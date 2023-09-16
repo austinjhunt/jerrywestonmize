@@ -87,8 +87,8 @@ if (!class_exists('UserMetaConditionalDisplay')) {
                 ),
                 $atts
             );
-            if (empty($attributes['user_meta_properties'])) {
-                $output = '<p>Please provide (at minimum) user_meta_properties="propA,propB,propC,..." argument to the [user_meta_conditional_display...] shortcode.</p>';
+            if (empty($attributes['required_user_meta_properties'])) {
+                $output = '<p>Please provide (at minimum) required_user_meta_propertiess="propA,propB,propC,..." argument to the [user_meta_conditional_display...] shortcode.</p>';
                 return $output;
             }
             // First, sanitize the data and remove white spaces
