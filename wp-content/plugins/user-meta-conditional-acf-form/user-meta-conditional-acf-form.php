@@ -159,6 +159,7 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                 $acf_field_group_ids = preg_replace('/\s*,\s*/', ',', filter_var($attributes['acf_field_group_ids']));
                 $acf_field_group_ids_array = explode(',', $acf_field_group_ids);
                 acf_form(array(
+                    'post_id' => 'user_' . get_current_user_id(),
                     'id' => 'acf-form-' . $this->generateRandomString(),
                     'field_groups' => $acf_field_group_ids_array,
                 ));
