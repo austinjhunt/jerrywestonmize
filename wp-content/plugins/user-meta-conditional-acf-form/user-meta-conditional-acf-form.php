@@ -11,7 +11,7 @@
 
 defined('ABSPATH') or die('You should not be here');
 if (!class_exists('UserMetaConditionalACFFormDisplay')) {
-    class UserMetaConditionalDisplay
+    class UserMetaConditionalACFFormDisplay
     {
         public $plugin_name;
         function __construct()
@@ -176,5 +176,5 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
     }
 }
 
-$conditionalFormDisplayPlugin = new UserMetaConditionalDisplay();
-$conditionalFormDisplayPlugin->register();
+$conditionalACFFormDisplayPlugin = new UserMetaConditionalACFFormDisplay();
+$conditionalACFFormDisplayPlugin->register();
