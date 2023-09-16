@@ -93,7 +93,7 @@ if (!class_exists('UserMetaConditionalDisplay')) {
                 return $output;
             }
             // First, sanitize the data and remove white spaces
-            $user_meta_properties = preg_replace('/\s*,\s*/', ',', filter_var($attributes['user_meta_properties']));
+            $user_meta_properties = preg_replace('/\s*,\s*/', ',', filter_var($attributes['required_user_meta_properties']));
             echo "<p>Properties: " . $user_meta_properties . "</p>";
             $user_meta_properties_array = explode(',', $user_meta_properties);
             var_dump($user_meta_properties_array);
