@@ -156,7 +156,7 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                 }
             }
             if (!empty($attributes['pre_form_message'])) {
-                echo '<p>' . $attributes['pre_form_message'] . '</p>';
+                $output = '<p>' . $attributes['pre_form_message'] . '</p>' . $output;
             }
             echo $output;
             return ob_get_clean();
