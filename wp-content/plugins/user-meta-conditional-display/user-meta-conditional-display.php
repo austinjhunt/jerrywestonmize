@@ -2,16 +2,11 @@
 /*
  * Plugin Name: User Meta Conditional Display
  * Plugin URI: https://github.com/austinjhunt/jerrywestonmize
- * Description: This plugin, triggered with shortcode
- * [user_meta_conditional_display required_user_meta_properties="a,b,c..." missing_properties_action="show|hide" trigger="all|any"] checks to see
- * if all/any of specified (comma-separated) meta properties are missing for an authenticated user. If any/all (default all) are missing,
- * either show or hide (based on specified action, default=hide) content between opening/closing shortcode, e.g., show a form asking for those properties.
- * The wrapped content will always show by default for users who are not logged in,
- * so the condition only applies when users are logged in.
-Version: 1.0.0
-Requires PHP: 8
-Author: Austin Hunt
-Author URI: https://austinjhunt.com
+ * Description: This plugin, triggered with shortcode [user_meta_conditional_display required_user_meta_properties="a,b,c..." missing_properties_action="show|hide" trigger="all|any"] CONTENT [/user_meta_conditional_display] checks to see if all/any of specified (comma-separated) meta properties are missing for an authenticated user. If any/all (default=all) are missing/empty,  either show or hide (default=hide) content between opening/closing shortcode, e.g., show a form asking for those properties. The wrapped content will always show by default for users who are not logged in, so the condition only applies when users are logged in.
+ * Version: 1.0.0
+ * Requires PHP: 8
+ * Author: Austin Hunt
+ * Author URI: https://austinjhunt.com
 */
 
 defined('ABSPATH') or die('You should not be here');
