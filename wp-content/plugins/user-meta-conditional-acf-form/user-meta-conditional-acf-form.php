@@ -113,11 +113,6 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
             $user_meta_properties_array = explode(',', $user_meta_properties);
             $simple_empty_count = $this->count_missing_user_meta_properties($user_meta_properties_array);
 
-
-            // initialize default output
-            if (!empty($attributes['pre_form_message'])) {
-                echo '<p>' . $attributes['pre_form_message'] . '</p>';
-            }
             $show_form = false;
             if ($attributes['missing_properties_action'] == 'show') {
                 if ($attributes['trigger'] == 'all') {
@@ -151,6 +146,10 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                 }
             }
             if ($show_form) {
+                // form heading / pre form message
+                if (!empty($attributes['pre_form_message'])) {
+                    echo '<p>' . $attributes['pre_form_message'] . '</p>';
+                }
                 $acf_field_group_ids = preg_replace('/\s*,\s*/', ',', filter_var($attributes['acf_field_group_ids']));
                 $acf_field_group_ids_array = explode(',', $acf_field_group_ids);
                 acf_form(array(
