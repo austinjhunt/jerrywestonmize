@@ -84,6 +84,7 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
         // [user_meta_conditional_acf_display missing_properties_action="show|hide" user_meta_properties="propA,propB,..."]
         public function user_meta_conditional_acf_display_callback($atts, $content = '')
         {
+            ob_start();
 
             // this function only affects logged in users.
             if (!is_user_logged_in()) {
@@ -153,8 +154,8 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                     }
                 }
             }
-
-            return $output;
+            echo $output;
+            return ob_get_clean();
         }
         public function add_admin_pages()
         {
