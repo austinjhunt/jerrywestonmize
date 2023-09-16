@@ -96,6 +96,7 @@ if (!class_exists('UserMetaConditionalDisplay')) {
             $user_meta_properties_array = explode(',', $user_meta_properties);
 
             $simple_empty_count = $this->count_missing_user_meta_properties($user_meta_properties_array);
+
             // initialize default output
             $output = '';
             if ($attributes['missing_properties_action'] == 'show') {
@@ -111,6 +112,7 @@ if (!class_exists('UserMetaConditionalDisplay')) {
                     }
                 }
             } else if ($attributes['missing_properties_action'] == 'hide') {
+                $output .=  "<p>Action: hide</p>";
                 if ($attributes['trigger'] == 'all') {
                     // hide content if all properties missing
                     if ($simple_empty_count == 'all') {
@@ -129,6 +131,10 @@ if (!class_exists('UserMetaConditionalDisplay')) {
                     }
                 }
             }
+            $output .=  "<p>Trigger: " . $attributes['trigger'] . "</p>";
+            $output .=  "<p>Action: " . $attributes['missing_properties_action'] . "</p>";
+            $output .=  "<p>Empty Count: " . $simple_empty_count . "</p>";
+
             return $output;
         }
         public function add_admin_pages()
