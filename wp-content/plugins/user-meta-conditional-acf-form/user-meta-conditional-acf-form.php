@@ -100,7 +100,6 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                 ),
                 $atts
             );
-            var_dump($attributes);
             if (empty($attributes['required_user_meta_properties']) or empty($attributes['acf_field_group_ids'])) {
                 $output = '<p>Please provide (at minimum) acf_field_group_ids="fg1,fg2,..." and required_user_meta_properties="propA,propB,propC,..." argument to the [user_meta_conditional_acf_display...] shortcode.</p>';
                 return $output;
