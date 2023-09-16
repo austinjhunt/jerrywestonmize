@@ -98,11 +98,17 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                     'acf_field_group_ids' => '',
                     'missing_properties_action' => 'show',
                     'required_user_meta_properties' => '',
+                    'data_exists_redirect' => '',
                     'trigger' => 'all' // alternative is any
 
                 ),
                 $atts
             );
+            $redirect = '';
+            if (!empty($attributes['data_exists_redirect'])) {
+                $redirect = $attributes['data_exists_redirect'];
+            }
+
             if (empty($attributes['required_user_meta_properties']) or empty($attributes['acf_field_group_ids'])) {
                 $output = '<p>Please provide (at minimum) acf_field_group_ids="fg1,fg2,..." and required_user_meta_properties="propA,propB,propC,..." argument to the [user_meta_conditional_acf_display...] shortcode.</p>';
                 return $output;
@@ -155,7 +161,13 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                 acf_form(array(
                     'id' => 'acf-form-' . $this->generateRandomString(),
                     'field_groups' => $acf_field_group_ids_array,
+                    'return' => $redirect
                 ));
+            } else {
+                if (!empty($redirect)) {
+                    wp_redirect($redirect);
+                    exit;
+                }
             }
 
             return ob_get_clean();
