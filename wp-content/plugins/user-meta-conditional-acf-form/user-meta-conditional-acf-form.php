@@ -162,8 +162,7 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                 acf_form(array(
                     'post_id' => 'user_' . get_current_user_id(),
                     'id' => 'acf-form-' . $this->generateRandomString(),
-                    'field_groups' => $acf_field_group_ids_array,
-                    'return' => $redirect
+                    'field_groups' => $acf_field_group_ids_array
                 ));
             } else {
                 if (!empty($redirect)) {
