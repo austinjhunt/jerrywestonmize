@@ -118,7 +118,6 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
             $acf_form_content = acf_form(array(
                 'id' => 'acf-form-' . $this->generateRandomString(),
                 'field_groups' => $acf_field_group_ids_array,
-                'form' => true
             ));
 
             // initialize default output
@@ -127,17 +126,17 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
             } else {
                 $output = '';
             }
+            echo $output;
             if ($attributes['missing_properties_action'] == 'show') {
                 if ($attributes['trigger'] == 'all') {
                     // show content if all properties missing
                     if ($simple_empty_count == 'all') {
-                        $output .= $acf_form_content;
+                        $output = $acf_form_content;
                     } // default already empty
                 } else if ($attributes['trigger'] == 'any') {
                     // show content if any properties missing
                     if ($simple_empty_count == 'some' or $simple_empty_count == 'all') {
-
-                        $output .= $acf_form_content;
+                        $output = $acf_form_content;
                     }
                 }
             } else if ($attributes['missing_properties_action'] == 'hide') {
@@ -147,7 +146,7 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                         $output = '';
                     } else {
                         // show if not all properties missing
-                        $output .= $acf_form_content;
+                        $output = $acf_form_content;
                     }
                 } else if ($attributes['trigger'] == 'any') {
                     // hide content if any properties missing
@@ -155,7 +154,7 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                         $output = '';
                     } else {
                         // show if no properties missing
-                        $output .= $acf_form_content;
+                        $output = $acf_form_content;
                     }
                 }
             }
