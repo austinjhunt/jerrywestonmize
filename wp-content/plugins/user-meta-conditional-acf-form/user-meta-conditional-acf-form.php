@@ -115,7 +115,8 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
             $acf_field_group_ids_array = explode(',', $acf_field_group_ids);
             $acf_form_content = acf_form(array(
                 'id' => 'acf-form-' . $this->generateRandomString(),
-                'field_groups' => $acf_field_group_ids_array
+                'field_groups' => $acf_field_group_ids_array,
+                'form' => false
             ));
 
             // initialize default output
