@@ -161,7 +161,6 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                 acf_form(array(
                     'id' => 'acf-form-' . $this->generateRandomString(),
                     'field_groups' => $acf_field_group_ids_array,
-                    'return' => $redirect
                 ));
             } else {
                 if (!empty($redirect)) {
