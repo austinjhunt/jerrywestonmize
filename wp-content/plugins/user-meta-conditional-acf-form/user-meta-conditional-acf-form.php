@@ -1,6 +1,6 @@
 <?php
 /*
- * Plugin Name: Conditional ACF
+ * Plugin Name: Conditional ACF Field Group Display
  * Plugin URI: https://github.com/austinjhunt/jerrywestonmize
  * Description: This plugin, triggered with shortcode [user_meta_conditional_acf_display required_user_meta_properties="a,b,c..." missing_properties_action="show|hide" trigger="all|any" acf_field_group_ids="..."] checks to see if all/any of specified (comma-separated) meta properties are missing for an authenticated user. If any/all (default=all) are missing/empty, either show or hide (default=hide) an ACF form containing specified field groups. Useful for asking for info from a logged in user if they haven't already provided it.
  * Version: 1.0.0
