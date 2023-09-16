@@ -1,17 +1,17 @@
 <?php
 /*
- * Plugin Name: Forminator T
+ * Plugin Name: Conditional ACF
  * Plugin URI: https://github.com/austinjhunt/jerrywestonmize
- * Description: This plugin, triggered with shortcode [user_meta_conditional_display required_user_meta_properties="a,b,c..." missing_properties_action="show|hide" trigger="all|any"] checks to see if all/any of specified (comma-separated) meta properties are missing for an authenticated user. If any/all (default all) are missing, either show or hide (based on specified action, default=hide) content between opening/closing shortcode, e.g., show a form asking for those properties. The wrapped content will always show by default for users who are not logged in, so the condition only applies when users are logged in.
-Version: 1.0.0
-Requires PHP: 8
-Author: Austin Hunt
-Author URI: https://austinjhunt.com
+ * Description: This plugin, triggered with shortcode [user_meta_conditional_acf_display required_user_meta_properties="a,b,c..." missing_properties_action="show|hide" trigger="all|any" acf_field_group_ids="..."] checks to see if all/any of specified (comma-separated) meta properties are missing for an authenticated user. If any/all (default=all) are missing/empty, either show or hide (default=hide) an ACF form containing specified field groups. Useful for asking for info from a logged in user if they haven't already provided it.
+ * Version: 1.0.0
+ * Requires PHP: 8
+ * Author: Austin Hunt
+ * Author URI: https://austinjhunt.com
 */
 
 defined('ABSPATH') or die('You should not be here');
-if (!class_exists('JWMAddressForm')) {
-    class JWMAddressForm
+if (!class_exists('UserMetaConditionalACFFormDisplay')) {
+    class UserMetaConditionalDisplay
     {
         public $plugin_name;
         function __construct()
@@ -26,7 +26,7 @@ if (!class_exists('JWMAddressForm')) {
             // add_action('admin_menu', array($this, 'add_admin_pages'));
 
             // allow shortcode with args
-            add_shortcode("user_meta_conditional_display", array($this, "user_meta_conditional_display_callback"));
+            add_shortcode("user_meta_conditional_acf_display", array($this, "user_meta_conditional_acf_display_callback"));
 
             plugin_basename(__FILE__);
 
@@ -38,7 +38,7 @@ if (!class_exists('JWMAddressForm')) {
         // public function settings_link($links)
         // {
         //     // do not need this function for this plugin,
-        //     $settings_link = '<a href="https://jerrywestonmize.com/wp-admin/admin.php?page=jwm_user_meta_conditional_display_plugin">Settings</a>';
+        //     $settings_link = '<a href="https://jerrywestonmize.com/wp-admin/admin.php?page=jwm_user_meta_conditional_acf_display_plugin">Settings</a>';
         //     array_push($links, $settings_link);
         //     return $links;
         // }
@@ -68,12 +68,23 @@ if (!class_exists('JWMAddressForm')) {
             }
             return $simple_empty_count;
         }
-
-        // [user_meta_conditional_display missing_properties_action="show|hide" user_meta_properties="propA,propB,..."]
-        public function user_meta_conditional_display_callback($atts, $content = '')
+        function generateRandomString($length = 10)
         {
-            // this function is invoked by the shortcode, and renders the wrapped content ($content) based on
-            // non-existence of any or all specified meta properties of user
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[random_int(0, $charactersLength - 1)];
+            }
+            return $randomString;
+        }
+
+
+        // [user_meta_conditional_acf_display missing_properties_action="show|hide" user_meta_properties="propA,propB,..."]
+        public function user_meta_conditional_acf_display_callback($atts, $content = '')
+        {
+
+            // this function only affects logged in users.
             if (!is_user_logged_in()) {
                 // return content by default if user is not logged in. no way to check user meta properties
                 // for non-authenticated user.
@@ -81,63 +92,76 @@ if (!class_exists('JWMAddressForm')) {
             }
             $attributes = shortcode_atts(
                 array(
+                    'acf_field_group_ids' => '',
                     'missing_properties_action' => 'show',
                     'required_user_meta_properties' => '',
                     'trigger' => 'all' // alternative is any
+
                 ),
                 $atts
             );
-            if (empty($attributes['required_user_meta_properties'])) {
-                $output = '<p>Please provide (at minimum) required_user_meta_properties="propA,propB,propC,..." argument to the [user_meta_conditional_display...] shortcode.</p>';
+            if (empty($attributes['required_user_meta_properties']) or empty($attributes['acf_field_group_ids'])) {
+                $output = '<p>Please provide (at minimum) acf_field_group_ids="fg1,fg2,..." and required_user_meta_propertiess="propA,propB,propC,..." argument to the [user_meta_conditional_acf_display...] shortcode.</p>';
                 return $output;
             }
-            // First, sanitize the data and remove white spaces
-            $user_meta_properties = preg_replace('/\s*,\s*/', ',', filter_var($attributes['user_meta_properties'], FILTER_SANITIZE_STRING));
-            $user_meta_properties_array = explode(',', $user_meta_properties);
 
+            // First, sanitize the data and remove white spaces
+            $user_meta_properties = preg_replace('/\s*,\s*/', ',', filter_var($attributes['required_user_meta_properties']));
+            $user_meta_properties_array = explode(',', $user_meta_properties);
             $simple_empty_count = $this->count_missing_user_meta_properties($user_meta_properties_array);
+
+            $acf_field_group_ids = preg_replace('/\s*,\s*/', ',', filter_var($attributes['acf_field_group_ids']));
+            $acf_field_group_ids_array = explode(',', $acf_field_group_ids);
+            $acf_form_content = acf_form(array(
+                'id' => 'acf-form-' . $this->generateRandomString(),
+                'field_groups' => $acf_field_group_ids_array
+            ));
+
             // initialize default output
             $output = '';
             if ($attributes['missing_properties_action'] == 'show') {
                 if ($attributes['trigger'] == 'all') {
                     // show content if all properties missing
                     if ($simple_empty_count == 'all') {
-                        $output = $content;
+                        $output = $acf_form_content;
                     } // default already empty
                 } else if ($attributes['trigger'] == 'any') {
                     // show content if any properties missing
-                    if ($simple_empty_count == 'any' or $simple_empty_count == 'all') {
-                        $output = $content;
+                    if ($simple_empty_count == 'some' or $simple_empty_count == 'all') {
+
+                        $output = $acf_form_content;
                     }
                 }
             } else if ($attributes['missing_properties_action'] == 'hide') {
+                $output .=  "<p>Action: hide</p>";
                 if ($attributes['trigger'] == 'all') {
                     // hide content if all properties missing
                     if ($simple_empty_count == 'all') {
                         $output = '';
                     } else {
                         // show if not all properties missing
-                        $output = $content;
+                        $output = $acf_form_content;
                     }
                 } else if ($attributes['trigger'] == 'any') {
                     // hide content if any properties missing
-                    if ($simple_empty_count == 'any' or $simple_empty_count == 'all') {
+                    if ($simple_empty_count == 'some' or $simple_empty_count == 'all') {
                         $output = '';
                     } else {
                         // show if no properties missing
-                        $output = $content;
+                        $output = $acf_form_content;
                     }
                 }
             }
+
             return $output;
         }
         public function add_admin_pages()
         {
             add_menu_page(
-                'User Meta Conditional Display Plugin',
-                'User Meta Conditional Display',
+                'User Meta Conditional ACF Form Display Plugin',
+                'User Meta Conditional ACF Form Display',
                 'manage_options',
-                'jwm_user_meta_conditional_display_plugin',
+                'jwm_user_meta_conditional_acf_display_plugin',
                 array($this, 'admin_index'),
                 'dashicons-visibility',
                 110
@@ -152,5 +176,5 @@ if (!class_exists('JWMAddressForm')) {
     }
 }
 
-$conditionalFormDisplayPlugin = new JWMAddressForm();
+$conditionalFormDisplayPlugin = new UserMetaConditionalDisplay();
 $conditionalFormDisplayPlugin->register();
