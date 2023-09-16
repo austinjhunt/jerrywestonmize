@@ -113,52 +113,52 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
             $user_meta_properties_array = explode(',', $user_meta_properties);
             $simple_empty_count = $this->count_missing_user_meta_properties($user_meta_properties_array);
 
-            $acf_field_group_ids = preg_replace('/\s*,\s*/', ',', filter_var($attributes['acf_field_group_ids']));
-            $acf_field_group_ids_array = explode(',', $acf_field_group_ids);
-            $acf_form_content = acf_form(array(
-                'id' => 'acf-form-' . $this->generateRandomString(),
-                'field_groups' => $acf_field_group_ids_array,
-            ));
 
             // initialize default output
             if (!empty($attributes['pre_form_message'])) {
-                $output = '<p>' . $attributes['pre_form_message'] . '</p>';
-            } else {
-                $output = '';
+                echo '<p>' . $attributes['pre_form_message'] . '</p>';
             }
-            echo $output;
+            $show_form = false;
             if ($attributes['missing_properties_action'] == 'show') {
                 if ($attributes['trigger'] == 'all') {
                     // show content if all properties missing
                     if ($simple_empty_count == 'all') {
-                        $output = $acf_form_content;
+                        $show_form = true;
                     } // default already empty
                 } else if ($attributes['trigger'] == 'any') {
                     // show content if any properties missing
                     if ($simple_empty_count == 'some' or $simple_empty_count == 'all') {
-                        $output = $acf_form_content;
+                        $show_form = true;
                     }
                 }
             } else if ($attributes['missing_properties_action'] == 'hide') {
                 if ($attributes['trigger'] == 'all') {
                     // hide content if all properties missing
                     if ($simple_empty_count == 'all') {
-                        $output = '';
+                        $show_form = false;
                     } else {
                         // show if not all properties missing
-                        $output = $acf_form_content;
+                        $show_form = true;
                     }
                 } else if ($attributes['trigger'] == 'any') {
                     // hide content if any properties missing
                     if ($simple_empty_count == 'some' or $simple_empty_count == 'all') {
-                        $output = '';
+                        $show_form = false;
                     } else {
                         // show if no properties missing
-                        $output = $acf_form_content;
+                        $show_form = true;
                     }
                 }
             }
-            echo $output;
+            if ($show_form) {
+                $acf_field_group_ids = preg_replace('/\s*,\s*/', ',', filter_var($attributes['acf_field_group_ids']));
+                $acf_field_group_ids_array = explode(',', $acf_field_group_ids);
+                acf_form(array(
+                    'id' => 'acf-form-' . $this->generateRandomString(),
+                    'field_groups' => $acf_field_group_ids_array,
+                ));
+            }
+
             return ob_get_clean();
         }
         public function add_admin_pages()
