@@ -111,7 +111,7 @@ if (!class_exists('UserMetaConditionalDisplay')) {
                     } // default already empty
                 } else if ($attributes['trigger'] == 'any') {
                     // show content if any properties missing
-                    if ($simple_empty_count == 'any' or $simple_empty_count == 'all') {
+                    if ($simple_empty_count == 'some' or $simple_empty_count == 'all') {
                         $stat = 2;
                         $output = $content;
                     }
@@ -130,7 +130,7 @@ if (!class_exists('UserMetaConditionalDisplay')) {
                     }
                 } else if ($attributes['trigger'] == 'any') {
                     // hide content if any properties missing
-                    if ($simple_empty_count == 'any' or $simple_empty_count == 'all') {
+                    if ($simple_empty_count == 'some' or $simple_empty_count == 'all') {
                         $output = '';
                         $stat = 5;
                     } else {
