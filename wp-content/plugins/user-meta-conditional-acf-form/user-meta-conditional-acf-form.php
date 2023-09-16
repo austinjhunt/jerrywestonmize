@@ -18,6 +18,7 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
         {
             $this->plugin_name = plugin_basename(__FILE__);
         }
+
         function register()
         {
             add_action('admin_enqueue_scripts', array($this, 'enqueue'));
@@ -133,7 +134,6 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                     }
                 }
             } else if ($attributes['missing_properties_action'] == 'hide') {
-                $output .=  "<p>Action: hide</p>";
                 if ($attributes['trigger'] == 'all') {
                     // hide content if all properties missing
                     if ($simple_empty_count == 'all') {
