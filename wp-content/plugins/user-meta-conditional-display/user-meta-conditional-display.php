@@ -56,7 +56,6 @@ if (!class_exists('UserMetaConditionalDisplay')) {
             $simple_empty_count = "none";
             foreach ($properties as $prop) {
                 $val = get_user_meta(user_id: get_current_user_id(), key: $prop, single: true);
-                echo "<p>Value of " . $prop . ": " . $val . "</p>";
                 if (empty($val)) {
                     $empty_count = $empty_count + 1;
                 }
@@ -73,24 +72,31 @@ if (!class_exists('UserMetaConditionalDisplay')) {
         // [user_meta_conditional_display missing_properties_action="show|hide" user_meta_properties="propA,propB,..."]
         public function user_meta_conditional_display_callback($atts, $content = '')
         {
-            // this function is invoked by the shortcode, and renders the wrapped content ($content) based on
-            // non-existence of any or all specified meta properties of user
-            if (!is_user_logged_in()) {
-                // return content by default if user is not logged in. no way to check user meta properties
-                // for non-authenticated user.
-                return $content;
-            }
+            if ($content)
+                // this function is invoked by the shortcode, and renders the wrapped content ($content) based on
+                // non-existence of any or all specified meta properties of user
+                if (!is_user_logged_in()) {
+                    // return content by default if user is not logged in. no way to check user meta properties
+                    // for non-authenticated user.
+                    return $content;
+                }
             $attributes = shortcode_atts(
                 array(
+                    'content_is_shortcode' => 'no',
                     'missing_properties_action' => 'show',
                     'required_user_meta_properties' => '',
                     'trigger' => 'all' // alternative is any
+
                 ),
                 $atts
             );
             if (empty($attributes['required_user_meta_properties'])) {
                 $output = '<p>Please provide (at minimum) required_user_meta_propertiess="propA,propB,propC,..." argument to the [user_meta_conditional_display...] shortcode.</p>';
                 return $output;
+            }
+            $content_is_shortcode = ($attributes['content_is_shortcode'] == 'yes');
+            if ($content_is_shortcode) {
+                $content = do_shortcode($content);
             }
             // First, sanitize the data and remove white spaces
             $user_meta_properties = preg_replace('/\s*,\s*/', ',', filter_var($attributes['required_user_meta_properties']));
@@ -101,18 +107,16 @@ if (!class_exists('UserMetaConditionalDisplay')) {
 
             // initialize default output
             $output = '';
-            $stat = 0;
             if ($attributes['missing_properties_action'] == 'show') {
                 if ($attributes['trigger'] == 'all') {
                     // show content if all properties missing
                     if ($simple_empty_count == 'all') {
-                        $stat = 1;
                         $output = $content;
                     } // default already empty
                 } else if ($attributes['trigger'] == 'any') {
                     // show content if any properties missing
                     if ($simple_empty_count == 'some' or $simple_empty_count == 'all') {
-                        $stat = 2;
+
                         $output = $content;
                     }
                 }
@@ -122,29 +126,20 @@ if (!class_exists('UserMetaConditionalDisplay')) {
                     // hide content if all properties missing
                     if ($simple_empty_count == 'all') {
                         $output = '';
-                        $stat = 3;
                     } else {
                         // show if not all properties missing
-                        $stat = 4;
                         $output = $content;
                     }
                 } else if ($attributes['trigger'] == 'any') {
                     // hide content if any properties missing
                     if ($simple_empty_count == 'some' or $simple_empty_count == 'all') {
                         $output = '';
-                        $stat = 5;
                     } else {
                         // show if no properties missing
                         $output = $content;
-                        $stat = 6;
                     }
                 }
             }
-
-            $output .=  "<p>Trigger: " . $attributes['trigger'] . "</p>";
-            $output .=  "<p>Action: " . $attributes['missing_properties_action'] . "</p>";
-            $output .=  "<p>Empty Count: " . $simple_empty_count . "</p>";
-            $output .=  "<p>Stat: " . $stat . "</p>";
 
             return $output;
         }
