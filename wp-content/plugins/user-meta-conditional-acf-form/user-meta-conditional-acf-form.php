@@ -167,8 +167,7 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                 ));
             } else {
                 if (!empty($redirect)) {
-                    wp_redirect($redirect);
-                    exit;
+                    echo "<script>window.location.href = '" . $redirect . "';</script>";
                 }
             }
 
