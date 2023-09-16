@@ -122,7 +122,11 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
             ));
 
             // initialize default output
-            $output = '';
+            if (!empty($attributes['pre_form_message'])) {
+                $output = '<p>' . $attributes['pre_form_message'] . '</p>';
+            } else {
+                $output = '';
+            }
             if ($attributes['missing_properties_action'] == 'show') {
                 if ($attributes['trigger'] == 'all') {
                     // show content if all properties missing
@@ -154,9 +158,6 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                         $output = $acf_form_content;
                     }
                 }
-            }
-            if (!empty($attributes['pre_form_message'])) {
-                $output = '<p>' . $attributes['pre_form_message'] . '</p>' . $output;
             }
             echo $output;
             return ob_get_clean();
