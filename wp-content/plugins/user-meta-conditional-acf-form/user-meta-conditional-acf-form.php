@@ -2,7 +2,7 @@
 /*
  * Plugin Name: Conditional ACF Field Group Display
  * Plugin URI: https://github.com/austinjhunt/jerrywestonmize
- * Description: This plugin, triggered with shortcode [user_meta_conditional_acf_display required_user_meta_properties="a,b,c..." missing_properties_action="show|hide" trigger="all|any" acf_field_group_ids="..."] checks to see if all/any of specified (comma-separated) meta properties are missing for an authenticated user. If any/all (default=all) are missing/empty, either show or hide (default=hide) an ACF form containing specified field groups. Useful for asking for info from a logged in user if they haven't already provided it.
+ * Description: This plugin, triggered with shortcode [user_meta_conditional_acf_display pre_form_message="ex: Please provide the following information in order to move forward" required_user_meta_properties="a,b,c..." missing_properties_action="show|hide" trigger="all|any" acf_field_group_ids="..."] checks to see if all/any of specified (comma-separated) meta properties are missing for an authenticated user. If any/all (default=all) are missing/empty, either show or hide (default=hide) an ACF form containing specified field groups. Useful for asking for info from a logged in user if they haven't already provided it.
  * Version: 1.0.0
  * Requires PHP: 8
  * Author: Austin Hunt
@@ -94,6 +94,7 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
             }
             $attributes = shortcode_atts(
                 array(
+                    'pre_form_message' => 'Please provide the following information before moving forward.',
                     'acf_field_group_ids' => '',
                     'missing_properties_action' => 'show',
                     'required_user_meta_properties' => '',
@@ -153,6 +154,9 @@ if (!class_exists('UserMetaConditionalACFFormDisplay')) {
                         $output = $acf_form_content;
                     }
                 }
+            }
+            if (!empty($attributes['pre_form_message'])) {
+                echo '<p>' . $attributes['pre_form_message'] . '</p>';
             }
             echo $output;
             return ob_get_clean();
