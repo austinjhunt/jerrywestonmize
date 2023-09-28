@@ -315,8 +315,9 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 				'email-subject'               => esc_html__( 'Your new account on {site_title}', 'forminator' ),
 				'email-editor'                => $message,
 
-				'email-subject-method-email'  => esc_html__( 'Activate your account on {site_url}', 'forminator' ),
-				'email-editor-method-email'   => $message_method_email,
+				//'email-subject-method-email'  => esc_html__( 'Activate your account on {site_url}', 'forminator' ),
+				//'email-editor-method-email'   => $message_method_email,
+				
 				'email-subject-method-manual' => esc_html__( 'Your new account on {site_title} is under review.', 'forminator' ),
 				'email-editor-method-manual'  => $message_method_manual,
 			);
