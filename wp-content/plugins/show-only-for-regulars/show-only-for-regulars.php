@@ -51,6 +51,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
             $attributes = shortcode_atts(
                 array(
                     'newcomer_redirect_uri' => '',
+                    'content_is_shortcode' => true
                 ),
                 $atts
             );
@@ -59,7 +60,11 @@ if (!class_exists('ShowOnlyForRegulars')) {
             $customer_status = explode(':', $customer_status)[0];
             $customer_status = trim($customer_status);
             if ($customer_status == "regular") {
-                echo $content;
+                if ($attributes['content_is_shortcode'] == true) {
+                    echo do_shortcode($content);
+                } else if ($attributes['content_is_shortcode'] == false) {
+                    echo $content;
+                }
             } else if ($customer_status == "newcomer") {
                 if (!empty($attributes['newcomer_redirect_uri'])) {
                     $redirect = $attributes['newcomer_redirect_uri'];
