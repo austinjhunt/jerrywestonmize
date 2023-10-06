@@ -56,6 +56,8 @@ if (!class_exists('ShowOnlyForRegulars')) {
             );
 
             $customer_status = get_user_meta(user_id: get_current_user_id(), key: 'customer_status', single: true);
+            $customer_status = explode(':', $customer_status)[0];
+            $customer_status = trim($customer_status);
             echo "<h3>Customer Status: " . $customer_status . "</h3>";
             if ($customer_status == "regular") {
                 echo $content;
