@@ -172,7 +172,11 @@ class WebHookApplicationService
             $this->container
         );
 
-        $webHooks = $settingsService->getCategorySettings('webHooks');
+        $webHooks = apply_filters(
+            'amelia_modify_web_hooks',
+            $settingsService->getCategorySettings('webHooks'),
+            $data
+        );
 
         foreach ($webHooks as $webHook) {
             if ($webHook['action'] === $action && $webHook['type'] === $reservation['type']) {

@@ -67,7 +67,7 @@ class AddEventCommandHandler extends CommandHandler
 
         try {
             /** @var AbstractUser $user */
-            $user = $userAS->authorization(
+            $user = $command->getUserApplicationService()->authorization(
                 $command->getPage() === 'cabinet' ? $command->getToken() : null,
                 $command->getCabinetType()
             );

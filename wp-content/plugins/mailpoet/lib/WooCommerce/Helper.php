@@ -138,7 +138,7 @@ class Helper {
       'paginate' => true,
     ])->total;
 
-    return $ordersCount;
+    return intval($ordersCount);
   }
 
   public function getRawPrice($price, array $args = []) {

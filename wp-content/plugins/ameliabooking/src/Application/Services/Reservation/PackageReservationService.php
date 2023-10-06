@@ -227,7 +227,9 @@ class PackageReservationService extends AppointmentReservationService
         /** @var Collection $customFieldsCollection */
         $customFieldsCollection = $customFieldRepository->getAll();
 
-        $reservation->setCustomer(UserFactory::create($appointmentData['bookings'][0]['customer']));
+        if (!empty($appointmentData['bookings'][0]['customer'])) {
+            $reservation->setCustomer(UserFactory::create($appointmentData['bookings'][0]['customer']));
+        }
 
         $reservation->setReservation($package);
 

@@ -47,7 +47,7 @@ class DeleteEventBookingCommandHandler extends CommandHandler
         /** @var UserApplicationService $userAS */
         $userAS = $this->container->get('application.user.service');
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanDelete(Entities::EVENTS)) {
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::EVENTS)) {
             try {
                 /** @var AbstractUser $user */
                 $user = $userAS->authorization(

@@ -48,16 +48,12 @@ class CancelBookingCommandHandler extends CommandHandler
 
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get($type);
-        /** @var CustomerApplicationService $customerAS */
-        $customerAS = $this->container->get('application.user.customer.service');
-        /** @var UserApplicationService $userAS */
-        $userAS = $this->container->get('application.user.service');
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
         try {
             /** @var AbstractUser $user */
-            $user = $userAS->authorization(
+            $user = $command->getUserApplicationService()->authorization(
                 $command->getPage() === 'cabinet' ? $command->getToken() : null,
                 $command->getCabinetType()
             );
@@ -81,7 +77,7 @@ class CancelBookingCommandHandler extends CommandHandler
             $booking->setToken(new Token($token['token']));
         }
 
-        if (!$customerAS->isCustomerBooking($booking, $user, null)) {
+        if (!$command->getUserApplicationService()->isCustomerBooking($booking, $user, null)) {
             throw new AccessDeniedException('You are not allowed to update booking status');
         }
 

@@ -1196,6 +1196,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     cb.aggregatedPrice AS booking_aggregatedPrice,
                     cb.token AS booking_token,
                     cb.utcOffset AS booking_utcOffset,
+                    cb.couponId AS booking_couponId,
                     
                     cu.id AS customer_id,
                     cu.firstName AS customer_firstName,

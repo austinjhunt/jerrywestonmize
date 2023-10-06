@@ -495,7 +495,7 @@ if (! function_exists('getWorkHours')) {
             }
 
             $periodList = [];
-            if ($weekDay['time'][0] !== null && $weekDay['time'][1] !== null) {
+            if (!empty($weekDay['time'][0]) && !empty($weekDay['time'][1])) {
                 if (!(array_key_exists('periods', $weekDay))) {
                     $period = [
                         'id' => null,
@@ -504,7 +504,8 @@ if (! function_exists('getWorkHours')) {
                         'serviceIds' => [],
                         'locationId' => null,
                         'periodServiceList' => [],
-                        'savedPeriodServiceList' => []
+                        'savedPeriodServiceList' => [],
+                        'periodLocationList' => [],
                     ];
                     array_push($periodList, $period);
                 } else {
@@ -516,7 +517,8 @@ if (! function_exists('getWorkHours')) {
                             'serviceIds' => [],
                             'locationId' => null,
                             'periodServiceList' => [],
-                            'savedPeriodServiceList' => []
+                            'savedPeriodServiceList' => [],
+                            'periodLocationList' => [],
                         ];
                         array_push($periodList, $periodItem);
                     }
@@ -597,7 +599,15 @@ if (! function_exists('createCustomers')) {
     {
         $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
         /** @var CustomerApplicationService $customerAS */
-        $customerAS   = $container->get('application.user.customer.service');
+        $customerAS = $container->get('application.user.customer.service');
+        /** @var UserRepository $userRepo */
+        $userRepo = $container->get('domain.users.repository');
+
+        $ameliaUser = $userRepo->getByEntityId($user->ID, 'externalId');
+        if ($ameliaUser && $ameliaUser->length() > 0) {
+            return;
+        }
+
         $userMetaData = get_user_meta($user->ID);
         $userArr      =
             [
@@ -633,11 +643,17 @@ if (! function_exists('createProviders')) {
         $locationRepository = $container->get('domain.locations.repository');
         /** @var ProviderApplicationService $providerAS */
         $providerAS = $container->get('application.user.provider.service');
+        /** @var UserRepository $userRepo */
+        $userRepo = $container->get('domain.users.repository');
 
         $schedule    = $settingsService->getCategorySettings('weekSchedule');
         $weekDayList = getWorkHours($schedule);
 
         foreach ($users as $user) {
+            $ameliaUser = $userRepo->getByEntityId($user->ID, 'externalId');
+            if ($ameliaUser && $ameliaUser->length() > 0) {
+                continue;
+            }
             $userMetaData = get_user_meta($user->ID);
 
             $locations = $locationRepository->getFiltered([], 1);
@@ -660,7 +676,11 @@ if (! function_exists('createProviders')) {
         }
     }
 }
-//  add_action('bp_init', 'createProviders');
+
+// added to fix conflict with "WP Login and Logout redirect"
+if (!function_exists('get_current_screen')) {
+    require_once ABSPATH . '/wp-admin/includes/screen.php';
+}
 
 if (isset($_POST['create_customers'])) {
     try {

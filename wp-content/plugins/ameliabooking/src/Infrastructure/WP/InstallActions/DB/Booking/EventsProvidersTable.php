@@ -25,8 +25,8 @@ class EventsProvidersTable extends AbstractDatabaseTable
 
         return "CREATE TABLE {$table} (
                    `id` INT(11) NOT NULL AUTO_INCREMENT,
-                   `eventId` INT(11) NOT NULL,
-                   `userId` INT(11) NOT NULL,
+                   `eventId` bigint(20) NOT NULL,
+                   `userId` bigint(20) NOT NULL,
                     PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     }

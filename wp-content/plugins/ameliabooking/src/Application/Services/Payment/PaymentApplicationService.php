@@ -642,6 +642,7 @@ class PaymentApplicationService
      * @param array $data
      * @param int $index
      * @param string|null $paymentMethod
+     * @param string $customRedirectUrl
      *
      * @return array
      * @throws QueryExecutionException
@@ -649,7 +650,7 @@ class PaymentApplicationService
      * @throws \Interop\Container\Exception\ContainerException
      * @throws Exception
      */
-    public function createPaymentLink($data, $index = null, $recurringKey = null, $paymentMethod = null)
+    public function createPaymentLink($data, $index = null, $recurringKey = null, $paymentMethod = null, $customRedirectUrl = null)
     {
         try {
             /** @var PaymentApplicationService $paymentAS */
@@ -686,6 +687,7 @@ class PaymentApplicationService
 
             $customerPanelUrl = $settingsService->getSetting('roles', 'customerCabinet')['pageUrl'];
             $redirectUrl      = $paymentMethod ? $customerPanelUrl : $redirectUrl;
+            $redirectUrl      = $customRedirectUrl ?: $redirectUrl;
 
             $totalPrice = $this->calculateAppointmentPrice($booking, $type, $reservation);
 

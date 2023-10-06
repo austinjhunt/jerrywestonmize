@@ -25,8 +25,8 @@ class CustomerBookingsToEventsPeriodsTable extends AbstractDatabaseTable
 
         return "CREATE TABLE {$table} (
                     `id` INT(11) NOT NULL AUTO_INCREMENT,
-                    `customerBookingId` INT(11) NOT NULL,
-                    `eventPeriodId` INT(11) NOT NULL,
+                    `customerBookingId` bigint(20) NOT NULL,
+                    `eventPeriodId` bigint(20) NOT NULL,
                     PRIMARY KEY (`id`),
                     UNIQUE KEY `bookingEventPeriod` (`customerBookingId` ,`eventPeriodId`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";

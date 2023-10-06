@@ -21,11 +21,11 @@ class GetSettingsCommandHandler extends CommandHandler
      * @throws ContainerException
      * @throws AccessDeniedException
      */
-    public function handle()
+    public function handle(GetSettingsCommand $command)
     {
         $result = new CommandResult();
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::SETTINGS)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::SETTINGS)) {
             throw new AccessDeniedException('You are not allowed to read settings.');
         }
 

@@ -27,9 +27,9 @@ class GetCustomFieldsCommandHandler extends CommandHandler
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      * @throws \Interop\Container\Exception\ContainerException
      */
-    public function handle()
+    public function handle(GetCustomFieldsCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::CUSTOM_FIELDS)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::CUSTOM_FIELDS)) {
             throw new AccessDeniedException('You are not allowed to read custom fields.');
         }
 

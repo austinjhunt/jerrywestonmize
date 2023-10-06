@@ -16,6 +16,8 @@
       'hasApiCall': (typeof hasAmeliaEntitiesApiCall !== 'undefined') && hasAmeliaEntitiesApiCall,
       'trigger': '<?php echo esc_js($params['trigger']); ?>',
       'trigger_type': '<?php echo esc_js($params['trigger_type']); ?>',
+      'triggered_form': 'cbf',
+      'in_dialog': '<?php echo esc_js($params['in_dialog']); ?>',
       'show': '<?php echo esc_js($params['show']); ?>',
       'counter': '<?php echo esc_js($params['counter']); ?>',
       'package': '<?php echo esc_js($params['package']); ?>',
@@ -43,5 +45,11 @@
   id="amelia-v2-booking-<?php echo $params['counter']; ?>"
   class="amelia-v2-booking<?php echo $params['trigger'] !== '' ? ' amelia-skip-load amelia-skip-load-' . $params['counter'] : ''; ?>"
 >
-  <catalog-form-wrapper></catalog-form-wrapper>
+    <?php
+    if(!$params['in_dialog']) {
+        echo '<catalog-form-wrapper></catalog-form-wrapper>';
+    } else {
+        echo '<dialog-forms></dialog-forms>';
+    }
+    ?>
 </div>

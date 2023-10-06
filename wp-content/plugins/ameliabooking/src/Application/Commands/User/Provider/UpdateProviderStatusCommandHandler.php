@@ -38,7 +38,7 @@ class UpdateProviderStatusCommandHandler extends CommandHandler
      */
     public function handle(UpdateProviderStatusCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::EMPLOYEES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::EMPLOYEES)) {
             throw new AccessDeniedException('You are not allowed to update employee.');
         }
 

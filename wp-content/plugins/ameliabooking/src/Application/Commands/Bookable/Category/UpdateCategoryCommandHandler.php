@@ -9,6 +9,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Category;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Bookable\Service\CategoryFactory;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\CategoryRepository;
 
@@ -31,7 +32,7 @@ class UpdateCategoryCommandHandler extends CommandHandler
      */
     public function handle(UpdateCategoryCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::SERVICES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::SERVICES)) {
             throw new AccessDeniedException('You are not allowed to update bookable category.');
         }
 
@@ -48,6 +49,8 @@ class UpdateCategoryCommandHandler extends CommandHandler
         /** @var CategoryRepository $categoryRepository */
         $categoryRepository = $this->container->get('domain.bookable.category.repository');
         if ($categoryRepository->update($command->getArg('id'), $category)) {
+            $category->setId(new Id($command->getArg('id')));
+
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully updated bookable category.');
             $result->setData([

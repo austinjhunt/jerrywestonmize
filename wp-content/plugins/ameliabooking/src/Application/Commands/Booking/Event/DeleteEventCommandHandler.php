@@ -38,7 +38,7 @@ class DeleteEventCommandHandler extends CommandHandler
      */
     public function handle(DeleteEventCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanDelete(Entities::EVENTS)) {
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::EVENTS)) {
             throw new AccessDeniedException('You are not allowed to delete event');
         }
 

@@ -373,7 +373,7 @@ abstract class AbstractUser
             'firstName'        => $this->getFirstName()->getValue(),
             'lastName'         => $this->getLastName()->getValue(),
             'birthday'         => null !== $this->getBirthday() ? $this->getBirthday()->getValue() : null,
-            'email'            => $this->getEmail()->getValue(),
+            'email'            => $this->getEmail() ? $this->getEmail()->getValue() : null,
             'phone'            => null !== $this->getPhone() ? $this->getPhone()->getValue() : null,
             'type'             => $this->getType(),
             'status'           => null !== $this->getStatus() ? $this->getStatus()->getValue() : null,

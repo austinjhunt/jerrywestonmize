@@ -39,7 +39,7 @@ class DisconnectFromGoogleAccountCommandHandler extends CommandHandler
         /** @var UserApplicationService $userAS */
         $userAS = $this->getContainer()->get('application.user.service');
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::EMPLOYEES)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::EMPLOYEES)) {
             try {
                 /** @var AbstractUser $user */
                 $user = $userAS->authorization(

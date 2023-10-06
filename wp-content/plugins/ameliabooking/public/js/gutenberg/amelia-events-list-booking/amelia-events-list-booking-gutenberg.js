@@ -83,6 +83,14 @@
         type: 'string',
         default: ''
       },
+      trigger_type: {
+        type: 'string',
+        default: 'id'
+      },
+      in_dialog: {
+        type: 'boolean',
+        default: false
+      },
       event: {
         type: 'string',
         default: ''
@@ -114,6 +122,10 @@
         eventOptions: [
           {value: 'events', label: wpAmeliaLabels.show_event},
           {value: 'tags', label: wpAmeliaLabels.show_tag}
+        ],
+        trigger_type: [
+          {value: 'id', label: wpAmeliaLabels.trigger_type_id},
+          {value: 'class', label: wpAmeliaLabels.trigger_type_class}
         ]
       }
 
@@ -175,6 +187,14 @@
 
           if (attributes.trigger) {
             shortCode += ' trigger=' + attributes.trigger + ''
+          }
+
+          if (attributes.trigger && attributes.trigger_type) {
+            shortCode += ' trigger_type=' + attributes.trigger_type + ''
+          }
+
+          if (attributes.trigger && attributes.in_dialog) {
+            shortCode += ' in_dialog=1'
           }
 
           shortCode += ']'
@@ -252,6 +272,29 @@
               return props.setAttributes({trigger: TextControl})
             }
           }))
+
+          inspectorElements.push(el(components.SelectControl, {
+            id: 'amelia-js-trigger_type',
+            label: wpAmeliaLabels.trigger_type,
+            value: attributes.trigger_type,
+            options: options.trigger_type,
+            help: wpAmeliaLabels.trigger_type_tooltip,
+            onChange: function (selectControl) {
+              return props.setAttributes({trigger_type: selectControl})
+            }
+          }))
+
+          inspectorElements.push(el(components.PanelRow,
+            {},
+            el('label', {htmlFor: 'amelia-js-in-dialog'}, wpAmeliaLabels.in_dialog),
+            el(components.FormToggle, {
+              id: 'amelia-js-in-dialog',
+              checked: attributes.in_dialog,
+              onChange: function () {
+                return props.setAttributes({in_dialog: !props.attributes.in_dialog})
+              }
+            })
+          ))
         } else {
           attributes.event = ''
           attributes.tag = ''

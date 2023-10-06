@@ -63,6 +63,36 @@ final class Container extends \Slim\Container
     }
 
     /**
+     * Get the API Permissions domain service
+     *
+     * @throws \Interop\Container\Exception\ContainerException
+     */
+    public function getApiPermissionsService()
+    {
+        return $this->get('domain.api.permissions.service');
+    }
+
+    /**
+     * Get the API User application service
+     *
+     * @throws \Interop\Container\Exception\ContainerException
+     */
+    public function getApiUserApplicationService()
+    {
+        return $this->get('application.api.user.service');
+    }
+
+    /**
+     * Get the User application service
+     *
+     * @throws \Interop\Container\Exception\ContainerException
+     */
+    public function getUserApplicationService()
+    {
+        return $this->get('application.user.service');
+    }
+
+    /**
      * @return mixed
      * @throws \Interop\Container\Exception\ContainerException
      */

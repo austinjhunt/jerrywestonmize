@@ -39,7 +39,7 @@ class GetTransactionAmountCommandHandler extends CommandHandler
      */
     public function handle(GetTransactionAmountCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::FINANCE)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::FINANCE)) {
             throw new AccessDeniedException('You are not allowed to read payment.');
         }
 
@@ -50,11 +50,7 @@ class GetTransactionAmountCommandHandler extends CommandHandler
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
 
-        /** @var CurrencyService $currencyService */
-        $currencyService = $this->container->get('infrastructure.payment.currency.service');
-
         $payment = $paymentRepository->getById($paymentId);
-
 
         if (empty($payment->getTransactionId()) && empty($payment->getWcOrderId())) {
             $result->setResult(CommandResult::RESULT_ERROR);

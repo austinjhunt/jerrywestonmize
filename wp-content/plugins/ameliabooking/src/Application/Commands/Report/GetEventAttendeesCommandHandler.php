@@ -48,7 +48,7 @@ class GetEventAttendeesCommandHandler extends CommandHandler
      */
     public function handle(GetEventAttendeesCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::APPOINTMENTS)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::APPOINTMENTS)) {
             throw new AccessDeniedException('You are not allowed to read appointments.');
         }
 
@@ -267,6 +267,10 @@ class GetEventAttendeesCommandHandler extends CommandHandler
 
                     $row[BackendStrings::getEventStrings()['event_book_tickets']] .= $ticketsExportString . ($params['separate'] === 'true' ? '' : '; ');
                 }
+            }
+
+            if (in_array('couponCode', $fields, true)) {
+                $row[BackendStrings::getCommonStrings()['coupon_code']] .= ($booking->getCoupon() && $booking->getCoupon()->getCode() ? $booking->getCoupon()->getCode()->getValue() : '') . $delimiterSeparate;
             }
 
             $mergedRow = array_merge($row, $rowCF);

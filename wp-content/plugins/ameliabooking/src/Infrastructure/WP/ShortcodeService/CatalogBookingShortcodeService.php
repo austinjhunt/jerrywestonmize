@@ -24,16 +24,17 @@ class CatalogBookingShortcodeService extends AmeliaBookingShortcodeService
     {
         $params = shortcode_atts(
             [
-                'trigger'  => '',
-                'trigger_type' => '',
+                'trigger'           => '',
+                'trigger_type'      => '',
+                'in_dialog'         => '',
                 'categories_hidden' => '',
-                'show'     => '',
-                'package'  => null,
-                'category' => null,
-                'service'  => null,
-                'employee' => null,
-                'location' => null,
-                'counter'  => self::$counter
+                'show'              => '',
+                'package'           => null,
+                'category'          => null,
+                'service'           => null,
+                'employee'          => null,
+                'location'          => null,
+                'counter'           => self::$counter
             ],
             $params
         );

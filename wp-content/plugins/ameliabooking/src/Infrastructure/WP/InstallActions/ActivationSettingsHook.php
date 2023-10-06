@@ -57,6 +57,8 @@ class ActivationSettingsHook
 
         self::initZoomSettings();
 
+        self::initApiKeySettings();
+
         self::initLessonSpaceSettings();
 
         self::initIcsSettings();
@@ -398,6 +400,19 @@ This message does not have an option for responding. If you need additional info
         ];
 
         self::initSettings('zoom', $settings);
+    }
+
+
+    /**
+     * Init Api Key Settings
+     */
+    private static function initApiKeySettings()
+    {
+        $settings = [
+            'apiKeys' => []
+        ];
+
+        self::initSettings('apiKeys', $settings);
     }
 
     /**

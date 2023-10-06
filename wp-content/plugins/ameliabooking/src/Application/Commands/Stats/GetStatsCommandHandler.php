@@ -44,7 +44,7 @@ class GetStatsCommandHandler extends CommandHandler
      */
     public function handle(GetStatsCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::DASHBOARD)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::DASHBOARD)) {
             throw new AccessDeniedException('You are not allowed to read coupons.');
         }
 

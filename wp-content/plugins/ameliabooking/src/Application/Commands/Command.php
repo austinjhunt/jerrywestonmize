@@ -24,6 +24,8 @@ use AmeliaBooking\Application\Commands\Stats\AddStatsCommand;
 use AmeliaBooking\Application\Commands\User\Customer\ReauthorizeCommand;
 use AmeliaBooking\Application\Commands\User\LoginCabinetCommand;
 use AmeliaBooking\Application\Commands\User\LogoutCabinetCommand;
+use AmeliaBooking\Application\Services\User\UserApplicationService;
+use AmeliaBooking\Domain\Services\Permissions\PermissionsService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
 use Slim\Http\Request;
@@ -46,6 +48,10 @@ abstract class Command
     private $page;
 
     private $cabinetType;
+
+    private $permissionService;
+
+    private $userApplicationService;
 
     /**
      * Command constructor.
@@ -225,5 +231,37 @@ abstract class Command
     public function getCabinetType()
     {
         return $this->cabinetType;
+    }
+
+    /**
+     * @return PermissionsService
+     */
+    public function getPermissionService()
+    {
+        return $this->permissionService;
+    }
+
+    /**
+     * @param PermissionsService $permissionService
+     */
+    public function setPermissionService($permissionService)
+    {
+        $this->permissionService = $permissionService;
+    }
+
+    /**
+     * @return UserApplicationService
+     */
+    public function getUserApplicationService()
+    {
+        return $this->userApplicationService;
+    }
+
+    /**
+     * @param UserApplicationService $userApplicationService
+     */
+    public function setUserApplicationService($userApplicationService)
+    {
+        $this->userApplicationService = $userApplicationService;
     }
 }

@@ -28,7 +28,7 @@ class EventsPeriodsTable extends AbstractDatabaseTable
 
         return "CREATE TABLE {$table} (
                    `id` INT(11) NOT NULL AUTO_INCREMENT,
-                   `eventId` INT(11) NOT NULL,
+                   `eventId` bigint(20) NOT NULL,
                    `periodStart` DATETIME NOT NULL,
                    `periodEnd` DATETIME NOT NULL,
                    `zoomMeeting` TEXT({$description}) NULL,

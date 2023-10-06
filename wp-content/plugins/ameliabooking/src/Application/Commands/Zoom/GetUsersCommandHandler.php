@@ -39,7 +39,7 @@ class GetUsersCommandHandler extends CommandHandler
         /** @var boolean $isCabinetPage */
         $isCabinetPage = $command->getPage() === 'cabinet';
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::EMPLOYEES)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::EMPLOYEES)) {
             /** @var AbstractUser $user */
             $user = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
 

@@ -13,6 +13,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 
@@ -35,7 +36,7 @@ class UpdatePaymentCommandHandler extends CommandHandler
      */
     public function handle(UpdatePaymentCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::FINANCE)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::FINANCE)) {
             throw new AccessDeniedException('You are not allowed to update payment.');
         }
 
@@ -54,7 +55,9 @@ class UpdatePaymentCommandHandler extends CommandHandler
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
 
-        if ($paymentRepository->update($command->getArg('id'), $payment)) {
+        $paymentId = (int)$command->getArg('id');
+        if ($paymentRepository->update($paymentId, $payment)) {
+            $payment->setId(new Id($paymentId));
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Payment successfully updated.');
             $result->setData(

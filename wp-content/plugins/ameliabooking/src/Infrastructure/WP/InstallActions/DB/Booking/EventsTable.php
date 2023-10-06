@@ -32,7 +32,7 @@ class EventsTable extends AbstractDatabaseTable
 
         return "CREATE TABLE {$table} (
                    `id` INT(11) NOT NULL AUTO_INCREMENT,
-                   `parentId` INT(11),
+                   `parentId` bigint(20),
                    `name` varchar({$name}) NOT NULL default '',
                    `status` ENUM('approved','pending','canceled','rejected') NOT NULL,
                    `bookingOpens` DATETIME NULL,
@@ -52,7 +52,7 @@ class EventsTable extends AbstractDatabaseTable
                    `maxCustomCapacity` int(11) NULL DEFAULT NULL,
                    `maxExtraPeople` int(11) NULL DEFAULT NULL,
                    `price` double NOT NULL,
-                   `locationId` INT(11) NULL,
+                   `locationId` bigint(20) NULL,
                    `customLocation` VARCHAR({$name}) NULL,
                    `description` TEXT({$description}) NULL,
                    `color` varchar({$color}) NULL NULL,
@@ -69,7 +69,7 @@ class EventsTable extends AbstractDatabaseTable
                    `fullPayment` TINYINT(1) DEFAULT 0,
                    `deposit` double DEFAULT 0,
                    `customPricing` TINYINT(1) DEFAULT 0,
-                   `organizerId` INT(11) NULL,
+                   `organizerId` bigint(20) NULL,
                    `closeAfterMin` INT(11) NULL DEFAULT NULL,
                    `closeAfterMinBookings` TINYINT(1) DEFAULT 0,
                    `aggregatedPrice` TINYINT(1) DEFAULT 1,

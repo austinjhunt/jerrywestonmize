@@ -56,7 +56,7 @@ class UpdateCustomFieldCommandHandler extends CommandHandler
      */
     public function handle(UpdateCustomFieldCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::CUSTOM_FIELDS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::CUSTOM_FIELDS)) {
             throw new AccessDeniedException('You are not allowed to update custom fields.');
         }
 
@@ -134,6 +134,11 @@ class UpdateCustomFieldCommandHandler extends CommandHandler
         /** @var CustomFieldOption $customFieldOption */
         foreach ($customField->getOptions()->getItems() as $customFieldOptionKey => $customFieldOption) {
             $customFieldOptionArray = $customFieldOptionsArray[$customFieldOptionKey];
+
+            if (!isset($customFieldOptionArray['customFieldId']) && $customField->getId()) {
+                $customFieldOptionArray['customFieldId'] = $customField->getId()->getValue();
+                $customFieldOption->setCustomFieldId($customField->getId());
+            }
 
             if ($customFieldOptionArray['new'] && !$customFieldOptionArray['deleted']) {
                 $customFieldOptionId = $customFieldOptionRepository->add($customFieldOption);

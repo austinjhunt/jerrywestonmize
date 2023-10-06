@@ -29,7 +29,7 @@ class Database
         $this->password = DB_PASSWORD;
         $this->host = defined('DB_HOST') && DB_HOST ? DB_HOST : 'localhost';
         $this->charset = DB_CHARSET;
-        $this->collate = DB_COLLATE;
+        $this->collate = defined('DB_COLLATE') && DB_COLLATE ? DB_COLLATE : '';
     }
 
     /**\

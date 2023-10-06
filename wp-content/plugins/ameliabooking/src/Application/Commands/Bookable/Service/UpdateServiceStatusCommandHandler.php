@@ -40,7 +40,7 @@ class UpdateServiceStatusCommandHandler extends CommandHandler
      */
     public function handle(UpdateServiceStatusCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::SERVICES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::SERVICES)) {
             throw new AccessDeniedException('You are not allowed to update service.');
         }
 

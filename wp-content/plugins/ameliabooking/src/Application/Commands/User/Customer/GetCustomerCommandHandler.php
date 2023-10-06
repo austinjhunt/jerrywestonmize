@@ -44,7 +44,7 @@ class GetCustomerCommandHandler extends CommandHandler
             return $result;
         }
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead($user->getType())) {
+        if (!$command->getPermissionService()->currentUserCanRead($user->getType())) {
             throw new AccessDeniedException('You are not allowed to read user');
         }
 

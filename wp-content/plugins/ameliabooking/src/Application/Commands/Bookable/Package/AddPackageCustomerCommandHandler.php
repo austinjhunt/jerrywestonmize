@@ -46,8 +46,7 @@ class AddPackageCustomerCommandHandler extends CommandHandler
      */
     public $mandatoryFields = [
         'packageId',
-        'customerId',
-        'rules'
+        'customerId'
     ];
 
     /**
@@ -71,7 +70,7 @@ class AddPackageCustomerCommandHandler extends CommandHandler
         /** @var AbstractUser $user */
         $user = null;
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::PACKAGES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::PACKAGES)) {
             /** @var AbstractUser $user */
             $user = $userAS->getAuthenticatedUser($command->getToken(), false, 'customerCabinet');
 
@@ -116,11 +115,24 @@ class AddPackageCustomerCommandHandler extends CommandHandler
             null
         );
 
+        $rules = $command->getField('rules');
+
+        if (empty($rules)) {
+            $rules = [];
+            foreach ($package->getBookable()->getItems() as $packageService) {
+                $rules[] = [
+                    "serviceId" => $packageService->getService()->getId()->getValue(),
+                    "providerId" => null,
+                    "locationId" => null
+                ];
+            }
+        }
+
         /** @var Collection $packageCustomerServices */
         $packageCustomerServices = $packageApplicationService->addPackageCustomerServices(
             $package,
             $packageCustomer,
-            $command->getField('rules'),
+            $rules,
             true
         );
 

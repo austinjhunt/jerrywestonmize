@@ -32,9 +32,9 @@ class GetNotificationsCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws \Interop\Container\Exception\ContainerException
      */
-    public function handle()
+    public function handle(GetNotificationsCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::NOTIFICATIONS)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::NOTIFICATIONS)) {
             throw new AccessDeniedException('You are not allowed to read notifications');
         }
 

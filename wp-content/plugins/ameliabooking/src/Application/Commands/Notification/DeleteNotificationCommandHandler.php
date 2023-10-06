@@ -40,7 +40,7 @@ class DeleteNotificationCommandHandler extends CommandHandler
      */
     public function handle(DeleteNotificationCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::NOTIFICATIONS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::NOTIFICATIONS)) {
             throw new AccessDeniedException('You are not allowed to delete notifications');
         }
 

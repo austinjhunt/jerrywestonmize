@@ -74,7 +74,7 @@ class GetEventsCommandHandler extends CommandHandler
         if (!$isFrontEnd) {
             try {
                 /** @var AbstractUser $user */
-                $user = $userAS->authorization(
+                $user = $command->getUserApplicationService()->authorization(
                     $isCabinetPage ? $command->getToken() : null,
                     $command->getCabinetType()
                 );

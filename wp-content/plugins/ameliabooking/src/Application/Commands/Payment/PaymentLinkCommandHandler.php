@@ -53,10 +53,10 @@ class PaymentLinkCommandHandler extends CommandHandler
         if ($data['data']['type'] === 'appointment') {
             $data['data']['bookable'] = $data['data']['service'];
         } else {
-            $data['data']['bookable'] = $data['data'];
+            $data['data']['bookable'] = $data['data'][$data['data']['type']];
         }
 
-        $paymentLinks = $paymentApplicationService->createPaymentLink($data['data'], 0, null, [$data['paymentMethod'] => true]);
+        $paymentLinks = $paymentApplicationService->createPaymentLink($data['data'], 0, null, [$data['paymentMethod'] => true], $command->getField('redirectUrl'));
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage(!empty(array_values($paymentLinks)[0]['link']) ? 'Successfully created link' : array_values($paymentLinks)[1]);

@@ -39,7 +39,7 @@ class GetCustomersCommandHandler extends CommandHandler
      */
     public function handle(GetCustomersCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::CUSTOMERS)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::CUSTOMERS)) {
             throw new AccessDeniedException('You are not allowed to read customers.');
         }
 
@@ -56,7 +56,7 @@ class GetCustomersCommandHandler extends CommandHandler
 
         $params = $command->getField('params');
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanReadOthers(Entities::CUSTOMERS)) {
+        if (!$command->getPermissionService()->currentUserCanReadOthers(Entities::CUSTOMERS)) {
             /** @var ProviderApplicationService $providerAS */
             $providerAS = $this->container->get('application.user.provider.service');
 

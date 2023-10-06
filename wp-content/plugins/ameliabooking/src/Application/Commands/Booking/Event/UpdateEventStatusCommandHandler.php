@@ -43,7 +43,7 @@ class UpdateEventStatusCommandHandler extends CommandHandler
      */
     public function handle(UpdateEventStatusCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWriteStatus(Entities::EVENTS)) {
+        if (!$command->getPermissionService()->currentUserCanWriteStatus(Entities::EVENTS)) {
             throw new AccessDeniedException('You are not allowed to update event status');
         }
 

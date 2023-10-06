@@ -362,7 +362,9 @@ class EventReservationService extends AbstractReservationService
         }
 
         $reservation->setApplyDeposit(new BooleanValueObject($applyDeposit));
-        $reservation->setCustomer($booking->getCustomer());
+        if ($booking->getCustomer()) {
+            $reservation->setCustomer($booking->getCustomer());
+        }
         $reservation->setBookable($event);
         $reservation->setBooking($booking);
         $reservation->setReservation($event);

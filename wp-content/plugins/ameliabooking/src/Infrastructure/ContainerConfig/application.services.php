@@ -48,6 +48,19 @@ $entries['application.user.service'] = function ($c) {
 };
 
 /**
+ * API User Application service
+ *
+ * @param $c
+ *
+ * @return \AmeliaBooking\Application\Services\User\UserApplicationService
+ */
+$entries['application.api.user.service'] = function ($c) {
+    return new AmeliaBooking\Application\Services\User\UserApplicationService(
+        $c
+    );
+};
+
+/**
  * Provider service
  *
  * @param Container $c

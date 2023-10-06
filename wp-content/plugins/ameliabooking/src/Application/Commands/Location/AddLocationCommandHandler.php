@@ -12,6 +12,7 @@ use AmeliaBooking\Domain\Factory\Location\LocationFactory;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Domain\Factory\Location\ProviderLocationFactory;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
@@ -49,7 +50,7 @@ class AddLocationCommandHandler extends CommandHandler
      */
     public function handle(AddLocationCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::LOCATIONS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::LOCATIONS)) {
             throw new AccessDeniedException('You are not allowed to add location');
         }
 
@@ -106,6 +107,8 @@ class AddLocationCommandHandler extends CommandHandler
                     }
                 }
             }
+
+            $location->setId(new Id($locationId));
 
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully added location.');

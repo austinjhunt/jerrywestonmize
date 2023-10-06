@@ -9,6 +9,7 @@ use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Factory\Location\LocationFactory;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 
@@ -43,7 +44,7 @@ class UpdateLocationCommandHandler extends CommandHandler
      */
     public function handle(UpdateLocationCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::LOCATIONS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::LOCATIONS)) {
             throw new AccessDeniedException('You are not allowed to update location!');
         }
 
@@ -62,6 +63,7 @@ class UpdateLocationCommandHandler extends CommandHandler
         /** @var LocationRepository $locationRepository */
         $locationRepository = $this->container->get('domain.locations.repository');
         if ($locationRepository->update($command->getArg('id'), $location)) {
+            $location->setId(new Id($command->getArg('id')));
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully updated location.');
             $result->setData([

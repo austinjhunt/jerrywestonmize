@@ -36,7 +36,7 @@ class DeleteResourceCommandHandler extends CommandHandler
      */
     public function handle(DeleteResourceCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanDelete(Entities::RESOURCES)) {
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::RESOURCES)) {
             throw new AccessDeniedException('You are not allowed to delete resources.');
         }
 

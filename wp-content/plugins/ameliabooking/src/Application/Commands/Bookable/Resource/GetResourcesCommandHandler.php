@@ -36,7 +36,7 @@ class GetResourcesCommandHandler extends CommandHandler
      */
     public function handle(GetResourcesCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::RESOURCES)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::RESOURCES)) {
             throw new AccessDeniedException('You are not allowed to read resources.');
         }
 

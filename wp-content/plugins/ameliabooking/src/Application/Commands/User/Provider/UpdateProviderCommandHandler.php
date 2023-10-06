@@ -57,14 +57,15 @@ class UpdateProviderCommandHandler extends CommandHandler
         /** @var UserApplicationService $userAS */
         $userAS = $this->getContainer()->get('application.user.service');
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::EMPLOYEES) ||
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::EMPLOYEES) ||
             (
-                !$this->getContainer()->getPermissionsService()->currentUserCanWriteOthers(Entities::EMPLOYEES) &&
+                !$command->getPermissionService()->currentUserCanWriteOthers(Entities::EMPLOYEES) &&
                 (
                     !$currentUser->getId() ||
                     $currentUser->getId()->getValue() !== $userId
                 )
             )
+
         ) {
             $oldUser = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
 
@@ -104,9 +105,7 @@ class UpdateProviderCommandHandler extends CommandHandler
             return $result;
         }
 
-        if (($currentUser === null && $command->getToken()) ||
-            $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER
-        ) {
+        if ($command->getUserApplicationService()->checkProviderPermissions($currentUser, $command->getToken())) {
             /** @var SettingsService $settingsDS */
             $settingsDS = $this->container->get('domain.settings.service');
 

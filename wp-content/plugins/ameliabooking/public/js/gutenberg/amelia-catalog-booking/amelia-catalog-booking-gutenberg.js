@@ -127,6 +127,10 @@
         type: 'string',
         default: 'id'
       },
+      in_dialog: {
+        type: 'boolean',
+        default: false
+      },
       show: {
         type: 'string',
         default: ''
@@ -272,6 +276,10 @@
 
           if (attributes.trigger && attributes.trigger_type) {
             shortCode += ' trigger_type=' + attributes.trigger_type + ''
+          }
+
+          if (attributes.trigger && attributes.in_dialog) {
+            shortCode += ' in_dialog=1'
           }
 
           if (attributes.skip_categories) {
@@ -444,6 +452,18 @@
             return props.setAttributes({trigger_type: selectControl})
           }
         }))
+
+        inspectorElements.push(el(components.PanelRow,
+          {},
+          el('label', {htmlFor: 'amelia-js-in-dialog'}, wpAmeliaLabels.in_dialog),
+          el(components.FormToggle, {
+            id: 'amelia-js-in-dialog',
+            checked: attributes.in_dialog,
+            onChange: function () {
+              return props.setAttributes({in_dialog: !props.attributes.in_dialog})
+            }
+          })
+        ))
 
         return [
           el(blockControls, {key: 'controls'}),

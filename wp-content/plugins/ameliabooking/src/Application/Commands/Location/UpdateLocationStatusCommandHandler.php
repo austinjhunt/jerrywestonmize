@@ -41,7 +41,7 @@ class UpdateLocationStatusCommandHandler extends CommandHandler
      */
     public function handle(UpdateLocationStatusCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::LOCATIONS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::LOCATIONS)) {
             throw new AccessDeniedException('You are not allowed to update location!');
         }
 

@@ -37,7 +37,7 @@ class DeletePackageCommandHandler extends CommandHandler
      */
     public function handle(DeletePackageCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanDelete(Entities::PACKAGES)) {
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::PACKAGES)) {
             throw new AccessDeniedException('You are not allowed to delete packages.');
         }
 

@@ -26,6 +26,7 @@ class StepBookingShortcodeService extends AmeliaBookingShortcodeService
             [
                 'trigger'  => '',
                 'trigger_type' => '',
+                'in_dialog' => '',
                 'show'     => '',
                 'category' => null,
                 'service'  => null,

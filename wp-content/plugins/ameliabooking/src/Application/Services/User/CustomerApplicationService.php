@@ -38,7 +38,7 @@ use Slim\Exception\ContainerValueNotFoundException;
  *
  * @package AmeliaBooking\Application\Services\User
  */
-class CustomerApplicationService
+class CustomerApplicationService extends UserApplicationService
 {
     private $container;
 
@@ -51,6 +51,7 @@ class CustomerApplicationService
      */
     public function __construct(Container $container)
     {
+        parent::__construct($container);
         $this->container = $container;
     }
 
@@ -114,26 +115,6 @@ class CustomerApplicationService
         $userRepository->rollback();
 
         return $result;
-    }
-
-    /**
-     * @param CustomerBooking $booking
-     * @param AbstractUser    $user
-     * @param string          $bookingToken
-     *
-     * @return boolean
-     */
-    public function isCustomerBooking($booking, $user, $bookingToken)
-    {
-        $isValidToken = $bookingToken !== null && $bookingToken === $booking->getToken()->getValue();
-
-        $isValidUser = $user && $user->getId() && $user->getId()->getValue() === $booking->getCustomerId()->getValue();
-
-        if (!($isValidToken || $isValidUser)) {
-            return false;
-        }
-
-        return true;
     }
 
     /**

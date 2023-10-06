@@ -28,11 +28,11 @@ class GetWPUsersCommandHandler extends CommandHandler
      */
     public function handle(GetWPUsersCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::EMPLOYEES)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::EMPLOYEES)) {
             throw new AccessDeniedException('You are not allowed to read employees.');
         }
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::CUSTOMERS)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::CUSTOMERS)) {
             throw new AccessDeniedException('You are not allowed to read customers.');
         }
 

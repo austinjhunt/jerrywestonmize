@@ -61,7 +61,7 @@ class UpdateEventBookingCommandHandler extends CommandHandler
         /** @var AbstractUser $user */
         $user = $this->container->get('logged.in.user');
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::EVENTS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::EVENTS)) {
             $user = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
 
             if ($user === null) {
@@ -180,7 +180,7 @@ class UpdateEventBookingCommandHandler extends CommandHandler
                     }
                 }
             }
-        } else {
+        } else if (!empty($bookingData['persons'])) {
             if ($customerBooking->getStatus()->getValue() === BookingStatus::APPROVED &&
                 $customerBooking->getPersons()->getValue() < $bookingData['persons']
             ) {

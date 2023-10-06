@@ -31,7 +31,7 @@ class DeleteCustomFieldCommandHandler extends CommandHandler
      */
     public function handle(DeleteCustomFieldCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanDelete(Entities::CUSTOM_FIELDS)) {
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::CUSTOM_FIELDS)) {
             throw new AccessDeniedException('You are not allowed to delete custom field.');
         }
 

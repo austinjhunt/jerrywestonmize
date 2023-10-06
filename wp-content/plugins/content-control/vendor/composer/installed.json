@@ -267,21 +267,22 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/trustedlogin/client.git",
-                "reference": "8a0473631496b09c14431d7dd6d7888a6e850191"
+                "reference": "0275ef9e2318e3c656622be07ab8cacfbe032db2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/trustedlogin/client/zipball/8a0473631496b09c14431d7dd6d7888a6e850191",
-                "reference": "8a0473631496b09c14431d7dd6d7888a6e850191",
+                "url": "https://api.github.com/repos/trustedlogin/client/zipball/0275ef9e2318e3c656622be07ab8cacfbe032db2",
+                "reference": "0275ef9e2318e3c656622be07ab8cacfbe032db2",
                 "shasum": ""
             },
             "require-dev": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "php": ">=5.3.0",
+                "spatie/phpunit-watcher": "^1.23",
                 "yoast/phpunit-polyfills": "^1.0"
             },
-            "time": "2023-09-07T19:05:09+00:00",
+            "time": "2023-09-22T19:57:11+00:00",
             "bin": [
                 "bin/build-sass"
             ],

@@ -36,7 +36,7 @@ class DeleteCouponCommandHandler extends CommandHandler
      */
     public function handle(DeleteCouponCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanDelete(Entities::COUPONS)) {
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::COUPONS)) {
             throw new AccessDeniedException('You are not allowed to delete coupons.');
         }
 

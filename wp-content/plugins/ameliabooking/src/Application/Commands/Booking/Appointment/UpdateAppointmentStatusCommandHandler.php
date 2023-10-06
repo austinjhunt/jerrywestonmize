@@ -54,7 +54,7 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
      */
     public function handle(UpdateAppointmentStatusCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWriteStatus(Entities::APPOINTMENTS)) {
+        if (!$command->getPermissionService()->currentUserCanWriteStatus(Entities::APPOINTMENTS)) {
             throw new AccessDeniedException('You are not allowed to update appointment status');
         }
 

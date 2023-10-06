@@ -38,14 +38,11 @@ class GetEventCommandHandler extends CommandHandler
      */
     public function handle(GetEventCommand $command)
     {
-        /** @var UserApplicationService $userAS */
-        $userAS = $this->container->get('application.user.service');
-
         $result = new CommandResult();
 
         try {
             /** @var AbstractUser $user */
-            $user = $userAS->authorization(
+            $user = $command->getUserApplicationService()->authorization(
                 $command->getPage() === 'cabinet' ? $command->getToken() : null,
                 $command->getCabinetType()
             );

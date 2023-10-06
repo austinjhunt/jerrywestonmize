@@ -302,7 +302,7 @@ class AbstractBookable
             'name'             => null !== $this->getName() ? $this->getName()->getValue() : null,
             'description'      => null !== $this->getDescription() ? $this->getDescription()->getValue() : null,
             'color'            => null !== $this->getColor() ? $this->getColor()->getValue() : null,
-            'price'            => $this->getPrice()->getValue(),
+            'price'            => $this->getPrice() ? $this->getPrice()->getValue() : null,
             'deposit'          => null !== $this->getDeposit() ? $this->getDeposit()->getValue() : null,
             'depositPayment'   => null !== $this->getDepositPayment() ? $this->getDepositPayment()->getValue() : null,
             'depositPerPerson' => null !== $this->getDepositPerPerson() ?

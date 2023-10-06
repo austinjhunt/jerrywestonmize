@@ -6,6 +6,8 @@
 
 namespace AmeliaBooking\Infrastructure\Routes;
 
+use AmeliaBooking\Infrastructure\API\Api;
+use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Routes\Activation\Activation;
 use AmeliaBooking\Infrastructure\Routes\Bookable\Category;
 use AmeliaBooking\Infrastructure\Routes\Bookable\Extra;
@@ -49,10 +51,9 @@ class Routes
 {
     /**
      * @param App $app
-     *
-     * @throws \InvalidArgumentException
+     * @param Container $container
      */
-    public static function routes(App $app)
+    public static function routes(App $app, Container $container)
     {
         Activation::routes($app);
 
@@ -113,5 +114,7 @@ class Routes
         Package::routes($app);
 
         Test::routes($app);
+
+        
     }
 }

@@ -25,6 +25,8 @@ class EventsListBookingShortcodeService extends AmeliaBookingShortcodeService
         $params = shortcode_atts(
             [
                 'trigger'       => '',
+                'trigger_type'  => '',
+                'in_dialog'     => '',
                 'counter'       => self::$counter,
                 'event'         => null,
                 'recurring'     => null,

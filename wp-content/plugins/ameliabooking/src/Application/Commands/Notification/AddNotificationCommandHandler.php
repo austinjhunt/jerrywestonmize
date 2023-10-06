@@ -12,6 +12,7 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Notification\Notification;
 use AmeliaBooking\Domain\Factory\Notification\NotificationFactory;
 use AmeliaBooking\Domain\ValueObjects\Json;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationRepository;
@@ -45,7 +46,7 @@ class AddNotificationCommandHandler extends CommandHandler
      */
     public function handle(AddNotificationCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::NOTIFICATIONS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::NOTIFICATIONS)) {
             throw new AccessDeniedException('You are not allowed to create notifications');
         }
 
@@ -118,6 +119,7 @@ class AddNotificationCommandHandler extends CommandHandler
 
         $id = $notificationRepo->add($notification);
         if ($id) {
+            $notification->setId(new Id($id));
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully added notification.');
             $result->setData(

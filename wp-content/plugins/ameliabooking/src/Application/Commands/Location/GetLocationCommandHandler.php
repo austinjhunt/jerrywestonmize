@@ -28,7 +28,7 @@ class GetLocationCommandHandler extends CommandHandler
      */
     public function handle(GetLocationCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::LOCATIONS)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::LOCATIONS)) {
             throw new AccessDeniedException('You are not allowed to read location');
         }
 

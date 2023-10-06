@@ -37,7 +37,7 @@ class GetCouponCommandHandler extends CommandHandler
      */
     public function handle(GetCouponCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::COUPONS)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::COUPONS)) {
             throw new AccessDeniedException('You are not allowed to read coupon.');
         }
 

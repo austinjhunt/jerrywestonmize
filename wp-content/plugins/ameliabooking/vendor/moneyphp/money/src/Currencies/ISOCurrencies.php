@@ -43,8 +43,6 @@ final class ISOCurrencies implements Currencies
     /**
      * Returns the numeric code for a currency.
      *
-     * @param Currency $currency
-     *
      * @return int
      *
      * @throws UnknownCurrencyException If currency is not available in the current context
@@ -62,7 +60,7 @@ final class ISOCurrencies implements Currencies
      * @return \Traversable
      */
     #[\ReturnTypeWillChange]
-  public function getIterator()
+    public function getIterator()
     {
         return new \ArrayIterator(
             array_map(

@@ -105,6 +105,26 @@ class DIVI_EventsList extends ET_Builder_Module
                 'option_category' => 'basic_option',
                 'description'     => BackendStrings::getWordPressStrings()['manually_loading_description'],
             ),
+            'trigger_type' => array(
+                'label'           => esc_html__(BackendStrings::getWordPressStrings()['trigger_type'], 'divi-divi_amelia'),
+                'type'            => 'select',
+                'options'         => array(
+                    'id' => BackendStrings::getWordPressStrings()['trigger_type_id'],
+                    'class' => BackendStrings::getWordPressStrings()['trigger_type_class']
+                ),
+                'toggle_slug'     => 'main_content',
+                'option_category' => 'basic_option',
+            ),
+            'in_dialog' => array(
+                'label'             => esc_html__(BackendStrings::getWordPressStrings()['in_dialog'], 'divi-divi_amelia'),
+                'type'              => 'yes_no_button',
+                'options'           => array(
+                    'on'  => esc_html__(BackendStrings::getCommonStrings()['yes'], 'divi-divi_amelia'),
+                    'off' => esc_html__(BackendStrings::getCommonStrings()['no'], 'divi-divi_amelia'),
+                ),
+                'toggle_slug'     => 'main_content',
+                'option_category' => 'basic_option',
+            ),
         );
     }
 
@@ -123,8 +143,16 @@ class DIVI_EventsList extends ET_Builder_Module
         $preselect =  $this->props['booking_params'];
         $shortcode = '[ameliaeventslistbooking';
         $trigger   = $this->props['trigger'];
+        $trigger_type = $this->props['trigger_type'];
+        $in_dialog = $this->props['in_dialog'];
         if ($trigger !== null && $trigger !== '') {
             $shortcode .= ' trigger='.$trigger;
+        }
+        if (!empty($trigger) && !empty($trigger_type)) {
+            $shortcode .= ' trigger_type='.$trigger_type;
+        }
+        if (!empty($trigger) && $in_dialog === 'on') {
+            $shortcode .= ' in_dialog=1';
         }
         if ($preselect === 'on') {
             $event = $this->checkValues($this->props['events']);

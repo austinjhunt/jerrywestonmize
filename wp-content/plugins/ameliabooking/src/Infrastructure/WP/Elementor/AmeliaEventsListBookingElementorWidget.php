@@ -102,6 +102,33 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
             ]
         );
 
+        $this->add_control(
+            'trigger_type',
+            [
+                'label' => BackendStrings::getWordPressStrings()['trigger_type'],
+                'type' => Controls_Manager::SELECT,
+                'condition' => ['preselect' => 'yes'],
+                'description' => BackendStrings::getWordPressStrings()['trigger_type_tooltip'],
+                'options' => [
+                    'id' => BackendStrings::getWordPressStrings()['trigger_type_id'],
+                    'class' => BackendStrings::getWordPressStrings()['trigger_type_class']
+                ],
+                'default' => 'id'
+            ]
+        );
+
+        $this->add_control(
+            'in_dialog',
+            [
+                'label' => BackendStrings::getWordPressStrings()['in_dialog'],
+                'type' => Controls_Manager::SWITCHER,
+                'condition' => ['preselect' => 'yes'],
+                'default' => false,
+                'label_on' => BackendStrings::getCommonStrings()['yes'],
+                'label_off' => BackendStrings::getCommonStrings()['no'],
+            ]
+        );
+
         $this->end_controls_section();
     }
 
@@ -111,6 +138,8 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
 
         if ($settings['preselect']) {
             $trigger = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
+            $trigger_type = $settings['load_manually'] && $settings['trigger_type'] !== '' ? ' trigger_type=' . $settings['trigger_type'] : '';
+            $in_dialog = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
 
             $selected_event = $settings['select_event'] === '0' ? '' : ' event=' . $settings['select_event'];
 
@@ -118,7 +147,7 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
 
             $selected_tag = $settings['select_tag'] ? ' tag=' . "'" . $settings['select_tag'] . "'" : '';
 
-            echo '[ameliaeventslistbooking' . $trigger . $selected_event . $selected_tag . $show_recurring . ']';
+            echo '[ameliaeventslistbooking' . $trigger . $trigger_type . $in_dialog . $selected_event . $selected_tag . $show_recurring . ']';
         } else {
             echo '[ameliaeventslistbooking]';
         }

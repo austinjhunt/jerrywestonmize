@@ -31,7 +31,7 @@ class UpdateCustomFieldsPositionsCommandHandler extends CommandHandler
      */
     public function handle(UpdateCustomFieldsPositionsCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::CUSTOM_FIELDS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::CUSTOM_FIELDS)) {
             throw new AccessDeniedException('You are not allowed to update custom fields positions.');
         }
 
@@ -42,22 +42,22 @@ class UpdateCustomFieldsPositionsCommandHandler extends CommandHandler
         $categories = [];
 
         foreach ($customFieldsArray as $customFieldArray) {
-            $customFields = CustomFieldFactory::create($customFieldArray);
-            if (!$customFields instanceof CustomField) {
+            $customField = CustomFieldFactory::create($customFieldArray);
+            if (!$customField instanceof CustomField) {
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setMessage('Could not update bookable categories positions.');
 
                 return $result;
             }
 
-            $categories[] = $customFields;
+            $categories[] = $customField;
         }
 
         /** @var CustomFieldRepository $customFieldRepository */
         $customFieldRepository = $this->container->get('domain.customField.repository');
 
-        foreach ($categories as $customFields) {
-            $customFieldRepository->update($customFields->getId()->getValue(), $customFields);
+        foreach ($categories as $customField) {
+            $customFieldRepository->updateFieldById($customField->getId()->getValue(), $customField->getPosition()->getValue(), 'position');
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);

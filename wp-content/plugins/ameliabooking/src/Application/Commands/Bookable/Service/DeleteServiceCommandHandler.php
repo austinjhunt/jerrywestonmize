@@ -37,7 +37,7 @@ class DeleteServiceCommandHandler extends CommandHandler
      */
     public function handle(DeleteServiceCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanDelete(Entities::SERVICES)) {
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::SERVICES)) {
             throw new AccessDeniedException('You are not allowed to delete services.');
         }
 

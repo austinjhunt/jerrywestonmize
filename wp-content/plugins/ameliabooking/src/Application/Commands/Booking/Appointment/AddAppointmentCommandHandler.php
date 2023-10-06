@@ -84,7 +84,7 @@ class AddAppointmentCommandHandler extends CommandHandler
 
         try {
             /** @var AbstractUser $user */
-            $user = $userAS->authorization(
+            $user = $command->getUserApplicationService()->authorization(
                 $command->getPage() === 'cabinet' ? $command->getToken() : null,
                 $command->getCabinetType()
             );
@@ -109,7 +109,8 @@ class AddAppointmentCommandHandler extends CommandHandler
 
         $appointmentData = $command->getFields();
 
-        $paymentData = array_merge($command->getField('payment'), ['isBackendBooking' => true]);
+        $paymentData = !empty($command->getField('payment')) ? array_merge($command->getField('payment'), ['isBackendBooking' => true]) :
+            ['amount' => 0, 'gateway' => 'onSite', 'isBackendBooking' => true];
 
         /** @var Service $service */
         $service = $bookableAS->getAppointmentService($appointmentData['serviceId'], $appointmentData['providerId']);

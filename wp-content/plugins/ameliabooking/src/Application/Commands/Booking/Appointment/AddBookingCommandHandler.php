@@ -152,7 +152,7 @@ class AddBookingCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
-        if ($settingsService->getSetting('general', 'runInstantPostBookingActions')) {
+        if ($settingsService->getSetting('general', 'runInstantPostBookingActions') || !empty($command->getField('runInstantPostBookingActions'))) {
             $reservationService->runPostBookingActions($result);
         }
 

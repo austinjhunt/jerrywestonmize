@@ -244,6 +244,12 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             $where[] = 'customerBookingId IN (' . implode(', ', $queryBookings) . ')';
         }
 
+
+        if (!empty($criteria['packageCustomerId'])) {
+            $params[':packageCustomerId'] = $criteria['packageCustomerId'];
+            $where[] = 'packageCustomerId = :packageCustomerId';
+        }
+
         if (!empty($criteria['ids'])) {
             $queryIds = [];
 
@@ -413,6 +419,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 c.id AS coupon_id,
                 c.discount AS coupon_discount,
                 c.deduction AS coupon_deduction,
+                c.code AS coupon_code,
        
                 a.serviceId AS serviceId,
                 a.id AS appointmentId,
@@ -461,6 +468,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 c.id AS coupon_id,
                 c.discount AS coupon_discount,
                 c.deduction AS coupon_deduction,
+                c.code AS coupon_code,
        
                 NULL AS serviceId,
                 NULL AS appointmentId,
@@ -508,6 +516,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 c.id AS coupon_id,
                 c.discount AS coupon_discount,
                 c.deduction AS coupon_deduction,
+                c.code AS coupon_code,
        
                 NULL AS serviceId,
                 NULL AS appointmentId,
@@ -611,7 +620,8 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 'coupon' => !empty($row['coupon_id']) ? [
                     'id' => $row['coupon_id'],
                     'discount' => $row['coupon_discount'],
-                    'deduction' => $row['coupon_deduction']
+                    'deduction' => $row['coupon_deduction'],
+                    'code' => $row['coupon_code']
                 ] : null,
                 'persons' => $row['persons'],
                 'aggregatedPrice' => $row['aggregatedPrice'],

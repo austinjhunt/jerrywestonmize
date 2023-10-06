@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Application\Controller;
 
 use AmeliaBooking\Application\Commands\Command;
+use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Services\Permissions\PermissionsService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
@@ -41,7 +42,12 @@ abstract class Controller
      */
     protected $permissionsService;
     protected $allowedFields = ['ameliaNonce'];
+
     protected $sendJustData = false;
+    /**
+     * @var UserApplicationService
+     */
+    private $userApplicationService;
 
     /**
      * Base Controller constructor.
@@ -50,11 +56,12 @@ abstract class Controller
      *
      * @throws \Interop\Container\Exception\ContainerException
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container, $fromApi = false)
     {
         $this->commandBus = $container->getCommandBus();
         $this->eventBus = $container->getEventBus();
-        $this->permissionsService = $container->getPermissionsService();
+        $this->permissionsService = $fromApi ? $container->getApiPermissionsService() : $container->getPermissionsService();
+        $this->userApplicationService = $fromApi ? $container->getApiUserApplicationService() : $container->getUserApplicationService();
     }
 
     /**
@@ -102,22 +109,25 @@ abstract class Controller
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function __invoke(Request $request, Response $response, $args)
+    public function __invoke(Request $request, Response $response, $args, $validApiCall = false)
     {
         /** @var Command $command */
         $command = $this->instantiateCommand($request, $args);
 
-        if (!$command->validateNonce($request)) {
+        /** @var SettingsService $settingsService */
+        $settingsService = new SettingsService(new SettingsStorage());
+
+        if (!$validApiCall && !$command->validateNonce($request)) {
             return $response->withStatus(self::STATUS_FORBIDDEN);
         }
+
+        $command->setPermissionService($this->permissionsService);
+        $command->setUserApplicationService($this->userApplicationService);
 
         /** @var CommandResult $commandResult */
         $commandResult = $this->commandBus->handle($command);
 
         if ($commandResult->getResult() === CommandResult::RESULT_ERROR) {
-            /** @var SettingsService $settingsService */
-            $settingsService = new SettingsService(new SettingsStorage());
-
             if ($settingsService->getSetting('activation', 'responseErrorAsConflict')) {
                 $commandResult->setResult(CommandResult::RESULT_CONFLICT);
             }

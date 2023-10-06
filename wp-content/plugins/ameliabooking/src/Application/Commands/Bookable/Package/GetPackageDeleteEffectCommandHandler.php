@@ -31,7 +31,7 @@ class GetPackageDeleteEffectCommandHandler extends CommandHandler
      */
     public function handle(GetPackageDeleteEffectCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::PACKAGES)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::PACKAGES)) {
             throw new AccessDeniedException('You are not allowed to read packages');
         }
 

@@ -33,7 +33,7 @@ class UpdatePackagesPositionsCommandHandler extends CommandHandler
      */
     public function handle(UpdatePackagesPositionsCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::PACKAGES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::PACKAGES)) {
             throw new AccessDeniedException('You are not allowed to update bookable packages positions.');
         }
 
@@ -55,9 +55,14 @@ class UpdatePackagesPositionsCommandHandler extends CommandHandler
 
         /** @var Package $package */
         foreach ($packages->getItems() as $package) {
-            $package->setPosition(new PositiveInteger($packagesPositions[$package->getId()->getValue()]));
+            $package->setPosition(
+                new PositiveInteger(
+                    !empty($packagesPositions[$package->getId()->getValue()]) ?
+                    $packagesPositions[$package->getId()->getValue()] : count($packagesPositions)
+                )
+            );
 
-            $packageRepository->update($package->getId()->getValue(), $package);
+            $packageRepository->updateFieldById($package->getId()->getValue(), $package->getPosition()->getValue(), 'position');
         }
 
         $packageRepository->commit();

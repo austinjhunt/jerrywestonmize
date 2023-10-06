@@ -430,19 +430,21 @@ class EntityApplicationService
                             array_column($period['periodLocationList'], 'locationId')
                         );
 
-                        $servicesIds = self::getUniqueIds(
-                            $servicesIds,
-                            array_column($period['periodServiceList'], 'serviceId')
-                        );
+                        if (isset($servicesIds)) {
+                            $servicesIds = self::getUniqueIds(
+                                $servicesIds,
+                                array_column($period['periodServiceList'], 'serviceId')
+                            );
+                        }
                     }
                 }
             }
         }
 
 
-        $existingServicesIds = $servicesIds ? $serviceRepository->getIds(['id' => $servicesIds]) : [];
+        $existingServicesIds = !empty($servicesIds) ? $serviceRepository->getIds(['id' => $servicesIds]) : [];
 
-        $existingLocationsIds = $locationsIds ? $locationRepository->getIds(['id' => $locationsIds]) : [];
+        $existingLocationsIds = !empty($locationsIds) ? $locationRepository->getIds(['id' => $locationsIds]) : [];
 
 
         if (isset($data['locationId']) && !in_array((int)$data['locationId'], $existingLocationsIds)) {

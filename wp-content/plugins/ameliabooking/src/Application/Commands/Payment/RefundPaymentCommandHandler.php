@@ -39,7 +39,7 @@ class RefundPaymentCommandHandler extends CommandHandler
      */
     public function handle(RefundPaymentCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::FINANCE)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::FINANCE)) {
             throw new AccessDeniedException('You are not allowed to update payment.');
         }
 

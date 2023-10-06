@@ -27,7 +27,9 @@ class AddExtraController extends Controller
         'description',
         'maxQuantity',
         'position',
+        'aggregatedPrice',
         'translations',
+        'serviceId'
     ];
 
     /**

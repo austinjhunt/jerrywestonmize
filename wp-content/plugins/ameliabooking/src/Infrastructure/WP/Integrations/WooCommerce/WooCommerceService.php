@@ -1064,6 +1064,8 @@ class WooCommerceService
             return false;
         }
 
+        do_action('AmeliaAddBookingToWcCart', $data);
+
         foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
             if (isset($wc_item[self::AMELIA])) {
                 $wooCommerceCart->remove_cart_item($wc_key);

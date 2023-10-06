@@ -62,6 +62,7 @@ class PackageServiceFactory
 
         if (!empty($data['providers'])) {
             foreach ($data['providers'] as $providerData) {
+                $providerData['type'] = 'provider';
                 $packageService->getProviders()->addItem(UserFactory::create($providerData));
             }
         }

@@ -46,7 +46,7 @@ class AddResourceCommandHandler extends CommandHandler
      */
     public function handle(AddResourceCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::RESOURCES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::RESOURCES)) {
             throw new AccessDeniedException('You are not allowed to add resources.');
         }
 

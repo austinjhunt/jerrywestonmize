@@ -32,7 +32,7 @@ class AddCustomFieldCommandHandler extends CommandHandler
      */
     public function handle(AddCustomFieldCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::CUSTOM_FIELDS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::CUSTOM_FIELDS)) {
             throw new AccessDeniedException('You are not allowed to add custom fields.');
         }
 

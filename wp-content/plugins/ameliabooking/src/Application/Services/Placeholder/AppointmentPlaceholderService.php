@@ -465,7 +465,8 @@ class AppointmentPlaceholderService extends PlaceholderService
             $data["service_extra_{$extraId}_price"] = array_key_exists($extraId, $bookingExtras) ?
                 $helperService->getFormattedPrice($extra->getPrice()->getValue()) : '';
 
-            $multiplyByNumberOfPeople = $extra->getAggregatedPrice()->getValue() && $persons !== 1;
+            $multiplyByNumberOfPeople = ($extra->getAggregatedPrice() === null ? $service->getAggregatedPrice()->getValue()
+                : $extra->getAggregatedPrice()->getValue()) && $persons !== 1;
 
             if (array_key_exists($extraId, $bookingExtras) && $bookingExtras[$extraId]['quantity'] !== 0) {
                 $allExtraDetails .= ($type === 'email' ? '<p>' : '') . $extra->getName()->getValue() . ': (' .

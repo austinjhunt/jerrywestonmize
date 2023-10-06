@@ -44,7 +44,7 @@ class GetCustomersCommandHandler extends CommandHandler
         /** @var AbstractUser $currentUser */
         $currentUser = $this->container->get('logged.in.user');
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::CUSTOMERS) &&
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::CUSTOMERS) &&
             !($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER)
         ) {
             if ($command->getToken()) {
@@ -81,7 +81,7 @@ class GetCustomersCommandHandler extends CommandHandler
 
         $countParams = [];
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanReadOthers(Entities::CUSTOMERS)) {
+        if (!$command->getPermissionService()->currentUserCanReadOthers(Entities::CUSTOMERS)) {
             /** @var Collection $providerCustomers */
             $providerCustomers = $providerAS->getAllowedCustomers($currentUser);
 

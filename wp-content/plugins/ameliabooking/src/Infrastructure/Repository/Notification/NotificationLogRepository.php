@@ -843,7 +843,7 @@ class NotificationLogRepository extends AbstractRepository
                     e.recurringCycle AS event_recurringCycle,
                     e.recurringOrder AS event_recurringOrder,
                     e.recurringUntil AS event_recurringUntil,
-                    e.recurringCycle AS event_recurringInterval,
+                    e.recurringInterval AS event_recurringInterval,
                     e.bringingAnyone AS event_bringingAnyone,
                     e.bookMultipleTimes AS event_bookMultipleTimes,
                     e.maxCapacity AS event_maxCapacity,

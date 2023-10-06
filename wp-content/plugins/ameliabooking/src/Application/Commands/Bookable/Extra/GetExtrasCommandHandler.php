@@ -30,7 +30,7 @@ class GetExtrasCommandHandler extends CommandHandler
      */
     public function handle(GetExtrasCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::SERVICES)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::SERVICES)) {
             throw new AccessDeniedException('You are not allowed to read bookable extra');
         }
 

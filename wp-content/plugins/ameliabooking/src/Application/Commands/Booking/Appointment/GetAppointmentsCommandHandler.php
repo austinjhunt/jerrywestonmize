@@ -77,7 +77,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         try {
             /** @var AbstractUser $user */
-            $user = $userAS->authorization($isCabinetPage ? $command->getToken() : null, $command->getCabinetType());
+            $user = $command->getUserApplicationService()->authorization($isCabinetPage ? $command->getToken() : null, $command->getCabinetType());
         } catch (AuthorizationException $e) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setData(

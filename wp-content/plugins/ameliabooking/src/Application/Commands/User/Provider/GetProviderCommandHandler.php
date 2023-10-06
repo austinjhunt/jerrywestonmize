@@ -44,9 +44,9 @@ class GetProviderCommandHandler extends CommandHandler
         /** @var AbstractUser $currentUser */
         $currentUser = $this->container->get('logged.in.user');
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::EMPLOYEES) ||
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::EMPLOYEES) ||
             (
-                !$this->getContainer()->getPermissionsService()->currentUserCanReadOthers(Entities::EMPLOYEES) &&
+                !$command->getPermissionService()->currentUserCanReadOthers(Entities::EMPLOYEES) &&
                 $currentUser->getId()->getValue() !== $providerId
             )
         ) {

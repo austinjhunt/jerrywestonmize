@@ -97,7 +97,7 @@ class UpdateAppointmentCommandHandler extends CommandHandler
 
         try {
             /** @var AbstractUser $user */
-            $user = $userAS->authorization(
+            $user = $command->getUserApplicationService()->authorization(
                 $command->getPage() === 'cabinet' ? $command->getToken() : null,
                 $command->getCabinetType()
             );
@@ -285,13 +285,16 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         }
 
 
+        $paymentData = !empty($command->getField('payment')) ? array_merge($command->getField('payment'), ['isBackendBooking' => true]) :
+            ['amount' => 0, 'gateway' => 'onSite', 'isBackendBooking' => true];
+
         try {
             $appointmentAS->update(
                 $oldAppointment,
                 $appointment,
                 $removedBookings,
                 $service,
-                $paymentData = array_merge($command->getField('payment'), ['isBackendBooking' => true])
+                $paymentData
             );
         } catch (QueryExecutionException $e) {
             $appointmentRepo->rollback();
@@ -305,6 +308,18 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         $appRescheduled = $appointmentAS->isAppointmentRescheduled($appointment, $oldAppointment);
 
         if ($appRescheduled) {
+            if (!$appointmentAS->canBeBooked($appointment, false, null, null)) {
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage(FrontendStrings::getCommonStrings()['package_booking_unavailable']);
+                $result->setData(
+                    [
+                        'timeSlotUnavailable' => true
+                    ]
+                );
+
+                return $result;
+            }
+
             $appointment->setRescheduled(new BooleanValueObject(true));
 
             foreach ($appointment->getBookings()->getItems() as $booking) {

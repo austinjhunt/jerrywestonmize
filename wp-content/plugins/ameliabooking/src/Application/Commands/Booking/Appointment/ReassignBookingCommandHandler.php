@@ -83,16 +83,14 @@ class ReassignBookingCommandHandler extends CommandHandler
         $appointmentDS = $this->container->get('domain.booking.appointment.service');
         /** @var BookableApplicationService $bookableAS */
         $bookableAS = $this->container->get('application.bookable.service');
-        /** @var BookingApplicationService $bookingAS */
-        $bookingAS = $this->container->get('application.booking.booking.service');
-        /** @var AppointmentReservationService $reservationService */
+         /** @var AppointmentReservationService $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get(Entities::APPOINTMENT);
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
 
         try {
             /** @var AbstractUser $user */
-            $user = $userAS->authorization(
+            $user = $command->getUserApplicationService()->authorization(
                 $command->getPage() === 'cabinet' ? $command->getToken() : null,
                 $command->getCabinetType()
             );
@@ -107,8 +105,7 @@ class ReassignBookingCommandHandler extends CommandHandler
             return $result;
         }
 
-        if ($userAS->isCustomer($user) &&
-            !$settingsDS->getSetting('roles', 'allowCustomerReschedule')
+        if ($userAS->isCustomer($user) && !$settingsDS->getSetting('roles', 'allowCustomerReschedule')
         ) {
             throw new AccessDeniedException('You are not allowed to update appointment');
         }
@@ -290,6 +287,9 @@ class ReassignBookingCommandHandler extends CommandHandler
                 $bookingStart === $oldAppointment->getBookingStart()->getValue()->format('Y-m-d H:i')
             )
         ) {
+            /** @var BookingApplicationService $bookingAS */
+            $bookingAS = $this->container->get('application.booking.booking.service');
+
             if ($bookingStart !== $oldAppointment->getBookingStart()->getValue()->format('Y-m-d H:i')) {
                 $bookingAS->bookingRescheduled(
                     $oldAppointment->getId()->getValue(),

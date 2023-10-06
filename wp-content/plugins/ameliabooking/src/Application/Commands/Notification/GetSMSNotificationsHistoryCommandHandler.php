@@ -30,7 +30,7 @@ class GetSMSNotificationsHistoryCommandHandler extends CommandHandler
      */
     public function handle(GetSMSNotificationsHistoryCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::NOTIFICATIONS)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::NOTIFICATIONS)) {
             throw new AccessDeniedException('You are not allowed to read notifications');
         }
 

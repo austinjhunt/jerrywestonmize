@@ -32,7 +32,7 @@ class GetEventDeleteEffectCommandHandler extends CommandHandler
      */
     public function handle(GetEventDeleteEffectCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::SERVICES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::EVENTS)) {
             throw new AccessDeniedException('You are not allowed to write events');
         }
 
@@ -48,7 +48,7 @@ class GetEventDeleteEffectCommandHandler extends CommandHandler
         $result->setMessage('Successfully retrieved message.');
         $result->setData([
             'valid'   => $event->getStatus()->getValue() === BookingStatus::REJECTED,
-            'message' => BackendStrings::getEventStrings()['event_cancel_before_delete']
+            'message' => $event->getStatus()->getValue() === BookingStatus::REJECTED ? '' : BackendStrings::getEventStrings()['event_cancel_before_delete']
         ]);
 
         return $result;

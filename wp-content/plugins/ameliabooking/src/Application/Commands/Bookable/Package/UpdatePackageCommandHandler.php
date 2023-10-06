@@ -48,7 +48,7 @@ class UpdatePackageCommandHandler extends CommandHandler
      */
     public function handle(UpdatePackageCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::PACKAGES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::PACKAGES)) {
             throw new AccessDeniedException('You are not allowed to update package.');
         }
 

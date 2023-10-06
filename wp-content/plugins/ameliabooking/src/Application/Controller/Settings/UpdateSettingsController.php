@@ -41,7 +41,8 @@ class UpdateSettingsController extends Controller
         'appointments',
         'sendAllCF',
         'usedLanguages',
-        'ics'
+        'ics',
+        'apiKeys'
     ];
 
     /**

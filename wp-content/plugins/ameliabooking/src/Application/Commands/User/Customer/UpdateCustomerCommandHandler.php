@@ -55,7 +55,7 @@ class UpdateCustomerCommandHandler extends CommandHandler
 
         $userRepository->beginTransaction();
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::CUSTOMERS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::CUSTOMERS)) {
             $oldUser = $userAS->getAuthenticatedUser($command->getToken(), false, 'customerCabinet');
 
             if ($oldUser === null || $oldUser->getId()->getValue() !== intval($command->getArg('id'))) {

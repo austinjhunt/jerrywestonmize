@@ -53,7 +53,7 @@ class AddCouponCommandHandler extends CommandHandler
      */
     public function handle(AddCouponCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::COUPONS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::COUPONS)) {
             throw new AccessDeniedException('You are not allowed to add new coupon.');
         }
 

@@ -37,7 +37,7 @@ class DeletePaymentCommandHandler extends CommandHandler
      */
     public function handle(DeletePaymentCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanDelete(Entities::FINANCE)) {
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::FINANCE)) {
             throw new AccessDeniedException('You are not allowed to delete payments.');
         }
 

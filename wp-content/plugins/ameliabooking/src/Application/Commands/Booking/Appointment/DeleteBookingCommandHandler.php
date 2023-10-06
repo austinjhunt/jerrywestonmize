@@ -37,7 +37,7 @@ class DeleteBookingCommandHandler extends CommandHandler
      */
     public function handle(DeleteBookingCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanDelete(Entities::APPOINTMENTS)) {
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::APPOINTMENTS)) {
             throw new AccessDeniedException('You are not allowed to delete appointment');
         }
 

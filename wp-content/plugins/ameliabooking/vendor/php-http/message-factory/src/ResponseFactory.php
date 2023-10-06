@@ -11,6 +11,8 @@ use AmeliaPsr\Http\Message\StreamInterface;
  * This factory contract can be reused in Message and Server Message factories.
  *
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
+ *
+ * @deprecated since version 1.1, use AmeliaPsr\Http\Message\ResponseFactoryInterface instead.
  */
 interface ResponseFactory
 {

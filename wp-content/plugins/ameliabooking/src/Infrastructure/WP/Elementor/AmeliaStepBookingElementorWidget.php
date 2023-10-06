@@ -152,6 +152,17 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             ]
         );
 
+        $this->add_control(
+            'in_dialog',
+            [
+                'label' => BackendStrings::getWordPressStrings()['in_dialog'],
+                'type' => Controls_Manager::SWITCHER,
+                'default' => false,
+                'label_on' => BackendStrings::getCommonStrings()['yes'],
+                'label_off' => BackendStrings::getCommonStrings()['no'],
+            ]
+        );
+
         $this->end_controls_section();
     }
     protected function render() {
@@ -159,6 +170,7 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
 
         $trigger = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
         $trigger_type = $settings['load_manually'] && $settings['trigger_type'] !== '' ? ' trigger_type=' . $settings['trigger_type'] : '';
+        $in_dialog = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
 
         $category = $settings['select_category'] === '0' ? '' : ' category=' . $settings['select_category'];
         $service = $settings['select_service'] === '0' ? '' : ' service=' . $settings['select_service'];
@@ -170,7 +182,7 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
 
         $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
 
-        $shortcode = '[ameliastepbooking' . $trigger . $trigger_type;
+        $shortcode = '[ameliastepbooking' . $trigger . $trigger_type . $in_dialog;
         if ($settings['preselect']) {
             echo $shortcode . $show . $category_service . $employee . $location . $package . ']';
         } else {

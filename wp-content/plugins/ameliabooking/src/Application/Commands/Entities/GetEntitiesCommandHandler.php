@@ -73,7 +73,7 @@ class GetEntitiesCommandHandler extends CommandHandler
 
         try {
             /** @var AbstractUser $currentUser */
-            $currentUser = $userAS->authorization(
+            $currentUser = $command->getUserApplicationService()->authorization(
                 $command->getPage() === 'cabinet' ? $command->getToken() : null,
                 $command->getCabinetType()
             );
@@ -277,7 +277,7 @@ class GetEntitiesCommandHandler extends CommandHandler
                 'dates' => [null, null]
             ];
 
-            if (!$this->getContainer()->getPermissionsService()->currentUserCanReadOthers(Entities::APPOINTMENTS)) {
+            if (!$command->getPermissionService()->currentUserCanReadOthers(Entities::APPOINTMENTS)) {
                 if ($currentUser->getId() === null) {
                     $userParams[$currentUser->getType() . 'Id'] = 0;
                 } else {

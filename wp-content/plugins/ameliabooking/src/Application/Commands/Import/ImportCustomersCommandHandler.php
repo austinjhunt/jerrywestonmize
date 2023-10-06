@@ -43,7 +43,7 @@ class ImportCustomersCommandHandler extends CommandHandler
      */
     public function handle(ImportCustomersCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::CUSTOMERS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::CUSTOMERS)) {
             throw new AccessDeniedException('You are not allowed to read customers.');
         }
 

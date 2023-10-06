@@ -35,7 +35,7 @@ class GetPaymentsCommandHandler extends CommandHandler
      */
     public function handle(GetPaymentsCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::FINANCE)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::FINANCE)) {
             throw new AccessDeniedException('You are not allowed to read payments.');
         }
 

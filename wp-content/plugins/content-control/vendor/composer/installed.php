@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'code-atlantic/content-control',
-        'pretty_version' => '2.0.9',
-        'version' => '2.0.9.0',
+        'pretty_version' => '2.0.11',
+        'version' => '2.0.11.0',
         'reference' => NULL,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'code-atlantic/content-control' => array(
-            'pretty_version' => '2.0.9',
-            'version' => '2.0.9.0',
+            'pretty_version' => '2.0.11',
+            'version' => '2.0.11.0',
             'reference' => NULL,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
@@ -49,7 +49,7 @@
         'trustedlogin/client' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '8a0473631496b09c14431d7dd6d7888a6e850191',
+            'reference' => '0275ef9e2318e3c656622be07ab8cacfbe032db2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../trustedlogin/client',
             'aliases' => array(),

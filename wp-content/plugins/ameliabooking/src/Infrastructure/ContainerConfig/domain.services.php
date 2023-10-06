@@ -21,6 +21,31 @@ $entries['domain.permissions.service'] = function ($c) {
 };
 
 /**
+ * Permissions service
+ *
+ * @param $c
+ *
+ * @return \AmeliaBooking\Domain\Services\Permissions\PermissionsService
+ */
+$entries['domain.api.permissions.service'] = function ($c) {
+    return new AmeliaBooking\Domain\Services\Permissions\PermissionsService(
+        $c,
+        new AmeliaBooking\Infrastructure\WP\PermissionsService\PermissionsChecker()
+    );
+};
+
+/**
+ * Permissions service
+ *
+ * @param $c
+ *
+ * @return \AmeliaBooking\Domain\Services\Api\BasicApiService
+ */
+$entries['domain.api.service'] = function () {
+    return new AmeliaBooking\Domain\Services\Api\BasicApiService();
+};
+
+/**
  * Appointment service
  *
  * @return \AmeliaBooking\Domain\Services\Booking\AppointmentDomainService

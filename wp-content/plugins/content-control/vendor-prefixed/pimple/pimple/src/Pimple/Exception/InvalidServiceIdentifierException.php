@@ -23,7 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Modified by code-atlantic on 24-September-2023 using Strauss.
+ * Modified by code-atlantic on 04-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 

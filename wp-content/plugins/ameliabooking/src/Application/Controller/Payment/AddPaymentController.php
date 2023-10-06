@@ -23,11 +23,18 @@ class AddPaymentController extends Controller
      * @var array
      */
     protected $allowedFields = [
-        'bookingId',
+        'customerBookingId',
         'dateTime',
         'status',
         'gateway',
+        'gatewayTitle',
         'data',
+        'packageCustomerId',
+        'amount',
+        'entity',
+        'actionsCompleted',
+        'wcOrderId',
+        'transactionId'
     ];
 
     /**

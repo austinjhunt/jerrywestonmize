@@ -45,7 +45,7 @@ class UpdateResourceCommandHandler extends CommandHandler
      */
     public function handle(UpdateResourceCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::RESOURCES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::RESOURCES)) {
             throw new AccessDeniedException('You are not allowed to update resource.');
         }
 

@@ -35,7 +35,7 @@ class GetProvidersCommandHandler extends CommandHandler
      */
     public function handle(GetProvidersCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::EMPLOYEES)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::EMPLOYEES)) {
             throw new AccessDeniedException('You are not allowed to read employees.');
         }
 
@@ -54,7 +54,7 @@ class GetProvidersCommandHandler extends CommandHandler
 
         $params = $command->getField('params');
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanReadOthers(Entities::EMPLOYEES)) {
+        if (!$command->getPermissionService()->currentUserCanReadOthers(Entities::EMPLOYEES)) {
             /** @var AbstractUser $currentUser */
             $currentUser = $this->container->get('logged.in.user');
 

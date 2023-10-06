@@ -1,5 +1,4 @@
 (function (wp) {
-
   var el = wp.element.createElement
   var components = wp.components
   var blockControls = wp.editor.BlockControls
@@ -118,6 +117,10 @@
         type: 'string',
         default: 'id'
       },
+      in_dialog: {
+        type: 'boolean',
+        default: false
+      },
       show: {
         type: 'string',
         default: ''
@@ -160,7 +163,7 @@
       options['show'] = [{value: '', label: wpAmeliaLabels.show_all}, {value: 'services', label: wpAmeliaLabels.services}, {value: 'packages', label: wpAmeliaLabels.packages}]
       options['trigger_type'] = [{value: 'id', label: wpAmeliaLabels.trigger_type_id}, {value: 'class', label: wpAmeliaLabels.trigger_type_class}]
 
-      function getOptions(data) {
+      function getOptions (data) {
         var options = []
 
         data = Object.keys(data).map(function (key) {
@@ -181,35 +184,35 @@
       }
 
       getOptions(categories)
-      .forEach(function (element) {
-        options['categories'].push(element)
-      })
+        .forEach(function (element) {
+          options['categories'].push(element)
+        })
 
       getOptions(services)
-      .forEach(function (element) {
-        options['services'].push(element)
-      })
+        .forEach(function (element) {
+          options['services'].push(element)
+        })
 
       getOptions(employees)
-      .forEach(function (element) {
-        options['employees'].push(element)
-      })
+        .forEach(function (element) {
+          options['employees'].push(element)
+        })
 
       if (locations.length) {
         getOptions(locations)
-        .forEach(function (element) {
-          options['locations'].push(element)
-        })
+          .forEach(function (element) {
+            options['locations'].push(element)
+          })
       }
 
       if (packages.length) {
         getOptions(packages)
-            .forEach(function (element) {
-              options['packages'].push(element)
-            })
+          .forEach(function (element) {
+            options['packages'].push(element)
+          })
       }
 
-      function getShortCode(props, attributes) {
+      function getShortCode (props, attributes) {
         var shortCode = ''
         if (categories.length !== 0 && services.length !== 0 && employees.length !== 0) {
           if (attributes.parametars) {
@@ -248,9 +251,13 @@
             shortCode += ' trigger_type=' + attributes.trigger_type + ''
           }
 
+          if (attributes.trigger && attributes.in_dialog) {
+            shortCode += ' in_dialog=1'
+          }
+
           shortCode += ']'
         } else {
-          shortCode = "Notice: Please create category, service and employee first."
+          shortCode = 'Notice: Please create category, service and employee first.'
         }
 
         props.setAttributes({short_code: shortCode})
@@ -259,7 +266,6 @@
       }
 
       if (categories.length !== 0 && services.length !== 0 && employees.length !== 0) {
-
         inspectorElements.push(el(components.PanelRow,
           {},
           el('label', {htmlFor: 'amelia-js-parametars'}, wpAmeliaLabels.filter),
@@ -268,14 +274,13 @@
             checked: attributes.parametars,
             onChange: function () {
               return props.setAttributes({parametars: !props.attributes.parametars})
-            },
+            }
           })
         ))
 
         inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
 
         if (attributes.parametars) {
-
           inspectorElements.push(el(components.SelectControl, {
             id: 'amelia-js-select-category',
             label: wpAmeliaLabels.select_category,
@@ -353,7 +358,6 @@
           }
         }
 
-
         inspectorElements.push(el(components.TextControl, {
           id: 'amelia-js-trigger',
           label: wpAmeliaLabels.manually_loading,
@@ -375,6 +379,18 @@
           }
         }))
 
+        inspectorElements.push(el(components.PanelRow,
+          {},
+          el('label', {htmlFor: 'amelia-js-in-dialog'}, wpAmeliaLabels.in_dialog),
+          el(components.FormToggle, {
+            id: 'amelia-js-in-dialog',
+            checked: attributes.in_dialog,
+            onChange: function () {
+              return props.setAttributes({in_dialog: !props.attributes.in_dialog})
+            }
+          })
+        ))
+
         return [
           el(blockControls, {key: 'controls'}),
           el(inspectorControls, {key: 'inspector'},
@@ -386,10 +402,9 @@
             getShortCode(props, props.attributes)
           )
         ]
-
       } else {
-        inspectorElements.push(el('p', {style: {'margin-bottom': '1em'}}, 'Please create category, services and employee first. You can find instructions in our documentation on link below.'));
-        inspectorElements.push(el('a', {href:'https://wpamelia.com/quickstart/', target:'_blank', style: {'margin-bottom': '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'));
+        inspectorElements.push(el('p', {style: {'margin-bottom': '1em'}}, 'Please create category, services and employee first. You can find instructions in our documentation on link below.'))
+        inspectorElements.push(el('a', {href: 'https://wpamelia.com/quickstart/', target: '_blank', style: {'margin-bottom': '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'))
 
         return [
           el(blockControls, {key: 'controls'}),
@@ -404,7 +419,6 @@
           )
         ]
       }
-
     },
 
     save: function (props) {
@@ -415,7 +429,6 @@
       )
     }
   })
-
 })(
   window.wp
 )

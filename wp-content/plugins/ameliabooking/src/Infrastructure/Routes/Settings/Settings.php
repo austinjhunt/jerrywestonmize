@@ -25,5 +25,7 @@ class Settings
         $app->get('/settings', GetSettingsController::class);
 
         $app->post('/settings', UpdateSettingsController::class);
+
+
     }
 }

@@ -35,7 +35,7 @@ class UpdateCouponStatusCommandHandler extends CommandHandler
      */
     public function handle(UpdateCouponStatusCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::LOCATIONS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::LOCATIONS)) {
             throw new AccessDeniedException('You are not allowed to update coupon!');
         }
 

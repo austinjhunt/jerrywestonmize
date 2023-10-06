@@ -35,7 +35,7 @@ class GetPaymentsCommandHandler extends CommandHandler
      */
     public function handle(GetPaymentsCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::FINANCE)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::FINANCE)) {
             throw new AccessDeniedException('You are not allowed to read payments.');
         }
 
@@ -142,6 +142,10 @@ class GetPaymentsCommandHandler extends CommandHandler
             if (in_array('wcOrderId', $params['fields'], true)) {
                 $secondaryOrderIds = !empty($payment['secondaryPayments']) ? array_filter(array_column($payment['secondaryPayments'], 'wcOrderId')) : null;
                 $row[BackendStrings::getCommonStrings()['wc_order_id_export']] = $payment['wcOrderId']. (!empty($secondaryOrderIds) ? ', ' . implode(', ', $secondaryOrderIds) : '');
+            }
+
+            if (in_array('couponCode', $params['fields'], true)) {
+                $row[BackendStrings::getCommonStrings()['coupon_code']] = ($payment['coupon'] ? $payment['coupon']['code'] : '');
             }
 
             $row = apply_filters('amelia_before_csv_export_payments', $row, $payment);

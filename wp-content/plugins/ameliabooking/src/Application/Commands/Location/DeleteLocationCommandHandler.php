@@ -33,7 +33,7 @@ class DeleteLocationCommandHandler extends CommandHandler
      */
     public function handle(DeleteLocationCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanDelete(Entities::LOCATIONS)) {
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::LOCATIONS)) {
             throw new AccessDeniedException('You are not allowed to delete location');
         }
 

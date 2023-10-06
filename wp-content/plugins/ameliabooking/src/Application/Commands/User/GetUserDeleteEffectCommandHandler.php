@@ -38,8 +38,8 @@ class GetUserDeleteEffectCommandHandler extends CommandHandler
      */
     public function handle(GetUserDeleteEffectCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::EMPLOYEES) &&
-            !$this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::CUSTOMERS)
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::EMPLOYEES) &&
+            !$command->getPermissionService()->currentUserCanRead(Entities::CUSTOMERS)
         ) {
             throw new AccessDeniedException('You are not allowed to read user');
         }

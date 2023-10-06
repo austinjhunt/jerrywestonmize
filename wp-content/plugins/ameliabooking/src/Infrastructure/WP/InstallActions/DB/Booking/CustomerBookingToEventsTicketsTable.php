@@ -25,8 +25,8 @@ class CustomerBookingToEventsTicketsTable extends AbstractDatabaseTable
 
         return "CREATE TABLE {$table} (
                     `id` INT(11) NOT NULL AUTO_INCREMENT,
-                    `customerBookingId` INT(11) NOT NULL,
-                    `eventTicketId` INT(11) NOT NULL,
+                    `customerBookingId` bigint(20) NOT NULL,
+                    `eventTicketId` bigint(20) NOT NULL,
                     `price` double DEFAULT 0,
                     `persons` int(11) NOT NULL,
                     PRIMARY KEY (`id`)

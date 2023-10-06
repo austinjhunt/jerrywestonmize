@@ -52,7 +52,7 @@ class AddPackageCommandHandler extends CommandHandler
      */
     public function handle(AddPackageCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::PACKAGES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::PACKAGES)) {
             throw new AccessDeniedException('You are not allowed to add package.');
         }
 

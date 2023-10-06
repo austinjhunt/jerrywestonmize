@@ -25,7 +25,11 @@ class UpdateExtraController extends Controller
         'description',
         'price',
         'maxQuantity',
-        'duration'
+        'duration',
+        'position',
+        'serviceId',
+        'aggregatedPrice',
+        'translations',
     ];
 
     /**

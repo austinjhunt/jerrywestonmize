@@ -31,7 +31,7 @@ class UpdateCategoriesPositionsCommandHandler extends CommandHandler
      */
     public function handle(UpdateCategoriesPositionsCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::SERVICES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::SERVICES)) {
             throw new AccessDeniedException('You are not allowed to update bookable categories positions.');
         }
 

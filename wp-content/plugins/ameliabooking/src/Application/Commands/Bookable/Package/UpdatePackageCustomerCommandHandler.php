@@ -55,7 +55,7 @@ class UpdatePackageCustomerCommandHandler extends CommandHandler
         /** @var AbstractUser $user */
         $user = null;
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::PACKAGES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::PACKAGES)) {
             /** @var AbstractUser $user */
             $user = $userAS->getAuthenticatedUser($command->getToken(), false, 'customerCabinet');
 

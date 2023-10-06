@@ -45,8 +45,8 @@ class AddProviderCommandHandler extends CommandHandler
      */
     public function handle(AddProviderCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::EMPLOYEES) ||
-            !$this->getContainer()->getPermissionsService()->currentUserCanWriteOthers(Entities::EMPLOYEES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::EMPLOYEES) ||
+            !$command->getPermissionService()->currentUserCanWriteOthers(Entities::EMPLOYEES)) {
             throw new AccessDeniedException('You are not allowed to add employee.');
         }
 

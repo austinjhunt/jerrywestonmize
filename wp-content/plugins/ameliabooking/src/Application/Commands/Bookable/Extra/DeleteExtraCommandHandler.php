@@ -31,7 +31,7 @@ class DeleteExtraCommandHandler extends CommandHandler
      */
     public function handle(DeleteExtraCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanDelete(Entities::SERVICES)) {
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::SERVICES)) {
             throw new AccessDeniedException('You are not allowed to delete bookable extra');
         }
 

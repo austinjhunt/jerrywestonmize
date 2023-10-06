@@ -17,7 +17,8 @@ class PaymentLinkController extends Controller
 
     protected $allowedFields = [
         'data',
-        'paymentMethod'
+        'paymentMethod',
+        'redirectUrl'
     ];
 
     /**

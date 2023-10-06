@@ -58,7 +58,7 @@ class AddServiceCommandHandler extends CommandHandler
      */
     public function handle(AddServiceCommand $command)
     {
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::SERVICES)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::SERVICES)) {
             throw new AccessDeniedException('You are not allowed to add service.');
         }
 

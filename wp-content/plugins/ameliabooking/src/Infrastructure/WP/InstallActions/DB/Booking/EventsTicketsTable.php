@@ -28,7 +28,7 @@ class EventsTicketsTable extends AbstractDatabaseTable
 
         return "CREATE TABLE {$table} (
                    `id` INT(11) NOT NULL AUTO_INCREMENT,
-                   `eventId` INT(11) NOT NULL,
+                   `eventId` bigint(20) NOT NULL,
                    `enabled` TINYINT(1) DEFAULT 1,
                    `name` varchar({$name}) NOT NULL,
                    `price` double DEFAULT 0,

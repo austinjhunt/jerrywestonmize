@@ -9,6 +9,7 @@ use AmeliaBooking\Application\Services\Location\CurrentLocation;
 use AmeliaBooking\Application\Services\Stash\StashApplicationService;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Services\Api\BasicApiService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Services\Frontend\LessParserService;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\LessonSpaceService;
@@ -387,6 +388,17 @@ class UpdateSettingsCommandHandler extends CommandHandler
                 $settingsFields['lessonSpace']['companyId'] = $companyDetails['id'];
             } else {
                 $settingsFields['lessonSpace']['companyId'] = $settingsService->getCategorySettings('lessonSpace')['companyId'];
+            }
+        }
+
+        if (isset($settingsFields['apiKeys']) && isset($settingsFields['apiKeys']['apiKeys'])) {
+            /** @var BasicApiService $apiService */
+            $apiService = $this->getContainer()->get('domain.api.service');
+            foreach ($settingsFields['apiKeys']['apiKeys'] as $index => $apiKey) {
+                if ($apiKey['isNew']) {
+                    $settingsFields['apiKeys']['apiKeys'][$index]['key'] = $apiService->createHash($settingsFields['apiKeys']['apiKeys'][$index]['key']);
+                }
+                unset($settingsFields['apiKeys']['apiKeys'][$index]['isNew']);
             }
         }
 
