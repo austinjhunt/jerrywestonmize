@@ -55,7 +55,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 $atts
             );
 
-            $customer_status = get_field('customer_status', 'user_' . get_current_user_id());
+            $customer_status = get_user_meta(user_id: get_current_user_id(), key: 'customer_status', single: true);
             echo "<h3>Customer Status: " . $customer_status . "</h3>";
             if ($customer_status == "regular") {
                 echo $content;
@@ -71,5 +71,5 @@ if (!class_exists('ShowOnlyForRegulars')) {
     }
 }
 
-$conditionalACFFormDisplayPlugin = new ShowOnlyForRegulars();
-$conditionalACFFormDisplayPlugin->register();
+$showOnlyForRegularsPlugin = new ShowOnlyForRegulars();
+$showOnlyForRegularsPlugin->register();
