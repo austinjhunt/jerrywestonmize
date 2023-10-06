@@ -56,12 +56,14 @@ if (!class_exists('ShowOnlyForRegulars')) {
             );
 
             $customer_status = get_field('customer_status', 'user_' . get_current_user_id());
-
+            echo "<h3>Customer Status: " . $customer_status . "</h3>";
             if ($customer_status == "regular") {
                 echo $content;
-            } else if (!empty($attributes['newcomer_redirect_uri'])) {
-                $redirect = $attributes['newcomer_redirect_uri'];
-                echo "<script>window.location.href = '" . $redirect . "';</script>";
+            } else if ($customer_status == "newcomer") {
+                if (!empty($attributes['newcomer_redirect_uri'])) {
+                    $redirect = $attributes['newcomer_redirect_uri'];
+                    echo "<script>window.location.href = '" . $redirect . "';</script>";
+                }
             }
 
             return ob_get_clean();
