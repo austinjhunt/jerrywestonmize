@@ -49,15 +49,9 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 $atts
             );
 
-            // this function only affects logged in users.
+            // redirect unauthenticated users to home page
             if (!is_user_logged_in()) {
-                // return content by default if user is not logged in. no way to check user meta properties
-                // for non-authenticated user.
-                if ($attributes['content_is_shortcode'] == true) {
-                    echo do_shortcode($content);
-                } else if ($attributes['content_is_shortcode'] == false) {
-                    echo $content;
-                }
+                echo "<script>window.location = '" . get_home_url() . "';</script>";
             }
 
 
@@ -73,7 +67,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
             } else if ($customer_status == "newcomer") {
                 if (!empty($attributes['newcomer_redirect_uri'])) {
                     $redirect = $attributes['newcomer_redirect_uri'];
-                    echo "<script>window.location.href = '" . $redirect . "';</script>";
+                    echo "<script>window.location = '" . $redirect . "';</script>";
                 }
             }
 
