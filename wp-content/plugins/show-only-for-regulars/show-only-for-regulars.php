@@ -71,7 +71,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 }
             } else if ($customer_status == "") {
                 // set customer status to newcomer
-                update_user_meta(user_id: get_current_user_id(), meta_key: 'customer_status', meta_value: 'newcomer');
+                update_user_meta(user_id: get_current_user_id(), meta_key: 'customer_status', meta_value: 'newcomer: Newcomer');
                 if (!empty($attributes['newcomer_redirect_uri'])) {
                     $redirect = $attributes['newcomer_redirect_uri'];
                     echo "<script>window.location = '" . $redirect . "';</script>";
