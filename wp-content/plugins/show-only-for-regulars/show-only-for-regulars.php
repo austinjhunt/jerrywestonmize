@@ -56,7 +56,6 @@ if (!class_exists('ShowOnlyForRegulars')) {
 
 
             $customer_status = get_user_meta(user_id: get_current_user_id(), key: 'customer_status', single: true);
-            echo "<h1>Got user meta, customer status is: " . $customer_status . "</h1>";
             $customer_status = explode(':', $customer_status)[0];
             $customer_status = trim($customer_status);
             if ($customer_status == "regular") {
@@ -70,8 +69,13 @@ if (!class_exists('ShowOnlyForRegulars')) {
                     $redirect = $attributes['newcomer_redirect_uri'];
                     echo "<script>window.location = '" . $redirect . "';</script>";
                 }
-            } else {
-                echo "<h1>Your customer status is: " . $customer_status . "</h1>";
+            } else if ($customer_status == "") {
+                // set customer status to newcomer
+                update_user_meta(user_id: get_current_user_id(), meta_key: 'customer_status', meta_value: 'newcomer');
+                if (!empty($attributes['newcomer_redirect_uri'])) {
+                    $redirect = $attributes['newcomer_redirect_uri'];
+                    echo "<script>window.location = '" . $redirect . "';</script>";
+                }
             }
 
             return ob_get_clean();
