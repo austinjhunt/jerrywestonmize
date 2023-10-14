@@ -56,6 +56,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
 
 
             $customer_status = get_user_meta(user_id: get_current_user_id(), key: 'customer_status', single: true);
+            echo "<h1>Got user meta, customer status is: " . $customer_status . "</h1>";
             $customer_status = explode(':', $customer_status)[0];
             $customer_status = trim($customer_status);
             if ($customer_status == "regular") {
