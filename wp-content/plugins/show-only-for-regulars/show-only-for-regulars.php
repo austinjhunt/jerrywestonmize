@@ -67,7 +67,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
             } else if ($customer_status == "newcomer") {
                 if (!empty($attributes['newcomer_redirect_uri'])) {
                     $redirect = $attributes['newcomer_redirect_uri'];
-                    echo "<script>window.location = '" . $redirect . "';</script>";
+                    echo "<script>setTimeout(() => {window.location = '" . $redirect . "';}, 750);</script>";
                 }
             }
 
