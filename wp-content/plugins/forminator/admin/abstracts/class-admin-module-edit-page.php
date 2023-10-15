@@ -655,6 +655,9 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			wp_cache_delete( $cache_prefix, $cache_prefix );
 			wp_cache_delete( $cache_prefix . '_publish', $cache_prefix . '_publish' );
 			wp_cache_delete( $cache_prefix . '_draft', $cache_prefix . '_draft' );
+			// Call do action after create duplicate module
+			Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $new_id, $model );
+
 		}
 	}
 
@@ -683,6 +686,11 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			Forminator_Form_Entry_Model::delete_by_form( $id );
 			$form_view = Forminator_Form_Views_Model::get_instance();
 			$form_view->delete_by_form( $id );
+
+			$post_status = get_post_status( $id );
+			if ( 'pdf_form' === $post_status ) {
+				$model::$module_slug = 'pdf';
+			}
 
 			$function = 'forminator_update_' . $model::$module_slug . '_submissions_retention';
 			if ( function_exists( $function ) ) {
@@ -939,6 +947,8 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 						if ( $model instanceof Forminator_Base_Form_Model ) {
 							$model->status = $status;
 							$model->save();
+							// Call module update do action on status update
+							Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
 						}
 					}
 				}
@@ -953,6 +963,8 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 						if ( $model instanceof Forminator_Base_Form_Model ) {
 							$model->status = $status;
 							$model->save();
+							// Call module update do action on status update
+							Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
 						}
 					}
 				}
@@ -1068,6 +1080,8 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			if ( $model instanceof Forminator_Base_Form_Model ) {
 				$model->status = $status;
 				$model->save();
+				// Call module update do action on status update
+				Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
 			}
 		}
 	}

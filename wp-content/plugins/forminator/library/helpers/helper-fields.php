@@ -639,7 +639,11 @@ function forminator_replace_field_data( $custom_form, $element_id, $data, $quiz_
 			}
 		} elseif ( $is_pdf ) {
 			// Since PDFs use entry meta which is already from the database, it has been processed already.
-			$value = $field_value['value'];
+			if ( is_array( $field_value ) && isset( $field_value['value'] ) ) {
+				$value = $field_value['value'];
+			} else {
+				$value = $field_value;
+			}
 		} else {
 			$selected_values = is_array( $field_value ) ? $field_value : array( $field_value );
 			$value           = implode( ', ', array_keys( array_intersect( array_flip( $field_options ), array_map( 'stripslashes', $selected_values ) ) ) );

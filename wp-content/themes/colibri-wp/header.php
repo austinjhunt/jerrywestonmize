@@ -17,6 +17,8 @@ if ( function_exists( 'wp_body_open' ) ) {
     do_action( 'wp_body_open' );
 }
 ?>
+
+ 
 <div class="site" id="page-top">
     <?php colibriwp_theme()->get( 'header' )->render(); ?>
 

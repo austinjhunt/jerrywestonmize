@@ -301,7 +301,7 @@ class Forminator_Currency extends Forminator_Field {
 		$max            = self::get_property( 'limit_max', $field, $data );
 		$min            = self::get_property( 'limit_min', $field, $data );
 		$custom_message = self::get_property( 'limit_message', $field, false, 'bool' );
-		$precision      = self::get_property( 'precision', $field, 0 );
+		$precision      = self::get_property( 'precision', $field, 2 );
 		$separator      = self::get_property( 'separators', $field, 'blank' );
 		$max            = trim( $max );
 		$min            = trim( $min );

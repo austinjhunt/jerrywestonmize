@@ -1279,7 +1279,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			// replace misc data vars with value.
 			$redirect_url                   = forminator_replace_variables( $redirect_url, self::$module_id );
 			$newtab                         = forminator_replace_variables( $newtab, self::$module_id );
-			self::$response_attrs['url']    = $redirect_url;
+			self::$response_attrs['url']    = esc_url( $redirect_url );
 			self::$response_attrs['newtab'] = esc_html( $newtab );
 		}
 
@@ -2033,17 +2033,22 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		preg_match_all( $pattern, $formula, $matches );
 
 		foreach ( $matches[1] as $main_field ) {
-			if ( ! isset( self::$prepared_data[ $main_field ] ) ) {
-				$formula = str_replace( '{' . $main_field . '-*}', '{' . $main_field . '}', $formula );
-			} else {
+			$copied_fields = array();
+			// If there is the main field - add it to the array.
+			if ( isset( self::$prepared_data[ $main_field ] ) ) {
 				$copied_fields = array( $main_field );
-				foreach ( array_keys( self::$prepared_data ) as $key ) {
-					if ( 0 === strpos( $key, $main_field . '-' ) ) {
-						$copied_fields[] = $key;
-					}
-				}
-				$formula = str_replace( '{' . $main_field . '-*}', '({' . implode( '}+{', $copied_fields ) . '})', $formula );
 			}
+			// If there are any field copy - add it to the array.
+			foreach ( array_keys( self::$prepared_data ) as $key ) {
+				if ( 0 === strpos( $key, $main_field . '-' ) ) {
+					$copied_fields[] = $key;
+				}
+			}
+			$value = 0;
+			if ( $copied_fields ) {
+				$value = '({' . implode( '}+{', $copied_fields ) . '})';
+			}
+			$formula = str_replace( '{' . $main_field . '-*}', $value, $formula );
 		}
 		return $formula;
 	}

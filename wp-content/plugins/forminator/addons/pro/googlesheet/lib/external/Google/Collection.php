@@ -78,6 +78,7 @@ class Forminator_Google_Collection extends Forminator_Google_Model implements It
 		return isset($this->modelData[$this->collection_key][$offset]);
 	}
 
+	#[\ReturnTypeWillChange]
 	public function offsetGet($offset)
 	{
 		if (!is_numeric($offset)) {

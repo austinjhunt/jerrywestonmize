@@ -315,9 +315,8 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 				'email-subject'               => esc_html__( 'Your new account on {site_title}', 'forminator' ),
 				'email-editor'                => $message,
 
-				//'email-subject-method-email'  => esc_html__( 'Activate your account on {site_url}', 'forminator' ),
-				//'email-editor-method-email'   => $message_method_email,
-				
+				'email-subject-method-email'  => esc_html__( 'Activate your account on {site_url}', 'forminator' ),
+				'email-editor-method-email'   => $message_method_email,
 				'email-subject-method-manual' => esc_html__( 'Your new account on {site_title} is under review.', 'forminator' ),
 				'email-editor-method-manual'  => $message_method_manual,
 			);
@@ -487,7 +486,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	 * @param string $title Name.
 	 * @param string $status Status.
 	 * @param object $template Template.
-	 * @return int post ID
+	 * @return WP_Error post ID
 	 */
 	public static function update( $id, $title, $status, $template ) {
 		if ( is_null( $id ) || $id <= 0 ) {
@@ -549,10 +548,12 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		}
 
 		// Handle quiz questions
-		$form_model->notifications = $notifications;
+		$form_model->notifications      = $notifications;
+		$settings['notification_count'] = ! empty( $notifications ) ? count( $notifications ) : 0;
 
-		$form_model->name     = sanitize_title( $title );
-		$settings['formName'] = sanitize_text_field( $title );
+		$form_model->name            = sanitize_title( $title );
+		$settings['formName']        = sanitize_text_field( $title );
+		$settings['previous_status'] = get_post_status( $id );
 
 		$form_model->settings = $settings;
 

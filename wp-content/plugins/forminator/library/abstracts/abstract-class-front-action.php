@@ -450,7 +450,7 @@ abstract class Forminator_Front_Action {
 		$response = $this->handle_form();
 
 		if ( self::$is_draft && $response['success'] ) {
-			wp_send_json_success( $this->show_draft_link( self::$module_id, $response ) );
+			wp_send_json_success( self::show_draft_link( self::$module_id, $response ) );
 		}
 
 		// sanitize front end message.
@@ -493,12 +493,13 @@ abstract class Forminator_Front_Action {
 	 *
 	 * @since 1.17.0
 	 */
-	public function show_draft_link( $form_id, $response ) {
+	private static function show_draft_link( $form_id, $response ) {
 		$response['form_id']    = $form_id;
 		$response['type']       = 'save_draft';
 		$draft_link             = esc_url( add_query_arg( 'draft', $response['draft_id'], get_permalink( $response['page_id'] ) ) );
 		$send_draft_email_nonce = esc_attr( 'forminator_nonce_email_draft_link_' . $response['draft_id'] );
 		$message                = str_replace( '{retention_period}', $response['retention_period'], $response['message'] );
+		$message                = forminator_replace_form_data( $message, static::$module_object );
 		$autofill_email         = isset( $response['first_email'] ) ? $response['first_email'] : '';
 
 		ob_start();

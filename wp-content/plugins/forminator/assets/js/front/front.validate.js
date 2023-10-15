@@ -404,6 +404,10 @@
 	});
 	$.validator.addMethod("forminatorPhoneNational", function ( value, element ) {
 		var phone = $( element );
+		if ( !phone.data('required') && value === '+' +phone.intlTelInput( 'getSelectedCountryData' ).dialCode ) {
+			return true;
+		}
+
 		if (
 			'undefined' !== typeof phone.data( 'country' ) &&
 			phone.data( 'country' ).toLowerCase() !== phone.intlTelInput( 'getSelectedCountryData' ).iso2
@@ -416,7 +420,7 @@
 	});
 	$.validator.addMethod("forminatorPhoneInternational", function (value, element) {
 		// check whether phone field is international and optional
-		if ( !$(element).data('required') && value === '+' +$(element).intlTelInput( 'getSelectedCountryData' ).dialCode ) {
+		if ( !$(element).data('required') && value === '+' +$(element).intlTelInput( 'getSelectedCountryData' ).dialCode + ' ' ) {
 			return true;
 		}
 

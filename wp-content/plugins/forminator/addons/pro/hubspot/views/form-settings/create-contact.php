@@ -216,7 +216,7 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 				<tr class="custom-field" id="custom-field" style="display: none;">
 					<td>
 						<div class="sui-form-field">
-							<select name=custom_property[]" class="sui-select sui-select-sm">
+							<select name="custom_property[]" class="sui-select sui-select-sm" data-search="true">
 								<option value=""><?php esc_html_e( 'None', 'forminator' ); ?></option>
 								<?php if ( ! empty( $vars['properties'] ) ) {
 									foreach ( $vars['properties'] as $p => $prop ) { ?>
@@ -231,7 +231,7 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 						<div class="fui-select-with-delete">
 
 							<div class="sui-form-field">
-								<select name="custom_field[]" class="sui-select sui-select-sm">
+								<select name="custom_field[]" class="sui-select sui-select-sm" data-search="true">
 									<option value=""><?php esc_html_e( 'None', 'forminator' ); ?></option>
 									<?php
 									if ( ! empty( $forminator_fields ) ) :
@@ -287,15 +287,22 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 							$(this).SUIselect2('destroy');
 						}
 					});
+
 					var clone_field = custom_field.clone();
 					$('.add-additional-field').before( clone_field );
 					clone_field.find('.select2').remove();
 					clone_field.find('select.sui-select').val('').removeAttr('selected');
+
 					clone_field.find( '.sui-select' ).SUIselect2({
 						dropdownCssClass: 'sui-variables-dropdown sui-color-accessible'
 					});
-					custom_field.find( '.sui-select' ).SUIselect2({
+					custom_field.find( 'select.sui-select' ).SUIselect2({
 						dropdownCssClass: 'sui-variables-dropdown sui-color-accessible'
+					});
+
+					$( '.custom-field' ).each( function() {
+						$select = $( this ).find( '.sui-select' );
+						SUI.select.init( $select );
 					});
 				}
 			});

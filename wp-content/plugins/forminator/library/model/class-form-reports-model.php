@@ -49,12 +49,12 @@ class Forminator_Form_Reports_Model {
 	 * @param $report
 	 * @param $status
 	 *
-	 * @return bool|int|mysqli_result|resource|null
+	 * @return int
 	 */
 	public function report_save( $report, $status ) {
 		global $wpdb;
 
-		return $wpdb->insert(
+		$wpdb->insert(
 			$this->table_name,
 			array(
 				'report_value' => maybe_serialize( $report ),
@@ -63,6 +63,8 @@ class Forminator_Form_Reports_Model {
 				'date_updated' => date_i18n( 'Y-m-d H:i:s' ),
 			)
 		);
+
+		return $wpdb->insert_id;
 	}
 
 	/**
@@ -121,12 +123,26 @@ class Forminator_Form_Reports_Model {
 	public function report_delete( $report_id ) {
 		global $wpdb;
 
-		return $wpdb->delete(
+		$result = $wpdb->delete(
 			$this->get_table_name(),
 			array(
 				'report_id' => $report_id,
 			)
 		);
+
+		if ( ! is_wp_error( $result ) ) {
+			/**
+			 * Fires after report status update
+			 *
+			 * @param string $report_id Report ID.
+			 *
+			 * @since 1.27.0
+			 *
+			 */
+			do_action( 'forminator_after_notification_delete', $report_id );
+		}
+
+		return $result;
 	}
 
 	/**
@@ -169,7 +185,7 @@ class Forminator_Form_Reports_Model {
 	public function report_update_status( $report_id, $status ) {
 		global $wpdb;
 
-		return $wpdb->update(
+		$result = $wpdb->update(
 			$this->get_table_name(),
 			array(
 				'status' => $status,
@@ -178,6 +194,21 @@ class Forminator_Form_Reports_Model {
 				'report_id' => $report_id,
 			)
 		);
+
+		if ( ! is_wp_error( $result ) ) {
+			/**
+			 * Fires after report status update
+			 *
+			 * @param string $report_id Report ID.
+			 * @param string $status Report status.
+			 *
+			 * @since 1.27.0
+			 *
+			 */
+			do_action( 'forminator_after_notification_status_update', $report_id, $status );
+		}
+
+		return $result;
 	}
 
 	/**

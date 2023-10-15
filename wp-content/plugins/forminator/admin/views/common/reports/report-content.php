@@ -98,6 +98,31 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
                     'app_link'     => Forminator_Admin_Report_Page::get_instance()->get_app_link_module_id( $args['form_id'], $args['form_type'] ),
 				)
 			);
+
+			if ( 'forminator_forms' === $args['form_type'] ) {
+				// Geolocation widget.
+				$vars = apply_filters(
+					'forminator_reports_geolocation_widget',
+					array(
+						'id'          => 'forminator_report_geolocation_widget',
+						'title'       => __( 'Location', 'forminator' ),
+						'description' => __( 'Summary of users\' locations.', 'forminator' ),
+						'icon'        => 'sui-icon-pin',
+						'notice'      => sprintf(
+							/* translators: 1. Open link tag. 2. Close link tag. */
+							__( 'Install the %1$sGeolocation Add-on%2$s to view the locations from where your form submissions are from.', 'forminator' ),
+							'<a href="' . esc_url( menu_page_url( 'forminator-addons', false ) ) . '" target="_blank">',
+							'</a>'
+						),
+					),
+					$args
+				);
+
+				Forminator_Admin_Addons_page::get_instance()->render_template(
+					'admin/views/common/reports/basic-widget',
+					$vars
+				);
+			}
 			?>
         </div>
     </div>
