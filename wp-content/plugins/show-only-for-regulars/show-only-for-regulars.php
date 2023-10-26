@@ -41,11 +41,15 @@ if (!class_exists('ShowOnlyForRegulars')) {
             $query_params = array();
             // add each user attribute as a query param to the redirect uri
             foreach ($user_attr_query_params as $attr) {
-                $value = get_user_meta(user_id: get_current_user_id(), key: $attr, single: true);
+                // if attr is user_email 
+                if ($attr == "user_email") {
+                    $value = get_userdata(get_current_user_id())->user_email;
+                } else {
+                    $value = get_user_meta(user_id: get_current_user_id(), key: $attr, single: true);
+                }
                 if ($value) {
                     $query_params[$attr] = $value;
                 }
-
             }
             $url_with_params = add_query_arg($query_params, $redirect_uri);
             return $url_with_params;
