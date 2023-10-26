@@ -37,8 +37,8 @@ if (!class_exists('MakeupCreditsRequired')) {
         }
 
 
-        // [show_only_for_regulars newcomer_redirect_uri="REDIRECT NEWCOMERS TO THIS URL"]CONTENT[/show_only_for_regulars]
-        public function show_only_for_regulars_callback($atts, $content = '')
+        // [makeup_credits_required redirect_uri=" redirect here if no credits of this type present in ACF field" lesson_type="virtual/inperson"]CONTENT[/makeup_credits_required]
+        public function makeup_credits_required_callback($atts, $content = '')
         {
             ob_start();
             $attributes = shortcode_atts(
