@@ -86,7 +86,7 @@ if (!class_exists('HandleLessonCancellation')) {
 
             // Check if a user exists with the provided email
             if ($user) {
-                echo 'User ID: ' . $user->ID;
+                error_log('User ID: ' . $user->ID);
                 $service_id = $reservation['serviceId'];
                 $category_name = $this->get_amelia_service_category_name_from_service_id($service_id);
 
