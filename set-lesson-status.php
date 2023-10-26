@@ -7,7 +7,8 @@ if (isset($_GET['appointment_id']) && isset($_GET['status'])) {
 
     // Initialize cURL
     $ch = curl_init();
-
+    echo "Appointment ID: " . $appointment_id . "<br>";
+    echo "Status: " . $status . "<br>";
     // Set cURL options
     $url = 'https://jerrywestonmize.com/amelia/wp-admin/admin-ajax.php?action=wpamelia_api&call=/api/v1/appointments/status/' . $appointment_id;
     curl_setopt($ch, CURLOPT_URL, $url);
