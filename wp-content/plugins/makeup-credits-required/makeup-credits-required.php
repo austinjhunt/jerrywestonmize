@@ -2,7 +2,7 @@
 /*
  * Plugin Name: Makeup Credits Required
  * Plugin URI: https://github.com/austinjhunt/jerrywestonmize
- * Description: This plugin offers a shortcode [makeup_credits_required lesson_type="[virtual,inperson]"]CONTENT[/makeup_credits_required] that only shows content if the signed in user has at least one makeup credit of the specified lesson type.
+ * Description: This plugin offers a shortcode [makeup_credits_required lesson_type="[virtual,inperson]"]CONTENT[/makeup_credits_required] that only shows content if the signed in user has at least one makeup credit of the specified lesson type. If no credits, redirect to home page.
  * Version: 1.0.0
  * Requires PHP: 8
  * Author: Austin Hunt
@@ -37,22 +37,18 @@ if (!class_exists('MakeupCreditsRequired')) {
         }
 
 
-        // [makeup_credits_required redirect_uri=" redirect here if no credits of this type present in ACF field" lesson_type="virtual/inperson"]CONTENT[/makeup_credits_required]
+        // [makeup_credits_required   lesson_type="virtual/inperson"]CONTENT[/makeup_credits_required]
         public function makeup_credits_required_callback($atts, $content = '')
         {
             ob_start();
             $attributes = shortcode_atts(
                 array(
-                    'redirect_uri' => '',
                     'content_is_shortcode' => true,
                     'lesson_type' => 'virtual'
                 ),
                 $atts
             );
-
             $makeup_credits = get_field('' . $attributes['lesson_type'] . '_makeup_lesson_credits', 'user_' . get_current_user_id());
-
-
             // redirect unauthenticated users or users without makeup credits to home page
             if (!is_user_logged_in() || $makeup_credits < 1) {
                 echo "<script>window.location = '" . get_home_url() . "';</script>";
