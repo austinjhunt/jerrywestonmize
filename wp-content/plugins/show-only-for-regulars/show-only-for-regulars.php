@@ -39,9 +39,9 @@ if (!class_exists('ShowOnlyForRegulars')) {
         public function get_redirect_uri_with_user_meta_query_params($redirect_uri, $user_attrs)
         {
             // add each user attribute as a query param to the redirect uri
-            foreach ($user_attrs as $key => $value) {
-                $attr_value = get_user_meta(user_id: get_current_user_id(), key: $key, single: true);
-                $redirect_uri = add_query_arg($key, $attr_value, $redirect_uri);
+            foreach ($user_attrs as $attr) {
+                $value = get_user_meta(user_id: get_current_user_id(), key: $attr, single: true);
+                $redirect_uri = add_query_arg($attr, $value, $redirect_uri);
             }
             return $redirect_uri;
         }
