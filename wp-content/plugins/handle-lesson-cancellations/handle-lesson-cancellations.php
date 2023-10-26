@@ -31,9 +31,9 @@ if (!class_exists('HandleLessonCancellation')) {
         {
             // actions
             echo "HANDLE LESSON CANCELLATION";
-            echo $reservation;
-            echo $bookings;
-            echo $container;
+            var_dump($reservation);
+            var_dump($bookings);
+            var_dump($container);
         }
 
 
