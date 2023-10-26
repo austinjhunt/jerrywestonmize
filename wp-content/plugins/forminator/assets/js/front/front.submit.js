@@ -78,6 +78,11 @@
 			form.find('.forminator-field--phone').each(function() {
 				var phone_element = $(this);
 				if ( !phone_element.data('required') && 'international' === phone_element.data('validation') ) {
+					var dialCode = '+' + phone_element.intlTelInput( 'getSelectedCountryData' ).dialCode + ' ';
+					var currentInput = phone_element.val();
+					if (dialCode === currentInput)
+						phone_element.val('');
+				} else if ( !phone_element.data('required') && 'standard' === phone_element.data('validation') ) {
 					var dialCode = '+' + phone_element.intlTelInput( 'getSelectedCountryData' ).dialCode;
 					var currentInput = phone_element.val();
 					if (dialCode === currentInput)

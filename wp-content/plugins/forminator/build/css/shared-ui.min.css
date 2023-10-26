@@ -18348,6 +18348,11 @@ html.sui-has-overlay {
   color: #333;
 }
 
+.sui-2-12-16 .sui-wrap .sui-tag-grey {
+  background-color: #888;
+  color: #fff;
+}
+
 .sui-2-12-16 .sui-wrap .sui-tag-published {
   background-color: #17a8e3;
   color: #fff;
@@ -24458,6 +24463,24 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
 .sui-2-12-16 .report-button-with-toggle .sui-toggle .sui-toggle-slider~.sui-toggle-label {
   margin-left: 0;
   margin-right: 44px;
+}
+
+.sui-2-12-16 .forminator-geo-state-block {
+  max-height: 190px;
+  overflow: auto;
+}
+
+.sui-2-12-16 #forminator_report_geolocation_widget tbody {
+  display: block;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.sui-2-12-16 #forminator_report_geolocation_widget thead,
+.sui-2-12-16 #forminator_report_geolocation_widget table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
 .sui-2-12-16 .sui-wrap #fui-stripe-plans .sui-accordion-item {

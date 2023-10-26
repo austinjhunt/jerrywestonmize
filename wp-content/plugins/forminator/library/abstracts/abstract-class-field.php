@@ -1946,7 +1946,12 @@ abstract class Forminator_Field {
 		$separator  = self::get_property( 'separators', $field, 'blank' );
 		$separators = self::forminator_separators( $separator, $field );
 
-		return str_replace( $separators['point'], '.', $number );
+		// Replace decimal with # temporarily to prevent being replaced with a separator.
+		$number = str_replace( $separators['point'], '#', $number );
+		$number = str_replace( $separators['separator'], '', $number );
+		$number = str_replace( '#', '.', $number );
+
+		return $number;
 	}
 
 	/**

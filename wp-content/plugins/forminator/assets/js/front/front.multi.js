@@ -1015,9 +1015,7 @@
 			});
 
 			// Fixes the 2nd number input bug: https://incsub.atlassian.net/browse/FOR-3033
-			form.find( 'input[type=number]' ).on( 'mouseover', function() {
-				$( this ).trigger( 'focus' );
-			}).on( 'mouseout', function() {
+			form.find( 'input[type=number]' ).on( 'mouseout', function() {
 				$( this ).trigger( 'blur' );
 			});
 		},

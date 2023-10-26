@@ -832,7 +832,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 	 * @param string $title Name.
 	 * @param string $status Status.
 	 * @param object $template Template.
-	 * @return int post ID
+	 * @return WP_Error post ID
 	 */
 	public static function update( $id, $title, $status, $template ) {
 		if ( is_null( $id ) || $id <= 0 ) {
@@ -914,7 +914,9 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 			}
 		}
 
-		$form_model->settings      = self::validate_settings( $settings );
+		$form_model->settings        = self::validate_settings( $settings );
+		$settings['previous_status'] = get_post_status( $id );
+
 		$form_model->notifications = $notifications;
 		$form_model->status        = $status;
 
@@ -933,8 +935,9 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 		 * @param string $status - quiz status.
 		 * @param array  $questions - quiz questions.
 		 * @param array  $results - quiz results.
+		 * @param array  $settings - quiz settings.
 		 */
-		do_action( 'forminator_quiz_action_' . $action, $id, $type, $status, $questions, $results );
+		do_action( 'forminator_quiz_action_' . $action, $id, $type, $status, $questions, $results, $settings );
 
 		Forminator_Render_Form::regenerate_css_file( $id );
 

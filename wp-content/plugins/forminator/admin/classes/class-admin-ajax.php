@@ -267,7 +267,7 @@ class Forminator_Admin_AJAX {
 		$status         = isset( $submitted_data['status'] ) ? $submitted_data['status'] : '';
 		$version        = isset( $submitted_data['version'] ) ? $submitted_data['version'] : '1.0';
 		$template       = new stdClass();
-		$action         = false;
+		$action         = '';
 
 		if ( ! empty( $_POST['data'] ) ) {
 			$form_data = Forminator_Core::sanitize_array( json_decode( wp_unslash( $_POST['data'] ), true ) );
@@ -275,14 +275,14 @@ class Forminator_Admin_AJAX {
 
 		if ( is_null( $id ) || $id <= 0 ) {
 			$form_model = new Forminator_Form_Model();
-			$action     = 'create';
+			$action = 'create';
 
 			if ( empty( $status ) ) {
 				$status = Forminator_Form_Model::STATUS_PUBLISH;
 			}
 		} else {
 			$form_model = Forminator_Base_Form_Model::get_model( $id );
-			$action     = 'update';
+			$action = 'update';
 
 			if ( ! is_object( $form_model ) ) {
 				wp_send_json_error( esc_html__( 'Form model doesn\'t exist', 'forminator' ) );
@@ -1331,6 +1331,16 @@ class Forminator_Admin_AJAX {
 
 			$return_url = admin_url( 'admin.php?page=forminator-' . forminator_get_prefix( $slug, 'c' ) );
 
+			/**
+			 * Fires after form import
+			 *
+			 * @since 1.27.0
+			 *
+			 * @param int $slug Module type.
+			 */
+
+			do_action( 'forminator_after_form_import', $slug );
+
 			wp_send_json_success(
 				array(
 					'id'  => $model->id,
@@ -1671,6 +1681,16 @@ class Forminator_Admin_AJAX {
 
 		$html = forminator_template( 'common/popup/export', array( 'slug' => $slug ) );
 
+		/**
+		 * Fires after form export
+		 *
+		 * @since 1.27.0
+		 *
+		 * @param int $slug Module type.
+		 */
+
+		do_action( 'forminator_after_form_export', $slug );
+
 		wp_send_json_success( $html );
 	}
 
@@ -1798,6 +1818,19 @@ class Forminator_Admin_AJAX {
 
 		$editor_settings = Forminator_Core::sanitize_text_field( 'editor_settings', false );
 		update_option( 'forminator_editor_settings', $editor_settings );
+
+		$old_usage_tracking = get_option( 'forminator_usage_tracking' );
+		$usage_tracking     = filter_input( INPUT_POST, 'usage_tracking', FILTER_VALIDATE_BOOLEAN );
+		update_option( 'forminator_usage_tracking', $usage_tracking );
+
+		/**
+		 * Triggered after save dashboard settings
+		 *
+		 * @param boolean $old_usage_tracking Old usage tracking value.
+		 *
+		 * @since 1.27.0
+		 */
+		do_action( 'forminator_after_dashboard_settings', $old_usage_tracking );
 
 		wp_send_json_success();
 	}
@@ -2194,6 +2227,22 @@ class Forminator_Admin_AJAX {
 			update_option( 'forminator_version_upgraded', false );
 		}
 
+		// Remove this code once the next feature is released, as it is a data tracking option
+		if ( ! empty( $_POST['usage_value'] ) ) {
+			$old_usage_tracking = get_option( 'forminator_usage_tracking' );
+			$usage_value        = filter_input( INPUT_POST, 'usage_value', FILTER_VALIDATE_BOOLEAN );
+			update_option( 'forminator_usage_tracking', $usage_value );
+
+			/**
+			 * Triggered after Feature model Usage settings save
+			 *
+			 * @param boolean $old_usage_tracking Old usage tracking value.
+			 *
+			 * @since 1.27.0
+			 */
+			do_action( 'forminator_feature_usage_settings', $old_usage_tracking );
+		}
+
 		wp_send_json_success();
 	}
 
@@ -2441,6 +2490,7 @@ class Forminator_Admin_AJAX {
 					'reports'    => $report_data,
 					'chart_data' => $chart_data,
 				);
+				$response = apply_filters( 'forminator_report_data', $response, $form_id, $form_type, $start_date, $end_date );
 				wp_send_json_success( $response );
 			}
 		}
@@ -2549,15 +2599,29 @@ class Forminator_Admin_AJAX {
 		$status       = Forminator_Core::sanitize_text_field( 'status' );
 		$reports_data = Forminator_Core::sanitize_array( $_POST['reports'] );
 
+		$reports_data['report_status'] = $status;
+
 		if ( 0 !== (int) $report_id ) {
 			$result = Forminator_Form_Reports_Model::get_instance()->report_update( $report_id, $reports_data, $status );
 		} else {
 			$result = Forminator_Form_Reports_Model::get_instance()->report_save( $reports_data, $status );
+			$reports_data['report_id'] = $result;
 		}
 
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error();
 		}
+
+		/**
+		 * Fires after report save
+		 *
+		 * @since 1.27.0
+		 *
+		 * @param array $reports_data Report data.
+		 */
+
+		do_action( 'forminator_after_notification_update', $reports_data );
+
 		wp_send_json_success( $result );
 	}
 
@@ -2582,6 +2646,7 @@ class Forminator_Admin_AJAX {
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error();
 		}
+
 		wp_send_json_success( $result );
 	}
 }

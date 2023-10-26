@@ -1255,6 +1255,9 @@ function forminator_reset_settings() {
 	delete_option( "forminator_stripe_configuration" );
 	delete_option( "forminator_paypal_configuration" );
 
+	$usage_tracking = get_option( 'forminator_usage_tracking', false );
+	delete_option( "forminator_usage_tracking" );
+
 	/**
 	 * @see forminator_delete_addon_options()
 	 */
@@ -1293,9 +1296,11 @@ function forminator_reset_settings() {
 	/**
 	 * Fires after Settings reset
 	 *
-	 * @since 1.6.3
+	 * @param bool $usage_data usage tracking data enable or not
+	 *
+	 * @since 1.27.0
 	 */
-	do_action( 'forminator_after_reset_settings' );
+	do_action( 'forminator_after_reset_settings', $usage_tracking );
 }
 
 /**

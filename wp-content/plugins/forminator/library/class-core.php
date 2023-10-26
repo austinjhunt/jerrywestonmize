@@ -123,6 +123,9 @@ class Forminator_Core {
 			if ( ! FORMINATOR_PRO ) {
 				$this->admin->add_upgrade_page();
 			}
+
+			// Call Mixpanel class
+            new Forminator_Mixpanel();
 		}
 
 		// Protection management.
@@ -331,6 +334,8 @@ class Forminator_Core {
 			}
 			/* @noinspection PhpIncludeInspection */
 			include_once forminator_plugin_dir() . 'library/model/class-form-entries-list-table.php';
+			/* @noinspection PhpIncludeInspection */
+			include_once forminator_plugin_dir() . 'library/mixpanel/class-mixpanel.php';
 		}
 
 		if ( Forminator::is_internal_page_cache_support_enabled() ) {

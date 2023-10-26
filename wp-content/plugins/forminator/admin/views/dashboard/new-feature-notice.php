@@ -1,7 +1,7 @@
 <?php
 $user      = wp_get_current_user();
-$banner_1x = forminator_plugin_url() . 'assets/images/geolocation-header.png';
-$banner_2x = forminator_plugin_url() . 'assets/images/geolocation-header@2x.png';
+$banner_1x = forminator_plugin_url() . 'assets/images/Feature_highlight.png';
+$banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 ?>
 
 <div class="sui-modal sui-modal-md">
@@ -15,7 +15,7 @@ $banner_2x = forminator_plugin_url() . 'assets/images/geolocation-header@2x.png'
 		aria-labelledby="forminator-new-feature__title"
 	>
 
-		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1260" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
+		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1270" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
 
 			<div class="sui-box-header sui-flatten sui-content-center">
 
@@ -27,48 +27,59 @@ $banner_2x = forminator_plugin_url() . 'assets/images/geolocation-header@2x.png'
 					/>
 				</figure>
 
-				<button class="sui-button-icon sui-button-white sui-button-float--right forminator-dismiss-new-feature" data-modal-close>
+				<button class="sui-button-icon sui-button-white sui-button-float--right forminator-dismiss-new-feature" data-type="dismiss" data-modal-close>
 					<span class="sui-icon-close sui-md" aria-hidden="true"></span>
 					<span class="sui-screen-reader-text"><?php esc_html_e( 'Close this dialog.', 'forminator' ); ?></span>
 				</button>
 
-				<h3 class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: initial;"><?php esc_html_e( 'New: Forminator Geolocation Add-on', 'forminator' ); ?>
-                    <?php if ( ! FORMINATOR_PRO ) { ?>
-                        <span class="sui-tag sui-tag-pro">
-                            <?php esc_html_e( 'PRO', 'forminator' ); ?>
-                        </span>
-                    <?php } ?>
+				<h3 class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: initial;">
+                    <?php esc_html_e( 'Help us improve your form building experience', 'forminator' ); ?>
                 </h3>
 
 				<p class="sui-description">
 					<?php
 					printf(
-					/* Translators: 1. User name 2. Opening <strong> tag, 2. closing <strong> tag, 3. Opening <a> tag with forminator setting data section url, 2. closing <a> tag  */
-						esc_html__( 'Hey %s! We\'re excited to introduce the Forminator Geolocation Add-on, a powerful tool that lets you effortlessly gather geolocation data from your form submissions. Plus, with the integration of Google Place API, you can provide address auto-completion for a smoother user experience.', 'forminator' ),
+					/* translators: %s: Admin name */
+						esc_html__( 'Hey there! %s, We believe Forminator is the ultimate form builder for your WordPress website. However, we understand that there`s always room for improvement. That`s why we need your support in collecting anonymous usage data to enhance the plugin`s capabilities and ensure it`s the most efficient tool for building your forms.', 'forminator' ),
 						esc_html( ucfirst( $user->display_name ) )
 					);
 					?>
 				</p>
-				<div class="sui-modal-list">
-					<h3><?php esc_html_e( 'Geolocation Add-on Features:', 'forminator' ); ?></h3>
-					<ol>
-						<li><span class="sui-icon-check sui-sm" aria-hidden="true"></span>
-							<span><?php esc_html_e( 'Collect users’ geolocation on form submissions.', 'forminator' ); ?></span>
-                        </li>
-						<li><span class="sui-icon-check sui-sm" aria-hidden="true"></span>
-							<span><?php esc_html_e( 'Let users enter accurate addresses with Google Map address auto-suggestion and auto-completion.', 'forminator' ); ?></span>
-                        </li>
-						<li><span class="sui-icon-check sui-sm" aria-hidden="true"></span>
-							<span><?php esc_html_e( 'Display a Google Map on your forms to allow easy address selection.', 'forminator' ); ?></span>
-                        </li>
-					</ol>
+                <p class="sui-description">
+					<?php
+					printf(
+					/* Translators: 1. Opening <a> tag, 2. closing <a> tag  */
+						esc_html__( 'Your data will be completely anonymous and will never be used to identify you, and we promise to use it only to improve Forminator. Learn more about usage tracking %1$shere%2$s.', 'forminator' ),
+						'<a href="https://wpmudev.com/docs/privacy/our-plugins/#usage-tracking-fm" target="_blank">',
+						'</a>'
+					);
+					?>
+				</p>
+				<div class="sui-form-field">
+
+					<label for="forminator-new-feature-toggle" class="sui-toggle fui-highlighted-toggle">
+					
+						<input type="checkbox" id="forminator-new-feature-toggle" aria-labelledby="forminator-new-feature-toggle-label">
+						
+						<span class="sui-toggle-slider" aria-hidden="true"></span>
+						
+						<span id="forminator-new-feature-toggle-label" class="sui-toggle-label">
+                            <?php esc_html_e( 'Allow usage data collection', 'forminator' ); ?>
+                        </span>
+						
+						<span class="sui-tag sui-tag-sm sui-tag-grey" style="margin-left: 8px;">
+                            <?php esc_html_e( 'Recommended', 'forminator' ); ?>
+                        </span>
+					
+					</label>
+
 				</div>
 			</div>
 
 			<div class="sui-box-footer sui-flatten sui-content-center">
 
-				<button class="sui-button sui-button-blue forminator-dismiss-new-feature" data-modal-close data-link="<?php echo esc_url( menu_page_url( 'forminator-addons', false ) ); ?>">
-					<?php esc_html_e( 'Get the add-on', 'forminator' ); ?>
+				<button class="sui-button forminator-dismiss-new-feature" data-type="save" data-modal-close>
+					<?php esc_html_e( 'Save', 'forminator' ); ?>
                 </button>
 
 			</div>
@@ -80,26 +91,25 @@ $banner_2x = forminator_plugin_url() . 'assets/images/geolocation-header@2x.png'
 </div>
 
 <script type="text/javascript">
-	jQuery( '#forminator-new-feature .forminator-dismiss-new-feature' ).on( 'click', function( e ) {
-		e.preventDefault();
+  jQuery('#forminator-new-feature .forminator-dismiss-new-feature').on('click', function (e) {
+    e.preventDefault()
 
-		var $self   = jQuery(this);
-		var $notice = jQuery( e.currentTarget ).closest( '.forminator-feature-modal' );
-		var ajaxUrl = '<?php echo esc_url( forminator_ajax_url() ); ?>';
+    var $notice = jQuery(e.currentTarget).closest('.forminator-feature-modal'),
+      ajaxUrl = '<?php echo esc_url( forminator_ajax_url() ); ?>',
+      dataType = jQuery(this).data('type'),
+      ajaxData = {
+        action: 'forminator_dismiss_notification',
+        prop: $notice.data('prop'),
+        _ajax_nonce: $notice.data('nonce')
+      }
 
-		jQuery.post(
-			ajaxUrl,
-			{
-				action: 'forminator_dismiss_notification',
-				prop: $notice.data('prop'),
-				_ajax_nonce: $notice.data('nonce')
-			}
-		).always( function() {
-			$notice.hide();
-			var link = $self.data('link');
-			if ( link ) {
-				location.href = link;
-			}
-		});
-	});
+    if ( 'save' === dataType ) {
+      ajaxData['usage_value'] = jQuery('#forminator-new-feature-toggle').is(':checked')
+    }
+
+    jQuery.post(ajaxUrl, ajaxData)
+      .always(function () {
+        $notice.hide()
+      })
+  })
 </script>

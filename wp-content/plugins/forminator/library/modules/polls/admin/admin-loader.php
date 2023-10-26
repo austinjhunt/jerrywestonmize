@@ -322,7 +322,7 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 	 * @param string $title Name.
 	 * @param string $status Status.
 	 * @param object $template Template.
-	 * @return int post ID
+	 * @return WP_Error post ID
 	 */
 	public static function update( $id, $title, $status, $template ) {
 		if ( is_null( $id ) || $id <= 0 ) {
@@ -365,7 +365,9 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 			$form_model->add_field( $field_model );
 		}
 
-		$settings             = self::validate_settings( $template->settings );
+		$settings                    = self::validate_settings( $template->settings );
+		$settings['previous_status'] = get_post_status( $id );
+
 		$form_model->settings = $settings;
 		$form_model->status   = $status;
 

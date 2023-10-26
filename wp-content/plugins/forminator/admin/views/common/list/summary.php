@@ -15,7 +15,7 @@ if ( $count > 0 || $is_search ) {
 
 	<div class="sui-box sui-summary <?php echo esc_attr( $this->get_box_summary_classes() ); ?>">
 
-		<div class="sui-summary-image-space" aria-hidden="true"></div>
+		<div class="sui-summary-image-space" aria-hidden="true" style="<?php echo esc_attr( $this->get_box_summary_image_style() ); ?>"></div>
 
 		<div class="sui-summary-segment">
 

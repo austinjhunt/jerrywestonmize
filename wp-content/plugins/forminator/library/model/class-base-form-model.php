@@ -1146,7 +1146,7 @@ abstract class Forminator_Base_Form_Model {
 			 */
 			do_action( 'forminator_before_create_model_from_import_data', $import_data, $class );
 
-			if ( ! isset( $import_data['type'] ) || empty( $import_data['type'] ) ) {
+			if ( empty( $import_data['type'] ) ) {
 				throw new Exception( esc_html__( 'Invalid format of import data type', 'forminator' ) );
 			}
 
@@ -1158,17 +1158,18 @@ abstract class Forminator_Base_Form_Model {
 				throw new Exception( esc_html__( 'Invalid format of import data', 'forminator' ) );
 			}
 
-			if ( ! isset( $meta['settings'] ) || empty( $meta['settings'] ) ) {
+			if ( empty( $meta['settings'] ) ) {
 				throw new Exception( esc_html__( 'Invalid format of import data settings', 'forminator' ) );
 			}
 
-			if ( ! isset( $meta['settings']['formName'] ) || empty( $meta['settings']['formName'] ) ) {
+			if ( empty( $meta['settings']['formName'] ) ) {
 				throw new Exception( esc_html__( 'Invalid format of import data name', 'forminator' ) );
 			}
 
 			$form_name = $meta['settings']['formName'];
 
 			$type = $import_data['type'];
+
 			switch ( $type ) {
 				case 'quiz':
 					$post_type = 'forminator_quizzes';
@@ -1198,18 +1199,14 @@ abstract class Forminator_Base_Form_Model {
 				throw new Exception( $post_id->get_error_message(), $post_id->get_error_code() );
 			}
 
-			if ( ! isset( $meta['settings'] ) ) {
-				$meta['settings'] = array();
-			}
 			// update form_id.
-			$meta['settings']['form_id'] = $post_id;
+			$meta['settings']['form_id']         = $post_id;
+			$meta['settings']['previous_status'] = 'draft';
 
 			update_post_meta( $post_id, self::META_KEY, $meta );
 
 			/** @var Forminator_Base_Form_Model|Forminator_Poll_Model|Forminator_Quiz_Model|Forminator_Form_Model $model */
 			$model    = $model->load( $post_id );
-			$fields   = array( $meta );
-			$settings = $meta['settings'];
 
 			if ( ! $model instanceof $class ) {
 				throw new Exception( esc_html__( 'Failed to load imported Forminator model', 'forminator' ) );
@@ -1225,18 +1222,10 @@ abstract class Forminator_Base_Form_Model {
 			 * @since 1.11
 			 */
 			do_action( 'forminator_' . $type . '_action_imported', $post_id, $post_status, $model );
-			/**
-			 * Action called after form saved to database
-			 *
-			 * @param int $id - form id.
-			 * @param string $form_name - form title.
-			 * @param string $post_status - form status.
-			 * @param array $fields - form fields.
-			 * @param array $settings - form settings.
-			 *
-			 * @since 1.11
-			 */
-			do_action( 'forminator_custom_form_action_create', $post_id, $form_name, $post_status, $fields, $settings );
+
+			// Call do action after create imported module
+			self::module_update_do_action( $type, $post_id, $model );
+
 		} catch ( Exception $e ) {
 			$code = $e->getCode();
 			if ( empty( $code ) ) {
@@ -1689,5 +1678,43 @@ abstract class Forminator_Base_Form_Model {
 	 */
 	public function get_expiry_date( $expire_date ) {
 		return is_numeric( $expire_date ) ? (int) $expire_date / 1000 : strtotime( $expire_date );
+	}
+
+	/**
+	 * Call do action when module update
+	 *
+	 * @param string $type module type
+	 * @param string $post_id post ID
+	 * @param object $model model array
+	 *
+	 * @return void
+	 */
+	public static function module_update_do_action( $type, $post_id, $model ) {
+		$modelArray    = (array) $model;
+		$post_status   = ! empty( $modelArray['status'] ) ? $modelArray['status'] : '';
+		$settings      = ! empty( $modelArray['settings'] ) ? $modelArray['settings'] : array();
+		$settings['previous_status'] = 'draft';
+		switch ( $type ) {
+			case 'form':
+				$fields = ! empty( $model->fields ) ? $model->get_fields_grouped() : array();
+				$form_name = $modelArray['settings']['formName'];
+				/** This action is documented in library/modules/custom-forms/admin/admin-loader.php */
+				do_action( 'forminator_custom_form_action_update', $post_id, $form_name, $post_status, $fields, $settings );
+				break;
+			case 'poll':
+				$answer = ! empty( $model->fields ) ? $model->get_fields_as_array() : array();
+				/** This action is documented in library/modules/polls/admin/admin-loader.php */
+				do_action( 'forminator_poll_action_update', $post_id, $post_status, $answer, $settings );
+				break;
+			case 'quiz':
+				$quiz_type = $modelArray['quiz_type'];
+				$questions = $modelArray['questions'];
+				$results   = $modelArray['results'];
+				/** This action is documented in library/modules/quizzes/admin/admin-loader.php */
+				do_action( 'forminator_quiz_action_update', $post_id, $quiz_type, $post_status, $questions, $results, $settings );
+				break;
+			default:
+				break;
+		}
 	}
 }

@@ -142,6 +142,17 @@ class Forminator_Export {
 		);
 		update_option( 'forminator_exporter_log', $logs );
 
+		/**
+		 * Action hook to trigger before Manual Export download.
+		 *
+		 * @param int $form_id Form ID
+		 * @param string $form_type Form type(form/quiz/poll)
+		 *
+		 * @since 1.27.0
+		 *
+		 */
+		do_action( 'forminator_before_manual_export_download', $form_id, $type );
+
 		$fp = fopen( 'php://output', 'w' ); // phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_fopen -- disable phpcs because it writes memory
 		ob_start();
 		foreach ( $data as $fields ) {
@@ -161,6 +172,7 @@ class Forminator_Export {
 
 		// make php send the generated csv lines to the browser.
 		exit( $output ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
 	}
 
 	/**
@@ -248,6 +260,20 @@ class Forminator_Export {
 			forminator_maybe_log( $data[ $key ] );
 
 			update_option( 'forminator_entries_export_schedule', $data );
+
+			/**
+			 * Action hook to trigger after Schedule Export save.
+			 *
+			 * @param int $form_id Form ID
+			 * @param string $form_type Form type(form/quiz/poll)
+			 * @param array $data all the export form data
+			 *
+			 * @since 1.27.0
+			 *
+			 */
+
+			do_action( 'forminator_after_export_schedule_save', $form_id, $form_type, $data );
+
 			$redirect = remove_query_arg( array( 'err_msg' ) );
 
 			$referer = wp_get_referer();

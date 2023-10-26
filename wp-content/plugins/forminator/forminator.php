@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Forminator
- * Version: 1.26.0
+ * Version: 1.27.0
  * Plugin URI:  https://wpmudev.com/project/forminator/
  * Description: Capture user information (as detailed as you like), engage users with interactive polls that show real-time results and graphs, “no wrong answer” Facebook-style quizzes and knowledge tests.
  * Author: WPMU DEV
@@ -32,43 +32,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
-
-if ( ! defined( 'FORMINATOR_VERSION' ) ) {
-	define( 'FORMINATOR_VERSION', '1.26.0' );
-}
-
-if ( ! defined( 'FORMINATOR_SUI_VERSION' ) ) {
-	define( 'FORMINATOR_SUI_VERSION', '2.12.16' );
-}
-
-if ( ! defined( 'FORMINATOR_STRIPE_LIB_VERSION' ) ) {
-	define( 'FORMINATOR_STRIPE_LIB_VERSION', '7.67.0' );
-}
-
-if ( ! defined( 'FORMINATOR_STRIPE_LIB_DATE' ) ) {
-	define( 'FORMINATOR_STRIPE_LIB_DATE', '2019-12-03' );
-}
-
-if ( ! defined( 'FORMINATOR_STRIPE_PARTNER_ID' ) ) {
-	define( 'FORMINATOR_STRIPE_PARTNER_ID', 'pp_partner_GeDaq2odDgGkDJ' );
-}
-
-if ( ! defined( 'FORMINATOR_PAYPAL_LIB_VERSION' ) ) {
-	define( 'FORMINATOR_PAYPAL_LIB_VERSION', '1.14.0' );
-}
-
-if ( ! defined( 'FORMINATOR_PRO' ) ) {
-	define( 'FORMINATOR_PRO', false );
-}
-
-if ( ! defined( 'FORMINATOR_PLUGIN_BASENAME' ) ) {
-	define( 'FORMINATOR_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-
-}
-
-if ( ! defined( 'FORMINATOR_PRO_URL' ) ) {
-	define( 'FORMINATOR_PRO_URL', 'https://wpmudev.com/project/forminator-pro/' );
-}
+// Constants
+require_once plugin_dir_path( __FILE__ ) . 'constants.php';
 
 // Include API
 require_once plugin_dir_path( __FILE__ ) . 'library/class-api.php';
@@ -78,6 +43,9 @@ register_activation_hook( __FILE__, array( 'Forminator', 'activation_hook' ) );
 // Register deactivation hook
 register_deactivation_hook( __FILE__, array( 'Forminator', 'deactivation_hook' ) );
 
+if ( ! defined( 'FORMINATOR_PLUGIN_BASENAME' ) ) {
+	define( 'FORMINATOR_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+}
 /**
  * Class Forminator
  *
@@ -407,7 +375,6 @@ if ( ! class_exists( 'Forminator' ) ) {
 		private function init() {
 			// Initialize plugin core
 			$this->forminator = Forminator_Core::get_instance();
-
 			/**
 			 * Triggered when plugin is loaded
 			 */
@@ -457,16 +424,8 @@ if ( ! class_exists( 'Forminator' ) ) {
 				include_once forminator_plugin_dir() . 'library/lib/dash-notice/wpmudev-dash-notification.php';
 			}
 
-			// un-change-able 5.6.0 requirement, based on lowest version needed on vendors list
-			if ( version_compare( PHP_VERSION, '5.6.0', 'ge' ) ) {
-				/**
-				 * Vendors list
-				 * - Stripe PHP - Min PHP req 5.6.0 (managed internally)
-				 * - Paypal PHP - Min PHP req 5.6.0 (managed internally)
-				 */
-				/** @noinspection PhpIncludeInspection */
-				include_once forminator_plugin_dir() . 'library/external/autoload_psr4.php';
-			}
+			// Prefixed vendor autoload.
+			include_once forminator_plugin_dir() . 'library/external/vendor/autoload.php';
 
 			if ( ! FORMINATOR_PRO ) {
 

@@ -1,13 +1,13 @@
 === Forminator - Contact Form, Payment Form & Custom Form Builder ===
 Plugin Name: Forminator - Contact Form, Payment Form & Custom Form Builder
-Version: 1.26.0
+Version: 1.27.0
 Author: WPMU DEV
 Author URI: https://wpmudev.com/
 Contributors: WPMUDEV
 Tags: forms, contact form, wordpress form plugin, payment form, custom form, form builder, paypal form wordpress, form maker, quiz, quiz builder, order form, stripe payments, paypal payments, stripe form, paypal form
 Requires at least: 5.2
 Tested up to: 6.3
-Stable tag: 1.26.0
+Stable tag: 1.27.0
 Requires PHP: 5.6.20
 License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -218,6 +218,18 @@ Find out all you need to know by checking out our API documentation [here](https
 9. Allow simple drag and drop multi-file uploads for users.
 
 == Changelog ==
+
+= 1.27.0 ( 2023-10-09 ) =
+
+- New: Usage Data tracking
+- Fix: Phone validation set to Croatia or other international formats prevents form submission
+- Fix: Resume message from Save and Continue display field tag name instead of typed text
+- Fix: Using merge tags in checkbox/radio fields results in an "Error! Invalid payment amount!" message
+- Fix: Hovering over number fields triggers the "Typing" action
+- Fix: The search field is not working when an additional field is added to a HubSpot form
+- Fix: Form submission fails when the Field Group repeater has "choice" fields and the PDF is attached to the email
+- Fix: Inline validation prevents PayPal submission in case of pre-submission errors
+- Fix: Stripe charges an incorrect amount for payments over 999 when using comma-formatted numbers
 
 = 1.26.0 ( 2023-09-13 ) =
 

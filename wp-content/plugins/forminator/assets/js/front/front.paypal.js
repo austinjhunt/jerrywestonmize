@@ -111,6 +111,11 @@
 					$form.find('input, select, textarea, .forminator-field-signature').on( 'change', function() {
 						if ( self.is_data_valid() && self.is_form_valid() ) {
 							actions.enable();
+							if ( $target_message.hasClass('forminator-error') ) {
+								$target_message.html( '' ).attr( "aria-hidden", "true" );
+								// In case of payment failed error
+								$target_message.removeClass('forminator-show');
+							}
 						} else {
                             actions.disable();
                         }
@@ -149,7 +154,7 @@
 						$target_message.removeClass('forminator-accessible').addClass('forminator-error').html('').removeAttr( 'aria-hidden' );
 						$target_message.html('<label class="forminator-label--error"><span>' + generalMessage.form_has_error + '</span></label>');
 						self.focus_to_element($target_message);
-                    } else{
+                    } else {
 						$form.trigger( 'forminator:preSubmit:paypal', [ $target_message ] );
 						if ( $target_message.html() ) {
 							self.focus_to_element($target_message);

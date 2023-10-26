@@ -21,6 +21,8 @@ $nonce   = wp_create_nonce( 'forminator_save_dashboard_settings' );
 
 			<?php $this->template( 'settings/tab-editor' ); ?>
 
+			<?php $this->template( 'settings/tab-tracking' ); ?>
+
 		</div>
 
 		<div class="sui-box-footer">
