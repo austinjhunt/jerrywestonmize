@@ -59,6 +59,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 $atts
             );
 
+            echo $attributes['user_attr_query_params'];
 
             // redirect unauthenticated users to home page
             if (!is_user_logged_in()) {
@@ -67,6 +68,8 @@ if (!class_exists('ShowOnlyForRegulars')) {
 
             // split include_user_meta_attrs into array  
             $user_attr_query_params = array_map('trim', explode(',', $attributes['user_attr_query_params']));
+
+            var_dump($user_attr_query_params);
 
             $customer_status = get_user_meta(user_id: get_current_user_id(), key: 'customer_status', single: true);
             $customer_status = explode(':', $customer_status)[0];
@@ -81,7 +84,8 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 if (!empty($attributes['newcomer_redirect_uri'])) {
                     $redirect = $attributes['newcomer_redirect_uri'];
                     $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $user_attr_query_params);
-                    echo "<script>window.location = '" . $redirect . "';</script>";
+                    echo $redirect;
+                    // echo "<script>window.location = '" . $redirect . "';</script>";
                 }
             } else if ($customer_status == "") {
                 // set customer status to newcomer
@@ -89,7 +93,8 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 if (!empty($attributes['newcomer_redirect_uri'])) {
                     $redirect = $attributes['newcomer_redirect_uri'];
                     $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $user_attr_query_params);
-                    echo "<script>window.location = '" . $redirect . "';</script>";
+                    echo $redirect;
+                    // echo "<script>window.location = '" . $redirect . "';</script>";
                 }
             }
 
