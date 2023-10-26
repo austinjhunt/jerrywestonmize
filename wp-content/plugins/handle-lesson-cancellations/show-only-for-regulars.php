@@ -1,8 +1,8 @@
 <?php
 /*
- * Plugin Name: Show Only For Regulars
+ * Plugin Name: Handle Lesson Cancellations
  * Plugin URI: https://github.com/austinjhunt/jerrywestonmize
- * Description: This plugin, triggered with shortcode [show_only_for_regulars content_is_shortcode=true/false newcomer_redirect_uri="REDIRECT NEWCOMERS TO THIS URL"]CONTENT[/show_only_for_regulars]  will show CONTENT that it wraps only if signed in user's ACF field "customer_status" is "regular". Set content_is_shortcode=true if the content you are wrapping is a shortcode, e.g. [ameliastepbooking]. Set content_is_shortcode=false if the content you are wrapping is not a shortcode, e.g. <h1>Some header</h1>. Set newcomer_redirect_uri to redirect newcomers to a specific URL. If newcomer_redirect_uri is set, content_is_shortcode is ignored. If newcomer_redirect_uri is not set and the person is a newcomer, they'll see nothing. If visitor is not logged in at all, this plugin has no effect and simply returns content. 
+ * Description: This plugin adds additional business logic on top of Amelia appointment (lesson) cancellations. It increments the user's meta field (virtual_makeup_lessons or inperson_makeup_lessons) by 1.  
  * Version: 1.0.0
  * Requires PHP: 8
  * Author: Austin Hunt
