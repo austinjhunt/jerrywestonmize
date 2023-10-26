@@ -262,27 +262,26 @@
         },
         {
             "name": "trustedlogin/client",
-            "version": "dev-develop",
-            "version_normalized": "dev-develop",
+            "version": "v1.6.1",
+            "version_normalized": "1.6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/trustedlogin/client.git",
-                "reference": "0275ef9e2318e3c656622be07ab8cacfbe032db2"
+                "reference": "1c924f8dee1b10624223741b72e5ce83f1e45ce3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/trustedlogin/client/zipball/0275ef9e2318e3c656622be07ab8cacfbe032db2",
-                "reference": "0275ef9e2318e3c656622be07ab8cacfbe032db2",
+                "url": "https://api.github.com/repos/trustedlogin/client/zipball/1c924f8dee1b10624223741b72e5ce83f1e45ce3",
+                "reference": "1c924f8dee1b10624223741b72e5ce83f1e45ce3",
                 "shasum": ""
             },
             "require-dev": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "php": ">=5.3.0",
-                "spatie/phpunit-watcher": "^1.23",
                 "yoast/phpunit-polyfills": "^1.0"
             },
-            "time": "2023-09-22T19:57:11+00:00",
+            "time": "2023-09-22T17:54:18+00:00",
             "bin": [
                 "bin/build-sass"
             ],
@@ -313,7 +312,7 @@
             ],
             "support": {
                 "issues": "https://github.com/trustedlogin/client/issues",
-                "source": "https://github.com/trustedlogin/client/tree/develop"
+                "source": "https://github.com/trustedlogin/client/tree/v1.6.1"
             },
             "install-path": "../trustedlogin/client"
         }
