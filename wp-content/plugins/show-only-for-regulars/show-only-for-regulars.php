@@ -36,10 +36,10 @@ if (!class_exists('ShowOnlyForRegulars')) {
             wp_enqueue_script($this->plugin_name . "_script", plugins_url('/assets/main.js', __FILE__));
         }
 
-        public function get_redirect_uri_with_user_meta_query_params($redirect_uri, $user_attrs)
+        public function get_redirect_uri_with_user_meta_query_params($redirect_uri, $user_attr_query_params)
         {
             // add each user attribute as a query param to the redirect uri
-            foreach ($user_attrs as $attr) {
+            foreach ($user_attr_query_params as $attr) {
                 $value = get_user_meta(user_id: get_current_user_id(), key: $attr, single: true);
                 $redirect_uri = add_query_arg($attr, $value, $redirect_uri);
             }
@@ -66,7 +66,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
             }
 
             // split include_user_meta_attrs into array  
-            $include_user_meta_attrs = array_map('trim', explode(',', $attributes['include_user_meta_attrs']));
+            $user_attr_query_params = array_map('trim', explode(',', $attributes['user_attr_query_params']));
 
             $customer_status = get_user_meta(user_id: get_current_user_id(), key: 'customer_status', single: true);
             $customer_status = explode(':', $customer_status)[0];
@@ -80,7 +80,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
             } else if ($customer_status == "newcomer") {
                 if (!empty($attributes['newcomer_redirect_uri'])) {
                     $redirect = $attributes['newcomer_redirect_uri'];
-                    $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $include_user_meta_attrs);
+                    $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $user_attr_query_params);
                     echo "<script>window.location = '" . $redirect . "';</script>";
                 }
             } else if ($customer_status == "") {
@@ -88,7 +88,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 update_user_meta(user_id: get_current_user_id(), meta_key: 'customer_status', meta_value: 'newcomer: Newcomer');
                 if (!empty($attributes['newcomer_redirect_uri'])) {
                     $redirect = $attributes['newcomer_redirect_uri'];
-                    $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $include_user_meta_attrs);
+                    $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $user_attr_query_params);
                     echo "<script>window.location = '" . $redirect . "';</script>";
                 }
             }
