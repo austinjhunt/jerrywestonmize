@@ -73,8 +73,6 @@ if (!class_exists('ShowOnlyForRegulars')) {
             // split include_user_meta_attrs into array  
             $user_attr_query_params = array_map('trim', explode(',', $attributes['user_attr_query_params']));
 
-            var_dump($user_attr_query_params);
-
             $customer_status = get_user_meta(user_id: get_current_user_id(), key: 'customer_status', single: true);
             $customer_status = explode(':', $customer_status)[0];
             $customer_status = trim($customer_status);
