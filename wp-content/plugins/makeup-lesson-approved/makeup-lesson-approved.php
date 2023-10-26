@@ -22,7 +22,7 @@ if (!class_exists('DecrementMakeupCredits')) {
         function register()
         {
 
-            add_action('AmeliaAppointmentBookingAdded', array($this, 'handle_makeup_lesson_booking'), 10, 3);
+            add_action('AmeliaAppointmentBookingStatusUpdated', array($this, 'handle_makeup_lesson_booking'), 10, 3);
             plugin_basename(__FILE__);
         }
 
