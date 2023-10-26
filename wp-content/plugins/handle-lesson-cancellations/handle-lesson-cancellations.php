@@ -30,10 +30,10 @@ if (!class_exists('HandleLessonCancellation')) {
         function handle_lesson_cancellation($reservation, $bookings, $container)
         {
             // actions
-            echo "HANDLE LESSON CANCELLATION";
-            var_dump($reservation);
-            var_dump($bookings);
-            var_dump($container);
+            error_log('HANDLE LESSON CANCELLATION');
+            error_log(print_r($reservation, true));
+            error_log(print_r($bookings, true));
+            error_log(print_r($container, true));
         }
 
 
