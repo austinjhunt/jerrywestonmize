@@ -38,12 +38,17 @@ if (!class_exists('ShowOnlyForRegulars')) {
 
         public function get_redirect_uri_with_user_meta_query_params($redirect_uri, $user_attr_query_params)
         {
+            $query_params = array();
             // add each user attribute as a query param to the redirect uri
             foreach ($user_attr_query_params as $attr) {
                 $value = get_user_meta(user_id: get_current_user_id(), key: $attr, single: true);
-                $redirect_uri = add_query_arg($attr, $value, $redirect_uri);
+                if ($value) {
+                    $query_params[$attr] = $value;
+                }
+
             }
-            return $redirect_uri;
+            $url_with_params = add_query_arg($query_params, $redirect_uri);
+            return $url_with_params;
         }
 
         // [show_only_for_regulars newcomer_redirect_uri="REDIRECT NEWCOMERS TO THIS URL"]CONTENT[/show_only_for_regulars]
@@ -59,7 +64,6 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 $atts
             );
 
-            echo $attributes['user_attr_query_params'];
 
             // redirect unauthenticated users to home page
             if (!is_user_logged_in()) {
@@ -84,8 +88,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 if (!empty($attributes['newcomer_redirect_uri'])) {
                     $redirect = $attributes['newcomer_redirect_uri'];
                     $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $user_attr_query_params);
-                    echo $redirect;
-                    // echo "<script>window.location = '" . $redirect . "';</script>";
+                    echo "<script>window.location = '" . $redirect . "';</script>";
                 }
             } else if ($customer_status == "") {
                 // set customer status to newcomer
@@ -93,8 +96,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 if (!empty($attributes['newcomer_redirect_uri'])) {
                     $redirect = $attributes['newcomer_redirect_uri'];
                     $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $user_attr_query_params);
-                    echo $redirect;
-                    // echo "<script>window.location = '" . $redirect . "';</script>";
+                    echo "<script>window.location = '" . $redirect . "';</script>";
                 }
             }
 
