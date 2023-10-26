@@ -1,0 +1,38 @@
+.conditional-display-admin .container {
+  padding: 1rem;
+}
+
+input[type="submit"].acf-button.button.button-primary.button-large {
+  text-align: center;
+  margin: 0 auto;
+  background-color: rgb(64, 191, 154);
+  background-image: none;
+  font-family: Prociono;
+  font-weight: 400;
+  text-transform: none;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 1px;
+  color: #fff;
+  border-top-width: 2px;
+  border-top-color: rgb(64, 191, 154);
+  border-top-style: solid;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-right-width: 2px;
+  border-right-color: rgb(64, 191, 154);
+  border-right-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: rgb(64, 191, 154);
+  border-bottom-style: solid;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-left-width: 2px;
+  border-left-color: rgb(64, 191, 154);
+  border-left-style: solid;
+  padding-top: 15px;
+  padding-right: 30px;
+  padding-bottom: 15px;
+  padding-left: 30px;
+  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.5);
+}
