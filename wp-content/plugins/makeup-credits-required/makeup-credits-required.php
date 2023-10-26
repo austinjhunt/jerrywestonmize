@@ -1,6 +1,6 @@
 <?php
 /*
- * Plugin Name: Show Only For Regulars
+ * Plugin Name: Makeup Credits Required
  * Plugin URI: https://github.com/austinjhunt/jerrywestonmize
  * Description: This plugin offers a shortcode [makeup_credits_required lesson_type="[virtual,inperson]"]CONTENT[/makeup_credits_required] that only shows content if the signed in user has at least one makeup credit of the specified lesson type.
  * Version: 1.0.0
