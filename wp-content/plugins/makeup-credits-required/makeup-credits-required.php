@@ -55,8 +55,10 @@ if (!class_exists('MakeupCreditsRequired')) {
             );
             $makeup_credits = get_field('' . $attributes['lesson_type'] . '_makeup_lesson_credits', 'user_' . get_current_user_id());
             // redirect unauthenticated users or users without makeup credits to home page
-            if (!is_user_logged_in() || $makeup_credits < 1) {
+            if (!is_user_logged_in()) {
                 echo "<script>window.location = '" . $login_url . "';</script>";
+            } else if ($makeup_credits < 1) {
+                echo "<script>window.location = 'https://jerrywestonmize.com/';</script>";
             }
             if ($attributes['content_is_shortcode'] == true) {
                 echo do_shortcode($content);
