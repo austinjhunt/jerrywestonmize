@@ -110,17 +110,12 @@ if (!class_exists('DecrementMakeupCredits')) {
                 error_log('User ID: ' . $user->ID);
                 $service_id = $reservation['serviceId'];
                 $category_name = $this->get_amelia_service_category_name_from_service_id($service_id);
-                $service_name = $this->get_amelia_service_name($service_id);
-                if ($category_name == "Make Up Lessons") {
-                    error_log('Category = makeup lessons');
-                    // if service  name contains "Virtual", decrement virtual credits
-                    if (strpos(strtolower($service_name), 'virtual') !== false) {
-                        $this->decrement_virtual_makeup_lesson_credits($user->ID);
-                    }
-                    // if service name lowercase contains in-person, inperson, or in person, decrement in person credits
-                    else if (strpos(strtolower($service_name), 'in-person') !== false || strpos(strtolower($service_name), 'inperson') !== false || strpos(strtolower($service_name), 'in person') !== false) {
-                        $this->decrement_inperson_makeup_lesson_credits($user->ID);
-                    }
+                error_log('Category name: ' . $category_name . '');
+
+                if ($category_name == "Virtual Make Up Lessons") {
+                    $this->decrement_virtual_makeup_lesson_credits($user->ID);
+                } else if ($category_name == "In-Person Make Up Lessons") {
+                    $this->decrement_inperson_makeup_lesson_credits($user->ID);
                 }
 
             }
