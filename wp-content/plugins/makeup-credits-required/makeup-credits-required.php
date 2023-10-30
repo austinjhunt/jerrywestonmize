@@ -41,6 +41,10 @@ if (!class_exists('MakeupCreditsRequired')) {
         public function makeup_credits_required_callback($atts, $content = '')
         {
             $login_url = "https://jerrywestonmize.com/index.php/login/";
+            $current_url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            $current_url = urlencode($current_url);
+            $login_url = $login_url . '?redirect_to=' . $current_url . '';
+
             ob_start();
             $attributes = shortcode_atts(
                 array(
