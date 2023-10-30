@@ -58,6 +58,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
         // [show_only_for_regulars newcomer_redirect_uri="REDIRECT NEWCOMERS TO THIS URL"]CONTENT[/show_only_for_regulars]
         public function show_only_for_regulars_callback($atts, $content = '')
         {
+            $login_url = "https://jerrywestonmize.com/index.php/login/";
             ob_start();
             $attributes = shortcode_atts(
                 array(
@@ -71,7 +72,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
 
             // redirect unauthenticated users to home page
             if (!is_user_logged_in()) {
-                echo "<script>window.location = '" . get_home_url() . "';</script>";
+                echo "<script>window.location = '" . $login_url . "';</script>";
             }
 
             // split include_user_meta_attrs into array  

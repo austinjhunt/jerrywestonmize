@@ -40,6 +40,7 @@ if (!class_exists('MakeupCreditsRequired')) {
         // [makeup_credits_required   lesson_type="virtual/inperson"]CONTENT[/makeup_credits_required]
         public function makeup_credits_required_callback($atts, $content = '')
         {
+            $login_url = "https://jerrywestonmize.com/index.php/login/";
             ob_start();
             $attributes = shortcode_atts(
                 array(
@@ -51,7 +52,7 @@ if (!class_exists('MakeupCreditsRequired')) {
             $makeup_credits = get_field('' . $attributes['lesson_type'] . '_makeup_lesson_credits', 'user_' . get_current_user_id());
             // redirect unauthenticated users or users without makeup credits to home page
             if (!is_user_logged_in() || $makeup_credits < 1) {
-                echo "<script>window.location = '" . get_home_url() . "';</script>";
+                echo "<script>window.location = '" . $login_url . "';</script>";
             }
             if ($attributes['content_is_shortcode'] == true) {
                 echo do_shortcode($content);
