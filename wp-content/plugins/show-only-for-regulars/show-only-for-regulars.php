@@ -69,7 +69,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 $atts
             );
             $login_url = "https://jerrywestonmize.com/index.php/login/";
-            $current_url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            $current_url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             $current_url = urlencode($current_url);
             $login_url = $login_url . '?redirect_to=' . $current_url . '';
             // redirect unauthenticated users to home page
