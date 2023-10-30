@@ -88,8 +88,9 @@ if (!class_exists('HandleLessonCancellation')) {
             if ($user) {
                 error_log('User ID: ' . $user->ID);
                 $service_id = $reservation['serviceId'];
+                error_log('Service ID: ' . $service_id);
                 $category_name = $this->get_amelia_service_category_name_from_service_id($service_id);
-
+                error_log('Category Name: ' . $category_name);
                 if ($category_name == "Virtual Lessons") {
                     $this->increment_virtual_makeup_lesson_credits($user->ID);
                 } else if ($category_name == "In Person Lessons") {
