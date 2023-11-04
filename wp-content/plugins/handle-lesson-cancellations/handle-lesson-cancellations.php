@@ -91,9 +91,11 @@ if (!class_exists('HandleLessonCancellation')) {
                 error_log('Service ID: ' . $service_id);
                 $category_name = $this->get_amelia_service_category_name_from_service_id($service_id);
                 error_log('Category Name: ' . $category_name);
-                if ($category_name == "Virtual Lessons") {
+                if ($category_name == "Virtual Lessons" || $category_name == "Virtual Make Up Lessons") {
+                    // increment virtual makeup lesson credits when user cancels either a normal virtual lesson or a make up virtual lesson
                     $this->increment_virtual_makeup_lesson_credits($user->ID);
-                } else if ($category_name == "In Person Lessons") {
+                } else if ($category_name == "In Person Lessons" || $category_name == "In-Person Make Up Lessons") {
+                    // increment in-person makeup lesson credits when user cancels either a normal in person lesson or a make up in person lesson
                     $this->increment_inperson_makeup_lesson_credits($user->ID);
                 }
             }
