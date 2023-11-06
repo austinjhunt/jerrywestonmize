@@ -22,7 +22,11 @@ if (!class_exists('DecrementMakeupCredits')) {
         function register()
         {
 
-            add_action('AmeliaAppointmentBookingAdded', array($this, 'handle_makeup_lesson_booking'), 10, 3);
+            // use AmeliaAppointmentBookingAdded hook for virtual makeup lessons since those are auto-approved 
+            add_action('AmeliaAppointmentBookingAdded', array($this, 'handle_virtual_makeup_lesson_booking'), 10, 3);
+
+            // use AmeliaAppointmentBookingStatusUpdated hook for in-person makeup lessons since those are manually approved (pending by default)
+            add_action('AmeliaAppointmentBookingStatusUpdated', array($this, 'handle_inperson_makeup_lesson_booking'), 10, 3);
             plugin_basename(__FILE__);
         }
 
@@ -88,9 +92,24 @@ if (!class_exists('DecrementMakeupCredits')) {
             );
             return $category_name;
         }
-        function handle_makeup_lesson_booking($reservation, $bookings, $container)
+
+        function get_user_from_bookings($bookings)
         {
-            error_log('AmeliaAppointmentBookingStatusUpdated. calling handle_makeup_lesson_booking');
+            // get WP user from the Amelia appointment customer email (1:1 relationship)
+            $customer_email = $bookings[0]['customer']['email'];
+            error_log('customer email: ' . $customer_email . '');
+            $user = get_user_by('email', $customer_email);
+            if ($user) {
+                return $user;
+            } else {
+                error_log("No user found with email " . $customer_email . "");
+                return null;
+            }
+        }
+
+        function handle_virtual_makeup_lesson_booking($reservation, $bookings, $container)
+        {
+            error_log('AmeliaAppointmentBookingAdded (auto-approved virtual makeup lesson) -> calling handle_virtual_makeup_lesson_booking');
 
             // continue only if reservation status is now approved
             if ($reservation['status'] != 'approved') {
@@ -98,14 +117,7 @@ if (!class_exists('DecrementMakeupCredits')) {
                 return;
             }
 
-            // Extract email from the array
-            $customer_email = $bookings[0]['customer']['email'];
-            error_log('customer email: ' . $customer_email . '');
-
-            // Get WordPress user by email
-            $user = get_user_by('email', $customer_email);
-
-            // Check if a user exists with the provided email
+            $user = $this->get_user_from_bookings($bookings);
             if ($user) {
                 error_log('User ID: ' . $user->ID);
                 $service_id = $reservation['serviceId'];
@@ -117,7 +129,32 @@ if (!class_exists('DecrementMakeupCredits')) {
                 } else if ($category_name == "In-Person Make Up Lessons") {
                     $this->decrement_inperson_makeup_lesson_credits($user->ID);
                 }
+            }
+        }
 
+        function handle_inperson_makeup_lesson_booking($reservation, $bookings, $container)
+        {
+            error_log('AmeliaAppointmentBookingStatusUpdated (manual) -> calling handle_inperson_makeup_lesson_booking');
+
+            // continue only if reservation status is now approved
+            if ($reservation['status'] != 'approved') {
+                error_log('reservation status is not approved. exiting.');
+                return;
+            }
+
+            $user = $this->get_user_from_bookings($bookings);
+
+            // Check if a user exists with the provided email
+            if ($user) {
+                error_log('User ID: ' . $user->ID);
+                $service_id = $reservation['serviceId'];
+                $category_name = $this->get_amelia_service_category_name_from_service_id($service_id);
+                error_log('Category name: ' . $category_name . '');
+                if ($category_name == "Virtual Make Up Lessons") {
+                    $this->decrement_virtual_makeup_lesson_credits($user->ID);
+                } else if ($category_name == "In-Person Make Up Lessons") {
+                    $this->decrement_inperson_makeup_lesson_credits($user->ID);
+                }
             }
         }
 
