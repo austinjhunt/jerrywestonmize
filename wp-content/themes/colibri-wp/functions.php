@@ -27,12 +27,31 @@ function jwm_logout_url($default)
 	return 'https://jerrywestonmize.com/jwmsecure.php?' . $queryString;
 }
 
-// change the forgot password URL
+// change the forgot password URL on login page
 function jwm_lostpassword_url()
 {
 	return 'https://jerrywestonmize.com/jwmsecure.php?action=lostpassword';
 }
 add_filter('lostpassword_url', 'jwm_lostpassword_url');
+
+// change the reset password link in the email you get after clicking forgot password
+function custom_reset_password_message($message, $key, $user_login, $user_data)
+{
+	// Check if the message contains the URL we want to replace
+	if (strpos($message, 'wp-login.php?action=rp') !== false) {
+		$user_locale = get_user_meta($user_data->ID, 'locale', true);
+		$wp_lang = !empty($user_locale) ? $user_locale : 'en_US';
+		// Construct the new URL
+		$new_url = 'https://jerrywestonmize.com/jwmsecure.php?action=rp&key=' . $key . '&login=' . rawurlencode($user_login) . '&wp_lang=' . $wp_lang;
+
+		$old_url = 'https://jerrywestonmize.com/wp-login.php?action=rp&key=' . $key . '&login=' . rawurlencode($user_login) . '&wp_lang=' . $wp_lang;
+		// Replace the old URL with the new URL
+		$message = str_replace($old_url, $new_url, $message);
+	}
+
+	return $message;
+}
+add_filter('retrieve_password_message', 'custom_reset_password_message', 10, 4);
 
 // change the behavior after log out completion (default redirects to wp-login.php)
 add_action('wp_logout', 'jwm_logout_complete');
