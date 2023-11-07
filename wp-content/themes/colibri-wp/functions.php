@@ -10,9 +10,11 @@ if ( ! defined( 'COLIBRI_THEME_REQUIRED_PHP_VERSION' ) ) {
 	define( 'COLIBRI_THEME_REQUIRED_PHP_VERSION', '5.6.0' );
 }
 
+
+// begin mods
 // change the logout url
 add_filter( 'logout_url', 'jwm_logout_url' );
-function jwm_logout_url( $default ) 
+function jwm_logout_url( $default )
 {
     // set your URL here
     // // Parse the URL into its components.
@@ -21,7 +23,7 @@ function jwm_logout_url( $default )
 	// Get the query string from the parsed URL.
 	$queryString = $parsedUrl['query'];
 
-	// Remove the leading question mark from the query string. 
+	// Remove the leading question mark from the query string.
     return  'https://jerrywestonmize.com/jwmsecure.php?' . $queryString  ;
 }
 
@@ -35,10 +37,12 @@ function jwm_logout_complete(){
 
 add_action('after_setup_theme', 'remove_admin_bar');
 function remove_admin_bar() {
-if (!current_user_can('administrator') && !is_admin()) {
-  show_admin_bar(false);
+    if (!current_user_can('administrator') && !is_admin()) {
+        show_admin_bar(false);
+    }
 }
-}
+
+// end of mods
 
 add_action( 'after_switch_theme', 'colibriwp_check_php_version' );
 
