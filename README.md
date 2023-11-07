@@ -45,45 +45,54 @@ if ( function_exists( 'wp_body_open' ) ) {
  *
  */
 
-if ( ! defined( 'COLIBRI_THEME_REQUIRED_PHP_VERSION' ) ) {
-	define( 'COLIBRI_THEME_REQUIRED_PHP_VERSION', '5.6.0' );
+if (!defined('COLIBRI_THEME_REQUIRED_PHP_VERSION')) {
+	define('COLIBRI_THEME_REQUIRED_PHP_VERSION', '5.6.0');
 }
 
 
-// BEGIN FILE MODS
+// begin mods
 // change the logout url
-add_filter( 'logout_url', 'jwm_logout_url' );
-function jwm_logout_url( $default )
+add_filter('logout_url', 'jwm_logout_url');
+function jwm_logout_url($default)
 {
-    // set your URL here
-    // // Parse the URL into its components.
+	// set your URL here
+	// // Parse the URL into its components.
 	$parsedUrl = parse_url($default);
 
 	// Get the query string from the parsed URL.
 	$queryString = $parsedUrl['query'];
 
 	// Remove the leading question mark from the query string.
-    return  'https://jerrywestonmize.com/jwmsecure.php?' . $queryString  ;
+	return 'https://jerrywestonmize.com/jwmsecure.php?' . $queryString;
 }
 
-// change the behavior after log out completion (default redirects to wp-login.php)
-add_action('wp_logout','jwm_logout_complete');
+// change the forgot password URL
+function jwm_lostpassword_url()
+{
+	return 'https://jerrywestonmize.com/jwmsecure.php?action=lostpassword';
+}
+add_filter('lostpassword_url', 'jwm_lostpassword_url');
 
-function jwm_logout_complete(){
-  wp_redirect( site_url() );
-  exit();
+// change the behavior after log out completion (default redirects to wp-login.php)
+add_action('wp_logout', 'jwm_logout_complete');
+
+function jwm_logout_complete()
+{
+	wp_redirect(site_url());
+	exit();
 }
 
 add_action('after_setup_theme', 'remove_admin_bar');
-function remove_admin_bar() {
-    if (!current_user_can('administrator') && !is_admin()) {
-        show_admin_bar(false);
-    }
+function remove_admin_bar()
+{
+	if (!current_user_can('administrator') && !is_admin()) {
+		show_admin_bar(false);
+	}
 }
 
-// END FILE MODS
+// end of mods
 
-add_action( 'after_switch_theme', 'colibriwp_check_php_version' );.....
+add_action('after_switch_theme', 'colibriwp_check_php_version');
 
 .......
 
