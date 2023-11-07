@@ -14,7 +14,7 @@ When you update the theme, theme file edits are cleared away. These modification
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="profile" href="http://gmpg.org/xfn/11">
-	<?php acf_form_head();?>
+	<?php acf_form_head();?> // THIS IS WHAT YOU NEED TO RE-ADD
     <?php wp_head(); ?>
     <?php colibriwp_theme()->get( 'css' )->render(); ?>
 </head>
@@ -50,7 +50,7 @@ if ( ! defined( 'COLIBRI_THEME_REQUIRED_PHP_VERSION' ) ) {
 }
 
 
-// begin mods
+// BEGIN FILE MODS
 // change the logout url
 add_filter( 'logout_url', 'jwm_logout_url' );
 function jwm_logout_url( $default )
@@ -81,7 +81,7 @@ function remove_admin_bar() {
     }
 }
 
-// end of mods
+// END FILE MODS
 
 add_action( 'after_switch_theme', 'colibriwp_check_php_version' );.....
 
