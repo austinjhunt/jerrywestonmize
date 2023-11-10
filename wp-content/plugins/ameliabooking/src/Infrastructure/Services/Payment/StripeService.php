@@ -55,15 +55,17 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 $stripeData['metadata'] = $data['metaData'];
             }
 
-            if ($data['metadata']['email']) {
-                $stripeData['receipt_email'] = $data['metadata']['email'];
+            if ($data['metaData']['email']) {
+                $stripeData['receipt_email'] = $data['metaData']['email'];
             }
-            if ($data['metadata']['Customer Email']) {
-                $stripeData['receipt_email'] = $data['metadata']['Customer Email'];
+            if ($data['metaData']['Customer Email']) {
+                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
             }
 
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
+            } else {
+                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
 
             $stripeData = apply_filters(
