@@ -311,7 +311,7 @@ function get_shapes_css() {
     $css = '';
     $url = get_template_directory_uri();
     foreach ($shapes as $shape) {
-        $css .= ".colibri-shape-${shape} {\nbackground-image:url('${url}/resources/images/header-shapes/${shape}.png')\n}\n";
+        $css .= ".colibri-shape-{$shape} {\nbackground-image:url('{$url}/resources/images/header-shapes/{$shape}.png')\n}\n";
     }
     return $css;
 }

@@ -37,7 +37,7 @@ function wp_colibri_v1_delete_preset($req) {
     $post_id = $req['postId'];
     $result = wp_delete_post($post_id);
     if($result) {
-        status_header(204);
+	    return  new \WP_REST_Response(null, 204);
     } else {
         return array(
             'success' => false,

@@ -121,7 +121,7 @@ function set_plugin_option($option_name, $data, $backup = false)
     if (use_plugin_options()) {
         $colibri_option_name = get_colibri_option_name($option_name);
         if ($backup) {
-            update_option("${colibri_option_name}_".time(), get_option($colibri_option_name, array()));
+            update_option("{$colibri_option_name}_".time(), get_option($colibri_option_name, array()));
         }
         update_option($colibri_option_name, $data);
     } else {

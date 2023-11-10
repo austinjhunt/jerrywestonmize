@@ -175,7 +175,7 @@ class GoogleFontsLocalLoader {
 					);
 				}
 
-				return "url(${url})";
+				return "url({$url})";
 			},
 			$css
 		);
