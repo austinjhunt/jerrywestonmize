@@ -100,10 +100,64 @@ function remove_admin_bar()
 // end of mods
 
 add_action('after_switch_theme', 'colibriwp_check_php_version');
-.......
-
-
-
-
+......
 
 ```
+
+
+## Payment Receipts - Amelia Code Modification
+
+If the Amelia plugin is updated, there is a chance this code will need to be re-added. 
+
+Amelia doesn't properly trigger Stripe payment receipts because by default it does not tie in "receipt_email" key in the initial PaymentIntent creation API request to Stripe. 
+
+To fix this, I customized the logic of `wp-content/plugins/ameliabooking/src/Infrastructure/Services/Payment/StripeService.php` to add that `receipt_email` key with the value of the `Customer Email` metadata that Weston had already added under the Amelia > Settings > Payments > Stripe > Customer Metadata menu. 
+ 
+These are the specific changes to the [wp-content/plugins/ameliabooking/src/Infrastructure/Services/Payment/StripeService.php](wp-content/plugins/ameliabooking/src/Infrastructure/Services/Payment/StripeService.php) file:
+```
+...
+
+if ($stripeSettings['manualCapture']) {
+	$stripeData['capture_method'] = 'manual';
+}
+
+if ($data['metaData']) {
+	$stripeData['metadata'] = $data['metaData'];
+}
+
+...
+
+// BEGIN MODS
+
+if ($data['metaData']['Customer Email']) {
+	$stripeData['receipt_email'] = $data['metaData']['Customer Email'];
+}
+// also added a fallback description since that was appearing as null on the Stripe side
+if ($data['description']) {
+	$stripeData['description'] = $data['description'];
+} else {
+	$stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
+}
+// END MODS
+
+....
+
+$stripeData = apply_filters(
+	'amelia_before_stripe_payment',
+	$stripeData
+);
+
+$intent = PaymentIntent::create($stripeData);
+
+```
+
+According to these docs on the PaymentIntent API reference: [https://stripe.com/docs/api/payment_intents](https://stripe.com/docs/api/payment_intents), including a `receipt_email` will automatically trigger a receipt to be sent to that email upon the success of the payment intent. [https://stripe.com/docs/api/payment_intents/object#payment_intent_object-receipt_email](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-receipt_email)
+
+`receipt_email`: *Email address that the receipt for the resulting payment will be sent to. If receipt_email is specified for a payment in live mode, a receipt will be sent regardless of your email settings.*
+
+To test this, I deployed that update and did the following:
+
+1. Ensured Amelia is using the live keys
+2. Temporarily reduced the price of one of the paid services to $0.50 (minimum allowable charge with Stripe processing)
+3. Booked one of those lessons on the front end with my own debit card
+4. I got the lesson approved notification as normal, and within about 15 seconds I also got the receipt email from stripe.
