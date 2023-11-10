@@ -71,6 +71,8 @@ class AppointmentPlaceholderService extends PlaceholderService
             'appointment_notes'       => 'Appointment note',
             'appointment_price'       => $helperService->getFormattedPrice(100),
             'appointment_cancel_url'  => 'http://cancel_url.com',
+            'appointment_approve_url' => 'http://approve_url.com',
+            'appointment_reject_url'  => 'http://reject_url.com',
             'zoom_join_url'           => $type === 'email' ?
                 '<a href="#">' . BackendStrings::getCommonStrings()['zoom_click_to_join'] . '</a>' : 'https://join_zoom_link.com',
             'zoom_host_url'           => $type === 'email' ?
@@ -116,8 +118,15 @@ class AppointmentPlaceholderService extends PlaceholderService
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
+        $bookingKeyForEmployee = null;
+
+        if ($bookingKey === null) {
+            $bookingKeyForEmployee = $this->getBookingKeyForEmployee($appointment);
+        }
+
         $token = isset($appointment['bookings'][$bookingKey]) ?
-            $bookingRepository->getToken($appointment['bookings'][$bookingKey]['id']) : null;
+            $bookingRepository->getToken($appointment['bookings'][$bookingKey]['id']) :
+            ($bookingKeyForEmployee ? $bookingRepository->getToken($bookingKeyForEmployee) : null);
 
         $token = isset($token['token']) ? $token['token'] : null;
 
@@ -130,9 +139,9 @@ class AppointmentPlaceholderService extends PlaceholderService
         $data = array_merge($data, $this->getAppointmentData($appointment, $bookingKey, $type));
         $data = array_merge($data, $this->getServiceData($appointment, $bookingKey, $type));
         $data = array_merge($data, $this->getEmployeeData($appointment, $bookingKey));
-        $data = array_merge($data, $this->getRecurringAppointmentsData($appointment, $bookingKey, $type, 'recurring'));
+        $data = array_merge($data, $this->getRecurringAppointmentsData($appointment, $bookingKey, $type, 'recurring', $bookingKeyForEmployee));
         if (empty($customer)) {
-            $data = array_merge($data, $this->getGroupedAppointmentData($appointment, $bookingKey, $type));
+            $data = array_merge($data, $this->getGroupedAppointmentData($appointment, $bookingKey, $type, $token));
         }
         $data = array_merge($data, $this->getBookingData($appointment, $type, $bookingKey, $token, $data['deposit']));
         $data = array_merge($data, $this->getCompanyData($bookingKey !== null ? $locale : null));
@@ -343,7 +352,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                     $duration
                 );
 
-                $servicePrices[$price] = $helperService->getFormattedPrice($price);
+                $servicePrices[] = $helperService->getFormattedPrice($price);
 
                 $serviceDurations[$duration] = $helperService->secondsToNiceDuration($duration);
             }
@@ -356,7 +365,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                 $duration
             );
 
-            $servicePrices[$price] = $helperService->getFormattedPrice(
+            $servicePrices[] = $helperService->getFormattedPrice(
                 $price
             );
 
@@ -372,7 +381,7 @@ class AppointmentPlaceholderService extends PlaceholderService
             'service_duration'        => implode(', ', $serviceDurations),
             'service_name'            => $serviceName,
             'reservation_name'        => $serviceName,
-            'service_price'           => implode(', ', $servicePrices),
+            'service_price'           => implode(', ', array_unique($servicePrices)),
         ];
 
         $bookingExtras = [];
@@ -603,7 +612,7 @@ class AppointmentPlaceholderService extends PlaceholderService
      * @throws ContainerException
      * @throws Exception
      */
-    public function getRecurringAppointmentsData($appointment, $bookingKey, $type, $placeholderType)
+    public function getRecurringAppointmentsData($appointment, $bookingKey, $type, $placeholderType, $bookingKeyForEmployee = null)
     {
         if (!array_key_exists('recurring', $appointment)) {
             return [
@@ -626,6 +635,7 @@ class AppointmentPlaceholderService extends PlaceholderService
 
         foreach ($appointment['recurring'] as $recurringData) {
             $recurringBookingKey = null;
+            $recurringBookingKeyForEmployee = null;
 
             $isForCustomer =
                 $bookingKey !== null ||
@@ -641,6 +651,16 @@ class AppointmentPlaceholderService extends PlaceholderService
                         $recurringBookingKey = $bookingKey;
                     }
                 }
+            } elseif ($bookingKeyForEmployee !== null) {
+                foreach ($recurringData['appointment']['bookings'] as $key => $recurringBooking) {
+                    if (isset($recurringData['booking']['id'])) {
+                        if ($recurringBooking['id'] === $recurringData['booking']['id']) {
+                            $recurringBookingKeyForEmployee = $key;
+                        }
+                    } else {
+                        $recurringBookingKeyForEmployee = $bookingKeyForEmployee;
+                    }
+                }
             }
 
             $token =
@@ -648,20 +668,48 @@ class AppointmentPlaceholderService extends PlaceholderService
                 isset(
                     $recurringData['appointment']['bookings'][$recurringBookingKey],
                     $recurringData['appointment']['bookings'][$recurringBookingKey]['id']
-                ) ? $bookingRepository->getToken($recurringData['appointment']['bookings'][$recurringBookingKey]['id']) : null;
+                ) ? $bookingRepository->getToken($recurringData['appointment']['bookings'][$recurringBookingKey]['id']) :(
+                    $recurringBookingKeyForEmployee !== null &&
+                    isset(
+                        $recurringData['appointment']['bookings'][$recurringBookingKeyForEmployee],
+                        $recurringData['appointment']['bookings'][$recurringBookingKeyForEmployee]['id']
+                    ) ? $bookingRepository->getToken($recurringData['appointment']['bookings'][$recurringBookingKeyForEmployee]['id']) :
+            null);
+
+            $recurringPlaceholders = [];
 
             $recurringPlaceholders = array_merge(
-                $this->getEmployeeData($recurringData['appointment'], $recurringBookingKey),
-                $this->getAppointmentData($recurringData['appointment'], $recurringBookingKey, $type),
-                $this->getServiceData($recurringData['appointment'], $recurringBookingKey, $type),
-                $this->getCustomFieldsData($recurringData['appointment'], $type, $bookingKey),
+                $recurringPlaceholders,
+                $this->getEmployeeData($recurringData['appointment'], $recurringBookingKey)
+            );
+
+            $recurringPlaceholders = array_merge(
+                $recurringPlaceholders,
+                $this->getAppointmentData($recurringData['appointment'], $recurringBookingKey, $type)
+            );
+
+            $recurringPlaceholders = array_merge(
+                $recurringPlaceholders,
+                $this->getServiceData($recurringData['appointment'], $recurringBookingKey, $type)
+            );
+
+            $recurringPlaceholders = array_merge(
+                $recurringPlaceholders,
+                $this->getCustomFieldsData($recurringData['appointment'], $type, $bookingKey)
+            );
+
+            $recurringPlaceholders = array_merge(
+                $recurringPlaceholders,
                 $this->getBookingData(
                     $recurringData['appointment'],
                     $type,
                     $recurringBookingKey,
-                    isset($token['token']) ? $token['token'] : null
+                    isset($token['token']) ? $token['token'] : null,
+                    $recurringPlaceholders['deposit']
                 )
             );
+
+            $recurringPlaceholders['time_zone'] = get_option('timezone_string');
 
             unset($recurringPlaceholders['icsFiles']);
 
@@ -682,6 +730,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                 'Placeholders' .
                 ($isForCustomer && $placeholderType === 'package' ? 'Customer' : '') .
                 ($isForCustomer && $placeholderType === 'recurring' ? 'Customer' : '') .
+                ($isForCustomer && $placeholderType === 'cart' ? 'Customer' : '') .
                 ($type === 'email' ? '' : 'Sms');
 
             /** @var HelperService $helperService */
@@ -748,6 +797,11 @@ class AppointmentPlaceholderService extends PlaceholderService
                 continue;
             }
 
+            /** @var CustomerBookingRepository $bookingRepository */
+            $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+            $token = $bookingRepository->getToken($appointment['bookings'][$bookingId]['id']);
+
             $groupPlaceholders = array_merge(
                 $this->getAppointmentData($appointment, $bookingId, $type),
                 $this->getServiceData($appointment, $bookingId, $type),
@@ -756,7 +810,10 @@ class AppointmentPlaceholderService extends PlaceholderService
                 $this->getBookingData(
                     $appointment,
                     $type,
-                    $bookingId
+                    $bookingId,
+                    isset($token['token']) ? $token['token'] : null,
+                    null,
+                    true
                 )
             );
 

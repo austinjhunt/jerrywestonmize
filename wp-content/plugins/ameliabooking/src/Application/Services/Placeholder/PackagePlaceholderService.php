@@ -112,7 +112,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                 0,
                 $customer ?: UserFactory::create($package['customer'])
             ),
-            $this->getRecurringAppointmentsData($package, $bookingKey, $type, 'package'),
+            $this->getRecurringAppointmentsData($package, $bookingKey, $type, 'package', null),
             [
                 'icsFiles' => !empty($package['icsFiles']) ? $package['icsFiles'] : []
             ],
@@ -332,18 +332,44 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                 );
             }
         }
-        if (empty($entity['recurring']) && !empty($entity['onlyOneEmployee'])) {
-            $employeeData = $this->getEmployeeData(['providerId' => $entity['onlyOneEmployee']['id']]);
+        if (empty($entity['recurring'])) {
+            if (!empty($entity['onlyOneEmployee'])) {
+                if ($entity['onlyOneEmployee']['id'] === $userId) {
+                    $employeeData = $this->getEmployeeData(['providerId' => $entity['onlyOneEmployee']['id']]);
 
-            $employeeSubject = $this->applyPlaceholders(
-                $subject,
-                $employeeData
-            );
+                    $employeeSubject = $this->applyPlaceholders(
+                        $subject,
+                        $employeeData
+                    );
 
-            $employeeBody = $this->applyPlaceholders(
-                $body,
-                $employeeData
-            );
+                    $employeeBody = $this->applyPlaceholders(
+                        $body,
+                        $employeeData
+                    );
+                }
+            }
+
+            /** @var \AmeliaBooking\Application\Services\Settings\SettingsService $settingsAS*/
+            $settingsAS = $this->container->get('application.settings.service');
+
+            $emptyPackageEmployees = $settingsAS->getEmptyPackageEmployees();
+            if (!empty($emptyPackageEmployees)) {
+                foreach ($emptyPackageEmployees as $employee) {
+                    if ($employee['id'] === $userId) {
+                        $employeeData = $this->getEmployeeData(['providerId' => $employee['id']]);
+
+                        $employeeSubject = $this->applyPlaceholders(
+                            $subject,
+                            $employeeData
+                        );
+
+                        $employeeBody = $this->applyPlaceholders(
+                            $body,
+                            $employeeData
+                        );
+                    }
+                }
+            }
         }
 
         return [

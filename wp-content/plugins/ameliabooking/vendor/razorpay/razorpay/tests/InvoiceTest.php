@@ -5,19 +5,12 @@ namespace Razorpay\Tests;
 use Razorpay\Api\Request;
 
 class InvoiceTest extends TestCase
-{   
-    /**
-     * Specify unique invoice id & customer id
-     * for example inv_IF37M4q6SdOpjT & cust_IEfAt3ruD4OEzo
-     */
+{
+    private $invoiceId = 'inv_IEjVoNaeZj3jhw';
 
-    private $invoiceId = "inv_IH69XFNA9IMQ7k";
+    private $customerId = 'cust_IEfAt3ruD4OEzo';
 
-    private $invoiceIdNotify = "inv_JM5rC3ddYKVWgy";
-
-    private $customerId = "cust_IEfAt3ruD4OEzo";
-
-    public function setUp(): void
+    public function setUp()
     {
         parent::setUp();
     }
@@ -65,7 +58,7 @@ class InvoiceTest extends TestCase
      */
     public function testSendNotification()
     {
-        $data = $this->api->invoice->fetch($this->invoiceId)->notifyBy('sms');
+        $data = $this->api->invoice->fetch($this->invoiceId)->notifyBy('email');
 
         $this->assertTrue(is_array($data));
 

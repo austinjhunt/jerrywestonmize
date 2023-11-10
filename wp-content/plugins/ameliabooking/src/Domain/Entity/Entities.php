@@ -15,6 +15,7 @@ class Entities
     const BOOKING = 'booking';
     const BOOKINGS = 'bookings';
     const CALENDAR = 'calendar';
+    const CART = 'cart';
     const CATEGORIES = 'categories';
     const CATEGORY = 'category';
     const COUPON = 'coupon';

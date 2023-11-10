@@ -64,6 +64,9 @@ class Payment
     /** @var Id */
     private $wcOrderId;
 
+    /** @var Id */
+    private $wcOrderItemId;
+
     /** @var Url */
     private $wcOrderUrl;
 
@@ -328,6 +331,22 @@ class Payment
     }
 
     /**
+     * @return Id
+     */
+    public function getWcOrderItemId()
+    {
+        return $this->wcOrderItemId;
+    }
+
+    /**
+     * @param Id $wcOrderItemId
+     */
+    public function setWcOrderItemId($wcOrderItemId)
+    {
+        $this->wcOrderItemId = $wcOrderItemId;
+    }
+
+    /**
      * @return Url
      */
     public function getWcOrderUrl()
@@ -414,6 +433,7 @@ class Payment
             'created'           => $this->getCreated() ? $this->getCreated()->getValue()->format('Y-m-d H:i:s') : null,
             'actionsCompleted'  => $this->getActionsCompleted() ? $this->getActionsCompleted()->getValue() : null,
             'wcOrderId'         => $this->getWcOrderId() ? $this->getWcOrderId()->getValue() : null,
+            'wcOrderItemId'     => $this->getWcOrderItemId() ? $this->getWcOrderItemId()->getValue() : null,
             'wcOrderUrl'        => $this->getWcOrderUrl() ? $this->getWcOrderUrl()->getValue() : null,
             'wcItemCouponValue' => $this->getWcItemCouponValue() ? $this->getWcItemCouponValue()->getValue() : null,
             'wcItemTaxValue'    => $this->getWcItemTaxValue() ? $this->getWcItemTaxValue()->getValue() : null,

@@ -61,42 +61,6 @@ class PackageReservationService extends AppointmentReservationService
     }
 
     /**
-     * @param array      $bookingCustomFieldsArray
-     * @param Collection $customFieldsCollection
-     * @param int        $serviceId
-     *
-     * @return string
-     *
-     * @throws InvalidArgumentException
-     */
-    private function getCustomFieldsJsonForService(
-        $bookingCustomFieldsArray,
-        $customFieldsCollection,
-        $serviceId
-    ) {
-        foreach ($bookingCustomFieldsArray as $customFieldId => $value) {
-            /** @var CustomField $customField */
-            $customField = $customFieldsCollection->getItem($customFieldId);
-
-            $isCustomFieldForService = $customField->getAllServices() && $customField->getAllServices()->getValue();
-
-            /** @var Service $customFieldService */
-            foreach ($customField->getServices()->getItems() as $customFieldService) {
-                if ($customFieldService->getId()->getValue() === (int)$serviceId) {
-                    $isCustomFieldForService = true;
-                    break;
-                }
-            }
-
-            if (!$isCustomFieldForService) {
-                unset($bookingCustomFieldsArray[$customFieldId]);
-            }
-        }
-
-        return json_encode($bookingCustomFieldsArray);
-    }
-
-    /**
      * @param array       $appointmentData
      * @param Reservation $reservation
      * @param bool        $save
@@ -125,7 +89,9 @@ class PackageReservationService extends AppointmentReservationService
 
         if ($package->getSharedCapacity() && $package->getSharedCapacity()->getValue()) {
             if ($package->getQuantity()->getValue() < sizeof($appointmentData['package'])) {
-                throw new PackageBookingUnavailableException('');
+                throw new PackageBookingUnavailableException(
+                    FrontendStrings::getCommonStrings()['package_booking_unavailable']
+                );
             }
         } else {
             $appCount = [];
@@ -140,7 +106,9 @@ class PackageReservationService extends AppointmentReservationService
                 if (!empty($appCount[$bookable->getService()->getId()->getValue()]) &&
                     $appCount[$bookable->getService()->getId()->getValue()] > $bookable->getQuantity()->getValue()
                 ) {
-                    throw new PackageBookingUnavailableException('');
+                    throw new PackageBookingUnavailableException(
+                        FrontendStrings::getCommonStrings()['package_booking_unavailable']
+                    );
                 }
             }
         }
@@ -148,19 +116,31 @@ class PackageReservationService extends AppointmentReservationService
 
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
+
         $limitPerCustomerGlobal = $settingsDS->getSetting('roles', 'limitPerCustomerPackage');
-        if (!empty($limitPerCustomerGlobal) || !empty($package->getLimitPerCustomer()) && (!isset($appointmentData['isBackendOrCabinet']) || !$appointmentData['isBackendOrCabinet'])) {
-            $limitPackage  = !empty($package->getLimitPerCustomer()) ? json_decode($package->getLimitPerCustomer()->getValue(), true) : null;
+
+        if (!empty($limitPerCustomerGlobal) || !empty($package->getLimitPerCustomer())) {
+            $limitPackage = !empty($package->getLimitPerCustomer()) ?
+                json_decode($package->getLimitPerCustomer()->getValue(), true) : null;
+
             $optionEnabled = empty($limitPackage) ? $limitPerCustomerGlobal['enabled'] : $limitPackage['enabled'];
+
             if ($optionEnabled) {
                 /** @var PackageCustomerRepository $packageCustomerRepository */
                 $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
 
-                $packageSpecific  = !empty($limitPackage['timeFrame']) || !empty($limitPackage['period']) || !empty($limitPackage['numberOfApp']);
+                $packageSpecific =
+                    !empty($limitPackage['timeFrame']) ||
+                    !empty($limitPackage['period']) ||
+                    !empty($limitPackage['numberOfApp']);
+
                 $limitPerCustomer = !empty($limitPackage) ? [
-                    'numberOfApp' => !empty($limitPackage['numberOfApp']) ? $limitPackage['numberOfApp'] : $limitPerCustomerGlobal['numberOfApp'],
-                    'timeFrame'   => !empty($limitPackage['timeFrame']) ? $limitPackage['timeFrame'] : $limitPerCustomerGlobal['timeFrame'],
-                    'period'      => !empty($limitPackage['period']) ? $limitPackage['period'] : $limitPerCustomerGlobal['period'],
+                    'numberOfApp' => !empty($limitPackage['numberOfApp']) ?
+                        $limitPackage['numberOfApp'] : $limitPerCustomerGlobal['numberOfApp'],
+                    'timeFrame'   => !empty($limitPackage['timeFrame']) ?
+                        $limitPackage['timeFrame'] : $limitPerCustomerGlobal['timeFrame'],
+                    'period'      => !empty($limitPackage['period']) ?
+                        $limitPackage['period'] : $limitPerCustomerGlobal['period'],
                 ] : $limitPerCustomerGlobal;
 
                 $count = $packageCustomerRepository->getUserPackageCount(
@@ -281,10 +261,10 @@ class PackageReservationService extends AppointmentReservationService
                 }
             }
 
-            try {
-                /** @var Reservation $packageReservation */
-                $packageReservation = new Reservation();
+            /** @var Reservation $packageReservation */
+            $packageReservation = new Reservation();
 
+            try {
                 $this->bookSingle(
                     $packageReservation,
                     $packageAppointmentData,

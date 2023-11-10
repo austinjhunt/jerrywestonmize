@@ -221,9 +221,14 @@ class ActivationSettingsHook
             'smsApiToken'          => '',
             'bccEmail'             => '',
             'bccSms'               => '',
+            'emptyPackageEmployees' => '',
             'smsBalanceEmail'      => ['enabled' => false, 'minimum' => 0, 'email' => ''],
             'cancelSuccessUrl'     => '',
             'cancelErrorUrl'       => '',
+            'approveSuccessUrl'    => '',
+            'approveErrorUrl'      => '',
+            'rejectSuccessUrl'     => '',
+            'rejectErrorUrl'       => '',
             'breakReplacement'     => '<br>',
             'pendingReminder'      => false,
             'whatsAppEnabled'      => $savedSettings && !empty($savedSettings['whatsAppPhoneID']) && !empty($savedSettings['whatsAppAccessToken'])
@@ -254,50 +259,53 @@ This message does not have an option for responding. If you need additional info
      */
     private static function initWeekScheduleSettings()
     {
-        self::initSettings('weekSchedule', [
+        self::initSettings(
+            'weekSchedule',
             [
-                'day'     => 'Monday',
-                'time'    => ['09:00', '17:00'],
-                'breaks'  => [],
-                'periods' => []
-            ],
-            [
-                'day'     => 'Tuesday',
-                'time'    => ['09:00', '17:00'],
-                'breaks'  => [],
-                'periods' => []
-            ],
-            [
-                'day'     => 'Wednesday',
-                'time'    => ['09:00', '17:00'],
-                'breaks'  => [],
-                'periods' => []
-            ],
-            [
-                'day'     => 'Thursday',
-                'time'    => ['09:00', '17:00'],
-                'breaks'  => [],
-                'periods' => []
-            ],
-            [
-                'day'     => 'Friday',
-                'time'    => ['09:00', '17:00'],
-                'breaks'  => [],
-                'periods' => []
-            ],
-            [
-                'day'     => 'Saturday',
-                'time'    => [],
-                'breaks'  => [],
-                'periods' => []
-            ],
-            [
-                'day'     => 'Sunday',
-                'time'    => [],
-                'breaks'  => [],
-                'periods' => []
+                [
+                    'day'     => 'Monday',
+                    'time'    => ['09:00', '17:00'],
+                    'breaks'  => [],
+                    'periods' => []
+                ],
+                [
+                    'day'     => 'Tuesday',
+                    'time'    => ['09:00', '17:00'],
+                    'breaks'  => [],
+                    'periods' => []
+                ],
+                [
+                    'day'     => 'Wednesday',
+                    'time'    => ['09:00', '17:00'],
+                    'breaks'  => [],
+                    'periods' => []
+                ],
+                [
+                    'day'     => 'Thursday',
+                    'time'    => ['09:00', '17:00'],
+                    'breaks'  => [],
+                    'periods' => []
+                ],
+                [
+                    'day'     => 'Friday',
+                    'time'    => ['09:00', '17:00'],
+                    'breaks'  => [],
+                    'periods' => []
+                ],
+                [
+                    'day'     => 'Saturday',
+                    'time'    => [],
+                    'breaks'  => [],
+                    'periods' => []
+                ],
+                [
+                    'day'     => 'Sunday',
+                    'time'    => [],
+                    'breaks'  => [],
+                    'periods' => []
+                ]
             ]
-        ]);
+        );
     }
 
     /**
@@ -306,6 +314,7 @@ This message does not have an option for responding. If you need additional info
     private static function initGoogleCalendarSettings()
     {
         $settingsService = new SettingsService(new SettingsStorage());
+
         $savedSettings = $settingsService->getCategorySettings('googleCalendar');
 
         $settings = [
@@ -526,6 +535,7 @@ This message does not have an option for responding. If you need additional info
             'hideCurrencySymbolFrontend' => false,
             'defaultPaymentMethod'       => 'onSite',
             'onSite'                     => true,
+            'cart'                       => false,
             'coupons'                    => true,
             'couponsCaseInsensitive'     => false,
             'paymentLinks'               => [
@@ -544,7 +554,8 @@ This message does not have an option for responding. If you need additional info
                     'enabled'     => false,
                     'appointment' => '',
                     'package'     => '',
-                    'event'       => ''
+                    'event'       => '',
+                    'cart'        => '',
                 ],
             ],
             'stripe'                     => [
@@ -558,13 +569,15 @@ This message does not have an option for responding. If you need additional info
                     'enabled'     => false,
                     'appointment' => '',
                     'package'     => '',
-                    'event'       => ''
+                    'event'       => '',
+                    'cart'        => '',
                 ],
                 'metaData'           => [
                     'enabled'     => false,
                     'appointment' => null,
                     'package'     => null,
-                    'event'       => null
+                    'event'       => null,
+                    'cart'        => '',
                 ],
                 'manualCapture'   => false,
             ],
@@ -578,10 +591,12 @@ This message does not have an option for responding. If you need additional info
                     'appointment' => '',
                     'package'     => '',
                     'event'       => '',
+                    'cart'        => '',
                     'translations' => [
                         'appointment' => null,
                         'event'       => null,
                         'package'     => null,
+                        'cart'        => '',
                     ],
                 ],
                 'skipCheckoutGetValueProcessing' => isset($savedSettings['wc']['skipCheckoutGetValueProcessing']) ?
@@ -660,13 +675,15 @@ This message does not have an option for responding. If you need additional info
                     'enabled'     => false,
                     'appointment' => '',
                     'package'     => '',
-                    'event'       => ''
+                    'event'       => '',
+                    'cart'        => '',
                 ],
                 'metaData'           => [
                     'enabled'     => false,
                     'appointment' => null,
                     'package'     => null,
-                    'event'       => null
+                    'event'       => null,
+                    'cart'        => '',
                 ],
                 'method'          => [],
             ],
@@ -681,19 +698,22 @@ This message does not have an option for responding. If you need additional info
                     'enabled'       => false,
                     'appointment'   => '',
                     'package'       => '',
-                    'event'         => ''
+                    'event'         => '',
+                    'cart'          => '',
                 ],
                 'name'            => [
                     'enabled'       => false,
                     'appointment'   => '',
                     'package'       => '',
-                    'event'         => ''
+                    'event'         => '',
+                    'cart'          => '',
                 ],
                 'metaData'       => [
                     'enabled'       => false,
                     'appointment'   => null,
                     'package'       => null,
-                    'event'         => null
+                    'event'         => null,
+                    'cart'          => '',
                 ],
             ]
         ];
@@ -705,11 +725,14 @@ This message does not have an option for responding. If you need additional info
             [
                 ['stripe', 'description'],
                 ['stripe', 'description', 'package'],
+                ['stripe', 'description', 'cart'],
                 ['stripe', 'metaData'],
                 ['stripe', 'metaData', 'package'],
+                ['stripe', 'metaData', 'cart'],
                 ['stripe', 'manualCapture'],
                 ['payPal', 'description'],
                 ['payPal', 'description', 'package'],
+                ['payPal', 'description', 'cart'],
                 ['wc', 'onSiteIfFree'],
                 ['wc', 'page'],
                 ['wc', 'dashboard'],
@@ -719,11 +742,18 @@ This message does not have an option for responding. If you need additional info
                 ['wc', 'redirectPage'],
                 ['wc', 'checkoutData'],
                 ['wc', 'checkoutData', 'package'],
+                ['wc', 'checkoutData', 'cart'],
                 ['wc', 'checkoutData', 'translations'],
                 ['wc', 'checkoutData', 'translations', 'appointment'],
                 ['wc', 'checkoutData', 'translations', 'event'],
                 ['wc', 'checkoutData', 'translations', 'package'],
-                ['razorpay', 'name']
+                ['wc', 'checkoutData', 'translations', 'cart'],
+                ['razorpay', 'name'],
+                ['razorpay', 'description', 'cart'],
+                ['razorpay', 'metaData', 'cart'],
+                ['razorpay', 'name', 'cart'],
+                ['mollie', 'description', 'cart'],
+                ['mollie', 'metaData', 'cart'],
             ],
             $settings
         );
@@ -753,9 +783,10 @@ This message does not have an option for responding. If you need additional info
             'disableUrlParams'              => $savedSettings ? false : true,
             'enableThriveItems'             => false,
             'customUrl'                     => [
-                'enabled'    => false,
-                'pluginPath' => '/wp-content/plugins/ameliabooking/',
-                'ajaxPath'   => '/wp-admin/admin-ajax.php',
+                'enabled'     => false,
+                'pluginPath'  => '/wp-content/plugins/ameliabooking/',
+                'ajaxPath'    => '/wp-admin/admin-ajax.php',
+                'uploadsPath' => '',
             ],
             'v3RelativePath'                => false,
             'v3AsyncLoading'                => false,
@@ -1331,6 +1362,7 @@ This message does not have an option for responding. If you need additional info
             'allowAdminBookAtAnyTime'     => false,
             'adminServiceDurationAsSlot'  => false,
             'enabledHttpAuthorization'    => true,
+            'enabledNoShowTag'            => true,
             'customerCabinet'             => [
                 'enabled'         => true,
                 'headerJwtSecret' => (new Token(null, 20))->getValue(),
@@ -1404,6 +1436,10 @@ This message does not have an option for responding. If you need additional info
             'allowBookingIfPending'             => true,
             'allowBookingIfNotMin'              => true,
             'openedBookingAfterMin'             => false,
+            'cartPlaceholders'                  => '<!-- Content --><p>DateTime: %appointment_date_time%</p>',
+            'cartPlaceholdersSms'               => 'DateTime: %appointment_date_time%',
+            'cartPlaceholdersCustomer'          => '<!-- Content --><p>DateTime: %appointment_date_time%</p>',
+            'cartPlaceholdersCustomerSms'       => 'DateTime: %appointment_date_time%',
             'recurringPlaceholders'             => 'DateTime: %appointment_date_time%',
             'recurringPlaceholdersSms'          => 'DateTime: %appointment_date_time%',
             'recurringPlaceholdersCustomer'     => 'DateTime: %appointment_date_time%',
@@ -1417,6 +1453,8 @@ This message does not have an option for responding. If you need additional info
             'groupAppointmentPlaceholderSms'    => 'Name: %customer_full_name%',
             'groupEventPlaceholderSms'          => 'Name: %customer_full_name%',
             'translations'                      => [
+                'cartPlaceholdersCustomer'         => null,
+                'cartPlaceholdersCustomerSms'      => null,
                 'recurringPlaceholdersCustomer'    => null,
                 'recurringPlaceholdersCustomerSms' => null,
                 'packagePlaceholdersCustomer'      => null,
@@ -1430,6 +1468,15 @@ This message does not have an option for responding. If you need additional info
         ];
 
         self::initSettings('appointments', $settings);
+
+        self::setNewSettingsToExistingSettings(
+            'appointments',
+            [
+                ['translations', 'cartPlaceholdersCustomer'],
+                ['translations', 'cartPlaceholdersCustomerSms'],
+            ],
+            $settings
+        );
     }
 
     /**
@@ -1459,17 +1506,20 @@ This message does not have an option for responding. If you need additional info
 
         foreach ($pathsKeys as $keys) {
             $current = &$savedSettings;
+
             $currentInit = &$initSettings;
 
             foreach ((array)$keys as $key) {
                 if (!isset($current[$key])) {
                     $current[$key] = !empty($currentInit[$key]) ? $currentInit[$key] : null;
+
                     $setSettings = true;
 
                     continue 2;
                 }
 
                 $current = &$current[$key];
+
                 $currentInit = &$initSettings[$key];
             }
         }

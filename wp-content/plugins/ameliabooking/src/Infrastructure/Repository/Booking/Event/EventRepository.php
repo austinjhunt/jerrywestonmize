@@ -537,6 +537,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 p.transactionId AS payment_transactionId,
                 p.data AS payment_data,
                 p.wcOrderId AS payment_wcOrderId,
+                p.wcOrderItemId AS payment_wcOrderItemId,
             ';
 
             $paymentJoin = "LEFT JOIN {$paymentsTable} p ON p.customerBookingId = cb.id";
@@ -1216,6 +1217,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     p.transactionId AS payment_transactionId,
                     p.data AS payment_data,
                     p.wcOrderId AS payment_wcOrderId,
+                    p.wcOrderItemId AS payment_wcOrderItemId,
                     
                     pu.id AS provider_id,
                     pu.firstName AS provider_firstName,
@@ -1450,6 +1452,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     p.transactionId AS payment_transactionId,
                     p.data AS payment_data,
                     p.wcOrderId AS payment_wcOrderId,
+                    p.wcOrderItemId AS payment_wcOrderItemId,
                     
                     pu.id AS provider_id,
                     pu.firstName AS provider_firstName,
@@ -1883,6 +1886,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     p.transactionId AS payment_transactionId,
                     p.data AS payment_data,
                     p.wcOrderId AS payment_wcOrderId,
+                    p.wcOrderItemId AS payment_wcOrderItemId,
                 ';
 
                 $joins .= "
@@ -2161,6 +2165,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 p.transactionId AS payment_transactionId,
                 p.data AS payment_data,
                 p.wcOrderId AS payment_wcOrderId,
+                p.wcOrderItemId AS payment_wcOrderItemId,
             ';
 
             $joins .= "

@@ -1091,6 +1091,52 @@ abstract class AbstractNotificationService
     }
 
     /**
+     * @param array $data
+     * @param bool  $logNotification
+     *
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function sendCartNotifications($data, $logNotification, $notifyCustomers = true)
+    {
+        /** @var Collection $customerNotifications */
+        $customerNotifications = $this->getByNameAndType(
+            'customer_cart',
+            $this->type
+        );
+
+        $data['isForCustomer'] = true;
+
+        foreach ($customerNotifications->getItems() as $customerNotification) {
+            if ($customerNotification->getStatus()->getValue() === NotificationStatus::ENABLED && $notifyCustomers) {
+                $this->sendNotification(
+                    $data,
+                    $customerNotification,
+                    $logNotification
+                );
+            }
+        }
+
+        /** @var Collection $providerNotifications */
+        $providerNotifications = $this->getByNameAndType(
+            'provider_cart',
+            $this->type
+        );
+
+        $data['isForCustomer'] = false;
+
+        foreach ($providerNotifications->getItems() as $providerNotification) {
+            if ($providerNotification->getStatus()->getValue() === NotificationStatus::ENABLED) {
+                $this->sendNotification(
+                    $data,
+                    $providerNotification,
+                    $logNotification
+                );
+            }
+        }
+    }
+
+    /**
      * Get User info for notification
      *
      * @param string $userType
@@ -1105,6 +1151,10 @@ abstract class AbstractNotificationService
     {
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        /** @var \AmeliaBooking\Application\Services\Settings\SettingsService $settingsAS*/
+        $settingsAS = $this->container->get('application.settings.service');
+
 
         $usersInfo = [];
 
@@ -1124,6 +1174,7 @@ abstract class AbstractNotificationService
                         break;
 
                     case (Entities::PACKAGE):
+                    case (Entities::APPOINTMENTS):
                         $usersInfo[$entityData['customer']['id']] = [
                             'id'    => $entityData['customer']['id'],
                             'email' => $entityData['customer']['email'],
@@ -1167,6 +1218,7 @@ abstract class AbstractNotificationService
                         break;
 
                     case (Entities::PACKAGE):
+                    case (Entities::APPOINTMENTS):
                         foreach ($entityData['recurring'] as $reservation) {
                             $usersInfo[$reservation['appointment']['provider']['id']] = [
                                 'id'    => $reservation['appointment']['provider']['id'],
@@ -1174,12 +1226,24 @@ abstract class AbstractNotificationService
                                 'phone' => $reservation['appointment']['provider']['phone']
                             ];
                         }
-                        if (empty($entityData['recurring']) && !empty($entityData['onlyOneEmployee'])) {
-                            $usersInfo[$entityData['onlyOneEmployee']['id']] = [
-                                'id' => $entityData['onlyOneEmployee']['id'],
-                                'email' => $entityData['onlyOneEmployee']['email'],
-                                'phone' => $entityData['onlyOneEmployee']['phone']
-                            ];
+                        if (empty($entityData['recurring'])) {
+                            if (!empty($entityData['onlyOneEmployee'])) {
+                                $usersInfo[$entityData['onlyOneEmployee']['id']] = [
+                                    'id' => $entityData['onlyOneEmployee']['id'],
+                                    'email' => $entityData['onlyOneEmployee']['email'],
+                                    'phone' => $entityData['onlyOneEmployee']['phone']
+                                ];
+                            }
+                            $emptyPackageEmployees = $settingsAS->getEmptyPackageEmployees();
+                            if (!empty($emptyPackageEmployees)) {
+                                foreach ($emptyPackageEmployees as $employee) {
+                                    $usersInfo[$employee['id']] = [
+                                        'id'    => $employee['id'],
+                                        'email' => $employee['email'],
+                                        'phone' => $employee['phone']
+                                    ];
+                                }
+                            }
                         }
 
                         break;

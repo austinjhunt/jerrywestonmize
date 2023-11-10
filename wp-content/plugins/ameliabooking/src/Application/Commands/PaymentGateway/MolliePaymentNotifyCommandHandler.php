@@ -147,6 +147,13 @@ class MolliePaymentNotifyCommandHandler extends CommandHandler
                 'transactionId'
             );
 
+            $paymentRepository->updateFieldByColumn(
+                'transactionId',
+                $command->getField('id'),
+                'parentId',
+                $payment->getId()->getValue()
+            );
+
             switch ($data[2]) {
                 case (Entities::APPOINTMENT):
                     $recurringData = [];

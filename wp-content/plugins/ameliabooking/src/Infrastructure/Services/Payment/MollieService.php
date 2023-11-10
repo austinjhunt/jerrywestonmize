@@ -180,17 +180,20 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
      * @param array $data
      *
      * @return array
+     * @throws \Exception
      */
     public function refund($data)
     {
         $amount = $this->getTransactionAmount($data['id']);
+
         $response = $this->getGateway()->refund(
             array(
                 'transactionReference' => $data['id'],
-                'amount'               => $amount,
+                'amount'               => !empty($data['amount']) ? $data['amount'] : $amount,
                 'currency'             => $this->settingsService->getCategorySettings('payments')['currency']
             )
         )->send();
+
         return ['error' => $response->getData()['status'] !== 200 ? $response->getData()['detail'] : false];
     }
 

@@ -47,7 +47,10 @@ $entries['infrastructure.report.csv.service'] = function () {
  */
 $entries['infrastructure.payment.payPal.service'] = function ($c) {
     return new AmeliaBooking\Infrastructure\Services\Payment\PayPalService(
-        $c->get('domain.settings.service')
+        $c->get('domain.settings.service'),
+        new AmeliaBooking\Infrastructure\Services\Payment\CurrencyService(
+            $c->get('domain.settings.service')
+        )
     );
 };
 
@@ -60,7 +63,10 @@ $entries['infrastructure.payment.payPal.service'] = function ($c) {
  */
 $entries['infrastructure.payment.stripe.service'] = function ($c) {
     return new AmeliaBooking\Infrastructure\Services\Payment\StripeService(
-        $c->get('domain.settings.service')
+        $c->get('domain.settings.service'),
+        new AmeliaBooking\Infrastructure\Services\Payment\CurrencyService(
+            $c->get('domain.settings.service')
+        )
     );
 };
 
@@ -73,7 +79,10 @@ $entries['infrastructure.payment.stripe.service'] = function ($c) {
  */
 $entries['infrastructure.payment.mollie.service'] = function ($c) {
     return new AmeliaBooking\Infrastructure\Services\Payment\MollieService(
-        $c->get('domain.settings.service')
+        $c->get('domain.settings.service'),
+        new AmeliaBooking\Infrastructure\Services\Payment\CurrencyService(
+            $c->get('domain.settings.service')
+        )
     );
 };
 
@@ -86,7 +95,10 @@ $entries['infrastructure.payment.mollie.service'] = function ($c) {
  */
 $entries['infrastructure.payment.razorpay.service'] = function ($c) {
     return new AmeliaBooking\Infrastructure\Services\Payment\RazorpayService(
-        $c->get('domain.settings.service')
+        $c->get('domain.settings.service'),
+        new AmeliaBooking\Infrastructure\Services\Payment\CurrencyService(
+            $c->get('domain.settings.service')
+        )
     );
 };
 

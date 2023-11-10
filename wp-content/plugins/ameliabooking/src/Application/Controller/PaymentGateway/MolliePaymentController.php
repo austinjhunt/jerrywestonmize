@@ -31,6 +31,7 @@ class MolliePaymentController extends Controller
         'couponCode',
         'payment',
         'recurring',
+        'isCart',
         'recaptcha',
         'packageId',
         'package',

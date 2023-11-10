@@ -197,11 +197,11 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         $paymentAS = $this->container->get('application.payment.service');
 
         $paymentTransactionId = null;
+
         $paymentCompleted = empty($data['bookings'][0]['packageCustomerService']['id']) ?
             $paymentAS->processPayment($result, $data['payment'], $reservation, new BookingType($type), $paymentTransactionId) : true;
 
         if (!$paymentCompleted || $result->getResult() === CommandResult::RESULT_ERROR) {
-
             if ($save) {
                 $this->deleteReservation($reservation);
 
@@ -232,7 +232,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             return $result;
         }
 
-        $this->finalize($result, $reservation, new BookingType($type));
+        $this->finalize($result, $reservation, new BookingType($type), !empty($data['isCart']));
 
         $paymentAS->setPaymentTransactionId(
             !empty($result->getData()['payment']['id']) ? $result->getData()['payment']['id'] : null,
@@ -405,15 +405,16 @@ abstract class AbstractReservationService implements ReservationServiceInterface
 
     /**
      * @param CommandResult $result
-     * @param Reservation $reservation
-     * @param BookingType $bookingType
+     * @param Reservation   $reservation
+     * @param BookingType   $bookingType
+     * @param bool          $isCart
      *
      * @throws ContainerValueNotFoundException
      * @throws ContainerException
      * @throws ForbiddenFileUploadException
      * @throws InvalidArgumentException
      */
-    public function finalize($result, $reservation, $bookingType)
+    public function finalize($result, $reservation, $bookingType, $isCart)
     {
         /** @var CustomerApplicationService $customerApplicationService */
         $customerApplicationService = $this->container->get('application.user.customer.service');
@@ -476,6 +477,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     'appointmentStatusChanged' => false,
                     'packageId'                => $reservation->getBookable()->getId()->getValue(),
                     'package'                  => [],
+                    'isCart'                   => $isCart,
                     'recurring'                => [],
                     'bookable'                 => $reservation->getBookable()->toArray(),
                     'paymentId'                => $payment->getId()->getValue(),
@@ -555,6 +557,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     'packageCustomerId' => $payment && $payment->getPackageCustomerId() ?
                         $payment->getPackageCustomerId()->getValue() : null,
                     'payment'   => $payment ? $payment->toArray() : null,
+                    'isCart'    => $isCart,
                 ]
             )
         );
@@ -659,8 +662,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @param int       $bookingId
-     * @param int       $packageCustomerId
+     * @param int|null  $bookingId
+     * @param int|null  $packageCustomerId
      * @param array     $paymentData
      * @param float     $amount
      * @param DateTime  $dateTime
@@ -731,6 +734,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 'parentId'          => !empty($paymentData['parentId']) ? $paymentData['parentId'] : null,
                 'wcOrderId'         => !empty($paymentData['wcOrderId']) && $paymentData['gateway'] === 'wc' ?
                     $paymentData['wcOrderId'] : null,
+                'wcOrderItemId'     => !empty($paymentData['wcOrderItemId']) && $paymentData['gateway'] === 'wc' ?
+                    $paymentData['wcOrderItemId'] : null,
             ],
             $amount
         );
@@ -822,6 +827,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      * @param int    $bookingId
      * @param string $type
      * @param array  $recurring
+     * @param bool   $isCart
      * @param bool   $appointmentStatusChanged
      * @param int    $packageId
      * @param array  $customerData
@@ -838,6 +844,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         $bookingId,
         $type,
         $recurring,
+        $isCart,
         $appointmentStatusChanged,
         $packageId,
         $customerData,
@@ -861,6 +868,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     'packageId'                => $packageId,
                     'customer'                 => $customerData,
                     'recurring'                => [],
+                    'isCart'                   => false,
                     'paymentId'                => $paymentId,
                     'packageCustomerId'        => $packageCustomerId,
                 ]
@@ -910,6 +918,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             array_merge(
                 [
                     'type'                              => $reservation->getType()->getValue(),
+                    'isCart'                            => $isCart,
                     $reservation->getType()->getValue() => $reservation->toArray(),
                     Entities::BOOKING                   => $booking->toArray(),
                     'appointmentStatusChanged'          => $appointmentStatusChanged,
@@ -997,6 +1006,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 $bookingId,
                 $result->getData()['type'],
                 $recurring,
+                $result->getData()['isCart'],
                 $appointmentStatusChanged,
                 $result->getData()['packageId'],
                 $result->getData()['customer'],
@@ -1078,5 +1088,24 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         if (!empty($token['token'])) {
             $booking->setToken(new Token($token['token']));
         }
+    }
+
+    /**
+     * @param AbstractBookable $bookable
+     * @param bool             $applyDeposit
+     *
+     * @return boolean
+     */
+    public function applyDeposit($bookable, $applyDeposit)
+    {
+        $depositPaymentEnabled = $bookable->getDeposit() &&
+            $bookable->getDeposit()->getValue() !== DepositType::DISABLED;
+
+        $fullPaymentEnabled =
+            $depositPaymentEnabled &&
+            $bookable->getFullPayment() &&
+            $bookable->getFullPayment()->getValue();
+
+        return $applyDeposit ? $depositPaymentEnabled : $depositPaymentEnabled && !$fullPaymentEnabled;
     }
 }

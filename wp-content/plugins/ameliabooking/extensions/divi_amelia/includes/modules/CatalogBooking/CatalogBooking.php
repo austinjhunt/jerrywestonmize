@@ -49,35 +49,27 @@ class DIVI_CatalogBooking extends ET_Builder_Module
         $this->showPackages = !empty($data['packages']);
 
         $this->catalog['0']        = BackendStrings::getWordPressStrings()['show_catalog'];
-        $this->catalog['category'] = BackendStrings::getWordPressStrings()['show_category'];
-        $this->catalog['service']  = BackendStrings::getWordPressStrings()['show_service'];
+        $this->catalog['category'] = BackendStrings::getWordPressStrings()['show_categories'];
+        $this->catalog['service']  = BackendStrings::getWordPressStrings()['show_services'];
         if ($this->showPackages) {
-            $this->catalog['package'] = BackendStrings::getWordPressStrings()['show_package'];
+            $this->catalog['package'] = BackendStrings::getWordPressStrings()['show_packages'];
         }
 
-
-        $this->categories['0'] = BackendStrings::getWordPressStrings()['choose_category'];
         foreach ($data['categories'] as $category) {
             $this->categories[$category['id']] = $category['name'] . ' (id: ' . $category['id'] . ')';
         }
-
-        $this->services['0'] = BackendStrings::getWordPressStrings()['choose_service'];
         foreach ($data['servicesList'] as $service) {
             if ($service) {
                 $this->services[$service['id']] = $service['name']. ' (id: ' . $service['id'] . ')';
             }
         }
-
-        $this->packages['0'] = BackendStrings::getWordPressStrings()['choose_package'];
         foreach ($data['packages'] as $package) {
             $this->packages[$package['id']] = $package['name']. ' (id: ' . $package['id'] . ')';
         }
 
-        $this->employees['0'] = BackendStrings::getWordPressStrings()['show_all_employees'];
         foreach ($data['employees'] as $employee) {
             $this->employees[$employee['id']] = $employee['firstName'] . ' ' . $employee['lastName'] . ' (id: ' . $employee['id'] . ')';
         }
-        $this->locations['0'] = BackendStrings::getWordPressStrings()['show_all_locations'];
         foreach ($data['locations'] as $location) {
             $this->locations[$location['id']] = $location['name'] . ' (id: ' . $location['id'] . ')';
         }
@@ -108,7 +100,8 @@ class DIVI_CatalogBooking extends ET_Builder_Module
             ),
             'categories' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_category'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_categories'],
                 'options'         => $this->categories,
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
@@ -118,7 +111,8 @@ class DIVI_CatalogBooking extends ET_Builder_Module
             ),
             'services' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_service'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_services'],
                 'options'         => $this->services,
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
@@ -128,7 +122,8 @@ class DIVI_CatalogBooking extends ET_Builder_Module
             ),
             'packages' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_package'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_packages'],
                 'options'         => $this->packages,
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
@@ -161,7 +156,8 @@ class DIVI_CatalogBooking extends ET_Builder_Module
             ),
             'employees' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_employee'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_employees'],
                 'options'         => $this->employees,
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
@@ -171,7 +167,8 @@ class DIVI_CatalogBooking extends ET_Builder_Module
             ),
             'locations' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_location'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_locations'],
                 'options'         => $this->locations,
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
@@ -227,9 +224,19 @@ class DIVI_CatalogBooking extends ET_Builder_Module
     public function checkValues($val)
     {
         if ($val !== null) {
-            return !is_numeric($val) ? (strpos($val, 'id:') ?  substr(explode('id: ', $val)[1], 0, -1) : '0') : $val;
+            $val = explode(',', $val);
+            if (is_array($val)) {
+                $newVals = [];
+                foreach ($val as $parameter) {
+                    if ($parameter) {
+                        $newVals[] = !is_numeric($parameter) ? (strpos($parameter, 'id:') ?  substr(explode('id: ', $parameter)[1], 0, -1) : $parameter) : $parameter;
+                    }
+                }
+                return count($newVals) > 0 ? $newVals : [];
+            }
+            return [];
         }
-        return '0';
+        return [];
     }
 
     public function render($attrs, $content = null, $render_slug = null)
@@ -258,23 +265,23 @@ class DIVI_CatalogBooking extends ET_Builder_Module
             $service  = $this->checkValues($this->props['services']);
             $package1 = $this->checkValues($this->props['packages']);
 
-            if ($category !== '0' && $catalog === 'category') {
-                $shortcode .= ' category=' . $category;
-            } else if ($service !== '0' && $catalog === 'service') {
-                $shortcode .= ' service=' . $service;
-            } else if ($package1 !== '0' && $catalog === 'package') {
-                $shortcode .= ' package=' . $package1;
+            if ($category && count($category) > 0 && $catalog === 'category') {
+                $shortcode .= ' category=' . implode(',', $category);
+            } else if ($service && count($service) > 0 && $catalog === 'service') {
+                $shortcode .= ' service=' . implode(',', $service);
+            } else if ($package1 && count($package1) > 0 && $catalog === 'package') {
+                $shortcode .= ' package=' . implode(',', $package1);
             }
         }
         if ($preselect === 'on') {
             $employee = $this->checkValues($this->props['employees']);
             $location = $this->checkValues($this->props['locations']);
 
-            if ($employee !== '0') {
-                $shortcode .= ' employee=' . $employee;
+            if ($employee && count($employee) > 0) {
+                $shortcode .= ' employee=' . implode(',', $employee);
             }
-            if ($location !== '0') {
-                $shortcode .= ' location=' . $location;
+            if ($location && count($location) > 0) {
+                $shortcode .= ' location=' . implode(',', $location);
             }
 
             $skipCategories = $this->props['skip_categories'];

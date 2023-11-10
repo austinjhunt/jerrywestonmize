@@ -31,6 +31,7 @@ class PayPalPaymentController extends Controller
         'couponCode',
         'payment',
         'recurring',
+        'isCart',
         'recaptcha',
         'packageId',
         'package',

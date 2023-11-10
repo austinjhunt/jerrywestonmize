@@ -14,7 +14,6 @@ return array(
     'Normalizer' => $vendorDir . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
     'Omnipay\\Omnipay' => $vendorDir . '/omnipay/common/src/Omnipay.php',
     'ParseError' => $vendorDir . '/symfony/polyfill-php70/Resources/stubs/ParseError.php',
-    'Requests' => $vendorDir . '/rmccue/requests/library/Requests.php',
     'SessionUpdateTimestampHandlerInterface' => $vendorDir . '/symfony/polyfill-php70/Resources/stubs/SessionUpdateTimestampHandlerInterface.php',
     'TypeError' => $vendorDir . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
     'lessc' => $vendorDir . '/oyejorge/less.php/lessc.inc.php',

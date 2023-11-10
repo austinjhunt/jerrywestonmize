@@ -9,18 +9,18 @@ namespace AmeliaBooking\Application\Commands\Payment;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
-use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
+use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
+use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
-use AmeliaBooking\Infrastructure\Services\Payment\CurrencyService;
-use AmeliaBooking\Infrastructure\Services\Payment\MollieService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
+use Interop\Container\Exception\ContainerException;
 
 /**
  * Class RefundPaymentCommandHandler
@@ -33,9 +33,11 @@ class RefundPaymentCommandHandler extends CommandHandler
      * @param RefundPaymentCommand $command
      *
      * @return CommandResult
-     * @throws QueryExecutionException
-     * @throws InvalidArgumentException
      * @throws AccessDeniedException
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     * @throws ContainerException
      */
     public function handle(RefundPaymentCommand $command)
     {
@@ -50,14 +52,16 @@ class RefundPaymentCommandHandler extends CommandHandler
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
 
-        /** @var CurrencyService $currencyService */
-        $currencyService = $this->container->get('infrastructure.payment.currency.service');
+        /** @var PaymentApplicationService $paymentAS */
+        $paymentAS = $this->container->get('application.payment.service');
 
+        /** @var Payment $payment */
         $payment = $paymentRepository->getById($paymentId);
 
-        $relatedPayments = [];
-
-        if ($payment->getAmount()->getValue() === 0 || $payment->getGateway()->getName()->getValue() === PaymentType::ON_SITE || $payment->getStatus()->getValue() === 'refunded') {
+        if ($payment->getAmount()->getValue() === 0.0 ||
+            $payment->getGateway()->getName()->getValue() === PaymentType::ON_SITE ||
+            $payment->getStatus()->getValue() === PaymentStatus::REFUNDED
+        ) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Payment object can not be refunded');
             $result->setData(
@@ -69,29 +73,19 @@ class RefundPaymentCommandHandler extends CommandHandler
             return $result;
         }
 
-        $amount = $payment->getAmount()->getValue();
-
-        $relatedPayments = $paymentRepository->getRelatedPayments($payment);
+        $amount = $paymentAS->hasRelatedRefundablePayment($payment) ? $payment->getAmount()->getValue() : null;
 
         if ($payment->getGateway()->getName()->getValue() === PaymentType::WC) {
-            $response = WooCommerceService::refund($payment->getWcOrderId()->getValue(), $amount);
+            $response = WooCommerceService::refund(
+                $payment->getWcOrderId()->getValue(),
+                $payment->getWcOrderItemId() ? $payment->getWcOrderItemId()->getValue() : null,
+                $amount
+            );
         } else {
             /** @var PaymentServiceInterface $paymentService */
-            $paymentService = $this->container->get('infrastructure.payment.' . $payment->getGateway()->getName()->getValue() . '.service');
-
-
-            foreach ($relatedPayments as $relatedPayment) {
-                $amount += $relatedPayment['amount'];
-            }
-
-            switch ($payment->getGateway()->getName()->getValue()) {
-                case PaymentType::STRIPE:
-                    $amount = $currencyService->getAmountInFractionalUnit(new Price($amount));
-                    break;
-                case PaymentType::RAZORPAY:
-                    $amount = intval($amount * 100);
-                    break;
-            }
+            $paymentService = $this->container->get(
+                'infrastructure.payment.' . $payment->getGateway()->getName()->getValue() . '.service'
+            );
 
             $response = $paymentService->refund(['id' => $payment->getTransactionId(), 'amount' => $amount]);
         }
@@ -102,17 +96,17 @@ class RefundPaymentCommandHandler extends CommandHandler
             $result->setData(
                 [
                     Entities::PAYMENT => $payment->toArray(),
-                    'response' => $response
+                    'response'        => $response
                 ]
             );
 
             return $result;
         }
 
-        $paymentRepository->updateFieldByIds(
-            !empty($relatedPayments) ? array_merge([$payment->getId()->getValue()], array_column($relatedPayments, 'id')) : [$payment->getId()->getValue()],
-            'status',
-            'refunded'
+        $paymentRepository->updateFieldById(
+            $payment->getId()->getValue(),
+            PaymentStatus::REFUNDED,
+            'status'
         );
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
@@ -120,7 +114,7 @@ class RefundPaymentCommandHandler extends CommandHandler
         $result->setData(
             [
                 Entities::PAYMENT => $payment->toArray(),
-                'response' => $response
+                'response'        => $response
             ]
         );
 

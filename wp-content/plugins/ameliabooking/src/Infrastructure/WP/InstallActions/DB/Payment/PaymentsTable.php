@@ -42,6 +42,7 @@ class PaymentsTable extends AbstractDatabaseTable
                    `created` DATETIME NULL,
                    `actionsCompleted` TINYINT(1) NULL,
                    `wcOrderId` bigint(20) NULL,
+                   `wcOrderItemId` bigint(20) NULL,
                    `transactionId` varchar(255) NULL,
                     PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";

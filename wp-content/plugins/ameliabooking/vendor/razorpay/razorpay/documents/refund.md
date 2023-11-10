@@ -31,8 +31,7 @@ $api->payment->fetch($paymentId)->refund(array("amount"=> "100", "speed"=>"norma
   "created_at": 1597078866,
   "batch_id": null,
   "status": "processed",
-  "speed_processed": "normal",
-  "speed_requested": "normal"
+  "speed_processed": "normal"
 }
 ```
 -------------------------------------------------------------------------------------------------------
@@ -158,8 +157,6 @@ $api->payment->fetch($paymentId)->fetchRefund($refundId);
 
 ### Fetch all refunds
 ```php
-$options = array("count" => 2);
-
 $api->refund->all($options);
 ```
 

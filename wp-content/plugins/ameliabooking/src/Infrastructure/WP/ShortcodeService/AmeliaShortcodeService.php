@@ -89,12 +89,14 @@ class AmeliaShortcodeService
             AMELIA_VERSION
         );
 
+        $customUrl = $settingsService->getSetting('activation', 'customUrl');
+
         if ($settingsService->getSetting('customization', 'useGenerated') === null ||
             $settingsService->getSetting('customization', 'useGenerated')
         ) {
             wp_enqueue_style(
                 'amelia_booking_styles',
-                AMELIA_UPLOADS_URL . '/amelia/css/amelia-booking.' .
+                (!empty($customUrl['uploadsPath']) ? $customUrl['uploadsPath'] : AMELIA_UPLOADS_URL)  . '/amelia/css/amelia-booking.' .
                 $settingsService->getSetting('customization', 'hash') . '.css',
                 [],
                 AMELIA_VERSION
@@ -124,8 +126,6 @@ class AmeliaShortcodeService
             'wpAmeliaSettings',
             $settingsService->getFrontendSettings()
         );
-
-        $customUrl = $settingsService->getSetting('activation', 'customUrl');
 
         wp_localize_script(
             'amelia_booking_scripts',

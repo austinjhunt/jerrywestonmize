@@ -59,7 +59,7 @@ class TimeSlotService
      * @param int      $providerId
      * @param int|null $locationId
      * @param array    $selectedExtras
-     * @param int      $excludeAppointmentId
+     * @param int|null $excludeAppointmentId
      * @param int      $personsCount
      * @param boolean  $isFrontEndBooking
      *

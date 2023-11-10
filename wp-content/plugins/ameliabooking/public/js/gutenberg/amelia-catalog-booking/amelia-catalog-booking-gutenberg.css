@@ -18,3 +18,12 @@
     position: absolute;
     max-width: 44px !important;
 }
+
+#amelia-js-select-service, #amelia-js-select-category, #amelia-js-select-employee, #amelia-js-select-location, #amelia-js-select-package {
+    height: 100px;
+    overflow-y: scroll;
+}
+
+.amelia-gutenberg-multi-select .components-input-control-suffix-wrapper{
+    display: none
+}

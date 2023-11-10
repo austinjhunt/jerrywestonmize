@@ -175,12 +175,12 @@
 
       options['categoryOptions'] = [
         {value: '', label: wpAmeliaLabels.show_catalog},
-        {value: 'categories', label: wpAmeliaLabels.show_category},
-        {value: 'services', label: wpAmeliaLabels.show_service}
+        {value: 'categories', label: wpAmeliaLabels.show_categories},
+        {value: 'services', label: wpAmeliaLabels.show_services}
       ]
 
       if (packages.length) {
-        options['categoryOptions'].push({value: 'packages', label: wpAmeliaLabels.show_package})
+        options['categoryOptions'].push({value: 'packages', label: wpAmeliaLabels.show_packages})
       }
 
       options['categories'] = []
@@ -243,11 +243,11 @@
         let shortCode = ''
 
         if (categories.length !== 0 && services.length !== 0 && employees.length !== 0) {
-          if (attributes.employee !== '') {
+          if (attributes.employee && attributes.employee.length && !attributes.employee.includes('')) {
             shortCodeString += ' employee=' + attributes.employee + ''
           }
 
-          if (attributes.location !== '') {
+          if (attributes.location && attributes.location.length && !attributes.location.includes('')) {
             shortCodeString += ' location=' + attributes.location + ''
           }
 
@@ -255,14 +255,17 @@
             if (attributes.show) {
               shortCodeString += ' show=' + attributes.show
             }
-            shortCode += '[ameliacatalogbooking category=' + attributes.category + shortCodeString
+            let category = attributes.category && attributes.category.length > 0 ? 'category=' + attributes.category : ''
+            shortCode += '[ameliacatalogbooking ' + category + shortCodeString
           } else if (attributes.categoryOptions === 'services') {
             if (attributes.show && attributes.show !== 'packages') {
               shortCodeString += ' show=' + attributes.show
             }
-            shortCode += '[ameliacatalogbooking service=' + attributes.service + shortCodeString
+            let service = attributes.service && attributes.service.length > 0 ? 'service=' + attributes.service : ''
+            shortCode += '[ameliacatalogbooking ' + service + shortCodeString
           } else if (attributes.categoryOptions === 'packages') {
-            shortCode += '[ameliacatalogbooking package=' + attributes.package + shortCodeString
+            let packages = attributes.package && attributes.package.length > 0 ? 'package=' + attributes.package : ''
+            shortCode += '[ameliacatalogbooking ' + packages + shortCodeString
           } else {
             if (attributes.show) {
               shortCodeString += ' show=' + attributes.show
@@ -298,7 +301,7 @@
 
       if (categories.length !== 0 && services.length !== 0 && employees.length !== 0) {
         inspectorElements.push(el(components.SelectControl, {
-          id: 'amelia-js-select-category',
+          id: 'amelia-js-select-selection-type',
           label: wpAmeliaLabels.select_catalog_view,
           value: attributes.categoryOptions,
           options: options.categoryOptions,
@@ -308,8 +311,8 @@
         }))
 
         if (attributes.categoryOptions === 'categories') {
-          if (attributes.category === '' || attributes.category === options.services[0].value) {
-            attributes.category = options.categories[0].value
+          if (attributes.category === '' || attributes.category === options.categories[0].value) {
+            attributes.category = [options.categories[0].value]
           }
 
           attributes.service = ''
@@ -319,13 +322,15 @@
             id: 'amelia-js-select-category',
             value: attributes.category,
             options: options.categories,
+            multiple: true,
+            className: 'amelia-gutenberg-multi-select',
             onChange: function (selectControl) {
               return props.setAttributes({category: selectControl})
             }
           }))
         } else if (attributes.categoryOptions === 'services') {
           if (attributes.service === '' || attributes.service === options.services[0].value) {
-            attributes.service = options.services[0].value
+            attributes.service = [options.services[0].value]
           }
 
           attributes.category = ''
@@ -335,13 +340,15 @@
             id: 'amelia-js-select-service',
             value: attributes.service,
             options: options.services,
+            multiple: true,
+            className: 'amelia-gutenberg-multi-select',
             onChange: function (selectControl) {
               return props.setAttributes({service: selectControl})
             }
           }))
         } else if (attributes.categoryOptions === 'packages') {
           if (attributes.package === '' || attributes.package === options.packages[0].value) {
-            attributes.package = options.packages[0].value
+            attributes.package = [options.packages[0].value]
           }
           attributes.category = ''
           attributes.service = ''
@@ -350,6 +357,8 @@
             id: 'amelia-js-select-package',
             value: attributes.package,
             options: options.packages,
+            multiple: true,
+            className: 'amelia-gutenberg-multi-select',
             onChange: function (selectControl) {
               return props.setAttributes({package: selectControl})
             }
@@ -392,6 +401,8 @@
             label: wpAmeliaLabels.select_employee,
             value: attributes.employee,
             options: options.employees,
+            multiple: true,
+            className: 'amelia-gutenberg-multi-select',
             onChange: function (selectControl) {
               return props.setAttributes({employee: selectControl})
             }
@@ -405,6 +416,8 @@
               label: wpAmeliaLabels.select_location,
               value: attributes.location,
               options: options.locations,
+              multiple: true,
+              className: 'amelia-gutenberg-multi-select',
               onChange: function (selectControl) {
                 return props.setAttributes({location: selectControl})
               }
@@ -421,6 +434,7 @@
               label: wpAmeliaLabels.show_all,
               value: attributes.show,
               options: options.show,
+              className: 'amelia-gutenberg-multi-select',
               onChange: function (selectControl) {
                 return props.setAttributes({show: selectControl})
               }

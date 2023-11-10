@@ -4,16 +4,11 @@ namespace Razorpay\Tests;
 
 use Razorpay\Api\Request;
 
-class FundTest extends TestCase
-{   
-    /**
-     * Specify unique customer id
-     * for example cust_IEfAt3ruD4OEzo
-     */
+class fundTest extends TestCase
+{
+    private $customerId = 'cust_IEfAt3ruD4OEzo';
 
-    private $customerId = "cust_IEfAt3ruD4OEzo";
-
-    public function setUp(): void
+    public function setUp()
     {
         parent::setUp();
     }

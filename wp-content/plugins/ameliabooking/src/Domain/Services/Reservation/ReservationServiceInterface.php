@@ -140,14 +140,16 @@ interface ReservationServiceInterface
      */
     public function processBooking($result, $appointmentData, $reservation, $save);
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param CommandResult $result
      * @param Reservation   $reservation
      * @param BookingType   $bookingType
+     * @param bool          $isCart
      *
      * @throws ContainerException
      */
-    public function finalize($result, $reservation, $bookingType);
+    public function finalize($result, $reservation, $bookingType, $isCart);
 
     /**
      * @param CustomerBooking  $booking

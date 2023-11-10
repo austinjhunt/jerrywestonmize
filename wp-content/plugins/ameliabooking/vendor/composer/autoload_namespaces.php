@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Requests' => array($vendorDir . '/rmccue/requests/library'),
     'Pimple' => array($vendorDir . '/pimple/pimple/src'),
     'Mailgun' => array($vendorDir . '/mailgun/mailgun-php/src'),
     'Less' => array($vendorDir . '/oyejorge/less.php/lib'),

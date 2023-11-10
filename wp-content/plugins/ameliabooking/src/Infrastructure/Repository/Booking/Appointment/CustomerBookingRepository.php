@@ -567,4 +567,47 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
 
         return new Collection($items);
     }
+
+    /**
+     * @param array $ids
+     *
+     * @return array
+     * @throws QueryExecutionException
+     */
+    public function countByNoShowStatus($ids)
+    {
+        $idsString = implode(', ', $ids);
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT customerId, COUNT(*) AS count
+                FROM {$this->table} cb
+                WHERE customerId IN ($idsString) AND status = 'no-show'
+                GROUP BY customerId"
+            );
+
+            $statement->execute();
+
+            $rows = $statement->fetchAll();
+
+            $result = [];
+            foreach ($ids as $id) {
+                $count = 0;
+                foreach ($rows as $row) {
+                    if ($row['customerId'] == $id) {
+                        $count = $row['count'];
+                        break;
+                    }
+                }
+                $result[] = [
+                    'id' => $id,
+                    'count' => $count,
+                ];
+            }
+        } catch (Exception $e) {
+            throw new QueryExecutionException('Unable to find booking by id in ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        return $result;
+    }
 }

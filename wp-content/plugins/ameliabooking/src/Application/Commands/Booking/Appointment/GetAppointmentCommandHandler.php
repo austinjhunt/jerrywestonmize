@@ -13,11 +13,14 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Json;
+use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\LessonSpaceService;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -36,6 +39,7 @@ class GetAppointmentCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
+     * @throws NotFoundException
      */
     public function handle(GetAppointmentCommand $command)
     {
@@ -74,13 +78,41 @@ class GetAppointmentCommandHandler extends CommandHandler
             throw new AccessDeniedException('You are not allowed to read appointment');
         }
 
+        /** @var PaymentRepository $paymentRepository */
+        $paymentRepository = $this->container->get('domain.payment.repository');
+
+        $bookingIds = [];
+
+        /** @var CustomerBooking $booking */
+        foreach ($appointment->getBookings()->getItems() as $booking) {
+            /** @var Payment $payment */
+            foreach ($booking->getPayments()->getItems() as $payment) {
+                if ($payment->getParentId() && $payment->getParentId()->getValue()) {
+                    /** @var Payment $parentPayment */
+                    $parentPayment = $paymentRepository->getById($payment->getParentId()->getValue());
+
+                    $bookingIds[] = $parentPayment->getCustomerBookingId()->getValue();
+                }
+
+                /** @var Collection $relatedPayments */
+                $relatedPayments = $paymentRepository->getByEntityId(
+                    $payment->getParentId() ? $payment->getParentId()->getValue() : $payment->getId()->getValue(),
+                    'parentId'
+                );
+
+                /** @var Payment $relatedPayment */
+                foreach ($relatedPayments->getItems() as $relatedPayment) {
+                    $bookingIds[] = $relatedPayment->getCustomerBookingId()->getValue();
+                }
+            }
+        }
+
         /** @var Collection $recurringAppointments */
-        $recurringAppointments = $appointmentRepo->getFiltered(
+        $recurringAppointments = $bookingIds ? $appointmentRepo->getFiltered(
             [
-                'parentId' => $appointment->getParentId() ?
-                    $appointment->getParentId()->getValue() : $appointment->getId()->getValue()
+                'bookingIds' => array_unique($bookingIds),
             ]
-        );
+        ) : new Collection();
 
         $customerAS->removeBookingsForOtherCustomers($user, new Collection([$appointment]));
 

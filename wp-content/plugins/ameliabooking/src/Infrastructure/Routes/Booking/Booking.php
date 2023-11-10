@@ -8,6 +8,8 @@ namespace AmeliaBooking\Infrastructure\Routes\Booking;
 
 use AmeliaBooking\Application\Controller\Booking\Appointment\CancelBookingController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\CancelBookingRemotelyController;
+use AmeliaBooking\Application\Controller\Booking\Appointment\ApproveBookingRemotelyController;
+use AmeliaBooking\Application\Controller\Booking\Appointment\RejectBookingRemotelyController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\DeleteBookingController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\GetIcsController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\ReassignBookingController;
@@ -42,5 +44,9 @@ class Booking
         $app->get('/bookings/ics/{id:[0-9]+}', GetIcsController::class)->setOutputBuffering(false);
 
         $app->post('/bookings/success/{id:[0-9]+}', SuccessfulBookingController::class);
+
+        $app->get('/bookings/success/{id:[0-9]+}', ApproveBookingRemotelyController::class);
+
+        $app->get('/bookings/reject/{id:[0-9]+}', RejectBookingRemotelyController::class);
     }
 }

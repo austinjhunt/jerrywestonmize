@@ -546,10 +546,10 @@ class EntityApplicationService
         }
 
 
-        $existingLocationsIds = $data['locationId'] ?
+        $existingLocationsIds = !empty($data['locationId']) ?
             $locationRepository->getIds(['id' => [(int)$data['locationId']]]) : [];
 
-        if ($data['locationId'] && !in_array((int)$data['locationId'], $existingLocationsIds)) {
+        if (!empty($data['locationId']) && !in_array((int)$data['locationId'], $existingLocationsIds)) {
             $data['locationId'] = null;
         }
     }
@@ -632,10 +632,10 @@ class EntityApplicationService
         }
 
 
-        $existingLocationsIds = $data['locationId'] ?
+        $existingLocationsIds = !empty($data['locationId']) ?
             $locationRepository->getIds(['id' => [(int)$data['locationId']]]) : [];
 
-        if ($data['locationId'] && !in_array((int)$data['locationId'], $existingLocationsIds)) {
+        if (!empty($data['locationId']) && !in_array((int)$data['locationId'], $existingLocationsIds)) {
             return Entities::LOCATION;
         }
 

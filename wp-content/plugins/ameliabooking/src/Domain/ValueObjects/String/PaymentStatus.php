@@ -15,6 +15,8 @@ final class PaymentStatus
 
     const PARTIALLY_PAID = 'partiallyPaid';
 
+    const REFUNDED = 'refunded';
+
     /**
      * @var string
      */

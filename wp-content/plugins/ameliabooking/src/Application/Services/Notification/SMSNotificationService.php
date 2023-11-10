@@ -104,8 +104,17 @@ class SMSNotificationService extends AbstractNotificationService
 
         foreach ($users as $user) {
             if ($user['phone']) {
-                $reParsedData = $appointmentArray['type'] === Entities::PACKAGE &&
-                !(isset($appointmentArray['isForCustomer']) && $appointmentArray['isForCustomer']) ?
+                if (!$isCustomerPackage && !empty($data['providersAppointments'][$user['id']])) {
+                    $text = $placeholderService->applyPlaceholders(
+                        $notificationContent,
+                        array_merge(
+                            $data,
+                            ['cart_appointments_details' => $data['providersAppointments'][$user['id']]]
+                        )
+                    );
+                }
+
+                $reParsedData = !$isCustomerPackage ?
                     $placeholderService->reParseContentForProvider(
                         $appointmentArray,
                         '',

@@ -313,6 +313,17 @@ $entries['application.placeholder.appointment.service'] = function ($c) {
 };
 
 /**
+ * Appointments Notification Service
+ *
+ * @param Container $c
+ *
+ * @return \AmeliaBooking\Application\Services\Placeholder\AppointmentsPlaceholderService
+ */
+$entries['application.placeholder.appointments.service'] = function ($c) {
+    return new AmeliaBooking\Application\Services\Placeholder\AppointmentsPlaceholderService($c);
+};
+
+/**
  * Package Notification Service
  *
  * @param Container $c

@@ -5,19 +5,14 @@ namespace Razorpay\Tests;
 use Razorpay\Api\Request;
 
 class EmandateTest extends TestCase
-{ 
-    /**
-     * Specify unique customer id, invoice id & token id 
-     * for example cust_IEfAt3ruD4OEzo, inv_IF37M4q6SdOpjT & token_IF1ThOcFC9J7pU
-     */
-    
-    private $customerId = "cust_IEfAt3ruD4OEzo";
-    
-    private $invoiceId = "inv_JM5rC3ddYKVWgy";
+{
+    private $customerId = 'cust_BMB3EwbqnqZ2EI';
 
-    private $tokenId = "token_IF1ThOcFC9J7pU";
+    private $invoiceId = 'inv_IF37M4q6SdOpjT';
 
-    public function setUp(): void
+    private $tokenId = 'token_IF1ThOcFC9J7pU';
+
+    public function setUp()
     {
         parent::setUp();
     }
@@ -43,7 +38,7 @@ class EmandateTest extends TestCase
      
         $this->assertTrue(is_array($data->toArray()));
         
-        $this->assertArrayHasKey('id',$data->toArray());
+        $this->assertTrue(in_array('id',$data->toArray()));
     }
 
     /**
@@ -51,7 +46,7 @@ class EmandateTest extends TestCase
      */
     public function testCreateSubscriptionRegistrationEmandate()
     {
-        $data = $this->api->subscription->createSubscriptionRegistration(array('customer'=>array('name'=>'Gaurav Kumar','email'=>'gaurav.kumar@example.com','contact'=>'9999999999'),'type'=>'link','amount'=>100,'currency'=>'INR','description'=>'Registration Link for Gaurav Kumar','subscription_registration'=>array('method'=>'card','max_amount'=>'500','expire_at'=> strtotime("+1 month") ),'receipt'=>'Receipt No. '.time(),'email_notify'=>1,'sms_notify'=>1,'expire_by'=>strtotime("+1 month"),'notes' => array('note_key 1' => 'Beam me up Scotty','note_key 2' => 'Tea. Earl Gray. Hot.')));
+        $data = $this->api->subscription->createSubscriptionRegistration(array('customer'=>array('name'=>'Gaurav Kumar','email'=>'gaurav.kumar@example.com','contact'=>'7000569565'),'type'=>'link','amount'=>100,'currency'=>'INR','description'=>'Registration Link for Gaurav Kumar','subscription_registration'=>array('method'=>'card','max_amount'=>'500','expire_at'=> strtotime("+1 month") ),'receipt'=>'Receipt No. '.time(),'email_notify'=>1,'sms_notify'=>1,'expire_by'=>strtotime("+1 month"),'notes' => array('note_key 1' => 'Beam me up Scotty','note_key 2' => 'Tea. Earl Gray. Hot.')));
 
         $this->assertTrue(is_array($data->toArray()));
 
@@ -63,11 +58,11 @@ class EmandateTest extends TestCase
      */
     public function testSendNotification()
     {
-        $data = $this->api->invoice->fetch($this->invoiceId)->notifyBy('sms');
+        $data = $this->api->invoice->fetch($this->invoiceId)->notifyBy('email');
 
         $this->assertTrue(is_array($data));
 
-        $this->assertArrayHasKey('success',$data);
+        $this->assertTrue(in_array('success',$data));
             
     }
 
@@ -82,7 +77,7 @@ class EmandateTest extends TestCase
 
        $this->assertTrue(is_array($data->toArray()));
 
-       $this->assertArrayHasKey('id',$data->toArray());
+       $this->assertTrue(in_array('id',$data->toArray()));      
     }
 
     /**

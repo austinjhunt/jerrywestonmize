@@ -9,10 +9,10 @@ namespace AmeliaBooking\Domain\Entity\Booking;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
+use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
-use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
@@ -50,6 +50,9 @@ class Reservation
     private $isStatusChanged;
 
     /** @var BooleanValueObject */
+    private $isCart;
+
+    /** @var BooleanValueObject */
     private $applyDeposit;
 
     /** @var array */
@@ -75,9 +78,6 @@ class Reservation
 
     /** @var AbstractUser $user */
     private $loggedInUser;
-
-    /** @var Payment $payment */
-    private $payment;
 
     /**
      * @return BooleanValueObject
@@ -168,7 +168,7 @@ class Reservation
     }
 
     /**
-     * @param AbstractBookable $bookable
+     * @param Service|Event|Package $bookable
      */
     public function setBookable(AbstractBookable $bookable)
     {
@@ -304,6 +304,22 @@ class Reservation
     }
 
     /**
+     * @return BooleanValueObject
+     */
+    public function isCart()
+    {
+        return $this->isCart;
+    }
+
+    /**
+     * @param BooleanValueObject $isCart
+     */
+    public function setIsCart(BooleanValueObject $isCart)
+    {
+        $this->isCart = $isCart;
+    }
+
+    /**
      * @return array
      */
     public function getUploadedCustomFieldFilesInfo()
@@ -349,21 +365,5 @@ class Reservation
     public function setLoggedInUser(AbstractUser $loggedInUser)
     {
         $this->loggedInUser = $loggedInUser;
-    }
-
-    /**
-     * @return Payment
-     */
-    public function getPayment()
-    {
-        return $this->payment;
-    }
-
-    /**
-     * @param Payment $payment
-     */
-    public function setPayment($payment)
-    {
-        $this->payment = $payment;
     }
 }

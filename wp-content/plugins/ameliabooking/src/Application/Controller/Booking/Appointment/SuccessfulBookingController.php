@@ -25,7 +25,6 @@ class SuccessfulBookingController extends Controller
         'type',
         'appointmentStatusChanged',
         'recurring',
-        'package',
         'packageId',
         'customer',
         'paymentId',

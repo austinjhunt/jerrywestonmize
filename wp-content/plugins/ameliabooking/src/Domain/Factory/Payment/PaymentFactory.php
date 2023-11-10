@@ -83,17 +83,26 @@ class PaymentFactory
         if (!empty($data['wcOrderId']) && WooCommerceService::isEnabled()) {
             $payment->setWcOrderId(new Id($data['wcOrderId']));
 
+            if (!empty($data['wcOrderItemId'])) {
+                $payment->setWcOrderItemId(new Id($data['wcOrderItemId']));
+            }
+
             if ($wcOrderUrl = HelperService::getWooCommerceOrderUrl($data['wcOrderId'])) {
                 $payment->setWcOrderUrl(new Url($wcOrderUrl));
             }
 
             if ($wcOrderItemValues = HelperService::getWooCommerceOrderItemAmountValues($data['wcOrderId'])) {
-                if (!empty($wcOrderItemValues[0]['coupon'])) {
-                    $payment->setWcItemCouponValue(new Price($wcOrderItemValues[0]['coupon'] < 0 ? 0 : $wcOrderItemValues[0]['coupon']));
+                $key = !empty($data['wcOrderItemId']) && !empty($wcOrderItemValues[$data['wcOrderItemId']]) ?
+                    $data['wcOrderItemId'] : array_keys($wcOrderItemValues)[0];
+
+                if (!empty($wcOrderItemValues[$key]['coupon'])) {
+                    $payment->setWcItemCouponValue(
+                        new Price($wcOrderItemValues[$key]['coupon'] < 0 ? 0 : $wcOrderItemValues[$key]['coupon'])
+                    );
                 }
 
-                if (!empty($wcOrderItemValues[0]['tax'])) {
-                    $payment->setWcItemTaxValue(new Price($wcOrderItemValues[0]['tax']));
+                if (!empty($wcOrderItemValues[$key]['tax'])) {
+                    $payment->setWcItemTaxValue(new Price($wcOrderItemValues[$key]['tax']));
                 }
             }
         }

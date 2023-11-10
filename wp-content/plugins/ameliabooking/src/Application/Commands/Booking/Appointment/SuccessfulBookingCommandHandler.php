@@ -38,7 +38,8 @@ class SuccessfulBookingCommandHandler extends CommandHandler
     {
         $this->checkMandatoryFields($command);
 
-        $type = $command->getField('type') ?: Entities::APPOINTMENT;
+        $type = $command->getField('type') === Entities::CART ?
+            Entities::APPOINTMENT : $command->getField('type');
 
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get($type);
@@ -65,8 +66,9 @@ class SuccessfulBookingCommandHandler extends CommandHandler
 
         return $reservationService->getSuccessBookingResponse(
             (int)$command->getArg('id'),
-            $command->getField('type') ?: Entities::APPOINTMENT,
+            $type,
             !empty($command->getFields()['recurring']) ? $command->getFields()['recurring'] : [],
+            $command->getField('type') === Entities::CART,
             $command->getFields()['appointmentStatusChanged'],
             $command->getField('packageId'),
             $command->getField('customer'),

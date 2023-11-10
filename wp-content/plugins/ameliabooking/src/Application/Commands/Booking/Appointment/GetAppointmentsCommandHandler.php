@@ -23,6 +23,7 @@ use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -171,6 +172,10 @@ class GetAppointmentsCommandHandler extends CommandHandler
             unset($params['customerId']);
         }
 
+        $customersNoShowCountIds = [];
+
+        $noShowTagEnabled = $settingsDS->getSetting('roles', 'enableNoShowTag');
+
         if (!$isCabinetPackageRequest && $appointmentsIds) {
             $appointments = $appointmentRepository->getFiltered(
                 array_merge(
@@ -192,6 +197,10 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         (int)$params['packageId'] : null,
                 ]
             );
+
+            if ($noShowTagEnabled && !!$availablePackageBookings) {
+                $customersNoShowCountIds[] = $availablePackageBookings[0]['customerId'];
+            }
         }
 
         /** @var Collection $services */
@@ -225,6 +234,10 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
                 if ($bookingAS->isBookingApprovedOrPending($booking->getStatus()->getValue())) {
                     $bookingsCount++;
+                }
+
+                if ($noShowTagEnabled && !in_array($booking->getCustomerId()->getValue(), $customersNoShowCountIds)) {
+                    $customersNoShowCountIds[] = $booking->getCustomerId()->getValue();
                 }
             }
 
@@ -405,6 +418,15 @@ class GetAppointmentsCommandHandler extends CommandHandler
             );
         }
 
+        $customersNoShowCount = [];
+
+        if ($noShowTagEnabled && $customersNoShowCountIds) {
+            /** @var CustomerBookingRepository $bookingRepository */
+            $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+            $customersNoShowCount = $bookingRepository->countByNoShowStatus($customersNoShowCountIds);
+        }
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved appointments');
         $result->setData(
@@ -416,7 +438,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
                 'total'                    => $periodsAppointmentsCount,
                 'totalApproved'            => $periodsAppointmentsApprovedCount,
                 'totalPending'             => $periodsAppointmentsPendingCount,
-                'currentUser'              => $user ? $user->toArray() : null
+                'currentUser'              => $user ? $user->toArray() : null,
+                'customersNoShowCount'     => $customersNoShowCount
             ]
         );
 

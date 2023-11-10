@@ -342,9 +342,19 @@ class BookingAddedEventHandler
                 }
             }
 
+            $currentBookingIndex = 0;
+
+            foreach ($recurringReservationData[$type]['bookings'] as $index => $reservationBooking) {
+                $recurringData[$key][$type]['bookings'][$index]['isLastBooking'] = true;
+
+                if ($recurringReservationData['booking']['id'] === $reservationBooking['id']) {
+                    $currentBookingIndex = $index;
+                }
+            }
+
             if (!$commandResult->getData()['packageId'] && empty($commandResult->getData()['fromLink'])) {
                 $dataRecurring = $recurringReservationData;
-                $dataRecurring['bookable']  = $data['bookable'];
+                $dataRecurring['bookable']  = $recurringReservationObject->toArray()['service'];
                 $dataRecurring['customer']  = $data['customer'];
                 $dataRecurring['recurring'] = array_column($recurringData, 'appointment');
                 $recurringData[$key][$type]['bookings'][$currentBookingIndex]['payments'][0]['paymentLinks'] = $paymentAS->createPaymentLink($dataRecurring, $currentBookingIndex, $key);
@@ -378,7 +388,10 @@ class BookingAddedEventHandler
 
         $reservation['recurring'] = $recurringData;
 
-        if ($appointmentStatusChanged === true && !$commandResult->getData()['packageId']) {
+        if ($appointmentStatusChanged === true &&
+            !$commandResult->getData()['packageId'] &&
+            !$commandResult->getData()['isCart']
+        ) {
             foreach ($reservation['bookings'] as $bookingKey => $bookingArray) {
                 if ($bookingArray['id'] !== $booking['id'] &&
                     $bookingArray['status'] === BookingStatus::APPROVED &&
@@ -389,7 +402,10 @@ class BookingAddedEventHandler
             }
         }
 
-        if ($appointmentStatusChanged === true && !$commandResult->getData()['packageId']) {
+        if ($appointmentStatusChanged === true &&
+            !$commandResult->getData()['packageId'] &&
+            !$commandResult->getData()['isCart']
+        ) {
             $emailNotificationService->sendAppointmentStatusNotifications($reservation, empty($commandResult->getData()['fromLink']), true);
 
             if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
@@ -401,7 +417,10 @@ class BookingAddedEventHandler
             }
         }
 
-        if ($appointmentStatusChanged !== true && !$commandResult->getData()['packageId']) {
+        if ($appointmentStatusChanged !== true &&
+            !$commandResult->getData()['packageId'] &&
+            !$commandResult->getData()['isCart']
+        ) {
             $emailNotificationService->sendBookingAddedNotifications($reservation, $booking, true);
 
             if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
@@ -443,9 +462,41 @@ class BookingAddedEventHandler
             }
         }
 
+        if ($commandResult->getData()['isCart']) {
+            $cartReservation = [
+                'type'              => Entities::APPOINTMENTS,
+                'customer'          => $commandResult->getData()['customer'],
+                'icsFiles'          => $icsFiles,
+                'isRetry'           => !empty($commandResult->getData()['isRetry']) ?
+                    $commandResult->getData()['isRetry'] : null,
+                'status'            => 'purchase',
+                'recurring' => array_merge(
+                    [
+                        [
+                            'type'                     => Entities::APPOINTMENT,
+                            Entities::APPOINTMENT      => $reservation,
+                            Entities::BOOKING          => $booking,
+                            'appointmentStatusChanged' => $appointmentStatusChanged,
+                        ]
+                    ],
+                    $reservation['recurring']
+                )
+            ];
+
+            $emailNotificationService->sendCartNotifications($cartReservation, true);
+
+            if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
+                $smsNotificationService->sendCartNotifications($cartReservation, true);
+            }
+
+            if ($whatsAppNotificationService->checkRequiredFields()) {
+                $whatsAppNotificationService->sendCartNotifications($cartReservation, true);
+            }
+        }
+
         foreach ($recurringData as $key => $recurringReservationData) {
             if ($recurringReservationData['appointmentStatusChanged'] === true) {
-                foreach ($recurringData[$key][$type]['bookings'] as $bookingKey => $recurringReservationBooking) {
+                foreach ($recurringReservationData[$type]['bookings'] as $bookingKey => $recurringReservationBooking) {
                     if ($recurringReservationBooking['customerId'] === $booking['customerId']) {
                         $recurringData[$key][$type]['bookings'][$bookingKey]['skipNotification'] = true;
                     }
@@ -496,7 +547,7 @@ class BookingAddedEventHandler
             ]
         );
 
-        foreach ($recurringData as $key => $recurringReservationData) {
+        foreach ($recurringData as $recurringReservationData) {
             $webHookService->process(
                 self::BOOKING_ADDED,
                 $recurringReservationData[$type],

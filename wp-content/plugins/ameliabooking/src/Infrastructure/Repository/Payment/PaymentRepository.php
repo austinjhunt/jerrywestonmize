@@ -130,6 +130,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             ':created'           => DateTimeService::getNowDateTimeInUtc(),
             ':wcOrderId'         => !empty($data['wcOrderId']) ? $data['wcOrderId'] : null,
             ':transactionId'      => !empty($data['transactionId']) ? $data['transactionId'] : null,
+            ':wcOrderItemId'     => !empty($data['wcOrderItemId']) ? $data['wcOrderItemId'] : null,
         ];
 
         if ($data['parentId']) {
@@ -143,9 +144,9 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 "INSERT INTO
                 {$this->table} 
                 (
-                `customerBookingId`, `packageCustomerId`, `parentId`, `amount`, `dateTime`, `status`, `gateway`, `gatewayTitle`, `data`, `entity`, `actionsCompleted`, `created`, `wcOrderId`, `transactionId`
+                `customerBookingId`, `packageCustomerId`, `parentId`, `amount`, `dateTime`, `status`, `gateway`, `gatewayTitle`, `data`, `entity`, `actionsCompleted`, `created`, `wcOrderId`, `wcOrderItemId`, `transactionId`
                 ) VALUES (
-                :customerBookingId, :packageCustomerId, :parentId, :amount, :dateTime, :status, :gateway, :gatewayTitle, :data, :entity, :actionsCompleted, :created, :wcOrderId, :transactionId
+                :customerBookingId, :packageCustomerId, :parentId, :amount, :dateTime, :status, :gateway, :gatewayTitle, :data, :entity, :actionsCompleted, :created, :wcOrderId, :wcOrderItemId, :transactionId
                 )"
             );
 
@@ -404,6 +405,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 p.dateTime AS dateTime,
                 p.status AS status,
                 p.wcOrderId AS wcOrderId,
+                p.wcOrderItemId AS wcOrderItemId,
                 p.gateway AS gateway,
                 p.gatewayTitle AS gatewayTitle,
                 p.transactionId AS transactionId,
@@ -453,6 +455,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 p.dateTime AS dateTime,
                 p.status AS status,
                 p.wcOrderId AS wcOrderId,
+                p.wcOrderItemId AS wcOrderItemId,
                 p.gateway AS gateway,
                 p.gatewayTitle AS gatewayTitle,
                 p.transactionId AS transactionId,
@@ -501,6 +504,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 p.dateTime AS dateTime,
                 p.status AS status,
                 p.wcOrderId AS wcOrderId,
+                p.wcOrderItemId AS wcOrderItemId,
                 p.gateway AS gateway,
                 p.gatewayTitle AS gatewayTitle,
                 p.transactionId AS transactionId,
@@ -586,6 +590,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                     DateTimeService::getCustomDateTimeFromUtc($row['bookingStart']) : null,
                 'status' =>  $row['status'],
                 'wcOrderId' =>  $row['wcOrderId'],
+                'wcOrderItemId' =>  $row['wcOrderItemId'],
                 'gateway' =>  $row['gateway'],
                 'gatewayTitle' =>  $row['gatewayTitle'],
                 'transactionId' =>  $row['transactionId'],
@@ -906,116 +911,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
         }
         return $result;
-    }
-
-
-    /**
-     * @param Payment $payment
-     *
-     * @return array
-     * @throws QueryExecutionException
-     */
-    public function getRelatedPayments($payment)
-    {
-        $result = [];
-
-        $params = [
-            ':paymentId1' => $payment->getId()->getValue(),
-            ':paymentId2' => $payment->getId()->getValue(),
-        ];
-
-        $where = "WHERE id <> :paymentId1 AND (status = 'paid' OR status = 'partiallyPaid') AND (parentId = :paymentId2";
-
-        if ($payment->getParentId()) {
-            $params[':parentId2'] = $params[':parentId1']  = $payment->getParentId()->getValue();
-            $where .= ' OR parentId= :parentId1 OR id = :parentId2)';
-        } else {
-            $where .= ')';
-        }
-
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT
-                    id AS id,
-                    customerBookingId AS customerBookingId,
-                    packageCustomerId AS packageCustomerId,
-                    parentId AS parentId,
-                    amount AS amount,
-                    entity AS entity,
-                    created AS created,
-                    dateTime AS dateTime,
-                    status AS status,
-                    gateway AS gateway,
-                    gatewayTitle AS gatewayTitle,
-                    data AS data, 
-                    transactionId AS transactionId,
-                    wcOrderId AS wcOrderId
-                FROM {$this->table}
-                {$where}"
-            );
-
-            $statement->execute($params);
-
-            $rows = $statement->fetchAll();
-
-            foreach ($rows as $row) {
-                //getting wc tax
-                /** @var Payment $paymentObject **/
-                $paymentObject = call_user_func([static::FACTORY, 'create'], $row);
-                if ($paymentObject) {
-                    $paymentArray = $paymentObject->toArray();
-                    $paymentArray['dateTime'] = DateTimeService::getCustomDateTimeFromUtc($paymentArray['dateTime']);
-                    $result[] = $paymentArray;
-                }
-            }
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in related payments ' . __CLASS__, $e->getCode(), $e);
-        }
-        return $result;
-    }
-
-    /**
-     * @param array  $ids
-     * @param mixed  $fieldValue
-     * @param string $fieldName
-     *
-     * @return mixed
-     * @throws QueryExecutionException
-     */
-    public function updateFieldByIds($ids, $fieldName, $fieldValue)
-    {
-        $queryParams = [];
-
-        $params = [
-            ":$fieldName" => $fieldValue
-        ];
-
-        foreach ($ids as $index => $value) {
-            $param = ':id' . $index;
-
-            $queryParams[]  = $param;
-            $params[$param] = $value;
-        }
-
-        $where = 'WHERE id IN (' . implode(', ', $queryParams) . ')';
-
-        try {
-            $statement = $this->connection->prepare(
-                "UPDATE {$this->table}
-                SET `$fieldName` = :$fieldName
-                {$where}"
-            );
-
-            $res = $statement->execute($params);
-
-            if (!$res) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
-
-            return $res;
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
-        }
     }
 
     /**

@@ -51,12 +51,12 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
 
         $options = [
             'show_catalog' => BackendStrings::getWordPressStrings()['show_catalog'],
-            'show_category' => BackendStrings::getWordPressStrings()['show_category'],
-            'show_service' => BackendStrings::getWordPressStrings()['show_service'],
+            'show_category' => BackendStrings::getWordPressStrings()['show_categories'],
+            'show_service' => BackendStrings::getWordPressStrings()['show_services'],
         ];
 
         if ($controls_data['packages']) {
-            $options['show_package'] = BackendStrings::getWordPressStrings()['show_package'];
+            $options['show_package'] = BackendStrings::getWordPressStrings()['show_packages'];
         }
 
         $this->add_control(
@@ -74,10 +74,11 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             'select_category',
             [
                 'label' => BackendStrings::getWordPressStrings()['select_category'],
-                'type' => Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
                 'options' => $controls_data['categories'],
                 'condition' => ['select_catalog' => 'show_category'],
-                'default' => array_keys($controls_data['categories']) ? array_keys($controls_data['categories'])[0] : 0,
+                'default' => array_keys($controls_data['categories']) ? [array_keys($controls_data['categories'])[0]] : 0,
             ]
         );
 
@@ -85,10 +86,11 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             'select_service',
             [
                 'label' => BackendStrings::getWordPressStrings()['select_service'],
-                'type' => Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
                 'options' => $controls_data['services'],
                 'condition' => ['select_catalog' => 'show_service'],
-                'default' => array_keys($controls_data['services']) ? array_keys($controls_data['services'])[0] : 0,
+                'default' => array_keys($controls_data['services']) ? [array_keys($controls_data['services'])[0]] : 0,
             ]
         );
 
@@ -97,10 +99,11 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
                 'select_package',
                 [
                     'label' => BackendStrings::getWordPressStrings()['select_package'],
-                    'type' => Controls_Manager::SELECT,
+                    'type' => Controls_Manager::SELECT2,
+                    'multiple' => true,
                     'options' => $controls_data['packages'],
                     'condition' => ['select_catalog' => 'show_package'],
-                    'default' => array_keys($controls_data['packages']) ? array_keys($controls_data['packages'])[0] : 0,
+                    'default' => array_keys($controls_data['packages']) ? [array_keys($controls_data['packages'])[0]] : 0,
                 ]
             );
         }
@@ -132,10 +135,10 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             'select_employee',
             [
                 'label' => BackendStrings::getWordPressStrings()['select_employee'],
-                'type' => Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
                 'options' => $controls_data['employees'],
                 'condition' => ['preselect' => 'yes'],
-                'default' => '0',
             ]
         );
 
@@ -143,10 +146,10 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             'select_location',
             [
                 'label' => BackendStrings::getWordPressStrings()['select_location'],
-                'type' => Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
                 'options' => $controls_data['locations'],
                 'condition' => ['preselect' => 'yes'],
-                'default' => '0',
             ]
         );
 
@@ -219,25 +222,25 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
 
             $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
         }
-        elseif ($settings['select_catalog'] === 'show_category') {
-            $category_service = ' category=' . $settings['select_category'];
+        elseif ($settings['select_catalog'] === 'show_category' && count($settings['select_category']) > 0) {
+            $category_service = ' category=' . implode(',', $settings['select_category']);
 
             $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
         }
-        elseif ($settings['select_catalog'] === 'show_service') {
-            $category_service = ' service=' . $settings['select_service'];
+        elseif ($settings['select_catalog'] === 'show_service' && count($settings['select_service']) > 0) {
+            $category_service = ' service=' . implode(',', $settings['select_service']);
 
             $show = empty($settings['select_show']) || $settings['select_show'] === 'packages' ? '' : ' show=' . $settings['select_show'];
         }
-        elseif ($settings['select_catalog'] === 'show_package') {
-            $category_service = ' package=' . $settings['select_package'];
+        elseif ($settings['select_catalog'] === 'show_package' && count($settings['select_package']) > 0) {
+            $category_service = ' package=' . implode(',', $settings['select_package']);
         } else {
             $category_service = '';
         }
 
         if ($settings['preselect']) {
-            $employee = $settings['select_employee'] === '0' ? '' : ' employee=' . $settings['select_employee'];
-            $location = $settings['select_location'] === '0' ? '' : ' location=' . $settings['select_location'];
+            $employee = empty($settings['select_employee']) ? '' : ' employee=' . implode(',', $settings['select_employee']);
+            $location = empty($settings['select_location']) ? '' : ' location=' . implode(',', $settings['select_location']);
         }
         else {
             $employee = '';
@@ -271,15 +274,11 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
         }
 
         $elementorData['employees'] = [];
-        $elementorData['employees'][0] = BackendStrings::getWordPressStrings()['show_all_employees'];
-
         foreach ($data['employees'] as $provider) {
             $elementorData['employees'][$provider['id']] = $provider['firstName'] . $provider['lastName'] . ' (id: ' . $provider['id'] . ')';
         }
 
         $elementorData['locations'] = [];
-        $elementorData['locations'][0] = BackendStrings::getWordPressStrings()['show_all_locations'];
-
         foreach ($data['locations'] as $location) {
             $elementorData['locations'][$location['id']] = $location['name'] . ' (id: ' . $location['id'] . ')';
         }

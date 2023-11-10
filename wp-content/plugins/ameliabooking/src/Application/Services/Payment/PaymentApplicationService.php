@@ -30,6 +30,7 @@ use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Container;
+use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\CustomerBookingEventTicketRepository;
@@ -155,10 +156,13 @@ class PaymentApplicationService
 
                 $wcOrderItemValues = HelperService::getWooCommerceOrderItemAmountValues($item['wcOrderId']);
 
-                if ($wcOrderItemValues) {
-                    $item['wcItemCouponValue'] = $wcOrderItemValues[0]['coupon'];
+                $key = !empty($item['wcOrderItemId']) && !empty($wcOrderItemValues[$item['wcOrderItemId']]) ?
+                    $item['wcOrderItemId'] : array_keys($wcOrderItemValues)[0];
 
-                    $item['wcItemTaxValue'] = $wcOrderItemValues[0]['tax'];
+                if ($wcOrderItemValues) {
+                    $item['wcItemCouponValue'] = $wcOrderItemValues[$key]['coupon'];
+
+                    $item['wcItemTaxValue'] = $wcOrderItemValues[$key]['tax'];
                 }
             }
         }
@@ -190,10 +194,11 @@ class PaymentApplicationService
         if (!$paymentAmount &&
             (
                 $paymentData['gateway'] === 'stripe' ||
-                $paymentData['gateway'] === 'payPal'
-                || $paymentData['gateway'] === 'mollie'
-                || $paymentData['gateway'] === 'razorpay'
-            )) {
+                $paymentData['gateway'] === 'payPal' ||
+                $paymentData['gateway'] === 'mollie' ||
+                $paymentData['gateway'] === 'razorpay'
+            )
+        ) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage(FrontendStrings::getCommonStrings()['payment_error']);
             $result->setData(
@@ -491,7 +496,6 @@ class PaymentApplicationService
                     $customer
                 );
             } catch (Exception $e) {
-                $placeholderData = [];
             }
         }
 
@@ -558,15 +562,15 @@ class PaymentApplicationService
             'paymentId'
         );
 
+        $followingPaymentId = $followingPayments->length() ?
+            min(array_map('intval', array_column($followingPayments->toArray(), 'id'))) : null;
+
         /** @var Cache $cache */
         foreach ($caches->getItems() as $cache) {
-            /** @var Payment $nextPayment */
-            $nextPayment = $followingPayments->length() ? $followingPayments->getItem(0) : null;
-
-            if ($nextPayment) {
+            if ($followingPaymentId) {
                 $cacheRepository->updateByEntityId(
                     $payment->getId()->getValue(),
-                    $nextPayment->getId()->getValue(),
+                    $followingPaymentId,
                     'paymentId'
                 );
             } else {
@@ -577,6 +581,18 @@ class PaymentApplicationService
                 );
             }
         }
+
+        $paymentRepository->updateByEntityId(
+            $payment->getId()->getValue(),
+            $followingPaymentId,
+            'parentId'
+        );
+
+        $paymentRepository->updateFieldById(
+            $followingPaymentId,
+            null,
+            'parentId'
+        );
 
         if (!$paymentRepository->delete($payment->getId()->getValue())) {
             return false;
@@ -675,7 +691,8 @@ class PaymentApplicationService
                 return null;
             }
 
-            $paymentLinksSettings = !empty($entitySettings) ? $entitySettings['payments']['paymentLinks'] : null;
+            $paymentLinksSettings = !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ?
+                $entitySettings['payments']['paymentLinks'] : null;
             $paymentLinksEnabled  = $paymentLinksSettings ? $paymentLinksSettings['enabled'] : $settingsService->getSetting('payments', 'paymentLinks')['enabled'];
             if (!$paymentLinksEnabled || ($booking && (in_array($booking['status'], [BookingStatus::CANCELED, BookingStatus::REJECTED, BookingStatus::NO_SHOW])))) {
                 return null;
@@ -712,7 +729,9 @@ class PaymentApplicationService
             }
             $allWCTaxes = array_sum(array_filter(array_column($payments, 'wcItemTaxValue')));
 
-            $amountWithoutTax = $allAmounts - $allWCTaxes;
+            $allWCCoupons = array_sum(array_filter(array_column($payments, 'wcItemCouponValue')));
+
+            $amountWithoutTax = $allAmounts + $allWCCoupons - $allWCTaxes;
             if ($amountWithoutTax >= $totalPrice || $totalPrice === 0) {
                 return null;
             }
@@ -1031,5 +1050,48 @@ class PaymentApplicationService
                 $transactionId
             );
         }
+    }
+
+    /**
+     * Inspect if there is related payment (multiple appointments were booked and paid at once) that can be refunded
+     *
+     * @param Payment $payment
+     *
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     * @throws NotFoundException
+     */
+    public function hasRelatedRefundablePayment($payment)
+    {
+        /** @var PaymentRepository $paymentRepository */
+        $paymentRepository = $this->container->get('domain.payment.repository');
+
+        /** @var Collection $followingPayments */
+        $followingPayments = $paymentRepository->getByEntityId(
+            $payment->getParentId() ? $payment->getParentId()->getValue() : $payment->getId()->getValue(),
+            'parentId'
+        );
+
+        if ($payment->getParentId()) {
+            /** @var Payment $parentPayment */
+            $parentPayment = $paymentRepository->getById($payment->getParentId()->getValue());
+
+            $followingPayments->addItem($parentPayment);
+        }
+
+        /** @var Payment $followingPayment */
+        foreach ($followingPayments->getItems() as $followingPayment) {
+            if ($followingPayment->getId()->getValue() !== $payment->getId()->getValue() &&
+                (
+                    $followingPayment->getStatus()->getValue() === PaymentStatus::REFUNDED ||
+                    $followingPayment->getStatus()->getValue() === PaymentStatus::PAID ||
+                    $followingPayment->getStatus()->getValue() === PaymentStatus::PARTIALLY_PAID
+                )
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

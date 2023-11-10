@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8017e162465441a9361afa3337d5152d
+class ComposerStaticInita9f4da7ad0ab12aa8dbfb0a550cb9452
 {
     public static $files = array (
         '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
@@ -21,15 +21,12 @@ class ComposerStaticInit8017e162465441a9361afa3337d5152d
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62_am' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
-        '941748b3c8cae4466c827dfb5ca9602a' => __DIR__ . '/..' . '/rmccue/requests/library/Deprecated.php',
         'cf150f72bd303a2ff07711c9a70f2d53' => __DIR__ . '/..' . '/google/apiclient/src/Google/autoload.php',
-        '13906c19e3d8fcd1341b24ed4d51cf72' => __DIR__ . '/..' . '/razorpay/razorpay/Deprecated.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'W' => 
         array (
-            'WpOrg\\Requests\\' => 15,
             'Webmozart\\Assert\\' => 17,
         ),
         'T' => 
@@ -115,10 +112,6 @@ class ComposerStaticInit8017e162465441a9361afa3337d5152d
     );
 
     public static $prefixDirsPsr4 = array (
-        'WpOrg\\Requests\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/rmccue/requests/src',
-        ),
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
@@ -291,6 +284,13 @@ class ComposerStaticInit8017e162465441a9361afa3337d5152d
     );
 
     public static $prefixesPsr0 = array (
+        'R' => 
+        array (
+            'Requests' => 
+            array (
+                0 => __DIR__ . '/..' . '/rmccue/requests/library',
+            ),
+        ),
         'P' => 
         array (
             'Pimple' => 
@@ -365,7 +365,6 @@ class ComposerStaticInit8017e162465441a9361afa3337d5152d
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'Omnipay\\Omnipay' => __DIR__ . '/..' . '/omnipay/common/src/Omnipay.php',
         'ParseError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ParseError.php',
-        'Requests' => __DIR__ . '/..' . '/rmccue/requests/library/Requests.php',
         'SessionUpdateTimestampHandlerInterface' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/SessionUpdateTimestampHandlerInterface.php',
         'TypeError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
         'lessc' => __DIR__ . '/..' . '/oyejorge/less.php/lessc.inc.php',
@@ -374,10 +373,10 @@ class ComposerStaticInit8017e162465441a9361afa3337d5152d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8017e162465441a9361afa3337d5152d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8017e162465441a9361afa3337d5152d::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit8017e162465441a9361afa3337d5152d::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit8017e162465441a9361afa3337d5152d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInita9f4da7ad0ab12aa8dbfb0a550cb9452::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita9f4da7ad0ab12aa8dbfb0a550cb9452::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInita9f4da7ad0ab12aa8dbfb0a550cb9452::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInita9f4da7ad0ab12aa8dbfb0a550cb9452::$classMap;
 
         }, null, ClassLoader::class);
     }

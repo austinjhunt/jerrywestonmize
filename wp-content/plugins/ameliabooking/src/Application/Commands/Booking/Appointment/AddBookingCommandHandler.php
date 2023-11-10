@@ -6,12 +6,13 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
+use AmeliaBooking\Application\Services\Reservation\AbstractReservationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Booking\Reservation;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
-use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use Exception;
@@ -46,7 +47,7 @@ class AddBookingCommandHandler extends CommandHandler
     {
         $this->checkMandatoryFields($command);
 
-        /** @var ReservationServiceInterface $reservationService */
+        /** @var AbstractReservationService $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get(
             $command->getField('type') ?: Entities::APPOINTMENT
         );
@@ -64,6 +65,7 @@ class AddBookingCommandHandler extends CommandHandler
             $validateCoupon = false;
         }
 
+        /** @var Reservation $reservation */
         $reservation = $reservationService->getNew(
             $validateCoupon,
             true,

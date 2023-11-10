@@ -63,7 +63,7 @@ class FrontendStrings
      * @return array
      */
     public static function getBookableStrings() {
-        return [
+        $labels = [
             'allow_customers_to_pay_total'       => __('Check this option if you want your<br> customers to have the option to choose<br> whether they will pay a full amount<br> or just a deposit. If unchecked,<br> customers will only have deposit<br> as a payment option.', 'wpamelia'),
             'deposit_by_the_number_of_people'    => __('Check this option if you want the deposit<br> amount to be multiplied by the number<br> of people that customers add in the<br> "Bringing anyone with you" section.', 'wpamelia'),
             'allow_total_amount'                 => __('Allow customers to pay total appointment amount', 'wpamelia'),
@@ -84,6 +84,8 @@ class FrontendStrings
             'pricing'                            => __('Pricing', 'wpamelia'),
             'event_date_range'                   => __('Date range', 'wpamelia'),
         ];
+
+        return array_merge($labels, LiteFrontendStrings::getBookableStrings());
     }
 
     /**
@@ -93,37 +95,21 @@ class FrontendStrings
      */
     public static function getCommonStrings()
     {
-        return [
+        $labels = [
             'add_coupon'                   => __('Add Coupon', 'wpamelia'),
-            'add_to_calendar'              => __('Add to Calendar', 'wpamelia'),
-            'and'                          => __('and'),
-            'no_package_services'          => __('It seems like there are no available or visible services assigned to the packages, at this moment.'),
-            'no_services_employees'        => __('It seems like there are no employees or services created, or no  employees are assigned to the service, at this moment.'),
-            'add_services_employees'       => __('If you are the admin of this page, see how to'),
-            'add_services_url'             => __('Add services'),
-            'add_employees_url'            => __('employees.'),
+            'and'                          => __('and', 'wpamelia'),
+            'no_package_services'          => __('It seems like there are no available or visible services assigned to the packages, at this moment.', 'wpamelia'),
             'all_slots_selected'           => __('All slots are selected', 'wpamelia'),
             'appointment'                  => __('Appointment', 'wpamelia'),
             'appointments'                 => __('Appointments', 'wpamelia'),
             'appointment_info'             => __('Appointment Info', 'wpamelia'),
             'at'                           => __('at', 'wpamelia'),
-            'back'                         => __('Back', 'wpamelia'),
-            'base_price_colon'             => __('Base Price:', 'wpamelia'),
             'book'                         => __('Book', 'wpamelia'),
-            'booking_completed_approved'   => __('Thank you! Your booking is completed.', 'wpamelia'),
             'booking_completed_email'      => __('An email with details of your booking has been sent to you.', 'wpamelia'),
             'booking_completed_pending'    => __('Thank you! Your booking is completed and now is pending confirmation.', 'wpamelia'),
-            'bookings_limit_reached'       => __('Maximum bookings reached', 'wpamelia'),
-            'cancel'                       => __('Cancel', 'wpamelia'),
-            'canceled'                     => __('Canceled', 'wpamelia'),
-            'capacity_colon'               => __('Capacity:', 'wpamelia'),
             'client_time_colon'            => __('Client Time:', 'wpamelia'),
-            'closed'                       => __('Closed', 'wpamelia'),
+            'cart_info'                    => __('Summary', 'wpamelia'),
             'expired'                      => __('Expired', 'wpamelia'),
-            'full'                         => __('Full', 'wpamelia'),
-            'upcoming'                     => __('Upcoming', 'wpamelia'),
-            'confirm'                      => __('Confirm', 'wpamelia'),
-            'congratulations'              => __('Congratulations', 'wpamelia'),
             'coupon_invalid'               => __('This coupon is not valid anymore', 'wpamelia'),
             'coupon_expired'               => __('This coupon has expired', 'wpamelia'),
             'coupon_missing'               => __('Please enter coupon', 'wpamelia'),
@@ -135,52 +121,31 @@ class FrontendStrings
             'credit_or_debit_card_colon'   => __('Credit or debit card:', 'wpamelia'),
             'custom_fields'                => __('Custom Fields', 'wpamelia'),
             'customer'                     => __('Customer', 'wpamelia'),
-            'customer_already_booked_app'  => __('You have already booked this appointment', 'wpamelia'),
-            'customer_already_booked_ev'   => __('You have already booked this event', 'wpamelia'),
             'date'                         => __('Date', 'wpamelia'),
-            'date_colon'                   => __('Date:', 'wpamelia'),
             'discount_amount_colon'        => __('Discount', 'wpamelia'),
-            'duration_colon'               => __('Duration:', 'wpamelia'),
-            'email_colon'                  => __('Email:', 'wpamelia'),
-            'email_exist_error'            => __('Email already exists with different name. Please check your name.', 'wpamelia'),
             'email_not_sent_error'         => __('Unfortunately a server error occurred and your email was not sent.', 'wpamelia'),
             'email_placeholder'            => __('example@mail.com', 'wpamelia'),
             'employee'                     => __('employee', 'wpamelia'),
             'employees'                    => __('employees', 'wpamelia'),
-            'enter_email_warning'          => __('Please enter email', 'wpamelia'),
-            'enter_first_name_warning'     => __('Please enter first name', 'wpamelia'),
-            'enter_last_name_warning'      => __('Please enter last name', 'wpamelia'),
-            'enter_phone_warning'          => __('Please enter phone number', 'wpamelia'),
-            'enter_valid_email_warning'    => __('Please enter a valid email address', 'wpamelia'),
-            'enter_valid_phone_warning'    => __('Please enter a valid phone number', 'wpamelia'),
-            'event_info'                   => __('Event Info', 'wpamelia'),
             'event_booking_unavailable'    => __('Event booking is unavailable', 'wpamelia'),
             'extras_costs_colon'           => __('Extras Cost:', 'wpamelia'),
             'file_upload'                  => __('Drop file here or click to upload', 'wpamelia'),
             'file_upload_error'            => __('Please upload the file', 'wpamelia'),
-            'finish_appointment'           => __('Finish', 'wpamelia'),
-            'first_name_colon'             => __('First Name:', 'wpamelia'),
             'forbidden_file_upload'        => __('This file is forbidden for upload', 'wpamelia'),
             'outlook_calendar'             => __('Outlook Calendar', 'wpamelia'),
-            'h'                            => __('h', 'wpamelia'),
             'incomplete_cvc'               => __('Your card\'s security code is incomplete', 'wpamelia'),
             'incomplete_expiry'            => __('Your card\'s expiration date is incomplete', 'wpamelia'),
             'incomplete_number'            => __('Your card number is incomplete', 'wpamelia'),
             'incomplete_zip'               => __('Your postal code is incomplete', 'wpamelia'),
             'invalid_expiry_year_past'     => __('Your card\'s expiration year is in the past', 'wpamelia'),
             'invalid_number'               => __('Your card number is invalid', 'wpamelia'),
-            'last_name_colon'              => __('Last Name:', 'wpamelia'),
             'location'                     => __('Location', 'wpamelia'),
             'location_colon'               => __('Location:', 'wpamelia'),
             'maximum_capacity_reached'     => __('Maximum capacity is reached', 'wpamelia'),
-            'min'                          => __('min', 'wpamelia'),
             'name'                         => __('Name', 'wpamelia'),
             'no'                           => __('No', 'wpamelia'),
             'number_of_additional_persons' => __('Number of Additional People:', 'wpamelia'),
-            'on_site'                      => __('On-site', 'wpamelia'),
-            'oops'                         => __('Oops...'),
             'on_line'                      => __('Online', 'wpamelia'),
-            'open'                         => __('Open', 'wpamelia'),
             'opened'                       => __('Opened', 'wpamelia'),
             'out_of'                       => __('out of', 'wpamelia'),
             'package'                      => __('Package', 'wpamelia'),
@@ -199,28 +164,20 @@ class FrontendStrings
             'payment_btn_mollie'           => __('Online', 'wpamelia'),
             'persons'                      => __('people', 'wpamelia'),
             'phone'                        => __('Phone', 'wpamelia'),
-            'phone_colon'                  => __('Phone:', 'wpamelia'),
             'please_wait'                  => __('Please Wait', 'wpamelia'),
-            'price_colon'                  => __('Price:', 'wpamelia'),
             'razorpay'                     => __('Razorpay', 'wpamelia'),
             'recaptcha_error'              => __('Please confirm you are not a robot', 'wpamelia'),
             'recaptcha_invalid_error'      => __('Verification expired. Please try again.', 'wpamelia'),
             'required_field'               => __('This field is required', 'wpamelia'),
-            'select_calendar'              => __('Select Calendar', 'wpamelia'),
             'service'                      => __('service', 'wpamelia'),
             'services'                     => __('Services', 'wpamelia'),
-            'services_lower'               => __('services', 'wpamelia'),
             'stripe'                       => __('Stripe', 'wpamelia'),
             'subtotal_colon'               => __('Subtotal:', 'wpamelia'),
             'text_mode'                    => __('Text Mode', 'wpamelia'),
             'html_mode'                    => __('HTML Mode', 'wpamelia'),
             'time'                         => __('Time', 'wpamelia'),
-            'time_colon'                   => __('Local Time:', 'wpamelia'),
-            'time_slot_unavailable'        => __('Time slot is unavailable', 'wpamelia'),
             'time_slot_unavailable_plural' => __('Time slots are unavailable', 'wpamelia'),
             'package_booking_unavailable'  => __('Booking is unavailable', 'wpamelia'),
-            'total_cost_colon'             => __('Total Cost:', 'wpamelia'),
-            'total_number_of_persons'      => __('Total Number of People:', 'wpamelia'),
             'waiting_for_payment'          => __('Waiting for payment', 'wpamelia'),
             'wc'                           => __('On-line', 'wpamelia'),
             'wc_appointment_is_removed'    => __('Appointment is removed from the cart.', 'wpamelia'),
@@ -240,6 +197,8 @@ class FrontendStrings
             'years'                        => __('Years', 'wpamelia'),
             'free'                         => __('Free', 'wpamelia'),
         ];
+
+        return array_merge($labels, LiteFrontendStrings::getCommonStrings());
     }
 
     /**
@@ -249,7 +208,7 @@ class FrontendStrings
      */
     public static function getSearchStrings()
     {
-        return [
+        $labels = [
             'appointment_date_colon'  => __('Appointment Date:', 'wpamelia'),
             'book_package'            => __('Book Package', 'wpamelia'),
             'bringing_anyone'         => __('Bringing anyone with you?', 'wpamelia'),
@@ -276,6 +235,8 @@ class FrontendStrings
             'to_lower'                => __('to', 'wpamelia'),
             'to_upper'                => __('To', 'wpamelia'),
         ];
+
+        return array_merge($labels, LiteFrontendStrings::getSearchStrings());
     }
 
     /**
@@ -285,7 +246,7 @@ class FrontendStrings
      */
     public static function getBookingStrings()
     {
-        return [
+        $labels = [
             'add_extra'                    => __('Add extra', 'wpamelia'),
             'add_people'                   => __('Number of people that are coming with you.', 'wpamelia'),
             'any'                          => __('Any', 'wpamelia'),
@@ -293,11 +254,9 @@ class FrontendStrings
             'book_appointment'             => __('Book Appointment', 'wpamelia'),
             'bringing_anyone_with_you'     => __('Bringing anyone with you?', 'wpamelia'),
             'card_number_colon'            => __('Card number', 'wpamelia'),
-            'continue'                     => __('Continue', 'wpamelia'),
             'coupons_used'                 => __('Coupon Limit Reached', 'wpamelia'),
             'coupons_used_description'     => __('Number of appointments with applied coupon is', 'wpamelia'),
             'disable_popup_blocker'        => __('Popup Blocker is enabled! To add your appointment to your calendar, please allow popups and add this site to your exception list.', 'wpamelia'),
-            'email_address_colon'          => __('Email Address', 'wpamelia'),
             'employee_information'         => __('Employee information', 'wpamelia'),
             'employee_information_package' => __('Employee information', 'wpamelia'),
             'expires_after'                => __('Expires after', 'wpamelia'),
@@ -313,8 +272,6 @@ class FrontendStrings
             'extra_colon'                  => __('Extra:', 'wpamelia'),
             'extra_error'                  => __('Please select the extra:', 'wpamelia'),
             'full_amount_consent'          => __('I want to pay full amount', 'wpamelia'),
-            'get_in_touch'                 => __('Get in Touch', 'wpamelia'),
-            'collapse_menu'                => __('Collapse menu', 'wpamelia'),
             'includes_colon'               => __('includes:', 'wpamelia'),
             'min_req_extras_colon'         => __('Minimum required extras:', 'wpamelia'),
             'multiple_locations'           => __('Multiple Locations', 'wpamelia'),
@@ -336,13 +293,9 @@ class FrontendStrings
             'payment_protected_policy'     => __('Payment protected by policy and powered by', 'wpamelia'),
             'payment_type_deposit_only'    => __('Deposit only', 'wpamelia'),
             'payment_type_full_amount'     => __('Whole amount', 'wpamelia'),
-            'payment_onsite_sentence'      => __('The payment will be done on-site.', 'wpamelia'),
             'payment_wc_mollie_sentence'   => __('You will be redirected to the payment checkout.', 'wpamelia'),
             'person_upper'                 => __('Person', 'wpamelia'),
             'persons_upper'                => __('People', 'wpamelia'),
-            'phone_number_colon'           => __('Phone Number', 'wpamelia'),
-            'pick_date_and_time_colon'     => __('Pick date & time:', 'wpamelia'),
-            'please_select'                => __('Please select', 'wpamelia'),
             'plus_more'                    => __('+more', 'wpamelia'),
             'price_changed_message'        => __('This change will lead to a price increase for certain bookings. Do you want payment links to be created?', 'wpamelia'),
             'qty_colon'                    => __('Qty:', 'wpamelia'),
@@ -381,22 +334,14 @@ class FrontendStrings
             'select_this_employee_package' => __('Select this Employee', 'wpamelia'),
             'show_more'                    => __('Show more', 'wpamelia'),
             'show_less'                    => __('Show less', 'wpamelia'),
-            'summary'                      => __('Summary', 'wpamelia'),
-            'total_amount_colon'           => __('Total Amount:', 'wpamelia'),
             'upload_file_here'             => __('Upload file here', 'wpamelia'),
             'without_expiration'           => __('Without expiration', 'wpamelia'),
-            'your_name_colon'              => __('Your Name', 'wpamelia'),
 
-            'service_selection'            => __('Service Selection', 'wpamelia'),
-            'service_colon'                => __('Service', 'wpamelia'),
             'select_location'              => __('Select Location', 'wpamelia'),
             'employee_colon'               => __('Employee', 'wpamelia'),
             'select_employee'              => __('Select Employee', 'wpamelia'),
-            'please_select_service'        => __('Please select service', 'wpamelia'),
             'please_select_employee'       => __('Please select employee', 'wpamelia'),
             'please_select_location'       => __('Please select location', 'wpamelia'),
-            'dropdown_category_heading'    => __('Category', 'wpamelia'),
-            'dropdown_items_heading'       => __('Service', 'wpamelia'),
             'dropdown_empty'               => __('No matching data', 'wpamelia'),
 
             'bringing_anyone'              => __('Bringing Anyone With You', 'wpamelia'),
@@ -415,8 +360,12 @@ class FrontendStrings
             'extras_card_open'             => __('Learn More', 'wpamelia'),
             'extras_card_close'            => __('Hide', 'wpamelia'),
 
-            'date_time'                    => __('Date & Time', 'wpamelia'),
             'date_time_slots_selected'     => __('All slots are selected', 'wpamelia'),
+
+            'cart_step'                    => __('Cart', 'wpamelia'),
+            'cart_add_button'              => __('Book another', 'wpamelia'),
+            'cart_view_button'             => __('View Cart', 'wpamelia'),
+            'cart_title'                   => __('You can find below the appointments you selected for booking. If you want to book more, click on the button below.'),
 
             'recurring_step'               => __('Recurring Appointment', 'wpamelia'),
             'recurrence'                   => __('Recurrence', 'wpamelia'),
@@ -457,12 +406,6 @@ class FrontendStrings
             'number_of_recurrences'        => __('Number of Recurrences:', 'wpamelia'),
             'recurring_slots_selected'     => __('All slots are selected', 'wpamelia'),
 
-            'info_step'                    => __('Your Information', 'wpamelia'),
-            'enter_first_name'             => __('Enter first name', 'wpamelia'),
-            'enter_last_name'              => __('Enter last name', 'wpamelia'),
-            'enter_email'                  => __('Enter email', 'wpamelia'),
-            'enter_phone'                  => __('Enter phone', 'wpamelia'),
-
             'package_info_step'            => __('Package', 'wpamelia'),
             'package_info_discount'        => __('Save', 'wpamelia'),
             'package_info_includes'        => __('includes', 'wpamelia'),
@@ -493,38 +436,30 @@ class FrontendStrings
 
             'package_info'                 => __('Package', 'wpamelia'),
 
-            'payment_step'                 => __('Payments', 'wpamelia'),
             'coupon'                       => __('Coupon', 'wpamelia'),
             'coupon_mandatory'             => __('The coupon field is mandatory', 'wpamelia'),
             'add_coupon_btn'               => __('Add', 'wpamelia'),
-            'summary_services'             => __('Services', 'wpamelia'),
             'summary_services_subtotal'    => __('Service Subtotal', 'wpamelia'),
-            'summary_person'               => __('person', 'wpamelia'),
             'summary_persons'              => __('people', 'wpamelia'),
             'summary_recurrence'           => __('Recurrence', 'wpamelia'),
             'summary_recurrences'          => __('Recurrences', 'wpamelia'),
             'summary_extras'               => __('Extras', 'wpamelia'),
             'summary_extras_subtotal'      => __('Extras Subtotal', 'wpamelia'),
             'summary_package'              => __('Package', 'wpamelia'),
-            'summary_event'                => __('Event', 'wpamelia'),
             'summary_event_subtotal'       => __('Event Subtotal', 'wpamelia'),
             'paying_now'                   => __('Paying now', 'wpamelia'),
             'paying_later'                 => __('Paying later', 'wpamelia'),
 
-            'appointment_id'               => __('Appointment ID', 'wpamelia'),
-            'event_id'                     => __('Event ID', 'wpamelia'),
             'congrats_total_amount'        => __('Total Amount', 'wpamelia'),
-            'congrats_payment'             => __('Payment', 'wpamelia'),
-            'congrats_date'                => __('Date', 'wpamelia'),
-            'congrats_time'                => __('Local Time', 'wpamelia'),
-            'congrats_service'             => __('Service', 'wpamelia'),
             'congrats_package'             => __('Package', 'wpamelia'),
-            'congrats_employee'            => __('Employee', 'wpamelia'),
             'congrats_location'            => __('Location', 'wpamelia'),
             'congrats_panel'               => __('Customer Panel', 'wpamelia'),
+            'congrats_cart'                => __('Total Services Booked', 'wpamelia'),
 
             'whatsapp_opt_in_text'         => __('By entering your phone number you agree to receive messages via WhatsApp', 'wpamelia')
         ];
+
+        return array_merge($labels, LiteFrontendStrings::getBookingStrings());
     }
 
     /**
@@ -534,7 +469,7 @@ class FrontendStrings
      */
     public static function getEventStrings()
     {
-        return [
+        $labels = [
             'add_ticket_category'       => __('Add Pricing Category', 'wpamelia'),
             'apply_to_all'              => __('Apply this to all recurring events', 'wpamelia'),
             'custom_pricing_warning'    => __('Custom pricing spots will override Maximum allowed spots value.', 'wpamelia'),
@@ -545,11 +480,9 @@ class FrontendStrings
             'event_add_date_range'      => __('Add Date Range', 'wpamelia'),
             'event_free'                => __('Free', 'wpamelia'),
             'event_book_now'            => __('Book now', 'wpamelia'),
-            'event_book_event'          => __('Book event', 'wpamelia'),
             'ev_spot'                   => __('Spot', 'wpamelia'),
             'ev_spots'                  => __('Spots', 'wpamelia'),
             'ev_no_spots'               => __('No spots left', 'wpamelia'),
-            'event_book'                => __('Book this event', 'wpamelia'),
             'event_book_persons'        => __('Number of people', 'wpamelia'),
             'event_book_tickets'        => __('Number of tickets', 'wpamelia'),
             'event_date_range_warning'  => __('Date Ranges that are not defined will use default price from ticket category.', 'wpamelia'),
@@ -558,9 +491,7 @@ class FrontendStrings
             'event_location'            => __('Event Location', 'wpamelia'),
             'event_status'              => __('Event Status', 'wpamelia'),
             'event_employee'            => __('Event Employee', 'wpamelia'),
-            'event_capacity'            => __('Capacity:', 'wpamelia'),
             'event_today'               => __('Today', 'wpamelia'),
-            'event_filters'             => __('Filters', 'wpamelia'),
             'event_upcoming_events'     => __('Upcoming events', 'wpamelia'),
             'event_spot'                => __('spot left', 'wpamelia'),
             'event_spots_left'          => __('spots left', 'wpamelia'),
@@ -580,34 +511,19 @@ class FrontendStrings
             'event_tickets_context'     => __('Select the number of tickets that you want to book for each ticket type', 'wpamelia'),
             'event_ticket_types'        => __('Ticket Types', 'wpamelia'),
             'no_events'                 => __('No results found...', 'wpamelia'),
-            'event_start'               => __('Event Starts', 'wpamelia'),
-            'event_end'                 => __('Event Ends', 'wpamelia'),
-            'event_at'                  => __('at', 'wpamelia'),
-            'event_close'               => __('Close', 'wpamelia'),
             'event_select_tickets'      => __('Select Tickets', 'wpamelia'),
-            'event_congrats'            => __('Congratulations', 'wpamelia'),
-            'event_payment'             => __('Payment', 'wpamelia'),
-            'event_customer_info'       => __('Your Information', 'wpamelia'),
-            'event_about_list'          => __('About Event', 'wpamelia'),
             'congrats_panel'            => __('Customer Panel', 'wpamelia'),
 
-            'events_available'          => __('Events Available', 'wpamelia'),
-            'event_available'           => __('Event Available', 'wpamelia'),
             'event_page'                => __('Page', 'wpamelia'),
-            'event_search'              => __('Search for Events', 'wpamelia'),
             'event_calendar'            => __('Calendar', 'wpamelia'),
             'event_begins'              => __('Begins', 'wpamelia'),
-            'event_slot_left'           => __('slot left', 'wpamelia'),
-            'event_slots_left'          => __('slots left', 'wpamelia'),
-            'event_learn_more'          => __('Learn more', 'wpamelia'),
-            'event_read_more'           => __('Read more', 'wpamelia'),
-            'event_timetable'           => __('Timetable', 'wpamelia'),
             'about'                     => __('About', 'wpamelia'),
             'event_tickets_left'        => __('tickets left', 'wpamelia'),
             'event_ticket_left'         => __('ticket left', 'wpamelia'),
             'back_btn'                  => __('Go Back', 'wpamelia'),
-            'event_bringing'            => __('How many attendees do you want to book event for?', 'wpamelia'),
         ];
+
+        return array_merge($labels, LiteFrontendStrings::getEventStrings());
     }
 
     /**
@@ -617,19 +533,12 @@ class FrontendStrings
      */
     public static function getCatalogStrings()
     {
-        return [
+        $labels = [
             'booking_appointment'                => __('Booking Appointment', 'wpamelia'),
             'buffer_time'                        => __('Buffer Time', 'wpamelia'),
-            'categories'                         => __('Categories', 'wpamelia'),
-            'category_colon'                     => __('Category:', 'wpamelia'),
-            'description'                        => __('Description', 'wpamelia'),
             'description_colon'                  => __('Description:', 'wpamelia'),
             'extras'                             => __('Extras', 'wpamelia'),
-            'info'                               => __('Info', 'wpamelia'),
             'maximum_quantity_colon'             => __('Maximum Quantity:', 'wpamelia'),
-            'view_more'                          => __('View More', 'wpamelia'),
-            'view_all'                           => __('View All', 'wpamelia'),
-            'filter_input'                       => __('Search', 'wpamelia'),
             'filter_employee'                    => __('Filter by Employee', 'wpamelia'),
             'filter_location'                    => __('Filter by Location', 'wpamelia'),
             'filter_all'                         => __('All', 'wpamelia'),
@@ -642,10 +551,7 @@ class FrontendStrings
             'save'                               => __('Save', 'wpamelia'),
             'free'                               => __('Free', 'wpamelia'),
             'in_package'                         => __('In Package', 'wpamelia'),
-            'book_now'                           => __('Book Now', 'wpamelia'),
-            'about_service'                      => __('About Service', 'wpamelia'),
             'about_package'                      => __('About Package', 'wpamelia'),
-            'view_all_photos'                    => __('View all photos', 'wpamelia'),
             'service_available_in_package'       => __('This service is available in a Package', 'wpamelia'),
             'more_packages'                      => __('View More Packages', 'wpamelia'),
             'less_packages'                      => __('View Less Packages', 'wpamelia'),
@@ -656,16 +562,15 @@ class FrontendStrings
             'expires_weeks'                      => __('weeks', 'wpamelia'),
             'expires_month'                      => __('month', 'wpamelia'),
             'expires_months'                     => __('months', 'wpamelia'),
-            'back_btn'                           => __('Go Back', 'wpamelia'),
             'employees'                          => __('Employees', 'wpamelia'),
-            'heading_service'                    => __('Service', 'wpamelia'),
-            'heading_services'                   => __('Services', 'wpamelia'),
             'employee_info'                      => __('Employee information', 'wpamelia'),
             'book_service'                       => __('Book This Service', 'wpamelia'),
             'book_package'                       => __('Book This Package', 'wpamelia'),
             'no_search_data'                     => __('No results', 'wpamelia'),
             'tab_employees'                      => __('Employees', 'wpamelia'),
         ];
+
+        return array_merge($labels, LiteFrontendStrings::getCatalogStrings());
     }
 
     /**
@@ -675,7 +580,7 @@ class FrontendStrings
      */
     public static function getCabinetStrings()
     {
-        return [
+        $labels = [
             'add_date'                               => __('Add Date', 'wpamelia'),
             'add_day_off'                            => __('Add Day Off', 'wpamelia'),
             'add_day_off_placeholder'                => __('Enter holiday or day off name', 'wpamelia'),
@@ -692,9 +597,7 @@ class FrontendStrings
             'approved'                               => __('Approved', 'wpamelia'),
             'assigned_services'                      => __('Assigned Services', 'wpamelia'),
             'attendees'                              => __('Attendees', 'wpamelia'),
-            'available'                              => __('Available', 'wpamelia'),
             'away'                                   => __('Away', 'wpamelia'),
-            'booking_cancel_exception'               => __('Booking can\'t be canceled', 'wpamelia'),
             'booking_closes'                         => __('Booking Closes', 'wpamelia'),
             'booking_opens'                          => __('Booking Opens', 'wpamelia'),
             'booking_reschedule_exception'           => __('Appointment can\'t be rescheduled', 'wpamelia'),
@@ -985,7 +888,6 @@ class FrontendStrings
             'select_max_customer_count_warning'      => __('Maximum number of places is', 'wpamelia'),
             'select_repeat_period'                   => __('Select Repeat Period', 'wpamelia'),
             'select_repeat_interval'                 => __('Select Repeat Interval', 'wpamelia'),
-            'select_service'                         => __('Select Service', 'wpamelia'),
             'select_service_category'                => __('Select Service Category', 'wpamelia'),
             'select_service_warning'                 => __('Please select service', 'wpamelia'),
             'select_time'                            => __('Select Time', 'wpamelia'),
@@ -1009,7 +911,6 @@ class FrontendStrings
             'special_days_reflect_services'          => __('Reflect On', 'wpamelia'),
             'spots'                                  => __('Spots', 'wpamelia'),
             'status'                                 => __('Status', 'wpamelia'),
-            'subtotal'                               => __('Subtotal', 'wpamelia'),
             'success'                                => __('Success', 'wpamelia'),
             'time'                                   => __('Time', 'wpamelia'),
             'today'                                  => __('Today', 'wpamelia'),
@@ -1054,5 +955,7 @@ class FrontendStrings
             'due'                                    => __('Due', 'wpamelia'),
             'google_meet_link'                       => __('Google Meet Link', 'wpamelia'),
         ];
+
+        return array_merge($labels, LiteFrontendStrings::getCabinetStrings());
     }
 }

@@ -77,7 +77,7 @@ abstract class Command
     /**
      * @param mixed $arg Argument to be fetched
      *
-     * @return null
+     * @return null|mixed
      */
     public function getArg($arg)
     {

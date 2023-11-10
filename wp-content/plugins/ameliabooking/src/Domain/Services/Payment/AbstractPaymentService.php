@@ -7,6 +7,7 @@
 namespace AmeliaBooking\Domain\Services\Payment;
 
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\Services\Payment\CurrencyService;
 
 /**
  * Class AbstractPaymentService
@@ -21,13 +22,21 @@ class AbstractPaymentService
     protected $settingsService;
 
     /**
-     * PayPalService constructor.
+     * @var CurrencyService $currencyService
+     */
+    protected $currencyService;
+
+    /**
+     * AbstractPaymentService constructor.
      *
      * @param SettingsService $settingsService
+     * @param CurrencyService $currencyService
      */
     public function __construct(
-        SettingsService $settingsService
+        SettingsService $settingsService,
+        CurrencyService $currencyService
     ) {
         $this->settingsService = $settingsService;
+        $this->currencyService = $currencyService;
     }
 }

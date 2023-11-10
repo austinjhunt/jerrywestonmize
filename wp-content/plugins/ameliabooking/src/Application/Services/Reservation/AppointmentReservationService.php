@@ -27,6 +27,7 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBookingExtra;
 use AmeliaBooking\Domain\Entity\Booking\Reservation;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
+use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
@@ -48,6 +49,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
+use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
@@ -91,8 +93,22 @@ class AppointmentReservationService extends AbstractReservationService
      */
     public function book($appointmentData, $reservation, $save)
     {
+        /** @var CustomFieldRepository $customFieldRepository */
+        $customFieldRepository = $this->container->get('domain.customField.repository');
+
+        /** @var Collection $customFieldsCollection */
+        $customFieldsCollection = $appointmentData['bookings'][0]['customFields'] ?
+            $customFieldRepository->getAll() : new Collection();
+
+        $clonedCustomFieldsData = $appointmentData['bookings'][0]['customFields'] ?
+            json_decode($appointmentData['bookings'][0]['customFields'], true) : null;
+
         /** @var CouponApplicationService $couponAS */
         $couponAS = $this->container->get('application.coupon.service');
+
+        if (empty($appointmentData['couponCode']) && array_column($appointmentData['recurring'], 'couponCode')) {
+            $appointmentData['couponCode'] = array_column($appointmentData['recurring'], 'couponCode')[0];
+        }
 
         /** @var Coupon $coupon */
         $coupon = !empty($appointmentData['couponCode']) ? $couponAS->processCoupon(
@@ -125,6 +141,13 @@ class AppointmentReservationService extends AbstractReservationService
             )
         ) : [$appointmentData['bookingStart']];
 
+        $appointmentData['bookings'][0]['customFields'] = $clonedCustomFieldsData ?
+            $this->getCustomFieldsJsonForService(
+                $clonedCustomFieldsData,
+                $customFieldsCollection,
+                $appointmentData['serviceId']
+            ) : null;
+
         $this->bookSingle(
             $reservation,
             $appointmentData,
@@ -134,11 +157,9 @@ class AppointmentReservationService extends AbstractReservationService
             $save
         );
 
-        $reservation->setApplyDeposit(
-            new BooleanValueObject(
-                isset($appointmentData['bookings'][0]['deposit']) ? $appointmentData['bookings'][0]['deposit'] : false
-            )
-        );
+        $reservation->setApplyDeposit(new BooleanValueObject($reservation->getBooking()->getDeposit()->getValue()));
+
+        $reservation->setIsCart(new BooleanValueObject(!empty($appointmentData['isCart'])));
 
         /** @var Payment $payment */
         $payment = $save && $reservation->getBooking() && $reservation->getBooking()->getPayments()->length() ?
@@ -155,6 +176,8 @@ class AppointmentReservationService extends AbstractReservationService
                 $recurringAppointmentData = array_merge(
                     $appointmentData,
                     [
+                        'serviceId'    => !empty($recurringData['serviceId']) ?
+                            $recurringData['serviceId'] : $appointmentData['serviceId'],
                         'providerId'   => $recurringData['providerId'],
                         'locationId'   => $recurringData['locationId'],
                         'bookingStart' => $recurringData['bookingStart'],
@@ -164,6 +187,20 @@ class AppointmentReservationService extends AbstractReservationService
                         'package'      => []
                     ]
                 );
+
+                if (!empty($appointmentData['isCart'])) {
+                    if (isset($recurringData['extras'])) {
+                        $recurringAppointmentData['bookings'][0]['extras'] = $recurringData['extras'];
+                    }
+
+                    if (!empty($recurringData['persons'])) {
+                        $recurringAppointmentData['bookings'][0]['persons'] = $recurringData['persons'];
+                    }
+
+                    if (!empty($recurringData['duration'])) {
+                        $recurringAppointmentData['bookings'][0]['duration'] = $recurringData['duration'];
+                    }
+                }
 
                 if (!empty($recurringAppointmentData['bookings'][0]['utcOffset'])) {
                     $recurringAppointmentData['bookings'][0]['utcOffset'] = $recurringData['utcOffset'];
@@ -183,22 +220,31 @@ class AppointmentReservationService extends AbstractReservationService
                     $recurringAppointmentData['bookings'][0]['couponId'] = null;
                 }
 
-                if ($index >= $bookable->getRecurringPayment()->getValue()) {
+                $isRecurringAndOnSite = empty($appointmentData['isCart']) &&
+                    $index >= $bookable->getRecurringPayment()->getValue();
+
+                if ($isRecurringAndOnSite) {
                     $recurringAppointmentData['payment']['gateway'] = PaymentType::ON_SITE;
 
                     $recurringAppointmentData['bookings'][0]['deposit'] = 0;
                 }
 
+                $recurringAppointmentData['payment']['wcOrderItemId'] = !empty($recurringData['wcOrderItemId']) ?
+                    $recurringData['wcOrderItemId'] : null;
+
                 $recurringAppointmentData['payment']['parentId'] = $payment ? $payment->getId()->getValue() : null;
 
+                /** @var Reservation $recurringReservation */
+                $recurringReservation = new Reservation();
+
+                $recurringAppointmentData['bookings'][0]['customFields'] = $clonedCustomFieldsData ?
+                    $this->getCustomFieldsJsonForService(
+                        $clonedCustomFieldsData,
+                        $customFieldsCollection,
+                        $recurringAppointmentData['serviceId']
+                    ) : null;
+
                 try {
-                    /** @var Reservation $recurringReservation */
-                    $recurringReservation = new Reservation();
-
-                    $recurringReservation->setApplyDeposit(
-                        new BooleanValueObject($index >= $bookable->getRecurringPayment()->getValue() ? false : $appointmentData['bookings'][0]['deposit'])
-                    );
-
                     $this->bookSingle(
                         $recurringReservation,
                         $recurringAppointmentData,
@@ -219,6 +265,10 @@ class AppointmentReservationService extends AbstractReservationService
 
                     throw $e;
                 }
+
+                $recurringReservation->setApplyDeposit(
+                    new BooleanValueObject($recurringReservation->getBooking()->getDeposit()->getValue())
+                );
 
                 $recurringReservations->addItem($recurringReservation);
             }
@@ -275,6 +325,14 @@ class AppointmentReservationService extends AbstractReservationService
 
         /** @var Service $service */
         $service = $bookableAS->getAppointmentService($appointmentData['serviceId'], $appointmentData['providerId']);
+
+        $appointmentData['bookings'][0]['deposit'] =
+            !empty($appointmentData['payment']['gateway']) &&
+            $appointmentData['payment']['gateway'] !== PaymentType::ON_SITE &&
+            $this->applyDeposit(
+                $service,
+                !empty($appointmentData['bookings'][0]['deposit'])
+            );
 
         if ($service->getStatus()->getValue() === Status::HIDDEN) {
             throw new BookingUnavailableException(
@@ -647,7 +705,8 @@ class AppointmentReservationService extends AbstractReservationService
             /** @var Extra $extra */
             $extra = $bookable->getExtras()->getItem($bookingExtra->getExtraId()->getValue());
 
-            $duration += ($extra->getDuration() ? $bookingExtra->getQuantity()->getValue() * $extra->getDuration()->getValue() : 0);
+            $duration += ($extra->getDuration() ?
+                $bookingExtra->getQuantity()->getValue() * $extra->getDuration()->getValue() : 0);
         }
 
         return [
@@ -731,8 +790,9 @@ class AppointmentReservationService extends AbstractReservationService
 
         if ($reservation->getRecurring()) {
             /** @var Reservation $recurringReservation */
-            foreach ($reservation->getRecurring()->getItems() as $key => $recurringReservation) {
+            foreach ($reservation->getRecurring()->getItems() as $recurringReservation) {
                 $recurringAppointmentData = [
+                    'serviceId'          => $recurringReservation->getReservation()->getServiceId()->getValue(),
                     'providerId'         => $recurringReservation->getReservation()->getProviderId()->getValue(),
                     'locationId'         => $recurringReservation->getReservation()->getLocationId() ?
                         $recurringReservation->getReservation()->getLocationId()->getValue() : null,
@@ -742,11 +802,23 @@ class AppointmentReservationService extends AbstractReservationService
                         $recurringReservation->getReservation()->getBookingEnd()->getValue()->format('Y-m-d H:i:s'),
                     'notifyParticipants' => $recurringReservation->getReservation()->isNotifyParticipants(),
                     'status'             => $recurringReservation->getReservation()->getStatus()->getValue(),
+                    'persons'            => $recurringReservation->getBooking()->getPersons()->getValue(),
+                    'extras'             => [],
+                    'duration'           => $recurringReservation->getBooking()->getDuration()
+                        ? $recurringReservation->getBooking()->getDuration()->getValue() : null,
                     'utcOffset'          => $recurringReservation->getBooking()->getUtcOffset() ?
                         $recurringReservation->getBooking()->getUtcOffset()->getValue() : null,
                     'deposit'            => $recurringReservation->getApplyDeposit()->getValue(),
-                    'useCoupon'          => $recurringReservation->getBooking()->getCouponId() ? true : false,
+                    'customFields'       => $recurringReservation->getBooking()->getCustomFields() ?
+                        json_decode($recurringReservation->getBooking()->getCustomFields()->getValue(), true) : null,
                 ];
+
+                $recurringBookableSettings = $recurringReservation->getBookable()->getSettings() ?
+                    json_decode($recurringReservation->getBookable()->getSettings()->getValue(), true) : null;
+
+                $recurringAppointmentData['wcProductId'] =
+                    $recurringBookableSettings && isset($recurringBookableSettings['payments']['wc']['productId']) ?
+                        $recurringBookableSettings['payments']['wc']['productId'] : null;
 
                 $recurringAppointmentData['couponId'] = !$recurringReservation->getBooking()->getCoupon() ? null :
                     $recurringReservation->getBooking()->getCoupon()->getId()->getValue();
@@ -755,6 +827,19 @@ class AppointmentReservationService extends AbstractReservationService
                     $recurringReservation->getBooking()->getCoupon()->getCode()->getValue();
 
                 $recurringAppointmentData['useCoupon'] = $recurringReservation->getBooking()->getCoupon() !== null;
+
+                /** @var CustomerBooking $recurringBooking */
+                $recurringBooking = $recurringReservation->getBooking();
+
+                foreach ($recurringBooking->getExtras()->keys() as $extraKey) {
+                    /** @var CustomerBookingExtra $bookingExtra */
+                    $bookingExtra = $recurringBooking->getExtras()->getItem($extraKey);
+
+                    $recurringAppointmentData['extras'][] = [
+                        'extraId'  => $bookingExtra->getExtraId()->getValue(),
+                        'quantity' => $bookingExtra->getQuantity()->getValue()
+                    ];
+                }
 
                 $recurringAppointmentsData[] = $recurringAppointmentData;
             }
@@ -777,6 +862,8 @@ class AppointmentReservationService extends AbstractReservationService
                     'end'   => $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i'),
                 ]
             ],
+            'allCustomFields'    => !empty($requestData['bookings'][0]['customFields']) ?
+                $requestData['bookings'][0]['customFields'] : null,
             'notifyParticipants' => $appointment->isNotifyParticipants(),
             'bookings'           => [
                 [
@@ -806,6 +893,7 @@ class AppointmentReservationService extends AbstractReservationService
                 'gateway' => $paymentGateway
             ],
             'recurring'          => $recurringAppointmentsData,
+            'isCart'             => $requestData['isCart'],
             'package'            => [],
             'locale'             => $reservation->getLocale()->getValue(),
             'timeZone'           => $reservation->getTimeZone()->getValue(),
@@ -824,14 +912,10 @@ class AppointmentReservationService extends AbstractReservationService
         return $info;
     }
 
-
-
     /**
      * @param array $reservation
      *
      * @return array
-     *
-     * @throws InvalidArgumentException
      */
     public function getWooCommerceDataFromArray($reservation, $index)
     {
@@ -848,31 +932,6 @@ class AppointmentReservationService extends AbstractReservationService
         $booking = $reservation['booking'];
 
         $customerInfo = !empty($booking['info']) ? json_decode($booking['info'], true) : null;
-
-        $recurringAppointmentsData = [];
-
-        if (!empty($reservation['recurring'])) {
-            /** @var Reservation $recurringReservation */
-            foreach ($reservation['recurring'] as $key => $recurringReservation) {
-                $recurringAppointmentData = [
-                    'providerId'         => $recurringReservation['providerId'],
-                    'locationId'         => $recurringReservation['locationId'],
-                    'bookingStart'       => $recurringReservation['bookingStart'],
-                    'bookingEnd'         => $recurringReservation['bookingEnd'],
-                    'notifyParticipants' => $recurringReservation['notifyParticipants'],
-                    'status'             => $recurringReservation['status'],
-                    'utcOffset'          => $recurringReservation['bookings'][$index]['utcOffset'],
-                ];
-
-                $recurringAppointmentData['couponId'] = $recurringReservation['bookings'][$index]['couponId'];
-
-                $recurringAppointmentData['couponCode'] = !$recurringReservation['bookings'][$index]['coupon'] ? null : $recurringReservation['bookings'][0]['coupon']['code'];
-
-                $recurringAppointmentData['useCoupon'] = !!$recurringReservation['bookings'][$index]['couponId'];
-
-                $recurringAppointmentsData[] = $recurringAppointmentData;
-            }
-        }
 
         $info = [
             'type'               => Entities::APPOINTMENT,
@@ -918,7 +977,7 @@ class AppointmentReservationService extends AbstractReservationService
             'payment'            => [
                 'gateway' => $booking['payments'][0]['gateway']
             ],
-            'recurring'          => $recurringAppointmentsData,
+            'recurring'          => [],
             'package'            => [],
             'locale'             => $customerInfo ? $customerInfo['locale'] : null,
             'timeZone'           => $customerInfo ? $customerInfo['timeZone'] : null,
@@ -1027,7 +1086,7 @@ class AppointmentReservationService extends AbstractReservationService
             /** @var Service $recurringBookable */
             $recurringBookable = $recurringReservation->getBookable();
 
-            if ($index < $recurringBookable->getRecurringPayment()->getValue()) {
+            if ($reservation->isCart()->getValue() || $index < $recurringBookable->getRecurringPayment()->getValue()) {
                 $recurringPaymentAmount = $this->getPaymentAmount(
                     $recurringReservation->getBooking(),
                     $recurringBookable
@@ -1312,19 +1371,32 @@ class AppointmentReservationService extends AbstractReservationService
         $settingsDS = $this->container->get('domain.settings.service');
 
         $limitPerCustomerGlobal = $settingsDS->getSetting('roles', 'limitPerCustomerService');
+
         if (!empty($limitPerCustomerGlobal) || !empty($service->getLimitPerCustomer())) {
-            $limitService  = !empty($service->getLimitPerCustomer()) ? json_decode($service->getLimitPerCustomer()->getValue(), true) : null;
+            $limitService = !empty($service->getLimitPerCustomer()) ?
+                json_decode($service->getLimitPerCustomer()->getValue(), true) : null;
+
             $optionEnabled = empty($limitService) ? $limitPerCustomerGlobal['enabled'] : $limitService['enabled'];
+
             if ($optionEnabled) {
                 /** @var AppointmentRepository $appointmentRepository */
                 $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
 
-                $serviceSpecific  = !empty($limitService['timeFrame']) || !empty($limitService['period']) || !empty($limitService['from']) || !empty($limitService['numberOfApp']);
+                $serviceSpecific =
+                    !empty($limitService['timeFrame']) ||
+                    !empty($limitService['period']) ||
+                    !empty($limitService['from']) ||
+                    !empty($limitService['numberOfApp']);
+
                 $limitPerCustomer = !empty($limitService) ? [
-                    'numberOfApp' => !empty($limitService['numberOfApp']) ? $limitService['numberOfApp'] : $limitPerCustomerGlobal['numberOfApp'],
-                    'timeFrame'   => !empty($limitService['timeFrame']) ? $limitService['timeFrame'] : $limitPerCustomerGlobal['timeFrame'],
-                    'period'      => !empty($limitService['period']) ? $limitService['period'] : $limitPerCustomerGlobal['period'],
-                    'from'        => !empty($limitService['from']) ? $limitService['from'] : $limitPerCustomerGlobal['from']
+                    'numberOfApp' => !empty($limitService['numberOfApp']) ?
+                        $limitService['numberOfApp'] : $limitPerCustomerGlobal['numberOfApp'],
+                    'timeFrame'   => !empty($limitService['timeFrame']) ?
+                        $limitService['timeFrame'] : $limitPerCustomerGlobal['timeFrame'],
+                    'period'      => !empty($limitService['period']) ?
+                        $limitService['period'] : $limitPerCustomerGlobal['period'],
+                    'from'        => !empty($limitService['from']) ?
+                        $limitService['from'] : $limitPerCustomerGlobal['from']
                 ] : $limitPerCustomerGlobal;
 
                 $count = $appointmentRepository->getRelevantAppointmentsCount(
@@ -1340,6 +1412,43 @@ class AppointmentReservationService extends AbstractReservationService
                 }
             }
         }
+
         return false;
+    }
+
+    /**
+     * @param array      $bookingCustomFieldsArray
+     * @param Collection $customFieldsCollection
+     * @param int        $serviceId
+     *
+     * @return string
+     *
+     * @throws InvalidArgumentException
+     */
+    public function getCustomFieldsJsonForService(
+        $bookingCustomFieldsArray,
+        $customFieldsCollection,
+        $serviceId
+    ) {
+        foreach ($bookingCustomFieldsArray as $customFieldId => $value) {
+            /** @var CustomField $customField */
+            $customField = $customFieldsCollection->getItem($customFieldId);
+
+            $isCustomFieldForService = $customField->getAllServices() && $customField->getAllServices()->getValue();
+
+            /** @var Service $customFieldService */
+            foreach ($customField->getServices()->getItems() as $customFieldService) {
+                if ($customFieldService->getId()->getValue() === (int)$serviceId) {
+                    $isCustomFieldForService = true;
+                    break;
+                }
+            }
+
+            if (!$isCustomFieldForService) {
+                unset($bookingCustomFieldsArray[$customFieldId]);
+            }
+        }
+
+        return json_encode($bookingCustomFieldsArray);
     }
 }

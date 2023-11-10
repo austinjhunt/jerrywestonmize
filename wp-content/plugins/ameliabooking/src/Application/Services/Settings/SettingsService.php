@@ -6,8 +6,10 @@
 
 namespace AmeliaBooking\Application\Services\Settings;
 
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Infrastructure\Common\Container;
+use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 
 /**
  * Class SettingsService
@@ -112,6 +114,35 @@ class SettingsService
         $bccEmail =  $settingsDS->getSetting('notifications', 'bccEmail');
 
         return ($bccEmail !== '') ? explode(',', $bccEmail) : [];
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     * @throws \Interop\Container\Exception\ContainerException +
+     */
+    public function getEmptyPackageEmployees()
+    {
+        /** @var \AmeliaBooking\Domain\Services\Settings\SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        $emptyPackageEmployees =  $settingsDS->getSetting('notifications', 'emptyPackageEmployees');
+
+        $employees = [];
+        if ($emptyPackageEmployees !== '') {
+            /** @var UserRepository $userRepository */
+            $userRepository = $this->container->get('domain.users.repository');
+
+            $employeeIds = explode(',', $emptyPackageEmployees);
+            foreach ($employeeIds as $employeeId) {
+                $user = $userRepository->getById((int)$employeeId);
+                if ($user instanceof AbstractUser) {
+                    $employees[] = $user->toArray();
+                }
+            }
+        }
+
+        return $employees;
     }
 
     /**

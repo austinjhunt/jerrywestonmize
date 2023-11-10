@@ -75,6 +75,8 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
     {
         unset($data['icsFiles']);
 
+        unset($data['providersAppointments']);
+
         $placeholders = array_map(
             function ($placeholder) {
                 return "%{$placeholder}%";
@@ -203,7 +205,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
      *
      * @throws ContainerException
      */
-    protected function getBookingData($appointment, $type, $bookingKey = null, $token = null, $depositEnabled = null)
+    protected function getBookingData($appointment, $type, $bookingKey = null, $token = null, $depositEnabled = null, $isGroup = null)
     {
         /** @var HelperService $helperService */
         $helperService = $this->container->get('application.helper.service');
@@ -471,6 +473,13 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
 
         $appointmentPrice = $helperService->getFormattedPrice($appointmentPrice >= 0 ? $appointmentPrice : 0);
 
+        $bookingKeyForEmployee = null;
+
+        if ($bookingKey === null || $isGroup) {
+            $bookingKeyForEmployee = $isGroup ?
+                $appointment['bookings'][$bookingKey]['id'] : $this->getBookingKeyForEmployee($appointment);
+        }
+
 
         return array_merge(
             $paymentLinks,
@@ -481,6 +490,12 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     $bookingKey !== null && isset($appointment['bookings'][$bookingKey]['id']) ?
                         AMELIA_ACTION_URL . '/bookings/cancel/' . $appointment['bookings'][$bookingKey]['id'] .
                         ($token ? '&token=' . $token : '') . "&type={$appointment['type']}" : '',
+                'appointment_approve_url' =>
+                    $bookingKeyForEmployee !== null ? (AMELIA_ACTION_URL . '/bookings/success/' . $bookingKeyForEmployee .
+                        '&token=' . $token) : '',
+                'appointment_reject_url' =>
+                    $bookingKeyForEmployee !== null ? (AMELIA_ACTION_URL . '/bookings/reject/' . $bookingKeyForEmployee .
+                        '&token=' . $token) : '',
                 "{$appointment['type']}_deposit_payment"    => $depositAmount !== null ? $helperService->getFormattedPrice($depositAmount) : '',
                 'payment_type'                      => $paymentType,
                 'payment_status'                    => $payment ? $payment['status'] : '',
@@ -942,8 +957,6 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     /** @var EventRepository $eventRepository */
                     $eventRepository = $this->container->get('domain.booking.event.repository');
 
-                    $couponsCriteria['entityIds'] = [$appointment['id']];
-
                     $couponsCriteria['entityType'] = Entities::EVENT;
 
                     $customerReservations = $eventRepository->getFiltered(
@@ -1142,5 +1155,25 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                 }
             }
         }
+    }
+
+    /**
+     * @param array $appointment
+     *
+     * @return int
+     */
+    protected function getBookingKeyForEmployee($appointment)
+    {
+        foreach ($appointment['bookings'] as $booking) {
+            if ($booking['isLastBooking'] || $booking['isChangedStatus']) {
+                return $booking['id'];
+            }
+        }
+
+        if ($appointment['isRescheduled']) {
+            return $appointment['bookings'][0]['id'];
+        }
+
+        return null;
     }
 }

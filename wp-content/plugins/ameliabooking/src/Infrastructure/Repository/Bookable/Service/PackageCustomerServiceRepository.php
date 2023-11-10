@@ -217,7 +217,8 @@ class PackageCustomerServiceRepository extends AbstractRepository
                     p.gatewayTitle AS payment_gatewayTitle,
                     p.transactionId AS payment_transactionId,
                     p.data AS payment_data,
-                    p.wcOrderId AS payment_wcOrderId
+                    p.wcOrderId AS payment_wcOrderId,
+                    p.wcOrderItemId AS payment_wcOrderItemId
                 FROM {$this->table} pcs
                 INNER JOIN {$this->packagesCustomersTable} pc ON pcs.packageCustomerId = pc.id
                 LEFT JOIN {$this->paymentsTable} p ON p.packageCustomerId = pc.id

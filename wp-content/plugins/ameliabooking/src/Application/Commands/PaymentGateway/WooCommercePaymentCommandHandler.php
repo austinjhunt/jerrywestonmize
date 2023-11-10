@@ -176,11 +176,10 @@ class WooCommercePaymentCommandHandler extends CommandHandler
             $bookableSettings = $reservation->getBookable()->getSettings() ?
                 json_decode($reservation->getBookable()->getSettings()->getValue(), true) : null;
 
-            WooCommerceService::addToCart(
-                $appointmentData,
-                $bookableSettings && isset($bookableSettings['payments']['wc']['productId']) ?
-                    $bookableSettings['payments']['wc']['productId'] : null
-            );
+            $appointmentData['wcProductId'] = $bookableSettings && isset($bookableSettings['payments']['wc']['productId']) ?
+                $bookableSettings['payments']['wc']['productId'] : null;
+
+            WooCommerceService::addToCart($appointmentData);
         } catch (Exception $e) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage(FrontendStrings::getCommonStrings()['wc_error']);

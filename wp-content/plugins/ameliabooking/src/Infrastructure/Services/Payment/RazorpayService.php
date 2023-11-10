@@ -124,10 +124,18 @@ class RazorpayService extends AbstractPaymentService implements PaymentServiceIn
      * @param array $data
      *
      * @return array
+     * @throws \Exception
      */
     public function refund($data)
     {
-        $refund = $this->getApi()->payment->fetch($data['id'])->refund();
+        $props = [];
+
+        if (!empty($data['amount'])) {
+            $props['amount'] = intval($data['amount'] * 100);
+        }
+
+        $refund = $this->getApi()->payment->fetch($data['id'])->refund($props);
+
         return ['error' => $refund->toArray()['status'] !== 'processed'];
     }
 

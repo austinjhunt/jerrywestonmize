@@ -9,18 +9,17 @@ namespace AmeliaBooking\Application\Commands\Payment;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
-use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
+use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
-use AmeliaBooking\Infrastructure\Services\Payment\CurrencyService;
-use AmeliaBooking\Infrastructure\Services\Payment\MollieService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
+use Interop\Container\Exception\ContainerException;
 
 /**
  * Class GetTransactionAmountCommandHandler
@@ -33,9 +32,11 @@ class GetTransactionAmountCommandHandler extends CommandHandler
      * @param GetTransactionAmountCommand $command
      *
      * @return CommandResult
-     * @throws QueryExecutionException
-     * @throws InvalidArgumentException
      * @throws AccessDeniedException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     * @throws InvalidArgumentException
      */
     public function handle(GetTransactionAmountCommand $command)
     {
@@ -50,6 +51,10 @@ class GetTransactionAmountCommandHandler extends CommandHandler
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
 
+        /** @var PaymentApplicationService $paymentAS */
+        $paymentAS = $this->container->get('application.payment.service');
+
+        /** @var Payment $payment */
         $payment = $paymentRepository->getById($paymentId);
 
         if (empty($payment->getTransactionId()) && empty($payment->getWcOrderId())) {
@@ -69,23 +74,21 @@ class GetTransactionAmountCommandHandler extends CommandHandler
             $amount = WooCommerceService::getOrderAmount($payment->getWcOrderId()->getValue());
         } else {
             /** @var PaymentServiceInterface $paymentService */
-            $paymentService = $this->container->get('infrastructure.payment.' . $payment->getGateway()->getName()->getValue() . '.service');
+            $paymentService = $this->container->get(
+                'infrastructure.payment.' . $payment->getGateway()->getName()->getValue() . '.service'
+            );
 
             $amount = $paymentService->getTransactionAmount($payment->getTransactionId());
-
-            switch ($payment->getGateway()->getName()->getValue()) {
-                case PaymentType::STRIPE:
-                    $amount = $amount/100;
-                    break;
-            }
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Retrieved transaction successfully.');
         $result->setData(
             [
-                Entities::PAYMENT => $payment->toArray(),
-                'transactionAmount' => $amount
+                Entities::PAYMENT   => $payment->toArray(),
+                'transactionAmount' => $amount,
+                'refundAmount'      => $paymentAS->hasRelatedRefundablePayment($payment) ?
+                    $payment->getAmount()->getValue() : $amount,
             ]
         );
 

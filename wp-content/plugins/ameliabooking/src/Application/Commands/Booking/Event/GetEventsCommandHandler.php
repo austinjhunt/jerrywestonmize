@@ -24,6 +24,7 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use DateTimeZone;
 use Exception;
@@ -150,6 +151,10 @@ class GetEventsCommandHandler extends CommandHandler
 
         $eventsArray = [];
 
+        $customersNoShowCountIds = [];
+
+        $noShowTagEnabled = $settingsDS->getSetting('roles', 'enableNoShowTag');
+
         /** @var Event $event */
         foreach ($events->getItems() as $event) {
             if ($isFrontEnd && !$event->getShow()->getValue()) {
@@ -174,6 +179,10 @@ class GetEventsCommandHandler extends CommandHandler
                             )
                         );
                     }
+
+                    if ($noShowTagEnabled) {
+                        $customersNoShowCountIds[] = $booking->getCustomerId()->getValue();
+                    }
                 }
 
                 $maxCapacity = 0;
@@ -193,6 +202,10 @@ class GetEventsCommandHandler extends CommandHandler
                 foreach ($event->getBookings()->getItems() as $booking) {
                     if ($booking->getStatus()->getValue() === BookingStatus::APPROVED || $booking->getStatus()->getValue() === BookingStatus::PENDING) {
                         $persons += $booking->getPersons()->getValue();
+                    }
+
+                    if ($noShowTagEnabled) {
+                        $customersNoShowCountIds[] = $booking->getCustomerId()->getValue();
                     }
                 }
             }
@@ -290,12 +303,22 @@ class GetEventsCommandHandler extends CommandHandler
             $eventsArray[] = array_merge($event->toArray(), $eventsInfo);
         }
 
+        $customersNoShowCount = [];
+
+        if ($noShowTagEnabled && $customersNoShowCountIds) {
+            /** @var CustomerBookingRepository $bookingRepository */
+            $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+            $customersNoShowCount = $bookingRepository->countByNoShowStatus($customersNoShowCountIds);
+        }
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved events');
         $result->setData(
             [
-                Entities::EVENTS => $eventsArray,
-                'count'          => !$isCalendarPage ? (int)$eventRepository->getFilteredIdsCount($params) : null
+                Entities::EVENTS       => $eventsArray,
+                'count'                => !$isCalendarPage ? (int)$eventRepository->getFilteredIdsCount($params) : null,
+                'customersNoShowCount' => $customersNoShowCount
             ]
         );
 

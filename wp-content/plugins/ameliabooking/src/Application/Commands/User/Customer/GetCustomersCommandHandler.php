@@ -14,6 +14,7 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -109,10 +110,27 @@ class GetCustomersCommandHandler extends CommandHandler
             }
         }
 
+        $customersNoShowCount = [];
+
+        $noShowTagEnabled = $settingsService->getSetting('roles', 'enableNoShowTag');
+
+        if ($noShowTagEnabled && $users) {
+            /** @var CustomerBookingRepository $bookingRepository */
+            $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+            $usersIds = array_map(function ($user) { return $user['id']; }, $users);
+
+            $customersNoShowCount =  $usersIds ? $bookingRepository->countByNoShowStatus($usersIds) : [];
+        }
+
         $users = array_values($users);
 
-        foreach ($users as &$user) {
+        foreach ($users as $key => &$user) {
             $user['wpUserPhotoUrl'] = $this->container->get('user.avatar')->getAvatar($user['externalId']);
+
+            if ($noShowTagEnabled) {
+                $user['noShowCount'] = $customersNoShowCount[$key]['count'];
+            }
 
             $user = array_map(
                 function ($v) {

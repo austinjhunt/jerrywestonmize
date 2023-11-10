@@ -20,6 +20,7 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -136,6 +137,13 @@ class GetStatsCommandHandler extends CommandHandler
 
         $packageAS->setPackageBookingsForAppointments($upcomingAppointments);
 
+        $customersNoShowCount = [];
+
+        $customersNoShowCountIds = [];
+
+        $noShowTagEnabled = $settingsDS->getSetting('roles', 'enableNoShowTag');
+
+
         /** @var Appointment $appointment */
         foreach ($upcomingAppointments->getItems() as $appointment) {
             if ($appointment->getBookingStart()->getValue()->format('Y-m-d') === $todayDateString) {
@@ -164,6 +172,19 @@ class GetStatsCommandHandler extends CommandHandler
                     'past'       => $currentDateTime >= $appointment->getBookingStart()->getValue()
                 ]
             );
+
+            foreach ($appointment->getBookings()->getItems() as $booking) {
+                if ($noShowTagEnabled && !in_array($booking->getCustomerId()->getValue(), $customersNoShowCountIds)) {
+                    $customersNoShowCountIds[] = $booking->getCustomerId()->getValue();
+                }
+            }
+        }
+
+        if ($noShowTagEnabled && $customersNoShowCountIds) {
+            /** @var CustomerBookingRepository $bookingRepository */
+            $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+            $customersNoShowCount = $bookingRepository->countByNoShowStatus($customersNoShowCountIds);
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
@@ -181,7 +202,8 @@ class GetStatsCommandHandler extends CommandHandler
                 'locationsStats'       => $locationsStats,
                 'customersStats'       => $customersStats,
                 Entities::APPOINTMENTS => $upcomingAppointmentsArr,
-                'appointmentsCount'    => 10
+                'appointmentsCount'    => 10,
+                'customersNoShowCount' => $customersNoShowCount
             ]
         );
 

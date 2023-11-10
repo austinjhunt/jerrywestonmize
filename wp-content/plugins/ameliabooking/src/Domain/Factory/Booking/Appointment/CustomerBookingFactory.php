@@ -224,6 +224,7 @@ class CustomerBookingFactory
                     'parentId'          => !empty($row['payment_parentId']) ? $row['payment_parentId'] : null,
                     'data'              => $row['payment_data'],
                     'wcOrderId'         => !empty($row['payment_wcOrderId']) ? $row['payment_wcOrderId'] : null,
+                    'wcOrderItemId'     => !empty($row['payment_wcOrderItemId']) ? $row['payment_wcOrderItemId'] : null,
                 ];
             }
 

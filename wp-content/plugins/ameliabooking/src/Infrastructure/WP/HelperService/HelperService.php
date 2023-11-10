@@ -6,6 +6,8 @@
 
 namespace AmeliaBooking\Infrastructure\WP\HelperService;
 
+use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
+
 /**
  * Class HelperService
  *
@@ -64,10 +66,10 @@ class HelperService
 
         if ($order) {
             foreach ($order->get_items() as $itemId => $orderItem) {
-                $data = wc_get_order_item_meta($itemId, 'ameliabooking');
+                $data = wc_get_order_item_meta($itemId, WooCommerceService::AMELIA);
 
                 if ($data && is_array($data)) {
-                    $prices[] = [
+                    $prices[$itemId] = [
                         'coupon' => (float)round($orderItem->get_subtotal() - $orderItem->get_total(), 2),
                         'tax'    => !isset($data['taxIncluded']) || !$data['taxIncluded'] ?
                             (float)$orderItem->get_total_tax() : 0,

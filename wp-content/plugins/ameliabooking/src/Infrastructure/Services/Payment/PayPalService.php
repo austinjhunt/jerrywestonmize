@@ -117,17 +117,22 @@ class PayPalService extends AbstractPaymentService implements PaymentServiceInte
     public function refund($data)
     {
         $payment = $this->getTransaction($data['id']);
+
         if ($payment) {
-            $saleId   = $payment['transactions'][0]['related_resources'][0]['sale']['id'];
-            $response = $this->getGateway()->refund(
-                array(
-                    'transactionReference' => $saleId,
-                    'currency'             => $this->settingsService->getCategorySettings('payments')['currency']
-                )
-            )->send();
+            $props = [
+                'transactionReference' => $payment['transactions'][0]['related_resources'][0]['sale']['id'],
+                'currency'             => $this->settingsService->getCategorySettings('payments')['currency']
+            ];
+
+            if (!empty($data['amount'])) {
+                $props['amount'] = $data['amount'];
+            }
+
+            $response = $this->getGateway()->refund($props)->send();
 
             return ['error' => $response->getCode() !== 201 ? $response->getMessage() : false];
         }
+
         return ['error' => true];
     }
 

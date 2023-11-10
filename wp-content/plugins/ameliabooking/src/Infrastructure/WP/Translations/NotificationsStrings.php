@@ -1093,7 +1093,8 @@ Thank you,
 
 You have successfully purchased %package_name%.
 
-Thank you for choosing our company, %company_name%'
+Thank you for choosing our company,
+%company_name%'
         ];
     }
 
@@ -1237,6 +1238,98 @@ The %package_name% purchased by %customer_full_name% has been canceled.'
         ];
     }
 
+    /**
+     * default provider's package notification
+     *
+     * @return array
+     */
+    public static function getProviderCartEmailNotification()
+    {
+        return [
+            'name'       => 'provider_cart',
+            'entity'     => 'appointment',
+            'type'       => 'email',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'provider',
+            'subject'    => 'Cart Purchase',
+            'content'    =>
+                '<p>Hi <strong>%employee_full_name%</strong>,</p><p><br></p><p>Customer <strong>%customer_full_name%</strong> has successfully scheduled several appointments. The details about bookings are shown below.</p><p><br></p><p>%cart_appointments_details%</p><p><br></p><p>Thank you,</p><p><strong>%company_name%</strong></p>'
+        ];
+    }
+
+    /**
+     * default provider's package notification
+     *
+     * @return array
+     */
+    public static function getProviderCartSmsNotification()
+    {
+        return [
+            'name'       => 'provider_cart',
+            'entity'     => 'appointment',
+            'type'       => 'sms',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'provider',
+            'subject'    => 'NULL',
+            'content'    =>
+                'Hi %employee_full_name%,
+
+Customer %customer_full_name% has successfully scheduled several appointments.
+                     
+Thank you, %company_name%'
+        ];
+    }
+
+    /**
+     * default customer's cart notification
+     *
+     * @return array
+     */
+    public static function getCustomerCartEmailNotification()
+    {
+        return [
+            'name'       => 'customer_cart',
+            'entity'     => 'appointment',
+            'type'       => 'email',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'customer',
+            'subject'    => 'Cart Purchase',
+            'content'    =>
+                '<p>Dear <strong>%customer_full_name%</strong>,</p><p><br></p><p>You have successfully purchased several appointments. The details about your bookings are shown below.</p><p><br></p><p>%cart_appointments_details%.</p><p><br></p><p>Thank you for choosing our company,</p><p><strong>%company_name%</strong></p>'
+        ];
+    }
+
+    /**
+     * default customer's cart notification
+     *
+     * @return array
+     */
+    public static function getCustomerCartSmsNotification()
+    {
+        return [
+            'name'       => 'customer_cart',
+            'entity'     => 'appointment',
+            'type'       => 'sms',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'customer',
+            'subject'    => 'NULL',
+            'content'    =>
+                'Dear %customer_full_name%,
+
+You have successfully scheduled several appointments.
+
+Thank you for choosing our company,
+%company_name%'
+        ];
+    }
 
 
     /**
@@ -1342,6 +1435,35 @@ The %package_name% purchased by %customer_full_name% has been canceled.'
                 ]
             ]
         );
+    }
+
+    /**
+     * Array of default whatsapp notifications
+     *
+     * @return array
+     */
+    public static function getWhatsAppCartNotifications()
+    {
+        // needs to be changed for basic and lite
+        $sendTo = ['customer', 'provider'];
+
+        $newRows = [];
+
+        foreach ($sendTo as $to) {
+            $newRows[] = [
+                'name'       => $to . '_cart',
+                'entity'     => 'appointment',
+                'type'       => 'whatsapp',
+                'time'       => 'NULL',
+                'timeBefore' => 'NULL',
+                'timeAfter'  => 'NULL',
+                'sendTo'     => $to,
+                'subject'    => '',
+                'content'    => ''
+            ];
+        }
+
+        return $newRows;
     }
 
     /**

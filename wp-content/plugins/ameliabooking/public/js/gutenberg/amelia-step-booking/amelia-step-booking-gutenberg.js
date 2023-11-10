@@ -1,8 +1,8 @@
 (function (wp) {
   var el = wp.element.createElement
   var components = wp.components
-  var blockControls = wp.editor.BlockControls
-  var inspectorControls = wp.editor.InspectorControls
+  var blockControls = wp.blockEditor.BlockControls
+  var inspectorControls = wp.blockEditor.InspectorControls
   var data = wpAmeliaLabels.data
 
   var categories = []
@@ -222,21 +222,21 @@
               shortCode += ' show=' + attributes.show + ''
             }
 
-            if (attributes.service) {
+            if (attributes.service && attributes.service.length && !attributes.service.includes('')) {
               shortCode += ' service=' + attributes.service + ''
-            } else if (attributes.category) {
+            } else if (attributes.category && attributes.category.length && !attributes.category.includes('')) {
               shortCode += ' category=' + attributes.category + ''
             }
 
-            if (attributes.employee) {
+            if (attributes.employee && attributes.employee.length && !attributes.employee.includes('')) {
               shortCode += ' employee=' + attributes.employee + ''
             }
 
-            if (attributes.location) {
+            if (attributes.location && attributes.location.length && !attributes.location.includes('')) {
               shortCode += ' location=' + attributes.location + ''
             }
 
-            if (attributes.package) {
+            if (attributes.package && attributes.package.length && !attributes.package.includes('')) {
               shortCode += ' package=' + attributes.package + ''
             }
           } else {
@@ -283,9 +283,11 @@
         if (attributes.parametars) {
           inspectorElements.push(el(components.SelectControl, {
             id: 'amelia-js-select-category',
+            className: 'amelia-gutenberg-multi-select',
             label: wpAmeliaLabels.select_category,
             value: attributes.category,
             options: options.categories,
+            multiple: true,
             onChange: function (selectControl) {
               return props.setAttributes({category: selectControl})
             }
@@ -296,8 +298,10 @@
           inspectorElements.push(el(components.SelectControl, {
             id: 'amelia-js-select-service',
             label: wpAmeliaLabels.select_service,
+            className: 'amelia-gutenberg-multi-select',
             value: attributes.service,
             options: options.services,
+            multiple: true,
             onChange: function (selectControl) {
               return props.setAttributes({service: selectControl})
             }
@@ -308,8 +312,10 @@
           inspectorElements.push(el(components.SelectControl, {
             id: 'amelia-js-select-employee',
             label: wpAmeliaLabels.select_employee,
+            className: 'amelia-gutenberg-multi-select',
             value: attributes.employee,
             options: options.employees,
+            multiple: true,
             onChange: function (selectControl) {
               return props.setAttributes({employee: selectControl})
             }
@@ -319,9 +325,11 @@
 
           inspectorElements.push(el(components.SelectControl, {
             id: 'amelia-js-select-location',
+            className: 'amelia-gutenberg-multi-select',
             label: wpAmeliaLabels.select_location,
             value: attributes.location,
             options: options.locations,
+            multiple: true,
             onChange: function (selectControl) {
               return props.setAttributes({location: selectControl})
             }
@@ -333,8 +341,10 @@
             inspectorElements.push(el(components.SelectControl, {
               id: 'amelia-js-select-package',
               label: wpAmeliaLabels.select_package,
+              className: 'amelia-gutenberg-multi-select',
               value: attributes.package,
               options: options.packages,
+              multiple: true,
               onChange: function (selectControl) {
                 return props.setAttributes({package: selectControl})
               }

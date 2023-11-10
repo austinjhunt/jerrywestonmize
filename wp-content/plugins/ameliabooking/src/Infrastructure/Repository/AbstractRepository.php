@@ -192,6 +192,8 @@ class AbstractRepository
     }
 
     /**
+     * SET $entityColumnName = $entityColumnValue WHERE $entityColumnName = $entityId
+     *
      * @param int    $entityId
      * @param String $entityColumnValue
      * @param String $entityColumnName
@@ -233,6 +235,8 @@ class AbstractRepository
     }
 
     /**
+     * SET $fieldName = $fieldValue WHERE id = $id
+     *
      * @param int    $id
      * @param mixed  $fieldValue
      * @param string $fieldName
@@ -262,6 +266,42 @@ class AbstractRepository
             }
 
             return $res;
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * SET $fieldName = $fieldValue WHERE $columnName = $columnValue
+     *
+     * @param string $fieldName
+     * @param mixed  $fieldValue
+     * @param string $columnName
+     * @param mixed  $columnValue
+     *
+     * @return void
+     * @throws QueryExecutionException
+     */
+    public function updateFieldByColumn($fieldName, $fieldValue, $columnName, $columnValue)
+    {
+        $params = [
+            ":$fieldName"  => $fieldValue,
+            ":$columnName" => $columnValue,
+        ];
+
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table}
+                SET
+                `$fieldName` = :$fieldName
+                WHERE $columnName = :$columnName"
+            );
+
+            $res = $statement->execute($params);
+
+            if (!$res) {
+                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
+            }
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
         }

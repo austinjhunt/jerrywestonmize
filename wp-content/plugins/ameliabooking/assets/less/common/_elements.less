@@ -828,7 +828,8 @@
 
       &.selected::after {
         left: 12px;
-        top: 16px;
+        top: 50%;
+        transform: translateY(-50%);
         font-size: 8px;
         line-height: 1.9;
         color: @color-green;
@@ -864,6 +865,52 @@
 
       &:hover {
         background-color: @color-highlight;
+      }
+    }
+
+    .am-customer-name {
+      position: relative;
+      padding: 0px 4px 0 24px;
+      height: 22px;
+      width: fit-content;
+      max-width: 80%;
+      border-radius: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      line-height: 24px;
+
+      &.am-no-show {
+
+        &-gray {
+          border: 1px solid #D1D5D7;
+          background: #FBFBFB;
+          &::before {
+            content: url("../../img/am-user-single-no-show.svg");
+          }
+        }
+        &-yellow {
+          border: 1px solid #F7E4A2;
+          background: #FDF9E8;
+          &::before {
+            content: url("../../img/am-user-double-no-show.svg");
+          }
+        }
+        &-red {
+          border: 1px solid #F1A29D;
+          background: #FCE8E7;
+          &::before {
+            content: url("../../img/am-user-multiple-no-show.svg");
+          }
+        }
+      }
+
+      &::before {
+        height: 24px;
+        position: absolute;
+        left: 0;
+        display: block;
       }
     }
   }
@@ -979,6 +1026,57 @@
     h3 {
       margin: 0 0 @margin-small/2;
       line-height: 1;
+
+      &.am-customer-name {
+        position: relative;
+        padding: 0px 4px 0 24px;
+        height: 22px;
+        width: fit-content;
+        max-width: 80%;
+        border-radius: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        line-height: 24px;
+        margin-bottom: 2px;
+
+        &.am-no-show {
+
+          &-gray {
+            border: 1px solid #D1D5D7;
+            background: #FBFBFB;
+            &::before {
+              content: url("../../img/am-user-single-no-show.svg");
+            }
+          }
+          &-yellow {
+            border: 1px solid #F7E4A2;
+            background: #FDF9E8;
+            &::before {
+              content: url("../../img/am-user-double-no-show.svg");
+            }
+          }
+          &-red {
+            border: 1px solid #F1A29D;
+            background: #FCE8E7;
+            &::before {
+              content: url("../../img/am-user-multiple-no-show.svg");
+            }
+          }
+        }
+
+        &::before {
+          height: 24px;
+          position: absolute;
+          left: 0;
+          display: block;
+        }
+
+        .am-attendees-plus {
+          display: unset;
+        }
+      }
     }
 
     span {
@@ -1911,6 +2009,12 @@
     .el-button {
       margin: @margin-medium 0 0 @margin-small;
       width: auto;
+    }
+
+    .el-button-group {
+      .el-button {
+        margin: 0;
+      }
     }
   }
 }

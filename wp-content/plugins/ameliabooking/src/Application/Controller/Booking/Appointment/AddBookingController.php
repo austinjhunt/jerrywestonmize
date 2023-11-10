@@ -32,6 +32,7 @@ class AddBookingController extends Controller
         'validateCoupon',
         'payment',
         'recurring',
+        'isCart',
         'packageId',
         'package',
         'packageRules',

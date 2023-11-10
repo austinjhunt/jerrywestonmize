@@ -46,25 +46,21 @@ class DIVI_StepBooking extends ET_Builder_Module
         $data = GutenbergBlock::getEntitiesData()['data'];
         $this->showPackages = !empty($data['packages']);
 
-        $this->categories['0'] = BackendStrings::getWordPressStrings()['show_all_categories'];
+//        $this->categories['0'] = BackendStrings::getWordPressStrings()['show_all_categories'];
         foreach ($data['categories'] as $category) {
             $this->categories[$category['id']] = $category['name']. ' (id: ' . $category['id'] . ')';
         }
-        $this->services['0'] = BackendStrings::getWordPressStrings()['show_all_services'];
         foreach ($data['servicesList'] as $service) {
             if ($service) {
                 $this->services[$service['id']] = $service['name']. ' (id: ' . $service['id'] . ')';
             }
         }
-        $this->employees['0'] = BackendStrings::getWordPressStrings()['show_all_employees'];
         foreach ($data['employees'] as $employee) {
             $this->employees[$employee['id']] = $employee['firstName'] . ' ' . $employee['lastName'] . ' (id: ' . $employee['id'] . ')';
         }
-        $this->locations['0'] = BackendStrings::getWordPressStrings()['show_all_locations'];
         foreach ($data['locations'] as $location) {
             $this->locations[$location['id']] = $location['name']. ' (id: ' . $location['id'] . ')';
         }
-        $this->packages['0'] = BackendStrings::getWordPressStrings()['show_all_packages'];
         foreach ($data['packages'] as $package) {
             $this->packages[$package['id']] = $package['name']. ' (id: ' . $package['id'] . ')';
         }
@@ -98,7 +94,8 @@ class DIVI_StepBooking extends ET_Builder_Module
             ),
             'categories' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_category'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_categories'],
                 'options'         => $this->categories,
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
@@ -108,8 +105,9 @@ class DIVI_StepBooking extends ET_Builder_Module
             ),
             'services' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_service'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
                 'toggle_slug'     => 'main_content',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_services'],
                 'options'         => $this->services,
                 'option_category' => 'basic_option',
                 'show_if'         => array(
@@ -118,9 +116,10 @@ class DIVI_StepBooking extends ET_Builder_Module
             ),
             'employees' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_employee'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
                 'options'         => $this->employees,
                 'toggle_slug'     => 'main_content',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_employees'],
                 'option_category' => 'basic_option',
                 'show_if'         => array(
                     'booking_params' => 'on',
@@ -128,8 +127,9 @@ class DIVI_StepBooking extends ET_Builder_Module
             ),
             'locations' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_location'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
                 'options'         => $this->locations,
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_locations'],
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
                 'show_if'         => array(
@@ -141,10 +141,11 @@ class DIVI_StepBooking extends ET_Builder_Module
         if ($this->showPackages) {
             $array['packages'] = array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_package'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
                 'options'         => $this->packages,
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_packages'],
                 'show_if'         => array(
                     'booking_params' => 'on',
                 ),
@@ -194,9 +195,19 @@ class DIVI_StepBooking extends ET_Builder_Module
     public function checkValues($val)
     {
         if ($val !== null) {
-            return !is_numeric($val) ? (strpos($val, 'id:') ?  substr(explode('id: ', $val)[1], 0, -1) : '0') : $val;
+            $val = explode(',', $val);
+            if (is_array($val)) {
+                $newVals = [];
+                foreach ($val as $parameter) {
+                    if ($parameter) {
+                        $newVals[] = !is_numeric($parameter) ? (strpos($parameter, 'id:') ?  substr(explode('id: ', $parameter)[1], 0, -1) : $parameter) : $parameter;
+                    }
+                }
+                return count($newVals) > 0 ? $newVals : [];
+            }
+            return [];
         }
-        return '0';
+        return [];
     }
 
     public function render($attrs, $content = null, $render_slug = null)
@@ -226,19 +237,19 @@ class DIVI_StepBooking extends ET_Builder_Module
             $location = $this->checkValues($this->props['locations']);
             $package  = $this->checkValues($this->props['packages']);
 
-            if ($service !== '0') {
-                $shortcode .= ' service=' . $service;
-            } else if ($category !== '0') {
-                $shortcode .= ' category=' . $category;
+            if ($service && count($service) > 0) {
+                $shortcode .= ' service=' . implode(',', $service);
+            } else if ($category && count($category) > 0) {
+                $shortcode .= ' category=' . implode(',', $category);
             }
-            if ($employee !== '0') {
-                $shortcode .= ' employee=' . $employee;
+            if ($employee && count($employee) > 0) {
+                $shortcode .= ' employee=' . implode(',', $employee);
             }
-            if ($location !== '0') {
-                $shortcode .= ' location=' . $location;
+            if ($location && count($location) > 0) {
+                $shortcode .= ' location=' . implode(',', $location);
             }
-            if ($package !== '0') {
-                $shortcode .= ' package=' . $package;
+            if ($package && count($package) > 0) {
+                $shortcode .= ' package=' . implode(',', $package);
             }
         }
         $shortcode .= ']';

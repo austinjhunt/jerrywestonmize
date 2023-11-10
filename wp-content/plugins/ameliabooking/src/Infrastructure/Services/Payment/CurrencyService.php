@@ -6,41 +6,40 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Payment;
 
-use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use Money\Currencies\ISOCurrencies;
+use Money\Exception\ParserException;
 use Money\Parser\DecimalMoneyParser;
 
 /**
  * Class CurrencyService
  */
-class CurrencyService extends AbstractPaymentService
+class CurrencyService
 {
     /**
-     * @param Price  $amount
-     *
-     * @return mixed
-     * @throws \Money\Exception\ParserException
+     * @var SettingsService $settingsService
      */
-    public function getAmountInFractionalUnit($amount)
-    {
-        $currencies = new ISOCurrencies();
+    protected $settingsService;
 
-        $moneyParser = new DecimalMoneyParser($currencies);
-
-        return $moneyParser->parse(
-            (string)$amount->getValue(),
-            $this->settingsService->getCategorySettings('payments')['currency']
-        )->getAmount();
+    /**
+     * CurrencyService constructor.
+     *
+     * @param SettingsService $settingsService
+     */
+    public function __construct(
+        SettingsService $settingsService
+    ) {
+        $this->settingsService = $settingsService;
     }
 
     /**
-     * @param int $amount
+     * @param Price  $amount
      *
-     * @return mixed
-     * @throws \Money\Exception\ParserException
+     * @return string
+     * @throws ParserException
      */
-    public function getAmountFromFractionalUnit($amount)
+    public function getAmountInFractionalUnit($amount)
     {
         $currencies = new ISOCurrencies();
 

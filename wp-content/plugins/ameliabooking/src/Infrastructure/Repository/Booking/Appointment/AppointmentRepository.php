@@ -160,6 +160,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     p.transactionId AS payment_transactionId,
                     p.data AS payment_data,
                     p.wcOrderId AS payment_wcOrderId,
+                    p.wcOrderItemId AS payment_wcOrderItemId,
                     
                     c.id AS coupon_id,
                     c.code AS coupon_code,
@@ -255,6 +256,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     p.transactionId AS payment_transactionId,
                     p.data AS payment_data,
                     p.wcOrderId AS payment_wcOrderId,
+                    p.wcOrderItemId AS payment_wcOrderItemId,
                     
                     c.id AS coupon_id,
                     c.code AS coupon_code,
@@ -274,7 +276,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 WHERE a.id = (
                   SELECT cb2.appointmentId FROM {$this->bookingsTable} cb2 WHERE cb2.id = :customerBookingId
                 )
-                ORDER BY a.bookingStart"
+                ORDER BY a.bookingStart, cb.id"
             );
 
             $statement->bindParam(':customerBookingId', $id);
@@ -964,6 +966,20 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 $params[':bookingId'] = $criteria['bookingId'];
             }
 
+            if (isset($criteria['bookingIds'])) {
+                $queryBookings = [];
+
+                foreach ((array)$criteria['bookingIds'] as $index => $value) {
+                    $param = ':bookingId' . $index;
+
+                    $queryBookings[] = $param;
+
+                    $params[$param] = $value;
+                }
+
+                $where[] = 'cb.id IN (' . implode(', ', $queryBookings) . ')';
+            }
+
             if (isset($criteria['bookingCouponId'])) {
                 $where[] = 'cb.couponId = :bookingCouponId';
                 $params[':bookingCouponId'] = $criteria['bookingCouponId'];
@@ -1096,6 +1112,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 p.data AS payment_data,
                 p.parentId AS payment_parentId,
                 p.wcOrderId AS payment_wcOrderId,
+                p.wcOrderItemId AS payment_wcOrderItemId,
                 p.created AS payment_created,
             ';
 

@@ -30,6 +30,7 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ResourceRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventTagsRepository;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
@@ -176,6 +177,9 @@ class GetEntitiesCommandHandler extends CommandHandler
             $resultData['categories'] = $categories->toArray();
         }
 
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
         $resultData['customers'] = [];
 
         /** Customers */
@@ -207,6 +211,21 @@ class GetEntitiesCommandHandler extends CommandHandler
                         $customers = $userRepo->getAllWithAllowedBooking();
 
                         $resultData['customers'] = $customers->toArray();
+                }
+            }
+
+            $noShowTagEnabled = $settingsDS->getSetting('roles', 'enableNoShowTag');
+
+            if ($noShowTagEnabled && $resultData['customers']) {
+                /** @var CustomerBookingRepository $bookingRepository */
+                $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+                $usersIds = array_map(function ($user) { return $user['id']; }, $resultData['customers']);
+
+                $customersNoShowCount =  $bookingRepository->countByNoShowStatus($usersIds);
+
+                foreach ($resultData['customers'] as $key => $customer) {
+                    $resultData['customers'][$key]['noShowCount'] = $customersNoShowCount[$key]['count'];
                 }
             }
         }
@@ -367,9 +386,6 @@ class GetEntitiesCommandHandler extends CommandHandler
 
             $resultData['coupons'] = $coupons->toArray();
         }
-
-        /** @var SettingsService $settingsDS */
-        $settingsDS = $this->container->get('domain.settings.service');
 
         /** Settings */
         if (in_array(Entities::SETTINGS, $params['types'], true)) {

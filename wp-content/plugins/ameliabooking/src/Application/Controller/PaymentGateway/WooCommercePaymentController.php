@@ -4,6 +4,7 @@ namespace AmeliaBooking\Application\Controller\PaymentGateway;
 
 use AmeliaBooking\Application\Commands\PaymentGateway\WooCommercePaymentCommand;
 use AmeliaBooking\Application\Controller\Controller;
+use RuntimeException;
 use Slim\Http\Request;
 
 /**
@@ -30,6 +31,7 @@ class WooCommercePaymentController extends Controller
         'couponCode',
         'payment',
         'recurring',
+        'isCart',
         'packageId',
         'package',
         'packageRules',
@@ -48,11 +50,12 @@ class WooCommercePaymentController extends Controller
      * @param         $args
      *
      * @return WooCommercePaymentCommand
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new WooCommercePaymentCommand($args);
+
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

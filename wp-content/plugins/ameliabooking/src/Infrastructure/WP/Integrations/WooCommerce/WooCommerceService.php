@@ -133,9 +133,25 @@ class WooCommerceService
             return;
         }
 
+        $index = 0;
+
         foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
             if (isset($wc_item[self::AMELIA]) && is_array($wc_item[self::AMELIA])) {
                 $product_price = self::getReservationPaymentAmount($wc_item[self::AMELIA])['paymentAmount'];
+
+                $bookableData = self::getEntity($wc_item[self::AMELIA]);
+
+                if (empty($wc_item[self::AMELIA]['isCart']) &&
+                    isset($bookableData['bookable']['recurringPayment']) &&
+                    $bookableData['bookable']['recurringPayment'] !== null &&
+                    $index > $bookableData['bookable']['recurringPayment']
+                ) {
+                    $wc_item['data']->set_price(0);
+
+                    continue;
+                }
+
+                $index++;
 
                 /** @var \WC_Product $wc_item ['data'] */
                 $wc_item['data']->set_price($product_price >= 0 ? $product_price : 0);
@@ -348,13 +364,13 @@ class WooCommerceService
     /**
      * Save appointment booking
      *
-     * @param array $data
-     * @param mixed $orderItem
+     * @param array     $data
+     * @param \WC_Order $order
      *
      * @return CustomerBooking|null
      * @throws \Exception
      */
-    private static function saveBooking($data, $orderItem)
+    private static function saveBooking($data, $order)
     {
         try {
             /** @var ReservationServiceInterface $reservationService */
@@ -368,15 +384,19 @@ class WooCommerceService
             $paymentRepository = self::$container->get('domain.payment.repository');
 
             /** @var Collection $payments */
-            $payments = $paymentRepository->getByEntityId($data['payment']['wcOrderItemId'], 'wcOrderId');
+            $payments = $paymentRepository->getByEntityId($data['payment']['wcOrderId'], 'wcOrderId');
 
             /** @var Payment $payment */
             foreach ($payments->getItems() as $payment) {
-                $paymentRepository->updateFieldById(
-                    $payment->getId()->getValue(),
-                    ($orderItem->get_total() > 0 ? $orderItem->get_total() : 0) + $orderItem->get_total_tax(),
-                    'amount'
-                );
+                foreach ($order->get_items() as $itemId => $orderItem) {
+                    if ($payment->getWcOrderItemId() && $payment->getWcOrderItemId()->getValue() === (int)$itemId) {
+                        $paymentRepository->updateFieldById(
+                            $payment->getId()->getValue(),
+                            ($orderItem->get_total() > 0 ? $orderItem->get_total() : 0) + $orderItem->get_total_tax(),
+                            'amount'
+                        );
+                    }
+                }
             }
 
             $reservationService->runPostBookingActions($result);
@@ -526,21 +546,32 @@ class WooCommerceService
                 }
 
                 foreach ($wcItemAmeliaCache['recurring'] as $index => $recurringReservation) {
-                    $recurringBookable = self::getEntity(
-                        array_merge(
-                            $wcItemAmeliaCache,
-                            $recurringReservation
-                        )
+                    $recurringBookableData = array_merge(
+                        $wcItemAmeliaCache,
+                        $recurringReservation,
+                        [
+                            'couponId' => $recurringReservation['couponId'],
+                            'bookings' => [
+                                array_merge(
+                                    $wcItemAmeliaCache['bookings'][0],
+                                    [
+                                        'extras'   => !empty($recurringReservation['extras']) ?
+                                            $recurringReservation['extras'] : [],
+                                        'persons'  => !empty($recurringReservation['persons']) ?
+                                            $recurringReservation['persons'] : [],
+                                        'duration' => !empty($recurringReservation['duration']) ?
+                                            $recurringReservation['duration'] : [],
+                                    ]
+                                )
+                            ],
+                        ]
                     );
 
-                    if ($index < $bookableData['bookable']['recurringPayment']) {
+                    $recurringBookable = self::getEntity($recurringBookableData);
+
+                    if (!empty($wcItemAmeliaCache['isCart']) || $index < $bookableData['bookable']['recurringPayment']) {
                         $recurringPaymentAmount = self::getBookingPaymentAmount(
-                            array_merge(
-                                $wcItemAmeliaCache,
-                                [
-                                    'couponId' => $wcItemAmeliaCache['recurring'][$index]['couponId']
-                                ]
-                            ),
+                            $recurringBookableData,
                             $recurringBookable
                         );
 
@@ -548,7 +579,7 @@ class WooCommerceService
                             $recurringPaymentAmount = self::calculateDepositAmount(
                                 $recurringPaymentAmount,
                                 $recurringBookable['bookable'],
-                                $wcItemAmeliaCache['bookings'][0]['persons']
+                                $wcItemAmeliaCache['recurring'][$index]['persons']
                             );
                         }
 
@@ -626,7 +657,13 @@ class WooCommerceService
             ];
         }
 
-        $price = (float)$booking['bookable']['price'] *
+        $duration = !empty($wcItemAmeliaCache['bookings'][0]['duration']) ?
+            $wcItemAmeliaCache['bookings'][0]['duration'] : null;
+
+        $basePrice = $duration && !empty($booking['bookable']['customPricing']['durations'][$duration]) ?
+            $booking['bookable']['customPricing']['durations'][$duration]['price'] : $booking['bookable']['price'];
+
+        $price = (float)$basePrice *
             ($booking['bookable']['aggregatedPrice'] ? $wcItemAmeliaCache['bookings'][0]['persons'] : 1);
 
         if (!empty($wcItemAmeliaCache['bookings'][0]['ticketsData'])) {
@@ -934,6 +971,8 @@ class WooCommerceService
                     $duration = !empty($ameliaEntitiesIds[0]['duration'])
                         ? $ameliaEntitiesIds[0]['duration'] : $service->getDuration()->getValue();
 
+                    $customPricing = null;
+
                     if (!empty($ameliaEntitiesIds[0]['duration']) && $service->getCustomPricing()) {
                         $customPricing = json_decode($service->getCustomPricing()->getValue(), true);
 
@@ -957,6 +996,7 @@ class WooCommerceService
                             'depositPayment'   => $service->getDepositPayment()->getValue(),
                             'deposit'          => $service->getDeposit()->getValue(),
                             'depositPerPerson' => $service->getDepositPerPerson()->getValue(),
+                            'customPricing'    => $customPricing,
                         ],
                         'coupons'   => [],
                         'extras'    => []
@@ -1030,9 +1070,24 @@ class WooCommerceService
         }
 
         if (!WC()->is_rest_api_request()) {
+            $index = 0;
+
             foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
                 if (isset($wc_item[self::AMELIA]) && is_array($wc_item[self::AMELIA])) {
                     $product_price = self::getReservationPaymentAmount($wc_item[self::AMELIA])['paymentAmount'];
+
+                    $bookableData = self::getEntity($wc_item[self::AMELIA]);
+
+                    if (empty($wc_item[self::AMELIA]['isCart']) &&
+                        $bookableData['bookable']['recurringPayment'] !== null &&
+                        $index > $bookableData['bookable']['recurringPayment']
+                    ) {
+                        $wc_item['data']->set_price(0);
+
+                        break;
+                    }
+
+                    $index++;
 
                     /** @var \WC_Product $wc_item ['data'] */
                     $wc_item['data']->set_price($product_price >= 0 ? $product_price : 0);
@@ -1050,13 +1105,12 @@ class WooCommerceService
     /**
      * Add appointment booking to cart
      *
-     * @param array    $data
-     * @param int|null $productId
+     * @param array $data
      *
      * @return boolean
      * @throws \Exception
      */
-    public static function addToCart($data, $productId)
+    public static function addToCart($data)
     {
         $wooCommerceCart = self::getWooCommerceCart();
 
@@ -1072,7 +1126,45 @@ class WooCommerceService
             }
         }
 
-        $wooCommerceCart->add_to_cart($productId ?: self::getProductIdFromSettings(), 1, '', [], [self::AMELIA => $data]);
+        $defaultProductId = self::getProductIdFromSettings();
+
+        $wooCommerceCart->add_to_cart(
+            !empty($data['wcProductId']) ? $data['wcProductId'] : $defaultProductId,
+            1,
+            '',
+            [],
+            [self::AMELIA => array_merge($data, ['recurring' => []])]
+        );
+
+        foreach ($data['recurring'] as $item) {
+            $productId = !empty($item['wcProductId']) ? $item['wcProductId'] : $defaultProductId;
+
+            $recurringData = array_merge($data, $item, ['recurring' => []]);
+
+            $recurringData['bookings'][0]['utcOffset'] = $item['utcOffset'];
+
+            $recurringData['bookings'][0]['extras'] = $item['extras'];
+
+            $recurringData['bookings'][0]['persons'] = $item['persons'];
+
+            $recurringData['bookings'][0]['duration'] = $item['duration'];
+
+            $recurringData['bookings'][0]['customFields'] = $item['customFields'];
+
+            $recurringData['couponId'] = $item['couponId'];
+
+            $recurringData['couponCode'] = $item['couponCode'];
+
+            $recurringData['bookings'][0]['deposit'] = $item['deposit'];
+
+            $wooCommerceCart->add_to_cart(
+                $productId ?: self::getProductIdFromSettings(),
+                1,
+                '',
+                [],
+                [self::AMELIA => $recurringData]
+            );
+        }
 
         return true;
     }
@@ -1152,6 +1244,65 @@ class WooCommerceService
         }
 
         return $timeInfo;
+    }
+
+    /**
+     * Get package labels.
+     *
+     * @param array $data
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public static function getCartLabels($data)
+    {
+        $cartInfo = [];
+
+        foreach (array_merge([$data], $data['recurring']) as $bookingData) {
+            /** @var array $packageBooking */
+            $booking = self::getEntity(
+                array_merge(['type' => Entities::APPOINTMENT], $bookingData)
+            );
+
+            $serviceId = $booking['bookable']['id'];
+
+            $cartInfo[$serviceId]['name'] =
+                '<strong>' .
+                self::$settingsService->getCategorySettings('labels')['service'] .
+                ':</strong> ' .
+                $booking['bookable']['name'];
+
+            $cartInfo[$serviceId]['data'][] =
+                '<strong>' .
+                self::$settingsService->getCategorySettings('labels')['employee'] .
+                ':</strong> ' .
+                $booking['firstName'] . ' ' . $booking['lastName'];
+
+            $timeInfo = self::getDateInfo(
+                [
+                    [
+                        'start' => $bookingData['bookingStart'],
+                        'end'   => $bookingData['bookingEnd'],
+                    ]
+                ],
+                $data['bookings'][0]['utcOffset'],
+                $data['type']
+            );
+
+            $cartInfo[$serviceId]['data'][] = $timeInfo[0];
+        }
+
+        $result = ['<br>', "<hr style='margin-top: 16px; margin-bottom: 10px'>", '<p>' . '<strong>' . FrontendStrings::getAllStrings()['appointments'] . ':</strong> ' . '</p>'];
+
+        foreach ($cartInfo as $serviceData) {
+            $result[] = $serviceData['name'];
+
+            foreach ($serviceData['data'] as $value) {
+                $result[] = $value;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -1315,8 +1466,6 @@ class WooCommerceService
             /** @var array $booking */
             $booking = self::getEntity($wc_item[self::AMELIA]);
 
-            $bookingType = $wc_item[self::AMELIA]['type'];
-
             $customFieldsInfo = [];
 
             if (!is_array($wc_item[self::AMELIA]['bookings'][0]['customFields'])) {
@@ -1358,7 +1507,7 @@ class WooCommerceService
 
             $bookableLabel = '';
 
-            switch ($bookingType) {
+            switch ($wc_item[self::AMELIA]['type']) {
                 case Entities::APPOINTMENT:
                     $bookableInfo = self::getAppointmentLabels($wc_item[self::AMELIA]);
 
@@ -1379,11 +1528,19 @@ class WooCommerceService
                     $bookableLabel = FrontendStrings::getCommonStrings()['event_info'];
 
                     break;
+
+                case Entities::CART:
+                    $bookableInfo = self::getCartLabels($wc_item[self::AMELIA]);
+
+                    $bookableLabel = FrontendStrings::getCommonStrings()['cart_info'];
+
+                    break;
             }
 
             $recurringInfo = [];
 
-            $recurringItems = !empty($wc_item[self::AMELIA]['recurring']) ? $wc_item[self::AMELIA]['recurring'] : [];
+            $recurringItems = !empty($wc_item[self::AMELIA]['recurring']) && empty($wc_item[self::AMELIA]['isCart'])
+                ? $wc_item[self::AMELIA]['recurring'] : [];
 
             foreach ($recurringItems as $index => $recurringReservation) {
                 $recurringInfo[] = self::getDateInfo(
@@ -1410,14 +1567,14 @@ class WooCommerceService
             /** @var HelperService $helperService */
             $helperService = self::$container->get('application.helper.service');
 
-            $description = !empty($wcSettings['checkoutData'][$bookingType]) ?
-                trim($wcSettings['checkoutData'][$bookingType]) : '';
+            $description = !empty($wcSettings['checkoutData'][$wc_item[self::AMELIA]['type']]) ?
+                trim($wcSettings['checkoutData'][$wc_item[self::AMELIA]['type']]) : '';
 
-            if (!empty($wcSettings['checkoutData']['translations'][$bookingType])) {
+            if (!empty($wcSettings['checkoutData']['translations'][$wc_item[self::AMELIA]['type']])) {
                 $description = $helperService->getBookingTranslation(
                     $wc_item[self::AMELIA]['locale'],
                     json_encode($wcSettings['checkoutData']['translations']),
-                    $bookingType
+                    $wc_item[self::AMELIA]['type']
                 ) ?: $description;
             }
 
@@ -1432,7 +1589,7 @@ class WooCommerceService
 
                 $wc_item[self::AMELIA]['bookings'][0]['couponId'] = $wc_item[self::AMELIA]['couponId'];
 
-                switch ($bookingType) {
+                switch ($wc_item[self::AMELIA]['type']) {
                     case Entities::APPOINTMENT:
                         $placeholderService = self::$container->get('application.placeholder.appointment.service');
 
@@ -1443,6 +1600,51 @@ class WooCommerceService
                         $reservationData['recurring'] = [];
 
                         foreach ($wc_item[self::AMELIA]['recurring'] as $index => $recurringReservation) {
+                            $reservationData['recurring'][] = [
+                                'type'                => Entities::APPOINTMENT,
+                                Entities::APPOINTMENT => array_merge(
+                                    $reservationData,
+                                    $recurringReservation,
+                                    [
+                                        'type' => Entities::APPOINTMENT,
+                                        'bookings' => [
+                                            array_merge(
+                                                $wc_item[self::AMELIA]['bookings'][0],
+                                                ['price' => 0]
+                                            )
+                                        ],
+                                    ]
+                                ),
+                            ];
+                        }
+
+                        break;
+                    case Entities::CART:
+                        $placeholderService = self::$container->get("application.placeholder.appointments.service");
+
+                        $reservation = AppointmentFactory::create($wc_item[self::AMELIA]);
+
+                        $reservationData = $reservation->toArray();
+
+                        $reservationData['customer'] = $wc_item[self::AMELIA]['bookings'][0]['customer'];
+
+                        $reservationData['recurring'][] = [
+                            'type'                => Entities::APPOINTMENT,
+                            Entities::APPOINTMENT => array_merge(
+                                $reservationData,
+                                [
+                                    'type' => Entities::APPOINTMENT,
+                                    'bookings' => [
+                                        array_merge(
+                                            $wc_item[self::AMELIA]['bookings'][0],
+                                            ['price' => 0]
+                                        )
+                                    ],
+                                ]
+                            ),
+                        ];
+
+                        foreach ($wc_item[self::AMELIA]['recurring'] as $recurringReservation) {
                             $reservationData['recurring'][] = [
                                 'type'                => Entities::APPOINTMENT,
                                 Entities::APPOINTMENT => array_merge(
@@ -1597,7 +1799,7 @@ class WooCommerceService
 
                 $description = $descriptionParts ? implode('<p', $descriptionParts) : $description;
 
-                $placeholderData["{$bookingType}_deposit_payment"] = $paymentData['deposit'] ? $helperService->getFormattedPrice($paymentData['paymentAmount']) : '';
+                $placeholderData["{$wc_item[self::AMELIA]['type']}_deposit_payment"] = $paymentData['deposit'] ? $helperService->getFormattedPrice($paymentData['paymentAmount']) : '';
                 $metaData = $placeholderService->applyPlaceholders(
                     $description,
                     $placeholderData
@@ -1813,7 +2015,7 @@ class WooCommerceService
     public static function getLabels($data)
     {
         if ($data && is_array($data)) {
-            $other_data = self::getItemData([], [self::AMELIA => $data]);
+            $other_data = self::getItemData([], [self::AMELIA => array_merge($data, ['recurring'  => []])]);
 
             if (empty($data['payment']['fromLink'])) {
                 $labels = strpos($other_data[0]['value'], '<br>') !== false ? preg_replace("/\r|\n/", '<br>', $other_data[0]['value']) : $other_data[0]['value'];
@@ -1861,10 +2063,49 @@ class WooCommerceService
      * Manage bookings after checkout.
      *
      * @param $order_id
+     * @throws QueryExecutionException
      */
     public static function orderStatusChanged($order_id)
     {
         $order = new \WC_Order($order_id);
+
+        $bookingData = [];
+
+        $couponCode = null;
+
+        foreach ($order->get_items() as $item_id => $order_item) {
+            $data = wc_get_order_item_meta($item_id, self::AMELIA);
+
+            if ($data && is_array($data) && !isset($data['processed']) && !empty($data['type']) && $data['type'] !== 'package') {
+                if ($data['couponCode']) {
+                    $couponCode = $data['couponCode'];
+                }
+
+                $serviceBookingData = [
+                    'providerId'         => $data['providerId'],
+                    'locationId'         => $data['locationId'],
+                    'bookingStart'       => $data['bookingStart'],
+                    'bookingEnd'         => $data['bookingEnd'],
+                    'notifyParticipants' => $data['notifyParticipants'],
+                    'status'             => $data['status'],
+                    'utcOffset'          => $data['bookings'][0]['utcOffset'],
+                    'extras'             => $data['bookings'][0]['extras'],
+                    'persons'            => $data['bookings'][0]['persons'],
+                    'duration'           => $data['bookings'][0]['duration'],
+                    'couponId'           => $data['couponId'],
+                    'couponCode'         => $data['couponCode'],
+                    'wcOrderItemId'      => $item_id,
+                ];
+
+                if (!empty($data['serviceId'])) {
+                    $serviceBookingData['serviceId'] = $data['serviceId'];
+                }
+
+                $bookingData[] = $serviceBookingData;
+            }
+        }
+
+        array_shift($bookingData);
 
         foreach ($order->get_items() as $item_id => $order_item) {
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
@@ -1887,6 +2128,12 @@ class WooCommerceService
 
             try {
                 if ($isValid !== false && !isset($data['processed']) && !($order->get_status() === 'cancelled' || $order->get_status() === 'failed')) {
+                    if ($couponCode && empty($data['couponCode'])) {
+                        $data['couponCode'] = $couponCode;
+                    }
+
+                    $data['recurring'] = $bookingData;
+
                     self::$isProcessing = true;
 
                     $data['processed'] = true;
@@ -1897,7 +2144,7 @@ class WooCommerceService
 
                     $data['payment']['wcOrderId'] = $order_id;
 
-                    $data['payment']['wcOrderItemId'] = $order_id;
+                    $data['payment']['wcOrderItemId'] = $item_id;
 
                     $data['payment']['orderStatus'] = $order->get_status();
 
@@ -1917,7 +2164,8 @@ class WooCommerceService
                         $data['bookings'][0]['customer']['externalId'] = $order->get_user_id();
                     }
 
-                    $customFields = $data['bookings'][0]['customFields'];
+                    $customFields = !empty($data['allCustomFields']) ?
+                        $data['allCustomFields'] : $data['bookings'][0]['customFields'];
 
                     $data['bookings'][0]['customFields'] = $customFields ? json_encode($customFields) : null;
 
@@ -1991,7 +2239,7 @@ class WooCommerceService
                             }
                         }
                     } else {
-                        $booking = self::saveBooking($data, $order_item);
+                        $booking = self::saveBooking($data, $order);
 
                         $data['bookings'][0]['customFields'] = $customFields;
 
@@ -2007,6 +2255,8 @@ class WooCommerceService
                                 $booking['customer']['externalId']
                             );
                         }
+
+                        $data['recurring'] = [];
 
                         wc_update_order_item_meta($item_id, self::AMELIA, $data);
                     }
@@ -2025,6 +2275,8 @@ class WooCommerceService
             } catch (ContainerException $e) {
             } catch (\Exception $e) {
             }
+
+            break;
         }
     }
 
@@ -2378,16 +2630,18 @@ class WooCommerceService
      * Refund order
      *
      * @param $order_id
+     * @param $order_item_id
      * @param $amount
      * @param $refund_reason
      *
      * @return array
      * @throws ContainerException
      */
-    public static function refund($order_id, $amount, $refund_reason = '')
+    public static function refund($order_id, $order_item_id, $amount, $refund_reason = '')
     {
         $order = wc_get_order($order_id);
-        $amount = $order->get_total();
+
+        $amount = !empty($amount) ? $amount : $order->get_total();
 
         // If it's something else such as a WC_Order_Refund, we don't want that.
         if (! is_a($order, 'WC_Order') || $order->get_status() === 'refunded') {
@@ -2403,7 +2657,8 @@ class WooCommerceService
         if ($order_items) {
             foreach ($order_items as $item_id => $item) {
                 $item_meta = $order->get_item_meta($item_id);
-                if (in_array(self::AMELIA, array_keys($item_meta))) {
+
+                if (in_array(self::AMELIA, array_keys($item_meta)) && !$order_item_id || $item_id === $order_item_id) {
                     $refund_tax = $item->get_taxes()['total'] ?: 0;
                     $line_items[ $item_id ] = array(
                         'qty' => $item_meta['_qty'][0],

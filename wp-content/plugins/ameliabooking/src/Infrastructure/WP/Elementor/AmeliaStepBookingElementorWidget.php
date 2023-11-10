@@ -64,10 +64,11 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             'select_category',
             [
                 'label' => BackendStrings::getWordPressStrings()['select_category'],
-                'type' => Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
                 'options' => $controls_data['categories'],
                 'condition' => ['preselect' => 'yes'],
-                'default' => '0',
+                'placeholder' => BackendStrings::getWordPressStrings()['show_all_categories']
             ]
         );
 
@@ -75,10 +76,11 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             'select_service',
             [
                 'label' => BackendStrings::getWordPressStrings()['select_service'],
-                'type' => Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
                 'options' => $controls_data['services'],
                 'condition' => ['preselect' => 'yes'],
-                'default' => '0',
+                'placeholder' => BackendStrings::getWordPressStrings()['show_all_services'],
             ]
         );
 
@@ -86,10 +88,11 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             'select_employee',
             [
                 'label' => BackendStrings::getWordPressStrings()['select_employee'],
-                'type' => Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
                 'options' => $controls_data['employees'],
                 'condition' => ['preselect' => 'yes'],
-                'default' => '0',
+                'placeholder' => BackendStrings::getWordPressStrings()['show_all_employees'],
             ]
         );
 
@@ -97,10 +100,11 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             'select_location',
             [
                 'label' => BackendStrings::getWordPressStrings()['select_location'],
-                'type' => Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
                 'options' => $controls_data['locations'],
                 'condition' => ['preselect' => 'yes'],
-                'default' => '0',
+                'placeholder' => BackendStrings::getWordPressStrings()['show_all_locations'],
             ]
         );
 
@@ -109,10 +113,11 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
                 'select_package',
                 [
                     'label' => BackendStrings::getWordPressStrings()['select_package'],
-                    'type' => Controls_Manager::SELECT,
+                    'type' => Controls_Manager::SELECT2,
+                    'multiple' => true,
                     'options' => $controls_data['packages'],
                     'condition' => ['preselect' => 'yes'],
-                    'default' => '0',
+                    'placeholder' => BackendStrings::getWordPressStrings()['show_all_packages'],
                 ]
             );
         }
@@ -172,13 +177,13 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
         $trigger_type = $settings['load_manually'] && $settings['trigger_type'] !== '' ? ' trigger_type=' . $settings['trigger_type'] : '';
         $in_dialog = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
 
-        $category = $settings['select_category'] === '0' ? '' : ' category=' . $settings['select_category'];
-        $service = $settings['select_service'] === '0' ? '' : ' service=' . $settings['select_service'];
-        $category_service = $settings['select_service'] === '0' ? $category : $service;
+        $category = empty($settings['select_category']) ? '' : ' category=' . implode(',', $settings['select_category']);
+        $service  = empty($settings['select_service']) ? '' : ' service=' . implode(',', $settings['select_service']);
+        $category_service = empty($settings['select_service']) ? $category : $service;
 
-        $employee = $settings['select_employee'] === '0' ? '' : ' employee=' . $settings['select_employee'];
-        $location = $settings['select_location'] === '0' ? '' : ' location=' . $settings['select_location'];
-        $package  = empty($settings['select_package']) || $settings['select_package'] === '0' ? '' : ' package=' . $settings['select_package'];
+        $employee = empty($settings['select_employee']) ? '' : ' employee=' . implode(',', $settings['select_employee']);
+        $location = empty($settings['select_location']) ? '' : ' location=' . implode(',', $settings['select_location']);
+        $package  = empty($settings['select_package'])  ? '' : ' package=' . implode(',', $settings['select_package']);
 
         $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
 
@@ -196,14 +201,12 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
         $elementorData = [];
 
         $elementorData['categories'] = [];
-        $elementorData['categories'][0] = BackendStrings::getWordPressStrings()['show_all_categories'];
 
         foreach ($data['categories'] as $category) {
             $elementorData['categories'][$category['id']] = $category['name'] . ' (id: ' . $category['id'] . ')';
         }
 
         $elementorData['services'] = [];
-        $elementorData['services'][0] = BackendStrings::getWordPressStrings()['show_all_services'];
 
         foreach ($data['servicesList'] as $service) {
             if ($service) {
@@ -212,21 +215,18 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
         }
 
         $elementorData['employees'] = [];
-        $elementorData['employees'][0] = BackendStrings::getWordPressStrings()['show_all_employees'];
 
         foreach ($data['employees'] as $provider) {
             $elementorData['employees'][$provider['id']] = $provider['firstName'] . $provider['lastName'] . ' (id: ' . $provider['id'] . ')';
         }
 
         $elementorData['locations'] = [];
-        $elementorData['locations'][0] = BackendStrings::getWordPressStrings()['show_all_locations'];
 
         foreach ($data['locations'] as $location) {
             $elementorData['locations'][$location['id']] = $location['name'] . ' (id: ' . $location['id'] . ')';
         }
 
         $elementorData['packages'] = [];
-        $elementorData['packages'][0] = BackendStrings::getWordPressStrings()['show_all_packages'];
 
         foreach ($data['packages'] as $package) {
             $elementorData['packages'][$package['id']] = $package['name'] . ' (id: ' . $package['id'] . ')';

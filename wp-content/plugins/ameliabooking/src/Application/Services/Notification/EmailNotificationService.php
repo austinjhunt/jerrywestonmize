@@ -89,14 +89,20 @@ class EmailNotificationService extends AbstractNotificationService
         $isBackend         = isset($appointmentArray['isBackend']) && $appointmentArray['isBackend'];
 
         /** @var  $customer */
-        $customer = ($appointmentArray['type'] !== Entities::PACKAGE && $bookingKey !== null)
-            ? $userRepository->getById($appointmentArray['bookings'][$bookingKey]['customerId']) : null;
+        $customer = (
+            $appointmentArray['type'] !== Entities::PACKAGE &&
+            $appointmentArray['type'] !== Entities::APPOINTMENTS &&
+            $bookingKey !== null
+        ) ? $userRepository->getById($appointmentArray['bookings'][$bookingKey]['customerId']) : null;
 
-        if ($appointmentArray['type'] === Entities::PACKAGE) {
-            $info = $isCustomerPackage ? json_encode($appointmentArray['customer']) : null;
+        if ($appointmentArray['type'] === Entities::PACKAGE || $appointmentArray['type'] === Entities::APPOINTMENTS) {
+            $info = $isCustomerPackage || $appointmentArray['type'] === Entities::APPOINTMENTS
+                ? json_encode($appointmentArray['customer']) : null;
+
             $userLanguage = null;
         } else {
             $info = $bookingKey !== null ? $appointmentArray['bookings'][$bookingKey]['info'] : null;
+
             $userLanguage = $customer ? $customer->getTranslations() : null;
         }
 
@@ -136,6 +142,7 @@ class EmailNotificationService extends AbstractNotificationService
         $sendIcsPending = $settingsService->getSetting('ics', 'sendIcsAttachmentPending');
 
         $bookingStatus = $bookingKey ? $appointmentArray['bookings'][$bookingKey]['status'] : $appointmentArray['status'];
+
         if (!empty($data['icsFiles'])) {
             $icsFiles = ($sendIcs && $bookingStatus === BookingStatus::APPROVED || $sendIcsPending && $bookingStatus === BookingStatus::PENDING)
                 ? $data['icsFiles'][($isCustomerPackage || $bookingKey !== null) && !$isBackend ? 'translated' : 'original'] : [];
@@ -159,19 +166,37 @@ class EmailNotificationService extends AbstractNotificationService
 
             try {
                 if ($user['email']) {
+                    $appointmentId = $appointmentArray['type'] === Entities::APPOINTMENT ?
+                        $appointmentArray['id'] :
+                        (
+                            $appointmentArray['type'] === Entities::APPOINTMENTS ?
+                                $appointmentArray['recurring'][0]['appointment']['id'] : null
+                        );
+
                     if (!empty($appointmentArray['isRetry'])) {
                         /** @var Collection $sentNotifications */
                         $sentNotifications = $notificationLogRepo->getSentNotificationsByUserAndEntity(
                             $user['id'],
                             'email',
-                            $appointmentArray['type'],
+                            $appointmentArray['type'] === Entities::APPOINTMENTS ?
+                                Entities::APPOINTMENT : $appointmentArray['type'],
                             $appointmentArray['type'] === Entities::PACKAGE ?
-                                $appointmentArray['packageCustomerId'] : $appointmentArray['id']
+                                $appointmentArray['packageCustomerId'] : $appointmentId
                         );
 
                         if ($sentNotifications->length()) {
                             continue;
                         }
+                    }
+
+                    if (!$isCustomerPackage && !empty($data['providersAppointments'][$user['id']])) {
+                        $body = $placeholderService->applyPlaceholders(
+                            $notificationContent,
+                            array_merge(
+                                $data,
+                                ['cart_appointments_details' => $data['providersAppointments'][$user['id']]['cart_appointments_details']]
+                            )
+                        );
                     }
 
                     $reParsedData = !$isCustomerPackage ?
@@ -199,11 +224,11 @@ class EmailNotificationService extends AbstractNotificationService
                         ]
                     );
 
-                    if ($logNotification) {
+                    if ($logNotification && $user['id']) {
                         $logNotificationId = $notificationLogRepo->add(
                             $notification,
                             $user['id'],
-                            $appointmentArray['type'] === Entities::APPOINTMENT ? $appointmentArray['id'] : null,
+                            $appointmentId,
                             $appointmentArray['type'] === Entities::EVENT ? $appointmentArray['id'] : null,
                             $appointmentArray['type'] === Entities::PACKAGE ? $appointmentArray['packageCustomerId'] : null,
                             json_encode(
