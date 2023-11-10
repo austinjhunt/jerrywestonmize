@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace MailPoet\Automation\Integrations\WooCommerce\Triggers;
+namespace MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders;
 
 if (!defined('ABSPATH')) exit;
 
@@ -10,6 +10,7 @@ use MailPoet\Automation\Engine\Data\StepValidationArgs;
 use MailPoet\Automation\Engine\Data\Subject;
 use MailPoet\Automation\Engine\Hooks;
 use MailPoet\Automation\Engine\Integration\Trigger;
+use MailPoet\Automation\Engine\WordPress;
 use MailPoet\Automation\Integrations\WooCommerce\Payloads\OrderStatusChangePayload;
 use MailPoet\Automation\Integrations\WooCommerce\Subjects\CustomerSubject;
 use MailPoet\Automation\Integrations\WooCommerce\Subjects\OrderStatusChangeSubject;
@@ -17,18 +18,17 @@ use MailPoet\Automation\Integrations\WooCommerce\Subjects\OrderSubject;
 use MailPoet\Automation\Integrations\WooCommerce\WooCommerce;
 use MailPoet\Validator\Builder;
 use MailPoet\Validator\Schema\ObjectSchema;
-use MailPoet\WP\Functions;
 
 class OrderStatusChangedTrigger implements Trigger {
 
-  /** @var Functions */
-  private $wp;
+  /** @var WordPress */
+  protected $wp;
 
   /** @var WooCommerce */
-  private $woocommerce;
+  protected $woocommerce;
 
   public function __construct(
-    Functions $wp,
+    WordPress $wp,
     WooCommerce $woocommerceHelper
   ) {
     $this->wp = $wp;
