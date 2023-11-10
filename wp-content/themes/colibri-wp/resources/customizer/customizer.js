@@ -76867,11 +76867,28 @@ var LinkedSelectControl = function (_ColibriVueControl) {
     }, {
         key: "vueData",
         value: function vueData(wpControl) {
+            var linkedToSetting = window.wp.customize(wpControl.params.linked_to);
+            var linkedSettingValue = linkedToSetting.get();
+
+            var value = this.getWpControlValue(wpControl);
+            var options = [];
+
+            if (linkedSettingValue && wpControl.params.choices) {
+                var rawOptions = wpControl.params.choices[linkedSettingValue];
+                if (rawOptions) {
+                    options = $.map(rawOptions, function (value, key) {
+                        return {
+                            label: value,
+                            value: key
+                        };
+                    });
+                }
+            }
 
             return {
-                value: this.getWpControlValue(wpControl),
+                value: value,
                 size: wpControl.params.size || "",
-                options: []
+                options: options
             };
         }
     }, {

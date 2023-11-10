@@ -29,6 +29,9 @@ wp-config.php
 # Uploads
 /wp-content/uploads/
 
+# Updraft backups
+/wp-content/updraft
+
 # Log files
 *.log
 
