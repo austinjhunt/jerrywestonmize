@@ -31,7 +31,6 @@ wp-config.php
 
 # Updraft backups
 /wp-content/updraft
-
 # Log files
 *.log
 
