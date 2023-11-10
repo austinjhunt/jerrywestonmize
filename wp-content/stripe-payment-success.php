@@ -1,24 +1,30 @@
 <?php
-// webhook.php
-//
-// Use this sample code to handle webhook events in your integration.
-//
-// 1) Paste this code into a new file (webhook.php)
-//
-// 2) Install dependencies
-//   composer require stripe/stripe-php
-//
-// 3) Run the server on http://localhost:4242
-//   php -S localhost:4242
 
 require 'vendor/autoload.php';
 
+// Load .env file
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+
+$MODE = getenv('MODE');
+$STRIPE_LIVE_PUBLISHABLE_KEY = getenv('STRIPE_LIVE_PUBLISHABLE_KEY');
+$STRIPE_LIVE_SECRET_KEY = getenv('STRIPE_LIVE_SECRET_KEY');
+$STRIPE_TEST_PUBLISHABLE_KEY = getenv('STRIPE_TEST_PUBLISHABLE_KEY');
+$STRIPE_TEST_SECRET_KEY = getenv('STRIPE_TEST_SECRET_KEY');
+$STRIPE_CLI_WEBHOOK_SECRET = getenv('STRIPE_CLI_WEBHOOK_SECRET');
+
+if ($MODE == '' or $MODE == 'test') {
+    $STRIPE_SECRET_KEY = $STRIPE_TEST_SECRET_KEY;
+} else if ($MODE == 'live') {
+    $STRIPE_SECRET_KEY = $STRIPE_LIVE_SECRET_KEY;
+}
 // The library needs to be configured with your account's secret key.
 // Ensure the key is kept out of any version control system you might be using. 
-$stripe = new \Stripe\StripeClient('sk_test_...');
+$stripe = new \Stripe\StripeClient($STRIPE_SECRET_KEY);
 
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
-$endpoint_secret = 'whsec_a075d47173b9d193e4785ffa2cf466e7371b2488e81e6cf68373899ecd1c6950';
+$endpoint_secret = $STRIPE_CLI_WEBHOOK_SECRET;
 
 $payload = @file_get_contents('php://input');
 $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
@@ -55,6 +61,9 @@ switch ($event->type) {
                 ['expand' => ['charges.data.balance_transaction']]
             );
 
+            // write serialized object to error log
+            error_log('paymentIntent: ' . print_r($paymentIntent, true));
+
             // Assuming the PaymentIntent has a customer email set
             if ($paymentIntent->receipt_email) {
                 $charge = $paymentIntent->charges->data[0];
@@ -63,7 +72,7 @@ switch ($event->type) {
                 // Use your preferred method to send an email to the customer.
                 // For example, using PHP's mail function:
                 $to = $paymentIntent->receipt_email;
-                $subject = "Your receipt from [Your Company Name]";
+                $subject = "Your receipt from Jerry Weston Mize Music";
                 $message = "Thank you for your purchase. Here is your receipt: " . $receipt_url;
                 $headers = "From: no-reply@yourcompany.com\r\n";
                 if (mail($to, $subject, $message, $headers)) {
@@ -71,6 +80,8 @@ switch ($event->type) {
                 } else {
                     echo "Failed to send receipt email.";
                 }
+            } else {
+                error_log("PaymentIntent without customer email.");
             }
         } catch (\Stripe\Exception\ApiErrorException $e) {
             // Handle error
