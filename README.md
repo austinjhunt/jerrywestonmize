@@ -104,16 +104,16 @@ add_action('after_switch_theme', 'colibriwp_check_php_version');
 
 ```
 
-
 ## Payment Receipts - Amelia Code Modification
 
-If the Amelia plugin is updated, there is a chance this code will need to be re-added. 
+If the Amelia plugin is updated, there is a chance this code will need to be re-added.
 
-Amelia doesn't properly trigger Stripe payment receipts because by default it does not tie in "receipt_email" key in the initial PaymentIntent creation API request to Stripe. 
+Amelia doesn't properly trigger Stripe payment receipts because by default it does not tie in "receipt_email" key in the initial PaymentIntent creation API request to Stripe.
 
-To fix this, I customized the logic of `wp-content/plugins/ameliabooking/src/Infrastructure/Services/Payment/StripeService.php` to add that `receipt_email` key with the value of the `Customer Email` metadata that Weston had already added under the Amelia > Settings > Payments > Stripe > Customer Metadata menu. 
- 
+To fix this, I customized the logic of `wp-content/plugins/ameliabooking/src/Infrastructure/Services/Payment/StripeService.php` to add that `receipt_email` key with the value of the `Customer Email` metadata that Weston had already added under the Amelia > Settings > Payments > Stripe > Customer Metadata menu.
+
 These are the specific changes to the [wp-content/plugins/ameliabooking/src/Infrastructure/Services/Payment/StripeService.php](wp-content/plugins/ameliabooking/src/Infrastructure/Services/Payment/StripeService.php) file:
+
 ```
 ...
 
@@ -153,7 +153,7 @@ $intent = PaymentIntent::create($stripeData);
 
 According to these docs on the PaymentIntent API reference: [https://stripe.com/docs/api/payment_intents](https://stripe.com/docs/api/payment_intents), including a `receipt_email` will automatically trigger a receipt to be sent to that email upon the success of the payment intent. [https://stripe.com/docs/api/payment_intents/object#payment_intent_object-receipt_email](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-receipt_email)
 
-`receipt_email`: *Email address that the receipt for the resulting payment will be sent to. If receipt_email is specified for a payment in live mode, a receipt will be sent regardless of your email settings.*
+`receipt_email`: _Email address that the receipt for the resulting payment will be sent to. If receipt_email is specified for a payment in live mode, a receipt will be sent regardless of your email settings._
 
 To test this, I deployed that update and did the following:
 
@@ -161,3 +161,7 @@ To test this, I deployed that update and did the following:
 2. Temporarily reduced the price of one of the paid services to $0.50 (minimum allowable charge with Stripe processing)
 3. Booked one of those lessons on the front end with my own debit card
 4. I got the lesson approved notification as normal, and within about 15 seconds I also got the receipt email from stripe.
+
+## WP Core Updates
+
+Since we are using a custom login file, and we deleted the default wp-login.php file (not included in this repository), be sure to always remove the wp-login.php file after running a WP Core update because that apparently re-adds that file back which opens an obvious vulnerability for WP attackers.
