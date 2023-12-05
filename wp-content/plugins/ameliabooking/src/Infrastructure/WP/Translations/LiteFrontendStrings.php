@@ -115,6 +115,7 @@ class LiteFrontendStrings
             'open'                         => __('Open', 'wpamelia'),
             'phone_colon'                  => __('Phone:', 'wpamelia'),
             'price_colon'                  => __('Price:', 'wpamelia'),
+            'service'                      => __('service', 'wpamelia'),
             'select_calendar'              => __('Select Calendar', 'wpamelia'),
             'services_lower'               => __('services', 'wpamelia'),
             'time_colon'                   => __('Local Time:', 'wpamelia'),
@@ -177,6 +178,8 @@ class LiteFrontendStrings
             'congrats_time'                => __('Local Time', 'wpamelia'),
             'congrats_service'             => __('Service', 'wpamelia'),
             'congrats_employee'            => __('Employee', 'wpamelia'),
+            'show_more'                    => __('Show more', 'wpamelia'),
+            'show_less'                    => __('Show less', 'wpamelia'),
         ];
     }
 
@@ -209,6 +212,9 @@ class LiteFrontendStrings
             'event_read_more'           => __('Read more', 'wpamelia'),
             'event_timetable'           => __('Timetable', 'wpamelia'),
             'event_bringing'            => __('How many attendees do you want to book event for?', 'wpamelia'),
+            'event_show_less'           => __('Show less', 'wpamelia'),
+            'event_show_more'           => __('Show more', 'wpamelia'),
+            'event_location'            => __('Event Location', 'wpamelia'),
         ];
     }
 

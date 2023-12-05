@@ -324,7 +324,7 @@ class Coupon
             'discount'              => $this->getDiscount()->getValue(),
             'deduction'             => $this->getDeduction()->getValue(),
             'limit'                 => $this->getLimit()->getValue(),
-            'customerLimit'         => $this->getCustomerLimit()->getValue(),
+            'customerLimit'         => $this->getCustomerLimit() ? $this->getCustomerLimit()->getValue() : 0,
             'used'                  => $this->getUsed() ? $this->getUsed()->getValue() : 0,
             'notificationInterval'  => $this->getNotificationInterval() ? $this->getNotificationInterval()->getValue() : 0,
             'notificationRecurring' => $this->getNotificationRecurring() ? $this->getNotificationRecurring()->getValue() : 0,

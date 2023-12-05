@@ -142,6 +142,7 @@ class SettingsStorage implements SettingsStorageInterface
             'general'                => [
                 'itemsPerPage'                           => $this->getSetting('general', 'itemsPerPage'),
                 'appointmentsPerPage'                    => $this->getSetting('general', 'appointmentsPerPage'),
+                'eventsPerPage'                          => $this->getSetting('general', 'eventsPerPage'),
                 'servicesPerPage'                        => $this->getSetting('general', 'servicesPerPage'),
                 'customersFilterLimit'                   => $this->getSetting('general', 'customersFilterLimit'),
                 'calendarEmployeesPreselected'           => $this->getSetting('general', 'calendarEmployeesPreselected'),
@@ -279,6 +280,7 @@ class SettingsStorage implements SettingsStorageInterface
                 'showActivationSettings'        => $this->getSetting('activation', 'showActivationSettings'),
                 'stash'                         => $this->getSetting('activation', 'stash'),
                 'disableUrlParams'              => $this->getSetting('activation', 'disableUrlParams'),
+                'isNewInstallation'             => $this->getSetting('activation', 'isNewInstallation'),
             ],
             'roles'                  => [
                 'allowAdminBookAtAnyTime'     => $this->getSetting('roles', 'allowAdminBookAtAnyTime'),
@@ -305,6 +307,7 @@ class SettingsStorage implements SettingsStorageInterface
                     'loginEnabled'   => $this->getSetting('roles', 'providerCabinet')['loginEnabled'],
                     'tokenValidTime' => $this->getSetting('roles', 'providerCabinet')['tokenValidTime'],
                 ],
+                'providerBadges'          => $this->getSetting('roles', 'providerBadges'),
                 'limitPerCustomerService' => $this->getSetting('roles', 'limitPerCustomerService'),
                 'limitPerCustomerPackage' => $this->getSetting('roles', 'limitPerCustomerPackage'),
                 'limitPerCustomerEvent' => $this->getSetting('roles', 'limitPerCustomerEvent'),

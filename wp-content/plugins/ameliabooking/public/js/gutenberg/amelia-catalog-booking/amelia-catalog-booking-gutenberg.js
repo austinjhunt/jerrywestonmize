@@ -136,28 +136,28 @@
         default: ''
       },
       location: {
-        type: 'string',
-        default: ''
+        type: 'array',
+        default: []
       },
       package: {
-        type: 'string',
-        default: ''
+        type: 'array',
+        default: []
       },
       category: {
-        type: 'string',
-        default: ''
+        type: 'array',
+        default: []
       },
       categoryOptions: {
         type: 'string',
         default: ''
       },
       service: {
-        type: 'string',
-        default: ''
+        type: 'array',
+        default: []
       },
       employee: {
-        type: 'string',
-        default: ''
+        type: 'array',
+        default: []
       },
       parametars: {
         type: 'boolean',

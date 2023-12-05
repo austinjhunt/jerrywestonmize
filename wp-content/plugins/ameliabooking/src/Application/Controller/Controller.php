@@ -41,7 +41,10 @@ abstract class Controller
      * @var PermissionsService
      */
     protected $permissionsService;
-    protected $allowedFields = ['ameliaNonce'];
+    protected $allowedFields = [
+        'ameliaNonce',
+        'wpAmeliaNonce',
+    ];
 
     protected $sendJustData = false;
     /**

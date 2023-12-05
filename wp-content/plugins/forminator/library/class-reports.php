@@ -48,7 +48,7 @@ class Forminator_Reports {
 	 */
 	public function __construct() {
 
-		add_action( 'wp_footer', array( &$this, 'schedule_reports' ) );
+		add_action( 'init', array( &$this, 'schedule_reports' ) );
 		add_action( 'forminator_process_report', array( &$this, 'process_report' ) );
 	}
 
@@ -58,8 +58,14 @@ class Forminator_Reports {
 	 * @since 1.0
 	 */
 	public function schedule_reports() {
-		if ( ! wp_next_scheduled( 'forminator_process_report' ) ) {
-			wp_schedule_event( time(), 'every_minute', 'forminator_process_report' );
+		// Clear old cron schedule.
+		if ( wp_next_scheduled( 'forminator_process_report' ) ) {
+			wp_clear_scheduled_hook( 'forminator_process_report' );
+		}
+
+		// Create new schedule using AS.
+		if ( false === as_has_scheduled_action( 'forminator_process_report' ) ) {
+			as_schedule_recurring_action( time() + 20, MINUTE_IN_SECONDS, 'forminator_process_report', array(), 'forminator', true );
 		}
 	}
 

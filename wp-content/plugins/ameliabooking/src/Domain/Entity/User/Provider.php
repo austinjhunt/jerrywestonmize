@@ -48,6 +48,9 @@ class Provider extends AbstractUser
     /** @var Description */
     private $description;
 
+    /** @var Id */
+    private $badgeId;
+
     /**
      * @param Name       $firstName
      * @param Name       $lastName
@@ -247,6 +250,22 @@ class Provider extends AbstractUser
         $this->description = $description;
     }
 
+    /**
+     * @return Id
+     */
+    public function getBadgeId()
+    {
+        return $this->badgeId;
+    }
+
+    /**
+     * @param Id $badgeId
+     */
+    public function setBadgeId(Id $badgeId)
+    {
+        $this->badgeId = $badgeId;
+    }
+
 
     /**
      * Returns the Provider entity fields in an array form
@@ -266,6 +285,7 @@ class Provider extends AbstractUser
                 'outlookCalendar' => $this->getOutlookCalendar() ? $this->getOutlookCalendar()->toArray() : null,
                 'timeZone'        => $this->getTimeZone() ? $this->getTimeZone()->getValue() : null,
                 'description'     => $this->getDescription() ? $this->getDescription()->getValue() : null,
+                'badgeId'         => $this->getBadgeId() ? $this->getBadgeId()->getValue() : null,
             ]
         );
     }

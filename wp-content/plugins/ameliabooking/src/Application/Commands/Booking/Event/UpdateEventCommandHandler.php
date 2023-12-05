@@ -96,8 +96,15 @@ class UpdateEventCommandHandler extends CommandHandler
 
         $entityService->removeMissingEntitiesForEvent($eventData);
 
-        /** @var Event $event */
-        $event = $eventApplicationService->build($eventData);
+        try {
+            /** @var Event $event */
+            $event = $eventApplicationService->build($eventData);
+        } catch (Exception $e) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage($e->getMessage());
+            $result->setData(['message' => $e->getMessage()]);
+            return $result;
+        }
 
         /** @var Event $event */
         $oldEvent = $eventApplicationService->getEventById(

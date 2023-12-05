@@ -403,6 +403,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 NULL AS packageCustomerId,
                 p.amount AS amount,
                 p.dateTime AS dateTime,
+                p.created AS created,
                 p.status AS status,
                 p.wcOrderId AS wcOrderId,
                 p.wcOrderItemId AS wcOrderItemId,
@@ -453,6 +454,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 p.packageCustomerId AS packageCustomerId,
                 p.amount AS amount,
                 p.dateTime AS dateTime,
+                p.created AS created,
                 p.status AS status,
                 p.wcOrderId AS wcOrderId,
                 p.wcOrderItemId AS wcOrderItemId,
@@ -502,6 +504,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 NULL AS packageCustomerId,
                 p.amount AS amount,
                 p.dateTime AS dateTime,
+                p.created AS created,
                 p.status AS status,
                 p.wcOrderId AS wcOrderId,
                 p.wcOrderItemId AS wcOrderItemId,
@@ -586,6 +589,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             $result[(int)$row['id']] = [
                 'id' =>  (int)$row['id'],
                 'dateTime' =>  DateTimeService::getCustomDateTimeFromUtc($row['dateTime']),
+                'created'  =>  DateTimeService::getCustomDateTimeFromUtc($row['created']),
                 'bookingStart' =>  $row['bookingStart'] ?
                     DateTimeService::getCustomDateTimeFromUtc($row['bookingStart']) : null,
                 'status' =>  $row['status'],

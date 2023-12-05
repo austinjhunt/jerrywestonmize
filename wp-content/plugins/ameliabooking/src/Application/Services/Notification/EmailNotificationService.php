@@ -472,13 +472,32 @@ class EmailNotificationService extends AbstractNotificationService
                     );
                 }
 
-                $subject = $placeholderService->applyPlaceholders(
-                    $notification->getSubject()->getValue(),
+                $notificationContent = $notification->getContent()->getValue();
+                $notificationSubject = $notification->getSubject()->getValue();
+
+                $customerDefaultLanguage = $cabinetType === 'customer' && $customer->getTranslations() ? json_decode($customer->getTranslations()->getValue(), true)['defaultLanguage'] : null;
+
+                if (!empty($customerDefaultLanguage)) {
+                    $notificationSubject = $helperService->getBookingTranslation(
+                        $customerDefaultLanguage,
+                        $notification->getTranslations() ? $notification->getTranslations()->getValue() : null,
+                        'subject'
+                    ) ?: $notification->getSubject()->getValue();
+
+                    $notificationContent = $helperService->getBookingTranslation(
+                        $customerDefaultLanguage,
+                        $notification->getTranslations() ? $notification->getTranslations()->getValue() : null,
+                        'content'
+                    ) ?: $notification->getContent()->getValue();
+                }
+
+                $body = $placeholderService->applyPlaceholders(
+                    $notificationContent,
                     $data
                 );
 
-                $body = $placeholderService->applyPlaceholders(
-                    $notification->getContent()->getValue(),
+                $subject = $placeholderService->applyPlaceholders(
+                    $notificationSubject,
                     $data
                 );
 

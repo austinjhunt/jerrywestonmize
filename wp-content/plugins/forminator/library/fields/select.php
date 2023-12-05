@@ -129,7 +129,7 @@ class Forminator_Select extends Forminator_Field {
 		$uniq_id       = Forminator_CForm_Front::$uid;
 		$id            = 'forminator-form-' . $settings['form_id'] . '__field--' . $id . '_' . $uniq_id;
 		$required      = self::get_property( 'required', $field, false, 'bool' );
-		$options       = self::get_property( 'options', $field, array() );
+		$options       = self::get_options( $field );
 		$post_value    = self::get_post_data( $name, false );
 		$description   = self::get_property( 'description', $field, '' );
 		$label         = esc_html( self::get_property( 'field_label', $field, '' ) );

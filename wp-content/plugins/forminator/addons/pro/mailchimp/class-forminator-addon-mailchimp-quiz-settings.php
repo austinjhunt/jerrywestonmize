@@ -38,25 +38,6 @@ class Forminator_Addon_Mailchimp_Quiz_Settings extends Forminator_Addon_Quiz_Set
 	private $tags_data = array();
 
 	/**
-	 * Forminator_Addon_Mailchimp_Form_Settings constructor.
-	 *
-	 * @since 1.0 Mailchimp Addon
-	 *
-	 * @param Forminator_Addon_Abstract $addon
-	 * @param                           $quiz_id
-	 *
-	 * @throws Forminator_Addon_Exception
-	 */
-	public function __construct( Forminator_Addon_Abstract $addon, $quiz_id ) {
-		parent::__construct( $addon, $quiz_id );
-
-		$this->_update_quiz_settings_error_message = esc_html__(
-			'The update to your settings for this quiz failed, check the quiz input and try again.',
-			'forminator'
-		);
-	}
-
-	/**
 	 * For settings Wizard steps
 	 *
 	 * @since 1.0 Mailchimp Addon

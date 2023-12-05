@@ -369,6 +369,10 @@ class BookingApplicationService
                 ) {
                     $data['package'][$key]['locationId'] = null;
                 }
+
+                if (isset($data['package'][$key]['utcOffset']) && $data['package'][$key]['utcOffset'] === '') {
+                    $data['package'][$key]['utcOffset'] = null;
+                }
             }
         }
 

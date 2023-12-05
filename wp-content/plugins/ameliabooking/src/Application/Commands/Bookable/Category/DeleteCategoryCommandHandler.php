@@ -99,6 +99,7 @@ class DeleteCategoryCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted bookable category.');
+        $result->setData([]);
 
         return $result;
     }

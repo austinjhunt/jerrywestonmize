@@ -109,6 +109,11 @@ abstract class Forminator_Addon_Form_Settings_Abstract extends Forminator_Addon_
 		}
 		$this->form_fields   = forminator_addon_format_form_fields( $custom_form );
 		$this->form_settings = forminator_addon_format_form_settings( $custom_form );
+
+		$this->_update_form_settings_error_message = esc_html__(
+			'The update to your settings for this form failed, check the form input and try again.',
+			'forminator'
+		);
 	}
 
 	/**

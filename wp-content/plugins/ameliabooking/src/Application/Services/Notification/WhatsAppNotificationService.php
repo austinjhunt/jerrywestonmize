@@ -521,7 +521,9 @@ class WhatsAppNotificationService extends AbstractNotificationService
                 $components = $this->getComponentData($notification, $data);
                 $phone      = $sendTo . '_phone';
                 try {
-                    $this->sendAndUpdate($data[$phone], $notification->getWhatsAppTemplate(), $components);
+                    $customerDefaultLanguage = $cabinetType === 'customer' && $customer->getTranslations() ? json_decode($customer->getTranslations()->getValue(), true)['defaultLanguage'] : null;
+
+                    $this->sendAndUpdate($data[$phone], $notification->getWhatsAppTemplate(), $components, $customerDefaultLanguage);
                 } catch (QueryExecutionException $e) {
                 }
             }

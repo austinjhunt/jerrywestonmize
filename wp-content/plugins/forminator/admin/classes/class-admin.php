@@ -59,6 +59,9 @@ class Forminator_Admin {
 		// Add links next to plugin details.
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 3 );
 
+		// Update permissions when user profile is updated.
+		add_action( 'profile_update', array( $this, 'maybe_update_permissions' ), 10, 1 );
+
 		// Init Admin AJAX class.
 		new Forminator_Admin_AJAX();
 
@@ -730,9 +733,10 @@ class Forminator_Admin {
 	 */
 	public function add_plugin_action_links( $links ) {
 		// Settings link.
-		if ( forminator_get_admin_cap() ) {
+		if ( current_user_can( forminator_get_admin_cap() ) ) {
 			$action_links['dashboard'] = '<a href="' . admin_url( 'admin.php?page=forminator' ) . '" aria-label="' . esc_attr__( 'Go to Forminator Dashboard', 'forminator' ) . '">' . esc_html__( 'Dashboard', 'forminator' ) . '</a>';
 		}
+
 		// Documentation link.
 		$action_links['docs'] = '<a href="' . forminator_get_link( 'docs', 'forminator_pluginlist_docs' ) . '" aria-label="' . esc_attr__( 'Docs', 'forminator' ) . '" target="_blank">' . esc_html__( 'Docs', 'forminator' ) . '</a>';
 
@@ -988,5 +992,66 @@ class Forminator_Admin {
           }( jQuery ) );
         </script>
 		<?php
+	}
+
+	/**
+	 * Upon user update, check if updated user is in permissions option.
+	 */
+	public function maybe_update_permissions( $user_id = null ) {
+		$permissions = get_option( 'forminator_permissions', array() );
+		if ( empty( $permissions ) ) {
+			return;
+		}
+
+		// Check if user ID is in the permissions
+		if ( is_null( forminator_recursive_array_search( $user_id, $permissions ) ) ) {
+			return;
+		}
+
+		foreach ( $permissions as $key => $permission ) {
+			/**
+			 * For specific users.
+			 * - Add caps to the users
+			 * - Check each permission for get_avatar then retrieve it.
+			 */
+			if ( 'specific' === $permission['permission_type'] ) {
+
+				foreach( $permission['specific_user'] as $user_index => $user_id ) {
+					$user = get_user_by( 'ID', $user_id );
+
+					if ( false !== $user ) {
+						// Set user info.
+						$permissions[ $key ]['user_info'][ $user_id ]['name'] = $user->display_name;
+						$permissions[ $key ]['user_info'][ $user_id ]['email'] = $user->user_email;
+
+						// We only need avatar for first user.
+						if ( 0 === $user_index ) {
+							$permissions[ $key ]['avatar'] = get_avatar_url( $user->user_email, array( 'size' => 30 ) );
+						}
+					}
+				}
+
+			/**
+			 * For roles.
+			 * - Add caps to users under these roles.
+			 */
+			} else {
+				if ( empty(  $permission['exclude_users'] ) ) {
+					continue;
+				}
+
+				// Set user info for excluded users.
+				foreach( $permission['exclude_users'] as $user_id ) {
+					$user = get_user_by( 'ID', $user_id );
+
+					if ( false !== $user ) {
+						$permissions[ $key ]['user_info'][ $user_id ]['name'] = $user->display_name;
+						$permissions[ $key ]['user_info'][ $user_id ]['email'] = $user->user_email;
+					}
+				}
+			}
+		}
+
+		update_option( 'forminator_permissions', $permissions );
 	}
 }

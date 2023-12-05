@@ -165,7 +165,7 @@ class Resource
             'name'       => !empty($this->getName()) ? $this->getName()->getValue() : '',
             'quantity'   => !empty($this->getQuantity()) ? $this->getQuantity()->getValue() : 1,
             'shared'     => !empty($this->getShared()) ? $this->getShared()->getValue() : false,
-            'status'     => $this->getStatus()->getValue(),
+            'status'     => $this->getStatus() ? $this->getStatus()->getValue() : Status::VISIBLE,
             'entities'   => $this->getEntities(),
             'countAdditionalPeople' => $this->getCountAdditionalPeople() ? $this->getCountAdditionalPeople()->getValue() : null
         ];

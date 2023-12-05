@@ -42,7 +42,8 @@ class UpdateSettingsController extends Controller
         'sendAllCF',
         'usedLanguages',
         'ics',
-        'apiKeys'
+        'apiKeys',
+        'providerBadges'
     ];
 
     /**

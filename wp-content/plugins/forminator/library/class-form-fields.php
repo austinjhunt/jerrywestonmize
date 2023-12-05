@@ -42,9 +42,9 @@ class Forminator_Fields {
 		 */
 		$this->fields = apply_filters( 'forminator_fields', $fields );
 
-		add_action( 'wp_footer', array( &$this, 'forminator_daily_cron' ) );
+		add_action( 'init', array( &$this, 'schedule_forminator_daily_cron' ) );
 
-		add_action( 'schedule_forminator_daily_cron', array( &$this, 'cron_init' ) );
+		add_action( 'forminator_daily_cron', array( &$this, 'cron_init' ) );
 
 		add_action( 'forminator_update_version', array( &$this, 'upgrade_actions' ), 10, 2 );
 	}
@@ -107,11 +107,18 @@ class Forminator_Fields {
 	 * Set up the schedule delete file
 	 *
 	 * @since 1.13
+	 * @since 1.27 Change from WP cron to Action Scheduler
 	 */
-	public function forminator_daily_cron() {
-		if ( ! wp_next_scheduled( 'schedule_forminator_daily_cron' ) ) {
-			// Set to run after 25 hours so it will be more than 24 hours compared to file upload time
-			wp_schedule_single_event( time() + 60 * 60 * 24, 'schedule_forminator_daily_cron' );
+	public function schedule_forminator_daily_cron() {
+		// Clear old cron schedule.
+		if ( wp_next_scheduled( 'forminator_daily_cron' ) ) {
+			wp_clear_scheduled_hook( 'forminator_daily_cron' );
+		}
+
+		// Create new schedule using AS.
+		if ( false === as_has_scheduled_action( 'forminator_daily_cron' ) ) {
+			//	Set to run after 25 hours so it will be more than 24 hours compared to file upload time
+			as_schedule_single_action( strtotime( '+25 hours' ), 'forminator_daily_cron', array(), 'forminator', true );
 		}
 	}
 

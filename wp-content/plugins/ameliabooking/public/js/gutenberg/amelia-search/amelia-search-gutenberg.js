@@ -221,7 +221,7 @@
         ]
       } else {
         inspectorElements.push(el('p', {style: {'margin-bottom': '1em'}}, 'Please create category, services and employee first. You can find instructions in our documentation on link below.'));
-        inspectorElements.push(el('a', {href:'https://wpamelia.com/quickstart/', target:'_blank', style: {'margin-bottom': '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'));
+        inspectorElements.push(el('a', {href: 'https://wpamelia.com/quickstart/', target: '_blank', style: {'margin-bottom': '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'));
 
         return [
           el(blockControls, {key: 'controls'}),

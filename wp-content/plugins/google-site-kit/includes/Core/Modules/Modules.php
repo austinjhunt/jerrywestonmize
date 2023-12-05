@@ -26,7 +26,6 @@ use Google\Site_Kit\Modules\PageSpeed_Insights;
 use Google\Site_Kit\Modules\Search_Console;
 use Google\Site_Kit\Modules\Site_Verification;
 use Google\Site_Kit\Modules\Tag_Manager;
-use Google\Site_Kit\Core\Util\Build_Mode;
 use Google\Site_Kit\Core\Util\URL;
 use Exception;
 
@@ -675,7 +674,6 @@ final class Modules {
 		// Consider UA to be connected if GA4 is connected.
 		if (
 			Analytics::MODULE_SLUG === $slug &&
-			Feature_Flags::enabled( 'ga4Reporting' ) &&
 			! $module->is_connected() &&
 			$this->is_module_connected( Analytics_4::MODULE_SLUG )
 		) {

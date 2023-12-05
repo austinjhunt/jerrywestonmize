@@ -46,13 +46,6 @@ final class Forminator_Addon_Activecampaign extends Forminator_Addon_Abstract {
 	public function __construct() {
 		// late init to allow translation.
 		$this->_description                = esc_html__( 'Get awesome by your form.', 'forminator' );
-		$this->_activation_error_message   = esc_html__( 'Sorry but we failed to activate Activecampaign Integration, don\'t hesitate to contact us', 'forminator' );
-		$this->_deactivation_error_message = esc_html__( 'Sorry but we failed to deactivate Activecampaign Integration, please try again', 'forminator' );
-
-		$this->_update_settings_error_message = esc_html__(
-			'Sorry, we failed to update settings, please check your form and try again',
-			'forminator'
-		);
 
 		$this->_icon     = forminator_addon_activecampaign_assets_url() . 'icons/activecampaign.png';
 		$this->_icon_x2  = forminator_addon_activecampaign_assets_url() . 'icons/activecampaign@2x.png';

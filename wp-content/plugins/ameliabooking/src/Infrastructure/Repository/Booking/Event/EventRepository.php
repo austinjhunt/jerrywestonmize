@@ -645,6 +645,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     cb.persons AS booking_persons,
                     cb.customFields AS booking_customFields,
                     cb.info AS booking_info,
+                    cb.token AS booking_token,
                     cb.aggregatedPrice AS booking_aggregatedPrice,
                     cb.couponId AS booking_couponId,
        
@@ -1432,6 +1433,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     cb.customFields AS booking_customFields,
                     cb.info AS booking_info,
                     cb.utcOffset AS booking_utcOffset,
+                    cb.token AS booking_token,
                     cb.aggregatedPrice AS booking_aggregatedPrice,
                     
                     cu.id AS customer_id,
@@ -1855,6 +1857,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 cb.customFields AS booking_customFields,
                 cb.info AS booking_info,
                 cb.utcOffset AS booking_utcOffset,
+                cb.token AS booking_token,
                 cb.aggregatedPrice AS booking_aggregatedPrice,
             ';
 
@@ -2238,6 +2241,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             cb.customFields AS booking_customFields,
             cb.info AS booking_info,
             cb.utcOffset AS booking_utcOffset,
+            cb.token AS booking_token,
             cb.aggregatedPrice AS booking_aggregatedPrice
         ';
 

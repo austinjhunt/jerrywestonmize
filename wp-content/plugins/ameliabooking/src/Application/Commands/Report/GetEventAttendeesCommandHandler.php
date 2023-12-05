@@ -125,16 +125,21 @@ class GetEventAttendeesCommandHandler extends CommandHandler
                 }
 
 
-                if ((array_key_exists('type', $customFiled) && $customFiled['type'] === 'file') ||
-                    !$eventHasCustomField
-                ) {
+                if (!$eventHasCustomField) {
                     continue;
                 }
 
                 /** @var CustomField $item **/
                 $item = $customFieldsList->keyExists($customFieldId) ? $customFieldsList->getItem($customFieldId) : null;
                 if ($item) {
-                    if (is_array($customFiled['value'])) {
+                    if ($customFiled['type'] === 'file') {
+                        $rowCF[$item->getLabel()->getValue()] = '';
+                        foreach ($customFiled['value'] as $cfIndex => $cfFile) {
+                            $rowCF[$item->getLabel()->getValue()] .= ($cfIndex === 0 ? '' : ' | ')  . (AMELIA_UPLOADS_FILES_PATH_USE ? AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking->getId()->getValue() . '/' . $cfIndex :
+                                AMELIA_UPLOADS_FILES_URL . $booking->getId()->getValue() . '_' . $customFiled['value'][$cfIndex]['name']);
+                        }
+                        $rowCF[$item->getLabel()->getValue()] .= $delimiterSeparate;
+                    } else if (is_array($customFiled['value'])) {
                         $rowCF[$item->getLabel()->getValue()] .= implode('|', $customFiled['value']) . $delimiterSeparate;
                     } else {
                         $rowCF[$item->getLabel()->getValue()] .= $customFiled['value'] . $delimiterSeparate;
@@ -290,7 +295,17 @@ class GetEventAttendeesCommandHandler extends CommandHandler
             }
         }
 
-        $reportService->generateReport($rows, str_replace(' ', '_', $event->getName()->getValue()), $delimiter);
+        $reportService->generateReport(
+            $rows,
+            str_replace(
+                ' ',
+                '_',
+                $event->getName()->getValue() . ' ' .
+                DateTimeService::getCustomDateTimeObject($event->getPeriods()->toArray()[0]['periodStart'])
+                ->format('Y-m-d H-i')
+            ),
+            $delimiter
+        );
 
         $result->setAttachment(true);
 

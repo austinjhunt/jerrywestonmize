@@ -129,7 +129,7 @@ class Forminator_MultiValue extends Forminator_Field {
 		$post_value  = self::get_post_data( $name, self::FIELD_PROPERTY_VALUE_NOT_EXIST );
 		$name        = $name . '[]';
 		$required    = self::get_property( 'required', $field, false );
-		$options     = self::get_property( 'options', $field, array() );
+		$options     = self::get_options( $field );
 		$value_type  = trim( isset( $field['value_type'] ) ? $field['value_type'] : 'multiselect' );
 		$description = self::get_property( 'description', $field, '' );
 		$label       = esc_html( self::get_property( 'field_label', $field, '' ) );

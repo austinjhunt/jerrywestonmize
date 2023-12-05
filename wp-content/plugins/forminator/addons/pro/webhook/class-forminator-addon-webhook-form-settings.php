@@ -17,25 +17,6 @@ class Forminator_Addon_Webhook_Form_Settings extends Forminator_Addon_Form_Setti
 	protected $addon;
 
 	/**
-	 * Forminator_Addon_Webhook_Form_Settings constructor.
-	 *
-	 *
-	 *
-	 * @param Forminator_Addon_Abstract $addon
-	 * @param                           $form_id
-	 *
-	 * @throws Forminator_Addon_Exception
-	 */
-	public function __construct( Forminator_Addon_Abstract $addon, $form_id ) {
-		parent::__construct( $addon, $form_id );
-
-		$this->_update_form_settings_error_message = esc_html__(
-			'The update to your settings for this form failed, check the form input and try again.',
-			'forminator'
-		);
-	}
-
-	/**
 	 * Webhook Form Settings wizard
 	 *
 	 *

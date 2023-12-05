@@ -217,7 +217,10 @@ abstract class Command
             !($this instanceof GetSMSNotificationsHistoryCommand) &&
             !($this instanceof PaymentLinkCommand)
         ) {
-            return wp_verify_nonce($request->getQueryParams()['ameliaNonce'], 'ajax-nonce');
+            wp_verify_nonce(
+                $request->getQueryParams()['wpAmeliaNonce'] ?: $request->getQueryParams()['ameliaNonce'],
+                'ajax-nonce'
+            );
         }
 
         return true;

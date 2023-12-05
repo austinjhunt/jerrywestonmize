@@ -177,6 +177,68 @@ input[type=text].el-select__input {
     &.is-disabled {
       color: @color-gray;
     }
+
+    &.am-employee-badge-option {
+      padding: 0 8px;
+      max-width: 400px;
+      position: relative;
+      display: flex;
+      min-height: 34px;
+      align-items: center;
+
+      span {
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        padding: 0 4px;
+        color: #FFF;
+        text-align: center;
+        font-family: @roboto;
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 19px;
+        border-radius: 5px;
+      }
+    }
+
+    .am-employee-badge {
+      padding: 0 4px;
+      align-items: center;
+      border-radius: 5px;
+      font-size: 13px;
+      line-height: 19px;
+      font-weight: 600;
+      color: #FFF;
+    }
+  }
+
+  .am-manage-employee-badges {
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    //color: #1A2C37;
+    padding: 0 8px;
+    box-sizing: border-box;
+    border-top: 1px solid #D1D5D7;
+    color: #1A2C37;
+    font-family: @roboto;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    &-icon {
+      margin-right: 4px;
+    }
+
+    &.am-manage-badges-option {
+      height: 40px;
+      font-size: 14px;
+    }
   }
 }
 

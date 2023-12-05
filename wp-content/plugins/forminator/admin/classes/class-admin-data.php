@@ -91,6 +91,7 @@ class Forminator_Admin_Data {
 		// Generate addon nonce.
 		Forminator_Addon_Admin_Ajax::get_instance()->generate_nonce();
 		$id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
+		$user = wp_get_current_user();
 
 		return array(
 			'ajaxUrl'                        => forminator_ajax_url(),
@@ -174,6 +175,7 @@ class Forminator_Admin_Data {
 			'wpmudevMembership'              => forminator_get_wpmudev_membership(), // 'free'
 			'upsellModalText'                => Forminator_Admin_Addons_page::get_upsell_modal_info(),
 			'pdfExtensionsEnabled'           => $this->pdf_extensions_enabled(),
+			'userPermissions'                => $user->get_role_caps(),
 		);
 	}
 

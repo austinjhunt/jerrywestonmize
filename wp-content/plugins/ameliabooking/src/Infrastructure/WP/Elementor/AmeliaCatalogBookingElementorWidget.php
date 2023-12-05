@@ -221,28 +221,29 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             $category_service = '';
 
             $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
-        }
-        elseif ($settings['select_catalog'] === 'show_category' && count($settings['select_category']) > 0) {
-            $category_service = ' category=' . implode(',', $settings['select_category']);
+        } elseif ($settings['select_catalog'] === 'show_category' && !empty($settings['select_category'])) {
+            $category_service = ' category=' . (is_array($settings['select_category']) ?
+                    implode(',', $settings['select_category']) : $settings['select_category']);
 
             $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
-        }
-        elseif ($settings['select_catalog'] === 'show_service' && count($settings['select_service']) > 0) {
-            $category_service = ' service=' . implode(',', $settings['select_service']);
+        } elseif ($settings['select_catalog'] === 'show_service' && !empty($settings['select_service'])) {
+            $category_service = ' service=' . (is_array($settings['select_service']) ?
+                    implode(',', $settings['select_service']) : $settings['select_service']);
 
             $show = empty($settings['select_show']) || $settings['select_show'] === 'packages' ? '' : ' show=' . $settings['select_show'];
-        }
-        elseif ($settings['select_catalog'] === 'show_package' && count($settings['select_package']) > 0) {
-            $category_service = ' package=' . implode(',', $settings['select_package']);
+        } elseif ($settings['select_catalog'] === 'show_package' && !empty($settings['select_package'])) {
+            $category_service = ' package=' . (is_array($settings['select_package']) ?
+                    implode(',', $settings['select_package']) : $settings['select_package']);
         } else {
             $category_service = '';
         }
 
         if ($settings['preselect']) {
-            $employee = empty($settings['select_employee']) ? '' : ' employee=' . implode(',', $settings['select_employee']);
-            $location = empty($settings['select_location']) ? '' : ' location=' . implode(',', $settings['select_location']);
-        }
-        else {
+            $employee = empty($settings['select_employee']) ? '' : ' employee=' . (is_array($settings['select_employee']) ?
+                    implode(',', $settings['select_employee']) : $settings['select_employee']);
+            $location = empty($settings['select_location']) ? '' : ' location=' . (is_array($settings['select_location']) ?
+                    implode(',', $settings['select_location']) : $settings['select_location']);
+        } else {
             $employee = '';
             $location = '';
         }

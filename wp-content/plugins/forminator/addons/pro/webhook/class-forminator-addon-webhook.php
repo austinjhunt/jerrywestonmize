@@ -54,14 +54,6 @@ final class Forminator_Addon_Webhook extends Forminator_Addon_Abstract {
 			'<a href="https://www.workato.com/" target="_blank">'
 		);
 
-		$this->_activation_error_message   = esc_html__( 'Sorry but we failed to activate Webhook Integration, don\'t hesitate to contact us', 'forminator' );
-		$this->_deactivation_error_message = esc_html__( 'Sorry but we failed to deactivate Webhook Integration, please try again', 'forminator' );
-
-		$this->_update_settings_error_message = esc_html__(
-			'Sorry, we failed to update settings, please check your form and try again',
-			'forminator'
-		);
-
 		$this->_icon      = forminator_addon_webhook_assets_url() . 'icons/webhook.png';
 		$this->_icon_x2   = forminator_addon_webhook_assets_url() . 'icons/webhook@2x.png';
 		$this->_image     = forminator_addon_webhook_assets_url() . 'img/webhook.png';

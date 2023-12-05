@@ -11,11 +11,11 @@
  */
 
 if ( ! defined( 'FORMINATOR_VERSION' ) ) {
-	define( 'FORMINATOR_VERSION', '1.27.0' );
+	define( 'FORMINATOR_VERSION', '1.28.0' );
 }
 
 if ( ! defined( 'FORMINATOR_SUI_VERSION' ) ) {
-	define( 'FORMINATOR_SUI_VERSION', '2.12.16' );
+	define( 'FORMINATOR_SUI_VERSION', '2.12.23' );
 }
 
 if ( ! defined( 'FORMINATOR_STRIPE_LIB_VERSION' ) ) {

@@ -47,6 +47,7 @@ class AddProviderController extends Controller
         'sendEmployeePanelAccessEmail',
         'translations',
         'timeZone',
+        'badgeId',
     ];
 
     /**

@@ -1825,7 +1825,7 @@ abstract class Forminator_Render_Form {
 	 */
 	public function edit_module_link( $module_id, $module_type, $is_preview = false ) {
 		if (
-			! current_user_can( 'manage_options' ) ||
+			! current_user_can( forminator_get_permission( 'forminator-cform' ) ) ||
 			$is_preview
 		) {
 			return;

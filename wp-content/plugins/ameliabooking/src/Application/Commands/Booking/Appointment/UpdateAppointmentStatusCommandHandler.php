@@ -69,7 +69,7 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
         /** @var BookingApplicationService $bookingAS */
         $bookingAS = $this->container->get('application.booking.booking.service');
         /** @var UserApplicationService $userAS */
-        $userAS = $this->getContainer()->get('application.user.service');
+        $userAS = $command->getUserApplicationService();
         /** @var AppointmentApplicationService $appointmentAS */
         $appointmentAS = $this->container->get('application.booking.appointment.service');
         /** @var BookableApplicationService $bookableAS */

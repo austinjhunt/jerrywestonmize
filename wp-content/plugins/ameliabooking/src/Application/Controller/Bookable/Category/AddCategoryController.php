@@ -24,7 +24,10 @@ class AddCategoryController extends Controller
         'status',
         'name',
         'position',
-        'serviceList'
+        'serviceList',
+        'color',
+        'pictureFullPath',
+        'pictureThumbPath',
     ];
 
     /**

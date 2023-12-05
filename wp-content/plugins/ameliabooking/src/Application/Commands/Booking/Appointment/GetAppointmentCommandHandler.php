@@ -112,7 +112,16 @@ class GetAppointmentCommandHandler extends CommandHandler
             [
                 'bookingIds' => array_unique($bookingIds),
             ]
-        ) : new Collection();
+        ) : $appointmentRepo->getFiltered(
+            [
+                'parentId' => $appointment->getParentId() ?
+                    $appointment->getParentId()->getValue() : $appointment->getId()->getValue()
+            ]
+        );
+
+        if ($recurringAppointments->keyExists($appointment->getId()->getValue())) {
+            $recurringAppointments->deleteItem($appointment->getId()->getValue());
+        }
 
         $customerAS->removeBookingsForOtherCustomers($user, new Collection([$appointment]));
 

@@ -73,7 +73,11 @@ class CustomerBookingFactory
         }
 
         if (isset($data['customFields'])) {
-            $customerBooking->setCustomFields(new Json($data['customFields']));
+            if (is_string($data['customFields'])) {
+                $customerBooking->setCustomFields(new Json($data['customFields']));
+            } else if (json_encode($data['customFields']) !== false) {
+                $customerBooking->setCustomFields(new Json(json_encode($data['customFields'])));
+            }
         }
 
         if (isset($data['info'])) {
@@ -195,6 +199,7 @@ class CustomerBookingFactory
                     'utcOffset'       => $row['booking_utcOffset'],
                     'aggregatedPrice' => $row['booking_aggregatedPrice'],
                     'duration'        => !empty($row['booking_duration']) ? $row['booking_duration'] : null,
+                    'token'           => isset($row['booking_token']) ? $row['booking_token'] : null,
                 ];
             }
 

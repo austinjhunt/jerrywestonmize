@@ -3,6 +3,8 @@ $section                  = Forminator_Core::sanitize_text_field( 'section', 'da
 $nonce                    = wp_create_nonce( 'forminator_save_popup_uninstall_settings' );
 $forminator_uninstall     = get_option( 'forminator_uninstall_clear_data', false );
 $forminator_custom_upload = get_option( 'forminator_custom_upload', false );
+$upload_root              = get_option( 'forminator_custom_upload_root' );
+$upload_root              = ! empty( $upload_root ) ? basename( $upload_root ) : 'forminator';
 ?>
 
 <div class="sui-box" data-nav="data" style="<?php echo esc_attr( 'data' !== $section ? 'display: none;' : '' ); ?>">
@@ -100,33 +102,21 @@ $forminator_custom_upload = get_option( 'forminator_custom_upload', false );
 
                             <div data-tab-content="forminator-custom_upload-true" class="sui-tab-content sui-tab-boxed<?php echo( $forminator_custom_upload ? ' active' : '' ); ?>">
                                 <div class="sui-form-field">
-                                    <span class="sui-description">
-                                        <?php esc_html_e( 'Enter a directory path to store uploaded files', 'forminator' ); ?>
-                                    </span>
+                                    <span class="sui-field-prefix">
+                                        <?php esc_html_e( 'Enter a custom directory to store uploaded files', 'forminator' ); ?>
+									</span>
                                     <div class="sui-control-with-icon">
                                         <span class="sui-icon-folder" aria-hidden="true"></span>
                                         <input type="text"
                                            name="custom_upload_root"
-                                           value="<?php echo esc_html( forminator_upload_root() ); ?>"
-                                           class="sui-form-control"
+                                           value="<?php echo esc_html( $upload_root ); ?>"
+                                           class="sui-form-control forminator-custom-directory-value"
                                         />
                                     </div>
-                                </div>
-
-                                <div role="alert" class="sui-notice sui-active" style="display: block; text-align: left;" aria-live="assertive">
-
-                                    <div class="sui-notice-content">
-
-                                        <div class="sui-notice-message">
-
-                                            <span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
-
-                                            <p><?php esc_html_e( 'Note: If the above directory is not available, it will be automatically created.', 'forminator' ); ?></p>
-
-                                        </div>
-
-                                    </div>
-
+                                    <span class="sui-description">
+                                        <strong><?php esc_html_e( 'Path: ', 'forminator' ); ?></strong>
+                                        <span class="forminator-custom-directory"><?php esc_html_e( '/wp-content/uploads/', 'forminator' ); ?><strong><?php echo esc_html( $upload_root ); ?></strong></span>
+                                    </span>
                                 </div>
 
                             </div>

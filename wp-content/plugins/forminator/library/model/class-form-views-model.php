@@ -146,38 +146,6 @@ class Forminator_Form_Views_Model {
 	}
 
 	/**
-	 * Get the top converting form
-	 *
-	 * @since 1.0
-	 * @param string $form_type - the form type (Forminator_Base_Form_Model - post_type).
-	 * @param string $starting_date - the start date (dd-mm-yyy).
-	 * @param string $ending_date - the end date (dd-mm-yyy).
-	 *
-	 * @see _get_top_converting
-	 *
-	 * @return false|object { form_id => id, conversion => 0 }
-	 */
-	public function top_converting_form( $form_type, $starting_date = null, $ending_date = null ) {
-		return $this->_get_top_converting( $form_type, $starting_date, $ending_date );
-	}
-
-	/**
-	 * Get the most popular form
-	 *
-	 * @since 1.0
-	 * @param string $form_type - the form type (Forminator_Base_Form_Model - post_type).
-	 * @param string $starting_date - the start date (dd-mm-yyy).
-	 * @param string $ending_date - the end date (dd-mm-yyy).
-	 *
-	 * @see _get_top_converting
-	 *
-	 * @return false|object { form_id => id, views => 0 }
-	 */
-	public function most_popular_form( $form_type, $starting_date = null, $ending_date = null ) {
-		return $this->_get_most_popular( $form_type, $starting_date, $ending_date );
-	}
-
-	/**
 	 * Count data
 	 *
 	 * @since 1.0
@@ -224,75 +192,6 @@ class Forminator_Form_Views_Model {
 		}
 
 		return $date_query;
-	}
-
-	/**
-	 * Get top converting form by type
-	 *
-	 * @since 1.0
-	 * @param string $form_type - the form type.
-	 * @param string $starting_date - the start date (dd-mm-yyy).
-	 * @param string $ending_date - the end date (dd-mm-yyy).
-	 *
-	 * @return false|object { form_id => id, conversion => 0 }
-	 */
-	private function _get_top_converting( $form_type = null, $starting_date = null, $ending_date = null ) {
-		global $wpdb;
-		$entry_table_name = Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_ENTRY );
-
-		if ( ! is_null( $form_type ) && ! empty( $form_type ) ) {
-			$date_query  = $this->_generate_date_query( $wpdb, $starting_date, $ending_date, 'd.' );
-			$sql_views   = "SELECT d.form_id, SUM(d.`count`) AS views FROM {$this->get_table_name()} d LEFT JOIN {$wpdb->posts}  p ON (p.`ID` = d.`form_id`) WHERE p.post_type = %s $date_query GROUP BY d.`form_id`";
-			$sql_entries = "SELECT e.form_id, COUNT(1) AS entries FROM $entry_table_name e LEFT JOIN  {$wpdb->posts} p ON (p.`ID` = e.`form_id`) WHERE p.post_type = %s GROUP BY e.`form_id`";
-			$sql         = "SELECT v.form_id, ROUND( (( s.entries *100 )/ v.views), 1 ) AS conversion FROM ($sql_views) v LEFT JOIN ($sql_entries) s ON (s.form_id = v.form_id) WHERE v.views > 0 ORDER BY conversion DESC LIMIT 0, 1";
-
-			$sql = $wpdb->prepare( $sql, $form_type, $form_type ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		} else {
-			$date_query  = $this->_generate_date_query( $wpdb, $starting_date, $ending_date, 'd.', 'WHERE' );
-			$sql_views   = "SELECT d.form_id, SUM(d.`count`) AS views FROM {$this->get_table_name()} d $date_query GROUP BY d.`form_id`";
-			$sql_entries = "SELECT e.form_id, COUNT(1) AS entries FROM $entry_table_name e GROUP BY e.`form_id`";
-			$sql         = "SELECT v.form_id, ROUND( (( s.entries *100 )/ v.views), 1 ) AS conversion FROM ($sql_views) v LEFT JOIN ($sql_entries) s ON (s.form_id = v.form_id) WHERE v.views > 0 ORDER BY conversion DESC LIMIT 0, 1";
-		}
-
-		$results = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-
-		if ( $results && is_array( $results ) && count( $results ) > 0 ) {
-			return $results[0];
-		}
-
-		return false;
-	}
-
-
-	/**
-	 * Get most popular form by type
-	 *
-	 * @since 1.0
-	 * @param string $form_type - the form type.
-	 * @param string $starting_date - the start date (dd-mm-yyy).
-	 * @param string $ending_date - the end date (dd-mm-yyy).
-	 *
-	 * @return false|object { form_id => id, views => 0 }
-	 */
-	private function _get_most_popular( $form_type = null, $starting_date = null, $ending_date = null ) {
-		global $wpdb;
-
-		if ( ! is_null( $form_type ) && ! empty( $form_type ) ) {
-			$date_query = $this->_generate_date_query( $wpdb, $starting_date, $ending_date, 'd.' );
-			$sql        = "SELECT d.`form_id`, SUM(d.`count`) as views FROM  {$this->get_table_name()} d LEFT JOIN {$wpdb->posts} p ON (p.`ID` = d.`form_id`) WHERE p.post_type = %s $date_query GROUP BY d.`form_id` ORDER BY views DESC LIMIT 0,1";
-			$sql        = $wpdb->prepare( $sql, $form_type ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		} else {
-			$date_query = $this->_generate_date_query( $wpdb, $starting_date, $ending_date, 'd.', 'WHERE' );
-			$sql        = "SELECT d.`form_id`, SUM(d.`count`) as views FROM  {$this->get_table_name()} d $date_query GROUP BY d.`form_id` ORDER BY views DESC LIMIT 0,1";
-		}
-
-		$results = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-
-		if ( $results && is_array( $results ) && count( $results ) > 0 ) {
-			return $results[0];
-		}
-
-		return false;
 	}
 
 	/**

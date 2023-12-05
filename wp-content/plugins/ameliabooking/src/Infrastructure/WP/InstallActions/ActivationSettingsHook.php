@@ -125,6 +125,7 @@ class ActivationSettingsHook
             'requiredEmailField'                     => true,
             'itemsPerPage'                           => 12,
             'appointmentsPerPage'                    => 100,
+            'eventsPerPage'                          => 100,
             'servicesPerPage'                        => 100,
             'customersFilterLimit'                   => 100,
             'calendarEmployeesPreselected'           => 0,
@@ -768,6 +769,8 @@ This message does not have an option for responding. If you need additional info
 
         $savedSettings = $settingsService->getCategorySettings('activation');
 
+        $isNewInstallation = empty($savedSettings);
+
         $settings = [
             'showActivationSettings'        => true,
             'active'                        => false,
@@ -795,6 +798,8 @@ This message does not have an option for responding. If you need additional info
         self::initSettings('activation', $settings);
 
         $savedSettings['showAmeliaPromoCustomizePopup'] = true;
+
+        $savedSettings['isNewInstallation'] = $isNewInstallation;
 
         self::initSettings('activation', $savedSettings, true);
     }
@@ -1297,29 +1302,31 @@ This message does not have an option for responding. If you need additional info
             );
         }
 
-        $hash = $lessParserService->compileAndSave(
-            array_merge(
-                [
-                    'color-accent'         => $globalColors['primaryColor'],
-                    'color-white'          => $globalColors['textColorOnBackground'],
-                    'color-text-prime'     => $globalColors['formTextColor'],
-                    'color-text-second'    => $globalColors['formTextColor'],
-                    'color-bgr'            => $globalColors['formBackgroundColor'],
-                    'color-gradient1'      => $globalColors['formGradientColor1'],
-                    'color-gradient2'      => $globalColors['formGradientColor2'],
-                    'color-dropdown'       => $globalColors['formDropdownColor'],
-                    'color-dropdown-text'  => $globalColors['formDropdownTextColor'],
-                    'color-input'          => $globalColors['formInputColor'],
-                    'color-input-text'     => $globalColors['formInputTextColor'],
-                    'font'                 => !empty($settings['font']) ? $settings['font'] : '',
-                    'custom-font-selected' => $settings['customFontSelected'],
-                    'font-url'             => !empty($settings['fontUrl']) ? $settings['fontUrl'] : '',
-                ],
-                $settingsForm
-            )
-        );
+        if ($settingsService->getSetting('customization', 'useGenerated')) {
+            $hash = $lessParserService->compileAndSave(
+                array_merge(
+                    [
+                        'color-accent'         => $globalColors['primaryColor'],
+                        'color-white'          => $globalColors['textColorOnBackground'],
+                        'color-text-prime'     => $globalColors['formTextColor'],
+                        'color-text-second'    => $globalColors['formTextColor'],
+                        'color-bgr'            => $globalColors['formBackgroundColor'],
+                        'color-gradient1'      => $globalColors['formGradientColor1'],
+                        'color-gradient2'      => $globalColors['formGradientColor2'],
+                        'color-dropdown'       => $globalColors['formDropdownColor'],
+                        'color-dropdown-text'  => $globalColors['formDropdownTextColor'],
+                        'color-input'          => $globalColors['formInputColor'],
+                        'color-input-text'     => $globalColors['formInputTextColor'],
+                        'font'                 => !empty($settings['font']) ? $settings['font'] : '',
+                        'custom-font-selected' => $settings['customFontSelected'],
+                        'font-url'             => !empty($settings['fontUrl']) ? $settings['fontUrl'] : '',
+                    ],
+                    $settingsForm
+                )
+            );
 
-        $settings['hash'] = $hash;
+            $settings['hash'] = $hash;
+        }
 
         $settingsService->fixCustomization($settings);
 
@@ -1410,6 +1417,26 @@ This message does not have an option for responding. If you need additional info
                 'timeFrame'   => 'day',
                 'period'      => 1,
                 'from'        => 'bookingDate'
+            ],
+            'providerBadges'  => [
+                'counter' => 3,
+                'badges'  => [
+                    [
+                        'id'      => 1,
+                        'content' => 'Most Popular',
+                        'color'   => '#1246D6'
+                    ],
+                    [
+                        'id'      => 2,
+                        'content' => 'Top Performer',
+                        'color'   => '#019719'
+                    ],
+                    [
+                        'id'      => 3,
+                        'content' => 'Exclusive',
+                        'color'   => '#CCA20C'
+                    ],
+                ]
             ],
         ];
 

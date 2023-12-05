@@ -236,6 +236,7 @@ class StashApplicationService
                 'specialDayList'   => $provider->getSpecialDayList()->toArray(),
                 'translations'     => $provider->getTranslations() ? $provider->getTranslations()->getValue() : null,
                 'description'      => $provider->getDescription() ? $provider->getDescription()->getValue() : null,
+                'badgeId'          => $provider->getBadgeId() ? $provider->getBadgeId()->getValue() : null,
             ];
 
             /** @var Service $service */
