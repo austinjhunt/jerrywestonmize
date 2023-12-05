@@ -141,7 +141,11 @@ class WooCommerceService
 
                 $bookableData = self::getEntity($wc_item[self::AMELIA]);
 
-                if (empty($wc_item[self::AMELIA]['isCart']) &&
+                $isCart = isset($wc_item[self::AMELIA]['isCart']) && is_string($wc_item[self::AMELIA]['isCart'])
+                    ? filter_var($wc_item[self::AMELIA]['isCart'], FILTER_VALIDATE_BOOLEAN)
+                    : !empty($wc_item[self::AMELIA]['isCart']);
+
+                if (!$isCart &&
                     isset($bookableData['bookable']['recurringPayment']) &&
                     $bookableData['bookable']['recurringPayment'] !== null &&
                     $index > $bookableData['bookable']['recurringPayment']
@@ -569,7 +573,8 @@ class WooCommerceService
 
                     $recurringBookable = self::getEntity($recurringBookableData);
 
-                    if (!empty($wcItemAmeliaCache['isCart']) || $index < $bookableData['bookable']['recurringPayment']) {
+                    $isCart = is_string($wcItemAmeliaCache['isCart']) ? filter_var($wcItemAmeliaCache['isCart'], FILTER_VALIDATE_BOOLEAN) : !empty($wcItemAmeliaCache['isCart']);
+                    if ($isCart || $index < $bookableData['bookable']['recurringPayment']) {
                         $recurringPaymentAmount = self::getBookingPaymentAmount(
                             $recurringBookableData,
                             $recurringBookable
@@ -638,14 +643,14 @@ class WooCommerceService
     }
 
     /**
-     * Get payment amount for booking
+     * Get payment price for booking
      *
      * @param $wcItemAmeliaCache
      * @param $booking
      *
      * @return float
      */
-    private static function getBookingPaymentAmount($wcItemAmeliaCache, $booking)
+    private static function getBookingPaymentPrice($wcItemAmeliaCache, $booking)
     {
         $extras = [];
 
@@ -664,7 +669,7 @@ class WooCommerceService
             $booking['bookable']['customPricing']['durations'][$duration]['price'] : $booking['bookable']['price'];
 
         $price = (float)$basePrice *
-            ($booking['bookable']['aggregatedPrice'] ? $wcItemAmeliaCache['bookings'][0]['persons'] : 1);
+            (!empty($booking['bookable']['aggregatedPrice']) ? $wcItemAmeliaCache['bookings'][0]['persons'] : 1);
 
         if (!empty($wcItemAmeliaCache['bookings'][0]['ticketsData'])) {
             $ticketSumPrice = 0;
@@ -675,7 +680,7 @@ class WooCommerceService
                     $booking['bookable']['customTickets'][$ticketData['eventTicketId']]['price'];
 
                 $ticketSumPrice += $ticketData['persons'] ?
-                    ($booking['bookable']['aggregatedPrice'] || (int)$ticketData['persons'] === 0 ? (int)$ticketData['persons'] : 1) * $ticketPrice : 0;
+                    (!empty($booking['bookable']['aggregatedPrice']) || (int)$ticketData['persons'] === 0 ? (int)$ticketData['persons'] : 1) * $ticketPrice : 0;
             }
 
             $price = $ticketSumPrice;
@@ -691,10 +696,25 @@ class WooCommerceService
                 $extra['quantity'];
         }
 
+        return $price;
+    }
+
+    /**
+     * Get payment amount for booking
+     *
+     * @param $wcItemAmeliaCache
+     * @param $booking
+     *
+     * @return float
+     */
+    private static function getBookingPaymentAmount($wcItemAmeliaCache, $booking)
+    {
+        $price = self::getBookingPaymentPrice($wcItemAmeliaCache, $booking);
+
         if ($wcItemAmeliaCache['couponId'] && isset($booking['coupons'][$wcItemAmeliaCache['couponId']])) {
             $subtraction = $price / 100 *
-                ($wcItemAmeliaCache['couponId'] ? $booking['coupons'][$wcItemAmeliaCache['couponId']]['discount'] : 0) +
-                ($wcItemAmeliaCache['couponId'] ? $booking['coupons'][$wcItemAmeliaCache['couponId']]['deduction'] : 0);
+                $booking['coupons'][$wcItemAmeliaCache['couponId']]['discount'] +
+                $booking['coupons'][$wcItemAmeliaCache['couponId']]['deduction'];
 
             return round($price - $subtraction, 2);
         }
@@ -1078,7 +1098,12 @@ class WooCommerceService
 
                     $bookableData = self::getEntity($wc_item[self::AMELIA]);
 
-                    if (empty($wc_item[self::AMELIA]['isCart']) &&
+                    $isCart = isset($wc_item[self::AMELIA]['isCart']) && is_string($wc_item[self::AMELIA]['isCart'])
+                        ? filter_var($wc_item[self::AMELIA]['isCart'], FILTER_VALIDATE_BOOLEAN)
+                        : !empty($wc_item[self::AMELIA]['isCart']);
+
+                    if (!$isCart &&
+                        isset($bookableData['bookable']['recurringPayment']) &&
                         $bookableData['bookable']['recurringPayment'] !== null &&
                         $index > $bookableData['bookable']['recurringPayment']
                     ) {
@@ -1144,6 +1169,8 @@ class WooCommerceService
             $recurringData['bookings'][0]['utcOffset'] = $item['utcOffset'];
 
             $recurringData['bookings'][0]['extras'] = $item['extras'];
+
+            $recurringData['dateTimeValues'] = $item['dateTimeValues'];
 
             $recurringData['bookings'][0]['persons'] = $item['persons'];
 
@@ -1497,9 +1524,9 @@ class WooCommerceService
 
             $couponUsed = [];
 
-            if (!empty($wc_item[self::AMELIA]['couponId'])) {
+            if (!empty($wc_item[self::AMELIA]['couponId']) && !empty($wc_item[self::AMELIA]['couponCode'])) {
                 $couponUsed = [
-                    '<strong>' . FrontendStrings::getCommonStrings()['coupon_used'] . '</strong>'
+                    '<strong>' . FrontendStrings::getCommonStrings()['coupon_used'] . ':</strong> ' . $wc_item[self::AMELIA]['couponCode']
                 ];
             }
 
@@ -1539,7 +1566,11 @@ class WooCommerceService
 
             $recurringInfo = [];
 
-            $recurringItems = !empty($wc_item[self::AMELIA]['recurring']) && empty($wc_item[self::AMELIA]['isCart'])
+            $isCart = isset($wc_item[self::AMELIA]['isCart']) && is_string($wc_item[self::AMELIA]['isCart'])
+                ? filter_var($wc_item[self::AMELIA]['isCart'], FILTER_VALIDATE_BOOLEAN)
+                : !empty($wc_item[self::AMELIA]['isCart']);
+
+            $recurringItems = !empty($wc_item[self::AMELIA]['recurring']) && !$isCart
                 ? $wc_item[self::AMELIA]['recurring'] : [];
 
             foreach ($recurringItems as $index => $recurringReservation) {
@@ -1752,14 +1783,16 @@ class WooCommerceService
                 }
 
                 $reservationData['bookings'][0]['customFields'] =
-                    $reservationData['bookings'][0]['customFields'] ? json_encode($reservationData['bookings'][0]['customFields']) : '';
+                    $reservationData['bookings'][0]['customFields'] ?
+                        (is_string($reservationData['bookings'][0]['customFields']) ?
+                            $reservationData['bookings'][0]['customFields'] : json_encode($reservationData['bookings'][0]['customFields'])) : '';
 
                 $reservationData['bookings'][0]['isChangedStatus'] = true;
 
                 $reservationData['isForCustomer'] = true;
 
                 $paymentData = self::getReservationPaymentAmount($wc_item[self::AMELIA]);
-                $reservationData['bookings'][0]['price'] = $paymentData['bookingPrice'];
+                $reservationData['bookings'][0]['price'] = self::getBookingPaymentPrice($wc_item[self::AMELIA], $booking);
 
                 $placeholderData = $placeholderService->getPlaceholdersData(
                     $reservationData,

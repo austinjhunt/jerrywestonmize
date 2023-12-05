@@ -148,6 +148,23 @@ class GetPaymentsCommandHandler extends CommandHandler
                 $row[BackendStrings::getCommonStrings()['coupon_code']] = ($payment['coupon'] ? $payment['coupon']['code'] : '');
             }
 
+
+            if (in_array('paymentCreated', $params['fields'], true)) {
+                $row[BackendStrings::getFinanceStrings()['payment_created']] =
+                    DateTimeService::getCustomDateTimeObject($payment['created'])
+                        ->format($dateFormat . ' ' . $timeFormat)
+                    . (!empty($payment['secondaryPayments']) ? ', ' . implode(
+                        ', ',
+                        array_map(
+                            function ($val) use ($dateFormat, $timeFormat) {
+                                return DateTimeService::getCustomDateTimeObject($val['created'])
+                                    ->format($dateFormat . ' ' . $timeFormat);
+                            },
+                            $payment['secondaryPayments']
+                        )
+                    ) : '');
+            }
+
             $row = apply_filters('amelia_before_csv_export_payments', $row, $payment);
 
             $rows[] = $row;

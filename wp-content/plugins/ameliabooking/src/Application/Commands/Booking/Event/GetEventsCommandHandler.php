@@ -66,7 +66,7 @@ class GetEventsCommandHandler extends CommandHandler
         /** @var AbstractUser $user */
         $user = null;
 
-        $isFrontEnd = isset($params['page']);
+        $isFrontEnd = isset($params['page']) && empty($params['group']);
 
         $isCalendarPage = $isFrontEnd && (int)$params['page'] === 0;
 
@@ -117,7 +117,7 @@ class GetEventsCommandHandler extends CommandHandler
 
         $filteredEventIds = $eventRepository->getFilteredIds(
             $params,
-            $settingsDS->getSetting('general', 'itemsPerPage')
+            !empty($params['limit']) ? $params['limit'] : $settingsDS->getSetting('general', 'itemsPerPage')
         );
 
         if ($isCabinetPage) {

@@ -209,6 +209,10 @@ class UserFactory
                     $user->setDescription(new Description($data['description']));
                 }
 
+                if (!empty($data['badgeId'])) {
+                    $user->setBadgeId(new Id($data['badgeId']));
+                }
+
                 break;
             case 'manager':
                 $user = new Manager(

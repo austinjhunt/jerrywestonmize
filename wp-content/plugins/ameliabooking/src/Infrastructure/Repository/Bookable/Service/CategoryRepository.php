@@ -31,17 +31,20 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
         $data = $entity->toArray();
 
         $params = [
-            ':status'       => $data['status'],
-            ':name'         => $data['name'],
-            ':position'     => $data['position'],
-            ':translations' => $data['translations'],
+            ':status'           => $data['status'],
+            ':name'             => $data['name'],
+            ':position'         => $data['position'],
+            ':color'            => $data['color'],
+            ':pictureFullPath'  => $data['pictureFullPath'],
+            ':pictureThumbPath' => $data['pictureThumbPath'],
+            ':translations'     => $data['translations'],
         ];
 
         try {
             $statement = $this->connection->prepare(
                 "INSERT INTO {$this->table} 
-                (`status`, `name`, `position`, `translations`)
-                VALUES (:status, :name, :position, :translations)"
+                (`status`, `name`, `position`, `translations`, `color`, `pictureFullPath`, `pictureThumbPath`)
+                VALUES (:status, :name, :position, :translations, :color, :pictureFullPath, :pictureThumbPath)"
             );
 
             $res = $statement->execute($params);
@@ -68,17 +71,20 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
         $data = $entity->toArray();
 
         $params = [
-            ':status'       => $data['status'],
-            ':name'         => $data['name'],
-            ':position'     => $data['position'],
-            ':translations' => $data['translations'],
-            ':id'           => $id
+            ':status'           => $data['status'],
+            ':name'             => $data['name'],
+            ':position'         => $data['position'],
+            ':translations'     => $data['translations'],
+            ':color'            => $data['color'],
+            ':pictureFullPath'  => $data['pictureFullPath'],
+            ':pictureThumbPath' => $data['pictureThumbPath'],
+            ':id'               => $id
         ];
 
         try {
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
-                SET `status` = :status, `name` = :name, `position` = :position, `translations` = :translations
+                SET `status` = :status, `name` = :name, `position` = :position, `translations` = :translations, `color` = :color, `pictureFullPath` = :pictureFullPath, `pictureThumbPath` = :pictureThumbPath
                 WHERE id = :id"
             );
 

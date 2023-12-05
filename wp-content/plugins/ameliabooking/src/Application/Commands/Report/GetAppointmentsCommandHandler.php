@@ -104,7 +104,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                 foreach ((array)$appointment['bookings'] as $booking) {
                     $customFieldsJson = json_decode($booking['customFields'], true);
                     foreach ((array)$customFieldsJson as $cfId => $customFiled) {
-                        if ($customFiled['type'] !== 'file' && !in_array($cfId, array_keys($customFields))) {
+                        if (!in_array($cfId, array_keys($customFields))) {
                             /** @var CustomField $item **/
                             $item = $allCustomFields->keyExists($cfId) ? $allCustomFields->getItem($cfId) : null;
                             if ($item) {
@@ -159,7 +159,13 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         $value = '';
                         foreach ((array)$customFieldsJson as $cfId => $customFiled) {
                             if ($cfId === $customFieldId) {
-                                if (is_array($customFiled['value'])) {
+                                if ($customFiled['type'] === 'file') {
+                                    $value = '';
+                                    foreach ($customFiled['value'] as $cfIndex => $cfFile) {
+                                        $value .= ($cfIndex === 0 ? '' : ' | ')  . (AMELIA_UPLOADS_FILES_PATH_USE ? AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking['id'] . '/' . $cfIndex :
+                                            AMELIA_UPLOADS_FILES_URL . $booking['id'] . '_' . $customFiled['value'][$cfIndex]['name']);
+                                    }
+                                } else if (is_array($customFiled['value'])) {
                                     $value = implode('|', $customFiled['value']);
                                 } else {
                                     $value = $customFiled['value'];
@@ -206,7 +212,13 @@ class GetAppointmentsCommandHandler extends CommandHandler
                             $value = '';
                             foreach ((array)$customFieldsJson as $cfId => $customFiled) {
                                 if ($cfId === $customFieldId) {
-                                    if (is_array($customFiled['value'])) {
+                                    if ($customFiled['type'] === 'file') {
+                                        $value = '';
+                                        foreach ($customFiled['value'] as $cfIndex => $cfFile) {
+                                            $value .= ($cfIndex === 0 ? '' : ' | ')  . (AMELIA_UPLOADS_FILES_PATH_USE ? AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking['id'] . '/' . $cfIndex :
+                                                AMELIA_UPLOADS_FILES_URL . $booking['id'] . '_' . $customFiled['value'][$cfIndex]['name']);
+                                        }
+                                    } else if (is_array($customFiled['value'])) {
                                         $value = implode('|', $customFiled['value']);
                                     } else {
                                         $value = $customFiled['value'];

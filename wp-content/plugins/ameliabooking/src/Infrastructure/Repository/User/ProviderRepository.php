@@ -184,6 +184,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.pictureThumbPath AS picture_thumb_path,
                     u.zoomUserId AS user_zoom_user_id,
                     u.translations AS user_translations,
+                    u.badgeId AS badge_id,
                     gd.id AS google_calendar_id,
                     gd.token AS google_calendar_token,
                     gd.calendarId AS google_calendar_calendar_id,
@@ -243,6 +244,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.pictureFullPath AS picture_full_path,
                     u.pictureThumbPath AS picture_thumb_path,
                     u.translations AS user_translations,
+                    u.badgeId AS user_badge_id,
                     lt.locationId AS user_locationId
                 FROM {$this->table} u
                 LEFT JOIN {$this->providerLocationTable} lt ON lt.userId = u.id
@@ -593,6 +595,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.pictureThumbPath AS picture_thumb_path,
                     u.translations AS user_translations,
                     u.timeZone AS user_timeZone,
+                    u.badgeId AS badge_id,
                     plt.locationId AS user_locationId,
                     pst.serviceId AS service_id,
                     pst.price AS service_price,
@@ -1847,6 +1850,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 'specialDayList'   => [],
                 'serviceList'      => [],
                 'timeZone'         => isset($row['user_timeZone']) ? $row['user_timeZone'] : null,
+                'badgeId'          => isset($row['badge_id']) ? $row['badge_id'] : null,
             ];
         }
 

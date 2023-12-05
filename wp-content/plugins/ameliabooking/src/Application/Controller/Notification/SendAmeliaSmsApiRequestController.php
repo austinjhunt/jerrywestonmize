@@ -19,7 +19,7 @@ class SendAmeliaSmsApiRequestController extends Controller
      * @var array
      */
     protected $allowedFields = [
-        'action',
+        'process',
         'data',
         'type'
     ];

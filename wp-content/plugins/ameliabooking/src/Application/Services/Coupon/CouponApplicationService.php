@@ -193,10 +193,14 @@ class CouponApplicationService
         /** @var CustomerBookingRepository $customerBookingRepository */
         $customerBookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
+        /** @var PackageCustomerRepository $packageCustomerRepository */
+        $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
+
         return $couponServiceRepository->deleteByEntityId($coupon->getId()->getValue(), 'couponId') &&
             $couponEventRepository->deleteByEntityId($coupon->getId()->getValue(), 'couponId') &&
             $couponPackageRepository->deleteByEntityId($coupon->getId()->getValue(), 'couponId') &&
             $customerBookingRepository->updateByEntityId($coupon->getId()->getValue(), null, 'couponId') &&
+            $packageCustomerRepository->updateByEntityId($coupon->getId()->getValue(), null, 'couponId') &&
             $couponRepository->delete($coupon->getId()->getValue());
     }
 

@@ -95,6 +95,10 @@ class UpdateProviderCommandHandler extends CommandHandler
 
         $entityService->removeMissingEntitiesForProvider($providerData);
 
+        if (!!$oldUser->getBadgeId() && !isset($providerData['badgeId'])) {
+            $providerData['badgeId'] = null;
+        }
+
         /** @var Provider $newUser */
         $newUser = UserFactory::create(array_merge($oldUser->toArray(), $providerData));
 

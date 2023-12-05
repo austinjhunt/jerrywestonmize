@@ -210,6 +210,15 @@ class AddAppointmentCommandHandler extends CommandHandler
                 ]
             );
 
+            if ($appointment->getBookings() &&
+                $appointment->getBookings()->keyExists(0) &&
+                $appointment->getBookings()->getItem(0)->getPayments() &&
+                $appointment->getBookings()->getItem(0)->getPayments()->keyExists(0)
+            ) {
+                $paymentData['parentId'] =
+                    $appointment->getBookings()->getItem(0)->getPayments()->getItem(0)->getId()->getValue();
+            }
+
             $appointmentAS->convertTime($recurringAppointmentData);
 
             /** @var Appointment $recurringAppointment */

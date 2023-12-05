@@ -25,6 +25,9 @@ class UpdateCategoryController extends Controller
         'name',
         'position',
         'translations',
+        'color',
+        'pictureFullPath',
+        'pictureThumbPath',
     ];
 
     /**

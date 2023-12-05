@@ -55,7 +55,7 @@ class EventEventsListener implements ListenerInterface
     public function handle(EventInterface $event, $param = null)
     {
         // Handling the events
-        if ($param->getResult() !== 'error') {
+        if ($param->getResult() !== CommandResult::RESULT_ERROR && $param->getResult() !== CommandResult::RESULT_CONFLICT) {
             ThriveAutomatorService::initItems();
 
             switch ($event->getName()) {

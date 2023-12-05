@@ -159,7 +159,7 @@ class AppointmentReservationService extends AbstractReservationService
 
         $reservation->setApplyDeposit(new BooleanValueObject($reservation->getBooking()->getDeposit()->getValue()));
 
-        $reservation->setIsCart(new BooleanValueObject(!empty($appointmentData['isCart'])));
+        $reservation->setIsCart(new BooleanValueObject(is_string($appointmentData['isCart']) ? filter_var($appointmentData['isCart'], FILTER_VALIDATE_BOOLEAN) : !empty($appointmentData['isCart'])));
 
         /** @var Payment $payment */
         $payment = $save && $reservation->getBooking() && $reservation->getBooking()->getPayments()->length() ?
@@ -188,7 +188,7 @@ class AppointmentReservationService extends AbstractReservationService
                     ]
                 );
 
-                if (!empty($appointmentData['isCart'])) {
+                if ($reservation->isCart() && $reservation->isCart()->getValue()) {
                     if (isset($recurringData['extras'])) {
                         $recurringAppointmentData['bookings'][0]['extras'] = $recurringData['extras'];
                     }
@@ -802,6 +802,12 @@ class AppointmentReservationService extends AbstractReservationService
                         $recurringReservation->getReservation()->getBookingEnd()->getValue()->format('Y-m-d H:i:s'),
                     'notifyParticipants' => $recurringReservation->getReservation()->isNotifyParticipants(),
                     'status'             => $recurringReservation->getReservation()->getStatus()->getValue(),
+                    'dateTimeValues'     => [
+                        [
+                            'start' => $recurringReservation->getReservation()->getBookingStart()->getValue()->format('Y-m-d H:i'),
+                            'end'   => $recurringReservation->getReservation()->getBookingEnd()->getValue()->format('Y-m-d H:i'),
+                        ]
+                    ],
                     'persons'            => $recurringReservation->getBooking()->getPersons()->getValue(),
                     'extras'             => [],
                     'duration'           => $recurringReservation->getBooking()->getDuration()
@@ -862,8 +868,8 @@ class AppointmentReservationService extends AbstractReservationService
                     'end'   => $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i'),
                 ]
             ],
-            'allCustomFields'    => !empty($requestData['bookings'][0]['customFields']) ?
-                $requestData['bookings'][0]['customFields'] : null,
+            'allCustomFields'    => $booking->getCustomFields() && $booking->getCustomFields()->getValue() ?
+                json_decode($booking->getCustomFields()->getValue(), true) : null,
             'notifyParticipants' => $appointment->isNotifyParticipants(),
             'bookings'           => [
                 [

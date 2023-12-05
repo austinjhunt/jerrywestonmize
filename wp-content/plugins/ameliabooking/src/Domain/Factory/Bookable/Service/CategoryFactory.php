@@ -7,6 +7,8 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\Category;
 use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\PositiveInteger;
+use AmeliaBooking\Domain\ValueObjects\Picture;
+use AmeliaBooking\Domain\ValueObjects\String\Color;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 
@@ -28,7 +30,8 @@ class CategoryFactory
         $category = new Category(
             new Status($data['status']),
             new Name($data['name']),
-            new PositiveInteger($data['position'])
+            new PositiveInteger($data['position']),
+            new Color($data['color'])
         );
 
         if (isset($data['id'])) {
@@ -48,6 +51,14 @@ class CategoryFactory
 
         if (isset($data['translations'])) {
             $category->setTranslations(new Json($data['translations']));
+        }
+
+        if (isset($data['color'])) {
+            $category->setColor(new Color($data['color']));
+        }
+
+        if (!empty($data['pictureFullPath']) && !empty($data['pictureThumbPath'])) {
+            $category->setPicture(new Picture($data['pictureFullPath'], $data['pictureThumbPath']));
         }
 
         return $category;

@@ -189,7 +189,7 @@ function ameliaPluginActionCallback (pluginActionUrl, pluginActionText) {
       loader.style.display = 'block';
 
       if (checkBox.checked !== wpAmeliaDeleteSettings) {
-        jQuery.post(wpAmeliaActionURL + '/settings&ameliaNonce=' + wpAmeliaNonce, {activation: {deleteTables: checkBox.checked ? 1 : 0}})
+        jQuery.post(wpAmeliaActionURL + '/settings&wpAmeliaNonce=' + wpAmeliaNonce, {activation: {deleteTables: checkBox.checked ? 1 : 0}})
           .done(function (data) {
             window.location.href = pluginActionUrl;
           })

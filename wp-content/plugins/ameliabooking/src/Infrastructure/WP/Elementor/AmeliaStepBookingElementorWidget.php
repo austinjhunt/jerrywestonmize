@@ -173,17 +173,23 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
     protected function render() {
         $settings = $this->get_settings_for_display();
 
-        $trigger = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
+        $trigger      = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
         $trigger_type = $settings['load_manually'] && $settings['trigger_type'] !== '' ? ' trigger_type=' . $settings['trigger_type'] : '';
-        $in_dialog = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
+        $in_dialog    = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
 
-        $category = empty($settings['select_category']) ? '' : ' category=' . implode(',', $settings['select_category']);
-        $service  = empty($settings['select_service']) ? '' : ' service=' . implode(',', $settings['select_service']);
+        $category = empty($settings['select_category']) ? '' : ' category=' . (is_array($settings['select_category']) ?
+                implode(',', $settings['select_category']) : $settings['select_category']);
+        $service  = empty($settings['select_service']) ? '' : ' service=' . (is_array($settings['select_service']) ?
+                implode(',', $settings['select_service']) : $settings['select_service']);
+
         $category_service = empty($settings['select_service']) ? $category : $service;
 
-        $employee = empty($settings['select_employee']) ? '' : ' employee=' . implode(',', $settings['select_employee']);
-        $location = empty($settings['select_location']) ? '' : ' location=' . implode(',', $settings['select_location']);
-        $package  = empty($settings['select_package'])  ? '' : ' package=' . implode(',', $settings['select_package']);
+        $employee = empty($settings['select_employee']) ? '' : ' employee=' . (is_array($settings['select_employee']) ?
+                implode(',', $settings['select_employee']) : $settings['select_employee']);
+        $location = empty($settings['select_location']) ? '' : ' location=' . (is_array($settings['select_location']) ?
+                implode(',', $settings['select_location']) : $settings['select_location']);
+        $package  = empty($settings['select_package'])  ? '' : ' package=' .  (is_array($settings['select_package']) ?
+                implode(',', $settings['select_package']) : $settings['select_package']);
 
         $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
 

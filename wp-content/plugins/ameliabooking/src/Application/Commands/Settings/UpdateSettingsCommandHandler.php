@@ -305,6 +305,16 @@ class UpdateSettingsCommandHandler extends CommandHandler
             unset($settingsFields['sendAllCF']);
         }
 
+        if ($command->getField('providerBadges') !== null) {
+            $rolesSettings = $settingsService->getCategorySettings('roles');
+
+            $settingsFields['roles'] = $rolesSettings;
+
+            $settingsFields['roles']['providerBadges'] = $command->getField('providerBadges');
+
+            unset($settingsFields['providerBadges']);
+        }
+
         if (!$settingsService->getCategorySettings('activation')['stash'] &&
             !empty($settingsFields['activation']['stash'])
         ) {

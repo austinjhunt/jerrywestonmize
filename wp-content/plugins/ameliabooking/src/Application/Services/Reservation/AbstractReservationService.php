@@ -232,7 +232,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             return $result;
         }
 
-        $this->finalize($result, $reservation, new BookingType($type), !empty($data['isCart']));
+        $this->finalize($result, $reservation, new BookingType($type), is_string($data['isCart']) ? filter_var($data['isCart'], FILTER_VALIDATE_BOOLEAN) : !empty($data['isCart']));
 
         $paymentAS->setPaymentTransactionId(
             !empty($result->getData()['payment']['id']) ? $result->getData()['payment']['id'] : null,

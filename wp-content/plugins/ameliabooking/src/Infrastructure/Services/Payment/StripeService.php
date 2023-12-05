@@ -37,11 +37,11 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
         if ($data['paymentMethodId']) {
             $stripeData = [
-                'payment_method' => $data['paymentMethodId'],
-                'amount' => $data['amount'],
-                'currency' => $this->settingsService->getCategorySettings('payments')['currency'],
-                'confirmation_method' => 'manual',
-                'confirm' => true,
+                'payment_method'       => $data['paymentMethodId'],
+                'amount'               => $data['amount'],
+                'currency'             => $this->settingsService->getCategorySettings('payments')['currency'],
+                'confirmation_method'  => 'manual',
+                'confirm'              => true,
                 'payment_method_types' => ['card'],
             ];
 
@@ -53,18 +53,9 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 $stripeData['metadata'] = $data['metaData'];
             }
 
-            // BEGIN MODS
-
-            if ($data['metaData']['Customer Email']) {
-                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
-            }
-            // also added a fallback description since that was appearing as null on the Stripe side
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
-            } else {
-                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
-            // END MODS
 
             $stripeData = apply_filters(
                 'amelia_before_stripe_payment',
@@ -87,14 +78,14 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
         if ($intent && ($intent->status === 'requires_action' || $intent->status === 'requires_source_action') && $intent->next_action->type === 'use_stripe_sdk') {
             $response = [
-                'requiresAction' => true,
+                'requiresAction'            => true,
                 'paymentIntentClientSecret' => $intent->client_secret,
-                'paymentIntentId' => $intent->getLastResponse()->json['id']
+                'paymentIntentId'           => $intent->getLastResponse()->json['id']
             ];
         } else if ($intent && ($intent->status === 'succeeded' || ($stripeSettings['manualCapture'] && $intent->status === 'requires_capture'))) {
             $response = [
                 'paymentSuccessful' => true,
-                'paymentIntentId' => $intent->getLastResponse()->json['id']
+                'paymentIntentId'   => $intent->getLastResponse()->json['id']
             ];
         } else {
             $response = [
@@ -121,9 +112,9 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
         $price = $stripe->prices->create(
             [
-                'unit_amount' => $data['amount'],
-                'currency' => $data['currency'],
-                'product_data' => ['name' => $data['description']],
+            'unit_amount' => $data['amount'],
+            'currency' => $data['currency'],
+            'product_data' => ['name' => $data['description']],
             ]
         );
 
@@ -141,7 +132,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                         'url' => $data['returnUrl'] . '&session_id={CHECKOUT_SESSION_ID}'
                     ]
                 ],
-                //                'invoice_creation' => ['enabled' => true],
+//                'invoice_creation' => ['enabled' => true],
             ];
 
             if (!empty($data['metaData'])) {
@@ -195,8 +186,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
         $secretKey = $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey'];
 
-        $stripe = new StripeClient($secretKey);
-        $response = $stripe->checkout->sessions->retrieve($sessionId);
+        $stripe   = new StripeClient($secretKey);
+        $response =  $stripe->checkout->sessions->retrieve($sessionId);
         return $response->getLastResponse()->code === 200 ? $response['payment_intent'] : null;
     }
 
@@ -209,8 +200,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
         $secretKey = $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey'];
 
-        $stripe = new StripeClient($secretKey);
+        $stripe   = new StripeClient($secretKey);
         $response = $stripe->paymentIntents->retrieve($id);
-        return $response->getLastResponse()->code === 200 ? $response->toArray()['amount'] / 100 : null;
+        return $response->getLastResponse()->code === 200 ? $response->toArray()['amount']/100 : null;
     }
 }

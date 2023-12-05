@@ -15,7 +15,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  */
 final class Description
 {
-    const MAX_LENGTH = 4095;
+    const MAX_LENGTH = 10000;
     /**
      * @var string
      */
@@ -31,8 +31,9 @@ final class Description
     public function __construct($description)
     {
         if ($description && strlen($description) > static::MAX_LENGTH) {
+            $shortDescription = substr($description, 0, 10) . '...';
             throw new InvalidArgumentException(
-                "Description \"{$description}\" must be less than " . static::MAX_LENGTH . ' chars'
+                "Description \"{$shortDescription}\" must be less than " . static::MAX_LENGTH . ' characters'
             );
         }
 

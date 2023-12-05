@@ -57,6 +57,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             ':countryPhoneIso'  => isset($data['countryPhoneIso']) ? $data['countryPhoneIso'] : null,
             ':translations'     => isset($data['translations']) ? $data['translations'] : null,
             ':timeZone'         => isset($data['timeZone']) ? $data['timeZone'] : null,
+            ':badgeId'          => isset($data['badgeId']) ? $data['badgeId'] : null,
         ];
 
         try {
@@ -80,7 +81,8 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 `usedTokens`,
                 `password`,
                 `translations`,
-                `timeZone`
+                `timeZone`,
+                `badgeId`
                 ) VALUES (
                 :type,
                 :status,
@@ -100,7 +102,8 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 :usedTokens,
                 :password,
                 :translations,
-                :timeZone
+                :timeZone,
+                :badgeId
                 )"
             );
 
@@ -145,6 +148,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             ':translations'     => isset($data['translations']) ? $data['translations'] : null,
             ':timeZone'         => isset($data['timeZone']) ? $data['timeZone'] : null,
             ':id'               => $id,
+            ':badgeId'          => isset($data['badgeId']) ? $data['badgeId'] : null,
         ];
 
         try {
@@ -166,7 +170,8 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 `pictureThumbPath` = :pictureThumbPath,
                 `password` = IFNULL(:password, `password`),
                 `translations` = :translations,
-                `timeZone` = :timeZone 
+                `timeZone` = :timeZone,
+                `badgeId` = :badgeId 
                 WHERE 
                 id = :id"
             );

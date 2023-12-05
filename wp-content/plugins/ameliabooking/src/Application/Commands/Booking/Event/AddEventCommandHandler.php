@@ -90,8 +90,15 @@ class AddEventCommandHandler extends CommandHandler
 
         $eventRepository->beginTransaction();
 
-        /** @var Event $event */
-        $event = $eventApplicationService->build($eventData);
+        try {
+            /** @var Event $event */
+            $event = $eventApplicationService->build($eventData);
+        } catch (Exception $e) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage($e->getMessage());
+            $result->setData(['message' => $e->getMessage()]);
+            return $result;
+        }
 
         try {
             /** @var Collection $events */

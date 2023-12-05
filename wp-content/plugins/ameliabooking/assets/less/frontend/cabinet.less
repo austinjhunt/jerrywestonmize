@@ -719,7 +719,7 @@
             width: 100%;
           }
 
-          .am-google-calendar-button {
+          .am-outlook-calendar-button {
             padding: 0;
             height: 40px;
             border: 1px solid transparent;
@@ -764,17 +764,89 @@
               }
             }
 
-            .am-google-calendar-button-image {
+            .am-outlook-calendar-button-image {
               float: left;
               padding: 9px;
               background: #fff;
               border-radius: 1px;
             }
 
+            .am-outlook-calendar-button-text {
+              padding: 12px 0;
+              display: inline-block;
+              margin: 0;
+            }
+          }
+
+          .am-google-calendar-button {
+            padding: 0;
+            height: 40px;
+            border: 1px solid #747775;
+            margin: inherit;
+            width: 100%;
+            background-color: #ffffff;
+            -webkit-border-radius: 1px;
+            border-radius: 1px;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
+            transition: background-color .218s, border-color .218s, box-shadow .218s;
+            -webkit-user-select: none;
+            -webkit-appearance: none;
+            background-image: none;
+            cursor: pointer;
+            outline: none;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+
+            &:hover {
+              box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+              background-color: rgba(48, 48, 48, 0.08);
+            }
+
+            &:focus {
+              box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+              background-color: rgba(48, 48, 48, 0.08);
+            }
+
+            &.connected {
+              background-color: #131314;
+              border: 1px solid #8e918f;
+
+              &:hover {
+                box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+                background-color: #131314;
+              }
+
+              &:focus {
+                box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+                background-color: #131314;
+              }
+            }
+
+            .am-google-calendar-button-image {
+              float: left;
+              padding: 9px;
+              background: transparent;
+              border-radius: 1px;
+
+              img {
+                width: 20px;
+              }
+            }
+
             .am-google-calendar-button-text {
               padding: 12px 0;
               display: inline-block;
               margin: 0;
+              color: #131314;
+
+              &.connected {
+                color: #e3e3e3;
+              }
             }
           }
 
