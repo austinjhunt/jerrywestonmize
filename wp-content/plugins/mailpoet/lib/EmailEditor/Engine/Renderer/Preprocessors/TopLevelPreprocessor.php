@@ -1,12 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace MailPoet\EmailEditor\Engine\Renderer;
+namespace MailPoet\EmailEditor\Engine\Renderer\Preprocessors;
 
 if (!defined('ABSPATH')) exit;
 
 
-class Preprocessor {
-
+class TopLevelPreprocessor implements Preprocessor {
   const SINGLE_COLUMN_TEMPLATE = [
     'blockName' => 'core/columns',
     'attrs' => [],
@@ -17,16 +16,12 @@ class Preprocessor {
     ]],
   ];
 
-  public function preprocess(array $parsedBlocks): array {
-    return $this->addTopLevelColumns($parsedBlocks);
-  }
-
   /**
    * In the editor we allow putting content blocks directly into the root level of the email.
    * But for rendering purposes it is more convenient to have them wrapped in a single column.
    * This method walks through the first level of blocks and wraps non column blocks into a single column.
    */
-  private function addTopLevelColumns(array $parsedBlocks): array {
+  public function preprocess(array $parsedBlocks, array $layoutStyles): array {
     $wrappedParsedBlocks = [];
     $nonColumnsBlocksBuffer = [];
     foreach ($parsedBlocks as $block) {
