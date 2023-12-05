@@ -138,6 +138,10 @@ class Forminator_Core {
 
 		// Post meta box.
 		add_action( 'init', array( &$this, 'post_field_meta_box' ) );
+
+		// Clean up Action Scheduler.
+		add_action( 'init', array( $this, 'schedule_action_scheduler_cleanup' ), 999 );
+		add_action( 'forminator_action_scheduler_cleanup', array( &$this, 'action_scheduler_cleanup' ) );
 	}
 
 	/**
@@ -532,6 +536,90 @@ class Forminator_Core {
 			}
 
 			return $data;
+		}
+	}
+
+	/**
+	 * Shedule the Action Scheduler cleanup every hour.
+	 *
+	 * @return mixed
+	 */
+	public function schedule_action_scheduler_cleanup() {
+		// Create new schedule using AS.
+		if ( false === as_has_scheduled_action( 'forminator_action_scheduler_cleanup' ) ) {
+			as_schedule_recurring_action( time(), HOUR_IN_SECONDS * 2, 'forminator_action_scheduler_cleanup', array(), 'forminator', true );
+		}
+	}
+
+	/**
+	 * Delete Action Scheduler actions and logs of Forminator.
+	 *
+	 * @return void
+	 */
+	public static function action_scheduler_cleanup( $db_prefix = null ) {
+		global $wpdb;
+		$is_uninstall = false;
+
+		// If null, its being called by AS action hook.
+		if ( is_null( $db_prefix ) ) {
+			$db_prefix = $wpdb->prefix;
+		} else {
+			// Plugin is being uninstalled, unschedule all and all forminator scheduled actions.
+			$is_uninstall = true;
+
+			as_unschedule_action( 'forminator_action_scheduler_cleanup', array(), 'forminator' );
+			as_unschedule_action( 'forminator_send_export', array(), 'forminator' );
+			as_unschedule_action( 'forminator_daily_cron', array(), 'forminator' );
+			as_unschedule_action( 'forminator_process_report', array(), 'forminator' );
+			as_unschedule_action( 'forminator_general_data_protection_cleanup', array(), 'forminator' );
+		}
+
+		$table_actions = $db_prefix . 'actionscheduler_actions';
+		$table_logs    = $db_prefix . 'actionscheduler_logs';
+		$table_groups  = $db_prefix . 'actionscheduler_groups';
+		$slug          = 'forminator';
+		$group_id      = (int) $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$table_groups} WHERE slug = %s", $slug ) );
+		$and           = '';
+
+		// If not uninstall, do not delete pending tasks.
+		if ( ! $is_uninstall ) {
+			$and = "AND ( as_actions.status = 'complete' || as_actions.status = 'failed' || as_actions.status = 'canceled' )";
+		}
+
+		$query = $wpdb->prepare(
+			"SELECT action_id
+			FROM {$table_actions} as_actions
+			WHERE as_actions.group_id = %s
+			" . $and . "
+			LIMIT 100",
+			$group_id,
+		);
+
+		// Delete all AS forminator actions and logs.
+		while ( $action_ids = $wpdb->get_col( $query ) ) {
+			if ( empty( $action_ids ) ) {
+				break;
+			}
+
+			$where_in = implode(
+				', ',
+				array_fill(
+					0,
+					is_array( $action_ids ) || $action_ids instanceof \Countable ? count( $action_ids ) : 0,
+					'%s'
+				)
+			);
+
+			$wpdb->query(
+				$wpdb->prepare(
+					"DELETE as_actions, as_logs
+					 FROM {$table_actions} as_actions
+					 LEFT JOIN {$table_logs} as_logs
+						ON as_actions.action_id = as_logs.action_id
+					 WHERE as_actions.action_id IN ( {$where_in} )",
+					 $action_ids
+				)
+			);
 		}
 	}
 }

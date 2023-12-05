@@ -828,7 +828,7 @@ class Forminator_Stripe extends Forminator_Field {
 
 		try {
 			// Makue sure payment ID exist.
-			if ( ! isset( Forminator_CForm_Front_Action::$prepared_data['paymentid'] ) ) {
+			if ( empty( Forminator_CForm_Front_Action::$prepared_data['paymentid'] ) ) {
 				throw new Exception( esc_html__( 'Stripe Payment ID does not exist.', 'forminator' ) );
 			}
 

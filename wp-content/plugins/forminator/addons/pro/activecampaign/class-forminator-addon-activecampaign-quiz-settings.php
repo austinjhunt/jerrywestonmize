@@ -23,25 +23,6 @@ class Forminator_Addon_Activecampaign_Quiz_Settings extends Forminator_Addon_Qui
 	protected $custom_fields;
 
 	/**
-	 * Forminator_Addon_Activecampaign_Quiz_Settings constructor.
-	 *
-	 * @since 1.0 Activecampaign Addon
-	 *
-	 * @param Forminator_Addon_Abstract $addon
-	 * @param                           $quiz_id
-	 *
-	 * @throws Forminator_Addon_Exception
-	 */
-	public function __construct( Forminator_Addon_Abstract $addon, $quiz_id ) {
-		parent::__construct( $addon, $quiz_id );
-
-		$this->_update_quiz_settings_error_message = esc_html__(
-			'The update to your settings for this quiz failed, check the quiz input and try again.',
-			'forminator'
-		);
-	}
-
-	/**
 	 * Activecampaign Quiz Settings wizard
 	 *
 	 * @since 1.0 Activecampaign Addon

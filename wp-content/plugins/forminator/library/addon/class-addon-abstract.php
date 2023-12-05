@@ -891,7 +891,12 @@ abstract class Forminator_Addon_Abstract implements Forminator_Addon_Interface {
 	 * @return string
 	 */
 	public function get_activation_error_message() {
-		return $this->_activation_error_message;
+		if ( ! empty( $this->_activation_error_message ) ) {
+			return $this->_activation_error_message;
+		}
+
+		/* translators: integration title */
+		return sprintf( esc_html__( 'Sorry but we failed to activate %s Integration, don\'t hesitate to contact us', 'forminator' ), $this->get_title() );
 	}
 
 	/**
@@ -901,7 +906,12 @@ abstract class Forminator_Addon_Abstract implements Forminator_Addon_Interface {
 	 * @return string
 	 */
 	public function get_deactivation_error_message() {
-		return $this->_deactivation_error_message;
+		if ( ! empty( $this->_deactivation_error_message ) ) {
+			return $this->_deactivation_error_message;
+		}
+
+		/* translators: integration title */
+		return sprintf( esc_html__( 'Sorry but we failed to deactivate %s Integration, please try again', 'forminator' ), $this->get_title() );
 	}
 
 	/**
@@ -911,7 +921,11 @@ abstract class Forminator_Addon_Abstract implements Forminator_Addon_Interface {
 	 * @return string
 	 */
 	public function get_update_settings_error_message() {
-		return $this->_update_settings_error_message;
+		if ( ! empty( $this->_update_settings_error_message ) ) {
+			return $this->_update_settings_error_message;
+		}
+
+		return esc_html__( 'Sorry, we failed to update settings, please check your form and try again', 'forminator' );
 	}
 
 
@@ -2818,6 +2832,6 @@ abstract class Forminator_Addon_Abstract implements Forminator_Addon_Interface {
 	final public function connection_failed() {
 
 		/* translators: integration title */
-		return sprintf( esc_html__( 'We couldn\'t connect to your %s account. Please resolve the errors below and try again.', 'forminator' ), $this->_title );
+		return sprintf( esc_html__( 'We couldn\'t connect to your %s account. Please resolve the errors below and try again.', 'forminator' ), $this->get_title() );
 	}
 }

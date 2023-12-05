@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Forminator
- * Version: 1.27.0
+ * Version: 1.28.0
  * Plugin URI:  https://wpmudev.com/project/forminator/
  * Description: Capture user information (as detailed as you like), engage users with interactive polls that show real-time results and graphs, “no wrong answer” Facebook-style quizzes and knowledge tests.
  * Author: WPMU DEV
@@ -124,11 +124,11 @@ if ( ! class_exists( 'Forminator' ) ) {
 		 * @since 1.11
 		 */
 		public static function deactivation_hook() {
-			wp_clear_scheduled_hook( 'forminator_general_data_protection_cleanup' );
-			wp_clear_scheduled_hook( 'forminator_send_export' );
-			wp_clear_scheduled_hook( 'forminator_process_report' );
-			wp_clear_scheduled_hook( 'wpmudev_scheduled_jobs' );
-			wp_clear_scheduled_hook( 'schedule_forminator_daily_cron' );
+			as_unschedule_action( 'forminator_action_scheduler_cleanup', array(), 'forminator' );
+			as_unschedule_action( 'forminator_send_export', array(), 'forminator' );
+			as_unschedule_action( 'forminator_daily_cron', array(), 'forminator' );
+			as_unschedule_action( 'forminator_process_report', array(), 'forminator' );
+			as_unschedule_action( 'forminator_general_data_protection_cleanup', array(), 'forminator' );
 		}
 
 		/**
@@ -547,4 +547,14 @@ if ( ! function_exists( 'forminator_addons_dir' ) ) {
 	function forminator_addons_dir() {
 		return trailingslashit( forminator_plugin_dir() . 'addons' );
 	}
+}
+
+if ( file_exists( forminator_plugin_dir() . 'library/external/src/Forminator/woocommerce/action-scheduler/action-scheduler.php' ) ) {
+	add_action(
+		'plugins_loaded',
+		function() {
+			require_once forminator_plugin_dir() . 'library/external/src/Forminator/woocommerce/action-scheduler/action-scheduler.php';
+		},
+		-10 // Don't change.
+	);
 }

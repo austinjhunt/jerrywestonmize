@@ -1,4 +1,5 @@
 <?php
+use Forminator\Mixpanel as FMixPanel;
 /**
  * Mixpanel main class.
  */
@@ -47,7 +48,7 @@ class Forminator_Mixpanel {
 	public function __construct() {
 		if ( null === $this->mixpanel ) {
 			// Create new mixpanel instance.
-			$this->mixpanel = \Forminator\Mixpanel::getInstance(
+			$this->mixpanel = FMixPanel::getInstance(
 				self::TOKEN,
 				array(
 					// Fix class name error due to dynamic class names are not available on prefixed lib.
@@ -56,6 +57,7 @@ class Forminator_Mixpanel {
 						'curl'   => '\Forminator\ConsumerStrategies_CurlConsumer',
 						'socket' => '\Forminator\ConsumerStrategies_SocketConsumer',
 					),
+					'consumer' => 'socket',
 				)
 			);
 
@@ -148,7 +150,7 @@ class Forminator_Mixpanel {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			'memory_limit'       => ini_get( 'memory_limit' ),
 			'max_execution_time' => ini_get( 'max_execution_time' ),
-			'os_version'         => @php_uname( 's' ),
+			'os_version'         => function_exists( 'php_uname' ) ? php_uname( 's' ) : 'unknown',
 			'competitor_plugin'  => $this->get_competitors()
 		);
 

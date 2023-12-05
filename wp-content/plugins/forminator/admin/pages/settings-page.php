@@ -242,6 +242,9 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 		if ( Forminator::is_addons_feature_enabled() ) {
 			$this->prepare_addons();
 		}
+
+		// Add js data for Permissions.
+		add_filter( 'forminator_data', array( $this, 'add_permissions_js_data' ) );
 	}
 
 	private function prepare_addons() {
@@ -258,6 +261,23 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 		);
 
 		$this->addons_list = forminator_get_registered_addons_list();
+	}
+
+	public function add_permissions_js_data( $data ) {
+		if ( ! current_user_can( forminator_get_admin_cap() ) ) {
+			return $data;
+		}
+
+		$permissions = get_option( 'forminator_permissions', array() );
+		// $permissions = json_decode( wp_unslash( $permissions ), true );
+
+		$data['mainSettings'] = array(
+			'permissions' => $permissions,
+			'modal'       => array(),
+		);
+		$data['permission_nonce'] = wp_create_nonce( 'forminator_permission_nonce' );
+
+		return $data;
 	}
 
 	public function process_request() {

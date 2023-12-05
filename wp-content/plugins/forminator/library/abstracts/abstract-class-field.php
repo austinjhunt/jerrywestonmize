@@ -233,6 +233,22 @@ abstract class Forminator_Field {
 	}
 
 	/**
+	 * Get options for radio and selectbox fields
+	 *
+	 * @param array $field Field settings.
+	 * @return array
+	 */
+	public static function get_options( $field ) {
+		$options = self::get_property( 'options', $field, array() );
+
+		if ( ! empty( $field['options_order'] ) && 'random' === $field['options_order'] ) {
+			shuffle( $options );
+		}
+
+		return $options;
+	}
+
+	/**
 	 * @since 1.0
 	 *
 	 * @param       $field

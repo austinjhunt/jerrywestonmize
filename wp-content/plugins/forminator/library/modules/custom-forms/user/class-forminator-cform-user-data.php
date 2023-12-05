@@ -37,7 +37,7 @@ class Forminator_CForm_User_Data {
 	 * @return string JSON
 	 */
 	public function approve_user() {
-		forminator_validate_ajax( 'forminatorFormEntries' );
+		forminator_validate_ajax( 'forminatorFormEntries', false, 'forminator-entries' );
 
 		$activation_key = Forminator_Core::sanitize_text_field( 'activation_key' );
 		if ( $activation_key ) {
@@ -65,7 +65,7 @@ class Forminator_CForm_User_Data {
 	 * @return string JSON
 	 */
 	public function delete_unconfirmed_user() {
-		forminator_validate_ajax( 'forminatorFormEntries' );
+		forminator_validate_ajax( 'forminatorFormEntries', false, 'forminator-entries' );
 
 		$activation_key = Forminator_Core::sanitize_text_field( 'activation_key' );
 		if ( $activation_key ) {
@@ -134,7 +134,7 @@ class Forminator_CForm_User_Data {
 	 * @return array
 	 */
 	public function resend_activation_link() {
-		forminator_validate_ajax( 'forminatorResendActivation' );
+		forminator_validate_ajax( 'forminatorResendActivation', false, 'forminator-entries' );
 		$key = Forminator_Core::sanitize_text_field( 'key' );
 
 		if ( isset( $key ) ) {
@@ -181,7 +181,7 @@ class Forminator_CForm_User_Data {
 	 * Resend Notification Email
 	 */
 	public function resend_notification_email() {
-		forminator_validate_ajax( 'forminatorResendNotificationEmail' );
+		forminator_validate_ajax( 'forminatorResendNotificationEmail', false, 'forminator-entries' );
 		$entry_id = Forminator_Core::sanitize_text_field( 'entry_id' );
 
 		if ( isset( $entry_id ) ) {

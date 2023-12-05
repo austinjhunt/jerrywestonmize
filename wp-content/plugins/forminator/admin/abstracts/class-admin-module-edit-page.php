@@ -1036,7 +1036,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			return;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'manage_forminator' ) ) {
+		if ( ! current_user_can( forminator_get_permission( 'forminator-cform' ) ) ) {
 			return;
 		}
 

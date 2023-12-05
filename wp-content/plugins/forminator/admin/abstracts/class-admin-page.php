@@ -56,7 +56,7 @@ abstract class Forminator_Admin_Page {
 			$this->page_id = add_menu_page(
 				$page_title,
 				$menu_title,
-				forminator_get_admin_cap(),
+				forminator_get_permission( $page_slug ),
 				$page_slug,
 				$render ? array( $this, 'render' ) : null,
 				$this->get_menu_icon()
@@ -66,7 +66,7 @@ abstract class Forminator_Admin_Page {
 				$parent,
 				$page_title,
 				$menu_title,
-				forminator_get_admin_cap(),
+				forminator_get_permission( $page_slug ),
 				$page_slug,
 				$render ? array( $this, 'render' ) : null
 			);

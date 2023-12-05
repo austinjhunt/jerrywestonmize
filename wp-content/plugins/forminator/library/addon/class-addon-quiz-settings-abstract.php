@@ -131,6 +131,11 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 			$this->form_fields   = ! empty( $lead_model ) ? forminator_addon_format_form_fields( $lead_model ) : array();
 			$this->form_settings = ! empty( $lead_model ) ? forminator_addon_format_form_settings( $lead_model ) : array();
 		}
+
+		$this->_update_quiz_settings_error_message = esc_html__(
+			'The update to your settings for this quiz failed, check the quiz input and try again.',
+			'forminator'
+		);
 	}
 
 	/**
@@ -651,5 +656,53 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 		);
 
 		return $address;
+	}
+
+	/**
+	 * Get fields for spesific addon field type
+	 *
+	 * @param string $type Field type.
+	 * @return array
+	 */
+	protected function get_fields_for_type( $type ) {
+		$fields = parent::get_fields_for_type( $type );
+
+		if ( 'email' === $type ) {
+			return $fields;
+		}
+
+		$quiz_fields = array_map(
+			function( $quiz_question ) {
+				return array(
+					'element_id'  => $quiz_question['slug'],
+					'field_label' => $quiz_question['title'],
+				);
+			},
+			$this->get_quiz_fields()
+		);
+		array_unshift(
+			$quiz_fields,
+			array(
+				'element_id'  => 'quiz-name',
+				'field_label' => __( 'Quiz Name', 'forminator' ),
+			)
+		);
+		if ( 'knowledge' === $this->quiz->quiz_type ) {
+			$quiz_fields[] = array(
+				'element_id'  => 'correct-answers',
+				'field_label' => __( 'Correct Answers', 'forminator' ),
+			);
+			$quiz_fields[] = array(
+				'element_id'  => 'total-answers',
+				'field_label' => __( 'Total Answers', 'forminator' ),
+			);
+		} elseif ( 'nowrong' === $this->quiz->quiz_type ) {
+			$quiz_fields[] = array(
+				'element_id'  => 'result-answers',
+				'field_label' => __( 'Result Answer', 'forminator' ),
+			);
+		}
+
+		return array_merge( $fields, $quiz_fields );
 	}
 }

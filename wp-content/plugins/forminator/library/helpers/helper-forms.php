@@ -248,60 +248,6 @@ function forminator_get_form_name( $id ) {
 }
 
 /**
- * Return top converting form name
- *
- * @since 1.0
- * @return string
- */
-function forminator_top_converting_form() {
-	$form_view      = Forminator_Form_Views_Model::get_instance();
-	$top_conversion = $form_view->top_converting_form( 'forminator_forms' );
-
-	// If no forms, break.
-	if ( ! isset( $top_conversion->form_id ) ) {
-		return '-';
-	}
-
-	return forminator_get_form_name( $top_conversion->form_id );
-}
-
-/**
- * Return top quiz
- *
- * @since 1.0
- * @return string
- */
-function forminator_most_shared_quiz() {
-	$form_view    = Forminator_Form_Views_Model::get_instance();
-	$most_popular = $form_view->most_popular_form( 'forminator_quizzes' );
-
-	// If no forms, break.
-	if ( ! isset( $most_popular->form_id ) ) {
-		return '-';
-	}
-
-	return forminator_get_form_name( $most_popular->form_id );
-}
-
-/**
- * Return most popular poll
- *
- * @since 1.0
- * @return string
- */
-function forminator_most_popular_poll() {
-	$form_view    = Forminator_Form_Views_Model::get_instance();
-	$most_popular = $form_view->most_popular_form( 'forminator_polls' );
-
-	// If no forms, break.
-	if ( ! isset( $most_popular->form_id ) ) {
-		return '-';
-	}
-
-	return forminator_get_form_name( $most_popular->form_id );
-}
-
-/**
  * Central per page for form view
  *
  * @since 1.0

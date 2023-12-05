@@ -15,7 +15,7 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 		aria-labelledby="forminator-new-feature__title"
 	>
 
-		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1270" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
+		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1280" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
 
 			<div class="sui-box-header sui-flatten sui-content-center">
 
@@ -33,53 +33,49 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 				</button>
 
 				<h3 class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: initial;">
-                    <?php esc_html_e( 'Help us improve your form building experience', 'forminator' ); ?>
+					<?php esc_html_e( 'New: User Role Permissions and Mailjet', 'forminator' ); ?>
                 </h3>
 
 				<p class="sui-description">
 					<?php
 					printf(
-					/* translators: %s: Admin name */
-						esc_html__( 'Hey there! %s, We believe Forminator is the ultimate form builder for your WordPress website. However, we understand that there`s always room for improvement. That`s why we need your support in collecting anonymous usage data to enhance the plugin`s capabilities and ensure it`s the most efficient tool for building your forms.', 'forminator' ),
-						esc_html( ucfirst( $user->display_name ) )
+						/* translators: 1. Admin name 2. Open 'b' tag 3. Close 'b' tag */
+						esc_html__( 'Hey, %1$s! We\'re thrilled to introduce our new %2$sUser Role Permissions%3$s feature and seamless %2$sMailjet Integration%3$s to take your form building experience to the next level.', 'forminator' ),
+						esc_html( ucfirst( $user->display_name ) ),
+						'<b>',
+						'</b>'
 					);
 					?>
 				</p>
-                <p class="sui-description">
-					<?php
-					printf(
-					/* Translators: 1. Opening <a> tag, 2. closing <a> tag  */
-						esc_html__( 'Your data will be completely anonymous and will never be used to identify you, and we promise to use it only to improve Forminator. Learn more about usage tracking %1$shere%2$s.', 'forminator' ),
-						'<a href="https://wpmudev.com/docs/privacy/our-plugins/#usage-tracking-fm" target="_blank">',
-						'</a>'
-					);
-					?>
-				</p>
-				<div class="sui-form-field">
 
-					<label for="forminator-new-feature-toggle" class="sui-toggle fui-highlighted-toggle">
-					
-						<input type="checkbox" id="forminator-new-feature-toggle" aria-labelledby="forminator-new-feature-toggle-label">
-						
-						<span class="sui-toggle-slider" aria-hidden="true"></span>
-						
-						<span id="forminator-new-feature-toggle-label" class="sui-toggle-label">
-                            <?php esc_html_e( 'Allow usage data collection', 'forminator' ); ?>
-                        </span>
-						
-						<span class="sui-tag sui-tag-sm sui-tag-grey" style="margin-left: 8px;">
-                            <?php esc_html_e( 'Recommended', 'forminator' ); ?>
-                        </span>
-					
-					</label>
+				<div class="sui-modal-list">
+					<ul style="text-align: left;">
 
+						<li>
+							<h3 style="margin-bottom: 0;">
+								<span class="sui-icon-check sui-sm" aria-hidden="true"></span>
+								&nbsp;&nbsp;
+								<?php esc_html_e( 'User Role Permissions', 'forminator' ); ?></h3>
+							<p class="sui-description" style="margin-bottom: 30px;"><?php esc_html_e( 'You can now control the access and management of Forminator\'s features by assigning access to selected users or user roles, ensuring tailored and secure form and data management.', 'forminator' ); ?></p>
+						</li>
+
+						<li>
+							<h3 style="margin-bottom: 0;">
+								<span class="sui-icon-check sui-sm" aria-hidden="true"></span>
+								&nbsp;&nbsp;
+								<?php esc_html_e( 'Mailjet Integration', 'forminator' ); ?>
+							</h3>
+							<p class="sui-description"><?php esc_html_e( 'With the latest version of Forminator, you can seamlessly connect and send your form submissions to Mailjet, enabling easy creation and delivery of marketing and transactional emails.', 'forminator' ); ?></p>
+						</li>
+
+					</ul>
 				</div>
 			</div>
 
 			<div class="sui-box-footer sui-flatten sui-content-center">
 
-				<button class="sui-button forminator-dismiss-new-feature" data-type="save" data-modal-close>
-					<?php esc_html_e( 'Save', 'forminator' ); ?>
+				<button class="sui-button forminator-dismiss-new-feature" data-modal-close>
+					<?php esc_html_e( 'Got it!', 'forminator' ); ?>
                 </button>
 
 			</div>

@@ -126,51 +126,62 @@ function forminator_remove_upload_files() {
 $clear_data = get_option( 'forminator_uninstall_clear_data', false );
 $usage_data = get_option( 'forminator_usage_tracking', false );
 
-global $wpdb;
-if ( $clear_data && ! is_multisite() ) {
-	$db_prefix = $wpdb->prefix;
+if ( $clear_data ) {
+	global $wpdb;
+	include_once plugin_dir_path( __FILE__ ) . 'library/class-core.php';
+	include_once plugin_dir_path( __FILE__ ) . 'library/helpers/helper-core.php';
 
-	forminator_delete_custom_options( $db_prefix );
-	forminator_delete_custom_posts( $db_prefix );
-	forminator_clear_module_submissions( $db_prefix );
-	forminator_remove_upload_files();
-	forminator_drop_custom_tables( $db_prefix );
+	if ( ! is_multisite() ) {
+		$db_prefix = $wpdb->prefix;
 
-} elseif ( $clear_data ) {
-	$sites = get_sites();
-
-	foreach ( $sites as $site ) {
-		$blog_id = $site->blog_id;
-		$db_prefix = $wpdb->get_blog_prefix( $blog_id );
-
-		forminator_delete_custom_posts( $db_prefix );
-
-		// Switch to blog before deleting options.
-		switch_to_blog( $blog_id );
+		forminator_delete_permissions();
 		forminator_delete_custom_options( $db_prefix );
-		restore_current_blog();
-
+		forminator_delete_custom_posts( $db_prefix );
 		forminator_clear_module_submissions( $db_prefix );
-
-		switch_to_blog( $blog_id );
 		forminator_remove_upload_files();
-		restore_current_blog();
-
 		forminator_drop_custom_tables( $db_prefix );
+		Forminator_Core::action_scheduler_cleanup( $db_prefix );
+
+	} else {
+		$sites = get_sites();
+
+		foreach ( $sites as $site ) {
+			$blog_id = $site->blog_id;
+			$db_prefix = $wpdb->get_blog_prefix( $blog_id );
+
+			forminator_delete_custom_posts( $db_prefix );
+
+			// Switch to blog before deleting options.
+			switch_to_blog( $blog_id );
+			forminator_delete_permissions();
+			forminator_delete_custom_options( $db_prefix );
+			restore_current_blog();
+
+			forminator_clear_module_submissions( $db_prefix );
+
+			switch_to_blog( $blog_id );
+			forminator_remove_upload_files();
+			restore_current_blog();
+
+			forminator_drop_custom_tables( $db_prefix );
+			Forminator_Core::action_scheduler_cleanup( $db_prefix );
+		}
 	}
 }
 
 include_once plugin_dir_path( __FILE__ ) . 'constants.php';
-include_once plugin_dir_path( __FILE__ ) . 'library/external/vendor/autoload.php';
-include_once plugin_dir_path( __FILE__ ) . 'library/mixpanel/class-mixpanel.php';
-Forminator_Mixpanel::get_instance();
+if ( file_exists( plugin_dir_path( __FILE__ ) . 'library/external/src/Forminator/mixpanel/mixpanel-php/lib/Mixpanel.php' ) ) {
+	include_once plugin_dir_path( __FILE__ ) . 'library/external/src/Forminator/mixpanel/mixpanel-php/lib/Mixpanel.php';
+	include_once plugin_dir_path( __FILE__ ) . 'library/mixpanel/class-mixpanel.php';
+	Forminator_Mixpanel::get_instance();
 
-/**
- * Action hook to run after plugin reset.
- *
- * @param bool $usage_data usage tracking data enable or not
- * @param bool $clear_data Uninstallation data settings reset or preserve
- *
- * @since 1.27.0
- */
-do_action( 'forminator_after_uninstall', $usage_data, $clear_data );
+	/**
+	 * Action hook to run after plugin reset.
+	 *
+	 * @param bool $usage_data usage tracking data enable or not
+	 * @param bool $clear_data Uninstallation data settings reset or preserve
+	 *
+	 * @since 1.27.0
+	 */
+	do_action( 'forminator_after_uninstall', $usage_data, $clear_data );
+}

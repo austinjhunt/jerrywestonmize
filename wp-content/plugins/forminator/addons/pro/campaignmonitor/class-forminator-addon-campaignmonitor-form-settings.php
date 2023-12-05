@@ -17,25 +17,6 @@ class Forminator_Addon_Campaignmonitor_Form_Settings extends Forminator_Addon_Fo
 	protected $addon;
 
 	/**
-	 * Forminator_Addon_Campaignmonitor_Form_Settings constructor.
-	 *
-	 * @since 1.0 Campaignmonitor Addon
-	 *
-	 * @param Forminator_Addon_Abstract $addon
-	 * @param                           $form_id
-	 *
-	 * @throws Forminator_Addon_Exception
-	 */
-	public function __construct( Forminator_Addon_Abstract $addon, $form_id ) {
-		parent::__construct( $addon, $form_id );
-
-		$this->_update_form_settings_error_message = esc_html__(
-			'The update to your settings for this form failed, check the form input and try again.',
-			'forminator'
-		);
-	}
-
-	/**
 	 * Campaignmonitor Form Settings wizard
 	 *
 	 * @since 1.0 Campaignmonitor Addon

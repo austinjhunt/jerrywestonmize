@@ -2478,6 +2478,11 @@ function forminator_custom_upload_root( $dir, $base ) {
 	$custom_upload = get_option( 'forminator_custom_upload' );
 	if ( isset( $custom_upload ) && $custom_upload ) {
 		$upload_root = get_option( 'forminator_custom_upload_root' );
+		$upload_root = basename( $upload_root );
+		if ( ! str_contains( $upload_root, $dir['basedir'] ) ) {
+			$upload_root = $dir['basedir'] . '/' . $upload_root;
+		}
+
 		if ( ! empty( $upload_root ) ) {
 			if ( 'url' === $base ) {
 				$dir_path    = str_replace( $dir['basedir'], '', $upload_root );
@@ -2776,8 +2781,11 @@ function forminator_allowed_mime_types( $mimes = array(), $allow = true ) {
 	}
 	if ( ! $allow ) {
 		$filters = array( 'htm|html', 'js', 'jse', 'jar', 'php', 'php3', 'php4', 'php5', 'phtml', 'svg', 'swf', 'exe', 'html', 'htm', 'shtml', 'xhtml', 'xml', 'css', 'asp', 'aspx', 'jsp', 'sql', 'hta', 'dll', 'bat', 'com', 'sh', 'bash', 'py', 'pl', 'dfxp' );
-		foreach ( $filters as $filter ) {
-			unset( $mimes[ $filter ] );
+		foreach ( $mimes as $mime_key ) {
+			$key = strtolower( $mime_key );
+			if ( in_array( $key, $filters, true ) ) {
+				unset( $mimes[ $mime_key ] );
+			}
 		}
 	}
 

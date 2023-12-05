@@ -19,6 +19,12 @@ $sections = apply_filters(
 		'payments'           => __( 'Payments', 'forminator' ),
 	)
 );
+
+// Show Permission settings for admins only.
+if ( current_user_can( forminator_get_admin_cap() ) ) {
+	$sections['permissions'] = __( 'Permissions', 'forminator' );
+}
+
 ?>
 <div class="sui-row-with-sidenav">
 
@@ -66,6 +72,12 @@ $sections = apply_filters(
 	<?php $this->template( 'settings/tab-payments' ); ?>
 	<?php $this->template( 'settings/tab-accessibility' ); ?>
 	<?php $this->template( 'settings/tab-import' ); ?>
+	<?php
+	// Show only for admins.
+	if ( current_user_can( forminator_get_admin_cap() ) ) {
+		$this->template( 'settings/tab-permissions' );
+	}
+	?>
 
 	<?php
 		/**

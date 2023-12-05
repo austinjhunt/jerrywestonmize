@@ -31,11 +31,6 @@ class Forminator_Addon_Slack_Form_Settings extends Forminator_Addon_Form_Setting
 	public function __construct( Forminator_Addon_Abstract $addon, $form_id ) {
 		parent::__construct( $addon, $form_id );
 
-		$this->_update_form_settings_error_message = esc_html__(
-			'The update to your settings for this form failed, check the form input and try again.',
-			'forminator'
-		);
-
 		$this->target_types = array(
 			Forminator_Addon_Slack::TARGET_TYPE_PUBLIC_CHANNEL  => esc_html__( 'Public Channel', 'forminator' ),
 			Forminator_Addon_Slack::TARGET_TYPE_PRIVATE_CHANNEL => esc_html__( 'Private Channel', 'forminator' ),

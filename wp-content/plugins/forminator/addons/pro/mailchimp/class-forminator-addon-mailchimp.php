@@ -118,13 +118,6 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 	public function __construct() {
 		// late init to allow translation.
 		$this->_description                = esc_html__( 'Make form data as Mailchimp List', 'forminator' );
-		$this->_activation_error_message   = esc_html__( 'Sorry but we failed to activate Mailchimp Integration, don\'t hesitate to contact us', 'forminator' );
-		$this->_deactivation_error_message = esc_html__( 'Sorry but we failed to deactivate Mailchimp Integration, plese try again', 'forminator' );
-
-		$this->_update_settings_error_message = esc_html__(
-			'Sorry, we failed to update settings, please check your form and try again',
-			'forminator'
-		);
 
 		$this->_icon     = forminator_addon_mailchimp_assets_url() . 'icons/mailchimp.png';
 		$this->_icon_x2  = forminator_addon_mailchimp_assets_url() . 'icons/mailchimp@2x.png';
@@ -777,7 +770,7 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 	 * AJAX load group interests
 	 */
 	public function ajax_group_interests() {
-		forminator_validate_ajax( 'forminator_mailchimp_interests' );
+		forminator_validate_ajax( 'forminator_mailchimp_interests', false, 'forminator-integrations' );
 		$html      = '';
 		$post_data = isset( $_POST['data'] ) ? Forminator_Core::sanitize_array( $_POST['data'], 'data' ) : array();
 		$data      = array();

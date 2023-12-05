@@ -84,8 +84,8 @@ class Forminator_Addon_Admin_Ajax {
 	 *
 	 * @since 1.1
 	 */
-	private function validate_ajax() {
-		if ( ! forminator_is_user_allowed() || ! check_ajax_referer( self::$_nonce_action, false, false ) ) {
+	private function validate_ajax( $page_slug = '' ) {
+		if ( ! forminator_is_user_allowed( $page_slug ) || ! check_ajax_referer( self::$_nonce_action, false, false ) ) {
 			$this->send_json_errors( esc_html__( 'Invalid request, you are not allowed to do that action.', 'forminator' ) );
 		}
 	}
@@ -97,7 +97,7 @@ class Forminator_Addon_Admin_Ajax {
 	 * @since 1.1
 	 */
 	public function deactivate() {
-		$this->validate_ajax();
+		$this->validate_ajax( 'forminator-integrations' );
 		$data  = $this->validate_and_sanitize_fields( array( 'slug' ) );
 		$slug  = $data['slug'];
 		$addon = forminator_get_addon( $slug );
@@ -140,7 +140,7 @@ class Forminator_Addon_Admin_Ajax {
 	 * @since 1.1
 	 */
 	public function settings() {
-		$this->validate_ajax();
+		$this->validate_ajax( 'forminator-integrations' );
 		$sanitized_post_data = $this->validate_and_sanitize_fields( array( 'slug', 'current_step', 'step' ) );
 		$slug                = $sanitized_post_data['slug'];
 		$step                = $sanitized_post_data['step'];
@@ -182,7 +182,7 @@ class Forminator_Addon_Admin_Ajax {
 	 * @since 1.1
 	 */
 	public function deactivate_for_module() {
-		$this->validate_ajax();
+		$this->validate_ajax( 'forminator' );
 		$sanitized_post_data = $this->validate_and_sanitize_fields( array( 'slug', 'module_id', 'module_type' ) );
 		$slug                = $sanitized_post_data['slug'];
 		$module_id           = $sanitized_post_data['module_id'];
@@ -257,7 +257,7 @@ class Forminator_Addon_Admin_Ajax {
 	 * @since 1.1
 	 */
 	public function get_addons() {
-		$this->validate_ajax();
+		$this->validate_ajax( 'forminator-integrations' );
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		$addons = forminator_get_registered_addons_grouped_by_connected();
 
@@ -436,7 +436,7 @@ class Forminator_Addon_Admin_Ajax {
 	 * Refresh email lists
 	 */
 	public function refresh_email_lists() {
-		$this->validate_ajax();
+		$this->validate_ajax( 'forminator-integrations' );
 		$sanitized_post_data = $this->validate_and_sanitize_fields( array( 'slug', 'global_id' ) );
 
 		$slug  = $sanitized_post_data['slug'];
@@ -469,7 +469,7 @@ class Forminator_Addon_Admin_Ajax {
 	 * @since 1.1
 	 */
 	public function get_module_addons() {
-		$this->validate_ajax();
+		$this->validate_ajax( 'forminator' );
 		$sanitized_post_data = $this->validate_and_sanitize_fields( array( 'module_id', 'module_type' ) );
 		$module_id           = $sanitized_post_data['module_id'];
 		$module_slug         = $sanitized_post_data['module_type'];
@@ -493,7 +493,7 @@ class Forminator_Addon_Admin_Ajax {
 	 * @since 1.1
 	 */
 	public function module_settings() {
-		$this->validate_ajax();
+		$this->validate_ajax( 'forminator' );
 		$sanitized_post_data = $this->validate_and_sanitize_fields( array( 'slug', 'step', 'module_id', 'module_type', 'current_step' ) );
 		$slug                = $sanitized_post_data['slug'];
 		$step                = $sanitized_post_data['step'];

@@ -128,7 +128,7 @@ class Forminator_Radio extends Forminator_Field {
 		$id               = 'forminator-field-' . $id;
 		$required         = self::get_property( 'required', $field, false );
 		$ariareq          = 'false';
-		$options          = self::get_property( 'options', $field, array() );
+		$options          = self::get_options( $field );
 		$value_type       = isset( $field['value_type'] ) ? trim( $field['value_type'] ) : 'multiselect';
 		$post_value       = self::get_post_data( $name, false );
 		$description      = self::get_property( 'description', $field, '' );

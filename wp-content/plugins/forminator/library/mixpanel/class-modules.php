@@ -354,10 +354,10 @@ class Forminator_Mixpanel_Modules extends Events {
 			$geo_data         = array();
 			if ( ! empty( $address_data ) ) {
 				foreach ( $address_data as $data ) {
-					if ( 'show' === $data['show_map'] ) {
+					if ( isset( $data['show_map'] ) && 'show' === $data['show_map'] ) {
 						$geo_data[] = 'Show Map';
 					}
-					if ( $data['auto_suggest'] ) {
+					if ( isset( $data['auto_suggest'] ) && $data['auto_suggest'] ) {
 						$geo_data[] = 'Autocomplete';
 					}
 				}
