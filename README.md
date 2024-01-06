@@ -54,6 +54,15 @@ function jwm_logout_url($default)
 	return 'https://jerrywestonmize.com/jwmsecure.php?' . $queryString;
 }
 
+// change login url - added on 1/6/2024 becaus login form began redirecting
+// to default wp-login.php?redirect_to ... after submission
+add_filter('login_url', 'jwm_login_url');
+function jwm_login_url($default) {
+	$parsedUrl = parse_url($default);
+	$queryString = $parsedUrl['query'];
+	return 'https://jerrywestonmize.com/jwmsecure.php?' . $queryString;
+}
+
 // change the forgot password URL on login page
 function jwm_lostpassword_url()
 {
