@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Forminator package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Forminator 1.28.0\n"
+"Project-Id-Version: Forminator 1.28.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/build\n"
-"POT-Creation-Date: 2023-11-06 12:01:37+00:00\n"
+"POT-Creation-Date: 2023-12-18 13:54:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1871,7 +1871,7 @@ msgstr ""
 
 #: addons/pro/googlesheet/class-forminator-addon-googlesheet.php:626
 #: addons/pro/trello/class-forminator-addon-trello.php:617
-#: admin/classes/class-admin.php:169 admin/classes/class-admin.php:268
+#: admin/classes/class-admin.php:171 admin/classes/class-admin.php:270
 #: admin/views/dashboard/widgets/widget-upgrade.php:7
 #: library/helpers/helper-core.php:662
 msgid "Forminator Pro"
@@ -4189,7 +4189,7 @@ msgstr ""
 
 #: admin/abstracts/class-admin-module-edit-page.php:433
 #: admin/abstracts/class-admin-module-edit-page.php:449
-#: admin/classes/class-admin-l10n.php:176 admin/classes/class-admin.php:248
+#: admin/classes/class-admin-l10n.php:176 admin/classes/class-admin.php:250
 #: admin/locale.php:262 admin/pages/reports-page.php:212
 #: admin/views/common/entries/content-none.php:2
 #: admin/views/common/entries/header.php:2
@@ -4271,17 +4271,17 @@ msgid "Plugins"
 msgstr ""
 
 #: admin/abstracts/class-admin-page.php:243
-#: admin/abstracts/class-admin-page.php:257 admin/classes/class-admin.php:822
+#: admin/abstracts/class-admin-page.php:257 admin/classes/class-admin.php:824
 msgid "Roadmap"
 msgstr ""
 
 #: admin/abstracts/class-admin-page.php:244
-#: admin/abstracts/class-admin-page.php:258 admin/classes/class-admin.php:810
+#: admin/abstracts/class-admin-page.php:258 admin/classes/class-admin.php:812
 msgid "Support"
 msgstr ""
 
 #: admin/abstracts/class-admin-page.php:245
-#: admin/abstracts/class-admin-page.php:259 admin/classes/class-admin.php:741
+#: admin/abstracts/class-admin-page.php:259 admin/classes/class-admin.php:743
 msgid "Docs"
 msgstr ""
 
@@ -4520,7 +4520,7 @@ msgstr ""
 msgid "Already a member?"
 msgstr ""
 
-#: admin/classes/class-addons-page.php:489 admin/locale.php:2431
+#: admin/classes/class-addons-page.php:489 admin/locale.php:2432
 msgid "Connect site"
 msgstr ""
 
@@ -4639,9 +4639,9 @@ msgid "Forminator encountered an error while fetching the PDF files."
 msgstr ""
 
 #: admin/classes/class-admin-ajax.php:539
-#: admin/classes/class-admin-ajax.php:2616
-#: admin/classes/class-admin-ajax.php:2646
-#: admin/classes/class-admin-ajax.php:2693 admin/locale.php:1339
+#: admin/classes/class-admin-ajax.php:2618
+#: admin/classes/class-admin-ajax.php:2648
+#: admin/classes/class-admin-ajax.php:2695 admin/locale.php:1339
 #: library/abstracts/abstract-class-front-action.php:1021
 msgid "Something went wrong."
 msgstr ""
@@ -4813,36 +4813,36 @@ msgstr ""
 msgid "You've entered an invalid live client id"
 msgstr ""
 
-#: admin/classes/class-admin-ajax.php:2268
+#: admin/classes/class-admin-ajax.php:2270
 msgid "Invalid option name"
 msgstr ""
 
-#: admin/classes/class-admin-ajax.php:2340
+#: admin/classes/class-admin-ajax.php:2342
 msgid "Invalid notification name"
 msgstr ""
 
-#: admin/classes/class-admin-ajax.php:2449
+#: admin/classes/class-admin-ajax.php:2451
 msgid "All the submissions deleted successfully."
 msgstr ""
 
-#: admin/classes/class-admin-ajax.php:2456
+#: admin/classes/class-admin-ajax.php:2458
 msgid "Submission delete failed."
 msgstr ""
 
-#: admin/classes/class-admin-ajax.php:2499
-#: admin/classes/class-admin-ajax.php:2551
+#: admin/classes/class-admin-ajax.php:2501
+#: admin/classes/class-admin-ajax.php:2553
 msgid "Required field missing"
 msgstr ""
 
-#: admin/classes/class-admin-ajax.php:2509
+#: admin/classes/class-admin-ajax.php:2511
 msgid "Unexpected action, we could not handle it."
 msgstr ""
 
-#: admin/classes/class-admin-ajax.php:2584
+#: admin/classes/class-admin-ajax.php:2586
 msgid "Current user cannot add recipient."
 msgstr ""
 
-#: admin/classes/class-admin-ajax.php:2594 library/class-export.php:220
+#: admin/classes/class-admin-ajax.php:2596 library/class-export.php:220
 msgid "Invalid email."
 msgstr ""
 
@@ -5214,7 +5214,7 @@ msgid ""
 "etc.) on your quiz."
 msgstr ""
 
-#: admin/classes/class-admin-l10n.php:127 admin/classes/class-admin.php:591
+#: admin/classes/class-admin-l10n.php:127 admin/classes/class-admin.php:593
 #: admin/views/dashboard/footer-free.php:64
 msgid "Learn more"
 msgstr ""
@@ -5289,7 +5289,7 @@ msgstr ""
 msgid "Deactivate Anyway"
 msgstr ""
 
-#: admin/classes/class-admin-l10n.php:151 admin/classes/class-admin.php:226
+#: admin/classes/class-admin-l10n.php:151 admin/classes/class-admin.php:228
 #: admin/locale.php:205 admin/views/settings/header.php:2
 #: library/modules/quizzes/admin/admin-loader.php:548
 msgid "Settings"
@@ -6410,60 +6410,60 @@ msgstr ""
 msgid "Forminator"
 msgstr ""
 
-#: admin/classes/class-admin.php:173
+#: admin/classes/class-admin.php:175
 msgid "Forminator Dashboard"
 msgstr ""
 
-#: admin/classes/class-admin.php:173 admin/classes/class-admin.php:737
+#: admin/classes/class-admin.php:175 admin/classes/class-admin.php:739
 #: admin/views/common/reports/content.php:8
 #: admin/views/common/reports/content.php:20 admin/views/dashboard/header.php:2
 #: admin/views/settings/tab-dashboard.php:4
 msgid "Dashboard"
 msgstr ""
 
-#: admin/classes/class-admin.php:194 admin/classes/class-admin.php:195
+#: admin/classes/class-admin.php:196 admin/classes/class-admin.php:197
 #: admin/locale.php:820 admin/views/integrations/header.php:2
 msgid "Integrations"
 msgstr ""
 
-#: admin/classes/class-admin.php:226
+#: admin/classes/class-admin.php:228
 msgid "Global Settings"
 msgstr ""
 
-#: admin/classes/class-admin.php:247
+#: admin/classes/class-admin.php:249
 msgid "Forminator Submissions"
 msgstr ""
 
-#: admin/classes/class-admin.php:268 admin/classes/class-admin.php:749
+#: admin/classes/class-admin.php:270 admin/classes/class-admin.php:751
 #: admin/views/upgrade/upgrade-content.php:17
 msgid "Upgrade to Forminator Pro"
 msgstr ""
 
-#: admin/classes/class-admin.php:289
+#: admin/classes/class-admin.php:291
 msgid "Forminator Add-ons"
 msgstr ""
 
-#: admin/classes/class-admin.php:290 admin/locale.php:1715
+#: admin/classes/class-admin.php:292 admin/locale.php:1715
 #: admin/views/custom-form/popup/import-cf7.php:166
 msgid "Add-ons"
 msgstr ""
 
-#: admin/classes/class-admin.php:310 admin/locale.php:1718
+#: admin/classes/class-admin.php:312 admin/locale.php:1718
 #: admin/views/common/reports/header.php:2
 msgid "Reports"
 msgstr ""
 
-#: admin/classes/class-admin.php:352 admin/classes/class-admin.php:749
+#: admin/classes/class-admin.php:354 admin/classes/class-admin.php:751
 msgid "Upgrade"
 msgstr ""
 
-#: admin/classes/class-admin.php:355
+#: admin/classes/class-admin.php:357
 #: library/modules/quizzes/admin/admin-loader.php:783
 #: library/modules/quizzes/admin/admin-loader.php:790
 msgid "Hey"
 msgstr ""
 
-#: admin/classes/class-admin.php:359
+#: admin/classes/class-admin.php:361
 #. translators: user's name
 msgid ""
 "%s, it appears you have an active WPMU DEV membership but haven't upgraded "
@@ -6471,33 +6471,33 @@ msgid ""
 "for it!"
 msgstr ""
 
-#: admin/classes/class-admin.php:395
+#: admin/classes/class-admin.php:397
 msgid "Claim your free gift"
 msgstr ""
 
-#: admin/classes/class-admin.php:397
+#: admin/classes/class-admin.php:399
 msgid "Find out more"
 msgstr ""
 
-#: admin/classes/class-admin.php:398 admin/classes/class-admin.php:877
+#: admin/classes/class-admin.php:400 admin/classes/class-admin.php:879
 msgid "Remind me later"
 msgstr ""
 
-#: admin/classes/class-admin.php:401
+#: admin/classes/class-admin.php:403
 msgid "Managing multiple WP sites for clients? Here’s a free gift to make it easier"
 msgstr ""
 
-#: admin/classes/class-admin.php:404
+#: admin/classes/class-admin.php:406
 msgid ""
 "In addition to Forminator, WPMU DEV has everything you need for fast and "
 "convenient site management."
 msgstr ""
 
-#: admin/classes/class-admin.php:407
+#: admin/classes/class-admin.php:409
 msgid "Trusted by over 50K web developers. Completely free to try."
 msgstr ""
 
-#: admin/classes/class-admin.php:442
+#: admin/classes/class-admin.php:444
 #. translators: %s: Forminator vesrion
 msgid ""
 "We've noticed you have updated to Forminator Pro version %s. Please ensure "
@@ -6505,11 +6505,11 @@ msgid ""
 "1.0.4 or higher to ensure compatibility with the new submissions processes."
 msgstr ""
 
-#: admin/classes/class-admin.php:507
+#: admin/classes/class-admin.php:509
 msgid "Forminator - Import your Contact Form 7 forms automatically"
 msgstr ""
 
-#: admin/classes/class-admin.php:509
+#: admin/classes/class-admin.php:511
 msgid ""
 "We noticed that Contact Form 7 is active on your website. You can use our "
 "built-in Contact Form 7 importer to import your existing forms and the "
@@ -6517,11 +6517,11 @@ msgid ""
 "supports the most widely used add-ons as well."
 msgstr ""
 
-#: admin/classes/class-admin.php:513
+#: admin/classes/class-admin.php:515
 msgid "Import Contact Form 7 Forms"
 msgstr ""
 
-#: admin/classes/class-admin.php:515 admin/classes/class-admin.php:593
+#: admin/classes/class-admin.php:517 admin/classes/class-admin.php:595
 #: admin/locale.php:918
 #: library/lib/dash-notice/wpmudev-dash-notification.php:268
 #: library/lib/dash-notice/wpmudev-dash-notification.php:309
@@ -6530,7 +6530,7 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: admin/classes/class-admin.php:584
+#: admin/classes/class-admin.php:586
 #. Translators: 1. Opening <a> tag with link to stripe SCA Compliant, 2.
 #. closing <a> tag.
 msgid ""
@@ -6541,7 +6541,7 @@ msgid ""
 "checking them to ensure everything works fine."
 msgstr ""
 
-#: admin/classes/class-admin.php:650
+#: admin/classes/class-admin.php:652
 #. translators: %d: Module count.
 msgid ""
 "Awesome! You've published more than %d modules with Forminator. Hope you "
@@ -6550,21 +6550,21 @@ msgid ""
 "rating on wp.org to help us spread the word and boost our motivation."
 msgstr ""
 
-#: admin/classes/class-admin.php:654 admin/classes/class-admin.php:683
-#: admin/classes/class-admin.php:809 admin/views/common/entries/prompt.php:42
+#: admin/classes/class-admin.php:656 admin/classes/class-admin.php:685
+#: admin/classes/class-admin.php:811 admin/views/common/entries/prompt.php:42
 msgid "Rate Forminator"
 msgstr ""
 
-#: admin/classes/class-admin.php:657 admin/classes/class-admin.php:687
+#: admin/classes/class-admin.php:659 admin/classes/class-admin.php:689
 #: admin/views/common/entries/prompt.php:46
 msgid "Maybe later"
 msgstr ""
 
-#: admin/classes/class-admin.php:661 admin/views/common/entries/prompt.php:49
+#: admin/classes/class-admin.php:663 admin/views/common/entries/prompt.php:49
 msgid "No Thanks"
 msgstr ""
 
-#: admin/classes/class-admin.php:679
+#: admin/classes/class-admin.php:681
 msgid ""
 "Excellent! You've been using Forminator for a while now. Hope you are "
 "enjoying it so far. We have spent countless hours developing this free "
@@ -6572,15 +6572,15 @@ msgid ""
 "rating on wp.org to help us spread the word and boost our motivation."
 msgstr ""
 
-#: admin/classes/class-admin.php:737
+#: admin/classes/class-admin.php:739
 msgid "Go to Forminator Dashboard"
 msgstr ""
 
-#: admin/classes/class-admin.php:751
-msgid "Upgrade For 60% Off!"
+#: admin/classes/class-admin.php:753
+msgid "Upgrade For 80% Off!"
 msgstr ""
 
-#: admin/classes/class-admin.php:754
+#: admin/classes/class-admin.php:756
 msgid "Renew Membership"
 msgstr ""
 
@@ -6588,35 +6588,35 @@ msgstr ""
 msgid "WPMU DEV"
 msgstr ""
 
-#: admin/classes/class-admin.php:785
+#: admin/classes/class-admin.php:787
 #. translators: %s: Authorise url.
 msgid "By %s"
 msgstr ""
 
-#: admin/classes/class-admin.php:801
+#: admin/classes/class-admin.php:803
 #. translators: %s: Plugin name.
 msgid "More information about %s"
 msgstr ""
 
-#: admin/classes/class-admin.php:803 admin/classes/class-admin.php:817
+#: admin/classes/class-admin.php:805 admin/classes/class-admin.php:819
 msgid "View details"
 msgstr ""
 
-#: admin/classes/class-admin.php:820
+#: admin/classes/class-admin.php:822
 msgid "Premium Support"
 msgstr ""
 
-#: admin/classes/class-admin.php:863
+#: admin/classes/class-admin.php:865
 msgid "New update available for one or more Add-ons."
 msgstr ""
 
-#: admin/classes/class-admin.php:867
+#: admin/classes/class-admin.php:869
 msgid ""
 "A new update is available for one or more of your Forminator Add-ons. Click "
 "on the button below to check and update the required Add-on."
 msgstr ""
 
-#: admin/classes/class-admin.php:872
+#: admin/classes/class-admin.php:874
 msgid "View and Update"
 msgstr ""
 
@@ -14618,7 +14618,7 @@ msgid "Don't worry, only admin users can see this message"
 msgstr ""
 
 #: admin/locale.php:2414
-msgid "Get 60% OFF Forminator Pro"
+msgid "Get 80% OFF Forminator Pro"
 msgstr ""
 
 #: admin/locale.php:2415
@@ -14632,11 +14632,11 @@ msgstr ""
 #: admin/locale.php:2417
 msgid ""
 "Start collecting subscription payments in Forminator Pro with the new "
-"Stripe Subscription add-on! Upgrade now and get 60% OFF all annual plans."
+"Stripe Subscription add-on! Upgrade now and get 80% OFF all annual plans."
 msgstr ""
 
 #: admin/locale.php:2418
-msgid "Hosting by the Same People Behind Forminator!"
+msgid "Exclusive $1 hosting offer from the creators of Forminator"
 msgstr ""
 
 #: admin/locale.php:2419
@@ -14644,226 +14644,230 @@ msgid "Only admin users can see this message"
 msgstr ""
 
 #: admin/locale.php:2420
-msgid "Claim Your 50% Off Hosting Now!"
+msgid "Claim Your $1 Hosting"
 msgstr ""
 
 #: admin/locale.php:2421
 msgid ""
-"Unleash the Full Power of Your Site with WPMU DEV Hosting! Lightning-Fast "
-"Speed, Robust Security, 24/7 Expert Support, and Effortless Ease of Use. "
-"Take Your Sites to the Next Level Today {{b}}with 50% off the First "
-"Month!{{/b}}"
+"To celebrate the holidays, WPMU DEV is letting you try their award winning "
+"hosting for just $1 for the first month. "
 msgstr ""
 
 #: admin/locale.php:2422
-msgid "Click to connect"
+msgid ""
+"Plans include: free migration, premium WP plugin suite (incl. Forminator "
+"Pro), and site management tools. Limited time only."
 msgstr ""
 
 #: admin/locale.php:2423
+msgid "Click to connect"
+msgstr ""
+
+#: admin/locale.php:2424
 msgid ""
 "Forminator isn't connected to a WPMU DEV account. Connect to unlock "
 "additional free features."
 msgstr ""
 
-#: admin/locale.php:2424
+#: admin/locale.php:2425
 msgid "Connect Forminator to your WPMU DEV account"
 msgstr ""
 
-#: admin/locale.php:2425
+#: admin/locale.php:2426
 msgid "Connect to WPMU DEV to unlock features for free."
 msgstr ""
 
-#: admin/locale.php:2426 admin/views/addons/addon-details.php:276
+#: admin/locale.php:2427 admin/views/addons/addon-details.php:276
 msgid "Documentation"
 msgstr ""
 
-#: admin/locale.php:2427
+#: admin/locale.php:2428
 msgid "Unlock Forminator PDF Generator Add-on"
 msgstr ""
 
-#: admin/locale.php:2428
+#: admin/locale.php:2429
 msgid ""
 "Generate and send PDF files (e.g., form entries, receipts, invoices, "
 "quotations) to users after form submission."
 msgstr ""
 
-#: admin/locale.php:2429
+#: admin/locale.php:2430
 msgid "Create free Account"
 msgstr ""
 
-#: admin/locale.php:2430
+#: admin/locale.php:2431
 msgid "Already have an account?"
 msgstr ""
 
-#: admin/locale.php:2432
+#: admin/locale.php:2433
 msgid "Plus unlock other WPMU DEV perks and benefits!"
 msgstr ""
 
-#: admin/locale.php:2433
+#: admin/locale.php:2434
 msgid "WPMU DEV Hub"
 msgstr ""
 
-#: admin/locale.php:2434
+#: admin/locale.php:2435
 msgid "Effortlessly  manage unlimited sites from one dashboard."
 msgstr ""
 
-#: admin/locale.php:2435
+#: admin/locale.php:2436
 msgid "Auto Updates"
 msgstr ""
 
-#: admin/locale.php:2436
+#: admin/locale.php:2437
 msgid "Schedule safe updates for all your plugins and themes."
 msgstr ""
 
-#: admin/locale.php:2437
+#: admin/locale.php:2438
 msgid "Uptime Monitor"
 msgstr ""
 
-#: admin/locale.php:2438
+#: admin/locale.php:2439
 msgid "Instant downtime alerts and helpful site analytics."
 msgstr ""
 
-#: admin/locale.php:2439
+#: admin/locale.php:2440
 msgid "One Click SSO"
 msgstr ""
 
-#: admin/locale.php:2440
+#: admin/locale.php:2441
 msgid "Access all your sites from one place with one click."
 msgstr ""
 
-#: admin/locale.php:2441
+#: admin/locale.php:2442
 msgid "White Label Reports"
 msgstr ""
 
-#: admin/locale.php:2442
+#: admin/locale.php:2443
 msgid "Custom website health reports for clients."
 msgstr ""
 
-#: admin/locale.php:2443
+#: admin/locale.php:2444
 msgid "Secure Site Backups"
 msgstr ""
 
-#: admin/locale.php:2444
+#: admin/locale.php:2445
 msgid "Including 1GB free WPMU DEV storage."
 msgstr ""
 
-#: admin/locale.php:2445
+#: admin/locale.php:2446
 msgid "Client Billing"
 msgstr ""
 
-#: admin/locale.php:2446
+#: admin/locale.php:2447
 msgid "A full payment solution for your business."
 msgstr ""
 
-#: admin/locale.php:2447
+#: admin/locale.php:2448
 msgid "Many More Benefits"
 msgstr ""
 
-#: admin/locale.php:2448
+#: admin/locale.php:2449
 msgid "Many more membership perks and benefits."
 msgstr ""
 
-#: admin/locale.php:2449
+#: admin/locale.php:2450
 msgid "Inline Message"
 msgstr ""
 
-#: admin/locale.php:2450
+#: admin/locale.php:2451
 msgid "Redirect user to a URL"
 msgstr ""
 
-#: admin/locale.php:2451
+#: admin/locale.php:2452
 msgid "Hide form"
 msgstr ""
 
-#: admin/locale.php:2452
+#: admin/locale.php:2453
 msgid "is"
 msgstr ""
 
-#: admin/locale.php:2453
+#: admin/locale.php:2454
 msgid "is not"
 msgstr ""
 
-#: admin/locale.php:2454
+#: admin/locale.php:2455
 msgid "day is"
 msgstr ""
 
-#: admin/locale.php:2455
+#: admin/locale.php:2456
 msgid "day is not"
 msgstr ""
 
-#: admin/locale.php:2456
+#: admin/locale.php:2457
 msgid "month is not"
 msgstr ""
 
-#: admin/locale.php:2457
+#: admin/locale.php:2458
 msgid "month is"
 msgstr ""
 
-#: admin/locale.php:2458
+#: admin/locale.php:2459
 msgid "is before"
 msgstr ""
 
-#: admin/locale.php:2459
+#: admin/locale.php:2460
 msgid "is after"
 msgstr ""
 
-#: admin/locale.php:2460
+#: admin/locale.php:2461
 msgid "is before %s or more days from current date"
 msgstr ""
 
-#: admin/locale.php:2461
+#: admin/locale.php:2462
 msgid "is before less than %s days from current date"
 msgstr ""
 
-#: admin/locale.php:2462
+#: admin/locale.php:2463
 msgid "is after %s or more days from current date"
 msgstr ""
 
-#: admin/locale.php:2463
+#: admin/locale.php:2464
 msgid "is after less than %s days from current date"
 msgstr ""
 
-#: admin/locale.php:2464
+#: admin/locale.php:2465
 msgid "is greater than"
 msgstr ""
 
-#: admin/locale.php:2465
+#: admin/locale.php:2466
 msgid "is less than"
 msgstr ""
 
-#: admin/locale.php:2466
+#: admin/locale.php:2467
 msgid "contains"
 msgstr ""
 
-#: admin/locale.php:2467
+#: admin/locale.php:2468
 msgid "starts with"
 msgstr ""
 
-#: admin/locale.php:2468
+#: admin/locale.php:2469
 msgid "ends with"
 msgstr ""
 
-#: admin/locale.php:2469
+#: admin/locale.php:2470
 msgid "is correct"
 msgstr ""
 
-#: admin/locale.php:2470
+#: admin/locale.php:2471
 msgid "is incorrect"
 msgstr ""
 
-#: admin/locale.php:2471
+#: admin/locale.php:2472
 msgid "is final result"
 msgstr ""
 
-#: admin/locale.php:2472
+#: admin/locale.php:2473
 msgid "is not final result"
 msgstr ""
 
-#: admin/locale.php:2473
+#: admin/locale.php:2474
 msgid "Please fix the error(s) in the SETTINGS tab."
 msgstr ""
 
-#: admin/locale.php:2474
+#: admin/locale.php:2475
 msgid "Billing frequency should be greater than or equal to 1"
 msgstr ""
 

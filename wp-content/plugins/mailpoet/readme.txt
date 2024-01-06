@@ -1,9 +1,9 @@
 === MailPoet - Newsletters, Email Marketing, and Automation ===
 Contributors: mailpoet, woocommerce, automattic
 Tags: email, email marketing, post notification, woocommerce emails, email automation, newsletter, newsletter builder, newsletter subscribers
-Requires at least: 6.2
-Tested up to: 6.3
-Stable tag: 4.39.0
+Requires at least: 6.3
+Tested up to: 6.4
+Stable tag: 4.41.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -218,6 +218,23 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 6. WooCommerce emails
 
 == Changelog ==
+
+= 4.41.0 - 2024-01-03 =
+* Added: notices about new sender domain requirements;
+* Added: support for DMARC record on sender domains;
+* Updated: minimum required WooCommerce version to 8.3;
+* Fixed: incorrect results for "was sent" segment;
+* Fixed: incorrect "Sent on" time displayed on Email listing page;
+* Fixed: error when activating an invalid automation;
+* Fixed: emoji support in email body for DBs with utf8 encoding;
+* Fixed: incorrect results when using "all of" condition for "purchased in category" segment.
+
+= 4.40.0 - 2023-12-12 =
+* Added: MailPoet integration with WooCommerce Multi-Channel dashboard;
+* Added: automation template detail with steps preview;
+* Updated: minimum required WordPress version to 6.3;
+* Fixed: Email editor text toolbox overlay when browser is zoomed in;
+* Fixed: an error when searching stats for emails sent to large lists.
 
 = 4.39.0 - 2023-12-04 =
 * Improved: Some translations got rephrased;

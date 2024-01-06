@@ -17,7 +17,8 @@ function colibri_titles() {
 }
 
 function colibri_page_title_html( $atts, $titles ) {
-	$html = "<span><" . $atts['tag'] . " style='margin-bottom:0'>" . get_title( $titles ) . "</" . $atts['tag'] . "></span>";
+	$tag = htmlspecialchars($atts['tag'], ENT_QUOTES, 'UTF-8');
+	$html = "<span><" . $tag . " style='margin-bottom:0'>" . get_title( $titles ) . "</" . $tag. "></span>";
 
 	return $html;
 }

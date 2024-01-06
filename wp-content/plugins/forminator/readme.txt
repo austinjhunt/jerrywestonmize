@@ -1,13 +1,13 @@
 === Forminator - Contact Form, Payment Form & Custom Form Builder ===
 Plugin Name: Forminator - Contact Form, Payment Form & Custom Form Builder
-Version: 1.28.0
+Version: 1.28.1
 Author: WPMU DEV
 Author URI: https://wpmudev.com/
 Contributors: WPMUDEV
 Tags: forms, contact form, wordpress form plugin, payment form, custom form, form builder, paypal form wordpress, form maker, quiz, quiz builder, order form, stripe payments, paypal payments, stripe form, paypal form
 Requires at least: 5.2
 Tested up to: 6.4
-Stable tag: 1.28.0
+Stable tag: 1.28.1
 Requires PHP: 7.4
 License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -205,6 +205,10 @@ Find out all you need to know by checking out our API documentation [here](https
 
 [https://wpmudev.com/docs/wpmu-dev-plugins/forminator/](https://wpmudev.com/docs/wpmu-dev-plugins/forminator/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=forminator-readme&utm_content=docs_link)
 
+= How can I report security issues or bugs? =
+
+We take plugin security incredibly seriously; if you have a bug or vulnerability to report, you can do so through the Patchstack Vulnerability Disclosure Program. It’s fast, easy, and you will be notified when the issue is fixed. [Report a vulnerability](https://patchstack.com/database/vdp/forminator).
+
 == Screenshots ==
 
 1. Setup WordPress contact forms in seconds.
@@ -218,6 +222,11 @@ Find out all you need to know by checking out our API documentation [here](https
 9. Allow simple drag and drop multi-file uploads for users.
 
 == Changelog ==
+
+= 1.28.1 ( 2023-12-18 ) =
+
+- Improvement: Hosting offer update
+- Improvement: Discount copy update
 
 = 1.28.0 ( 2023-11-13 ) =
 

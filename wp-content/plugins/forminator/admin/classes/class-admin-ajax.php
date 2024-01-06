@@ -2259,6 +2259,8 @@ class Forminator_Admin_AJAX {
 			'forminator_submission_rating_later_dismiss',
 			'forminator_hosting_banner_dismiss',
 			'forminator_hosting_banner_later',
+			'forminator_hosting_offer_dismiss',
+			'forminator_hosting_offer_later'
 		);
 
 		if ( ! in_array( $notification_name, $allowed_options, true )

@@ -4,7 +4,6 @@ namespace ExtendBuilder;
 
 require_once __DIR__ . '/base.php';
 require_once __DIR__ . '/wrapper.php';
-require_once __DIR__ . '/render-js.php';
 require_once __DIR__ . '/menu-1.php';
 require_once __DIR__ . '/video.php';
 require_once __DIR__ . '/search.php';

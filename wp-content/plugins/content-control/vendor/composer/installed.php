@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'code-atlantic/content-control',
-        'pretty_version' => '2.0.12',
-        'version' => '2.0.12.0',
+        'pretty_version' => '2.1.0',
+        'version' => '2.1.0.0',
         'reference' => NULL,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'code-atlantic/content-control' => array(
-            'pretty_version' => '2.0.12',
-            'version' => '2.0.12.0',
+            'pretty_version' => '2.1.0',
+            'version' => '2.1.0.0',
             'reference' => NULL,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',

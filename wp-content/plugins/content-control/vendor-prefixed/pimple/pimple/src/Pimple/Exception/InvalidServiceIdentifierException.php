@@ -23,8 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Modified by code-atlantic on 26-October-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified by code-atlantic on 08-December-2023 using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace ContentControl\Vendor\Pimple\Exception;
