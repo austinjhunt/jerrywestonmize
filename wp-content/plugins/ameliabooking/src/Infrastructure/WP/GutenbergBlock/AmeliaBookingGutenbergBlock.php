@@ -36,6 +36,13 @@ class AmeliaBookingGutenbergBlock extends GutenbergBlock
             )
         );
 
+        wp_enqueue_style(
+            'amelia_booking_gutenberg_styles',
+            AMELIA_URL . 'public/js/gutenberg/amelia-booking/amelia-booking-gutenberg.css',
+            [],
+            AMELIA_VERSION
+        );
+
         register_block_type(
             'amelia/booking-gutenberg-block',
             array('editor_script' => 'amelia_booking_gutenberg_block')

@@ -26,7 +26,7 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
     }
 
     public function get_icon() {
-        return 'amelia-logo-beta';
+        return 'amelia-logo';
     }
 
     public function get_categories() {
@@ -37,7 +37,7 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
         $this->start_controls_section(
             'amelia_events_section',
             [
-                'label' => '<div class="amelia-elementor-content-beta"><p class="amelia-elementor-content-title">'
+                'label' => '<div class="amelia-elementor-content"><p class="amelia-elementor-content-title">'
                     . BackendStrings::getWordPressStrings()['events_list_booking_gutenberg_block']['title']
                     . '</p><br><p class="amelia-elementor-content-p">'
                     . BackendStrings::getWordPressStrings()['events_list_booking_gutenberg_block']['description']
@@ -60,10 +60,11 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
             'select_event',
             [
                 'label' => BackendStrings::getWordPressStrings()['select_event'],
-                'type' => Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
                 'options' => self::amelia_elementor_get_events(),
                 'condition' => ['preselect' => 'yes'],
-                'default' => '0',
+                'placeholder' => BackendStrings::getWordPressStrings()['show_all_events']
             ]
         );
 
@@ -71,10 +72,11 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
             'select_tag',
             [
                 'label' => BackendStrings::getWordPressStrings()['select_tag'],
-                'type' => Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
                 'options' => self::amelia_elementor_get_tags(),
                 'condition' => ['preselect' => 'yes'],
-                'default' => '',
+                'placeholder' => BackendStrings::getWordPressStrings()['show_all_tags']
             ]
         );
 
@@ -141,11 +143,23 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
             $trigger_type = $settings['load_manually'] && $settings['trigger_type'] !== '' ? ' trigger_type=' . $settings['trigger_type'] : '';
             $in_dialog = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
 
-            $selected_event = $settings['select_event'] === '0' ? '' : ' event=' . $settings['select_event'];
+            $selected_event = empty($settings['select_event']) ? '' : ' event=' . (is_array($settings['select_event']) ?
+                    implode(',', $settings['select_event']) : $settings['select_event']);
 
             $show_recurring = $settings['show_recurring'] ? ' recurring=1' : '';
 
-            $selected_tag = $settings['select_tag'] ? ' tag=' . "'" . $settings['select_tag'] . "'" : '';
+            $selected_tag = '';
+            if (!empty($settings['select_tag'])) {
+                $selected_tag .= ' tag="';
+                if (is_array($settings['select_tag'])) {
+                    foreach (array_filter($settings['select_tag']) as $index => $tag) {
+                        $selected_tag .= ($index === 0 ? '' : ',') . '{' . $tag . '}';
+                    }
+                } else {
+                    $selected_tag .= $settings['select_tag'];
+                }
+                $selected_tag .= '"';
+            }
 
             echo '[ameliaeventslistbooking' . $trigger . $trigger_type . $in_dialog . $selected_event . $selected_tag . $show_recurring . ']';
         } else {
@@ -174,8 +188,6 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
         $tags = GutenbergBlock::getEntitiesData()['data']['tags'];
 
         $returnTags = [];
-
-        $returnTags[''] = BackendStrings::getWordPressStrings()['show_all_tags'];
 
         foreach ($tags as $index => $tag) {
             $returnTags[$tag['name']] = $tag['name'];

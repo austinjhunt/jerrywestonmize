@@ -21,7 +21,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
-use AmeliaBooking\Infrastructure\Services\LessonSpace\LessonSpaceService;
+use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -88,10 +88,13 @@ class GetAppointmentCommandHandler extends CommandHandler
             /** @var Payment $payment */
             foreach ($booking->getPayments()->getItems() as $payment) {
                 if ($payment->getParentId() && $payment->getParentId()->getValue()) {
-                    /** @var Payment $parentPayment */
-                    $parentPayment = $paymentRepository->getById($payment->getParentId()->getValue());
+                    try {
+                        /** @var Payment $parentPayment */
+                        $parentPayment = $paymentRepository->getById($payment->getParentId()->getValue());
 
-                    $bookingIds[] = $parentPayment->getCustomerBookingId()->getValue();
+                        $bookingIds[] = $parentPayment->getCustomerBookingId()->getValue();
+                    } catch (\Exception $e) {
+                    }
                 }
 
                 /** @var Collection $relatedPayments */
@@ -167,13 +170,17 @@ class GetAppointmentCommandHandler extends CommandHandler
             $lessonSpaceEnabled   = $settingsDS->getSetting('lessonSpace', 'enabled');
             $lessonSpaceCompanyId = $settingsDS->getSetting('lessonSpace', 'companyId');
             if ($lessonSpaceEnabled && $lessonSpaceApiKey && $lessonSpaceCompanyId) {
-                /** @var LessonSpaceService $lessonSpaceService */
+                /** @var AbstractLessonSpaceService $lessonSpaceService */
                 $lessonSpaceService = $this->container->get('infrastructure.lesson.space.service');
                 $spaceId            = explode("https://www.thelessonspace.com/space/", $appointmentArray['lessonSpace']);
                 if ($spaceId && count($spaceId) > 1) {
                     $appointmentArray['lessonSpaceDetails'] = $lessonSpaceService->getSpace($lessonSpaceApiKey, $lessonSpaceCompanyId, $spaceId[1]);
                 }
             }
+        }
+
+        if (isset($appointmentArray['notifyParticipants'])) {
+            $appointmentArray['notifyParticipants'] = intval($appointmentArray['notifyParticipants']);
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);

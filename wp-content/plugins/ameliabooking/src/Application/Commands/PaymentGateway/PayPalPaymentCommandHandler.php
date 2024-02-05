@@ -8,10 +8,10 @@ use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Services\Payment\PayPalService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -91,7 +91,7 @@ class PayPalPaymentCommandHandler extends CommandHandler
             return $result;
         }
 
-        /** @var PayPalService $paymentService */
+        /** @var PaymentServiceInterface $paymentService */
         $paymentService = $this->container->get('infrastructure.payment.payPal.service');
 
         $response = $paymentService->execute(

@@ -1,12 +1,11 @@
 .divi_booking:before {
     content: "" !important;
-    background-image: url(../includes/images/amelia-logo-admin-icon.svg);
+    background-image: url(../includes/images/amelia-logo-outdated-divi.svg);
     background-repeat: no-repeat;
     background-position: center center;
     margin: 0 auto 5px;
-    width: 20px;
     height: 20px;
-    margin-bottom: 1px !important;
+    margin-bottom: 4px !important;
 }
 
 
@@ -16,7 +15,6 @@
     background-repeat: no-repeat;
     background-position: center center;
     margin: 0 auto 5px;
-    width: 20px;
     height: 20px;
     margin-bottom: 1px !important;
 }
@@ -28,7 +26,6 @@
     background-repeat: no-repeat;
     background-position: center center;
     margin: 0 auto 5px;
-    width: 20px;
     height: 20px;
     margin-bottom: 1px !important;
 }
@@ -37,37 +34,34 @@
 
 .divi_catalog:before {
     content: "" !important;
-    background-image: url(../includes/images/amelia-logo-admin-icon.svg);
+    background-image: url(../includes/images/amelia-logo-outdated-divi.svg);
     background-repeat: no-repeat;
     background-position: center center;
     margin: 0 auto 5px;
-    width: 20px;
     height: 20px;
-    margin-bottom: 1px !important;
+    margin-bottom: 4px !important;
 }
 
 
 .divi_search:before {
     content: "" !important;
-    background-image: url(../includes/images/amelia-logo-admin-icon.svg);
+    background-image: url(../includes/images/amelia-logo-outdated-divi.svg);
     background-repeat: no-repeat;
     background-position: center center;
     margin: 0 auto 5px;
-    width: 20px;
     height: 20px;
-    margin-bottom: 1px !important;
+    margin-bottom: 4px !important;
 }
 
 
 .divi_events:before {
     content: "" !important;
-    background-image: url(../includes/images/amelia-logo-admin-icon.svg);
+    background-image: url(../includes/images/amelia-logo-outdated-divi.svg);
     background-repeat: no-repeat;
     background-position: center center;
     margin: 0 auto 5px;
-    width: 20px;
     height: 20px;
-    margin-bottom: 1px !important;
+    margin-bottom: 4px !important;
 }
 
 .divi_step_booking:before {
@@ -82,7 +76,7 @@
 
 .divi_catalog_booking:before {
     content: "" !important;
-    background-image: url(../includes/images/amelia-logo-beta-divi.svg);
+    background-image: url(../includes/images/amelia-logo-admin-icon.svg);
     background-repeat: no-repeat;
     background-position: center center;
     margin: 0 auto 5px;
@@ -92,7 +86,7 @@
 
 .divi_events_list_booking:before {
     content: "" !important;
-    background-image: url(../includes/images/amelia-logo-beta-divi.svg);
+    background-image: url(../includes/images/amelia-logo-admin-icon.svg);
     background-repeat: no-repeat;
     background-position: center center;
     margin: 0 auto 5px;

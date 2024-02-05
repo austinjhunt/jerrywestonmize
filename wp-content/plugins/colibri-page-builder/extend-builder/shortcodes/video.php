@@ -16,7 +16,8 @@ function colibri_html_embed_iframe($url,$autoplay){
 }
 
 function colibri_html_embed_video($url,$attributes){
-    echo "<video class='h-video-main' ".$attributes." ><source src=".esc_url($url)." type='video/mp4' /></video>";
+
+    echo "<video class='h-video-main' ". esc_attr($attributes)." ><source src=".esc_url($url)." type='video/mp4' /></video>";
 }
 
 

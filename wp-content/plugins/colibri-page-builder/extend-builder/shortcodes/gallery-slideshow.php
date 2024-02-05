@@ -103,7 +103,7 @@ function colibri_gallery_slideshow( $atts ) {
 					}
 					?>
                     <dl class="slideshow-item">
-                        <dt class="slideshow-icon landscape <?= $atts['id'] ?>-image"
+                        <dt class="slideshow-icon landscape <?= esc_attr($atts['id']) ?>-image"
                             style="background-image: url(<?= $imgURL ?>)">
 
                             <!-- Show captions -->
@@ -157,7 +157,7 @@ function colibri_gallery_slideshow( $atts ) {
 		$new_content = '';
 		$pos_index   = 0;
 
-		$new_content .= '<div class="' . $atts['id'] . '-dls-wrapper slideshow-items-wrapper slideshow-element-style-' . $atts['style-type'] . ' ' . $dropShadowClass . '"><div class="slideshow-inner">';
+		$new_content .= '<div class="' . esc_attr($atts['id']) . '-dls-wrapper slideshow-items-wrapper slideshow-element-style-' . esc_attr($atts['style-type']) . ' ' . esc_attr($dropShadowClass) . '"><div class="slideshow-inner">';
 
 		while ( strpos( $slideshow, 'src="', $pos_index ) !== false /* && strpos($slideshow, 'wp-caption-text', $pos_index)!==false */ ) {
 
@@ -195,7 +195,7 @@ function colibri_gallery_slideshow( $atts ) {
 			}
 
 			$replace_with = "<dl class='slideshow-item'>"
-			                . "<dt class='slideshow-icon landscape " . $atts['id'] . "-image' style='background-image: url(" . $extracted_url . ");'>"
+			                . "<dt class='slideshow-icon landscape " . esc_attr($atts['id']) . "-image' style='background-image: url(" . $extracted_url . ");'>"
 			                . $caption_content
 			                . "</dt>"
 			                . "</dl>";
@@ -223,16 +223,16 @@ function colibri_gallery_slideshow( $atts ) {
 
 		$slideshow = $new_content;
 
-
+        $atts_id = esc_html($atts['id']);
 		if ( $atts['show-captions'] == 1 ) {
 			$slideshow = $slideshow . "
                     <style>
-                        #{$atts['id']} .slideshow-caption {
+                        #{$atts_id} .slideshow-caption {
                             position: absolute;
                             width: 100%;
                             font-style: italic;
                         }
-                        #{$atts['id']} .slideshow-caption > p {
+                        #{$atts_id} .slideshow-caption > p {
                             overflow: hidden;
                             cursor: default;
                             text-overflow: ellipsis;
@@ -246,7 +246,7 @@ function colibri_gallery_slideshow( $atts ) {
 
 	ob_start();
 
-	$slideshow_selector = '#' . $atts['id'];
+	$slideshow_selector = '#' . $atts_id;
 
 	?>
     <style type="text/css">
@@ -367,21 +367,21 @@ function colibri_gallery_slideshow( $atts ) {
         /* Caption align */
         <?=$slideshow_selector?>
         .slideshow-caption {
-            text-align: <?=$atts['caption-align']?>;
+            text-align: <?= esc_html($atts['caption-align'])?>;
         }
 
 
         /* Caption font size */
         <?=$slideshow_selector?>
         .slideshow-caption {
-            font-size: <?=$captionFontSize?>;
+            font-size: <?= esc_html($captionFontSize)?>;
         }
 
         /* Caption background color*/
         <?php if($captionBackgroundColorExists) : ?>
         <?=$slideshow_selector?>
         .slideshow-caption {
-            background-color: <?=$atts['caption-background-color']?>;
+            background-color: <?= esc_html($atts['caption-background-color'])?>;
         }
 
         <?php endif; ?>
@@ -400,7 +400,7 @@ function colibri_gallery_slideshow( $atts ) {
             left: 0;
             right: 0;
             width: 100%;
-            padding: <?=$thumbnailsPadding?>;
+            padding: <?= esc_html($thumbnailsPadding)?>;
         }
 
         <?=$slideshow_selector?>
@@ -416,7 +416,7 @@ function colibri_gallery_slideshow( $atts ) {
         <?php if($thumbnailsBackgroundColorExists) : ?>
         <?=$slideshow_selector?>
         .slideshow-thumbnails-outer {
-            background-color: <?=$atts['thumbnail-background-color']?>;
+            background-color: <?= esc_html($atts['thumbnail-background-color'])?>;
         }
 
         <?php endif; ?>
@@ -451,7 +451,7 @@ function colibri_gallery_slideshow( $atts ) {
         }
 
         <?=$slideshow_selector?>
-        .owl-nav .owl-prev, <?=$slideshow_selector?> .owl-nav .owl-next {
+        .owl-nav .owl-prev, <?= $slideshow_selector?> .owl-nav .owl-next {
             display: inline-block;
             font: normal normal normal 14px/1 FontAwesome;
             font-size: inherit;
@@ -635,7 +635,7 @@ function colibri_gallery_slideshow( $atts ) {
 	$slideshow = $style . $slideshow;
 
 
-	return "<div id='{$atts['id']}' class='slideshow-wrapper'>{$slideshow}</div>";
+	return "<div id='{$atts_id}' class='slideshow-wrapper'>{$slideshow}</div>";
 
 }
 

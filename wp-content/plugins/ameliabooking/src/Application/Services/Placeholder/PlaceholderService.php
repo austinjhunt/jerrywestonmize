@@ -46,7 +46,7 @@ use Slim\Exception\ContainerValueNotFoundException;
 /**
  * Class PlaceholderService
  *
- * @package AmeliaBooking\Application\Services\Notification
+ * @package AmeliaBooking\Application\Services\Placeholder
  */
 abstract class PlaceholderService implements PlaceholderServiceInterface
 {
@@ -1170,7 +1170,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             }
         }
 
-        if ($appointment['isRescheduled']) {
+        if (!empty($appointment['isRescheduled']) && $appointment['isRescheduled']) {
             return $appointment['bookings'][0]['id'];
         }
 

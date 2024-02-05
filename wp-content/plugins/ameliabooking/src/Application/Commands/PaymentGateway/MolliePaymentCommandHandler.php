@@ -6,7 +6,6 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
-use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomerService;
 use AmeliaBooking\Domain\Entity\Booking\Reservation;
@@ -14,6 +13,7 @@ use AmeliaBooking\Domain\Entity\Cache\Cache;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Factory\Cache\CacheFactory;
+use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Json;
@@ -22,7 +22,6 @@ use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
-use AmeliaBooking\Infrastructure\Services\Payment\MollieService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -70,7 +69,7 @@ class MolliePaymentCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
-        /** @var MollieService $paymentService */
+        /** @var PaymentServiceInterface $paymentService */
         $paymentService = $this->container->get('infrastructure.payment.mollie.service');
 
         /** @var CacheRepository $cacheRepository */
@@ -135,10 +134,10 @@ class MolliePaymentCommandHandler extends CommandHandler
 
         $identifier = $cacheId . '_' . $token->getValue() . '_' . $type;
 
-        $returnUrl = $command->getField('returnUrl');
-        $response  = $paymentService->execute(
+        $returnUrl = explode('#', $command->getField('returnUrl'));
+        $response = $paymentService->execute(
             [
-                'returnUrl'   => $returnUrl . (strpos($returnUrl, '?') ? '&' : '?') . 'ameliaCache=' . $identifier,
+                'returnUrl'   => $returnUrl[0] . (strpos($returnUrl[0], '?') ? '&' : '?') . 'ameliaCache=' . $identifier . (!empty($returnUrl[1]) ? '#' . $returnUrl[1] : ''),
                 'notifyUrl'   => (AMELIA_DEV ? str_replace('localhost', AMELIA_NGROK_URL, AMELIA_ACTION_URL) : AMELIA_ACTION_URL) . '/payment/mollie/notify&name=' . $identifier,
                 'amount'      => $paymentAmount,
                 'locale'      => str_replace('-', '_', $reservation->getLocale()->getValue()),

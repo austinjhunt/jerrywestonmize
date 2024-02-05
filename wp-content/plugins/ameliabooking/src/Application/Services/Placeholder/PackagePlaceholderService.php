@@ -30,12 +30,11 @@ use Slim\Exception\ContainerValueNotFoundException;
 /**
  * Class PackagePlaceholderService
  *
- * @package AmeliaBooking\Application\Services\Notification
+ * @package AmeliaBooking\Application\Services\Placeholder
  */
 class PackagePlaceholderService extends AppointmentPlaceholderService
 {
     /**
-     *
      * @return array
      *
      * @throws ContainerException

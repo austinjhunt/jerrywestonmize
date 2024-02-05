@@ -4,9 +4,10 @@ namespace AmeliaBooking\Application\Services\Reservation;
 
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
+use AmeliaBooking\Application\Services\Deposit\AbstractDepositApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\TimeSlot\TimeSlotService as ApplicationTimeSlotService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -159,7 +160,7 @@ class AppointmentReservationService extends AbstractReservationService
 
         $reservation->setApplyDeposit(new BooleanValueObject($reservation->getBooking()->getDeposit()->getValue()));
 
-        $reservation->setIsCart(new BooleanValueObject(is_string($appointmentData['isCart']) ? filter_var($appointmentData['isCart'], FILTER_VALIDATE_BOOLEAN) : !empty($appointmentData['isCart'])));
+        $reservation->setIsCart(new BooleanValueObject(isset($appointmentData['isCart']) && is_string($appointmentData['isCart']) ? filter_var($appointmentData['isCart'], FILTER_VALIDATE_BOOLEAN) : !empty($appointmentData['isCart'])));
 
         /** @var Payment $payment */
         $payment = $save && $reservation->getBooking() && $reservation->getBooking()->getPayments()->length() ?
@@ -272,6 +273,14 @@ class AppointmentReservationService extends AbstractReservationService
 
                 $recurringReservations->addItem($recurringReservation);
             }
+        }
+
+        if ($reservation->hasAvailabilityValidation()->getValue() &&
+            $this->hasDoubleBookings($reservation, $recurringReservations)
+        ) {
+            throw new BookingUnavailableException(
+                FrontendStrings::getCommonStrings()['time_slot_unavailable']
+            );
         }
 
         $reservation->setRecurring($recurringReservations);
@@ -485,7 +494,7 @@ class AppointmentReservationService extends AbstractReservationService
                 $booking->getPackageCustomerService()->getId() &&
                 !empty($appointmentData['isCabinetBooking'])
             ) {
-                /** @var PackageApplicationService $packageApplicationService */
+                /** @var AbstractPackageApplicationService $packageApplicationService */
                 $packageApplicationService = $this->container->get('application.bookable.package');
 
                 if (!$packageApplicationService->isBookingAvailableForPurchasedPackage(
@@ -559,6 +568,83 @@ class AppointmentReservationService extends AbstractReservationService
         $reservation->setBooking($booking);
         $reservation->setReservation($appointment);
         $reservation->setIsStatusChanged(new BooleanValueObject($appointmentStatusChanged));
+    }
+
+    /**
+     * @param Reservation|null $firstReservation
+     * @param Collection       $followingReservations
+     *
+     * @return boolean
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function hasDoubleBookings($firstReservation, $followingReservations)
+    {
+        $hasDoubledBooking = $firstReservation && $this->isDoubleBooking($firstReservation->getReservation());
+
+        if (!$hasDoubledBooking) {
+            /** @var Reservation $followingReservation */
+            foreach ($followingReservations->getItems() as $followingReservation) {
+                if ($this->isDoubleBooking($followingReservation->getReservation())) {
+                    $hasDoubledBooking = true;
+
+                    break;
+                }
+            }
+        }
+
+        if ($hasDoubledBooking) {
+            $this->deleteReservation($firstReservation);
+
+            /** @var Reservation $followingReservation */
+            foreach ($followingReservations->getItems() as $followingReservation) {
+                $this->deleteReservation($followingReservation);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Appointment $appointment
+     *
+     * @return boolean
+     * @throws QueryExecutionException
+     */
+    public function isDoubleBooking($appointment)
+    {
+        /** @var AppointmentRepository $appointmentRepository */
+        $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
+
+        /** @var Collection $appointments */
+        $bookedAppointments = $appointmentRepository->getFiltered(
+            [
+                'dates'         => [
+                    $appointment->getBookingStart()->getValue()->format('Y-m-d H:i'),
+                    $appointment->getBookingStart()->getValue()->format('Y-m-d H:i')
+                ],
+                'providers'     => [$appointment->getProviderId()->getValue()],
+                'skipServices'  => true,
+                'skipProviders' => true,
+                'skipCustomers' => true,
+            ]
+        );
+
+        /** @var Appointment $bookedAppointment */
+        foreach ($bookedAppointments->getItems() as $bookedAppointment) {
+            if ($bookedAppointment->getId()->getValue() !== $appointment->getId()->getValue() &&
+                (
+                    $appointment->getStatus()->getValue() === BookingStatus::APPROVED ||
+                    $appointment->getStatus()->getValue() === BookingStatus::PENDING
+                )
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -899,7 +985,7 @@ class AppointmentReservationService extends AbstractReservationService
                 'gateway' => $paymentGateway
             ],
             'recurring'          => $recurringAppointmentsData,
-            'isCart'             => $requestData['isCart'],
+            'isCart'             => !empty($requestData['isCart']),
             'package'            => [],
             'locale'             => $reservation->getLocale()->getValue(),
             'timeZone'           => $reservation->getTimeZone()->getValue(),
@@ -1033,10 +1119,12 @@ class AppointmentReservationService extends AbstractReservationService
                     ]
                 ];
 
-                WooCommerceService::updateItemMetaData(
-                    $payment->getWcOrderId()->getValue(),
-                    $appointmentArrayModified
-                );
+                if (WooCommerceService::isEnabled()) {
+                    WooCommerceService::updateItemMetaData(
+                        $payment->getWcOrderId()->getValue(),
+                        $appointmentArrayModified
+                    );
+                }
 
                 foreach ($appointmentArrayModified['bookings'] as &$bookingArray) {
                     if (!empty($bookingArray['customFields'])) {
@@ -1074,13 +1162,16 @@ class AppointmentReservationService extends AbstractReservationService
      */
     public function getReservationPaymentAmount($reservation)
     {
+        /** @var AbstractDepositApplicationService $depositAS */
+        $depositAS = $this->container->get('application.deposit.service');
+
         /** @var Service $bookable */
         $bookable = $reservation->getBookable();
 
         $paymentAmount = $this->getPaymentAmount($reservation->getBooking(), $bookable);
 
         if ($reservation->getApplyDeposit()->getValue()) {
-            $paymentAmount = $this->calculateDepositAmount(
+            $paymentAmount = $depositAS->calculateDepositAmount(
                 $paymentAmount,
                 $bookable,
                 $reservation->getBooking()->getPersons()->getValue()
@@ -1099,7 +1190,7 @@ class AppointmentReservationService extends AbstractReservationService
                 );
 
                 if ($recurringReservation->getApplyDeposit()->getValue()) {
-                    $recurringPaymentAmount = $this->calculateDepositAmount(
+                    $recurringPaymentAmount = $depositAS->calculateDepositAmount(
                         $recurringPaymentAmount,
                         $recurringBookable,
                         $recurringReservation->getBooking()->getPersons()->getValue()
@@ -1367,11 +1458,12 @@ class AppointmentReservationService extends AbstractReservationService
      * @param Service $service
      * @param int $customerId
      * @param DateTime $appointmentStart
+     * @param int $bookingId
      *
      * @return bool
      * @throws Exception
      */
-    public function checkLimitsPerCustomer($service, $customerId, $appointmentStart)
+    public function checkLimitsPerCustomer($service, $customerId, $appointmentStart, $bookingId = null)
     {
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
@@ -1410,7 +1502,8 @@ class AppointmentReservationService extends AbstractReservationService
                     $customerId,
                     $appointmentStart,
                     $limitPerCustomer,
-                    $serviceSpecific
+                    $serviceSpecific,
+                    $bookingId
                 );
 
                 if ($count >= $limitPerCustomer['numberOfApp']) {

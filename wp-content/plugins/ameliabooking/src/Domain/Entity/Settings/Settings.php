@@ -25,6 +25,9 @@ class Settings
     /** @var LessonSpaceSettings */
     private $lessonSpaceSettings;
 
+    /** @var GoogleMeetSettings */
+    private $googleMeetSettings;
+
     /**
      * @return GeneralSettings
      */
@@ -87,6 +90,22 @@ class Settings
     public function setLessonSpaceSettings($lessonSpaceSettings)
     {
         $this->lessonSpaceSettings = $lessonSpaceSettings;
+    }
+
+    /**
+     * @return GoogleMeetSettings
+     */
+    public function getGoogleMeetSettings()
+    {
+        return $this->googleMeetSettings;
+    }
+
+    /**
+     * @param GoogleMeetSettings $googleMeetSettings
+     */
+    public function setGoogleMeetSettings($googleMeetSettings)
+    {
+        $this->googleMeetSettings = $googleMeetSettings;
     }
 
     /**

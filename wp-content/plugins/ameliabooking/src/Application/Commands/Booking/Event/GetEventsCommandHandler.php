@@ -117,7 +117,8 @@ class GetEventsCommandHandler extends CommandHandler
 
         $filteredEventIds = $eventRepository->getFilteredIds(
             $params,
-            !empty($params['limit']) ? $params['limit'] : $settingsDS->getSetting('general', 'itemsPerPage')
+            $isFrontEnd ? (!empty($params['limit']) ? $params['limit'] : $settingsDS->getSetting('general', 'itemsPerPage')):
+                    $settingsDS->getSetting('general', 'itemsPerPageBackEnd')
         );
 
         if ($isCabinetPage) {

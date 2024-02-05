@@ -25,7 +25,7 @@ class AmeliaSearchElementorWidget extends Widget_Base
     }
 
     public function get_icon() {
-        return 'amelia-logo';
+        return 'amelia-logo-outdated';
     }
 
     public function get_categories() {
@@ -37,10 +37,12 @@ class AmeliaSearchElementorWidget extends Widget_Base
         $this->start_controls_section(
             'amelia_search_section',
             [
-                'label' => '<div class="amelia-elementor-content"><p class="amelia-elementor-content-title">'
+                'label' => '<div class="amelia-elementor-content-outdated"><p class="amelia-elementor-content-title">'
                     . BackendStrings::getWordPressStrings()['search_gutenberg_block']['title']
                     . '</p><br><p class="amelia-elementor-content-p">'
                     . BackendStrings::getWordPressStrings()['search_gutenberg_block']['description']
+                    . '</p><br><p class="amelia-elementor-content-p amelia-elementor-content-p-outdated">'
+                    . BackendStrings::getWordPressStrings()['outdated_booking_gutenberg_block']
                     . '</p>',
             ]
         );

@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Commands\Notification;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
-use AmeliaBooking\Application\Services\Notification\WhatsAppNotificationService;
+use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -43,7 +43,7 @@ class WhatsAppWebhookCommandHandler extends CommandHandler
             return $result;
         }
 
-        /** @var WhatsAppNotificationService $whatsAppNotificationService */
+        /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $this->getContainer()->get('application.whatsAppNotification.service');
 
         $data = $command->getFields();

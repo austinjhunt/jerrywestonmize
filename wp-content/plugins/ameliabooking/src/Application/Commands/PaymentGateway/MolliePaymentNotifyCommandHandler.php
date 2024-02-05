@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Commands\PaymentGateway;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
@@ -23,6 +23,7 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
@@ -38,7 +39,6 @@ use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
-use AmeliaBooking\Infrastructure\Services\Payment\MollieService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 
@@ -122,7 +122,7 @@ class MolliePaymentNotifyCommandHandler extends CommandHandler
         /** @var Payment $payment */
         $payment = $paymentRepository->getById($cache->getPaymentId()->getValue());
 
-        /** @var MollieService $paymentService */
+        /** @var PaymentServiceInterface $paymentService */
         $paymentService = $this->container->get('infrastructure.payment.mollie.service');
 
         $response = $paymentService->fetchPayment(
@@ -645,7 +645,7 @@ class MolliePaymentNotifyCommandHandler extends CommandHandler
                         ['packageCustomerServices' => $packageCustomerServices->keys()]
                     );
 
-                    /** @var PackageApplicationService $packageApplicationService */
+                    /** @var AbstractPackageApplicationService $packageApplicationService */
                     $packageApplicationService = $this->container->get('application.bookable.package');
 
                     /** @var Appointment $appointment */

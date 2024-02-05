@@ -4,9 +4,6 @@ namespace AmeliaBooking\Infrastructure\Repository\User;
 
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
-use AmeliaBooking\Domain\Entity\Schedule\Period;
-use AmeliaBooking\Domain\Entity\Schedule\SpecialDay;
-use AmeliaBooking\Domain\Entity\Schedule\WeekDay;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\User\ProviderFactory;
@@ -15,11 +12,11 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Connection;
+use AmeliaBooking\Infrastructure\Licence\Licence;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\ExtrasTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\AppointmentsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsToServicesTable;
-use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Location\LocationsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\WPUsersTable;
 
 /**
@@ -381,158 +378,6 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
 
     /**
      *
-     * @return Collection
-     * @throws QueryExecutionException
-     */
-    public function getAllWithServices()
-    {
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT
-                    u.id AS user_id,
-                    u.status AS user_status,
-                    u.externalId AS external_id,
-                    u.firstName AS user_firstName,
-                    u.lastName AS user_lastName,
-                    u.email AS user_email,
-                    u.note AS note,
-                    u.description AS description,
-                    u.phone AS phone,
-                    u.pictureFullPath AS picture_full_path,
-                    u.pictureThumbPath AS picture_thumb_path,
-                    u.zoomUserId AS user_zoom_user_id,
-                    u.translations AS user_translations,
-                    lt.locationId AS user_locationId,
-                    st.serviceId AS service_id,
-                    st.price AS service_price,
-                    st.customPricing AS service_customPricing,
-                    st.minCapacity AS service_minCapacity,
-                    st.maxCapacity AS service_maxCapacity,
-                    s.name AS service_name,
-                    s.description AS service_description,
-                    s.color AS service_color,
-                    s.status AS service_status,
-                    s.categoryId AS service_categoryId,
-                    s.duration AS service_duration,
-                    s.bringingAnyone AS service_bringingAnyone,
-                    s.show AS service_show,
-                    s.aggregatedPrice AS service_aggregatedPrice,
-                    s.pictureFullPath AS service_picture_full,
-                    s.pictureThumbPath AS service_picture_thumb,
-                    s.recurringCycle AS service_recurringCycle,
-                    s.recurringSub AS service_recurringSub,
-                    s.recurringPayment AS service_recurringPayment,
-                    s.settings AS service_settings,
-                    s.translations AS service_translations,
-                    s.deposit AS service_deposit,
-                    s.depositPayment AS service_depositPayment,
-                    s.depositPerPerson AS service_depositPerPerson,
-                    
-                    gd.id AS google_calendar_id,
-                    gd.token AS google_calendar_token,
-                    gd.calendarId AS google_calendar_calendar_id,
-                   
-                    od.id AS outlook_calendar_id,
-                    od.token AS outlook_calendar_token,
-                    od.calendarId AS outlook_calendar_calendar_id
-                FROM {$this->table} u
-                LEFT JOIN {$this->providersGoogleCalendarTable} gd ON gd.userId = u.id
-                LEFT JOIN {$this->providersOutlookCalendarTable} od ON od.userId = u.id
-                LEFT JOIN {$this->providerLocationTable} lt ON lt.userId = u.id
-                LEFT JOIN {$this->providerServicesTable} st ON st.userId = u.id
-                LEFT JOIN {$this->serviceTable} s ON s.id = st.serviceId
-                WHERE u.type = :type
-                ORDER BY CONCAT(u.firstName, ' ', u.lastName)"
-            );
-
-            $type = AbstractUser::USER_ROLE_PROVIDER;
-
-            $statement->bindParam(':type', $type);
-
-            $statement->execute();
-
-            $providerRows = [];
-            $serviceRows = [];
-            $providerServiceRows = [];
-
-            while ($row = $statement->fetch()) {
-                $this->parseUserRow($row, $providerRows, $serviceRows, $providerServiceRows);
-            }
-
-            $providers = ProviderFactory::createCollection($providerRows, $serviceRows, $providerServiceRows);
-
-            if (!$providers->length()) {
-                return new Collection();
-            }
-
-            $providerIds = implode(', ', $providers->keys());
-
-            $statement = $this->connection->prepare(
-                "SELECT
-                    u.id AS user_id,
-                    u.firstName AS user_firstName,
-                    u.lastName AS user_lastName,
-                    u.email AS user_email,
-                    u.translations AS user_translations,
-                    wdt.id AS weekDay_id,
-                    wdt.dayIndex AS weekDay_dayIndex,
-                    wdt.startTime AS weekDay_startTime,
-                    wdt.endTime As weekDay_endTime,
-                    pt.id AS period_id,
-                    pt.startTime AS period_startTime,
-                    pt.endTime AS period_endTime,
-                    pt.locationId AS period_locationId,
-                    pst.id AS periodService_id,
-                    pst.serviceId AS periodService_serviceId,
-                    sdt.id AS specialDay_id,
-                    sdt.startDate AS specialDay_startDate,
-                    sdt.endDate As specialDay_endDate,
-                    sdpt.id AS specialDayPeriod_id,
-                    sdpt.startTime AS specialDayPeriod_startTime,
-                    sdpt.endTime AS specialDayPeriod_endTime,
-                    sdpt.locationId AS specialDayPeriod_locationId,
-                    sdpst.id AS specialDayPeriodService_id,
-                    sdpst.serviceId AS specialDayPeriodService_serviceId
-                FROM {$this->table} u
-                LEFT JOIN {$this->providerWeekDayTable} wdt ON wdt.userId = u.id
-                LEFT JOIN {$this->providerPeriodTable} pt ON pt.weekDayId = wdt.id
-                LEFT JOIN {$this->providerPeriodServiceTable} pst ON pst.periodId = pt.id
-                LEFT JOIN {$this->providerSpecialDayTable} sdt ON sdt.userId = u.id
-                LEFT JOIN {$this->providerSpecialDayPeriodTable} sdpt ON sdpt.specialDayId = sdt.id
-                LEFT JOIN {$this->providerSpecialDayPeriodServiceTable} sdpst ON sdpst.periodId = sdpt.id
-                WHERE u.id IN ({$providerIds})
-                ORDER BY CONCAT(u.firstName, ' ', u.lastName)"
-            );
-
-            $statement->execute();
-
-            $providerRows = [];
-            $serviceRows = [];
-            $providerServiceRows = [];
-
-            while ($row = $statement->fetch()) {
-                $this->parseUserRow($row, $providerRows, $serviceRows, $providerServiceRows);
-            }
-
-            /** @var Provider $provider */
-            foreach (ProviderFactory::createCollection($providerRows, [], [])->getItems() as $provider) {
-                $providers->getItem(
-                    $provider->getId()->getValue()
-                )->setWeekDayList($provider->getWeekDayList());
-
-                $providers->getItem(
-                    $provider->getId()->getValue()
-                )->setSpecialDayList($provider->getSpecialDayList());
-            }
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
-        }
-
-        return $providers;
-    }
-
-    /**
-     *
      * @param array $criteria
      *
      * @return Collection
@@ -745,165 +590,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             )->setSpecialDayList($provider->getSpecialDayList());
         }
 
-        return $providers;
-    }
-
-    /**
-     *
-     * @param array $criteria
-     *
-     * @return Collection
-     * @throws QueryExecutionException
-     */
-    public function getByCriteriaWithSchedule($criteria)
-    {
-        $where = ['u.type = :type'];
-
-        $params[':type'] = AbstractUser::USER_ROLE_PROVIDER;
-
-        if (!empty($criteria['providers'])) {
-            $queryProviders = [];
-
-            foreach ((array)$criteria['providers'] as $index => $value) {
-                $param = ':provider' . $index;
-                $queryProviders[] = $param;
-                $params[$param] = $value;
-            }
-
-            $where[] = 'u.id IN (' . implode(', ', $queryProviders) . ')';
-        }
-
-        $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
-
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT
-                    u.id AS user_id,
-                    u.status AS user_status,
-                    u.externalId AS external_id,
-                    u.firstName AS user_firstName,
-                    u.lastName AS user_lastName,
-                    u.email AS user_email,
-                    u.zoomUserId AS user_zoom_user_id,
-                    u.countryPhoneIso AS user_countryPhoneIso,
-                    u.note AS note,
-                    u.description AS description,
-                    u.phone AS phone,
-                    u.pictureFullPath AS picture_full_path,
-                    u.pictureThumbPath AS picture_thumb_path,
-                    u.translations AS user_translations,
-                    u.timeZone AS user_timeZone,
-                    lt.locationId AS user_locationId,
-                    wdt.id AS weekDay_id,
-                    wdt.dayIndex AS weekDay_dayIndex,
-                    wdt.startTime AS weekDay_startTime,
-                    wdt.endTime As weekDay_endTime,
-                    pt.id AS period_id,
-                    pt.startTime AS period_startTime,
-                    pt.endTime AS period_endTime,
-                    pt.locationId AS period_locationId,
-                    pst.id AS periodService_id,
-                    pst.serviceId AS periodService_serviceId,
-                    tot.id AS timeOut_id,
-                    tot.startTime AS timeOut_startTime,
-                    tot.endTime AS timeOut_endTime,
-                    gd.id AS google_calendar_id,
-                    gd.token AS google_calendar_token,
-                    gd.calendarId AS google_calendar_calendar_id,
-                    od.id AS outlook_calendar_id,
-                    od.token AS outlook_calendar_token,
-                    od.calendarId AS outlook_calendar_calendar_id
-                FROM {$this->table} u
-                LEFT JOIN {$this->providerLocationTable} lt ON lt.userId = u.id
-                LEFT JOIN {$this->providersGoogleCalendarTable} gd ON gd.userId = u.id
-                LEFT JOIN {$this->providersOutlookCalendarTable} od ON od.userId = u.id
-                LEFT JOIN {$this->providerWeekDayTable} wdt ON wdt.userId = u.id
-                LEFT JOIN {$this->providerPeriodTable} pt ON pt.weekDayId = wdt.id
-                LEFT JOIN {$this->providerPeriodServiceTable} pst ON pst.periodId = pt.id
-                LEFT JOIN {$this->providerSpecialDayTable} sdt ON sdt.userId = u.id
-                LEFT JOIN {$this->providerSpecialDayPeriodTable} sdpt ON sdpt.specialDayId = sdt.id
-                LEFT JOIN {$this->providerTimeOutTable} tot ON tot.weekDayId = wdt.id
-                $where
-                ORDER BY CONCAT(u.firstName, ' ', u.lastName), u.id, tot.weekDayId, wdt.dayIndex, pt.id"
-            );
-
-            $statement->execute($params);
-
-            $providerRows = [];
-            $serviceRows = [];
-            $providerServiceRows = [];
-
-            while ($row = $statement->fetch()) {
-                $this->parseUserRow($row, $providerRows, $serviceRows, $providerServiceRows);
-            }
-
-            /** @var Collection $providers */
-            $providers = call_user_func([static::FACTORY, 'createCollection'], $providerRows, $serviceRows, $providerServiceRows);
-
-            $statement = $this->connection->prepare(
-                "SELECT
-                    u.id AS user_id,
-                    u.status AS user_status,
-                    u.externalId AS external_id,
-                    u.firstName AS user_firstName,
-                    u.lastName AS user_lastName,
-                    u.email AS user_email,
-                    u.note AS note,
-                    u.description AS description,
-                    u.phone AS phone,
-                    u.pictureFullPath AS picture_full_path,
-                    u.pictureThumbPath AS picture_thumb_path,
-                    u.translations AS user_translations,
-                    sdt.id AS specialDay_id,
-                    sdt.startDate AS specialDay_startDate,
-                    sdt.endDate As specialDay_endDate,
-                    sdpt.id AS specialDayPeriod_id,
-                    sdpt.startTime AS specialDayPeriod_startTime,
-                    sdpt.endTime AS specialDayPeriod_endTime,
-                    sdpt.locationId AS specialDayPeriod_locationId,
-                    sdpst.id AS specialDayPeriodService_id,
-                    sdpst.serviceId AS specialDayPeriodService_serviceId,
-                    dot.id AS dayOff_id,
-                    dot.name AS dayOff_name,
-                    dot.startDate AS dayOff_startDate,
-                    dot.endDate AS dayOff_endDate,
-                    dot.repeat AS dayOff_repeat
-                FROM {$this->table} u
-                LEFT JOIN {$this->providerSpecialDayTable} sdt ON sdt.userId = u.id
-                LEFT JOIN {$this->providerSpecialDayPeriodTable} sdpt ON sdpt.specialDayId = sdt.id
-                LEFT JOIN {$this->providerSpecialDayPeriodServiceTable} sdpst ON sdpst.periodId = sdpt.id
-                LEFT JOIN {$this->providerDayOffTable} dot ON dot.userId = u.id
-                $where"
-            );
-
-            $providerRows = [];
-            $serviceRows = [];
-            $providerServiceRows = [];
-
-            $statement->execute($params);
-
-            while ($row = $statement->fetch()) {
-                $this->parseUserRow($row, $providerRows, $serviceRows, $providerServiceRows);
-            }
-
-            /** @var Collection $providersWithSpecialDays */
-            $providersWithSpecialDays = call_user_func([static::FACTORY, 'createCollection'], $providerRows, $serviceRows, $providerServiceRows);
-
-            /** @var Provider $provider */
-            foreach ($providersWithSpecialDays->getItems() as $provider) {
-                $providers->getItem(
-                    $provider->getId()->getValue()
-                )->setDayOffList($provider->getDayOffList());
-
-                $providers->getItem(
-                    $provider->getId()->getValue()
-                )->setSpecialDayList($provider->getSpecialDayList());
-            }
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
-        }
-
-        return $providers;
+        return Licence::getEmployees($providers);
     }
 
     /**
@@ -979,272 +666,6 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
         }
 
         return $row;
-    }
-
-    /**
-     * @param      $criteria
-     *
-     * @return Collection
-     *
-     * @throws InvalidArgumentException
-     * @throws QueryExecutionException
-     */
-    public function getByCriteria($criteria)
-    {
-        $locationsTable = LocationsTable::getTableName();
-
-        $params = [
-            ':type' => AbstractUser::USER_ROLE_PROVIDER,
-        ];
-
-        $where = [];
-
-        if (!empty($criteria['providerStatus'])) {
-            $params[':providerStatus'] = $criteria['providerStatus'];
-
-            $where[] = 'u.status = :providerStatus';
-        }
-
-        if (!empty($criteria['serviceStatus'])) {
-            $params[':serviceStatus'] = $criteria['serviceStatus'];
-
-            $where[] = 's.status = :serviceStatus';
-        }
-
-        if (!empty($criteria['services'])) {
-            $queryServices = [];
-
-            foreach ((array)$criteria['services'] as $index => $value) {
-                $param = ':service' . $index;
-                $queryServices[] = $param;
-                $params[$param] = $value;
-            }
-
-            $where[] = 'st.serviceId IN (' . implode(', ', $queryServices) . ')';
-        }
-
-        if (!empty($criteria['providers'])) {
-            $queryProviders = [];
-
-            foreach ((array)$criteria['providers'] as $index => $value) {
-                $param = ':provider' . $index;
-                $queryProviders[] = $param;
-                $params[$param] = $value;
-            }
-
-            $where[] = 'u.id IN (' . implode(', ', $queryProviders) . ')';
-        }
-
-        $where = $where ? ' AND ' . implode(' AND ', $where) : '';
-
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT
-                    u.id AS user_id,
-                    u.firstName AS user_firstName,
-                    u.lastName AS user_lastName,
-                    u.email AS user_email,
-                    u.translations AS user_translations,
-                    u.timeZone AS user_timeZone,
-                    lt.locationId AS user_locationId,
-                    wdt.id AS weekDay_id,
-                    wdt.dayIndex AS weekDay_dayIndex,
-                    wdt.startTime AS weekDay_startTime,
-                    wdt.endTime As weekDay_endTime,
-                    pt.id AS period_id,
-                    pt.startTime AS period_startTime,
-                    pt.endTime AS period_endTime,
-                    pt.locationId AS period_locationId,
-                    pst.id AS periodService_id,
-                    pst.serviceId AS periodService_serviceId,
-                    tot.id AS timeOut_id,
-                    tot.startTime AS timeOut_startTime,
-                    tot.endTime AS timeOut_endTime,
-                    st.serviceId AS service_id,
-                    st.price AS service_price,
-                    st.customPricing AS service_customPricing,
-                    st.minCapacity AS service_minCapacity,
-                    st.maxCapacity AS service_maxCapacity,
-                    s.name AS service_name,
-                    s.description AS service_description,
-                    s.color AS service_color,
-                    s.status AS service_status,
-                    s.categoryId AS service_categoryId,
-                    s.duration AS service_duration,
-                    s.aggregatedPrice AS service_aggregatedPrice,
-                    s.bringingAnyone AS service_bringingAnyone,
-                    s.pictureFullPath AS service_picture_full,
-                    s.pictureThumbPath AS service_picture_thumb,
-                    s.settings AS service_settings,
-                    s.timeBefore AS service_timeBefore,
-                    s.timeAfter AS service_timeAfter,
-                    s.deposit AS service_deposit,
-                    s.depositPayment AS service_depositPayment,
-                    s.depositPerPerson AS service_depositPerPerson,
-                    gd.id AS google_calendar_id,
-                    gd.token AS google_calendar_token,
-                    gd.calendarId AS google_calendar_calendar_id,
-                    od.id AS outlook_calendar_id,
-                    od.token AS outlook_calendar_token,
-                    od.calendarId AS outlook_calendar_calendar_id
-                FROM {$this->table} u
-                INNER JOIN {$this->providerServicesTable} st ON st.userId = u.id
-                LEFT JOIN {$this->serviceTable} s ON s.id = st.serviceId
-                LEFT JOIN {$this->providerLocationTable} lt ON lt.userId = u.id
-                LEFT JOIN {$locationsTable} l ON (lt.locationId = l.id AND l.status = 'visible')
-                LEFT JOIN {$this->providersGoogleCalendarTable} gd ON gd.userId = u.id
-                LEFT JOIN {$this->providersOutlookCalendarTable} od ON od.userId = u.id
-                LEFT JOIN {$this->providerWeekDayTable} wdt ON wdt.userId = u.id
-                LEFT JOIN {$this->providerPeriodTable} pt ON pt.weekDayId = wdt.id
-                LEFT JOIN {$this->providerPeriodServiceTable} pst ON pst.periodId = pt.id
-                LEFT JOIN {$this->providerTimeOutTable} tot ON tot.weekDayId = wdt.id
-                WHERE u.type = :type {$where}
-                ORDER BY tot.weekDayId, wdt.dayIndex"
-            );
-
-            $statement->execute($params);
-
-            $providerRows = [];
-            $serviceRows = [];
-            $providerServiceRows = [];
-
-            while ($row = $statement->fetch()) {
-                $this->parseUserRow($row, $providerRows, $serviceRows, $providerServiceRows);
-            }
-
-            /** @var Collection $providers */
-            $providers = call_user_func([static::FACTORY, 'createCollection'], $providerRows, $serviceRows, $providerServiceRows);
-
-            $params = [
-                ':type' => AbstractUser::USER_ROLE_PROVIDER,
-            ];
-
-            $where = [];
-
-            if (!empty($criteria['providerStatus'])) {
-                $params[':providerStatus'] = $criteria['providerStatus'];
-
-                $where[] = 'u.status = :providerStatus';
-            }
-
-            if (!empty($criteria['providers'])) {
-                $queryProviders = [];
-
-                foreach ((array)$criteria['providers'] as $index => $value) {
-                    $param = ':provider' . $index;
-                    $queryProviders[] = $param;
-                    $params[$param] = $value;
-                }
-
-                $where[] = 'u.id IN (' . implode(', ', $queryProviders) . ')';
-            }
-
-            $where = $where ? ' AND ' . implode(' AND ', $where) : '';
-
-            $statement = $this->connection->prepare(
-                "SELECT
-                    u.id AS user_id,
-                    u.firstName AS user_firstName,
-                    u.lastName AS user_lastName,
-                    u.email AS user_email,
-                    u.translations AS user_translations,
-                    sdt.id AS specialDay_id,
-                    sdt.startDate AS specialDay_startDate,
-                    sdt.endDate As specialDay_endDate,
-                    sdpt.id AS specialDayPeriod_id,
-                    sdpt.startTime AS specialDayPeriod_startTime,
-                    sdpt.endTime AS specialDayPeriod_endTime,
-                    sdpt.locationId AS specialDayPeriod_locationId,
-                    sdpst.id AS specialDayPeriodService_id,
-                    sdpst.serviceId AS specialDayPeriodService_serviceId,
-                    dot.id AS dayOff_id,
-                    dot.name AS dayOff_name,
-                    dot.startDate AS dayOff_startDate,
-                    dot.endDate AS dayOff_endDate,
-                    dot.repeat AS dayOff_repeat
-                FROM {$this->table} u
-                LEFT JOIN {$this->providerSpecialDayTable} sdt ON sdt.userId = u.id
-                LEFT JOIN {$this->providerSpecialDayPeriodTable} sdpt ON sdpt.specialDayId = sdt.id
-                LEFT JOIN {$this->providerSpecialDayPeriodServiceTable} sdpst ON sdpst.periodId = sdpt.id
-                LEFT JOIN {$this->providerDayOffTable} dot ON dot.userId = u.id
-                WHERE u.type = :type {$where}"
-            );
-
-            $statement->execute($params);
-
-            $providerRows = [];
-            $serviceRows = [];
-            $providerServiceRows = [];
-
-            while ($row = $statement->fetch()) {
-                $this->parseUserRow($row, $providerRows, $serviceRows, $providerServiceRows);
-            }
-
-            /** @var Collection $providers2 */
-            $providersWithChanges = call_user_func(
-                [static::FACTORY, 'createCollection'],
-                $providerRows,
-                $serviceRows,
-                $providerServiceRows
-            );
-
-            /** @var Provider $provider */
-            foreach ($providersWithChanges->getItems() as $provider) {
-                if ($providers->keyExists($provider->getId()->getValue())) {
-                    $providers->getItem(
-                        $provider->getId()->getValue()
-                    )->setDayOffList($provider->getDayOffList());
-
-                    $providers->getItem(
-                        $provider->getId()->getValue()
-                    )->setSpecialDayList($provider->getSpecialDayList());
-                }
-            }
-
-            /** @var Provider $provider */
-            foreach ($providers->getItems() as $provider) {
-                if (!empty($criteria['location']) &&
-                    $provider->getLocationId() &&
-                    $provider->getLocationId()->getValue() !== (int)$criteria['location']
-                ) {
-                    $hasLocation = false;
-
-                    /** @var WeekDay $weekDay */
-                    foreach ($provider->getWeekDayList()->getItems() as $weekDay) {
-                        /** @var Period $period */
-                        foreach ($weekDay->getPeriodList()->getItems() as $period) {
-                            if ($period->getLocationId() &&
-                                $period->getLocationId()->getValue() === (int)$criteria['location']
-                            ) {
-                                $hasLocation = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    /** @var SpecialDay $specialDay */
-                    foreach ($provider->getSpecialDayList()->getItems() as $specialDay) {
-                        /** @var Period $period */
-                        foreach ($specialDay->getPeriodList()->getItems() as $period) {
-                            if ($period->getLocationId() &&
-                                $period->getLocationId()->getValue() === (int)$criteria['location']
-                            ) {
-                                $hasLocation = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!$hasLocation) {
-                        $providers->deleteItem($provider->getId()->getValue());
-                    }
-                }
-            }
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
-        }
-
-        return $providers;
     }
 
     /**
@@ -1362,13 +783,16 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
      * @return array
      * @throws QueryExecutionException
      */
-    public function getAvailable($dayIndex)
+    public function getAvailable($dayIndex, $providerTimeZone)
     {
-        $currentDateTime = "STR_TO_DATE('" . DateTimeService::getNowDateTime() . "', '%Y-%m-%d %H:%i:%s')";
+        $currentDateTime = DateTimeService::getNowDateTime();
+        $currentDateTimeInTimeZone = DateTimeService::getCustomDateTimeObjectInTimeZone($currentDateTime, $providerTimeZone);
+        $currentDateTimeSQL = "STR_TO_DATE('" . $currentDateTimeInTimeZone->format('Y-m-d H:i:s') . "', '%Y-%m-%d %H:%i:%s')";
 
         $params = [
-            ':dayIndex' => $dayIndex === 0 ? 7 : $dayIndex,
-            ':type'     => AbstractUser::USER_ROLE_PROVIDER
+            ':dayIndex'         => $dayIndex === 0 ? 7 : $dayIndex,
+            ':type'             => AbstractUser::USER_ROLE_PROVIDER,
+            ':providerTimeZone' => $providerTimeZone
         ];
 
         try {
@@ -1377,6 +801,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 u.firstName AS user_firstName,
                 u.lastName AS user_lastName,
                 u.translations AS user_translations,
+                u.timeZone AS user_timeZone,
                 wdt.id AS weekDay_id,
                 wdt.dayIndex AS weekDay_dayIndex,
                 wdt.startTime AS weekDay_startTime,
@@ -1389,14 +814,15 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
               LEFT JOIN {$this->providerPeriodTable} pt ON pt.weekDayId = wdt.id
               WHERE u.type = :type AND
               wdt.dayIndex = :dayIndex AND
+              (u.timeZone = NULL OR u.timeZone = :providerTimeZone) AND
               ((
-              {$currentDateTime} >= wdt.startTime AND
-              {$currentDateTime} <= wdt.endTime AND
+              {$currentDateTimeSQL} >= wdt.startTime AND
+              {$currentDateTimeSQL} <= wdt.endTime AND
               pt.startTime IS NULL AND
               pt.endTime IS NULL
               ) OR (
-              {$currentDateTime} >= pt.startTime AND
-              {$currentDateTime} <= pt.endTime AND
+              {$currentDateTimeSQL} >= pt.startTime AND
+              {$currentDateTimeSQL} <= pt.endTime AND
               pt.startTime IS NOT NULL AND
               pt.endTime IS NOT NULL
               ))");

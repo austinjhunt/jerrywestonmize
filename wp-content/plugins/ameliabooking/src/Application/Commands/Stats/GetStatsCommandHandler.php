@@ -9,7 +9,7 @@ namespace AmeliaBooking\Application\Commands\Stats;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Stats\StatsService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -57,7 +57,7 @@ class GetStatsCommandHandler extends CommandHandler
         $statsAS = $this->container->get('application.stats.service');
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
-        /** @var PackageApplicationService $packageAS */
+        /** @var AbstractPackageApplicationService $packageAS */
         $packageAS = $this->container->get('application.bookable.package');
 
         $startDate = $command->getField('params')['dates'][0] . ' 00:00:00';

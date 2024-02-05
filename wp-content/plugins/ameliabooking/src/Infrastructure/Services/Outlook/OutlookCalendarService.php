@@ -2,7 +2,7 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Outlook;
 
-use AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -32,7 +32,9 @@ use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\Appointme
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentStatusUpdatedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentTimeUpdatedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAddedEventHandler;
+use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingApprovedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingCanceledEventHandler;
+use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingRejectedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventEditedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventStatusUpdatedEventHandler;
@@ -44,18 +46,11 @@ use Microsoft\Graph\Model\Attendee;
 use Microsoft\Graph\Model\BodyType;
 use Microsoft\Graph\Model\Calendar;
 use Microsoft\Graph\Model\DateTimeTimeZone;
-use Microsoft\Graph\Model\Entity;
 use Microsoft\Graph\Model\Event;
 use Microsoft\Graph\Model\FreeBusyStatus;
 use Microsoft\Graph\Model\ItemBody;
 use Microsoft\Graph\Model\Location;
-use Microsoft\Graph\Model\PatternedRecurrence;
 use Microsoft\Graph\Model\PhysicalAddress;
-use Microsoft\Graph\Model\Recipient;
-use Microsoft\Graph\Model\RecurrencePattern;
-use Microsoft\Graph\Model\RecurrencePatternType;
-use Microsoft\Graph\Model\RecurrenceRange;
-use Microsoft\Graph\Model\RecurrenceRangeType;
 use Microsoft\Graph\Model\SingleValueLegacyExtendedProperty;
 use WP_Error;
 
@@ -64,7 +59,7 @@ use WP_Error;
  *
  * @package AmeliaBooking\Infrastructure\Services\Outlook
  */
-class OutlookCalendarService
+class OutlookCalendarService extends AbstractOutlookCalendarService
 {
     /** @var Container $container */
     private $container;
@@ -75,16 +70,12 @@ class OutlookCalendarService
     /** @var SettingsService */
     private $settings;
 
-    public static $providersOutlookEvents = [];
-
     const GUID = '{66f5a359-4659-4830-9070-00049ec6ac6e}';
 
     /**
      * OutlookCalendarService constructor.
      *
      * @param Container $container
-     *
-     * @throws ContainerException
      */
     public function __construct(Container $container)
     {
@@ -126,6 +117,9 @@ class OutlookCalendarService
         );
     }
 
+    /**
+     * @return void
+     */
     public static function handleCallback()
     {
         if (isset($_REQUEST['code'], $_REQUEST['state']) && !isset($_REQUEST['scope']) && !isset($_REQUEST['type'])) {
@@ -148,7 +142,7 @@ class OutlookCalendarService
      * @param $authCode
      * @param $redirectUri
      *
-     * @return mixed
+     * @return array
      */
     public function fetchAccessTokenWithAuthCode($authCode, $redirectUri)
     {
@@ -199,6 +193,7 @@ class OutlookCalendarService
     /**
      * @param Provider $provider
      *
+     * @return void
      * @throws ContainerException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
@@ -295,6 +290,7 @@ class OutlookCalendarService
      * @param string      $commandSlug
      * @param null|string $oldStatus
      *
+     * @return void
      * @throws ContainerException
      * @throws GraphException
      * @throws InvalidArgumentException
@@ -331,6 +327,8 @@ class OutlookCalendarService
                 case AppointmentTimeUpdatedEventHandler::TIME_UPDATED:
                 case AppointmentStatusUpdatedEventHandler::APPOINTMENT_STATUS_UPDATED:
                 case BookingCanceledEventHandler::BOOKING_CANCELED:
+                case BookingApprovedEventHandler::BOOKING_APPROVED:
+                case BookingRejectedEventHandler::BOOKING_REJECTED:
                     if ($appointmentStatus === 'canceled' || $appointmentStatus === 'rejected' ||
                         ($appointmentStatus === 'pending' && $this->settings['insertPendingAppointments'] === false)
                     ) {
@@ -359,6 +357,7 @@ class OutlookCalendarService
      * @param string $commandSlug
      * @param Collection $periods
      *
+     * @return void
      * @throws ContainerException
      * @throws GraphException
      * @throws InvalidArgumentException
@@ -420,6 +419,7 @@ class OutlookCalendarService
      * @param string $dateEnd
      * @param array $eventIds
      *
+     * @return array
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws ContainerException
@@ -493,8 +493,8 @@ class OutlookCalendarService
      * @param \DateTime  $startDateTime
      * @param \DateTime  $endDateTime
      *
+     * @return void
      * @throws InvalidArgumentException
-     * @throws QueryExecutionException
      * @throws Exception
      * @throws ContainerException
      */
@@ -715,7 +715,7 @@ class OutlookCalendarService
         /** @var LocationRepository $locationRepository */
         $locationRepository = $this->container->get('domain.locations.repository');
 
-        /** @var CustomFieldApplicationService $customFieldService */
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
 
         $type = $period ? Entities::EVENT : Entities::APPOINTMENT;

@@ -5,16 +5,11 @@
  */
 
 use AmeliaBooking\Infrastructure\Common\Container;
-use AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarService;
-use AmeliaBooking\Infrastructure\Services\LessonSpace\LessonSpaceService;
 use AmeliaBooking\Infrastructure\Services\Notification\MailerFactory;
 use AmeliaBooking\Infrastructure\Services\Notification\MailgunService;
 use AmeliaBooking\Infrastructure\Services\Notification\PHPMailService;
 use AmeliaBooking\Infrastructure\Services\Notification\SMTPService;
 use AmeliaBooking\Infrastructure\Services\Notification\WpMailService;
-use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCalendarService;
-use AmeliaBooking\Infrastructure\Services\Recaptcha\RecaptchaService;
-use AmeliaBooking\Infrastructure\Services\Zoom\ZoomService;
 
 defined('ABSPATH') or die('No script kiddies please!');
 
@@ -43,15 +38,10 @@ $entries['infrastructure.report.csv.service'] = function () {
  *
  * @param Container $c
  *
- * @return AmeliaBooking\Infrastructure\Services\Payment\PayPalService
+ * @return AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface
  */
 $entries['infrastructure.payment.payPal.service'] = function ($c) {
-    return new AmeliaBooking\Infrastructure\Services\Payment\PayPalService(
-        $c->get('domain.settings.service'),
-        new AmeliaBooking\Infrastructure\Services\Payment\CurrencyService(
-            $c->get('domain.settings.service')
-        )
-    );
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getPayPalService($c);
 };
 
 /**
@@ -59,15 +49,10 @@ $entries['infrastructure.payment.payPal.service'] = function ($c) {
  *
  * @param Container $c
  *
- * @return AmeliaBooking\Infrastructure\Services\Payment\StripeService
+ * @return AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface
  */
 $entries['infrastructure.payment.stripe.service'] = function ($c) {
-    return new AmeliaBooking\Infrastructure\Services\Payment\StripeService(
-        $c->get('domain.settings.service'),
-        new AmeliaBooking\Infrastructure\Services\Payment\CurrencyService(
-            $c->get('domain.settings.service')
-        )
-    );
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getStripeService($c);
 };
 
 /**
@@ -75,15 +60,10 @@ $entries['infrastructure.payment.stripe.service'] = function ($c) {
  *
  * @param Container $c
  *
- * @return AmeliaBooking\Infrastructure\Services\Payment\MollieService
+ * @return AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface
  */
 $entries['infrastructure.payment.mollie.service'] = function ($c) {
-    return new AmeliaBooking\Infrastructure\Services\Payment\MollieService(
-        $c->get('domain.settings.service'),
-        new AmeliaBooking\Infrastructure\Services\Payment\CurrencyService(
-            $c->get('domain.settings.service')
-        )
-    );
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getMollieService($c);
 };
 
 /**
@@ -91,15 +71,10 @@ $entries['infrastructure.payment.mollie.service'] = function ($c) {
  *
  * @param Container $c
  *
- * @return AmeliaBooking\Infrastructure\Services\Payment\RazorpayService
+ * @return AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface
  */
 $entries['infrastructure.payment.razorpay.service'] = function ($c) {
-    return new AmeliaBooking\Infrastructure\Services\Payment\RazorpayService(
-        $c->get('domain.settings.service'),
-        new AmeliaBooking\Infrastructure\Services\Payment\CurrencyService(
-            $c->get('domain.settings.service')
-        )
-    );
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getRazorpayService($c);
 };
 
 /**
@@ -135,10 +110,10 @@ $entries['infrastructure.frontend.lessParser.service'] = function ($c) {
  *
  * @param Container $c
  *
- * @return GoogleCalendarService
+ * @return AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService
  */
 $entries['infrastructure.google.calendar.service'] = function ($c) {
-    return new AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarService($c);
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getCalendarGoogleService($c);
 };
 
 /**
@@ -146,12 +121,10 @@ $entries['infrastructure.google.calendar.service'] = function ($c) {
  *
  * @param Container $c
  *
- * @return ZoomService
+ * @return AmeliaBooking\Infrastructure\Services\Zoom\AbstractZoomService
  */
 $entries['infrastructure.zoom.service'] = function ($c) {
-    return new AmeliaBooking\Infrastructure\Services\Zoom\ZoomService(
-        $c->get('domain.settings.service')
-    );
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getZoomService($c);
 };
 
 /**
@@ -159,24 +132,21 @@ $entries['infrastructure.zoom.service'] = function ($c) {
  *
  * @param Container $c
  *
- * @return LessonSpaceService
+ * @return AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService
  */
 $entries['infrastructure.lesson.space.service'] = function ($c) {
-    return new LessonSpaceService(
-        $c,
-        $c->get('domain.settings.service')
-    );
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getLessonSpaceService($c);
 };
 
 /**
- * Outlook Service
+ * Outlook Calendar Service
  *
  * @param Container $c
  *
- * @return OutlookCalendarService
+ * @return AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService
  */
 $entries['infrastructure.outlook.calendar.service'] = function ($c) {
-    return new OutlookCalendarService($c);
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getCalendarOutlookService($c);
 };
 
 /**
@@ -184,10 +154,8 @@ $entries['infrastructure.outlook.calendar.service'] = function ($c) {
  *
  * @param Container $c
  *
- * @return RecaptchaService
+ * @return AmeliaBooking\Infrastructure\Services\Recaptcha\AbstractRecaptchaService
  */
 $entries['infrastructure.recaptcha.service'] = function ($c) {
-    return new AmeliaBooking\Infrastructure\Services\Recaptcha\RecaptchaService(
-        $c->get('domain.settings.service')
-    );
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getRecaptchaService($c);
 };

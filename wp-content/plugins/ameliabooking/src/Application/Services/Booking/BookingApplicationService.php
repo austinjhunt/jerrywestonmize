@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Services\Booking;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
-use AmeliaBooking\Application\Services\Notification\WhatsAppNotificationService;
+use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -499,11 +499,8 @@ class BookingApplicationService
 
                 if ($reservation->getProvider() === null && $reservation->getProviderId() !== null) {
                     /** @var Provider $provider */
-                    $provider = $providerRepository->getByCriteriaWithSchedule(
-                        [
-                            Entities::PROVIDERS => [$reservation->getProviderId()->getValue()
-                            ]
-                        ]
+                    $provider = $providerRepository->getWithSchedule(
+                        ['providers' => [$reservation->getProviderId()->getValue()]]
                     )->getItem($reservation->getProviderId()->getValue());
 
                     $reservation->setProvider($provider);
@@ -627,13 +624,13 @@ class BookingApplicationService
 
                 if ($reservation->getProvider() === null && $reservation->getProviderId() !== null) {
                     /** @var Collection $providers */
-                    $providers = $providerRepository->getByCriteriaWithSchedule(
-                        [
-                            Entities::PROVIDERS => [$reservation->getProviderId()->getValue()]
-                        ]
+                    $providers = $providerRepository->getWithSchedule(
+                        ['providers' => [$reservation->getProviderId()->getValue()]]
                     );
+
                     /** @var Provider $provider */
                     $provider = count($providers->getItems()) ? $providers->getItem($reservation->getProviderId()->getValue()) : null;
+
                     if ($provider) {
                         $reservation->setProvider($provider);
                     }
@@ -827,7 +824,7 @@ class BookingApplicationService
         $notificationService = $this->container->get('application.emailNotification.service');
         /** @var SMSNotificationService $smsNotificationService */
         $smsNotificationService = $this->container->get('application.smsNotification.service');
-        /** @var WhatsAppNotificationService $whatsAppNotificationService */
+        /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $this->container->get('application.whatsAppNotification.service');
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');

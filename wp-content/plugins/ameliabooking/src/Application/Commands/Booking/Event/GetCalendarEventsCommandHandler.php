@@ -19,8 +19,8 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Recurring;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
-use AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarService;
-use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCalendarService;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -59,9 +59,9 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         $userAS = $this->getContainer()->get('application.user.service');
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
-        /** @var GoogleCalendarService $googleCalendarService */
+        /** @var AbstractGoogleCalendarService $googleCalendarService */
         $googleCalendarService = $this->container->get('infrastructure.google.calendar.service');
-        /** @var OutlookCalendarService $outlookCalendarService */
+        /** @var AbstractOutlookCalendarService $outlookCalendarService */
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
         /** @var EventDomainService $eventDomainService */
         $eventDomainService = $this->container->get('domain.booking.event.service');

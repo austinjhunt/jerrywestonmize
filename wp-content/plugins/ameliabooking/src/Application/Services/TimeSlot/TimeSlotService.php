@@ -3,7 +3,10 @@
 namespace AmeliaBooking\Application\Services\TimeSlot;
 
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
+use AmeliaBooking\Application\Services\Location\AbstractLocationApplicationService;
+use AmeliaBooking\Application\Services\Resource\AbstractResourceApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
+use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\SlotsEntities;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Booking\SlotsEntitiesFactory;
@@ -18,13 +21,11 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ResourceRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
-use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
-use AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarService;
-use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCalendarService;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use DateTime;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -253,16 +254,15 @@ class TimeSlotService
      * @param Collection $providers
      * @param array      $props
      *
-     * @return void
      * @throws ContainerException
      * @throws Exception
      */
     public function setBlockerAppointments($providers, $props)
     {
-        /** @var GoogleCalendarService $googleCalendarService */
+        /** @var AbstractGoogleCalendarService $googleCalendarService */
         $googleCalendarService = $this->container->get('infrastructure.google.calendar.service');
 
-        /** @var OutlookCalendarService $outlookCalendarService */
+        /** @var AbstractOutlookCalendarService $outlookCalendarService */
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
 
         /** @var EventApplicationService $eventApplicationService */
@@ -384,6 +384,7 @@ class TimeSlotService
             'adminServiceDurationAsSlot' => !$isFrontEndBooking &&
                 $userApplicationService->isAdminAndAllowedToBookAtAnyTime() &&
                 $settingsDomainService->getSetting('roles', 'adminServiceDurationAsSlot'),
+            'limitPerEmployee' => $settingsDomainService->getSetting('roles', 'limitPerEmployee'),
         ];
     }
 
@@ -402,11 +403,11 @@ class TimeSlotService
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
 
-        /** @var LocationRepository $locationRepository */
-        $locationRepository = $this->container->get('domain.locations.repository');
+        /** @var AbstractResourceApplicationService $resourceApplicationService */
+        $resourceApplicationService = $this->container->get('application.resource.service');
 
-        /** @var ResourceRepository $resourceRepository */
-        $resourceRepository = $this->container->get('domain.bookable.resource.repository');
+        /** @var AbstractLocationApplicationService $locationAS */
+        $locationAS = $this->container->get('application.location.service');
 
         /** @var Collection $services */
         $services = $serviceRepository->getWithExtras(
@@ -424,10 +425,10 @@ class TimeSlotService
         );
 
         /** @var Collection $locations */
-        $locations = $locationRepository->getAllIndexedById();
+        $locations = $locationAS->getAllIndexedById();
 
         /** @var Collection $resources */
-        $resources = $resourceRepository->getByCriteria(['status' => Status::VISIBLE]);
+        $resources = $resourceApplicationService->getAll(['status' => Status::VISIBLE]);
 
         /** @var SlotsEntities $slotEntities */
         $slotEntities = SlotsEntitiesFactory::create();

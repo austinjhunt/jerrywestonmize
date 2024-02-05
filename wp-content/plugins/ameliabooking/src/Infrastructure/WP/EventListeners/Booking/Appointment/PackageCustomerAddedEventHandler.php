@@ -11,13 +11,11 @@ use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
-use AmeliaBooking\Application\Services\WebHook\WebHookApplicationService;
+use AmeliaBooking\Application\Services\WebHook\AbstractWebHookApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomerService;
-use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
-use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -25,7 +23,6 @@ use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
-use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use Exception;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -61,7 +58,7 @@ class PackageCustomerAddedEventHandler
         /** @var SMSNotificationService $smsNotificationService */
         $smsNotificationService = $container->get('application.smsNotification.service');
 
-        /** @var WebHookApplicationService $webHookService */
+        /** @var AbstractWebHookApplicationService $webHookService */
         $webHookService = $container->get('application.webHook.service');
 
         /** @var SettingsService $settingsService */

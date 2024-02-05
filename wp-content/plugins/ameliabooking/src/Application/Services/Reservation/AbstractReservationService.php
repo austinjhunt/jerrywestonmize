@@ -3,11 +3,11 @@
 namespace AmeliaBooking\Application\Services\Reservation;
 
 use AmeliaBooking\Application\Commands\CommandResult;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
-use AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\User\CustomerApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
@@ -57,7 +57,7 @@ use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingR
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
-use AmeliaBooking\Infrastructure\Services\Recaptcha\RecaptchaService;
+use AmeliaBooking\Infrastructure\Services\Recaptcha\AbstractRecaptchaService;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use DateTime;
@@ -158,13 +158,9 @@ abstract class AbstractReservationService implements ReservationServiceInterface
 
         $type = $data['type'] ?: Entities::APPOINTMENT;
 
-        /** @var AbstractUser $currentUser */
-        $currentUser = $this->container->get('logged.in.user');
-
         if (!empty($data['payment']['gateway']) &&
-            $data['payment']['gateway'] === 'onSite' &&
-            $currentUser &&
-            $currentUser->getType() === Entities::CUSTOMER
+            ($data['payment']['gateway'] === 'onSite' || ($data['payment']['gateway'] === 'stripe' && empty($data['payment']['data']['paymentIntentId']))) &&
+            empty($data['isBackendOrCabinet'])
         ) {
             /** @var SettingsService $settingsService */
             $settingsService = $this->container->get('domain.settings.service');
@@ -175,7 +171,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             );
 
             if ($googleRecaptchaSettings['enabled']) {
-                /** @var RecaptchaService $recaptchaService */
+                /** @var AbstractRecaptchaService $recaptchaService */
                 $recaptchaService = $this->container->get('infrastructure.recaptcha.service');
 
                 if (!array_key_exists('recaptcha', $data) || !$recaptchaService->verify($data['recaptcha'])) {
@@ -218,7 +214,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 }
 
                 if ($reservation->getPackageCustomerServices()) {
-                    /** @var PackageApplicationService $packageApplicationService */
+                    /** @var AbstractPackageApplicationService $packageApplicationService */
                     $packageApplicationService = $this->container->get('application.bookable.package');
 
                     $packageApplicationService->deletePackageCustomer($reservation->getPackageCustomerServices());
@@ -232,7 +228,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             return $result;
         }
 
-        $this->finalize($result, $reservation, new BookingType($type), is_string($data['isCart']) ? filter_var($data['isCart'], FILTER_VALIDATE_BOOLEAN) : !empty($data['isCart']));
+        $this->finalize($result, $reservation, new BookingType($type), isset($data['isCart']) && is_string($data['isCart']) ? filter_var($data['isCart'], FILTER_VALIDATE_BOOLEAN) : !empty($data['isCart']));
 
         $paymentAS->setPaymentTransactionId(
             !empty($result->getData()['payment']['id']) ? $result->getData()['payment']['id'] : null,
@@ -331,7 +327,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         }
 
         if ($reservation->hasCustomFieldsValidation()->getValue()) {
-            /** @var CustomFieldApplicationService $customFieldService */
+            /** @var AbstractCustomFieldApplicationService $customFieldService */
             $customFieldService = $this->container->get('application.customField.service');
 
             $appointmentData['uploadedCustomFieldFilesInfo'] = [];
@@ -489,10 +485,10 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             return;
         }
 
-        /** @var CustomFieldApplicationService $customFieldService */
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
 
-        if ($reservation->getBooking()) {
+        if ($reservation->getBooking() && $reservation->getBooking()->getId()) {
             $customFieldService->saveUploadedFiles(
                 $reservation->getBooking()->getId()->getValue(),
                 $reservation->getUploadedCustomFieldFilesInfo(),
@@ -784,44 +780,6 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         return true;
     }
 
-    /**
-     * @param float            $paymentAmount
-     * @param AbstractBookable $bookable
-     * @param int              $persons
-     *
-     * @return float
-     */
-    public function calculateDepositAmount($paymentAmount, $bookable, $persons)
-    {
-        if ($bookable->getDepositPayment()->getValue() !== DepositType::DISABLED) {
-            switch ($bookable->getDepositPayment()->getValue()) {
-                case DepositType::FIXED:
-                    if ($bookable->getDepositPerPerson() && $bookable->getDepositPerPerson()->getValue()) {
-                        if ($paymentAmount > $persons * $bookable->getDeposit()->getValue()) {
-                            return $persons * $bookable->getDeposit()->getValue();
-                        }
-                    } else {
-                        if ($paymentAmount > $bookable->getDeposit()->getValue()) {
-                            return $bookable->getDeposit()->getValue();
-                        }
-                    }
-
-                    break;
-
-                case DepositType::PERCENTAGE:
-                    $depositAmount = round($paymentAmount / 100 * $bookable->getDeposit()->getValue(), 2);
-
-                    if ($paymentAmount > $depositAmount) {
-                        return $depositAmount;
-                    }
-
-                    break;
-            }
-        }
-
-        return $paymentAmount;
-    }
-
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param int    $bookingId
@@ -954,6 +912,18 @@ abstract class AbstractReservationService implements ReservationServiceInterface
 
             $bookingId = 0;
             $appointmentStatusChanged = false;
+
+            /** @var PaymentRepository $paymentRepository */
+            $paymentRepository = $this->container->get('domain.payment.repository');
+
+            if (!empty($result->getData()['paymentId'])) {
+                /** @var Payment $payment */
+                $payment = $paymentRepository->getById($result->getData()['paymentId']);
+
+                if ($payment && $payment->getActionsCompleted() && $payment->getActionsCompleted()->getValue()) {
+                    return;
+                }
+            }
 
             switch ($result->getData()['type']) {
                 case (Entities::APPOINTMENT):

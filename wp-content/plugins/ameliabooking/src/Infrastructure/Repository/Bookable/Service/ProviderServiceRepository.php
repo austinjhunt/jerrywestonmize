@@ -2,13 +2,11 @@
 
 namespace AmeliaBooking\Infrastructure\Repository\Bookable\Service;
 
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
+use AmeliaBooking\Infrastructure\Licence;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
-use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\PackagesServicesTable;
-use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
 
 /**
  * Class ProviderServiceRepository
@@ -36,15 +34,32 @@ class ProviderServiceRepository extends AbstractRepository
             ':minCapacity'   => $data['minCapacity'],
             ':maxCapacity'   => $data['maxCapacity'],
             ':price'         => $data['price'],
-            ':customPricing' => $data['customPricing'],
         ];
+
+        $additionalData = Licence\DataModifier::getProviderServiceRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values']);
 
         try {
             $statement = $this->connection->prepare(
                 "INSERT INTO {$this->table}
-                (`userId`, `serviceId`, `minCapacity`, `maxCapacity`, `price`, `customPricing`)
+                (
+                 {$additionalData['columns']}
+                 `userId`,
+                 `serviceId`,
+                 `minCapacity`,
+                 `maxCapacity`,
+                 `price`
+                 )
                 VALUES
-                (:userId, :serviceId, :minCapacity, :maxCapacity, :price, :customPricing)"
+                (
+                 {$additionalData['placeholders']}
+                 :userId,
+                 :serviceId,
+                 :minCapacity,
+                 :maxCapacity,
+                 :price
+                 )"
             );
 
             $res = $statement->execute($params);
@@ -74,13 +89,20 @@ class ProviderServiceRepository extends AbstractRepository
             ':minCapacity'   => $data['minCapacity'],
             ':maxCapacity'   => $data['maxCapacity'],
             ':price'         => $data['price'],
-            ':customPricing' => $data['customPricing'],
         ];
+
+        $additionalData = Licence\DataModifier::getProviderServiceRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values']);
 
         try {
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
-                SET `minCapacity` = :minCapacity, `maxCapacity` = :maxCapacity, `price` = :price, `customPricing` = :customPricing
+                SET
+                {$additionalData['columnsPlaceholders']}
+                `minCapacity` = :minCapacity,
+                `maxCapacity` = :maxCapacity,
+                `price` = :price
                 WHERE id = :id"
             );
 

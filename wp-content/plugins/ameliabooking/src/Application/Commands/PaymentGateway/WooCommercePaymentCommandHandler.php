@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Commands\PaymentGateway;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
-use AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\ForbiddenFileUploadException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -74,7 +74,7 @@ class WooCommercePaymentCommandHandler extends CommandHandler
             return $result;
         }
 
-        /** @var CustomFieldApplicationService $customFieldService */
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
 
         $uploadedCustomFieldFilesNames = $customFieldService->saveUploadedFiles(
@@ -196,9 +196,7 @@ class WooCommercePaymentCommandHandler extends CommandHandler
         $result->setMessage('Proceed to WooCommerce Cart');
         $result->setData(
             [
-                'cartUrl' => WooCommerceService::getPageUrl(
-                    !empty($appointmentData['locale']) ? $appointmentData['locale'] : ''
-                )
+                'cartUrl' => WooCommerceService::getPageUrl($appointmentData)
             ]
         );
 

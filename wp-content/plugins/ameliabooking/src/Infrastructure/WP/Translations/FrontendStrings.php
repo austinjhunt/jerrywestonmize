@@ -4,6 +4,7 @@ namespace AmeliaBooking\Infrastructure\WP\Translations;
 
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
+use AmeliaBooking\Infrastructure\Licence;
 
 /**
  * Class FrontendStrings
@@ -62,8 +63,9 @@ class FrontendStrings
      *
      * @return array
      */
-    public static function getBookableStrings() {
-        $labels = [
+    public static function getBookableStrings()
+    {
+        $labels = Licence\Licence::$premium ? [
             'allow_customers_to_pay_total'       => __('Check this option if you want your<br> customers to have the option to choose<br> whether they will pay a full amount<br> or just a deposit. If unchecked,<br> customers will only have deposit<br> as a payment option.', 'wpamelia'),
             'deposit_by_the_number_of_people'    => __('Check this option if you want the deposit<br> amount to be multiplied by the number<br> of people that customers add in the<br> "Bringing anyone with you" section.', 'wpamelia'),
             'allow_total_amount'                 => __('Allow customers to pay total appointment amount', 'wpamelia'),
@@ -83,7 +85,7 @@ class FrontendStrings
             'pricing_by_date_enabled'            => __('Pricing by Date range', 'wpamelia'),
             'pricing'                            => __('Pricing', 'wpamelia'),
             'event_date_range'                   => __('Date range', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getBookableStrings());
     }
@@ -95,7 +97,7 @@ class FrontendStrings
      */
     public static function getCommonStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'add_coupon'                   => __('Add Coupon', 'wpamelia'),
             'and'                          => __('and', 'wpamelia'),
             'no_package_services'          => __('It seems like there are no available or visible services assigned to the packages, at this moment.', 'wpamelia'),
@@ -195,7 +197,7 @@ class FrontendStrings
             'year'                         => __('Year', 'wpamelia'),
             'years'                        => __('Years', 'wpamelia'),
             'free'                         => __('Free', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getCommonStrings());
     }
@@ -207,7 +209,7 @@ class FrontendStrings
      */
     public static function getSearchStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'appointment_date_colon'  => __('Appointment Date:', 'wpamelia'),
             'book_package'            => __('Book Package', 'wpamelia'),
             'bringing_anyone'         => __('Bringing anyone with you?', 'wpamelia'),
@@ -233,7 +235,7 @@ class FrontendStrings
             'time_range_colon'        => __('Time Range:', 'wpamelia'),
             'to_lower'                => __('to', 'wpamelia'),
             'to_upper'                => __('To', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getSearchStrings());
     }
@@ -245,7 +247,7 @@ class FrontendStrings
      */
     public static function getBookingStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'add_extra'                    => __('Add extra', 'wpamelia'),
             'add_people'                   => __('Number of people that are coming with you.', 'wpamelia'),
             'any'                          => __('Any', 'wpamelia'),
@@ -454,7 +456,7 @@ class FrontendStrings
             'congrats_cart'                => __('Total Services Booked', 'wpamelia'),
 
             'whatsapp_opt_in_text'         => __('By entering your phone number you agree to receive messages via WhatsApp', 'wpamelia')
-        ];
+        ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getBookingStrings());
     }
@@ -466,7 +468,7 @@ class FrontendStrings
      */
     public static function getEventStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'add_ticket_category'       => __('Add Pricing Category', 'wpamelia'),
             'apply_to_all'              => __('Apply this to all recurring events', 'wpamelia'),
             'custom_pricing_warning'    => __('Custom pricing spots will override Maximum allowed spots value.', 'wpamelia'),
@@ -515,7 +517,7 @@ class FrontendStrings
             'event_tickets_left'        => __('tickets left', 'wpamelia'),
             'event_ticket_left'         => __('ticket left', 'wpamelia'),
             'back_btn'                  => __('Go Back', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getEventStrings());
     }
@@ -527,7 +529,7 @@ class FrontendStrings
      */
     public static function getCatalogStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'booking_appointment'                => __('Booking Appointment', 'wpamelia'),
             'buffer_time'                        => __('Buffer Time', 'wpamelia'),
             'description_colon'                  => __('Description:', 'wpamelia'),
@@ -562,7 +564,7 @@ class FrontendStrings
             'book_package'                       => __('Book This Package', 'wpamelia'),
             'no_search_data'                     => __('No results', 'wpamelia'),
             'tab_employees'                      => __('Employees', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getCatalogStrings());
     }
@@ -574,7 +576,7 @@ class FrontendStrings
      */
     public static function getCabinetStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'add_date'                               => __('Add Date', 'wpamelia'),
             'add_day_off'                            => __('Add Day Off', 'wpamelia'),
             'add_day_off_placeholder'                => __('Enter holiday or day off name', 'wpamelia'),
@@ -787,7 +789,6 @@ class FrontendStrings
             'new_password_length'                    => __('Password must be longer than 3 characters', 'wpamelia'),
             'new_password_required'                  => __('Please enter new password', 'wpamelia'),
             'no_attendees_yet'                       => __('There are no attendees yet...', 'wpamelia'),
-            'no_results'                             => __('There are no results...', 'wpamelia'),
             'no_selected_extras_requirements'        => __('Select customer, employee and service', 'wpamelia'),
             'no_selected_slot_requirements'          => __('Select date and time', 'wpamelia'),
             'no-show'                                => __('No-show', 'wpamelia'),
@@ -948,7 +949,7 @@ class FrontendStrings
             'tax'                                    => __('Tax', 'wpamelia'),
             'due'                                    => __('Due', 'wpamelia'),
             'google_meet_link'                       => __('Google Meet Link', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getCabinetStrings());
     }

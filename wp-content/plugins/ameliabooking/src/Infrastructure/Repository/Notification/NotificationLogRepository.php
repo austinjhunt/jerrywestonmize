@@ -921,13 +921,14 @@ class NotificationLogRepository extends AbstractRepository
                 WHERE 
                 u.type = :type AND
                 u.status = :statusVisible AND
-                MONTH(birthday) = MONTH({$currentDate}) AND
+                MONTH(u.birthday) = MONTH({$currentDate}) AND
                 DAY(u.birthday) = DAY({$currentDate}) AND 
                 u.id NOT IN (
                   SELECT nl.userID 
                   FROM {$this->table} nl 
                   INNER JOIN {$this->notificationsTable} n ON nl.notificationId = n.id 
-                  WHERE n.name = 'customer_birthday_greeting' AND n.type = '{$notificationType}'
+                  WHERE n.name = 'customer_birthday_greeting' AND n.type = '{$notificationType}' AND
+                  YEAR(nl.sentDateTime) = YEAR({$currentDate}) AND (nl.sent IS NULL OR nl.sent = 1)
                 )"
             );
 

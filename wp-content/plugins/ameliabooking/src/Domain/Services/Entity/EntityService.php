@@ -150,7 +150,7 @@ class EntityService
      * @param Collection    $appointments
      * @param array         $props
      *
-     * @return void
+     * @return array
      * @throws InvalidArgumentException
      */
     public function filterSlotsAppointments($slotsEntities, $appointments, $props)
@@ -175,6 +175,7 @@ class EntityService
         }
 
         $continuousAppointments = [];
+        $continuousAppointmentsProviders = [];
 
         $lastIndex = null;
 
@@ -210,6 +211,12 @@ class EntityService
                     $continuousAppointments[$appointment->getBookingStart()->getValue()->format('Y-m-d')]
                     [$appointment->getBookingStart()->getValue()->format('H:i')] = [];
 
+                    if (empty($continuousAppointmentsProviders[$appointment->getBookingStart()->getValue()->format('Y-m-d')][$appointment->getProviderId()->getValue()])) {
+                        $continuousAppointmentsProviders[$appointment->getBookingStart()->getValue()->format('Y-m-d')][$appointment->getProviderId()->getValue()] = 1;
+                    } else {
+                        $continuousAppointmentsProviders[$appointment->getBookingStart()->getValue()->format('Y-m-d')][$appointment->getProviderId()->getValue()]++;
+                    }
+
                     $previousAppointment->setBookingEnd(
                         new DateTimeValue(
                             DateTimeService::getCustomDateTimeObject(
@@ -227,7 +234,7 @@ class EntityService
             }
         }
 
-        return $continuousAppointments;
+        return [$continuousAppointments, $continuousAppointmentsProviders];
     }
 
     /**

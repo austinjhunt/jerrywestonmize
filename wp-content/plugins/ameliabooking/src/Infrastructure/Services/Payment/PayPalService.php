@@ -6,7 +6,6 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Payment;
 
-use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use Omnipay\Omnipay;

@@ -11,7 +11,7 @@ namespace AmeliaBooking\Application\Services\Location;
  *
  * @package AmeliaBooking\Application\Services\Location
  */
-class CurrentLocation
+class CurrentLocation extends AbstractCurrentLocation
 {
     /**
      * Get country ISO code by public IP address

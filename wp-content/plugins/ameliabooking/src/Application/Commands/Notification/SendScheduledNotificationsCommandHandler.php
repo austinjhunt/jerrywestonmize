@@ -6,7 +6,7 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
-use AmeliaBooking\Application\Services\Notification\WhatsAppNotificationService;
+use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 
@@ -33,7 +33,7 @@ class SendScheduledNotificationsCommandHandler extends CommandHandler
         $notificationService = $this->getContainer()->get('application.emailNotification.service');
         /** @var SMSNotificationService $smsNotificationService */
         $smsNotificationService = $this->getContainer()->get('application.smsNotification.service');
-        /** @var WhatsAppNotificationService $whatsAppNotificationService */
+        /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $this->getContainer()->get('application.whatsAppNotification.service');
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');

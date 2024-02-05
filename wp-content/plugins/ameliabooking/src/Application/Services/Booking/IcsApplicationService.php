@@ -3,7 +3,7 @@
 namespace AmeliaBooking\Application\Services\Booking;
 
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -232,7 +232,7 @@ class IcsApplicationService
         /** @var PlaceholderService $placeholderService */
         $placeholderService = $this->container->get("application.placeholder.{$type}.service");
 
-        /** @var CustomFieldApplicationService $customFieldService */
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
 
 

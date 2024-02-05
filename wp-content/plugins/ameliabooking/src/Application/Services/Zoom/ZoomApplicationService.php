@@ -15,13 +15,14 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventPeriodsRepository;
+use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingApprovedEventHandler;
+use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingRejectedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventEditedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventStatusUpdatedEventHandler;
 use AmeliaBooking\Domain\Factory\Zoom\ZoomFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
-use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentDeletedEventHandler;
@@ -30,7 +31,7 @@ use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\Appointme
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentTimeUpdatedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingCanceledEventHandler;
-use AmeliaBooking\Infrastructure\Services\Zoom\ZoomService;
+use AmeliaBooking\Infrastructure\Services\Zoom\AbstractZoomService;
 use \DateTimeZone;
 
 /**
@@ -38,24 +39,11 @@ use \DateTimeZone;
  *
  * @package AmeliaBooking\Application\Services\Zoom
  */
-class ZoomApplicationService
+class ZoomApplicationService extends AbstractZoomApplicationService
 {
-    /** @var Container $container */
-    private $container;
-
     const SCHEDULED_MEETING = 2;
 
     const RECURRING_WITH_FIXED_TIME_MEETING = 8;
-
-    /**
-     * ZoomApplicationService constructor.
-     *
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
 
     /**
      * @param Appointment $reservation
@@ -139,6 +127,8 @@ class ZoomApplicationService
                 case AppointmentStatusUpdatedEventHandler::APPOINTMENT_STATUS_UPDATED:
                 case AppointmentEditedEventHandler::BOOKING_STATUS_UPDATED:
                 case BookingCanceledEventHandler::BOOKING_CANCELED:
+                case BookingApprovedEventHandler::BOOKING_APPROVED:
+                case BookingRejectedEventHandler::BOOKING_REJECTED:
                     $this->processMeetingForStatusChange($reservation, false);
                     break;
 
@@ -308,6 +298,17 @@ class ZoomApplicationService
     }
 
     /**
+     * @return array
+     */
+    public function getUsers()
+    {
+        /** @var AbstractZoomService $zoomService */
+        $zoomService = $this->container->get('infrastructure.zoom.service');
+
+        return $zoomService->getUsers();
+    }
+
+    /**
      * @param Appointment|EventPeriod $reservation
      * @param AbstractRepository      $repository
      *
@@ -319,7 +320,7 @@ class ZoomApplicationService
      */
     public function removeMeeting($reservation, $repository)
     {
-        /** @var ZoomService $zoomService */
+        /** @var AbstractZoomService $zoomService */
         $zoomService = $this->container->get('infrastructure.zoom.service');
 
         if ($reservation->getZoomMeeting() && $reservation->getZoomMeeting()->getId()) {
@@ -347,7 +348,7 @@ class ZoomApplicationService
      */
     private function getMeeting($reservation)
     {
-        /** @var ZoomService $zoomService */
+        /** @var AbstractZoomService $zoomService */
         $zoomService = $this->container->get('infrastructure.zoom.service');
 
         $zoomResult = $zoomService->getMeeting($reservation->getZoomMeeting()->getId()->getValue());
@@ -377,7 +378,7 @@ class ZoomApplicationService
      */
     private function createOrEditAppointmentMeeting($reservation, $zoomLicencedUsers = false)
     {
-        /** @var ZoomService $zoomService */
+        /** @var AbstractZoomService $zoomService */
         $zoomService = $this->container->get('infrastructure.zoom.service');
 
         $meetingStart = DateTimeService::getCustomDateTimeObject(
@@ -448,7 +449,7 @@ class ZoomApplicationService
      */
     private function createOrEditEventMeeting($reservation, $periods, $zoomLicencedUsers = false)
     {
-        /** @var ZoomService $zoomService */
+        /** @var AbstractZoomService $zoomService */
         $zoomService = $this->container->get('infrastructure.zoom.service');
 
         /** @var EventPeriodsRepository $eventPeriodsRepository */

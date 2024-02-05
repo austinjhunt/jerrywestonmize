@@ -6,28 +6,11 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Recaptcha;
 
-use AmeliaBooking\Domain\Services\Settings\SettingsService;
-
 /**
  * Class RecaptchaService
  */
-class RecaptchaService
+class RecaptchaService extends AbstractRecaptchaService
 {
-    /**
-     * @var SettingsService $settingsService
-     */
-    private $settingsService;
-
-    /**
-     * RecaptchaService constructor.
-     *
-     * @param SettingsService $settingsService
-     */
-    public function __construct(SettingsService $settingsService)
-    {
-        $this->settingsService = $settingsService;
-    }
-
     /**
      * @param string $value
      *

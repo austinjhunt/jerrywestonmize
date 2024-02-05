@@ -7,8 +7,9 @@
 namespace AmeliaBooking\Infrastructure\WP\GutenbergBlock;
 
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
+use AmeliaBooking\Application\Services\Location\AbstractLocationApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\User\Provider;
@@ -20,7 +21,6 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\CategoryRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventTagsRepository;
-use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -157,10 +157,10 @@ class GutenbergBlock
         try {
             self::setContainer(require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php');
 
-            /** @var LocationRepository $locationRepository */
-            $locationRepository = self::$container->get('domain.locations.repository');
+            /** @var AbstractLocationApplicationService $locationAS */
+            $locationAS = self::$container->get('application.location.service');
 
-            $locations = $locationRepository->getAllOrderedByName();
+            $locations = $locationAS->getAllOrderedByName();
 
             $resultData['locations'] = $locations->toArray();
 
@@ -186,7 +186,7 @@ class GutenbergBlock
             $providerAS = self::$container->get('application.user.provider.service');
 
             /** @var Collection $providers */
-            $providers = $providerRepository->getByCriteriaWithSchedule([]);
+            $providers = $providerRepository->getWithSchedule([]);
 
             $providerServicesData = $providerRepository->getProvidersServices();
 
@@ -266,7 +266,7 @@ class GutenbergBlock
                 ]
             );
 
-            /** @var PackageApplicationService $packageApplicationService */
+            /** @var AbstractPackageApplicationService $packageApplicationService */
             $packageApplicationService = self::$container->get('application.bookable.package');
 
             $finalData['packages'] = $packageApplicationService->getPackagesArray();

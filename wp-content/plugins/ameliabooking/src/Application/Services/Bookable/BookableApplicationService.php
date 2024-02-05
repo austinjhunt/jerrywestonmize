@@ -30,6 +30,7 @@ use AmeliaBooking\Domain\Factory\Bookable\Service\PackageServiceFactory;
 use AmeliaBooking\Domain\Factory\Location\LocationFactory;
 use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\User\ProviderService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\Duration;
 use AmeliaBooking\Domain\ValueObjects\Json;
@@ -37,7 +38,6 @@ use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\PositiveInteger;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
-use AmeliaBooking\Domain\ValueObjects\PositiveDuration;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -354,8 +354,33 @@ class BookableApplicationService
         /** @var SpecialDayPeriodServiceRepository $specialDayPeriodServiceRepo */
         $specialDayPeriodServiceRepo = $this->container->get('domain.schedule.specialDay.period.service.repository');
 
+        /** @var ServiceRepository $serviceRepository */
+        $serviceRepository = $this->container->get('domain.bookable.service.repository');
+        /** @var ProviderService $providerDomainService */
+        $providerDomainService = $this->container->get('domain.user.provider.service');
+
+        /** @var Collection $services */
+        $services = $serviceRepository->getAllArrayIndexedById();
+
+        /** @var Collection $providers */
+        $providers = $providerRepo->getWithSchedule([]);
+
         /** @var Collection $serviceProviders */
-        $serviceProviders = $providerRepo->getByCriteria(['services' => [$service->getId()->getValue()]]);
+        $serviceProviders = new Collection();
+
+        /** @var Provider $provider */
+        foreach ($providers->getItems() as $provider) {
+            /** @var Service $providerService */
+            foreach ($provider->getServiceList()->getItems() as $providerService) {
+                if ($providerService->getId()->getValue() === $service->getId()->getValue()) {
+                    $providerDomainService->setProviderServices($provider, $services, true);
+
+                    $serviceProviders->addItem($provider);
+
+                    break;
+                }
+            }
+        }
 
         $serviceId = $service->getId()->getValue();
 
@@ -495,67 +520,6 @@ class BookableApplicationService
     }
 
     /**
-     * @param Service $service
-     *
-     * @throws ContainerValueNotFoundException
-     * @throws QueryExecutionException
-     */
-    public function manageExtrasForServiceAdd($service)
-    {
-        /** @var ServiceRepository $serviceRepository */
-        $serviceRepository = $this->container->get('domain.bookable.service.repository');
-        /** @var ExtraRepository $extraRepository */
-        $extraRepository = $this->container->get('domain.bookable.extra.repository');
-
-        if ($service->getExtras() !== null) {
-            $extras = $service->getExtras();
-            foreach ($extras->getItems() as $extra) {
-                /** @var Extra $extra */
-                $extra->setServiceId(new Id($service->getId()->getValue()));
-
-                if (!($extraId = $extraRepository->add($extra))) {
-                    $serviceRepository->rollback();
-                }
-
-                $extra->setId(new Id($extraId));
-            }
-        }
-    }
-
-    /**
-     * @param Service $service
-     *
-     * @throws ContainerValueNotFoundException
-     * @throws QueryExecutionException
-     */
-    public function manageExtrasForServiceUpdate($service)
-    {
-        /** @var ServiceRepository $serviceRepository */
-        $serviceRepository = $this->container->get('domain.bookable.service.repository');
-        /** @var ExtraRepository $extraRepository */
-        $extraRepository = $this->container->get('domain.bookable.extra.repository');
-
-        if ($service->getExtras() !== null) {
-            $extras = $service->getExtras();
-            foreach ($extras->getItems() as $extra) {
-                /** @var Extra $extra */
-                $extra->setServiceId(new Id($service->getId()->getValue()));
-                if ($extra->getId() === null) {
-                    if (!($extraId = $extraRepository->add($extra))) {
-                        $serviceRepository->rollback();
-                    }
-
-                    $extra->setId(new Id($extraId));
-                } else {
-                    if (!$extraRepository->update($extra->getId()->getValue(), $extra)) {
-                        $serviceRepository->rollback();
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Accept two collection: services and providers
      * For each service function will add providers that are working on this service
      *
@@ -683,7 +647,7 @@ class BookableApplicationService
         /** @var Collection $packageCustomerServices */
         $packageCustomerServices = $packageCustomerServiceRepository->getByCriteria(['services' => $servicesIds]);
 
-        /** @var PackageApplicationService $packageApplicationService */
+        /** @var AbstractPackageApplicationService $packageApplicationService */
         $packageApplicationService = $this->container->get('application.bookable.package');
 
         return [
@@ -737,7 +701,7 @@ class BookableApplicationService
             }
         }
 
-        /** @var PackageApplicationService $packageApplicationService */
+        /** @var AbstractPackageApplicationService $packageApplicationService */
         $packageApplicationService = $this->container->get('application.bookable.package');
 
         return [

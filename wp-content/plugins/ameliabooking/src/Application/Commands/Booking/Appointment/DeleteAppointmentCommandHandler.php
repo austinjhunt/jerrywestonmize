@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Commands\Booking\Appointment;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -50,7 +50,7 @@ class DeleteAppointmentCommandHandler extends CommandHandler
         /** @var AppointmentApplicationService $appointmentApplicationService */
         $appointmentApplicationService = $this->container->get('application.booking.appointment.service');
 
-        /** @var CustomFieldApplicationService $customFieldService */
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
 
         /** @var Appointment $appointment */

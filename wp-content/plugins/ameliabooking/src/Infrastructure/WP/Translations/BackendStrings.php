@@ -2,6 +2,8 @@
 
 namespace AmeliaBooking\Infrastructure\WP\Translations;
 
+use AmeliaBooking\Infrastructure\Licence;
+
 /**
  * Class BackendStrings
  *
@@ -20,7 +22,7 @@ class BackendStrings
      */
     public static function getCommonStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'add'                       => __('Add', 'wpamelia'),
             'all'                       => __('All', 'wpamelia'),
             'all_locations'             => __('All Locations', 'wpamelia'),
@@ -41,20 +43,8 @@ class BackendStrings
             'customer_already_booked'   => __('Customer has already booked this appointment', 'wpamelia'),
             'date_specific'             => __('Specific Date', 'wpamelia'),
             'expired'                   => __('Expired', 'wpamelia'),
-            'minutes'                   => __('Minutes', 'wpamelia'),
-            'hour'                      => __('Hour', 'wpamelia'),
-            'hours'                     => __('Hours', 'wpamelia'),
-            'day'                       => __('Day', 'wpamelia'),
-            'days'                      => __('Days', 'wpamelia'),
-            'week'                      => __('Week', 'wpamelia'),
-            'weeks'                     => __('Weeks', 'wpamelia'),
-            'month'                     => __('Month', 'wpamelia'),
-            'months'                    => __('Months', 'wpamelia'),
-            'year'                      => __('Year', 'wpamelia'),
-            'years'                     => __('Years', 'wpamelia'),
             'discard'                   => __('Discard', 'wpamelia'),
             'discount'                  => __('Discount (%)', 'wpamelia'),
-            'employees'                 => __('Employees', 'wpamelia'),
             'expiration_date'           => __('Expiration date', 'wpamelia'),
             'event_tickets'             => __('Tickets', 'wpamelia'),
             'import'                    => __('Import', 'wpamelia'),
@@ -66,7 +56,6 @@ class BackendStrings
             'manage_badges'             => __('Manage Badges', 'wpamelia'),
             'manage_employee_badges'    => __('Manage Employee Badges', 'wpamelia'),
             'no_employees_yet'          => __('You don\'t have any employees here yet...', 'wpamelia'),
-            'ok'                        => __('OK', 'wpamelia'),
             'on_site_tooltip'           => __('Here you can enable/disable On-Site payments for this service', 'wpamelia'),
             'open'                      => __('Open', 'wpamelia'),
             'package'                   => __('Package', 'wpamelia'),
@@ -130,7 +119,7 @@ class BackendStrings
 
             'whats_new_heading'                  => __('New update is here!', 'wpamelia'),
             'whats_new_go_to'                    => __('Go to the What\'s New page', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getCommonStrings());
     }
@@ -142,7 +131,7 @@ class BackendStrings
      */
     public static function getSettingsStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'activation_activated'                   => __('Plugin has been activated', 'wpamelia'),
             'activation_deactivated'                 => __('Plugin has been deactivated', 'wpamelia'),
             'activation_envato_failed'               => __('It seems that Envato API is currently busy (please try again) or you don\'t have a valid purchase of Amelia', 'wpamelia'),
@@ -153,18 +142,13 @@ class BackendStrings
             'add_new_role'                           => __('Add New Role', 'wpamelia'),
             'admin_time_slot_service_duration'       => __('Booking Time Slots will depend on the service duration', 'wpamelia'),
             'admin_time_slot_service_duration_tt'    => __('When this option is deactivated, the booking will be<br/>determined based on the Default Time Slot Step', 'wpamelia'),
-            'allow_booking_if_pending_tooltip'       => __('If this is disabled, your front-end customers won\'t be able to book appointment with Pending status above the maximum capacity.<br/>Once the maximum capacity is reached appointment will close and time slot will become unavailable.', 'wpamelia'),
-            'allow_booking_if_not_min_tooltip'       => __('If this is disabled, your front-end customers won\'t be able to submit a booking unless they fill in the minimum service capacity,<br/>but once they book for any capacity above minimum, the time slot will become unavailable for booking for others.<br/>If enabled, multiple customers will be able to book the same time slot, without having to fill in the minimum capacity.', 'wpamelia'),
             'allow_customer_delete_profile_tooltip'  => __('Enable this option if you want to allow your customers to delete their profile data (bookings won\'t be deleted).', 'wpamelia'),
             'amelia_role'                            => __('Amelia Role', 'wpamelia'),
-            'api_documentation'                      => __('Amelia API Documentation', 'wpamelia'),
             'appointments'                           => __('Appointments', 'wpamelia'),
             'bcc_email_placeholder'                  => __('Please enter email address', 'wpamelia'),
             'bcc_sms_placeholder'                    => __('Please enter phone number', 'wpamelia'),
-            'buffer_time_in_slot_tooltip'            => __('If this option is enabled<br>time slots will be shown with included service buffer time', 'wpamelia'),
             'codecanyon_purchase_code'               => __('CodeCanyon Purchase Code', 'wpamelia'),
             'cart'                                   => __('Cart', 'wpamelia'),
-            'coupons_case_insensitive'               => __('Set Coupons to be case insensitive', 'wpamelia'),
             'analytics_event_tooltip'                => __('Name of the event (standard or custom)', 'wpamelia'),
             'employee_selection_logic_round_robin'   => __('Round Robin', 'wpamelia'),
             'employee_selection_logic_highest_price' => __('Highest price', 'wpamelia'),
@@ -172,7 +156,6 @@ class BackendStrings
             'empty_package_email'                    => __('Notify selected employees about empty package purchases', 'wpamelia'),
             'empty_package_email_tooltip'            => __('These employees will receive the package purchased e-mail notification when it is purchased without any appointments booked.', 'wpamelia'),
             'enable_google_meet_tooltip'             => __('Enable this option if you want to include Google Meet in your event.', 'wpamelia'),
-            'cart_enable_tooltip'                    => __('If this option is enabled, customers will be able to book multiple services in a single booking process.', 'wpamelia'),
             'custom_fields'                          => __('Custom Fields', 'wpamelia'),
             'custom_fields_description'              => __('Add/edit custom fields', 'wpamelia'),
             'custom_fields_settings'                 => __('Custom fields settings', 'wpamelia'),
@@ -195,14 +178,11 @@ class BackendStrings
             'name_razorpay'                          => __('Name for Razorpay', 'wpamelia'),
             'description_stripe'                     => __('Description for Stripe', 'wpamelia'),
             'description_wc'                         => __('Description for WooCommerce', 'wpamelia'),
-            'enable_no_show_tag'                     => __('Enable No-show tag', 'wpamelia'),
-            'enable_no_show_tag_tooltip'             => __('Enable this option if you want to see which Customers were a No-show', 'wpamelia'),
             'enabled'                                => __('Enabled', 'wpamelia'),
             'endpoint'                               => __('Endpoint', 'wpamelia'),
             'endpoint_tooltip'                       => __('Enter here an endpoint if you are using Mailgun from EU countries', 'wpamelia'),
             'enter_valid_url_warning'                => __('Please enter a valid URL with protocol (http:// or https://)', 'wpamelia'),
             'envato_api_activated'                   => __('Activated with Envato', 'wpamelia'),
-            'events'                                 => __('Events', 'wpamelia'),
             'event_description'                      => __('Event Description', 'wpamelia'),
             'event_description_tooltip'              => __('Description of the event that will be displayed in the Google Calendar.<br/>You can find available placeholders on the Notifications page.', 'wpamelia'),
             'event_description_tooltip_outlook'      => __('Description of the event that will be displayed in the Outlook Calendar.<br/>You can find available placeholders on the Notifications page.', 'wpamelia'),
@@ -211,14 +191,9 @@ class BackendStrings
             'event_title_tooltip_outlook'            => __('Title of the event that will be displayed in the Outlook Calendar.<br/>You can find available placeholders on the Notifications page.', 'wpamelia'),
             'meeting_title_tooltip'                  => __('Title of the meeting that will be displayed in the Zoom.<br/>You can find available placeholders on the Notifications page.', 'wpamelia'),
             'meeting_agenda_tooltip'                 => __('Agenda of the meeting that will be displayed in the Zoom.<br/>You can find available placeholders on the Notifications page.', 'wpamelia'),
-            'generate'                               => __('Generate', 'wpamelia'),
             'api_key'                                => __('API key', 'wpamelia'),
-            'api_keys'                               => __('API keys', 'wpamelia'),
-            'api_keys_settings_description'          => __('Use this setting to manage API keys for Amelia endpoints', 'wpamelia'),
             'api_key_copied'                         => __('Copied!', 'wpamelia'),
-            'api_key_placeholder'                    => __('Click \'Generate\' to get your API key', 'wpamelia'),
             'api_key_permissions'                    => __('API key Permissions', 'wpamelia'),
-            'api_url'                                => __('API base URL: ', 'wpamelia'),
             'new_api_key'                            => __('New API key', 'wpamelia'),
             'api_key_last_4_characters'              => __('Last 4 characters', 'wpamelia'),
             'api_key_expiration_date'                => __('Expiration Date', 'wpamelia'),
@@ -244,17 +219,16 @@ class BackendStrings
             'zoom_credentials_tooltip'               => __('Click here to see how to obtain<br/>Zoom Application ID, Client ID and Client Secret', 'wpamelia'),
             'limit_app_per_customer_from'            => __('Time period is calculated from', 'wpamelia'),
             'limit_app_per_customer_from_tt'         => __('‘Booking date and time’ will set the limit based on the date when the booking is created, regardless of the appointment date and time.<br>The ‘Appointment date and time’ option will set the limit based on the appointment scheduled date.', 'wpamelia'),
+            'limit_app_per_employee'                 => __('Limit appointments per employee', 'wpamelia'),
+            'limit_app_per_employee_tt'              => __('Set this option if you want to limit the number of appointments that an employee can have daily no matter how many appointments ‘fit’ inside the working hours', 'wpamelia'),
             'limit_app_booking_date'                 => __('Appointment date and time', 'wpamelia'),
             'limit_app_date_booked'                  => __('Booking date and time', 'wpamelia'),
-            'limit_app_per_customer_tt'              => __('The limit is checked by customer email', 'wpamelia'),
-            'limit_package_per_customer_tt'          => __('The limit is checked by customer email', 'wpamelia'),
             'limit_events_per_customer_from'         => __('Time period is calculated from', 'wpamelia'),
             'limit_events_per_customer_from_tt'      => __('‘Booking date and time’ will set the limit based on the date when the booking is created, regardless of the event’s date and time.<br>The ‘Event start date and time’ will set it based on the event’s start date and time.', 'wpamelia'),
             'limit_events_booking_date'              => __('Event start date and time', 'wpamelia'),
             'limit_events_booking_date_tt'           => __('Limit will be based on the event date, not based on the date when booking is created.', 'wpamelia'),
             'limit_events_date_booked'               => __('Booking date and time', 'wpamelia'),
             'limit_events_date_booked_tt'            => __('Limit will be based on the date when booking is created, regardless of the event date and time.', 'wpamelia'),
-            'limit_events_per_customer_tt'           => __('The limit is checked by customer email', 'wpamelia'),
             'number_of_events'                       => __('Number of events', 'wpamelia'),
             'insert_pending_appointments_tooltip'    => __('Enable this option if you want your employees to see<br/>appointments with pending status in their calendar.', 'wpamelia'),
             'pending_appointments_meetings_tooltip'  => __('Enable this option if you want to create zoom meetings for appointments with pending status.', 'wpamelia'),
@@ -284,7 +258,6 @@ class BackendStrings
             'number_of_events_returned_tooltip'      => __('Maximum number of events returned on one result page.<br/>It is recommended to use smaller number of returned<br/>events if your server performance is not so good.', 'wpamelia'),
             'number_of_packages'                     => __('Number of packages', 'wpamelia'),
             'payment_from_customer_panel'            => __('Allow customer to pay via Customers Panel', 'wpamelia'),
-            'payment_links_enable_tooltip'           => __('If this option is enabled customers will be able to pay via email notifications or through their Customer panel.', 'wpamelia'),
             'payment_links_change_status'            => __('Update booking status automatically', 'wpamelia'),
             'payment_links_change_status_tooltip'    => __('Update booking status to approved after succesfull payment from link', 'wpamelia'),
             'payment_links_redirect'                 => __('Redirect URL after Payment', 'wpamelia'),
@@ -303,7 +276,6 @@ class BackendStrings
             'razorpay_service'                       => __('Razorpay Service', 'wpamelia'),
             'razorpay_test_client_id_error'          => __('Please enter test key id', 'wpamelia'),
             'razorpay_test_secret_error'             => __('Please enter test key secret', 'wpamelia'),
-            'recaptcha_enabled_tooltip'              => __('Enable this option if you want to add Google reCAPTCHA on the front-end booking forms', 'wpamelia'),
             'recaptcha_invisible'                    => __('Add "Invisible Google reCaptcha"', 'wpamelia'),
             'recaptcha_invisible_tooltip'            => __('If you enable this option Google reCAPTCHA will stay visible in the bottom right corner<br>but the plugin will check the user automatically, without the need to mark the checkbox.', 'wpamelia'),
             'recaptcha_site_key'                     => __('Google reCAPTCHA Site Key', 'wpamelia'),
@@ -378,7 +350,6 @@ class BackendStrings
             'unable_to_deactivate_plugin'            => __('Unable to deactivate plugin. Please try again later.', 'wpamelia'),
             'url'                                    => __('URL', 'wpamelia'),
             'value'                                  => __('Value', 'wpamelia'),
-            'view_api_keys_settings'                 => __('View API keys Settings', 'wpamelia'),
             'view_appointments_settings'             => __('View Appointments Settings', 'wpamelia'),
             'view_days_off_settings'                 => __('View Working Hours & Days Off Settings', 'wpamelia'),
             'view_google_calendar_settings'          => __('View Google Calendar Settings', 'wpamelia'),
@@ -430,9 +401,8 @@ class BackendStrings
             'weeks4'                                 => __('4 weeks', 'wpamelia'),
             'work_hours_days_off'                    => __('Working Hours & Days Off', 'wpamelia'),
             'wp_role'                                => __('WP Role', 'wpamelia'),
-            'your_api_key'                           => __('Your API key', 'wpamelia'),
             'whats_new'                              => __('What\'s New', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getSettingsStrings());
     }
@@ -444,7 +414,7 @@ class BackendStrings
      */
     public static function getNotificationsStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'accepted'                               => __('Accepted', 'wpamelia'),
             'after'                                  => __('After', 'wpamelia'),
             'already_have_an_account'                => __('Already have an account?', 'wpamelia'),
@@ -643,7 +613,7 @@ Thank you,
             'whatsapp_select_ph'                     => __('Please select placeholder', 'wpamelia'),
             'whatsapp_status_tooltip'                => __('This is the status in whatsapp.', 'wpamelia'),
             'whatsapp_template_name'                 => __('Template name', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getNotificationsStrings());
     }
@@ -655,7 +625,7 @@ Thank you,
      */
     public static function getDashboardStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'average_bookings'              => __('Average Bookings', 'wpamelia'),
             'average_bookings_tooltip'      => __('Shows the average number of bookings per day<br/>for the selected date range.', 'wpamelia'),
             'no_today_appointments'         => __('There are no appointments for today', 'wpamelia'),
@@ -669,7 +639,7 @@ Thank you,
             'channel'                       => __('channel', 'wpamelia'),
             'not_show'                      => __("Don't show again", 'wpamelia'),
             'promo_date'                    => __("1. November at 4Pm cest", 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getDashboardStrings());
     }
@@ -681,28 +651,24 @@ Thank you,
      */
     public static function getScheduleStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'add_break'                           => __('Add Break', 'wpamelia'),
             'add_day_off_placeholder'             => __('Enter holiday or day off name', 'wpamelia'),
-            'add_period'                          => __('Add Period', 'wpamelia'),
             'company_days_off'                    => __('Company Days off', 'wpamelia'),
             'company_days_off_settings'           => __('Company Days Off Settings', 'wpamelia'),
             'company_work_hours_settings'         => __('Company Working Hours Settings', 'wpamelia'),
             'confirm_global_change_working_hours' => __('You will change working hours setting which is also set for each employee separately. Do you want to update it for all employees?', 'wpamelia'),
-            'days_off_add'                        => __('Add Day Off', 'wpamelia'),
             'days_off_date_warning'               => __('Please enter date', 'wpamelia'),
             'days_off_name_warning'               => __('Please enter name', 'wpamelia'),
-            'days_off_repeat_yearly'              => __('Repeat Yearly', 'wpamelia'),
             'edit_company_days_off'               => __('Edit Company Days off', 'wpamelia'),
             'employee_days_off'                   => __('Employee Days off', 'wpamelia'),
             'pick_a_date_or_range'                => __('Pick a date or range', 'wpamelia'),
             'pick_a_year'                         => __('Pick a year', 'wpamelia'),
             'reflects_on'                         => __('Reflects on', 'wpamelia'),
-            'save_special_day'                    => __('Save Special Day', 'wpamelia'),
             'set_break_time'                      => __('Set Break Time', 'wpamelia'),
             'set_work_time'                       => __('Set Work Time', 'wpamelia'),
             'work_hours_days_off_settings'        => __('Working Hours & Days Off Settings', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getScheduleStrings());
     }
@@ -714,12 +680,12 @@ Thank you,
      */
     public static function getEntityFormStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'delete'          => __('Delete', 'wpamelia'),
             'duplicate'       => __('Duplicate', 'wpamelia'),
             'loader_message'  => __('Please Wait', 'wpamelia'),
             'visible'         => __('Visible', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getEntityFormStrings());
     }
@@ -731,7 +697,7 @@ Thank you,
      */
     public static function getLocationStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'address'                        => __('Address', 'wpamelia'),
             'click_add_locations'            => __('Start by clicking the Add Location button', 'wpamelia'),
             'confirm_delete_location'        => __('Are you sure you want to delete this location?', 'wpamelia'),
@@ -759,7 +725,7 @@ Thank you,
             'pin_purple'                     => __('Purple', 'wpamelia'),
             'pin_red'                        => __('Red', 'wpamelia'),
             'pin_green'                      => __('Green', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getLocationStrings());
     }
@@ -771,7 +737,7 @@ Thank you,
      */
     public static function getServiceStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'add_duration'                       => __('Add Duration', 'wpamelia'),
             'all_employees'                      => __('All Employees', 'wpamelia'),
             'all_locations'                      => __('All Locations', 'wpamelia'),
@@ -834,7 +800,6 @@ Thank you,
             'package_total'                      => __('Total', 'wpamelia'),
             'package_to_be_booked'               => __('to be booked', 'wpamelia'),
             'period'                             => __('Period', 'wpamelia'),
-            'plus_more'                          => __('+more', 'wpamelia'),
             'pricing'                            => __('Pricing', 'wpamelia'),
             'purchased_packages'                 => __('Manage Packages', 'wpamelia'),
             'resource_additional_people'         => __('Enable Resource usage for a group booking', 'wpamelia'),
@@ -873,7 +838,6 @@ Thank you,
             'select_package_service_warning'     => __('Please select at least one service', 'wpamelia'),
             'select_service_employee_warning'    => __('Please select select at least one employee', 'wpamelia'),
             'service_details'                    => __('Service Details', 'wpamelia'),
-            'service_provider_remove_fail'       => __('Provider has appointments for this service', 'wpamelia'),
             'service_show_on_site_tooltip'       => __('If this option is disabled, service will be available for booking from back-end pages only.', 'wpamelia'),
             'service_recurring_sub'              => __('Handle unavailable recurring dates', 'wpamelia'),
             'service_recurring_sub_tooltip'      => __('Set how an alternate date should be suggested to the customer<br>if the desired date has no available time-slots for booking.', 'wpamelia'),
@@ -890,7 +854,7 @@ Thank you,
             'update_for_all'                     => __('Update for all', 'wpamelia'),
             'mandatory_extra_enable'             => __('Set extra as a mandatory field', 'wpamelia'),
             'min_required_extras'                => __('Minimum required extras', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getServiceStrings());
     }
@@ -902,10 +866,10 @@ Thank you,
      */
     public static function getUserStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'birthday'                 => __('Birthday', 'wpamelia'),
             'dont_import'              => __('Don\'t import', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getUserStrings());
     }
@@ -917,7 +881,7 @@ Thank you,
      */
     public static function getEmployeeStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'activity'                         => __('Status', 'wpamelia'),
             'add_employee'                     => __('Add Employee', 'wpamelia'),
             'available'                        => __('Available', 'wpamelia'),
@@ -954,7 +918,6 @@ Thank you,
             'period_location_filter1_tooltip'  => __('Select specific location for this period.', 'wpamelia'),
             'period_location_filter2_tooltip'  => __('Select specific location for each period.', 'wpamelia'),
             'period_services_filter2_tooltip'  => __('Select specific services for each period.', 'wpamelia'),
-            'service_provider_remove_fail'     => __('Provider has appointments for this service', 'wpamelia'),
             'service_provider_remove_fail_all' => __('Provider has appointments for', 'wpamelia'),
             'special_days_reflect_services'    => __('Reflect On', 'wpamelia'),
             'password'                         => __('Password', 'wpamelia'),
@@ -962,8 +925,7 @@ Thank you,
             'send_employee_panel_access_email' => __('Send Employee Panel Access Email', 'wpamelia'),
             'new_password_length'              => __('Password must be longer than 3 characters', 'wpamelia'),
             'zoom_user_tooltip'                => __('Here you can select Zoom User,<br/>so once the appointment is scheduled,<br/>zoom meeting will be automatically created.', 'wpamelia'),
-            'timezone'                         => __('Timezone', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getEmployeeStrings());
     }
@@ -975,7 +937,7 @@ Thank you,
      */
     public static function getCustomerStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'all_customer_appointments'    => __('All customer appointments', 'wpamelia'),
             'click_add_customers'          => __('Start by clicking the Add Customer button or', 'wpamelia'),
             'customer_not_deleted'         => __('Customer can not be deleted because of the future booking', 'wpamelia'),
@@ -987,7 +949,7 @@ Thank you,
             'last_appointment_date'        => __('Last appointment date', 'wpamelia'),
             'number_of_appointments'       => __('Number of appointments', 'wpamelia'),
             'note_internal'                => __('Note (Internal)', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getCustomerStrings());
     }
@@ -999,7 +961,7 @@ Thank you,
      */
     public static function getImportStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'check_csv'                    => __('Please check your .csv file and try again', 'wpamelia'),
             'download_csv'                 => __('Download .csv', 'wpamelia'),
             'import_failed'                => __('Import failed', 'wpamelia'),
@@ -1012,7 +974,7 @@ Thank you,
             'skip_import'                  => __('Skip import', 'wpamelia'),
             'values_overwritten'           => __('Values that will be overwritten', 'wpamelia'),
             'values_saved'                 => __('Values that will be saved', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getImportStrings());
     }
@@ -1024,14 +986,16 @@ Thank you,
      */
     public static function getWhatsNewStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'need_help'                      => __('Need Help?', 'wpamelia'),
             'amelia_changelog'               => __('Amelia Changelog', 'wpamelia'),
+            'included_plan_your'             => __('Included in Your Plan', 'wpamelia'),
+            'included_plan_higher'           => __('Included in Higher Plans', 'wpamelia'),
             'current_version'                => __('You are currently using Version ', 'wpamelia'),
             'version'                        => __('Version ', 'wpamelia'),
             'version_subtitle'               => __('We are thrilled to announce the latest release of Amelia, packed with bug fixes that enhance your user experience. Here is what you can expect from this update: ', 'wpamelia'),
             'see_previous_versions'          => __('See Previous Versions', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getWhatsNewStrings());
     }
@@ -1043,8 +1007,7 @@ Thank you,
      */
     public static function getLiteVsPremiumStrings()
     {
-        $labels = [
-        ];
+        $labels = [];
 
         return array_merge($labels, LiteBackendStrings::getLiteVsPremiumStrings());
     }
@@ -1056,7 +1019,7 @@ Thank you,
      */
     public static function getFinanceStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'code'                               => __('Code', 'wpamelia'),
             'code_tooltip'                       => __('Here you need to define a coupon code which customers will<br/>enter in their booking so they can get a discount.', 'wpamelia'),
             'confirm_delete_coupon'              => __('Are you sure you want to delete this coupon?', 'wpamelia'),
@@ -1102,7 +1065,7 @@ Thank you,
             'usage_customer_limit'               => __('Maximum Usage Per Customer', 'wpamelia'),
             'usage_customer_limit_tooltip'       => __('Here you can define the maximum number of coupons for use for single customer. After the<br/>limit is reached for single customer, your coupon will become unavailable for that customer.', 'wpamelia'),
             'used'                               => __('Used', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getFinanceStrings());
     }
@@ -1114,7 +1077,7 @@ Thank you,
      */
     public static function getPaymentStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'event_info'               => __('Event Info', 'wpamelia'),
             'confirm_refund_payment'   => __('Are you sure you want to refund this payment?', 'wpamelia'),
             'refund_payment_amount'    => __('The refund amount is', 'wpamelia'),
@@ -1133,7 +1096,7 @@ Thank you,
             'payments_not_deleted'     => __('Payments have not been deleted', 'wpamelia'),
             'plus_tax'                 => __('(+tax)', 'wpamelia'),
             'event_price'              => __('Event Price', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getPaymentStrings());
     }
@@ -1145,12 +1108,11 @@ Thank you,
      */
     public static function getAppointmentStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'appointment_id'                    => __('Appointment ID', 'wpamelia'),
             'appointment_not_deleted'           => __('Appointment has not been deleted', 'wpamelia'),
             'appointments_not_deleted'          => __('Appointment have not been deleted', 'wpamelia'),
             'assigned'                          => __('Assigned', 'wpamelia'),
-            'cancel_appointment'                => __('Cancel Appointment', 'wpamelia'),
             'choose_a_group_service'            => __('Choose a group service', 'wpamelia'),
             'click_add_appointments'            => __('Start by clicking the New Appointment button', 'wpamelia'),
             'confirm_delete_package_purchase'   => __('Are you sure you want to delete this package purchase and it\'s appointments?', 'wpamelia'),
@@ -1198,7 +1160,7 @@ Thank you,
             'exported_same_row_event'           => __('Booking info from attendees exported in the same row', 'wpamelia'),
             'exported_separate_rows_event'      => __('Booking info from attendees exported in separate rows', 'wpamelia'),
             'package_booking_unavailable'       => __('Booking is unavailable', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getAppointmentStrings());
     }
@@ -1208,8 +1170,9 @@ Thank you,
      *
      * @return array
      */
-    public static function getBookableStrings() {
-        $labels = [
+    public static function getBookableStrings()
+    {
+        $labels = Licence\Licence::$premium ? [
             'allow_customers_to_pay_total'       => __('Check this option if you want your<br> customers to have the option to choose<br> whether they will pay a full amount<br> or just a deposit. If unchecked,<br> customers will only have deposit<br> as a payment option.', 'wpamelia'),
             'deposit_by_the_number_of_people'    => __('Check this option if you want the deposit<br> amount to be multiplied by the number<br> of people that customers add in the<br> "Bringing anyone with you" section.', 'wpamelia'),
             'deposit_amount'                     => __('Deposit amount', 'wpamelia'),
@@ -1226,7 +1189,7 @@ Thank you,
             'percentage'                         => __('Percentage', 'wpamelia'),
             'enter_positive_price_warning'       => __('Amount must be positive number', 'wpamelia'),
             'pricing_by_date_enabled'            => __('Pricing by Date range', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getBookableStrings());
     }
@@ -1238,7 +1201,7 @@ Thank you,
      */
     public static function getEventStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'apply_to_all'                => __('Apply this to all recurring events', 'wpamelia'),
             'click_add_events'            => __('Start by clicking the New Event button', 'wpamelia'),
             'confirm_delete_following'    => __('Do you want to delete following canceled events?', 'wpamelia'),
@@ -1284,7 +1247,7 @@ Thank you,
             'open_following'              => __('Open following', 'wpamelia'),
             'price_changed_message'       => __('This change will lead to a price increase in this bookings. Do you want payment links to be created?', 'wpamelia'),
             'cancel'                      => __('Cancel', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getEventStrings());
     }
@@ -1296,7 +1259,7 @@ Thank you,
      */
     public static function getCalendarStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'add_customer'                   => __('Add Customer', 'wpamelia'),
             'add_employee'                   => __('Add Employee', 'wpamelia'),
             'add_location'                   => __('Add Location', 'wpamelia'),
@@ -1305,7 +1268,6 @@ Thank you,
             'appointment_drag_breaks'        => __('Appointment can\'t be moved because of employee break in the selected period', 'wpamelia'),
             'appointment_drag_exist'         => __('There is already an appointment for this employee in selected time period', 'wpamelia'),
             'appointment_drag_out_schedule'  => __('Appointment can\'t be moved because the employee doesn\'t provide this service at the selected time', 'wpamelia'),
-            'appointment_drag_working_hours' => __('Appointment can\'t be moved out of employee working hours', 'wpamelia'),
             'day'                            => __('Day', 'wpamelia'),
             'group_booking'                  => __('Group appointment', 'wpamelia'),
             'list'                           => __('List', 'wpamelia'),
@@ -1315,7 +1277,7 @@ Thank you,
             'timeline'                       => __('Timeline', 'wpamelia'),
             'today'                          => __('Today', 'wpamelia'),
             'week'                           => __('Week', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getCalendarStrings());
     }
@@ -1327,7 +1289,7 @@ Thank you,
      */
     public static function getCustomizeStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'add_option'                         => __('Add Option', 'wpamelia'),
             'address_as_location'                => __('Google/Outlook Location', 'wpamelia'),
             'address_as_location_tooltip'        => __('Enable this option to set this custom field as the location in Google/Outlook calendar events, ICS files and "Add to calendar" events', 'wpamelia'),
@@ -1596,7 +1558,6 @@ Thank you,
 
             'coupon'                             => __('Coupon', 'wpamelia'),
             'add_coupon_btn'                     => __('Add', 'wpamelia'),
-            'summary_person'                     => __('person', 'wpamelia'),
             'summary_recurrence'                 => __('Recurrence', 'wpamelia'),
             'summary_recurrences'                => __('Recurrences', 'wpamelia'),
             'summary_extras'                     => __('Extras', 'wpamelia'),
@@ -1676,7 +1637,6 @@ Thank you,
             'cpb_your_info_content'              => __('Registration, Telephone Number, Email', 'wpamelia'),
             'cpb_payment_content'                => __('Payment type, deposit payment...', 'wpamelia'),
             'cb_package_appointments_heading'    => __('Package Appointments', 'wpamelia'),
-            'plus_more'                          => __('+more', 'wpamelia'),
             'location_input_field'               => __('Location Input Field', 'wpamelia'),
             'employee_input_field'               => __('Employee Input Field', 'wpamelia'),
             'primary_button_type'                => __('Primary Button Type', 'wpamelia'),
@@ -1758,9 +1718,8 @@ Thank you,
             // strings used only on backend
             'step_tickets_tab'                   => __('Step Tickets Tab', 'wpamelia'),
             'customer_panel_btn'                 => __('Customer Panel Button', 'wpamelia'),
-            'event_employees'                    => __('Event Employees', 'wpamelia'),
             'coupon_segment'                     => __('Coupon Segment', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getCustomizeStrings());
     }
@@ -1770,7 +1729,7 @@ Thank you,
      */
     public static function getWordPressStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'notice_panel'                     => __('Notice: Please select at least one panel.', 'wpamelia'),
             'search'                           => __('Search', 'wpamelia'),
             'search_date'                      => __('Preselect Current Date', 'wpamelia'),
@@ -1789,7 +1748,7 @@ Thank you,
                 'title'       => __('Amelia - Employee Panel', 'wpamelia'),
                 'description' => __('Front-end Employee Panel is a shortcode that gives your employees the possibility to manage their bookings, working hours, days off, assigned services and profile information.', 'wpamelia'),
             ],
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getWordPressStrings());
     }
@@ -1799,7 +1758,7 @@ Thank you,
      */
     public static function getBuddyBossStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'amelia_settings_profile'           => __('Amelia Profile Settings', 'wpamelia'),
             'amelia_settings_customers'         => __('Amelia Users Settings', 'wpamelia'),
             'enable_amelia'                     => __('Enable Amelia', 'wpamelia'),
@@ -1823,7 +1782,7 @@ Thank you,
             'create_customers_text'             => __('Create Customers from WP Users with Amelia Customer Role', 'wpamelia'),
             'guest_booking_enabled'             => __('Enable guest booking', 'wpamelia'),
             'guest_booking_enabled_text'        => __('Allow booking without a prior login', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getBuddyBossStrings());
     }
@@ -1833,7 +1792,7 @@ Thank you,
      */
     public static function getRecurringStrings()
     {
-        $labels = [
+        $labels = Licence\Licence::$premium ? [
             'recurring_sub_message1'   => __('Some of the desired slots are busy. We offered you the nearest time slots instead.', 'wpamelia'),
             'recurring_sub_message2'   => __('Number of adjusted time slots: ', 'wpamelia'),
             'recurring_active'         => __('Repeat this appointment', 'wpamelia'),
@@ -1855,7 +1814,7 @@ Thank you,
             'recurring_date_third'     => __('Third', 'wpamelia'),
             'recurring_date_fourth'    => __('Fourth', 'wpamelia'),
             'recurring_date_last'      => __('Last', 'wpamelia'),
-        ];
+        ] : [];
 
         return array_merge($labels, LiteBackendStrings::getRecurringStrings());
     }

@@ -2,7 +2,7 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Google;
 
-use AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -34,7 +34,9 @@ use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\Appointme
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentStatusUpdatedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentTimeUpdatedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAddedEventHandler;
+use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingApprovedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingCanceledEventHandler;
+use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingRejectedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventEditedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventStatusUpdatedEventHandler;
@@ -48,7 +50,7 @@ use Interop\Container\Exception\ContainerException;
  *
  * @package AmeliaBooking\Infrastructure\Services\Google
  */
-class GoogleCalendarService
+class GoogleCalendarService extends AbstractGoogleCalendarService
 {
 
     /** @var Container $container */
@@ -65,8 +67,6 @@ class GoogleCalendarService
 
     /** @var string */
     private $timeZone;
-
-    public static $providersGoogleEvents = [];
 
     /**
      * GoogleClientService constructor.
@@ -109,10 +109,10 @@ class GoogleCalendarService
     }
 
     /**
-     * Exchange a code for an valid authentication token.
+     * Exchange a code for a valid authentication token.
      *
      * @param $authCode
-     *
+     * @param $redirectUri
      * @return string
      */
     public function fetchAccessTokenWithAuthCode($authCode, $redirectUri)
@@ -127,7 +127,7 @@ class GoogleCalendarService
      *
      * @param Provider $provider
      *
-     * @return mixed
+     * @return array
      *
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
@@ -195,6 +195,7 @@ class GoogleCalendarService
      * @param Appointment|Event $appointment
      * @param string      $commandSlug
      *
+     * @return void
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
@@ -231,6 +232,8 @@ class GoogleCalendarService
                 case AppointmentTimeUpdatedEventHandler::TIME_UPDATED:
                 case AppointmentStatusUpdatedEventHandler::APPOINTMENT_STATUS_UPDATED:
                 case BookingCanceledEventHandler::BOOKING_CANCELED:
+                case BookingApprovedEventHandler::BOOKING_APPROVED:
+                case BookingRejectedEventHandler::BOOKING_REJECTED:
                     if ($appointmentStatus === 'canceled' || $appointmentStatus === 'rejected' ||
                         ($appointmentStatus === 'pending' && $this->settings['insertPendingAppointments'] === false)
                     ) {
@@ -255,6 +258,7 @@ class GoogleCalendarService
      * @param Collection $periods
      * @param array $providers
      *
+     * @return void
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
@@ -318,7 +322,8 @@ class GoogleCalendarService
      * @param string $dateStartEnd
      * @param string $dateEnd
      * @param array $eventIds
-     *
+
+     * @return array
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
@@ -521,7 +526,14 @@ class GoogleCalendarService
     {
         $queryParams = ['sendNotifications' => $this->settings['sendEventInvitationEmail']];
 
-        if ($this->settings['enableGoogleMeet']) {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+        $enabledForEntity = $settingsService
+            ->getEntitySettings($period ? $appointment->getSettings() : $appointment->getService()->getSettings())
+            ->getGoogleMeetSettings()
+            ->getEnabled();
+
+        if ($enabledForEntity) {
             $queryParams['conferenceDataVersion'] = 1;
         }
 
@@ -631,7 +643,7 @@ class GoogleCalendarService
     /**
      * Create and return Google Calendar Event Object filled with appointments data.
      *
-     * @param Appointment $appointment
+     * @param Appointment|Event $appointment
      * @param Provider    $provider
      * @param EventPeriod $period
      *
@@ -647,7 +659,7 @@ class GoogleCalendarService
         /** @var LocationRepository $locationRepository */
         $locationRepository = $this->container->get('domain.locations.repository');
 
-        /** @var CustomFieldApplicationService $customFieldService */
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
 
         $type = $period ? Entities::EVENT : Entities::APPOINTMENT;
@@ -725,7 +737,14 @@ class GoogleCalendarService
             )
         ];
 
-        if ($this->settings['enableGoogleMeet']) {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+        $enabledForEntity = $settingsService
+            ->getEntitySettings($period ? $appointment->getSettings() : $appointment->getService()->getSettings())
+            ->getGoogleMeetSettings()
+            ->getEnabled();
+
+        if ($enabledForEntity) {
             $token = new Token();
 
             $eventData['conferenceData'] = [

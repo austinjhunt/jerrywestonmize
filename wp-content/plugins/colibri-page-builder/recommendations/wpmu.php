@@ -7,6 +7,7 @@ use ColibriWP\PageBuilder\PageBuilder;
 use ColibriWP\PageBuilder\ThemeHooks;
 use ColibriWP\Theme\PluginsManager;
 
+
 function wpmu_get_classes() {
 
 	$defender_hardener_namespace = "\\WP_Defender\\Module\\Hardener\\Component";
@@ -117,7 +118,10 @@ function colibri_is_wpmu_plugin_active( $key ) {
 }
 
 add_action( "wp_ajax_colibri_page_builder_wpmu_setting", function () {
-
+	check_ajax_referer( 'colibri_page_builder_wpmu_nonce', 'nonce' );
+	if ( !current_user_can( 'edit_theme_options' ) ) {
+		wp_send_json_error();
+	}
 	$params  = $_REQUEST;
 	$slug    = sanitize_text_field(array_get_value( $params, 'slug', '' ));
 	$option  = sanitize_text_field(array_get_value( $params, 'option', '' ));
@@ -316,46 +320,53 @@ function colibri_wpmu_get_plugin_page( $key ) {
 
 	return $url;
 }
+global $colibri_recommended_plugins_data;
+$colibri_recommended_plugins_data = [
+	'smush'       => [
+		'free'        => 'wp-smushit/wp-smush.php',
+		'pro'         => 'wp-smush-pro/wp-smush.php',
+		'name'        => 'Smush',
+		'description' => 'Compress and optimize images with lazy load, WebP conversion, and resize detection to increase site performance.',
+		'slug'        => 'wp-smushit',
+	],
+	'hummingbird' => [
+		'free'        => 'hummingbird-performance/wp-hummingbird.php',
+		'pro'         => 'wp-hummingbird/wp-hummingbird.php',
+		'name'        => 'Hummingbird',
+		'description' => 'Make your site faster by adding cache, minify CSS and Javascript, defer critical .CSS and .JS, Smush lazy load integration and much more.',
+		'slug'        => 'hummingbird-performance',
+	],
+	'defender'    => [
+		'free'        => 'defender-security/wp-defender.php',
+		'pro'         => 'wp-defender/wp-defender.php',
+		'name'        => 'Defender',
+		'description' => 'WordPress security plugin with malware scans, IP blocking, audit logs, firewall, login security & more.',
+		'slug'        => 'defender-security',
+	],
+
+	'forminator' => [
+		'free'          => 'forminator/forminator.php',
+		'pro'           => 'forminator/forminator.php',
+		'name'          => 'Forminator',
+		'description'   => 'Forminator is an expandable form builder plugin for WordPress.',
+		'suppressed_by' => 'contact-form-7',
+		'slug'          => 'forminator',
+	],
+
+	'hustle' => [
+		'free'          => 'wordpress-popup/popover.php',
+		'pro'           => 'hustle/opt-in.php',
+		'name'          => 'Hustle',
+		'description'   => 'Collect email addresses with pop-ups, slide-ins, widgets, or in post opt-in forms.',
+		'suppressed_by' => 'mailchimp-for-wp',
+		'slug'          => 'wordpress-popup',
+	],
+
+];
 
 function colibri_wpmu_get_recommended_plugins() {
-	$plugins = [
-		'smush'       => [
-			'free'        => 'wp-smushit/wp-smush.php',
-			'pro'         => 'wp-smush-pro/wp-smush.php',
-			'name'        => 'Smush',
-			'description' => 'Compress and optimize images with lazy load, WebP conversion, and resize detection to increase site performance.'
-		],
-		'hummingbird' => [
-			'free'        => 'hummingbird-performance/wp-hummingbird.php',
-			'pro'         => 'wp-hummingbird/wp-hummingbird.php',
-			'name'        => 'Hummingbird',
-			'description' => 'Make your site faster by adding cache, minify CSS and Javascript, defer critical .CSS and .JS, Smush lazy load integration and much more.'
-		],
-		'defender'    => [
-			'free'        => 'defender-security/wp-defender.php',
-			'pro'         => 'wp-defender/wp-defender.php',
-			'name'        => 'Defender',
-			'description' => 'WordPress security plugin with malware scans, IP blocking, audit logs, firewall, login security & more.',
-		],
-
-		'forminator' => [
-			'free'          => 'forminator/forminator.php',
-			'pro'           => 'forminator/forminator.php',
-			'name'          => 'Forminator',
-			'description'   => 'Forminator is an expandable form builder plugin for WordPress.',
-			'suppressed_by' => 'contact-form-7'
-		],
-
-		'hustle' => [
-			'free'          => 'wordpress-popup/popover.php',
-			'pro'           => 'hustle/opt-in.php',
-			'name'          => 'Hustle',
-			'description'   => 'Collect email addresses with pop-ups, slide-ins, widgets, or in post opt-in forms.',
-			'suppressed_by' => 'mailchimp-for-wp'
-		],
-
-
-	];
+    global $colibri_recommended_plugins_data;
+	$plugins = $colibri_recommended_plugins_data;
 
 	$result = [];
 
@@ -366,6 +377,7 @@ function colibri_wpmu_get_recommended_plugins() {
 			'plugin_path'   => $plugin_data['free'],
 			'suppressed_by' => array_get_value( $plugin_data, 'suppressed_by', false ),
 		);
+
 
 		if ( file_exists( WP_PLUGIN_DIR . "/" . $plugin_data['pro'] ) ) {
 			$data['plugin_path'] = $plugin_data['pro'];
@@ -379,6 +391,91 @@ function colibri_wpmu_get_recommended_plugins() {
 	return $result;
 }
 
+
+function colibri_plugin_is_compatible($plugin_slug) {
+	//only do requests in admin pages. For other types of pages mark it as true. We only care for admin pages where you have buttons to install the
+    //recommended plugins.
+	if(!is_admin()) {
+		return true;
+	}
+	$wp_org_data_transient_key = 'colibri_recommended_plugin_' . $plugin_slug . '_wp_org_data';
+	// delete_transient($wp_org_data_transient_key);
+	$wp_org_data = get_transient( $wp_org_data_transient_key );
+	if ( ! $wp_org_data ) {
+
+
+		// WordPress.org API URL to fetch plugin information
+		$api_url = 'https://api.wordpress.org/plugins/info/1.0/' . $plugin_slug . '.json';
+
+		$response = wp_remote_get( $api_url );
+
+		if ( ! is_wp_error( $response ) ) {
+			$body          = wp_remote_retrieve_body( $response );
+			$response_data = json_decode( $body, true );
+
+			$wp_org_data = [];
+
+			if ( $response_data && isset( $response_data['requires'] ) ) {
+
+
+				$wp_org_data['required_php_version'] = $response_data['requires_php']; // Required PHP version
+				$wp_org_data['required_wp_version']  = $response_data['requires']; // Required PHP version
+
+				//save transient for one day
+				set_transient( $wp_org_data_transient_key, $wp_org_data, DAY_IN_SECONDS );
+			}
+		}
+
+	}
+
+	$required_php_version = isset( $wp_org_data['required_php_version'] ) ? $wp_org_data['required_php_version'] : false;
+	$required_wp_version  = isset( $wp_org_data['required_wp_version'] ) ? $wp_org_data['required_wp_version'] : false;
+	if ( $required_php_version && $required_wp_version ) {
+		//if php or wp version is not compatible skip the plugin
+		if ( version_compare( PHP_VERSION, $required_php_version ) < 0 ||
+		     version_compare( get_bloginfo( 'version' ), $required_wp_version ) < 0
+		) {
+			return false;
+		}
+	}
+
+    return true;
+}
+/**
+ * @param $plugins
+ * Filter out plugins that are not compatible with the current php and wp version to not crash
+ * we only care for the get starter page;
+ * @return array|mixed
+ */
+
+function colibri_filter_theme_plugins_that_are_not_compatible($plugins) {
+
+	$final_plugins = [];
+
+	global $colibri_recommended_plugins_data;
+
+	//Remove plugins that are not compatible with the current php and wp version
+	foreach ( $plugins as $plugin => $plugin_data ) {
+		$plugin_slug = isset( $plugin_data['slug'] ) ? $plugin_data['slug'] : false;
+		if ( ! $plugin_slug && isset( $colibri_recommended_plugins_data[ $plugin ] ) ) {
+			$plugin_slug = $colibri_recommended_plugins_data[ $plugin ]['slug'];
+		}
+
+		//if not slug is provided return it
+		if ( ! $plugin_slug ) {
+			$final_plugins[ $plugin ] = $plugin_data;
+			continue;
+		}
+        $plugin_is_compatible = colibri_plugin_is_compatible($plugin_slug);
+        if(!$plugin_is_compatible) {
+            continue;
+        }
+
+		$final_plugins[ $plugin ] = $plugin_data;
+	}
+
+    return $final_plugins;
+}
 ThemeHooks::prefixed_add_filter( 'theme_plugins', function ( $plugins ) {
 	$wpmu_plugins   = colibri_wpmu_get_recommended_plugins();
 	$mapped_plugins = [];
@@ -388,11 +485,21 @@ ThemeHooks::prefixed_add_filter( 'theme_plugins', function ( $plugins ) {
 	}
 	$plugins = array_merge( $plugins, $mapped_plugins );
 
-	return $plugins;
+
+    $final_plugins = colibri_filter_theme_plugins_that_are_not_compatible($plugins);
+
+	return $final_plugins;
 }, 50 );
 
 function wpmu_recommendation_customize_register( $wp_customize ) {
 
+    if(!colibri_plugin_is_compatible('defender-security') ||
+       !colibri_plugin_is_compatible('hummingbird-performance') ||
+       !colibri_plugin_is_compatible('wp-smushit') ||
+       !colibri_plugin_is_compatible('wordpress-popup')
+    ) {
+        return;
+    }
 
 	/** @var \WP_Customize_Manager $wp_customize */
 	$wp_customize->add_control( 'colibri_wpmu_recommended_security_container', array(
@@ -466,7 +573,7 @@ add_action( 'admin_notices', function () {
 	/** @var PluginsManager $manager */
 
 
-	if ( get_transient( 'colibri_wpmu_forminator_hide_notice' ) ) {
+	if ( get_transient( 'colibri_wpmu_forminator_hide_notice' ) || !colibri_plugin_is_compatible('forminator')) {
 		return;
 	}
 

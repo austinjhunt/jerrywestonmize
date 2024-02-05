@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Commands\Notification;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\Notification\WhatsAppNotificationService;
+use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
 use AmeliaBooking\Domain\Collection\AbstractCollection;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -44,7 +44,7 @@ class GetNotificationsCommandHandler extends CommandHandler
         $notificationRepo = $this->container->get('domain.notification.repository');
         /** @var NotificationsToEntitiesRepository $notificationEntitiesRepo */
         $notificationEntitiesRepo = $this->container->get('domain.notificationEntities.repository');
-        /** @var WhatsAppNotificationService $whatsAppNotificationService */
+        /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $this->container->get('application.whatsAppNotification.service');
 
         $whatsAppTemplates = [];
@@ -60,8 +60,8 @@ class GetNotificationsCommandHandler extends CommandHandler
                 $notification->setEntityIds($notificationEntitiesRepo->getEntities($notification->getId()->getValue()));
                 $notification->setEntityIds(array_map('intval', $notification->getEntityIds()));
             }
-            if (!empty($whatsAppTemplates[0]) && !empty($notification->getWhatsAppTemplate()) && !empty($whatsAppTemplates[0]['data'])) {
-                if (!in_array($notification->getWhatsAppTemplate(), array_column($whatsAppTemplates[0]['data'], 'name'))) {
+            if (!empty($whatsAppTemplates[0]) && !empty($notification->getWhatsAppTemplate()) && !empty($whatsAppTemplates[0])) {
+                if (!in_array($notification->getWhatsAppTemplate(), array_column($whatsAppTemplates[0], 'name'))) {
                     $notification->setWhatsAppTemplate('');
                     $notification->setSubject(new Name(''));
                     $notification->setContent(new Html(''));

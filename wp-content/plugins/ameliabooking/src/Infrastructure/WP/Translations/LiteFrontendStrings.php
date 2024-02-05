@@ -62,7 +62,8 @@ class LiteFrontendStrings
      *
      * @return array
      */
-    public static function getBookableStrings() {
+    public static function getBookableStrings()
+    {
         return [
         ];
     }
@@ -98,6 +99,7 @@ class LiteFrontendStrings
             'duration_colon'               => __('Duration:', 'wpamelia'),
             'email_colon'                  => __('Email:', 'wpamelia'),
             'email_exist_error'            => __('Email already exists with different name. Please check your name.', 'wpamelia'),
+            'employee_limit_reached'       => __('Employee daily appointment limit has been reached. Please choose another date or employee.', 'wpamelia'),
             'enter_email_warning'          => __('Please enter email', 'wpamelia'),
             'enter_first_name_warning'     => __('Please enter first name', 'wpamelia'),
             'enter_last_name_warning'      => __('Please enter last name', 'wpamelia'),
@@ -252,6 +254,7 @@ class LiteFrontendStrings
         return [
             'available'                              => __('Available', 'wpamelia'),
             'booking_cancel_exception'               => __('Booking can\'t be canceled', 'wpamelia'),
+            'no_results'                             => __('There are no results...', 'wpamelia'),
             'select_service'                         => __('Select Service', 'wpamelia'),
             'subtotal'                               => __('Subtotal', 'wpamelia'),
         ];

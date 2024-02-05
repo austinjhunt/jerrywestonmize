@@ -9,11 +9,10 @@ namespace AmeliaBooking\Application\Commands\Bookable\Resource;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Resource\AbstractResourceApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ResourceRepository;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -29,7 +28,6 @@ class GetResourcesCommandHandler extends CommandHandler
      *
      * @return CommandResult
      * @throws ContainerValueNotFoundException
-     * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
      * @throws ContainerException
@@ -46,11 +44,11 @@ class GetResourcesCommandHandler extends CommandHandler
 
         $params = $command->getField('params');
 
-        /** @var ResourceRepository $resourceRepository */
-        $resourceRepository = $this->container->get('domain.bookable.resource.repository');
+        /** @var AbstractResourceApplicationService $resourceApplicationService */
+        $resourceApplicationService = $this->container->get('application.resource.service');
 
         /** @var Collection $resources */
-        $resources = $resourceRepository->getByCriteria(['search' => $params['search']]);
+        $resources = $resourceApplicationService->getAll(['search' => $params['search']]);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved resources.');

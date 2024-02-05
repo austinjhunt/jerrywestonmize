@@ -29,7 +29,7 @@ use Slim\Exception\ContainerValueNotFoundException;
 /**
  * Class EventPlaceholderService
  *
- * @package AmeliaBooking\Application\Services\Notification
+ * @package AmeliaBooking\Application\Services\Placeholder
  */
 class EventPlaceholderService extends PlaceholderService
 {

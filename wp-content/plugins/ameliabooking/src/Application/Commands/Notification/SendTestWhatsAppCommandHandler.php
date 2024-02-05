@@ -5,17 +5,12 @@ namespace AmeliaBooking\Application\Commands\Notification;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\Notification\WhatsAppNotificationService;
+use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Application\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\NotificationSendTo;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Repository\Notification\NotificationRepository;
-use AmeliaBooking\Infrastructure\Services\Notification\MailgunService;
-use AmeliaBooking\Infrastructure\Services\Notification\PHPMailService;
-use AmeliaBooking\Infrastructure\Services\Notification\SMTPService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -55,7 +50,7 @@ class SendTestWhatsAppCommandHandler extends CommandHandler
 
         $type = $command->getField('type');
 
-        /** @var WhatsAppNotificationService $whatsAppNotificationService */
+        /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $this->container->get('application.whatsAppNotification.service');
         /** @var PlaceholderService $placeholderService */
         $placeholderService = $this->getContainer()->get("application.placeholder.{$type}.service");

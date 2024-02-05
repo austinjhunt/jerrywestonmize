@@ -5,18 +5,21 @@ namespace AmeliaBooking\Infrastructure\Services\LessonSpace;
 
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
+use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventPeriodsRepository;
 use AmeliaBooking\Infrastructure\Routes\Booking\Event\Event;
+use Interop\Container\Exception\ContainerException;
 
-class LessonSpaceService
+class LessonSpaceService extends AbstractLessonSpaceService
 {
     /**
      * @var SettingsService $settingsService
@@ -44,10 +47,12 @@ class LessonSpaceService
      * @param Collection $periods
      * @param array $booking
      *
+     * @return void
+     *
      * @throws QueryExecutionException
-     * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
-     * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
-     * @throws \Interop\Container\Exception\ContainerException
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
+     * @throws ContainerException
      */
     public function handle($appointment, $entity, $periods = null, $booking = null)
     {
@@ -165,7 +170,7 @@ class LessonSpaceService
     /**
      * @param $apiKey
      *
-     * @return mixed
+     * @return array
      *
      */
     public function getCompanyId($apiKey)
@@ -177,8 +182,9 @@ class LessonSpaceService
     /**
      * @param $apiKey
      * @param $companyId
+     * @param $searchTerm
      *
-     * @return mixed
+     * @return array
      */
     public function getAllSpaces($apiKey, $companyId, $searchTerm = null)
     {
@@ -203,7 +209,8 @@ class LessonSpaceService
      * @param $apiKey
      * @param $companyId
      * @param $spaceId
-     * @return mixed
+     *
+     * @return array
      */
     public function getSpaceUsers($apiKey, $companyId, $spaceId)
     {
@@ -215,7 +222,8 @@ class LessonSpaceService
      * @param $apiKey
      * @param $companyId
      * @param $spaceId
-     * @return mixed
+     *
+     * @return array
      */
     public function getSpace($apiKey, $companyId, $spaceId)
     {
@@ -227,7 +235,7 @@ class LessonSpaceService
      * @param $apiKey
      * @param $companyId
      *
-     * @return mixed
+     * @return array
      */
     public function getAllTeachers($apiKey, $companyId)
     {
@@ -237,12 +245,12 @@ class LessonSpaceService
     }
 
     /**
-     * @param string $lessonSpaceApiKey
+     * @param $lessonSpaceApiKey
      * @param $data
      * @param $requestUrl
      * @param $method
      *
-     * @return mixed
+     * @return array
      */
     public function execute($lessonSpaceApiKey, $data, $requestUrl, $method)
     {
@@ -282,6 +290,11 @@ class LessonSpaceService
         return json_decode($result, true);
     }
 
+    /**
+     * @param $resultArray
+     *
+     * @return string
+     */
     private function getInviteUrl($resultArray)
     {
         $inviteUrl = '';

@@ -236,10 +236,12 @@ class UpdateEventBookingCommandHandler extends CommandHandler
                     }
                 }
 
-                WooCommerceService::updateItemMetaData(
-                    $payment->getWcOrderId()->getValue(),
-                    $eventArray
-                );
+                if (WooCommerceService::isEnabled()) {
+                    WooCommerceService::updateItemMetaData(
+                        $payment->getWcOrderId()->getValue(),
+                        $eventArray
+                    );
+                }
             }
         }
 

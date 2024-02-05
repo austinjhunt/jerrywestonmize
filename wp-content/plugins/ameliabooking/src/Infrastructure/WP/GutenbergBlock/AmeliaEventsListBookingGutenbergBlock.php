@@ -37,7 +37,7 @@ class AmeliaEventsListBookingGutenbergBlock extends GutenbergBlock
         );
 
         wp_enqueue_style(
-            'amelia_booking_gutenberg_styles',
+            'amelia_events_list_booking_gutenberg_styles',
             AMELIA_URL . 'public/js/gutenberg/amelia-events-list-booking/amelia-gutenberg-styles.css',
             [],
             AMELIA_VERSION

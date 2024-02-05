@@ -37,7 +37,8 @@ class Requests_Utility_CaseInsensitiveDictionary implements ArrayAccess, Iterato
 	 * @param string $key Item key
 	 * @return boolean Does the item exist?
 	 */
-	public function offsetExists($key) {
+	#[\ReturnTypeWillChange]
+    public function offsetExists($key) {
 		$key = strtolower($key);
 		return isset($this->data[$key]);
 	}
@@ -48,7 +49,8 @@ class Requests_Utility_CaseInsensitiveDictionary implements ArrayAccess, Iterato
 	 * @param string $key Item key
 	 * @return string|null Item value (null if offsetExists is false)
 	 */
-	public function offsetGet($key) {
+	#[\ReturnTypeWillChange]
+    public function offsetGet($key) {
 		$key = strtolower($key);
 		if (!isset($this->data[$key])) {
 			return null;
@@ -65,7 +67,8 @@ class Requests_Utility_CaseInsensitiveDictionary implements ArrayAccess, Iterato
 	 * @param string $key Item name
 	 * @param string $value Item value
 	 */
-	public function offsetSet($key, $value) {
+	#[\ReturnTypeWillChange]
+    public function offsetSet($key, $value) {
 		if ($key === null) {
 			throw new Requests_Exception('Object is a dictionary, not a list', 'invalidset');
 		}
@@ -79,7 +82,8 @@ class Requests_Utility_CaseInsensitiveDictionary implements ArrayAccess, Iterato
 	 *
 	 * @param string $key
 	 */
-	public function offsetUnset($key) {
+	#[\ReturnTypeWillChange]
+    public function offsetUnset($key) {
 		unset($this->data[strtolower($key)]);
 	}
 
@@ -88,7 +92,8 @@ class Requests_Utility_CaseInsensitiveDictionary implements ArrayAccess, Iterato
 	 *
 	 * @return ArrayIterator
 	 */
-	public function getIterator() {
+	#[\ReturnTypeWillChange]
+    public function getIterator() {
 		return new ArrayIterator($this->data);
 	}
 

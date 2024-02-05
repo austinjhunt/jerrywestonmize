@@ -54,7 +54,7 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
                 $orderDirection = $criteria['sort'][0] === '-' ? 'DESC' : 'ASC';
                 $order = "ORDER BY {$orderColumn} {$orderDirection}";
 
-                $joinWithBookings = $column !== 'customer' ?  true : $joinWithBookings;
+                $joinWithBookings = $column !== 'customer' || $joinWithBookings;
             }
 
             if (!empty($criteria['search'])) {
@@ -86,19 +86,27 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
 
             $statsJoins = '';
 
+            $having = '';
+
             if ($joinWithBookings) {
                 $params[':bookingPendingStatus'] = BookingStatus::PENDING;
 
-                $statsFields = '
+                $statsFields = "
                     MAX(app.bookingStart) as lastAppointment,
                     COUNT(cb.id) as totalAppointments,
                     SUM(case when cb.status = :bookingPendingStatus then 1 else 0 end) as countPendingAppointments,
-                ';
+                ";
 
                 $statsJoins = "
                     LEFT JOIN {$bookingsTable} cb ON u.id = cb.customerId
                     LEFT JOIN {$appointmentsTable} app ON app.id = cb.appointmentId
                 ";
+
+                if (!empty($criteria['noShow'])) {
+                    $having = "HAVING (SUM(case when cb.status = 'no-show' then 1 else 0 end)) " . ($criteria['noShow'] === "3" ? '>=' : '=') . ":noShow";
+
+                    $params[':noShow'] = $criteria['noShow'];
+                }
             }
 
             $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
@@ -129,6 +137,7 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
                 {$statsJoins}
                 {$where}
                 GROUP BY u.id
+                {$having}
                 {$order}
                 {$limit}"
             );
@@ -194,6 +203,14 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
             $where[] = 'u.id IN (' . implode(', ', $customersCriteria) . ')';
         }
 
+        if (!empty($criteria['noShow'])) {
+            $bookingsTable = CustomerBookingsTable::getTableName();
+
+            $params[':noShow'] = $criteria['noShow'];
+
+            $where[] = "(SELECT COUNT(*) FROM {$bookingsTable} cb WHERE cb.status='no-show' AND cb.customerId=u.id)" . ($criteria['noShow'] === "3" ? '>=' : '=') . " :noShow";
+        }
+
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         try {
@@ -201,7 +218,8 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
                 "SELECT COUNT(*) as count
                 FROM {$this->table} as u 
                 LEFT JOIN {$wpUserTable} wpu ON u.externalId = wpu.id
-                $where"
+                $where
+                "
             );
 
             $statement->execute($params);

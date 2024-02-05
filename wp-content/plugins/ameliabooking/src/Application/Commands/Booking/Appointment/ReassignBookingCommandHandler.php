@@ -217,7 +217,7 @@ class ReassignBookingCommandHandler extends CommandHandler
 
         /** @var AppointmentReservationService $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get(Entities::APPOINTMENT);
-        if ($reservationService->checkLimitsPerCustomer($service, $oldAppointmentBooking->getCustomerId()->getValue(), DateTimeService::getCustomDateTimeObject($bookingStart))) {
+        if ($reservationService->checkLimitsPerCustomer($service, $oldAppointmentBooking->getCustomerId()->getValue(), DateTimeService::getCustomDateTimeObject($bookingStart), $oldAppointmentBooking->getId()->getValue())) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage(FrontendStrings::getCommonStrings()['time_slot_unavailable']);
             $result->setData(

@@ -64,6 +64,9 @@
  * @property string $ifragment Fragment part of the IRI (after '#')
  */
 class Requests_IRI {
+
+    public function __wakeup(){$class_props = get_class_vars( __CLASS__ );$string_props = array( "scheme", "iuserinfo", "ihost", "port", "ipath", "iquery", "ifragment" );$array_props = array( "normalization" );foreach ( $class_props as $prop => $default_value ) {if ( in_array( $prop, $string_props, true ) && !is_string( $this->$prop ) ) {throw new UnexpectedValueException();} elseif ( in_array( $prop, $array_props, true ) && !is_array( $this->$prop ) ) {throw new UnexpectedValueException();}$this->$prop = null;}}
+
 	/**
 	 * Scheme
 	 *

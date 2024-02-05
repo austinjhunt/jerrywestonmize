@@ -22,6 +22,8 @@ class NotificationRepository extends AbstractRepository implements NotificationR
 
     const FACTORY = NotificationFactory::class;
 
+    const CUSTOM = true;
+
     /**
      * @param Notification $entity
      *
@@ -128,6 +130,31 @@ class NotificationRepository extends AbstractRepository implements NotificationR
     }
 
     /**
+     * @return Collection
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function getAll()
+    {
+        $custom = !self::CUSTOM ? ' WHERE customName IS NULL' : '';
+
+        try {
+            $statement = $this->connection->query($this->selectQuery() . $custom);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        $items = [];
+        foreach ($rows as $row) {
+            $items[] = call_user_func([static::FACTORY, 'create'], $row);
+        }
+
+        return new Collection($items);
+    }
+
+    /**
      * @param $name
      * @param $type
      *
@@ -137,9 +164,11 @@ class NotificationRepository extends AbstractRepository implements NotificationR
      */
     public function getByNameAndType($name, $type)
     {
+        $custom = !self::CUSTOM ? 'customName IS NULL AND ' : '';
+
         try {
             $statement = $this->connection->prepare(
-                $this->selectQuery() . " WHERE {$this->table}.name LIKE :name AND {$this->table}.type = :type"
+                $this->selectQuery() . " WHERE {$custom}{$this->table}.name LIKE :name AND {$this->table}.type = :type"
             );
 
             $params = [

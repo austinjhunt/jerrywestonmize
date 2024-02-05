@@ -6,6 +6,7 @@
 
 namespace AmeliaBooking\Infrastructure\Routes\Payment;
 
+use AmeliaBooking\Application\Controller\Payment\GetTransactionAmountController;
 use AmeliaBooking\Application\Controller\Payment\RefundPaymentController;
 use Slim\App;
 
@@ -22,5 +23,7 @@ class Refund
     public static function routes(App $app)
     {
         $app->post('/payments/refund/{id:[0-9]+}', RefundPaymentController::class);
+
+        $app->get('/payments/transaction/{id:[0-9]+}', GetTransactionAmountController::class);
     }
 }

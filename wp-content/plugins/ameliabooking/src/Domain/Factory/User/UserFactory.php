@@ -32,6 +32,7 @@ use AmeliaBooking\Domain\Factory\Schedule\DayOffFactory;
 use AmeliaBooking\Domain\Factory\Schedule\TimeOutFactory;
 use AmeliaBooking\Domain\Factory\Schedule\PeriodFactory;
 use AmeliaBooking\Domain\Factory\Schedule\WeekDayFactory;
+use AmeliaBooking\Infrastructure\Licence;
 
 /**
  * Class UserFactory
@@ -66,6 +67,8 @@ class UserFactory
                 $specialDayList = [];
                 $serviceList = [];
                 $appointmentList = [];
+
+                Licence\DataModifier::userFactory($data);
 
                 if (isset($data['weekDayList'])) {
                     foreach ((array)$data['weekDayList'] as $weekDay) {
@@ -245,6 +248,8 @@ class UserFactory
         if (!empty($data['birthday'])) {
             if (is_string($data['birthday'])) {
                 $user->setBirthday(new Birthday(\DateTime::createFromFormat('Y-m-d', $data['birthday'])));
+            } else if (is_array($data['birthday'])) {
+                $user->setBirthday(new Birthday(\DateTime::createFromFormat('Y-m-d', explode(' ', $data['birthday']['date'])[0])));
             } else {
                 $user->setBirthday(new Birthday($data['birthday']));
             }

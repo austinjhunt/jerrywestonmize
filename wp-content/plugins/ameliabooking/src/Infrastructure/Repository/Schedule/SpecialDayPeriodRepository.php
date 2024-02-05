@@ -4,6 +4,7 @@ namespace AmeliaBooking\Infrastructure\Repository\Schedule;
 
 use AmeliaBooking\Domain\Entity\Schedule\SpecialDayPeriod;
 use AmeliaBooking\Domain\Factory\Schedule\SpecialDayPeriodFactory;
+use AmeliaBooking\Infrastructure\Licence;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 
@@ -29,16 +30,29 @@ class SpecialDayPeriodRepository extends AbstractRepository
 
         $params = [
             ':specialDayId' => $specialDayId,
-            ':locationId'   => $data['locationId'] ? $data['locationId'] : null,
             ':startTime'    => $data['startTime'],
             ':endTime'      => $data['endTime']
         ];
 
+        $additionalData = Licence\DataModifier::getPeriodRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values']);
+
         try {
             $statement = $this->connection->prepare(
-                "INSERT INTO {$this->table}
-                (`specialDayId`, `startTime`, `endTime`, `locationId`)
-                VALUES (:specialDayId, :startTime, :endTime, :locationId)"
+                "INSERT INTO
+                {$this->table}
+                (
+                {$additionalData['columns']}
+                `specialDayId`,
+                `startTime`,
+                `endTime`
+                ) VALUES (
+                {$additionalData['placeholders']}
+                :specialDayId,
+                :startTime,
+                :endTime
+                )"
             );
 
             $res = $statement->execute($params);
@@ -65,15 +79,21 @@ class SpecialDayPeriodRepository extends AbstractRepository
 
         $params = [
             ':id'         => $id,
-            ':locationId' => $data['locationId'] ? $data['locationId'] : null,
             ':startTime'  => $data['startTime'],
             ':endTime'    => $data['endTime']
         ];
 
+        $additionalData = Licence\DataModifier::getPeriodRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values']);
+
         try {
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
-                SET `startTime` = :startTime, `endTime` = :endTime, `locationId` = :locationId
+                SET
+                {$additionalData['columnsPlaceholders']}
+                `startTime` = :startTime,
+                `endTime` = :endTime
                 WHERE id = :id"
             );
 

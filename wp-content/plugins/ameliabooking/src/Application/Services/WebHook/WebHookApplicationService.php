@@ -23,28 +23,14 @@ use Slim\Exception\ContainerValueNotFoundException;
  *
  * @package AmeliaBooking\Application\Services\WebHook
  */
-class WebHookApplicationService
+class WebHookApplicationService extends AbstractWebHookApplicationService
 {
-    /** @var Container $container */
-    private $container;
-
-    /**
-     * WebHookApplicationService constructor.
-     *
-     * @param Container $container
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * @param string   $action
      * @param array    $reservation
      * @param array    $bookings
      *
+     * @return void
      * @throws InvalidArgumentException
      * @throws ContainerValueNotFoundException
      * @throws NotFoundException

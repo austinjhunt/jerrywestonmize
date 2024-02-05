@@ -14,8 +14,8 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
-use AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarService;
-use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCalendarService;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -61,9 +61,9 @@ class GetProviderCommandHandler extends CommandHandler
         $providerService = $this->container->get('application.user.provider.service');
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
-        /** @var GoogleCalendarService $googleCalService */
+        /** @var AbstractGoogleCalendarService $googleCalService */
         $googleCalService = $this->container->get('infrastructure.google.calendar.service');
-        /** @var OutlookCalendarService $outlookCalendarService */
+        /** @var AbstractOutlookCalendarService $outlookCalendarService */
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
 
         $companyDaysOff = $settingsService->getCategorySettings('daysOff');

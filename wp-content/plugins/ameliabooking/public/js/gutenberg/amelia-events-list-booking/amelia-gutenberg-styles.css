@@ -1,3 +1,4 @@
+/*
 .components-button.block-editor-block-types-list__item.editor-block-list-item-amelia-events-list-booking-gutenberg-block .block-editor-block-icon{
     width: 44px !important;
 }
@@ -14,7 +15,20 @@
     position: relative
 }
 
-.amelia-step-booking-gutenberg {
+.amelia-events-list-booking-gutenberg {
     position: absolute;
     max-width: 44px !important;
 }
+
+.amelia-gutenberg-multi-select .components-input-control-suffix-wrapper{
+    display: none
+}
+
+#amelia-js-select-event, #amelia-js-select-tag {
+    padding-right: 0 !important;
+}
+
+#amelia-js-select-event option, #amelia-js-select-tag option {
+    float: left;
+    min-width: 100%;
+}*/

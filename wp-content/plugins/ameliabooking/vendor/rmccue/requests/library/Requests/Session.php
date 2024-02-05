@@ -18,6 +18,9 @@
  * @subpackage Session Handler
  */
 class Requests_Session {
+
+    public function __wakeup(){throw new \LogicException( __CLASS__ . " should never be unserialized" );}
+
 	/**
 	 * Base URL for requests
 	 *

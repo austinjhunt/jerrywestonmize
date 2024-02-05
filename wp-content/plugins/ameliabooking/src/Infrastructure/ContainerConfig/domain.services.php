@@ -25,24 +25,20 @@ $entries['domain.permissions.service'] = function ($c) {
  *
  * @param $c
  *
- * @return \AmeliaBooking\Domain\Services\Permissions\PermissionsService
+ * @return AmeliaBooking\Domain\Services\Permissions\PermissionsService
+ * @throws \Interop\Container\Exception\ContainerException
  */
 $entries['domain.api.permissions.service'] = function ($c) {
-    return new AmeliaBooking\Domain\Services\Permissions\PermissionsService(
-        $c,
-        new AmeliaBooking\Infrastructure\WP\PermissionsService\PermissionsChecker()
-    );
+    return AmeliaBooking\Infrastructure\Licence\DomainService::getPermissionService($c);
 };
 
 /**
  * Permissions service
  *
- * @param $c
- *
- * @return \AmeliaBooking\Domain\Services\Api\BasicApiService
+ * @return AmeliaBooking\Domain\Services\Api\BasicApiService
  */
 $entries['domain.api.service'] = function () {
-    return new AmeliaBooking\Domain\Services\Api\BasicApiService();
+    return AmeliaBooking\Infrastructure\Licence\DomainService::getApiService();
 };
 
 /**
@@ -118,94 +114,22 @@ $entries['domain.schedule.service'] = function () {
 };
 
 /**
- * @return \AmeliaBooking\Domain\Services\Resource\AbstractResourceService
+ * @return AmeliaBooking\Domain\Services\Resource\AbstractResourceService
  */
 $entries['domain.resource.service'] = function () {
-    $intervalService = new AmeliaBooking\Domain\Services\Interval\IntervalService();
-
-    $locationService = new AmeliaBooking\Domain\Services\Location\LocationService();
-
-    $providerService = new AmeliaBooking\Domain\Services\User\ProviderService(
-        $intervalService
-    );
-
-    $scheduleService = new AmeliaBooking\Domain\Services\Schedule\ScheduleService(
-        $intervalService,
-        $providerService,
-        $locationService
-    );
-
-    // Change for Basic Licence - BasicResourceService
-    return new AmeliaBooking\Domain\Services\Resource\ResourceService(
-        $intervalService,
-        $scheduleService
-    );
+    return AmeliaBooking\Infrastructure\Licence\DomainService::getResourceService();
 };
 
 /**
- * @return \AmeliaBooking\Domain\Services\Entity\EntityService
+ * @return AmeliaBooking\Domain\Services\Entity\EntityService
  */
 $entries['domain.entity.service'] = function () {
-    $intervalService = new AmeliaBooking\Domain\Services\Interval\IntervalService();
-
-    $locationService = new AmeliaBooking\Domain\Services\Location\LocationService();
-
-    $providerService = new AmeliaBooking\Domain\Services\User\ProviderService(
-        $intervalService
-    );
-
-    $scheduleService = new AmeliaBooking\Domain\Services\Schedule\ScheduleService(
-        $intervalService,
-        $providerService,
-        $locationService
-    );
-
-    // Change for Basic Licence - BasicResourceService
-    $resourceService = new AmeliaBooking\Domain\Services\Resource\ResourceService(
-        $intervalService,
-        $scheduleService
-    );
-
-    return new AmeliaBooking\Domain\Services\Entity\EntityService(
-        $providerService,
-        $resourceService
-    );
+    return AmeliaBooking\Infrastructure\Licence\DomainService::getEntityService();
 };
 
 /**
- * @return \AmeliaBooking\Domain\Services\TimeSlot\TimeSlotService
+ * @return AmeliaBooking\Domain\Services\TimeSlot\TimeSlotService
  */
 $entries['domain.timeSlot.service'] = function () {
-    $intervalService = new AmeliaBooking\Domain\Services\Interval\IntervalService();
-
-    $locationService = new AmeliaBooking\Domain\Services\Location\LocationService();
-
-    $providerService = new AmeliaBooking\Domain\Services\User\ProviderService(
-        $intervalService
-    );
-
-    $scheduleService = new AmeliaBooking\Domain\Services\Schedule\ScheduleService(
-        $intervalService,
-        $providerService,
-        $locationService
-    );
-
-    // Change for Basic Licence - BasicResourceService
-    $resourceService = new AmeliaBooking\Domain\Services\Resource\ResourceService(
-        $intervalService,
-        $scheduleService
-    );
-
-    $entityService = new AmeliaBooking\Domain\Services\Entity\EntityService(
-        $providerService,
-        $resourceService
-    );
-
-    return new AmeliaBooking\Domain\Services\TimeSlot\TimeSlotService(
-        $intervalService,
-        $scheduleService,
-        $providerService,
-        $resourceService,
-        $entityService
-    );
+    return AmeliaBooking\Infrastructure\Licence\DomainService::getTimeSlotService();
 };

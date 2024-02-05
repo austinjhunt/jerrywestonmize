@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Commands\Booking\Appointment;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
@@ -53,7 +53,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
         /** @var ServiceRepository $serviceRepository */
         $serviceRepository = $this->container->get('domain.bookable.service.repository');
 
-        /** @var PackageApplicationService $packageAS */
+        /** @var AbstractPackageApplicationService $packageAS */
         $packageAS = $this->container->get('application.bookable.package');
 
         /** @var SettingsService $settingsDS */
@@ -74,7 +74,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         $isCabinetPackageRequest = $isCabinetPage && isset($params['activePackages']);
 
-        $isDashboardPackageRequest = !$isCabinetPage && isset($params['packageId']);
+        $isDashboardPackageRequest = !$isCabinetPage && (isset($params['packageId']) || !empty($params['packageBookings']));
 
         try {
             /** @var AbstractUser $user */
@@ -139,7 +139,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
         $availablePackageBookings = [];
 
         if (!$isCabinetPackageRequest && !$isDashboardPackageRequest) {
-            $upcomingAppointmentsLimit = $settingsDS->getSetting('general', 'appointmentsPerPage');
+            $upcomingAppointmentsLimit = $settingsDS->getSetting('general', 'itemsPerPageBackEnd');
 
             /** @var Collection $periodAppointments */
             $periodAppointments = $appointmentRepository->getPeriodAppointments(
@@ -372,7 +372,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
             empty($params['providers']) &&
             empty($params['locations'])
         ) {
-            /** @var PackageApplicationService $packageApplicationService */
+            /** @var AbstractPackageApplicationService $packageApplicationService */
             $packageApplicationService = $this->container->get('application.bookable.package');
 
             /** @var Collection $emptyBookedPackages */

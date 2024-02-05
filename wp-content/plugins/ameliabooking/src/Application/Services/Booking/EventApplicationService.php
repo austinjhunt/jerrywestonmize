@@ -1008,7 +1008,9 @@ class EventApplicationService
             /** @var EventTagsRepository $eventTagsRepository */
             $eventTagsRepository = $this->container->get('domain.booking.event.tag.repository');
 
-            $eventTagsRepository->deleteByEventId($oldEvent->getId()->getValue());
+            if ($oldEvent->getTags()->length()) {
+                $eventTagsRepository->deleteByEventId($oldEvent->getId()->getValue());
+            }
 
             /** @var EventTag $eventTag */
             foreach ($newEvent->getTags()->getItems() as $eventTag) {

@@ -119,14 +119,14 @@ class WhatsAppService
      * @param string $name
      * @return mixed
      */
-    public function getTemplates($name = null)
+    public function getTemplates($name = null, $url = null)
     {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
         $businessId      = $settingsService->getSetting('notifications', 'whatsAppBusinessID');
         $accessToken     = $settingsService->getSetting('notifications', 'whatsAppAccessToken');
 
-        $route = self::URL . $businessId . '/message_templates?access_token=' . $accessToken . ($name ? ('&name=' .$name) : '');
+        $route = $url ?: (self::URL . $businessId . '/message_templates?access_token=' . $accessToken . ($name ? ('&name=' .$name) : ''));
 
         return $this->sendRequest($route, 'GET', null, false);
     }

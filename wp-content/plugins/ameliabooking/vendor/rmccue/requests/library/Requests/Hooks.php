@@ -13,6 +13,9 @@
  * @subpackage Utilities
  */
 class Requests_Hooks implements Requests_Hooker {
+
+    public function __wakeup(){throw new \LogicException( __CLASS__ . " should never be unserialized" );}
+
 	/**
 	 * Registered callbacks for each hook
 	 *

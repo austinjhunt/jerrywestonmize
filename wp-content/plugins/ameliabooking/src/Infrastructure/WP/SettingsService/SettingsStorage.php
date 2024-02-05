@@ -2,9 +2,10 @@
 
 namespace AmeliaBooking\Infrastructure\WP\SettingsService;
 
-use AmeliaBooking\Application\Services\Location\CurrentLocation;
+use AmeliaBooking\Application\Services\Location\AbstractCurrentLocation;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsStorageInterface;
+use AmeliaBooking\Infrastructure\Licence;
 
 /**
  * Class SettingsStorage
@@ -16,7 +17,7 @@ class SettingsStorage implements SettingsStorageInterface
     /** @var array|mixed */
     private $settingsCache;
 
-    /** @var CurrentLocation */
+    /** @var AbstractCurrentLocation */
     private $locationService;
 
     private static $wpSettings = [
@@ -32,13 +33,25 @@ class SettingsStorage implements SettingsStorageInterface
      */
     public function __construct()
     {
-        $this->locationService = new CurrentLocation();
-        $this->settingsCache = json_decode(get_option('amelia_settings'), true);
+        $this->locationService = Licence\ApplicationService::getCurrentLocationService();
+
+        $this->settingsCache = self::getSavedSettings();
+
+        Licence\DataModifier::modifySettings($this->settingsCache);
+
         foreach (self::$wpSettings as $ameliaSetting => $wpSetting) {
             $this->settingsCache['wordpress'][$ameliaSetting] = get_option($wpSetting);
         }
 
         DateTimeService::setTimeZone($this->getAllSettings());
+    }
+
+    /**
+     * @return array
+     */
+    private function getSavedSettings()
+    {
+        return json_decode(get_option('amelia_settings'), true);
     }
 
     /**
@@ -141,6 +154,7 @@ class SettingsStorage implements SettingsStorageInterface
             'daysOff'                => $this->getCategorySettings('daysOff'),
             'general'                => [
                 'itemsPerPage'                           => $this->getSetting('general', 'itemsPerPage'),
+                'itemsPerPageBackEnd'                    => $this->getSetting('general', 'itemsPerPageBackEnd'),
                 'appointmentsPerPage'                    => $this->getSetting('general', 'appointmentsPerPage'),
                 'eventsPerPage'                          => $this->getSetting('general', 'eventsPerPage'),
                 'servicesPerPage'                        => $this->getSetting('general', 'servicesPerPage'),
@@ -167,6 +181,7 @@ class SettingsStorage implements SettingsStorageInterface
                 'customFieldsUploadsPath'                => $this->getSetting('general', 'customFieldsUploadsPath'),
                 'runInstantPostBookingActions'           => $this->getSetting('general', 'runInstantPostBookingActions'),
                 'sortingPackages'                        => $this->getSetting('general', 'sortingPackages'),
+                'backLink'                               => $this->getSetting('general', 'backLink'),
                 'sortingServices'                        => $this->getSetting('general', 'sortingServices'),
                 'googleRecaptcha'                              => [
                     'enabled'   => $this->getSetting('general', 'googleRecaptcha')['enabled'],
@@ -175,8 +190,10 @@ class SettingsStorage implements SettingsStorageInterface
                 ],
                 'usedLanguages' => $this->getSetting('general', 'usedLanguages'),
             ],
-            'googleCalendar'         =>
-                $this->getSetting('googleCalendar', 'clientID') && $this->getSetting('googleCalendar', 'clientSecret'),
+            'googleCalendar'         => [
+              'enabled' => $this->getSetting('googleCalendar', 'clientID') && $this->getSetting('googleCalendar', 'clientSecret'),
+              'googleMeetEnabled' => $this->getSetting('googleCalendar', 'enableGoogleMeet')
+            ],
             'outlookCalendar'        =>
                 $this->getSetting('outlookCalendar', 'clientID') && $this->getSetting('outlookCalendar', 'clientSecret'),
             'zoom'                   => [
@@ -281,6 +298,7 @@ class SettingsStorage implements SettingsStorageInterface
                 'stash'                         => $this->getSetting('activation', 'stash'),
                 'disableUrlParams'              => $this->getSetting('activation', 'disableUrlParams'),
                 'isNewInstallation'             => $this->getSetting('activation', 'isNewInstallation'),
+                'hideUnavailableFeatures'       => $this->getSetting('activation', 'hideUnavailableFeatures'),
             ],
             'roles'                  => [
                 'allowAdminBookAtAnyTime'     => $this->getSetting('roles', 'allowAdminBookAtAnyTime'),
@@ -308,10 +326,11 @@ class SettingsStorage implements SettingsStorageInterface
                     'tokenValidTime' => $this->getSetting('roles', 'providerCabinet')['tokenValidTime'],
                 ],
                 'providerBadges'          => $this->getSetting('roles', 'providerBadges'),
+                'enableNoShowTag'         => $this->getSetting('roles', 'enableNoShowTag'),
                 'limitPerCustomerService' => $this->getSetting('roles', 'limitPerCustomerService'),
                 'limitPerCustomerPackage' => $this->getSetting('roles', 'limitPerCustomerPackage'),
-                'limitPerCustomerEvent' => $this->getSetting('roles', 'limitPerCustomerEvent'),
-                'enabledNoShowTag'      => $this->getSetting('roles', 'enabledNoShowTag'),
+                'limitPerCustomerEvent'   => $this->getSetting('roles', 'limitPerCustomerEvent'),
+                'limitPerEmployee'        => $this->getSetting('roles', 'limitPerEmployee'),
             ],
             'customization'          => $this->getCategorySettings('customization'),
             'customizedData'         => $this->getCategorySettings('customizedData'),
@@ -342,6 +361,7 @@ class SettingsStorage implements SettingsStorageInterface
     {
         $this->settingsCache[$settingCategoryKey][$settingKey] = $settingValue;
         $settingsCopy = $this->settingsCache;
+
         unset($settingsCopy['wordpress']);
         update_option('amelia_settings', json_encode($settingsCopy));
     }
@@ -356,6 +376,7 @@ class SettingsStorage implements SettingsStorageInterface
     {
         $this->settingsCache[$settingCategoryKey] = $settingValues;
         $settingsCopy = $this->settingsCache;
+
         unset($settingsCopy['wordpress']);
         update_option('amelia_settings', json_encode($settingsCopy));
     }
@@ -371,6 +392,9 @@ class SettingsStorage implements SettingsStorageInterface
             $this->settingsCache[$settingCategoryKey] = $settingValues;
         }
         $settingsCopy = $this->settingsCache;
+
+        Licence\DataModifier::restoreSettings($settingsCopy, self::getSavedSettings());
+
         unset($settingsCopy['wordpress']);
         update_option('amelia_settings', json_encode($settingsCopy));
     }

@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Commands\Google;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
-use AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -24,7 +24,7 @@ class GetGoogleAuthURLCommandHandler extends CommandHandler
     {
         $result = new CommandResult();
 
-        /** @var GoogleCalendarService $googleCalendarService */
+        /** @var AbstractGoogleCalendarService $googleCalendarService */
         $googleCalendarService = $this->container->get('infrastructure.google.calendar.service');
 
         $authUrl = $googleCalendarService->createAuthUrl(

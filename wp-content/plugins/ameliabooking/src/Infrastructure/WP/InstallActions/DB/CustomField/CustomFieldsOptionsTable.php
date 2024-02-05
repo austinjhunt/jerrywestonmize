@@ -26,7 +26,7 @@ class CustomFieldsOptionsTable extends AbstractDatabaseTable
         return "CREATE TABLE {$table} (
                    `id` INT(11) NOT NULL AUTO_INCREMENT,
                    `customFieldId` int(11) NOT NULL,
-                   `label` VARCHAR(255) NOT NULL DEFAULT '',
+                   `label` TEXT NOT NULL DEFAULT '',
                    `position` int(11) NOT NULL,
                    `translations` TEXT NULL DEFAULT NULL,
                     PRIMARY KEY (`id`)

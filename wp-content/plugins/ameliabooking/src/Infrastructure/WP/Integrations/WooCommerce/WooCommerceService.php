@@ -32,6 +32,7 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
+use AmeliaBooking\Domain\ValueObjects\String\BookingType;
 use AmeliaBooking\Domain\ValueObjects\String\DepositType;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
@@ -176,11 +177,12 @@ class WooCommerceService
     /**
      * Get cart page
      *
-     * @param string $locale
+     * @param array $appointmentData
      * @return string
      */
-    public static function getPageUrl($locale = '')
+    public static function getPageUrl($appointmentData)
     {
+        $locale = !empty($appointmentData['locale']) ? $appointmentData['locale'] : '';
         $locale = $locale ? explode('_', $locale) : null;
 
         switch (self::$settingsService->getCategorySettings('payments')['wc']['page']) {
@@ -189,19 +191,23 @@ class WooCommerceService
                     function_exists('icl_object_id') &&
                     ($url = apply_filters('wpml_permalink', get_permalink(get_option('woocommerce_checkout_page_id')), $locale[0], true))
                 ) {
-                    return $url;
+                    $redirectUrl = $url;
+                } else {
+                    $redirectUrl = wc_get_checkout_url();
                 }
 
-                return wc_get_checkout_url();
+                break;
             case 'cart':
                 if (!empty($locale[0]) &&
                     function_exists('icl_object_id') &&
                     ($url = apply_filters('wpml_permalink', get_permalink(get_option('woocommerce_cart_page_id')), $locale[0], true))
                 ) {
-                    return $url;
+                    $redirectUrl = $url;
+                } else {
+                    $redirectUrl = wc_get_cart_url();
                 }
 
-                return wc_get_cart_url();
+                break;
             default:
                 $locale = defined(AMELIA_LOCALE) ? explode('_', AMELIA_LOCALE) : null;
 
@@ -209,11 +215,15 @@ class WooCommerceService
                     function_exists('icl_object_id') &&
                     ($url = apply_filters('wpml_permalink', get_permalink(get_option('woocommerce_cart_page_id')), $locale[0], true))
                 ) {
-                    return $url;
+                    $redirectUrl = $url;
+                } else {
+                    $redirectUrl = wc_get_cart_url();
                 }
 
-                return wc_get_cart_url();
+                break;
         }
+
+        return apply_filters('amelia_wc_redirect_page', $redirectUrl, $appointmentData);
     }
 
     /**
@@ -227,7 +237,7 @@ class WooCommerceService
     /**
      * Is WooCommerce enabled
      *
-     * @return string
+     * @return bool
      */
     public static function isEnabled()
     {
@@ -403,7 +413,16 @@ class WooCommerceService
                 }
             }
 
-            $reservationService->runPostBookingActions($result);
+            /** @var SettingsService $settingsService */
+            $settingsService = self::$container->get('domain.settings.service');
+
+            $wcSettings = self::$settingsService->getSetting('payments', 'wc');
+
+            if ($settingsService->getSetting('general', 'runInstantPostBookingActions') ||
+                (isset($wcSettings['redirectPage']) && $wcSettings['redirectPage'] === 1)
+            ) {
+                $reservationService->runPostBookingActions($result);
+            }
         } catch (ContainerException $e) {
         } catch (\Exception $e) {
         }
@@ -1281,7 +1300,7 @@ class WooCommerceService
      * @return array
      * @throws \Exception
      */
-    public static function getCartLabels($data)
+    private static function getCartLabels($data)
     {
         $cartInfo = [];
 
@@ -1340,7 +1359,7 @@ class WooCommerceService
      * @return array
      * @throws \Exception
      */
-    public static function getPackageLabels($data)
+    private static function getPackageLabels($data)
     {
         $packageInfo = [];
 
@@ -1399,7 +1418,7 @@ class WooCommerceService
      * @return array
      * @throws \Exception
      */
-    public static function getAppointmentLabels($data)
+    private static function getAppointmentLabels($data)
     {
         /** @var array $booking */
         $booking = self::getEntity($data);
@@ -1435,7 +1454,7 @@ class WooCommerceService
      * @return array
      * @throws \Exception
      */
-    public static function getEventLabels($data)
+    private static function getEventLabels($data)
     {
         /** @var array $booking */
         $booking = self::getEntity($data);
@@ -1943,30 +1962,6 @@ class WooCommerceService
     }
 
     /**
-     * Add order item meta.
-     *
-     * @param $item_id
-     * @param $values
-     * @param $wc_key
-     * @throws ContainerException
-     */
-    public static function addOrderItemMeta($item_id, $values, $wc_key)
-    {
-        if (isset($values[self::AMELIA]) && is_array($values[self::AMELIA])) {
-            wc_update_order_item_meta(
-                $item_id,
-                self::AMELIA,
-                array_merge(
-                    $values[self::AMELIA],
-                    [
-                        'labels' => self::getLabels($values[self::AMELIA])
-                    ]
-                )
-            );
-        }
-    }
-
-    /**
      * Checkout Create Order Line Item.
      *
      * @param $item
@@ -2083,7 +2078,7 @@ class WooCommerceService
         foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
             if (isset($wc_item[self::AMELIA]) && is_array($wc_item[self::AMELIA])) {
                 if ($errorMessage = self::validateBooking($wc_item[self::AMELIA])) {
-                    $cartUrl = self::getPageUrl(!empty($wc_item[self::AMELIA]['locale']) ? $wc_item[self::AMELIA]['locale'] : '');
+                    $cartUrl = self::getPageUrl($wc_item[self::AMELIA]);
                     $removeAppointmentMessage = FrontendStrings::getCommonStrings()['wc_appointment_is_removed'];
 
                     throw new \Exception($errorMessage . "<a href='{$cartUrl}'>{$removeAppointmentMessage}</a>");
@@ -2109,7 +2104,12 @@ class WooCommerceService
         foreach ($order->get_items() as $item_id => $order_item) {
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
-            if ($data && is_array($data) && !isset($data['processed']) && !empty($data['type']) && $data['type'] !== 'package') {
+            if ($data && is_array($data) &&
+                !isset($data['processed']) &&
+                !empty($data['type']) &&
+                $data['type'] !== 'package' &&
+                $data['type'] !== 'event'
+            ) {
                 if ($data['couponCode']) {
                     $couponCode = $data['couponCode'];
                 }
@@ -2143,7 +2143,7 @@ class WooCommerceService
         foreach ($order->get_items() as $item_id => $order_item) {
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
-            $isValid = $data && is_array($data) && !self::$isProcessing;
+            $isValid = $data && is_array($data);
 
             $wcSettings = self::$settingsService->getSetting('payments', 'wc');
 
@@ -2160,7 +2160,7 @@ class WooCommerceService
             }
 
             try {
-                if ($isValid !== false && !isset($data['processed']) && !($order->get_status() === 'cancelled' || $order->get_status() === 'failed')) {
+                if ($isValid !== false && !self::$isProcessing && !isset($data['processed']) && !($order->get_status() === 'cancelled' || $order->get_status() === 'failed')) {
                     if ($couponCode && empty($data['couponCode'])) {
                         $data['couponCode'] = $couponCode;
                     }
@@ -2308,8 +2308,6 @@ class WooCommerceService
             } catch (ContainerException $e) {
             } catch (\Exception $e) {
             }
-
-            break;
         }
     }
 
@@ -2321,7 +2319,7 @@ class WooCommerceService
      *
      * @throws QueryExecutionException
      */
-    public static function updateBookingStatus($payment, $type, $order)
+    private static function updateBookingStatus($payment, $type, $order)
     {
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = self::$container->get('application.reservation.service')->get($type);
@@ -2385,7 +2383,7 @@ class WooCommerceService
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
-    public static function bookingAppointmentUpdated($payment, $requestedStatus)
+    private static function bookingAppointmentUpdated($payment, $requestedStatus)
     {
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = self::$container->get('application.reservation.service')->get(Entities::APPOINTMENT);
@@ -2426,7 +2424,7 @@ class WooCommerceService
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
-    public static function bookingEventUpdated($payment, $requestedStatus)
+    private static function bookingEventUpdated($payment, $requestedStatus)
     {
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = self::$container->get('application.reservation.service')->get(Entities::EVENT);
@@ -2460,7 +2458,7 @@ class WooCommerceService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public static function bookingPackageUpdated($payment, $requestedStatus)
+    private static function bookingPackageUpdated($payment, $requestedStatus)
     {
         /** @var PackageCustomerRepository $packageCustomerRepository */
         $packageCustomerRepository = self::$container->get('domain.bookable.packageCustomer.repository');
@@ -2720,7 +2718,7 @@ class WooCommerceService
      *
      * @param $order_id
      *
-     * @return string
+     * @return float
      * @throws ContainerException
      */
     public static function getOrderAmount($order_id)

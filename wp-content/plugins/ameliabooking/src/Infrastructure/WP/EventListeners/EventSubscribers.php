@@ -40,6 +40,8 @@ class EventSubscribers
         $eventBus->addListener('BookingTimeUpdated', $appointmentListener);
         $eventBus->addListener('BookingAdded', $appointmentListener);
         $eventBus->addListener('BookingCanceled', $appointmentListener);
+        $eventBus->addListener('BookingApproved', $appointmentListener);
+        $eventBus->addListener('BookingRejected', $appointmentListener);
         $eventBus->addListener('BookingEdited', $appointmentListener);
         $eventBus->addListener('BookingReassigned', $appointmentListener);
         $eventBus->addListener('PackageCustomerUpdated', $appointmentListener);

@@ -46,18 +46,22 @@ class Renderer {
     $parsedBlocks = $parser->parse($post->post_content); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
     $layoutStyles = $this->settingsController->getEmailLayoutStyles();
+    $themeData = $this->settingsController->getTheme()->get_data();
+    $contentBackground = $themeData['styles']['color']['background'] ?? $layoutStyles['background'];
+    $contentFontFamily = $themeData['styles']['typography']['fontFamily'];
     $parsedBlocks = $this->preprocessManager->preprocess($parsedBlocks, $layoutStyles);
     $renderedBody = $this->renderBlocks($parsedBlocks);
 
     $styles = (string)file_get_contents(dirname(__FILE__) . '/' . self::TEMPLATE_STYLES_FILE);
+    $styles .= $this->settingsController->getStylesheetForRendering();
     $styles = apply_filters('mailpoet_email_renderer_styles', $styles, $post);
 
     $template = (string)file_get_contents(dirname(__FILE__) . '/' . self::TEMPLATE_FILE);
 
-    // Apply layout styles
+    // Replace style settings placeholders with values
     $template = str_replace(
-      ['{{width}}', '{{background}}', '{{padding_top}}', '{{padding_right}}', '{{padding_bottom}}', '{{padding_left}}'],
-      [$layoutStyles['width'], $layoutStyles['background'], $layoutStyles['padding']['top'], $layoutStyles['padding']['right'], $layoutStyles['padding']['bottom'], $layoutStyles['padding']['left']],
+      ['{{width}}', '{{layout_background}}', '{{content_background}}', '{{content_font_family}}', '{{padding_top}}', '{{padding_right}}', '{{padding_bottom}}', '{{padding_left}}'],
+      [$layoutStyles['width'], $layoutStyles['background'], $contentBackground, $contentFontFamily, $layoutStyles['padding']['top'], $layoutStyles['padding']['right'], $layoutStyles['padding']['bottom'], $layoutStyles['padding']['left']],
       $template
     );
 

@@ -18,7 +18,16 @@ function colibri_titles() {
 
 function colibri_page_title_html( $atts, $titles ) {
 	$tag = htmlspecialchars($atts['tag'], ENT_QUOTES, 'UTF-8');
-	$html = "<span><" . $tag . " style='margin-bottom:0'>" . get_title( $titles ) . "</" . $tag. "></span>";
+
+	$allowed_tags = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6');
+
+	if (!in_array($tag, $allowed_tags)) {
+		$tag = 'h2';
+	}
+
+	$title = wp_kses_post(get_title( $titles ));
+
+	$html = "<span><" . $tag . " style='margin-bottom:0'>" . $title . "</" . $tag. "></span>";
 
 	return $html;
 }

@@ -3,14 +3,13 @@
 namespace AmeliaBooking\Application\Services\Bookable;
 
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use Exception;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class BasicPackageApplicationService
  *
- * @package AmeliaBooking\Application\Services\Booking
+ * @package AmeliaBooking\Application\Services\Bookable
  */
 class BasicPackageApplicationService extends AbstractPackageApplicationService
 {
@@ -103,6 +102,46 @@ class BasicPackageApplicationService extends AbstractPackageApplicationService
      * @return array
      */
     public function getPackagesArray()
+    {
+        return [];
+    }
+
+    /**
+     * @param array $paymentsData
+     * @return void
+     */
+    public function setPaymentData(&$paymentsData)
+    {
+    }
+
+    /**
+     * @param Collection $appointments
+     * @param Collection $packageCustomerServices
+     * @param array $packageData
+     *
+     * @return void
+     */
+    protected function fixPurchase($appointments, $packageCustomerServices, $packageData)
+    {
+    }
+
+    /**
+     * @param Collection $packageCustomerServices
+     * @param Collection $appointments
+     *
+     * @return array
+     */
+    public function getPackageUnusedBookingsCount($packageCustomerServices, $appointments)
+    {
+        return [];
+    }
+
+    /**
+     * @param  array $package
+     *
+     * @return array
+     */
+    public function getOnlyOneEmployee($package)
     {
         return [];
     }

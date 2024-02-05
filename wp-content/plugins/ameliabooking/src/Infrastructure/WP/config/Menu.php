@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Infrastructure\WP\config;
 
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\Licence\Licence;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 
 /**
@@ -68,17 +69,7 @@ class Menu
 
         $defaultPageElement = array_splice($defaultPages, $defaultPageKey, 1);
 
-        return array_merge(
-            $defaultPageElement,
-            $defaultPages,
-            [
-                [
-                    'parentSlug' => 'amelia',
-                    'pageTitle'  => 'Employees',
-                    'menuTitle'  => BackendStrings::getCommonStrings()['employees'],
-                    'capability' => 'amelia_read_employees',
-                    'menuSlug'   => 'wpamelia-employees',
-                ],
+        $menuItems = [
                 [
                     'parentSlug' => 'amelia',
                     'pageTitle'  => 'Services',
@@ -149,7 +140,20 @@ class Menu
                     'capability' => 'amelia_read_whats_new',
                     'menuSlug'   => 'wpamelia-whats-new',
                 ],
-            ]
+            ];
+
+        if ($liteMenuItem = Licence::getLiteMenuItem()) {
+            $menuItems[] = $liteMenuItem;
+        }
+
+        if ($employeesMenuItem = Licence::getEmployeesMenuItem()) {
+            array_unshift($menuItems, $employeesMenuItem);
+        }
+
+        return array_merge(
+            $defaultPageElement,
+            $defaultPages,
+            $menuItems
         );
     }
 }

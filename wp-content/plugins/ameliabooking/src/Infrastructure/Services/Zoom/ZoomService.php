@@ -14,7 +14,7 @@ use AmeliaFirebase\JWT\JWT;
  *
  * @package AmeliaBooking\Infrastructure\Services\Zoom
  */
-class ZoomService
+class ZoomService extends AbstractZoomService
 {
     /**
      * @var SettingsService $settingsService
@@ -156,7 +156,7 @@ class ZoomService
      * @param array|null $data
      * @param string     $method
      *
-     * @return mixed
+     * @return array
      */
     public function execute($requestUrl, $data, $method)
     {
@@ -208,7 +208,7 @@ class ZoomService
 
     /**
      *
-     * @return mixed
+     * @return array
      */
     public function getUsers()
     {
@@ -245,7 +245,7 @@ class ZoomService
      * @param int   $userId
      * @param array $data
      *
-     * @return mixed
+     * @return array
      */
     public function createMeeting($userId, $data)
     {
@@ -256,7 +256,7 @@ class ZoomService
      * @param int   $meetingId
      * @param array $data
      *
-     * @return mixed
+     * @return array
      */
     public function updateMeeting($meetingId, $data)
     {
@@ -266,7 +266,7 @@ class ZoomService
     /**
      * @param int   $meetingId
      *
-     * @return mixed
+     * @return array
      */
     public function deleteMeeting($meetingId)
     {
@@ -276,7 +276,7 @@ class ZoomService
     /**
      * @param int $meetingId
      *
-     * @return mixed
+     * @return array
      */
     public function getMeeting($meetingId)
     {

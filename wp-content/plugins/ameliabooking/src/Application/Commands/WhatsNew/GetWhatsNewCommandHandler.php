@@ -49,14 +49,14 @@ class GetWhatsNewCommandHandler extends CommandHandler
 
         $blogPageContent = $this->getPageContent('https://wpamelia.com/blog/');
 
-        $blogPostsElements = $blogPageContent->query('//*[@class="post-title"]');
+        $blogPostsElements = $blogPageContent->query('//article[contains(@class, "post-list-post")]');
 
         foreach ($blogPostsElements as $blogPostElement) {
             $post = new stdClass();
 
             $post->href = $blogPostElement->getElementsByTagName('a')[0]->getAttribute('href');
 
-            $post->title = $blogPostElement->getElementsByTagName('a')[0]->textContent;
+            $post->title = $blogPostElement->getElementsByTagName('h2')->item(0)->textContent;
 
             $blogPosts[] = $post;
         }

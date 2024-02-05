@@ -52,6 +52,6 @@ class ApproveBookingRemotelyController extends Controller
      */
     protected function emitSuccessEvent(DomainEventBus $eventBus, CommandResult $result)
     {
-        $eventBus->emit('BookingEdited', $result);
+        $eventBus->emit('BookingApproved', $result);
     }
 }

@@ -214,11 +214,13 @@ abstract class Command
             !($this instanceof FetchAccessTokenWithAuthCodeCommand) &&
             !($this instanceof WhatsAppWebhookRegisterCommand) &&
             !($this instanceof WhatsAppWebhookCommand) &&
-            !($this instanceof GetSMSNotificationsHistoryCommand) &&
-            !($this instanceof PaymentLinkCommand)
+            !($this instanceof PaymentLinkCommand) &&
+            !($this instanceof GetSMSNotificationsHistoryCommand)
         ) {
-            wp_verify_nonce(
-                $request->getQueryParams()['wpAmeliaNonce'] ?: $request->getQueryParams()['ameliaNonce'],
+            $queryParams = $request->getQueryParams();
+
+            return wp_verify_nonce(
+                !empty($queryParams['wpAmeliaNonce']) ? $queryParams['wpAmeliaNonce'] : $queryParams['ameliaNonce'],
                 'ajax-nonce'
             );
         }

@@ -10,8 +10,8 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
-use AmeliaBooking\Application\Services\Notification\WhatsAppNotificationService;
-use AmeliaBooking\Application\Services\WebHook\WebHookApplicationService;
+use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
+use AmeliaBooking\Application\Services\WebHook\AbstractWebHookApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -22,10 +22,10 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarService;
-use AmeliaBooking\Application\Services\Zoom\ZoomApplicationService;
-use AmeliaBooking\Infrastructure\Services\LessonSpace\LessonSpaceService;
-use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCalendarService;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
+use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
+use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -53,25 +53,25 @@ class AppointmentTimeUpdatedEventHandler
      */
     public static function handle($commandResult, $container)
     {
-        /** @var GoogleCalendarService $googleCalendarService */
+        /** @var AbstractGoogleCalendarService $googleCalendarService */
         $googleCalendarService = $container->get('infrastructure.google.calendar.service');
-        /** @var OutlookCalendarService $outlookCalendarService */
+        /** @var AbstractOutlookCalendarService $outlookCalendarService */
         $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
         /** @var EmailNotificationService $emailNotificationService */
         $emailNotificationService = $container->get('application.emailNotification.service');
         /** @var SMSNotificationService $smsNotificationService */
         $smsNotificationService = $container->get('application.smsNotification.service');
-        /** @var WhatsAppNotificationService $whatsAppNotificationService */
+        /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $container->get('application.whatsAppNotification.service');
         /** @var SettingsService $settingsService */
         $settingsService = $container->get('domain.settings.service');
-        /** @var WebHookApplicationService $webHookService */
+        /** @var AbstractWebHookApplicationService $webHookService */
         $webHookService = $container->get('application.webHook.service');
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
-        /** @var ZoomApplicationService $zoomService */
+        /** @var AbstractZoomApplicationService $zoomService */
         $zoomService = $container->get('application.zoom.service');
-        /** @var LessonSpaceService $lessonSpaceService */
+        /** @var AbstractLessonSpaceService $lessonSpaceService */
         $lessonSpaceService = $container->get('infrastructure.lesson.space.service');
 
         /** @var Appointment|Event $reservationObject */

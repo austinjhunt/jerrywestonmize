@@ -24,7 +24,6 @@ use AmeliaBooking\Domain\Entity\Schedule\TimeOut;
 use AmeliaBooking\Domain\Entity\Schedule\WeekDay;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
-use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
 use AmeliaBooking\Domain\Factory\Location\ProviderLocationFactory;
 use AmeliaBooking\Domain\Factory\Schedule\PeriodLocationFactory;
 use AmeliaBooking\Domain\Factory\Schedule\SpecialDayPeriodLocationFactory;
@@ -61,7 +60,6 @@ use AmeliaBooking\Infrastructure\Repository\Schedule\TimeOutRepository;
 use AmeliaBooking\Infrastructure\Repository\Schedule\WeekDayRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
-use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -888,7 +886,19 @@ class ProviderApplicationService
             /** @var AppointmentRepository $appointmentRepo */
             $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
 
-            $availableProviders = $providerRepository->getAvailable((int)date('w'));
+            $providerTimeZones = [];
+            $availableProviders = [];
+
+            $WPtimeZone = DateTimeService::getTimeZone()->getName();
+
+            foreach ($providers as $provider) {
+                $providerTimeZones[] = isset($provider['timeZone']) ? $provider['timeZone'] : $WPtimeZone;
+            }
+
+            foreach (array_unique($providerTimeZones) as $providerTimeZone) {
+                $availableProviders += $providerRepository->getAvailable((int)date('w'), $providerTimeZone);
+            }
+
             $onBreakProviders = $providerRepository->getOnBreak((int)date('w'));
             $onVacationProviders = $providerRepository->getOnVacation();
             $busyProviders = $appointmentRepo->getCurrentAppointments();
@@ -1545,48 +1555,5 @@ class ProviderApplicationService
         }
 
         return $customers;
-    }
-
-    /**
-     * @param Provider   $provider
-     * @param Collection $services
-     * @param bool       $allowHiddenServices
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws Exception
-     */
-    public function setProviderServices($provider, $services, $allowHiddenServices)
-    {
-        /** @var Collection $providerServiceList */
-        $providerServiceList = new Collection();
-
-        /** @var Service $providerService */
-        foreach ($provider->getServiceList()->getItems() as $providerService) {
-            if ($services->keyExists($providerService->getId()->getValue())) {
-                /** @var Service $service */
-                $service = $services->getItem($providerService->getId()->getValue());
-
-                if ($allowHiddenServices ? true : $service->getStatus()->getValue() === Status::VISIBLE) {
-                    $providerServiceList->addItem(
-                        ServiceFactory::create(
-                            array_merge(
-                                $service->toArray(),
-                                [
-                                    'price'         => $providerService->getPrice()->getValue(),
-                                    'minCapacity'   => $providerService->getMinCapacity()->getValue(),
-                                    'maxCapacity'   => $providerService->getMaxCapacity()->getValue(),
-                                    'customPricing' => $providerService->getCustomPricing() ?
-                                        $providerService->getCustomPricing()->getValue() : null,
-                                ]
-                            )
-                        ),
-                        $service->getId()->getValue()
-                    );
-                }
-            }
-        }
-
-        $provider->setServiceList($providerServiceList);
     }
 }

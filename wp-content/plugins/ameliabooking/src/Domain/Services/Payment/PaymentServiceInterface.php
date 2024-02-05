@@ -40,4 +40,11 @@ interface PaymentServiceInterface
      * @return mixed
      */
     public function getTransactionAmount($id);
+
+    /**
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public function complete($data);
 }

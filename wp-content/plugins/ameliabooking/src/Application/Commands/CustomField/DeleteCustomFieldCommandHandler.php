@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Commands\CustomField;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
@@ -40,7 +40,7 @@ class DeleteCustomFieldCommandHandler extends CommandHandler
         /** @var CustomFieldRepository $customFieldRepository */
         $customFieldRepository = $this->container->get('domain.customField.repository');
 
-        /** @var CustomFieldApplicationService $customFieldApplicationService */
+        /** @var AbstractCustomFieldApplicationService $customFieldApplicationService */
         $customFieldApplicationService = $this->container->get('application.customField.service');
 
         $customFieldRepository->beginTransaction();

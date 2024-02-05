@@ -382,10 +382,14 @@ class EmailNotificationService extends AbstractNotificationService
                                 $settingsAS->getBccEmails()
                             );
 
-                            $notificationLogRepo->add(
+                            $logNotificationId = $notificationLogRepo->add(
                                 $notification,
                                 $customerArray['id']
                             );
+
+                            if ($logNotificationId) {
+                                $notificationLogRepo->updateFieldById($logNotificationId, 1, 'sent');
+                            }
                         } catch (Exception $e) {
                         }
                     }

@@ -13,13 +13,10 @@ use AmeliaBooking\Application\Controller\Notification\GetSMSNotificationsHistory
 use AmeliaBooking\Application\Controller\Notification\SendAmeliaSmsApiRequestController;
 use AmeliaBooking\Application\Controller\Notification\SendScheduledNotificationsController;
 use AmeliaBooking\Application\Controller\Notification\SendTestEmailController;
-use AmeliaBooking\Application\Controller\Notification\SendTestWhatsAppController;
 use AmeliaBooking\Application\Controller\Notification\SendUndeliveredNotificationsController;
 use AmeliaBooking\Application\Controller\Notification\UpdateNotificationController;
 use AmeliaBooking\Application\Controller\Notification\UpdateNotificationStatusController;
 use AmeliaBooking\Application\Controller\Notification\UpdateSMSNotificationHistoryController;
-use AmeliaBooking\Application\Controller\Notification\WhatsAppWebhookController;
-use AmeliaBooking\Application\Controller\Notification\WhatsAppWebhookRegisterController;
 use Slim\App;
 
 /**
@@ -43,12 +40,6 @@ class Notification
         $app->post('/notifications/status/{id:[0-9]+}', UpdateNotificationStatusController::class);
 
         $app->post('/notifications/email/test', SendTestEmailController::class);
-
-        $app->post('/notifications/whatsapp/test', SendTestWhatsAppController::class);
-
-        $app->get('/notifications/whatsapp/webhook', WhatsAppWebhookRegisterController::class);
-
-        $app->post('/notifications/whatsapp/webhook', WhatsAppWebhookController::class);
 
         $app->get('/notifications/scheduled/send', SendScheduledNotificationsController::class);
 

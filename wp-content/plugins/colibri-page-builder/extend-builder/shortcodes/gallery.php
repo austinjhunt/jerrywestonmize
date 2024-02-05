@@ -11,6 +11,8 @@ $colibri_gallery_index = 0;
 
 function colibri_gallery_placeholder($atts, $defaultNumberOfPictures, $galleryImageOverlayClass)
 {
+
+    $atts_id = esc_attr($atts['id']);
     ob_start();
     ?>
     <div class="<?php echo esc_attr($atts['id']) ?>-dls-wrapper gallery-items-wrapper">
@@ -22,7 +24,7 @@ function colibri_gallery_placeholder($atts, $defaultNumberOfPictures, $galleryIm
                     $prefix   = ($atts['masonry'] == 1) ? 'masonry-' : '';
                     $imgURL   = PageBuilder::instance()->rootURL() . "/extend-builder/assets/images/{$prefix}{$imgIndex}.jpg";
                     ?>
-                    <a <?php echo($atts['link'] === 'none' ? 'class="pointer-event-none"' : "") ?> <?php echo($atts['lb'] == '1' ? "data-fancybox='{$atts['id']}-group'" : "") ?>
+                    <a <?php echo($atts['link'] === 'none' ? 'class="pointer-event-none"' : "") ?> <?php echo($atts['lb'] == '1' ? "data-fancybox='{$atts_id}-group'" : "") ?>
                             href="<?php echo esc_url($imgURL); ?>">
                         <img src="<?php echo esc_url( $imgURL); ?>" class="<?php echo esc_attr( $atts['id']); ?>-image" alt="">
 
@@ -112,8 +114,8 @@ function colibri_gallery_shortcode($atts)
 
         $gallery = preg_replace("/<br(.*?)>/is", "", $gallery);
         $gallery = preg_replace("/<div(.*?)id='gallery-(.*?)>/",
-            "<div $1 class='" . $atts['id'] . "-dls-wrapper gallery-items-wrapper' >", $gallery);
-        $gallery = preg_replace("/<img(.*)class=\"(.*?)\"/", "<img $1 class='" . $atts['id'] . "-image'", $gallery);
+            "<div $1 class='" . esc_attr($atts['id']) . "-dls-wrapper gallery-items-wrapper' >", $gallery);
+        $gallery = preg_replace("/<img(.*)class=\"(.*?)\"/", "<img $1 class='" . esc_attr($atts['id']) . "-image'", $gallery);
 
         $gallery= preg_replace("/(class=['\"]gallery-item)/", "$1" . ' masonry-item', $gallery);
 
@@ -130,7 +132,7 @@ function colibri_gallery_shortcode($atts)
                     "<div class='" . $galleryImageOverlayClass . "'></div>", $gallery);
             }
 
-            $gallery = $gallery . '<style>#' . $atts['id'] . ' .wp-caption-text.gallery-caption{display:none;}</style>';
+            $gallery = $gallery . '<style>#' . esc_html($atts['id']) . ' .wp-caption-text.gallery-caption{display:none;}</style>';
         }
 
 
@@ -206,10 +208,11 @@ function colibri_gallery_shortcode($atts)
     $gallery = $style . $gallery;
 
     if ($atts['lb'] == 1) {
-        $gallery = preg_replace('/<a/', '<a data-fancybox="' . $atts['id'] . '-group"', $gallery);
+        $gallery = preg_replace('/<a/', '<a data-fancybox="' . esc_attr($atts['id']) . '-group"', $gallery);
     }
 
-    return "<div id='{$atts['id']}' class='gallery-wrapper'>{$gallery}</div>";
+	$atts_id = esc_attr($atts['id']);
+    return "<div id='{$atts_id}' class='gallery-wrapper'>{$gallery}</div>";
 
 }
 

@@ -13,7 +13,6 @@ use AmeliaBooking\Application\Services\Cache\CacheApplicationService;
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
 use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
 use AmeliaBooking\Application\Services\Gallery\GalleryApplicationService;
-use AmeliaBooking\Application\Services\Location\LocationApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\ReservationService;
 use AmeliaBooking\Application\Services\TimeSlot\TimeSlotService;
@@ -52,10 +51,10 @@ $entries['application.user.service'] = function ($c) {
  *
  * @param $c
  *
- * @return \AmeliaBooking\Application\Services\User\UserApplicationService
+ * @return AmeliaBooking\Application\Services\User\UserApplicationService
  */
 $entries['application.api.user.service'] = function ($c) {
-    return new AmeliaBooking\Application\Services\User\UserApplicationService(
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getApiService(
         $c
     );
 };
@@ -83,12 +82,34 @@ $entries['application.user.customer.service'] = function ($c) {
 };
 
 /**
- * Location service
+ * Current Location Service
  *
- * @return \AmeliaBooking\Application\Services\Location\CurrentLocation
+ * @return AmeliaBooking\Application\Services\Location\AbstractCurrentLocation
  */
 $entries['application.currentLocation.service'] = function () {
-    return new AmeliaBooking\Application\Services\Location\CurrentLocation();
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getCurrentLocationService();
+};
+
+/**
+ * Deposit Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Deposit\AbstractDepositApplicationService
+ */
+$entries['application.deposit.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getDepositService($c);
+};
+
+/**
+ * Extra Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Extra\AbstractExtraApplicationService
+ */
+$entries['application.extra.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getExtraService($c);
 };
 
 /**
@@ -198,7 +219,18 @@ $entries['application.bookable.service'] = function ($c) {
  * @return AbstractPackageApplicationService
  */
 $entries['application.bookable.package'] = function ($c) {
-    return new AmeliaBooking\Application\Services\Bookable\PackageApplicationService($c);
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getPackageService($c);
+};
+
+/**
+ * Resource service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Resource\AbstractResourceApplicationService
+ */
+$entries['application.resource.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getResourceService($c);
 };
 
 /**
@@ -239,21 +271,21 @@ $entries['application.cache.service'] = function ($c) {
  *
  * @param Container $c
  *
- * @return CouponApplicationService
+ * @return AmeliaBooking\Application\Services\Coupon\AbstractCouponApplicationService
  */
 $entries['application.coupon.service'] = function ($c) {
-    return new AmeliaBooking\Application\Services\Coupon\CouponApplicationService($c);
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getCouponService($c);
 };
 
 /**
- * Location service
+ * Location Service
  *
  * @param Container $c
  *
- * @return LocationApplicationService
+ * @return AmeliaBooking\Application\Services\Location\AbstractLocationApplicationService
  */
 $entries['application.location.service'] = function ($c) {
-    return new AmeliaBooking\Application\Services\Location\LocationApplicationService($c);
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getLocationService($c);
 };
 
 /**
@@ -295,10 +327,10 @@ $entries['application.smsNotification.service'] = function ($c) {
  *
  * @param Container $c
  *
- * @return \AmeliaBooking\Application\Services\Notification\WhatsAppNotificationService
+ * @return AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService
  */
 $entries['application.whatsAppNotification.service'] = function ($c) {
-    return new AmeliaBooking\Application\Services\Notification\WhatsAppNotificationService($c, 'whatsapp');
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getWhatsAppNotificationService($c);
 };
 
 /**
@@ -412,14 +444,14 @@ $entries['application.payment.service'] = function ($c) {
 };
 
 /**
- * Upload File Service
+ * Custom Field Service
  *
  * @param Container $c
  *
- * @return \AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService
+ * @return AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService
  */
 $entries['application.customField.service'] = function ($c) {
-    return new AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService($c);
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getCustomFieldService($c);
 };
 
 /**
@@ -427,10 +459,10 @@ $entries['application.customField.service'] = function ($c) {
  *
  * @param Container $c
  *
- * @return AmeliaBooking\Application\Services\WebHook\WebHookApplicationService
+ * @return AmeliaBooking\Application\Services\WebHook\AbstractWebHookApplicationService
  */
 $entries['application.webHook.service'] = function ($c) {
-    return new AmeliaBooking\Application\Services\WebHook\WebHookApplicationService($c);
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getWebHookService($c);
 };
 
 /**
@@ -438,10 +470,10 @@ $entries['application.webHook.service'] = function ($c) {
  *
  * @param Container $c
  *
- * @return \AmeliaBooking\Application\Services\Zoom\ZoomApplicationService
+ * @return AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService
  */
 $entries['application.zoom.service'] = function ($c) {
-    return new AmeliaBooking\Application\Services\Zoom\ZoomApplicationService($c);
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getZoomService($c);
 };
 
 /**

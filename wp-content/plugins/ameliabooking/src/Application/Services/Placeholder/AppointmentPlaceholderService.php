@@ -36,7 +36,7 @@ use Slim\Exception\ContainerValueNotFoundException;
 /**
  * Class AppointmentPlaceholderService
  *
- * @package AmeliaBooking\Application\Services\Notification
+ * @package AmeliaBooking\Application\Services\Placeholder
  */
 class AppointmentPlaceholderService extends PlaceholderService
 {
@@ -534,7 +534,9 @@ class AppointmentPlaceholderService extends PlaceholderService
 
         $locale = $this->getLocale($appointment, $bookingKey);
 
-        if (!($locationId = $appointment['locationId'])) {
+        if (!empty($appointment['locationId'])) {
+            $locationId = $appointment['locationId'];
+        } else {
             $locationId = $user->getLocationId() ? $user->getLocationId()->getValue() : null;
         }
 

@@ -3,8 +3,9 @@
 namespace AmeliaBooking\Application\Services\Booking;
 
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
-use AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
+use AmeliaBooking\Application\Services\Deposit\AbstractDepositApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\TimeSlot\TimeSlotService as ApplicationTimeSlotService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -126,6 +127,7 @@ class AppointmentApplicationService
                 }
 
                 $customerBookingExtra->setPrice(new Price($extra->getPrice()->getValue()));
+                $customerBookingExtra->setAggregatedPrice(new BooleanValueObject($extra->getAggregatedPrice()->getValue()));
             }
 
             $customerBooking->setPrice(
@@ -254,6 +256,8 @@ class AppointmentApplicationService
         $customerBookingExtraRepository = $this->container->get('domain.booking.customerBookingExtra.repository');
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get(Entities::APPOINTMENT);
+        /** @var AbstractDepositApplicationService $depositAS */
+        $depositAS = $this->container->get('application.deposit.service');
 
         $appointmentId = $appointmentRepository->add($appointment);
         $appointment->setId(new Id($appointmentId));
@@ -299,7 +303,7 @@ class AppointmentApplicationService
                     $customerBooking->getDeposit()->getValue() &&
                     $paymentData['gateway'] !== PaymentType::ON_SITE
                 ) {
-                    $paymentDeposit = $reservationService->calculateDepositAmount(
+                    $paymentDeposit = $depositAS->calculateDepositAmount(
                         $paymentAmount,
                         $service,
                         $customerBooking->getPersons()->getValue()
@@ -364,6 +368,8 @@ class AppointmentApplicationService
         $reservationService = $this->container->get('application.reservation.service')->get(Entities::APPOINTMENT);
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
+        /** @var AbstractDepositApplicationService $depositAS */
+        $depositAS = $this->container->get('application.deposit.service');
 
         $appointmentRepo->update($oldAppointment->getId()->getValue(), $newAppointment);
 
@@ -407,7 +413,7 @@ class AppointmentApplicationService
                         $newBooking->getDeposit()->getValue() &&
                         $paymentData['gateway'] !== PaymentType::ON_SITE
                     ) {
-                        $paymentDeposit = $reservationService->calculateDepositAmount(
+                        $paymentDeposit = $depositAS->calculateDepositAmount(
                             $paymentAmount,
                             $service,
                             $newBooking->getPersons()->getValue()
@@ -888,7 +894,7 @@ class AppointmentApplicationService
         /** @var AppointmentDomainService $appointmentDomainService */
         $appointmentDomainService = $this->container->get('domain.booking.appointment.service');
 
-        /** @var CustomFieldApplicationService $customFieldService */
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
 
         /** @var AppointmentRepository $appointmentRepository */
@@ -985,7 +991,7 @@ class AppointmentApplicationService
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $this->container->get('application.booking.booking.service');
 
-        /** @var CustomFieldApplicationService $customFieldService */
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
 
         /** @var Collection $removedBookings */
@@ -1036,7 +1042,7 @@ class AppointmentApplicationService
         /** @var CustomerBookingRepository $customerBookingRepository */
         $customerBookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
-        /** @var PackageApplicationService $packageApplicationService */
+        /** @var AbstractPackageApplicationService $packageApplicationService */
         $packageApplicationService = $this->container->get('application.bookable.package');
 
         if ((!$booking->getId() || !$ignoredBookings->keyExists($booking->getId()->getValue())) &&

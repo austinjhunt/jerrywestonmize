@@ -12,13 +12,6 @@ use AmeliaBooking\Domain\Repository\BaseRepositoryInterface;
 interface ProviderRepositoryInterface extends BaseRepositoryInterface
 {
     /**
-     * @param      $searchCriteria
-     *
-     * @return mixed
-     */
-    public function getByCriteria($searchCriteria);
-
-    /**
      * @param     $criteria
      * @param int $itemsPerPage
      *

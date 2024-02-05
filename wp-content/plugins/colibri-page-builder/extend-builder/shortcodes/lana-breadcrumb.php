@@ -59,7 +59,7 @@ function lana_breadcrumb($atts)
      */
     $breadcrumb_elements['home'] = array(
         'href' => home_url('/'),
-        'text' => convertStrSpaceToHtml($atts['home_label'])
+        'text' => convertStrSpaceToHtml(wp_kses_post($atts['home_label']))
     );
 
     /**

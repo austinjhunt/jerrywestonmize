@@ -7,6 +7,7 @@ use AmeliaBooking\Domain\Entity\Schedule\Period;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
+use AmeliaBooking\Infrastructure\Licence;
 
 /**
  * Class PeriodFactory
@@ -23,6 +24,8 @@ class PeriodFactory
      */
     public static function create($data)
     {
+        Licence\DataModifier::periodFactory($data);
+
         $period = new Period(
             new DateTimeValue(\DateTime::createFromFormat('H:i:s', $data['startTime'])),
             new DateTimeValue(\DateTime::createFromFormat('H:i:s', $data['endTime'])),

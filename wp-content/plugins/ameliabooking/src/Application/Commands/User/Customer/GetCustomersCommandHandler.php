@@ -95,7 +95,7 @@ class GetCustomersCommandHandler extends CommandHandler
             $params['limit'] : $settingsService->getSetting('general', 'itemsPerPage');
 
         $users = $customerRepository->getFiltered(
-            array_merge($params, ['ignoredBookings' => true]),
+            array_merge($params, ['ignoredBookings' => empty($params['noShow'])]),
             $itemsPerPage
         );
 

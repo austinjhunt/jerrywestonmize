@@ -10,12 +10,14 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use Exception;
 use Interop\Container\Exception\ContainerException;
+use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Interface PlaceholderServiceInterface
  *
- * @package AmeliaBooking\Domain\Services\Reservation
+ * @package AmeliaBooking\Application\Services\Placeholder
  */
 interface PlaceholderServiceInterface
 {
@@ -23,7 +25,7 @@ interface PlaceholderServiceInterface
      *
      * @return array
      *
-     * @throws \Interop\Container\Exception\ContainerException
+     * @throws ContainerException
      */
     public function getEntityPlaceholdersDummyData($type);
 
@@ -38,11 +40,11 @@ interface PlaceholderServiceInterface
      * @return array
      *
      * @throws InvalidArgumentException
-     * @throws \Slim\Exception\ContainerValueNotFoundException
+     * @throws ContainerValueNotFoundException
      * @throws NotFoundException
      * @throws QueryExecutionException
      * @throws ContainerException
-     * @throws \Exception
+     * @throws Exception
      */
-    function getPlaceholdersData($appointment, $bookingKey = null, $type = null, $customer = null, $allBookings = null);
+    public function getPlaceholdersData($appointment, $bookingKey = null, $type = null, $customer = null, $allBookings = null);
 }

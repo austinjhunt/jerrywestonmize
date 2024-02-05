@@ -72,7 +72,7 @@ add_shortcode('colibri_copyright', function ($attrs, $content) {
 	$msg       = $content ? $content : $default;
 	$msg = str_replace( "{year}", date('Y'), $msg );
 	$msg = str_replace( "{site-name}", get_bloginfo('name'), $msg );
-	return $msg;
+	return wp_kses_post($msg);
 });
 
 add_shortcode('colibri_site_title', function ($atts) {

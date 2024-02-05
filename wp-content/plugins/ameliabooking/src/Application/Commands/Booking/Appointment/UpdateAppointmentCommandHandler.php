@@ -8,11 +8,12 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
-use AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\AppointmentReservationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
+use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -31,7 +32,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
-use AmeliaBooking\Infrastructure\Services\Zoom\ZoomService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -80,10 +80,10 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         $bookingAS = $this->container->get('application.booking.booking.service');
         /** @var BookableApplicationService $bookableAS */
         $bookableAS = $this->container->get('application.bookable.service');
-        /** @var CustomFieldApplicationService $customFieldService */
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
-        /** @var ZoomService $zoomService */
-        $zoomService = $this->container->get('infrastructure.zoom.service');
+        /** @var AbstractZoomApplicationService $zoomService */
+        $zoomService = $this->container->get('application.zoom.service');
         /** @var UserApplicationService $userAS */
         $userAS = $this->getContainer()->get('application.user.service');
         /** @var SettingsService $settingsDS */

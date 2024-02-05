@@ -1524,10 +1524,11 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
      * @param Service $service
      * @param int $customerId
      * @param \DateTime $appointmentStart
+     * @param int $bookingId
      * @return Collection
      * @throws QueryExecutionException
      */
-    public function getRelevantAppointmentsCount($service, $customerId, $appointmentStart, $limitPerCustomer, $serviceSpecific)
+    public function getRelevantAppointmentsCount($service, $customerId, $appointmentStart, $limitPerCustomer, $serviceSpecific, $bookingId = null)
     {
         $params = [
             ':customerId' => $customerId
@@ -1556,6 +1557,11 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
         if ($serviceSpecific) {
             $where .= " AND a.serviceId = :serviceId";
             $params[':serviceId'] = $service->getId()->getValue();
+        }
+
+        if ($bookingId) {
+            $where .= " AND cb.id <> :bookingId";
+            $params[':bookingId'] = $bookingId;
         }
 
         try {

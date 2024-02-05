@@ -6,12 +6,12 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
+use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Services\Zoom\ZoomService;
 use Interop\Container\Exception\ContainerException;
 use mageekguy\atoum\asserters\boolean;
 
@@ -64,8 +64,8 @@ class GetUsersCommandHandler extends CommandHandler
             return $result;
         }
 
-        /** @var ZoomService $zoomService */
-        $zoomService = $this->container->get('infrastructure.zoom.service');
+        /** @var AbstractZoomApplicationService $zoomService */
+        $zoomService = $this->container->get('application.zoom.service');
 
         if (!$zoomService) {
             $result->setResult(CommandResult::RESULT_SUCCESS);

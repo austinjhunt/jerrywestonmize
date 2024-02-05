@@ -14,14 +14,12 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
-use Exception;
 use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class AppointmentsPlaceholderService
  *
- * @package AmeliaBooking\Application\Services\Notification
+ * @package AmeliaBooking\Application\Services\Placeholder
  */
 class AppointmentsPlaceholderService extends AppointmentPlaceholderService
 {

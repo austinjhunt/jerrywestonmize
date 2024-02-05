@@ -7,6 +7,7 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
+use AmeliaBooking\Infrastructure\Licence\Licence;
 
 /**
  * Renders menu pages
@@ -75,7 +76,7 @@ class SubmenuPageHandler
 
 
         if ($page === 'wpamelia-notifications') {
-            wp_enqueue_script('amelia_paddle', 'https://cdn.paddle.com/paddle/paddle.js');
+            wp_enqueue_script('amelia_paddle', Licence::getPaddleUrl());
         }
 
         // Enqueue Styles
@@ -284,6 +285,9 @@ class SubmenuPageHandler
                     'amelia_booking_scripts',
                     'wpAmeliaLabels',
                     array_merge(
+                        BackendStrings::getEntityFormStrings(),
+                        BackendStrings::getUserStrings(),
+                        BackendStrings::getEmployeeStrings(),
                         BackendStrings::getFinanceStrings(),
                         BackendStrings::getCommonStrings(),
                         BackendStrings::getScheduleStrings(),
@@ -319,7 +323,21 @@ class SubmenuPageHandler
                 wp_localize_script(
                     'amelia_booking_scripts',
                     'wpAmeliaLabels',
-                    BackendStrings::getWhatsNewStrings()
+                    array_merge(
+                        BackendStrings::getWhatsNewStrings(),
+                        BackendStrings::getNotificationsStrings(),
+                        BackendStrings::getRecurringStrings(),
+                        BackendStrings::getCommonStrings(),
+                        BackendStrings::getAppointmentStrings()
+                    )
+                );
+
+                break;
+            case ('wpamelia-lite-vs-premium'):
+                wp_localize_script(
+                    'amelia_booking_scripts',
+                    'wpAmeliaLabels',
+                    BackendStrings::getLiteVsPremiumStrings()
                 );
 
                 break;
@@ -370,7 +388,7 @@ class SubmenuPageHandler
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/admin.891c568e.js',
+                AMELIA_URL . 'v3/public/assets/admin.72e1fc30.js',
                 [],
                 AMELIA_VERSION,
                 true

@@ -9,7 +9,7 @@ use MailPoet\EmailEditor\Engine\Renderer\BlockRenderer;
 use MailPoet\EmailEditor\Engine\SettingsController;
 
 class Columns implements BlockRenderer {
-  public function render($blockContent, array $parsedBlock, SettingsController $settingsController): string {
+  public function render(string $blockContent, array $parsedBlock, SettingsController $settingsController): string {
     $content = '';
     foreach ($parsedBlock['innerBlocks'] ?? [] as $block) {
       $content .= render_block($block);
@@ -32,6 +32,7 @@ class Columns implements BlockRenderer {
     $paddingLeft = $parsedBlock['attrs']['style']['spacing']['padding']['left'] ?? '0px';
     $paddingRight = $parsedBlock['attrs']['style']['spacing']['padding']['right'] ?? '0px';
     $paddingTop = $parsedBlock['attrs']['style']['spacing']['padding']['top'] ?? '0px';
+    $marginTop = $parsedBlock['email_attrs']['margin-top'] ?? '0px';
 
     $align = $parsedBlock['attrs']['align'] ?? null;
     if ($align !== 'full') {
@@ -43,12 +44,19 @@ class Columns implements BlockRenderer {
     }
 
     return '
-      <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="width:' . $width . ';" width="' . $width . '" bgcolor="' . $backgroundColor . '" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-      <div style="background:' . $backgroundColor . ';background-color:' . $backgroundColor . ';margin:0px auto;max-width:' . $width . ';width:100%;padding-left:' . $layoutPaddingLeft . ';padding-right:' . $layoutPaddingRight . ';">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:' . $backgroundColor . ';background-color:' . $backgroundColor . ';max-width:' . $width . ';width:100%;">
+      <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="width:' . $width . ';" width="' . $width . '"><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+      <div style="margin-top:' . $marginTop . ';max-width:' . $width . ';padding-left:' . $layoutPaddingLeft . ';padding-right:' . $layoutPaddingRight . ';">
+        <table
+          align="center"
+          border="0"
+          cellpadding="0"
+          cellspacing="0"
+          role="presentation"
+          style="background:' . $backgroundColor . ';background-color:' . $backgroundColor . ';max-width:' . $width . ';width:100%;"
+        >
           <tbody>
             <tr>
-              <td style="font-size:0px;padding-left:' . $paddingLeft . ';padding-right:' . $paddingRight . ';padding-bottom:' . $paddingBottom . ';padding-top:' . $paddingTop . ';text-align:left;">
+              <td style="font-size:0px;background:' . $backgroundColor . ';background-color:' . $backgroundColor . ';padding-left:' . $paddingLeft . ';padding-right:' . $paddingRight . ';padding-bottom:' . $paddingBottom . ';padding-top:' . $paddingTop . ';text-align:left;">
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="width:100%;">
                   <tr>
                     {columns_content}

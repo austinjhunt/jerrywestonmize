@@ -4,6 +4,7 @@ namespace AmeliaBooking\Infrastructure\Repository\Schedule;
 
 use AmeliaBooking\Domain\Entity\Schedule\Period;
 use AmeliaBooking\Domain\Factory\Schedule\PeriodFactory;
+use AmeliaBooking\Infrastructure\Licence;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 
@@ -31,14 +32,27 @@ class PeriodRepository extends AbstractRepository
             ':weekDayId'  => $weekDayId,
             ':startTime'  => $data['startTime'],
             ':endTime'    => $data['endTime'],
-            ':locationId' => $data['locationId'] ? $data['locationId'] : null,
         ];
+
+        $additionalData = Licence\DataModifier::getPeriodRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values']);
 
         try {
             $statement = $this->connection->prepare(
-                "INSERT INTO {$this->table}
-                (`weekDayId`, `startTime`, `endTime`, `locationId`)
-                VALUES (:weekDayId, :startTime, :endTime, :locationId)"
+                "INSERT INTO
+                {$this->table}
+                (
+                {$additionalData['columns']}
+                `weekDayId`,                
+                `startTime`,
+                `endTime`
+                ) VALUES (
+                {$additionalData['placeholders']}
+                :weekDayId,
+                :startTime,
+                :endTime
+              )"
             );
 
             $res = $statement->execute($params);
@@ -67,14 +81,21 @@ class PeriodRepository extends AbstractRepository
             ':id'         => $id,
             ':startTime'  => $data['startTime'],
             ':endTime'    => $data['endTime'],
-            ':locationId' => $data['locationId'] ? $data['locationId'] : null,
         ];
+
+        $additionalData = Licence\DataModifier::getPeriodRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values']);
 
         try {
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
-                SET `startTime` = :startTime, `endTime` = :endTime, `locationId` = :locationId
-                WHERE id = :id"
+                SET
+                {$additionalData['columnsPlaceholders']}
+                `startTime` = :startTime,
+                `endTime` = :endTime
+                WHERE
+                id = :id"
             );
 
             $res = $statement->execute($params);

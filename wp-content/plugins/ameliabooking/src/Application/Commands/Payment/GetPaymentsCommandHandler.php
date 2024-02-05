@@ -54,12 +54,12 @@ class GetPaymentsCommandHandler extends CommandHandler
 
         $params = $command->getField('params');
 
-        if ($params['dates']) {
+        if (!empty($params['dates'])) {
             $params['dates'][0] .= ' 00:00:00';
             $params['dates'][1] .= ' 23:59:59';
         }
 
-        $paymentsData = $paymentAS->getPaymentsData($params, $settingsService->getSetting('general', 'itemsPerPage'));
+        $paymentsData = $paymentAS->getPaymentsData($params, $settingsService->getSetting('general', 'itemsPerPageBackEnd'));
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved payments.');

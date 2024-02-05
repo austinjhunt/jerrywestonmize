@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Application\Services\Stash;
 
+use AmeliaBooking\Application\Services\Location\AbstractLocationApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -28,7 +29,6 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventTagsRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
-use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use Interop\Container\Exception\ContainerException;
 
@@ -71,14 +71,14 @@ class StashApplicationService
         /** @var ProviderService $providerService */
         $providerService = $this->container->get('domain.user.provider.service');
 
+        /** @var AbstractLocationApplicationService $locationAS */
+        $locationAS = $this->container->get('application.location.service');
+
         /** @var ServiceRepository $serviceRepository */
         $serviceRepository = $this->container->get('domain.bookable.service.repository');
 
         /** @var CategoryRepository $categoryRepository */
         $categoryRepository = $this->container->get('domain.bookable.category.repository');
-
-        /** @var LocationRepository $locationRepository */
-        $locationRepository = $this->container->get('domain.locations.repository');
 
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
@@ -99,7 +99,7 @@ class StashApplicationService
         $services = $serviceRepository->getAllArrayIndexedById();
 
         /** @var Collection $locations */
-        $locations = $locationRepository->getAllOrderedByName();
+        $locations = $locationAS->getAllOrderedByName();
 
         /** @var Collection $providers */
         $providers = $providerRepository->getWithSchedule([]);
@@ -186,6 +186,7 @@ class StashApplicationService
                 'id'     => $location->getId()->getValue(),
                 'name'   => $location->getName()->getValue(),
                 'status' => $location->getStatus()->getValue(),
+                'address'=> $location->getAddress()->getValue(),
                 'translations' => $location->getTranslations() ? $location->getTranslations()->getValue() : null
             ];
         }

@@ -25,9 +25,11 @@ function colibri_breadcrumb_element_shortcode( $atts ) {
 
     $breadcrumb_separator    = urldecode( $atts['separator_symbol'] );
     $use_prefix              = $atts['use_prefix'];
-    $breadcrumb_prefix       = convertStrSpaceToHtml( $atts['prefix'] );
+    $breadcrumb_prefix       = $atts['prefix'];
     $home_as_icon            = ! ! $atts['home_as_icon'];
     $home_icon               = urldecode( base64_decode( $atts['home_icon'] ) );
+    //remove the script tag
+    $home_icon               = preg_replace('/script/i', '', $home_icon);
     $lana_breadcrumb_options = array(
         'home_as_icon' => $home_as_icon,
         'home_label'   => $atts['home_label']
@@ -41,7 +43,7 @@ function colibri_breadcrumb_element_shortcode( $atts ) {
 
     ?>
 
-    <div class="<?= $atts['id'] ?>-dls-wrapper breadcrumb-items__wrapper">
+    <div class="<?= esc_attr($atts['id']) ?>-dls-wrapper breadcrumb-items__wrapper">
         <?php if ( $use_prefix ): ?>
             <span class="breadcrumb-items__prefix"><?php echo wp_kses_post($breadcrumb_prefix); ?></span>
         <?php endif; ?>
@@ -103,7 +105,7 @@ function colibri_breadcrumb_element_shortcode( $atts ) {
                     ?>
                     <ol class="breadcrumb colibri-breadcrumb">
                         <li class="breadcrumb-item"><a
-                                    href="<?php echo esc_url( home_url() ); ?>"><?php echo( $home_as_icon ? $home_icon : $atts['home_label'] ); ?></a>
+                                    href="<?php echo esc_url( home_url() ); ?>"><?php echo( $home_as_icon ? $home_icon : wp_kses_post($atts['home_label']) ); ?></a>
                         </li>
                     </ol>
                     <?php
@@ -137,7 +139,7 @@ function colibri_breadcrumb_element_shortcode( $atts ) {
 
     ob_start();
 
-    $breadcrumb_selector = '#' . $atts['id'];
+    $breadcrumb_selector = strip_tags('#' . $atts['id']);
 
     ?>
     <style type="text/css">
@@ -153,8 +155,8 @@ function colibri_breadcrumb_element_shortcode( $atts ) {
 
     $style      = ob_get_clean();
     $breadcrumb = $style . $breadcrumb;
-
-    return "<div id='{$atts['id']}' class='breadcrumb-wrapper'>{$breadcrumb}</div>";
+    $atts_id = esc_attr($atts['id']);
+    return "<div id='{$atts_id}' class='breadcrumb-wrapper'>{$breadcrumb}</div>";
 
 }
 

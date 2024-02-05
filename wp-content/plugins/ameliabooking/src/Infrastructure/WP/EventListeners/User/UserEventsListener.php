@@ -5,10 +5,10 @@
 
 namespace AmeliaBooking\Infrastructure\WP\EventListeners\User;
 
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\WP\EventListeners\User\Provider\ProviderAddedEventHandler;
-use AmeliaBooking\Infrastructure\WP\EventListeners\User\Provider\ProviderUpdatedEventHandler;
+use AmeliaBooking\Infrastructure\Licence\EventListener;
 use Interop\Container\Exception\ContainerException;
 use League\Event\ListenerInterface;
 use League\Event\EventInterface;
@@ -53,20 +53,10 @@ class UserEventsListener implements ListenerInterface
      *
      * @throws QueryExecutionException
      * @throws ContainerException
+     * @throws InvalidArgumentException
      */
     public function handle(EventInterface $event, $param = null)
     {
-        // Handling the event
-        switch ($event->getName()) {
-            case 'user.added':
-                UserAddedEventHandler::handle($param);
-                break;
-            case 'provider.updated':
-                ProviderUpdatedEventHandler::handle($param, $this->container);
-                break;
-            case 'provider.added':
-                ProviderAddedEventHandler::handle($param, $this->container);
-                break;
-        }
+        EventListener::handleUserListeners($this->container, $event, $param);
     }
 }

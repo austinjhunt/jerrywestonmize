@@ -4,11 +4,13 @@ namespace AmeliaBooking\Application\Services\Reservation;
 
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
+use AmeliaBooking\Application\Services\Deposit\AbstractDepositApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\BookingsLimitReachedException;
+use AmeliaBooking\Domain\Common\Exceptions\BookingUnavailableException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Common\Exceptions\PackageBookingUnavailableException;
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
@@ -20,7 +22,6 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Reservation;
-use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
@@ -75,8 +76,11 @@ class PackageReservationService extends AppointmentReservationService
      */
     public function book($appointmentData, $reservation, $save)
     {
-        /** @var PackageApplicationService $packageApplicationService */
+        /** @var AbstractPackageApplicationService $packageApplicationService */
         $packageApplicationService = $this->container->get('application.bookable.package');
+
+        /** @var AbstractDepositApplicationService $depositAS */
+        $depositAS = $this->container->get('application.deposit.service');
 
         $clonedCustomFieldsData = $appointmentData['bookings'][0]['customFields'] ?
             json_decode($appointmentData['bookings'][0]['customFields'], true) : null;
@@ -299,7 +303,7 @@ class PackageReservationService extends AppointmentReservationService
         $applyDeposit = $appointmentData['deposit'] && $appointmentData['payment']['gateway'] !== PaymentType::ON_SITE;
 
         if ($applyDeposit) {
-            $paymentDeposit = $this->calculateDepositAmount(
+            $paymentDeposit = $depositAS->calculateDepositAmount(
                 $paymentAmount,
                 $package,
                 1
@@ -332,6 +336,14 @@ class PackageReservationService extends AppointmentReservationService
             }
 
             $packageCustomer->setPayments($payments);
+        }
+
+        if ($reservation->hasAvailabilityValidation()->getValue() &&
+            $this->hasDoubleBookings(null, $packageReservations)
+        ) {
+            throw new BookingUnavailableException(
+                FrontendStrings::getCommonStrings()['time_slot_unavailable']
+            );
         }
     }
 
@@ -549,6 +561,9 @@ class PackageReservationService extends AppointmentReservationService
      */
     public function getReservationPaymentAmount($reservation)
     {
+        /** @var AbstractDepositApplicationService $depositAS */
+        $depositAS = $this->container->get('application.deposit.service');
+
         /** @var Package $bookable */
         $bookable = $reservation->getBookable();
 
@@ -567,7 +582,7 @@ class PackageReservationService extends AppointmentReservationService
         $paymentAmount = $this->getPaymentAmount($reservation->getBooking(), $bookable, $coupon ? $coupon->toArray() : null);
 
         if ($reservation->getApplyDeposit()->getValue()) {
-            $paymentAmount = $this->calculateDepositAmount(
+            $paymentAmount = $depositAS->calculateDepositAmount(
                 $paymentAmount,
                 $bookable,
                 1

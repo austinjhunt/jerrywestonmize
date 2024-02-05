@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Commands\User\Customer;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
-use AmeliaBooking\Application\Services\Notification\WhatsAppNotificationService;
+use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 
@@ -38,7 +38,7 @@ class ReauthorizeCommandHandler extends CommandHandler
         /** @var EmailNotificationService $notificationService */
         $notificationService = $this->getContainer()->get('application.emailNotification.service');
 
-        /** @var WhatsAppNotificationService $whatsAppNotificationService */
+        /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $this->getContainer()->get('application.whatsAppNotification.service');
 
         /** @var Customer $customer */

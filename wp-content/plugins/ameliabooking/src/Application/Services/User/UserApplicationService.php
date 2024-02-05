@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Services\User;
 
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
@@ -15,7 +15,6 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Entity\User\Provider;
-use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Json;
@@ -28,8 +27,8 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
-use AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarService;
-use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCalendarService;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use AmeliaBooking\Infrastructure\WP\UserService\CreateWPUser;
 use AmeliaBooking\Infrastructure\WP\UserService\UserService;
 use Exception;
@@ -127,7 +126,7 @@ class UserApplicationService
         /** @var Collection $packageCustomerServices */
         $packageCustomerServices = $packageCustomerServiceRepository->getByCriteria(['customerId' => $userId]);
 
-        /** @var PackageApplicationService $packageApplicationService */
+        /** @var AbstractPackageApplicationService $packageApplicationService */
         $packageApplicationService = $this->container->get('application.bookable.package');
 
         return [
@@ -150,7 +149,7 @@ class UserApplicationService
      */
     public function setWpUserIdForNewUser($userId, $user)
     {
-        if (!$user->getEmail() || !trim($user->getEmail()->getValue())) {
+        if (!$user->getEmail() || !$user->getEmail()->getValue() || !trim($user->getEmail()->getValue())) {
             return;
         }
 
@@ -273,10 +272,10 @@ class UserApplicationService
         /** @var ProviderApplicationService $providerService */
         $providerService = $this->container->get('application.user.provider.service');
 
-        /** @var GoogleCalendarService $googleCalendarService */
+        /** @var AbstractGoogleCalendarService $googleCalendarService */
         $googleCalendarService = $this->container->get('infrastructure.google.calendar.service');
 
-        /** @var OutlookCalendarService $outlookCalendarService */
+        /** @var AbstractOutlookCalendarService $outlookCalendarService */
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
 
 

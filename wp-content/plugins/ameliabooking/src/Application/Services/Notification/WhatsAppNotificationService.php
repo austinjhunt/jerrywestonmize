@@ -34,7 +34,7 @@ use Slim\Exception\ContainerValueNotFoundException;
  *
  * @package AmeliaBooking\Application\Services\Notification
  */
-class WhatsAppNotificationService extends AbstractNotificationService
+class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
 {
     /**
      * @return bool
@@ -56,30 +56,52 @@ class WhatsAppNotificationService extends AbstractNotificationService
     {
         /** @var WhatsAppService $whatsAppService */
         $whatsAppService = $this->container->get('application.whatsApp.service');
+
+        $whatsAppTemplatesLang = [];
+
+        $whatsAppTemplates = [];
+
+        $templates = [];
+        do {
+            $templates = $whatsAppService->getTemplates(null, !empty($templates['paging']['next']) ? $templates['paging']['next'] : null);
+            if (empty($templates['error'])) {
+                $whatsAppTemplates     = array_merge($whatsAppTemplates, $templates['data']);
+                $whatsAppTemplatesLang = array_merge($whatsAppTemplatesLang, $this->addTemplates($templates));
+            }
+        } while (!empty($templates['paging']['next']));
+
+        return [$whatsAppTemplates, $whatsAppTemplatesLang];
+    }
+
+    /**
+     * @param array $whatsAppTemplates
+     *
+     * @return array
+     */
+    private function addTemplates($whatsAppTemplates)
+    {
+        /** @var HelperService $helperService */
+        $helperService = $this->container->get('application.helper.service');
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
+
+        $defaultLanguage = $settingsService->getSetting('notifications', 'whatsAppLanguage');
 
         $usedLanguages     = $settingsService->getSetting('general', 'usedLanguages');
         $defaultWpLanguage = get_locale();
         if (!in_array($defaultWpLanguage, $usedLanguages)) {
             $usedLanguages[] = $defaultWpLanguage;
         }
-        $whatsAppTemplates     = $whatsAppService->getTemplates();
+
         $whatsAppTemplatesLang = [];
-        if (empty($whatsAppTemplates['error'])) {
-            /** @var SettingsService $settingsService */
-            $settingsService = $this->container->get('domain.settings.service');
-            $defaultLanguage = $settingsService->getSetting('notifications', 'whatsAppLanguage');
-            /** @var HelperService $helperService */
-            $helperService = $this->container->get('application.helper.service');
-            foreach ($whatsAppTemplates['data'] as $item) {
-                $similarLanguages = $helperService->getLocaleLanguage($usedLanguages, $item['language']);
-                if (!$defaultLanguage || $item['language'] === $defaultLanguage || in_array($defaultLanguage, $similarLanguages)) {
-                    $whatsAppTemplatesLang[] = $item;
-                }
+        foreach ($whatsAppTemplates['data'] as $item) {
+            $similarLanguages = $helperService->getLocaleLanguage($usedLanguages, $item['language']);
+            if (!$defaultLanguage || $item['language'] === $defaultLanguage || in_array($defaultLanguage, $similarLanguages)) {
+                $whatsAppTemplatesLang[] = $item;
             }
         }
-        return [$whatsAppTemplates, $whatsAppTemplatesLang];
+
+        return $whatsAppTemplatesLang;
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
@@ -222,6 +244,10 @@ class WhatsAppNotificationService extends AbstractNotificationService
     {
         /** @var Collection $notifications */
         $notifications = $this->getByNameAndType('customer_birthday_greeting', $this->type);
+
+        if (empty($notifications) || $notifications->length() === 0) {
+            return;
+        }
 
         /** @var Notification $notification */
         $notification = $notifications->getItem($notifications->keys()[0]);

@@ -39,4 +39,14 @@ class AbstractPaymentService
         $this->settingsService = $settingsService;
         $this->currencyService = $currencyService;
     }
+
+    /**
+     * @param array $data
+     *
+     * @return mixed|null
+     */
+    public function complete($data)
+    {
+        return null;
+    }
 }

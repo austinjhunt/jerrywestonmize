@@ -12,59 +12,29 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldEventRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldOptionRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldServiceRepository;
+use Interop\Container\Exception\ContainerException;
+use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class CustomFieldApplicationService
  *
  * @package AmeliaBooking\Application\Services\CustomField
  */
-class CustomFieldApplicationService
+class CustomFieldApplicationService extends AbstractCustomFieldApplicationService
 {
-    private $container;
-
-    public static $allowedUploadedFileExtensions = [
-        '.jpg'  => 'image/jpeg',
-        '.jpeg' => 'image/jpeg',
-        '.png'  => 'image/png',
-
-        '.mp3'  => 'audio/mpeg',
-        '.mpeg' => 'video/mpeg',
-        '.mp4'  => 'video/mp4',
-
-        '.txt'  => 'text/plain',
-        '.csv'  => 'text/plain',
-        '.xls'  => 'application/vnd.ms-excel',
-        '.pdf'  => 'application/pdf',
-        '.doc'  => 'application/msword',
-        '.docx' => 'application/msword',
-    ];
-
-    /**
-     * CustomFieldApplicationService constructor.
-     *
-     * @param Container $container
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * @param CustomField $customField
      *
      * @return boolean
      *
-     * @throws \Slim\Exception\ContainerValueNotFoundException
+     * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
+     * @throws ContainerException
      */
     public function delete($customField)
     {
@@ -97,8 +67,8 @@ class CustomFieldApplicationService
         $uploadedFilesInfo = [];
 
         foreach ($customFields as $customFieldId => $customField) {
-            if ($customField['type'] === 'file' && isset($customFields[$customFieldId]['value'])) {
-                foreach ((array)$customFields[$customFieldId]['value'] as $index => $data) {
+            if ($customField['type'] === 'file' && isset($customField['value'])) {
+                foreach ((array)$customField['value'] as $index => $data) {
                     if (isset($_FILES['files']['tmp_name'][$customFieldId][$index])) {
                         $fileExtension = pathinfo(
                             $_FILES['files']['name'][$customFieldId][$index],
@@ -141,9 +111,9 @@ class CustomFieldApplicationService
      *
      * @return array
      *
-     * @throws \Slim\Exception\ContainerValueNotFoundException
+     * @throws ContainerValueNotFoundException
      * @throws ForbiddenFileUploadException
-     * @throws \Interop\Container\Exception\ContainerException
+     * @throws ContainerException
      */
     public function saveUploadedFiles($bookingId, $uploadedCustomFieldFilesNames, $folder, $copy)
     {
@@ -190,7 +160,7 @@ class CustomFieldApplicationService
      * @param Collection $oldBookings
      *
      * @return void
-     * @throws \Interop\Container\Exception\ContainerException
+     * @throws ContainerException
      */
     public function deleteUploadedFilesForDeletedBookings($bookings, $oldBookings)
     {
@@ -228,7 +198,7 @@ class CustomFieldApplicationService
     /**
      * @return string
      *
-     * @throws \Interop\Container\Exception\ContainerException
+     * @throws ContainerException
      */
     public function getUploadsPath()
     {
@@ -247,7 +217,7 @@ class CustomFieldApplicationService
     /**
      * @param Appointment|Event $entity
      *
-     * @return string
+     * @return string|null
      *
      */
     public function getCalendarEventLocation($entity)
@@ -274,6 +244,20 @@ class CustomFieldApplicationService
                 }
             }
         }
+
         return null;
+    }
+
+    /**
+     * @return Collection
+     *
+     * @throws QueryExecutionException
+     */
+    public function getAll()
+    {
+        /** @var CustomFieldRepository $customFieldRepository */
+        $customFieldRepository = $this->container->get('domain.customField.repository');
+
+        return $customFieldRepository->getAll();
     }
 }

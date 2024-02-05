@@ -9,28 +9,21 @@ namespace AmeliaBooking\Application\Commands\Bookable\Package;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
-use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomerService;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
-use AmeliaBooking\Domain\Factory\Bookable\Service\PackageCustomerFactory;
-use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
-use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
-use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
-use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -89,7 +82,7 @@ class AddPackageCustomerCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
-        /** @var PackageApplicationService $packageApplicationService */
+        /** @var AbstractPackageApplicationService $packageApplicationService */
         $packageApplicationService = $this->container->get('application.bookable.package');
 
         /** @var PackageRepository $packageRepository */
@@ -136,7 +129,7 @@ class AddPackageCustomerCommandHandler extends CommandHandler
             true
         );
 
-        $onlyOneEmployee = $packageApplicationService->getOnlyOneEmployee($package);
+        $onlyOneEmployee = $packageApplicationService->getOnlyOneEmployee($package->toArray());
 
         /** @var Payment $payment */
         $payment = $reservationService->addPayment(

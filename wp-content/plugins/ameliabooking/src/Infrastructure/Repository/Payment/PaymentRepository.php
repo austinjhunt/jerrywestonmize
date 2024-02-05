@@ -313,7 +313,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
         $whereAppointment2 = [];
         $whereEvent = [];
 
-        if ($criteria['dates']) {
+        if (!empty($criteria['dates'])) {
             $whereAppointment1[] = "(DATE_FORMAT(p.dateTime, '%Y-%m-%d %H:%i:%s') BETWEEN :paymentAppointmentFrom1 AND :paymentAppointmentTo1)";
             $whereAppointment2[] = "(DATE_FORMAT(p.dateTime, '%Y-%m-%d %H:%i:%s') BETWEEN :paymentAppointmentFrom2 AND :paymentAppointmentTo2)";
             $appointmentParams1[':paymentAppointmentFrom1'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);

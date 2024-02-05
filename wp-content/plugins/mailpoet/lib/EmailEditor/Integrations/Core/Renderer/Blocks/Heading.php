@@ -10,53 +10,58 @@ use MailPoet\EmailEditor\Engine\SettingsController;
 use MailPoet\Util\Helpers;
 
 class Heading implements BlockRenderer {
-  public function render($blockContent, array $parsedBlock, SettingsController $settingsController): string {
-    $contentStyles = $settingsController->getEmailContentStyles();
-    $availableStylesheets = $settingsController->getAvailableStylesheets();
-    return str_replace('{heading_content}', $blockContent, $this->getBlockWrapper($parsedBlock, $contentStyles, $availableStylesheets));
+  public function render(string $blockContent, array $parsedBlock, SettingsController $settingsController): string {
+    $level = $parsedBlock['attrs']['level'] ?? 2; // default level is 2
+    $blockContent = $this->adjustStyleAttribute($blockContent, $parsedBlock, $settingsController, ['tag_name' => "h{$level}"]);
+    return str_replace('{heading_content}', $blockContent, $this->getBlockWrapper($parsedBlock, $settingsController));
   }
 
   /**
    * Based on MJML <mj-text>
    */
-  private function getBlockWrapper(array $parsedBlock, array $contentStyles, ?string $availableStylesheets): string {
-    $styles = [];
-    foreach ($parsedBlock['email_attrs'] ?? [] as $property => $value) {
-      $styles[$property] = $value;
-    }
+  private function getBlockWrapper(array $parsedBlock, SettingsController $settingsController): string {
 
-    if (!isset($styles['font-size'])) {
-      $styles['font-size'] = $contentStyles['typography']['fontSize'];
-    }
-    if (!isset($styles['font-family'])) {
-      $styles['font-family'] = $contentStyles['typography']['fontFamily'];
+    $availableStylesheets = $settingsController->getAvailableStylesheets();
+    $marginTop = $parsedBlock['email_attrs']['margin-top'] ?? '0px';
+
+    // Styles for padding need to be set on the wrapping table cell due to support in Outlook
+    $styles = [
+      'background-color' => $parsedBlock['attrs']['style']['color']['background'] ?? 'transparent',
+      'min-width' => '100%', // prevent Gmail App from shrinking the table on mobile devices
+      'padding-bottom' => $parsedBlock['attrs']['style']['spacing']['padding']['bottom'] ?? '0px',
+      'padding-left' => $parsedBlock['attrs']['style']['spacing']['padding']['left'] ?? '0px',
+      'padding-right' => $parsedBlock['attrs']['style']['spacing']['padding']['right'] ?? '0px',
+      'padding-top' => $parsedBlock['attrs']['style']['spacing']['padding']['top'] ?? '0px',
+    ];
+
+    foreach ($parsedBlock['email_attrs'] ?? [] as $property => $value) {
+      if ($property === 'width') continue; // width is handled by the wrapping blocks (columns, column)
+      if ($property === 'margin-top') continue; // margin-top is set on the wrapping div co we need to avoid duplication
+      $styles[$property] = $value;
     }
 
     $styles = array_merge($styles, $this->fetchStylesFromBlockAttrs($availableStylesheets, $parsedBlock['attrs']));
 
     return '
-      <table
-        role="presentation"
-        border="0"
-        cellpadding="0"
-        cellspacing="0"
-        style="' . $this->convertStylesToString($styles) . '"
-      >
-        <tr>
-          <td>
-            {heading_content}
-          </td>
-        </tr>
-      </table>
+      <!--[if mso | IE]><table align="left" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><![endif]-->
+        <div style="margin-top: ' . $marginTop . ';">
+          <table
+            role="presentation"
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            style="min-width: 100%;"
+            width="100%"
+          >
+            <tr>
+              <td style="' . $settingsController->convertStylesToString($styles) . '">
+                {heading_content}
+              </td>
+            </tr>
+          </table>
+        </div>
+      <!--[if mso | IE]></td></tr></table><![endif]-->
     ';
-  }
-
-  private function convertStylesToString(array $styles): string {
-    $cssString = '';
-    foreach ($styles as $property => $value) {
-      $cssString .= $property . ':' . $value . '; ';
-    }
-    return trim($cssString); // Remove trailing space and return the formatted string
   }
 
   private function fetchStylesFromBlockAttrs(?string $availableStylesheets, array $attrs = []): array {
@@ -106,5 +111,28 @@ class Heading implements BlockRenderer {
     }
 
     return $styles;
+  }
+
+  /**
+   * 1) We need to remove padding because we render padding on wrapping table cell
+   * 2) We also need to replace font-size to avoid clamp() because clamp() is not supported in many email clients.
+   * The font size values is automatically converted to clamp() when WP site theme is configured to use fluid layouts.
+   * Currently (WP 6.4), there is no way to disable this behavior.
+   * @param array{tag_name: string, class_name?: string} $tag
+   */
+  private function adjustStyleAttribute($blockContent, array $parsedBlock, SettingsController $settingsController, array $tag): string {
+    $html = new \WP_HTML_Tag_Processor($blockContent);
+    $themeData = $settingsController->getTheme()->get_data();
+    $fontSize = 'font-size:' . ($parsedBlock['email_attrs']['font-size'] ?? $themeData['styles']['typography']['fontSize']) . ';';
+
+    if ($html->next_tag($tag)) {
+      $elementStyle = $html->get_attribute('style') ?? '';
+      $elementStyle = preg_replace('/padding.*:.?[0-9]+px;?/', '', $elementStyle);
+      $elementStyle = preg_replace('/font-size:[^;]+;?/', $fontSize, $elementStyle);
+      $html->set_attribute('style', $elementStyle);
+      $blockContent = $html->get_updated_html();
+    }
+
+    return $blockContent;
   }
 }

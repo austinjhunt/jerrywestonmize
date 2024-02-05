@@ -7,6 +7,7 @@
 namespace AmeliaBooking\Domain\Factory\Settings;
 
 use AmeliaBooking\Domain\Entity\Settings\GeneralSettings;
+use AmeliaBooking\Domain\Entity\Settings\GoogleMeetSettings;
 use AmeliaBooking\Domain\Entity\Settings\LessonSpaceSettings;
 use AmeliaBooking\Domain\Entity\Settings\PaymentSettings;
 use AmeliaBooking\Domain\Entity\Settings\Settings;
@@ -33,6 +34,7 @@ class SettingsFactory
         $zoomSettings = new ZoomSettings();
         $paymentSettings = new PaymentSettings();
         $lessonSpaceSetings = new LessonSpaceSettings();
+        $googleMeetSettings = new GoogleMeetSettings();
 
         $data = $entityJsonData ? json_decode($entityJsonData->getValue(), true) : [];
 
@@ -102,9 +104,17 @@ class SettingsFactory
             $lessonSpaceSetings->setEnabled($globalSettings['lessonSpace']['enabled']);
         }
 
+        if (isset($data['googleMeet']['enabled'])) {
+            $googleMeetSettings->setEnabled($data['googleMeet']['enabled']);
+        } else {
+            $googleMeetSettings->setEnabled($globalSettings['googleCalendar']['enableGoogleMeet']);
+        }
+
+
         $entitySettings->setGeneralSettings($generalSettings);
         $entitySettings->setZoomSettings($zoomSettings);
         $entitySettings->setLessonSpaceSettings($lessonSpaceSetings);
+        $entitySettings->setGoogleMeetSettings($googleMeetSettings);
 
         return $entitySettings;
     }

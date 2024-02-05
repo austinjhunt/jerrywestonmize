@@ -10,6 +10,7 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
+use AmeliaBooking\Application\Services\Extra\AbstractExtraApplicationService;
 use AmeliaBooking\Application\Services\Gallery\GalleryApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Category;
@@ -111,6 +112,8 @@ class UpdateServiceCommandHandler extends CommandHandler
 
         /** @var BookableApplicationService $bookableService */
         $bookableService = $this->container->get('application.bookable.service');
+        /** @var AbstractExtraApplicationService $extraService */
+        $extraService = $this->container->get('application.extra.service');
         /** @var GalleryApplicationService $galleryService */
         $galleryService = $this->container->get('application.gallery.service');
 
@@ -141,7 +144,7 @@ class UpdateServiceCommandHandler extends CommandHandler
             !$command->getField('applyGlobally')
         );
 
-        $bookableService->manageExtrasForServiceUpdate($service);
+        $extraService->manageExtrasForServiceUpdate($service);
 
         $bookableService->managePackagesForServiceUpdate($service);
 

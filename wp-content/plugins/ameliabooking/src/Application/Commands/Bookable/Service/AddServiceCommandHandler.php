@@ -11,6 +11,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
+use AmeliaBooking\Application\Services\Extra\AbstractExtraApplicationService;
 use AmeliaBooking\Application\Services\Gallery\GalleryApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -87,6 +88,8 @@ class AddServiceCommandHandler extends CommandHandler
         $serviceRepository = $this->container->get('domain.bookable.service.repository');
         /** @var BookableApplicationService $bookableService */
         $bookableService = $this->container->get('application.bookable.service');
+        /** @var AbstractExtraApplicationService $extraService */
+        $extraService = $this->container->get('application.extra.service');
         /** @var GalleryApplicationService $galleryService */
         $galleryService = $this->container->get('application.gallery.service');
         /** @var ProviderRepository $providerRepository */
@@ -115,7 +118,7 @@ class AddServiceCommandHandler extends CommandHandler
             $providerRepository->getFiltered(['providers' => $command->getField('providers')], 0) : new Collection();
 
         $bookableService->manageProvidersForServiceAdd($service, $providers);
-        $bookableService->manageExtrasForServiceAdd($service);
+        $extraService->manageExtrasForServiceAdd($service);
         $galleryService->manageGalleryForEntityAdd($service->getGallery(), $serviceId);
 
         $serviceRepository->commit();

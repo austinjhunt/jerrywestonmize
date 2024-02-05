@@ -13,6 +13,7 @@ use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Repository\User\UserRepositoryInterface;
 use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\String\Password;
+use AmeliaBooking\Infrastructure\Licence;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingsTable;
@@ -53,16 +54,17 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             ':pictureThumbPath' => $data['pictureThumbPath'],
             ':password'         => isset($data['password']) ? $data['password'] : null,
             ':usedTokens'       => isset($data['usedTokens']) ? $data['usedTokens'] : null,
-            ':zoomUserId'       => isset($data['zoomUserId']) ? $data['zoomUserId'] : null,
             ':countryPhoneIso'  => isset($data['countryPhoneIso']) ? $data['countryPhoneIso'] : null,
-            ':translations'     => isset($data['translations']) ? $data['translations'] : null,
-            ':timeZone'         => isset($data['timeZone']) ? $data['timeZone'] : null,
-            ':badgeId'          => isset($data['badgeId']) ? $data['badgeId'] : null,
         ];
+
+        $additionalData = Licence\DataModifier::getUserRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values']);
 
         try {
             $statement = $this->connection->prepare(
                 "INSERT INTO {$this->table} (
+                {$additionalData['columns']}
                 `type`,
                 `status`,
                 `externalId`,
@@ -76,14 +78,11 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 `birthday`,
                 `pictureFullPath`,
                 `pictureThumbPath`,
-                `zoomUserId`,
                 `countryPhoneIso`,
                 `usedTokens`,
-                `password`,
-                `translations`,
-                `timeZone`,
-                `badgeId`
+                `password`
                 ) VALUES (
+                {$additionalData['placeholders']}
                 :type,
                 :status,
                 :externalId,
@@ -97,13 +96,9 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 STR_TO_DATE(:birthday, '%Y-%m-%d'),
                 :pictureFullPath,
                 :pictureThumbPath,
-                :zoomUserId,
                 :countryPhoneIso,
                 :usedTokens,
-                :password,
-                :translations,
-                :timeZone,
-                :badgeId
+                :password
                 )"
             );
 
@@ -142,19 +137,20 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             ':birthday'         => isset($data['birthday']) ? $data['birthday']->format('Y-m-d') : null,
             ':pictureFullPath'  => $data['pictureFullPath'],
             ':pictureThumbPath' => $data['pictureThumbPath'],
-            ':zoomUserId'       => isset($data['zoomUserId']) ? $data['zoomUserId'] : null,
             ':countryPhoneIso'  => isset($data['countryPhoneIso']) ? $data['countryPhoneIso'] : null,
             ':password'         => isset($data['password']) ? $data['password'] : null,
-            ':translations'     => isset($data['translations']) ? $data['translations'] : null,
-            ':timeZone'         => isset($data['timeZone']) ? $data['timeZone'] : null,
             ':id'               => $id,
-            ':badgeId'          => isset($data['badgeId']) ? $data['badgeId'] : null,
         ];
+
+        $additionalData = Licence\DataModifier::getUserRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values']);
 
         try {
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
                 SET
+                {$additionalData['columnsPlaceholders']}
                 `externalId` = :externalId,
                 `firstName` = :firstName,
                 `lastName` = :lastName,
@@ -164,14 +160,10 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 `phone` = :phone,
                 `gender` = :gender,
                 `birthday` = STR_TO_DATE(:birthday, '%Y-%m-%d'),
-                `zoomUserId` = :zoomUserId,
                 `countryPhoneIso` = :countryPhoneIso,
                 `pictureFullPath` = :pictureFullPath,
                 `pictureThumbPath` = :pictureThumbPath,
-                `password` = IFNULL(:password, `password`),
-                `translations` = :translations,
-                `timeZone` = :timeZone,
-                `badgeId` = :badgeId 
+                `password` = IFNULL(:password, `password`)
                 WHERE 
                 id = :id"
             );

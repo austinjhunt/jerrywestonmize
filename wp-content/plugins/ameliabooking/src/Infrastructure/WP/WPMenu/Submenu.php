@@ -25,6 +25,7 @@ class Submenu
     public function __construct($submenuHandler, $menu)
     {
         $this->submenuHandler = $submenuHandler;
+
         $this->menu = $menu;
     }
 
@@ -50,21 +51,35 @@ class Submenu
             AMELIA_URL . 'public/img/amelia-logo-admin-icon.svg'
         );
 
+        $isLite = false;
+
         foreach ($this->menu as $menu) {
-            $this->handleMenuItem($menu);
+            if ($menu['menuSlug'] === 'wpamelia-lite-vs-premium') {
+                $isLite = true;
+            }
+        }
+
+        foreach ($this->menu as $menu) {
+            $this->handleMenuItem($menu, $isLite);
         }
 
         remove_submenu_page('amelia', 'amelia');
-
     }
 
     /**
      * @param array $menu
+     * @param bool  $isLite
      */
-    public function handleMenuItem($menu)
+    public function handleMenuItem($menu, $isLite)
     {
         if ($menu['menuSlug'] === 'wpamelia-whats-new') {
-            $menu['menuTitle'] = '<span style="color: #FF8C00">' . $menu['menuTitle'] . '</span>';
+            $menu['menuTitle'] = (!$isLite ? '<span style="color: #FF8C00">' : '') . $menu['menuTitle'] . (!$isLite ? '</span>' : '');
+        }
+
+        if ($menu['menuSlug'] === 'wpamelia-lite-vs-premium') {
+            $menu['menuTitle'] = '<span class="dashicons dashicons-star-filled" style="color: #ff8c00"></span>
+                <span style="color: #ff8c00;font-weight: 500;display: inline-block;margin-left: 5px;margin-top: 2px;">'
+                . $menu['menuTitle'] . '</span>';
         }
 
         $this->addSubmenuPage(

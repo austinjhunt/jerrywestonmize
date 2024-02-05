@@ -42,8 +42,8 @@
 </script>
 
 <div
-  id="amelia-v2-booking-<?php echo $params['counter']; ?>"
-  class="amelia-v2-booking<?php echo $params['trigger'] !== '' ? ' amelia-skip-load amelia-skip-load-' . $params['counter'] : ''; ?>"
+  id="amelia-v2-booking-<?php echo esc_attr($params['counter']); ?>"
+  class="amelia-v2-booking<?php echo $params['trigger'] !== '' ? ' amelia-skip-load amelia-skip-load-' . esc_attr($params['counter']) : ''; ?>"
  >
     <?php
       if(!$params['in_dialog']) {

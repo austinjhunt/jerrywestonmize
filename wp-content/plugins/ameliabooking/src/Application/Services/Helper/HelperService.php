@@ -2,15 +2,10 @@
 
 namespace AmeliaBooking\Application\Services\Helper;
 
-use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Entity\User\Customer;
-use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
-use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\LoginType;
 use AmeliaBooking\Infrastructure\Common\Container;
-use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaFirebase\JWT\JWT;
 use Interop\Container\Exception\ContainerException;
 use DateTime;

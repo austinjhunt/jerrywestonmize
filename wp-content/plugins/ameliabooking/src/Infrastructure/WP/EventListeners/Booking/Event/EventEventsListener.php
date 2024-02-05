@@ -7,7 +7,7 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event;
 
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Infrastructure\Common\Container;
-use AmeliaBooking\Infrastructure\WP\Integrations\ThriveAutomator\ThriveAutomatorService;
+use AmeliaBooking\Infrastructure\Licence\EventListener;
 use League\Event\ListenerInterface;
 use League\Event\EventInterface;
 
@@ -56,19 +56,7 @@ class EventEventsListener implements ListenerInterface
     {
         // Handling the events
         if ($param->getResult() !== CommandResult::RESULT_ERROR && $param->getResult() !== CommandResult::RESULT_CONFLICT) {
-            ThriveAutomatorService::initItems();
-
-            switch ($event->getName()) {
-                case 'EventStatusUpdated':
-                    EventStatusUpdatedEventHandler::handle($param, $this->container);
-                    break;
-                case 'EventEdited':
-                    EventEditedEventHandler::handle($param, $this->container);
-                    break;
-                case 'EventAdded':
-                    EventAddedEventHandler::handle($param, $this->container);
-                    break;
-            }
+            EventListener::handleEventListeners($this->container, $event, $param);
         }
     }
 }

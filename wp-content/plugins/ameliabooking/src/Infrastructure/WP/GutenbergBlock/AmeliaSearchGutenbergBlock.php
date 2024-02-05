@@ -25,6 +25,13 @@ class AmeliaSearchGutenbergBlock extends GutenbergBlock
             array( 'wp-blocks', 'wp-components', 'wp-element', 'wp-editor')
         );
 
+        wp_enqueue_style(
+            'amelia_search_gutenberg_styles',
+            AMELIA_URL . 'public/js/gutenberg/amelia-search/amelia-search-gutenberg.css',
+            [],
+            AMELIA_VERSION
+        );
+
         register_block_type(
             'amelia/search-gutenberg-block',
             array('editor_script' => 'amelia_search_gutenberg_block')

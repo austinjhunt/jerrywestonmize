@@ -9,7 +9,7 @@ namespace AmeliaBooking\Application\Commands\CustomField;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
@@ -79,7 +79,7 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
             }
         }
 
-        /** @var CustomFieldApplicationService $customFieldService */
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
 
         if ($currentUser === null ||
@@ -143,7 +143,7 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
 
         $result->setFile([
             'name'     => $fileInfo['name'],
-            'type'     => CustomFieldApplicationService::$allowedUploadedFileExtensions[
+            'type'     => AbstractCustomFieldApplicationService::$allowedUploadedFileExtensions[
                 '.' . strtolower(pathinfo($fileInfo['fileName'], PATHINFO_EXTENSION))
             ],
             'content'  => file_get_contents(

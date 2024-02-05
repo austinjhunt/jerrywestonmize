@@ -2,7 +2,7 @@
 
 namespace AmeliaBooking\Application\Services\Stats;
 
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -15,6 +15,7 @@ use AmeliaBooking\Domain\Entity\Schedule\WeekDay;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Schedule\PeriodFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\User\ProviderService;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
@@ -162,14 +163,26 @@ class StatsService
 
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
+        /** @var ServiceRepository $serviceRepository */
+        $serviceRepository = $this->container->get('domain.bookable.service.repository');
+        /** @var ProviderService $providerService */
+        $providerService = $this->container->get('domain.user.provider.service');
+
+        /** @var Collection $services */
+        $services = $serviceRepository->getAllArrayIndexedById();
 
         /** @var Collection $providers */
-        $providers = $providerRepository->getByCriteriaWithSchedule($params);
+        $providers = $providerRepository->getWithSchedule([]);
+
+        /** @var Provider $provider */
+        foreach ($providers->getItems() as $provider) {
+            $providerService->setProviderServices($provider, $services, true);
+        }
 
         /** @var ProviderApplicationService $providerApplicationService */
         $providerApplicationService = $this->container->get('application.user.provider.service');
 
-        /** @var PackageApplicationService $packageApplicationService */
+        /** @var AbstractPackageApplicationService $packageApplicationService */
         $packageApplicationService = $this->container->get('application.bookable.package');
 
         $packageDatesData = $packageApplicationService->getPackageStatsData($params);

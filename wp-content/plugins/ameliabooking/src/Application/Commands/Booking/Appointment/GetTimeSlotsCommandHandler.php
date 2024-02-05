@@ -15,8 +15,8 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\PositiveDuration;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
-use AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarService;
-use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCalendarService;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use DateTimeZone;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -256,9 +256,9 @@ class GetTimeSlotsCommandHandler extends CommandHandler
 
                 $endDateTime->setTimezone(DateTimeService::getTimeZone());
 
-                GoogleCalendarService::$providersGoogleEvents = [];
+                AbstractGoogleCalendarService::$providersGoogleEvents = [];
 
-                OutlookCalendarService::$providersOutlookEvents = [];
+                AbstractOutlookCalendarService::$providersOutlookEvents = [];
 
                 $freeSlots = $applicationTimeSlotService->getSlotsByProps(
                     $settings,
@@ -296,9 +296,9 @@ class GetTimeSlotsCommandHandler extends CommandHandler
                             ) : $endDateTime;
                     }
 
-                    GoogleCalendarService::$providersGoogleEvents = [];
+                    AbstractGoogleCalendarService::$providersGoogleEvents = [];
 
-                    OutlookCalendarService::$providersOutlookEvents = [];
+                    AbstractOutlookCalendarService::$providersOutlookEvents = [];
 
                     $freeSlots = $applicationTimeSlotService->getSlotsByProps(
                         $settings,
@@ -387,7 +387,8 @@ class GetTimeSlotsCommandHandler extends CommandHandler
                 'slots'     => $converted['available'] ?: $freeSlots['available'],
                 'occupied'  => $converted['occupied'] ?: $freeSlots['occupied'],
                 'busyness'  => $busyness,
-                'lastProvider' => $lastBookedProviderId
+                'lastProvider' => $lastBookedProviderId,
+                'appCount' => $freeSlots['appCount']
             ]
         );
 

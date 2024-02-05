@@ -7,7 +7,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Factory\Outlook\OutlookCalendarFactory;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCalendarService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use AmeliaBooking\Infrastructure\Repository\Outlook\OutlookCalendarRepository;
 
 /**
@@ -39,7 +39,7 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
         /** @var OutlookCalendarRepository $outlookCalendarRepository */
         $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
 
-        /** @var OutlookCalendarService $outlookCalendarService */
+        /** @var AbstractOutlookCalendarService $outlookCalendarService */
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
 
         $token = $outlookCalendarService->fetchAccessTokenWithAuthCode(

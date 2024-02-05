@@ -7,15 +7,10 @@
 namespace AmeliaBooking\Infrastructure\Routes\Payment;
 
 use AmeliaBooking\Application\Controller\Payment\AddPaymentController;
-use AmeliaBooking\Application\Controller\Payment\CreatePaymentLinkController;
 use AmeliaBooking\Application\Controller\Payment\DeletePaymentController;
 use AmeliaBooking\Application\Controller\Payment\CalculatePaymentAmountController;
 use AmeliaBooking\Application\Controller\Payment\GetPaymentController;
 use AmeliaBooking\Application\Controller\Payment\GetPaymentsController;
-use AmeliaBooking\Application\Controller\Payment\GetTransactionAmountController;
-use AmeliaBooking\Application\Controller\Payment\PaymentCallbackController;
-use AmeliaBooking\Application\Controller\Payment\PaymentLinkController;
-use AmeliaBooking\Application\Controller\Payment\RefundPaymentController;
 use AmeliaBooking\Application\Controller\Payment\UpdatePaymentController;
 use Slim\App;
 
@@ -42,13 +37,5 @@ class Payment
         $app->post('/payments/{id:[0-9]+}', UpdatePaymentController::class);
 
         $app->post('/payments/amount', CalculatePaymentAmountController::class);
-
-        $app->get('/payments/transaction/{id:[0-9]+}', GetTransactionAmountController::class);
-
-        $app->get('/payments/callback', PaymentCallbackController::class);
-
-        $app->post('/payments/callback', PaymentCallbackController::class);
-
-        $app->post('/payments/link', PaymentLinkController::class);
     }
 }

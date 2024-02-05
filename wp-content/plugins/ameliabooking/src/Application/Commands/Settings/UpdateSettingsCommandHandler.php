@@ -5,14 +5,14 @@ namespace AmeliaBooking\Application\Commands\Settings;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\Location\CurrentLocation;
+use AmeliaBooking\Application\Services\Location\AbstractCurrentLocation;
 use AmeliaBooking\Application\Services\Stash\StashApplicationService;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Api\BasicApiService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Services\Frontend\LessParserService;
-use AmeliaBooking\Infrastructure\Services\LessonSpace\LessonSpaceService;
+use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -56,7 +56,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->getContainer()->get('domain.settings.service');
 
-        /** @var CurrentLocation $locationService */
+        /** @var AbstractCurrentLocation $locationService */
         $locationService = $this->getContainer()->get('application.currentLocation.service');
 
         /** @var LessParserService $lessParserService */
@@ -375,6 +375,9 @@ class UpdateSettingsCommandHandler extends CommandHandler
             ] : [],
             isset($settingsFields['activation']['disableUrlParams']) ? [
                 'disableUrlParams' => $settingsFields['activation']['disableUrlParams']
+            ] : [],
+            isset($settingsFields['activation']['hideUnavailableFeatures']) ? [
+                'hideUnavailableFeatures' => $settingsFields['activation']['hideUnavailableFeatures']
             ] : []
         );
 
@@ -390,7 +393,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
 
         if ($command->getField('lessonSpace') !== null && $settingsFields['lessonSpace']['apiKey']) {
             if (!$settingsService->getCategorySettings('lessonSpace')['companyId']) {
-                /** @var LessonSpaceService $lessonSpaceService */
+                /** @var AbstractLessonSpaceService $lessonSpaceService */
                 $lessonSpaceService = $this->container->get('infrastructure.lesson.space.service');
 
                 $companyDetails = $lessonSpaceService->getCompanyId($settingsFields['lessonSpace']['apiKey']);

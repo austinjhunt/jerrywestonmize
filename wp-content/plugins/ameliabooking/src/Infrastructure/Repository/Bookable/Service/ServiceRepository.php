@@ -12,6 +12,7 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Infrastructure\Connection;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
+use AmeliaBooking\Infrastructure\Licence;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Domain\Repository\Bookable\Service\ServiceRepositoryInterface;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -160,34 +161,25 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
             ':maxCapacity'      => $data['maxCapacity'],
             ':maxExtraPeople'   => $data['maxExtraPeople'],
             ':duration'         => $data['duration'],
-            ':timeBefore'       => $data['timeBefore'],
-            ':timeAfter'        => $data['timeAfter'],
             ':bringingAnyone'   => $data['bringingAnyone'] ? 1 : 0,
-            ':show'             => $data['show'] ? 1 : 0,
             ':aggregatedPrice'  => $data['aggregatedPrice'] ? 1 : 0,
             ':pictureFullPath'  => $data['pictureFullPath'],
             ':pictureThumbPath' => $data['pictureThumbPath'],
             ':position'         => $data['position'],
-            ':settings'         => $data['settings'],
-            ':recurringCycle'   => $data['recurringCycle'],
-            ':recurringSub'     => $data['recurringSub'],
-            ':recurringPayment' => $data['recurringPayment'],
-            ':translations'     => $data['translations'],
-            ':deposit'          => $data['deposit'],
-            ':depositPayment'   => $data['depositPayment'],
-            ':depositPerPerson' => $data['depositPerPerson'] ? 1 : 0,
-            ':fullPayment'      => $data['fullPayment'] ? 1 : 0,
             ':mandatoryExtra'   => $data['mandatoryExtra'] ? 1 : 0,
             ':minSelectedExtras'=> $data['minSelectedExtras'],
-            ':customPricing'    => $data['customPricing'],
-            ':limitPerCustomer' => $data['limitPerCustomer']
         ];
+
+        $additionalData = Licence\DataModifier::getServiceRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values']);
 
         try {
             $statement = $this->connection->prepare(
                 "INSERT INTO 
                 {$this->table} 
                 (
+                {$additionalData['columns']}
                 `name`, 
                 `description`, 
                 `color`, 
@@ -198,28 +190,15 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
                 `maxCapacity`,
                 `maxExtraPeople`,
                 `duration`,
-                `timeBefore`,
-                `timeAfter`,
                 `bringingAnyone`,
-                `show`,
                 `aggregatedPrice`,
                 `pictureFullPath`,
                 `pictureThumbPath`,
                 `position`,
-                `settings`,
-                `recurringCycle`,
-                `recurringSub`,
-                `recurringPayment`,
-                `translations`,
-                `deposit`,
-                `depositPayment`,
-                `depositPerPerson`,
-                `fullPayment`,
                 `mandatoryExtra`,
-                `minSelectedExtras`,
-                `customPricing`,
-                `limitPerCustomer`
+                `minSelectedExtras`
                 ) VALUES (
+                {$additionalData['placeholders']}
                 :name,
                 :description,
                 :color,
@@ -230,27 +209,13 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
                 :maxCapacity,
                 :maxExtraPeople,
                 :duration,
-                :timeBefore,
-                :timeAfter,
                 :bringingAnyone,
-                :show,
                 :aggregatedPrice,
                 :pictureFullPath,
                 :pictureThumbPath,
                 :position,
-                :settings,
-                :recurringCycle,
-                :recurringSub,
-                :recurringPayment,
-                :translations,
-                :deposit,
-                :depositPayment,
-                :depositPerPerson,
-                :fullPayment,
                 :mandatoryExtra,
-                :minSelectedExtras,
-                :customPricing,
-                :limitPerCustomer
+                :minSelectedExtras
                 )"
             );
 
@@ -284,70 +249,42 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
             ':price'            => $data['price'],
             ':status'           => $data['status'],
             ':categoryId'       => $data['categoryId'],
-            ':minCapacity'      => $data['minCapacity'],
-            ':maxCapacity'      => $data['maxCapacity'],
             ':maxExtraPeople'   => $data['maxExtraPeople'],
             ':duration'         => $data['duration'],
-            ':timeBefore'       => $data['timeBefore'],
-            ':timeAfter'        => $data['timeAfter'],
             ':bringingAnyone'   => $data['bringingAnyone'] ? 1 : 0,
-            ':show'             => $data['show'] ? 1 : 0,
             ':aggregatedPrice'  => $data['aggregatedPrice'] ? 1 : 0,
             ':pictureFullPath'  => $data['pictureFullPath'],
             ':pictureThumbPath' => $data['pictureThumbPath'],
             ':position'         => $data['position'],
-            ':settings'         => $data['settings'],
-            ':recurringCycle'   => $data['recurringCycle'],
-            ':recurringSub'     => $data['recurringSub'],
-            ':recurringPayment' => $data['recurringPayment'],
-            ':translations'     => $data['translations'],
-            ':deposit'          => $data['deposit'],
-            ':depositPayment'   => $data['depositPayment'],
-            ':depositPerPerson' => $data['depositPerPerson'] ? 1 : 0,
-            ':fullPayment'      => $data['fullPayment'] ? 1 : 0,
             ':mandatoryExtra'   => $data['mandatoryExtra'] ? 1 : 0,
             ':minSelectedExtras'=> $data['minSelectedExtras'],
-            ':customPricing'    => $data['customPricing'],
-            ':limitPerCustomer' => $data['limitPerCustomer'],
             ':id'               => $id
         ];
 
+        $additionalData = Licence\DataModifier::getServiceRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values']);
 
         try {
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
                 SET
+                {$additionalData['columnsPlaceholders']}
                 `name`              = :name,
                 `description`       = :description,
                 `color`             = :color,
                 `price`             = :price,
                 `status`            = :status,
                 `categoryId`        = :categoryId,
-                `minCapacity`       = :minCapacity,
-                `maxCapacity`       = :maxCapacity,
                 `maxExtraPeople`    = :maxExtraPeople,    
                 `duration`          = :duration,
-                `timeBefore`        = :timeBefore,
-                `timeAfter`         = :timeAfter,
                 `bringingAnyone`    = :bringingAnyone,
-                `show`              = :show,
                 `aggregatedPrice`   = :aggregatedPrice,
                 `pictureFullPath`   = :pictureFullPath,
                 `pictureThumbPath`  = :pictureThumbPath,
                 `position`          = :position,
-                `settings`          = :settings,
-                `recurringCycle`    = :recurringCycle,
-                `recurringSub`      = :recurringSub,
-                `recurringPayment`  = :recurringPayment,
-                `translations`      = :translations,
-                `deposit`           = :deposit,
-                `depositPayment`    = :depositPayment,
-                `depositPerPerson`  = :depositPerPerson,
-                `fullPayment`       = :fullPayment,
                 `mandatoryExtra`    = :mandatoryExtra,
-                `minSelectedExtras` = :minSelectedExtras,
-                `customPricing`     = :customPricing,
-                `limitPerCustomer`  = :limitPerCustomer
+                `minSelectedExtras` = :minSelectedExtras
                 WHERE
                 id = :id"
             );

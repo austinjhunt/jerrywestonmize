@@ -6,7 +6,7 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
-use AmeliaBooking\Application\Services\Notification\WhatsAppNotificationService;
+use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
@@ -45,7 +45,7 @@ class SendUndeliveredNotificationsCommandHandler extends CommandHandler
         /** @var SMSNotificationService $smsNotificationService */
         $smsNotificationService = $this->getContainer()->get('application.smsNotification.service');
 
-        /** @var WhatsAppNotificationService $whatsAppNotificationService */
+        /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $this->container->get('application.whatsAppNotification.service');
 
         /** @var PaymentRepository $paymentRepository */

@@ -652,7 +652,12 @@ if (! function_exists('createProviders')) {
         foreach ($users as $user) {
             $ameliaUser = $userRepo->getByEntityId($user->ID, 'externalId');
             if ($ameliaUser && $ameliaUser->length() > 0) {
-                continue;
+                if ($ameliaUser->toArray()[0]['type'] === 'provider') {
+                    continue;
+                }
+                if ($ameliaUser->toArray()[0]['type'] === 'customer') {
+                    $userRepo->delete($ameliaUser->toArray()[0]['id']);
+                }
             }
             $userMetaData = get_user_meta($user->ID);
 

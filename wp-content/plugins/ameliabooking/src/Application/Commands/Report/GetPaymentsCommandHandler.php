@@ -52,7 +52,7 @@ class GetPaymentsCommandHandler extends CommandHandler
 
         $params = $command->getField('params');
 
-        if ($params['dates']) {
+        if (!empty($params['dates'])) {
             $params['dates'][0] .= ' 00:00:00';
             $params['dates'][1] .= ' 23:59:59';
         }
@@ -98,7 +98,8 @@ class GetPaymentsCommandHandler extends CommandHandler
 
             if (in_array('location', $params['fields'], true)) {
                 $row[BackendStrings::getCommonStrings()['location']] =
-                    !empty($payment['location']['location_address']) ? $payment['location']['location_address'] : $payment['location']['location_name'];
+                    isset($payment['location']) ?
+                        (!empty($payment['location']['location_address']) ? $payment['location']['location_address'] : $payment['location']['location_name']) : '';
             }
 
             if (in_array('amount', $params['fields'], true)) {

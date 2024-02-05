@@ -8,6 +8,7 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
+use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
@@ -17,7 +18,6 @@ use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
-use AmeliaBooking\Infrastructure\Services\Zoom\ZoomService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -204,8 +204,8 @@ class UpdateEventCommandHandler extends CommandHandler
         $zoomUsersLicenced = false;
 
         if ($oldEvent->getZoomUserId() && $event->getZoomUserId() && $zoomUserChanged) {
-            /** @var ZoomService $zoomService */
-            $zoomService = $this->container->get('infrastructure.zoom.service');
+            /** @var AbstractZoomApplicationService $zoomService */
+            $zoomService = $this->container->get('application.zoom.service');
 
             $zoomUserType    = 0;
             $zoomOldUserType = 0;

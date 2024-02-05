@@ -82,22 +82,37 @@ class NotificationSMSHistoryRepository extends AbstractRepository
     public function update($id, $data)
     {
         $params = [
-            ':logId'    => $data['logId'],
-            ':dateTime' => $data['dateTime'],
             ':status'   => $data['status'],
             ':price'    => $data['price'],
-            ':segments' => $data['segments'],
             ':id'       => $id
         ];
+
+        $sqlUpdate = '';
+
+        if (isset($data['logId'])) {
+            $params[':logId'] = $data['logId'];
+
+            $sqlUpdate .= '`logId` = COALESCE(:logId, `logId`),';
+        }
+
+        if (isset($data['dateTime'])) {
+            $params[':dateTime'] = $data['dateTime'];
+
+            $sqlUpdate .= '`dateTime` = COALESCE(:dateTime, `dateTime`),';
+        }
+
+        if (isset($data['segments'])) {
+            $params[':segments'] = $data['segments'];
+
+            $sqlUpdate .= '`segments` = COALESCE(:segments, `segments`),';
+        }
 
         try {
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table} SET
-                `logId` = COALESCE(:logId, `logId`),
-                `dateTime` = COALESCE(:dateTime, `dateTime`),
+                {$sqlUpdate}
                 `status` = COALESCE(:status, `status`),
-                `price` = COALESCE(:price, `price`),
-                `segments` = COALESCE(:segments, `segments`)
+                `price` = COALESCE(:price, `price`)                
                 WHERE id = :id"
             );
 

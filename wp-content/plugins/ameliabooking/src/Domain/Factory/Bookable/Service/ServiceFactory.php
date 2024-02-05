@@ -30,6 +30,7 @@ use AmeliaBooking\Domain\ValueObjects\Priority;
 use AmeliaBooking\Domain\ValueObjects\String\Color;
 use AmeliaBooking\Domain\ValueObjects\String\Description;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
+use AmeliaBooking\Infrastructure\Licence;
 
 /**
  * Class ServiceFactory
@@ -46,6 +47,7 @@ class ServiceFactory
      */
     public static function create($data)
     {
+        Licence\DataModifier::serviceFactory($data);
 
         $service = new Service();
 

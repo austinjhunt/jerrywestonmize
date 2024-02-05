@@ -23,6 +23,7 @@ class Roles
         'amelia_read_menu',
         'amelia_read_dashboard',
         'amelia_read_whats_new',
+        'amelia_read_lite_vs_premium',
         'amelia_read_calendar',
         'amelia_read_appointments',
         'amelia_read_events',
@@ -38,6 +39,7 @@ class Roles
         'amelia_read_custom_fields',
         'amelia_read_settings',
 
+        'amelia_read_others_settings',
         'amelia_read_others_dashboard',
         'amelia_read_others_calendar',
         'amelia_read_others_appointments',
@@ -62,6 +64,7 @@ class Roles
         'amelia_write_settings',
         'amelia_write_status',
 
+        'amelia_write_others_settings',
         'amelia_write_others_calendar',
         'amelia_write_others_appointments',
         'amelia_write_others_services',
@@ -150,6 +153,7 @@ class Roles
                     'amelia_read_menu'                 => true,
                     'amelia_read_dashboard'            => true,
                     'amelia_read_whats_new'            => true,
+                    'amelia_read_lite_vs_premium'      => true,
                     'amelia_read_calendar'             => true,
                     'amelia_read_appointments'         => true,
                     'amelia_read_events'               => true,

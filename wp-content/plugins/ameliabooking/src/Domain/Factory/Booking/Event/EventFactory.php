@@ -29,6 +29,7 @@ use AmeliaBooking\Domain\ValueObjects\String\DepositType;
 use AmeliaBooking\Domain\ValueObjects\String\Description;
 use AmeliaBooking\Domain\ValueObjects\String\EntityType;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
+use AmeliaBooking\Infrastructure\Licence;
 
 /**
  * Class EventFactory
@@ -46,6 +47,8 @@ class EventFactory
      */
     public static function create($data)
     {
+        Licence\DataModifier::eventFactory($data);
+
         $event = new Event();
 
         if (isset($data['id'])) {

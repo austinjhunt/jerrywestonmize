@@ -506,11 +506,13 @@ class EntityApplicationService
 
         $customersIds = self::getUniqueIds(array_column($data['bookings'], 'customerId'));
 
-        $existingCustomersIds = $userRepository->getIds(['id' => $customersIds]);
+        if (!empty($customersIds)) {
+            $existingCustomersIds = $userRepository->getIds(['id' => $customersIds]);
 
-        foreach ($data['bookings'] as $index => $item) {
-            if (!in_array((int)$item['customerId'], $existingCustomersIds)) {
-                unset($data['bookings'][$index]);
+            foreach ($data['bookings'] as $index => $item) {
+                if (!in_array((int)$item['customerId'], $existingCustomersIds)) {
+                    unset($data['bookings'][$index]);
+                }
             }
         }
 

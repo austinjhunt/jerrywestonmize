@@ -27,13 +27,20 @@ class AmeliaEventsGutenbergBlock extends GutenbergBlock
         );
 
         wp_localize_script(
-            'amelia_booking_gutenberg_block',
+            'amelia_events_gutenberg_block',
             'wpAmeliaLabels',
             array_merge(
                 BackendStrings::getCommonStrings(),
                 BackendStrings::getWordPressStrings(),
                 self::getEntitiesData()
             )
+        );
+
+        wp_enqueue_style(
+            'amelia_events_gutenberg_styles',
+            AMELIA_URL . 'public/js/gutenberg/amelia-events/amelia-events-gutenberg.css',
+            [],
+            AMELIA_VERSION
         );
 
         register_block_type(

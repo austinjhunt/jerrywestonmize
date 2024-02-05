@@ -7,11 +7,11 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
-use AmeliaBooking\Domain\Factory\User\ProviderFactory;
 use AmeliaBooking\Domain\Repository\Booking\Event\EventRepositoryInterface;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Licence;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingsToEventsPeriodsTable;
@@ -58,22 +58,6 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             ':description'          => $data['description'],
             ':color'                => $data['color'],
             ':price'                => $data['price'],
-            ':recurringCycle'       => $data['recurring'] && $data['recurring']['cycle'] ?
-                $data['recurring']['cycle'] : null,
-            ':recurringOrder'       => $data['recurring'] && $data['recurring']['order'] ?
-                $data['recurring']['order'] : null,
-            ':recurringInterval'    => $data['recurring'] && $data['recurring']['cycleInterval'] ?
-                $data['recurring']['cycleInterval'] : null,
-            ':recurringMonthly'     => $data['recurring'] && $data['recurring']['monthlyRepeat'] ?
-                $data['recurring']['monthlyRepeat'] : null,
-            ':monthlyDate'          => $data['recurring'] && $data['recurring']['monthDate'] ?
-                DateTimeService::getCustomDateTimeInUtc($data['recurring']['monthDate']) : null,
-            ':monthlyOnRepeat'      => $data['recurring'] && $data['recurring']['monthlyOnRepeat'] ?
-                $data['recurring']['monthlyOnRepeat'] : null,
-            ':monthlyOnDay'         => $data['recurring'] && $data['recurring']['monthlyOnDay'] ?
-                $data['recurring']['monthlyOnDay'] : null,
-            ':recurringUntil'       => $data['recurring'] && $data['recurring']['until'] ?
-                DateTimeService::getCustomDateTimeInUtc($data['recurring']['until']) : null,
             ':bringingAnyone'       => $data['bringingAnyone'] ? 1 : 0,
             ':bookMultipleTimes'    => $data['bookMultipleTimes'] ? 1 : 0,
             ':maxCapacity'          => $data['maxCapacity'],
@@ -81,28 +65,23 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             ':maxExtraPeople'       => $data['maxExtraPeople'],
             ':show'                 => $data['show'] ? 1 : 0,
             ':notifyParticipants'   => $data['notifyParticipants'],
-            ':locationId'           => $data['locationId'],
             ':customLocation'       => $data['customLocation'],
             ':parentId'             => $data['parentId'],
             ':created'              => $data['created'],
-            ':settings'             => $data['settings'],
-            ':zoomUserId'           => $data['zoomUserId'],
-            ':organizerId'          => $data['organizerId'],
-            ':translations'         => $data['translations'],
-            ':deposit'              => $data['deposit'],
-            ':depositPayment'       => $data['depositPayment'],
-            ':depositPerPerson'     => $data['depositPerPerson'] ? 1 : 0,
-            ':fullPayment'          => $data['fullPayment'] ? 1 : 0,
-            ':customPricing'        => $data['customPricing'] ? 1 : 0,
             ':closeAfterMin'        => $data['closeAfterMin'],
             ':closeAfterMinBookings'  => $data['closeAfterMinBookings'] ? 1 : 0,
             ':aggregatedPrice'      => $data['aggregatedPrice'] ? 1 : 0
         ];
 
+        $additionalData = Licence\DataModifier::getEventRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values'], $additionalData['addValues']);
+
         try {
             $statement = $this->connection->prepare(
                 "INSERT INTO {$this->table} 
                 (
+                {$additionalData['columns']}
                 `bookingOpens`,
                 `bookingCloses`,
                 `bookingOpensRec`,
@@ -112,14 +91,6 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 `description`,
                 `color`,
                 `price`,
-                `recurringCycle`,
-                `recurringOrder`,
-                `recurringInterval`,
-                `recurringMonthly`,
-                `monthlyDate`,
-                `monthlyOnRepeat`,
-                `monthlyOnDay`,
-                `recurringUntil`,
                 `bringingAnyone`,
                 `bookMultipleTimes`,
                 `maxCapacity`,
@@ -127,24 +98,15 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 `maxExtraPeople`,
                 `show`,
                 `notifyParticipants`,
-                `locationId`,
                 `customLocation`,
                 `parentId`,
                 `created`,
-                `settings`,
-                `zoomUserId`,
-                `organizerId`,
-                `translations`,
-                `deposit`,
-                `depositPayment`,
-                `depositPerPerson`,
-                `fullPayment`,
-                `customPricing`,
                 `closeAfterMin`,
                 `closeAfterMinBookings`,
                 `aggregatedPrice`
                  )
                 VALUES (
+                {$additionalData['placeholders']}
                 :bookingOpens,
                 :bookingCloses,
                 :bookingOpensRec,
@@ -154,14 +116,6 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 :description,
                 :color,
                 :price,
-                :recurringCycle,
-                :recurringOrder,
-                :recurringInterval,
-                :recurringMonthly,
-                :monthlyDate,
-                :monthlyOnRepeat,
-                :monthlyOnDay,           
-                :recurringUntil,
                 :bringingAnyone,
                 :bookMultipleTimes,
                 :maxCapacity,
@@ -169,19 +123,9 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 :maxExtraPeople,
                 :show,
                 :notifyParticipants,
-                :locationId,
                 :customLocation,
                 :parentId,
                 :created,
-                :settings,
-                :zoomUserId,
-                :organizerId,
-                :translations,
-                :deposit,
-                :depositPayment,
-                :depositPerPerson,
-                :fullPayment,
-                :customPricing,
                 :closeAfterMin,
                 :closeAfterMinBookings,
                 :aggregatedPrice
@@ -222,13 +166,6 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             ':description'          => $data['description'],
             ':color'                => $data['color'],
             ':price'                => $data['price'],
-            ':recurringCycle'       => $data['recurring'] ? $data['recurring']['cycle'] : null,
-            ':recurringOrder'       => $data['recurring'] ? $data['recurring']['order'] : null,
-            ':recurringInterval'    => $data['recurring'] ? $data['recurring']['cycleInterval'] : null,
-            ':monthlyDate'          => $data['recurring'] && $data['recurring']['monthDate'] ?
-                DateTimeService::getCustomDateTimeInUtc($data['recurring']['monthDate']) : null,
-            ':recurringUntil'       => $data['recurring'] ?
-                DateTimeService::getCustomDateTimeInUtc($data['recurring']['until']) : null,
             ':bringingAnyone'       => $data['bringingAnyone'] ? 1 : 0,
             ':bookMultipleTimes'    => $data['bookMultipleTimes'] ? 1 : 0,
             ':maxCapacity'          => $data['maxCapacity'],
@@ -236,27 +173,22 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             ':maxExtraPeople'       => $data['maxExtraPeople'],
             ':show'                 => $data['show'] ? 1 : 0,
             ':notifyParticipants'   => $data['notifyParticipants'] ? 1 : 0,
-            ':locationId'           => $data['locationId'],
             ':customLocation'       => $data['customLocation'],
             ':parentId'             => $data['parentId'],
-            ':settings'             => $data['settings'],
-            ':zoomUserId'           => $data['zoomUserId'],
-            ':organizerId'          => $data['organizerId'],
-            ':translations'         => $data['translations'],
-            ':deposit'              => $data['deposit'],
-            ':depositPayment'       => $data['depositPayment'],
-            ':depositPerPerson'     => $data['depositPerPerson'] ? 1 : 0,
-            ':fullPayment'          => $data['fullPayment'] ? 1 : 0,
-            ':customPricing'        => $data['customPricing'] ? 1 : 0,
             ':closeAfterMin'        => $data['closeAfterMin'],
             ':closeAfterMinBookings'  => $data['closeAfterMinBookings'] ? 1 : 0,
             ':aggregatedPrice'      => $data['aggregatedPrice'] ? 1 : 0
         ];
 
+        $additionalData = Licence\DataModifier::getEventRepositoryData($data);
+
+        $params = array_merge($params, $additionalData['values']);
+
         try {
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
                 SET
+                {$additionalData['columnsPlaceholders']}
                 `bookingOpens` = :bookingOpens,
                 `bookingCloses` = :bookingCloses, 
                 `bookingOpensRec` = :bookingOpensRec,
@@ -266,11 +198,6 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 `description` = :description,
                 `color` = :color,
                 `price` = :price,
-                `recurringCycle` = :recurringCycle,
-                `recurringOrder` = :recurringOrder,
-                `recurringInterval` = :recurringInterval,
-                `monthlyDate` = :monthlyDate,    
-                `recurringUntil` = :recurringUntil,
                 `bringingAnyone` = :bringingAnyone,
                 `bookMultipleTimes` = :bookMultipleTimes,
                 `maxCapacity` = :maxCapacity,
@@ -278,18 +205,8 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 `maxExtraPeople` = :maxExtraPeople,    
                 `show` = :show,
                 `notifyParticipants` = :notifyParticipants,
-                `locationId` = :locationId,
                 `customLocation` = :customLocation,
                 `parentId` = :parentId,
-                `settings` = :settings,
-                `zoomUserId` = :zoomUserId,
-                `organizerId` = :organizerId,
-                `translations` = :translations,
-                `deposit` = :deposit,
-                `depositPayment` = :depositPayment,
-                `depositPerPerson` = :depositPerPerson,
-                `fullPayment` = :fullPayment,
-                `customPricing` = :customPricing,
                 `closeAfterMin` = :closeAfterMin,
                 `closeAfterMinBookings` = :closeAfterMinBookings,
                 `aggregatedPrice` = :aggregatedPrice
@@ -881,25 +798,50 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         $tagJoin = '';
 
         if (isset($criteria['tag'])) {
-            $params[':tag'] = $criteria['tag'];
+            $queryTags = [];
 
-            $tagJoin = "INNER JOIN {$eventsTagsTable} et ON et.eventId = e.id AND et.name = :tag";
+            $tags = $criteria['tag'];
+            foreach ((array)$tags as $index => $value) {
+                $param = ':tag' . $index;
+
+                $queryTags[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = 'et.name IN (' . implode(', ', $queryTags) . ')';
+
+            $tagJoin = "INNER JOIN {$eventsTagsTable} et ON et.eventId = e.id";
         }
 
         if (!empty($criteria['id'])) {
             if (!empty($criteria['recurring'])) {
-                $params[':id1'] = (int)$criteria['id'];
-                $params[':id2'] = (int)$criteria['id'];
-                $params[':id3'] = (int)$criteria['id'];
-                $params[':id4'] = (int)$criteria['id'];
+                $whereOr = [];
+                foreach ((array)$criteria['id'] as $index => $value) {
+                    $param = 'id' . $index;
 
-                $where[] = "((e.id = :id1 AND e.parentId IS NULL) OR 
-                    (e.parentId IN (SELECT parentId FROM {$this->table} WHERE parentId = :id2)) OR
-                    (e.id >= :id3  AND e.parentId IN (SELECT parentId FROM {$this->table} WHERE id = :id4)))";
+                    $params[':rec1' . $param] = (int)$value;
+                    $params[':rec2' . $param] = (int)$value;
+                    $params[':rec3' . $param] = (int)$value;
+                    $params[':rec4' . $param] = (int)$value;
+
+                    $whereOr[] = "((e.id = :rec1id" . $index . " AND e.parentId IS NULL) OR 
+                    (e.parentId IN (SELECT parentId FROM {$this->table} WHERE parentId = :rec2id" . $index . ")) OR
+                    (e.id >= :rec3id" . $index . "  AND e.parentId IN (SELECT parentId FROM {$this->table} WHERE id = :rec4id" . $index . ")))";
+                }
+                $where[] = implode(' OR ', $whereOr);
             } else {
-                $params[':id'] = (int)$criteria['id'];
+                $queryIds = [];
 
-                $where[] = 'e.id = :id';
+                foreach ((array)$criteria['id'] as $index => $value) {
+                    $param = ':id' . $index;
+
+                    $queryIds[] = $param;
+
+                    $params[$param] = (int)$value;
+                }
+
+                $where[] = 'e.id IN (' . implode(', ', $queryIds) . ')';
             }
         }
 
@@ -1038,25 +980,50 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         $tagJoin = '';
 
         if (isset($criteria['tag'])) {
-            $params[':tag'] = $criteria['tag'];
+            $queryTags = [];
 
-            $tagJoin = "INNER JOIN {$eventsTagsTable} et ON et.eventId = e.id AND et.name = :tag";
+            $tags = $criteria['tag'];//explode(',', $criteria['tag']);
+            foreach ((array)$tags as $index => $value) {
+                $param = ':tag' . $index;
+
+                $queryTags[] = $param;
+
+                $params[$param] = $value;//trim($value, '{}');
+            }
+
+            $where[] = 'et.name IN (' . implode(', ', $queryTags) . ')';
+
+            $tagJoin = "INNER JOIN {$eventsTagsTable} et ON et.eventId = e.id";
         }
 
         if (!empty($criteria['id'])) {
             if (!empty($criteria['recurring'])) {
-                $params[':id1'] = (int)$criteria['id'];
-                $params[':id2'] = (int)$criteria['id'];
-                $params[':id3'] = (int)$criteria['id'];
-                $params[':id4'] = (int)$criteria['id'];
+                $whereOr = [];
+                foreach ((array)$criteria['id'] as $index => $value) {
+                    $param = 'id' . $index;
 
-                $where[] = "((e.id = :id1 AND e.parentId IS NULL) OR 
-                    (e.parentId IN (SELECT parentId FROM {$this->table} WHERE parentId = :id2)) OR
-                    (e.id >= :id3  AND e.parentId IN (SELECT parentId FROM {$this->table} WHERE id = :id4)))";
+                    $params[':rec1' . $param] = (int)$value;
+                    $params[':rec2' . $param] = (int)$value;
+                    $params[':rec3' . $param] = (int)$value;
+                    $params[':rec4' . $param] = (int)$value;
+
+                    $whereOr[] = "((e.id = :rec1id" . $index . " AND e.parentId IS NULL) OR 
+                    (e.parentId IN (SELECT parentId FROM {$this->table} WHERE parentId = :rec2id" . $index . ")) OR
+                    (e.id >= :rec3id" . $index . "  AND e.parentId IN (SELECT parentId FROM {$this->table} WHERE id = :rec4id" . $index . ")))";
+                }
+                $where[] = implode(' OR ', $whereOr);
             } else {
-                $params[':id'] = (int)$criteria['id'];
+                $queryIds = [];
 
-                $where[] = 'e.id = :id';
+                foreach ((array)$criteria['id'] as $index => $value) {
+                    $param = ':id' . $index;
+
+                    $queryIds[] = $param;
+
+                    $params[$param] = (int)$value;
+                }
+
+                $where[] = 'e.id IN (' . implode(', ', $queryIds) . ')';
             }
         }
 

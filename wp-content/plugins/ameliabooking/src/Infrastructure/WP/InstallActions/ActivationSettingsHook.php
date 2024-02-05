@@ -99,14 +99,14 @@ class ActivationSettingsHook
 
     /**
      * Init General Settings
+     *
+     * @param array $savedSettings
+     *
+     * @return array
      */
-    private static function initGeneralSettings()
+    public static function getDefaultGeneralSettings($savedSettings)
     {
-        $settingsService = new SettingsService(new SettingsStorage());
-
-        $savedSettings = $settingsService->getCategorySettings('general');
-
-        $settings = [
+        return [
             'timeSlotLength'                         => 1800,
             'serviceDurationAsSlot'                  => false,
             'bufferTimeInSlot'                       => true,
@@ -124,6 +124,7 @@ class ActivationSettingsHook
             'requiredPhoneNumberField'               => false,
             'requiredEmailField'                     => true,
             'itemsPerPage'                           => 12,
+            'itemsPerPageBackEnd'                    => 30,
             'appointmentsPerPage'                    => 100,
             'eventsPerPage'                          => 100,
             'servicesPerPage'                        => 100,
@@ -148,8 +149,30 @@ class ActivationSettingsHook
             ],
             'usedLanguages'                          => [],
         ];
+    }
+
+    /**
+     * Get General Settings
+     */
+    private static function initGeneralSettings()
+    {
+        $settingsService = new SettingsService(new SettingsStorage());
+
+        $savedSettings = $settingsService->getCategorySettings('general');
+
+        $settings = self::getDefaultGeneralSettings($savedSettings);
+
+        $settings['backLink'] = self::getBackLinkSetting();
 
         self::initSettings('general', $settings);
+
+        self::setNewSettingsToExistingSettings(
+            'general',
+            [
+                ['backLink', 'url'],
+            ],
+            $settings
+        );
     }
 
     /**
@@ -195,15 +218,15 @@ class ActivationSettingsHook
     }
 
     /**
-     * Init Notification Settings
+     * Get Notification Settings
+     *
+     * @param array $savedSettings
+     *
+     * @return array
      */
-    private static function initNotificationsSettings()
+    public static function getDefaultNotificationsSettings($savedSettings)
     {
-        $settingsService = new SettingsService(new SettingsStorage());
-
-        $savedSettings = $settingsService->getCategorySettings('notifications');
-
-        $settings = [
+        return [
             'mailService'          => 'php',
             'smtpHost'             => '',
             'smtpPort'             => '',
@@ -232,8 +255,11 @@ class ActivationSettingsHook
             'rejectErrorUrl'       => '',
             'breakReplacement'     => '<br>',
             'pendingReminder'      => false,
-            'whatsAppEnabled'      => $savedSettings && !empty($savedSettings['whatsAppPhoneID']) && !empty($savedSettings['whatsAppAccessToken'])
-            && !empty($savedSettings['whatsAppBusinessID']) ? true : false,
+            'whatsAppEnabled'      =>
+                $savedSettings &&
+                !empty($savedSettings['whatsAppPhoneID']) &&
+                !empty($savedSettings['whatsAppAccessToken']) &&
+                !empty($savedSettings['whatsAppBusinessID']),
             'whatsAppPhoneID'      => '',
             'whatsAppAccessToken'  => '',
             'whatsAppBusinessID'   => '',
@@ -243,6 +269,18 @@ class ActivationSettingsHook
 This message does not have an option for responding. If you need additional information about your booking, please contact us at %company_phone%',
             'whatsAppReplyToken'   => (new Token(null, 20))->getValue(),
         ];
+    }
+
+    /**
+     * Init Notification Settings
+     */
+    private static function initNotificationsSettings()
+    {
+        $settingsService = new SettingsService(new SettingsStorage());
+
+        $savedSettings = $settingsService->getCategorySettings('notifications');
+
+        $settings = self::getDefaultNotificationsSettings($savedSettings);
 
         self::initSettings('notifications', $settings);
     }
@@ -519,15 +557,15 @@ This message does not have an option for responding. If you need additional info
     }
 
     /**
-     * Init Payments Settings
+     * Get Payments Settings
+     *
+     * @param array $savedSettings
+     *
+     * @return array
      */
-    private static function initPaymentsSettings()
+    public static function getDefaultPaymentsSettings($savedSettings)
     {
-        $settingsService = new SettingsService(new SettingsStorage());
-
-        $savedSettings = $settingsService->getCategorySettings('payments');
-
-        $settings = [
+        return [
             'currency'                   => 'USD',
             'symbol'                     => '$',
             'priceSymbolPosition'        => 'before',
@@ -718,6 +756,18 @@ This message does not have an option for responding. If you need additional info
                 ],
             ]
         ];
+    }
+
+    /**
+     * Init Payments Settings
+     */
+    private static function initPaymentsSettings()
+    {
+        $settingsService = new SettingsService(new SettingsStorage());
+
+        $savedSettings = $settingsService->getCategorySettings('payments');
+
+        $settings = self::getDefaultPaymentsSettings($savedSettings);
 
         self::initSettings('payments', $settings);
 
@@ -783,6 +833,7 @@ This message does not have an option for responding. If you need additional info
             'stash'                         => false,
             'responseErrorAsConflict'       => $savedSettings ? false : true,
             'enablePolyfill'                => $savedSettings ? true : false,
+            'hideUnavailableFeatures'       => true,
             'disableUrlParams'              => $savedSettings ? false : true,
             'enableThriveItems'             => false,
             'customUrl'                     => [
@@ -1351,10 +1402,12 @@ This message does not have an option for responding. If you need additional info
 
     /**
      * Init Roles Settings
+     *
+     * @return array
      */
-    private static function initRolesSettings()
+    public static function getDefaultRolesSettings()
     {
-        $settings = [
+        return [
             'allowConfigureSchedule'      => false,
             'allowConfigureDaysOff'       => false,
             'allowConfigureSpecialDays'   => false,
@@ -1369,7 +1422,7 @@ This message does not have an option for responding. If you need additional info
             'allowAdminBookAtAnyTime'     => false,
             'adminServiceDurationAsSlot'  => false,
             'enabledHttpAuthorization'    => true,
-            'enabledNoShowTag'            => true,
+            'enableNoShowTag'             => true,
             'customerCabinet'             => [
                 'enabled'         => true,
                 'headerJwtSecret' => (new Token(null, 20))->getValue(),
@@ -1418,6 +1471,12 @@ This message does not have an option for responding. If you need additional info
                 'period'      => 1,
                 'from'        => 'bookingDate'
             ],
+            'limitPerEmployee' => [
+                'enabled'     => false,
+                'numberOfApp' => 1,
+                'timeFrame'   => 'day',
+                'period'      => 1,
+            ],
             'providerBadges'  => [
                 'counter' => 3,
                 'badges'  => [
@@ -1439,6 +1498,14 @@ This message does not have an option for responding. If you need additional info
                 ]
             ],
         ];
+    }
+
+    /**
+     * Init Roles Settings
+     */
+    private static function initRolesSettings()
+    {
+        $settings = self::getDefaultRolesSettings();
 
         self::initSettings('roles', $settings);
 
@@ -1453,11 +1520,13 @@ This message does not have an option for responding. If you need additional info
     }
 
     /**
-     * Init Appointments Settings
+     * Get Appointments Settings
+     *
+     * @return array
      */
-    private static function initAppointmentsSettings()
+    public static function getDefaultAppointmentsSettings()
     {
-        $settings = [
+        return [
             'isGloballyBusySlot'                => false,
             'bookMultipleTimes'                 => false,
             'allowBookingIfPending'             => true,
@@ -1493,6 +1562,14 @@ This message does not have an option for responding. If you need additional info
             ],
             'employeeSelection'                => 'random',
         ];
+    }
+
+    /**
+     * Init Appointments Settings
+     */
+    private static function initAppointmentsSettings()
+    {
+        $settings = self::getDefaultAppointmentsSettings();
 
         self::initSettings('appointments', $settings);
 
@@ -1514,6 +1591,38 @@ This message does not have an option for responding. If you need additional info
         $settings = [];
 
         self::initSettings('webHooks', $settings);
+    }
+
+    /**
+     * get Back Link Setting
+     */
+    private static function getBackLinkSetting()
+    {
+        $settingsService = new SettingsService(new SettingsStorage());
+
+        $backLinksLabels = [
+            'Generated with Amelia - WordPress Booking Plugin',
+            'Powered by Amelia - WordPress Booking Plugin',
+            'Booking by Amelia  - WordPress Booking Plugin',
+            'Powered by Amelia - Appointment and Events Booking Plugin',
+            'Powered by Amelia - Appointment and Event Booking Plugin',
+            'Powered by Amelia - WordPress Booking Plugin',
+            'Generated with Amelia - Appointment and Event Booking Plugin',
+            'Booking Enabled by Amelia - Appointment and Event Booking Plugin',
+        ];
+
+        $backLinksUrls = [
+            'https://wpamelia.com/?utm_source=lite&utm_medium=websites&utm_campaign=powerdby',
+            'https://wpamelia.com/demos/?utm_source=lite&utm_medium=website&utm_campaign=powerdby#Features-list',
+            'https://wpamelia.com/pricing/?utm_source=lite&utm_medium=website&utm_campaign=powerdby',
+            'https://wpamelia.com/documentation/?utm_source=lite&utm_medium=website&utm_campaign=powerdby',
+        ];
+
+        return [
+            'enabled' => $settingsService->getCategorySettings('general') === null,
+            'label'   => $backLinksLabels[rand(0, 7)],
+            'url'     => $backLinksUrls[rand(0, 3)],
+        ];
     }
 
     /**

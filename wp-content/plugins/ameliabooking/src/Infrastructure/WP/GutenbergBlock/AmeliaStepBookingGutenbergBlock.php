@@ -38,7 +38,7 @@ class AmeliaStepBookingGutenbergBlock extends GutenbergBlock
 
 
         wp_enqueue_style(
-            'amelia_booking_gutenberg_styles',
+            'amelia_step_booking_gutenberg_styles',
             AMELIA_URL . 'public/js/gutenberg/amelia-step-booking/amelia-gutenberg-styles.css',
             [],
             AMELIA_VERSION

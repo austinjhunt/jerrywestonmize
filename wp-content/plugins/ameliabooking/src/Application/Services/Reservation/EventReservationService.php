@@ -5,6 +5,7 @@ namespace AmeliaBooking\Application\Services\Reservation;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
+use AmeliaBooking\Application\Services\Deposit\AbstractDepositApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
 use AmeliaBooking\Domain\Common\Exceptions\BookingsLimitReachedException;
@@ -13,7 +14,6 @@ use AmeliaBooking\Domain\Common\Exceptions\CouponExpiredException;
 use AmeliaBooking\Domain\Common\Exceptions\CouponInvalidException;
 use AmeliaBooking\Domain\Common\Exceptions\CouponUnknownException;
 use AmeliaBooking\Domain\Common\Exceptions\CustomerBookedException;
-use AmeliaBooking\Domain\Common\Exceptions\EventBookingUnavailableException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
@@ -97,6 +97,9 @@ class EventReservationService extends AbstractReservationService
 
         /** @var CouponApplicationService $couponAS */
         $couponAS = $this->container->get('application.coupon.service');
+
+        /** @var AbstractDepositApplicationService $depositAS */
+        $depositAS = $this->container->get('application.deposit.service');
 
         /** @var Coupon $coupon */
         $coupon = !empty($eventData['couponCode']) ? $couponAS->processCoupon(
@@ -236,7 +239,7 @@ class EventReservationService extends AbstractReservationService
                 }
             }
 
-            $paymentDeposit = $this->calculateDepositAmount(
+            $paymentDeposit = $depositAS->calculateDepositAmount(
                 $paymentAmount,
                 $event,
                 $personsCount
@@ -842,6 +845,9 @@ class EventReservationService extends AbstractReservationService
      */
     public function getReservationPaymentAmount($reservation)
     {
+        /** @var AbstractDepositApplicationService $depositAS */
+        $depositAS = $this->container->get('application.deposit.service');
+
         /** @var Event $bookable */
         $bookable = $reservation->getBookable();
 
@@ -860,7 +866,7 @@ class EventReservationService extends AbstractReservationService
                 }
             }
 
-            $paymentAmount = $this->calculateDepositAmount(
+            $paymentAmount = $depositAS->calculateDepositAmount(
                 $paymentAmount,
                 $bookable,
                 $personsCount

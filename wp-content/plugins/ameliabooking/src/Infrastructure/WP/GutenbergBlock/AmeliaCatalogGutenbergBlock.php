@@ -24,6 +24,13 @@ class AmeliaCatalogGutenbergBlock extends GutenbergBlock
             array('wp-blocks', 'wp-components', 'wp-element', 'wp-editor')
         );
 
+        wp_enqueue_style(
+            'amelia_catalog_gutenberg_styles',
+            AMELIA_URL . 'public/js/gutenberg/amelia-catalog/amelia-catalog-gutenberg.css',
+            [],
+            AMELIA_VERSION
+        );
+
         register_block_type(
             'amelia/catalog-gutenberg-block',
             array('editor_script' => 'amelia_catalog_gutenberg_block')

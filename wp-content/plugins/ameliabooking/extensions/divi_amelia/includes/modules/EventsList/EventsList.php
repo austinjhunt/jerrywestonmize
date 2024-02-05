@@ -29,11 +29,11 @@ class DIVI_EventsList extends ET_Builder_Module
 
         $data = GutenbergBlock::getEntitiesData()['data'];
 
-        $this->events['0'] = BackendStrings::getWordPressStrings()['show_all_events'];
+
         foreach ($data['events'] as $event) {
             $this->events[$event['id']] = $event['name'] . ' (id: ' . $event['id'] . ') - ' . $event['formattedPeriodStart'];
         }
-        $this->tags['0'] = BackendStrings::getWordPressStrings()['show_all_tags'];
+
         foreach ($data['tags'] as $tag) {
             $this->tags[$tag['name']] = $tag['name'] . ' (id: ' . $tag['id'] . ')';
         }
@@ -67,7 +67,8 @@ class DIVI_EventsList extends ET_Builder_Module
             ),
             'events' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_event'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_events'],
                 'options'         => $this->events,
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
@@ -77,10 +78,12 @@ class DIVI_EventsList extends ET_Builder_Module
             ),
             'tags' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_tag'], 'divi-divi_amelia'),
-                'type'            => 'select',
+                'type'            => 'amelia_multi_select',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_tags'],
                 'toggle_slug'     => 'main_content',
                 'options'         => $this->tags,
                 'option_category' => 'basic_option',
+                'brackets'        => true,
                 'show_if'         => array(
                     'booking_params' => 'on',
                 ),
@@ -131,11 +134,19 @@ class DIVI_EventsList extends ET_Builder_Module
     public function checkValues($val)
     {
         if ($val !== null) {
-            $matches = [];
-            $id      = preg_match('/id: \d+\)/', $val, $matches);
-            return !is_numeric($val) ? ($id && count($matches) ? substr($matches[0], 4, -1) : '0') : $val;
+            $val = explode(',', $val);
+            if (is_array($val)) {
+                $newVals = [];
+                foreach ($val as $parameter) {
+                    if ($parameter) {
+                        $newVals[] = !is_numeric($parameter) ? (strpos($parameter, 'id:') ?  substr(explode('id: ', $parameter)[1], 0, -1) : $parameter) : $parameter;
+                    }
+                }
+                return count($newVals) > 0 ? $newVals : [];
+            }
+            return [];
         }
-        return '0';
+        return [];
     }
 
     public function render($attrs, $content = null, $render_slug = null)
@@ -157,11 +168,11 @@ class DIVI_EventsList extends ET_Builder_Module
         if ($preselect === 'on') {
             $event = $this->checkValues($this->props['events']);
             $tag   = $this->props['tags'];
-            if ($event !== '0') {
-                $shortcode .= ' event=' . $event;
+            if ($event && count($event) > 0) {
+                $shortcode .= ' event=' . implode(',', $event);
             }
-            if ($tag !== null && $tag !== '' && $tag !== '0') {
-                $shortcode .= " tag='" . $tag . "'";
+            if ($tag) {
+                $shortcode .= ' tag="' . $tag . '"';
             }
             $recurring = $this->props['recurring'];
             if ($recurring === 'on') {

@@ -3,7 +3,7 @@
 namespace AmeliaBooking\Application\Services\Payment;
 
 use AmeliaBooking\Application\Commands\CommandResult;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -39,9 +39,6 @@ use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Services\Payment\CurrencyService;
-use AmeliaBooking\Infrastructure\Services\Payment\PayPalService;
-use AmeliaBooking\Infrastructure\Services\Payment\RazorpayService;
-use AmeliaBooking\Infrastructure\Services\Payment\StripeService;
 use AmeliaBooking\Infrastructure\WP\HelperService\HelperService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
@@ -88,7 +85,7 @@ class PaymentApplicationService
         /** @var EventRepository $eventRepository */
         $eventRepository = $this->container->get('domain.booking.event.repository');
 
-        /** @var PackageApplicationService $packageApplicationService */
+        /** @var AbstractPackageApplicationService $packageApplicationService */
         $packageApplicationService = $this->container->get('application.bookable.package');
 
         $paymentsData = $paymentRepository->getFiltered($params, $itemsPerPage);
@@ -213,7 +210,7 @@ class PaymentApplicationService
 
         switch ($paymentData['gateway']) {
             case ('payPal'):
-                /** @var PayPalService $paymentService */
+                /** @var PaymentServiceInterface $paymentService */
                 $paymentService = $this->container->get('infrastructure.payment.payPal.service');
 
                 $response = $paymentService->complete(
@@ -242,7 +239,7 @@ class PaymentApplicationService
                 return true;
 
             case ('stripe'):
-                /** @var StripeService $paymentService */
+                /** @var PaymentServiceInterface $paymentService */
                 $paymentService = $this->container->get('infrastructure.payment.stripe.service');
 
                 /** @var CurrencyService $currencyService */
@@ -323,7 +320,7 @@ class PaymentApplicationService
             case ('mollie'):
                 return true;
             case ('razorpay'):
-                /** @var RazorpayService $paymentService */
+                /** @var PaymentServiceInterface $paymentService */
                 $paymentService = $this->container->get('infrastructure.payment.razorpay.service');
 
                 $paymentId = $paymentData['data']['paymentId'];
@@ -758,7 +755,7 @@ class PaymentApplicationService
                 'wc'       => $paymentSettings['wc']['enabled']
             ];
 
-            if (!empty($methods['wc'])) {
+            if (!empty($methods['wc']) && WooCommerceService::isEnabled()) {
                 /** @var ReservationServiceInterface $reservationService */
                 $reservationService = $this->container->get('application.reservation.service')->get($type);
 
@@ -824,6 +821,7 @@ class PaymentApplicationService
             if (!empty($methods['stripe'])) {
                 /** @var PaymentServiceInterface $paymentService */
                 $paymentService = $this->container->get('infrastructure.payment.stripe.service');
+
                 /** @var CurrencyService $currencyService */
                 $currencyService = $this->container->get('infrastructure.payment.currency.service');
 

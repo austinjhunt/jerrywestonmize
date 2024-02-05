@@ -18,7 +18,6 @@ use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
-use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
@@ -35,23 +34,8 @@ use Slim\Exception\ContainerValueNotFoundException;
  *
  * @package AmeliaBooking\Application\Services\Coupon
  */
-class CouponApplicationService
+class CouponApplicationService extends AbstractCouponApplicationService
 {
-    private $container;
-
-    /**
-     * CouponApplicationService constructor.
-     *
-     * @param Container $container
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
-
     /**
      * @param Coupon $coupon
      *
@@ -212,7 +196,7 @@ class CouponApplicationService
      * @param int    $userId
      * @param bool   $inspectCoupon
      *
-     * @return Coupon
+     * @return Coupon|null
      *
      * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
@@ -372,7 +356,7 @@ class CouponApplicationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function getCustomerCouponUsedCount($couponId, $userId)
+    private function getCustomerCouponUsedCount($couponId, $userId)
     {
         /** @var AppointmentRepository $appointmentRepo */
         $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
@@ -434,5 +418,18 @@ class CouponApplicationService
         }
 
         return $maxLimit - $used;
+    }
+
+    /**
+     * @return Collection
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public function getAll()
+    {
+        /** @var CouponRepository $couponRepository */
+        $couponRepository = $this->container->get('domain.coupon.repository');
+
+        return $couponRepository->getAllIndexedById();
     }
 }

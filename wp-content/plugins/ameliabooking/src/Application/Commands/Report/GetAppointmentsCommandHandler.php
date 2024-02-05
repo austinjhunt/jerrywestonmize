@@ -9,7 +9,7 @@ namespace AmeliaBooking\Application\Commands\Report;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Entity\CustomField\CustomField;
@@ -56,7 +56,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
         $settingsDS = $this->container->get('domain.settings.service');
         /** @var CustomFieldRepository $customFieldRepository */
         $customFieldRepository = $this->container->get('domain.customField.repository');
-        /** @var PackageApplicationService $packageAS */
+        /** @var AbstractPackageApplicationService $packageAS */
         $packageAS = $this->container->get('application.bookable.package');
 
         $result = new CommandResult();
@@ -65,11 +65,11 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         $params = $command->getField('params');
 
-        if ($params['dates'] && $params['dates'][0]) {
+        if (!empty($params['dates']) && $params['dates'][0]) {
             $params['dates'][0] .= ' 00:00:00';
         }
 
-        if ($params['dates'] && !empty($params['dates'][1])) {
+        if (!empty($params['dates']) && !empty($params['dates'][1])) {
             $params['dates'][1] .= ' 23:59:59';
         }
 
@@ -143,7 +143,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
             $customers = [];
             $rowCF     = [];
-            
+
             if ($params['separate'] !== "true") {
                 foreach ((array)$appointment['bookings'] as $booking) {
                     $infoJson = json_decode($booking['info'], true);

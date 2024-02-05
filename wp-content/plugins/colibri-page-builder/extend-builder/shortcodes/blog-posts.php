@@ -71,7 +71,7 @@ function colibri_blog_posts_print_meta_data( $atts ) {
 			get_post_time( 'm' ), get_post_time( 'j' ) ) ) . '">' . $colibri_global_icons[3] . '
             <span>' . get_the_date( get_option( 'date_format' ) ) . '</span>
         </a>';
-	$metadata_read_more_button = '<a class="colibri_post_read_more d-inline-flex" href="' . esc_url( get_permalink() ) . '">' . $atts['button_text'] . '</a>';
+	$metadata_read_more_button = '<a class="colibri_post_read_more d-inline-flex" href="' . esc_url( get_permalink() ) . '">' . wp_kses_post($atts['button_text']) . '</a>';
 	?>
     <div class="colibri_post_metadata  <?php if ( $atts['spacer_metadata'] === 'yes' )
 		echo 'd-flex' ?>">
@@ -125,7 +125,7 @@ function colibri_blog_posts_print_meta_data( $atts ) {
 					$bool = true;
 			}
 		}
-		$separator = "<span>" . $atts['metadata_separator'] . "</span>";
+		$separator = "<span>" . wp_kses_post($atts['metadata_separator']) . "</span>";
 		foreach ( $right as $key => $value ) {
 			if ( count( $right ) - 1 === $key ) {
 				$right_div .= $value;
@@ -329,8 +329,8 @@ function colibri_blog_posts_shortcode( $attrs ) {
 		'order'          => $atts['order_type'],
 	) );
 	?>
-    <div class="<?php echo str_replace( ',', ' ', $atts['classes_row_outside'] ) ?>">
-        <div class="<?php echo str_replace( ',', ' ', $atts['classes_row_inside'] ) ?>">
+    <div class="<?php echo esc_attr(str_replace( ',', ' ', $atts['classes_row_outside'] )) ?>">
+        <div class="<?php echo esc_attr(str_replace( ',', ' ', $atts['classes_row_inside'] )) ?>">
 			<?php
 			if ( $query->have_posts() ):
 				while ( $query->have_posts() ):

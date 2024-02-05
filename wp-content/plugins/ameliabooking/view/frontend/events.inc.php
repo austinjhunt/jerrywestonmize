@@ -22,7 +22,7 @@
       'employee': '<?php echo esc_js($atts['employee']); ?>',
       'eventId': '<?php echo esc_js($atts['event']); ?>',
       'eventRecurring': <?php echo $atts['recurring'] ? 1 : 0; ?>,
-      'eventTag': "<?php echo $atts['tag']; ?>"
+      'eventTag': "<?php echo esc_js($atts['tag']); ?>"
     }
   );
   var lazyBookingEntitiesIds = (typeof lazyBookingEntitiesIds === 'undefined') ? [] : lazyBookingEntitiesIds;

@@ -7,10 +7,9 @@
 namespace AmeliaBooking\Infrastructure\WP\ShortcodeService;
 
 use AmeliaBooking\Application\Services\Cache\CacheApplicationService;
-use AmeliaBooking\Application\Services\CustomField\CustomFieldApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\Stash\StashApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
-use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -158,7 +157,7 @@ class AmeliaShortcodeService
         wp_localize_script(
             'amelia_booking_scripts',
             'fileUploadExtensions',
-            array_keys(CustomFieldApplicationService::$allowedUploadedFileExtensions)
+            array_keys(AbstractCustomFieldApplicationService::$allowedUploadedFileExtensions)
         );
 
         if ($settingsService->getSetting('activation', 'stash') && self::$counter === 1) {

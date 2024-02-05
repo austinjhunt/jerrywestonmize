@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Commands\Google;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Domain\Factory\Google\GoogleCalendarFactory;
-use AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Repository\Google\GoogleCalendarRepository;
 
 /**
@@ -38,7 +38,7 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
         /** @var GoogleCalendarRepository $googleCalendarRepository */
         $googleCalendarRepository = $this->container->get('domain.google.calendar.repository');
 
-        /** @var GoogleCalendarService $googleCalService */
+        /** @var AbstractGoogleCalendarService $googleCalService */
         $googleCalService = $this->container->get('infrastructure.google.calendar.service');
 
         $accessToken = $googleCalService->fetchAccessTokenWithAuthCode(

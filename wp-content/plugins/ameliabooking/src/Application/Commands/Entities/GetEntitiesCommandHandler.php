@@ -6,8 +6,12 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
-use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
+use AmeliaBooking\Application\Services\Coupon\AbstractCouponApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
+use AmeliaBooking\Application\Services\Location\AbstractLocationApplicationService;
+use AmeliaBooking\Application\Services\Resource\AbstractResourceApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -27,18 +31,15 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\CategoryRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
-use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ResourceRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventTagsRepository;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
-use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
-use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
-use AmeliaBooking\Infrastructure\Services\LessonSpace\LessonSpaceService;
+use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -68,6 +69,15 @@ class GetEntitiesCommandHandler extends CommandHandler
 
         /** @var ProviderApplicationService $providerAS */
         $providerAS = $this->container->get('application.user.provider.service');
+
+        /** @var AbstractCustomFieldApplicationService $customFieldAS */
+        $customFieldAS = $this->container->get('application.customField.service');
+
+        /** @var AbstractLocationApplicationService $locationAS */
+        $locationAS = $this->container->get('application.location.service');
+
+        /** @var AbstractCouponApplicationService $couponAS */
+        $couponAS = $this->container->get('application.coupon.service');
 
         /** @var ProviderService $providerService */
         $providerService = $this->container->get('domain.user.provider.service');
@@ -140,11 +150,8 @@ class GetEntitiesCommandHandler extends CommandHandler
         if (in_array(Entities::LOCATIONS, $params['types'], true) ||
             in_array(Entities::EMPLOYEES, $params['types'], true)
         ) {
-            /** @var LocationRepository $locationRepository */
-            $locationRepository = $this->getContainer()->get('domain.locations.repository');
-
             /** @var Collection $locations */
-            $locations = $locationRepository->getAllOrderedByName();
+            $locations = $locationAS->getAllOrderedByName();
         }
 
         /** Locations */
@@ -320,11 +327,8 @@ class GetEntitiesCommandHandler extends CommandHandler
         if (in_array(Entities::CUSTOM_FIELDS, $params['types'], true) ||
             in_array('customFields', $params['types'], true)
         ) {
-            /** @var CustomFieldRepository $customFieldRepository */
-            $customFieldRepository = $this->container->get('domain.customField.repository');
-
             /** @var Collection $customFields */
-            $customFields = $customFieldRepository->getAll();
+            $customFields = $customFieldAS->getAll();
 
             $resultData['customFields'] = $customFields->toArray();
         }
@@ -333,11 +337,8 @@ class GetEntitiesCommandHandler extends CommandHandler
         if (in_array(Entities::COUPONS, $params['types'], true) &&
             $this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::COUPONS)
         ) {
-            /** @var CouponRepository $couponRepository */
-            $couponRepository = $this->container->get('domain.coupon.repository');
-
             /** @var Collection $coupons */
-            $coupons = $couponRepository->getAllIndexedById();
+            $coupons = $couponAS->getAll();
 
             /** @var CouponRepository $couponRepository */
             $couponRepository = $this->container->get('domain.coupon.repository');
@@ -348,40 +349,42 @@ class GetEntitiesCommandHandler extends CommandHandler
             /** @var PackageRepository $packageRepository */
             $packageRepository = $this->container->get('domain.bookable.package.repository');
 
-            foreach ($couponRepository->getCouponsServicesIds($coupons->keys()) as $ids) {
-                /** @var Coupon $coupon */
-                $coupon = $coupons->getItem($ids['couponId']);
+            if ($coupons->length()) {
+                foreach ($couponRepository->getCouponsServicesIds($coupons->keys()) as $ids) {
+                    /** @var Coupon $coupon */
+                    $coupon = $coupons->getItem($ids['couponId']);
 
-                $coupon->getServiceList()->addItem(
-                    $services->getItem($ids['serviceId']),
-                    $ids['serviceId']
-                );
-            }
+                    $coupon->getServiceList()->addItem(
+                        $services->getItem($ids['serviceId']),
+                        $ids['serviceId']
+                    );
+                }
 
-            /** @var Collection $allEvents */
-            $allEvents = $eventRepository->getAllIndexedById();
+                /** @var Collection $allEvents */
+                $allEvents = $eventRepository->getAllIndexedById();
 
-            foreach ($couponRepository->getCouponsEventsIds($coupons->keys()) as $ids) {
-                /** @var Coupon $coupon */
-                $coupon = $coupons->getItem($ids['couponId']);
+                foreach ($couponRepository->getCouponsEventsIds($coupons->keys()) as $ids) {
+                    /** @var Coupon $coupon */
+                    $coupon = $coupons->getItem($ids['couponId']);
 
-                $coupon->getEventList()->addItem(
-                    $allEvents->getItem($ids['eventId']),
-                    $ids['eventId']
-                );
-            }
+                    $coupon->getEventList()->addItem(
+                        $allEvents->getItem($ids['eventId']),
+                        $ids['eventId']
+                    );
+                }
 
-            /** @var Collection $allPackages */
-            $allPackages = $packageRepository->getAllIndexedById();
+                /** @var Collection $allPackages */
+                $allPackages = $packageRepository->getAllIndexedById();
 
-            foreach ($couponRepository->getCouponsPackagesIds($coupons->keys()) as $ids) {
-                /** @var Coupon $coupon */
-                $coupon = $coupons->getItem($ids['couponId']);
+                foreach ($couponRepository->getCouponsPackagesIds($coupons->keys()) as $ids) {
+                    /** @var Coupon $coupon */
+                    $coupon = $coupons->getItem($ids['couponId']);
 
-                $coupon->getPackageList()->addItem(
-                    $allPackages->getItem($ids['packageId']),
-                    $ids['packageId']
-                );
+                    $coupon->getPackageList()->addItem(
+                        $allPackages->getItem($ids['packageId']),
+                        $ids['packageId']
+                    );
+                }
             }
 
             $resultData['coupons'] = $coupons->toArray();
@@ -423,7 +426,7 @@ class GetEntitiesCommandHandler extends CommandHandler
 
         /** Packages */
         if (in_array(Entities::PACKAGES, $params['types'], true)) {
-            /** @var PackageApplicationService $packageApplicationService */
+            /** @var AbstractPackageApplicationService $packageApplicationService */
             $packageApplicationService = $this->container->get('application.bookable.package');
 
             $resultData['packages'] = $packageApplicationService->getPackagesArray();
@@ -431,11 +434,11 @@ class GetEntitiesCommandHandler extends CommandHandler
 
         /** Resources */
         if (in_array(Entities::RESOURCES, $params['types'], true)) {
-            /** @var ResourceRepository $resourceRepository */
-            $resourceRepository = $this->getContainer()->get('domain.bookable.resource.repository');
+            /** @var AbstractResourceApplicationService $resourceApplicationService */
+            $resourceApplicationService = $this->container->get('application.resource.service');
 
             /** @var Collection $resources */
-            $resources = $resourceRepository->getByCriteria([]);
+            $resources = $resourceApplicationService->getAll([]);
 
             $resultData['resources'] = $resources->toArray();
         }
@@ -447,7 +450,7 @@ class GetEntitiesCommandHandler extends CommandHandler
             $lessonSpaceCompanyId = $settingsDS->getSetting('lessonSpace', 'companyId');
 
             if ($lessonSpaceEnabled && $lessonSpaceApiKey) {
-                /** @var LessonSpaceService $lessonSpaceService */
+                /** @var AbstractLessonSpaceService $lessonSpaceService */
                 $lessonSpaceService = $this->container->get('infrastructure.lesson.space.service');
 
                 if (empty($lessonSpaceCompanyId)) {

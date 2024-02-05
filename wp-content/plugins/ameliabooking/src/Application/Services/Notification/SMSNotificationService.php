@@ -306,10 +306,14 @@ class SMSNotificationService extends AbstractNotificationService
                         if ($apiResponse->status === 'OK') {
                             $this->updateSmsHistory($historyId, $apiResponse);
 
-                            $notificationLogRepo->add(
+                            $logNotificationId = $notificationLogRepo->add(
                                 $notification,
                                 $data['customer_id']
                             );
+
+                            if ($logNotificationId) {
+                                $notificationLogRepo->updateFieldById($logNotificationId, 1, 'sent');
+                            }
                         }
                     } catch (QueryExecutionException $e) {
                     }

@@ -4,7 +4,7 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\User\Provider;
 
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
-use AmeliaBooking\Application\Services\Notification\WhatsAppNotificationService;
+use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use Interop\Container\Exception\ContainerException;
@@ -29,7 +29,7 @@ class ProviderAddedEventHandler
         if (!is_string($commandResult->getData()) && $commandResult->getData()['sendEmployeePanelAccessEmail'] === true) {
             /** @var EmailNotificationService $emailNotificationService */
             $emailNotificationService = $container->get('application.emailNotification.service');
-            /** @var WhatsAppNotificationService $whatsAppNotificationService */
+            /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
             $whatsAppNotificationService = $container->get('application.whatsAppNotification.service');
 
             $emailNotificationService->sendEmployeePanelAccess(
