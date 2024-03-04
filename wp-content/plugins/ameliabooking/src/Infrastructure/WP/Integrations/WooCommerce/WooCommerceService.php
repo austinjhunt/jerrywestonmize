@@ -10,7 +10,6 @@ use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
-use AmeliaBooking\Domain\Common\Exceptions\BookingUnavailableException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Extra;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
@@ -32,7 +31,6 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
-use AmeliaBooking\Domain\ValueObjects\String\BookingType;
 use AmeliaBooking\Domain\ValueObjects\String\DepositType;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
@@ -47,6 +45,7 @@ use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
+use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentEditedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingEditedEventHandler;
@@ -71,8 +70,8 @@ class WooCommerceService
     /** @var array $checkout_info */
     protected static $checkout_info = [];
 
-    /** @var boolean $isProcessing */
-    protected static $isProcessing = false;
+    /** @var boolean $processedAmeliaItems */
+    protected static $processedAmeliaItems = [];
 
     const AMELIA = 'ameliabooking';
 
@@ -120,6 +119,8 @@ class WooCommerceService
         add_action('woocommerce_before_checkout_process', [self::class, 'beforeCheckoutProcess'], 10, 1);
         add_action('woocommerce_checkout_create_order', [self::class, 'beforeCheckoutProcess'], 10, 2);
         add_filter('woocommerce_before_calculate_totals', [self::class, 'beforeCalculateTotals'], 10, 3);
+
+        add_action('woocommerce_checkout_order_created', [self::class, 'orderCreated'], 10, 1);
     }
 
     /**
@@ -134,10 +135,20 @@ class WooCommerceService
             return;
         }
 
-        $index = 0;
+        $groupData = [];
 
         foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
             if (isset($wc_item[self::AMELIA]) && is_array($wc_item[self::AMELIA])) {
+                $key = isset($wc_item[self::AMELIA]['wcItemHash']) ? $wc_item[self::AMELIA]['wcItemHash'] : 0;
+
+                $groupData[$key] = 0;
+            }
+        }
+
+        foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
+            if (isset($wc_item[self::AMELIA]) && is_array($wc_item[self::AMELIA])) {
+                $key = isset($wc_item[self::AMELIA]['wcItemHash']) ? $wc_item[self::AMELIA]['wcItemHash'] : 0;
+
                 $product_price = self::getReservationPaymentAmount($wc_item[self::AMELIA])['paymentAmount'];
 
                 $bookableData = self::getEntity($wc_item[self::AMELIA]);
@@ -147,16 +158,18 @@ class WooCommerceService
                     : !empty($wc_item[self::AMELIA]['isCart']);
 
                 if (!$isCart &&
+                    $wc_item[self::AMELIA]['type'] !== 'event' &&
+                    $wc_item[self::AMELIA]['type'] !== 'package' &&
                     isset($bookableData['bookable']['recurringPayment']) &&
                     $bookableData['bookable']['recurringPayment'] !== null &&
-                    $index > $bookableData['bookable']['recurringPayment']
+                    $groupData[$key] > $bookableData['bookable']['recurringPayment']
                 ) {
                     $wc_item['data']->set_price(0);
 
                     continue;
                 }
 
-                $index++;
+                $groupData[$key]++;
 
                 /** @var \WC_Product $wc_item ['data'] */
                 $wc_item['data']->set_price($product_price >= 0 ? $product_price : 0);
@@ -259,13 +272,11 @@ class WooCommerceService
      *
      * @param array $data
      *
-     * @return bool
+     * @return string
      */
     private static function validateBooking($data)
     {
         try {
-            $errorMessage = '';
-
             if ($data) {
                 /** @var CommandResult $result */
                 $result = new CommandResult();
@@ -283,39 +294,7 @@ class WooCommerceService
                 $reservationService->processBooking($result, $data, $reservation, false);
 
                 if ($result->getResult() === CommandResult::RESULT_ERROR) {
-                    if (isset($result->getData()['emailError'])) {
-                        $errorMessage = FrontendStrings::getCommonStrings()['email_exist_error'];
-                    }
-
-                    if (isset($result->getData()['couponUnknown'])) {
-                        $errorMessage = FrontendStrings::getCommonStrings()['coupon_unknown'];
-                    }
-
-                    if (isset($result->getData()['couponInvalid'])) {
-                        $errorMessage = FrontendStrings::getCommonStrings()['coupon_invalid'];
-                    }
-
-                    if (isset($result->getData()['customerAlreadyBooked'])) {
-                        switch ($data['type']) {
-                            case (Entities::APPOINTMENT):
-                            case (Entities::PACKAGE):
-                                $errorMessage = FrontendStrings::getCommonStrings()['customer_already_booked_app'];
-
-                                break;
-
-                            case (Entities::EVENT):
-                                $errorMessage = FrontendStrings::getCommonStrings()['customer_already_booked_ev'];
-
-                                break;
-                        }
-                    }
-
-                    if (isset($result->getData()['timeSlotUnavailable'])) {
-                        $errorMessage = FrontendStrings::getCommonStrings()['time_slot_unavailable'];
-                    }
-
-                    return $errorMessage ?
-                        "$errorMessage (<strong>{$data['serviceName']}</strong>). " : '';
+                    return self::getBookingErrorMessage($result, $data['type']);
                 }
 
                 return '';
@@ -373,61 +352,6 @@ class WooCommerceService
         }
 
         return $products;
-    }
-
-    /**
-     * Save appointment booking
-     *
-     * @param array     $data
-     * @param \WC_Order $order
-     *
-     * @return CustomerBooking|null
-     * @throws \Exception
-     */
-    private static function saveBooking($data, $order)
-    {
-        try {
-            /** @var ReservationServiceInterface $reservationService */
-            $reservationService = self::$container->get('application.reservation.service')->get($data['type']);
-
-            $reservation = $reservationService->getNew(false, false, false);
-
-            $result = $reservationService->processRequest($data, $reservation, true);
-
-            /** @var PaymentRepository $paymentRepository */
-            $paymentRepository = self::$container->get('domain.payment.repository');
-
-            /** @var Collection $payments */
-            $payments = $paymentRepository->getByEntityId($data['payment']['wcOrderId'], 'wcOrderId');
-
-            /** @var Payment $payment */
-            foreach ($payments->getItems() as $payment) {
-                foreach ($order->get_items() as $itemId => $orderItem) {
-                    if ($payment->getWcOrderItemId() && $payment->getWcOrderItemId()->getValue() === (int)$itemId) {
-                        $paymentRepository->updateFieldById(
-                            $payment->getId()->getValue(),
-                            ($orderItem->get_total() > 0 ? $orderItem->get_total() : 0) + $orderItem->get_total_tax(),
-                            'amount'
-                        );
-                    }
-                }
-            }
-
-            /** @var SettingsService $settingsService */
-            $settingsService = self::$container->get('domain.settings.service');
-
-            $wcSettings = self::$settingsService->getSetting('payments', 'wc');
-
-            if ($settingsService->getSetting('general', 'runInstantPostBookingActions') ||
-                (isset($wcSettings['redirectPage']) && $wcSettings['redirectPage'] === 1)
-            ) {
-                $reservationService->runPostBookingActions($result);
-            }
-        } catch (ContainerException $e) {
-        } catch (\Exception $e) {
-        }
-
-        return null;
     }
 
     /**
@@ -1109,10 +1033,20 @@ class WooCommerceService
         }
 
         if (!WC()->is_rest_api_request()) {
-            $index = 0;
+            $groupData = [];
 
             foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
                 if (isset($wc_item[self::AMELIA]) && is_array($wc_item[self::AMELIA])) {
+                    $key = isset($wc_item[self::AMELIA]['wcItemHash']) ? $wc_item[self::AMELIA]['wcItemHash'] : 0;
+
+                    $groupData[$key] = 0;
+                }
+            }
+
+            foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
+                if (isset($wc_item[self::AMELIA]) && is_array($wc_item[self::AMELIA])) {
+                    $key = isset($wc_item[self::AMELIA]['wcItemHash']) ? $wc_item[self::AMELIA]['wcItemHash'] : 0;
+
                     $product_price = self::getReservationPaymentAmount($wc_item[self::AMELIA])['paymentAmount'];
 
                     $bookableData = self::getEntity($wc_item[self::AMELIA]);
@@ -1122,16 +1056,18 @@ class WooCommerceService
                         : !empty($wc_item[self::AMELIA]['isCart']);
 
                     if (!$isCart &&
+                        $wc_item[self::AMELIA]['type'] !== 'event' &&
+                        $wc_item[self::AMELIA]['type'] !== 'package' &&
                         isset($bookableData['bookable']['recurringPayment']) &&
                         $bookableData['bookable']['recurringPayment'] !== null &&
-                        $index > $bookableData['bookable']['recurringPayment']
+                        $groupData[$key] > $bookableData['bookable']['recurringPayment']
                     ) {
                         $wc_item['data']->set_price(0);
 
                         break;
                     }
 
-                    $index++;
+                    $groupData[$key]++;
 
                     /** @var \WC_Product $wc_item ['data'] */
                     $wc_item['data']->set_price($product_price >= 0 ? $product_price : 0);
@@ -1164,13 +1100,25 @@ class WooCommerceService
 
         do_action('AmeliaAddBookingToWcCart', $data);
 
+        $wcSettings = self::$settingsService->getSetting('payments', 'wc');
+
         foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
             if (isset($wc_item[self::AMELIA])) {
-                $wooCommerceCart->remove_cart_item($wc_key);
+                if (empty($wcSettings['bookMultiple'])) {
+                    $wooCommerceCart->remove_cart_item($wc_key);
+                }
             }
         }
 
         $defaultProductId = self::getProductIdFromSettings();
+
+        $token = null;
+
+        if (!empty($wcSettings['bookMultiple'])) {
+            $token = new Token();
+
+            $data['wcItemHash'] = $token->getValue();
+        }
 
         $wooCommerceCart->add_to_cart(
             !empty($data['wcProductId']) ? $data['wcProductId'] : $defaultProductId,
@@ -1202,6 +1150,10 @@ class WooCommerceService
             $recurringData['couponCode'] = $item['couponCode'];
 
             $recurringData['bookings'][0]['deposit'] = $item['deposit'];
+
+            if ($token && !empty($wcSettings['bookMultiple'])) {
+                $recurringData['wcItemHash'] = $token->getValue();
+            }
 
             $wooCommerceCart->add_to_cart(
                 $productId ?: self::getProductIdFromSettings(),
@@ -2088,235 +2040,14 @@ class WooCommerceService
     }
 
     /**
-     * Manage bookings after checkout.
-     *
-     * @param $order_id
-     * @throws QueryExecutionException
-     */
-    public static function orderStatusChanged($order_id)
-    {
-        $order = new \WC_Order($order_id);
-
-        $bookingData = [];
-
-        $couponCode = null;
-
-        foreach ($order->get_items() as $item_id => $order_item) {
-            $data = wc_get_order_item_meta($item_id, self::AMELIA);
-
-            if ($data && is_array($data) &&
-                !isset($data['processed']) &&
-                !empty($data['type']) &&
-                $data['type'] !== 'package' &&
-                $data['type'] !== 'event'
-            ) {
-                if ($data['couponCode']) {
-                    $couponCode = $data['couponCode'];
-                }
-
-                $serviceBookingData = [
-                    'providerId'         => $data['providerId'],
-                    'locationId'         => $data['locationId'],
-                    'bookingStart'       => $data['bookingStart'],
-                    'bookingEnd'         => $data['bookingEnd'],
-                    'notifyParticipants' => $data['notifyParticipants'],
-                    'status'             => $data['status'],
-                    'utcOffset'          => $data['bookings'][0]['utcOffset'],
-                    'extras'             => $data['bookings'][0]['extras'],
-                    'persons'            => $data['bookings'][0]['persons'],
-                    'duration'           => $data['bookings'][0]['duration'],
-                    'couponId'           => $data['couponId'],
-                    'couponCode'         => $data['couponCode'],
-                    'wcOrderItemId'      => $item_id,
-                ];
-
-                if (!empty($data['serviceId'])) {
-                    $serviceBookingData['serviceId'] = $data['serviceId'];
-                }
-
-                $bookingData[] = $serviceBookingData;
-            }
-        }
-
-        array_shift($bookingData);
-
-        foreach ($order->get_items() as $item_id => $order_item) {
-            $data = wc_get_order_item_meta($item_id, self::AMELIA);
-
-            $isValid = $data && is_array($data);
-
-            $wcSettings = self::$settingsService->getSetting('payments', 'wc');
-
-            if ($data && is_array($data) && isset($data['type'], $wcSettings['rules'][$data['type']])) {
-                /** @var ReservationServiceInterface $reservationService */
-                $reservationService = self::$container->get('application.reservation.service')->get($data['type']);
-
-                $isValid = $reservationService->getWcStatus(
-                    $data['type'],
-                    $order->get_status(),
-                    'booking',
-                    isset($data['processed'])
-                );
-            }
-
-            try {
-                if ($isValid !== false && !self::$isProcessing && !isset($data['processed']) && !($order->get_status() === 'cancelled' || $order->get_status() === 'failed')) {
-                    if ($couponCode && empty($data['couponCode'])) {
-                        $data['couponCode'] = $couponCode;
-                    }
-
-                    $data['recurring'] = $bookingData;
-
-                    self::$isProcessing = true;
-
-                    $data['processed'] = true;
-
-                    $data['taxIncluded'] = wc_prices_include_tax();
-
-                    wc_update_order_item_meta($item_id, self::AMELIA, $data);
-
-                    $data['payment']['wcOrderId'] = $order_id;
-
-                    $data['payment']['wcOrderItemId'] = $item_id;
-
-                    $data['payment']['orderStatus'] = $order->get_status();
-
-                    $data['payment']['gatewayTitle'] = $order->get_payment_method_title();
-
-                    $data['payment']['amount'] = 0;
-
-                    $data['payment']['status'] = $order->get_payment_method() === 'cod' ?
-                        PaymentStatus::PENDING : PaymentStatus::PAID;
-
-                    /** @var SettingsService $settingsService */
-                    $settingsService = self::$container->get('domain.settings.service');
-
-                    $orderUserId = $order->get_user_id();
-
-                    if ($orderUserId && $settingsService->getSetting('roles', 'automaticallyCreateCustomer')) {
-                        $data['bookings'][0]['customer']['externalId'] = $order->get_user_id();
-                    }
-
-                    $customFields = !empty($data['allCustomFields']) ?
-                        $data['allCustomFields'] : $data['bookings'][0]['customFields'];
-
-                    $data['bookings'][0]['customFields'] = $customFields ? json_encode($customFields) : null;
-
-                    if (isset($data['payment']['fromLink']) && $data['payment']['fromLink']) {
-                        // from payment link
-
-                        if (isset($data['payment']['newPayment']) && $data['payment']['newPayment']) {
-                            /** @var PaymentApplicationService $paymentAS */
-                            $paymentAS = self::$container->get('application.payment.service');
-
-                            $data['payment']['gateway'] = 'wc';
-                            $linkPayment = $paymentAS->insertPaymentFromLink($data['payment'], $order_item->get_total() + ($order_item->get_total_tax() ?: 0), $data['type']);
-                            $data['payment'] = $linkPayment->toArray();
-                        } else {
-                            /** @var PaymentRepository $paymentRepository */
-                            $paymentRepository = self::$container->get('domain.payment.repository');
-
-                            $paymentRepository->updateFieldById($data['payment']['id'], $data['payment']['status'], 'status');
-                            $paymentRepository->updateFieldById($data['payment']['id'], $data['payment']['gatewayTitle'], 'gatewayTitle');
-                            $paymentRepository->updateFieldById($data['payment']['id'], DateTimeService::getNowDateTimeObjectInUtc()->format('Y-m-d H:i:s'), 'dateTime');
-                            $paymentRepository->updateFieldById($data['payment']['id'], 'wc', 'gateway');
-                            $paymentRepository->updateFieldById($data['payment']['id'], $order_item->get_total() + ($order_item->get_total_tax() ?: 0) , 'amount');
-                        }
-
-                        $payment = PaymentFactory::create($data['payment']);
-                        if (!($payment instanceof Payment)) {
-                            return;
-                        }
-
-                        /** @var ReservationServiceInterface $reservationService */
-                        $reservationService = self::$container->get('application.reservation.service')->get(
-                            $payment->getEntity()->getValue()
-                        );
-
-                        $requestedStatus = $reservationService->getWcStatus(
-                            $data['payment']['entity'],
-                            $order->get_status(),
-                            'booking',
-                            true
-                        );
-                        if ($requestedStatus !== false) {
-                            self::updateBookingStatus($payment, $data['payment']['entity'], $order);
-                        } else if ($data['payment']['entity'] === Entities::APPOINTMENT) {
-                            /** @var SettingsService $settingsDS */
-                            $settingsDS = self::$container->get('domain.settings.service');
-                            /** @var AppointmentApplicationService $appointmentAS */
-                            $appointmentAS = self::$container->get('application.booking.appointment.service');
-
-                            $reservation = $reservationService->getReservationByPayment($payment, true);
-
-                            $data = $reservation->getData();
-
-                            $bookableSettings = $data['bookable']['settings'];
-                            $entitySettings = !empty($bookableSettings) && json_decode($bookableSettings, true) ? json_decode($bookableSettings, true) : null;
-                            $paymentLinksSettings = !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ? $entitySettings['payments']['paymentLinks'] : null;
-                            $changeBookingStatus =  $paymentLinksSettings && $paymentLinksSettings['changeBookingStatus'] !== null ? $paymentLinksSettings['changeBookingStatus'] :
-                                $settingsDS->getSetting('payments', 'paymentLinks')['changeBookingStatus'];
-
-                            //call woo (update or create?) rules here
-                            if ($changeBookingStatus && $data['booking']['status'] !== BookingStatus::APPROVED) {
-                                $appointmentAS->updateBookingStatus($payment->getId()->getValue());
-
-                                $reservationData = $reservationService->getReservationByPayment($payment, true);
-
-                                do_action('AmeliaBookingAddedBeforeNotify', $reservationData, self::$container);
-
-                                BookingAddedEventHandler::handle(
-                                    $reservationData,
-                                    self::$container
-                                );
-                            }
-                        }
-                    } else {
-                        $booking = self::saveBooking($data, $order);
-
-                        $data['bookings'][0]['customFields'] = $customFields;
-
-                        // add created user to WooCommerce order if WooCommerce didn't created user but Amelia Customer has WordPress user
-                        if (!$orderUserId &&
-                            $booking !== null &&
-                            $settingsService->getSetting('roles', 'automaticallyCreateCustomer') &&
-                            !empty($booking['customer']['externalId'])
-                        ) {
-                            update_post_meta(
-                                $order_id,
-                                '_customer_user',
-                                $booking['customer']['externalId']
-                            );
-                        }
-
-                        $data['recurring'] = [];
-
-                        wc_update_order_item_meta($item_id, self::AMELIA, $data);
-                    }
-                } elseif ($isValid !== false && isset($data['processed'], $data['payment']['wcOrderId'])) {
-                    /** @var PaymentRepository $paymentRepository */
-                    $paymentRepository = self::$container->get('domain.payment.repository');
-
-                    /** @var Collection $payments */
-                    $payments = $paymentRepository->getByEntityId($order_id, 'wcOrderId');
-
-                    /** @var Payment $payment */
-                    foreach ($payments->getItems() as $payment) {
-                        self::updateBookingStatus($payment, $payment->getEntity() ? $payment->getEntity()->getValue() : $data['type'], $order);
-                    }
-                }
-            } catch (ContainerException $e) {
-            } catch (\Exception $e) {
-            }
-        }
-    }
-
-
-    /**
      * @param Payment $payment
      * @param string $type
      * @param $order
      *
+     * @throws BookingCancellationException
+     * @throws ContainerException
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
      * @throws QueryExecutionException
      */
     private static function updateBookingStatus($payment, $type, $order)
@@ -2328,7 +2059,7 @@ class WooCommerceService
         $paymentRepository = self::$container->get('domain.payment.repository');
 
         $paymentStatus =  $reservationService->getWcStatus(
-             $type,
+            $type,
             $order->get_status(),
             'payment',
             true
@@ -2358,15 +2089,15 @@ class WooCommerceService
         if ($requestedStatus !== false) {
             switch ($type) {
                 case (Entities::APPOINTMENT):
-                    self::bookingAppointmentUpdated($payment, $requestedStatus);
+                    self::bookingAppointmentUpdated($payment, $requestedStatus, true);
                     break;
 
                 case (Entities::EVENT):
-                    self::bookingEventUpdated($payment, $requestedStatus);
+                    self::bookingEventUpdated($payment, $requestedStatus, true);
                     break;
 
                 case (Entities::PACKAGE):
-                    self::bookingPackageUpdated($payment, $requestedStatus);
+                    self::bookingPackageUpdated($payment, $requestedStatus, true);
                     break;
             }
         }
@@ -2376,6 +2107,7 @@ class WooCommerceService
     /**
      * @param Payment $payment
      * @param string  $requestedStatus
+     * @param bool    $runActions
      *
      * @throws BookingCancellationException
      * @throws ContainerException
@@ -2383,7 +2115,7 @@ class WooCommerceService
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
-    private static function bookingAppointmentUpdated($payment, $requestedStatus)
+    private static function bookingAppointmentUpdated($payment, $requestedStatus, $runActions)
     {
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = self::$container->get('application.reservation.service')->get(Entities::APPOINTMENT);
@@ -2396,27 +2128,30 @@ class WooCommerceService
 
         $bookingData = $reservationService->updateStatus($booking, $requestedStatus);
 
-        $result = new CommandResult();
+        if ($runActions) {
+            $result = new CommandResult();
 
-        $result->setData(
-            [
-                Entities::APPOINTMENT          => $bookingData[Entities::APPOINTMENT],
-                'appointmentStatusChanged'     => $bookingData['appointmentStatusChanged'],
-                'appointmentRescheduled'       => false,
-                'bookingsWithChangedStatus'    => [$bookingData[Entities::BOOKING]],
-                'appointmentEmployeeChanged'   => null,
-                'appointmentZoomUserChanged'   => false,
-                'appointmentZoomUsersLicenced' => false,
-                'lessonSpaceChanged'           => false,
-            ]
-        );
+            $result->setData(
+                [
+                    Entities::APPOINTMENT          => $bookingData[Entities::APPOINTMENT],
+                    'appointmentStatusChanged'     => $bookingData['appointmentStatusChanged'],
+                    'appointmentRescheduled'       => false,
+                    'bookingsWithChangedStatus'    => [$bookingData[Entities::BOOKING]],
+                    'appointmentEmployeeChanged'   => null,
+                    'appointmentZoomUserChanged'   => false,
+                    'appointmentZoomUsersLicenced' => false,
+                    'lessonSpaceChanged'           => false,
+                ]
+            );
 
-        AppointmentEditedEventHandler::handle($result, self::$container);
+            AppointmentEditedEventHandler::handle($result, self::$container);
+        }
     }
 
     /**
      * @param Payment $payment
      * @param string  $requestedStatus
+     * @param bool    $runActions
      *
      * @throws BookingCancellationException
      * @throws ContainerException
@@ -2424,7 +2159,7 @@ class WooCommerceService
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
-    private static function bookingEventUpdated($payment, $requestedStatus)
+    private static function bookingEventUpdated($payment, $requestedStatus, $runActions)
     {
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = self::$container->get('application.reservation.service')->get(Entities::EVENT);
@@ -2437,28 +2172,31 @@ class WooCommerceService
 
         $bookingData = $reservationService->updateStatus($booking, $requestedStatus);
 
-        $result = new CommandResult();
+        if ($runActions) {
+            $result = new CommandResult();
 
-        $result->setData(
-            [
-                'type'                 => Entities::EVENT,
-                Entities::EVENT        => $bookingData[Entities::EVENT],
-                Entities::BOOKING      => $bookingData[Entities::BOOKING],
-                'bookingStatusChanged' => true,
-            ]
-        );
+            $result->setData(
+                [
+                    'type'                 => Entities::EVENT,
+                    Entities::EVENT        => $bookingData[Entities::EVENT],
+                    Entities::BOOKING      => $bookingData[Entities::BOOKING],
+                    'bookingStatusChanged' => true,
+                ]
+            );
 
-        BookingEditedEventHandler::handle($result, self::$container);
+            BookingEditedEventHandler::handle($result, self::$container);
+        }
     }
 
     /**
      * @param Payment $payment
      * @param string  $requestedStatus
+     * @param bool    $runActions
      *
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    private static function bookingPackageUpdated($payment, $requestedStatus)
+    private static function bookingPackageUpdated($payment, $requestedStatus, $runActions)
     {
         /** @var PackageCustomerRepository $packageCustomerRepository */
         $packageCustomerRepository = self::$container->get('domain.bookable.packageCustomer.repository');
@@ -2469,16 +2207,18 @@ class WooCommerceService
             'status'
         );
 
-        $result = new CommandResult();
+        if ($runActions) {
+            $result = new CommandResult();
 
-        $result->setData(
-            [
-                'packageCustomerId' => $payment->getPackageCustomerId()->getValue(),
-                'status'            => $requestedStatus,
-            ]
-        );
+            $result->setData(
+                [
+                    'packageCustomerId' => $payment->getPackageCustomerId()->getValue(),
+                    'status'            => $requestedStatus,
+                ]
+            );
 
-        PackageCustomerUpdatedEventHandler::handle($result, self::$container);
+            PackageCustomerUpdatedEventHandler::handle($result, self::$container);
+        }
     }
 
     /**
@@ -2488,9 +2228,30 @@ class WooCommerceService
     {
         $order = new \WC_Order($orderId);
 
+        /** @var SettingsService $settingsService */
+        $settingsService = self::$container->get('domain.settings.service');
+
+        $updatedOrder = false;
+
         if (!$order->has_status('failed')) {
             foreach ($order->get_items() as $itemId => $orderItem) {
                 $data = wc_get_order_item_meta($itemId, self::AMELIA);
+
+                // add created user to WooCommerce order if WooCommerce didn't create user but Amelia Customer has WordPress user
+                if (!$updatedOrder &&
+                    $data &&
+                    is_array($data) &&
+                    !empty($data['externalId']) &&
+                    $settingsService->getSetting('roles', 'automaticallyCreateCustomer')
+                ) {
+                    update_post_meta(
+                        $order->get_id(),
+                        '_customer_user',
+                        $data['externalId']
+                    );
+
+                    $updatedOrder = true;
+                }
 
                 $wcSettings = self::$settingsService->getSetting('payments', 'wc');
 
@@ -2725,5 +2486,692 @@ class WooCommerceService
     {
         $order = wc_get_order($order_id);
         return $order ? $order->get_total() : null;
+    }
+
+    /**
+     * @param CommandResult $result
+     *
+     * @return string
+     */
+    private static function getBookingErrorMessage($result, $type)
+    {
+        $errorMessage = '';
+
+        if (isset($result->getData()['emailError'])) {
+            $errorMessage = FrontendStrings::getCommonStrings()['email_exist_error'];
+        }
+
+        if (isset($result->getData()['couponUnknown'])) {
+            $errorMessage = FrontendStrings::getCommonStrings()['coupon_unknown'];
+        }
+
+        if (isset($result->getData()['couponInvalid'])) {
+            $errorMessage = FrontendStrings::getCommonStrings()['coupon_invalid'];
+        }
+
+        if (isset($result->getData()['customerAlreadyBooked'])) {
+            switch ($type) {
+                case (Entities::APPOINTMENT):
+                case (Entities::PACKAGE):
+                    $errorMessage = FrontendStrings::getCommonStrings()['customer_already_booked_app'];
+
+                    break;
+
+                case (Entities::EVENT):
+                    $errorMessage = FrontendStrings::getCommonStrings()['customer_already_booked_ev'];
+
+                    break;
+            }
+        }
+
+        if (isset($result->getData()['timeSlotUnavailable'])) {
+            $errorMessage = FrontendStrings::getCommonStrings()['time_slot_unavailable'];
+        }
+
+        return $errorMessage ? "$errorMessage " : '';
+    }
+
+    /**
+     * @param $order
+     * @throws ContainerException
+     * @throws QueryExecutionException
+     * @throws \Exception
+     */
+    public static function orderCreated($order)
+    {
+        if (self::isAmeliaOrder($order) &&
+            self::isAmeliaOrderValidForBooking($order) &&
+            !self::isAmeliaOrderPrePaid() &&
+            !self::isAmeliaOrderFromPaymentLink($order, false)
+        ) {
+            self::createBookings($order, false, false);
+        }
+    }
+
+    /**
+     * @param $order_id
+     * @throws BookingCancellationException
+     * @throws ContainerException
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     * @throws \Exception
+     */
+    public static function orderStatusChanged($order_id)
+    {
+        $order = new \WC_Order($order_id);
+
+        if (self::isAmeliaOrder($order)) {
+            if (self::isAmeliaOrderProcessed($order)) {
+                self::manageOrderUpdateStatus($order);
+            } else if (self::isAmeliaOrderValidForBooking($order)) {
+                if (self::isAmeliaOrderFromPaymentLink($order, true)) {
+                    self::managePaymentCreatedFromPaymentLink($order);
+                } else if (self::isAmeliaOrderPrePaid()) {
+                    self::createBookings($order, true, true);
+                } else {
+                    self::completeBookings($order);
+                }
+            } else {
+                self::manageOrderCreationFailed($order);
+            }
+        }
+    }
+
+    /**
+     * inspect if order has amelia booking items
+     *
+     * @param $order
+     * @return bool
+     */
+    private static function isAmeliaOrder($order)
+    {
+        foreach ($order->get_items() as $item_id => $order_item) {
+            $data = wc_get_order_item_meta($item_id, self::AMELIA);
+
+            if ($data && is_array($data)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * inspect if bookings or payment are created
+     *
+     * @param $order
+     * @return bool
+     */
+    private static function isAmeliaOrderProcessed($order)
+    {
+        foreach ($order->get_items() as $item_id => $order_item) {
+            $data = wc_get_order_item_meta($item_id, self::AMELIA);
+
+            if ($data && is_array($data)) {
+                if (isset($data['processed'], $data['payment']['wcOrderId'])) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * inspect if amelia order is created from payment link
+     *
+     * @param $order
+     * @param $inspectRules
+     * @return bool
+     */
+    private static function isAmeliaOrderFromPaymentLink($order, $inspectRules)
+    {
+        foreach ($order->get_items() as $item_id => $order_item) {
+            $data = wc_get_order_item_meta($item_id, self::AMELIA);
+
+            if ((!$inspectRules || self::isValid($order->get_status(), $data) !== false) &&
+                !isset($data['processed']) &&
+                isset($data['payment']['fromLink']) &&
+                $data['payment']['fromLink']
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * inspect if actions should be performed
+     *
+     * @param string $cacheData
+     *
+     * @return bool
+     */
+    private static function shouldAmeliaActionsRun($cacheData)
+    {
+        $cacheDataArray = json_decode($cacheData, true);
+
+        $trigger = $cacheDataArray && isset($cacheDataArray['request']['trigger'])
+            ? $cacheDataArray['request']['trigger']
+            : (
+                $cacheDataArray && isset($cacheDataArray['request']['form']['shortcode']['trigger'])
+                    ? $cacheDataArray['request']['form']['shortcode']['trigger']
+                    : ''
+            );
+
+        /** @var SettingsService $settingsService */
+        $settingsService = self::$container->get('domain.settings.service');
+
+        $wcSettings = self::$settingsService->getSetting('payments', 'wc');
+
+        if ($settingsService->getSetting('general', 'runInstantPostBookingActions') ||
+            (isset($wcSettings['redirectPage']) && $wcSettings['redirectPage'] === 1) ||
+            $trigger
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private static function isAmeliaOrderPrePaid()
+    {
+        $wcSettings = self::$settingsService->getSetting('payments', 'wc');
+
+        return empty($wcSettings['bookUnpaid']);
+    }
+
+    /**
+     * inspect if amelia order is valid by order status
+     *
+     * @param $order
+     * @return bool
+     */
+    private static function isAmeliaOrderValidForBooking($order)
+    {
+        return $order->get_status() !== 'cancelled' && $order->get_status() !== 'failed';
+    }
+
+    /**
+     * Manage bookings after order status is changed.
+     *
+     * @param string $orderStatus
+     * @param array  $data
+     * @return bool|null
+     */
+    private static function isValid($orderStatus, $data)
+    {
+        $isValid = $data && is_array($data);
+
+        $wcSettings = self::$settingsService->getSetting('payments', 'wc');
+
+        if ($isValid && isset($data['type'], $wcSettings['rules'][$data['type']])) {
+            /** @var ReservationServiceInterface $reservationService */
+            $reservationService = self::$container->get('application.reservation.service')->get($data['type']);
+
+            $isValid = $reservationService->getWcStatus(
+                $data['type'],
+                $orderStatus,
+                'booking',
+                isset($data['processed'])
+            );
+        }
+
+        return $isValid;
+    }
+
+    /**
+     * Set Amelia Item Data
+     *
+     * @param $data
+     * @param $order
+     * @param $couponCode
+     * @param $bookingData
+     * @param $paid
+     * @param $item_id
+     * @return void
+     */
+    private static function setAmeliaItemData(&$data, $order, $couponCode, $bookingData, $paid, $item_id)
+    {
+        if ($couponCode && empty($data['couponCode'])) {
+            $data['couponCode'] = $couponCode;
+        }
+
+        $data['recurring'] = $bookingData;
+
+        if ($paid) {
+            $data['processed'] = true;
+        }
+
+        $data['taxIncluded'] = wc_prices_include_tax();
+
+        wc_update_order_item_meta($item_id, self::AMELIA, $data);
+
+        $data['payment']['wcOrderId'] = $order->get_id();
+
+        $data['payment']['wcOrderItemId'] = $item_id;
+
+        $data['payment']['orderStatus'] = $order->get_status();
+
+        $data['payment']['gatewayTitle'] = $order->get_payment_method_title();
+
+        $data['payment']['amount'] = 0;
+
+        $data['payment']['status'] = $order->get_payment_method() === 'cod' ?
+            PaymentStatus::PENDING : PaymentStatus::PAID;
+
+        /** @var SettingsService $settingsService */
+        $settingsService = self::$container->get('domain.settings.service');
+
+        $orderUserId = $order->get_user_id();
+
+        if ($orderUserId && $settingsService->getSetting('roles', 'automaticallyCreateCustomer')) {
+            $data['bookings'][0]['customer']['externalId'] = $order->get_user_id();
+        }
+
+        $customFields = !empty($data['allCustomFields']) ?
+            $data['allCustomFields'] : $data['bookings'][0]['customFields'];
+
+        $data['bookings'][0]['customFields'] = $customFields ? json_encode($customFields) : null;
+    }
+
+    /**
+     * Create bookings
+     *
+     * @param $order
+     * @param $paid
+     * @param $inspectRules
+     * @throws \Exception
+     */
+    private static function createBookings($order, $paid, $inspectRules)
+    {
+        $groupData = [];
+
+        $couponCode = null;
+
+        foreach ($order->get_items() as $item_id => $order_item) {
+            $data = wc_get_order_item_meta($item_id, self::AMELIA);
+
+            if ($data &&
+                is_array($data) &&
+                !isset($data['processed']) &&
+                !empty($data['type']) &&
+                $data['type'] !== 'package' &&
+                $data['type'] !== 'event'
+            ) {
+                if ($data['couponCode']) {
+                    $couponCode = $data['couponCode'];
+                }
+
+                $serviceBookingData = [
+                    'providerId'         => $data['providerId'],
+                    'locationId'         => $data['locationId'],
+                    'bookingStart'       => $data['bookingStart'],
+                    'bookingEnd'         => $data['bookingEnd'],
+                    'notifyParticipants' => $data['notifyParticipants'],
+                    'status'             => $data['status'],
+                    'utcOffset'          => $data['bookings'][0]['utcOffset'],
+                    'extras'             => $data['bookings'][0]['extras'],
+                    'persons'            => $data['bookings'][0]['persons'],
+                    'duration'           => $data['bookings'][0]['duration'],
+                    'couponId'           => $data['couponId'],
+                    'couponCode'         => $data['couponCode'],
+                    'wcOrderItemId'      => $item_id,
+                ];
+
+                if (!empty($data['serviceId'])) {
+                    $serviceBookingData['serviceId'] = $data['serviceId'];
+                }
+
+                $key = isset($data['wcItemHash']) ? $data['wcItemHash'] : 0;
+
+                $groupData[$key][] = $serviceBookingData;
+            }
+        }
+
+        foreach ($groupData as $key => $value) {
+            array_shift($groupData[$key]);
+        }
+
+        foreach ($order->get_items() as $item_id => $order_item) {
+            $data = wc_get_order_item_meta($item_id, self::AMELIA);
+
+            $key = $data && is_array($data) && isset($data['wcItemHash']) ? $data['wcItemHash'] : 0;
+
+            try {
+                if ((!$inspectRules || self::isValid($order->get_status(), $data) !== false) &&
+                    !array_key_exists($key, self::$processedAmeliaItems) &&
+                    !isset($data['processed'])
+                ) {
+                    self::$processedAmeliaItems[$key] = true;
+
+                    $customFields = !empty($data['allCustomFields']) ?
+                        $data['allCustomFields'] : $data['bookings'][0]['customFields'];
+
+                    self::setAmeliaItemData($data, $order, $couponCode, $groupData ? $groupData[$key] : [], $paid, $item_id);
+
+                    /** @var ReservationServiceInterface $reservationService */
+                    $reservationService = self::$container->get('application.reservation.service')->get($data['type']);
+
+                    $reservation = $reservationService->getNew(false, false, !$paid);
+
+                    $result = $reservationService->processRequest($data, $reservation, true);
+
+                    if (!$paid && $result->getResult() === CommandResult::RESULT_ERROR) {
+                        $cartUrl = self::getPageUrl($data);
+
+                        $removeAppointmentMessage = FrontendStrings::getCommonStrings()['wc_appointment_is_removed'];
+
+                        $errorMessage = self::getBookingErrorMessage($result, $data['type']);
+
+                        if ($errorMessage) {
+                            throw new \Exception($errorMessage . "<a href='{$cartUrl}'>{$removeAppointmentMessage}</a>");
+                        }
+                    }
+
+                    /** @var PaymentRepository $paymentRepository */
+                    $paymentRepository = self::$container->get('domain.payment.repository');
+
+                    /** @var Collection $payments */
+                    $payments = $paymentRepository->getByEntityId($data['payment']['wcOrderId'], 'wcOrderId');
+
+                    /** @var Payment $payment */
+                    foreach ($payments->getItems() as $payment) {
+                        foreach ($order->get_items() as $itemId => $orderItem) {
+                            if ($payment->getWcOrderItemId() && $payment->getWcOrderItemId()->getValue() === (int)$itemId) {
+                                $paymentRepository->updateFieldById(
+                                    $payment->getId()->getValue(),
+                                    ($orderItem->get_total() > 0 ? $orderItem->get_total() : 0) + $orderItem->get_total_tax(),
+                                    'amount'
+                                );
+                            }
+                        }
+                    }
+
+                    $data['bookings'][0]['customFields'] = $customFields;
+
+                    if ($result && !$order->get_user_id()) {
+                        /** @var UserRepository $userRepository */
+                        $userRepository = self::$container->get('domain.users.repository');
+
+                        $user = $userRepository->getByEmail($result->getData()['customer']['email']);
+
+                        $data['externalId'] = $user && $user->getExternalId() ? $user->getExternalId()->getValue() : null;
+                    }
+
+                    if (self::shouldAmeliaActionsRun($data['cacheData'])) {
+                        if ($paid) {
+                            $reservationService->runPostBookingActions($result);
+                        } else {
+                            $data['result'] = $result->getData();
+                        }
+                    }
+
+                    $data['recurring'] = [];
+
+                    wc_update_order_item_meta($item_id, self::AMELIA, $data);
+                }
+            } catch (ContainerException $e) {
+            } catch (\Exception $e) {
+                if (!$paid) {
+                    throw new \Exception($e->getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * Manage payment created from payment link
+     *
+     * @param $order
+     */
+    private static function managePaymentCreatedFromPaymentLink($order)
+    {
+        foreach ($order->get_items() as $item_id => $order_item) {
+            $data = wc_get_order_item_meta($item_id, self::AMELIA);
+
+            $key = $data && is_array($data) && isset($data['wcItemHash']) ? $data['wcItemHash'] : 0;
+
+            try {
+                if (self::isValid($order->get_status(), $data) !== false &&
+                    !array_key_exists($key, self::$processedAmeliaItems) &&
+                    !isset($data['processed']) &&
+                    isset($data['payment']['fromLink']) &&
+                    $data['payment']['fromLink']
+                ) {
+                    self::$processedAmeliaItems[$key] = true;
+
+                    self::setAmeliaItemData($data, $order, $data['couponCode'], [], true, $item_id);
+
+                    if (isset($data['payment']['newPayment']) && $data['payment']['newPayment']) {
+                        /** @var PaymentApplicationService $paymentAS */
+                        $paymentAS = self::$container->get('application.payment.service');
+
+                        $data['payment']['gateway'] = 'wc';
+                        $linkPayment = $paymentAS->insertPaymentFromLink($data['payment'], $order_item->get_total() + ($order_item->get_total_tax() ?: 0), $data['type']);
+                        $data['payment'] = $linkPayment->toArray();
+                    } else {
+                        /** @var PaymentRepository $paymentRepository */
+                        $paymentRepository = self::$container->get('domain.payment.repository');
+
+                        $paymentRepository->updateFieldById($data['payment']['id'], $data['payment']['status'], 'status');
+                        $paymentRepository->updateFieldById($data['payment']['id'], $data['payment']['gatewayTitle'], 'gatewayTitle');
+                        $paymentRepository->updateFieldById($data['payment']['id'], DateTimeService::getNowDateTimeObjectInUtc()->format('Y-m-d H:i:s'), 'dateTime');
+                        $paymentRepository->updateFieldById($data['payment']['id'], 'wc', 'gateway');
+                        $paymentRepository->updateFieldById($data['payment']['id'], $order_item->get_total() + ($order_item->get_total_tax() ?: 0) , 'amount');
+                    }
+
+                    $payment = PaymentFactory::create($data['payment']);
+                    if (!($payment instanceof Payment)) {
+                        return;
+                    }
+
+                    /** @var ReservationServiceInterface $reservationService */
+                    $reservationService = self::$container->get('application.reservation.service')->get(
+                        $payment->getEntity()->getValue()
+                    );
+
+                    $requestedStatus = $reservationService->getWcStatus(
+                        $data['payment']['entity'],
+                        $order->get_status(),
+                        'booking',
+                        true
+                    );
+                    if ($requestedStatus !== false) {
+                        self::updateBookingStatus($payment, $data['payment']['entity'], $order);
+                    } else if ($data['payment']['entity'] === Entities::APPOINTMENT) {
+                        /** @var SettingsService $settingsDS */
+                        $settingsDS = self::$container->get('domain.settings.service');
+                        /** @var AppointmentApplicationService $appointmentAS */
+                        $appointmentAS = self::$container->get('application.booking.appointment.service');
+
+                        $reservation = $reservationService->getReservationByPayment($payment, true);
+
+                        $data = $reservation->getData();
+
+                        $bookableSettings = $data['bookable']['settings'];
+                        $entitySettings = !empty($bookableSettings) && json_decode($bookableSettings, true) ? json_decode($bookableSettings, true) : null;
+                        $paymentLinksSettings = !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ? $entitySettings['payments']['paymentLinks'] : null;
+                        $changeBookingStatus =  $paymentLinksSettings && $paymentLinksSettings['changeBookingStatus'] !== null ? $paymentLinksSettings['changeBookingStatus'] :
+                            $settingsDS->getSetting('payments', 'paymentLinks')['changeBookingStatus'];
+
+                        //call woo (update or create?) rules here
+                        if ($changeBookingStatus && $data['booking']['status'] !== BookingStatus::APPROVED) {
+                            $appointmentAS->updateBookingStatus($payment->getId()->getValue());
+
+                            $reservationData = $reservationService->getReservationByPayment($payment, true);
+
+                            do_action('AmeliaBookingAddedBeforeNotify', $reservationData, self::$container);
+
+                            BookingAddedEventHandler::handle(
+                                $reservationData,
+                                self::$container
+                            );
+                        }
+                    }
+                }
+            } catch (ContainerException $e) {
+            } catch (\Exception $e) {
+            }
+        }
+    }
+
+    /**
+     * Manage bookings after order status is changed.
+     *
+     * @param $order
+     * @throws BookingCancellationException
+     * @throws ContainerException
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     */
+    private static function manageOrderUpdateStatus($order)
+    {
+        /** @var PaymentRepository $paymentRepository */
+        $paymentRepository = self::$container->get('domain.payment.repository');
+
+        foreach ($order->get_items() as $item_id => $order_item) {
+            $data = wc_get_order_item_meta($item_id, self::AMELIA);
+
+            if (self::isValid($order->get_status(), $data) !== false &&
+                isset($data['processed'], $data['payment']['wcOrderId'])
+            ) {
+                /** @var Collection $payments */
+                $payments = $paymentRepository->getByEntityId($order->get_id(), 'wcOrderId');
+
+                /** @var Payment $payment */
+                foreach ($payments->getItems() as $payment) {
+                    try {
+                        self::updateBookingStatus(
+                            $payment,
+                            $payment->getEntity() ? $payment->getEntity()->getValue() : $data['type'],
+                            $order
+                        );
+                    } catch (ContainerException $e) {
+                    } catch (\Exception $e) {
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $order
+     * @return void
+     * @throws ContainerException
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     */
+    private static function completeBookings($order)
+    {
+        foreach ($order->get_items() as $item_id => $order_item) {
+            $data = wc_get_order_item_meta($item_id, self::AMELIA);
+
+            if ($data && is_array($data)) {
+                $data['processed'] = true;
+
+                wc_update_order_item_meta($item_id, self::AMELIA, $data);
+
+                if (isset($data['result']) && self::shouldAmeliaActionsRun($data['cacheData'])) {
+                    /** @var ReservationServiceInterface $reservationService */
+                    $reservationService = self::$container->get('application.reservation.service')->get($data['type']);
+
+                    /** @var CommandResult $result */
+                    $result = new CommandResult();
+
+                    $result->setResult(CommandResult::RESULT_SUCCESS);
+                    $result->setMessage('Successfully get booking');
+                    $result->setDataInResponse(false);
+                    $result->setData($data['result']);
+
+                    try {
+                        $reservationService->runPostBookingActions($result);
+                    } catch (ContainerException $e) {
+                    } catch (\Exception $e) {
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Manage bookings after order is failed on creation.
+     *
+     * @param $order
+     * @throws BookingCancellationException
+     * @throws ContainerException
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     */
+    private static function manageOrderCreationFailed($order)
+    {
+        /** @var PaymentRepository $paymentRepository */
+        $paymentRepository = self::$container->get('domain.payment.repository');
+
+        foreach ($order->get_items() as $item_id => $order_item) {
+            $data = wc_get_order_item_meta($item_id, self::AMELIA);
+
+            if ($data && is_array($data)) {
+                /** @var Collection $payments */
+                $payments = $paymentRepository->getByEntityId($item_id, 'wcOrderItemId');
+
+                if ($payments->length() === 1) {
+                    /** @var Payment $firstPayment */
+                    $firstPayment = $payments->getItem($payments->keys()[0]);
+
+                    /** @var Collection $followingPayments */
+                    $followingPayments = $paymentRepository->getByEntityId(
+                        $firstPayment->getId()->getValue(),
+                        'parentId'
+                    );
+
+                    /** @var Payment $payment */
+                    foreach ($followingPayments->getItems() as $payment) {
+                        $payments->addItem($payment);
+                    }
+                }
+
+                /** @var Payment $payment */
+                foreach ($payments->getItems() as $payment) {
+                    $paymentRepository->updateFieldById(
+                        $payment->getId()->getValue(),
+                        'pending',
+                        'status'
+                    );
+
+                    $paymentRepository->updateFieldById(
+                        $payment->getId()->getValue(),
+                        0,
+                        'amount'
+                    );
+
+                    try {
+                        switch ($data['type']) {
+                            case (Entities::APPOINTMENT):
+                                self::bookingAppointmentUpdated($payment, 'rejected', false);
+                                break;
+
+                            case (Entities::EVENT):
+                                self::bookingEventUpdated($payment, 'rejected', false);
+                                break;
+
+                            case (Entities::PACKAGE):
+                                self::bookingPackageUpdated($payment, 'rejected', false);
+                                break;
+                        }
+                    } catch (ContainerException $e) {
+                    } catch (\Exception $e) {
+                    }
+                }
+            }
+        }
     }
 }

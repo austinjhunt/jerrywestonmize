@@ -3,7 +3,7 @@ Contributors: mailpoet, woocommerce, automattic
 Tags: email, email marketing, post notification, woocommerce emails, email automation, newsletter, newsletter builder, newsletter subscribers
 Requires at least: 6.3
 Tested up to: 6.4
-Stable tag: 4.42.1
+Stable tag: 4.44.1
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -185,13 +185,13 @@ You have the liberty to choose how you send your emails: your own host (default,
 
 = Why should I use the MailPoet Sending Service? =
 
-Our free and paid plans offer unlimited amount of emails.
-
 Our global deliverability rate is 98.5%, often exceeding industry standards. We monitor each and every one of the millions of emails that we send for our users.
 
 Whether you send 10 or 100,000 emails a day, the MailPoet Sending Service routinely handles small business newsletters through to huge mailing lists with tens of thousands of subscribers.
 
 We highly encourage not to send with your host, [here’s why](https://kb.mailpoet.com/article/154-why-you-shouldnt-send-with-your-host).
+
+If you're just starting with your newsletter, we offer a free plan to get you started.
 
 = Can I filter specific categories out of my post notification? =
 
@@ -227,6 +227,28 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 6. WooCommerce emails
 
 == Changelog ==
+
+= 4.44.1 - 2024-02-26 =
+* Improvement: utm_source and utm_type parameters are added to links by default;
+* Fixed: remove HTML tags in subjects derived  from post titles.
+
+= 4.44.0 - 2024-02-19 =
+* Updated: Gutenberg dependencies;
+* Improved: order created/completed/cancelled automation triggers can now send transactional emails;
+* Fixed: transactional emails in automations fail to send in some cases.
+
+= 4.43.1 - 2024-02-12 =
+* Fixed: automation and legacy emails not rendering if one has an invalid option;
+* Fixed: sending tasks incorrectly marked as invalid;
+* Fixed: tutorial button on email templates and send email pages.
+
+= 4.43.0 - 2024-02-05 =
+* Improved: during import, "Update existing subscriber status" no longer requires "Update existing subscriber info" to be enabled;
+* Fixed: error "EntityManager is Closed" during sending on MySQL 8;
+* Fixed: error "new entity was found through the relationship" during email sending;
+* Fixed: Some strings where not translateable;
+* Fixed: errors when sending some emails;
+* Fixed: automation listing trash and delete action UI behavior.
 
 = 4.42.1 - 2024-01-30 =
 * Improved: Display sender domain authentication notices in Automations;

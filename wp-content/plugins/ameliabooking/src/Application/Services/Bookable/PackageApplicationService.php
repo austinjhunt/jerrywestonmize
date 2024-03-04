@@ -899,6 +899,11 @@ class PackageApplicationService extends AbstractPackageApplicationService
 
             $id = $packageCustomerService->getId()->getValue();
 
+            $sharedPackageCustomerServices = $packageCustomer->getBookingsCount() && $packageCustomer->getBookingsCount()->getValue() ?
+                array_filter($packageCustomerServices->toArray(), function($element) use ($packageCustomer, $packageCustomerService) {
+                return $element['packageCustomer']['id'] === $packageCustomer->getId()->getValue() && $element['id'] !== $packageCustomerService->getId()->getValue();
+            }) : [];
+
             /** @var Id  $couponId */
             $couponId = $packageCustomer->getCouponId() ? $packageCustomer->getCouponId()->getValue() : null;
 
@@ -945,6 +950,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
                     'available'  => $packageCustomerService->getBookingsCount()->getValue(),
                     'sharedCapacity' => $packageCustomer->getBookingsCount() &&
                         $packageCustomer->getBookingsCount()->getValue(),
+                    'sharedPackageCustomerServices' => $sharedPackageCustomerServices,
                     'payments' => $packageCustomer->getPayments()->toArray(),
                     'coupon' => $coupon ?: null
                 ];
@@ -1015,6 +1021,11 @@ class PackageApplicationService extends AbstractPackageApplicationService
                     foreach ($packageValues as $id => $values) {
                         $bookedCount = !empty($customerData[$customerId][$serviceId][$packageId][$id]) ?
                             $customerData[$customerId][$serviceId][$packageId][$id] : 0;
+
+                        foreach ($values['sharedPackageCustomerServices'] as $sharedService) {
+                            $bookedCount += !empty($customerData[$customerId][$sharedService['serviceId']][$packageId][$sharedService['id']]) ?
+                                $customerData[$customerId][$sharedService['serviceId']][$packageId][$sharedService['id']] : 0;
+                        }
 
                         $result[$customerId][$packageId][$serviceId][$id] = array_merge(
                             $values,

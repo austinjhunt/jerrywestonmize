@@ -88,10 +88,13 @@ add_filter('extendbuilder_wp_data', function ($value) {
 
     return $value;
 });
-
 add_filter('extendbuilder_wp_data', function ($value) {
 
-    $value['colibri_page_builder_wpmu_nonce'] = wp_create_nonce( 'colibri_page_builder_wpmu_nonce' );
+	$value['cp_shortcode_refresh_nonce'] = wp_create_nonce( 'cp_shortcode_refresh_nonce' );
+	$value['extend_builder_api_nonce'] = wp_create_nonce( 'extend_builder_api_nonce' );
+    $value['colibri_plugin_install_activate_nonce'] = wp_create_nonce( 'colibri_plugin_install_activate_nonce' );
+	$value['colibri_page_builder_wpmu_nonce'] = wp_create_nonce( 'colibri_page_builder_wpmu_nonce' );
+
     $value['forminator_is_compatible'] = colibri_plugin_is_compatible('forminator');
 //	$value['smush_is_compatible'] = colibri_plugin_is_compatible('wp-smushit');
 //	$value['hummingbird_is_compatible'] = colibri_plugin_is_compatible('hummingbird-performance');
@@ -225,6 +228,8 @@ add_action('customize_controls_print_scripts', function () {
                 'try_url'                  => colibri_try_url(),
             'rest_url' => rest_url(),
             'plugin_url' => PageBuilder::instance()->rootURL(),
+            'cp_shortcode_refresh_nonce' =>  wp_create_nonce('cp_shortcode_refresh_nonce'),
+            'extend_builder_api_nonce' =>  wp_create_nonce('extend_builder_api_nonce'),
             "shapes_url" => get_template_directory_uri() . '/resources/images/header-shapes/',
                 'defaults'                 => array(),
                 'content'                  => array(

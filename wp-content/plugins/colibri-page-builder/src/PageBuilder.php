@@ -1399,6 +1399,8 @@ class PageBuilder
 
 	public function shortcodeRefresh()
 	{
+
+		check_ajax_referer( 'cp_shortcode_refresh_nonce' );
 		if (!is_user_logged_in() || !current_user_can('edit_theme_options')) {
 			die();
 		}

@@ -7,35 +7,32 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\EmailEditor\Engine\Renderer\BlockRenderer;
 use MailPoet\EmailEditor\Engine\SettingsController;
+use MailPoet\EmailEditor\Integrations\Utils\DomDocumentHelper;
 
 /**
  * Renders a button block.
  * @see https://www.activecampaign.com/blog/email-buttons
  * @see https://documentation.mjml.io/#mj-button
  */
-
 class Button implements BlockRenderer {
   public function render($blockContent, array $parsedBlock, SettingsController $settingsController): string {
     // Don't render empty buttons
     if (empty($parsedBlock['innerHTML'])) {
       return '';
     }
-    $buttonDom = new \DOMDocument();
-    $buttonDom->loadHTML($parsedBlock['innerHTML']);
-    $buttonLink = $buttonDom->getElementsByTagName('a')->item(0);
+    $domHelper = new DomDocumentHelper($parsedBlock['innerHTML']);
+    $buttonLink = $domHelper->findElement('a');
 
-    if (!$buttonLink instanceof \DOMElement) {
-      return '';
-    }
+    if (!$buttonLink) return '';
 
-    $buttonOriginalWrapper = $buttonDom->getElementsByTagName('div')->item(0);
-    $buttonClasses = $buttonOriginalWrapper instanceof \DOMElement ? $buttonOriginalWrapper->getAttribute('class') : '';
+    $buttonOriginalWrapper = $domHelper->findElement('div');
+    $buttonClasses = $buttonOriginalWrapper ? $domHelper->getAttributeValue($buttonOriginalWrapper, 'class') : '';
 
     $markup = $this->getMarkup();
     $markup = str_replace('{classes}', $buttonClasses, $markup);
 
     // Add Link Text
-    $markup = str_replace('{linkText}', $buttonLink->textContent ?: '', $markup);
+    $markup = str_replace('{linkText}', $this->getElementInnerHTML($buttonLink) ?: '', $markup);
     $markup = str_replace('{linkUrl}', $buttonLink->getAttribute('href') ?: '#', $markup);
 
     // Width
@@ -115,5 +112,20 @@ class Button implements BlockRenderer {
           </td>
         </tr>
       </table>';
+  }
+
+  /**
+   * Because the button text can contain highlighted text, we need to get the inner HTML of the button
+   */
+  private function getElementInnerHTML(\DOMElement $element): string {
+    $innerHTML = '';
+    $children = $element->childNodes;
+    foreach ($children as $child) {
+      if (!$child instanceof \DOMNode) continue;
+      $ownerDocument = $child->ownerDocument;
+      if (!$ownerDocument instanceof \DOMDocument) continue;
+      $innerHTML .= $ownerDocument->saveXML($child);
+    }
+    return $innerHTML;
   }
 }

@@ -70,13 +70,18 @@ $entries['app.connection'] = function () {
 
     $mysqliEnabled = $settingsService->getSetting('db', 'mysqliEnabled');
 
+    $dbSettingsPort = $settingsService->getSetting('db', 'port');
+
+    $port = !empty($dbSettingsPort) ? $dbSettingsPort : 3306;
+
     if (!extension_loaded('pdo_mysql') || $mysqliEnabled) {
         return new \AmeliaBooking\Infrastructure\DB\MySQLi\Connection(
             $config('host'),
             $config('database'),
             $config('username'),
             $config('password'),
-            $config('charset')
+            $config('charset'),
+            $port
         );
     }
 
@@ -85,7 +90,8 @@ $entries['app.connection'] = function () {
         $config('database'),
         $config('username'),
         $config('password'),
-        $config('charset')
+        $config('charset'),
+        $port
     );
 };
 

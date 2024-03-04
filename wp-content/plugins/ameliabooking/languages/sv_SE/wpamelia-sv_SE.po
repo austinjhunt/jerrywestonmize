@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Amelia\n"
-"POT-Creation-Date: 2024-01-17 18:46+0100\n"
-"PO-Revision-Date: 2024-01-17 18:46+0100\n"
+"POT-Creation-Date: 2024-02-13 17:03+0100\n"
+"PO-Revision-Date: 2024-02-13 17:03+0100\n"
 "Last-Translator: \n"
 "Language-Team: Amelia\n"
 "Language: sv_SE\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;gettext;gettext_noop;_\n"
@@ -24,7 +24,7 @@ msgid "Add"
 msgstr "Lägg till"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:27
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1683
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1684
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:540
 msgid "All"
 msgstr "Alla"
@@ -109,7 +109,7 @@ msgid "Customer has already booked this appointment"
 msgstr "Du har redan bokat denna avtalad tid"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:44
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1811
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1812
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:323
 msgid "Specific Date"
 msgstr "Visa specifik kategori"
@@ -135,7 +135,7 @@ msgid "Expiration date"
 msgstr "Förfallodatum"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:49
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1713
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1714
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:506
 msgid "Tickets"
 msgstr "Biljetter"
@@ -203,7 +203,7 @@ msgid "Here you can enable/disable On-Site payments for this service"
 msgstr "Här kan du aktivera/inaktivera direktbetalningar för denna tjänst"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:60
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1237
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1238
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:117
 msgid "Open"
 msgstr "Öppen"
@@ -214,7 +214,7 @@ msgstr "Öppen"
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1445
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1565
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1574
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1686
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1687
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:153
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:408
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:436
@@ -296,14 +296,14 @@ msgstr "Återkommande"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:73
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1336
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1800
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1801
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:310
 msgid "Daily"
 msgstr "Dagligen"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:74
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1338
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1802
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1803
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:312
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:856
 msgid "Monthly"
@@ -311,7 +311,7 @@ msgstr "Månadsvis"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:75
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1337
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1801
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1802
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:311
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:857
 msgid "Weekly"
@@ -353,7 +353,7 @@ msgstr "Paketbokningar"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:83
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1345
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1804
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1805
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:314
 msgid "Every:"
 msgstr "Varje:"
@@ -441,7 +441,7 @@ msgstr "Obegränsad"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:100
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:948
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1326
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1327
 #, fuzzy
 msgid "Order"
 msgstr "WooCommerce beställnings-id"
@@ -502,7 +502,7 @@ msgstr "Kolla in det Event List 2,0"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:112
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:37
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1457
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1458
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:203
 msgid "Close"
 msgstr "Stäng"
@@ -809,7 +809,7 @@ msgid "Activated with Envato"
 msgstr "Aktiverad med Envato"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:186
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1487
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1488
 msgid "Event Description"
 msgstr "Eventbeskrivning"
 
@@ -938,7 +938,7 @@ msgstr "Vänligen fyll i detta fält."
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:611
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:557
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1009
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1259
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1260
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:164
 msgid "Category"
 msgstr "Kategori"
@@ -948,7 +948,7 @@ msgstr "Kategori"
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:476
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:71
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:560
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1459
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1460
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:175
 msgid "Event"
 msgstr "Evenemang"
@@ -1607,14 +1607,14 @@ msgid "Load Page"
 msgstr "Ladda sidan"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:335
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1508
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1509
 msgid "Select Category"
 msgstr "Välj kategori"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:336
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1033
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1205
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1512
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1513
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:258
 msgid "Select Service"
 msgstr "Välj Tjänst"
@@ -1626,7 +1626,7 @@ msgstr "Välj Tjänst"
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:341
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:417
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:879
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1509
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1510
 msgid "Select Employee"
 msgstr "Välj medarbetare"
 
@@ -1638,17 +1638,17 @@ msgstr "Välj medarbetare"
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:339
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:419
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:882
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1510
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1511
 msgid "Select Location"
 msgstr "Välj Plats"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:339
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1511
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1512
 msgid "Select Package"
 msgstr "Välj paket"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:340
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1513
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1514
 msgid "Select Event"
 msgstr "Välj ett event"
 
@@ -2054,7 +2054,7 @@ msgstr "Redigera avisering"
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:669
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:800
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1227
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1371
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1372
 msgid "Email"
 msgstr "E-post"
 
@@ -3242,7 +3242,7 @@ msgid "Date Purchased"
 msgstr "Inköpsdatum"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:788
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1653
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1654
 msgid "Package Details"
 msgstr "Paketdetaljer"
 
@@ -3480,7 +3480,7 @@ msgid "Please select select at least one employee"
 msgstr "Välj minst en medarbetare"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:840
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1385
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1386
 msgid "Service Details"
 msgstr "Information om tjänsten"
 
@@ -3586,7 +3586,7 @@ msgid "Add Employee"
 msgstr "Lägg till medarbetare"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:887
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1420
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1421
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:255
 msgid "Available"
 msgstr "Tillgänglig"
@@ -4131,8 +4131,8 @@ msgid "Used"
 msgstr "Använda"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1081
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1439
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1462
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1440
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1463
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:109
 msgid "Event Info"
 msgstr "Information"
@@ -4146,7 +4146,7 @@ msgid "The refund amount is"
 msgstr "Återbetalningsbeloppet är"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1085
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1700
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1701
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:73
 msgid "Deposit"
 msgstr "Deposition"
@@ -4194,12 +4194,12 @@ msgid "(+tax)"
 msgstr "(+moms)"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1098
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1242
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1243
 msgid "Event Price"
 msgstr "Evenemang Pris"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1112
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1287
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1288
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:176
 msgid "Appointment ID"
 msgstr "Boknings-ID"
@@ -4389,7 +4389,7 @@ msgstr "Välj hur du vill exportera deltagare till evenemanget"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1155
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:894
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1413
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1414
 msgid "Service Category"
 msgstr "Tjänst kategori"
 
@@ -4987,11 +4987,11 @@ msgstr "Plats hållare för avisering"
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1331
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:139
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:326
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1253
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1258
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1260
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1295
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1421
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1254
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1259
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1261
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1296
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1422
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:162
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:165
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:181
@@ -5044,7 +5044,7 @@ msgstr ""
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:64
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:324
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:556
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1296
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1297
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:182
 msgid "Employee"
 msgstr "Anställd"
@@ -5053,19 +5053,19 @@ msgstr "Anställd"
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1435
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1494
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1510
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1644
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1645
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:144
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:418
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:434
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:454
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:100
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:558
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1297
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1298
 msgid "Location"
 msgstr "Plats"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1335
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1803
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1804
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:313
 msgid "Repeat:"
 msgstr "Upprepa:"
@@ -5089,19 +5089,19 @@ msgid "Months"
 msgstr "Månad"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1346
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1808
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1809
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:319
 msgid "On:"
 msgstr "På:"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1347
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1805
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1806
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:315
 msgid "Until:"
 msgstr "Fram tills:"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1348
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1810
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1811
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:322
 msgid "Time(s):"
 msgstr "Tid:"
@@ -5109,7 +5109,7 @@ msgstr "Tid:"
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1349
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1620
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:305
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1600
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1601
 msgid "Recurring Appointments"
 msgstr "Väntande tidsbeställningar"
 
@@ -5124,7 +5124,7 @@ msgstr "Du kan redigera eller radera varje bokning"
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:431
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:642
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:55
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1293
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1294
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:179
 msgid "Date"
 msgstr "Datum"
@@ -5279,7 +5279,7 @@ msgstr "Antal personer"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1391
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:737
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1379
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1380
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:231
 msgid "Categories"
 msgstr "Kategorier"
@@ -5456,14 +5456,14 @@ msgid "Date range"
 msgstr "Datumintervall"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1439
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1264
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1265
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:183
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:218
 msgid "Show more"
 msgstr "Visa mer"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1440
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1265
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1266
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:184
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:217
 msgid "Show less"
@@ -5490,7 +5490,7 @@ msgid "Catalog Booking Form"
 msgstr "Katalog bokningsformulär"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1446
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1500
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1501
 msgid "Catalog"
 msgstr "Katalog"
 
@@ -5577,7 +5577,7 @@ msgstr "Det finns ett specialpaket med denna tjänst, kolla in dem!"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1470
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1475
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1689
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1690
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:354
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:409
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:547
@@ -5669,9 +5669,9 @@ msgid "includes"
 msgstr "inkluderar"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1487
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1673
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1675
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1697
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1674
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1676
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1698
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:411
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:561
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:566
@@ -5712,7 +5712,7 @@ msgstr "Lägg till fler möten"
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:362
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:406
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:425
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1268
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1269
 msgid "All slots are selected"
 msgstr "Alla slots är valda"
 
@@ -5806,35 +5806,35 @@ msgid "Specific date"
 msgstr "Specifikt datum"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1532
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1812
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1813
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:324
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:381
 msgid "First"
 msgstr "Förnamn"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1533
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1813
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1814
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:325
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:382
 msgid "Second"
 msgstr "Sekund"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1534
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1814
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1815
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:326
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:383
 msgid "Third"
 msgstr "Tredje"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1535
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1815
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1816
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:327
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:384
 msgid "Fourth"
 msgstr "Fjärde"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1536
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1816
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1817
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:328
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:385
 msgid "Last"
@@ -5876,7 +5876,7 @@ msgid "Appointment Repeats"
 msgstr "Återkommande bokningar"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1545
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1806
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1807
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:316
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:393
 msgid "Every"
@@ -5891,7 +5891,7 @@ msgstr "på"
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1547
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:108
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:395
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1469
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1470
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:202
 msgid "at"
 msgstr "datum"
@@ -5990,7 +5990,7 @@ msgid "Warning"
 msgstr "Varning"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1580
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1412
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1413
 msgid "Main Content"
 msgstr "Huvudsakligt innehåll"
 
@@ -6013,7 +6013,7 @@ msgid "Layout"
 msgstr "Layout"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1588
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1338
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1339
 msgid "Fonts and colors"
 msgstr "Typsnitt och färger"
 
@@ -6070,12 +6070,12 @@ msgid "Popup Buttons"
 msgstr "Popup-knappar"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1602
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1642
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1643
 msgid "Primary Button Type"
 msgstr "Primär knapptyp"
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1603
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1643
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1644
 msgid "Secondary Button Type"
 msgstr "Sekundär knapptyp"
 
@@ -6190,145 +6190,151 @@ msgid "Payment type, deposit payment..."
 msgstr "Betalningstyp, insättning..."
 
 #: src/Infrastructure/WP/Translations/BackendStrings.php:1640
+#, fuzzy
+#| msgid "Input Field"
+msgid "Service Input Field"
+msgstr "Inmatningsfält"
+
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1641
 msgid "Location Input Field"
 msgstr "Namn på plats"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1641
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1642
 msgid "Employee Input Field"
 msgstr "E-post för anställda"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1645
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1646
 msgid "Heading"
 msgstr "Väntande"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1646
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1647
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:234
 msgid "Info"
 msgstr "Info"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1647
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1648
 msgid "Popup Heading"
 msgstr "Väntande"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1648
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1649
 msgid "Extras Heading"
 msgstr "Tillvalsrubrik"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1649
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1650
 msgid "Extras Description"
 msgstr "Tillvalsbeskrivning"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1650
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1651
 msgid "Extras Duration"
 msgstr "Tillvalens varaktighet"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1651
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1652
 msgid "Services and Packages Overview"
 msgstr "Översikt över tjänster och paket"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1652
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1653
 msgid "Set up Services and Packages view"
 msgstr "Konfigurera vyn tjänster och paket"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1654
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1655
 msgid "Set up Package detailed view"
 msgstr "Ange detaljerad visning av paketet"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1656
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1657
 msgid "Card"
 msgstr "Kort"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1657
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1658
 msgid "Total Number of Packages"
 msgstr "Maximalt antal platser är"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1660
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1661
 msgid "“All/Packages/Services” filter option"
 msgstr "Filteralternativet \"Alla/Paket/Tjänster\""
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1661
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1662
 msgid "\"View Employee\" Button Type"
 msgstr "Knapptyp \"Visa medarbetare\""
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1662
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1663
 msgid "Book Option on Employee Dialog"
 msgstr "Bokningsalternativ i dialogrutan för anställda"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1663
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1664
 msgid "Employee Dialog"
 msgstr "E-post för anställda"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1664
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1665
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:261
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:262
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:562
 msgid "Employee information"
 msgstr "Information om medarbetare"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1665
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1666
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:563
 msgid "Book This Service"
 msgstr "E-posttjänst"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1666
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1667
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:564
 msgid "Book This Package"
 msgstr "Boka detta paket"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1667
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1668
 msgid "Package Category"
 msgstr "Ny kategori"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1668
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1669
 msgid "Package Duration"
 msgstr "Varaktighet"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1669
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1670
 msgid "Package Capacity"
 msgstr "Kapacitet"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1670
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1671
 msgid "Package Location"
 msgstr "Ny Plats"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1671
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1672
 msgid "Service Capacity"
 msgstr "Tjänst kategori"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1672
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1673
 msgid "Service Location"
 msgstr "Tjänstens varaktighet"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1674
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1691
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1675
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1692
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:550
 msgid "About Package"
 msgstr "Om paketet"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1676
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1677
 msgid "Packages Block"
 msgstr "Genomsnittligt antal bokningar"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1677
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1678
 msgid "“Filter by Employee” option"
 msgstr "Alternativet \"Filtrera efter medarbetare\""
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1678
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1679
 msgid "“Filter by Location” option"
 msgstr "Alternativet \"Filtrera efter plats\""
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1681
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1682
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:538
 msgid "Filter by Employee"
 msgstr "Redigera medarbetare"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1682
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1683
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:539
 msgid "Filter by Location"
 msgstr "Redigera plats"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1684
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1687
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1685
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1688
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:155
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:541
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:545
@@ -6336,190 +6342,190 @@ msgstr "Redigera plats"
 msgid "Packages"
 msgstr "Paket"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1685
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1686
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:174
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:542
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:543
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:140
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:327
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1281
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1422
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1282
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1423
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:173
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:243
 msgid "Services"
 msgstr "Tjänster"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1688
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1689
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:546
 msgid "View Employees"
 msgstr "Ny medarbetare"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1690
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1691
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:549
 msgid "In Package"
 msgstr "I paket"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1692
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1693
 msgid "This Service is available in a Package"
 msgstr "Denna tjänst är tillgänglig i ett paket"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1693
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1694
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:552
 msgid "View More Packages"
 msgstr "Visa mer"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1694
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1695
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:553
 msgid "View Less Packages"
 msgstr "Visa Meddelande"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1695
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1696
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:554
 msgid "Package includes"
 msgstr "Paketet innehåller"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1696
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1697
 msgid "Employee Price"
 msgstr "Anställd"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1698
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1699
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:133
 msgid "Extras Cost:"
 msgstr "Extra kostnad:"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1699
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1700
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:176
 msgid "Subtotal:"
 msgstr "Delsumma:"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1701
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1702
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:74
 msgid "(Paying now)"
 msgstr "(Betalar nu)"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1702
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1703
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:75
 msgid "Left to pay"
 msgstr "Kvar att betala"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1703
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1704
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:304
 msgid "Recurring Appointments:"
 msgstr "Återkommande bokningar:"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1704
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1705
 msgid "Event Tickets"
 msgstr "Event Tickets"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1705
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1706
 msgid "Set up visibility and labels of ticket selection"
 msgstr "Ställ in synlighet och etiketter för biljettval"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1706
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1707
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:514
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:232
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1159
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1537
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1538
 msgid "Calendar"
 msgstr "Kalender"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1707
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1708
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:510
 #, fuzzy
 #| msgid "Select Time"
 msgid "Select Tickets"
 msgstr "Välj tid"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1708
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1709
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:507
 msgid "Select the number of tickets that you want to book for each ticket type"
 msgstr "Välj antalet biljetter som du vill boka för varje biljettyp"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1709
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1710
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:508
 msgid "Ticket Types"
 msgstr "Typer av platsbiljett"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1710
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1711
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:517
 msgid "tickets left"
 msgstr "biljetter kvar"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1711
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1712
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:518
 msgid "ticket left"
 msgstr "biljett kvar"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1712
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1713
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:499
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1127
 msgid "Organizer"
 msgstr "Arrangör"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1714
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1715
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:258
 msgid "Coupon Limit Reached"
 msgstr "Kupongens gräns uppnådd"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1715
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1716
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:259
 msgid "Number of appointments with applied coupon is"
 msgstr "Antal bokningar med tillämpad kupong är"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1716
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1717
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:456
 #, fuzzy
 #| msgid "Total Number of Services"
 msgid "Total Services Booked"
 msgstr "Totalt antal personer:"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1719
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1720
 msgid "Step Tickets Tab"
 msgstr "Fliken Stegbiljetter"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1720
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1721
 #, fuzzy
 #| msgid "Customer Phone"
 msgid "Customer Panel Button"
 msgstr "Kundens telefon"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1721
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1722
 #, fuzzy
 #| msgid "Segments:"
 msgid "Coupon Segment"
 msgstr "Segment:"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1733
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1734
 msgid "Notice: Please select at least one panel."
 msgstr "Obs: Välj minst en panel."
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1734
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1419
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1735
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1420
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:237
 msgid "Search"
 msgstr "Sök"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1735
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1736
 msgid "Preselect Current Date"
 msgstr "Förvälj aktuellt datum"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1736
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1737
 msgid "AM - Search view"
 msgstr "Sökvy"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1737
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1738
 msgid "AM - Customer Panel"
 msgstr "Kundpanel"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1738
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1739
 msgid "AM - Employee Panel"
 msgstr "Medarbetarpanel"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1740
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1741
 msgid "Amelia - Search view"
 msgstr "Amelia - Sökvy"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1741
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1742
 msgid ""
 "Front-end Booking Search is shortcode that give your customers the "
 "possibility to search for appointment by selecting several filters so that "
@@ -6529,11 +6535,11 @@ msgstr ""
 "efter möte genom att välja flera filter så att de kan hitta de bästa "
 "tidsluckorna och tjänsterna för deras behov."
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1744
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1745
 msgid "Amelia - Customer Panel"
 msgstr "Amelia - Kundpanel"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1745
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1746
 msgid ""
 "Front-end Customer Panel is a shortcode that gives your customers the "
 "possibility to manage their bookings and profile information."
@@ -6541,11 +6547,11 @@ msgstr ""
 "Front-end Customer Panel är en kortkod som ger dina kunder möjlighet att "
 "hantera sina bokningar och profilinformation."
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1748
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1749
 msgid "Amelia - Employee Panel"
 msgstr "Amelia - Medarbetarpanel"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1749
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1750
 msgid ""
 "Front-end Employee Panel is a shortcode that gives your employees the "
 "possibility to manage their bookings, working hours, days off, assigned "
@@ -6555,103 +6561,103 @@ msgstr ""
 "möjlighet att hantera sina bokningar, arbetstider, lediga dagar, tilldelade "
 "tjänster och profilinformation."
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1762
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1763
 msgid "Amelia Profile Settings"
 msgstr "Inställningar för Amelia-profilen"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1763
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1764
 msgid "Amelia Users Settings"
 msgstr "Inställningar för Amelia-användare"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1764
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1765
 msgid "Enable Amelia"
 msgstr "Aktivera Amelia"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1765
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1766
 msgid "Enable Amelia Tabs on Profiles"
 msgstr "Aktivera Amelia-flikar på profiler"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1766
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1767
 msgid "Booking form on customer profile enabled"
 msgstr "Bokningsformulär på kundprofilen aktiverat"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1767
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1768
 msgid "Booking form tab enabled"
 msgstr "Fliken Bokningsformulär aktiverad"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1768
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1769
 msgid "Booking form on employee profile enabled"
 msgstr "Bokningsformuläret på medarbetarens profil aktiverat"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1769
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1770
 msgid "Booking form type"
 msgstr "Typ av bokningsformulär"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1770
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1771
 msgid "Booking form type on employee profile page"
 msgstr "Typ av bokningsformulär på medarbetarens profilsida"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1771
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1772
 msgid "Booking tab name"
 msgstr "Namn på bokningsfliken"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1772
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1773
 msgid "Book subtab name"
 msgstr "Namn på underfältet Bok"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1773
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1774
 msgid "Panel subtab name"
 msgstr "Namn på underfältet för panelen"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1774
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1775
 msgid "Booking on employee page tab name"
 msgstr "Fliktitel för bokning på medarbetarsidan"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1775
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1437
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1776
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1438
 msgid "Events List"
 msgstr "Eventlista"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1776
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1777
 msgid "Events Calendar"
 msgstr "Aktivitetskalender"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1777
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1778
 msgid "Automatically create Amelia Customers from WP Users "
 msgstr "Skapa automatiskt Amelia kund användare "
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1778
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1779
 msgid ""
 "After account activation, subscribers will be created as customers in Amelia "
 msgstr ""
 "Efter aktivering av kontot kommer prenumeranter att skapas som kunder i "
 "Amelia "
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1779
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1780
 msgid "Create Employees from WP Users with Amelia Employee Role"
 msgstr "Skapa medarbetare från WP-användare med Medarbetar-roll"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1780
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1781
 msgid "Create Amelia Employees"
 msgstr "Skapa medarbetare"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1781
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1782
 msgid "Create Amelia Customers"
 msgstr "Skapa kund"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1782
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1783
 msgid "Create Customers from WP Users with Amelia Customer Role"
 msgstr "Skapa kunder från WP-användare med Amelia-kundroll"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1783
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1784
 msgid "Enable guest booking"
 msgstr "Aktivera gästbokning"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1784
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1785
 msgid "Allow booking without a prior login"
 msgstr "Tillåt bokning utan föregående inloggning"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1796
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1797
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:307
 msgid ""
 "Some of the desired slots are busy. We offered you the nearest time slots "
@@ -6660,31 +6666,31 @@ msgstr ""
 "Några av de önskade tiderna är upptagna. Dessa är de närmaste tiderna vi kan "
 "erbjuda."
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1797
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1798
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:308
 msgid "Number of adjusted time slots: "
 msgstr "Antal ytterligare personer: "
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1798
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1799
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:309
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:854
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1223
 msgid "Repeat this appointment"
 msgstr "Datum för utnämningen"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1799
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1800
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:855
 msgid "Check this option if you want to create recurring appointments"
 msgstr ""
 "Aktivera det här alternativet om du vill tillåta dina kunder att schemalägga "
 "om sina egna avtalade tider"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1807
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1808
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:318
 msgid "until"
 msgstr "tills"
 
-#: src/Infrastructure/WP/Translations/BackendStrings.php:1809
+#: src/Infrastructure/WP/Translations/BackendStrings.php:1810
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:320
 msgid "Each:"
 msgstr "Varje:"
@@ -6742,7 +6748,7 @@ msgid "Client Time:"
 msgstr "Klient tid:"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:113
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1280
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1281
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:157
 msgid "Summary"
 msgstr "Sammanfattning"
@@ -6871,14 +6877,14 @@ msgstr ""
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:167
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:442
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1283
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1284
 msgid "people"
 msgstr "personer"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:168
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:132
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1229
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1372
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1373
 msgid "Phone"
 msgstr "Telefon"
 
@@ -6952,8 +6958,8 @@ msgstr "År"
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:199
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:480
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:548
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1241
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1424
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1242
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1425
 msgid "Free"
 msgstr "Gratis"
 
@@ -6966,7 +6972,7 @@ msgid "Please enter appointment date..."
 msgstr "Vänligen ange datum för mötet..."
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:217
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1239
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1240
 msgid "From"
 msgstr "Från"
 
@@ -7121,7 +7127,7 @@ msgstr "Nästa tjänst"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:300
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:765
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1349
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1350
 msgid "+more"
 msgstr "+mer"
 
@@ -7147,12 +7153,12 @@ msgid "Upload file here"
 msgstr "Ladda upp filen här"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:344
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1261
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1262
 msgid "No matching data"
 msgstr "Inga matchande uppgifter"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:346
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1263
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1264
 msgid "Bringing Anyone With You"
 msgstr "Tar du någon med dig"
 
@@ -7161,7 +7167,7 @@ msgid "The coupon field is mandatory"
 msgstr "Kupongfältet är obligatoriskt"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:441
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1282
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1283
 msgid "Service Subtotal"
 msgstr "Delsumma av tjänst"
 
@@ -7172,8 +7178,8 @@ msgid "Event Subtotal"
 msgstr "Delsumma"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:452
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1285
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1288
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1286
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1289
 msgid "Total Amount"
 msgstr "Total summa"
 
@@ -7200,12 +7206,12 @@ msgid "Show from date"
 msgstr "Visa från datum"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:489
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1235
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1236
 msgid "Event Type"
 msgstr "Händelsetyp"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:490
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1250
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1251
 msgid "Event Status"
 msgstr "Aktivitetsstatus"
 
@@ -7228,23 +7234,23 @@ msgstr ""
 "evenemanget"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:513
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1450
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1451
 msgid "Page"
 msgstr "Sida"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:515
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1452
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1453
 msgid "Begins"
 msgstr "Börjar"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:516
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1461
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1462
 msgid "About"
 msgstr "Om"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:519
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1231
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1397
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1398
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:241
 msgid "Go Back"
 msgstr "Gå tillbaka"
@@ -7262,7 +7268,7 @@ msgid "This service is available in a Package"
 msgstr "Denna tjänst är tillgänglig i ett paket"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:565
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1423
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1424
 msgid "No results"
 msgstr "Inga resultat"
 
@@ -8121,10 +8127,10 @@ msgstr "Lösenordet är angivet"
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:822
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:127
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:555
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1279
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1289
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1443
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1464
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1280
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1290
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1444
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1465
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:178
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:205
 msgid "Payment"
@@ -8316,7 +8322,7 @@ msgstr "Den här tjänsten har inga extrafunktioner"
 
 #: src/Infrastructure/WP/Translations/FrontendStrings.php:896
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:987
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1244
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1245
 msgid "Service Price"
 msgstr "Priset för tjänsten"
 
@@ -9139,7 +9145,7 @@ msgid "Enable usage for older IE browsers"
 msgstr "Aktivera stöd för äldre IE-browsers"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:273
-msgid "Hide unlocked options"
+msgid "Hide locked options"
 msgstr ""
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:274
@@ -10028,7 +10034,7 @@ msgid "Event description"
 msgstr "Evenemangsbeskrivning"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:532
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1236
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1237
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:219
 msgid "Event Location"
 msgstr "Evenemangsplats"
@@ -10300,7 +10306,7 @@ msgid "# of Hours in appointment"
 msgstr "# Antal timmar i möte"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:642
-#, no-php-format
+#, php-format
 msgid "% of load"
 msgstr "% belastning"
 
@@ -10392,7 +10398,7 @@ msgid "Upcoming appointments"
 msgstr "Kommande avtalade tider"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:706
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1518
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1519
 msgid "Show"
 msgstr "Visa"
 
@@ -10614,26 +10620,26 @@ msgid "Provider has appointments for this service"
 msgstr "Leverantören har avtalade tider för den här tjänsten"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:801
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1271
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1272
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:104
 msgid "Please enter first name"
 msgstr "Vänligen ange förnamn"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:802
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1273
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1274
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:105
 msgid "Please enter last name"
 msgstr "Vänligen ange efter namn"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:803
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1224
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1369
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1370
 msgid "First Name"
 msgstr "Förnamn"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:804
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1225
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1370
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1371
 msgid "Last Name"
 msgstr "Efternamn"
 
@@ -11039,7 +11045,7 @@ msgid "Payment Type"
 msgstr "Betalnings typ"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:988
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1284
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1285
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:259
 msgid "Subtotal"
 msgstr "Delsumma"
@@ -11131,13 +11137,13 @@ msgid "Customer is already added to this event"
 msgstr "Du har redan bokat denna avtalad tid"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1080
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1238
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1239
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:92
 msgid "Full"
 msgstr "Full"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1081
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1240
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1241
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:93
 msgid "Upcoming"
 msgstr "Kommande"
@@ -11285,7 +11291,7 @@ msgid "Steps"
 msgstr "Steg"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1206
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1363
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1364
 msgid "Text"
 msgstr "Text"
 
@@ -11318,7 +11324,7 @@ msgid "Preview"
 msgstr "Förhandsgranska"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1214
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1306
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1307
 msgid "Background Color"
 msgstr "Bakgrundsfärg"
 
@@ -11371,134 +11377,140 @@ msgid "Display Field:"
 msgstr "Visa fält:"
 
 #: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1234
+#, fuzzy
+#| msgid "Display Field:"
+msgid "Filterable Field:"
+msgstr "Visa fält:"
+
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1235
 msgid "Mandatory Field:"
 msgstr "Obligatoriskt fält:"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1243
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1244
 msgid "Service Badge"
 msgstr "Tjänstens namn"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1245
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1246
 msgid "Package Name"
 msgstr "Namn på paket"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1246
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1247
 msgid "Congratulations!"
 msgstr "Grattis!"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1247
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1248
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:79
 msgid "Add to Calendar"
 msgstr "Lägg till i kalender"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1248
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1249
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:110
 msgid "Finish"
 msgstr "Slutför"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1249
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1250
 msgid "Step By Step Booking Form"
 msgstr "Bokningsformulär steg för steg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1251
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1252
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:199
 msgid "Filters"
 msgstr "Filter"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1252
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1253
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:196
 msgid "Book event"
 msgstr "Boka event"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1254
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1255
 msgid "Form"
 msgstr "Formulär"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1255
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1256
 msgid "Form Flow"
 msgstr "Formulärflöde"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1256
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1257
 msgid "Use Global Colors"
 msgstr "Använd globala färger"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1257
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1340
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1258
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1341
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:161
 msgid "Service Selection"
 msgstr "Urval av tjänster"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1267
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1268
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:166
 msgid "Date & Time"
 msgstr "Datum & Tid"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1269
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1458
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1270
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1459
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:167
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:206
 msgid "Your Information"
 msgstr "Din information"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1270
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1271
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:168
 msgid "Enter first name"
 msgstr "Ange förnamn"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1272
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1273
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:169
 msgid "Enter last name"
 msgstr "Ange efternamn"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1274
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1275
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:170
 msgid "Enter email"
 msgstr "Skriv in postadressen"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1275
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1276
 msgid "Please enter valid email"
 msgstr "Ange en giltig e-postadress"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1276
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1277
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:171
 msgid "Enter phone"
 msgstr "Ange telefonnummer"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1277
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1278
 msgid "Please enter phone"
 msgstr "Ange ditt telefonnummer"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1286
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1287
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:153
 msgid "The payment will be done on-site."
 msgstr "Betalningen sker på plats."
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1290
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1291
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:159
 msgid "Your Name"
 msgstr "Ditt namn"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1291
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1292
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:150
 msgid "Email Address"
 msgstr "E-postadress"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1292
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1293
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:154
 msgid "Phone Number"
 msgstr "Telefonnummer"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1294
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1295
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:180
 #, fuzzy
 msgid "Local Time"
-msgstr "Tid"
+msgstr "Lokal tid:"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1298
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1299
 msgid "Choose a Form"
 msgstr "Välj ett formulär"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1299
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1300
 msgid ""
 "Choose a form you want to customize. The Step-by-Step 2.0 form is the new "
 "and improved version which provides you with better design and user "
@@ -11508,15 +11520,15 @@ msgstr ""
 "nya och förbättrade versionen som ger dig bättre design och "
 "användarupplevelse samt högre hastighet."
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1300
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1301
 msgid "Step-by-Step Booking Form 2.0"
 msgstr "Steg-för-steg bokningsformulär 2.0"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1301
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1302
 msgid "Booking Forms 1.0"
 msgstr "Bokningsformulär 1.0"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1302
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1303
 msgid ""
 "Redesigned and upgraded Step-by-Step Booking form with a better user "
 "experience, animations, improved speed, and a stand-out design!"
@@ -11525,7 +11537,7 @@ msgstr ""
 "användarupplevelse, animationer, förbättrad hastighet och en framstående "
 "design!"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1303
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1304
 msgid ""
 "Step-by-Step 1.0 Booking, Catalog Booking, Search Booking, Event List and "
 "Event Calendar Bookings."
@@ -11533,275 +11545,275 @@ msgstr ""
 "Steg-för-steg 1.0 Bokning, katalogbokning, sökbokning, evenemangslista och "
 "evenemangskalenderbokning."
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1304
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1305
 msgid "Primary and state colors"
 msgstr "Primär- och statsfärger"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1305
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1352
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1306
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1353
 msgid "Sidebar"
 msgstr "Sidopanel"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1307
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1308
 msgid "Content"
 msgstr "Innehåll"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1308
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1309
 msgid "Heading Text Color"
 msgstr "Textfärg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1309
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1310
 msgid "Content Text Color"
 msgstr "Textfärg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1310
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1311
 msgid "Input Fields"
 msgstr "Inmatningsfält"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1311
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1312
 msgid "Border Color"
 msgstr "Primär färg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1312
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1313
 msgid "Dropdowns"
 msgstr "Dropdown"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1313
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1314
 msgid "Init Cell"
 msgstr "Init cell"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1314
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1315
 msgid "Init Cell Text"
 msgstr "Init celltext"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1315
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1316
 msgid "Cell Selected Background"
 msgstr "Cell vald bakgrund"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1316
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1317
 msgid "Cell Selected Text"
 msgstr "Cell text för vald"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1317
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1318
 msgid "Cell Disabled Background"
 msgstr "Cell inaktivera bakgrund"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1318
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1319
 msgid "Cell Disabled Text"
 msgstr "Cell text för inaktiverad"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1319
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1320
 msgid "Primary Button Background Color"
 msgstr "Bakgrundsfärg för den primära knappen"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1320
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1321
 msgid "Primary Button Text Color"
 msgstr "Primär färg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1321
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1322
 msgid "Secondary Button Background Color"
 msgstr "Bakgrundsfärg för den sekundära knappen"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1322
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1323
 msgid "Secondary Button Text Color"
 msgstr "Textfärg för sekundär knapp"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1323
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1324
 msgid "Layout & Inputs"
 msgstr "Layout och inmatningar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1324
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1325
 msgid "Colors"
 msgstr "Färger"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1325
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1326
 msgid "Fonts"
 msgstr "Typsnitt"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1327
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1328
 msgid "Step Title"
 msgstr "Steg rubrik"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1328
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1329
 msgid "Footer Buttons"
 msgstr "Knappar i sidfoten"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1329
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1330
 msgid "Step Content"
 msgstr "Steg innehåll"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1330
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1373
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1331
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1374
 msgid "Finish Button Type"
 msgstr "Knapptyp slutför"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1331
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1374
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1332
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1375
 msgid "Panel Button Type"
 msgstr "Typ av panelknapp"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1332
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1333
 msgid "Summary Segment"
 msgstr "Sammanfattning av segmentet"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1333
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1334
 msgid "Payment Segment"
 msgstr "Betalningssegmentet"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1334
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1335
 msgid "Heading Title"
 msgstr "Rubriktitel"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1335
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1336
 msgid "Sub Steps"
 msgstr "Delsteg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1339
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1340
 msgid "Set up Sidebar visibility and its content"
 msgstr "Ställ in synlighet och innehåll i sidofältet"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1341
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1342
 msgid "Set up Services, Locations, Employees selection options"
 msgstr "Konfigurera alternativ för tjänster, platser och medarbetare"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1342
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1343
 msgid "Date & Time Selection"
 msgstr "Val av datum och tid"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1343
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1344
 msgid "Set up Calendar layout and Recurring popup options"
 msgstr "Konfigurera kalenderlayout och återkommande popup-alternativ"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1344
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1345
 msgid "Customer Information"
 msgstr "Kundens e-post"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1345
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1442
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1346
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1443
 msgid "Field order, mandatory fields, labels and display options"
 msgstr "Fältordning, obligatoriska fält, etiketter och visningsalternativ"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1346
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1347
 msgid "Payment Summary"
 msgstr "Betalningshistorik"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1347
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1444
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1348
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1445
 msgid "Set up labels and buttons"
 msgstr "Konfigurera etiketter och knappar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1348
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1446
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1349
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1447
 msgid "Set up button types and labels"
 msgstr "Konfigurera knapptyper och etiketter"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1351
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1352
 msgid "Global Settings"
 msgstr "Globala Inställningar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1353
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1354
 msgid "Section"
 msgstr "Avdrag"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1354
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1355
 msgid "Field Order"
 msgstr "Fältordning"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1355
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1445
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1465
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1356
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1446
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1466
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:95
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:204
 msgid "Congratulations"
 msgstr "Grattis"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1357
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1358
 msgid "Footer"
 msgstr "Sidfot"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1358
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1359
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:151
 msgid "Get in Touch"
 msgstr "Kontakta oss"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1359
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1360
 msgid "Collapse Menu"
 msgstr "Komprimera menyn"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1361
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1362
 msgid "Filled"
 msgstr "Fylld"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1362
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1363
 msgid "Plain"
 msgstr "Enkel"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1365
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1366
 msgid "Continue Button Type"
 msgstr "Knapptyp för Fortsätt"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1366
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1367
 msgid "Calendar Slot End Time"
 msgstr "Kalenderluckas sluttid"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1367
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1368
 msgid "Show Busy Time Slots"
 msgstr "Visa upptagna tidsluckor"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1368
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1369
 msgid "Calendar Time Zone"
 msgstr "Kalenders tidszon"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1375
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1376
 msgid "Sidebar Visibility"
 msgstr "Sidofälts synlighet"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1376
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1377
 msgid "Publish Form"
 msgstr "Publicera formulär"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1378
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1379
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:236
 msgid "View All"
 msgstr "Visa"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1380
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1381
 msgid "Set up categories cards"
 msgstr "Visa alla kategorier"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1381
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1382
 msgid "Cards"
 msgstr "Kort"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1382
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1383
 msgid "Card Button Type"
 msgstr "Radioknappar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1383
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1384
 msgid "Services Overview"
 msgstr "Service pris"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1384
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1385
 msgid "Set up Services view"
 msgstr "Stripe-tjänst"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1386
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1387
 msgid "Set up Service detailed view"
 msgstr "Information om tjänsten"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1387
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1388
 msgid "Booking Form"
 msgstr "Bokning"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1388
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1389
 msgid "Set options, colors and labels for booking form"
 msgstr "Ange alternativ, färger och etiketter för bokningsformuläret"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1390
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1391
 msgid "Catalog Booking Form 2.0"
 msgstr "Katalog Bokningsformulär 2.0"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1391
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1392
 msgid ""
 "Modernized Catalog Booking Form 2.0 with better user experience, improved "
 "speed, animation and a stand-out design!"
@@ -11809,98 +11821,98 @@ msgstr ""
 "Moderniserad katalogbokningsformulär 2.0 med bättre användarupplevelse, "
 "förbättrad hastighet, animation och en framstående design!"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1394
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1395
 msgid "Total Number of Services"
 msgstr "Totalt antal tjänster"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1395
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1396
 msgid "Back Button"
 msgstr "Radioknappar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1396
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1397
 msgid "“Back” Button Type"
 msgstr "Knapptyp \"Tillbaka\""
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1398
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1399
 msgid "“Book Now” Button Type"
 msgstr "Knapptyp \"Boka nu\""
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1401
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1402
 msgid "Main Category Button"
 msgstr "Kategorinamn"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1402
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1403
 msgid "Category Card Side Color"
 msgstr "Kategorikort sidofärg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1403
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1404
 msgid "Category Color"
 msgstr "Kategorifärg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1407
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1408
 msgid "Filter Menu Button Type"
 msgstr "Typ av filtermeny-knapp"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1408
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1410
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1409
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1411
 msgid "Categories Sidebar"
 msgstr "Kategorier"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1409
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1410
 msgid "Filters Block"
 msgstr "Filterblock"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1411
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1412
 msgid "Page Header"
 msgstr "Sidhuvud"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1414
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1415
 msgid "Service Duration"
 msgstr "Tjänstens varaktighet"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1415
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1426
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1416
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1427
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:239
 msgid "About Service"
 msgstr "Lägg till tjänst"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1416
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1417
 msgid "“Search” option"
 msgstr "Sök rabattkuponger"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1417
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1418
 msgid "Card Color"
 msgstr "Kort Färg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1425
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1426
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:238
 msgid "Book Now"
 msgstr "Boka"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1427
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1428
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:240
 msgid "View all photos"
 msgstr "Visa alla platser"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1429
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1430
 msgid "Support Heading:"
 msgstr "Stöd Rubrik:"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1430
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1431
 msgid "Company Phone:"
 msgstr "Företagstelefon:"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1431
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1432
 msgid "Company Email:"
 msgstr "Företagsnamn:"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1434
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1435
 #, fuzzy
 #| msgid "Booking Form"
 msgid "Event List Booking Form 2.0"
 msgstr "Bokning"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1435
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1436
 msgid ""
 "Modernized Event List Booking Form 2.0 with better user experience, improved "
 "speed, animation and a stand-out design!"
@@ -11908,7 +11920,7 @@ msgstr ""
 "Moderniserat bokningsformulär för evenemangslistor 2.0 med bättre "
 "användarupplevelse, förbättrad hastighet, animering och en enastående design!"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1438
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1439
 msgid ""
 "Set up Location, Images, Filters, Capacity, Price, and Status visibility "
 "options"
@@ -11916,237 +11928,237 @@ msgstr ""
 "Ställ in synlighetsalternativ för plats, bilder, filter, kapacitet, pris och "
 "status"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1440
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1441
 msgid "Set up Staff, Location, Gallery and other Event information visibility"
 msgstr ""
 "Konfigurera synlighet för personal, plats, galleri och annan "
 "händelseinformation"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1441
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1442
 msgid "Customer Info"
 msgstr "Kundinformation"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1448
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1449
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:208
 #, fuzzy
 #| msgid "Available"
 msgid "Events Available"
 msgstr "Tillgänglig"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1449
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1450
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:209
 #, fuzzy
 #| msgid "Available"
 msgid "Event Available"
 msgstr "Tillgänglig"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1451
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1452
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:210
 #, fuzzy
 #| msgid "Search Coupons"
 msgid "Search for Events"
 msgstr "Sök rabattkuponger"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1453
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1454
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:211
 msgid "slot left"
 msgstr "plats kvar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1454
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1455
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:212
 msgid "slots left"
 msgstr "platser kvar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1455
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1456
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:213
 msgid "Learn more"
 msgstr "Läs mer"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1456
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1457
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:214
 msgid "Read more"
 msgstr "Läs mer"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1460
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1461
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:177
 msgid "Event ID"
 msgstr "Evenemangets ID"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1463
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1464
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:215
 #, fuzzy
 #| msgid "Timeline"
 msgid "Timetable"
 msgstr "Tidslinje"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1466
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1467
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:207
 msgid "About Event"
 msgstr "Om Händelsen"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1467
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1468
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:200
 #, fuzzy
 #| msgid "Event Day"
 msgid "Event Starts"
 msgstr "evenemangets namn"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1468
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1469
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:201
 #, fuzzy
 #| msgid "Event Day"
 msgid "Event Ends"
 msgstr "evenemangets namn"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1470
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1471
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:216
 msgid "How many attendees do you want to book event for?"
 msgstr "Hur många deltagare vill du boka evenemang för?"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1473
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1474
 #, fuzzy
 #| msgid "Search Filters"
 msgid "Step Filters"
 msgstr "Sök filter"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1474
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1475
 msgid "Event Card"
 msgstr "Evenemang Kort"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1475
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1476
 msgid "Step Pagination"
 msgstr "Steg Paginering"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1476
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1477
 #, fuzzy
 #| msgid "Spots capacity"
 msgid "Event Slots Capacity"
 msgstr "Kapacitet"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1477
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1478
 #, fuzzy
 #| msgid "Card Button Type"
 msgid "Filters Button Type"
 msgstr "Radioknappar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1478
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1479
 #, fuzzy
 #| msgid "Card Button Type"
 msgid "Read More Button Type"
 msgstr "Radioknappar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1479
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1480
 #, fuzzy
 #| msgid "Card Button Type"
 msgid "Learn More Button Type"
 msgstr "Radioknappar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1480
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1481
 #, fuzzy
 #| msgid "Event Title"
 msgid "Event Tab Image"
 msgstr "evenemangets namn"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1481
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1482
 msgid "Step Header"
 msgstr "Steg rubrik"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1482
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1483
 msgid "Step Info Tab"
 msgstr "Fliken Steginformation"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1483
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1484
 #, fuzzy
 #| msgid "Booking Start"
 msgid "Booking Event Button"
 msgstr "Boka start"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1484
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1485
 #, fuzzy
 #| msgid "Finish"
 msgid "Finish Button"
 msgstr "Knapptyp slutför"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1485
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1486
 msgid "Close Event Button"
 msgstr "Knappen Stäng händelse"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1486
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1487
 #, fuzzy
 #| msgid "Event Day"
 msgid "Event Gallery"
 msgstr "Galleri för evenemang:"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1489
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1490
 #: src/Infrastructure/WP/Translations/LiteFrontendStrings.php:174
 msgid "person"
 msgstr "person"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1490
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1491
 #, fuzzy
 #| msgid "Edit Employee"
 msgid "Event Employees"
 msgstr "Redigera medarbetare"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1501
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1502
 msgid "Choose Category"
 msgstr "Välj kategori"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1502
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1503
 msgid "Choose Service"
 msgstr "Välj tjänst"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1503
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1504
 msgid "Choose Package"
 msgstr "Välj Paket"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1504
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1505
 msgid "Preselect Booking Parameters"
 msgstr "Förvälj boknings parametrar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1505
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1506
 #, fuzzy
 #| msgid "Categories"
 msgid "Skip Categories step"
 msgstr "Kategorier"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1506
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1507
 msgid "Insert Amelia Booking Shortcode"
 msgstr "Infoga Amelia bokning Shortcode"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1507
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1508
 msgid "Select Catalog View"
 msgstr "Välj katalogvy"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1514
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1515
 #, fuzzy
 #| msgid "Select Event"
 msgid "Select Events"
 msgstr "Välj ett event"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1515
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1516
 msgid "Select Tag"
 msgstr "﻿Välj Tagg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1516
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1517
 #, fuzzy
 #| msgid "Select Tag"
 msgid "Select Tags"
 msgstr "﻿Välj Tagg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1517
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1518
 msgid "Select View"
 msgstr "Välj Visa"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1519
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1520
 msgid "Show All"
 msgstr "Visa alla"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1520
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1521
 msgid "Load booking form manually"
 msgstr "Ladda bokningsformuläret manuellt"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1521
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1522
 msgid ""
 "Add element (button, link...) ID, that will manually load amelia shortcode "
 "content"
@@ -12154,151 +12166,151 @@ msgstr ""
 "Lägg till element (knapp, länk ...) ID, som manuellt laddar amelia "
 "kortkodsinnehåll"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1522
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1523
 msgid "Show all categories"
 msgstr "Visa alla kategorier"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1523
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1524
 msgid "Show all employees"
 msgstr "Visa alla medarbetare"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1524
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1525
 msgid "Show all locations"
 msgstr "Visa alla platser"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1525
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1526
 msgid "Show all services"
 msgstr "Visa alla tjänster"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1526
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1527
 msgid "Show all events"
 msgstr "Visa alla evenemang"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1527
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1528
 msgid "Show all packages"
 msgstr "Visa alla kategorier"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1528
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1529
 msgid "Show all tags"
 msgstr "Visa alla taggar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1529
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1530
 msgid "Show catalog of all categories"
 msgstr "Visa katalog för alla kategorier"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1530
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1531
 msgid "Show specific category"
 msgstr "Visa specifik kategori"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1531
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1532
 #, fuzzy
 #| msgid "Show specific category"
 msgid "Show specific categories"
 msgstr "Visa specifik kategori"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1532
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1533
 msgid "Show specific package"
 msgstr "Visa specifikt paket"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1533
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1534
 #, fuzzy
 #| msgid "Show specific category"
 msgid "Show specific packages"
 msgstr "Visa specifik kategori"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1534
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1535
 msgid "Show event"
 msgstr "Visa evenemang"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1535
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1536
 msgid "Show Type"
 msgstr "Visa typ"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1536
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1537
 msgid "List (default)"
 msgstr "Lista (standard)"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1538
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1539
 msgid "Show tag"
 msgstr "Visa tagg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1539
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1540
 msgid "Show specific service"
 msgstr "Visa specifik tjänst"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1540
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1541
 #, fuzzy
 #| msgid "Show specific service"
 msgid "Show specific services"
 msgstr "Visa specifik tjänst"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1541
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1542
 msgid "Trigger type"
 msgstr "Typ av utlösare"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1542
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1543
 msgid "Id"
 msgstr "Id"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1543
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1544
 msgid "Class"
 msgstr "Klass"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1544
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1545
 msgid "Trigger by attribute"
 msgstr "Utlös av attribut"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1545
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1546
 msgid "Step Booking"
 msgstr "Stegbokning"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1546
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1547
 msgid "Catalog Booking"
 msgstr "Genomsnittligt antal bokningar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1547
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1548
 msgid "Events List Booking"
 msgstr "Bokning av evenemangslista"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1548
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1549
 msgid "Show recurring events"
 msgstr "Visa återkommande händelser"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1549
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1550
 msgid "Show in Amelia Popup"
 msgstr "Visa i Amelia Popup"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1551
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1552
 msgid "AM - Booking view"
 msgstr "Bokningsvy"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1552
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1553
 msgid "AM - Step Booking"
 msgstr "Steg Bokning"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1553
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1554
 msgid "AM - Catalog Booking"
 msgstr "Genomsnittligt antal bokningar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1554
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1555
 msgid "AM - Catalog view"
 msgstr "Katalogvy"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1555
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1556
 msgid "AM - Events view"
 msgstr "Evenemang"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1556
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1557
 #, fuzzy
 #| msgid "AM - Catalog Booking"
 msgid "AM - Events List Booking"
 msgstr "Genomsnittligt antal bokningar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1558
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1559
 msgid "Amelia - Booking view"
 msgstr "Amelia - Bokningsvy"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1559
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1560
 msgid ""
 "Step-By-Step Booking Wizard gives your customers the option to choose "
 "everything about the booking in a few steps"
@@ -12306,11 +12318,11 @@ msgstr ""
 "Steg-för-steg-bokningsguiden ger dina kunder möjlighet att välja allt om "
 "bokningen i några steg"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1562
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1563
 msgid "Amelia - Step-By-Step Booking"
 msgstr "Steg-för-steg bokning"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1563
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1564
 msgid ""
 "Step-by-Step booking view guides the customers through several steps in "
 "order to make their bookings."
@@ -12318,11 +12330,11 @@ msgstr ""
 "Bokningsvyn steg-för-steg guidar kunderna genom flera steg för att göra sina "
 "bokningar."
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1566
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1567
 msgid "Amelia - Catalog Booking"
 msgstr "Genomsnittligt antal bokningar"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1567
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1568
 msgid ""
 "Front-end Booking Catalog is shortcode when you want to show your service in "
 "a form of a catalog"
@@ -12330,11 +12342,11 @@ msgstr ""
 "Bokningskatalog i frontend är en kortkod när du vill visa din tjänst i form "
 "av en katalog"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1570
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1571
 msgid "Amelia - Catalog view"
 msgstr "Amelia - Katalogvy"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1571
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1572
 msgid ""
 "Front-end Booking Catalog is shortcode when you want to show your service in "
 "a form of a cataloge"
@@ -12342,12 +12354,12 @@ msgstr ""
 "Front-end Booking Catalog är kortkod när du vill visa din tjänst i form av "
 "en katalog"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1574
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1575
 msgid "Amelia - Events"
 msgstr "Amelia - Evenemang"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1575
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1579
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1576
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1580
 msgid ""
 "Event Booking is shortcode that gives your customers the option to book one "
 "of the events that you've created on the back-end in a simple event list "
@@ -12356,11 +12368,11 @@ msgstr ""
 "Händelsebokning är kortkod som ger dina kunder möjlighet att boka ett av de "
 "evenemang som du har skapat på backend i en enkel händelselistvy."
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1578
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1579
 msgid "Amelia - Events List"
 msgstr "Amelia - Evenemangslista"
 
-#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1581
+#: src/Infrastructure/WP/Translations/LiteBackendStrings.php:1582
 msgid "You are using a form that will be outdated soon!"
 msgstr ""
 

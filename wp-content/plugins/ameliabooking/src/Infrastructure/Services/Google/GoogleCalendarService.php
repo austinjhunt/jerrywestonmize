@@ -241,6 +241,11 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                         break;
                     }
 
+                    if (!$appointment->getGoogleCalendarEventId()) {
+                        $this->insertEvent($appointment, $provider);
+                        break;
+                    }
+
                     $this->updateEvent($appointment, $provider);
                     break;
                 case AppointmentDeletedEventHandler::APPOINTMENT_DELETED:

@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the MailPoet plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MailPoet 4.42.1\n"
+"Project-Id-Version: MailPoet 4.44.1\n"
 "Report-Msgid-Bugs-To: http://support.mailpoet.com/\n"
 "Last-Translator: MailPoet i18n (https://www.transifex.com/organization/wysija)\n"
 "Language-Team: MailPoet i18n <https://www.transifex.com/organization/wysija>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-01-30T12:34:26+00:00\n"
+"POT-Creation-Date: 2024-02-26T16:38:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1067,8 +1067,8 @@ msgid "Select a field type:"
 msgstr ""
 
 #: views/form/templatesLegacy/settings/field_form.hbs:16
-#: lib/Models/CustomField.php:29
-#: lib/Models/Newsletter.php:67
+#: lib/Models/CustomField.php:35
+#: lib/Models/Newsletter.php:73
 msgid "Please specify a type."
 msgstr ""
 
@@ -1081,8 +1081,8 @@ msgstr ""
 #: lib/API/JSON/v1/DynamicSegments.php:123
 #: lib/API/JSON/v1/ImportExport.php:124
 #: lib/API/JSON/v1/Segments.php:133
-#: lib/Models/CustomField.php:26
-#: lib/Models/Segment.php:29
+#: lib/Models/CustomField.php:32
+#: lib/Models/Segment.php:35
 msgid "Please specify a name."
 msgstr ""
 
@@ -1588,11 +1588,6 @@ msgstr ""
 
 #: views/help.html:80
 msgid "Storage type"
-msgstr ""
-
-#: views/help.html:84
-#: views/settings_translations.html:171
-msgid "Looking for <link1>MailPoet Automations</link1>? Read how to <link2>enable them</link2>."
 msgstr ""
 
 #: views/help.html:45
@@ -4156,8 +4151,8 @@ msgid "This value should be the same."
 msgstr ""
 
 #: views/premium_key_validation_strings.html:2
-#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:173
-#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:178
+#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:159
+#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:164
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/commons.js:9
 msgid "Learn more"
@@ -5482,303 +5477,303 @@ msgstr ""
 msgid "Subscribe all my past customers to this list because they agreed to receive marketing emails from me."
 msgstr ""
 
-#: views/settings_translations.html:173
+#: views/settings_translations.html:172
 msgid "MailPoet Sending Service"
 msgstr ""
 
-#: views/settings_translations.html:174
+#: views/settings_translations.html:173
 msgid "You're now sending with MailPoet!"
 msgstr ""
 
-#: views/settings_translations.html:175
+#: views/settings_translations.html:174
 msgid "Solve all of your sending problems!"
 msgstr ""
 
-#: views/settings_translations.html:176
+#: views/settings_translations.html:175
 msgid "Reach the inbox, not the spam box."
 msgstr ""
 
-#: views/settings_translations.html:177
+#: views/settings_translations.html:176
 msgid "Easy configuration: enter a key to activate the sending service."
 msgstr ""
 
-#: views/settings_translations.html:178
+#: views/settings_translations.html:177
 msgid "Super fast: send up to 50,000 emails per hour."
 msgstr ""
 
-#: views/settings_translations.html:179
+#: views/settings_translations.html:178
 msgid "All emails are signed with SPF & DKIM."
 msgstr ""
 
-#: views/settings_translations.html:180
+#: views/settings_translations.html:179
 msgid "Automatically remove invalid and bounced addresses (bounce handling) to keep your lists clean."
 msgstr ""
 
-#: views/settings_translations.html:181
+#: views/settings_translations.html:180
 #: assets/dist/js/admin.js:2
 msgid "See video guide"
 msgstr ""
 
-#: views/settings_translations.html:182
+#: views/settings_translations.html:181
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/automation_editor.js:1
 #: assets/dist/js/commons.js:9
 msgid "Activate"
 msgstr ""
 
-#: views/settings_translations.html:183
+#: views/settings_translations.html:182
 msgid "Activated"
 msgstr ""
 
-#: views/settings_translations.html:184
+#: views/settings_translations.html:183
 msgid "Free up to 1,000 subscribers"
 msgstr ""
 
-#: views/settings_translations.html:185
+#: views/settings_translations.html:184
 msgid "or"
 msgstr ""
 
-#: views/settings_translations.html:186
+#: views/settings_translations.html:185
 msgid "[link]enter your key[/link]"
 msgstr ""
 
-#: views/settings_translations.html:187
+#: views/settings_translations.html:186
 msgid "Other"
 msgstr ""
 
-#: views/settings_translations.html:188
+#: views/settings_translations.html:187
 msgid "Send emails via your host"
 msgstr ""
 
-#: views/settings_translations.html:189
+#: views/settings_translations.html:188
 msgid "(not recommended!)"
 msgstr ""
 
-#: views/settings_translations.html:190
+#: views/settings_translations.html:189
 msgid "or via a third-party sender."
 msgstr ""
 
-#: views/settings_translations.html:191
+#: views/settings_translations.html:190
 msgid "Your key is not valid for MailPoet Sending Service."
 msgstr ""
 
-#: views/settings_translations.html:192
+#: views/settings_translations.html:191
 msgid "Get a new plan"
 msgstr ""
 
-#: views/settings_translations.html:193
+#: views/settings_translations.html:192
 msgid "Unless you're a pro, you’ll probably end up in spam."
 msgstr ""
 
-#: views/settings_translations.html:194
+#: views/settings_translations.html:193
 msgid "Sending speed is limited by your host and/or your third-party (with a 2,000 per hour maximum)."
 msgstr ""
 
-#: views/settings_translations.html:195
+#: views/settings_translations.html:194
 msgid "Manual configuration of SPF and DKIM required."
 msgstr ""
 
-#: views/settings_translations.html:196
+#: views/settings_translations.html:195
 msgid "Bounce handling is available, but only with an extra [link]add-on[/link]."
 msgstr ""
 
-#: views/settings_translations.html:197
+#: views/settings_translations.html:196
 msgid "Configure"
 msgstr ""
 
-#: views/settings_translations.html:198
+#: views/settings_translations.html:197
 msgid "Method"
 msgstr ""
 
-#: views/settings_translations.html:199
+#: views/settings_translations.html:198
 msgid "Your web host / web server"
 msgstr ""
 
-#: views/settings_translations.html:200
+#: views/settings_translations.html:199
 msgid "SMTP"
 msgstr ""
 
-#: views/settings_translations.html:201
+#: views/settings_translations.html:200
 msgid "Select your provider"
 msgstr ""
 
-#: views/settings_translations.html:202
+#: views/settings_translations.html:201
 msgid "Your web host"
 msgstr ""
 
-#: views/settings_translations.html:203
+#: views/settings_translations.html:202
 msgid "Not listed (default)"
 msgstr ""
 
-#: views/settings_translations.html:204
+#: views/settings_translations.html:203
 msgid "Sending frequency"
 msgstr ""
 
-#: views/settings_translations.html:205
+#: views/settings_translations.html:204
 msgid "Recommended"
 msgstr ""
 
-#: views/settings_translations.html:206
+#: views/settings_translations.html:205
 msgid "recommended"
 msgstr ""
 
-#: views/settings_translations.html:207
+#: views/settings_translations.html:206
 msgid "I'll set my own frequency"
 msgstr ""
 
-#: views/settings_translations.html:208
+#: views/settings_translations.html:207
 #: assets/dist/js/admin.js:2
 msgid "emails"
 msgstr ""
 
-#: views/settings_translations.html:209
+#: views/settings_translations.html:208
 msgid "%1$s emails"
 msgstr ""
 
-#: views/settings_translations.html:210
+#: views/settings_translations.html:209
 #: lib/Twig/Functions.php:230
 msgid "every minute"
 msgstr ""
 
 #. translators: %1$d is the amount of minutes.
-#: views/settings_translations.html:211
+#: views/settings_translations.html:210
 #: lib/Twig/Functions.php:232
 msgid "every %1$d minutes"
 msgstr ""
 
-#: views/settings_translations.html:212
+#: views/settings_translations.html:211
 #: lib/Twig/Functions.php:233
 msgid "every hour"
 msgstr ""
 
 #. translators: %1$d is the amount of hours.
-#: views/settings_translations.html:213
+#: views/settings_translations.html:212
 #: lib/Twig/Functions.php:235
 msgid "every %1$d hours"
 msgstr ""
 
-#: views/settings_translations.html:214
+#: views/settings_translations.html:213
 msgid "That's <strong>%1$s emails</strong> per day"
 msgstr ""
 
-#: views/settings_translations.html:215
+#: views/settings_translations.html:214
 msgid "That's %1$s emails per second. <strong>We highly recommend to send 1 email per second, at the absolute maximum.</strong> MailPoet needs at least one second to process and send a single email (on most hosts.) <strong>Alternatively, send with MailPoet, which can be up to 50 times faster.</strong>"
 msgstr ""
 
-#: views/settings_translations.html:216
+#: views/settings_translations.html:215
 msgid "<strong>Warning!</strong> You may break the terms of your web host or provider by sending more than the recommended emails per day. Contact your host if you want to send more."
 msgstr ""
 
-#: views/settings_translations.html:217
+#: views/settings_translations.html:216
 msgid "SMTP Hostname"
 msgstr ""
 
-#: views/settings_translations.html:218
+#: views/settings_translations.html:217
 msgid "e.g.: smtp.mydomain.com"
 msgstr ""
 
-#: views/settings_translations.html:219
+#: views/settings_translations.html:218
 msgid "SMTP Port"
 msgstr ""
 
-#: views/settings_translations.html:220
+#: views/settings_translations.html:219
 msgid "Region"
 msgstr ""
 
-#: views/settings_translations.html:221
+#: views/settings_translations.html:220
 msgid "Access Key"
 msgstr ""
 
-#: views/settings_translations.html:222
+#: views/settings_translations.html:221
 msgid "Secret Key"
 msgstr ""
 
-#: views/settings_translations.html:223
+#: views/settings_translations.html:222
 msgid "API Key"
 msgstr ""
 
-#: views/settings_translations.html:224
+#: views/settings_translations.html:223
 msgid "Login"
 msgstr ""
 
-#: views/settings_translations.html:225
+#: views/settings_translations.html:224
 msgid "Password"
 msgstr ""
 
-#: views/settings_translations.html:226
+#: views/settings_translations.html:225
 msgid "Secure Connection"
 msgstr ""
 
-#: views/settings_translations.html:227
+#: views/settings_translations.html:226
 msgid "Authentication"
 msgstr ""
 
-#: views/settings_translations.html:228
+#: views/settings_translations.html:227
 msgid "Leave this option set to Yes. Only a tiny portion of SMTP services prefer Authentication to be turned off."
 msgstr ""
 
-#: views/settings_translations.html:229
+#: views/settings_translations.html:228
 msgid "SPF Signature (Highly recommended!)"
 msgstr ""
 
-#: views/settings_translations.html:230
+#: views/settings_translations.html:229
 msgid "This improves your delivery rate by verifying that you're allowed to send emails from your domain."
 msgstr ""
 
-#: views/settings_translations.html:231
+#: views/settings_translations.html:230
 msgid "SPF is set up in your DNS. Read your host's support documentation for more information."
 msgstr ""
 
-#: views/settings_translations.html:232
+#: views/settings_translations.html:231
 msgid "Test the sending method"
 msgstr ""
 
-#: views/settings_translations.html:233
+#: views/settings_translations.html:232
 #: assets/dist/js/email-editor/email_editor.js:15
 msgid "Send a test email"
 msgstr ""
 
-#: views/settings_translations.html:234
+#: views/settings_translations.html:233
 msgid "Didn't receive the test email? Read our [link]quick guide[/link] to sending issues."
 msgstr ""
 
-#: views/settings_translations.html:235
+#: views/settings_translations.html:234
 msgid "The email could not be sent. Make sure the option \"Email notifications\" has a FROM email address in the Basics tab."
 msgstr ""
 
-#: views/settings_translations.html:236
+#: views/settings_translations.html:235
 msgid "This is a Sending Method Test"
 msgstr ""
 
-#: views/settings_translations.html:237
+#: views/settings_translations.html:236
 msgid "Yup, it works! You can start blasting away emails to the moon."
 msgstr ""
 
-#: views/settings_translations.html:238
+#: views/settings_translations.html:237
 msgid "The email has been sent! Check your inbox."
 msgstr ""
 
-#: views/settings_translations.html:239
+#: views/settings_translations.html:238
 msgid "or Cancel"
 msgstr ""
 
-#: views/settings_translations.html:241
+#: views/settings_translations.html:240
 msgid "Engagement analytics tracking"
 msgstr ""
 
-#: views/settings_translations.html:242
+#: views/settings_translations.html:241
 msgid "Choose the balance between subscriber privacy and deeper engagement insights that is right for your business."
 msgstr ""
 
-#: views/settings_translations.html:243
+#: views/settings_translations.html:242
 msgid "Full – additionally use browser cookies to improve the site and email engagement tracking and abandoned cart email accuracy."
 msgstr ""
 
-#: views/settings_translations.html:244
+#: views/settings_translations.html:243
 msgid "Partial – additionally track email engagement (opens, clicks). Disable cookie-based tracking."
 msgstr ""
 
-#: views/settings_translations.html:245
+#: views/settings_translations.html:244
 msgid "Basic – only use data your site already has about your subscribers. Disable email engagement and cookie-based tracking, and re-engagement emails."
 msgstr ""
 
@@ -6363,7 +6358,7 @@ msgstr ""
 
 #. translators: %1$s is the name of the database column.
 #: views/subscribers/importExport/import/step_data_manipulation.html:17
-#: lib/Models/Model.php:244
+#: lib/Models/Model.php:269
 msgid "Another record already exists. Please specify a different \"%1$s\"."
 msgstr ""
 
@@ -6523,7 +6518,7 @@ msgid "Lists to which the subscriber was subscribed."
 msgstr ""
 
 #: views/subscribers/subscribers.html:97
-#: lib/Models/Segment.php:93
+#: lib/Models/Segment.php:127
 #: lib/Segments/SegmentsRepository.php:78
 msgid "WordPress Users"
 msgstr ""
@@ -6903,7 +6898,7 @@ msgstr ""
 msgid "MailPoet Newsletter"
 msgstr ""
 
-#: lib/AdminPages/Pages/Settings.php:118
+#: lib/AdminPages/Pages/Settings.php:115
 msgctxt "Notice in Settings when WooCommerce is not enabled"
 msgid "You need to have WooCommerce active to access the MailPoet email customizer for WooCommerce."
 msgstr ""
@@ -7072,7 +7067,7 @@ msgid "This form does not exist."
 msgstr ""
 
 #: lib/API/JSON/v1/Forms.php:108
-#: lib/API/JSON/v1/Newsletters.php:179
+#: lib/API/JSON/v1/Newsletters.php:182
 msgid "You need to specify a status."
 msgstr ""
 
@@ -7100,39 +7095,39 @@ msgstr ""
 msgid "The email could not be sent: %s"
 msgstr ""
 
-#: lib/API/JSON/v1/Newsletters.php:128
-#: lib/API/JSON/v1/Newsletters.php:145
-#: lib/API/JSON/v1/Newsletters.php:192
-#: lib/API/JSON/v1/Newsletters.php:265
-#: lib/API/JSON/v1/Newsletters.php:285
-#: lib/API/JSON/v1/Newsletters.php:299
-#: lib/API/JSON/v1/Newsletters.php:320
-#: lib/API/JSON/v1/Newsletters.php:335
-#: lib/API/JSON/v1/Newsletters.php:358
+#: lib/API/JSON/v1/Newsletters.php:133
+#: lib/API/JSON/v1/Newsletters.php:150
+#: lib/API/JSON/v1/Newsletters.php:195
+#: lib/API/JSON/v1/Newsletters.php:260
+#: lib/API/JSON/v1/Newsletters.php:276
+#: lib/API/JSON/v1/Newsletters.php:290
+#: lib/API/JSON/v1/Newsletters.php:307
+#: lib/API/JSON/v1/Newsletters.php:322
+#: lib/API/JSON/v1/Newsletters.php:345
 #: assets/dist/js/admin.js:2
 msgid "This email does not exist."
 msgstr ""
 
-#: lib/API/JSON/v1/Newsletters.php:185
-#: lib/API/JSON/v1/SendingQueue.php:96
-#: lib/API/JSON/v1/SendingQueue.php:244
+#: lib/API/JSON/v1/Newsletters.php:188
+#: lib/API/JSON/v1/SendingQueue.php:89
+#: lib/API/JSON/v1/SendingQueue.php:220
 #: lib/Services/Bridge/API.php:376
 msgid "Subscribers limit reached."
 msgstr ""
 
-#: lib/API/JSON/v1/Newsletters.php:198
+#: lib/API/JSON/v1/Newsletters.php:201
 msgid "The sender address is not an authorized sender domain."
 msgstr ""
 
-#: lib/API/JSON/v1/Newsletters.php:217
+#: lib/API/JSON/v1/Newsletters.php:220
 msgid "This email has incorrect state."
 msgstr ""
 
-#: lib/API/JSON/v1/Newsletters.php:328
+#: lib/API/JSON/v1/Newsletters.php:315
 msgid "Newsletter data is missing."
 msgstr ""
 
-#: lib/API/JSON/v1/Newsletters.php:351
+#: lib/API/JSON/v1/Newsletters.php:338
 msgid "Please specify receiver information."
 msgstr ""
 
@@ -7195,26 +7190,26 @@ msgstr ""
 msgid "No segment IDs provided."
 msgstr ""
 
-#: lib/API/JSON/v1/SendingQueue.php:110
-#: lib/API/JSON/v1/SendingQueue.php:236
-#: lib/API/JSON/v1/SendingQueue.php:267
+#: lib/API/JSON/v1/SendingQueue.php:103
+#: lib/API/JSON/v1/SendingQueue.php:212
+#: lib/API/JSON/v1/SendingQueue.php:243
 msgid "This newsletter does not exist."
 msgstr ""
 
-#: lib/API/JSON/v1/SendingQueue.php:138
+#: lib/API/JSON/v1/SendingQueue.php:122
 msgid "This newsletter is already being sent."
 msgstr ""
 
-#: lib/API/JSON/v1/SendingQueue.php:158
+#: lib/API/JSON/v1/SendingQueue.php:143
 msgid "Unable to find scheduled task associated with this newsletter."
 msgstr ""
 
-#: lib/API/JSON/v1/SendingQueue.php:182
+#: lib/API/JSON/v1/SendingQueue.php:167
 msgid "There are no subscribers in that list!"
 msgstr ""
 
-#: lib/API/JSON/v1/SendingQueue.php:228
-#: lib/API/JSON/v1/SendingQueue.php:258
+#: lib/API/JSON/v1/SendingQueue.php:204
+#: lib/API/JSON/v1/SendingQueue.php:234
 msgid "This newsletter has not been sent yet."
 msgstr ""
 
@@ -7388,12 +7383,12 @@ msgid "This tag does not exist."
 msgstr ""
 
 #: lib/API/JSON/v1/Subscribers.php:340
-#: lib/Models/Subscriber.php:51
+#: lib/Models/Subscriber.php:57
 msgid "Please enter your email address"
 msgstr ""
 
 #: lib/API/JSON/v1/Subscribers.php:342
-#: lib/Models/Subscriber.php:52
+#: lib/Models/Subscriber.php:58
 msgid "Your email address is invalid!"
 msgstr ""
 
@@ -8102,26 +8097,26 @@ msgid "matches regex"
 msgstr ""
 
 #. translators: automation action title
-#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:81
-#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:94
+#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:88
+#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:101
 #: assets/dist/js/commons.js:9
 msgid "Send email"
 msgstr ""
 
-#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:95
+#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:102
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/commons.js:9
 #: assets/dist/js/email-editor/email_editor.js:15
 msgid "Subject"
 msgstr ""
 
-#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:124
+#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:131
 msgid "Automation email not found."
 msgstr ""
 
 #. translators: %s is the ID of email.
-#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:130
-#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:307
+#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:137
+#: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:322
 msgid "Automation email with ID '%s' not found."
 msgstr ""
 
@@ -9789,11 +9784,11 @@ msgstr ""
 msgid "Daemon does not set correctly."
 msgstr ""
 
-#: lib/Cron/Workers/SendingQueue/Tasks/Newsletter.php:226
+#: lib/Cron/Workers/SendingQueue/Tasks/Newsletter.php:243
 msgid "No subject"
 msgstr ""
 
-#: lib/Cron/Workers/SendingQueue/Tasks/Newsletter.php:295
+#: lib/Cron/Workers/SendingQueue/Tasks/Newsletter.php:312
 msgid "There was an error processing your newsletter during sending. If possible, please contact us and report this issue."
 msgstr ""
 
@@ -10764,34 +10759,34 @@ msgstr ""
 msgid "Filter \"mailpoet_mailer_smtp_instance\" must return an instance of PHPMailer."
 msgstr ""
 
-#: lib/Models/Newsletter.php:154
+#: lib/Models/Newsletter.php:197
 msgid "This is an empty email without any content and it cannot be sent. Please update [link]the email[/link]."
 msgstr ""
 
-#: lib/Models/Newsletter.php:212
+#: lib/Models/Newsletter.php:267
 msgid "Deleted list"
 msgstr ""
 
-#: lib/Models/Segment.php:95
+#: lib/Models/Segment.php:129
 #: lib/Segments/SegmentsRepository.php:80
 msgid "This list contains all of your WordPress users."
 msgstr ""
 
-#: lib/Models/Segment.php:111
+#: lib/Models/Segment.php:149
 #: lib/Segments/SegmentsRepository.php:95
 msgid "WooCommerce Customers"
 msgstr ""
 
-#: lib/Models/Segment.php:113
+#: lib/Models/Segment.php:151
 #: lib/Segments/SegmentsRepository.php:97
 msgid "This list contains all of your WooCommerce customers."
 msgstr ""
 
-#: lib/Models/SendingQueue.php:36
+#: lib/Models/SendingQueue.php:42
 msgid "Rendered newsletter body is invalid!"
 msgstr ""
 
-#: lib/Models/Subscriber.php:163
+#: lib/Models/Subscriber.php:209
 #: lib/Newsletter/Listing/NewsletterListingRepository.php:62
 #: lib/Subscribers/SubscriberListingRepository.php:297
 msgid "All Lists"
@@ -10799,7 +10794,7 @@ msgstr ""
 
 #. translators: %s is the number of subscribers without a segment.
 #. translators: %s is the number of subscribers without a list.
-#: lib/Models/Subscriber.php:172
+#: lib/Models/Subscriber.php:218
 #: lib/Subscribers/SubscriberListingRepository.php:283
 msgid "Subscribers without a list (%s)"
 msgstr ""
@@ -11096,7 +11091,7 @@ msgstr ""
 msgid "No valid subscribers were found."
 msgstr ""
 
-#: lib/Subscribers/ImportExport/Import/Import.php:201
+#: lib/Subscribers/ImportExport/Import/Import.php:218
 msgid "Unable to save imported subscribers."
 msgstr ""
 
@@ -11176,7 +11171,7 @@ msgstr ""
 msgid "System fields"
 msgstr ""
 
-#: lib/Subscribers/ImportExport/ImportExportRepository.php:207
+#: lib/Subscribers/ImportExport/ImportExportRepository.php:225
 msgid "Not In Segment"
 msgstr ""
 
@@ -11522,52 +11517,45 @@ msgid "Your website is running an outdated version of PHP (%1$s), on which MailP
 msgstr ""
 
 #. translators: %1$s is the domain of the user's default from address, %2$s is a rewritten version of their default from address, %3$s is HTML for an 'update sender' button, and %4$s is HTML for a Learn More button
-#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:105
-msgid ""
-"<strong>Update your sender email address to a branded domain by February 1st, 2024 to continue sending your campaigns.</strong>\n"
-"<span>Starting on February 1st, 2024, MailPoet will no longer be able to send from email addresses on shared 3rd party domains like <strong>%1$s</strong>. Please change your campaigns to send from an email address on your site's branded domain. Your emails will temporarily be sent from <strong>%2$s</strong>.</span> <p>%3$s &nbsp; %4$s</p>"
-msgstr ""
-
-#. translators: %1$s is the domain of the user's default from address, %2$s is a rewritten version of their default from address, %3$s is HTML for an 'update sender' button, and %4$s is HTML for a Learn More button
-#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:116
+#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:102
 msgid ""
 "<strong>Update your sender email address to a branded domain to continue sending your campaigns.</strong>\n"
 "<span>MailPoet can no longer send from email addresses on shared 3rd party domains like <strong>%1$s</strong>. Please change your campaigns to send from an email address on your site's branded domain. Your existing scheduled and active emails will temporarily be sent from <strong>%2$s</strong>.</span> <p>%3$s &nbsp; %4$s</p>"
 msgstr ""
 
 #. translators: %1$s is the domain of the user's default from address, %2$s is a rewritten version of their default from address, %3$s is HTML for an 'update sender' button, and %4$s is HTML for a Learn More button
-#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:126
+#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:112
 msgid ""
 "<strong>Your newsletters and post notifications have been paused. Update your sender email address to a branded domain to continue sending your campaigns.</strong>\n"
 "<span>MailPoet can no longer send from email addresses on shared 3rd party domains like <strong>%1$s</strong>. Please change your campaigns to send from an email address on your site's branded domain. Your marketing automations and transactional emails will temporarily be sent from <strong>%2$s</strong>.</span> <p>%3$s &nbsp; %4$s</p>"
 msgstr ""
 
 #. translators: %1$s is HTML for an 'authenticate domain' button, %2$s is HTML for a Learn More button
-#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:138
+#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:124
 msgid ""
 "<strong>Authenticate your sender domain to improve email delivery rates.</strong>\n"
 "<span>Major mailbox providers require you to authenticate your sender domain to confirm you sent the emails, and may place unauthenticated emails in the “Spam” folder. Please authenticate your sender domain to ensure your marketing campaigns are compliant and will reach your contacts.</span><p>%1$s &nbsp; %2$s</p>"
 msgstr ""
 
 #. translators: %1$s is a rewritten version of the user's default from address, %2$s is HTML for an 'authenticate domain' button, %3$s is HTML for a Learn More button
-#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:147
+#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:133
 msgid ""
 "<strong>Authenticate your sender domain to send new emails.</strong>\n"
 "      <span>Major mailbox providers require you to authenticate your sender domain to confirm you sent the emails, and may place unauthenticated emails in the “Spam” folder. Please authenticate your sender domain to ensure your marketing campaigns are compliant and will reach your contacts. Your existing scheduled and active emails will temporarily be sent from <strong>%1$s</strong>.</span> <p>%2$s &nbsp; %3$s</p>"
 msgstr ""
 
 #. translators: %1$s is a rewritten version of the user's default from address, %2$s is HTML for an 'authenticate domain' button, %3$s is HTML for a Learn More button
-#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:156
+#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:142
 msgid ""
 "<strong>Your newsletters and post notifications have been paused. Authenticate your sender domain to continue sending.</strong>\n"
 "<span>Major mailbox providers require you to authenticate your sender domain to confirm you sent the emails, and may place unauthenticated emails in the “Spam” folder. Please authenticate your sender domain to ensure your marketing campaigns are compliant and will reach your contacts. Your marketing automations and transactional emails will temporarily be sent from <strong>%1$s</strong>.</span> <p>%2$s &nbsp; %3$s</p>"
 msgstr ""
 
-#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:168
+#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:154
 msgid "Update sender email"
 msgstr ""
 
-#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:189
+#: lib/Util/Notices/SenderDomainAuthenticationNotices.php:175
 msgid "Authenticate domain"
 msgstr ""
 
@@ -12205,6 +12193,7 @@ msgid "Disengaged subscribers will [link]become inactive[/link] after {$months} 
 msgstr ""
 
 #: assets/dist/js/admin.js:2
+#: assets/dist/js/email-editor/email_editor.js:15
 #: assets/dist/js/newsletter_editor.js:2
 msgid "This email has already been sent. It can be edited, but not sent again. Duplicate this email if you want to send it again."
 msgstr ""
@@ -12219,14 +12208,6 @@ msgstr ""
 
 #: assets/dist/js/admin.js:2
 msgid "The newsletter is being sent..."
-msgstr ""
-
-#: assets/dist/js/admin.js:2
-msgid "Your %1s Automatic Email is now activated!"
-msgstr ""
-
-#: assets/dist/js/admin.js:2
-msgid "Your Welcome Email is now activated!"
 msgstr ""
 
 #: assets/dist/js/admin.js:2
@@ -12794,6 +12775,22 @@ msgid "Contacts who have interacted with your emails or made at least one purcha
 msgstr ""
 
 #: assets/dist/js/admin.js:2
+msgid "Unengaged Subscribers"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Contacts who haven’t interacted with your emails, haven’t made a purchase, or haven’t visited your page in the last 6 months."
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "First-Time Buyers"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Customers who have made their first purchase in the last 30 days."
+msgstr ""
+
+#: assets/dist/js/admin.js:2
 msgid "Recent Buyers"
 msgstr ""
 
@@ -12834,6 +12831,30 @@ msgid "Customers who haven’t made a purchase in the last 9 months."
 msgstr ""
 
 #: assets/dist/js/admin.js:2
+msgid "Clickers"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Contacts who regularly click on your emails in the last 90 days."
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Non-Openers"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Contacts who have received but haven’t opened an email in the last 90 days."
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Recent Clickers"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Contacts who have clicked on an email in the last 7 days."
+msgstr ""
+
+#: assets/dist/js/admin.js:2
 msgid "Recent Openers"
 msgstr ""
 
@@ -12847,6 +12868,22 @@ msgstr ""
 
 #: assets/dist/js/admin.js:2
 msgid "Customers who have completed $100 or more worth of orders in the last 12 months."
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Used a discount code"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Customers who made a purchase with a coupon code in the last 30 days."
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Frequently uses discounts"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Customers who have regularly used coupons in the last 90 days."
 msgstr ""
 
 #: assets/dist/js/admin.js:2
@@ -13144,11 +13181,11 @@ msgstr ""
 
 #: assets/dist/js/automation.js:1
 #: assets/dist/js/commons.js:9
-msgid "1 automation moved to the Trash."
+msgid "Automation \"%s\" was moved to the trash."
 msgstr ""
 
 #: assets/dist/js/automation.js:1
-msgid "1 automation restored from the Trash."
+msgid "Automation \"%s\" was restored from the trash."
 msgstr ""
 
 #: assets/dist/js/automation.js:1
@@ -13157,7 +13194,7 @@ msgid "Edit automation"
 msgstr ""
 
 #: assets/dist/js/automation.js:1
-msgid "1 automation and all associated data permanently deleted."
+msgid "Automation \"%s\" and all associated data were permanently deleted."
 msgstr ""
 
 #: assets/dist/js/automation.js:1
@@ -13258,6 +13295,10 @@ msgid "Exited"
 msgstr ""
 
 #: assets/dist/js/automation.js:1
+msgid "New automation"
+msgstr ""
+
+#: assets/dist/js/automation.js:1
 msgctxt "noun"
 msgid "Draft"
 msgstr ""
@@ -13265,10 +13306,6 @@ msgstr ""
 #: assets/dist/js/automation.js:1
 msgctxt "noun"
 msgid "Trash"
-msgstr ""
-
-#: assets/dist/js/automation.js:1
-msgid "New automation"
 msgstr ""
 
 #: assets/dist/js/automation.js:1
@@ -14002,7 +14039,7 @@ msgid "if/else"
 msgstr ""
 
 #: assets/dist/js/commons.js:9
-msgid "MailPoet shortcodes"
+msgid "You can use MailPoet shortcodes."
 msgstr ""
 
 #: assets/dist/js/commons.js:9
@@ -14750,15 +14787,7 @@ msgid "Delay"
 msgstr ""
 
 #: assets/dist/js/commons.js:9
-msgid "Your automation is now active."
-msgstr ""
-
-#: assets/dist/js/commons.js:9
-msgid "Your automation has been saved."
-msgstr ""
-
-#: assets/dist/js/commons.js:9
-msgid "You cannot edit this automation because it is in the Trash."
+msgid "You cannot edit automation \"%s\" because it is in the trash."
 msgstr ""
 
 #: assets/dist/js/commons.js:9
@@ -15067,6 +15096,26 @@ msgstr ""
 
 #: assets/dist/js/commons.js:9
 msgid "Purchase"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "Shared 3rd-party domains like <emailDomain/> will send from MailPoet's shared domain. We recommend that you use your site's branded domain instead."
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "MailPoet cannot send email campaigns from shared 3rd-party domains like <emailDomain/>. Please send from your site's branded domain instead."
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "Update your domain settings to improve email deliverability and meet new sending requirements."
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "Authenticate to send as <emailDomain/> and improve email deliverability."
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "Authenticate domain to send new emails as <emailDomain/>."
 msgstr ""
 
 #: assets/dist/js/commons.js:9

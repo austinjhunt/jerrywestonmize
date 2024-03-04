@@ -53,7 +53,10 @@ class SuccessfulBookingCommandHandler extends CommandHandler
             /** @var Payment $payment */
             $payment = $paymentRepository->getById($paymentId);
 
-            if ($payment && $payment->getActionsCompleted() && $payment->getActionsCompleted()->getValue()) {
+            if (
+                ($payment && $payment->getActionsCompleted() && $payment->getActionsCompleted()->getValue()) ||
+                ($payment && $payment->getTriggeredActions() && $payment->getTriggeredActions()->getValue())
+            ) {
                 $result = new CommandResult();
 
                 $result->setResult(CommandResult::RESULT_SUCCESS);
@@ -61,6 +64,8 @@ class SuccessfulBookingCommandHandler extends CommandHandler
                 $result->setDataInResponse(false);
 
                 return $result;
+            } elseif ($payment && !$payment->getTriggeredActions()) {
+                $paymentRepository->updateFieldById($paymentId, 1, 'triggeredActions');
             }
         }
 

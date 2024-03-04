@@ -288,7 +288,7 @@ interface ReservationServiceInterface
      * @param string $statusTarget
      * @param bool   $isUpdate
      *
-     * @return string|null
+     * @return mixed
      */
     public function getWcStatus($type, $orderStatus, $statusTarget, $isUpdate);
 }

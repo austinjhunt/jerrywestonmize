@@ -273,7 +273,9 @@ class GetTimeSlotsCommandHandler extends CommandHandler
                 );
 
                 if ($endDateTime->format('Y-m-d H:i') === $maximumDateTime->format('Y-m-d H:i') ||
-                    $endDateTime > $maximumDateTime
+                    ($endDateTime->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i') ===
+                        $maximumDateTime->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i')) ||
+                    ($endDateTime > $maximumDateTime)
                 ) {
                     break;
                 }

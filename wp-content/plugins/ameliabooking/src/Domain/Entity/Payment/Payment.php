@@ -61,6 +61,9 @@ class Payment
     /** @var BooleanValueObject */
     private $actionsCompleted;
 
+    /** @var BooleanValueObject */
+    private $triggeredActions;
+
     /** @var Id */
     private $wcOrderId;
 
@@ -315,6 +318,22 @@ class Payment
     }
 
     /**
+     * @return BooleanValueObject
+     */
+    public function getTriggeredActions()
+    {
+        return $this->triggeredActions;
+    }
+
+    /**
+     * @param BooleanValueObject $triggeredActions
+     */
+    public function setTriggeredActions($triggeredActions)
+    {
+        $this->triggeredActions = $triggeredActions;
+    }
+
+    /**
      * @return Id
      */
     public function getWcOrderId()
@@ -432,6 +451,7 @@ class Payment
             'entity'            => $this->getEntity() ? $this->getEntity()->getValue() : null,
             'created'           => $this->getCreated() ? $this->getCreated()->getValue()->format('Y-m-d H:i:s') : null,
             'actionsCompleted'  => $this->getActionsCompleted() ? $this->getActionsCompleted()->getValue() : null,
+            'triggeredActions'  => $this->getTriggeredActions() ? $this->getTriggeredActions()->getValue() : null,
             'wcOrderId'         => $this->getWcOrderId() ? $this->getWcOrderId()->getValue() : null,
             'wcOrderItemId'     => $this->getWcOrderItemId() ? $this->getWcOrderItemId()->getValue() : null,
             'wcOrderUrl'        => $this->getWcOrderUrl() ? $this->getWcOrderUrl()->getValue() : null,

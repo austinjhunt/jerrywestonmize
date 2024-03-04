@@ -920,8 +920,11 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 /** @var Payment $payment */
                 $payment = $paymentRepository->getById($result->getData()['paymentId']);
 
-                if ($payment && $payment->getActionsCompleted() && $payment->getActionsCompleted()->getValue()) {
+                if ($payment && $payment->getActionsCompleted() && $payment->getActionsCompleted()->getValue() ||
+                    $payment && $payment->getTriggeredActions() && $payment->getTriggeredActions()->getValue()) {
                     return;
+                } elseif ($payment && !$payment->getTriggeredActions()) {
+                    $paymentRepository->updateFieldById($payment->getId()->getValue(), 1, 'triggeredActions');
                 }
             }
 

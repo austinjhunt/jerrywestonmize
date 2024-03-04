@@ -76,6 +76,10 @@ class PaymentFactory
             $payment->setActionsCompleted(new BooleanValueObject($data['actionsCompleted']));
         }
 
+        if (!empty($data['triggeredActions'])) {
+            $payment->setTriggeredActions(new BooleanValueObject($data['triggeredActions']));
+        }
+
         if (!empty($data['created'])) {
             $payment->setCreated(new DateTimeValue(DateTimeService::getCustomDateTimeObject($data['created'])));
         }

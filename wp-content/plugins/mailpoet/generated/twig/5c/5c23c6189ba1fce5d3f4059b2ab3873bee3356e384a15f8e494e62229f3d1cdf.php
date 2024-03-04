@@ -47,7 +47,7 @@ class __TwigTemplate_7c02796c5b5268230e497d766ca01a9eda895b0cd8b3c0b91f858a1c150
 <div class=\"mailpoet_content mailpoet_woocommerce_content\" data-automation-id=\"woocommerce_content\">
 <p style=\"margin:0 0 16px\">";
         // line 6
-        echo \MailPoetVendor\twig_escape_filter($this->env, \MailPoetVendor\twig_sprintf($this->extensions['MailPoet\Twig\I18n']->translate("Hi %s,", "woocommerce"), "Elon"), "html", null, true);
+        echo \MailPoetVendor\twig_escape_filter($this->env, \MailPoetVendor\twig_sprintf($this->extensions['MailPoet\Twig\I18n']->translate("Hi %s,", "woocommerce"), "Jane"), "html", null, true);
         echo "</p>
 <p style=\"margin:0 0 16px\">";
         // line 7
@@ -135,7 +135,7 @@ class __TwigTemplate_7c02796c5b5268230e497d766ca01a9eda895b0cd8b3c0b91f858a1c150
         echo $this->extensions['MailPoet\Twig\I18n']->translate("Billing address", "woocommerce");
         echo "</h2>
 
-\t\t\t<address class=\"m_3180768237544866075address\" style=\"padding:12px;border:1px solid #e4e4e4\">Elon Musk<br>42 rue Blue Origin<br>75000 Paris<br>France</address>
+\t\t\t<address class=\"m_3180768237544866075address\" style=\"padding:12px;border:1px solid #e4e4e4\">Jane Doe<br>42 rue Blue Origin<br>75000 Paris<br>France</address>
 \t\t</td>
 \t\t\t\t\t<td valign=\"top\" width=\"50%\" style=\"text-align:left;font-family:'Helvetica Neue',Helvetica,Roboto,Arial,sans-serif;padding:0\">
 \t\t\t\t<h2 style=\"display:block;font-family:&quot;Helvetica Neue&quot;,Helvetica,Roboto,Arial,sans-serif;font-size:18px;font-weight:bold;line-height:130%;margin:0 0 18px;text-align:left\">";
@@ -143,7 +143,7 @@ class __TwigTemplate_7c02796c5b5268230e497d766ca01a9eda895b0cd8b3c0b91f858a1c150
         echo $this->extensions['MailPoet\Twig\I18n']->translate("Shipping address", "woocommerce");
         echo "</h2>
 
-\t\t\t\t<address class=\"m_3180768237544866075address\" style=\"padding:12px;border:1px solid #e4e4e4\">Elon Musk<br>42 rue Blue Origin<br>75000 Paris<br>France</address>
+\t\t\t\t<address class=\"m_3180768237544866075address\" style=\"padding:12px;border:1px solid #e4e4e4\">Jane Doe<br>42 rue Blue Origin<br>75000 Paris<br>France</address>
 \t\t\t</td>
 \t\t\t</tr>
 </tbody></table>
@@ -152,7 +152,8 @@ class __TwigTemplate_7c02796c5b5268230e497d766ca01a9eda895b0cd8b3c0b91f858a1c150
         echo $this->extensions['MailPoet\Twig\I18n']->translate("Thanks for shopping with us.", "woocommerce");
         echo "</p>
 </div>
-<div class=\"mailpoet_block_highlight\"></div>";
+<div class=\"mailpoet_block_highlight\"></div>
+";
     }
 
     public function getTemplateName()

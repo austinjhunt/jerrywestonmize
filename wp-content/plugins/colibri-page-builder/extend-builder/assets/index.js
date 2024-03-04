@@ -75,6 +75,7 @@
                             action: action,
                             data: options
                         }),
+                        _wpnonce:  _extendBuilderWPData.extend_builder_api_nonce,
                     }, function(response) {
                         //console.error('call response###', response);
                         success(response);
@@ -141,6 +142,7 @@
                             var data = _.extend( _.omit(currentChangeset,['customized']), {
                                 action: 'cp_shortcode_refresh',
                                 shortcode: encodedShortcode,
+                                _wpnonce: _extendBuilderWPData.cp_shortcode_refresh_nonce,
                                 rawShortcode : options.shortcode,
                                 context: context,
                                 _: Date.now()

@@ -18,6 +18,8 @@ class Api
 
     public function apiCall()
     {
+
+
         if (!colibri_user_can_customize()) {
             wp_send_json_error('unauthenticated');
             wp_die();
@@ -26,7 +28,7 @@ class Api
         if (!defined('DOING_AJAX')) {
             define( 'DOING_AJAX', true );
         }
-
+	    check_ajax_referer( 'extend_builder_api_nonce' );
         $options = isset($_REQUEST['api']) ? $_REQUEST['api'] : "{}";
         $options = wp_unslash($options);
 

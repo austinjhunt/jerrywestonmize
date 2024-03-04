@@ -826,7 +826,7 @@ class TimeSlotService
                         continue;
                     }
 
-                    $endInSeconds = $this->intervalService->getSeconds($appointmentData['endTime']);
+                    $endInSeconds = $this->intervalService->getSeconds($appointmentData['endTime']) + $service->getTimeAfter()->getValue();
 
                     $newEndInSeconds = $startInSeconds + $realRequiredTime;
 

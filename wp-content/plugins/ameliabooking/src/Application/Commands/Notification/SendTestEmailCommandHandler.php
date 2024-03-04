@@ -114,12 +114,24 @@ class SendTestEmailCommandHandler extends CommandHandler
             $dummyData
         );
 
-        $mailService->send(
-            $command->getField('recipientEmail'),
-            $subject,
-            $notificationService->getParsedBody($content),
-            $settingsAS->getBccEmails()
+        $emailData = apply_filters(
+            'amelia_manipulate_test_email_data',
+            [
+                'email'   => $command->getField('recipientEmail'),
+                'subject' => $subject,
+                'body'    => $notificationService->getParsedBody($content),
+                'bcc'     => $settingsAS->getBccEmails()
+            ]
         );
+
+        if (empty($emailData['skipSending'])) {
+            $mailService->send(
+                $emailData['email'],
+                $emailData['subject'],
+                $emailData['body'],
+                $emailData['bcc']
+            );
+        }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Test email successfully sent');

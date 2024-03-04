@@ -792,7 +792,8 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
         $params = [
             ':dayIndex'         => $dayIndex === 0 ? 7 : $dayIndex,
             ':type'             => AbstractUser::USER_ROLE_PROVIDER,
-            ':providerTimeZone' => $providerTimeZone
+            ':providerTimeZone' => $providerTimeZone,
+            ':WPtimeZone'       => DateTimeService::getTimeZone()->getName()
         ];
 
         try {
@@ -814,7 +815,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
               LEFT JOIN {$this->providerPeriodTable} pt ON pt.weekDayId = wdt.id
               WHERE u.type = :type AND
               wdt.dayIndex = :dayIndex AND
-              (u.timeZone = NULL OR u.timeZone = :providerTimeZone) AND
+              (COALESCE(u.timeZone, :WPtimeZone) = :providerTimeZone) AND
               ((
               {$currentDateTimeSQL} >= wdt.startTime AND
               {$currentDateTimeSQL} <= wdt.endTime AND

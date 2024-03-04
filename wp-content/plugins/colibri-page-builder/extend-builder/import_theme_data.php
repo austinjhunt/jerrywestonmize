@@ -226,7 +226,24 @@ class ColibriThemeDataImporter {
 					$data[ $key ] = $value;
 
 					break;
-
+					//For althea. The data is saved differently in this theme for iconList
+				case 'icon_list.localProps.iconList.0.icon.name':
+					$key = 'icon_list.localProps.iconList';
+					$icons = [];
+					for($i = 0; $i < 3; $i++) {
+						$icon = [
+							"type" => "svg",
+							'icon' => isset($data["icon_list.localProps.iconList.$i.icon.name"]) ? $data["icon_list.localProps.iconList.$i.icon.name"] : null,
+							"name" =>  isset($data["icon_list.localProps.iconList.$i.icon.name"]) ? $data["icon_list.localProps.iconList.$i.icon.name"] : null,
+							"link" => array(
+								"value" =>  isset($data["icon_list.localProps.iconList.$i.link_value"]) ? $data["icon_list.localProps.iconList.$i.link_value"] : null,
+							),
+							"text" => isset($data["icon_list.localProps.iconList.$i.text"]) ? $data["icon_list.localProps.iconList.$i.text"] : ''
+						];
+						$icons[] = $icon;
+					}
+				$data[ $key ] = $icons;
+					break;
 				case 'hero.style.background.overlay.color.opacity_':
 					//rewrite opacity_ to opacity (there was a problem with customizer controls that prevented usage of opacity)
 					$new_key = 'hero.style.background.overlay.color.opacity';

@@ -327,21 +327,21 @@ $colibri_recommended_plugins_data = [
 		'pro'         => 'wp-smush-pro/wp-smush.php',
 		'name'        => 'Smush',
 		'description' => 'Compress and optimize images with lazy load, WebP conversion, and resize detection to increase site performance.',
-		'slug'        => 'wp-smushit',
+		'wp_org_slug'        => 'wp-smushit',
 	],
 	'hummingbird' => [
 		'free'        => 'hummingbird-performance/wp-hummingbird.php',
 		'pro'         => 'wp-hummingbird/wp-hummingbird.php',
 		'name'        => 'Hummingbird',
 		'description' => 'Make your site faster by adding cache, minify CSS and Javascript, defer critical .CSS and .JS, Smush lazy load integration and much more.',
-		'slug'        => 'hummingbird-performance',
+		'wp_org_slug'        => 'hummingbird-performance',
 	],
 	'defender'    => [
 		'free'        => 'defender-security/wp-defender.php',
 		'pro'         => 'wp-defender/wp-defender.php',
 		'name'        => 'Defender',
 		'description' => 'WordPress security plugin with malware scans, IP blocking, audit logs, firewall, login security & more.',
-		'slug'        => 'defender-security',
+		'wp_org_slug'        => 'defender-security',
 	],
 
 	'forminator' => [
@@ -350,7 +350,7 @@ $colibri_recommended_plugins_data = [
 		'name'          => 'Forminator',
 		'description'   => 'Forminator is an expandable form builder plugin for WordPress.',
 		'suppressed_by' => 'contact-form-7',
-		'slug'          => 'forminator',
+		'wp_org_slug'          => 'forminator',
 	],
 
 	'hustle' => [
@@ -359,7 +359,7 @@ $colibri_recommended_plugins_data = [
 		'name'          => 'Hustle',
 		'description'   => 'Collect email addresses with pop-ups, slide-ins, widgets, or in post opt-in forms.',
 		'suppressed_by' => 'mailchimp-for-wp',
-		'slug'          => 'wordpress-popup',
+		'wp_org_slug'          => 'wordpress-popup',
 	],
 
 ];
@@ -376,6 +376,7 @@ function colibri_wpmu_get_recommended_plugins() {
 			'description'   => $plugin_data['description'],
 			'plugin_path'   => $plugin_data['free'],
 			'suppressed_by' => array_get_value( $plugin_data, 'suppressed_by', false ),
+            'wp_org_slug'   => $plugin_data['wp_org_slug']
 		);
 
 
@@ -394,12 +395,13 @@ function colibri_wpmu_get_recommended_plugins() {
 
 function colibri_plugin_is_compatible($plugin_slug) {
 	//only do requests in admin pages. For other types of pages mark it as true. We only care for admin pages where you have buttons to install the
-    //recommended plugins.
+    //recommended plugins. This needs to be true for plugins inside the customizer
 	if(!is_admin()) {
 		return true;
 	}
 	$wp_org_data_transient_key = 'colibri_recommended_plugin_' . $plugin_slug . '_wp_org_data';
 	// delete_transient($wp_org_data_transient_key);
+
 	$wp_org_data = get_transient( $wp_org_data_transient_key );
 	if ( ! $wp_org_data ) {
 
@@ -408,8 +410,8 @@ function colibri_plugin_is_compatible($plugin_slug) {
 		$api_url = 'https://api.wordpress.org/plugins/info/1.0/' . $plugin_slug . '.json';
 
 		$response = wp_remote_get( $api_url );
-
-		if ( ! is_wp_error( $response ) ) {
+		$response_code = wp_remote_retrieve_response_code($response);
+		if ( ! is_wp_error( $response ) && $response_code === 200 ) {
 			$body          = wp_remote_retrieve_body( $response );
 			$response_data = json_decode( $body, true );
 
@@ -424,7 +426,10 @@ function colibri_plugin_is_compatible($plugin_slug) {
 				//save transient for one day
 				set_transient( $wp_org_data_transient_key, $wp_org_data, DAY_IN_SECONDS );
 			}
-		}
+		} else {
+            //also set transient on error to not spam the user with requests
+			set_transient( $wp_org_data_transient_key, ['error' => true], DAY_IN_SECONDS );
+        }
 
 	}
 
@@ -437,7 +442,9 @@ function colibri_plugin_is_compatible($plugin_slug) {
 		) {
 			return false;
 		}
-	}
+	} else {
+        return false;
+    }
 
     return true;
 }
@@ -456,12 +463,11 @@ function colibri_filter_theme_plugins_that_are_not_compatible($plugins) {
 
 	//Remove plugins that are not compatible with the current php and wp version
 	foreach ( $plugins as $plugin => $plugin_data ) {
-		$plugin_slug = isset( $plugin_data['slug'] ) ? $plugin_data['slug'] : false;
-		if ( ! $plugin_slug && isset( $colibri_recommended_plugins_data[ $plugin ] ) ) {
-			$plugin_slug = $colibri_recommended_plugins_data[ $plugin ]['slug'];
-		}
+		$plugin_slug = isset( $plugin_data['wp_org_slug'] ) ? $plugin_data['wp_org_slug'] : false;
 
-		//if not slug is provided return it
+
+
+		//if slug is no wp org slug is provided then we skip version check
 		if ( ! $plugin_slug ) {
 			$final_plugins[ $plugin ] = $plugin_data;
 			continue;

@@ -1231,6 +1231,7 @@ class LiteBackendStrings
             'go_back'                            => __('Go Back', 'wpamelia'),
             'service_name'                       => __('Service name', 'wpamelia'),
             'display_field'                      => __('Display Field:', 'wpamelia'),
+            'filterable_field'                   => __('Filterable Field:', 'wpamelia'),
             'mandatory_field'                    => __('Mandatory Field:', 'wpamelia'),
             'event_type'                         => __('Event Type', 'wpamelia'),
             'event_location'                     => __('Event Location', 'wpamelia'),

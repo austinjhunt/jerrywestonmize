@@ -17,8 +17,8 @@ class Renderer {
   /** @var BlocksRegistry */
   private $blocksRegistry;
 
-  /** @var PreprocessManager */
-  private $preprocessManager;
+  /** @var ProcessManager */
+  private $processManager;
 
   /** @var SettingsController */
   private $settingsController;
@@ -31,12 +31,12 @@ class Renderer {
    */
   public function __construct(
     \MailPoetVendor\CSS $cssInliner,
-    PreprocessManager $preprocessManager,
+    ProcessManager $preprocessManager,
     BlocksRegistry $blocksRegistry,
     SettingsController $settingsController
   ) {
     $this->cssInliner = $cssInliner;
-    $this->preprocessManager = $preprocessManager;
+    $this->processManager = $preprocessManager;
     $this->blocksRegistry = $blocksRegistry;
     $this->settingsController = $settingsController;
   }
@@ -49,7 +49,7 @@ class Renderer {
     $themeData = $this->settingsController->getTheme()->get_data();
     $contentBackground = $themeData['styles']['color']['background'] ?? $layoutStyles['background'];
     $contentFontFamily = $themeData['styles']['typography']['fontFamily'];
-    $parsedBlocks = $this->preprocessManager->preprocess($parsedBlocks, $layoutStyles);
+    $parsedBlocks = $this->processManager->preprocess($parsedBlocks, $layoutStyles);
     $renderedBody = $this->renderBlocks($parsedBlocks);
 
     $styles = (string)file_get_contents(dirname(__FILE__) . '/' . self::TEMPLATE_STYLES_FILE);
@@ -88,6 +88,7 @@ class Renderer {
 
     $templateWithContentsDom = $this->inlineCSSStyles($templateWithContents);
     $templateWithContents = $this->postProcessTemplate($templateWithContentsDom);
+    $templateWithContents = $this->processManager->postprocess($templateWithContents);
     return [
       'html' => $templateWithContents,
       'text' => $this->renderTextVersion($templateWithContents),
@@ -112,7 +113,7 @@ class Renderer {
   }
 
   private function injectContentIntoTemplate($template, array $content) {
-    return preg_replace_callback('/{{\w+}}/', function($matches) use (&$content) {
+    return preg_replace_callback('/{{\w+}}/', function ($matches) use (&$content) {
       return array_shift($content);
     }, $template);
   }
@@ -139,10 +140,6 @@ class Renderer {
    * @return string
    */
   private function postProcessTemplate(DomNode $templateDom) {
-    // replace spaces in image tag URLs
-    foreach ($templateDom->query('img') as $image) {
-      $image->src = str_replace(' ', '%20', $image->src);
-    }
     // because tburry/pquery contains a bug and replaces the opening non mso condition incorrectly we have to replace the opening tag with correct value
     $template = $templateDom->__toString();
     $template = str_replace('<!--[if !mso]><![endif]-->', '<!--[if !mso]><!-- -->', $template);

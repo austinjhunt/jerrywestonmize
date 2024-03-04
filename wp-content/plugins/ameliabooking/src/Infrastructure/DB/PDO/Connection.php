@@ -69,6 +69,7 @@ class Connection extends \AmeliaBooking\Infrastructure\Connection
             PDO::ATTR_EMULATE_PREPARES,
             $emulatePrepares !== null ? $emulatePrepares : false
         );
+
         $this->handler->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
         $this->handler->exec('SET SESSION sql_mode = "TRADITIONAL"');

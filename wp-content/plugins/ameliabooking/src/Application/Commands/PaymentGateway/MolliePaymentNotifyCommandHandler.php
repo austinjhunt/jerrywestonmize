@@ -486,6 +486,16 @@ class MolliePaymentNotifyCommandHandler extends CommandHandler
                     break;
             }
 
+            $cacheDataArray = json_decode($cache->getData()->getValue(), true);
+
+            $trigger = $cacheDataArray && isset($cacheDataArray['request']['trigger'])
+                ? $cacheDataArray['request']['trigger']
+                : (
+                $cacheDataArray && isset($cacheDataArray['request']['form']['shortcode']['trigger'])
+                    ? $cacheDataArray['request']['form']['shortcode']['trigger']
+                    : ''
+                );
+
             $cache->setData(
                 new Json(
                     json_encode(
@@ -506,7 +516,7 @@ class MolliePaymentNotifyCommandHandler extends CommandHandler
             /** @var SettingsService $settingsService */
             $settingsService = $this->container->get('domain.settings.service');
 
-            if ($settingsService->getSetting('general', 'runInstantPostBookingActions')) {
+            if ($settingsService->getSetting('general', 'runInstantPostBookingActions') || $trigger) {
                 $reservationService->runPostBookingActions($result);
             }
         } elseif ($cacheData['status'] === null &&

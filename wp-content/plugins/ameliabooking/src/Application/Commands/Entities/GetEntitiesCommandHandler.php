@@ -17,6 +17,7 @@ use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -27,6 +28,7 @@ use AmeliaBooking\Domain\Services\Booking\EventDomainService;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\Services\User\ProviderService;
+use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\CategoryRepository;
@@ -170,8 +172,23 @@ class GetEntitiesCommandHandler extends CommandHandler
             /** @var BookableApplicationService $bookableAS */
             $bookableAS = $this->container->get('application.bookable.service');
 
-            /** @var Collection $services */
-            $services = $serviceRepository->getAllArrayIndexedById();
+            /** @var Collection $allServices */
+            $allServices = $serviceRepository->getAllArrayIndexedById();
+
+            $showHiddenServices = $currentUser &&
+                (
+                    $currentUser->getType() === AbstractUser::USER_ROLE_CUSTOMER ||
+                    $currentUser->getType() === AbstractUser::USER_ROLE_ADMIN ||
+                    $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER ||
+                    $currentUser->getType() === AbstractUser::USER_ROLE_MANAGER
+                );
+
+            /** @var Service $service */
+            foreach ($allServices->getItems() as $service) {
+                if ($service->getStatus()->getValue() === Status::VISIBLE || $showHiddenServices) {
+                    $services->addItem($service, $service->getId()->getValue());
+                }
+            }
 
             /** @var Collection $categories */
             $categories = $categoryRepository->getAllIndexedById();

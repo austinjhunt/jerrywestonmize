@@ -491,5 +491,148 @@
         margin: 0 10px;
       }
     }
+
+    &-features {
+      gap: 24px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 50px 40px;
+
+      &-left {
+        flex: 1 0 0;
+        padding: 20px 36px;
+        border-radius: 12px;
+        background: #FFF;
+        box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.07);
+        gap: 24px;
+        flex-direction: column;
+        display: flex;
+
+        img {
+          max-width: 100%;
+        }
+      }
+
+      &-right {
+        width: 31%;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      &-list {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        align-self: stretch;
+      }
+
+      &-item {
+        display: flex;
+        align-items: center;
+        flex: calc(50% - 8px);
+        background-color: #F4F7FE;
+        padding: 12px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        transition: background-color .3s ease-in-out;
+
+        &:nth-child(even) {
+          margin-left: 8px;
+        }
+
+        &:nth-child(odd) {
+          margin-right: 8px;
+        }
+
+        &:hover {
+          background-color: #dbe6ff;
+        }
+
+        img {
+          width: 24px;
+          height: 24px;
+          flex: 0 0 auto;
+        }
+
+        span {
+          display: block;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 1.42857;
+          margin-left: 8px;
+          color: #1A2C37;
+        }
+
+        @media @less-then-small {
+          flex: 100%;
+
+          &:nth-child(even) {
+            margin-left: 0;
+          }
+
+          &:nth-child(odd) {
+            margin-right: 0;
+          }
+        }
+      }
+
+      @media @less-then-xlarge {
+        margin: 0 auto;
+      }
+
+      @media @less-then-medium {
+        flex-direction: column;
+
+        &-right {
+          width: auto;
+        }
+
+        &-left {
+          width: 100%;
+          justify-content: center;
+          display: flex;
+        }
+      }
+
+      @media @less-then-xsmall {
+        padding: 50px 20px;
+        margin: 0 20px;
+      }
+
+      @media @less-then-large {
+        flex-direction: column;
+        gap: 40px;
+
+        &-left {
+          width: auto;
+        }
+
+        &-right {
+          width: auto;
+          flex-direction: row;
+        }
+      }
+
+      @media @less-then-small {
+
+        &-right {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+
+      @media @less-then-xsmall {
+        padding: 50px 10px;
+        margin: 0 10px;
+
+        &-left {
+          padding: 20px;
+        }
+      }
+    }
   }
 }

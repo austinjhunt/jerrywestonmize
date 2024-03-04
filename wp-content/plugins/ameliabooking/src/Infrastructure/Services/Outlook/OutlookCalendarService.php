@@ -107,7 +107,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 [
                 'client_id'     => $outlookSettings['clientID'],
                 'response_type' => 'code',
-                'redirect_uri'  => str_replace('http://', 'https://', $outlookSettings['redirectURI']),
+                    'redirect_uri'  => !AMELIA_DEV
+                        ? str_replace('http://', 'https://', $outlookSettings['redirectURI'])
+                        : $outlookSettings['redirectURI'],
                 'scope'         => 'offline_access calendars.readwrite',
                 'response_mode' => 'query',
                 'state'         => 'amelia-outlook-calendar-auth-' . $providerId,
@@ -152,6 +154,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         /** @var array $outlookSettings */
         $outlookSettings = $settingsService->getCategorySettings('outlookCalendar');
 
+        $redirectUrl = empty($redirectUri) ? $outlookSettings['redirectURI'] : explode('?', $redirectUri)[0];
+
         $response = wp_remote_post(
             'https://login.microsoftonline.com/common/oauth2/v2.0/token',
             [
@@ -161,11 +165,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     'client_secret' => $outlookSettings['clientSecret'],
                     'grant_type'    => 'authorization_code',
                     'code'          => $authCode,
-                    'redirect_uri'  => str_replace(
-                        'http://',
-                        'https://',
-                        empty($redirectUri) ? $outlookSettings['redirectURI'] : explode('?', $redirectUri)[0]
-                    ),
+                    'redirect_uri'  => !AMELIA_DEV
+                        ? str_replace('http://', 'https://', $redirectUrl)
+                        : $redirectUrl,
                     'scope'         => 'offline_access calendars.readwrite',
                 ]
             ]
@@ -339,6 +341,11 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     if ($appointmentStatus === 'approved' && $oldStatus && $oldStatus !== 'approved' &&
                         $this->settings['insertPendingAppointments'] === false
                     ) {
+                        $this->insertEvent($appointment, $provider);
+                        break;
+                    }
+
+                    if (!$appointment->getOutlookCalendarEventId()) {
                         $this->insertEvent($appointment, $provider);
                         break;
                     }
@@ -939,7 +946,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 'client_secret' => $outlookSettings['clientSecret'],
                 'grant_type'    => 'refresh_token',
                 'refresh_token' => $decodedToken['refresh_token'],
-                'redirect_uri'  => str_replace('http://', 'https://', $outlookSettings['redirectURI']),
+                'redirect_uri'  => !AMELIA_DEV
+                    ? str_replace('http://', 'https://', $outlookSettings['redirectURI'])
+                    : $outlookSettings['redirectURI'],
                 'scope'         => 'offline_access calendars.readwrite',
             )
             )

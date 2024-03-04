@@ -47,7 +47,7 @@ class __TwigTemplate_d3c0219cc7d428fe42a4fc7e74d053d0913c24417b15ad16753e99a9561
 <div class=\"mailpoet_content mailpoet_woocommerce_content\" data-automation-id=\"woocommerce_content\">
 <p style=\"margin:0 0 16px\">";
         // line 6
-        echo \MailPoetVendor\twig_escape_filter($this->env, \MailPoetVendor\twig_sprintf($this->extensions['MailPoet\Twig\I18n']->translate("Hi %s,", "woocommerce"), "Elon"), "html", null, true);
+        echo \MailPoetVendor\twig_escape_filter($this->env, \MailPoetVendor\twig_sprintf($this->extensions['MailPoet\Twig\I18n']->translate("Hi %s,", "woocommerce"), "Jane"), "html", null, true);
         echo "</p>
 <p style=\"margin:0 0 16px\">";
         // line 7
@@ -58,7 +58,8 @@ class __TwigTemplate_d3c0219cc7d428fe42a4fc7e74d053d0913c24417b15ad16753e99a9561
         echo $this->extensions['MailPoet\Twig\I18n']->translate("We look forward to seeing you soon.", "woocommerce");
         echo "</p>
 </div>
-<div class=\"mailpoet_block_highlight\"></div>";
+<div class=\"mailpoet_block_highlight\"></div>
+";
     }
 
     public function getTemplateName()

@@ -4,6 +4,7 @@ namespace AmeliaBooking\Application\Controller;
 
 use AmeliaBooking\Application\Commands\Command;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
+use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Permissions\PermissionsService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
@@ -220,7 +221,22 @@ abstract class Controller
         foreach ($names as $name) {
             if (!empty($params[$name])) {
                 $params[$name] = is_array($params[$name]) ? $params[$name] : explode(',', $params[$name]);
+
+                if (isset($params['dates'][0])) {
+                    $params['dates'][0] = preg_match("/^\d{4}-\d{2}-\d{2}$/", $params['dates'][0]) ?
+                        $params['dates'][0] : DateTimeService::getNowDate();
+                }
+
+                if (isset($params['dates'][1])) {
+                    $params['dates'][1] = preg_match("/^\d{4}-\d{2}-\d{2}$/", $params['dates'][1]) ?
+                        $params['dates'][1] : DateTimeService::getNowDate();
+                }
             }
+        }
+
+        if (isset($params['date'])) {
+            $params['date'] = preg_match("/^\d{4}-\d{2}-\d{2}$/", $params['date']) ?
+                $params['date'] : DateTimeService::getNowDate();
         }
     }
 }

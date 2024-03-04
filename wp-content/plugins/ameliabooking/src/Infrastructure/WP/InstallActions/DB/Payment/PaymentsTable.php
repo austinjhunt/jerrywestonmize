@@ -41,6 +41,7 @@ class PaymentsTable extends AbstractDatabaseTable
                    `entity` ENUM('appointment', 'event', 'package') NULL,
                    `created` DATETIME NULL,
                    `actionsCompleted` TINYINT(1) NULL,
+                   `triggeredActions` TINYINT(1) NULL,
                    `wcOrderId` bigint(20) NULL,
                    `wcOrderItemId` bigint(20) NULL,
                    `transactionId` varchar(255) NULL,

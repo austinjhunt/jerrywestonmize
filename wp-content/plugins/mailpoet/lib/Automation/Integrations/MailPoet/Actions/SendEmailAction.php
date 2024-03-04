@@ -36,6 +36,13 @@ use Throwable;
 class SendEmailAction implements Action {
   const KEY = 'mailpoet:send-email';
 
+  private const TRANSACTIONAL_TRIGGERS = [
+    'woocommerce:order-status-changed',
+    'woocommerce:order-created',
+    'woocommerce:order-completed',
+    'woocommerce:order-cancelled',
+  ];
+
   /** @var SettingsController */
   private $settings;
 
@@ -170,26 +177,34 @@ class SendEmailAction implements Action {
     $subscriberId = $args->getSinglePayloadByClass(SubscriberPayload::class)->getId();
     try {
       $segmentId = $args->getSinglePayloadByClass(SegmentPayload::class)->getId();
-
-      $subscriberSegment = $this->subscriberSegmentRepository->findOneBy([
-        'subscriber' => $subscriberId,
-        'segment' => $segmentId,
-        'status' => SubscriberEntity::STATUS_SUBSCRIBED,
-      ]);
-
-      if (!$subscriberSegment) {
-        throw InvalidStateException::create()->withMessage(sprintf("Subscriber ID '%s' is not subscribed to segment ID '%s'.", $subscriberId, $segmentId));
-      }
-
-      $subscriber = $subscriberSegment->getSubscriber();
-      if (!$subscriber) {
-        throw InvalidStateException::create();
-      }
     } catch (NotFoundException $e) {
+      $segmentId = null;
+    }
+
+    // Without segment, fetch subscriber by ID (needed e.g. for "mailpoet:custom-trigger").
+    // Transactional emails don't need to be checked against segment, no matter if it's set.
+    if (!$segmentId || $this->isTransactional($args->getStep(), $args->getAutomation())) {
       $subscriber = $this->subscribersRepository->findOneById($subscriberId);
       if (!$subscriber) {
         throw InvalidStateException::create();
       }
+      return $subscriber;
+    }
+
+    // With segment, fetch subscriber segment and check if they are subscribed.
+    $subscriberSegment = $this->subscriberSegmentRepository->findOneBy([
+      'subscriber' => $subscriberId,
+      'segment' => $segmentId,
+      'status' => SubscriberEntity::STATUS_SUBSCRIBED,
+    ]);
+
+    if (!$subscriberSegment) {
+      throw InvalidStateException::create()->withMessage(sprintf("Subscriber ID '%s' is not subscribed to segment ID '%s'.", $subscriberId, $segmentId));
+    }
+
+    $subscriber = $subscriberSegment->getSubscriber();
+    if (!$subscriber) {
+      throw InvalidStateException::create();
     }
     return $subscriber;
   }
@@ -261,7 +276,7 @@ class SendEmailAction implements Action {
     $transactionalTriggers = array_filter(
       $triggers,
       function(Step $step): bool {
-        return in_array($step->getKey(), ['woocommerce:order-status-changed'], true);
+        return in_array($step->getKey(), self::TRANSACTIONAL_TRIGGERS, true);
       }
     );
 
@@ -281,7 +296,7 @@ class SendEmailAction implements Action {
     return (bool)array_filter(
       $automation->getTriggers(),
       function(Step $step): bool {
-        return in_array($step->getKey(), ['woocommerce:order-status-changed', 'woocommerce:abandoned-cart'], true);
+        return strpos($step->getKey(), 'woocommerce:') === 0;
       }
     );
   }

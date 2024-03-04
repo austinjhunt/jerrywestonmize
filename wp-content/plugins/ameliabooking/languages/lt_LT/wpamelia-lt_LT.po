@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Amelia\n"
-"POT-Creation-Date: 2024-01-17 18:45+0100\n"
-"PO-Revision-Date: 2024-01-17 18:45+0100\n"
+"POT-Creation-Date: 2024-02-13 17:01+0100\n"
+"PO-Revision-Date: 2024-02-13 17:01+0100\n"
 "Last-Translator: Andrius Mažeika <andrius@mazeika.info>\n"
 "Language-Team: Amelia\n"
 "Language: lt\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-Basepath: ../../src/Infrastructure/WP/Translations\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;gettext;gettext_noop;_\n"
@@ -20,7 +20,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: BackendStrings.php:27 BackendStrings.php:1683 FrontendStrings.php:540
+#: BackendStrings.php:27 BackendStrings.php:1684 FrontendStrings.php:540
 msgid "All"
 msgstr "Visi"
 
@@ -53,7 +53,7 @@ msgstr ""
 #: BackendStrings.php:34
 #, fuzzy
 msgid "Booking"
-msgstr "Atsiprašome. Rezervacijos į krepšelį įkelti nepavyko."
+msgstr "Dėkojame! Jūsų rezervacija gauta."
 
 #: BackendStrings.php:35
 msgid "Canceled By Admin"
@@ -81,7 +81,7 @@ msgstr ""
 #: FrontendStrings.php:438
 #, fuzzy
 msgid "Coupon"
-msgstr "Nuolaidos kuponas jau panaudotas"
+msgstr "Jūsų įvestas nuolaidos kodas negalioja."
 
 #: BackendStrings.php:41 FrontendStrings.php:119
 msgid "The coupon you entered is not valid"
@@ -99,7 +99,7 @@ msgstr "Sukurti naują"
 msgid "Customer has already booked this appointment"
 msgstr "Jūs jau esate užsisakę šį laiką"
 
-#: BackendStrings.php:44 BackendStrings.php:1811 FrontendStrings.php:323
+#: BackendStrings.php:44 BackendStrings.php:1812 FrontendStrings.php:323
 msgid "Specific Date"
 msgstr "Specialios dienos"
 
@@ -120,7 +120,7 @@ msgstr "Nuolaida (%)"
 msgid "Expiration date"
 msgstr ""
 
-#: BackendStrings.php:49 BackendStrings.php:1713 FrontendStrings.php:506
+#: BackendStrings.php:49 BackendStrings.php:1714 FrontendStrings.php:506
 msgid "Tickets"
 msgstr ""
 
@@ -174,18 +174,19 @@ msgstr ""
 msgid "Here you can enable/disable On-Site payments for this service"
 msgstr ""
 
-#: BackendStrings.php:60 LiteBackendStrings.php:1237
+#: BackendStrings.php:60 LiteBackendStrings.php:1238
 #: LiteFrontendStrings.php:117
 msgid "Open"
 msgstr ""
 
 #: BackendStrings.php:61 BackendStrings.php:553 BackendStrings.php:1334
 #: BackendStrings.php:1445 BackendStrings.php:1565 BackendStrings.php:1574
-#: BackendStrings.php:1686 FrontendStrings.php:153 FrontendStrings.php:408
+#: BackendStrings.php:1687 FrontendStrings.php:153 FrontendStrings.php:408
 #: FrontendStrings.php:436 FrontendStrings.php:447 FrontendStrings.php:453
 #: FrontendStrings.php:544
+#, fuzzy
 msgid "Package"
-msgstr ""
+msgstr "Rezervacija išsaugota"
 
 #: BackendStrings.php:62 BackendStrings.php:1397
 msgid "Package Price"
@@ -240,20 +241,21 @@ msgid "Hide Employee Profile"
 msgstr ""
 
 #: BackendStrings.php:72 FrontendStrings.php:303 FrontendStrings.php:853
+#, fuzzy
 msgid "Recurring"
-msgstr ""
+msgstr "Ateinančios rezervacijos"
 
-#: BackendStrings.php:73 BackendStrings.php:1336 BackendStrings.php:1800
+#: BackendStrings.php:73 BackendStrings.php:1336 BackendStrings.php:1801
 #: FrontendStrings.php:310
 msgid "Daily"
 msgstr ""
 
-#: BackendStrings.php:74 BackendStrings.php:1338 BackendStrings.php:1802
+#: BackendStrings.php:74 BackendStrings.php:1338 BackendStrings.php:1803
 #: FrontendStrings.php:312 FrontendStrings.php:856
 msgid "Monthly"
 msgstr ""
 
-#: BackendStrings.php:75 BackendStrings.php:1337 BackendStrings.php:1801
+#: BackendStrings.php:75 BackendStrings.php:1337 BackendStrings.php:1802
 #: FrontendStrings.php:311 FrontendStrings.php:857
 msgid "Weekly"
 msgstr ""
@@ -276,8 +278,9 @@ msgid "Rescheduled"
 msgstr ""
 
 #: BackendStrings.php:80
+#, fuzzy
 msgid "Resource"
-msgstr ""
+msgstr "Paslauga pašalinta"
 
 #: BackendStrings.php:81 FrontendStrings.php:173
 msgid "This field is required"
@@ -287,7 +290,7 @@ msgstr "Šis laukas yra privalomas"
 msgid "Package Appointments"
 msgstr ""
 
-#: BackendStrings.php:83 BackendStrings.php:1345 BackendStrings.php:1804
+#: BackendStrings.php:83 BackendStrings.php:1345 BackendStrings.php:1805
 #: FrontendStrings.php:314
 msgid "Every:"
 msgstr ""
@@ -358,7 +361,7 @@ msgstr ""
 msgid "Unlimited"
 msgstr ""
 
-#: BackendStrings.php:100 FrontendStrings.php:948 LiteBackendStrings.php:1326
+#: BackendStrings.php:100 FrontendStrings.php:948 LiteBackendStrings.php:1327
 msgid "Order"
 msgstr ""
 
@@ -407,7 +410,7 @@ msgstr ""
 msgid "Check it out Event List 2.0"
 msgstr ""
 
-#: BackendStrings.php:112 LiteBackendStrings.php:37 LiteBackendStrings.php:1457
+#: BackendStrings.php:112 LiteBackendStrings.php:37 LiteBackendStrings.php:1458
 #: LiteFrontendStrings.php:203
 msgid "Close"
 msgstr ""
@@ -674,7 +677,7 @@ msgstr ""
 msgid "Activated with Envato"
 msgstr ""
 
-#: BackendStrings.php:186 LiteBackendStrings.php:1487
+#: BackendStrings.php:186 LiteBackendStrings.php:1488
 msgid "Event Description"
 msgstr ""
 
@@ -784,13 +787,13 @@ msgstr ""
 
 #: BackendStrings.php:209 BackendStrings.php:751 FrontendStrings.php:611
 #: LiteBackendStrings.php:557 LiteBackendStrings.php:1009
-#: LiteBackendStrings.php:1259 LiteFrontendStrings.php:164
+#: LiteBackendStrings.php:1260 LiteFrontendStrings.php:164
 msgid "Category"
 msgstr "Kategorija"
 
 #: BackendStrings.php:210 BackendStrings.php:1214 FrontendStrings.php:476
 #: LiteBackendStrings.php:71 LiteBackendStrings.php:560
-#: LiteBackendStrings.php:1459 LiteFrontendStrings.php:175
+#: LiteBackendStrings.php:1460 LiteFrontendStrings.php:175
 msgid "Event"
 msgstr "Renginys"
 
@@ -1001,8 +1004,9 @@ msgid "Name"
 msgstr "Pavadinimas"
 
 #: BackendStrings.php:257 BackendStrings.php:829 BackendStrings.php:950
+#, fuzzy
 msgid "Number of appointments"
-msgstr ""
+msgstr "Viso rezervacijų"
 
 #: BackendStrings.php:258
 msgid ""
@@ -1354,34 +1358,34 @@ msgstr "Laikas:"
 msgid "Load Page"
 msgstr ""
 
-#: BackendStrings.php:335 LiteBackendStrings.php:1508
+#: BackendStrings.php:335 LiteBackendStrings.php:1509
 #, fuzzy
 msgid "Select Category"
 msgstr "Pasirinkite kategoriją"
 
 #: BackendStrings.php:336 LiteBackendStrings.php:1033
-#: LiteBackendStrings.php:1205 LiteBackendStrings.php:1512
+#: LiteBackendStrings.php:1205 LiteBackendStrings.php:1513
 #: LiteFrontendStrings.php:258
 msgid "Select Service"
 msgstr "Pasirinkite paslaugą"
 
 #: BackendStrings.php:337 BackendStrings.php:1149 BackendStrings.php:1459
 #: BackendStrings.php:1493 FrontendStrings.php:341 FrontendStrings.php:417
-#: FrontendStrings.php:879 LiteBackendStrings.php:1509
+#: FrontendStrings.php:879 LiteBackendStrings.php:1510
 msgid "Select Employee"
 msgstr "Pasirinkite darbuotoją"
 
 #: BackendStrings.php:338 BackendStrings.php:1152 BackendStrings.php:1457
 #: BackendStrings.php:1495 FrontendStrings.php:233 FrontendStrings.php:339
-#: FrontendStrings.php:419 FrontendStrings.php:882 LiteBackendStrings.php:1510
+#: FrontendStrings.php:419 FrontendStrings.php:882 LiteBackendStrings.php:1511
 msgid "Select Location"
 msgstr "Pasirinkite vietą"
 
-#: BackendStrings.php:339 LiteBackendStrings.php:1511
+#: BackendStrings.php:339 LiteBackendStrings.php:1512
 msgid "Select Package"
 msgstr ""
 
-#: BackendStrings.php:340 LiteBackendStrings.php:1513
+#: BackendStrings.php:340 LiteBackendStrings.php:1514
 msgid "Select Event"
 msgstr ""
 
@@ -1753,7 +1757,7 @@ msgid "Edit Notification"
 msgstr ""
 
 #: BackendStrings.php:449 FrontendStrings.php:669 LiteBackendStrings.php:800
-#: LiteBackendStrings.php:1227 LiteBackendStrings.php:1371
+#: LiteBackendStrings.php:1227 LiteBackendStrings.php:1372
 msgid "Email"
 msgstr "El. paštas"
 
@@ -2103,8 +2107,9 @@ msgid "Package appointments list placeholder set up"
 msgstr ""
 
 #: BackendStrings.php:535
+#, fuzzy
 msgid "Package duration"
-msgstr ""
+msgstr "Trukmė"
 
 #: BackendStrings.php:536
 msgid "Package price description"
@@ -2188,8 +2193,9 @@ msgid ""
 msgstr ""
 
 #: BackendStrings.php:558 BackendStrings.php:1581
+#, fuzzy
 msgid "Placeholder"
-msgstr ""
+msgstr "SMS kintamieji"
 
 #: BackendStrings.php:559
 #, fuzzy
@@ -2867,7 +2873,7 @@ msgstr ""
 msgid "Date Purchased"
 msgstr ""
 
-#: BackendStrings.php:788 BackendStrings.php:1653
+#: BackendStrings.php:788 BackendStrings.php:1654
 msgid "Package Details"
 msgstr ""
 
@@ -2921,8 +2927,9 @@ msgid "Total"
 msgstr "Iš viso"
 
 #: BackendStrings.php:801
+#, fuzzy
 msgid "to be booked"
-msgstr ""
+msgstr "Jūs jau esate užsisakę šį laiką"
 
 #: BackendStrings.php:803 FrontendStrings.php:86 LiteBackendStrings.php:564
 #: LiteBackendStrings.php:1078
@@ -3085,7 +3092,7 @@ msgstr ""
 msgid "Please select select at least one employee"
 msgstr "Pasirinkite bent vieną darbuotoją"
 
-#: BackendStrings.php:840 LiteBackendStrings.php:1385
+#: BackendStrings.php:840 LiteBackendStrings.php:1386
 msgid "Service Details"
 msgstr "Paslaugos informacija"
 
@@ -3176,7 +3183,7 @@ msgstr "Būsena"
 msgid "Add Employee"
 msgstr "Pridėti darbuotoją"
 
-#: BackendStrings.php:887 LiteBackendStrings.php:1420
+#: BackendStrings.php:887 LiteBackendStrings.php:1421
 #: LiteFrontendStrings.php:255
 msgid "Available"
 msgstr "Dirba"
@@ -3665,8 +3672,8 @@ msgstr ""
 msgid "Used"
 msgstr ""
 
-#: BackendStrings.php:1081 LiteBackendStrings.php:1439
-#: LiteBackendStrings.php:1462 LiteFrontendStrings.php:109
+#: BackendStrings.php:1081 LiteBackendStrings.php:1440
+#: LiteBackendStrings.php:1463 LiteFrontendStrings.php:109
 msgid "Event Info"
 msgstr "Renginio informacija"
 
@@ -3680,7 +3687,7 @@ msgstr "Ar tikrai norite paslėpti šį darbuotoją?"
 msgid "The refund amount is"
 msgstr ""
 
-#: BackendStrings.php:1085 BackendStrings.php:1700 FrontendStrings.php:73
+#: BackendStrings.php:1085 BackendStrings.php:1701 FrontendStrings.php:73
 msgid "Deposit"
 msgstr ""
 
@@ -3724,11 +3731,11 @@ msgstr "Mokėjimai ištrinti"
 msgid "(+tax)"
 msgstr ""
 
-#: BackendStrings.php:1098 LiteBackendStrings.php:1242
+#: BackendStrings.php:1098 LiteBackendStrings.php:1243
 msgid "Event Price"
 msgstr "Renginio kaina"
 
-#: BackendStrings.php:1112 LiteBackendStrings.php:1287
+#: BackendStrings.php:1112 LiteBackendStrings.php:1288
 #: LiteFrontendStrings.php:176
 msgid "Appointment ID"
 msgstr ""
@@ -3888,7 +3895,7 @@ msgstr ""
 msgid "Choose how to export event attendees"
 msgstr ""
 
-#: BackendStrings.php:1155 FrontendStrings.php:894 LiteBackendStrings.php:1413
+#: BackendStrings.php:1155 FrontendStrings.php:894 LiteBackendStrings.php:1414
 msgid "Service Category"
 msgstr "Paslaugos kategorija"
 
@@ -3913,8 +3920,9 @@ msgid "Booking info from attendees exported in separate rows"
 msgstr ""
 
 #: BackendStrings.php:1162 FrontendStrings.php:181
+#, fuzzy
 msgid "Booking is unavailable"
-msgstr ""
+msgstr "Šis laiko tarpas užimtas"
 
 #: BackendStrings.php:1176 FrontendStrings.php:69
 msgid ""
@@ -4210,8 +4218,9 @@ msgid "Day"
 msgstr "Diena"
 
 #: BackendStrings.php:1272
+#, fuzzy
 msgid "Group appointment"
-msgstr ""
+msgstr "Ateinančios rezervacijos"
 
 #: BackendStrings.php:1273
 msgid "List"
@@ -4370,9 +4379,9 @@ msgid "Notification Placeholder"
 msgstr ""
 
 #: BackendStrings.php:1324 BackendStrings.php:1331 LiteBackendStrings.php:139
-#: LiteBackendStrings.php:326 LiteBackendStrings.php:1253
-#: LiteBackendStrings.php:1258 LiteBackendStrings.php:1260
-#: LiteBackendStrings.php:1295 LiteBackendStrings.php:1421
+#: LiteBackendStrings.php:326 LiteBackendStrings.php:1254
+#: LiteBackendStrings.php:1259 LiteBackendStrings.php:1261
+#: LiteBackendStrings.php:1296 LiteBackendStrings.php:1422
 #: LiteFrontendStrings.php:162 LiteFrontendStrings.php:165
 #: LiteFrontendStrings.php:181 LiteFrontendStrings.php:242
 msgid "Service"
@@ -4410,21 +4419,22 @@ msgstr ""
 #: BackendStrings.php:1492 BackendStrings.php:1509 FrontendStrings.php:340
 #: FrontendStrings.php:416 FrontendStrings.php:433 LiteBackendStrings.php:64
 #: LiteBackendStrings.php:324 LiteBackendStrings.php:556
-#: LiteBackendStrings.php:1296 LiteFrontendStrings.php:182
+#: LiteBackendStrings.php:1297 LiteFrontendStrings.php:182
 msgid "Employee"
 msgstr "Specialistas"
 
 #: BackendStrings.php:1333 BackendStrings.php:1435 BackendStrings.php:1494
-#: BackendStrings.php:1510 BackendStrings.php:1644 FrontendStrings.php:144
+#: BackendStrings.php:1510 BackendStrings.php:1645 FrontendStrings.php:144
 #: FrontendStrings.php:418 FrontendStrings.php:434 FrontendStrings.php:454
 #: LiteBackendStrings.php:100 LiteBackendStrings.php:558
-#: LiteBackendStrings.php:1297
+#: LiteBackendStrings.php:1298
 msgid "Location"
 msgstr "Vieta"
 
-#: BackendStrings.php:1335 BackendStrings.php:1803 FrontendStrings.php:313
+#: BackendStrings.php:1335 BackendStrings.php:1804 FrontendStrings.php:313
+#, fuzzy
 msgid "Repeat:"
-msgstr ""
+msgstr "Kartoti kasmet"
 
 #: BackendStrings.php:1340 FrontendStrings.php:192 LiteBackendStrings.php:48
 msgid "Days"
@@ -4438,20 +4448,20 @@ msgstr "Savaitė"
 msgid "Months"
 msgstr "Mėnuo"
 
-#: BackendStrings.php:1346 BackendStrings.php:1808 FrontendStrings.php:319
+#: BackendStrings.php:1346 BackendStrings.php:1809 FrontendStrings.php:319
 msgid "On:"
 msgstr ""
 
-#: BackendStrings.php:1347 BackendStrings.php:1805 FrontendStrings.php:315
+#: BackendStrings.php:1347 BackendStrings.php:1806 FrontendStrings.php:315
 msgid "Until:"
 msgstr ""
 
-#: BackendStrings.php:1348 BackendStrings.php:1810 FrontendStrings.php:322
+#: BackendStrings.php:1348 BackendStrings.php:1811 FrontendStrings.php:322
 msgid "Time(s):"
 msgstr "Laikas:"
 
 #: BackendStrings.php:1349 BackendStrings.php:1620 FrontendStrings.php:305
-#: LiteBackendStrings.php:1600
+#: LiteBackendStrings.php:1601
 msgid "Recurring Appointments"
 msgstr "Laukiančios patvirtinimo rezervacijos"
 
@@ -4461,7 +4471,7 @@ msgstr "Ar tikrai norite pašalinti šią rezervaciją?"
 
 #: BackendStrings.php:1351 BackendStrings.php:1507 FrontendStrings.php:126
 #: FrontendStrings.php:431 FrontendStrings.php:642 LiteBackendStrings.php:55
-#: LiteBackendStrings.php:1293 LiteFrontendStrings.php:179
+#: LiteBackendStrings.php:1294 LiteFrontendStrings.php:179
 msgid "Date"
 msgstr "Data"
 
@@ -4530,8 +4540,9 @@ msgid "Please select package:"
 msgstr ""
 
 #: BackendStrings.php:1376
+#, fuzzy
 msgid "Package:"
-msgstr ""
+msgstr "Rezervacija išsaugota"
 
 #: BackendStrings.php:1377 LiteFrontendStrings.php:84
 msgid "Back"
@@ -4588,7 +4599,7 @@ msgid "Number of people"
 msgstr ""
 
 #: BackendStrings.php:1391 LiteBackendStrings.php:737
-#: LiteBackendStrings.php:1379 LiteFrontendStrings.php:231
+#: LiteBackendStrings.php:1380 LiteFrontendStrings.php:231
 msgid "Categories"
 msgstr "Paslaugų kategorijos"
 
@@ -4649,8 +4660,9 @@ msgstr "Grupės dydis:"
 
 #: BackendStrings.php:1406 BackendStrings.php:1481 BackendStrings.php:1528
 #: FrontendStrings.php:267 FrontendStrings.php:377 FrontendStrings.php:558
+#, fuzzy
 msgid "weeks"
-msgstr ""
+msgstr "Savaitė"
 
 #: BackendStrings.php:1407 FrontendStrings.php:284
 msgid "The package is time-limited to"
@@ -4740,12 +4752,12 @@ msgstr "Renginio data"
 msgid "Date range"
 msgstr ""
 
-#: BackendStrings.php:1439 LiteBackendStrings.php:1264
+#: BackendStrings.php:1439 LiteBackendStrings.php:1265
 #: LiteFrontendStrings.php:183 LiteFrontendStrings.php:218
 msgid "Show more"
 msgstr ""
 
-#: BackendStrings.php:1440 LiteBackendStrings.php:1265
+#: BackendStrings.php:1440 LiteBackendStrings.php:1266
 #: LiteFrontendStrings.php:184 LiteFrontendStrings.php:217
 msgid "Show less"
 msgstr ""
@@ -4767,7 +4779,7 @@ msgstr ""
 msgid "Catalog Booking Form"
 msgstr ""
 
-#: BackendStrings.php:1446 LiteBackendStrings.php:1500
+#: BackendStrings.php:1446 LiteBackendStrings.php:1501
 msgid "Catalog"
 msgstr ""
 
@@ -4839,7 +4851,7 @@ msgstr ""
 msgid "Hey, there are special packages with this service, check them out!"
 msgstr ""
 
-#: BackendStrings.php:1470 BackendStrings.php:1475 BackendStrings.php:1689
+#: BackendStrings.php:1470 BackendStrings.php:1475 BackendStrings.php:1690
 #: FrontendStrings.php:354 FrontendStrings.php:409 FrontendStrings.php:547
 #: FrontendStrings.php:866 LiteBackendStrings.php:135
 #: LiteBackendStrings.php:1184
@@ -4876,7 +4888,7 @@ msgstr "Diena"
 #: FrontendStrings.php:376 FrontendStrings.php:556
 #, fuzzy
 msgid "days"
-msgstr "Darbo val. ir nedarbo dienos"
+msgstr "Šventės"
 
 #: BackendStrings.php:1480 BackendStrings.php:1525 FrontendStrings.php:266
 #: FrontendStrings.php:374 FrontendStrings.php:557
@@ -4892,8 +4904,9 @@ msgstr "Mėnuo"
 
 #: BackendStrings.php:1483 BackendStrings.php:1529 FrontendStrings.php:269
 #: FrontendStrings.php:378 FrontendStrings.php:560
+#, fuzzy
 msgid "months"
-msgstr ""
+msgstr "Mėnuo"
 
 #: BackendStrings.php:1484 FrontendStrings.php:337
 msgid "Without expiration"
@@ -4907,8 +4920,8 @@ msgstr ""
 msgid "includes"
 msgstr ""
 
-#: BackendStrings.php:1487 BackendStrings.php:1673 BackendStrings.php:1675
-#: BackendStrings.php:1697 FrontendStrings.php:411 FrontendStrings.php:561
+#: BackendStrings.php:1487 BackendStrings.php:1674 BackendStrings.php:1676
+#: BackendStrings.php:1698 FrontendStrings.php:411 FrontendStrings.php:561
 #: FrontendStrings.php:566 LiteBackendStrings.php:65 LiteBackendStrings.php:325
 msgid "Employees"
 msgstr "Darbuotojai"
@@ -4923,8 +4936,9 @@ msgid ""
 msgstr ""
 
 #: BackendStrings.php:1497 FrontendStrings.php:421
+#, fuzzy
 msgid "Date and Time"
-msgstr ""
+msgstr "Pasirinkite klientą ir paslaugą"
 
 #: BackendStrings.php:1499 FrontendStrings.php:423
 msgid "Selected"
@@ -4936,7 +4950,7 @@ msgstr ""
 
 #: BackendStrings.php:1501 BackendStrings.php:1557 FrontendStrings.php:104
 #: FrontendStrings.php:362 FrontendStrings.php:406 FrontendStrings.php:425
-#: LiteBackendStrings.php:1268
+#: LiteBackendStrings.php:1269
 msgid "All slots are selected"
 msgstr ""
 
@@ -4983,8 +4997,9 @@ msgid "Do you want to repeat this appointment?"
 msgstr ""
 
 #: BackendStrings.php:1520 FrontendStrings.php:369
+#, fuzzy
 msgid "Recurring Appointment"
-msgstr ""
+msgstr "Ateinančios rezervacijos"
 
 #: BackendStrings.php:1521 BackendStrings.php:1561 FrontendStrings.php:370
 #: FrontendStrings.php:443
@@ -5001,34 +5016,36 @@ msgid "Repeat every"
 msgstr "Kartoti kasmet"
 
 #: BackendStrings.php:1530 FrontendStrings.php:379
+#, fuzzy
 msgid "Repeat on"
-msgstr ""
+msgstr "Kartoti kasmet"
 
 #: BackendStrings.php:1531 FrontendStrings.php:380
+#, fuzzy
 msgid "Specific date"
-msgstr ""
+msgstr "Specialios dienos"
 
-#: BackendStrings.php:1532 BackendStrings.php:1812 FrontendStrings.php:324
+#: BackendStrings.php:1532 BackendStrings.php:1813 FrontendStrings.php:324
 #: FrontendStrings.php:381
 msgid "First"
 msgstr "Vardas"
 
-#: BackendStrings.php:1533 BackendStrings.php:1813 FrontendStrings.php:325
+#: BackendStrings.php:1533 BackendStrings.php:1814 FrontendStrings.php:325
 #: FrontendStrings.php:382
 msgid "Second"
 msgstr ""
 
-#: BackendStrings.php:1534 BackendStrings.php:1814 FrontendStrings.php:326
+#: BackendStrings.php:1534 BackendStrings.php:1815 FrontendStrings.php:326
 #: FrontendStrings.php:383
 msgid "Third"
 msgstr ""
 
-#: BackendStrings.php:1535 BackendStrings.php:1815 FrontendStrings.php:327
+#: BackendStrings.php:1535 BackendStrings.php:1816 FrontendStrings.php:327
 #: FrontendStrings.php:384
 msgid "Fourth"
 msgstr ""
 
-#: BackendStrings.php:1536 BackendStrings.php:1816 FrontendStrings.php:328
+#: BackendStrings.php:1536 BackendStrings.php:1817 FrontendStrings.php:328
 #: FrontendStrings.php:385
 msgid "Last"
 msgstr "Pavardė"
@@ -5062,7 +5079,7 @@ msgstr ""
 msgid "Appointment Repeats"
 msgstr ""
 
-#: BackendStrings.php:1545 BackendStrings.php:1806 FrontendStrings.php:316
+#: BackendStrings.php:1545 BackendStrings.php:1807 FrontendStrings.php:316
 #: FrontendStrings.php:393
 msgid "Every"
 msgstr ""
@@ -5072,7 +5089,7 @@ msgid "on"
 msgstr ""
 
 #: BackendStrings.php:1547 FrontendStrings.php:108 FrontendStrings.php:395
-#: LiteBackendStrings.php:1469 LiteFrontendStrings.php:202
+#: LiteBackendStrings.php:1470 LiteFrontendStrings.php:202
 msgid "at"
 msgstr "Data"
 
@@ -5151,7 +5168,7 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
-#: BackendStrings.php:1580 LiteBackendStrings.php:1412
+#: BackendStrings.php:1580 LiteBackendStrings.php:1413
 msgid "Main Content"
 msgstr ""
 
@@ -5171,7 +5188,7 @@ msgstr ""
 msgid "Layout"
 msgstr ""
 
-#: BackendStrings.php:1588 LiteBackendStrings.php:1338
+#: BackendStrings.php:1588 LiteBackendStrings.php:1339
 msgid "Fonts and colors"
 msgstr ""
 
@@ -5227,11 +5244,11 @@ msgstr ""
 msgid "Popup Buttons"
 msgstr ""
 
-#: BackendStrings.php:1602 BackendStrings.php:1642
+#: BackendStrings.php:1602 BackendStrings.php:1643
 msgid "Primary Button Type"
 msgstr ""
 
-#: BackendStrings.php:1603 BackendStrings.php:1643
+#: BackendStrings.php:1603 BackendStrings.php:1644
 msgid "Secondary Button Type"
 msgstr ""
 
@@ -5332,439 +5349,447 @@ msgid "Payment type, deposit payment..."
 msgstr ""
 
 #: BackendStrings.php:1640
+#, fuzzy
+#| msgid "Employee Input Field"
+msgid "Service Input Field"
+msgstr "Darbuotojo el. paštas"
+
+#: BackendStrings.php:1641
 msgid "Location Input Field"
 msgstr "Vieta pašalinta"
 
-#: BackendStrings.php:1641
+#: BackendStrings.php:1642
 msgid "Employee Input Field"
 msgstr "Darbuotojo el. paštas"
 
-#: BackendStrings.php:1645
+#: BackendStrings.php:1646
 msgid "Heading"
 msgstr "Laukiantis"
 
-#: BackendStrings.php:1646 LiteFrontendStrings.php:234
+#: BackendStrings.php:1647 LiteFrontendStrings.php:234
 msgid "Info"
 msgstr ""
 
-#: BackendStrings.php:1647
+#: BackendStrings.php:1648
 msgid "Popup Heading"
 msgstr "Laukiantis"
 
-#: BackendStrings.php:1648
+#: BackendStrings.php:1649
 msgid "Extras Heading"
 msgstr ""
 
-#: BackendStrings.php:1649
+#: BackendStrings.php:1650
 msgid "Extras Description"
 msgstr ""
 
-#: BackendStrings.php:1650
+#: BackendStrings.php:1651
 msgid "Extras Duration"
 msgstr ""
 
-#: BackendStrings.php:1651
+#: BackendStrings.php:1652
 msgid "Services and Packages Overview"
 msgstr ""
 
-#: BackendStrings.php:1652
+#: BackendStrings.php:1653
 msgid "Set up Services and Packages view"
 msgstr ""
 
-#: BackendStrings.php:1654
+#: BackendStrings.php:1655
 msgid "Set up Package detailed view"
 msgstr ""
 
-#: BackendStrings.php:1656
+#: BackendStrings.php:1657
 msgid "Card"
 msgstr ""
 
-#: BackendStrings.php:1657
+#: BackendStrings.php:1658
 msgid "Total Number of Packages"
 msgstr "Maksimalus vietų skaičius yra"
 
-#: BackendStrings.php:1660
+#: BackendStrings.php:1661
 msgid "“All/Packages/Services” filter option"
 msgstr ""
 
-#: BackendStrings.php:1661
+#: BackendStrings.php:1662
 msgid "\"View Employee\" Button Type"
 msgstr ""
 
-#: BackendStrings.php:1662
+#: BackendStrings.php:1663
 msgid "Book Option on Employee Dialog"
 msgstr ""
 
-#: BackendStrings.php:1663
+#: BackendStrings.php:1664
 msgid "Employee Dialog"
 msgstr "Darbuotojo el. paštas"
 
-#: BackendStrings.php:1664 FrontendStrings.php:261 FrontendStrings.php:262
+#: BackendStrings.php:1665 FrontendStrings.php:261 FrontendStrings.php:262
 #: FrontendStrings.php:562
 msgid "Employee information"
 msgstr ""
 
-#: BackendStrings.php:1665 FrontendStrings.php:563
+#: BackendStrings.php:1666 FrontendStrings.php:563
 msgid "Book This Service"
 msgstr "Redaguoti paslaugą"
 
-#: BackendStrings.php:1666 FrontendStrings.php:564
+#: BackendStrings.php:1667 FrontendStrings.php:564
 msgid "Book This Package"
 msgstr ""
 
-#: BackendStrings.php:1667
+#: BackendStrings.php:1668
 msgid "Package Category"
 msgstr "Nauja kategorija"
 
-#: BackendStrings.php:1668
+#: BackendStrings.php:1669
 msgid "Package Duration"
 msgstr "Trukmė"
 
-#: BackendStrings.php:1669
+#: BackendStrings.php:1670
 msgid "Package Capacity"
 msgstr "Talpa"
 
-#: BackendStrings.php:1670
+#: BackendStrings.php:1671
 msgid "Package Location"
 msgstr "Nauja vieta"
 
-#: BackendStrings.php:1671
+#: BackendStrings.php:1672
 msgid "Service Capacity"
 msgstr "Paslaugos kategorija"
 
-#: BackendStrings.php:1672
+#: BackendStrings.php:1673
 msgid "Service Location"
 msgstr "Pasirinkite vietą"
 
-#: BackendStrings.php:1674 BackendStrings.php:1691 FrontendStrings.php:550
+#: BackendStrings.php:1675 BackendStrings.php:1692 FrontendStrings.php:550
 msgid "About Package"
 msgstr ""
 
-#: BackendStrings.php:1676
+#: BackendStrings.php:1677
 msgid "Packages Block"
 msgstr ""
 
-#: BackendStrings.php:1677
+#: BackendStrings.php:1678
 msgid "“Filter by Employee” option"
 msgstr ""
 
-#: BackendStrings.php:1678
+#: BackendStrings.php:1679
 msgid "“Filter by Location” option"
 msgstr ""
 
-#: BackendStrings.php:1681 FrontendStrings.php:538
+#: BackendStrings.php:1682 FrontendStrings.php:538
 msgid "Filter by Employee"
 msgstr "Redaguoti darbuotoją"
 
-#: BackendStrings.php:1682 FrontendStrings.php:539
+#: BackendStrings.php:1683 FrontendStrings.php:539
 msgid "Filter by Location"
 msgstr "Redaguoti vietą"
 
-#: BackendStrings.php:1684 BackendStrings.php:1687 FrontendStrings.php:155
+#: BackendStrings.php:1685 BackendStrings.php:1688 FrontendStrings.php:155
 #: FrontendStrings.php:541 FrontendStrings.php:545 LiteBackendStrings.php:124
+#, fuzzy
 msgid "Packages"
-msgstr ""
+msgstr "Maksimalus vietų skaičius yra"
 
-#: BackendStrings.php:1685 FrontendStrings.php:174 FrontendStrings.php:542
+#: BackendStrings.php:1686 FrontendStrings.php:174 FrontendStrings.php:542
 #: FrontendStrings.php:543 LiteBackendStrings.php:140
-#: LiteBackendStrings.php:327 LiteBackendStrings.php:1281
-#: LiteBackendStrings.php:1422 LiteFrontendStrings.php:173
+#: LiteBackendStrings.php:327 LiteBackendStrings.php:1282
+#: LiteBackendStrings.php:1423 LiteFrontendStrings.php:173
 #: LiteFrontendStrings.php:243
 msgid "Services"
 msgstr "Paslaugos"
 
-#: BackendStrings.php:1688 FrontendStrings.php:546
+#: BackendStrings.php:1689 FrontendStrings.php:546
 msgid "View Employees"
 msgstr "Naujas darbuotojas"
 
-#: BackendStrings.php:1690 FrontendStrings.php:549
+#: BackendStrings.php:1691 FrontendStrings.php:549
+#, fuzzy
 msgid "In Package"
-msgstr ""
+msgstr "Rezervacija išsaugota"
 
-#: BackendStrings.php:1692
+#: BackendStrings.php:1693
 msgid "This Service is available in a Package"
 msgstr ""
 
-#: BackendStrings.php:1693 FrontendStrings.php:552
+#: BackendStrings.php:1694 FrontendStrings.php:552
 msgid "View More Packages"
 msgstr "Plačiau"
 
-#: BackendStrings.php:1694 FrontendStrings.php:553
+#: BackendStrings.php:1695 FrontendStrings.php:553
 msgid "View Less Packages"
 msgstr ""
 
-#: BackendStrings.php:1695 FrontendStrings.php:554
+#: BackendStrings.php:1696 FrontendStrings.php:554
 msgid "Package includes"
 msgstr ""
 
-#: BackendStrings.php:1696
+#: BackendStrings.php:1697
 msgid "Employee Price"
 msgstr "Specialistas"
 
-#: BackendStrings.php:1698 FrontendStrings.php:133
+#: BackendStrings.php:1699 FrontendStrings.php:133
 msgid "Extras Cost:"
 msgstr ""
 
-#: BackendStrings.php:1699 FrontendStrings.php:176
+#: BackendStrings.php:1700 FrontendStrings.php:176
 msgid "Subtotal:"
 msgstr "Viso:"
 
-#: BackendStrings.php:1701 FrontendStrings.php:74
+#: BackendStrings.php:1702 FrontendStrings.php:74
 msgid "(Paying now)"
 msgstr ""
 
-#: BackendStrings.php:1702 FrontendStrings.php:75
+#: BackendStrings.php:1703 FrontendStrings.php:75
 msgid "Left to pay"
 msgstr ""
 
-#: BackendStrings.php:1703 FrontendStrings.php:304
+#: BackendStrings.php:1704 FrontendStrings.php:304
 msgid "Recurring Appointments:"
 msgstr "Laukiančios patvirtinimo rezervacijos"
 
-#: BackendStrings.php:1704
+#: BackendStrings.php:1705
 #, fuzzy
 #| msgid "Event Price"
 msgid "Event Tickets"
 msgstr "Renginio kaina"
 
-#: BackendStrings.php:1705
+#: BackendStrings.php:1706
 msgid "Set up visibility and labels of ticket selection"
 msgstr ""
 
-#: BackendStrings.php:1706 FrontendStrings.php:514 LiteBackendStrings.php:232
-#: LiteBackendStrings.php:1159 LiteBackendStrings.php:1537
+#: BackendStrings.php:1707 FrontendStrings.php:514 LiteBackendStrings.php:232
+#: LiteBackendStrings.php:1159 LiteBackendStrings.php:1538
 msgid "Calendar"
 msgstr "Kalendorius"
 
-#: BackendStrings.php:1707 FrontendStrings.php:510
+#: BackendStrings.php:1708 FrontendStrings.php:510
 #, fuzzy
 #| msgid "Select Service"
 msgid "Select Tickets"
 msgstr "Pasirinkite paslaugą"
 
-#: BackendStrings.php:1708 FrontendStrings.php:507
+#: BackendStrings.php:1709 FrontendStrings.php:507
 msgid "Select the number of tickets that you want to book for each ticket type"
 msgstr ""
 
-#: BackendStrings.php:1709 FrontendStrings.php:508
+#: BackendStrings.php:1710 FrontendStrings.php:508
 msgid "Ticket Types"
 msgstr ""
 
-#: BackendStrings.php:1710 FrontendStrings.php:517
+#: BackendStrings.php:1711 FrontendStrings.php:517
 msgid "tickets left"
 msgstr ""
 
-#: BackendStrings.php:1711 FrontendStrings.php:518
+#: BackendStrings.php:1712 FrontendStrings.php:518
 msgid "ticket left"
 msgstr ""
 
-#: BackendStrings.php:1712 FrontendStrings.php:499 LiteBackendStrings.php:1127
+#: BackendStrings.php:1713 FrontendStrings.php:499 LiteBackendStrings.php:1127
 msgid "Organizer"
 msgstr ""
 
-#: BackendStrings.php:1714 FrontendStrings.php:258
+#: BackendStrings.php:1715 FrontendStrings.php:258
 msgid "Coupon Limit Reached"
 msgstr ""
 
-#: BackendStrings.php:1715 FrontendStrings.php:259
+#: BackendStrings.php:1716 FrontendStrings.php:259
 msgid "Number of appointments with applied coupon is"
 msgstr ""
 
-#: BackendStrings.php:1716 FrontendStrings.php:456
+#: BackendStrings.php:1717 FrontendStrings.php:456
 #, fuzzy
 #| msgid "Sort Services:"
 msgid "Total Services Booked"
 msgstr "Rūšiuoti paslaugas:"
 
-#: BackendStrings.php:1719
+#: BackendStrings.php:1720
 msgid "Step Tickets Tab"
 msgstr ""
 
-#: BackendStrings.php:1720
+#: BackendStrings.php:1721
 #, fuzzy
 #| msgid "Customer Phone"
 msgid "Customer Panel Button"
 msgstr "Kliento telefonas"
 
-#: BackendStrings.php:1721
+#: BackendStrings.php:1722
 msgid "Coupon Segment"
 msgstr ""
 
-#: BackendStrings.php:1733
+#: BackendStrings.php:1734
 msgid "Notice: Please select at least one panel."
 msgstr ""
 
-#: BackendStrings.php:1734 LiteBackendStrings.php:1419
+#: BackendStrings.php:1735 LiteBackendStrings.php:1420
 #: LiteFrontendStrings.php:237
 #, fuzzy
 msgid "Search"
 msgstr "Ieškoti…"
 
-#: BackendStrings.php:1735
+#: BackendStrings.php:1736
 msgid "Preselect Current Date"
 msgstr ""
 
-#: BackendStrings.php:1736
+#: BackendStrings.php:1737
 msgid "AM - Search view"
 msgstr ""
 
-#: BackendStrings.php:1737
+#: BackendStrings.php:1738
 msgid "AM - Customer Panel"
 msgstr ""
 
-#: BackendStrings.php:1738
+#: BackendStrings.php:1739
 msgid "AM - Employee Panel"
 msgstr ""
 
-#: BackendStrings.php:1740
+#: BackendStrings.php:1741
 msgid "Amelia - Search view"
 msgstr ""
 
-#: BackendStrings.php:1741
+#: BackendStrings.php:1742
 msgid ""
 "Front-end Booking Search is shortcode that give your customers the "
 "possibility to search for appointment by selecting several filters so that "
 "they could find the best time slots and services for their needs."
 msgstr ""
 
-#: BackendStrings.php:1744
+#: BackendStrings.php:1745
 msgid "Amelia - Customer Panel"
 msgstr ""
 
-#: BackendStrings.php:1745
+#: BackendStrings.php:1746
 msgid ""
 "Front-end Customer Panel is a shortcode that gives your customers the "
 "possibility to manage their bookings and profile information."
 msgstr ""
 
-#: BackendStrings.php:1748
+#: BackendStrings.php:1749
 msgid "Amelia - Employee Panel"
 msgstr ""
 
-#: BackendStrings.php:1749
+#: BackendStrings.php:1750
 msgid ""
 "Front-end Employee Panel is a shortcode that gives your employees the "
 "possibility to manage their bookings, working hours, days off, assigned "
 "services and profile information."
 msgstr ""
 
-#: BackendStrings.php:1762
+#: BackendStrings.php:1763
 msgid "Amelia Profile Settings"
 msgstr ""
 
-#: BackendStrings.php:1763
+#: BackendStrings.php:1764
 msgid "Amelia Users Settings"
 msgstr ""
 
-#: BackendStrings.php:1764
+#: BackendStrings.php:1765
 msgid "Enable Amelia"
 msgstr ""
 
-#: BackendStrings.php:1765
+#: BackendStrings.php:1766
 msgid "Enable Amelia Tabs on Profiles"
 msgstr ""
 
-#: BackendStrings.php:1766
+#: BackendStrings.php:1767
 msgid "Booking form on customer profile enabled"
 msgstr ""
 
-#: BackendStrings.php:1767
+#: BackendStrings.php:1768
 msgid "Booking form tab enabled"
 msgstr ""
 
-#: BackendStrings.php:1768
+#: BackendStrings.php:1769
 msgid "Booking form on employee profile enabled"
 msgstr ""
 
-#: BackendStrings.php:1769
+#: BackendStrings.php:1770
 msgid "Booking form type"
 msgstr ""
 
-#: BackendStrings.php:1770
+#: BackendStrings.php:1771
 msgid "Booking form type on employee profile page"
 msgstr ""
 
-#: BackendStrings.php:1771
+#: BackendStrings.php:1772
 msgid "Booking tab name"
 msgstr ""
 
-#: BackendStrings.php:1772
+#: BackendStrings.php:1773
 msgid "Book subtab name"
 msgstr ""
 
-#: BackendStrings.php:1773
+#: BackendStrings.php:1774
 msgid "Panel subtab name"
 msgstr ""
 
-#: BackendStrings.php:1774
+#: BackendStrings.php:1775
 msgid "Booking on employee page tab name"
 msgstr ""
 
-#: BackendStrings.php:1775 LiteBackendStrings.php:1437
+#: BackendStrings.php:1776 LiteBackendStrings.php:1438
 msgid "Events List"
 msgstr ""
 
-#: BackendStrings.php:1776
+#: BackendStrings.php:1777
 msgid "Events Calendar"
 msgstr ""
 
-#: BackendStrings.php:1777
+#: BackendStrings.php:1778
 msgid "Automatically create Amelia Customers from WP Users "
 msgstr ""
 
-#: BackendStrings.php:1778
+#: BackendStrings.php:1779
 msgid ""
 "After account activation, subscribers will be created as customers in Amelia "
 msgstr ""
 
-#: BackendStrings.php:1779
+#: BackendStrings.php:1780
 msgid "Create Employees from WP Users with Amelia Employee Role"
 msgstr ""
 
-#: BackendStrings.php:1780
+#: BackendStrings.php:1781
 msgid "Create Amelia Employees"
 msgstr ""
 
-#: BackendStrings.php:1781
+#: BackendStrings.php:1782
 msgid "Create Amelia Customers"
 msgstr "Sukurti klientą"
 
-#: BackendStrings.php:1782
+#: BackendStrings.php:1783
 msgid "Create Customers from WP Users with Amelia Customer Role"
 msgstr ""
 
-#: BackendStrings.php:1783
+#: BackendStrings.php:1784
 msgid "Enable guest booking"
 msgstr ""
 
-#: BackendStrings.php:1784
+#: BackendStrings.php:1785
 msgid "Allow booking without a prior login"
 msgstr ""
 
-#: BackendStrings.php:1796 FrontendStrings.php:307
+#: BackendStrings.php:1797 FrontendStrings.php:307
 msgid ""
 "Some of the desired slots are busy. We offered you the nearest time slots "
 "instead."
 msgstr ""
 
-#: BackendStrings.php:1797 FrontendStrings.php:308
+#: BackendStrings.php:1798 FrontendStrings.php:308
 msgid "Number of adjusted time slots: "
 msgstr "Papildomi asmenys:"
 
-#: BackendStrings.php:1798 FrontendStrings.php:309 FrontendStrings.php:854
+#: BackendStrings.php:1799 FrontendStrings.php:309 FrontendStrings.php:854
 #: LiteBackendStrings.php:1223
 msgid "Repeat this appointment"
 msgstr "Pasirinkite susitikimo laiką"
 
-#: BackendStrings.php:1799 FrontendStrings.php:855
+#: BackendStrings.php:1800 FrontendStrings.php:855
 msgid "Check this option if you want to create recurring appointments"
 msgstr "Ar tikri norite sukurti šios rezervacijos duplikatą?"
 
-#: BackendStrings.php:1807 FrontendStrings.php:318
+#: BackendStrings.php:1808 FrontendStrings.php:318
 msgid "until"
 msgstr ""
 
-#: BackendStrings.php:1809 FrontendStrings.php:320
+#: BackendStrings.php:1810 FrontendStrings.php:320
 msgid "Each:"
 msgstr ""
 
@@ -5811,7 +5836,7 @@ msgstr "Rezervacijos informaciją Jums išsiuntėme nurodytu el. pašto adresu."
 msgid "Client Time:"
 msgstr ""
 
-#: FrontendStrings.php:113 LiteBackendStrings.php:1280
+#: FrontendStrings.php:113 LiteBackendStrings.php:1281
 #: LiteFrontendStrings.php:157
 msgid "Summary"
 msgstr ""
@@ -5926,12 +5951,12 @@ msgid ""
 "Sorry, there was an error creating a payment link. Please try again later."
 msgstr "Atsiprašome, mokėjimo atlikti nepavyko. Bandykite dar kartą."
 
-#: FrontendStrings.php:167 FrontendStrings.php:442 LiteBackendStrings.php:1283
+#: FrontendStrings.php:167 FrontendStrings.php:442 LiteBackendStrings.php:1284
 msgid "people"
 msgstr ""
 
 #: FrontendStrings.php:168 LiteBackendStrings.php:132
-#: LiteBackendStrings.php:1229 LiteBackendStrings.php:1372
+#: LiteBackendStrings.php:1229 LiteBackendStrings.php:1373
 msgid "Phone"
 msgstr "Telefonas"
 
@@ -5993,7 +6018,7 @@ msgid "Years"
 msgstr ""
 
 #: FrontendStrings.php:199 FrontendStrings.php:480 FrontendStrings.php:548
-#: LiteBackendStrings.php:1241 LiteBackendStrings.php:1424
+#: LiteBackendStrings.php:1242 LiteBackendStrings.php:1425
 msgid "Free"
 msgstr ""
 
@@ -6005,7 +6030,7 @@ msgstr "Susitikimo data:"
 msgid "Please enter appointment date..."
 msgstr "Įveskite pageidaujamą datą…"
 
-#: FrontendStrings.php:217 LiteBackendStrings.php:1239
+#: FrontendStrings.php:217 LiteBackendStrings.php:1240
 msgid "From"
 msgstr "Nuo"
 
@@ -6044,8 +6069,9 @@ msgid "Please refine your search criteria"
 msgstr "Pakeiskite paieškos parametrus"
 
 #: FrontendStrings.php:226
+#, fuzzy
 msgid "results"
-msgstr ""
+msgstr "Nieko neradome…"
 
 #: FrontendStrings.php:227
 msgid "Search..."
@@ -6148,9 +6174,10 @@ msgid "Next Service"
 msgstr ""
 
 #: FrontendStrings.php:300 LiteBackendStrings.php:765
-#: LiteBackendStrings.php:1349
+#: LiteBackendStrings.php:1350
+#, fuzzy
 msgid "+more"
-msgstr ""
+msgstr "Plačiau"
 
 #: FrontendStrings.php:302
 msgid "Qty:"
@@ -6172,11 +6199,11 @@ msgstr ""
 msgid "Upload file here"
 msgstr ""
 
-#: FrontendStrings.php:344 LiteBackendStrings.php:1261
+#: FrontendStrings.php:344 LiteBackendStrings.php:1262
 msgid "No matching data"
 msgstr ""
 
-#: FrontendStrings.php:346 LiteBackendStrings.php:1263
+#: FrontendStrings.php:346 LiteBackendStrings.php:1264
 #, fuzzy
 msgid "Bringing Anyone With You"
 msgstr "Atvyksiu ne vienas"
@@ -6185,7 +6212,7 @@ msgstr "Atvyksiu ne vienas"
 msgid "The coupon field is mandatory"
 msgstr ""
 
-#: FrontendStrings.php:441 LiteBackendStrings.php:1282
+#: FrontendStrings.php:441 LiteBackendStrings.php:1283
 msgid "Service Subtotal"
 msgstr ""
 
@@ -6195,8 +6222,8 @@ msgstr ""
 msgid "Event Subtotal"
 msgstr "Viso"
 
-#: FrontendStrings.php:452 LiteBackendStrings.php:1285
-#: LiteBackendStrings.php:1288
+#: FrontendStrings.php:452 LiteBackendStrings.php:1286
+#: LiteBackendStrings.php:1289
 msgid "Total Amount"
 msgstr ""
 
@@ -6217,11 +6244,11 @@ msgstr ""
 msgid "Show from date"
 msgstr ""
 
-#: FrontendStrings.php:489 LiteBackendStrings.php:1235
+#: FrontendStrings.php:489 LiteBackendStrings.php:1236
 msgid "Event Type"
 msgstr ""
 
-#: FrontendStrings.php:490 LiteBackendStrings.php:1250
+#: FrontendStrings.php:490 LiteBackendStrings.php:1251
 msgid "Event Status"
 msgstr ""
 
@@ -6240,20 +6267,20 @@ msgid ""
 "event"
 msgstr ""
 
-#: FrontendStrings.php:513 LiteBackendStrings.php:1450
+#: FrontendStrings.php:513 LiteBackendStrings.php:1451
 msgid "Page"
 msgstr ""
 
-#: FrontendStrings.php:515 LiteBackendStrings.php:1452
+#: FrontendStrings.php:515 LiteBackendStrings.php:1453
 msgid "Begins"
 msgstr ""
 
-#: FrontendStrings.php:516 LiteBackendStrings.php:1461
+#: FrontendStrings.php:516 LiteBackendStrings.php:1462
 msgid "About"
 msgstr ""
 
 #: FrontendStrings.php:519 LiteBackendStrings.php:1231
-#: LiteBackendStrings.php:1397 LiteFrontendStrings.php:241
+#: LiteBackendStrings.php:1398 LiteFrontendStrings.php:241
 msgid "Go Back"
 msgstr ""
 
@@ -6270,7 +6297,7 @@ msgstr "Rezervuoti po"
 msgid "This service is available in a Package"
 msgstr ""
 
-#: FrontendStrings.php:565 LiteBackendStrings.php:1423
+#: FrontendStrings.php:565 LiteBackendStrings.php:1424
 msgid "No results"
 msgstr "Nieko neradome…"
 
@@ -6957,8 +6984,9 @@ msgid "Continue Booking"
 msgstr ""
 
 #: FrontendStrings.php:812
+#, fuzzy
 msgid "Booked Appointments"
-msgstr ""
+msgstr "Rezervuoti susitikimą"
 
 #: FrontendStrings.php:814
 msgid "Service info"
@@ -6977,9 +7005,9 @@ msgid "Password is set"
 msgstr ""
 
 #: FrontendStrings.php:822 LiteBackendStrings.php:127
-#: LiteBackendStrings.php:555 LiteBackendStrings.php:1279
-#: LiteBackendStrings.php:1289 LiteBackendStrings.php:1443
-#: LiteBackendStrings.php:1464 LiteFrontendStrings.php:178
+#: LiteBackendStrings.php:555 LiteBackendStrings.php:1280
+#: LiteBackendStrings.php:1290 LiteBackendStrings.php:1444
+#: LiteBackendStrings.php:1465 LiteFrontendStrings.php:178
 #: LiteFrontendStrings.php:205
 msgid "Payment"
 msgstr "Mokėjimas"
@@ -7139,7 +7167,7 @@ msgid "This service does not have any extras"
 msgstr "Papildomų paslaugų nėra"
 
 #: FrontendStrings.php:896 LiteBackendStrings.php:987
-#: LiteBackendStrings.php:1244
+#: LiteBackendStrings.php:1245
 msgid "Service Price"
 msgstr "Paslaugos kaina"
 
@@ -7265,8 +7293,9 @@ msgid "Attendee"
 msgstr ""
 
 #: LiteBackendStrings.php:32
+#, fuzzy
 msgid "Booked"
-msgstr ""
+msgstr "Jūs jau esate užsisakę šį laiką"
 
 #: LiteBackendStrings.php:36
 msgid ""
@@ -7443,8 +7472,9 @@ msgid "Payment Amount"
 msgstr "Mokėjimo data"
 
 #: LiteBackendStrings.php:134
+#, fuzzy
 msgid "Resources"
-msgstr ""
+msgstr "Klientai ištrinti"
 
 #: LiteBackendStrings.php:136
 #, fuzzy
@@ -7884,7 +7914,7 @@ msgid "Enable usage for older IE browsers"
 msgstr ""
 
 #: LiteBackendStrings.php:273
-msgid "Hide unlocked options"
+msgid "Hide locked options"
 msgstr ""
 
 #: LiteBackendStrings.php:274
@@ -8569,20 +8599,23 @@ msgid "Payment History"
 msgstr "Mokėjimų istorija"
 
 #: LiteBackendStrings.php:498
+#, fuzzy
 msgid "Date of the appointment"
-msgstr ""
+msgstr "Viso rezervacijų"
 
 #: LiteBackendStrings.php:499
+#, fuzzy
 msgid "Date & Time of the appointment"
-msgstr ""
+msgstr "Viso rezervacijų"
 
 #: LiteBackendStrings.php:500
 msgid "Duration of the appointment"
 msgstr ""
 
 #: LiteBackendStrings.php:501
+#, fuzzy
 msgid "End time of the appointment"
-msgstr ""
+msgstr "Viso rezervacijų"
 
 #: LiteBackendStrings.php:502
 msgid "Id of the appointment"
@@ -8605,8 +8638,9 @@ msgid "Status of the appointment"
 msgstr ""
 
 #: LiteBackendStrings.php:507
+#, fuzzy
 msgid "Start time of the appointment"
-msgstr ""
+msgstr "Viso rezervacijų"
 
 #: LiteBackendStrings.php:508
 msgid "Attendee code"
@@ -8629,16 +8663,18 @@ msgid "Company name"
 msgstr ""
 
 #: LiteBackendStrings.php:514
+#, fuzzy
 msgid "Company phone"
-msgstr ""
+msgstr "Organizacija"
 
 #: LiteBackendStrings.php:515
 msgid "Company website"
 msgstr ""
 
 #: LiteBackendStrings.php:516
+#, fuzzy
 msgid "Company email"
-msgstr ""
+msgstr "Organizacija"
 
 #: LiteBackendStrings.php:517
 #, fuzzy
@@ -8703,7 +8739,7 @@ msgstr ""
 msgid "Event description"
 msgstr ""
 
-#: LiteBackendStrings.php:532 LiteBackendStrings.php:1236
+#: LiteBackendStrings.php:532 LiteBackendStrings.php:1237
 #: LiteFrontendStrings.php:219
 msgid "Event Location"
 msgstr ""
@@ -8768,8 +8804,9 @@ msgid "Service description"
 msgstr ""
 
 #: LiteBackendStrings.php:547
+#, fuzzy
 msgid "Service duration"
-msgstr ""
+msgstr "Paslaugos informacija"
 
 #: LiteBackendStrings.php:548 LiteBackendStrings.php:1232
 msgid "Service name"
@@ -8940,8 +8977,9 @@ msgid "Default language"
 msgstr ""
 
 #: LiteBackendStrings.php:623
+#, fuzzy
 msgid "WhatsApp Notifications"
-msgstr ""
+msgstr "Pranešimai el. paštu"
 
 #: LiteBackendStrings.php:624
 msgid "Enable WhatsApp Notifications"
@@ -8968,7 +9006,7 @@ msgid "# of Hours in appointment"
 msgstr "Valandų skaičius"
 
 #: LiteBackendStrings.php:642
-#, no-php-format
+#, php-format
 msgid "% of load"
 msgstr "% užimtumo"
 
@@ -9053,7 +9091,7 @@ msgstr "šiandienai"
 msgid "Upcoming appointments"
 msgstr "Ateinančios rezervacijos"
 
-#: LiteBackendStrings.php:706 LiteBackendStrings.php:1518
+#: LiteBackendStrings.php:706 LiteBackendStrings.php:1519
 msgid "Show"
 msgstr "Rodyti"
 
@@ -9136,8 +9174,9 @@ msgid "Are you sure you want to show this service?"
 msgstr "Ar tikrai norite padaryti šią paslaugą matoma?"
 
 #: LiteBackendStrings.php:751
+#, fuzzy
 msgid "Are you sure you want to delete this category?"
-msgstr ""
+msgstr "Ar tikrai norite pašalinti šią kategoriją?"
 
 #: LiteBackendStrings.php:752
 msgid "Are you sure you want to duplicate this category?"
@@ -9263,23 +9302,23 @@ msgstr ""
 msgid "Provider has appointments for this service"
 msgstr ""
 
-#: LiteBackendStrings.php:801 LiteBackendStrings.php:1271
+#: LiteBackendStrings.php:801 LiteBackendStrings.php:1272
 #: LiteFrontendStrings.php:104
 msgid "Please enter first name"
 msgstr "Įveskite savo vardą"
 
-#: LiteBackendStrings.php:802 LiteBackendStrings.php:1273
+#: LiteBackendStrings.php:802 LiteBackendStrings.php:1274
 #: LiteFrontendStrings.php:105
 msgid "Please enter last name"
 msgstr "Įveskite savo pavardę"
 
 #: LiteBackendStrings.php:803 LiteBackendStrings.php:1224
-#: LiteBackendStrings.php:1369
+#: LiteBackendStrings.php:1370
 msgid "First Name"
 msgstr "Vardas"
 
 #: LiteBackendStrings.php:804 LiteBackendStrings.php:1225
-#: LiteBackendStrings.php:1370
+#: LiteBackendStrings.php:1371
 msgid "Last Name"
 msgstr "Pavardė"
 
@@ -9651,7 +9690,7 @@ msgstr "Mokėjimai ištrinti"
 msgid "Payment Type"
 msgstr ""
 
-#: LiteBackendStrings.php:988 LiteBackendStrings.php:1284
+#: LiteBackendStrings.php:988 LiteBackendStrings.php:1285
 #: LiteFrontendStrings.php:259
 msgid "Subtotal"
 msgstr "Viso"
@@ -9735,12 +9774,12 @@ msgstr ""
 msgid "Customer is already added to this event"
 msgstr "Jūs jau esate užsisakę šį laiką"
 
-#: LiteBackendStrings.php:1080 LiteBackendStrings.php:1238
+#: LiteBackendStrings.php:1080 LiteBackendStrings.php:1239
 #: LiteFrontendStrings.php:92
 msgid "Full"
 msgstr ""
 
-#: LiteBackendStrings.php:1081 LiteBackendStrings.php:1240
+#: LiteBackendStrings.php:1081 LiteBackendStrings.php:1241
 #: LiteFrontendStrings.php:93
 msgid "Upcoming"
 msgstr ""
@@ -9758,8 +9797,9 @@ msgid "Booking opens:"
 msgstr ""
 
 #: LiteBackendStrings.php:1118
+#, fuzzy
 msgid "Recurring:"
-msgstr ""
+msgstr "Ateinančios rezervacijos"
 
 #: LiteBackendStrings.php:1119
 msgid "This is a recurring event"
@@ -9886,7 +9926,7 @@ msgstr ""
 msgid "Steps"
 msgstr ""
 
-#: LiteBackendStrings.php:1206 LiteBackendStrings.php:1363
+#: LiteBackendStrings.php:1206 LiteBackendStrings.php:1364
 #, fuzzy
 msgid "Text"
 msgstr "Tekstas:"
@@ -9919,7 +9959,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: LiteBackendStrings.php:1214 LiteBackendStrings.php:1306
+#: LiteBackendStrings.php:1214 LiteBackendStrings.php:1307
 msgid "Background Color"
 msgstr ""
 
@@ -9972,931 +10012,936 @@ msgid "Display Field:"
 msgstr ""
 
 #: LiteBackendStrings.php:1234
+msgid "Filterable Field:"
+msgstr ""
+
+#: LiteBackendStrings.php:1235
 msgid "Mandatory Field:"
 msgstr ""
 
-#: LiteBackendStrings.php:1243
+#: LiteBackendStrings.php:1244
 msgid "Service Badge"
 msgstr "Paslauga"
 
-#: LiteBackendStrings.php:1245
+#: LiteBackendStrings.php:1246
 msgid "Package Name"
 msgstr ""
 
-#: LiteBackendStrings.php:1246
+#: LiteBackendStrings.php:1247
 #, fuzzy
 msgid "Congratulations!"
 msgstr "Sveikiname"
 
-#: LiteBackendStrings.php:1247 LiteFrontendStrings.php:79
+#: LiteBackendStrings.php:1248 LiteFrontendStrings.php:79
 msgid "Add to Calendar"
 msgstr "Įtraukti į mano kalendorių"
 
-#: LiteBackendStrings.php:1248 LiteFrontendStrings.php:110
+#: LiteBackendStrings.php:1249 LiteFrontendStrings.php:110
 msgid "Finish"
 msgstr "Baigti"
 
-#: LiteBackendStrings.php:1249
+#: LiteBackendStrings.php:1250
 msgid "Step By Step Booking Form"
 msgstr ""
 
-#: LiteBackendStrings.php:1251 LiteFrontendStrings.php:199
+#: LiteBackendStrings.php:1252 LiteFrontendStrings.php:199
 msgid "Filters"
 msgstr ""
 
-#: LiteBackendStrings.php:1252 LiteFrontendStrings.php:196
+#: LiteBackendStrings.php:1253 LiteFrontendStrings.php:196
 msgid "Book event"
 msgstr ""
 
-#: LiteBackendStrings.php:1254
+#: LiteBackendStrings.php:1255
 msgid "Form"
 msgstr ""
 
-#: LiteBackendStrings.php:1255
+#: LiteBackendStrings.php:1256
 msgid "Form Flow"
 msgstr ""
 
-#: LiteBackendStrings.php:1256
+#: LiteBackendStrings.php:1257
 msgid "Use Global Colors"
 msgstr ""
 
-#: LiteBackendStrings.php:1257 LiteBackendStrings.php:1340
+#: LiteBackendStrings.php:1258 LiteBackendStrings.php:1341
 #: LiteFrontendStrings.php:161
 msgid "Service Selection"
 msgstr ""
 
-#: LiteBackendStrings.php:1267 LiteFrontendStrings.php:166
+#: LiteBackendStrings.php:1268 LiteFrontendStrings.php:166
 #, fuzzy
 msgid "Date & Time"
 msgstr "Pasirinkite dieną ir laiką:"
 
-#: LiteBackendStrings.php:1269 LiteBackendStrings.php:1458
+#: LiteBackendStrings.php:1270 LiteBackendStrings.php:1459
 #: LiteFrontendStrings.php:167 LiteFrontendStrings.php:206
 msgid "Your Information"
 msgstr ""
 
-#: LiteBackendStrings.php:1270 LiteFrontendStrings.php:168
+#: LiteBackendStrings.php:1271 LiteFrontendStrings.php:168
 #, fuzzy
 msgid "Enter first name"
 msgstr "Įveskite savo vardą"
 
-#: LiteBackendStrings.php:1272 LiteFrontendStrings.php:169
+#: LiteBackendStrings.php:1273 LiteFrontendStrings.php:169
 #, fuzzy
 msgid "Enter last name"
 msgstr "Įveskite savo pavardę"
 
-#: LiteBackendStrings.php:1274 LiteFrontendStrings.php:170
+#: LiteBackendStrings.php:1275 LiteFrontendStrings.php:170
 #, fuzzy
 msgid "Enter email"
 msgstr "Įveskite el. paštą"
 
-#: LiteBackendStrings.php:1275
+#: LiteBackendStrings.php:1276
 msgid "Please enter valid email"
 msgstr ""
 
-#: LiteBackendStrings.php:1276 LiteFrontendStrings.php:171
+#: LiteBackendStrings.php:1277 LiteFrontendStrings.php:171
 msgid "Enter phone"
 msgstr ""
 
-#: LiteBackendStrings.php:1277
+#: LiteBackendStrings.php:1278
 #, fuzzy
 msgid "Please enter phone"
 msgstr "Įveskite telefono numerį"
 
-#: LiteBackendStrings.php:1286 LiteFrontendStrings.php:153
+#: LiteBackendStrings.php:1287 LiteFrontendStrings.php:153
 msgid "The payment will be done on-site."
 msgstr ""
 
-#: LiteBackendStrings.php:1290 LiteFrontendStrings.php:159
+#: LiteBackendStrings.php:1291 LiteFrontendStrings.php:159
 msgid "Your Name"
 msgstr ""
 
-#: LiteBackendStrings.php:1291 LiteFrontendStrings.php:150
+#: LiteBackendStrings.php:1292 LiteFrontendStrings.php:150
+#, fuzzy
 msgid "Email Address"
-msgstr ""
+msgstr "Įveskite veikiantį el. pašto adresą"
 
-#: LiteBackendStrings.php:1292 LiteFrontendStrings.php:154
+#: LiteBackendStrings.php:1293 LiteFrontendStrings.php:154
 #, fuzzy
 msgid "Phone Number"
 msgstr "Įveskite teisingą telefono numerį"
 
-#: LiteBackendStrings.php:1294 LiteFrontendStrings.php:180
+#: LiteBackendStrings.php:1295 LiteFrontendStrings.php:180
 #, fuzzy
 msgid "Local Time"
 msgstr "Laikas:"
 
-#: LiteBackendStrings.php:1298
+#: LiteBackendStrings.php:1299
 msgid "Choose a Form"
 msgstr ""
 
-#: LiteBackendStrings.php:1299
+#: LiteBackendStrings.php:1300
 msgid ""
 "Choose a form you want to customize. The Step-by-Step 2.0 form is the new "
 "and improved version which provides you with better design and user "
 "experience, as well as better speed."
 msgstr ""
 
-#: LiteBackendStrings.php:1300
+#: LiteBackendStrings.php:1301
 msgid "Step-by-Step Booking Form 2.0"
 msgstr ""
 
-#: LiteBackendStrings.php:1301
+#: LiteBackendStrings.php:1302
 msgid "Booking Forms 1.0"
 msgstr ""
 
-#: LiteBackendStrings.php:1302
+#: LiteBackendStrings.php:1303
 msgid ""
 "Redesigned and upgraded Step-by-Step Booking form with a better user "
 "experience, animations, improved speed, and a stand-out design!"
 msgstr ""
 
-#: LiteBackendStrings.php:1303
+#: LiteBackendStrings.php:1304
 msgid ""
 "Step-by-Step 1.0 Booking, Catalog Booking, Search Booking, Event List and "
 "Event Calendar Bookings."
 msgstr ""
 
-#: LiteBackendStrings.php:1304
+#: LiteBackendStrings.php:1305
 msgid "Primary and state colors"
 msgstr ""
 
-#: LiteBackendStrings.php:1305 LiteBackendStrings.php:1352
+#: LiteBackendStrings.php:1306 LiteBackendStrings.php:1353
 msgid "Sidebar"
 msgstr ""
 
-#: LiteBackendStrings.php:1307
+#: LiteBackendStrings.php:1308
 msgid "Content"
 msgstr ""
 
-#: LiteBackendStrings.php:1308
+#: LiteBackendStrings.php:1309
 msgid "Heading Text Color"
 msgstr ""
 
-#: LiteBackendStrings.php:1309
+#: LiteBackendStrings.php:1310
 msgid "Content Text Color"
 msgstr ""
 
-#: LiteBackendStrings.php:1310
+#: LiteBackendStrings.php:1311
 msgid "Input Fields"
 msgstr ""
 
-#: LiteBackendStrings.php:1311
+#: LiteBackendStrings.php:1312
 msgid "Border Color"
 msgstr ""
 
-#: LiteBackendStrings.php:1312
+#: LiteBackendStrings.php:1313
 msgid "Dropdowns"
 msgstr ""
 
-#: LiteBackendStrings.php:1313
+#: LiteBackendStrings.php:1314
 msgid "Init Cell"
 msgstr ""
 
-#: LiteBackendStrings.php:1314
+#: LiteBackendStrings.php:1315
 msgid "Init Cell Text"
 msgstr ""
 
-#: LiteBackendStrings.php:1315
+#: LiteBackendStrings.php:1316
 msgid "Cell Selected Background"
 msgstr ""
 
-#: LiteBackendStrings.php:1316
+#: LiteBackendStrings.php:1317
 msgid "Cell Selected Text"
 msgstr ""
 
-#: LiteBackendStrings.php:1317
+#: LiteBackendStrings.php:1318
 msgid "Cell Disabled Background"
 msgstr ""
 
-#: LiteBackendStrings.php:1318
+#: LiteBackendStrings.php:1319
 msgid "Cell Disabled Text"
 msgstr ""
 
-#: LiteBackendStrings.php:1319
+#: LiteBackendStrings.php:1320
 msgid "Primary Button Background Color"
 msgstr ""
 
-#: LiteBackendStrings.php:1320
+#: LiteBackendStrings.php:1321
 msgid "Primary Button Text Color"
 msgstr ""
 
-#: LiteBackendStrings.php:1321
+#: LiteBackendStrings.php:1322
 msgid "Secondary Button Background Color"
 msgstr ""
 
-#: LiteBackendStrings.php:1322
+#: LiteBackendStrings.php:1323
 msgid "Secondary Button Text Color"
 msgstr ""
 
-#: LiteBackendStrings.php:1323
+#: LiteBackendStrings.php:1324
 msgid "Layout & Inputs"
 msgstr ""
 
-#: LiteBackendStrings.php:1324
+#: LiteBackendStrings.php:1325
 msgid "Colors"
 msgstr ""
 
-#: LiteBackendStrings.php:1325
+#: LiteBackendStrings.php:1326
 msgid "Fonts"
 msgstr ""
 
-#: LiteBackendStrings.php:1327
+#: LiteBackendStrings.php:1328
 msgid "Step Title"
 msgstr ""
 
-#: LiteBackendStrings.php:1328
+#: LiteBackendStrings.php:1329
 msgid "Footer Buttons"
 msgstr ""
 
-#: LiteBackendStrings.php:1329
+#: LiteBackendStrings.php:1330
 msgid "Step Content"
 msgstr ""
 
-#: LiteBackendStrings.php:1330 LiteBackendStrings.php:1373
+#: LiteBackendStrings.php:1331 LiteBackendStrings.php:1374
 msgid "Finish Button Type"
 msgstr ""
 
-#: LiteBackendStrings.php:1331 LiteBackendStrings.php:1374
+#: LiteBackendStrings.php:1332 LiteBackendStrings.php:1375
 msgid "Panel Button Type"
 msgstr ""
 
-#: LiteBackendStrings.php:1332
+#: LiteBackendStrings.php:1333
 msgid "Summary Segment"
 msgstr ""
 
-#: LiteBackendStrings.php:1333
+#: LiteBackendStrings.php:1334
 msgid "Payment Segment"
 msgstr ""
 
-#: LiteBackendStrings.php:1334
+#: LiteBackendStrings.php:1335
 msgid "Heading Title"
 msgstr ""
 
-#: LiteBackendStrings.php:1335
+#: LiteBackendStrings.php:1336
 msgid "Sub Steps"
 msgstr ""
 
-#: LiteBackendStrings.php:1339
+#: LiteBackendStrings.php:1340
 msgid "Set up Sidebar visibility and its content"
 msgstr ""
 
-#: LiteBackendStrings.php:1341
+#: LiteBackendStrings.php:1342
 msgid "Set up Services, Locations, Employees selection options"
 msgstr ""
 
-#: LiteBackendStrings.php:1342
+#: LiteBackendStrings.php:1343
 msgid "Date & Time Selection"
 msgstr ""
 
-#: LiteBackendStrings.php:1343
+#: LiteBackendStrings.php:1344
 msgid "Set up Calendar layout and Recurring popup options"
 msgstr ""
 
-#: LiteBackendStrings.php:1344
+#: LiteBackendStrings.php:1345
 msgid "Customer Information"
 msgstr "Kliento el. paštas"
 
-#: LiteBackendStrings.php:1345 LiteBackendStrings.php:1442
+#: LiteBackendStrings.php:1346 LiteBackendStrings.php:1443
 msgid "Field order, mandatory fields, labels and display options"
 msgstr ""
 
-#: LiteBackendStrings.php:1346
+#: LiteBackendStrings.php:1347
 msgid "Payment Summary"
 msgstr "Mokėjimų istorija"
 
-#: LiteBackendStrings.php:1347 LiteBackendStrings.php:1444
+#: LiteBackendStrings.php:1348 LiteBackendStrings.php:1445
 msgid "Set up labels and buttons"
 msgstr ""
 
-#: LiteBackendStrings.php:1348 LiteBackendStrings.php:1446
+#: LiteBackendStrings.php:1349 LiteBackendStrings.php:1447
 msgid "Set up button types and labels"
 msgstr ""
 
-#: LiteBackendStrings.php:1351
+#: LiteBackendStrings.php:1352
 msgid "Global Settings"
 msgstr ""
 
-#: LiteBackendStrings.php:1353
+#: LiteBackendStrings.php:1354
 msgid "Section"
 msgstr "Aprašymas"
 
-#: LiteBackendStrings.php:1354
+#: LiteBackendStrings.php:1355
 msgid "Field Order"
 msgstr ""
 
-#: LiteBackendStrings.php:1355 LiteBackendStrings.php:1445
-#: LiteBackendStrings.php:1465 LiteFrontendStrings.php:95
+#: LiteBackendStrings.php:1356 LiteBackendStrings.php:1446
+#: LiteBackendStrings.php:1466 LiteFrontendStrings.php:95
 #: LiteFrontendStrings.php:204
 msgid "Congratulations"
 msgstr "Sveikiname"
 
-#: LiteBackendStrings.php:1357
+#: LiteBackendStrings.php:1358
 msgid "Footer"
 msgstr ""
 
-#: LiteBackendStrings.php:1358 LiteFrontendStrings.php:151
+#: LiteBackendStrings.php:1359 LiteFrontendStrings.php:151
 msgid "Get in Touch"
 msgstr ""
 
-#: LiteBackendStrings.php:1359
+#: LiteBackendStrings.php:1360
 msgid "Collapse Menu"
 msgstr ""
 
-#: LiteBackendStrings.php:1361
+#: LiteBackendStrings.php:1362
 msgid "Filled"
 msgstr ""
 
-#: LiteBackendStrings.php:1362
+#: LiteBackendStrings.php:1363
 msgid "Plain"
 msgstr ""
 
-#: LiteBackendStrings.php:1365
+#: LiteBackendStrings.php:1366
 msgid "Continue Button Type"
 msgstr ""
 
-#: LiteBackendStrings.php:1366
+#: LiteBackendStrings.php:1367
 msgid "Calendar Slot End Time"
 msgstr ""
 
-#: LiteBackendStrings.php:1367
+#: LiteBackendStrings.php:1368
 msgid "Show Busy Time Slots"
 msgstr ""
 
-#: LiteBackendStrings.php:1368
+#: LiteBackendStrings.php:1369
 msgid "Calendar Time Zone"
 msgstr ""
 
-#: LiteBackendStrings.php:1375
+#: LiteBackendStrings.php:1376
 msgid "Sidebar Visibility"
 msgstr ""
 
-#: LiteBackendStrings.php:1376
+#: LiteBackendStrings.php:1377
 msgid "Publish Form"
 msgstr ""
 
-#: LiteBackendStrings.php:1378 LiteFrontendStrings.php:236
+#: LiteBackendStrings.php:1379 LiteFrontendStrings.php:236
 msgid "View All"
 msgstr "Peržiūrėti"
 
-#: LiteBackendStrings.php:1380
+#: LiteBackendStrings.php:1381
 msgid "Set up categories cards"
 msgstr ""
 
-#: LiteBackendStrings.php:1381
+#: LiteBackendStrings.php:1382
 msgid "Cards"
 msgstr ""
 
-#: LiteBackendStrings.php:1382
+#: LiteBackendStrings.php:1383
 msgid "Card Button Type"
 msgstr ""
 
-#: LiteBackendStrings.php:1383
+#: LiteBackendStrings.php:1384
 msgid "Services Overview"
 msgstr "Paslaugos kaina"
 
-#: LiteBackendStrings.php:1384
+#: LiteBackendStrings.php:1385
 msgid "Set up Services view"
 msgstr "Rūšiuoti paslaugas:"
 
-#: LiteBackendStrings.php:1386
+#: LiteBackendStrings.php:1387
 msgid "Set up Service detailed view"
 msgstr "Paslaugos informacija"
 
-#: LiteBackendStrings.php:1387
+#: LiteBackendStrings.php:1388
 msgid "Booking Form"
 msgstr ""
 
-#: LiteBackendStrings.php:1388
+#: LiteBackendStrings.php:1389
 msgid "Set options, colors and labels for booking form"
 msgstr ""
 
-#: LiteBackendStrings.php:1390
+#: LiteBackendStrings.php:1391
 msgid "Catalog Booking Form 2.0"
 msgstr ""
 
-#: LiteBackendStrings.php:1391
+#: LiteBackendStrings.php:1392
 msgid ""
 "Modernized Catalog Booking Form 2.0 with better user experience, improved "
 "speed, animation and a stand-out design!"
 msgstr ""
 
-#: LiteBackendStrings.php:1394
+#: LiteBackendStrings.php:1395
 msgid "Total Number of Services"
 msgstr "Viso rezervacijų"
 
-#: LiteBackendStrings.php:1395
+#: LiteBackendStrings.php:1396
 msgid "Back Button"
 msgstr ""
 
-#: LiteBackendStrings.php:1396
+#: LiteBackendStrings.php:1397
 msgid "“Back” Button Type"
 msgstr ""
 
-#: LiteBackendStrings.php:1398
+#: LiteBackendStrings.php:1399
 msgid "“Book Now” Button Type"
 msgstr ""
 
-#: LiteBackendStrings.php:1401
+#: LiteBackendStrings.php:1402
 msgid "Main Category Button"
 msgstr ""
 
-#: LiteBackendStrings.php:1402
+#: LiteBackendStrings.php:1403
 msgid "Category Card Side Color"
 msgstr ""
 
-#: LiteBackendStrings.php:1403
+#: LiteBackendStrings.php:1404
 msgid "Category Color"
 msgstr ""
 
-#: LiteBackendStrings.php:1407
+#: LiteBackendStrings.php:1408
 msgid "Filter Menu Button Type"
 msgstr ""
 
-#: LiteBackendStrings.php:1408 LiteBackendStrings.php:1410
+#: LiteBackendStrings.php:1409 LiteBackendStrings.php:1411
 msgid "Categories Sidebar"
 msgstr "Paslaugų kategorijos"
 
-#: LiteBackendStrings.php:1409
+#: LiteBackendStrings.php:1410
 msgid "Filters Block"
 msgstr ""
 
-#: LiteBackendStrings.php:1411
+#: LiteBackendStrings.php:1412
 msgid "Page Header"
 msgstr ""
 
-#: LiteBackendStrings.php:1414
+#: LiteBackendStrings.php:1415
 msgid "Service Duration"
 msgstr "Paslaugos informacija"
 
-#: LiteBackendStrings.php:1415 LiteBackendStrings.php:1426
+#: LiteBackendStrings.php:1416 LiteBackendStrings.php:1427
 #: LiteFrontendStrings.php:239
 msgid "About Service"
 msgstr "Pridėti paslaugą"
 
-#: LiteBackendStrings.php:1416
+#: LiteBackendStrings.php:1417
 msgid "“Search” option"
 msgstr "Ieškoti vietų…"
 
-#: LiteBackendStrings.php:1417
+#: LiteBackendStrings.php:1418
 msgid "Card Color"
 msgstr ""
 
-#: LiteBackendStrings.php:1425 LiteFrontendStrings.php:238
+#: LiteBackendStrings.php:1426 LiteFrontendStrings.php:238
 msgid "Book Now"
 msgstr ""
 
-#: LiteBackendStrings.php:1427 LiteFrontendStrings.php:240
+#: LiteBackendStrings.php:1428 LiteFrontendStrings.php:240
 msgid "View all photos"
 msgstr ""
 
-#: LiteBackendStrings.php:1429
+#: LiteBackendStrings.php:1430
 msgid "Support Heading:"
 msgstr "Laukiantis"
 
-#: LiteBackendStrings.php:1430
+#: LiteBackendStrings.php:1431
 msgid "Company Phone:"
 msgstr "Organizacija"
 
-#: LiteBackendStrings.php:1431
+#: LiteBackendStrings.php:1432
 msgid "Company Email:"
 msgstr "Organizacija"
 
-#: LiteBackendStrings.php:1434
+#: LiteBackendStrings.php:1435
 msgid "Event List Booking Form 2.0"
 msgstr ""
 
-#: LiteBackendStrings.php:1435
+#: LiteBackendStrings.php:1436
 msgid ""
 "Modernized Event List Booking Form 2.0 with better user experience, improved "
 "speed, animation and a stand-out design!"
 msgstr ""
 
-#: LiteBackendStrings.php:1438
+#: LiteBackendStrings.php:1439
 msgid ""
 "Set up Location, Images, Filters, Capacity, Price, and Status visibility "
 "options"
 msgstr ""
 
-#: LiteBackendStrings.php:1440
+#: LiteBackendStrings.php:1441
 msgid "Set up Staff, Location, Gallery and other Event information visibility"
 msgstr ""
 
-#: LiteBackendStrings.php:1441
+#: LiteBackendStrings.php:1442
 #, fuzzy
 #| msgid "Customer Information"
 msgid "Customer Info"
 msgstr "Kliento el. paštas"
 
-#: LiteBackendStrings.php:1448 LiteFrontendStrings.php:208
+#: LiteBackendStrings.php:1449 LiteFrontendStrings.php:208
 #, fuzzy
 #| msgid "Available"
 msgid "Events Available"
 msgstr "Dirba"
 
-#: LiteBackendStrings.php:1449 LiteFrontendStrings.php:209
+#: LiteBackendStrings.php:1450 LiteFrontendStrings.php:209
 #, fuzzy
 #| msgid "Available"
 msgid "Event Available"
 msgstr "Dirba"
 
-#: LiteBackendStrings.php:1451 LiteFrontendStrings.php:210
+#: LiteBackendStrings.php:1452 LiteFrontendStrings.php:210
 #, fuzzy
 #| msgid "Search Results"
 msgid "Search for Events"
 msgstr "Paieškos rezultatai"
 
-#: LiteBackendStrings.php:1453 LiteFrontendStrings.php:211
+#: LiteBackendStrings.php:1454 LiteFrontendStrings.php:211
 msgid "slot left"
 msgstr ""
 
-#: LiteBackendStrings.php:1454 LiteFrontendStrings.php:212
+#: LiteBackendStrings.php:1455 LiteFrontendStrings.php:212
 msgid "slots left"
 msgstr ""
 
-#: LiteBackendStrings.php:1455 LiteFrontendStrings.php:213
+#: LiteBackendStrings.php:1456 LiteFrontendStrings.php:213
 #, fuzzy
 #| msgid "View more"
 msgid "Learn more"
 msgstr "Plačiau"
 
-#: LiteBackendStrings.php:1456 LiteFrontendStrings.php:214
+#: LiteBackendStrings.php:1457 LiteFrontendStrings.php:214
 #, fuzzy
 #| msgid "View more"
 msgid "Read more"
 msgstr "Plačiau"
 
-#: LiteBackendStrings.php:1460 LiteFrontendStrings.php:177
+#: LiteBackendStrings.php:1461 LiteFrontendStrings.php:177
 #, fuzzy
 #| msgid "Event Day"
 msgid "Event ID"
 msgstr "Renginio data"
 
-#: LiteBackendStrings.php:1463 LiteFrontendStrings.php:215
+#: LiteBackendStrings.php:1464 LiteFrontendStrings.php:215
 #, fuzzy
 #| msgid "Timeline"
 msgid "Timetable"
 msgstr "Chronologiškai"
 
-#: LiteBackendStrings.php:1466 LiteFrontendStrings.php:207
+#: LiteBackendStrings.php:1467 LiteFrontendStrings.php:207
 #, fuzzy
 #| msgid "Edit Event"
 msgid "About Event"
 msgstr "Redaguoti renginį"
 
-#: LiteBackendStrings.php:1467 LiteFrontendStrings.php:200
+#: LiteBackendStrings.php:1468 LiteFrontendStrings.php:200
 #, fuzzy
 #| msgid "Event Date"
 msgid "Event Starts"
 msgstr "Renginio data"
 
-#: LiteBackendStrings.php:1468 LiteFrontendStrings.php:201
+#: LiteBackendStrings.php:1469 LiteFrontendStrings.php:201
 #, fuzzy
 #| msgid "Events"
 msgid "Event Ends"
 msgstr "Renginiai"
 
-#: LiteBackendStrings.php:1470 LiteFrontendStrings.php:216
+#: LiteBackendStrings.php:1471 LiteFrontendStrings.php:216
 msgid "How many attendees do you want to book event for?"
 msgstr ""
 
-#: LiteBackendStrings.php:1473
+#: LiteBackendStrings.php:1474
 #, fuzzy
 #| msgid "Search Filters"
 msgid "Step Filters"
 msgstr "Paieškos filtrai"
 
-#: LiteBackendStrings.php:1474
+#: LiteBackendStrings.php:1475
 #, fuzzy
 #| msgid "Event Day"
 msgid "Event Card"
 msgstr "Renginio data"
 
-#: LiteBackendStrings.php:1475
+#: LiteBackendStrings.php:1476
 msgid "Step Pagination"
 msgstr ""
 
-#: LiteBackendStrings.php:1476
+#: LiteBackendStrings.php:1477
 #, fuzzy
 #| msgid "Spots capacity"
 msgid "Event Slots Capacity"
 msgstr "Talpa"
 
-#: LiteBackendStrings.php:1477
+#: LiteBackendStrings.php:1478
 msgid "Filters Button Type"
 msgstr ""
 
-#: LiteBackendStrings.php:1478
+#: LiteBackendStrings.php:1479
 msgid "Read More Button Type"
 msgstr ""
 
-#: LiteBackendStrings.php:1479
+#: LiteBackendStrings.php:1480
 msgid "Learn More Button Type"
 msgstr ""
 
-#: LiteBackendStrings.php:1480
+#: LiteBackendStrings.php:1481
 #, fuzzy
 #| msgid "Event Date"
 msgid "Event Tab Image"
 msgstr "Renginio data"
 
-#: LiteBackendStrings.php:1481
+#: LiteBackendStrings.php:1482
 msgid "Step Header"
 msgstr ""
 
-#: LiteBackendStrings.php:1482
+#: LiteBackendStrings.php:1483
 msgid "Step Info Tab"
 msgstr ""
 
-#: LiteBackendStrings.php:1483
+#: LiteBackendStrings.php:1484
 msgid "Booking Event Button"
 msgstr ""
 
-#: LiteBackendStrings.php:1484
+#: LiteBackendStrings.php:1485
 #, fuzzy
 #| msgid "Finish"
 msgid "Finish Button"
 msgstr "Baigti"
 
-#: LiteBackendStrings.php:1485
+#: LiteBackendStrings.php:1486
 msgid "Close Event Button"
 msgstr ""
 
-#: LiteBackendStrings.php:1486
+#: LiteBackendStrings.php:1487
 #, fuzzy
 #| msgid "Event Day"
 msgid "Event Gallery"
 msgstr "Renginio data"
 
-#: LiteBackendStrings.php:1489 LiteFrontendStrings.php:174
+#: LiteBackendStrings.php:1490 LiteFrontendStrings.php:174
 #, fuzzy
 msgid "person"
 msgstr "Asmuo"
 
-#: LiteBackendStrings.php:1490
+#: LiteBackendStrings.php:1491
 #, fuzzy
 #| msgid "Edit Employee"
 msgid "Event Employees"
 msgstr "Redaguoti darbuotoją"
 
-#: LiteBackendStrings.php:1501
+#: LiteBackendStrings.php:1502
 msgid "Choose Category"
 msgstr ""
 
-#: LiteBackendStrings.php:1502
+#: LiteBackendStrings.php:1503
 msgid "Choose Service"
 msgstr ""
 
-#: LiteBackendStrings.php:1503
+#: LiteBackendStrings.php:1504
 msgid "Choose Package"
 msgstr ""
 
-#: LiteBackendStrings.php:1504
+#: LiteBackendStrings.php:1505
 msgid "Preselect Booking Parameters"
 msgstr ""
 
-#: LiteBackendStrings.php:1505
+#: LiteBackendStrings.php:1506
 #, fuzzy
 #| msgid "Categories"
 msgid "Skip Categories step"
 msgstr "Paslaugų kategorijos"
 
-#: LiteBackendStrings.php:1506
+#: LiteBackendStrings.php:1507
 msgid "Insert Amelia Booking Shortcode"
 msgstr ""
 
-#: LiteBackendStrings.php:1507
+#: LiteBackendStrings.php:1508
 msgid "Select Catalog View"
 msgstr ""
 
-#: LiteBackendStrings.php:1514
+#: LiteBackendStrings.php:1515
 #, fuzzy
 #| msgid "Select Service"
 msgid "Select Events"
 msgstr "Pasirinkite paslaugą"
 
-#: LiteBackendStrings.php:1515
+#: LiteBackendStrings.php:1516
 msgid "Select Tag"
 msgstr ""
 
-#: LiteBackendStrings.php:1516
+#: LiteBackendStrings.php:1517
 #, fuzzy
 #| msgid "Select Calendar"
 msgid "Select Tags"
 msgstr "Pasirinkite kalendorių"
 
-#: LiteBackendStrings.php:1517
+#: LiteBackendStrings.php:1518
 msgid "Select View"
 msgstr ""
 
-#: LiteBackendStrings.php:1519
+#: LiteBackendStrings.php:1520
 msgid "Show All"
 msgstr ""
 
-#: LiteBackendStrings.php:1520
+#: LiteBackendStrings.php:1521
 msgid "Load booking form manually"
 msgstr ""
 
-#: LiteBackendStrings.php:1521
+#: LiteBackendStrings.php:1522
 msgid ""
 "Add element (button, link...) ID, that will manually load amelia shortcode "
 "content"
 msgstr ""
 
-#: LiteBackendStrings.php:1522
+#: LiteBackendStrings.php:1523
 msgid "Show all categories"
 msgstr ""
 
-#: LiteBackendStrings.php:1523
+#: LiteBackendStrings.php:1524
 msgid "Show all employees"
 msgstr ""
 
-#: LiteBackendStrings.php:1524
+#: LiteBackendStrings.php:1525
 msgid "Show all locations"
 msgstr ""
 
-#: LiteBackendStrings.php:1525
+#: LiteBackendStrings.php:1526
 msgid "Show all services"
 msgstr ""
 
-#: LiteBackendStrings.php:1526
+#: LiteBackendStrings.php:1527
 msgid "Show all events"
 msgstr ""
 
-#: LiteBackendStrings.php:1527
+#: LiteBackendStrings.php:1528
 msgid "Show all packages"
 msgstr ""
 
-#: LiteBackendStrings.php:1528
+#: LiteBackendStrings.php:1529
 msgid "Show all tags"
 msgstr ""
 
-#: LiteBackendStrings.php:1529
+#: LiteBackendStrings.php:1530
 msgid "Show catalog of all categories"
 msgstr ""
 
-#: LiteBackendStrings.php:1530
+#: LiteBackendStrings.php:1531
 msgid "Show specific category"
 msgstr ""
 
-#: LiteBackendStrings.php:1531
+#: LiteBackendStrings.php:1532
 #, fuzzy
 #| msgid "Specific Date"
 msgid "Show specific categories"
 msgstr "Specialios dienos"
 
-#: LiteBackendStrings.php:1532
+#: LiteBackendStrings.php:1533
 msgid "Show specific package"
 msgstr ""
 
-#: LiteBackendStrings.php:1533
+#: LiteBackendStrings.php:1534
 #, fuzzy
 #| msgid "Specific Date"
 msgid "Show specific packages"
 msgstr "Specialios dienos"
 
-#: LiteBackendStrings.php:1534
+#: LiteBackendStrings.php:1535
 msgid "Show event"
 msgstr ""
 
-#: LiteBackendStrings.php:1535
+#: LiteBackendStrings.php:1536
 msgid "Show Type"
 msgstr ""
 
-#: LiteBackendStrings.php:1536
+#: LiteBackendStrings.php:1537
 msgid "List (default)"
 msgstr ""
 
-#: LiteBackendStrings.php:1538
+#: LiteBackendStrings.php:1539
 msgid "Show tag"
 msgstr ""
 
-#: LiteBackendStrings.php:1539
+#: LiteBackendStrings.php:1540
 msgid "Show specific service"
 msgstr ""
 
-#: LiteBackendStrings.php:1540
+#: LiteBackendStrings.php:1541
 #, fuzzy
 #| msgid "Show service on site"
 msgid "Show specific services"
 msgstr "Rodyti svetainėje"
 
-#: LiteBackendStrings.php:1541
+#: LiteBackendStrings.php:1542
 msgid "Trigger type"
 msgstr ""
 
-#: LiteBackendStrings.php:1542
+#: LiteBackendStrings.php:1543
 #, fuzzy
 msgid "Id"
 msgstr "Pakeisti Alpha Sender ID"
 
-#: LiteBackendStrings.php:1543
+#: LiteBackendStrings.php:1544
 msgid "Class"
 msgstr ""
 
-#: LiteBackendStrings.php:1544
+#: LiteBackendStrings.php:1545
 msgid "Trigger by attribute"
 msgstr ""
 
-#: LiteBackendStrings.php:1545
+#: LiteBackendStrings.php:1546
 msgid "Step Booking"
 msgstr ""
 
-#: LiteBackendStrings.php:1546
+#: LiteBackendStrings.php:1547
 msgid "Catalog Booking"
 msgstr ""
 
-#: LiteBackendStrings.php:1547
+#: LiteBackendStrings.php:1548
 msgid "Events List Booking"
 msgstr ""
 
-#: LiteBackendStrings.php:1548
+#: LiteBackendStrings.php:1549
 msgid "Show recurring events"
 msgstr ""
 
-#: LiteBackendStrings.php:1549
+#: LiteBackendStrings.php:1550
 msgid "Show in Amelia Popup"
 msgstr ""
 
-#: LiteBackendStrings.php:1551
+#: LiteBackendStrings.php:1552
 msgid "AM - Booking view"
 msgstr ""
 
-#: LiteBackendStrings.php:1552
+#: LiteBackendStrings.php:1553
 msgid "AM - Step Booking"
 msgstr ""
 
-#: LiteBackendStrings.php:1553
+#: LiteBackendStrings.php:1554
 msgid "AM - Catalog Booking"
 msgstr ""
 
-#: LiteBackendStrings.php:1554
+#: LiteBackendStrings.php:1555
 msgid "AM - Catalog view"
 msgstr ""
 
-#: LiteBackendStrings.php:1555
+#: LiteBackendStrings.php:1556
 msgid "AM - Events view"
 msgstr ""
 
-#: LiteBackendStrings.php:1556
+#: LiteBackendStrings.php:1557
 msgid "AM - Events List Booking"
 msgstr ""
 
-#: LiteBackendStrings.php:1558
+#: LiteBackendStrings.php:1559
 msgid "Amelia - Booking view"
 msgstr ""
 
-#: LiteBackendStrings.php:1559
+#: LiteBackendStrings.php:1560
 msgid ""
 "Step-By-Step Booking Wizard gives your customers the option to choose "
 "everything about the booking in a few steps"
 msgstr ""
 
-#: LiteBackendStrings.php:1562
+#: LiteBackendStrings.php:1563
 msgid "Amelia - Step-By-Step Booking"
 msgstr ""
 
-#: LiteBackendStrings.php:1563
+#: LiteBackendStrings.php:1564
 msgid ""
 "Step-by-Step booking view guides the customers through several steps in "
 "order to make their bookings."
 msgstr ""
 
-#: LiteBackendStrings.php:1566
+#: LiteBackendStrings.php:1567
 msgid "Amelia - Catalog Booking"
 msgstr ""
 
-#: LiteBackendStrings.php:1567
+#: LiteBackendStrings.php:1568
 msgid ""
 "Front-end Booking Catalog is shortcode when you want to show your service in "
 "a form of a catalog"
 msgstr ""
 
-#: LiteBackendStrings.php:1570
+#: LiteBackendStrings.php:1571
 msgid "Amelia - Catalog view"
 msgstr ""
 
-#: LiteBackendStrings.php:1571
+#: LiteBackendStrings.php:1572
 msgid ""
 "Front-end Booking Catalog is shortcode when you want to show your service in "
 "a form of a cataloge"
 msgstr ""
 
-#: LiteBackendStrings.php:1574
+#: LiteBackendStrings.php:1575
 msgid "Amelia - Events"
 msgstr ""
 
-#: LiteBackendStrings.php:1575 LiteBackendStrings.php:1579
+#: LiteBackendStrings.php:1576 LiteBackendStrings.php:1580
 msgid ""
 "Event Booking is shortcode that gives your customers the option to book one "
 "of the events that you've created on the back-end in a simple event list "
 "view."
 msgstr ""
 
-#: LiteBackendStrings.php:1578
+#: LiteBackendStrings.php:1579
 msgid "Amelia - Events List"
 msgstr ""
 
-#: LiteBackendStrings.php:1581
+#: LiteBackendStrings.php:1582
 msgid "You are using a form that will be outdated soon!"
 msgstr ""
 

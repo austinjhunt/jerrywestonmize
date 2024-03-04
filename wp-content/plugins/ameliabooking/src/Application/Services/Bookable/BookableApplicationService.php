@@ -417,8 +417,10 @@ class BookableApplicationService
             }
 
             if ($updateCustomPricing && $isServiceProvider) {
-                /** @var Service $providerService */
-                foreach ($provider->getServiceList()->getItems() as $providerService) {
+                if ($provider->getServiceList()->keyExists($serviceId)) {
+                    /** @var Service $providerService */
+                    $providerService = $provider->getServiceList()->getItem($serviceId);
+
                     $updateProviderService = false;
 
                     if ((!$providerService->getCustomPricing() && $service->getCustomPricing()) ||

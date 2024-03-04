@@ -621,14 +621,15 @@ class AppointmentReservationService extends AbstractReservationService
         /** @var Collection $appointments */
         $bookedAppointments = $appointmentRepository->getFiltered(
             [
-                'dates'         => [
+                'dates'           => [
                     $appointment->getBookingStart()->getValue()->format('Y-m-d H:i'),
                     $appointment->getBookingStart()->getValue()->format('Y-m-d H:i')
                 ],
-                'providers'     => [$appointment->getProviderId()->getValue()],
-                'skipServices'  => true,
-                'skipProviders' => true,
-                'skipCustomers' => true,
+                'providers'       => [$appointment->getProviderId()->getValue()],
+                'skipServices'    => true,
+                'skipProviders'   => true,
+                'skipCustomers'   => true,
+                'bookingStatuses' => [BookingStatus::APPROVED, BookingStatus::PENDING],
             ]
         );
 
