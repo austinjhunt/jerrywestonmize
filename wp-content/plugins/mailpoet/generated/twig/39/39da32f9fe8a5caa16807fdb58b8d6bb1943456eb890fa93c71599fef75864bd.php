@@ -74,66 +74,78 @@ class __TwigTemplate_756448057f537f5715d1a262e5a4bc2ae04cea7f694f005ae4bcfe6c686
         // line 11
         echo json_encode(($context["newsletters_list"] ?? null));
         echo ";
-    var mailpoet_product_categories = ";
+    var mailpoet_product_attributes = ";
         // line 12
+        echo json_encode(($context["product_attributes"] ?? null));
+        echo ";
+    var mailpoet_local_product_attributes = ";
+        // line 13
+        echo json_encode(($context["local_product_attributes"] ?? null));
+        echo ";
+    var mailpoet_product_categories = ";
+        // line 14
         echo json_encode(($context["product_categories"] ?? null));
         echo ";
+    var mailpoet_product_tags = ";
+        // line 15
+        echo json_encode(($context["product_tags"] ?? null));
+        echo ";
     var mailpoet_products = ";
-        // line 13
+        // line 16
         echo json_encode(($context["products"] ?? null));
         echo ";
     var mailpoet_membership_plans = ";
-        // line 14
+        // line 17
         echo json_encode(($context["membership_plans"] ?? null));
         echo ";
     var mailpoet_subscription_products = ";
-        // line 15
+        // line 18
         echo json_encode(($context["subscription_products"] ?? null));
         echo ";
     var mailpoet_can_use_woocommerce_memberships = ";
-        // line 16
+        // line 19
         echo json_encode(($context["can_use_woocommerce_memberships"] ?? null));
         echo ";
     var mailpoet_can_use_woocommerce_subscriptions = ";
-        // line 17
+        // line 20
         echo json_encode(($context["can_use_woocommerce_subscriptions"] ?? null));
         echo ";
     var mailpoet_woocommerce_currency_symbol = ";
-        // line 18
+        // line 21
         echo json_encode(($context["woocommerce_currency_symbol"] ?? null));
         echo ";
     var mailpoet_woocommerce_countries = ";
-        // line 19
+        // line 22
         echo json_encode(($context["woocommerce_countries"] ?? null));
         echo ";
     var mailpoet_woocommerce_payment_methods = ";
-        // line 20
+        // line 23
         echo json_encode(($context["woocommerce_payment_methods"] ?? null));
         echo ";
     var mailpoet_woocommerce_shipping_methods = ";
-        // line 21
+        // line 24
         echo json_encode(($context["woocommerce_shipping_methods"] ?? null));
         echo ";
     var mailpoet_signup_forms = ";
-        // line 22
+        // line 25
         echo json_encode(($context["signup_forms"] ?? null));
         echo ";
     var mailpoet_automations = ";
-        // line 23
+        // line 26
         echo json_encode(($context["automations"] ?? null));
         echo ";
   </script>
 
   ";
-        // line 26
-        $this->loadTemplate("segments/translations.html", "segments/dynamic.html", 26)->display($context);
+        // line 29
+        $this->loadTemplate("segments/translations.html", "segments/dynamic.html", 29)->display($context);
     }
 
-    // line 30
+    // line 33
     public function block_after_translations($context, array $blocks = [])
     {
         $macros = $this->macros;
-        // line 31
+        // line 34
         echo "  ";
         echo do_action("mailpoet_segments_translations_after");
         echo "
@@ -152,7 +164,7 @@ class __TwigTemplate_756448057f537f5715d1a262e5a4bc2ae04cea7f694f005ae4bcfe6c686
 
     public function getDebugInfo()
     {
-        return array (  134 => 31,  130 => 30,  126 => 26,  120 => 23,  116 => 22,  112 => 21,  108 => 20,  104 => 19,  100 => 18,  96 => 17,  92 => 16,  88 => 15,  84 => 14,  80 => 13,  76 => 12,  72 => 11,  68 => 10,  64 => 9,  60 => 8,  56 => 7,  51 => 4,  47 => 3,  36 => 1,);
+        return array (  146 => 34,  142 => 33,  138 => 29,  132 => 26,  128 => 25,  124 => 24,  120 => 23,  116 => 22,  112 => 21,  108 => 20,  104 => 19,  100 => 18,  96 => 17,  92 => 16,  88 => 15,  84 => 14,  80 => 13,  76 => 12,  72 => 11,  68 => 10,  64 => 9,  60 => 8,  56 => 7,  51 => 4,  47 => 3,  36 => 1,);
     }
 
     public function getSourceContext()

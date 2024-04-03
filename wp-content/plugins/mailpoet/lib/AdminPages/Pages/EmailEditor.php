@@ -7,23 +7,45 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\API\JSON\API;
 use MailPoet\Config\Env;
+use MailPoet\Config\Installer;
+use MailPoet\Config\ServicesChecker;
 use MailPoet\EmailEditor\Engine\SettingsController;
+use MailPoet\EmailEditor\Engine\ThemeController;
 use MailPoet\EmailEditor\Integrations\MailPoet\EmailEditor as EditorInitController;
+use MailPoet\Util\CdnAssetUrl;
+use MailPoet\Util\License\Features\Subscribers as SubscribersFeature;
 use MailPoet\WP\Functions as WPFunctions;
 
 class EmailEditor {
-  /** @var WPFunctions */
-  private $wp;
+  private WPFunctions $wp;
 
-  /** @var SettingsController */
-  private $settingsController;
+  private SettingsController $settingsController;
+
+  private ThemeController $themeController;
+
+  /** @var CdnAssetUrl */
+  private $cdnAssetUrl;
+
+  /** @var ServicesChecker */
+  private $servicesChecker;
+
+  /** @var SubscribersFeature */
+  private $subscribersFeature;
 
   public function __construct(
     WPFunctions $wp,
-    SettingsController $settingsController
+    SettingsController $settingsController,
+    CdnAssetUrl $cdnAssetUrl,
+    ServicesChecker $servicesChecker,
+    SubscribersFeature $subscribersFeature,
+    ThemeController $themeController
   ) {
     $this->wp = $wp;
     $this->settingsController = $settingsController;
+    $this->cdnAssetUrl = $cdnAssetUrl;
+    $this->servicesChecker = $servicesChecker;
+    $this->subscribersFeature = $subscribersFeature;
+    $this->themeController = $themeController;
   }
 
   public function render() {
@@ -59,12 +81,35 @@ class EmailEditor {
         'json_api_root' => esc_js($jsonAPIRoot),
         'api_token' => esc_js($token),
         'api_version' => esc_js($apiVersion),
+        'cdn_url' => esc_js($this->cdnAssetUrl->generateCdnUrl("")),
+        'is_premium_plugin_active' => (bool)$this->servicesChecker->isPremiumPluginActive(),
         'current_wp_user_email' => esc_js($currentUserEmail),
         'editor_settings' => $this->settingsController->getSettings(),
-        'email_layout_styles' => $this->settingsController->getEmailLayoutStyles(),
         'editor_layout' => $this->settingsController->getLayout(),
+        'editor_theme' => $this->themeController->getTheme()->get_raw_data(),
+        'bc_state' => $this->getBackwardCompatibilityState(),
       ]
     );
+
+    // Renders additional script data that some components require e.g. PremiumModal. This is done here instead of using
+    // PageRenderer since that introduces other dependencies we want to avoid. Used by getUpgradeInfo.
+    $installer = new Installer(Installer::PREMIUM_PLUGIN_SLUG);
+    $inline_script_data = [
+      'mailpoet_premium_plugin_installed' => Installer::isPluginInstalled(Installer::PREMIUM_PLUGIN_SLUG),
+      'mailpoet_premium_plugin_active' => $this->servicesChecker->isPremiumPluginActive(),
+      'mailpoet_premium_plugin_download_url' => $this->subscribersFeature->hasValidPremiumKey() ? $installer->generatePluginDownloadUrl() : null,
+      'mailpoet_premium_plugin_activation_url' => $installer->generatePluginActivationUrl(Installer::PREMIUM_PLUGIN_PATH),
+      'mailpoet_has_valid_api_key' => $this->subscribersFeature->hasValidApiKey(),
+      'mailpoet_has_valid_premium_key' => $this->subscribersFeature->hasValidPremiumKey(),
+      'mailpoet_has_premium_support' => $this->subscribersFeature->hasPremiumSupport(),
+      'mailpoet_plugin_partial_key' => $this->servicesChecker->generatePartialApiKey(),
+      'mailpoet_subscribers_count' => $this->subscribersFeature->getSubscribersCount(),
+      'mailpoet_subscribers_limit' => $this->subscribersFeature->getSubscribersLimit(),
+      'mailpoet_subscribers_limit_reached' => $this->subscribersFeature->check(),
+    ];
+    $this->wp->wpAddInlineScript('mailpoet_email_editor', implode('', array_map(function ($key) use ($inline_script_data) {
+      return sprintf("var %s=%s;", $key, json_encode($inline_script_data[$key]));
+    }, array_keys($inline_script_data))), 'before');
 
     // Load CSS from Post Editor
     $this->wp->wpEnqueueStyle('wp-edit-post');
@@ -75,5 +120,17 @@ class EmailEditor {
     $this->wp->wpEnqueueMedia();
 
     echo '<div id="mailpoet-email-editor" class="block-editor"></div>';
+  }
+
+  /**
+   * Workaround for backward compatibility with WordPress and Gutenberg versions
+   * Hopefully we could get rid of this after we drop support for WP 6.4
+   */
+  private function getBackwardCompatibilityState(): array {
+    global $wp_version;
+    $gutenbergVersion = defined('GUTENBERG_VERSION') ? GUTENBERG_VERSION : '0.0.0';
+    return [
+      'isInlinedBlockToolbarAvailable' => version_compare($wp_version, '6.5', '>=') || version_compare($gutenbergVersion, '17.3', '>='),
+    ];
   }
 }

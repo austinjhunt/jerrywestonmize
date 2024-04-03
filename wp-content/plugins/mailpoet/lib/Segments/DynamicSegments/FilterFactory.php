@@ -33,8 +33,10 @@ use MailPoet\Segments\DynamicSegments\Filters\WooCommerceNumberOfOrders;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceNumberOfReviews;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceProduct;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommercePurchaseDate;
+use MailPoet\Segments\DynamicSegments\Filters\WooCommercePurchasedWithAttribute;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceSingleOrderValue;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceSubscription;
+use MailPoet\Segments\DynamicSegments\Filters\WooCommerceTag;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceTotalSpent;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceUsedCouponCode;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceUsedPaymentMethod;
@@ -131,6 +133,10 @@ class FilterFactory {
   /** @var NumberOfClicks */
   private $numberOfClicks;
 
+  private WooCommercePurchasedWithAttribute $wooCommercePurchasedWithAttribute;
+
+  private WooCommerceTag $wooCommerceTag;
+
   public function __construct(
     EmailAction $emailAction,
     EmailActionClickAny $emailActionClickAny,
@@ -154,6 +160,7 @@ class FilterFactory {
     SubscriberSubscribedViaForm $subscribedViaForm,
     WooCommerceSingleOrderValue $wooCommerceSingleOrderValue,
     WooCommerceAverageSpent $wooCommerceAverageSpent,
+    WooCommerceTag $wooCommerceTag,
     WooCommerceUsedCouponCode $wooCommerceUsedCouponCode,
     WooCommerceUsedPaymentMethod $wooCommerceUsedPaymentMethod,
     WooCommerceUsedShippingMethod $wooCommerceUsedShippingMethod,
@@ -161,7 +168,8 @@ class FilterFactory {
     SubscriberDateField $subscriberDateField,
     AutomationsEvents $automationsEvents,
     EmailsReceived $emailsReceived,
-    NumberOfClicks $numberOfClicks
+    NumberOfClicks $numberOfClicks,
+    WooCommercePurchasedWithAttribute $wooCommercePurchasedWithAttribute
   ) {
     $this->emailAction = $emailAction;
     $this->userRole = $userRole;
@@ -193,6 +201,8 @@ class FilterFactory {
     $this->wooCommerceFirstOrder = $wooCommerceFirstOrder;
     $this->emailsReceived = $emailsReceived;
     $this->numberOfClicks = $numberOfClicks;
+    $this->wooCommercePurchasedWithAttribute = $wooCommercePurchasedWithAttribute;
+    $this->wooCommerceTag = $wooCommerceTag;
   }
 
   public function getFilterForFilterEntity(DynamicSegmentFilterEntity $filter): Filter {
@@ -298,6 +308,10 @@ class FilterFactory {
       return $this->wooCommerceUsedCouponCode;
     } elseif ($action === WooCommerceFirstOrder::ACTION) {
       return $this->wooCommerceFirstOrder;
+    } elseif ($action === WooCommercePurchasedWithAttribute::ACTION) {
+      return $this->wooCommercePurchasedWithAttribute;
+    } elseif ($action == WooCommerceTag::ACTION) {
+      return $this->wooCommerceTag;
     }
     return $this->wooCommerceCategory;
   }

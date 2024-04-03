@@ -1,12 +1,12 @@
 === Content Control - The Ultimate Content Restriction Plugin! Restrict Content, Create Conditional Blocks & More ===
 Contributors: codeatlantic, danieliser
-Author URI: https://code-atlantic.com/?utm_campaign=upgrade-to-pro&utm_source=plugins-page&utm_medium=plugin-ui&utm_content=action-links-upgrade-text
-Plugin URI: https://contentcontrolplugin.com/?utm_campaign=plugin-info&utm_source=readme-header&utm_medium=plugin-ui&utm_content=author-uri
+Plugin URI: https://code-atlantic.com/?utm_campaign=upgrade-to-pro&utm_source=plugins-page&utm_medium=plugin-ui&utm_content=action-links-upgrade-text
+Author URI: https://contentcontrolplugin.com/?utm_campaign=plugin-info&utm_source=readme-header&utm_medium=plugin-ui&utm_content=author-uri
 Donate link: https://code-atlantic.com/donate/?utm_campaign=donations&utm_source=readme-header&utm_medium=plugin-ui&utm_content=donate-link
-Tags: access control, content, content restriction, permission, private, restrict, restrict access, restriction, user, visibility, widget, block visibility, user access, coming soon, maintenance mode, access manager, paywall
+Tags: membership, access control, members only, content restriction, maintenance mode
 Requires at least: 6.2
-Tested up to: 6.4
-Stable tag: 2.1.0
+Tested up to: 6.5.0
+Stable tag: 2.2.7
 Requires PHP: 7.4
 License: GPLv3 (or later)
 
@@ -42,6 +42,7 @@ Discover what Content Control brings to your table:
 - Use the `[content_control]` shortcode to protect content inline and cater to subscriber preferences.
 - Control widget visibility by selecting the user type that can view each widget.
 - Conditionally show coming soon or maintenance mode pages based on various rules.
+- Restrict access to your site's REST API endpoints.
 
 [Content Control Documentation](https://contentcontrolplugin.com/docs/?utm_campaign=plugin-info&utm_source=readme-description&utm_medium=wordpress&utm_content=documentation-link)
 
@@ -103,6 +104,48 @@ Bugs can be reported either in our support forum or we are happy to accept PRs o
 8. Restrict widgets as well.
 
 == Changelog ==
+
+= v2.2.7 - 03/20/2024 =
+
+- Improvement: Fix plugin preview blueprint file location.
+
+= v2.2.6 - 03/20/2024 =
+
+- Improvement: Add plugin preview blueprint support.
+
+= v2.2.5 - 03/20/2024 =
+
+- Improvement: Logic for protection being disabled was improved to be more efficient.
+- Fix: Bug with The Events Calendar showing blank screen when using Redirect restriction.
+- Fix: Bug where redirect based restrictions failed on The Events Calendar pages.
+- Fix: Typo in order of widget REST API check conditionals.
+
+= v2.2.4 - 03/20/2024 =
+
+- Fix: Enforced strict versioning in autoload build tool that recently auto updated causing the autoloader to suddenly leak unprefixed classes. This was causing random issues in combination with [incompatible autoloading by other plugins](https://pressidium.com/blog/wordpress-plugin-conflicts-how-to-prevent-composer-dependency-hell/).
+
+= v2.2.3 - 03/19/2024 =
+
+- Fix: Recurssion error with taxonomy queries due to calling setup_post during get_terms query. WooCommerce then setup global $product, which called another taxonomy query, and so on.
+- Fix: Bug when modified WP_Term_Query->terms arrays of ints were passed instead of epxected term objects.
+
+= v2.2.2 - 03/19/2024 =
+
+- Fix: Bug with new taxonomy query filter. For now this is limited to the REST API only.
+
+= v2.2.1 - 03/18/2024 =
+
+- Fix: Bug where the plugin had errors on taxonomy pages or queries.
+- Fix: Error when Term query taxonomy arg was not an array.
+
+= v2.2.0 - 03/17/2024 =
+
+- Feature: Add support for [restricing content in the REST API](https://contentcontrolplugin.com/features/rest-api/).
+- Feature: Add support for terms in WP term queries.
+- Fix: Nav Menu Link user rule not working properly.
+- Fix: Prevent "Required Upgrade" notices on new installs.
+- Tweak: Only show "Required Upgrade" notices to admins with plugin management permissions.
+- Dev:: Added new field type `userselect` for choosing users with search.
 
 = v2.1.0 - 12/08/2023 =
 

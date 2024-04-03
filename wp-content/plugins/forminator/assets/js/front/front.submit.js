@@ -567,9 +567,11 @@
 				var paymentIsHidden = self.$el.find('div[data-is-payment="true"]')
 					.closest('.forminator-row, .forminator-col').hasClass('forminator-hidden');
 				if ( self.$el.data('forminatorFrontPayment') && ! paymentIsHidden && ! $saveDraft ) {
-					self.$el.trigger('payment.before.submit.forminator', [formData, function () {
-						submitCallback.apply(thisForm);
-					}]);
+					setTimeout( function() {
+						self.$el.trigger('payment.before.submit.forminator', [formData, function () {
+							submitCallback.apply(thisForm);
+						}]);
+					}, 200 );
 				} else {
 					submitCallback.apply(thisForm);
 				}

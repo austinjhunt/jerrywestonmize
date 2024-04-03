@@ -5,6 +5,7 @@ namespace MailPoet\Automation\Integrations\WooCommerce\Subjects;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Automation\Engine\Data\Field;
 use MailPoet\Automation\Engine\Data\Subject as SubjectData;
 use MailPoet\Automation\Engine\Exceptions\InvalidStateException;
 use MailPoet\Automation\Engine\Integration\Payload;
@@ -35,7 +36,7 @@ class AbandonedCartSubject implements Subject {
 
   public function getName(): string {
     // translators: automation subject (entity entering automation) title
-    return __('MailPoet Abandoned Cart', 'mailpoet');
+    return __('WooCommerce abandoned cart', 'mailpoet');
   }
 
   public function getArgsSchema(): ObjectSchema {
@@ -61,6 +62,15 @@ class AbandonedCartSubject implements Subject {
   }
 
   public function getFields(): array {
-    return [];
+    return [
+      new Field(
+        'woocommerce:cart:cart-total',
+        Field::TYPE_NUMBER,
+        __('Cart total', 'mailpoet'),
+        function (AbandonedCartPayload $payload) {
+          return $payload->getTotal();
+        }
+      ),
+    ];
   }
 }

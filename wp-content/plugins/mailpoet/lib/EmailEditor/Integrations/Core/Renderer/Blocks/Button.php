@@ -5,7 +5,7 @@ namespace MailPoet\EmailEditor\Integrations\Core\Renderer\Blocks;
 if (!defined('ABSPATH')) exit;
 
 
-use MailPoet\EmailEditor\Engine\Renderer\BlockRenderer;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\BlockRenderer;
 use MailPoet\EmailEditor\Engine\SettingsController;
 use MailPoet\EmailEditor\Integrations\Utils\DomDocumentHelper;
 
@@ -24,15 +24,12 @@ class Button implements BlockRenderer {
     $buttonLink = $domHelper->findElement('a');
 
     if (!$buttonLink) return '';
-
-    $buttonOriginalWrapper = $domHelper->findElement('div');
-    $buttonClasses = $buttonOriginalWrapper ? $domHelper->getAttributeValue($buttonOriginalWrapper, 'class') : '';
-
     $markup = $this->getMarkup();
-    $markup = str_replace('{classes}', $buttonClasses, $markup);
+    $buttonClasses = $domHelper->getAttributeValueByTagName('div', 'class') ?? '';
 
     // Add Link Text
-    $markup = str_replace('{linkText}', $this->getElementInnerHTML($buttonLink) ?: '', $markup);
+    // Because the button text can contain highlighted text, we need to get the inner HTML of the button
+    $markup = str_replace('{linkText}', $domHelper->getElementInnerHTML($buttonLink) ?: '', $markup);
     $markup = str_replace('{linkUrl}', $buttonLink->getAttribute('href') ?: '#', $markup);
 
     // Width
@@ -47,7 +44,9 @@ class Button implements BlockRenderer {
     // Background
     $themeData = $settingsController->getTheme()->get_data();
     $defaultColor = $themeData['styles']['blocks']['core/button']['color']['background'] ?? 'transparent';
-    $bgColor = $parsedBlock['attrs']['style']['color']['background'] ?? $defaultColor;
+    $colorSetBySlug = isset($parsedBlock['attrs']['backgroundColor']) ? $settingsController->translateSlugToColor($parsedBlock['attrs']['backgroundColor']) : null;
+    $colorSetByUser = $colorSetBySlug ?: ($parsedBlock['attrs']['style']['color']['background'] ?? null);
+    $bgColor = $colorSetByUser ?? $defaultColor;
     $markup = str_replace('{backgroundColor}', $bgColor, $markup);
 
     // Styles attributes
@@ -56,8 +55,10 @@ class Button implements BlockRenderer {
       'cursor' => 'auto',
       'word-break' => 'break-word',
       'box-sizing' => 'border-box',
+      'overflow' => 'hidden',
     ];
     $linkStyles = [
+      'background-color' => $bgColor,
       'display' => 'block',
       'line-height' => '120%',
       'margin' => '0',
@@ -65,31 +66,54 @@ class Button implements BlockRenderer {
     ];
 
     // Border
-    if (isset($parsedBlock['attrs']['style']['border']) && !empty($parsedBlock['attrs']['style']['border'])) {
-      // Use text color if border color is not set
-      if (!($parsedBlock['attrs']['style']['border']['color'] ?? '')) {
-        $parsedBlock['attrs']['style']['border']['color'] = $parsedBlock['attrs']['style']['color']['text'] ?? null;
+    $borderAttrs = $parsedBlock['attrs']['style']['border'] ?? [];
+    if (!empty($borderAttrs)) {
+      // Use text color if border color is not set. Check for the value in the custom color text property
+      // then look also to the text color set from palette
+      if (!isset($borderAttrs['color'])) {
+        if (isset($parsedBlock['attrs']['style']['color']['text'])) {
+          $borderAttrs['color'] = $parsedBlock['attrs']['style']['color']['text'];
+        } elseif ($parsedBlock['attrs']['textColor']) {
+          $buttonClasses .= ' has-' . $parsedBlock['attrs']['textColor'] . '-border-color';
+        }
       }
-      $wrapperStyles = array_merge($wrapperStyles, wp_style_engine_get_styles(['border' => $parsedBlock['attrs']['style']['border']])['declarations']);
-      $wrapperStyles['border-style'] = 'solid';
+      $wrapperStyles = array_merge($wrapperStyles, wp_style_engine_get_styles(['border' => $borderAttrs])['declarations']);
+      // User might set only the border radius without border color and width so in that case we need to set border:none
+      // to avoid rendering 1px border. Let's render the border only when width is set or border top is set separately
+      // which is saved only when there is a side with non-zero width so it is enough to check only top
+      if (
+        (isset($borderAttrs['width']) && $borderAttrs['width'] !== '0px')
+        || isset($borderAttrs['top'])
+      ) {
+        $wrapperStyles['border-style'] = 'solid';
+      } else {
+        $wrapperStyles['border'] = 'none';
+      }
     } else {
       // Some clients render 1px border when not set as none
       $wrapperStyles['border'] = 'none';
     }
 
     // Spacing
-    if (isset($parsedBlock['attrs']['style']['spacing']['padding'])) {
-      $padding = $parsedBlock['attrs']['style']['spacing']['padding'];
-      $wrapperStyles['mso-padding-alt'] = "{$padding['top']} {$padding['right']} {$padding['bottom']} {$padding['left']}";
-      $linkStyles['padding-top'] = $padding['top'];
-      $linkStyles['padding-right'] = $padding['right'];
-      $linkStyles['padding-bottom'] = $padding['bottom'];
-      $linkStyles['padding-left'] = $padding['left'];
+    $paddingStyles = wp_style_engine_get_styles(['spacing' => ['padding' => $parsedBlock['attrs']['style']['spacing']['padding'] ?? null]]);
+    $linkStyles = array_merge($linkStyles, $paddingStyles['declarations'] ?? []);
+    // In most clients we want to render padding on the link element so that the full button is clickable
+    // Outlook doesn't support padding on the link element, so we need to set padding on the wrapper table cell and to have it only for Outlook we use mso-padding-alt
+    if (isset($paddingStyles['declarations'])) {
+      $paddingTop = $paddingStyles['declarations']['padding-top'] ?? '0px';
+      $paddingRight = $paddingStyles['declarations']['padding-right'] ?? '0px';
+      $paddingBottom = $paddingStyles['declarations']['padding-bottom'] ?? '0px';
+      $paddingLeft = $paddingStyles['declarations']['padding-left'] ?? '0px';
+      $wrapperStyles['mso-padding-alt'] = "$paddingTop $paddingRight $paddingBottom $paddingLeft";
     }
 
     // Typography + colors
     $typography = $parsedBlock['attrs']['style']['typography'] ?? [];
     $color = $parsedBlock['attrs']['style']['color'] ?? [];
+    $colorSetBySlug = isset($parsedBlock['attrs']['textColor']) ? $settingsController->translateSlugToColor($parsedBlock['attrs']['textColor']) : null;
+    if ($colorSetBySlug) {
+      $color['text'] = $colorSetBySlug;
+    }
     $typography['fontSize'] = $parsedBlock['email_attrs']['font-size'] ?? 'inherit';
     $typography['textDecoration'] = $typography['textDecoration'] ?? ($parsedBlock['email_attrs']['text-decoration'] ?? 'inherit');
     $linkStyles = array_merge($linkStyles, wp_style_engine_get_styles(['typography' => $typography, 'color' => $color])['declarations']);
@@ -100,6 +124,7 @@ class Button implements BlockRenderer {
 
     $markup = str_replace('{linkStyles}', $settingsController->convertStylesToString($linkStyles), $markup);
     $markup = str_replace('{wrapperStyles}', $settingsController->convertStylesToString($wrapperStyles), $markup);
+    $markup = str_replace('{classes}', $buttonClasses, $markup);
 
     return $markup;
   }
@@ -112,20 +137,5 @@ class Button implements BlockRenderer {
           </td>
         </tr>
       </table>';
-  }
-
-  /**
-   * Because the button text can contain highlighted text, we need to get the inner HTML of the button
-   */
-  private function getElementInnerHTML(\DOMElement $element): string {
-    $innerHTML = '';
-    $children = $element->childNodes;
-    foreach ($children as $child) {
-      if (!$child instanceof \DOMNode) continue;
-      $ownerDocument = $child->ownerDocument;
-      if (!$ownerDocument instanceof \DOMDocument) continue;
-      $innerHTML .= $ownerDocument->saveXML($child);
-    }
-    return $innerHTML;
   }
 }

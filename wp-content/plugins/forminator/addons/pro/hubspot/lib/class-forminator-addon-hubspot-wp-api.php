@@ -10,8 +10,6 @@ class Forminator_Addon_Hubspot_Wp_Api {
 
 	const AUTHORIZE_URL = 'https://app.hubspot.com/oauth/authorize';
 	const CLIENT_ID     = 'd4c00215-5579-414c-a831-95be7218239b';
-	const CLIENT_SECRET = '502c3a75-38fe-4a1f-9fc4-ff2464b639bf';
-	const HAPIKEY       = '7cf97e44-4037-4708-a032-0955318e0e76';
 
 	public static $oauth_scopes = 'tickets crm.lists.write crm.lists.read crm.objects.contacts.write crm.objects.contacts.read crm.schemas.contacts.write crm.schemas.contacts.read';
 
@@ -171,9 +169,12 @@ class Forminator_Addon_Hubspot_Wp_Api {
 
 		$this->_last_url_request = $url;
 
-		$headers = array(
-			'Authorization' => 'Bearer ' . ( ! empty( $access_token ) ? $access_token : self::HAPIKEY ),
-		);
+		$headers = array();
+		if ( $access_token ) {
+			$headers = array(
+				'Authorization' => 'Bearer ' . $access_token,
+			);
+		}
 
 		if ( 'GET' !== $verb && ! $json ) {
 			$headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8';
@@ -384,7 +385,7 @@ class Forminator_Addon_Hubspot_Wp_Api {
 		);
 		$response = $this->get_access_token( $args );
 
-		if ( ! is_wp_error( $response ) && ! empty( $response->access_token ) ) {
+		if ( ! empty( $response->access_token ) ) {
 			return $response->access_token;
 		}
 
@@ -441,26 +442,35 @@ class Forminator_Addon_Hubspot_Wp_Api {
 	 */
 	public function get_access_token( $args = array() ) {
 		$default_args = array(
-			'grant_type'    => 'authorization_code',
-			'client_id'     => self::CLIENT_ID,
-			'client_secret' => self::CLIENT_SECRET,
-			'scope'         => rawurlencode( self::$oauth_scopes ),
+			'grant_type' => 'authorization_code',
+			'state'      => 'state', // It's added just because state param is required on the final endpoint. It's unuseful here.
 		);
 		$args         = array_merge( $default_args, $args );
 
-		$response = $this->request(
-			'POST',
-			'oauth/v1/token',
-			$args,
-			''
+		$url = Forminator_Addon_Hubspot::redirect_uri(
+			'hubspot',
+			'get_access_token',
+			$args
 		);
-		if ( ! is_wp_error( $response ) && ! empty( $response->refresh_token ) ) {
+
+		$res      = wp_remote_get( $url );
+		$body     = is_wp_error( $res ) || ! $res ? '' : wp_remote_retrieve_body( $res );
+		$response = $body ? json_decode( $body ) : '';
+		if ( ! empty( $response->refresh_token ) ) {
 			$token_data = get_object_vars( $response );
 
 			$token_data['expires_in'] += time();
 
 			// Update auth token.
 			$this->update_auth_token( $token_data );
+		} elseif ( isset( $response->error ) ) {
+			if ( 'failed_request' === $response->error ) {
+				$error = esc_html__( 'Failed to process request, make sure your API URL is correct and your server has internet connection.', 'forminator' );
+			} else {
+				$error = sprintf( esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $response->error ) );
+			}
+
+			throw new Forminator_Addon_Hubspot_Wp_Api_Exception( $error );
 		}
 
 		return $response;

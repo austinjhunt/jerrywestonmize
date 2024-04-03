@@ -36,7 +36,28 @@ class DomDocumentHelper {
     return $element->hasAttribute($attribute) ? $element->getAttribute($attribute) : '';
   }
 
+  /**
+   * Searches for the first appearance of the given tag name and returns the value of specified attribute.
+   */
+  public function getAttributeValueByTagName(string $tagName, string $attribute): ?string {
+    $element = $this->findElement($tagName);
+    if (!$element) {
+      return null;
+    }
+    return $this->getAttributeValue($element, $attribute);
+  }
+
   public function getOuterHtml(\DOMElement $element): string {
     return (string)$this->dom->saveHTML($element);
+  }
+
+  public function getElementInnerHTML(\DOMElement $element): string {
+    $innerHTML = '';
+    $children = $element->childNodes;
+    foreach ($children as $child) {
+      if (!$child instanceof \DOMNode) continue;
+      $innerHTML .= $this->dom->saveHTML($child);
+    }
+    return $innerHTML;
   }
 }

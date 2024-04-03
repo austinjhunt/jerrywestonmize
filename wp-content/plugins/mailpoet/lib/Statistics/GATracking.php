@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Newsletter\Links\Links as NewsletterLinks;
+use MailPoet\Settings\TrackingConfig;
 use MailPoet\Util\Helpers;
 use MailPoet\Util\SecondLevelDomainNames;
 use MailPoet\WP\Functions;
@@ -22,16 +23,24 @@ class GATracking {
   /** @var Functions */
   private $wp;
 
+  /** @var TrackingConfig */
+  private $tackingConfig;
+
   public function __construct(
     NewsletterLinks $newsletterLinks,
-    Functions $wp
+    Functions $wp,
+    TrackingConfig $trackingConfig
   ) {
     $this->secondLevelDomainNames = new SecondLevelDomainNames();
     $this->newsletterLinks = $newsletterLinks;
     $this->wp = $wp;
+    $this->tackingConfig = $trackingConfig;
   }
 
   public function applyGATracking($renderedNewsletter, NewsletterEntity $newsletter, $internalHost = null) {
+    if (!$this->tackingConfig->isEmailTrackingEnabled()) {
+      return $renderedNewsletter;
+    }
     if ($newsletter->getType() == NewsletterEntity::TYPE_NOTIFICATION_HISTORY && $newsletter->getParent() instanceof NewsletterEntity) {
       $parentNewsletter = $newsletter->getParent();
       $field = $parentNewsletter->getGaCampaign();

@@ -9,7 +9,6 @@ use MailPoet\AdminPages\PageRenderer;
 use MailPoet\AutomaticEmails\AutomaticEmails;
 use MailPoet\Config\Env;
 use MailPoet\Config\Menu;
-use MailPoet\Config\ServicesChecker;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Listing\PageLimit;
 use MailPoet\Newsletter\NewslettersRepository;
@@ -19,7 +18,7 @@ use MailPoet\Services\AuthorizedSenderDomainController;
 use MailPoet\Services\Bridge;
 use MailPoet\Settings\SettingsController;
 use MailPoet\Settings\UserFlagsController;
-use MailPoet\Util\License\Features\Subscribers as SubscribersFeature;
+use MailPoet\Util\License\Features\CapabilitiesManager;
 use MailPoet\WooCommerce\TransactionalEmails;
 use MailPoet\WP\AutocompletePostListLoader as WPPostListLoader;
 use MailPoet\WP\DateTime;
@@ -59,13 +58,9 @@ class Newsletters {
   /** @var AuthorizedSenderDomainController */
   private $senderDomainController;
 
-  /** @var SubscribersFeature */
-  private $subscribersFeature;
-
-  /** @var ServicesChecker */
-  private $servicesChecker;
-
   private UserFlagsController $userFlagsController;
+
+  private CapabilitiesManager $capabilitiesManager;
 
   public function __construct(
     PageRenderer $pageRenderer,
@@ -79,9 +74,8 @@ class Newsletters {
     NewslettersRepository $newslettersRepository,
     Bridge $bridge,
     AuthorizedSenderDomainController $senderDomainController,
-    SubscribersFeature $subscribersFeature,
-    ServicesChecker $servicesChecker,
-    UserFlagsController $userFlagsController
+    UserFlagsController $userFlagsController,
+    CapabilitiesManager $capabilitiesManager
   ) {
     $this->pageRenderer = $pageRenderer;
     $this->listingPageLimit = $listingPageLimit;
@@ -94,9 +88,8 @@ class Newsletters {
     $this->newslettersRepository = $newslettersRepository;
     $this->bridge = $bridge;
     $this->senderDomainController = $senderDomainController;
-    $this->subscribersFeature = $subscribersFeature;
-    $this->servicesChecker = $servicesChecker;
     $this->userFlagsController = $userFlagsController;
+    $this->capabilitiesManager = $capabilitiesManager;
   }
 
   public function render() {
@@ -115,8 +108,8 @@ class Newsletters {
 
     $dateTime = new DateTime();
     $data['current_date'] = $dateTime->getCurrentDate(DateTime::DEFAULT_DATE_FORMAT);
-    $data['tomorrow_date'] = $dateTime->getCurrentDateTime()->modify( "+1 day" )
-      ->format( DateTime::DEFAULT_DATE_FORMAT );
+    $data['tomorrow_date'] = $dateTime->getCurrentDateTime()->modify("+1 day")
+      ->format(DateTime::DEFAULT_DATE_FORMAT);
     $data['current_time'] = $dateTime->getCurrentTime();
     $data['current_date_time'] = $dateTime->getCurrentDateTime()->format(DateTime::DEFAULT_DATE_TIME_FORMAT);
     $data['schedule_time_of_day'] = $dateTime->getTimeInterval(
@@ -135,7 +128,8 @@ class Newsletters {
 
     $data['sent_newsletters_count'] = $this->newslettersRepository->countBy(['status' => NewsletterEntity::STATUS_SENT]);
     $data['woocommerce_transactional_email_id'] = $this->settings->get(TransactionalEmails::SETTING_EMAIL_ID);
-    $data['display_detailed_stats'] = $this->subscribersFeature->hasValidPremiumKey() && !$this->subscribersFeature->check() && $this->servicesChecker->isPremiumPluginActive();
+    $detailedAnalyticsCapability = $this->capabilitiesManager->getCapability('detailedAnalytics');
+    $data['display_detailed_stats'] = isset($detailedAnalyticsCapability) && !$detailedAnalyticsCapability->isRestricted;
     $data['newsletters_templates_recently_sent_count'] = $this->newsletterTemplatesRepository->getRecentlySentCount();
 
     $data['product_categories'] = $this->wpPostListLoader->getWooCommerceCategories();

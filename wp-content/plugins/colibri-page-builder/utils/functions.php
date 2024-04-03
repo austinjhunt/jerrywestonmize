@@ -66,7 +66,12 @@ function colibri_upgrade_url() {
 
     $url = apply_filters( 'colibri_page_builder/upgrade_url', 'https://colibriwp.com/go/upgrade' );
 
-    return add_query_arg( 'utm_campaign', $activate_theme_name, $url );
+    return add_query_arg( array(
+		'utm_campaign' => $activate_theme_name,
+		'utm_theme'      => get_template(),
+		'utm_childtheme' => get_stylesheet(),
+	    ),
+	    $url );
 }
 
 function colibri_try_demo_url( $template ) {

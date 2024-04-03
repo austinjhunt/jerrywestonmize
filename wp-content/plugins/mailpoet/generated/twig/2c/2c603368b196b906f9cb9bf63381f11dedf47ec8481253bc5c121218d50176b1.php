@@ -42,7 +42,7 @@ class __TwigTemplate_a56b98597185bd94848e20889223b924a6c7613ed81a9303bb7a0ae2663
 <div id=\"mailpoet_segment_available_container\">
   <h3>";
         // line 4
-        echo $this->extensions['MailPoet\Twig\I18n']->translate("Select the segment that you want to add:");
+        echo $this->extensions['MailPoet\Twig\I18n']->translate("Select the list that you want to add:");
         echo "</h3>
 
   <select class=\"mailpoet_segment_available\"></select>
@@ -174,7 +174,8 @@ class __TwigTemplate_a56b98597185bd94848e20889223b924a6c7613ed81a9303bb7a0ae2663
       setupSortableSegments();
     }
   });
-<{{!}}/script>";
+<{{!}}/script>
+";
     }
 
     public function getTemplateName()

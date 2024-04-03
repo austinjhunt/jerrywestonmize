@@ -431,6 +431,9 @@ class Forminator_Core {
 		} else {
 			$value = $default_value;
 		}
+		if ( 'page' === $key ) {
+			$value = esc_attr( $value );
+		}
 
 		return $value;
 	}

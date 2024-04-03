@@ -3,7 +3,7 @@ Contributors: mailpoet, woocommerce, automattic
 Tags: email, email marketing, post notification, woocommerce emails, email automation, newsletter, newsletter builder, newsletter subscribers
 Requires at least: 6.3
 Tested up to: 6.4
-Stable tag: 4.44.1
+Stable tag: 4.48.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -11,6 +11,14 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Send beautiful newsletters from WordPress. Collect subscribers with signup forms, automate your emails for WooCommerce, blog post notifications & more
 
 == Description ==
+
+= Save up to 30% on MailPoet annual plans and upgrades =
+
+Our sale is live. Save up to 30% when you switch to or upgrade an annual plan — no coupon needed. Offer ends 3 pm UTC on March 29, 2024.
+
+[Shop annual plans](https://account.mailpoet.com/?billing=yearly&ref=sale-2024-h1-wporg&utm_source=wordpress.org&utm_medium=description&utm_campaign=2024-h1-sale)
+
+= What is MailPoet? =
 
 Use MailPoet to create, send, manage, and grow your email marketing campaigns – all without leaving your WordPress dashboard.
 
@@ -227,6 +235,32 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 6. WooCommerce emails
 
 == Changelog ==
+
+= 4.48.0 - 2024-03-22 =
+* Improved: minor changes and fixes.
+
+= 4.47.0 - 2024-03-18 =
+* Added: Automations are now generally available;
+* Added: new automation templates for WooCommerce marketing flows;
+* Added: Customer fields in automations now work also for guest users;
+* Improved: Optimize loading automation editor for large shops;
+* Improved: Consider tracking settings when adding utm_parameters into links;
+* Improved: new segment "purchased product by tag" introduced;
+* Fixed: filter details in automation template preview are not visible;
+* Fixed: Use less confusing language Segments vs Lists;
+* Fixed: Rare issue when a multi-column popup form was displayed in one column;
+* Fixed: background job runner may get stuck on an invalid email address;
+* Fixed: rendering of some special characters on Lists page.
+
+= 4.46.0 - 2024-03-11 =
+* Improved: new segment "purchased product by attribute" introduced;
+* Improved: trigger filters are now alphabetically sorted;
+* Fixed: Pop-Up forms did not appear on some product pages.
+
+= 4.45.0 - 2024-03-05 =
+* Improved: when the domain authentication service is unavailable, regard the old authentication status as the current one and continue to allow sending for authenticated domains.
+* Improved: when reentering the onboarding flow, continue where the user left the flow.
+* Fixed: a method in the "subscriber counter" background job could get a wrongly typed parameter.
 
 = 4.44.1 - 2024-02-26 =
 * Improvement: utm_source and utm_type parameters are added to links by default;

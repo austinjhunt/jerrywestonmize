@@ -402,6 +402,15 @@ class Forminator_Upload extends Forminator_Field {
 					);
 				}
 
+				$valid_mime = self::check_mime_type( $file_object['tmp_name'], $file_object['name'] );
+
+				if ( ! $valid_mime ) {
+					return array(
+						'success' => false,
+						'message' => esc_html__( 'Sorry, you are not allowed to upload this file type.', 'forminator' ),
+					);
+				}
+
 				$upload_dir       = wp_upload_dir(); // Set upload folder.
 				$file_path        = 'upload' === $upload_type ? forminator_upload_root_temp() : forminator_get_upload_path( $form_id, 'uploads' );
 				$file_url         = forminator_get_upload_url( $form_id, 'uploads' );
@@ -513,6 +522,19 @@ class Forminator_Upload extends Forminator_Field {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if content mime type is relevant to passed mime type
+	 *
+	 * @param string $file Full path to the file.
+	 * @param string $file_name The name of the file.
+	 * @return bool
+	 */
+	private static function check_mime_type( string $file, string $file_name ) : bool {
+		$wp_filetype = wp_check_filetype_and_ext( $file, $file_name );
+
+		return ! empty( $wp_filetype['ext'] ) && ! empty( $wp_filetype['type'] );
 	}
 
 	/**

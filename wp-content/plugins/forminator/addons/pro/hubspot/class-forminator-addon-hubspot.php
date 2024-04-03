@@ -57,16 +57,6 @@ final class Forminator_Addon_Hubspot extends Forminator_Addon_Abstract {
 		$this->is_multi_global = true;
 
 		$this->global_id_for_new_integrations = uniqid( '', true );
-
-		add_filter(
-			'forminator_addon_hubspot_api_request_headers',
-			array(
-				$this,
-				'default_filter_api_headers',
-			),
-			1,
-			4
-		);
 		add_action( 'wp_ajax_forminator_hubspot_support_request', array( $this, 'hubspot_support_request' ) );
 
 		add_action( 'forminator_after_activated_addons_removed', array( $this, 'clear_db' ), 10, 2 );
@@ -511,7 +501,7 @@ final class Forminator_Addon_Hubspot extends Forminator_Addon_Abstract {
 				$redirect_uri  = self::prepare_redirect_url();
 				$args          = array(
 					'code'         => $code,
-					'redirect_uri' => $redirect_uri,
+					'redirect_uri' => rawurlencode( $redirect_uri ),
 					'state'        => rawurlencode( self::get_nonce_value() . '|' . $final_redirect_url ),
 				);
 				$token_request = $api->get_access_token( $args );
@@ -590,32 +580,6 @@ final class Forminator_Addon_Hubspot extends Forminator_Addon_Abstract {
 		}
 
 		return $values;
-	}
-
-	/**
-	 * Default filter for header
-	 *
-	 * its add / change Authorization header
-	 * - on get access token it uses Basic realm of encoded client id and secret
-	 * - on web API request it uses Bearer realm of access token which default of @see Forminator_Addon_Hubspot_Wp_Api
-	 *
-	 * @since 1.0 HubSpot Addon
-	 *
-	 * @param $headers
-	 * @param $verb
-	 * @param $path
-	 * @param $args
-	 *
-	 * @return array
-	 */
-	public function default_filter_api_headers( $headers, $verb, $path, $args ) {
-		if ( false !== stripos( $path, 'oauth.access' ) ) {
-			$encoded_auth             = base64_encode( Forminator_Addon_Hubspot_Wp_Api::CLIENT_ID . ':' . Forminator_Addon_Hubspot_Wp_Api::CLIENT_SECRET ); //phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-			$headers['Authorization'] = 'Basic ' . $encoded_auth;
-			unset( $headers['Content-Type'] );
-		}
-
-		return $headers;
 	}
 
 	/**

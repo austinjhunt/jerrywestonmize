@@ -10,6 +10,7 @@ use MailPoet\Doctrine\EntityTraits\AutoincrementedIdTrait;
 use MailPoet\Doctrine\EntityTraits\CreatedAtTrait;
 use MailPoet\Doctrine\EntityTraits\DeletedAtTrait;
 use MailPoet\Doctrine\EntityTraits\UpdatedAtTrait;
+use MailPoet\Doctrine\EntityTraits\ValidationGroupsTrait;
 use MailPoet\Util\Helpers;
 use MailPoetVendor\Doctrine\Common\Collections\ArrayCollection;
 use MailPoetVendor\Doctrine\Common\Collections\Collection;
@@ -47,6 +48,7 @@ class SubscriberEntity {
   use CreatedAtTrait;
   use UpdatedAtTrait;
   use DeletedAtTrait;
+  use ValidationGroupsTrait;
 
   /**
    * @ORM\Column(type="bigint", nullable=true)
@@ -74,7 +76,7 @@ class SubscriberEntity {
 
   /**
    * @ORM\Column(type="string")
-   * @Assert\Email()
+   * @Assert\Email(groups={"Saving"})
    * @Assert\NotBlank()
    * @var string
    */

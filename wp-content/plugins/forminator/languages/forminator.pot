@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Forminator package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Forminator 1.29.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/build\n"
-"POT-Creation-Date: 2024-01-23 13:29:04+00:00\n"
+"Project-Id-Version: Forminator 1.29.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/forminator\n"
+"POT-Creation-Date: 2024-03-07 11:49:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -657,7 +657,7 @@ msgstr ""
 #: addons/pro/aweber/views/settings/success-authorize.php:15
 #: addons/pro/campaignmonitor/class-forminator-addon-campaignmonitor.php:346
 #: addons/pro/googlesheet/class-forminator-addon-googlesheet.php:408
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:321
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:311
 #: addons/pro/mailchimp/class-forminator-addon-mailchimp.php:632
 #: addons/pro/mailjet/class-forminator-addon-mailjet.php:549
 #: addons/pro/slack/class-forminator-addon-slack.php:438
@@ -734,10 +734,11 @@ msgstr ""
 #: addons/pro/aweber/lib/class-forminator-addon-aweber-wp-api.php:257
 #: addons/pro/campaignmonitor/lib/class-forminator-addon-campaignmonitor-wp-api.php:222
 #: addons/pro/campaignmonitor/lib/class-forminator-addon-campaignmonitor-wp-api.php:227
-#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:246
-#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:251
-#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:267
-#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:277
+#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:247
+#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:252
+#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:268
+#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:278
+#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:470
 #: addons/pro/mailchimp/lib/class-forminator-addon-mailchimp-wp-api.php:248
 #: addons/pro/mailchimp/lib/class-forminator-addon-mailchimp-wp-api.php:253
 #: addons/pro/mailchimp/lib/class-forminator-addon-mailchimp-wp-api.php:264
@@ -1235,7 +1236,8 @@ msgid "Missing required API Credentials"
 msgstr ""
 
 #: addons/pro/aweber/lib/class-forminator-addon-aweber-wp-api.php:230
-#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:231
+#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:232
+#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:468
 #: addons/pro/slack/lib/class-forminator-addon-slack-wp-api.php:209
 msgid ""
 "Failed to process request, make sure your API URL is correct and your "
@@ -1841,7 +1843,7 @@ msgstr ""
 
 #: addons/pro/googlesheet/class-forminator-addon-googlesheet.php:240
 #: addons/pro/googlesheet/class-forminator-addon-googlesheet.php:364
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:264
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:254
 #: addons/pro/slack/class-forminator-addon-slack.php:394
 #: addons/pro/trello/class-forminator-addon-trello.php:442
 msgid "DISCONNECT"
@@ -1864,7 +1866,7 @@ msgid "Please input valid Client Secret"
 msgstr ""
 
 #: addons/pro/googlesheet/class-forminator-addon-googlesheet.php:583
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:524
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:514
 #: addons/pro/slack/class-forminator-addon-slack.php:684
 msgid "Failed to get token"
 msgstr ""
@@ -2250,54 +2252,54 @@ msgid ""
 "again"
 msgstr ""
 
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:113
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:103
 msgid "HubSpot is not active"
 msgstr ""
 
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:153
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:667
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:717
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:143
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:631
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:681
 msgid "HubSpot is not connected"
 msgstr ""
 
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:158
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:148
 msgid "Invalid Form Settings of HubSpot"
 msgstr ""
 
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:163
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:153
 msgid "No active HubSpot connection found in this form"
 msgstr ""
 
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:547
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:537
 #: addons/pro/slack/class-forminator-addon-slack.php:703
 msgid "Failed to get authorization code."
 msgstr ""
 
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:635
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:599
 msgid "Pipeline can not be empty."
 msgstr ""
 
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:672
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:722
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:636
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:686
 msgid "Invalid Quiz Settings of HubSpot"
 msgstr ""
 
-#: addons/pro/hubspot/class-forminator-addon-hubspot.php:677
+#: addons/pro/hubspot/class-forminator-addon-hubspot.php:641
 msgid "No active HubSpot connection found in this quiz"
 msgstr ""
 
-#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:77
+#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:75
 #: addons/pro/slack/lib/class-forminator-addon-slack-wp-api.php:75
 #: addons/pro/trello/lib/class-forminator-addon-trello-wp-api.php:73
 msgid "Missing required Token"
 msgstr ""
 
-#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:264
+#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:265
 #: admin/locale.php:762
 msgid "Invalid"
 msgstr ""
 
-#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:714
+#: addons/pro/hubspot/lib/class-forminator-addon-hubspot-wp-api.php:724
 msgid "Property does not exist"
 msgstr ""
 
@@ -18682,12 +18684,12 @@ msgstr ""
 msgid "Please select a time within the specified time limits."
 msgstr ""
 
-#: library/fields/upload.php:158 library/fields/upload.php:473
+#: library/fields/upload.php:158 library/fields/upload.php:482
 #. translators: %d: File limit
 msgid "You can upload a maximum of %d files."
 msgstr ""
 
-#: library/fields/upload.php:169 library/fields/upload.php:433
+#: library/fields/upload.php:169 library/fields/upload.php:442
 #. translators: %s: Maximum size
 msgid "Maximum file size allowed is %s. "
 msgstr ""
@@ -18705,13 +18707,17 @@ msgstr ""
 msgid ".%s file extension is not allowed."
 msgstr ""
 
-#: library/fields/upload.php:421
+#: library/fields/upload.php:410
+msgid "Sorry, you are not allowed to upload this file type."
+msgstr ""
+
+#: library/fields/upload.php:430
 msgid "The attached file is empty and can't be uploaded."
 msgstr ""
 
-#: library/fields/upload.php:442 library/fields/upload.php:509
-#: library/fields/upload.php:618 library/fields/upload.php:669
-#: library/fields/upload.php:743
+#: library/fields/upload.php:451 library/fields/upload.php:518
+#: library/fields/upload.php:640 library/fields/upload.php:691
+#: library/fields/upload.php:765
 msgid "Error saving form. Upload error."
 msgstr ""
 

@@ -55,6 +55,7 @@ class DemoImport {
 
 
         add_action( 'wp_ajax_get_after_import_builder_data', function () {
+	        check_ajax_referer('extendthemes-ocdi-ajax-verification');
             $debug  = defined( 'COLIBRI_SCRIPT_DEBUG' ) && COLIBRI_SCRIPT_DEBUG;
             $result = array(
                 'data'    => array(

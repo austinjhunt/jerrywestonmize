@@ -7,7 +7,7 @@
  * @copyright 2021 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by code-atlantic on 08-December-2023 using {@see https://github.com/BrianHenryIE/strauss}.
+ * Modified by code-atlantic on 21-March-2024 using {@see https://github.com/BrianHenryIE/strauss}.
  */
 namespace ContentControl\Vendor\TrustedLogin;
 
@@ -102,7 +102,6 @@ final class SupportUser {
 			case 'expires_meta_key':
 			case 'created_by_meta_key':
 				return $this->{$name};
-				break;
 		}
 
 		return null;

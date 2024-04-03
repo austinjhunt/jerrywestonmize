@@ -5,8 +5,8 @@ namespace MailPoet\EmailEditor\Integrations\Core\Renderer\Blocks;
 if (!defined('ABSPATH')) exit;
 
 
-use MailPoet\EmailEditor\Engine\Renderer\BlockRenderer;
-use MailPoet\EmailEditor\Engine\Renderer\Layout\FlexLayoutRenderer;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\BlockRenderer;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Layout\FlexLayoutRenderer;
 use MailPoet\EmailEditor\Engine\SettingsController;
 
 class Buttons implements BlockRenderer {

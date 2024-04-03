@@ -5,7 +5,7 @@ namespace MailPoet\EmailEditor\Integrations\Core\Renderer\Blocks;
 if (!defined('ABSPATH')) exit;
 
 
-use MailPoet\EmailEditor\Engine\Renderer\BlockRenderer;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\BlockRenderer;
 use MailPoet\EmailEditor\Engine\SettingsController;
 use MailPoet\EmailEditor\Integrations\Utils\DomDocumentHelper;
 
@@ -21,9 +21,10 @@ class Image implements BlockRenderer {
     $image = $parsedHtml['image'];
     $caption = $parsedHtml['caption'];
 
-    $parsedBlock = $this->addImageSizeWhenMissing($parsedBlock, $imageUrl);
-    $image = $this->applyRoundedStyle($image, $parsedBlock);
+    $parsedBlock = $this->addImageSizeWhenMissing($parsedBlock, $imageUrl, $settingsController);
     $image = $this->addImageDimensions($image, $parsedBlock, $settingsController);
+    $image = $this->applyImageBorderStyle($image, $parsedBlock, $settingsController);
+    $image = $this->applyRoundedStyle($image, $parsedBlock);
 
     return str_replace(
       ['{image_content}', '{caption_content}'],
@@ -37,6 +38,7 @@ class Image implements BlockRenderer {
     if (isset($parsedBlock['attrs']['className']) && strpos($parsedBlock['attrs']['className'], 'is-style-rounded') !== false) {
       // If the image should be in a circle, we need to set the border-radius to 9999px to make it the same as is in the editor
       // This style cannot be applied on the wrapper, and we need to set it directly on the image
+      $blockContent = $this->removeStyleAttributeFromElement($blockContent, ['tag_name' => 'img'], 'border-radius');
       $blockContent = $this->addStyleToElement($blockContent, ['tag_name' => 'img'], 'border-radius: 9999px;');
     }
 
@@ -46,14 +48,33 @@ class Image implements BlockRenderer {
   /**
    * When the width is not set, it's important to get it for the image to be displayed correctly
    */
-  private function addImageSizeWhenMissing(array $parsedBlock, string $imageUrl): array {
+  private function addImageSizeWhenMissing(array $parsedBlock, string $imageUrl, SettingsController $settingsController): array {
     if (!isset($parsedBlock['attrs']['width'])) {
-      $maxWidth = $parsedBlock['email_attrs']['width'] ?? SettingsController::EMAIL_WIDTH;
+      $maxWidth = $settingsController->parseNumberFromStringWithPixels($parsedBlock['email_attrs']['width'] ?? SettingsController::EMAIL_WIDTH);
       $imageSize = wp_getimagesize($imageUrl);
-      $imageSize = $imageSize ? "{$imageSize[0]}px" : $maxWidth;
-      $parsedBlock['attrs']['width'] = min($imageSize, $maxWidth);
+      $imageSize = $imageSize ? $imageSize[0] : $maxWidth;
+      // Because width is primarily used for the max-width property, we need to add the left and right border width to it
+      $borderWidth = $parsedBlock['attrs']['style']['border']['width'] ?? '0px';
+      $borderLeftWidth = $parsedBlock['attrs']['style']['border']['left']['width'] ?? $borderWidth;
+      $borderRightWidth = $parsedBlock['attrs']['style']['border']['right']['width'] ?? $borderWidth;
+      $width = min($imageSize, $maxWidth);
+      $width += $settingsController->parseNumberFromStringWithPixels($borderLeftWidth ?? '0px');
+      $width += $settingsController->parseNumberFromStringWithPixels($borderRightWidth ?? '0px');
+      $parsedBlock['attrs']['width'] = "{$width}px";
     }
     return $parsedBlock;
+  }
+
+  private function applyImageBorderStyle(string $blockContent, array $parsedBlock, SettingsController $settingsController): string {
+    // Getting individual border properties
+    $borderStyles = wp_style_engine_get_styles(['border' => $parsedBlock['attrs']['style']['border'] ?? []]);
+    $borderStyles = $borderStyles['declarations'] ?? [];
+    if (!empty($borderStyles)) {
+      $borderStyles['border-style'] = 'solid';
+      $borderStyles['box-sizing'] = 'border-box';
+    }
+
+    return $this->addStyleToElement($blockContent, ['tag_name' => 'img'], $settingsController->convertStylesToString($borderStyles));
   }
 
   /**
@@ -66,12 +87,14 @@ class Image implements BlockRenderer {
       $styles = $html->get_attribute('style') ?? '';
       $styles = $settingsController->parseStylesToArray($styles);
       $height = $styles['height'] ?? null;
-      if ($height && is_numeric($settingsController->parseNumberFromStringWithPixels($height))) {
-        $html->set_attribute('height', $settingsController->parseNumberFromStringWithPixels($height));
+      if ($height && $height !== 'auto' && is_numeric($settingsController->parseNumberFromStringWithPixels($height))) {
+        $height = $settingsController->parseNumberFromStringWithPixels($height);
+        $html->set_attribute('height', $height);
       }
 
       if (isset($parsedBlock['attrs']['width'])) {
-        $html->set_attribute('width', $settingsController->parseNumberFromStringWithPixels($parsedBlock['attrs']['width']));
+        $width = $settingsController->parseNumberFromStringWithPixels($parsedBlock['attrs']['width']);
+        $html->set_attribute('width', $width);
       }
       $blockContent = $html->get_updated_html();
     }
@@ -86,9 +109,8 @@ class Image implements BlockRenderer {
   private function getCaptionStyles(SettingsController $settingsController, array $parsedBlock): string {
     $themeData = $settingsController->getTheme()->get_data();
 
-    // If the alignment is set, we need to center the caption
     $styles = [
-      'text-align' => isset($parsedBlock['attrs']['align']) ? 'center' : 'left',
+      'text-align' => 'center',
     ];
 
     $styles['font-size'] = $parsedBlock['email_attrs']['font-size'] ?? $themeData['styles']['typography']['fontSize'];
@@ -160,6 +182,21 @@ class Image implements BlockRenderer {
       $elementStyle = $html->get_attribute('style');
       $elementStyle = !empty($elementStyle) ? (rtrim($elementStyle, ';') . ';') : ''; // Adding semicolon if it's missing
       $elementStyle .= $style;
+      $html->set_attribute('style', $elementStyle);
+      $blockContent = $html->get_updated_html();
+    }
+
+    return $blockContent;
+  }
+
+  /**
+   * @param array{tag_name: string, class_name?: string} $tag
+   */
+  private function removeStyleAttributeFromElement($blockContent, array $tag, string $styleName): string {
+    $html = new \WP_HTML_Tag_Processor($blockContent);
+    if ($html->next_tag($tag)) {
+      $elementStyle = $html->get_attribute('style') ?? '';
+      $elementStyle = preg_replace('/' . $styleName . ':(.?[0-9]+px)+;?/', '', $elementStyle);
       $html->set_attribute('style', $elementStyle);
       $blockContent = $html->get_updated_html();
     }

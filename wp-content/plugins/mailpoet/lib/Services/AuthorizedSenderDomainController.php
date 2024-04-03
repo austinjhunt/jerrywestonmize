@@ -200,7 +200,7 @@ class AuthorizedSenderDomainController {
   }
 
   public function getFullyOrPartiallyVerifiedSenderDomains($domainsOnly = false): array {
-    $domainData = $this->getSenderDomainsByStatus([self::DOMAIN_STATUS_PARTIALLY_VERIFIED,self::DOMAIN_STATUS_VERIFIED]);
+    $domainData = $this->getSenderDomainsByStatus([self::DOMAIN_STATUS_PARTIALLY_VERIFIED, self::DOMAIN_STATUS_VERIFIED]);
     return $domainsOnly ? $this->extractDomains($domainData) : $domainData;
   }
 
@@ -239,8 +239,15 @@ class AuthorizedSenderDomainController {
   }
 
   private function reloadCache() {
-    $this->currentRawData = $this->bridge->getRawSenderDomainData();
-    $this->wp->setTransient(self::SENDER_DOMAINS_KEY, $this->currentRawData, 60 * 60 * 24);
+    $currentRawData = $this->bridge->getRawSenderDomainData();
+    if (!$currentRawData) return; // Do not modify cache if there is no data from the API
+
+    $this->currentRawData = $currentRawData;
+    $this->wp->setTransient(self::SENDER_DOMAINS_KEY, $this->currentRawData, 60 * 60 * 24 * 7);
+  }
+
+  public function isCacheAvailable(): bool {
+    return is_array($this->wp->getTransient(self::SENDER_DOMAINS_KEY));
   }
 
   private function getAllRawData(): array {
@@ -249,11 +256,10 @@ class AuthorizedSenderDomainController {
       if (is_array($currentData)) {
         $this->currentRawData = $currentData;
       } else {
-        $this->currentRawData = $this->bridge->getRawSenderDomainData();
-        $this->wp->setTransient(self::SENDER_DOMAINS_KEY, $this->currentRawData, 60 * 60 * 24);
+        $this->reloadCache();
       }
     }
-    return $this->currentRawData;
+    return is_array($this->currentRawData) ? $this->currentRawData : [];
   }
 
   private function getAllRecords(): array {

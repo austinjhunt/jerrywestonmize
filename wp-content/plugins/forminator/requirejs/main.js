@@ -1,18 +1,8847 @@
+var formintorjs;(function () { if (!formintorjs || !formintorjs.requirejs) {
+if (!formintorjs) { formintorjs = {}; } else { require = formintorjs; }
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.3.3 Copyright jQuery Foundation and other contributors.
  * Released under MIT license, https://github.com/requirejs/requirejs/blob/master/LICENSE
  */
+
+// UPFRONT DEV NOTICE: do not replace with minified version, this needs to be full version for proper build!!!
+
+//Not using strict: uneven strict support in browsers, #392, and causes
+//problems with requirejs.exec()/transpiler plugins that may not be strict.
+/*jslint regexp: true, nomen: true, sloppy: true */
+/*global window, navigator, document, importScripts, setTimeout, opera */
+
+var requirejs, require, define;
+(function (global, setTimeout) {
+    var req, s, head, baseElement, dataMain, src,
+        interactiveScript, currentlyAddingScript, mainScript, subPath,
+        version = '2.3.3',
+        commentRegExp = /\/\*[\s\S]*?\*\/|([^:"'=]|^)\/\/.*$/mg,
+        cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g,
+        jsSuffixRegExp = /\.js$/,
+        currDirRegExp = /^\.\//,
+        op = Object.prototype,
+        ostring = op.toString,
+        hasOwn = op.hasOwnProperty,
+        isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document),
+        isWebWorker = !isBrowser && typeof importScripts !== 'undefined',
+        //PS3 indicates loaded and complete, but need to wait for complete
+        //specifically. Sequence is 'loading', 'loaded', execution,
+        // then 'complete'. The UA check is unfortunate, but not sure how
+        //to feature test w/o causing perf issues.
+        readyRegExp = isBrowser && navigator.platform === 'PLAYSTATION 3' ?
+                      /^complete$/ : /^(complete|loaded)$/,
+        defContextName = '_',
+        //Oh the tragedy, detecting opera. See the usage of isOpera for reason.
+        isOpera = typeof opera !== 'undefined' && opera.toString() === '[object Opera]',
+        contexts = {},
+        cfg = {},
+        globalDefQueue = [],
+        useInteractive = false;
+
+    //Could match something like ')//comment', do not lose the prefix to comment.
+    function commentReplace(match, singlePrefix) {
+        return singlePrefix || '';
+    }
+
+    function isFunction(it) {
+        return ostring.call(it) === '[object Function]';
+    }
+
+    function isArray(it) {
+        return ostring.call(it) === '[object Array]';
+    }
+
+    /**
+     * Helper function for iterating over an array. If the func returns
+     * a true value, it will break out of the loop.
+     */
+    function each(ary, func) {
+        if (ary) {
+            var i;
+            for (i = 0; i < ary.length; i += 1) {
+                if (ary[i] && func(ary[i], i, ary)) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper function for iterating over an array backwards. If the func
+     * returns a true value, it will break out of the loop.
+     */
+    function eachReverse(ary, func) {
+        if (ary) {
+            var i;
+            for (i = ary.length - 1; i > -1; i -= 1) {
+                if (ary[i] && func(ary[i], i, ary)) {
+                    break;
+                }
+            }
+        }
+    }
+
+    function hasProp(obj, prop) {
+        return hasOwn.call(obj, prop);
+    }
+
+    function getOwn(obj, prop) {
+        return hasProp(obj, prop) && obj[prop];
+    }
+
+    /**
+     * Cycles over properties in an object and calls a function for each
+     * property value. If the function returns a truthy value, then the
+     * iteration is stopped.
+     */
+    function eachProp(obj, func) {
+        var prop;
+        for (prop in obj) {
+            if (hasProp(obj, prop)) {
+                if (func(obj[prop], prop)) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Simple function to mix in properties from source into target,
+     * but only if target does not already have a property of the same name.
+     */
+    function mixin(target, source, force, deepStringMixin) {
+        if (source) {
+            eachProp(source, function (value, prop) {
+                if (force || !hasProp(target, prop)) {
+                    if (deepStringMixin && typeof value === 'object' && value &&
+                        !isArray(value) && !isFunction(value) &&
+                        !(value instanceof RegExp)) {
+
+                        if (!target[prop]) {
+                            target[prop] = {};
+                        }
+                        mixin(target[prop], value, force, deepStringMixin);
+                    } else {
+                        target[prop] = value;
+                    }
+                }
+            });
+        }
+        return target;
+    }
+
+    //Similar to Function.prototype.bind, but the 'this' object is specified
+    //first, since it is easier to read/figure out what 'this' will be.
+    function bind(obj, fn) {
+        return function () {
+            return fn.apply(obj, arguments);
+        };
+    }
+
+    function scripts() {
+        return document.getElementsByTagName('script');
+    }
+
+    function defaultOnError(err) {
+        throw err;
+    }
+
+    //Allow getting a global that is expressed in
+    //dot notation, like 'a.b.c'.
+    function getGlobal(value) {
+        if (!value) {
+            return value;
+        }
+        var g = global;
+        each(value.split('.'), function (part) {
+            g = g[part];
+        });
+        return g;
+    }
+
+    /**
+     * Constructs an error with a pointer to an URL with more information.
+     * @param {String} id the error ID that maps to an ID on a web page.
+     * @param {String} message human readable error.
+     * @param {Error} [err] the original error, if there is one.
+     *
+     * @returns {Error}
+     */
+    function makeError(id, msg, err, requireModules) {
+        var e = new Error(msg + '\nhttp://requirejs.org/docs/errors.html#' + id);
+        e.requireType = id;
+        e.requireModules = requireModules;
+        if (err) {
+            e.originalError = err;
+        }
+        return e;
+    }
+
+    if (typeof define !== 'undefined') {
+        //If a define is already in play via another AMD loader,
+        //do not overwrite.
+        return;
+    }
+
+    if (typeof requirejs !== 'undefined') {
+        if (isFunction(requirejs)) {
+            //Do not overwrite an existing requirejs instance.
+            return;
+        }
+        cfg = requirejs;
+        requirejs = undefined;
+    }
+
+    //Allow for a require config object
+    if (typeof require !== 'undefined' && !isFunction(require)) {
+        //assume it is a config object.
+        cfg = require;
+        require = undefined;
+    }
+
+    function newContext(contextName) {
+        var inCheckLoaded, Module, context, handlers,
+            checkLoadedTimeoutId,
+            config = {
+                //Defaults. Do not set a default for map
+                //config to speed up normalize(), which
+                //will run faster if there is no default.
+                waitSeconds: 7,
+                baseUrl: './',
+                paths: {},
+                bundles: {},
+                pkgs: {},
+                shim: {},
+                config: {}
+            },
+            registry = {},
+            //registry of just enabled modules, to speed
+            //cycle breaking code when lots of modules
+            //are registered, but not activated.
+            enabledRegistry = {},
+            undefEvents = {},
+            defQueue = [],
+            defined = {},
+            urlFetched = {},
+            bundlesMap = {},
+            requireCounter = 1,
+            unnormalizedCounter = 1;
+
+        /**
+         * Trims the . and .. from an array of path segments.
+         * It will keep a leading path segment if a .. will become
+         * the first path segment, to help with module name lookups,
+         * which act like paths, but can be remapped. But the end result,
+         * all paths that use this function should look normalized.
+         * NOTE: this method MODIFIES the input array.
+         * @param {Array} ary the array of path segments.
+         */
+        function trimDots(ary) {
+            var i, part;
+            for (i = 0; i < ary.length; i++) {
+                part = ary[i];
+                if (part === '.') {
+                    ary.splice(i, 1);
+                    i -= 1;
+                } else if (part === '..') {
+                    // If at the start, or previous value is still ..,
+                    // keep them so that when converted to a path it may
+                    // still work when converted to a path, even though
+                    // as an ID it is less than ideal. In larger point
+                    // releases, may be better to just kick out an error.
+                    if (i === 0 || (i === 1 && ary[2] === '..') || ary[i - 1] === '..') {
+                        continue;
+                    } else if (i > 0) {
+                        ary.splice(i - 1, 2);
+                        i -= 2;
+                    }
+                }
+            }
+        }
+
+        /**
+         * Given a relative module name, like ./something, normalize it to
+         * a real name that can be mapped to a path.
+         * @param {String} name the relative name
+         * @param {String} baseName a real name that the name arg is relative
+         * to.
+         * @param {Boolean} applyMap apply the map config to the value. Should
+         * only be done if this normalization is for a dependency ID.
+         * @returns {String} normalized name
+         */
+        function normalize(name, baseName, applyMap) {
+            var pkgMain, mapValue, nameParts, i, j, nameSegment, lastIndex,
+                foundMap, foundI, foundStarMap, starI, normalizedBaseParts,
+                baseParts = (baseName && baseName.split('/')),
+                map = config.map,
+                starMap = map && map['*'];
+
+            //Adjust any relative paths.
+            if (name) {
+                name = name.split('/');
+                lastIndex = name.length - 1;
+
+                // If wanting node ID compatibility, strip .js from end
+                // of IDs. Have to do this here, and not in nameToUrl
+                // because node allows either .js or non .js to map
+                // to same file.
+                if (config.nodeIdCompat && jsSuffixRegExp.test(name[lastIndex])) {
+                    name[lastIndex] = name[lastIndex].replace(jsSuffixRegExp, '');
+                }
+
+                // Starts with a '.' so need the baseName
+                if (name[0].charAt(0) === '.' && baseParts) {
+                    //Convert baseName to array, and lop off the last part,
+                    //so that . matches that 'directory' and not name of the baseName's
+                    //module. For instance, baseName of 'one/two/three', maps to
+                    //'one/two/three.js', but we want the directory, 'one/two' for
+                    //this normalization.
+                    normalizedBaseParts = baseParts.slice(0, baseParts.length - 1);
+                    name = normalizedBaseParts.concat(name);
+                }
+
+                trimDots(name);
+                name = name.join('/');
+            }
+
+            //Apply map config if available.
+            if (applyMap && map && (baseParts || starMap)) {
+                nameParts = name.split('/');
+
+                outerLoop: for (i = nameParts.length; i > 0; i -= 1) {
+                    nameSegment = nameParts.slice(0, i).join('/');
+
+                    if (baseParts) {
+                        //Find the longest baseName segment match in the config.
+                        //So, do joins on the biggest to smallest lengths of baseParts.
+                        for (j = baseParts.length; j > 0; j -= 1) {
+                            mapValue = getOwn(map, baseParts.slice(0, j).join('/'));
+
+                            //baseName segment has config, find if it has one for
+                            //this name.
+                            if (mapValue) {
+                                mapValue = getOwn(mapValue, nameSegment);
+                                if (mapValue) {
+                                    //Match, update name to the new value.
+                                    foundMap = mapValue;
+                                    foundI = i;
+                                    break outerLoop;
+                                }
+                            }
+                        }
+                    }
+
+                    //Check for a star map match, but just hold on to it,
+                    //if there is a shorter segment match later in a matching
+                    //config, then favor over this star map.
+                    if (!foundStarMap && starMap && getOwn(starMap, nameSegment)) {
+                        foundStarMap = getOwn(starMap, nameSegment);
+                        starI = i;
+                    }
+                }
+
+                if (!foundMap && foundStarMap) {
+                    foundMap = foundStarMap;
+                    foundI = starI;
+                }
+
+                if (foundMap) {
+                    nameParts.splice(0, foundI, foundMap);
+                    name = nameParts.join('/');
+                }
+            }
+
+            // If the name points to a package's name, use
+            // the package main instead.
+            pkgMain = getOwn(config.pkgs, name);
+
+            return pkgMain ? pkgMain : name;
+        }
+
+        function removeScript(name) {
+            if (isBrowser) {
+                each(scripts(), function (scriptNode) {
+                    if (scriptNode.getAttribute('data-requiremodule') === name &&
+                            scriptNode.getAttribute('data-requirecontext') === context.contextName) {
+                        scriptNode.parentNode.removeChild(scriptNode);
+                        return true;
+                    }
+                });
+            }
+        }
+
+        function hasPathFallback(id) {
+            var pathConfig = getOwn(config.paths, id);
+            if (pathConfig && isArray(pathConfig) && pathConfig.length > 1) {
+                //Pop off the first array value, since it failed, and
+                //retry
+                pathConfig.shift();
+                context.require.undef(id);
+
+                //Custom require that does not do map translation, since
+                //ID is "absolute", already mapped/resolved.
+                context.makeRequire(null, {
+                    skipMap: true
+                })([id]);
+
+                return true;
+            }
+        }
+
+        //Turns a plugin!resource to [plugin, resource]
+        //with the plugin being undefined if the name
+        //did not have a plugin prefix.
+        function splitPrefix(name) {
+            var prefix,
+                index = name ? name.indexOf('!') : -1;
+            if (index > -1) {
+                prefix = name.substring(0, index);
+                name = name.substring(index + 1, name.length);
+            }
+            return [prefix, name];
+        }
+
+        /**
+         * Creates a module mapping that includes plugin prefix, module
+         * name, and path. If parentModuleMap is provided it will
+         * also normalize the name via require.normalize()
+         *
+         * @param {String} name the module name
+         * @param {String} [parentModuleMap] parent module map
+         * for the module name, used to resolve relative names.
+         * @param {Boolean} isNormalized: is the ID already normalized.
+         * This is true if this call is done for a define() module ID.
+         * @param {Boolean} applyMap: apply the map config to the ID.
+         * Should only be true if this map is for a dependency.
+         *
+         * @returns {Object}
+         */
+        function makeModuleMap(name, parentModuleMap, isNormalized, applyMap) {
+            var url, pluginModule, suffix, nameParts,
+                prefix = null,
+                parentName = parentModuleMap ? parentModuleMap.name : null,
+                originalName = name,
+                isDefine = true,
+                normalizedName = '';
+
+            //If no name, then it means it is a require call, generate an
+            //internal name.
+            if (!name) {
+                isDefine = false;
+                name = '_@r' + (requireCounter += 1);
+            }
+
+            nameParts = splitPrefix(name);
+            prefix = nameParts[0];
+            name = nameParts[1];
+
+            if (prefix) {
+                prefix = normalize(prefix, parentName, applyMap);
+                pluginModule = getOwn(defined, prefix);
+            }
+
+            //Account for relative paths if there is a base name.
+            if (name) {
+                if (prefix) {
+                    if (isNormalized) {
+                        normalizedName = name;
+                    } else if (pluginModule && pluginModule.normalize) {
+                        //Plugin is loaded, use its normalize method.
+                        normalizedName = pluginModule.normalize(name, function (name) {
+                            return normalize(name, parentName, applyMap);
+                        });
+                    } else {
+                        // If nested plugin references, then do not try to
+                        // normalize, as it will not normalize correctly. This
+                        // places a restriction on resourceIds, and the longer
+                        // term solution is not to normalize until plugins are
+                        // loaded and all normalizations to allow for async
+                        // loading of a loader plugin. But for now, fixes the
+                        // common uses. Details in #1131
+                        normalizedName = name.indexOf('!') === -1 ?
+                                         normalize(name, parentName, applyMap) :
+                                         name;
+                    }
+                } else {
+                    //A regular module.
+                    normalizedName = normalize(name, parentName, applyMap);
+
+                    //Normalized name may be a plugin ID due to map config
+                    //application in normalize. The map config values must
+                    //already be normalized, so do not need to redo that part.
+                    nameParts = splitPrefix(normalizedName);
+                    prefix = nameParts[0];
+                    normalizedName = nameParts[1];
+                    isNormalized = true;
+
+                    url = context.nameToUrl(normalizedName);
+                }
+            }
+
+            //If the id is a plugin id that cannot be determined if it needs
+            //normalization, stamp it with a unique ID so two matching relative
+            //ids that may conflict can be separate.
+            suffix = prefix && !pluginModule && !isNormalized ?
+                     '_unnormalized' + (unnormalizedCounter += 1) :
+                     '';
+
+            return {
+                prefix: prefix,
+                name: normalizedName,
+                parentMap: parentModuleMap,
+                unnormalized: !!suffix,
+                url: url,
+                originalName: originalName,
+                isDefine: isDefine,
+                id: (prefix ?
+                        prefix + '!' + normalizedName :
+                        normalizedName) + suffix
+            };
+        }
+
+        function getModule(depMap) {
+            var id = depMap.id,
+                mod = getOwn(registry, id);
+
+            if (!mod) {
+                mod = registry[id] = new context.Module(depMap);
+            }
+
+            return mod;
+        }
+
+        function on(depMap, name, fn) {
+            var id = depMap.id,
+                mod = getOwn(registry, id);
+
+            if (hasProp(defined, id) &&
+                    (!mod || mod.defineEmitComplete)) {
+                if (name === 'defined') {
+                    fn(defined[id]);
+                }
+            } else {
+                mod = getModule(depMap);
+                if (mod.error && name === 'error') {
+                    fn(mod.error);
+                } else {
+                    mod.on(name, fn);
+                }
+            }
+        }
+
+        function onError(err, errback) {
+            var ids = err.requireModules,
+                notified = false;
+
+            if (errback) {
+                errback(err);
+            } else {
+                each(ids, function (id) {
+                    var mod = getOwn(registry, id);
+                    if (mod) {
+                        //Set error on module, so it skips timeout checks.
+                        mod.error = err;
+                        if (mod.events.error) {
+                            notified = true;
+                            mod.emit('error', err);
+                        }
+                    }
+                });
+
+                if (!notified) {
+                    req.onError(err);
+                }
+            }
+        }
+
+        /**
+         * Internal method to transfer globalQueue items to this context's
+         * defQueue.
+         */
+        function takeGlobalQueue() {
+            //Push all the globalDefQueue items into the context's defQueue
+            if (globalDefQueue.length) {
+                each(globalDefQueue, function(queueItem) {
+                    var id = queueItem[0];
+                    if (typeof id === 'string') {
+                        context.defQueueMap[id] = true;
+                    }
+                    defQueue.push(queueItem);
+                });
+                globalDefQueue = [];
+            }
+        }
+
+        handlers = {
+            'require': function (mod) {
+                if (mod.require) {
+                    return mod.require;
+                } else {
+                    return (mod.require = context.makeRequire(mod.map));
+                }
+            },
+            'exports': function (mod) {
+                mod.usingExports = true;
+                if (mod.map.isDefine) {
+                    if (mod.exports) {
+                        return (defined[mod.map.id] = mod.exports);
+                    } else {
+                        return (mod.exports = defined[mod.map.id] = {});
+                    }
+                }
+            },
+            'module': function (mod) {
+                if (mod.module) {
+                    return mod.module;
+                } else {
+                    return (mod.module = {
+                        id: mod.map.id,
+                        uri: mod.map.url,
+                        config: function () {
+                            return getOwn(config.config, mod.map.id) || {};
+                        },
+                        exports: mod.exports || (mod.exports = {})
+                    });
+                }
+            }
+        };
+
+        function cleanRegistry(id) {
+            //Clean up machinery used for waiting modules.
+            delete registry[id];
+            delete enabledRegistry[id];
+        }
+
+        function breakCycle(mod, traced, processed) {
+            var id = mod.map.id;
+
+            if (mod.error) {
+                mod.emit('error', mod.error);
+            } else {
+                traced[id] = true;
+                each(mod.depMaps, function (depMap, i) {
+                    var depId = depMap.id,
+                        dep = getOwn(registry, depId);
+
+                    //Only force things that have not completed
+                    //being defined, so still in the registry,
+                    //and only if it has not been matched up
+                    //in the module already.
+                    if (dep && !mod.depMatched[i] && !processed[depId]) {
+                        if (getOwn(traced, depId)) {
+                            mod.defineDep(i, defined[depId]);
+                            mod.check(); //pass false?
+                        } else {
+                            breakCycle(dep, traced, processed);
+                        }
+                    }
+                });
+                processed[id] = true;
+            }
+        }
+
+        function checkLoaded() {
+            var err, usingPathFallback,
+                waitInterval = config.waitSeconds * 1000,
+                //It is possible to disable the wait interval by using waitSeconds of 0.
+                expired = waitInterval && (context.startTime + waitInterval) < new Date().getTime(),
+                noLoads = [],
+                reqCalls = [],
+                stillLoading = false,
+                needCycleCheck = true;
+
+            //Do not bother if this call was a result of a cycle break.
+            if (inCheckLoaded) {
+                return;
+            }
+
+            inCheckLoaded = true;
+
+            //Figure out the state of all the modules.
+            eachProp(enabledRegistry, function (mod) {
+                var map = mod.map,
+                    modId = map.id;
+
+                //Skip things that are not enabled or in error state.
+                if (!mod.enabled) {
+                    return;
+                }
+
+                if (!map.isDefine) {
+                    reqCalls.push(mod);
+                }
+
+                if (!mod.error) {
+                    //If the module should be executed, and it has not
+                    //been inited and time is up, remember it.
+                    if (!mod.inited && expired) {
+                        if (hasPathFallback(modId)) {
+                            usingPathFallback = true;
+                            stillLoading = true;
+                        } else {
+                            noLoads.push(modId);
+                            removeScript(modId);
+                        }
+                    } else if (!mod.inited && mod.fetched && map.isDefine) {
+                        stillLoading = true;
+                        if (!map.prefix) {
+                            //No reason to keep looking for unfinished
+                            //loading. If the only stillLoading is a
+                            //plugin resource though, keep going,
+                            //because it may be that a plugin resource
+                            //is waiting on a non-plugin cycle.
+                            return (needCycleCheck = false);
+                        }
+                    }
+                }
+            });
+
+            if (expired && noLoads.length) {
+                //If wait time expired, throw error of unloaded modules.
+                err = makeError('timeout', 'Load timeout for modules: ' + noLoads, null, noLoads);
+                err.contextName = context.contextName;
+                return onError(err);
+            }
+
+            //Not expired, check for a cycle.
+            if (needCycleCheck) {
+                each(reqCalls, function (mod) {
+                    breakCycle(mod, {}, {});
+                });
+            }
+
+            //If still waiting on loads, and the waiting load is something
+            //other than a plugin resource, or there are still outstanding
+            //scripts, then just try back later.
+            if ((!expired || usingPathFallback) && stillLoading) {
+                //Something is still waiting to load. Wait for it, but only
+                //if a timeout is not already in effect.
+                if ((isBrowser || isWebWorker) && !checkLoadedTimeoutId) {
+                    checkLoadedTimeoutId = setTimeout(function () {
+                        checkLoadedTimeoutId = 0;
+                        checkLoaded();
+                    }, 50);
+                }
+            }
+
+            inCheckLoaded = false;
+        }
+
+        Module = function (map) {
+            this.events = getOwn(undefEvents, map.id) || {};
+            this.map = map;
+            this.shim = getOwn(config.shim, map.id);
+            this.depExports = [];
+            this.depMaps = [];
+            this.depMatched = [];
+            this.pluginMaps = {};
+            this.depCount = 0;
+
+            /* this.exports this.factory
+               this.depMaps = [],
+               this.enabled, this.fetched
+            */
+        };
+
+        Module.prototype = {
+            init: function (depMaps, factory, errback, options) {
+                options = options || {};
+
+                //Do not do more inits if already done. Can happen if there
+                //are multiple define calls for the same module. That is not
+                //a normal, common case, but it is also not unexpected.
+                if (this.inited) {
+                    return;
+                }
+
+                this.factory = factory;
+
+                if (errback) {
+                    //Register for errors on this module.
+                    this.on('error', errback);
+                } else if (this.events.error) {
+                    //If no errback already, but there are error listeners
+                    //on this module, set up an errback to pass to the deps.
+                    errback = bind(this, function (err) {
+                        this.emit('error', err);
+                    });
+                }
+
+                //Do a copy of the dependency array, so that
+                //source inputs are not modified. For example
+                //"shim" deps are passed in here directly, and
+                //doing a direct modification of the depMaps array
+                //would affect that config.
+                this.depMaps = depMaps && depMaps.slice(0);
+
+                this.errback = errback;
+
+                //Indicate this module has be initialized
+                this.inited = true;
+
+                this.ignore = options.ignore;
+
+                //Could have option to init this module in enabled mode,
+                //or could have been previously marked as enabled. However,
+                //the dependencies are not known until init is called. So
+                //if enabled previously, now trigger dependencies as enabled.
+                if (options.enabled || this.enabled) {
+                    //Enable this module and dependencies.
+                    //Will call this.check()
+                    this.enable();
+                } else {
+                    this.check();
+                }
+            },
+
+            defineDep: function (i, depExports) {
+                //Because of cycles, defined callback for a given
+                //export can be called more than once.
+                if (!this.depMatched[i]) {
+                    this.depMatched[i] = true;
+                    this.depCount -= 1;
+                    this.depExports[i] = depExports;
+                }
+            },
+
+            fetch: function () {
+                if (this.fetched) {
+                    return;
+                }
+                this.fetched = true;
+
+                context.startTime = (new Date()).getTime();
+
+                var map = this.map;
+
+                //If the manager is for a plugin managed resource,
+                //ask the plugin to load it now.
+                if (this.shim) {
+                    context.makeRequire(this.map, {
+                        enableBuildCallback: true
+                    })(this.shim.deps || [], bind(this, function () {
+                        return map.prefix ? this.callPlugin() : this.load();
+                    }));
+                } else {
+                    //Regular dependency.
+                    return map.prefix ? this.callPlugin() : this.load();
+                }
+            },
+
+            load: function () {
+                var url = this.map.url;
+
+                //Regular dependency.
+                if (!urlFetched[url]) {
+                    urlFetched[url] = true;
+                    context.load(this.map.id, url);
+                }
+            },
+
+            /**
+             * Checks if the module is ready to define itself, and if so,
+             * define it.
+             */
+            check: function () {
+                if (!this.enabled || this.enabling) {
+                    return;
+                }
+
+                var err, cjsModule,
+                    id = this.map.id,
+                    depExports = this.depExports,
+                    exports = this.exports,
+                    factory = this.factory;
+
+                if (!this.inited) {
+                    // Only fetch if not already in the defQueue.
+                    if (!hasProp(context.defQueueMap, id)) {
+                        this.fetch();
+                    }
+                } else if (this.error) {
+                    this.emit('error', this.error);
+                } else if (!this.defining) {
+                    //The factory could trigger another require call
+                    //that would result in checking this module to
+                    //define itself again. If already in the process
+                    //of doing that, skip this work.
+                    this.defining = true;
+
+                    if (this.depCount < 1 && !this.defined) {
+                        if (isFunction(factory)) {
+                            //If there is an error listener, favor passing
+                            //to that instead of throwing an error. However,
+                            //only do it for define()'d  modules. require
+                            //errbacks should not be called for failures in
+                            //their callbacks (#699). However if a global
+                            //onError is set, use that.
+                            if ((this.events.error && this.map.isDefine) ||
+                                req.onError !== defaultOnError) {
+                                try {
+                                    exports = context.execCb(id, factory, depExports, exports);
+                                } catch (e) {
+                                    err = e;
+                                }
+                            } else {
+                                exports = context.execCb(id, factory, depExports, exports);
+                            }
+
+                            // Favor return value over exports. If node/cjs in play,
+                            // then will not have a return value anyway. Favor
+                            // module.exports assignment over exports object.
+                            if (this.map.isDefine && exports === undefined) {
+                                cjsModule = this.module;
+                                if (cjsModule) {
+                                    exports = cjsModule.exports;
+                                } else if (this.usingExports) {
+                                    //exports already set the defined value.
+                                    exports = this.exports;
+                                }
+                            }
+
+                            if (err) {
+                                err.requireMap = this.map;
+                                err.requireModules = this.map.isDefine ? [this.map.id] : null;
+                                err.requireType = this.map.isDefine ? 'define' : 'require';
+                                return onError((this.error = err));
+                            }
+
+                        } else {
+                            //Just a literal value
+                            exports = factory;
+                        }
+
+                        this.exports = exports;
+
+                        if (this.map.isDefine && !this.ignore) {
+                            defined[id] = exports;
+
+                            if (req.onResourceLoad) {
+                                var resLoadMaps = [];
+                                each(this.depMaps, function (depMap) {
+                                    resLoadMaps.push(depMap.normalizedMap || depMap);
+                                });
+                                req.onResourceLoad(context, this.map, resLoadMaps);
+                            }
+                        }
+
+                        //Clean up
+                        cleanRegistry(id);
+
+                        this.defined = true;
+                    }
+
+                    //Finished the define stage. Allow calling check again
+                    //to allow define notifications below in the case of a
+                    //cycle.
+                    this.defining = false;
+
+                    if (this.defined && !this.defineEmitted) {
+                        this.defineEmitted = true;
+                        this.emit('defined', this.exports);
+                        this.defineEmitComplete = true;
+                    }
+
+                }
+            },
+
+            callPlugin: function () {
+                var map = this.map,
+                    id = map.id,
+                    //Map already normalized the prefix.
+                    pluginMap = makeModuleMap(map.prefix);
+
+                //Mark this as a dependency for this plugin, so it
+                //can be traced for cycles.
+                this.depMaps.push(pluginMap);
+
+                on(pluginMap, 'defined', bind(this, function (plugin) {
+                    var load, normalizedMap, normalizedMod,
+                        bundleId = getOwn(bundlesMap, this.map.id),
+                        name = this.map.name,
+                        parentName = this.map.parentMap ? this.map.parentMap.name : null,
+                        localRequire = context.makeRequire(map.parentMap, {
+                            enableBuildCallback: true
+                        });
+
+                    //If current map is not normalized, wait for that
+                    //normalized name to load instead of continuing.
+                    if (this.map.unnormalized) {
+                        //Normalize the ID if the plugin allows it.
+                        if (plugin.normalize) {
+                            name = plugin.normalize(name, function (name) {
+                                return normalize(name, parentName, true);
+                            }) || '';
+                        }
+
+                        //prefix and name should already be normalized, no need
+                        //for applying map config again either.
+                        normalizedMap = makeModuleMap(map.prefix + '!' + name,
+                                                      this.map.parentMap,
+                                                      true);
+                        on(normalizedMap,
+                            'defined', bind(this, function (value) {
+                                this.map.normalizedMap = normalizedMap;
+                                this.init([], function () { return value; }, null, {
+                                    enabled: true,
+                                    ignore: true
+                                });
+                            }));
+
+                        normalizedMod = getOwn(registry, normalizedMap.id);
+                        if (normalizedMod) {
+                            //Mark this as a dependency for this plugin, so it
+                            //can be traced for cycles.
+                            this.depMaps.push(normalizedMap);
+
+                            if (this.events.error) {
+                                normalizedMod.on('error', bind(this, function (err) {
+                                    this.emit('error', err);
+                                }));
+                            }
+                            normalizedMod.enable();
+                        }
+
+                        return;
+                    }
+
+                    //If a paths config, then just load that file instead to
+                    //resolve the plugin, as it is built into that paths layer.
+                    if (bundleId) {
+                        this.map.url = context.nameToUrl(bundleId);
+                        this.load();
+                        return;
+                    }
+
+                    load = bind(this, function (value) {
+                        this.init([], function () { return value; }, null, {
+                            enabled: true
+                        });
+                    });
+
+                    load.error = bind(this, function (err) {
+                        this.inited = true;
+                        this.error = err;
+                        err.requireModules = [id];
+
+                        //Remove temp unnormalized modules for this module,
+                        //since they will never be resolved otherwise now.
+                        eachProp(registry, function (mod) {
+                            if (mod.map.id.indexOf(id + '_unnormalized') === 0) {
+                                cleanRegistry(mod.map.id);
+                            }
+                        });
+
+                        onError(err);
+                    });
+
+                    //Allow plugins to load other code without having to know the
+                    //context or how to 'complete' the load.
+                    load.fromText = bind(this, function (text, textAlt) {
+                        /*jslint evil: true */
+                        var moduleName = map.name,
+                            moduleMap = makeModuleMap(moduleName),
+                            hasInteractive = useInteractive;
+
+                        //As of 2.1.0, support just passing the text, to reinforce
+                        //fromText only being called once per resource. Still
+                        //support old style of passing moduleName but discard
+                        //that moduleName in favor of the internal ref.
+                        if (textAlt) {
+                            text = textAlt;
+                        }
+
+                        //Turn off interactive script matching for IE for any define
+                        //calls in the text, then turn it back on at the end.
+                        if (hasInteractive) {
+                            useInteractive = false;
+                        }
+
+                        //Prime the system by creating a module instance for
+                        //it.
+                        getModule(moduleMap);
+
+                        //Transfer any config to this other module.
+                        if (hasProp(config.config, id)) {
+                            config.config[moduleName] = config.config[id];
+                        }
+
+                        try {
+                            req.exec(text);
+                        } catch (e) {
+                            return onError(makeError('fromtexteval',
+                                             'fromText eval for ' + id +
+                                            ' failed: ' + e,
+                                             e,
+                                             [id]));
+                        }
+
+                        if (hasInteractive) {
+                            useInteractive = true;
+                        }
+
+                        //Mark this as a dependency for the plugin
+                        //resource
+                        this.depMaps.push(moduleMap);
+
+                        //Support anonymous modules.
+                        context.completeLoad(moduleName);
+
+                        //Bind the value of that module to the value for this
+                        //resource ID.
+                        localRequire([moduleName], load);
+                    });
+
+                    //Use parentName here since the plugin's name is not reliable,
+                    //could be some weird string with no path that actually wants to
+                    //reference the parentName's path.
+                    plugin.load(map.name, localRequire, load, config);
+                }));
+
+                context.enable(pluginMap, this);
+                this.pluginMaps[pluginMap.id] = pluginMap;
+            },
+
+            enable: function () {
+                enabledRegistry[this.map.id] = this;
+                this.enabled = true;
+
+                //Set flag mentioning that the module is enabling,
+                //so that immediate calls to the defined callbacks
+                //for dependencies do not trigger inadvertent load
+                //with the depCount still being zero.
+                this.enabling = true;
+
+                //Enable each dependency
+                each(this.depMaps, bind(this, function (depMap, i) {
+                    var id, mod, handler;
+
+                    if (typeof depMap === 'string') {
+                        //Dependency needs to be converted to a depMap
+                        //and wired up to this module.
+                        depMap = makeModuleMap(depMap,
+                                               (this.map.isDefine ? this.map : this.map.parentMap),
+                                               false,
+                                               !this.skipMap);
+                        this.depMaps[i] = depMap;
+
+                        handler = getOwn(handlers, depMap.id);
+
+                        if (handler) {
+                            this.depExports[i] = handler(this);
+                            return;
+                        }
+
+                        this.depCount += 1;
+
+                        on(depMap, 'defined', bind(this, function (depExports) {
+                            if (this.undefed) {
+                                return;
+                            }
+                            this.defineDep(i, depExports);
+                            this.check();
+                        }));
+
+                        if (this.errback) {
+                            on(depMap, 'error', bind(this, this.errback));
+                        } else if (this.events.error) {
+                            // No direct errback on this module, but something
+                            // else is listening for errors, so be sure to
+                            // propagate the error correctly.
+                            on(depMap, 'error', bind(this, function(err) {
+                                this.emit('error', err);
+                            }));
+                        }
+                    }
+
+                    id = depMap.id;
+                    mod = registry[id];
+
+                    //Skip special modules like 'require', 'exports', 'module'
+                    //Also, don't call enable if it is already enabled,
+                    //important in circular dependency cases.
+                    if (!hasProp(handlers, id) && mod && !mod.enabled) {
+                        context.enable(depMap, this);
+                    }
+                }));
+
+                //Enable each plugin that is used in
+                //a dependency
+                eachProp(this.pluginMaps, bind(this, function (pluginMap) {
+                    var mod = getOwn(registry, pluginMap.id);
+                    if (mod && !mod.enabled) {
+                        context.enable(pluginMap, this);
+                    }
+                }));
+
+                this.enabling = false;
+
+                this.check();
+            },
+
+            on: function (name, cb) {
+                var cbs = this.events[name];
+                if (!cbs) {
+                    cbs = this.events[name] = [];
+                }
+                cbs.push(cb);
+            },
+
+            emit: function (name, evt) {
+                each(this.events[name], function (cb) {
+                    cb(evt);
+                });
+                if (name === 'error') {
+                    //Now that the error handler was triggered, remove
+                    //the listeners, since this broken Module instance
+                    //can stay around for a while in the registry.
+                    delete this.events[name];
+                }
+            }
+        };
+
+        function callGetModule(args) {
+            //Skip modules already defined.
+            if (!hasProp(defined, args[0])) {
+                getModule(makeModuleMap(args[0], null, true)).init(args[1], args[2]);
+            }
+        }
+
+        function removeListener(node, func, name, ieName) {
+            //Favor detachEvent because of IE9
+            //issue, see attachEvent/addEventListener comment elsewhere
+            //in this file.
+            if (node.detachEvent && !isOpera) {
+                //Probably IE. If not it will throw an error, which will be
+                //useful to know.
+                if (ieName) {
+                    node.detachEvent(ieName, func);
+                }
+            } else {
+                node.removeEventListener(name, func, false);
+            }
+        }
+
+        /**
+         * Given an event from a script node, get the requirejs info from it,
+         * and then removes the event listeners on the node.
+         * @param {Event} evt
+         * @returns {Object}
+         */
+        function getScriptData(evt) {
+            //Using currentTarget instead of target for Firefox 2.0's sake. Not
+            //all old browsers will be supported, but this one was easy enough
+            //to support and still makes sense.
+            var node = evt.currentTarget || evt.srcElement;
+
+            //Remove the listeners once here.
+            removeListener(node, context.onScriptLoad, 'load', 'onreadystatechange');
+            removeListener(node, context.onScriptError, 'error');
+
+            return {
+                node: node,
+                id: node && node.getAttribute('data-requiremodule')
+            };
+        }
+
+        function intakeDefines() {
+            var args;
+
+            //Any defined modules in the global queue, intake them now.
+            takeGlobalQueue();
+
+            //Make sure any remaining defQueue items get properly processed.
+            while (defQueue.length) {
+                args = defQueue.shift();
+                if (args[0] === null) {
+                    return onError(makeError('mismatch', 'Mismatched anonymous define() module: ' +
+                        args[args.length - 1]));
+                } else {
+                    //args are id, deps, factory. Should be normalized by the
+                    //define() function.
+                    callGetModule(args);
+                }
+            }
+            context.defQueueMap = {};
+        }
+
+        context = {
+            config: config,
+            contextName: contextName,
+            registry: registry,
+            defined: defined,
+            urlFetched: urlFetched,
+            defQueue: defQueue,
+            defQueueMap: {},
+            Module: Module,
+            makeModuleMap: makeModuleMap,
+            nextTick: req.nextTick,
+            onError: onError,
+
+            /**
+             * Set a configuration for the context.
+             * @param {Object} cfg config object to integrate.
+             */
+            configure: function (cfg) {
+                //Make sure the baseUrl ends in a slash.
+                if (cfg.baseUrl) {
+                    if (cfg.baseUrl.charAt(cfg.baseUrl.length - 1) !== '/') {
+                        cfg.baseUrl += '/';
+                    }
+                }
+
+                // Convert old style urlArgs string to a function.
+                if (typeof cfg.urlArgs === 'string') {
+                    var urlArgs = cfg.urlArgs;
+                    cfg.urlArgs = function(id, url) {
+                        return (url.indexOf('?') === -1 ? '?' : '&') + urlArgs;
+                    };
+                }
+
+                //Save off the paths since they require special processing,
+                //they are additive.
+                var shim = config.shim,
+                    objs = {
+                        paths: true,
+                        bundles: true,
+                        config: true,
+                        map: true
+                    };
+
+                eachProp(cfg, function (value, prop) {
+                    if (objs[prop]) {
+                        if (!config[prop]) {
+                            config[prop] = {};
+                        }
+                        mixin(config[prop], value, true, true);
+                    } else {
+                        config[prop] = value;
+                    }
+                });
+
+                //Reverse map the bundles
+                if (cfg.bundles) {
+                    eachProp(cfg.bundles, function (value, prop) {
+                        each(value, function (v) {
+                            if (v !== prop) {
+                                bundlesMap[v] = prop;
+                            }
+                        });
+                    });
+                }
+
+                //Merge shim
+                if (cfg.shim) {
+                    eachProp(cfg.shim, function (value, id) {
+                        //Normalize the structure
+                        if (isArray(value)) {
+                            value = {
+                                deps: value
+                            };
+                        }
+                        if ((value.exports || value.init) && !value.exportsFn) {
+                            value.exportsFn = context.makeShimExports(value);
+                        }
+                        shim[id] = value;
+                    });
+                    config.shim = shim;
+                }
+
+                //Adjust packages if necessary.
+                if (cfg.packages) {
+                    each(cfg.packages, function (pkgObj) {
+                        var location, name;
+
+                        pkgObj = typeof pkgObj === 'string' ? {name: pkgObj} : pkgObj;
+
+                        name = pkgObj.name;
+                        location = pkgObj.location;
+                        if (location) {
+                            config.paths[name] = pkgObj.location;
+                        }
+
+                        //Save pointer to main module ID for pkg name.
+                        //Remove leading dot in main, so main paths are normalized,
+                        //and remove any trailing .js, since different package
+                        //envs have different conventions: some use a module name,
+                        //some use a file name.
+                        config.pkgs[name] = pkgObj.name + '/' + (pkgObj.main || 'main')
+                                     .replace(currDirRegExp, '')
+                                     .replace(jsSuffixRegExp, '');
+                    });
+                }
+
+                //If there are any "waiting to execute" modules in the registry,
+                //update the maps for them, since their info, like URLs to load,
+                //may have changed.
+                eachProp(registry, function (mod, id) {
+                    //If module already has init called, since it is too
+                    //late to modify them, and ignore unnormalized ones
+                    //since they are transient.
+                    if (!mod.inited && !mod.map.unnormalized) {
+                        mod.map = makeModuleMap(id, null, true);
+                    }
+                });
+
+                //If a deps array or a config callback is specified, then call
+                //require with those args. This is useful when require is defined as a
+                //config object before require.js is loaded.
+                if (cfg.deps || cfg.callback) {
+                    context.require(cfg.deps || [], cfg.callback);
+                }
+            },
+
+            makeShimExports: function (value) {
+                function fn() {
+                    var ret;
+                    if (value.init) {
+                        ret = value.init.apply(global, arguments);
+                    }
+                    return ret || (value.exports && getGlobal(value.exports));
+                }
+                return fn;
+            },
+
+            makeRequire: function (relMap, options) {
+                options = options || {};
+
+                function localRequire(deps, callback, errback) {
+                    var id, map, requireMod;
+
+                    if (options.enableBuildCallback && callback && isFunction(callback)) {
+                        callback.__requireJsBuild = true;
+                    }
+
+                    if (typeof deps === 'string') {
+                        if (isFunction(callback)) {
+                            //Invalid call
+                            return onError(makeError('requireargs', 'Invalid require call'), errback);
+                        }
+
+                        //If require|exports|module are requested, get the
+                        //value for them from the special handlers. Caveat:
+                        //this only works while module is being defined.
+                        if (relMap && hasProp(handlers, deps)) {
+                            return handlers[deps](registry[relMap.id]);
+                        }
+
+                        //Synchronous access to one module. If require.get is
+                        //available (as in the Node adapter), prefer that.
+                        if (req.get) {
+                            return req.get(context, deps, relMap, localRequire);
+                        }
+
+                        //Normalize module name, if it contains . or ..
+                        map = makeModuleMap(deps, relMap, false, true);
+                        id = map.id;
+
+                        if (!hasProp(defined, id)) {
+                            return onError(makeError('notloaded', 'Module name "' +
+                                        id +
+                                        '" has not been loaded yet for context: ' +
+                                        contextName +
+                                        (relMap ? '' : '. Use require([])')));
+                        }
+                        return defined[id];
+                    }
+
+                    //Grab defines waiting in the global queue.
+                    intakeDefines();
+
+                    //Mark all the dependencies as needing to be loaded.
+                    context.nextTick(function () {
+                        //Some defines could have been added since the
+                        //require call, collect them.
+                        intakeDefines();
+
+                        requireMod = getModule(makeModuleMap(null, relMap));
+
+                        //Store if map config should be applied to this require
+                        //call for dependencies.
+                        requireMod.skipMap = options.skipMap;
+
+                        requireMod.init(deps, callback, errback, {
+                            enabled: true
+                        });
+
+                        checkLoaded();
+                    });
+
+                    return localRequire;
+                }
+
+                mixin(localRequire, {
+                    isBrowser: isBrowser,
+
+                    /**
+                     * Converts a module name + .extension into an URL path.
+                     * *Requires* the use of a module name. It does not support using
+                     * plain URLs like nameToUrl.
+                     */
+                    toUrl: function (moduleNamePlusExt) {
+                        var ext,
+                            index = moduleNamePlusExt.lastIndexOf('.'),
+                            segment = moduleNamePlusExt.split('/')[0],
+                            isRelative = segment === '.' || segment === '..';
+
+                        //Have a file extension alias, and it is not the
+                        //dots from a relative path.
+                        if (index !== -1 && (!isRelative || index > 1)) {
+                            ext = moduleNamePlusExt.substring(index, moduleNamePlusExt.length);
+                            moduleNamePlusExt = moduleNamePlusExt.substring(0, index);
+                        }
+
+                        return context.nameToUrl(normalize(moduleNamePlusExt,
+                                                relMap && relMap.id, true), ext,  true);
+                    },
+
+                    defined: function (id) {
+                        return hasProp(defined, makeModuleMap(id, relMap, false, true).id);
+                    },
+
+                    specified: function (id) {
+                        id = makeModuleMap(id, relMap, false, true).id;
+                        return hasProp(defined, id) || hasProp(registry, id);
+                    }
+                });
+
+                //Only allow undef on top level require calls
+                if (!relMap) {
+                    localRequire.undef = function (id) {
+                        //Bind any waiting define() calls to this context,
+                        //fix for #408
+                        takeGlobalQueue();
+
+                        var map = makeModuleMap(id, relMap, true),
+                            mod = getOwn(registry, id);
+
+                        mod.undefed = true;
+                        removeScript(id);
+
+                        delete defined[id];
+                        delete urlFetched[map.url];
+                        delete undefEvents[id];
+
+                        //Clean queued defines too. Go backwards
+                        //in array so that the splices do not
+                        //mess up the iteration.
+                        eachReverse(defQueue, function(args, i) {
+                            if (args[0] === id) {
+                                defQueue.splice(i, 1);
+                            }
+                        });
+                        delete context.defQueueMap[id];
+
+                        if (mod) {
+                            //Hold on to listeners in case the
+                            //module will be attempted to be reloaded
+                            //using a different config.
+                            if (mod.events.defined) {
+                                undefEvents[id] = mod.events;
+                            }
+
+                            cleanRegistry(id);
+                        }
+                    };
+                }
+
+                return localRequire;
+            },
+
+            /**
+             * Called to enable a module if it is still in the registry
+             * awaiting enablement. A second arg, parent, the parent module,
+             * is passed in for context, when this method is overridden by
+             * the optimizer. Not shown here to keep code compact.
+             */
+            enable: function (depMap) {
+                var mod = getOwn(registry, depMap.id);
+                if (mod) {
+                    getModule(depMap).enable();
+                }
+            },
+
+            /**
+             * Internal method used by environment adapters to complete a load event.
+             * A load event could be a script load or just a load pass from a synchronous
+             * load call.
+             * @param {String} moduleName the name of the module to potentially complete.
+             */
+            completeLoad: function (moduleName) {
+                var found, args, mod,
+                    shim = getOwn(config.shim, moduleName) || {},
+                    shExports = shim.exports;
+
+                takeGlobalQueue();
+
+                while (defQueue.length) {
+                    args = defQueue.shift();
+                    if (args[0] === null) {
+                        args[0] = moduleName;
+                        //If already found an anonymous module and bound it
+                        //to this name, then this is some other anon module
+                        //waiting for its completeLoad to fire.
+                        if (found) {
+                            break;
+                        }
+                        found = true;
+                    } else if (args[0] === moduleName) {
+                        //Found matching define call for this script!
+                        found = true;
+                    }
+
+                    callGetModule(args);
+                }
+                context.defQueueMap = {};
+
+                //Do this after the cycle of callGetModule in case the result
+                //of those calls/init calls changes the registry.
+                mod = getOwn(registry, moduleName);
+
+                if (!found && !hasProp(defined, moduleName) && mod && !mod.inited) {
+                    if (config.enforceDefine && (!shExports || !getGlobal(shExports))) {
+                        if (hasPathFallback(moduleName)) {
+                            return;
+                        } else {
+                            return onError(makeError('nodefine',
+                                             'No define call for ' + moduleName,
+                                             null,
+                                             [moduleName]));
+                        }
+                    } else {
+                        //A script that does not call define(), so just simulate
+                        //the call for it.
+                        callGetModule([moduleName, (shim.deps || []), shim.exportsFn]);
+                    }
+                }
+
+                checkLoaded();
+            },
+
+            /**
+             * Converts a module name to a file path. Supports cases where
+             * moduleName may actually be just an URL.
+             * Note that it **does not** call normalize on the moduleName,
+             * it is assumed to have already been normalized. This is an
+             * internal API, not a public one. Use toUrl for the public API.
+             */
+            nameToUrl: function (moduleName, ext, skipExt) {
+                var paths, syms, i, parentModule, url,
+                    parentPath, bundleId,
+                    pkgMain = getOwn(config.pkgs, moduleName);
+
+                if (pkgMain) {
+                    moduleName = pkgMain;
+                }
+
+                bundleId = getOwn(bundlesMap, moduleName);
+
+                if (bundleId) {
+                    return context.nameToUrl(bundleId, ext, skipExt);
+                }
+
+                //If a colon is in the URL, it indicates a protocol is used and it is just
+                //an URL to a file, or if it starts with a slash, contains a query arg (i.e. ?)
+                //or ends with .js, then assume the user meant to use an url and not a module id.
+                //The slash is important for protocol-less URLs as well as full paths.
+                if (req.jsExtRegExp.test(moduleName)) {
+                    //Just a plain path, not module name lookup, so just return it.
+                    //Add extension if it is included. This is a bit wonky, only non-.js things pass
+                    //an extension, this method probably needs to be reworked.
+                    url = moduleName + (ext || '');
+                } else {
+                    //A module that needs to be converted to a path.
+                    paths = config.paths;
+
+                    syms = moduleName.split('/');
+                    //For each module name segment, see if there is a path
+                    //registered for it. Start with most specific name
+                    //and work up from it.
+                    for (i = syms.length; i > 0; i -= 1) {
+                        parentModule = syms.slice(0, i).join('/');
+
+                        parentPath = getOwn(paths, parentModule);
+                        if (parentPath) {
+                            //If an array, it means there are a few choices,
+                            //Choose the one that is desired
+                            if (isArray(parentPath)) {
+                                parentPath = parentPath[0];
+                            }
+                            syms.splice(0, i, parentPath);
+                            break;
+                        }
+                    }
+
+                    //Join the path parts together, then figure out if baseUrl is needed.
+                    url = syms.join('/');
+                    url += (ext || (/^data\:|^blob\:|\?/.test(url) || skipExt ? '' : '.js'));
+                    url = (url.charAt(0) === '/' || url.match(/^[\w\+\.\-]+:/) ? '' : config.baseUrl) + url;
+                }
+
+                return config.urlArgs && !/^blob\:/.test(url) ?
+                       url + config.urlArgs(moduleName, url) : url;
+            },
+
+            //Delegates to req.load. Broken out as a separate function to
+            //allow overriding in the optimizer.
+            load: function (id, url) {
+                req.load(context, id, url);
+            },
+
+            /**
+             * Executes a module callback function. Broken out as a separate function
+             * solely to allow the build system to sequence the files in the built
+             * layer in the right sequence.
+             *
+             * @private
+             */
+            execCb: function (name, callback, args, exports) {
+                return callback.apply(exports, args);
+            },
+
+            /**
+             * callback for script loads, used to check status of loading.
+             *
+             * @param {Event} evt the event from the browser for the script
+             * that was loaded.
+             */
+            onScriptLoad: function (evt) {
+                //Using currentTarget instead of target for Firefox 2.0's sake. Not
+                //all old browsers will be supported, but this one was easy enough
+                //to support and still makes sense.
+                if (evt.type === 'load' ||
+                        (readyRegExp.test((evt.currentTarget || evt.srcElement).readyState))) {
+                    //Reset interactive script so a script node is not held onto for
+                    //to long.
+                    interactiveScript = null;
+
+                    //Pull out the name of the module and the context.
+                    var data = getScriptData(evt);
+                    context.completeLoad(data.id);
+                }
+            },
+
+            /**
+             * Callback for script errors.
+             */
+            onScriptError: function (evt) {
+                var data = getScriptData(evt);
+                if (!hasPathFallback(data.id)) {
+                    var parents = [];
+                    eachProp(registry, function(value, key) {
+                        if (key.indexOf('_@r') !== 0) {
+                            each(value.depMaps, function(depMap) {
+                                if (depMap.id === data.id) {
+                                    parents.push(key);
+                                    return true;
+                                }
+                            });
+                        }
+                    });
+                    return onError(makeError('scripterror', 'Script error for "' + data.id +
+                                             (parents.length ?
+                                             '", needed by: ' + parents.join(', ') :
+                                             '"'), evt, [data.id]));
+                }
+            }
+        };
+
+        context.require = context.makeRequire();
+        return context;
+    }
+
+    /**
+     * Main entry point.
+     *
+     * If the only argument to require is a string, then the module that
+     * is represented by that string is fetched for the appropriate context.
+     *
+     * If the first argument is an array, then it will be treated as an array
+     * of dependency string names to fetch. An optional function callback can
+     * be specified to execute when all of those dependencies are available.
+     *
+     * Make a local req variable to help Caja compliance (it assumes things
+     * on a require that are not standardized), and to give a short
+     * name for minification/local scope use.
+     */
+    req = requirejs = function (deps, callback, errback, optional) {
+
+        //Find the right context, use default
+        var context, config,
+            contextName = defContextName;
+
+        // Determine if have config object in the call.
+        if (!isArray(deps) && typeof deps !== 'string') {
+            // deps is a config object
+            config = deps;
+            if (isArray(callback)) {
+                // Adjust args if there are dependencies
+                deps = callback;
+                callback = errback;
+                errback = optional;
+            } else {
+                deps = [];
+            }
+        }
+
+        if (config && config.context) {
+            contextName = config.context;
+        }
+
+        context = getOwn(contexts, contextName);
+        if (!context) {
+            context = contexts[contextName] = req.s.newContext(contextName);
+        }
+
+        if (config) {
+            context.configure(config);
+        }
+
+        return context.require(deps, callback, errback);
+    };
+
+    /**
+     * Support formintorjs.require.config() to make it easier to cooperate with other
+     * AMD loaders on globally agreed names.
+     */
+    req.config = function (config) {
+        return req(config);
+    };
+
+    /**
+     * Execute something after the current tick
+     * of the event loop. Override for other envs
+     * that have a better solution than setTimeout.
+     * @param  {Function} fn function to execute later.
+     */
+    req.nextTick = typeof setTimeout !== 'undefined' ? function (fn) {
+        setTimeout(fn, 4);
+    } : function (fn) { fn(); };
+
+    /**
+     * Export require as a global, but only if it does not already exist.
+     */
+    if (!require) {
+        require = req;
+    }
+
+    req.version = version;
+
+    //Used to filter out dependencies that are already paths.
+    req.jsExtRegExp = /^\/|:|\?|\.js$/;
+    req.isBrowser = isBrowser;
+    s = req.s = {
+        contexts: contexts,
+        newContext: newContext
+    };
+
+    //Create default context.
+    req({});
+
+    //Exports some context-sensitive methods on global require.
+    each([
+        'toUrl',
+        'undef',
+        'defined',
+        'specified'
+    ], function (prop) {
+        //Reference from contexts instead of early binding to default context,
+        //so that during builds, the latest instance of the default context
+        //with its config gets used.
+        req[prop] = function () {
+            var ctx = contexts[defContextName];
+            return ctx.require[prop].apply(ctx, arguments);
+        };
+    });
+
+    if (isBrowser) {
+        head = s.head = document.getElementsByTagName('head')[0];
+        //If BASE tag is in play, using appendChild is a problem for IE6.
+        //When that browser dies, this can be removed. Details in this jQuery bug:
+        //http://dev.jquery.com/ticket/2709
+        baseElement = document.getElementsByTagName('base')[0];
+        if (baseElement) {
+            head = s.head = baseElement.parentNode;
+        }
+    }
+
+    /**
+     * Any errors that require explicitly generates will be passed to this
+     * function. Intercept/override it if you want custom error handling.
+     * @param {Error} err the error object.
+     */
+    req.onError = defaultOnError;
+
+    /**
+     * Creates the node for the load command. Only used in browser envs.
+     */
+    req.createNode = function (config, moduleName, url) {
+        var node = config.xhtml ?
+                document.createElementNS('http://www.w3.org/1999/xhtml', 'html:script') :
+                document.createElement('script');
+        node.type = config.scriptType || 'text/javascript';
+        node.charset = 'utf-8';
+        node.async = true;
+        return node;
+    };
+
+    /**
+     * Does the request to load a module for the browser case.
+     * Make this a separate function to allow other environments
+     * to override it.
+     *
+     * @param {Object} context the require context to find state.
+     * @param {String} moduleName the name of the module.
+     * @param {Object} url the URL to the module.
+     */
+    req.load = function (context, moduleName, url) {
+        var config = (context && context.config) || {},
+            node;
+        if (isBrowser) {
+            //In the browser so use a script tag
+            node = req.createNode(config, moduleName, url);
+
+            node.setAttribute('data-requirecontext', context.contextName);
+            node.setAttribute('data-requiremodule', moduleName);
+
+            //Set up load listener. Test attachEvent first because IE9 has
+            //a subtle issue in its addEventListener and script onload firings
+            //that do not match the behavior of all other browsers with
+            //addEventListener support, which fire the onload event for a
+            //script right after the script execution. See:
+            //https://connect.microsoft.com/IE/feedback/details/648057/script-onload-event-is-not-fired-immediately-after-script-execution
+            //UNFORTUNATELY Opera implements attachEvent but does not follow the script
+            //script execution mode.
+            if (node.attachEvent &&
+                    //Check if node.attachEvent is artificially added by custom script or
+                    //natively supported by browser
+                    //read https://github.com/requirejs/requirejs/issues/187
+                    //if we can NOT find [native code] then it must NOT natively supported.
+                    //in IE8, node.attachEvent does not have toString()
+                    //Note the test for "[native code" with no closing brace, see:
+                    //https://github.com/requirejs/requirejs/issues/273
+                    !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0) &&
+                    !isOpera) {
+                //Probably IE. IE (at least 6-8) do not fire
+                //script onload right after executing the script, so
+                //we cannot tie the anonymous define call to a name.
+                //However, IE reports the script as being in 'interactive'
+                //readyState at the time of the define call.
+                useInteractive = true;
+
+                node.attachEvent('onreadystatechange', context.onScriptLoad);
+                //It would be great to add an error handler here to catch
+                //404s in IE9+. However, onreadystatechange will fire before
+                //the error handler, so that does not help. If addEventListener
+                //is used, then IE will fire error before load, but we cannot
+                //use that pathway given the connect.microsoft.com issue
+                //mentioned above about not doing the 'script execute,
+                //then fire the script load event listener before execute
+                //next script' that other browsers do.
+                //Best hope: IE10 fixes the issues,
+                //and then destroys all installs of IE 6-9.
+                //node.attachEvent('onerror', context.onScriptError);
+            } else {
+                node.addEventListener('load', context.onScriptLoad, false);
+                node.addEventListener('error', context.onScriptError, false);
+            }
+            node.src = url;
+
+            //Calling onNodeCreated after all properties on the node have been
+            //set, but before it is placed in the DOM.
+            if (config.onNodeCreated) {
+                config.onNodeCreated(node, config, moduleName, url);
+            }
+
+            //For some cache cases in IE 6-8, the script executes before the end
+            //of the appendChild execution, so to tie an anonymous define
+            //call to the module name (which is stored on the node), hold on
+            //to a reference to this node, but clear after the DOM insertion.
+            currentlyAddingScript = node;
+            if (baseElement) {
+                head.insertBefore(node, baseElement);
+            } else {
+                head.appendChild(node);
+            }
+            currentlyAddingScript = null;
+
+            return node;
+        } else if (isWebWorker) {
+            try {
+                //In a web worker, use importScripts. This is not a very
+                //efficient use of importScripts, importScripts will block until
+                //its script is downloaded and evaluated. However, if web workers
+                //are in play, the expectation is that a build has been done so
+                //that only one script needs to be loaded anyway. This may need
+                //to be reevaluated if other use cases become common.
+
+                // Post a task to the event loop to work around a bug in WebKit
+                // where the worker gets garbage-collected after calling
+                // importScripts(): https://webkit.org/b/153317
+                setTimeout(function() {}, 0);
+                importScripts(url);
+
+                //Account for anonymous modules
+                context.completeLoad(moduleName);
+            } catch (e) {
+                context.onError(makeError('importscripts',
+                                'importScripts failed for ' +
+                                    moduleName + ' at ' + url,
+                                e,
+                                [moduleName]));
+            }
+        }
+    };
+
+    function getInteractiveScript() {
+        if (interactiveScript && interactiveScript.readyState === 'interactive') {
+            return interactiveScript;
+        }
+
+        eachReverse(scripts(), function (script) {
+            if (script.readyState === 'interactive') {
+                return (interactiveScript = script);
+            }
+        });
+        return interactiveScript;
+    }
+
+    //Look for a data-main script attribute, which could also adjust the baseUrl.
+    if (isBrowser && !cfg.skipDataMain) {
+        //Figure out baseUrl. Get it from the script tag with require.js in it.
+        eachReverse(scripts(), function (script) {
+            //Set the 'head' where we can append children by
+            //using the script's parent.
+            if (!head) {
+                head = script.parentNode;
+            }
+
+            //Look for a data-main attribute to set main script for the page
+            //to load. If it is there, the path to data main becomes the
+            //baseUrl, if it is not already set.
+            dataMain = script.getAttribute('data-main');
+            if (dataMain) {
+                //Preserve dataMain in case it is a path (i.e. contains '?')
+                mainScript = dataMain;
+
+                //Set final baseUrl if there is not already an explicit one,
+                //but only do so if the data-main value is not a loader plugin
+                //module ID.
+                if (!cfg.baseUrl && mainScript.indexOf('!') === -1) {
+                    //Pull off the directory of data-main for use as the
+                    //baseUrl.
+                    src = mainScript.split('/');
+                    mainScript = src.pop();
+                    subPath = src.length ? src.join('/')  + '/' : './';
+
+                    cfg.baseUrl = subPath;
+                }
+
+                //Strip off any trailing .js since mainScript is now
+                //like a module name.
+                mainScript = mainScript.replace(jsSuffixRegExp, '');
+
+                //If mainScript is still a path, fall back to dataMain
+                if (req.jsExtRegExp.test(mainScript)) {
+                    mainScript = dataMain;
+                }
+
+                //Put the data-main script in the files to load.
+                cfg.deps = cfg.deps ? cfg.deps.concat(mainScript) : [mainScript];
+
+                return true;
+            }
+        });
+    }
+
+    /**
+     * The function that handles definitions of modules. Differs from
+     * require() in that a string for the module should be the first argument,
+     * and the function to execute after dependencies are loaded should
+     * return a value to define the module corresponding to the first argument's
+     * name.
+     */
+    define = function (name, deps, callback) {
+        var node, context;
+
+        //Allow for anonymous modules
+        if (typeof name !== 'string') {
+            //Adjust args appropriately
+            callback = deps;
+            deps = name;
+            name = null;
+        }
+
+        //This module may not have dependencies
+        if (!isArray(deps)) {
+            callback = deps;
+            deps = null;
+        }
+
+        //If no name, and callback is a function, then figure out if it a
+        //CommonJS thing with dependencies.
+        if (!deps && isFunction(callback)) {
+            deps = [];
+            //Remove comments from the callback string,
+            //look for require calls, and pull them into the dependencies,
+            //but only if there are function args.
+            if (callback.length) {
+                callback
+                    .toString()
+                    .replace(commentRegExp, commentReplace)
+                    .replace(cjsRequireRegExp, function (match, dep) {
+                        deps.push(dep);
+                    });
+
+                //May be a CommonJS thing even without require calls, but still
+                //could use exports, and module. Avoid doing exports and module
+                //work though if it just needs require.
+                //REQUIRES the function to expect the CommonJS variables in the
+                //order listed below.
+                deps = (callback.length === 1 ? ['require'] : ['require', 'exports', 'module']).concat(deps);
+            }
+        }
+
+        //If in IE 6-8 and hit an anonymous define() call, do the interactive
+        //work.
+        if (useInteractive) {
+            node = currentlyAddingScript || getInteractiveScript();
+            if (node) {
+                if (!name) {
+                    name = node.getAttribute('data-requiremodule');
+                }
+                context = contexts[node.getAttribute('data-requirecontext')];
+            }
+        }
+
+        //Always save off evaluating the def call until the script onload handler.
+        //This allows multiple modules to be in a file without prematurely
+        //tracing dependencies, and allows for anonymous module support,
+        //where the module name is not known until the script onload event
+        //occurs. If no context, use the global queue, and get it processed
+        //in the onscript load callback.
+        if (context) {
+            context.defQueue.push([name, deps, callback]);
+            context.defQueueMap[name] = true;
+        } else {
+            globalDefQueue.push([name, deps, callback]);
+        }
+    };
+
+    define.amd = {
+        jQuery: true
+    };
+
+    /**
+     * Executes the text. Normally just uses eval, but can be modified
+     * to use a better, environment-specific call. Only used for transpiling
+     * loader plugins, not for plain JS modules.
+     * @param {String} text the text to execute/evaluate.
+     */
+    req.exec = function (text) {
+        /*jslint evil: true */
+        return eval(text);
+    };
+
+    //Set up with config info.
+    req(cfg);
+}(this, (typeof setTimeout === 'undefined' ? undefined : setTimeout)));
+formintorjs.requirejs = requirejs;formintorjs.require = require;formintorjs.define = define;
+}
+}());
+formintorjs.define("requireLib", function(){});
 
 /**
  * @license RequireJS text 2.0.3 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/requirejs/text for details
  */
+/*jslint regexp: true */
+/*global require: false, XMLHttpRequest: false, ActiveXObject: false,
+  define: false, window: false, process: false, Packages: false,
+  java: false, location: false */
 
-var formintorjs;!function(){if(!formintorjs||!formintorjs.requirejs){formintorjs?require=formintorjs:formintorjs={};var requirejs,require,define;!function(global,setTimeout){function commentReplace(t,n){return n||""}function isFunction(t){return"[object Function]"===ostring.call(t)}function isArray(t){return"[object Array]"===ostring.call(t)}function each(t,n){if(t){var e;for(e=0;e<t.length&&(!t[e]||!n(t[e],e,t));e+=1);}}function eachReverse(t,n){if(t){var e;for(e=t.length-1;e>-1&&(!t[e]||!n(t[e],e,t));e-=1);}}function hasProp(t,n){return hasOwn.call(t,n)}function getOwn(t,n){return hasProp(t,n)&&t[n]}function eachProp(t,n){var e;for(e in t)if(hasProp(t,e)&&n(t[e],e))break}function mixin(t,n,e,i){return n&&eachProp(n,function(n,o){!e&&hasProp(t,o)||(!i||"object"!=typeof n||!n||isArray(n)||isFunction(n)||n instanceof RegExp?t[o]=n:(t[o]||(t[o]={}),mixin(t[o],n,e,i)))}),t}function bind(t,n){return function(){return n.apply(t,arguments)}}function scripts(){return document.getElementsByTagName("script")}function defaultOnError(t){throw t}function getGlobal(t){if(!t)return t;var n=global;return each(t.split("."),function(t){n=n[t]}),n}function makeError(t,n,e,i){var o=new Error(n+"\nhttp://requirejs.org/docs/errors.html#"+t);return o.requireType=t,o.requireModules=i,e&&(o.originalError=e),o}function newContext(t){function n(t){var n,e;for(n=0;n<t.length;n++)if("."===(e=t[n]))t.splice(n,1),n-=1;else if(".."===e){if(0===n||1===n&&".."===t[2]||".."===t[n-1])continue;n>0&&(t.splice(n-1,2),n-=2)}}function e(t,e,i){var o,a,r,s,l,p,d,c,u,m,f,h=e&&e.split("/"),_=F.map,v=_&&_["*"];if(t&&(t=t.split("/"),p=t.length-1,F.nodeIdCompat&&jsSuffixRegExp.test(t[p])&&(t[p]=t[p].replace(jsSuffixRegExp,"")),"."===t[0].charAt(0)&&h&&(f=h.slice(0,h.length-1),t=f.concat(t)),n(t),t=t.join("/")),i&&_&&(h||v)){a=t.split("/");t:for(r=a.length;r>0;r-=1){if(l=a.slice(0,r).join("/"),h)for(s=h.length;s>0;s-=1)if((o=getOwn(_,h.slice(0,s).join("/")))&&(o=getOwn(o,l))){d=o,c=r;break t}!u&&v&&getOwn(v,l)&&(u=getOwn(v,l),m=r)}!d&&u&&(d=u,c=m),d&&(a.splice(0,c,d),t=a.join("/"))}return getOwn(F.pkgs,t)||t}function i(t){isBrowser&&each(scripts(),function(n){if(n.getAttribute("data-requiremodule")===t&&n.getAttribute("data-requirecontext")===x.contextName)return n.parentNode.removeChild(n),!0})}function o(t){var n=getOwn(F.paths,t);if(n&&isArray(n)&&n.length>1)return n.shift(),x.require.undef(t),x.makeRequire(null,{skipMap:!0})([t]),!0}function a(t){var n,e=t?t.indexOf("!"):-1;return e>-1&&(n=t.substring(0,e),t=t.substring(e+1,t.length)),[n,t]}function r(t,n,i,o){var r,s,l,p,d=null,c=n?n.name:null,u=t,m=!0,f="";return t||(m=!1,t="_@r"+(T+=1)),p=a(t),d=p[0],t=p[1],d&&(d=e(d,c,o),s=getOwn(U,d)),t&&(d?f=i?t:s&&s.normalize?s.normalize(t,function(t){return e(t,c,o)}):-1===t.indexOf("!")?e(t,c,o):t:(f=e(t,c,o),p=a(f),d=p[0],f=p[1],i=!0,r=x.nameToUrl(f))),l=!d||s||i?"":"_unnormalized"+(S+=1),{prefix:d,name:f,parentMap:n,unnormalized:!!l,url:r,originalName:u,isDefine:m,id:(d?d+"!"+f:f)+l}}function s(t){var n=t.id,e=getOwn(k,n);return e||(e=k[n]=new x.Module(t)),e}function l(t,n,e){var i=t.id,o=getOwn(k,i);!hasProp(U,i)||o&&!o.defineEmitComplete?(o=s(t),o.error&&"error"===n?e(o.error):o.on(n,e)):"defined"===n&&e(U[i])}function p(t,n){var e=t.requireModules,i=!1;n?n(t):(each(e,function(n){var e=getOwn(k,n);e&&(e.error=t,e.events.error&&(i=!0,e.emit("error",t)))}),i||req.onError(t))}function d(){globalDefQueue.length&&(each(globalDefQueue,function(t){var n=t[0];"string"==typeof n&&(x.defQueueMap[n]=!0),$.push(t)}),globalDefQueue=[])}function c(t){delete k[t],delete z[t]}function u(t,n,e){var i=t.map.id;t.error?t.emit("error",t.error):(n[i]=!0,each(t.depMaps,function(i,o){var a=i.id,r=getOwn(k,a);!r||t.depMatched[o]||e[a]||(getOwn(n,a)?(t.defineDep(o,U[a]),t.check()):u(r,n,e))}),e[i]=!0)}function m(){var t,n,e=1e3*F.waitSeconds,a=e&&x.startTime+e<(new Date).getTime(),r=[],s=[],l=!1,d=!0;if(!b){if(b=!0,eachProp(z,function(t){var e=t.map,p=e.id;if(t.enabled&&(e.isDefine||s.push(t),!t.error))if(!t.inited&&a)o(p)?(n=!0,l=!0):(r.push(p),i(p));else if(!t.inited&&t.fetched&&e.isDefine&&(l=!0,!e.prefix))return d=!1}),a&&r.length)return t=makeError("timeout","Load timeout for modules: "+r,null,r),t.contextName=x.contextName,p(t);d&&each(s,function(t){u(t,{},{})}),a&&!n||!l||!isBrowser&&!isWebWorker||w||(w=setTimeout(function(){w=0,m()},50)),b=!1}}function f(t){hasProp(U,t[0])||s(r(t[0],null,!0)).init(t[1],t[2])}function h(t,n,e,i){t.detachEvent&&!isOpera?i&&t.detachEvent(i,n):t.removeEventListener(e,n,!1)}function _(t){var n=t.currentTarget||t.srcElement;return h(n,x.onScriptLoad,"load","onreadystatechange"),h(n,x.onScriptError,"error"),{node:n,id:n&&n.getAttribute("data-requiremodule")}}function v(){var t;for(d();$.length;){if(t=$.shift(),null===t[0])return p(makeError("mismatch","Mismatched anonymous define() module: "+t[t.length-1]));f(t)}x.defQueueMap={}}var b,g,x,y,w,F={waitSeconds:7,baseUrl:"./",paths:{},bundles:{},pkgs:{},shim:{},config:{}},k={},z={},q={},$=[],U={},j={},C={},T=1,S=1;return y={require:function(t){return t.require?t.require:t.require=x.makeRequire(t.map)},exports:function(t){if(t.usingExports=!0,t.map.isDefine)return t.exports?U[t.map.id]=t.exports:t.exports=U[t.map.id]={}},module:function(t){return t.module?t.module:t.module={id:t.map.id,uri:t.map.url,config:function(){return getOwn(F.config,t.map.id)||{}},exports:t.exports||(t.exports={})}}},g=function(t){this.events=getOwn(q,t.id)||{},this.map=t,this.shim=getOwn(F.shim,t.id),this.depExports=[],this.depMaps=[],this.depMatched=[],this.pluginMaps={},this.depCount=0},g.prototype={init:function(t,n,e,i){i=i||{},this.inited||(this.factory=n,e?this.on("error",e):this.events.error&&(e=bind(this,function(t){this.emit("error",t)})),this.depMaps=t&&t.slice(0),this.errback=e,this.inited=!0,this.ignore=i.ignore,i.enabled||this.enabled?this.enable():this.check())},defineDep:function(t,n){this.depMatched[t]||(this.depMatched[t]=!0,this.depCount-=1,this.depExports[t]=n)},fetch:function(){if(!this.fetched){this.fetched=!0,x.startTime=(new Date).getTime();var t=this.map;if(!this.shim)return t.prefix?this.callPlugin():this.load();x.makeRequire(this.map,{enableBuildCallback:!0})(this.shim.deps||[],bind(this,function(){return t.prefix?this.callPlugin():this.load()}))}},load:function(){var t=this.map.url;j[t]||(j[t]=!0,x.load(this.map.id,t))},check:function(){if(this.enabled&&!this.enabling){var t,n,e=this.map.id,i=this.depExports,o=this.exports,a=this.factory;if(this.inited){if(this.error)this.emit("error",this.error);else if(!this.defining){if(this.defining=!0,this.depCount<1&&!this.defined){if(isFunction(a)){if(this.events.error&&this.map.isDefine||req.onError!==defaultOnError)try{o=x.execCb(e,a,i,o)}catch(n){t=n}else o=x.execCb(e,a,i,o);if(this.map.isDefine&&void 0===o&&(n=this.module,n?o=n.exports:this.usingExports&&(o=this.exports)),t)return t.requireMap=this.map,t.requireModules=this.map.isDefine?[this.map.id]:null,t.requireType=this.map.isDefine?"define":"require",p(this.error=t)}else o=a;if(this.exports=o,this.map.isDefine&&!this.ignore&&(U[e]=o,req.onResourceLoad)){var r=[];each(this.depMaps,function(t){r.push(t.normalizedMap||t)}),req.onResourceLoad(x,this.map,r)}c(e),this.defined=!0}this.defining=!1,this.defined&&!this.defineEmitted&&(this.defineEmitted=!0,this.emit("defined",this.exports),this.defineEmitComplete=!0)}}else hasProp(x.defQueueMap,e)||this.fetch()}},callPlugin:function(){var t=this.map,n=t.id,i=r(t.prefix);this.depMaps.push(i),l(i,"defined",bind(this,function(i){var o,a,d,u=getOwn(C,this.map.id),m=this.map.name,f=this.map.parentMap?this.map.parentMap.name:null,h=x.makeRequire(t.parentMap,{enableBuildCallback:!0});return this.map.unnormalized?(i.normalize&&(m=i.normalize(m,function(t){return e(t,f,!0)})||""),a=r(t.prefix+"!"+m,this.map.parentMap,!0),l(a,"defined",bind(this,function(t){this.map.normalizedMap=a,this.init([],function(){return t},null,{enabled:!0,ignore:!0})})),void((d=getOwn(k,a.id))&&(this.depMaps.push(a),this.events.error&&d.on("error",bind(this,function(t){this.emit("error",t)})),d.enable()))):u?(this.map.url=x.nameToUrl(u),void this.load()):(o=bind(this,function(t){this.init([],function(){return t},null,{enabled:!0})}),o.error=bind(this,function(t){this.inited=!0,this.error=t,t.requireModules=[n],eachProp(k,function(t){0===t.map.id.indexOf(n+"_unnormalized")&&c(t.map.id)}),p(t)}),o.fromText=bind(this,function(e,i){var a=t.name,l=r(a),d=useInteractive;i&&(e=i),d&&(useInteractive=!1),s(l),hasProp(F.config,n)&&(F.config[a]=F.config[n]);try{req.exec(e)}catch(t){return p(makeError("fromtexteval","fromText eval for "+n+" failed: "+t,t,[n]))}d&&(useInteractive=!0),this.depMaps.push(l),x.completeLoad(a),h([a],o)}),void i.load(t.name,h,o,F))})),x.enable(i,this),this.pluginMaps[i.id]=i},enable:function(){z[this.map.id]=this,this.enabled=!0,this.enabling=!0,each(this.depMaps,bind(this,function(t,n){var e,i,o;if("string"==typeof t){if(t=r(t,this.map.isDefine?this.map:this.map.parentMap,!1,!this.skipMap),this.depMaps[n]=t,o=getOwn(y,t.id))return void(this.depExports[n]=o(this));this.depCount+=1,l(t,"defined",bind(this,function(t){this.undefed||(this.defineDep(n,t),this.check())})),this.errback?l(t,"error",bind(this,this.errback)):this.events.error&&l(t,"error",bind(this,function(t){this.emit("error",t)}))}e=t.id,i=k[e],hasProp(y,e)||!i||i.enabled||x.enable(t,this)})),eachProp(this.pluginMaps,bind(this,function(t){var n=getOwn(k,t.id);n&&!n.enabled&&x.enable(t,this)})),this.enabling=!1,this.check()},on:function(t,n){var e=this.events[t];e||(e=this.events[t]=[]),e.push(n)},emit:function(t,n){each(this.events[t],function(t){t(n)}),"error"===t&&delete this.events[t]}},x={config:F,contextName:t,registry:k,defined:U,urlFetched:j,defQueue:$,defQueueMap:{},Module:g,makeModuleMap:r,nextTick:req.nextTick,onError:p,configure:function(t){if(t.baseUrl&&"/"!==t.baseUrl.charAt(t.baseUrl.length-1)&&(t.baseUrl+="/"),"string"==typeof t.urlArgs){var n=t.urlArgs;t.urlArgs=function(t,e){return(-1===e.indexOf("?")?"?":"&")+n}}var e=F.shim,i={paths:!0,bundles:!0,config:!0,map:!0};eachProp(t,function(t,n){i[n]?(F[n]||(F[n]={}),mixin(F[n],t,!0,!0)):F[n]=t}),t.bundles&&eachProp(t.bundles,function(t,n){each(t,function(t){t!==n&&(C[t]=n)})}),t.shim&&(eachProp(t.shim,function(t,n){isArray(t)&&(t={deps:t}),!t.exports&&!t.init||t.exportsFn||(t.exportsFn=x.makeShimExports(t)),e[n]=t}),F.shim=e),t.packages&&each(t.packages,function(t){var n,e;t="string"==typeof t?{name:t}:t,e=t.name,n=t.location,n&&(F.paths[e]=t.location),F.pkgs[e]=t.name+"/"+(t.main||"main").replace(currDirRegExp,"").replace(jsSuffixRegExp,"")}),eachProp(k,function(t,n){t.inited||t.map.unnormalized||(t.map=r(n,null,!0))}),(t.deps||t.callback)&&x.require(t.deps||[],t.callback)},makeShimExports:function(t){function n(){var n;return t.init&&(n=t.init.apply(global,arguments)),n||t.exports&&getGlobal(t.exports)}return n},makeRequire:function(n,o){function a(e,i,l){var d,c,u;return o.enableBuildCallback&&i&&isFunction(i)&&(i.__requireJsBuild=!0),"string"==typeof e?isFunction(i)?p(makeError("requireargs","Invalid require call"),l):n&&hasProp(y,e)?y[e](k[n.id]):req.get?req.get(x,e,n,a):(c=r(e,n,!1,!0),d=c.id,hasProp(U,d)?U[d]:p(makeError("notloaded",'Module name "'+d+'" has not been loaded yet for context: '+t+(n?"":". Use require([])")))):(v(),x.nextTick(function(){v(),u=s(r(null,n)),u.skipMap=o.skipMap,u.init(e,i,l,{enabled:!0}),m()}),a)}return o=o||{},mixin(a,{isBrowser:isBrowser,toUrl:function(t){var i,o=t.lastIndexOf("."),a=t.split("/")[0],r="."===a||".."===a;return-1!==o&&(!r||o>1)&&(i=t.substring(o,t.length),t=t.substring(0,o)),x.nameToUrl(e(t,n&&n.id,!0),i,!0)},defined:function(t){return hasProp(U,r(t,n,!1,!0).id)},specified:function(t){return t=r(t,n,!1,!0).id,hasProp(U,t)||hasProp(k,t)}}),n||(a.undef=function(t){d();var e=r(t,n,!0),o=getOwn(k,t);o.undefed=!0,i(t),delete U[t],delete j[e.url],delete q[t],eachReverse($,function(n,e){n[0]===t&&$.splice(e,1)}),delete x.defQueueMap[t],o&&(o.events.defined&&(q[t]=o.events),c(t))}),a},enable:function(t){getOwn(k,t.id)&&s(t).enable()},completeLoad:function(t){var n,e,i,a=getOwn(F.shim,t)||{},r=a.exports;for(d();$.length;){if(e=$.shift(),null===e[0]){if(e[0]=t,n)break;n=!0}else e[0]===t&&(n=!0);f(e)}if(x.defQueueMap={},i=getOwn(k,t),!n&&!hasProp(U,t)&&i&&!i.inited){if(!(!F.enforceDefine||r&&getGlobal(r)))return o(t)?void 0:p(makeError("nodefine","No define call for "+t,null,[t]));f([t,a.deps||[],a.exportsFn])}m()},nameToUrl:function(t,n,e){var i,o,a,r,s,l,p,d=getOwn(F.pkgs,t);if(d&&(t=d),p=getOwn(C,t))return x.nameToUrl(p,n,e);if(req.jsExtRegExp.test(t))s=t+(n||"");else{for(i=F.paths,o=t.split("/"),a=o.length;a>0;a-=1)if(r=o.slice(0,a).join("/"),l=getOwn(i,r)){isArray(l)&&(l=l[0]),o.splice(0,a,l);break}s=o.join("/"),s+=n||(/^data\:|^blob\:|\?/.test(s)||e?"":".js"),s=("/"===s.charAt(0)||s.match(/^[\w\+\.\-]+:/)?"":F.baseUrl)+s}return F.urlArgs&&!/^blob\:/.test(s)?s+F.urlArgs(t,s):s},load:function(t,n){req.load(x,t,n)},execCb:function(t,n,e,i){return n.apply(i,e)},onScriptLoad:function(t){if("load"===t.type||readyRegExp.test((t.currentTarget||t.srcElement).readyState)){interactiveScript=null;var n=_(t);x.completeLoad(n.id)}},onScriptError:function(t){var n=_(t);if(!o(n.id)){var e=[];return eachProp(k,function(t,i){0!==i.indexOf("_@r")&&each(t.depMaps,function(t){if(t.id===n.id)return e.push(i),!0})}),p(makeError("scripterror",'Script error for "'+n.id+(e.length?'", needed by: '+e.join(", "):'"'),t,[n.id]))}}},x.require=x.makeRequire(),x}function getInteractiveScript(){return interactiveScript&&"interactive"===interactiveScript.readyState?interactiveScript:(eachReverse(scripts(),function(t){if("interactive"===t.readyState)return interactiveScript=t}),interactiveScript)}var req,s,head,baseElement,dataMain,src,interactiveScript,currentlyAddingScript,mainScript,subPath,version="2.3.3",commentRegExp=/\/\*[\s\S]*?\*\/|([^:"'=]|^)\/\/.*$/gm,cjsRequireRegExp=/[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g,jsSuffixRegExp=/\.js$/,currDirRegExp=/^\.\//,op=Object.prototype,ostring=op.toString,hasOwn=op.hasOwnProperty,isBrowser=!("undefined"==typeof window||"undefined"==typeof navigator||!window.document),isWebWorker=!isBrowser&&"undefined"!=typeof importScripts,readyRegExp=isBrowser&&"PLAYSTATION 3"===navigator.platform?/^complete$/:/^(complete|loaded)$/,defContextName="_",isOpera="undefined"!=typeof opera&&"[object Opera]"===opera.toString(),contexts={},cfg={},globalDefQueue=[],useInteractive=!1;if(void 0===define){if(void 0!==requirejs){if(isFunction(requirejs))return;cfg=requirejs,requirejs=void 0}void 0===require||isFunction(require)||(cfg=require,require=void 0),req=requirejs=function(t,n,e,i){var o,a,r=defContextName;return isArray(t)||"string"==typeof t||(a=t,isArray(n)?(t=n,n=e,e=i):t=[]),a&&a.context&&(r=a.context),o=getOwn(contexts,r),o||(o=contexts[r]=req.s.newContext(r)),a&&o.configure(a),o.require(t,n,e)},req.config=function(t){return req(t)},req.nextTick=void 0!==setTimeout?function(t){setTimeout(t,4)}:function(t){t()},require||(require=req),req.version=version,req.jsExtRegExp=/^\/|:|\?|\.js$/,req.isBrowser=isBrowser,s=req.s={contexts:contexts,newContext:newContext},req({}),each(["toUrl","undef","defined","specified"],function(t){req[t]=function(){var n=contexts[defContextName];return n.require[t].apply(n,arguments)}}),isBrowser&&(head=s.head=document.getElementsByTagName("head")[0],(baseElement=document.getElementsByTagName("base")[0])&&(head=s.head=baseElement.parentNode)),req.onError=defaultOnError,req.createNode=function(t,n,e){var i=t.xhtml?document.createElementNS("http://www.w3.org/1999/xhtml","html:script"):document.createElement("script");return i.type=t.scriptType||"text/javascript",i.charset="utf-8",i.async=!0,i},req.load=function(t,n,e){var i,o=t&&t.config||{};if(isBrowser)return i=req.createNode(o,n,e),i.setAttribute("data-requirecontext",t.contextName),i.setAttribute("data-requiremodule",n),!i.attachEvent||i.attachEvent.toString&&i.attachEvent.toString().indexOf("[native code")<0||isOpera?(i.addEventListener("load",t.onScriptLoad,!1),i.addEventListener("error",t.onScriptError,!1)):(useInteractive=!0,i.attachEvent("onreadystatechange",t.onScriptLoad)),i.src=e,o.onNodeCreated&&o.onNodeCreated(i,o,n,e),currentlyAddingScript=i,baseElement?head.insertBefore(i,baseElement):head.appendChild(i),currentlyAddingScript=null,i;if(isWebWorker)try{setTimeout(function(){},0),importScripts(e),t.completeLoad(n)}catch(i){t.onError(makeError("importscripts","importScripts failed for "+n+" at "+e,i,[n]))}},isBrowser&&!cfg.skipDataMain&&eachReverse(scripts(),function(t){if(head||(head=t.parentNode),dataMain=t.getAttribute("data-main"))return mainScript=dataMain,cfg.baseUrl||-1!==mainScript.indexOf("!")||(src=mainScript.split("/"),mainScript=src.pop(),subPath=src.length?src.join("/")+"/":"./",cfg.baseUrl=subPath),mainScript=mainScript.replace(jsSuffixRegExp,""),req.jsExtRegExp.test(mainScript)&&(mainScript=dataMain),cfg.deps=cfg.deps?cfg.deps.concat(mainScript):[mainScript],!0}),define=function(t,n,e){var i,o;"string"!=typeof t&&(e=n,n=t,t=null),isArray(n)||(e=n,n=null),!n&&isFunction(e)&&(n=[],e.length&&(e.toString().replace(commentRegExp,commentReplace).replace(cjsRequireRegExp,function(t,e){n.push(e)}),n=(1===e.length?["require"]:["require","exports","module"]).concat(n))),useInteractive&&(i=currentlyAddingScript||getInteractiveScript())&&(t||(t=i.getAttribute("data-requiremodule")),o=contexts[i.getAttribute("data-requirecontext")]),o?(o.defQueue.push([t,n,e]),o.defQueueMap[t]=!0):globalDefQueue.push([t,n,e])},define.amd={jQuery:!0},req.exec=function(text){return eval(text)},req(cfg)}}(this,"undefined"==typeof setTimeout?void 0:setTimeout),formintorjs.requirejs=requirejs,formintorjs.require=require,formintorjs.define=define}}(),formintorjs.define("requireLib",function(){}),formintorjs.define("text",["module"],function(t){"use strict";var n,e,i=["Msxml2.XMLHTTP","Microsoft.XMLHTTP","Msxml2.XMLHTTP.4.0"],o=/^\s*<\?xml(\s)+version=[\'\"](\d)*.(\d)*[\'\"](\s)*\?>/im,a=/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im,r="undefined"!=typeof location&&location.href,s=r&&location.protocol&&location.protocol.replace(/\:/,""),l=r&&location.hostname,p=r&&(location.port||void 0),d=[],c=t.config&&t.config()||{};return n={version:"2.0.3",strip:function(t){if(t){t=t.replace(o,"");var n=t.match(a);n&&(t=n[1])}else t="";return t},jsEscape:function(t){return t.replace(/(['\\])/g,"\\$1").replace(/[\f]/g,"\\f").replace(/[\b]/g,"\\b").replace(/[\n]/g,"\\n").replace(/[\t]/g,"\\t").replace(/[\r]/g,"\\r").replace(/[\u2028]/g,"\\u2028").replace(/[\u2029]/g,"\\u2029")},createXhr:c.createXhr||function(){var t,n,e;if("undefined"!=typeof XMLHttpRequest)return new XMLHttpRequest;if("undefined"!=typeof ActiveXObject)for(n=0;n<3;n+=1){e=i[n];try{t=new ActiveXObject(e)}catch(t){}if(t){i=[e];break}}return t},parseName:function(t){var n=!1,e=t.indexOf("."),i=t.substring(0,e),o=t.substring(e+1,t.length);return e=o.indexOf("!"),-1!==e&&(n=o.substring(e+1,o.length),n="strip"===n,o=o.substring(0,e)),{moduleName:i,ext:o,strip:n}},xdRegExp:/^((\w+)\:)?\/\/([^\/\\]+)/,useXhr:function(t,e,i,o){var a,r,s,l=n.xdRegExp.exec(t);return!l||(a=l[2],r=l[3],r=r.split(":"),s=r[1],r=r[0],!(a&&a!==e||r&&r.toLowerCase()!==i.toLowerCase()||(s||r)&&s!==o))},finishLoad:function(t,e,i,o){i=e?n.strip(i):i,c.isBuild&&(d[t]=i),o(i)},load:function(t,e,i,o){if(o.isBuild&&!o.inlineText)return void i();c.isBuild=o.isBuild;var a=n.parseName(t),d=a.moduleName+"."+a.ext,u=e.toUrl(d),m=c.useXhr||n.useXhr;!r||m(u,s,l,p)?n.get(u,function(e){n.finishLoad(t,a.strip,e,i)},function(t){i.error&&i.error(t)}):e([d],function(t){n.finishLoad(a.moduleName+"."+a.ext,a.strip,t,i)})},write:function(t,e,i,o){if(d.hasOwnProperty(e)){var a=n.jsEscape(d[e]);i.asModule(t+"!"+e,"define(function () { return '"+a+"';});\n")}},writeFile:function(t,e,i,o,a){var r=n.parseName(e),s=r.moduleName+"."+r.ext,l=i.toUrl(r.moduleName+"."+r.ext)+".js";n.load(s,i,function(e){var i=function(t){return o(l,t)};i.asModule=function(t,n){return o.asModule(t,l,n)},n.write(t,s,i,a)},a)}},"node"===c.env||!c.env&&"undefined"!=typeof process&&process.versions&&process.versions.node?(e=require.nodeRequire("fs"),n.get=function(t,n){var i=e.readFileSync(t,"utf8");0===i.indexOf("\ufeff")&&(i=i.substring(1)),n(i)}):"xhr"===c.env||!c.env&&n.createXhr()?n.get=function(t,e,i){var o=n.createXhr();o.open("GET",t,!0),c.onXhr&&c.onXhr(o,t),o.onreadystatechange=function(n){var a,r;4===o.readyState&&(a=o.status,a>399&&a<600?(r=new Error(t+" HTTP status: "+a),r.xhr=o,i(r)):e(o.responseText))},o.send(null)}:("rhino"===c.env||!c.env&&"undefined"!=typeof Packages&&"undefined"!=typeof java)&&(n.get=function(t,n){var e,i,o=new java.io.File(t),a=java.lang.System.getProperty("line.separator"),r=new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(o),"utf-8")),s="";try{for(e=new java.lang.StringBuffer,i=r.readLine(),i&&i.length()&&65279===i.charAt(0)&&(i=i.substring(1)),e.append(i);null!==(i=r.readLine());)e.append(a),e.append(i);s=String(e.toString())}finally{r.close()}n(s)}),n}),formintorjs.define("text!admin/templates/popups.html",[],function(){return'<div>\r\n\r\n\t\x3c!-- Base Structure --\x3e\r\n\t<script type="text/template" id="popup-tpl">\r\n\r\n\t\t<div class="sui-modal">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-popup__title"\r\n\t\t\t\taria-describedby="forminator-popup__description"\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- Modal Header: Center-aligned title with floating close button --\x3e\r\n\t<script type="text/template" id="popup-header-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg">{{ title }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- Modal Header: Inline title and close button --\x3e\r\n\t<script type="text/template" id="popup-header-inline-tpl">\r\n\r\n\t\t<div class="sui-box-header">\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title">{{ title }}</h3>\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button class="sui-button-icon forminator-popup-close" data-modal-close>\r\n\t\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-integration-tpl">\r\n\r\n\t\t<div class="sui-modal sui-modal-sm">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-integration-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-integration-popup__title"\r\n\t\t\t\taria-describedby="forminator-integration-popup__description"\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-integration-content-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<figure class="sui-box-logo" aria-hidden="true">\r\n\r\n\t\t\t\t<img\r\n\t\t\t\t\tsrc="{{ image }}"\r\n\t\t\t\t\tsrcset="{{ image }} 1x, {{ image_x2 }} 2x"\r\n\t\t\t\t\talt="{{ title }}"\r\n\t\t\t\t/>\r\n\r\n\t\t\t</figure>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--left forminator-addon-back" style="display: none;">\r\n\t\t\t\t<span class="sui-icon-chevron-left sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Back</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-integration-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<div class="forminator-integration-popup__header"></div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="forminator-integration-popup__body sui-box-body"></div>\r\n\r\n\t\t<div class="forminator-integration-popup__footer sui-box-footer sui-flatten sui-content-separated"></div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-loader-tpl">\r\n\r\n\t\t<p style="margin: 0; text-align: center;" aria-hidden="true"><span class="sui-icon-loader sui-md sui-loading"></span></p>\r\n\t\t<p class="sui-screen-reader-text">Loading content...</p>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-stripe-tpl">\r\n\r\n\t\t<div class="sui-modal sui-modal-md">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-stripe-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-stripe-popup__title"\r\n\t\t\t\taria-describedby=""\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-stripe-content-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<figure class="sui-box-logo" aria-hidden="true">\r\n\t\t\t\t<img src="{{ image }}" srcset="{{ image }} 1x, {{ image_x2 }} 2x" alt="{{ title }}" />\r\n\t\t\t</figure>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close">\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-stripe-popup__title" class="sui-box-title sui-lg" style="overflow: initial; display: none; white-space: normal; text-overflow: initial;">{{ title }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10"></div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center"></div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-slide-tpl">\r\n\t\t<div class="sui-modal sui-modal-lg">\r\n\t\t\t<div\r\n\t\t\t\t\trole="dialog"\r\n\t\t\t\t\tid="forminator-popup"\r\n\t\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\t\taria-modal="true"\r\n\t\t\t\t\taria-labelledby="forminator-slide-popup__title"\r\n\t\t\t\t\taria-describedby="forminator-slide-popup__description"\r\n\t\t\t>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t<\/script>\r\n\r\n</div>\r\n'}),function(t){window.empty=function(t){return void 0===t||!t},window.count=function(t){return void 0===t?0:t&&t.length?t.length:0},window.stripslashes=function(t){return(t+"").replace(/\\(.?)/g,function(t,n){switch(n){case"\\":return"\\";case"0":return"\0";case"":return"";default:return n}})},window.forminator_array_value_exists=function(t,n){return!_.isUndefined(t[n])&&!_.isEmpty(t[n])},window.decodeHtmlEntity=function(t){return void 0===t?t:t.replace(/&#(\d+);/g,function(t,n){return String.fromCharCode(n)})},window.encodeHtmlEntity=function(t){if(void 0===t)return t;for(var n=[],e=t.length-1;e>=0;e--)n.unshift(["&#",t[e].charCodeAt(),";"].join(""));return n.join("")},window.singularPluralText=function(t,n,e){var i="";return i=t<2?n:e,t+" "+i},window.isTrue=function(t){if(void 0===t)return!1;switch("string"==typeof t&&(t=t.trim().toLowerCase()),t){case!0:case"true":case 1:case"1":case"on":case"yes":return!0;default:return!1}},formintorjs.define("admin/utils",["text!admin/templates/popups.html"],function(n){var e={fields_ids:[],google_font_families:[],is_touch:function(){return Forminator.Data.is_touch},is_mobile_size:function(){return window.screen.width<=782},is_mobile:function(){return!(!Forminator.Utils.is_touch()&&!Forminator.Utils.is_mobile_size())},template:function(t){return _.templateSettings={evaluate:/\{\[([\s\S]+?)\]\}/g,interpolate:/\{\{([\s\S]+?)\}\}/g},_.template(t)},template_php:function(t){var n=_.templateSettings,e=!1;return _.templateSettings={interpolate:/<\?php echo (.+?) \?>/g,evaluate:/<\?php (.+?) \?>/g},e=_.template(t),_.templateSettings=n,function(t){return _.each(t,function(n,e){t["$"+e]=n}),e(t)}},ucfirst:function(t){return t.charAt(0).toUpperCase()+t.slice(1)},get_slug:function(t){return t=t.replace(" ","-"),t=t.replace(/[^-a-zA-Z0-9]/,"")},sanitize_uri_string:function(t){var n=decodeURIComponent(t);return n=n.replace(/-/g," ")},sanitize_text_field:function(t){if(!_.isUndefined(t)){return String(t).replace(/[&\/\\#^+()$~%.'":*?<>{}!@]/g,"").trim()}return t},get_url_param:function(t){for(var n=window.location.search.substring(1),e=n.split("&"),i=0;i<e.length;i++){var o=e[i].split("=");if(o[0]===t)return o[1]}return!1},is_email_wp:function(t){if(t.length<6)return!1;if(t.indexOf("@",1)<0)return!1;var n=t.split("@",2);if(!n[0].match(/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~\.-]+$/))return!1;if(n[1].match(/\.{2,}/))return!1;var e=n[1],i=e.split(".");if(i.length<2)return!1;for(var o=i.length,a=0;a<o;a++)if(!i[a].match(/^[a-z0-9-]+$/i))return!1;return!0},forminator_select2_tags:function(n,e){n.find("select.sui-select.fui-multi-select").each(function(){var n=t(this),i=n.closest(".sui-modal-content"),o=i.attr("id"),a=t(i.length?"#"+o:"SUI_BODY_CLASS"),r="true"===n.attr("data-search")?0:-1,s=n.hasClass("sui-select-sm")?"sui-select-dropdown-sm":"";e=_.defaults(e,{dropdownParent:a,minimumResultsForSearch:r,dropdownCssClass:s}),n.attr("data-reorder")&&n.on("select2:select",function(e){var i=e.params.data.element,o=t(i),a=n;a.append(o),a.trigger("change.select2")}),n.SUIselect2(e)})},forminator_select2_custom:function(n,e){n.find("select.sui-select.custom-select2").each(function(){var n=t(this),i=n.closest(".sui-modal-content"),o=i.attr("id"),a=t(i.length?"#"+o:"body"),r="true"===n.attr("data-search")?0:-1,s=n.hasClass("sui-select-sm")?"sui-select-dropdown-sm":"";e=_.defaults(e,{dropdownParent:a,minimumResultsForSearch:r,dropdownCssClass:s}),n.attr("data-reorder")&&n.on("select2:select",function(n){var e=n.params.data.element,i=t(e),o=t(this);o.append(i),o.trigger("change.select2")}),n.SUIselect2(e)})},init_select2:function(){window.SUI},load_google_fonts:function(n){var e=this;t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_load_google_fonts",_wpnonce:Forminator.Data.gFontNonce}}).done(function(t){!0===t.success&&(e.google_font_families=t.data),n.apply(t,[e.google_font_families])})},sui_delegate_events:function(){"object"==typeof window.SUI&&setTimeout(function(){SUI.suiAccordion(t(".sui-accordion")),SUI.suiTabs(t(".sui-tabs")),t('select.sui-select[data-theme="icon"]').each(function(){SUI.select.initIcon(t(this))}),t('select.sui-select[data-theme="color"]').each(function(){SUI.select.initColor(t(this))}),t('select.sui-select[data-theme="search"]').each(function(){SUI.select.initSearch(t(this))}),t("select.sui-select:not([data-theme]):not(.custom-select2):not(.fui-multi-select)").each(function(){SUI.select.init(t(this))}),t("select.sui-variables").each(function(){SUI.select.initVars(t(this))}),SUI.loadCircleScore(t(".sui-circle-score")),SUI.showHidePassword()},50)}},i={$popup:{},_deferred:{},initialize:function(){var e=Forminator.Utils.template(t(n).find("#popup-tpl").html());t("#forminator-popup").length?(t("#forminator-popup").remove(),this.initialize()):t("main.sui-wrap").append(e({})),this.$popup=t("#forminator-popup"),this.$popupId="forminator-popup",this.$focusAfterClosed="wpbody-content"},open:function(e,i,o,a){this.data=i,this.title="",this.action_text="",this.action_callback=!1,this.action_css_class="",this.has_custom_box=!1,this.has_footer=!0;var r="";switch(a){case"inline":r=Forminator.Utils.template(t(n).find("#popup-header-inline-tpl").html())
-;break;case"center":r=Forminator.Utils.template(t(n).find("#popup-header-tpl").html())}_.isUndefined(this.data)||(_.isUndefined(this.data.title)||(this.title=Forminator.Utils.sanitize_text_field(this.data.title)),_.isUndefined(this.data.has_footer)||(this.has_footer=this.data.has_footer),_.isUndefined(this.data.action_callback)||_.isUndefined(this.data.action_text)||(this.action_callback=this.data.action_callback,this.action_text=this.data.action_text,_.isUndefined(this.data.action_css_class)||(this.action_css_class=this.data.action_css_class)),_.isUndefined(this.data.has_custom_box)||(this.has_custom_box=this.data.has_custom_box)),this.initialize(),""!==r&&this.$popup.find(".sui-box").html(r({title:this.title}));var s=this,l=function(){return s.close(),!1};if(o&&this.$popup.closest(".sui-modal").addClass("sui-modal-"+o),this.has_custom_box)e.apply(this.$popup.find(".sui-box").get(),i);else{var p='<div class="sui-box-body"></div>';this.has_footer&&(p+='<div class="sui-box-footer"><button class="sui-button forminator-popup-cancel">'+Forminator.l10n.popup.cancel+"</button></div>"),this.$popup.find(".sui-box").append(p),e.apply(this.$popup.find(".sui-box-body").get(),i)}if(this.action_text&&this.action_callback){var d=this.action_callback;this.$popup.find(".sui-box-footer").append('<div class="sui-actions-right"><button class="forminator-popup-action sui-button '+this.action_css_class+'">'+this.action_text+"</button></div>"),this.$popup.find(".forminator-popup-action").on("click",function(){d&&d.apply(),s.close()})}else this.$popup.find(".forminator-popup-action").remove();return this.$popup.find(".forminator-popup-close").on("click",l),this.$popup.find(".forminator-popup-cancel").on("click",l),this.$popup.on("click",".forminator-popup-cancel",l),SUI.openModal(this.$popupId,this.$focusAfterClosed,void 0,!0,!0),Forminator.Utils.sui_delegate_events(),this._deferred=new t.Deferred,this._deferred.promise()},close:function(t,n){var e=this;SUI.closeModal(),setTimeout(function(){e.$popup.closest(".sui-modal").removeClass("sui-modal-sm").removeClass("sui-modal-md").removeClass("sui-modal-lg").removeClass("sui-modal-xl"),n&&n.apply()},300),this._deferred.resolve(this.$popup,t)}},o={$notification:{},_deferred:{},initialize:function(){t(".sui-floating-notices").length?(t(".sui-floating-notices").remove(),this.initialize()):t("main.sui-wrap").prepend('<div class="sui-floating-notices"><div role="alert" id="forminator-floating-notification" class="sui-notice" aria-live="assertive"></div></div>'),this.$notification=t("#forminator-floating-notification")},open:function(n,e,i){var o=this;return _.isUndefined(i)||5e3,this.uniq="forminator-floating-notification",this.text="<p>"+e+"</p>",this.type="",this.time=i||5e3,_.isUndefined(n)||""===n||(this.type=n),_.isUndefined(i)||(this.time=i),this.opts={type:this.type,autoclose:{show:!0,timeout:this.time}},this.initialize(),SUI.openNotice(this.uniq,this.text,this.opts),setTimeout(function(){o.close()},3e3),this._deferred=new t.Deferred,this._deferred.promise()},close:function(t){this._deferred.resolve(this.$popup,t)}};return{Utils:e,Popup:i,Integrations_Popup:{$popup:{},_deferred:{},initialize:function(){var e=Forminator.Utils.template(t(n).find("#popup-integration-tpl").html());t("#forminator-integration-popup").length?(t("#forminator-integration-popup").remove(),this.initialize()):t("main.sui-wrap").append(e({provider_image:"",provider_image2:"",provider_title:""})),this.$popup=t("#forminator-integration-popup"),this.$popupId="forminator-integration-popup",this.$focusAfterClosed="forminator-integrations-page"},open:function(e,i,o){this.data=i,this.title="",this.image="",this.image_x2="",this.action_text="",this.action_callback=!1,this.action_css_class="",this.has_custom_box=!1,this.has_footer=!0,_.isUndefined(this.data)||(_.isUndefined(this.data.title)||(this.title=this.data.title),_.isUndefined(this.data.image)||(this.image=this.data.image),_.isUndefined(this.data.image_x2)||(this.image_x2=this.data.image_x2)),this.initialize();var a=Forminator.Utils.template(t(n).find("#popup-integration-content-tpl").html());this.$popup.find(".sui-box").html(a({image:this.image,image_x2:this.image_x2,title:this.title}));var r=this,s=function(){return r.close(),!1};if(o&&this.$popup.addClass(o),e.apply(this.$popup.get(),i),this.action_text&&this.action_callback){var l=this.action_callback;this.$popup.find(".sui-box-footer").append('<button class="forminator-popup-action sui-button '+this.action_css_class+'">'+this.action_text+"</button>"),this.$popup.find(".forminator-popup-action").on("click",function(){l&&l.apply(),r.close()})}else this.$popup.find(".forminator-popup-action").remove();return this.$popup.find(".sui-dialog-close").on("click",s),this.$popup.on("click",".forminator-popup-cancel",s),SUI.openModal(this.$popupId,this.$focusAfterClosed),Forminator.Utils.sui_delegate_events(),this._deferred=new t.Deferred,this._deferred.promise()},close:function(t,n){Forminator.Events.trigger("forminator:addons:reload"),SUI.closeModal(),setTimeout(function(){n&&n.apply()},300),this._deferred.resolve(this.$popup,t)}},Stripe_Popup:{$popup:{},_deferred:{},initialize:function(){var e=Forminator.Utils.template(t(n).find("#popup-stripe-tpl").html());t("#forminator-stripe-popup").length?(t("#forminator-stripe-popup").remove(),this.initialize()):t("main.sui-wrap").append(e({provider_image:"",provider_image2:"",provider_title:""})),this.$popup=t("#forminator-stripe-popup"),this.$popupId="forminator-stripe-popup",this.$focusAfterClosed="wpbody-content"},open:function(e,i){this.data=i,this.title="",this.image="",this.image_x2="",this.action_text="",this.action_callback=!1,this.action_css_class="",this.has_custom_box=!1,this.has_footer=!0,_.isUndefined(this.data)||(_.isUndefined(this.data.title)||(this.title=this.data.title),_.isUndefined(this.data.image)||(this.image=this.data.image),_.isUndefined(this.data.image_x2)||(this.image_x2=this.data.image_x2)),this.initialize();var o=Forminator.Utils.template(t(n).find("#popup-stripe-content-tpl").html());this.$popup.find(".sui-box").html(o({image:this.image,image_x2:this.image_x2,title:this.title})),this.$popup.find(".sui-box-footer").css({"padding-top":"0"});var a=this,r=function(){return a.close(),!1};if(e.apply(this.$popup.get(),i),this.action_text&&this.action_callback){var s=this.action_callback;this.$popup.find(".sui-box-footer").append('<div class="sui-actions-right"><button class="forminator-popup-action sui-button '+this.action_css_class+'">'+this.action_text+"</button></div>"),this.$popup.find(".forminator-popup-action").on("click",function(){s&&s.apply(),a.close()})}else this.$popup.find(".forminator-popup-action").remove();return this.$popup.find(".forminator-popup-close").on("click",r),this.$popup.on("click",".forminator-popup-cancel",r),SUI.openModal(this.$popupId,this.$focusAfterClosed,void 0,!0,!0),Forminator.Utils.sui_delegate_events(),this._deferred=new t.Deferred,this._deferred.promise()},close:function(t,n){SUI.closeModal();var e=this;setTimeout(function(){e.$popup.closest(".sui-modal").removeClass("sui-modal-sm").removeClass("sui-modal-md").removeClass("sui-modal-lg").removeClass("sui-modal-xl"),n&&n.apply()},300),this._deferred.resolve(this.$popup,t)}},Notification:o,Slide_Popup:{$popup:{},_deferred:{},initialize:function(){var e=Forminator.Utils.template(t(n).find("#popup-slide-tpl").html());t("#forminator-popup").length?(t("#forminator-popup").remove(),this.initialize()):t("main.sui-wrap").append(e({})),this.$popup=t("#forminator-popup"),this.$popupId="forminator-popup",this.$focusAfterClosed="wpbody-content"},open:function(e,i,o,a){this.data=i,this.title="",this.action_text="",this.action_callback=!1,this.action_css_class="",this.has_custom_box=!1,this.has_footer=!0;var r="";switch(a){case"inline":r=Forminator.Utils.template(t(n).find("#popup-header-inline-tpl").html());break;case"center":r=Forminator.Utils.template(t(n).find("#popup-header-tpl").html())}_.isUndefined(this.data)||(_.isUndefined(this.data.title)||(this.title=this.data.title),_.isUndefined(this.data.has_footer)||(this.has_footer=this.data.has_footer),_.isUndefined(this.data.action_callback)||_.isUndefined(this.data.action_text)||(this.action_callback=this.data.action_callback,this.action_text=this.data.action_text,_.isUndefined(this.data.action_css_class)||(this.action_css_class=this.data.action_css_class)),_.isUndefined(this.data.has_custom_box)||(this.has_custom_box=this.data.has_custom_box)),this.initialize(),""!==r&&this.$popup.html(r({title:this.title}));var s=this,l=function(){return s.close(),!1};if(o&&this.$popup.closest(".sui-modal").addClass("sui-modal-"+o),this.has_custom_box)e.apply(this.$popup.get(),i);else{var p='<div class="sui-box-body"></div>';this.has_footer&&(p+='<div class="sui-box-footer"><button class="sui-button forminator-popup-cancel">'+Forminator.l10n.popup.cancel+"</button></div>"),this.$popup.append(p),e.apply(this.$popup.find(".sui-box-body").get(),i)}if(this.action_text&&this.action_callback){var d=this.action_callback;this.$popup.find(".sui-box-footer").append('<div class="sui-actions-right"><button class="forminator-popup-action sui-button '+this.action_css_class+'">'+this.action_text+"</button></div>"),this.$popup.find(".forminator-popup-action").on("click",function(){d&&d.apply(),s.close()})}else this.$popup.find(".forminator-popup-action").remove();return this.$popup.find(".forminator-popup-close").on("click",l),this.$popup.find(".forminator-popup-cancel").on("click",l),this.$popup.on("click",".forminator-popup-cancel",l),SUI.openModal(this.$popupId,this.$focusAfterClosed,void 0,!0,!0),Forminator.Utils.sui_delegate_events(),this._deferred=new t.Deferred,this._deferred.promise()},close:function(t,n){var e=this;SUI.closeModal(),setTimeout(function(){e.$popup.closest(".sui-modal").removeClass("sui-modal-sm").removeClass("sui-modal-md").removeClass("sui-modal-lg").removeClass("sui-modal-xl"),n&&n.apply()},300),this._deferred.resolve(this.$popup,t)}}}})}(jQuery),function(t){formintorjs.define("admin/dashboard",[],function(n){return new(Backbone.View.extend({el:".wpmudev-dashboard-section",events:{"click .wpmudev-action-close":"dismiss_welcome"},initialize:function(){var n=Forminator.Utils.get_url_param("notification"),e=Forminator.Utils.get_url_param("title"),i=Forminator.Utils.get_url_param("createnew");if(setTimeout(function(){t(".forminator-scroll-to").length&&t("html, body").animate({scrollTop:t(".forminator-scroll-to").offset().top-50},"slow")},100),n){var o=_.template("<strong>{{ formName }}</strong> {{ Forminator.l10n.options.been_published }}");Forminator.Notification.open("success",o({formName:Forminator.Utils.sanitize_uri_string(e)}),4e3)}return i&&setTimeout(function(){jQuery(".forminator-create-"+i).click()},200),this.render()},dismiss_welcome:function(n){n.preventDefault();var e=t(n.target).closest(".sui-box"),i=t(n.target).data("nonce");e.slideToggle(300,function(){t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_dismiss_welcome",_ajax_nonce:i},complete:function(t){e.remove()}})})},render:function(){t("#forminator-new-feature").length>0&&setTimeout(function(){SUI.openModal("forminator-new-feature","wpbody-content")},300)}}))})}(jQuery),function(t){formintorjs.define("admin/settings-page",[],function(){var n=Backbone.View.extend({el:".wpmudev-forminator-forminator-settings, .wpmudev-forminator-forminator-addons",events:{"click .sui-side-tabs label.sui-tab-item input":"sidetabs","click .sui-sidenav .sui-vertical-tab a":"sidenav","change .sui-sidenav select.sui-mobile-nav":"sidenav_select","click .stripe-connect-modal":"open_stripe_connect_modal","click .paypal-connect-modal":"open_paypal_connect_modal","click .forminator-stripe-connect":"connect_stripe","click .disconnect_stripe":"disconnect_stripe","click .forminator-connect-addon":"connect_addon","click .forminator-paypal-connect":"connect_paypal","click .disconnect_paypal":"disconnect_paypal","click button.sui-tab-item":"buttonTabs","click .forminator-toggle-unsupported-settings":"show_unsupported_settings","click .forminator-dismiss-unsupported":"hide_unsupported_settings","click button.addons-configure":"open_configure_connect_modal","keyup input.forminator-custom-directory-value":"show_custom_directory"},initialize:function(){var n=this;if(t(".wpmudev-forminator-forminator-settings").length||t(".wpmudev-forminator-forminator-addons").length){this.$el.find(".forminator-settings-save").submit(function(e){e.preventDefault();var i=t(this),o=i.find(".wpmudev-action-done").data("nonce"),a=i.find(".wpmudev-action-done").data("action"),r=i.find(".wpmudev-action-done").data("title"),s=i.find(".wpmudev-action-done").data("isReload");n.submitForm(t(this),a,o,r,s)});var e=window.location.hash;_.isUndefined(e)||_.isEmpty(e)||this.sidenav_go_to(e.substring(1),!0),this.renderHcaptcha(),this.render("v2"),this.render("v2-invisible"),this.render("v3"),this.captchaTab()}},captchaTab:function(){var n=this.$el.find('input[name="captcha_tab_saved"]');this.$el.find("button.captcha-main-tab").on("click",function(e){e.preventDefault(),n.val(t(this).data("tab-name"))})},render:function(n){var e=this.$el.find("#"+n+"-recaptcha-preview");e.html('<p class="fui-loading-dialog"><i class="sui-icon-loader sui-loading" aria-hidden="true"></i></p>'),t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_load_recaptcha_preview",_ajax_nonce:forminatorData.loadCaptcha,captcha:n}}).done(function(t){t.success&&e.html(t.data)})},renderHcaptcha:function(){var n=this.$el.find("#hcaptcha-preview");n.html('<p class="fui-loading-dialog"><i class="sui-icon-loader sui-loading" aria-hidden="true"></i></p>'),t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_load_hcaptcha_preview",_ajax_nonce:forminatorData.loadCaptcha}}).done(function(t){t.success&&n.html(t.data)})},submitForm:function(n,e,i,o,a){var r={},s=this;r.action="forminator_save_"+e+"_popup",r._ajax_nonce=i;var l=n.serialize()+"&"+t.param(r);t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:l,beforeSend:function(){n.find(".sui-button").prop("disabled",!0),n.find(".wpmudev-action-done").addClass("sui-button-onload")},success:function(i){var r=_.template("<strong>{{ tab }}</strong> {{ Forminator.l10n.commons.update_successfully }}"),l="success",p=r({tab:Forminator.Utils.sanitize_text_field(o)});if(i.success||(l="error",p=i.data),_.isUndefined(p)||Forminator.Notification.open(l,p,4e3),"captcha"===e)$captcha_tab_saved=n.find('input[name="captcha_tab_saved"]').val(),$captcha_tab_saved=""===$captcha_tab_saved?"recaptcha":$captcha_tab_saved,"recaptcha"===$captcha_tab_saved?(s.render("v2"),s.render("v2-invisible"),s.render("v3")):"hcaptcha"===$captcha_tab_saved&&s.renderHcaptcha();else if("geolocation_settings"===e){var d=!i.success,c=t("#forminator-settings--place-ip").parent();d?c.addClass("sui-form-field-error").find(".sui-error-message").removeClass("sui-hidden"):c.removeClass("sui-form-field-error").find(".sui-error-message").addClass("sui-hidden")}a&&window.location.reload()},error:function(t){Forminator.Notification.open("error",Forminator.l10n.commons.update_unsuccessfull,4e3)}}).always(function(){n.find(".sui-button").prop("disabled",!1),n.find(".wpmudev-action-done").removeClass("sui-button-onload")})},sidetabs:function(t){var n=this.$(t.target),e=n.parent("label"),i=n.data("tab-menu"),o=n.closest(".sui-side-tabs"),a=o.find(".sui-tabs-menu .sui-tab-item"),r=a.find("input");n.is("input")&&(a.removeClass("active"),r.removeAttr("checked"),o.find(".sui-tabs-content > div").removeClass("active"),e.addClass("active"),n.prop("checked","checked"),o.find('.sui-tabs-content div[data-tab-content="'+i+'"]').length&&o.find('.sui-tabs-content div[data-tab-content="'+i+'"]').addClass("active"))},sidenav:function(n){var e=t(n.target).data("nav");e&&this.sidenav_go_to(e,!0),n.preventDefault()},sidenav_select:function(n){var e=t(n.target).val();e&&this.sidenav_go_to(e,!0),n.preventDefault()},sidenav_go_to:function(t,n){var e=this.$el.find('a[data-nav="'+t+'"]'),i=e.closest(".sui-vertical-tabs"),o=i.find(".sui-vertical-tab"),a=this.$el.find(".sui-box[data-nav]"),r=this.$el.find('.sui-box[data-nav="'+t+'"]');n&&history.pushState({selected_tab:t},"Global Settings","admin.php?page=forminator-settings&section="+t),o.removeClass("current"),a.hide(),e.parent().addClass("current"),r.show()},open_configure_connect_modal:function(n){var e=t(n.target),i=e.data("slug"),o=e.data("action");"stripe-connect-modal"===o?this.open_stripe_connect_modal(n):"paypal-connect-modal"===o?this.open_paypal_connect_modal(n):i&&this.open_connect_modal(n,i)},open_stripe_connect_modal:function(n){n.preventDefault();var e=this,i=t(n.target),o=i.data("modalImage"),a=i.data("modalImageX2"),r=i.data("modalTitle"),s=i.data("modalNonce"),l={title:Forminator.Utils.sanitize_text_field(r),image:o,image_x2:a};return Forminator.Stripe_Popup.open(function(){var n=t(this);e.render_stripe_connect_modal_content(n,s,{})},l),!1},render_stripe_connect_modal_content:function(n,e,i){var o=this;i.action="forminator_stripe_settings_modal",i._ajax_nonce=e,i.page_slug=Forminator.Utils.get_url_param("page");n.find(".sui-box-body").html('<p class="fui-loading-modal"><i class="sui-icon-loader sui-loading" aria-hidden="true"></i></p>'),t.post({url:Forminator.Data.ajaxUrl,type:"post",data:i}).done(function(t){if(t&&t.success){n.find(".sui-box-header h3.sui-box-title").show(),n.find(".sui-box-body").html(t.data.html);var i=t.data.buttons;n.find(".sui-box-footer").html(""),_.each(i,function(t){n.find(".sui-box-footer").append(t.markup)}),n.find(".sui-button").removeClass("sui-button-onload"),_.isUndefined(t.data.notification)||_.isUndefined(t.data.notification.type)||_.isUndefined(t.data.notification.text)||_.isUndefined(t.data.notification.duration)||(Forminator.Notification.open(t.data.notification.type,t.data.notification.text,t.data.notification.duration).done(function(){}),o.update_stripe_page(e))}})},update_stripe_page:function(n){var e={action:"forminator_stripe_update_page",_ajax_nonce:n};t.post({url:Forminator.Data.ajaxUrl,type:"get",data:e}).done(function(t){jQuery("#sui-box-stripe").html(t.data),Forminator.Utils.sui_delegate_events(),Forminator.Stripe_Popup.close()})},show_unsupported_settings:function(n){n.preventDefault(),t(".forminator-unsupported-settings").show()},hide_unsupported_settings:function(n){n.preventDefault(),t(".forminator-unsupported-settings").hide()},connect_stripe:function(n){n.preventDefault();var e=t(n.target);e.addClass("sui-button-onload");var i=e.data("nonce"),o=this.$el.find("#forminator-stripe-popup"),a=o.find("form"),r=a.serializeArray(),s={};return t.map(r,function(t,n){s[t.name]=t.value}),s.connect=!0,this.render_stripe_connect_modal_content(o,i,s),!1},connect_addon:function(n){n.preventDefault();var e=t(n.target);e.addClass("sui-button-onload");var i=e.data("nonce"),o=this.$el.find("#forminator-stripe-popup"),a=o.find("form"),r=a.data("slug"),s=a.serializeArray(),l={};return t.map(s,function(t,n){l[t.name]=t.value}),l.connect=!0,this.render_connect_modal_content(r,o,i,l),!1},buttonTabs:function(t){var n=this.$(t.target),e=n.closest(".sui-tabs"),i=e.find(".sui-tabs-menu .sui-tab-item"),o=e.find(".sui-tabs-content .sui-tab-content");n.is("button")&&(i.removeClass("active"),i.attr("tabindex","-1"),o.attr("hidden",!0),o.removeClass("active"),n.removeAttr("tabindex"),n.addClass("active"),e.find("#"+n.attr("aria-controls")).addClass("active"),e.find("#"+n.attr("aria-controls")).attr("hidden",!1),e.find("#"+n.attr("aria-controls")).removeAttr("hidden")),t.preventDefault()},open_connect_modal:function(n,e){n.preventDefault();var i=this,o=t(n.target),a=o.data("modalNonce");return Forminator.Stripe_Popup.open(function(){var n=t(this);i.render_connect_modal_content(e,n,a,{})},{title:forminatorl10n[e].configure_title,image:forminatorData.imagesUrl+"/"+e+"-logo.png",image_x2:forminatorData.imagesUrl+"/"+e+"-logo@2x.png"}),!1},render_connect_modal_content:function(n,e,i,o){var a=this;o.action="forminator_"+n+"_settings_modal",o._ajax_nonce=i;e.find(".sui-box-body").html('<p class="fui-loading-modal"><i class="sui-icon-loader sui-loading" aria-hidden="true"></i></p>'),t.post({url:Forminator.Data.ajaxUrl,type:"post",data:o}).done(function(t){if(t&&t.success){e.find(".sui-box-header h3.sui-box-title").show(),e.find(".sui-box-body").html(t.data.html);var n=t.data.buttons;e.find(".sui-box-footer").html(""),_.each(n,function(t){e.find(".sui-box-footer").append(t.markup)}),e.find(".sui-button").removeClass("sui-button-onload"),t.data.notification&&(a.openNotificaion(t.data.notification),a.closePopup())}else Forminator.Notification.open("error",t.data),a.closePopup()})},closePopup:function(){Forminator.Utils.sui_delegate_events(),Forminator.Stripe_Popup.close()},openNotificaion:function(t){_.isUndefined(t)||_.isUndefined(t.type)||_.isUndefined(t.text)||_.isUndefined(t.duration)||Forminator.Notification.open(t.type,t.text,t.duration).done(function(){})},open_paypal_connect_modal:function(n){n.preventDefault();var e=this,i=t(n.target),o=i.data("modalImage"),a=i.data("modalImageX2"),r=i.data("modalTitle"),s=i.data("modalNonce");return Forminator.Stripe_Popup.open(function(){var n=t(this);e.render_paypal_connect_modal_content(n,s,{})},{title:Forminator.Utils.sanitize_text_field(r),image:o,image_x2:a}),!1},render_paypal_connect_modal_content:function(n,e,i){var o=this;i.action="forminator_paypal_settings_modal",i._ajax_nonce=e,t.post({url:Forminator.Data.ajaxUrl,type:"post",data:i}).done(function(t){if(t&&t.success){n.find(".sui-box-header h3.sui-box-title").show(),n.find(".sui-box-body").html(t.data.html);var i=t.data.buttons;n.find(".sui-box-footer").html(""),_.each(i,function(t){n.find(".sui-box-footer").append(t.markup)}),n.find(".sui-button").removeClass("sui-button-onload"),_.isUndefined(t.data.notification)||_.isUndefined(t.data.notification.type)||_.isUndefined(t.data.notification.text)||_.isUndefined(t.data.notification.duration)||(Forminator.Notification.open(t.data.notification.type,t.data.notification.text,t.data.notification.duration).done(function(){}),o.update_paypal_page(e))}})},update_paypal_page:function(n){var e={action:"forminator_paypal_update_page",_ajax_nonce:n};t.post({url:Forminator.Data.ajaxUrl,type:"get",data:e}).done(function(t){jQuery("#sui-box-paypal").html(t.data),Forminator.Utils.sui_delegate_events(),Forminator.Stripe_Popup.close()})},connect_paypal:function(n){n.preventDefault();var e=t(n.target);e.addClass("sui-button-onload");var i=e.data("nonce"),o=this.$el.find("#forminator-stripe-popup"),a=o.find("form"),r=a.serializeArray(),s={};return t.map(r,function(t,n){s[t.name]=t.value}),s.connect=!0,this.render_paypal_connect_modal_content(o,i,s),!1},disconnect_stripe:function(n){var e=t(n.target),i={action:"forminator_disconnect_stripe",_ajax_nonce:e.data("nonce")};e.addClass("sui-button-onload"),t.post({url:Forminator.Data.ajaxUrl,type:"get",data:i}).done(function(t){jQuery("#sui-box-stripe").html(t.data.html),Forminator.Utils.sui_delegate_events(),Forminator.Stripe_Popup.close(),_.isUndefined(t.data.notification)||_.isUndefined(t.data.notification.type)||_.isUndefined(t.data.notification.text)||_.isUndefined(t.data.notification.duration)||Forminator.Notification.open(t.data.notification.type,t.data.notification.text,t.data.notification.duration).done(function(){})})},disconnect_paypal:function(n){var e=t(n.target),i={action:"forminator_disconnect_paypal",_ajax_nonce:e.data("nonce")};e.addClass("sui-button-onload"),t.post({url:Forminator.Data.ajaxUrl,type:"get",data:i}).done(function(t){jQuery("#sui-box-paypal").html(t.data.html),Forminator.Utils.sui_delegate_events(),Forminator.Stripe_Popup.close(),_.isUndefined(t.data.notification)||_.isUndefined(t.data.notification.type)||_.isUndefined(t.data.notification.text)||_.isUndefined(t.data.notification.duration)||Forminator.Notification.open(t.data.notification.type,t.data.notification.text,t.data.notification.duration).done(function(){})})},show_custom_directory:function(n){var e=t(n.target),i=e.val();t(".forminator-custom-directory strong").html(i)}}),n=new n;return n})}(jQuery);var forminator_render_admin_captcha=function(){setTimeout(function(){var t=jQuery(".forminator-g-recaptcha"),n=t.data("sitekey"),e=t.data("theme"),i=t.data("size");window.grecaptcha.render(t[0],{sitekey:n,theme:e,size:i})},100)},forminator_render_admin_captcha_v2=function(){setTimeout(function(){var t=jQuery(".forminator-g-recaptcha-v2"),n=t.data("sitekey"),e=t.data("theme"),i=t.data("size");window.grecaptcha.render(t[0],{sitekey:n,theme:e,size:i})},100)},forminator_render_admin_captcha_v2_invisible=function(){setTimeout(function(){var t=jQuery(".forminator-g-recaptcha-v2-invisible"),n=t.data("sitekey"),e=t.data("theme"),i=t.data("size");window.grecaptcha.render(t[0],{sitekey:n,theme:e,size:i,badge:"inline"})},100)},forminator_render_admin_captcha_v3=function(){setTimeout(function(){var t=jQuery(".forminator-g-recaptcha-v3"),n=t.data("sitekey"),e=t.data("theme"),i=t.data("size");window.grecaptcha.render(t[0],{sitekey:n,theme:e,size:i,badge:"inline"})},100)},forminator_render_admin_hcaptcha=function(){setTimeout(function(){var t=jQuery(".forminator-hcaptcha"),n=t.data("sitekey");hcaptcha.render(t[0],{sitekey:n})},1e3)};formintorjs.define("text!tpl/dashboard.html",[],function(){
-return'<div>\r\n\r\n\t\x3c!-- TEMPLATE: Delete --\x3e\r\n\t<script type="text/template" id="forminator-delete-popup-tpl">\r\n\r\n\t    <div class="sui-box-body sui-spacing-top--0">\r\n\t\t    <p id="forminator-popup__description" class="sui-description" style="margin: 5px 0 0; text-align: center;">{{ content }}</p>\r\n\t    </div>\r\n\r\n\t    <div class="sui-box-footer sui-flatten sui-content-center sui-spacing-top--10">\r\n\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\r\n\t\t\t<form method="post" class="delete-action">\r\n\r\n\t\t\t\t<input type="hidden" name="forminator_action" value="{{ action }}">\r\n\t\t\t\t<input type="hidden" name="id" value="{{ id }}">\r\n\t\t\t\t<input type="hidden" id="forminatorNonce" name="forminatorNonce" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" id="forminatorEntryNonce" name="forminatorEntryNonce" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" name="_wp_http_referer" value="{{ referrer }}">\r\n\r\n\t\t\t\t<button type="submit" class="sui-button sui-button-ghost sui-button-red popup-confirmation-confirm" style="margin: 0;">\r\n\t\t\t\t\t<span class="sui-icon-trash" aria-hidden="true"></span>\r\n\t\t\t\t\t{{ button }}\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</form>\r\n\r\n\t    </div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- TEMPLATE: Create New Form (Base Structure) --\x3e\r\n\t<script type="text/template" id="forminator-new-form-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg">{{ Forminator.l10n.popup.enter_name }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-content-center sui-spacing-top--10"></div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten">\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button id="forminator-build-your-form" class="sui-button sui-button-blue">\r\n\t\t\t\t\t<span class="sui-loading-text">\r\n\t\t\t\t\t\t<i class="sui-icon-plus" aria-hidden="true"></i>\r\n\t\t\t\t\t\t{{Forminator.l10n.popup.create}}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- TEMPLATE: Create New Form (Content) --\x3e\r\n\t<script type="text/template" id="forminator-new-form-content-tpl">\r\n\r\n\t\t<p id="forminator-popup__description" class="sui-description">{{ Forminator.l10n.popup.new_form_desc2 }}</p>\r\n\r\n\t\t<div\r\n\t\t\trole="alert"\r\n\t\t\tid="forminator-template-register-notice"\r\n\t\t\tclass="sui-notice sui-notice-blue"\r\n\t\t\taria-live="assertive"\r\n\t\t>\r\n\r\n\t\t\t<div class="sui-notice-content">\r\n\r\n\t\t\t\t<div class="sui-notice-message">\r\n\r\n\t\t\t\t\t<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>\r\n\r\n\t\t\t\t\t<p style="text-align: left;">{{ Forminator.l10n.popup.registration_notice }}</p>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div\r\n\t\t\trole="alert"\r\n\t\t\tid="forminator-template-login-notice"\r\n\t\t\tclass="sui-notice sui-notice-blue"\r\n\t\t\taria-live="assertive"\r\n\t\t>\r\n\r\n\t\t\t<div class="sui-notice-content">\r\n\r\n\t\t\t\t<div class="sui-notice-message">\r\n\r\n\t\t\t\t\t<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>\r\n\r\n\t\t\t\t\t<p style="text-align: left;">{{ Forminator.l10n.popup.login_notice }}</p>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div id="forminator-form-name-input" class="sui-form-field">\r\n\r\n\t\t\t<label for="forminator-form-name" class="sui-screen-reader-text">{{ Forminator.l10n.popup.input_label }}</label>\r\n\t\t\t<input type="text"\r\n\t\t\t       id="forminator-form-name"\r\n\t\t\t       class="sui-form-control fui-required"\r\n\t\t\t       placeholder="{{Forminator.l10n.popup.new_form_placeholder}}" autofocus>\r\n\t\t\t<span class="sui-error-message" style="display: none;">{{Forminator.l10n.popup.form_name_validation}}</span>\r\n\r\n\t\t</div>\r\n\t<\/script>\r\n\r\n\t\x3c!-- TEMPLATE: Create Poll --\x3e\r\n\t<script type="text/template" id="forminator-new-poll-content-tpl">\r\n\t\t<p class="sui-description" style="text-align: center;">{{ Forminator.l10n.popup.new_poll_desc2 }}</p>\r\n\r\n\t\t<div id="forminator-form-name-input" class="sui-form-field">\r\n\r\n\t\t\t<label for="forminator-form-name" class="sui-screen-reader-text">{{ Forminator.l10n.popup.input_label }}</label>\r\n\t\t\t<input type="text"\r\n\t\t\t       id="forminator-form-name"\r\n\t\t\t       class="sui-form-control fui-required"\r\n\t\t\t       placeholder="{{Forminator.l10n.popup.new_poll_placeholder}}" autofocus>\r\n\t\t\t<span class="sui-error-message" style="display: none;">{{Forminator.l10n.popup.poll_name_validation}}</span>\r\n\r\n\t\t</div>\r\n\t<\/script>\r\n\r\n\t\x3c!-- TEMPLATE: Create Quiz, Step 1 --\x3e\r\n\t<script type="text/template" id="forminator-quizzes-popup-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: none;">{{ Forminator.l10n.quiz.choose_quiz_title }}</h3>\r\n\r\n\t\t\t<p id="forminator-popup__description" class="sui-description">{{ Forminator.l10n.quiz.choose_quiz_description }}</p>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-content-center sui-spacing-bottom--10">\r\n\r\n\t\t\t<div id="forminator-form-name-input" class="sui-form-field">\r\n\r\n\t\t\t\t<label for="forminator-form-name" class="sui-label">{{ Forminator.l10n.quiz.quiz_name }}</label>\r\n\r\n\t\t\t\t<input\r\n\t\t\t\t\ttype="text"\r\n\t\t\t\t\tid="forminator-form-name"\r\n\t\t\t\t\tclass="sui-form-control fui-required"\r\n\t\t\t\t\tplaceholder="{{Forminator.l10n.popup.new_quiz_placeholder}}"\r\n\t\t\t\t\tautofocus\r\n\t\t\t\t/>\r\n\t\t\t\t<span class="sui-error-message" style="display: none;">{{Forminator.l10n.popup.quiz_name_validation}}</span>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t\t<label class="sui-label">{{ Forminator.l10n.quiz.quiz_type }}</label>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-selectors" style="margin: 0;">\r\n\r\n\t\t\t<ul>\r\n\r\n\t\t\t\t<li><label for="forminator-new-quiz--knowledge" class="sui-box-selector">\r\n\t\t\t\t\t<input\r\n\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\tname="forminator-new-quiz"\r\n\t\t\t\t\t\tid="forminator-new-quiz--knowledge"\r\n\t\t\t\t\t\tclass="forminator-new-quiz-type"\r\n\t\t\t\t\t\tvalue="knowledge"\r\n\t\t\t\t\t\tchecked="checked"\r\n\t\t\t\t\t/>\r\n\t\t\t\t\t<span>\r\n\t\t\t\t\t\t<i class="sui-icon-academy" aria-hidden="true"></i>\r\n\t\t\t\t\t\t{{ Forminator.l10n.quiz.knowledge_label }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t\t<span>{{ Forminator.l10n.quiz.knowledge_description }}</span>\r\n\t\t\t\t</label></li>\r\n\r\n\t\t\t\t<li><label for="forminator-new-quiz--nowrong" class="sui-box-selector">\r\n\t\t\t\t\t<input\r\n\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\tname="forminator-new-quiz"\r\n\t\t\t\t\t\tid="forminator-new-quiz--nowrong"\r\n\t\t\t\t\t\tclass="forminator-new-quiz-type"\r\n\t\t\t\t\t\tvalue="nowrong"\r\n\t\t\t\t\t/>\r\n\t\t\t\t\t<span>\r\n\t\t\t\t\t\t<i class="sui-icon-community-people" aria-hidden="true"></i>\r\n\t\t\t\t\t\t{{ Forminator.l10n.quiz.nowrong_label }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t\t<span>{{ Forminator.l10n.quiz.nowrong_description }}</span>\r\n\t\t\t\t</label></li>\r\n\r\n\t\t\t</ul>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-spacing-top--30">\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button class="sui-button select-quiz-template">\r\n\t\t\t\t\t<span class="sui-loading-text">{{ Forminator.l10n.quiz.continue_button }}</span>\r\n\t\t\t\t\t<i class="sui-icon-load sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- TEMPLATE: Create Quiz, Step 2 (Pagination) --\x3e\r\n\t<script type="text/template" id="forminator-new-quiz-pagination-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--left forminator-popup-back">\r\n\t\t\t\t<span class="sui-icon-chevron-left sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.go_back }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close">\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg" style="overflow: initial; text-overflow: none; white-space: initial;">{{ Forminator.l10n.quiz.quiz_pagination }}</h3>\r\n\r\n\t\t\t<p id="forminator-popup__description" class="sui-description">\r\n\t\t\t\t{{ Forminator.l10n.quiz.quiz_pagination_descr }}<br>\r\n\t\t\t\t{{ Forminator.l10n.quiz.quiz_pagination_descr2 }}\r\n\t\t\t</p>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-spacing-bottom--10">\r\n\r\n\t\t\t<label class="sui-label">{{ Forminator.l10n.quiz.presentation }}</label>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-selectors" style="margin: 0;">\r\n\r\n\t\t\t<ul>\r\n\r\n\t\t\t\t<li><label class="sui-box-selector">\r\n\t\t\t\t\t<input\r\n\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\tname="forminator-quiz-pagination"\r\n\t\t\t\t\t\tvalue="0"\r\n\t\t\t\t\t/>\r\n\t\t\t\t\t<span>\r\n\t\t\t\t\t\t{{ Forminator.l10n.quiz.no_pagination }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t</label></li>\r\n\r\n\t\t\t\t<li><label class="sui-box-selector">\r\n\t\t\t\t\t<input\r\n\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\tname="forminator-quiz-pagination"\r\n\t\t\t\t\t\tvalue="1"\r\n\t\t\t\t\t/>\r\n\t\t\t\t\t<span>\r\n\t\t\t\t\t\t{{ Forminator.l10n.quiz.paginate_quiz }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t</label></li>\r\n\r\n\t\t\t</ul>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-spacing-top--30">\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button class="sui-button select-quiz-pagination">\r\n\t\t\t\t\t<span class="sui-loading-text">{{ Forminator.l10n.quiz.continue_button }}</span>\r\n\t\t\t\t\t<i class="sui-icon-load sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- TEMPLATE: Create Quiz, Step 3A (Leads Base Structure) --\x3e\r\n\t<script type="text/template" id="forminator-new-quiz-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--left forminator-popup-back">\r\n\t\t\t\t<span class="sui-icon-chevron-left sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.go_back }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close forminator-cancel-create-form">\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg">{{ Forminator.l10n.quiz.collect_leads }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10"></div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-separated">\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button id="forminator-build-your-form" class="sui-button sui-button-blue">\r\n\t\t\t\t\t<span class="sui-loading-text">\r\n\t\t\t\t\t\t<i class="sui-icon-plus" aria-hidden="true"></i> {{ Forminator.l10n.quiz.create_quiz }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- TEMPLATE: Create Quiz, Step 3B (Leads Content) --\x3e\r\n\t<script type="text/template" id="forminator-new-quiz-content-tpl">\r\n\r\n\t\t<p class="sui-description" style="text-align: center;">{{ Forminator.l10n.popup.new_quiz_desc2 }}\r\n\t\t\t{[ if( Forminator.Data.showDocLink ) { ]}\r\n\t\t\t\t<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/?utm_source=forminator&utm_medium=plugin&utm_campaign=capture_leads_learnmore_link#leads" target="_blank">\r\n\t\t\t\t\t{{ Forminator.l10n.popup.learn_more }}\r\n\t\t\t\t</a>\r\n\t\t\t{[ } ]}\r\n\t\t</p>\r\n\r\n\t\t<div class="sui-form-field">\r\n\r\n\t\t\t<label for="forminator-new-quiz-leads" class="sui-toggle fui-highlighted-toggle">\r\n\r\n\t\t\t\t<input\r\n\t\t\t\t\ttype="checkbox"\r\n\t\t\t\t\tid="forminator-new-quiz-leads"\r\n\t\t\t\t\taria-labelledby="forminator-new-quiz-leads-label"\r\n\t\t\t\t/>\r\n\r\n\t\t\t\t<span class="sui-toggle-slider" aria-hidden="true"></span>\r\n\r\n\t\t\t\t<span id="forminator-new-quiz-leads-label" class="sui-toggle-label">{{ Forminator.l10n.quiz.quiz_leads_toggle }}</span>\r\n\r\n\t\t\t</label>\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="alert"\r\n\t\t\t\tid="sui-quiz-leads-description"\r\n\t\t\t\tclass="sui-notice sui-notice-blue"\r\n\t\t\t\taria-live="assertive"\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-notice-content">\r\n\r\n\t\t\t\t\t<div class="sui-notice-message">\r\n\r\n\t\t\t\t\t\t<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>\r\n\r\n\t\t\t\t\t\t<p>{{ Forminator.l10n.quiz.quiz_leads_desc }}</p>\r\n\r\n\t\t\t\t\t</div>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- TEMPLATE: Export Schedule (on Submissions page) --\x3e\r\n\t<script type="text/template" id="forminator-exports-schedule-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body">\r\n\r\n\t\t\t<div class="sui-box-settings-row">\r\n\r\n\t\t\t\t<div class="sui-box-settings-col-2">\r\n\r\n\t\t\t\t\t<span class="sui-settings-label sui-dark">{{ Forminator.l10n.popup.manual_exports }}</span>\r\n\t\t\t\t\t<span class="sui-description">{{ Forminator.l10n.popup.manual_description }}</span>\r\n\r\n\t\t\t\t\t<form method="post" style="margin-top: 10px;">\r\n\r\n\t\t\t\t\t\t<input type="hidden" name="forminator_export" value="1" />\r\n\t\t\t\t\t\t<input type="hidden" name="form_id" value="{{ Forminator.l10n.exporter.form_id }}" />\r\n\t\t\t\t\t\t<input type="hidden" name="form_type" value="{{ Forminator.l10n.exporter.form_type }}" />\r\n\t\t\t\t\t\t<input type="hidden" name="_forminator_nonce" value="{{ Forminator.l10n.exporter.export_nonce }}" />\r\n\r\n\t\t\t\t\t\t<button class="sui-button sui-button-ghost">{{ Forminator.l10n.popup.download_csv }}</button>\r\n\r\n\t\t\t\t\t\t{[ if( \'cform\' === Forminator.l10n.exporter.form_type || \'quiz\' === Forminator.l10n.exporter.form_type ) { ]}\r\n\t\t\t\t\t\t\t<label for="apply-submission-filter" class="sui-checkbox sui-checkbox-sm sui-checkbox-stacked" style="margin-top: 20px;">\r\n\t\t\t\t\t\t\t\t<input type="checkbox" name="submission-filter" id="apply-submission-filter" value="yes" />\r\n\t\t\t\t\t\t\t\t<span aria-hidden="true"></span>\r\n\t\t\t\t\t\t\t\t<span>{{ Forminator.l10n.popup.apply_submission_filter }}</span>\r\n\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t{[ } ]}\r\n\r\n\t\t\t\t\t</form>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t\t<form method="post" class="sui-box-settings-row schedule-action">\r\n\r\n\t\t\t\t<div class="sui-box-settings-col-2">\r\n\r\n\t\t\t\t\t<span class="sui-settings-label sui-dark">{{ Forminator.l10n.popup.scheduled_exports }}</span>\r\n\t\t\t\t\t<span class="sui-description">{{ Forminator.l10n.popup.scheduled_description }}</span>\r\n\r\n\t\t\t\t\t<div class="sui-side-tabs" style="margin-top: 10px;">\r\n\r\n\t\t\t\t\t\t<div class="sui-tabs-menu tab-labels">\r\n\r\n\t\t\t\t\t\t\t<label for="forminator-disable-scheduled-exports" class="sui-tab-item tab-label-disable">\r\n\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\t\t\t\tname="enabled"\r\n\t\t\t\t\t\t\t\t\tvalue="false"\r\n\t\t\t\t\t\t\t\t\tid="forminator-disable-scheduled-exports"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t{{ Forminator.l10n.popup.disable }}\r\n\t\t\t\t\t\t\t</label>\r\n\r\n\t\t\t\t\t\t\t<label for="forminator-enable-scheduled-exports" class="sui-tab-item tab-label-enable">\r\n\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\t\t\t\tname="enabled"\r\n\t\t\t\t\t\t\t\t\tvalue="true"\r\n\t\t\t\t\t\t\t\t\tid="forminator-enable-scheduled-exports"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t{{ Forminator.l10n.popup.enable }}\r\n\t\t\t\t\t\t\t</label>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t<div class="sui-tabs-content schedule-enabled">\r\n\r\n\t\t\t\t\t\t\t<div id="forminator-export-schedule-timeframe" class="sui-tab-content sui-tab-boxed active">\r\n\r\n\t\t\t\t\t\t\t\t<div class="sui-row">\r\n\r\n\t\t\t\t\t\t\t\t\t<div class="sui-col-md-6">\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class="sui-form-field">\r\n\r\n\t\t\t\t\t\t\t\t\t\t\t<label class="sui-label">{{ Forminator.l10n.popup.frequency }}</label>\r\n\r\n\t\t\t\t\t\t\t\t\t\t\t<select name="interval" class="sui-select">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="daily">{{ Forminator.l10n.popup.daily }}</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="weekly">{{ Forminator.l10n.popup.weekly }}</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="monthly">{{ Forminator.l10n.popup.monthly }}</option>\r\n\t\t\t\t\t\t\t\t\t\t\t</select>\r\n\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t<div class="sui-col-md-6">\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class="sui-form-field">\r\n\r\n\t\t\t\t\t\t\t\t\t\t\t<label class="sui-label">{{ Forminator.l10n.popup.day_time }}</label>\r\n\r\n\t\t\t\t\t\t\t\t\t\t\t<select name="hour" class="sui-select">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="00:00">12:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="01:00">01:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="02:00">02:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="03:00">03:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="04:00">04:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="05:00">05:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="06:00">06:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="07:00">07:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="08:00">08:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="09:00">09:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="10:00">10:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="11:00">11:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="12:00">12:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="13:00">01:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="14:00">02:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="15:00">03:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="16:00">04:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="17:00">05:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="18:00">06:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="19:00">07:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="20:00">08:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="21:00">09:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="22:00">10:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="23:00">11:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t</select>\r\n\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t<div class="sui-form-field">\r\n\r\n\t\t\t\t\t\t\t\t\t<label class="sui-label">{{ Forminator.l10n.popup.week_day }}</label>\r\n\r\n\t\t\t\t\t\t\t\t\t<select name="day" class="sui-select">\r\n\t\t\t\t\t\t\t\t\t\t<option value="mon">{{ Forminator.l10n.popup.monday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="tue">{{ Forminator.l10n.popup.tuesday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="wed">{{ Forminator.l10n.popup.wednesday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="thu">{{ Forminator.l10n.popup.thursday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="fri">{{ Forminator.l10n.popup.friday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="sat">{{ Forminator.l10n.popup.saturday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="sun">{{ Forminator.l10n.popup.sunday }}</option>\r\n\t\t\t\t\t\t\t\t\t</select>\r\n\r\n\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t<div class="sui-form-field">\r\n\r\n\t\t\t\t\t\t\t\t\t<label class="sui-label">{{ Forminator.l10n.popup.day_month }}</label>\r\n\r\n\t\t\t\t\t\t\t\t\t<select name="month_day" class="sui-select">\r\n\t\t\t\t\t\t\t\t\t\t<option value="1">1</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="2">2</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="3">3</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="4">4</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="5">5</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="6">6</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="7">7</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="8">8</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="9">9</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="10">10</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="11">11</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="12">12</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="13">13</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="14">14</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="15">15</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="16">16</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="17">17</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="18">18</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="19">19</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="20">20</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="21">21</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="22">22</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="23">23</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="24">24</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="25">25</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="26">26</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="27">27</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="28">28</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="29">29</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="30">30</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="31">31</option>\r\n\t\t\t\t\t\t\t\t\t</select>\r\n\r\n\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t<div id="forminator-export-schedule-email" class="sui-form-field" style="margin-bottom: 20px;">\r\n\r\n\t\t\t\t\t\t\t\t\t<label class="sui-label">{{ Forminator.l10n.popup.email_to }}</label>\r\n\r\n\t\t\t\t\t\t\t\t\t<select name="email[]" class="sui-select fui-multi-select wpmudev-select" multiple="multiple">\r\n\t\t\t\t\t\t\t\t\t\t{[ _.each( Forminator.l10n.exporter.email, function ( email ) { ]}\r\n\t\t\t\t\t\t\t\t\t\t<option value="{{ email }}" selected="selected">{{ email }}</option>\r\n\t\t\t\t\t\t\t\t\t\t{[ }) ]}\r\n\t\t\t\t\t\t\t\t\t</select>\r\n\r\n\t\t\t\t\t\t\t\t\t<input type="hidden" name="form_id" value="{{ Forminator.l10n.exporter.form_id }}"/>\r\n\t\t\t\t\t\t\t\t\t<input type="hidden" name="form_type" value="{{ Forminator.l10n.exporter.form_type }}"/>\r\n\t\t\t\t\t\t\t\t\t<input type="hidden" name="action" value="forminator_export_entries"/>\r\n\t\t\t\t\t\t\t\t\t<input type="hidden" name="_forminator_nonce" value="{{ Forminator.l10n.exporter.export_nonce }}"/>\r\n\r\n\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t<label for="forminator-send-if-new-exports" class="sui-checkbox sui-checkbox-sm sui-checkbox-stacked">\r\n\t\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\ttype="checkbox"\r\n\t\t\t\t\t\t\t\t\t\tname="if_new"\r\n\t\t\t\t\t\t\t\t\t\tvalue="true"\r\n\t\t\t\t\t\t\t\t\t\tid="forminator-send-if-new-exports"\r\n\t\t\t\t\t\t\t\t\t\tclass="forminator-field-singular"\r\n\t\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t\t<span aria-hidden="true"></span>\r\n\t\t\t\t\t\t\t\t\t<span class="sui-description">{{ Forminator.l10n.popup.scheduled_export_if_new }}</span>\r\n\t\t\t\t\t\t\t\t</label>\r\n\r\n\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t</div>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t</form>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer">\r\n\r\n\t\t\t<button class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide="forminator-popup">{{ Forminator.l10n.popup.cancel }}</button>\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button type="submit" class="sui-button wpmudev-action-done">{{ Forminator.l10n.popup.save }}</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- TEMPLATE: Reset Plugin (on Settings page) --\x3e\r\n\t<script type="text/template" id="forminator-reset-plugin-settings-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10">\r\n\t\t\t<p class="sui-description" style="text-align: center;">{{ content }}</p>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center">\r\n\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\r\n\t\t\t<form method="post" class="delete-action">\r\n\t\t\t\t<input type="hidden" name="forminator_action" value="reset_plugin_settings">\r\n\t\t\t\t<input type="hidden" id="forminatorNonce" name="forminatorNonce" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" name="_wp_http_referer" value="{{ referrer }}&forminator_notice=settings_reset">\r\n\t\t\t\t<button type="submit" class="sui-button sui-button-ghost sui-button-red popup-confirmation-confirm">\r\n\t\t\t\t\t<span class="sui-loading-text" aria-hidden="true">\r\n\t\t\t\t\t\t<i class="sui-icon-refresh" aria-hidden="true"></i>\r\n\t\t\t\t\t\t{{ Forminator.l10n.popup.reset }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\t\t\t</form>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- TEMPLATE: Disconnect PayPal (on Settings page) --\x3e\r\n\t<script type="text/template" id="forminator-disconnect-paypal-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10">\r\n\t\t\t<p class="sui-description" style="text-align: center;">{{ content }}</p>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center">\r\n\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\r\n\t\t\t<button type="submit" class="disconnect_paypal sui-button sui-button-ghost sui-button-red popup-confirmation-confirm" data-nonce="{{ nonce }}" data-action="disconnect_paypal">\r\n\t\t\t\t{{ Forminator.l10n.popup.disconnect }}\r\n\t\t\t</button>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- TEMPLATE: Disconnect Stripe (on Settings page) --\x3e\r\n\t<script type="text/template" id="forminator-disconnect-stripe-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10">\r\n\t\t\t<p class="sui-description" style="text-align: center;">{{ content }}</p>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center">\r\n\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\r\n\t\t\t<button type="submit" class="disconnect_stripe sui-button sui-button-ghost sui-button-red popup-confirmation-confirm" data-nonce="{{ nonce }}" data-action="disconnect_stripe">\r\n\t\t\t\t<i class="sui-icon-refresh" aria-hidden="true"></i>\r\n\t\t\t\t{{ Forminator.l10n.popup.disconnect }}\r\n\t\t\t</button>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n    <script type="text/template" id="forminator-login-popup-tpl">\r\n\r\n        <div class="wpmudev-row">\r\n\r\n            <div class="wpmudev-col col-12 col-sm-6">\r\n\r\n                <a class="wpmudev-popup--logreg" href="{{ loginUrl }}">\r\n\r\n                    <div class="wpmudev-logreg--header">\r\n\r\n                        <span class="wpdui-icon wpdui-icon-key"></span>\r\n\r\n                        <h3 class="wpmudev-logreg--title">{{ Forminator.l10n.login.login_label }}</h3>\r\n\r\n                    </div>\r\n\r\n                    <div class="wpmudev-logreg--section">\r\n\r\n                        <p class="wpmudev-logreg--description">{{ Forminator.l10n.login.login_description }}</p>\r\n\r\n                        <div class="wpmudev-logreg--image">\r\n                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"\r\n                                 width="110" height="140" viewBox="0 0 110 140" preserveAspectRatio="none"\r\n                                 class="wpmudev-svg-login">\r\n                                <defs>\r\n                                    <path id="b" d="M0 40h100v94H0z"/>\r\n                                    <filter id="a" width="116%" height="117%" x="-8%" y="-7.4%"\r\n                                            filterUnits="objectBoundingBox">\r\n                                        <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>\r\n                                        <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1"\r\n                                                        stdDeviation="2.5"/>\r\n                                        <feColorMatrix in="shadowBlurOuter1"\r\n                                                       values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>\r\n                                    </filter>\r\n                                    <path id="c" d="M10 112h6v6h-6z"/>\r\n                                    <path id="d" d="M10 90h80v15H10z"/>\r\n                                    <path id="e" d="M10 60h80v15H10z"/>\r\n                                </defs>\r\n                                <g fill="none" fill-rule="evenodd" transform="translate(5)">\r\n                                    <use fill="#000" filter="url(#a)" xlink:href="#b"/>\r\n                                    <use fill="#FFF" xlink:href="#b"/>\r\n                                    <rect width="22" height="12" x="68" y="112" fill="#0472AC" rx="3"/>\r\n                                    <path fill="#808285" d="M19 114h26v2H19z"/>\r\n                                    <use fill="#FBFBFB" xlink:href="#c"/>\r\n                                    <path stroke="#E1E1E1" d="M10.5 112.5h5v5h-5z"/>\r\n                                    <use fill="#FBFBFB" xlink:href="#d"/>\r\n                                    <path stroke="#E1E1E1" d="M10.5 90.5h79v14h-79z"/>\r\n                                    <path fill="#808285" d="M10 85h26v2H10z"/>\r\n                                    <use fill="#FBFBFB" xlink:href="#e"/>\r\n                                    <path stroke="#E1E1E1" d="M10.5 60.5h79v14h-79z"/>\r\n                                    <path fill="#808285" d="M10 55h50v2H10z"/>\r\n                                    <circle cx="50" cy="15" r="15" fill="#0272AC"/>\r\n                                </g>\r\n                            </svg>\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                </a>\r\n\r\n            </div>\r\n\r\n            <div class="wpmudev-col col-12 col-sm-6">\r\n\r\n                <a class="wpmudev-popup--logreg" href="{{ registerUrl }}">\r\n\r\n                    <div class="wpmudev-logreg--header">\r\n\r\n                        <span class="wpdui-icon wpdui-icon-profile-female"></span>\r\n\r\n                        <h3 class="wpmudev-logreg--title">{{ Forminator.l10n.login.registration_label }}</h3>\r\n\r\n                    </div>\r\n\r\n                    <div class="wpmudev-logreg--section">\r\n\r\n                        <p class="wpmudev-logreg--description">{{ Forminator.l10n.login.registration_description }}</p>\r\n\r\n                        <div class="wpmudev-logreg--image">\r\n                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"\r\n                                 width="183" height="97" viewBox="0 0 183 97" preserveAspectRatio="none"\r\n                                 class="wpmudev-svg-registration">\r\n                                <defs>\r\n                                    <path id="a" d="M0 58h183v15H0z"/>\r\n                                    <path id="b" d="M0 23h183v15H0z"/>\r\n                                </defs>\r\n                                <g fill="none" fill-rule="evenodd">\r\n                                    <rect width="50" height="14" y="83" fill="#353535" rx="3"/>\r\n                                    <path fill="#FBFBFB" stroke="#E1E1E1" d="M.5 58.5h182v14H.5z"/>\r\n                                    <path fill="#808285" d="M0 51h40v2H0z"/>\r\n                                    <path fill="#FBFBFB" stroke="#E1E1E1" d="M.5 23.5h182v14H.5z"/>\r\n                                    <path fill="#808285" d="M0 16h40v2H0z"/>\r\n                                    <path fill="#353535" d="M0 0h120v6H0z"/>\r\n                                </g>\r\n                            </svg>\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                </a>\r\n\r\n            </div>\r\n\r\n        </div>\r\n    <\/script>\r\n\r\n\t<script type="text/template" id="forminator-form-popup-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close">\r\n\t\t\t\t<span class="sui-icon-close" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg">{{ Forminator.l10n.form.form_template_title }}</h3>\r\n\r\n\t\t\t<p id="forminator-popup__description" class="sui-description">{{ Forminator.l10n.form.form_template_description }}</p>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-selectors sui-box-selectors-col-2">\r\n\r\n\t\t\t<ul>\r\n\r\n\t\t\t\t{[ _.each(templates, function(template){ ]}\r\n\r\n\t\t\t\t\t{[ if( template.options.id !== \'leads\' ) { ]}\r\n\r\n\t\t\t\t\t\t<li>\r\n\r\n\t\t\t\t\t\t\t<label for="forminator-new-quiz--{{ template.options.id }}" class="sui-box-selector">\r\n\r\n\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\t\t\t\t\tname="forminator-form-template"\r\n\t\t\t\t\t\t\t\t\t\tid="forminator-new-quiz--{{ template.options.id }}"\r\n\t\t\t\t\t\t\t\t\t\tclass="forminator-new-form-type"\r\n\t\t\t\t\t\t\t\t\t\tvalue="{{ template.options.id }}"\r\n\t\t\t\t\t\t\t\t\t\t{[ if( template.options.id === \'blank\' ) { ]}\r\n\t\t\t\t\t\t\t\t\t\tchecked="checked"\r\n\t\t\t\t\t\t\t\t\t\t{[ } ]}\r\n\t\t\t\t\t\t\t\t/>\r\n\r\n\t\t\t\t\t\t\t\t<span>\r\n\t\t\t\t\t\t\t\t\t<i class="sui-icon-{{template.options.icon}}" aria-hidden="true"></i>\r\n\t\t\t\t\t\t\t\t\t{{ template.options.name }}\r\n\t\t\t\t\t\t\t\t</span>\r\n\r\n\t\t\t\t\t\t\t</label>\r\n\r\n\t\t\t\t\t\t</li>\r\n\r\n\t\t\t\t\t{[ } ]}\r\n\r\n\t\t\t\t{[ }); ]}\r\n\r\n\t\t\t</ul>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten">\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button class="sui-button select-quiz-template">\r\n\t\t\t\t\t<span class="sui-loading-text">{{ Forminator.l10n.quiz.continue_button }}</span>\r\n\t\t\t\t\t<i class="sui-icon-load sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n    <script type="text/template" id="forminator-new-form-popup-tpl">\r\n\r\n        <div class="wpmudev-box--congrats">\r\n\r\n            <div class="wpmudev-congrats--image"></div>\r\n\r\n            <div class="wpmudev-congrats--message">\r\n\r\n                <p><strong>{{ title }}</strong> {{ Forminator.l10n.popup.is_ready }}<br/>\r\n\t\t\t\t\t{{ Forminator.l10n.popup.new_form_desc }}</p>\r\n\r\n            </div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n    <script type="text/template" id="forminator-confirmation-popup-tpl">\r\n\r\n\t    <div class="sui-box-body sui-content-center">\r\n\t\t    <p>{{ confirmation_message }}</p>\r\n\t    </div>\r\n\r\n        <div class="sui-box-footer sui-flatten sui-content-center">\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost popup-confirmation-cancel">{{ Forminator.l10n.popup.cancel }}</button>\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost sui-button-red popup-confirmation-confirm">\r\n\t\t\t\t<span class="sui-loading-text">{{ Forminator.l10n.popup.delete }}</span>\r\n\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t</button>\r\n        </div>\r\n\r\n    <\/script>\r\n\r\n\t<script type="text/template" id="forminator-delete-poll-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body">\r\n\t\t\t<span class="sui-description">{{ content }}</span>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer">\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\t\t\t<button type="submit" class="delete-poll-submission sui-button sui-button-ghost sui-button-red popup-confirmation-confirm" data-nonce="{{ nonce }}" data-id="{{ id }}" data-action="delete_poll_submissions">\r\n\t\t\t\t{{ Forminator.l10n.popup.delete }}\r\n\t\t\t</button>\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="forminator-approve-user-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body">\r\n\t\t\t<span class="sui-description">{{ content }}</span>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer">\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\t\t\t<form method="post" class="form-approve-user">\r\n\t\t\t\t<input type="hidden" name="forminator_action" value="approve_user">\r\n\t\t\t\t<input type="hidden" name="id" value="{{ id }}">\r\n\t\t\t\t<input type="hidden" name="activationKey" value="{{ activationKey }}">\r\n\t\t\t\t<input type="hidden" id="forminatorNonce" name="forminatorNonce" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" id="forminatorEntryNonce" name="forminatorEntryNonce" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" name="_wp_http_referer" value="{{ referrer }}">\r\n\t\t\t\t<button type="submit" class="sui-button approve-user popup-confirmation-confirm">\r\n\t\t\t\t\t{{ Forminator.l10n.popup.approve_user }}\r\n\t\t\t\t</button>\r\n\t\t\t</form>\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="forminator-delete-unconfirmed-user-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body">\r\n\t\t\t<span class="sui-description">{{ content }}</span>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer">\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\t\t\t<form method="post" class="form-delete-unconfirmed-user">\r\n\t\t\t\t<input type="hidden" name="forminatorAction" value="delete-unconfirmed-user">\r\n\t\t\t\t<input type="hidden" name="formId" value="{{ formId }}">\r\n\t\t\t\t<input type="hidden" name="entryId" value="{{ entryId }}">\r\n\t\t\t\t<input type="hidden" name="activationKey" value="{{ activationKey }}">\r\n\t\t\t\t<input type="hidden" id="forminatorNonceDeleteUnconfirmedUser" name="forminatorNonceDeleteUnconfirmedUser" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" name="_wp_http_referer" value="{{ referrer }}">\r\n\t\t\t\t<button type="submit" class="sui-button sui-button-ghost sui-button-red delete-unconfirmed-user popup-confirmation-confirm">\r\n\t\t\t\t\t<i class="sui-icon-trash" aria-hidden="true"></i>\r\n\t\t\t\t\t{{ Forminator.l10n.popup.delete }}\r\n\t\t\t\t</button>\r\n\t\t\t</form>\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="forminator-addons-action-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--0">\r\n\r\n\t\t\t{[ if( forms.length <= 0 ) { ]}\r\n\r\n\t\t\t\t<p id="forminator-popup__description" class="sui-description" style="text-align: center;">{{ Forminator.l10n.popup.deactivateContent }}</p>\r\n\r\n\t\t\t{[ } else { ]}\r\n\r\n\t\t\t\t<p id="forminator-popup__description" class="sui-description" style="text-align: center;">{{ content }}</p>\r\n\r\n\t\t\t\t<div class="form-list">\r\n\r\n\t\t\t\t\t<h4 class="sui-table-title" style="margin: 0 0 5px;">{{ Forminator.l10n.popup.forms }}</h4>\r\n\r\n\t\t\t\t\t<table class="sui-table" style="margin: 0;">\r\n\t\t\t\t\t\t<tbody>\r\n\t\t\t\t\t\t{[ _.each( forms, function( value, key ){ ]}\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td class="sui-table-item-title">\r\n\t\t\t\t\t\t\t\t\t<span class="sui-icon-clipboard-notes" aria-hidden="true"></span>\r\n\t\t\t\t\t\t\t\t\t{{ value }}\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t\t<td width="73" style="text-align: right;">\r\n\t\t\t\t\t\t\t\t\t<a href="{{ forminatorData.formEditUrl + \'&id=\' + key }}" title="{{ value }}" class="sui-button-icon">\r\n\t\t\t\t\t\t\t\t\t\t<span class="sui-icon-pencil" aria-hidden="true"></span>\r\n\t\t\t\t\t\t\t\t\t</a>\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t{[ }) ]}\r\n\t\t\t\t\t\t</tbody>\r\n\t\t\t\t\t</table>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t{[ } ]}\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-separated">\r\n\r\n\t\t\t<button type="button" class="sui-button forminator-popup-close" data-a11y-dialog-hide>\r\n\t\t\t\t{{ Forminator.l10n.popup.cancel }}\r\n\t\t\t</button>\r\n\r\n\t\t\t{[ if( forms.length <= 0 ) { ]}\r\n\t\t\t\t<button class="sui-button addons-actions" data-addon="{{ id }}" data-nonce="{{ nonce }}" data-popup="true" data-is_network="{{ is_network }}" data-action="addons-deactivate">\r\n\t\t\t\t\t{{ Forminator.l10n.popup.deactivate }}\r\n\t\t\t\t</button>\r\n\t\t\t{[ } else { ]}\r\n\t\t\t\t<button class="sui-button sui-button-ghost sui-button-red addons-actions" data-addon="{{ id }}" data-nonce="{{ nonce }}" data-popup="true" data-is_network="{{ is_network }}" data-action="addons-deactivate">\r\n\t\t\t\t\t{{ Forminator.l10n.popup.deactivateAnyway }}\r\n\t\t\t\t</button>\r\n\t\t\t{[ } ]}\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="forminator-apply-appearance-preset-tpl">\r\n\r\n\t\t<div class="sui-box-body">\r\n\t\t\t<span class="sui-description" style="text-align: center; margin: -15px 0 30px;">{{ description }}</span>\r\n\r\n\t\t\t<div class="sui-form-field" style="margin-bottom: 10px;">\r\n\t\t\t\t{{ selectbox }}\r\n\t\t\t</div>\r\n\r\n\t\t\t<div class="sui-notice" style="margin-top: 10px;">\r\n\t\t\t\t<div class="sui-notice-content">\r\n\t\t\t\t\t<div class="sui-notice-message">\r\n\t\t\t\t\t\t<span class="sui-notice-icon sui-icon-info sui-md" aria-hidden="true"></span>\r\n\t\t\t\t\t\t<p>{{ notice }}</p>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center">\r\n\t\t\t<button id="forminator-apply-preset" class="sui-button sui-button-blue">\r\n\t\t\t\t<span class="sui-button-text-default">\r\n\t\t\t\t\t<i class="sui-icon-check" aria-hidden="true"></i> {{ button }}\r\n\t\t\t\t</span>\r\n\t\t\t\t<span class="sui-button-text-onload">\r\n\t\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</span>\r\n\t\t\t</button>\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="forminator-create-appearance-preset-tpl">\r\n\r\n\t\t<div class="sui-box-body sui-content-center">\r\n\t\t\t<span class="sui-description" style="margin: -15px 0 30px">{{ content }}</span>\r\n\r\n\t\t\t<div class="sui-form-field">\r\n\t\t\t\t<label for="forminator-preset-name" class="sui-label">{{ nameLabel }}</label>\r\n\t\t\t\t<input type="text"\r\n\t\t\t\t\t   id="forminator-preset-name"\r\n\t\t\t\t\t   class="sui-form-control fui-required"\r\n\t\t\t\t\t   placeholder="{{ namePlaceholder }}">\r\n\t\t\t</div>\r\n\r\n\t\t\t<div class="sui-form-field">\r\n\t\t\t\t<label class="sui-label">{{ formLabel }}</label>\r\n\t\t\t\t{{ forminatorData.forms_select }}\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center">\r\n\t\t\t<button id="forminator-create-preset" class="sui-button sui-button-blue" disabled="disabled">\r\n\t\t\t\t<span class="sui-button-text-default">\r\n\t\t\t\t\t<i class="sui-icon-plus" aria-hidden="true"></i> {{ title }}\r\n\t\t\t\t</span>\r\n\t\t\t\t<span class="sui-button-text-onload">\r\n\t\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t\t{{ loadingText }}\r\n\t\t\t\t</span>\r\n\t\t\t</button>\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n</div>\r\n'
-}),function(t){formintorjs.define("admin/popup/templates",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"forminator-popup-create--cform",step:"1",template:"blank",events:{"click .select-quiz-template":"selectTemplate","click .forminator-popup-close":"close","change .forminator-new-form-type":"clickTemplate","click #forminator-build-your-form":"handleMouseClick","focus #forminator-form-name":"resetNameSetup",keyup:"handleKeyClick"},popupTpl:Forminator.Utils.template(t(n).find("#forminator-form-popup-tpl").html()),newFormTpl:Forminator.Utils.template(t(n).find("#forminator-new-form-tpl").html()),newFormContent:Forminator.Utils.template(t(n).find("#forminator-new-form-content-tpl").html()),render:function(){var t=jQuery("#forminator-popup");"1"===this.step&&(this.$el.html(this.popupTpl({templates:Forminator.Data.modules.custom_form.templates})),this.$el.find(".select-quiz-template").prop("disabled",!1),t.closest(".sui-modal").removeClass("sui-modal-sm")),"2"===this.step&&(this.$el.html(this.newFormTpl()),this.$el.find(".sui-box-body").html(this.newFormContent()),"registration"===this.template&&(this.$el.find("#forminator-template-register-notice").show(),this.$el.find("#forminator-form-name").val(Forminator.l10n.popup.registration_name)),"login"===this.template&&(this.$el.find("#forminator-template-login-notice").show(),this.$el.find("#forminator-form-name").val(Forminator.l10n.popup.login_name)),t.closest(".sui-modal").addClass("sui-modal-sm"))},close:function(t){t.preventDefault(),Forminator.Popup.close()},clickTemplate:function(t){this.$el.find(".select-quiz-template").prop("disabled",!1)},selectTemplate:function(t){t.preventDefault();var n=this.$el.find("input[name=forminator-form-template]:checked").val();this.template=n,this.step="2",this.render()},handleMouseClick:function(t){this.createQuiz(t)},handleKeyClick:function(t){t.preventDefault(),13===t.which&&this.createQuiz(t)},resetNameSetup:function(n){var e=t(n.target).next(".sui-error-message");e.is(":visible")&&(e.hide(),this.$el.find("#forminator-build-your-form").removeClass("sui-button-onload"))},createQuiz:function(n){var e=t(n.target).addClass("sui-button-onload").closest(".sui-box").find("#forminator-form-name");if(""===e.val().trim())t(n.target).closest(".sui-box").find(".sui-error-message").show();else{var i=Forminator.Data.modules.custom_form.new_form_url;t(n.target).closest(".sui-box").find(".sui-error-message").hide(),form_url=i+"&name="+e.val(),form_url=form_url+"&template="+this.template,window.location.href=form_url}}})})}(jQuery),function(t){formintorjs.define("admin/popup/login",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-login-popup-tpl").html()),render:function(){this.$el.html(this.popupTpl({loginUrl:Forminator.Data.modules.login.login_url,registerUrl:Forminator.Data.modules.login.register_url}))}})})}(jQuery),function(t){formintorjs.define("admin/popup/quizzes",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"forminator-popup-create--quiz",step:1,pagination:0,type:"knowledge",events:{"click .select-quiz-template":"selectTemplate","click .select-quiz-pagination":"selectPagination","click .forminator-popup-back":"goBack","click .forminator-popup-close":"close","change .forminator-new-quiz-type":"clickTemplate","click #forminator-build-your-form":"handleMouseClick","click #forminator-new-quiz-leads":"handleToggle","focus #forminator-form-name":"resetNameSetup",keyup:"handleKeyClick"},popupTpl:Forminator.Utils.template(t(n).find("#forminator-quizzes-popup-tpl").html()),newFormTpl:Forminator.Utils.template(t(n).find("#forminator-new-quiz-tpl").html()),paginationTpl:Forminator.Utils.template(t(n).find("#forminator-new-quiz-pagination-tpl").html()),newFormContent:Forminator.Utils.template(t(n).find("#forminator-new-quiz-content-tpl").html()),render:function(){var t=jQuery("#forminator-popup");t.removeClass("sui-dialog-sm forminator-create-quiz-second-step forminator-create-quiz-pagination-step"),1===this.step&&(this.$el.html(this.popupTpl()),this.name&&(this.$el.find("#forminator-form-name").val(this.name),this.$el.find("#forminator-new-quiz--"+this.type).prop("checked",!0)),this.$el.find(".select-quiz-template").prop("disabled",!1)),2===this.step&&(this.$el.html(this.paginationTpl()),window.isTrue(this.pagination)?this.$el.find('[name="forminator-quiz-pagination"]').eq(1).prop("checked",!0):this.$el.find('[name="forminator-quiz-pagination"]').eq(0).prop("checked",!0),t.addClass("forminator-create-quiz-pagination-step")),3===this.step&&(this.$el.html(this.newFormTpl()),this.$el.find(".sui-box-body").html(this.newFormContent()),t.addClass("sui-dialog-sm forminator-create-quiz-second-step"))},close:function(t){t.preventDefault(),Forminator.Popup.close()},clickTemplate:function(t){this.$el.find(".select-quiz-template").prop("disabled",!1)},selectTemplate:function(n){n.preventDefault();var e=this.$el.find("input[name=forminator-new-quiz]:checked").val(),i=this.$el.find("#forminator-form-name").val();""===i.trim()?t(n.target).closest(".sui-box").find(".sui-error-message").show():(this.type=e,this.name=i,this.step=2,this.render())},goBack:function(t){t.preventDefault(),2==this.step&&(this.pagination=this.$el.find('input[name="forminator-quiz-pagination"]:checked').val()),this.step--,this.render()},selectPagination:function(t){t.preventDefault();var n=this.$el.find('input[name="forminator-quiz-pagination"]:checked').val();this.pagination=n,this.step=3,this.render()},handleMouseClick:function(t){this.createQuiz(t)},handleKeyClick:function(t){t.preventDefault(),13===t.which&&(1===this.step?this.selectTemplate(t):this.createQuiz(t))},handleToggle:function(n){var e=t(n.target).is(":checked"),i=t(n.target).closest(".sui-box").find("#sui-quiz-leads-description");e?i.show():i.hide()},resetNameSetup:function(n){var e=t(n.target).next(".sui-error-message");e.is(":visible")&&(e.hide(),this.$el.find("#forminator-build-your-form").removeClass("sui-button-onload"))},createQuiz:function(n){var e=t(n.target).addClass("sui-button-onload").closest(".sui-box").find("#forminator-new-quiz-leads").is(":checked"),i=Forminator.Data.modules.quizzes.knowledge_url;"nowrong"===this.type&&(i=Forminator.Data.modules.quizzes.nowrong_url),form_url=i+"&name="+this.name,window.isTrue(this.pagination)&&(form_url+="&pagination=true"),e&&(form_url+="&leads=true"),window.location.href=form_url}})})}(jQuery),function(t){formintorjs.define("admin/popup/schedule",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({popupTpl:Forminator.Utils.template(t(n).find("#forminator-exports-schedule-popup-tpl").html()),events:{'change select[name="interval"]':"on_change_interval","click .sui-toggle-label":"click_label","click .tab-labels .sui-tab-item":"click_tab_label","click .wpmudev-action-done":"submit_schedule"},render:function(){this.$el.html(this.popupTpl({})),Forminator.Utils.sui_delegate_events();var t=forminatorl10n.exporter;this.$el.find('input[name="if_new"]').prop("checked",t.if_new),this.set_enabled(t.enabled),this.$el.find('select[name="interval"]').change(),null!==t.email&&(this.$el.find('select[name="interval"]').val(t.interval),this.$el.find('select[name="day"]').val(t.day),this.$el.find('select[name="month_day"]').val(t.month_day?t.month_day:1),this.$el.find('select[name="hour"]').val(t.hour),"weekly"===t.interval?this.$el.find('select[name="day"]').closest(".sui-form-field").show():"monthly"===t.interval&&this.$el.find('select[name="month_day"]').closest(".sui-form-field").show(),this.load_select())},set_enabled:function(t){t?(this.$el.find('input[name="enabled"][value="true"]').prop("checked",!0),this.$el.find('input[name="enabled"][value="false"]').prop("checked",!1),this.$el.find(".tab-label-disable").removeClass("active"),this.$el.find(".tab-label-enable").addClass("active"),this.$el.find(".schedule-enabled").show(),this.$el.find('input[name="email"]').prop("required",!0)):(this.$el.find('input[name="enabled"][value="false"]').prop("checked",!0),this.$el.find('input[name="enabled"][value="true"]').prop("checked",!1),this.$el.find(".tab-label-disable").addClass("active"),this.$el.find(".tab-label-enable").removeClass("active"),this.$el.find(".schedule-enabled").hide())},load_select:function(){var t=forminatorl10n.exporter,n={tags:!0,tokenSeparators:[","," "],language:{searching:function(){return t.searching},noResults:function(){return t.noResults}},ajax:{url:forminatorData.ajaxUrl,type:"POST",delay:350,data:function(t){return{action:"forminator_builder_search_emails",_wpnonce:forminatorData.searchNonce,q:t.term,permission:"forminator-entries"}},processResults:function(t){return{results:t.data}},cache:!0},createTag:function(t){const n=t.term.trim();return Forminator.Utils.is_email_wp(n)?{id:n,text:n}:null},insertTag:function(t,n){t.push(n)}};Forminator.Utils.forminator_select2_tags(this.$el,n)},on_change_interval:function(t){this.$el.find('select[name="day"]').closest(".sui-form-field").hide(),this.$el.find('select[name="month_day"]').closest(".sui-form-field").hide(),"weekly"===t.target.value?(this.$el.find('select[name="month-day"]').closest(".sui-form-field").hide(),this.$el.find('select[name="day"]').closest(".sui-form-field").show()):"monthly"===t.target.value&&(this.$el.find('select[name="month_day"]').closest(".sui-form-field").show(),this.$el.find('select[name="day"]').closest(".sui-form-field").hide())},click_label:function(t){t.preventDefault(),this.$el.closest(".sui-form-field").find(".sui-toggle input").click()},click_tab_label:function(n){var e=t(n.target);e.closest(".sui-tab-item").hasClass("tab-label-disable")?this.set_enabled(!1):e.closest(".sui-tab-item").hasClass("tab-label-enable")&&(this.load_select(),this.set_enabled(!0))},submit_schedule:function(t){this.$el.find("form.schedule-action").trigger("submit")}})})}(jQuery),function(t){formintorjs.define("admin/popup/new-form",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-new-form-popup-tpl").html()),initialize:function(t){this.title=t.title,this.title=Forminator.Utils.sanitize_uri_string(this.title)},render:function(){this.$el.html(this.popupTpl({title:this.title}))}})})}(jQuery),function(t){formintorjs.define("admin/popup/polls",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-popup-templates",newFormTpl:Forminator.Utils.template(t(n).find("#forminator-new-form-tpl").html()),newPollContent:Forminator.Utils.template(t(n).find("#forminator-new-poll-content-tpl").html()),events:{"click #forminator-build-your-form":"handleMouseClick","focus #forminator-form-name":"resetNameSetup",keyup:"handleKeyClick"},initialize:function(t){this.options=t},render:function(){this.$el.html(this.newFormTpl()),this.$el.find(".sui-box-body").html(this.newPollContent())},handleMouseClick:function(t){this.create_poll(t)},handleKeyClick:function(t){t.preventDefault(),13===t.which&&this.create_poll(t)},resetNameSetup:function(n){var e=t(n.target).next(".sui-error-message");e.is(":visible")&&(e.hide(),this.$el.find("#forminator-build-your-form").removeClass("sui-button-onload"))},create_poll:function(n){n.preventDefault();var e=t(n.target).addClass("sui-button-onload").closest(".sui-box").find("#forminator-form-name");if(""===e.val().trim())t(n.target).closest(".sui-box").find(".sui-error-message").show();else{var i=Forminator.Data.modules.polls.new_form_url;t(n.target).closest(".sui-box").find(".sui-error-message").hide(),i=i+"&name="+e.val(),window.location.href=i}}})})}(jQuery),function(t){formintorjs.define("admin/popup/ajax",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"sui-box-body",events:{"click .wpmudev-action-done":"save","click .wpmudev-action-ajax-done":"ajax_save","click .wpmudev-action-ajax-cf7-import":"ajax_cf7_import","click .wpmudev-button-clear-exports":"clear_exports","click .forminator-radio--field":"show_poll_custom_input","click .forminator-popup-close":"close_popup","click .forminator-retry-import":"ajax_cf7_import","change #forminator-choose-import-form":"import_form_action","change .forminator-import-forms":"import_form_action"},initialize:function(t){return t=_.extend({action:"",nonce:"",data:"",id:"",enable_loader:!0},t),this.action=t.action,this.nonce=t.nonce,this.data=t.data,this.id=t.id,this.enable_loader=t.enable_loader,this.render()},render:function(){var n=this,e={};if(e.action="forminator_load_"+this.action+"_popup",e._ajax_nonce=this.nonce,e.data=this.data,this.id&&(e.id=this.id),this.enable_loader){var i="";"sui-box-body"!==this.className&&(i+='<div class="sui-box-body">'),i+='<p class="fui-loading-dialog" aria-label="Loading content"><i class="sui-icon-loader sui-loading" aria-hidden="true"></i></p>',"sui-box-body"!==this.className&&(i+="</div>"),n.$el.html(i)}t.post({url:Forminator.Data.ajaxUrl,type:"post",data:e}).done(function(t){if(t&&t.success){n.$el.html(t.data),n.$el.find(".wpmudev-hidden-popup").show(400),Forminator.Utils.sui_delegate_events();n.$el.find(".forminator-custom-form");n.delegateEvents()}}).always(function(){n.$el.find(".fui-loading-dialog").remove()})},save:function(n){n.preventDefault();var e={},i=t(n.target).data("nonce");e.action="forminator_save_"+this.action+"_popup",e._ajax_nonce=i,t(".wpmudev-popup-form input, .wpmudev-popup-form select").each(function(){var n=t(this);e[n.attr("name")]=n.val()}),t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:e,success:function(t){Forminator.Popup.close(!1,function(){window.location.reload()})}})},ajax_save:function(n){var e=this;n.preventDefault();var i={},o=t(n.target).data("nonce");i.action="forminator_save_"+this.action+"_popup",i._ajax_nonce=o,t(".wpmudev-popup-form input, .wpmudev-popup-form select, .wpmudev-popup-form textarea").each(function(){var n=t(this);("checkbox"!==n[0].type||"checkbox"===n[0].type&&n[0].checked)&&(i[n.attr("name")]=n.val())}),this.$el.find(".sui-button:not(.disable-loader)").addClass("sui-button-onload"),t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:i,success:function(t){if(!0===t.success){var n=!1;_.isUndefined(t.data.url)||(n=t.data.url),Forminator.Popup.close(!1,function(){n&&(location.href=n)})}else{const e="<p>"+t.data+"</p>",i={type:"error",autoclose:{timeout:8e3}};_.isUndefined(t.data)||SUI.openNotice("wpmudev-ajax-error-placeholder",e,i)}}}).always(function(){e.$el.find(".sui-button:not(.disable-loader)").removeClass("sui-button-onload")})},clear_exports:function(n){n.preventDefault();var e={},i=this,o=t(n.target).data("nonce"),a=t(n.target).data("form-id");e.action="forminator_clear_"+this.action+"_popup",e._ajax_nonce=o,e.id=a,t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:e,success:function(){i.render()}})},show_poll_custom_input:function(n){var e=this,i=this.$el.find(".forminator-input"),o=n.target.checked,a=t(n.target).attr("id");if(i.hide(),e.$el.find(".forminator-input#"+a+"-extra").length){var r=e.$el.find(".forminator-input#"+a+"-extra");o?r.show():r.hide()}},ajax_cf7_import:function(n){var e=this,i=e.$el.find("form").serializeArray();n.preventDefault(),this.$el.find(".sui-button:not(.disable-loader)").addClass("sui-button-onload"),this.$el.find(".wpmudev-ajax-error-placeholder").addClass("sui-hidden"),this.$el.find(".forminator-cf7-imported-fail").addClass("sui-hidden"),t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:i,xhr:function(){var t=new window.XMLHttpRequest;return t.upload.addEventListener("progress",function(t){if(t.lengthComputable){var n=t.loaded/t.total;n=parseInt(100*n),e.$el.find(".forminator-cf7-importing .sui-progress-text").html(n+"%"),e.$el.find(".forminator-cf7-importing .sui-progress-bar span").css("width",n+"%")}},!1),t},success:function(t){!0===t.success?setTimeout(function(){e.$el.find(".forminator-cf7-importing").addClass("sui-hidden"),e.$el.find(".forminator-cf7-imported").removeClass("sui-hidden")},1e3):_.isUndefined(t.data)||(setTimeout(function(){e.$el.find(".forminator-cf7-importing").addClass("sui-hidden"),e.$el.find(".forminator-cf7-imported-fail").removeClass("sui-hidden")},1e3),e.$el.find(".wpmudev-ajax-error-placeholder").removeClass("sui-hidden").find("p").text(t.data))}}).always(function(t){e.$el.find(".sui-button:not(.disable-loader)").removeClass("sui-button-onload"),e.$el.find(".forminator-cf7-import").addClass("sui-hidden"),e.$el.find(".forminator-cf7-importing").removeClass("sui-hidden")})},close_popup:function(){Forminator.Popup.close()},import_form_action:function(n){n.preventDefault();var e=t(n.target),i=e.val(),o=!1;"specific"===i&&(o=!0),(null==i||Array.isArray(i)&&i.length<1)&&(o=!0),this.$el.find(".wpmudev-action-ajax-cf7-import").prop("disabled",o)}})})}(jQuery),function(t){formintorjs.define("admin/popup/delete",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-delete-popup-tpl").html()),popupPollTpl:Forminator.Utils.template(t(n).find("#forminator-delete-poll-popup-tpl").html()),initialize:function(t){this.module=t.module,this.nonce=t.nonce,this.id=t.id,this.action=t.action,this.referrer=t.referrer,this.button=t.button||Forminator.l10n.popup.delete,this.content=t.content||Forminator.l10n.popup.cannot_be_reverted},render:function(){"poll"===this.module?this.$el.html(this.popupPollTpl({nonce:this.nonce,id:this.id,referrer:this.referrer,content:this.content})):this.$el.html(this.popupTpl({nonce:this.nonce,id:this.id,action:this.action,referrer:this.referrer,button:this.button,content:this.content}))}})})}(jQuery),function(t){formintorjs.define("admin/popup/preview",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"sui-box-body",initialize:function(n){var e=this,i={action:"",type:"",id:"",preview_data:{},enable_loader:!0};return"forminator_quizzes"===n.type&&(i.has_lead=n.has_lead,i.leads_id=n.leads_id),n=_.extend(i,n),this.action=n.action,this.type=n.type,this.nonce=n.nonce,this.id=n.id,this.render_id=0,this.preview_data=n.preview_data,this.enable_loader=n.enable_loader,"forminator_quizzes"===n.type&&(this.has_lead=n.has_lead,this.leads_id=n.leads_id),t(document).off("after.load.forminator"),t(document).on("after.load.forminator",function(t){e.after_load()}),this.render()},render:function(){var n=this,e={};if(e.action=this.action,e.type=this.type,e.id=this.id,e.render_id=this.render_id,e.nonce=this.nonce,e.is_preview=1,e.preview_data=this.preview_data,e.last_submit_data={},"forminator_quizzes"===this.type&&(e.has_lead=this.has_lead,e.leads_id=this.leads_id),this.enable_loader){var i="";"sui-box-body"!==this.className&&(i+='<div class="sui-box-body">'),i+='<div class="fui-loading-dialog"><p style="margin: 0; text-align: center;" aria-hidden="true"><span class="sui-icon-loader sui-md sui-loading"></span></p><p class="sui-screen-reader-text">Loading content...</p></div>',"sui-box-body"!==this.className&&(i+="</div>"),n.$el.html(i)}var o=t('<form id="forminator-module-'+this.id+'" data-forminator-render="'+this.render_id+'" style="display:none"></form>');n.$el.append(o),t(n.$el.find("#forminator-module-"+this.id+'[data-forminator-render="'+this.render_id+'"]').get(0)).forminatorLoader(e)},after_load:function(){var t=this;t.$el.find('div[data-form="forminator-module-'+this.id+'"]').remove(),t.$el.find(".fui-loading-dialog").remove()}})})}(jQuery),function(t){formintorjs.define("admin/popup/reset-plugin-settings",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-reset-plugin-settings-popup-tpl").html()),events:{"click .popup-confirmation-confirm":"confirm_action"},initialize:function(t){this.nonce=t.nonce,this.referrer=t.referrer,this.content=t.content||Forminator.l10n.popup.cannot_be_reverted},render:function(){this.$el.html(this.popupTpl({nonce:this.nonce,id:this.id,referrer:this.referrer,content:this.content}))},confirm_action:function(n){t(n.currentTarget).addClass("sui-button-onload")}})})}(jQuery),function(t){formintorjs.define("admin/popup/disconnect-stripe",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup delete-stripe--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-disconnect-stripe-popup-tpl").html()),initialize:function(t){this.nonce=t.nonce,this.referrer=t.referrer,this.content=t.content||Forminator.l10n.popup.cannot_be_reverted},render:function(){this.$el.html(this.popupTpl({nonce:this.nonce,id:this.id,referrer:this.referrer,content:Forminator.Utils.sanitize_text_field(this.content)}))}})})}(jQuery),function(t){formintorjs.define("admin/popup/disconnect-paypal",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-disconnect-paypal-popup-tpl").html()),initialize:function(t){this.nonce=t.nonce,this.referrer=t.referrer,this.content=t.content||Forminator.l10n.popup.cannot_be_reverted},render:function(){this.$el.html(this.popupTpl({nonce:this.nonce,id:this.id,referrer:this.referrer,content:Forminator.Utils.sanitize_text_field(this.content)}))}})})}(jQuery),function(t){formintorjs.define("admin/popup/approve-user",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-approve-user-popup-tpl").html()),events:{"click .approve-user.popup-confirmation-confirm":"approveUser"},initialize:function(t){this.nonce=t.nonce,this.referrer=t.referrer,this.content=t.content||Forminator.l10n.popup.cannot_be_reverted,this.activationKey=t.activationKey},render:function(){this.$el.html(this.popupTpl({nonce:this.nonce,id:this.id,referrer:this.referrer,content:this.content,activationKey:this.activationKey}))},submitForm:function(n,e,i){var o={};o.action="forminator_approve_user_popup",o._ajax_nonce=e,o.activation_key=i;var a=n.serialize()+"&"+t.param(o);t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:a,beforeSend:function(){n.find(".sui-button").addClass("sui-button-onload")},success:function(t){t&&t.success?(Forminator.Notification.open("success",Forminator.l10n.commons.approve_user_successfull,4e3),window.location.reload()):Forminator.Notification.open("error",t.data,4e3)},error:function(t){Forminator.Notification.open("error",Forminator.l10n.commons.approve_user_unsuccessfull,4e3)}}).always(function(){n.find(".sui-button").removeClass("sui-button-onload")})},approveUser:function(n){n.preventDefault(),t(n.target).addClass("sui-button-onload");var e=this.$el.find(".form-approve-user"),i=e.find("form");return this.submitForm(i,this.nonce,this.activationKey),!1}})})}(jQuery),function(t){formintorjs.define("admin/popup/delete-unconfirmed-user",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-delete-unconfirmed-user-popup-tpl").html()),events:{"click .delete-unconfirmed-user.popup-confirmation-confirm":"deleteUnconfirmedUser"},initialize:function(t){this.nonce=t.nonce,this.formId=t.formId,this.referrer=t.referrer,this.content=t.content||Forminator.l10n.popup.cannot_be_reverted,this.activationKey=t.activationKey,this.entryId=t.entryId},render:function(){this.$el.html(this.popupTpl({nonce:this.nonce,formId:this.formId,referrer:this.referrer,content:this.content,activationKey:this.activationKey,entryId:this.entryId}))},submitForm:function(n,e,i,o,a){var r={action:"forminator_delete_unconfirmed_user_popup",_ajax_nonce:e,activation_key:i,form_id:o,entry_id:a},s=n.serialize()+"&"+t.param(r);t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:s,beforeSend:function(){n.find(".sui-button").addClass("sui-button-onload")},success:function(t){t&&t.success?window.location.reload():Forminator.Notification.open("error",t.data,4e3)},error:function(t){Forminator.Notification.open("error",t.data,4e3)}}).always(function(){n.find(".sui-button").removeClass("sui-button-onload")})},deleteUnconfirmedUser:function(n){n.preventDefault(),t(n.target).addClass("sui-button-onload");var e=this.$el.find(".form-delete-unconfirmed-user"),i=e.find("form");return this.submitForm(i,this.nonce,this.activationKey,this.formId,this.entryId),!1}})})}(jQuery),function(t){formintorjs.define("admin/popup/create-appearance-preset",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-create-appearance-preset-tpl").html()),events:{"click #forminator-create-preset":"createPreset","keydown #forminator-preset-name":"toggleButton"},initialize:function(t){this.nonce=t.nonce,this.title=t.title,this.content=t.content,this.$target=t.$target},render:function(){var t=this.$target.data("modal-preset-form-label"),n=this.$target.data("modal-preset-loading-text"),e=this.$target.data("modal-preset-name-label"),i=this.$target.data("modal-preset-name-placeholder");this.$el.html(this.popupTpl({title:Forminator.Utils.sanitize_text_field(this.title),content:Forminator.Utils.sanitize_text_field(this.content),formLabel:Forminator.Utils.sanitize_text_field(t),loadingText:Forminator.Utils.sanitize_text_field(n),nameLabel:Forminator.Utils.sanitize_text_field(e),namePlaceholder:Forminator.Utils.sanitize_text_field(i)}))},toggleButton:function(n){setTimeout(function(){var e=t(n.currentTarget).val().trim();t("#forminator-create-preset").prop("disabled",!e)},300)},createPreset:function(n){n.preventDefault(),n.stopImmediatePropagation();var e=t(n.target);e.addClass("sui-button-onload-text");var i=this.$el.find('select[name="form_id"]').val(),o=this.$el.find("#forminator-preset-name").val(),a={action:"forminator_create_appearance_preset",_ajax_nonce:this.nonce,form_id:i,name:o};return t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:a,success:function(t){t&&t.success?Forminator.openPreset(t.data):(Forminator.Notification.open("error",t.data,4e3),e.removeClass("sui-button-onload-text"))},error:function(t){Forminator.Notification.open("error",t.data,4e3),e.removeClass("sui-button-onload-text")}}),!1}})})}(jQuery),function(t){formintorjs.define("admin/popup/apply-appearance-preset",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-apply-appearance-preset-tpl").html()),events:{"click #forminator-apply-preset":"applyPreset"},initialize:function(t){this.$target=t.$target},render:function(){this.$el.html(this.popupTpl({description:Forminator.Data.modules.ApplyPreset.description,notice:Forminator.Data.modules.ApplyPreset.notice,button:Forminator.Data.modules.ApplyPreset.button,selectbox:Forminator.Data.modules.ApplyPreset.selectbox}))},applyPreset:function(n){n.preventDefault(),n.stopImmediatePropagation();var e=t(n.target);e.addClass("sui-button-onload-text");var i=this.$target.data("form-id"),o=[],a=this.$el.find('select[name="appearance_preset"]').val();o=i?[i]:t("#forminator_bulk_ids").val().split(",");var r={action:"forminator_apply_appearance_preset",_ajax_nonce:Forminator.Data.modules.ApplyPreset.nonce,preset_id:a,ids:o};return t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:r,success:function(t){t&&t.success?(Forminator.Notification.open("success",t.data,4e3),Forminator.Popup.close()):(Forminator.Notification.open("error",t.data,4e3),e.removeClass("sui-button-onload-text"))},error:function(t){Forminator.Notification.open("error",t.data,4e3),e.removeClass("sui-button-onload-text")}}),!1}})})}(jQuery),function(t){formintorjs.define("admin/popup/confirm",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-confirmation-popup-tpl").html()),default_options:{confirmation_message:Forminator.l10n.popup.confirm_action,confirmation_title:Forminator.l10n.popup.confirm_title,confirm_callback:function(){this.close()},cancel_callback:function(){this.close()}},confirm_options:{},events:{"click .popup-confirmation-confirm":"confirm_action","click .popup-confirmation-cancel":"cancel_action"},initialize:function(t){this.confirm_options=_.defaults(t,this.default_options)},render:function(){return this.$el.html(this.popupTpl(this.confirm_options)),this},confirm_action:function(){this.confirm_options.confirm_callback.apply(this,[])},cancel_action:function(){this.confirm_options.cancel_callback.apply(this,[])},close:function(){Forminator.Popup.close()}})})}(jQuery),function(t){formintorjs.define("admin/popup/addons-actions",["text!tpl/dashboard.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--popup",popupTpl:Forminator.Utils.template(t(n).find("#forminator-addons-action-popup-tpl").html()),initialize:function(t){this.nonce=t.nonce,this.is_network=t.is_network,this.id=t.id,this.referrer=t.referrer,this.content=t.content||Forminator.l10n.popup.cannot_be_reverted,this.forms=t.forms||[]},render:function(){this.$el.html(this.popupTpl({nonce:this.nonce,is_network:this.is_network,id:this.id,referrer:this.referrer,content:this.content,forms:this.forms}))}})})}(jQuery),formintorjs.define("text!tpl/reports.html",[],function(){
-return'<div>\n    <script type="text/template" id="forminator-add-reports-content">\n        <div\n            id="forminator-notifications-slide-settings"\n            class="sui-modal-slide sui-active sui-loaded"\n            data-modal-size="lg"\n        >\n            <div class="sui-box">\n                <div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\n                    <button class="sui-button-icon sui-button-float--right forminator-popup-close">\n                        <span class="sui-icon-close" aria-hidden="true"></span>\n                        <span class="sui-screen-reader-text">Close</span>\n                    </button>\n                    <h3 id="forminator-settings__title" class="sui-box-title sui-lg">\n                        {{ Forminator.l10n.popup.settings_label }}\n                    </h3>\n                    <p id="forminator-settings__description" class="sui-description">\n                        {{ Forminator.l10n.popup.settings_description }}\n                    </p>\n                </div>\n                <div class="sui-box-body reports-settings-content"></div>\n\n                <div class="sui-box-footer sui-content-separated">\n                    <button class="sui-button sui-button-ghost forminator-cancel-report">\n                        <span class="sui-loading-text">{{ Forminator.l10n.popup.cancel }}</span>\n                        <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                    </button>\n                    <button\n                            id="forminator-notifications-slide-settings-next"\n                            class="sui-button forminator-popup-slide"\n                            data-modal-slide="forminator-notifications-slide-schedule"\n                            data-modal-slide-focus=""\n                            data-modal-slide-intro="next"\n                    >\n                        <span class="sui-loading-text">{{ Forminator.l10n.form.continue_button }}</span>\n                    </button>\n                </div>\n            </div>\n        </div>\n        <div\n            id="forminator-notifications-slide-schedule"\n            class="sui-modal-slide"\n            data-modal-size="lg"\n            aria-hidden="true"\n            tabindex="-1"\n        >\n            <div class="sui-box">\n                <div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\n                    <button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\n                        <span class="sui-icon-close sui-md" aria-hidden="true"></span>\n                        <span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\n                    </button>\n\n                    <h3 id="forminator-schedule__title" class="sui-box-title sui-lg">\n                        {{ Forminator.l10n.popup.schedule_label }}\n                    </h3>\n\n                    <p id="forminator-schedule__description" class="sui-description">\n                        {{ Forminator.l10n.popup.schedule_description }}\n                    </p>\n\n                </div>\n\n                <div class="sui-box-body reports-schedule-content"></div>\n                <div class="sui-box-footer sui-content-separated">\n\n                    <button id="forminator-notifications-slide-schedule-back"\n                            class="forminator-popup-slide sui-button sui-button-ghost"\n                            data-modal-slide="forminator-notifications-slide-settings"\n                            data-modal-slide-focus=""\n                            data-modal-slide-intro="back">\n                        <span class="sui-loading-text">{{ Forminator.l10n.popup.back }}</span>\n                        <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                    </button>\n                    <button id="forminator-notifications-slide-schedule-next"\n                            class="sui-button forminator-popup-slide"\n                            data-modal-slide="forminator-notifications-slide-recipients"\n                            data-modal-slide-focus=""\n                            data-modal-slide-intro="next">\n                        <span class="sui-loading-text">{{ Forminator.l10n.quiz.continue_button }}</span>\n                        <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                    </button>\n                </div>\n            </div>\n        </div>\n\n        <div\n                id="forminator-notifications-slide-recipients"\n                class="sui-modal-slide"\n                data-modal-size="lg"\n                aria-hidden="true"\n                tabindex="-1"\n        >\n            <div class="sui-box">\n                <div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\n                    <button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\n                        <span class="sui-icon-close sui-md" aria-hidden="true"></span>\n                        <span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\n                    </button>\n                    <h3 id="forminator-popup__title" class="sui-box-title sui-lg">\n                        {{ Forminator.l10n.popup.recipients_label }}\n                    </h3>\n                    <p id="forminator-popup__description" class="sui-description">\n                        {{ Forminator.l10n.popup.recipients_description }}\n                    </p>\n                </div>\n                <div class="sui-box-body reports-recipients-content"></div>\n                <div class="sui-box-footer sui-content-separated">\n                    <button id="forminator-notifications-slide-recipients-back"\n                            class="forminator-popup-slide sui-button sui-button-ghost"\n                            data-modal-slide="forminator-notifications-slide-schedule"\n                            data-modal-slide-focus=""\n                            data-modal-slide-intro="back">\n                        <span class="sui-loading-text">{{ Forminator.l10n.popup.back }}</span>\n                        <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                    </button>\n                    <div class="report-button-with-toggle">\n                        <label for="notification-status-slide" class="sui-toggle">\n                            <input type="checkbox" id="notification-status-slide" class="notification-save-status"\n                                   aria-labelledby="notification-status-slide-label"\n                                   {{ \'active\' === notification.report_status ? \'checked="checked"\' : \'\' }}>\n                            <span class="sui-toggle-slider" aria-hidden="true"></span>\n                            <span id="notification-status-slide-label" class="sui-toggle-label">\n                                {{ Forminator.l10n.popup.status_label }}\n                            </span>\n                        </label>\n                        <button class="sui-button forminator-report-save sui-button-blue" data-id="0">\n                            <span class="sui-loading-text">{{ Forminator.l10n.popup.save_changes }}</span>\n                            <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                        </button>\n                    </div>\n                </div>\n            </div>\n        </div>\n    <\/script>\n    <script type="text/template" id="forminator-reports-settings-content">\n        <div>\n            <div class="sui-box-settings-row">\n                <div class="sui-box-settings-col-2">\n                    <div class="sui-form-field">\n                        <label for="report-title"\n                               id="label-report-title" class="sui-label">\n                            {{ Forminator.l10n.commons.label }}\n                        </label>\n                        <input\n                                placeholder="Placeholder"\n                                id="report-title"\n                                name="label"\n                                value="{{ settings.label }}"\n                                class="sui-form-control"\n                                aria-labelledby="label-report-title"\n                                aria-describedby="error-report-title description-report-title"\n                        />\n                        <span id="description-report-title" class="sui-description">\n                            {{ Forminator.l10n.popup.label_description }}\n                        </span>\n                    </div>\n                </div>\n            </div>\n            <div class="sui-box-settings-row">\n                <div class="sui-box-settings-col-2">\n                    <label class="sui-settings-label">\n                        {{ Forminator.l10n.commons.module }}\n                    </label>\n                    <span class="sui-description">\n                       {{ Forminator.l10n.popup.module_description }}\n                    </span>\n                    <div class="sui-form-field">\n                        <div class="sui-side-tabs">\n                            <div class="sui-tabs-menu">\n                                <label for="module_forms" class="sui-tab-item {{ \'forms\' === settings.module ? \'active\' : \'\' }}">\n                                    <input type="radio"\n                                           name="module"\n                                           id="module_forms"\n                                           value="forms"\n                                           aria-controls="module_forms__content"\n                                           data-tab-menu="report-module">\n                                    {{ Forminator.l10n.popup.forms }}\n                                </label>\n                                <label for="module_quizzes" class="sui-tab-item {{ \'quizzes\' === settings.module ? \'active\' : \'\' }}">\n                                    <input type="radio"\n                                           name="module"\n                                           id="module_quizzes"\n                                           value="quizzes"\n                                           aria-controls="module_quizzes__content"\n                                           data-tab-menu="report-module">\n                                    {{ Forminator.l10n.popup.quizzes }}\n                                </label>\n                                <label for="module_polls" class="sui-tab-item {{ \'polls\' === settings.module ? \'active\' : \'\' }}">\n                                    <input type="radio"\n                                           name="module"\n                                           id="module_polls"\n                                           value="polls"\n                                           aria-controls="module_polls__content"\n                                           data-tab-menu="report-module">\n                                    {{ Forminator.l10n.popup.polls }}\n                                </label>\n                            </div>\n    \n                            <div class="sui-tabs-content">\n    \n                                <div role="tabpanel" id="module_forms__content"\n                                     class="sui-tab-content {{ \'forms\' === settings.module ? \'active\' : \'\' }}"\n                                     aria-labelledby="module_forms__tab" tabindex="0"\n                                     data-tab-content="report-module">\n                                    <div class="sui-border-frame">\n                                        <label class="sui-settings-label sui-sm">\n                                            {{ Forminator.l10n.popup.select_forms }}\n                                        </label>\n    \n                                        <span class="sui-description">\n                                            {{ Forminator.l10n.popup.select_forms_description }}\n                                        </span>\n    \n                                        <div class="sui-form-field">\n    \n                                            <div class="sui-side-tabs">\n                                                <div class="sui-tabs-menu">\n                                                    <label for="all_forms" class="sui-tab-item {{ undefined === settings.forms_type || \'all\' === settings.forms_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="forms_type"\n                                                               id="all_forms"\n                                                               value="all"\n                                                               aria-controls="all_forms__content"\n                                                               data-tab-menu="select-form">\n                                                        {{ Forminator.l10n.popup.all_forms }}\n                                                    </label>\n                                                    <label for="selected_forms" class="sui-tab-item {{ \'selected\' === settings.forms_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="forms_type"\n                                                               id="selected_forms"\n                                                               value="selected"\n                                                               aria-controls="selected_forms__content"\n                                                               data-tab-menu="select-form">\n                                                        {{ Forminator.l10n.popup.selected_forms }}\n                                                    </label>\n                                                </div>\n    \n                                                <div class="sui-tabs-content">\n    \n                                                    <div role="tabpanel" id="selected_forms__content"\n                                                         class="sui-tab-content {{ \'selected\' === settings.forms_type ? \'active\' : \'\' }}"\n                                                         aria-labelledby="selected_forms" tabindex="0" hidden\n                                                         data-tab-content="select-form">\n                                                        <div class="sui-border-frame">\n                                                            <div class="sui-form-field">\n                                                                <label class="sui-label">\n                                                                    {{ Forminator.l10n.popup.select_forms }}\n                                                                </label>\n    \n                                                                <select name="select_forms" class="sui-select" multiple>\n                                                                    {[ let selected_form = settings.selected_forms;\n                                                                    _.each(Forminator.Data.form_modules, function(forms){ ]}\n                                                                        <option value="{{ forms.id }}"\n                                                                            {[ if( undefined !== selected_form && selected_form.indexOf(forms.id.toString()) !== -1 ) { ]}\n                                                                                selected="selected"\n                                                                            {[ } ]}>\n                                                                            {{ forms.name }}\n                                                                        </option>\n                                                                    {[ }); ]}\n                                                                </select>\n    \n                                                                <p id="selected-forms-description" class="sui-description">\n                                                                    {{ Forminator.l10n.popup.selected_forms_description }}\n                                                                </p>\n                                                            </div>\n                                                        </div>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                </div>\n    \n                                <div role="tabpanel" id="module_quizzes__content"\n                                     class="sui-tab-content {{ \'quizzes\' === settings.module ? \'active\' : \'\' }}"\n                                     aria-labelledby="module_quizzes__tab" tabindex="0" hidden\n                                     data-tab-content="report-module">\n                                    <div class="sui-border-frame">\n                                        <label class="sui-settings-label sui-sm">\n                                            {{ Forminator.l10n.popup.select_quizzes }}\n                                        </label>\n    \n                                        <span class="sui-description">\n                                            {{ Forminator.l10n.popup.select_quizzes_description }}\n                                        </span>\n    \n                                        <div class="sui-form-field">\n    \n                                            <div class="sui-side-tabs">\n                                                <div class="sui-tabs-menu">\n                                                    <label for="all_quizzes" class="sui-tab-item {{ undefined === settings.quizzes_type || \'all\' === settings.quizzes_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="quizzes_type"\n                                                               id="all_quizzes"\n                                                               value="all"\n                                                               aria-controls="all_quizzes__content"\n                                                               data-tab-menu="select-quiz">\n                                                        {{ Forminator.l10n.popup.all_quizzes }}\n                                                    </label>\n                                                    <label for="selected_quizzes" class="sui-tab-item {{ \'selected\' === settings.quizzes_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="quizzes_type"\n                                                               id="selected_quizzes"\n                                                               value="selected"\n                                                               aria-controls="selected_quizzes__content"\n                                                               data-tab-menu="select-quiz">\n                                                        {{ Forminator.l10n.popup.selected_quizzes }}\n                                                    </label>\n                                                </div>\n    \n                                                <div class="sui-tabs-content">\n    \n                                                    <div role="tabpanel" id="selected_quizzes__content"\n                                                         class="sui-tab-content {{ \'selected\' === settings.quizzes_type ? \'active\' : \'\' }}"\n                                                         aria-labelledby="selected_quizzes__tab" tabindex="0" hidden\n                                                         data-tab-content="select-quiz">\n                                                        <div class="sui-border-frame">\n                                                            <div class="sui-form-field">\n                                                                <label class="sui-label">\n                                                                    {{ Forminator.l10n.popup.select_quizzes }}\n                                                                </label>\n    \n                                                                <select name="select_quizzes" class="sui-select" multiple>\n                                                                    {[ let selected_quiz = settings.selected_quizzes;\n                                                                    _.each(Forminator.Data.quiz_modules, function(quizzes){ ]}\n                                                                        <option value="{{ quizzes.id }}"\n                                                                        {[ if( undefined !== selected_quiz && selected_quiz.indexOf(quizzes.id.toString()) !== -1 ) { ]}selected="selected"{[ } ]}>\n                                                                            {{ quizzes.name }}\n                                                                        </option>\n                                                                    {[ }); ]}\n                                                                </select>\n    \n                                                                <p id="selected-quizzes-description" class="sui-description">\n                                                                    {{ Forminator.l10n.popup.selected_quizzes_description }}\n                                                                </p>\n                                                            </div>\n                                                        </div>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                </div>\n    \n                                <div role="tabpanel" id="module_polls__content"\n                                     class="sui-tab-content {{ \'polls\' === settings.module ? \'active\' : \'\' }}"\n                                     aria-labelledby="module_polls__tab" tabindex="0" hidden\n                                     data-tab-content="report-module">\n                                    <div class="sui-border-frame">\n                                        <label class="sui-settings-label sui-sm">\n                                            {{ Forminator.l10n.popup.select_polls }}\n                                        </label>\n    \n                                        <span class="sui-description">\n                                            {{ Forminator.l10n.popup.select_polls_description }}\n                                        </span>\n    \n                                        <div class="sui-form-field">\n    \n                                            <div class="sui-side-tabs">\n                                                <div class="sui-tabs-menu">\n                                                    <label for="all_polls" class="sui-tab-item {{ undefined === settings.polls_type || \'all\' === settings.polls_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="polls_type"\n                                                               id="all_polls"\n                                                               value="all"\n                                                               aria-controls="all_polls__content"\n                                                               data-tab-menu="select-poll">\n                                                        {{ Forminator.l10n.popup.all_polls }}\n                                                    </label>\n                                                    <label for="all_polls" class="sui-tab-item {{ \'selected\' === settings.polls_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="polls_type"\n                                                               id="selected_polls"\n                                                               value="selected"\n                                                               aria-controls="selected_polls__content"\n                                                               data-tab-menu="select-quiz">\n                                                        {{ Forminator.l10n.popup.selected_polls }}\n                                                    </label>\n                                                </div>\n    \n                                                <div class="sui-tabs-content">\n    \n                                                    <div role="tabpanel" id="selected_polls__content"\n                                                         class="sui-tab-content {{ \'selected\' === settings.polls_type ? \'active\' : \'\' }}"\n                                                         aria-labelledby="selected_polls__tab" tabindex="0" hidden\n                                                         data-tab-content="select-quiz">\n                                                        <div class="sui-border-frame">\n                                                            <div class="sui-form-field">\n                                                                <label class="sui-label">\n                                                                    {{ Forminator.l10n.popup.select_polls }}\n                                                                </label>\n    \n                                                                <select name="select_polls" class="sui-select" multiple>\n                                                                    {[ let selected_polls = settings.selected_polls;\n                                                                    _.each(Forminator.Data.poll_modules, function(polls){ ]}\n                                                                        <option value="{{ polls.id }}"\n                                                                         {[ if( undefined !== selected_polls && selected_polls.indexOf(polls.id.toString()) !== -1 ) { ]}selected="selected"{[ } ]}>\n                                                                            {{ polls.name }}\n                                                                        </option>\n                                                                    {[ }); ]}\n                                                                </select>\n    \n                                                                <p id="selected-poll-description" class="sui-description">\n                                                                    {{ Forminator.l10n.popup.selected_polls_description }}\n                                                                </p>\n                                                            </div>\n                                                        </div>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    <\/script>\n    <script type="text/template" id="forminator-reports-schedule-content">\n        <div class="sui-box-settings-row">\n\n            <div class="sui-box-settings-col-2">\n                <div class="sui-side-tabs">\n                    <div class="sui-tabs-menu">\n                        <label for="frequency_daily" class="sui-tab-item {{ \'daily\' === schedule.frequency ? \'active\' : \'\' }}">\n                            <input type="radio"\n                                   id="frequency_daily"\n                                   name="frequency"\n                                   aria-controls="frequency_daily__content"\n                                   value="daily"\n                                   data-tab-menu="report-frequency">\n                            {{ Forminator.l10n.popup.daily }}\n                        </label>\n                        <label for="frequency_weekly" class="sui-tab-item {{ \'weekly\' === schedule.frequency ? \'active\' : \'\' }}">\n                            <input type="radio"\n                                   name="frequency"\n                                   id="frequency_weekly"\n                                   aria-controls="frequency_weekly__content"\n                                   value="weekly"\n                                   data-tab-menu="report-frequency">\n                            {{ Forminator.l10n.popup.weekly }}\n                        </label>\n                        <label for="frequency_monthly" class="sui-tab-item {{ \'monthly\' === schedule.frequency ? \'active\' : \'\' }}">\n                            <input type="radio"\n                                   name="frequency"\n                                   id="frequency_monthly"\n                                   aria-controls="frequency_monthly__content"\n                                   value="monthly"\n                                   data-tab-menu="report-frequency">\n                            {{ Forminator.l10n.popup.monthly }}\n                        </label>\n                    </div>\n\n                    <div class="sui-tabs-content">\n\n                        <div role="tabpanel" id="frequency_daily__content" class="sui-tab-content\n                            {{ \'daily\' === schedule.frequency ? \'active\' : \'\' }}"\n                             aria-labelledby="frequency_daily__tab" tabindex="0"\n                             data-tab-content="report-frequency">\n                            <div class="sui-border-frame">\n                                <div class="sui-form-field sui-no-margin-bottom">\n                                    <label class="sui-label" for="report-time">\n                                        {{ Forminator.l10n.popup.day_time }}\n                                    </label>\n                                    <select name="report-time" id="report-time" class="sui-select">\n                                        {[ _.each(Forminator.l10n.popup.time_interval, function(interval){ ]}\n                                        <option value="{{ interval }}"\n                                            {[ if( undefined !== schedule.time && schedule.time === interval ) { ]}\n                                                selected="selected"\n                                            {[ } ]}\n                                        >{{ interval }}</option>\n                                        {[ }); ]}\n                                    </select>\n                                    <p id="select-single-frequency_time" class="sui-description">\n                                        {{ Forminator.l10n.popup.frequency_time }}\n                                    </p>\n                                </div>\n                            </div>\n                        </div>\n\n                        <div role="tabpanel" id="frequency_weekly__content" class="sui-tab-content\n                            {{ \'weekly\' === schedule.frequency ? \'active\' : \'\' }}"\n                             aria-labelledby="frequency_weekly__tab" tabindex="0" hidden\n                             data-tab-content="report-frequency">\n                            <div class="sui-border-frame">\n                                <div class="sui-row sui-no-margin-bottom schedule-box">\n                                    <div class="sui-col sui-form-field sui-no-margin-bottom">\n                                        <label class="sui-label" for="week-days">\n                                            {{ Forminator.l10n.popup.week_day }}\n                                        </label>\n                                        <select name="week-days" class="sui-select" id="week-days">\n                                            {[ _.each(Forminator.l10n.popup.week_days, function(week, days){ ]}\n                                            <option value="{{ days }}"\n                                                {[ if( undefined !== schedule.weekDay && schedule.weekDay === days ) { ]}\n                                                    selected="selected"\n                                                {[ } ]}\n                                            >{{ week }}</option>\n                                            {[ }); ]}\n                                        </select>\n                                    </div>\n                                    <div class="sui-col sui-form-field sui-no-margin-bottom">\n                                        <label class="sui-label" for="week-time">\n                                            {{ Forminator.l10n.popup.day_time }}\n                                        </label>\n                                        <select name="week-time" class="sui-select" id="week-time">\n                                            {[ _.each(Forminator.l10n.popup.time_interval, function(interval){ ]}\n                                            <option value="{{ interval }}"\n                                                {[ if( undefined !== schedule.weekTime && schedule.weekTime === interval ) { ]}\n                                                    selected="selected"\n                                                {[ } ]}\n                                            >{{ interval }}</option>\n                                            {[ }); ]}\n                                        </select>\n                                    </div>\n                                    <p id="select-single-default-helper" class="sui-col-12 sui-description">\n                                        {{ Forminator.l10n.popup.frequency_time }}\n                                    </p>\n                                </div>\n                            </div>\n                        </div>\n\n                        <div role="tabpanel" id="frequency_monthly__content" class="sui-tab-content\n                            {{ \'monthly\' === schedule.frequency ? \'active\' : \'\' }}"\n                             aria-labelledby="frequency_monthly__tab" tabindex="0" hidden\n                             data-tab-content="report-frequency">\n                            <div class="sui-border-frame">\n                                <div class="sui-row sui-no-margin-bottom schedule-box">\n                                    <div class="sui-col sui-form-field sui-no-margin-bottom">\n                                        <label class="sui-label" for="week-days">\n                                            {{ Forminator.l10n.popup.month_day }}\n                                        </label>\n                                        <select name="month-days" class="sui-select" id="month-days">\n                                            {[ _.each(Forminator.l10n.popup.month_days, function(month){ ]}\n                                            <option value="{{ month }}"\n                                                {[ if( undefined !== schedule.monthDay && schedule.monthDay === month.toString() ) { ]}\n                                                    selected="selected"\n                                                {[ } ]}\n                                            >{{ month }}</option>\n                                            {[ }); ]}\n                                        </select>\n                                    </div>\n                                    <div class="sui-col sui-form-field sui-no-margin-bottom">\n                                        <label class="sui-label" for="week-time">\n                                            {{ Forminator.l10n.popup.day_time }}\n                                        </label>\n                                        <select name="month-time" class="sui-select" id="month-time">\n                                            {[ _.each(Forminator.l10n.popup.time_interval, function(interval){ ]}\n                                            <option value="{{ interval }}"\n                                                {[ if( undefined !== schedule.monthTime && schedule.monthTime === interval ) { ]}\n                                                    selected="selected"\n                                                {[ } ]}\n                                            >{{ interval }}</option>\n                                            {[ }); ]}\n                                        </select>\n                                    </div>\n                                    <p id="select-month-default-helper" class="sui-col-12 sui-description">\n                                        {{ Forminator.l10n.popup.frequency_time }}\n                                    </p>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    <\/script>\n    <script type="text/template" id="forminator-reports-recipients-content">\n        <div class="sui-box-settings-row">\n            <div class="sui-box-settings-col-2">\n                <div class="sui-tabs sui-tabs-overflow">\n                    <div role="tablist" class="sui-tabs-menu">\n                        <button type="button" role="tab" id="notifications-add-users" class="sui-tab-item active"\n                                aria-controls="notifications-add-users-content" aria-selected="true">\n                            {{ Forminator.l10n.popup.add_users }}\n                        </button>\n                        <button type="button" role="tab" id="notifications-invite-users" class="sui-tab-item"\n                                aria-controls="notifications-invite-users-content" aria-selected="false" tabindex="-1">\n                            {{ Forminator.l10n.popup.add_by_email }}\n                        </button>\n                    </div>\n                    <div class="sui-tabs-content">\n                        <div role="tabpanel" tabindex="0" id="notifications-add-users-content"\n                             class="sui-tab-content active" aria-labelledby="notifications-add-users">\n                            <div class="sui-form-field sui-no-margin-bottom">\n                                <label for="forminator-search-users" class="sui-label">\n                                    {{ Forminator.l10n.popup.search_user }}\n                                </label>\n                                <select id="forminator-search-users" class="sui-select" data-theme="search"\n                                        data-placeholder="{{ Forminator.l10n.popup.search_placeholder }}"\n                                        multiple>\n                                </select>\n                            </div>\n                            {[ const hasUserRecipients = recipients.find( r => undefined !== r.role && \'\' !== r.role ); ]}\n                            <div class="{{ undefined === hasUserRecipients ? \'sui-hidden\' : \'sui-margin-top\' }}">\n                                <strong>{{ Forminator.l10n.popup.added_users }}</strong>\n                                <div class="sui-recipients" id="modal-user-recipients-list">\n                                    {[ for ( const recipient of recipients ) {\n                                    if ( \'\' !== recipient.role ) { ]}\n                                    <div class="sui-recipient sui-recipient-rounded" data-id="{{ recipient.id }}" data-email="{{ recipient.email }}">\n                                        {[ let subClass = \'\';\n                                        if ( \'undefined\' !== typeof recipient.is_pending ) {\n                                        if ( ! recipient.is_pending && \'undefined\' !== typeof recipient.is_subscribed && ! recipient.is_subscribed ) {\n                                        subClass = \'unsubscribed\';\n                                        } else {\n                                        subClass = recipient.is_pending ? \'pending\' : \'confirmed\';\n                                        }\n                                        } ]}\n                                        <span class="sui-recipient-name">\n                                            <span class="subscriber {{ subClass }}">\n                                                {[ if ( \'pending\' === subClass ) { ]}\n                                                <span class="sui-tooltip" data-tooltip="{{ Forminator.l10n.popup.awaiting_confirmation }}">\n                                                {[ } ]}\n                                                    <img src="{{ recipient.avatar }}" alt="{{ recipient.email }}">\n                                                {[ if ( \'pending\' === subClass ) { ]}\n                                                </span>\n                                                 {[ } ]}\n                                            </span>\n                                            <span class="forminator-recipient-name">{{ recipient.name }}</span>\n                                        </span>\n                                        <span class="sui-recipient-email">{{ recipient.role }}</span>\n                                        {[ if ( \'pending\' === subClass || \'unsubscribed\' === subClass ) { ]}\n                                        <button\n                                                type="button"\n                                                class="resend-invite sui-button-icon sui-tooltip"\n                                                data-tooltip="{{ Forminator.l10n.popup.resend_invite }}"\n                                        >\n                                            <span class="sui-icon-send" aria-hidden="true"></span>\n                                        </button>\n                                        {[ } ]}\n                                        <button\n                                                type="button"\n                                                class="sui-button-icon sui-tooltip forminator-remove-recipient"\n                                                data-tooltip="{{ Forminator.l10n.popup.remove_user }}"\n                                                data-id="{{ recipient.id }}"\n                                                data-email="{{ recipient.email }}"\n                                                data-type="user">\n                                            <span class="sui-icon-trash" aria-hidden="true"></span>\n                                        </button>\n                                    </div>\n                                    {[ } ]}\n                                    {[ } ]}\n                                </div>\n                            </div>\n                            <div class="sui-margin-top sui-hidden">\n                                <strong>{{ Forminator.l10n.popup.users }}</strong>\n                                <div class="sui-recipients" id="forminator-user-list"></div>\n                            </div>\n                            <div class="sui-notice sui-notice-warning sui-margin-top notifications-recipients-notice sui-hidden">\n                                <div class="sui-notice-content">\n                                    <div class="sui-notice-message">\n                                        <span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>\n                                        <p></p>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                        <div role="tabpanel" tabindex="0" id="notifications-invite-users-content" class="sui-tab-content" aria-labelledby="notifications-invite-users" hidden>\n                            <p class="sui-description">\n                                {{ Forminator.l10n.popup.invite_description }}\n                            </p>\n                            <div class="sui-form-field">\n                                <label for="recipient-name" id="label-recipient-name" class="sui-label">\n                                    {{ Forminator.l10n.popup.first_name }}\n                                </label>\n\n                                <input\n                                        placeholder="{{ Forminator.l10n.popup.name_placeholder }}"\n                                        id="recipient-name"\n                                        class="sui-form-control"\n                                        aria-labelledby="label-recipient-name"\n                                />\n                            </div>\n\n                            <div class="sui-form-field">\n                                <label for="recipient-email" id="label-recipient-email" class="sui-label">\n                                    {{ Forminator.l10n.popup.email_address }}\n                                </label>\n\n                                <input\n                                        placeholder="{{ Forminator.l10n.popup.email_placeholder }}"\n                                        id="recipient-email"\n                                        class="sui-form-control"\n                                        aria-labelledby="label-recipient-email"\n                                />\n                                <span id="error-recipient-email" class="sui-error-message" role="alert"></span>\n                            </div>\n\n                            <div class="sui-form-field sui-no-margin-bottom">\n                                <button type="button" id="add-recipient-button" class="sui-button" aria-live="polite" disabled="disabled">\n                                    <span class="sui-button-text-default">{{ Forminator.l10n.popup.add_recipient }}</span>\n                                    <span class="sui-button-text-onload">\n                                        <span class="sui-icon-loader sui-loading" aria-hidden="true"></span>\n                                        {{ Forminator.l10n.popup.adding_recipient }}\n                                    </span>\n                                </button>\n                            </div>\n\n                            {[ const hasInvitedRecipients = recipients.find( r => undefined === r.role || \'\' === r.role ); ]}\n                            <div class="{{ undefined === hasInvitedRecipients ? \'sui-hidden\' : \'sui-margin-top\' }}">\n                                <strong>{{ Forminator.l10n.popup.added_users }}</strong>\n                                <div class="sui-recipients" id="modal-email-recipients-list">\n                                    {[ for ( const recipient of recipients ) {\n                                    if ( undefined === recipient.role || \'\' === recipient.role ) { ]}\n                                    <div class="sui-recipient sui-recipient-rounded" data-id="{{ recipient.id }}" data-email="{{ recipient.email }}">\n                                        {[ let subClass = \'\';\n                                        if ( \'undefined\' !== typeof recipient.is_pending ) {\n                                        if ( ! recipient.is_pending && \'undefined\' !== typeof recipient.is_subscribed && ! recipient.is_subscribed ) {\n                                        subClass = \'unsubscribed\';\n                                        } else {\n                                        subClass = recipient.is_pending ? \'pending\' : \'confirmed\';\n                                        }\n                                        } ]}\n                                        <span class="sui-recipient-name">\n                                            <span class="subscriber {{ subClass }}">\n                                                {[ if ( \'pending\' === subClass ) { ]}\n                                                    <span class="sui-tooltip" data-tooltip="{{ Forminator.l10n.popup.awaiting_confirmation }}">\n                                                {[ } ]}\n                                                    <img src="{{ recipient.avatar }}" alt="{{ recipient.email }}">\n                                                {[ if ( \'pending\' === subClass ) { ]}\n                                                    </span>\n                                                {[ } ]}\n                                            </span>\n                                            <span>{{ recipient.name }}</span>\n                                        </span>\n                                        <span class="sui-recipient-email">{{ recipient.email }}</span>\n                                        {[ if ( \'pending\' === subClass || \'unsubscribed\' === subClass ) { ]}\n                                        <button\n                                                type="button"\n                                                class="resend-invite sui-button-icon sui-tooltip"\n                                                data-tooltip="{{ Forminator.l10n.popup.resend_invite }}"\n                                                data-name="{{ recipient.name }}"\n                                                data-email="{{ recipient.email }}">\n                                            <span class="sui-icon-send" aria-hidden="true"></span>\n                                        </button>\n                                        {[ } ]}\n                                        <button\n                                                type="button"\n                                                class="sui-button-icon sui-tooltip forminator-remove-recipient"\n                                                data-tooltip="{{ Forminator.l10n.popup.remove_user }}"\n                                                data-id="{{ recipient.id }}"\n                                                data-email="{{ recipient.email }}"\n                                                data-type="email">\n                                            <span class="sui-icon-trash" aria-hidden="true"></span>\n                                        </button>\n                                    </div>\n                                    {[ } ]}\n                                    {[ } ]}\n                                </div>\n                            </div>\n\n                            <div class="sui-notice sui-notice-warning sui-margin-top notifications-recipients-notice sui-hidden">\n                                <div class="sui-notice-content">\n                                    <div class="sui-notice-message">\n                                        <span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>\n                                        <p></p>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    <\/script>\n    <script type="text/template" id="forminator-edit-reports-content">\n        <div class="sui-box">\n            <div class="sui-box-header">\n                <h3 id="notification-modal-title" class="sui-box-title">{{ Forminator.l10n.popup.configure }}</h3>\n\n                <div class="sui-actions-right">\n                    <button class="sui-button-icon forminator-popup-close">\n                        <span class="sui-icon-close" aria-hidden="true"></span>\n                        <span class="sui-screen-reader-text">Close this modal</span>\n                    </button>\n                </div>\n\n            </div>\n\n            <div class="sui-box-body">\n                <div class="sui-tabs sui-tabs-flushed">\n                    <div role="tablist" class="sui-tabs-menu">\n                        <button type="button" role="tab" id="report-tab-settings"\n                                class="sui-tab-item active" aria-controls="report-tab-settings-content"\n                                aria-selected="true">\n                            {{ Forminator.l10n.popup.settings_label }}\n                        </button>\n\n                        <button type="button" role="tab" id="report-tab-schedule"\n                                class="sui-tab-item" aria-controls="report-tab-schedule-content"\n                                aria-selected="false" tabindex="-1">\n                            {{ Forminator.l10n.popup.schedule_label }}\n                        </button>\n\n                        <button type="button" role="tab" id="report-tab-recipients"\n                                class="sui-tab-item" aria-controls="report-tab-recipients-content"\n                                aria-selected="false" tabindex="-1">\n                            {{ Forminator.l10n.popup.recipients_label }}\n                        </button>\n                    </div>\n\n                    <div class="sui-tabs-content">\n                        <div role="tabpanel" tabindex="0" id="report-tab-settings-content"\n                             class="sui-tab-content reports-settings-content active" aria-labelledby="report-tab-settings">\n                        </div>\n                        <div role="tabpanel" tabindex="0" id="report-tab-schedule-content"\n                             class="sui-tab-content reports-schedule-content" aria-labelledby="report-tab-schedule">\n                        </div>\n                        <div role="tabpanel" tabindex="0" id="report-tab-recipients-content"\n                             class="sui-tab-content reports-recipients-content" aria-labelledby="report-tab-recipients">\n                        </div>\n                    </div>\n                </div>\n            </div>\n\n            <div class="sui-box-footer sui-content-separated">\n                <button class="sui-button sui-button-ghost forminator-cancel-report">\n                    <span class="sui-loading-text">{{ Forminator.l10n.popup.cancel }}</span>\n                    <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                </button>\n                <div class="report-button-with-toggle">\n                    <label for="notification-tab-status" class="sui-toggle">\n                        <input type="checkbox" id="notification-tab-status" class="notification-save-status"\n                               aria-labelledby="notification-tab-status-label"\n                               {{ \'active\' === notification.report_status ? \'checked="checked"\' : \'\' }}>\n                        <span class="sui-toggle-slider" aria-hidden="true"></span>\n                        <span id="notification-tab-status-label" class="sui-toggle-label">\n                            {{ Forminator.l10n.popup.status_label }}\n                        </span>\n                    </label>\n                    <button type="button" class="sui-button sui-button-blue forminator-report-save" aria-live="polite"\n                            data-id="{{ notification.report_id }}">\n                        <span class="sui-button-text-default">\n                            <span class="sui-icon-save" aria-hidden="true"></span>\n                            {{ Forminator.l10n.popup.save_changes }}\n                        </span>\n                        <span class="sui-button-text-onload">\n                            <span class="sui-icon-loader sui-loading" aria-hidden="true"></span>\n                            {{ Forminator.l10n.popup.saving_changes }}\n                        </span>\n                    </button>\n                </div>\n            </div>\n        </div>\n    <\/script>\n</div>'
-}),function(t){formintorjs.define("admin/popup/reports-notification",["text!tpl/reports.html"],function(n){return Backbone.View.extend({className:"forminator-popup-create--report-notification",events:{"click label.sui-tab-item":"inputTabs","click .forminator-popup-close":"close","click .forminator-cancel-report":"close","click button.forminator-popup-slide":"slide_modal","click button.forminator-add-recipient":"add_recipient","click button.forminator-remove-recipient":"remove_recipient","click button#add-recipient-button":"invite_add_recipient","click button.forminator-report-save":"report_save"},initialize:function(t){this.report_id=t.report_id},reportAddPopup:Forminator.Utils.template(t(n).find("#forminator-add-reports-content").html()),reportEditPopup:Forminator.Utils.template(t(n).find("#forminator-edit-reports-content").html()),settingsPopup:Forminator.Utils.template(t(n).find("#forminator-reports-settings-content").html()),schedulePopup:Forminator.Utils.template(t(n).find("#forminator-reports-schedule-content").html()),recipientsPopup:Forminator.Utils.template(t(n).find("#forminator-reports-recipients-content").html()),notification:{report_id:0,exclude:[],settings:{label:forminatorl10n.popup.form_reports,module:"forms",forms_type:"all"},schedule:{frequency:"daily"},report_status:"active",recipients:[]},render:function(){if(0!==this.report_id){var t="";"sui-box-body"!==this.className&&(t+='<div class="sui-box-body">'),t+='<p class="fui-loading-dialog" aria-label="Loading content"><i class="sui-icon-loader sui-loading" aria-hidden="true"></i></p>',"sui-box-body"!==this.className&&(t+="</div>"),this.$el.html(t),this.fetch_report_data(this.report_id)}else this.load_users(),this.$el.html(this.reportAddPopup({notification:this.notification})),this.render_html()},render_html:function(){var t=this;this.render_content(),setTimeout(function(){t.initSUI(),t.mapActions()},500)},render_content:function(){this.$el.find(".reports-settings-content").html(this.settingsPopup({settings:this.notification.settings})),this.$el.find(".reports-schedule-content").html(this.schedulePopup({schedule:this.notification.schedule})),this.$el.find(".reports-recipients-content").html(this.recipientsPopup({recipients:this.notification.recipients}))},initSUI:function(){t(".sui-select").each(function(){const n=t(this);"search"===n.data("theme")?SUI.select.initSearch(n):SUI.select.init(n)}),SUI.tabs()},mapActions:function(){this.initUserSelects(),this.toggleAddButton()},slide_modal:function(n){n.preventDefault();const e=t(n.currentTarget).data("modal-slide"),i=t(n.currentTarget).data("modal-slide-focus"),o=t(n.currentTarget).data("modal-slide-intro");SUI.slideModal(e,i,o)},close:function(t){t.preventDefault(),Forminator.Popup.close()},toggleAddButton:function(){const n=t('#notifications-invite-users-content input[id^="recipient-"]');n.on("keyup",function(){var e=!1;n.each(function(){""===t(this).val()&&(e=!0)}),e?t("#add-recipient-button").attr("disabled","disabled"):t("#add-recipient-button").attr("disabled",!1)})},inputTabs:function(t){var n=this.$(t.target),e=n.find("input"),i=e.data("tab-menu"),o=n.closest(".sui-side-tabs"),a=n.closest(".sui-tabs-menu").find(".sui-tab-item");n.is("label")&&(a.removeClass("active"),o.find('.sui-tabs-content div[data-tab-content="'+i+'"]').length&&(o.find('.sui-tabs-content div[data-tab-content="'+i+'"]').attr("hidden",!0),o.find('.sui-tabs-content div[data-tab-content="'+i+'"]').removeClass("active")),n.addClass("active"),o.find("#"+e.attr("aria-controls")).addClass("active"),o.find("#"+e.attr("aria-controls")).attr("hidden",!1),o.find("#"+e.attr("aria-controls")).removeAttr("hidden")),t.preventDefault()},load_users:function(){var n=this;t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_search_users",nonce:forminatorl10n.popup.fetch_nonce,exclude:this.notification.exclude},success:function(e){if(void 0!==e.data){var i=0;e.data.forEach(function(t){n.addToUsersList(t,0==i++)}),n.fixRecipientCSS(t("#forminator-user-list"))}}})},addToUsersList:function(n,e){const i=t("#forminator-user-list"),o=e?"sui-tooltip-bottom-right":"sui-tooltip-top-right";var a='<div class="sui-recipient sui-recipient-rounded" data-id="'+n.id+'" data-email="'+n.email+'"><span class="sui-recipient-name"><span class="subscriber"><img alt="" src="'+n.avatar+'" alt="'+n.email+'"></span><span class="forminator-recipient-name">'+n.name+'</span></span><span class="sui-recipient-email">'+n.role+'</span><button type="button" class="sui-button-icon forminator-add-recipient sui-tooltip '+o+'" data-tooltip="'+forminatorl10n.popup.add_user+'"';a+="data-user='"+JSON.stringify(n)+"'>",a+='<span class="sui-icon-plus" aria-hidden="true"></span></button></div>',i.append(a),this.toggleRecipientList(i,!0)},toggleRecipientList:function(t,n){if(void 0!==t.html()){const e=0===t.html().trim().length;t.parent("div").toggleClass("sui-hidden",e).toggleClass("sui-margin-top",!e),n&&this.toggleUserNotice(!1)}},toggleUserNotice:function(n){const e=t(".notifications-recipients-notice"),i=t("#forminator-popup .sui-button.sui-button-blue"),o=t(".forminator-report-save");var a=forminatorl10n.popup.no_recipients;n?a=forminatorl10n.popup.recipient_exists:0!==this.notification.report_id&&(a=forminatorl10n.popup.no_recipient_disable),e.find("p").html(a),n?(e.removeClass("sui-hidden"),setTimeout(function(){e.addClass("sui-hidden")},3e3)):0===this.notification.recipients.length?(i.attr("disabled","disabled"),o.attr("disabled","disabled"),e.removeClass("sui-hidden")):(i.attr("disabled",!1),o.attr("disabled",!1),e.addClass("sui-hidden"))},fixRecipientCSS:function(t){const n=t.children().length>1?"hidden":"unset";t.css("overflow-x",n),t.find(".sui-recipient:first-of-type .sui-tooltip").removeClass("sui-tooltip-top-right").addClass("sui-tooltip-bottom-right")},add_recipient:function(n,e){if(n.preventDefault(),""!==e&&void 0!==e||(e=t(n.currentTarget).data("user")),"object"===jQuery.type(e)){this.addUser(e,"user");const i=t("#forminator-user-list"),o='.sui-recipient[data-email="'+e.email+'"]';i.find(o).remove(),this.fixRecipientCSS(i),this.toggleRecipientList(i,!1)}},addUser:function(n,e){if(this.notification.recipients.findIndex(function(t){return n.email===t.email})>-1)return void this.toggleUserNotice(!0);const i=t("#modal-"+e+"-recipients-list"),o=""===n.role?n.email:n.role;var a="";void 0!==n.is_pending&&(a=n.is_pending||void 0===n.is_subscribed||n.is_subscribed?n.is_pending?"pending":"confirmed":"unsubscribed");var r='<img src="'+n.avatar+'" alt="'+n.email+'">',s="";"pending"!==a&&"unsubscribed"!==a||(r='<span class="sui-tooltip" data-tooltip="'+forminatorl10n.popup.awaiting_confirmation+'">'+r+"</span>",s='<button type="button" class="resend-invite sui-button-icon sui-tooltip" data-tooltip="'+forminatorl10n.popup.resend_invite+'"><span class="sui-icon-send" aria-hidden="true"></span></button>');const l='<div class="sui-recipient sui-recipient-rounded" data-id="'+n.id+'" data-email="'+n.email+'"><span class="sui-recipient-name"><span class="subscriber '+a+'">'+r+'</span><span class="forminator-recipient-name">'+n.name+'</span></span><span class="sui-recipient-email">'+o+"</span>"+s+'<button type="button" class="sui-button-icon forminator-remove-recipient sui-tooltip" data-tooltip="'+forminatorl10n.popup.remove_user+'" data-id="'+n.id+'" data-email="'+n.email+'"data-type="'+e+'"><span class="sui-icon-trash" aria-hidden="true"></span></button></div>';i.append(l),this.notification.recipients.push(n),"user"===e&&this.notification.exclude.push(n.id),this.toggleRecipientList(i,!0)},remove_recipient:function(n){n.preventDefault();const e=t(n.currentTarget).data("id"),i=t(n.currentTarget).data("email"),o=t(n.currentTarget).data("type"),a=t("#modal-"+o+"-recipients-list"),r='.sui-recipient[data-email="'+i+'"]',s=a.find(r);s.remove();var l;"user"===o&&(l=this.notification.exclude.indexOf(e.toString()),l>-1&&this.notification.exclude.splice(l,1),this.returnToList(s)),l=this.notification.recipients.findIndex(function(t){return e===parseInt(t.id)&&i===t.email}),l>-1&&this.notification.recipients.splice(l,1),this.toggleRecipientList(a,!0)},returnToList:function(n){const e=t("#forminator-user-list"),i={id:n.data("id"),name:n.find(".forminator-recipient-name").text(),email:n.data("email"),role:n.find(".sui-recipient-email").text(),avatar:n.find("img").attr("src")};n.find(".resend-invite").remove(),n.find(".sui-icon-trash").removeClass("sui-icon-trash").addClass("sui-icon-plus"),n.find("button").removeClass("forminator-remove-recipient").attr("data-user",JSON.stringify(i)).attr("data-tooltip",forminatorl10n.popup.add_recipient).addClass("forminator-add-recipient sui-tooltip-top-right"),e.append(n),this.fixRecipientCSS(e),this.toggleRecipientList(e,!1)},initUserSelects:function(){const n=t("#forminator-search-users"),e=this;n.SUIselect2({minimumInputLength:3,maximumSelectionLength:1,ajax:{url:ajaxurl,type:"POST",dataType:"json",delay:250,data:function(t){return{action:"forminator_search_users",nonce:forminatorl10n.popup.fetch_nonce,query:t.term,exclude:e.notification.exclude}},processResults:function(t){return{results:jQuery.map(t.data,function(t,n){return{text:t.name,id:n,user:{name:t.name,email:t.email,role:t.role,avatar:t.avatar,id:t.id}}})}}}}),n.on("select2:select",function(t){e.add_recipient(t,t.params.data.user),n.val(null).trigger("change")})},invite_add_recipient:function(){const n=event.target;var e=this;n.classList.add("sui-button-onload-text");const i=t("input#recipient-name"),o=t("input#recipient-email"),a=t("#error-recipient-email");t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_get_avatar",nonce:forminatorl10n.popup.fetch_nonce,email:o.val()},success:function(t){if(void 0!==t.data){if(a.parents().removeClass("sui-form-field-error"),a.html(""),!t.success)return a.html(t.data.message),a.parents().addClass("sui-form-field-error"),void n.classList.remove("sui-button-onload-text");const r={name:Forminator.Utils.sanitize_text_field(i.val()),email:o.val(),role:"",avatar:t.data,id:0};e.addUser(r,"email"),i.val("").trigger("keyup"),o.val("").trigger("keyup"),n.classList.remove("sui-button-onload-text")}}})},process_settings:function(){this.notification.settings={label:t("input#report-title").val(),module:t('label.active input[name="module"]').val(),forms_type:t('label.active input[name="forms_type"]').val(),selected_forms:t('select[name="select_forms"]').val(),quizzes_type:t('label.active input[name="quizzes_type"]').val(),selected_quizzes:t('select[name="select_quizzes"]').val(),polls_type:t('label.active input[name="polls_type"]').val(),selected_polls:t('select[name="select_polls"]').val()}},process_schedule:function(){this.notification.schedule={frequency:t('label.active input[name="frequency"]').val(),time:t('select[name="report-time"]').val(),weekDay:t('select[name="week-days"]').val(),weekTime:t('select[name="week-time"]').val(),monthDay:t('select[name="month-days"]').val(),monthTime:t('select[name="month-time"]').val(),yearMonth:t('select[name="year-month"]').val(),yearDays:t('select[name="year-days"]').val(),yearTime:t('select[name="year-time"]').val()}},report_save:function(n){n.preventDefault();const e=t(n.currentTarget).data("id");this.process_settings(),this.process_schedule(),0!==this.notification.recipients.length&&this.save(this.notification,e)},save:function(n,e){var i=t("input.notification-save-status").is(":checked");t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_save_report",nonce:forminatorl10n.popup.save_nonce,report_id:e,reports:n,status:i?"active":"inactive"},success:function(t){t.success&&location.reload()}})},fetch_report_data:function(n){const e=this;t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_fetch_report",nonce:forminatorl10n.popup.fetch_nonce,report_id:n},success:function(t){t.success&&void 0!==t.data&&(e.notification=t.data,e.load_users(),e.$el.html(e.reportEditPopup({notification:e.notification})),e.render_html())}}).always(function(){e.$el.find(".fui-loading-dialog").remove()})}})})}(jQuery),function(t){formintorjs.define("admin/popups",["admin/popup/templates","admin/popup/login","admin/popup/quizzes","admin/popup/schedule","admin/popup/new-form","admin/popup/polls","admin/popup/ajax","admin/popup/delete","admin/popup/preview","admin/popup/reset-plugin-settings","admin/popup/disconnect-stripe","admin/popup/disconnect-paypal","admin/popup/approve-user","admin/popup/delete-unconfirmed-user","admin/popup/create-appearance-preset","admin/popup/apply-appearance-preset","admin/popup/confirm","admin/popup/addons-actions","admin/popup/reports-notification"],function(n,e,i,o,a,r,s,l,p,d,c,u,m,f,h,v,b,g,x){var y=Backbone.View.extend({el:"main.sui-wrap",events:{"click .wpmudev-open-modal":"open_modal","click .wpmudev-button-open-modal":"open_modal"},initialize:function(){var t=Forminator.Utils.get_url_param("new"),n=Forminator.Utils.get_url_param("title");if(t){var e=new a({title:n});e.render(),this.open_popup(e,Forminator.l10n.popup.congratulations)}return this.open_export(),this.open_delete(),this.maybeShowNotice(),this.render()},render:function(){return this},maybeShowNotice:function(){var n=Forminator.l10n.notices;n&&t.each(n,function(t,n){var e=4e3;"custom_notice"===t&&(e=void 0),Forminator.Notification.open("success",n,e)})},open_delete:function(){var t=Forminator.Utils.get_url_param("delete"),n=Forminator.Utils.get_url_param("module_id"),e=Forminator.Utils.get_url_param("nonce"),i=Forminator.Utils.get_url_param("module_type"),o=Forminator.l10n.popup.delete_form,a=Forminator.l10n.popup.are_you_sure_form,r=this;"poll"===i&&(o=Forminator.l10n.popup.delete_poll,a=Forminator.l10n.popup.are_you_sure_poll),"quiz"===i&&(o=Forminator.l10n.popup.delete_quiz,a=Forminator.l10n.popup.are_you_sure_quiz),t&&setTimeout(function(){r.open_delete_popup("",n,e,o,a)},100)},open_export:function(){var t=Forminator.Utils.get_url_param("export"),n=Forminator.Utils.get_url_param("module_id"),e=Forminator.Utils.get_url_param("exportnonce"),i=Forminator.Utils.get_url_param("module_type"),o=this;t&&setTimeout(function(){o.open_export_module_modal(i,e,n,Forminator.l10n.popup.export_form,!1,!0,"wpmudev-ajax-popup")},100)},open_modal:function(n){n.preventDefault();var e=t(n.target);t(n.target).closest(".wpmudev-split--item");e.hasClass("wpmudev-open-modal")||e.hasClass("wpmudev-button-open-modal")||(e=e.closest(".wpmudev-open-modal,.wpmudev-button-open-modal"));var i=e.data("modal"),o=e.data("nonce"),a=e.data("form-id"),r=e.data("action"),s=e.data("has-leads"),l=e.data("leads-id"),p=e.data("modal-title"),d=e.data("modal-content"),c=e.data("button-text"),u=e.data("nonce-preview");switch(i){case"custom_forms":this.open_cform_popup();break;case"login_registration_forms":this.open_login_popup();break;case"polls":this.open_polls_popup();break;case"quizzes":this.open_quizzes_popup();break;case"exports":this.open_settings_modal(i,o,a,Forminator.l10n.popup.your_exports);break;case"exports-schedule":this.open_exports_schedule_popup();break;case"delete-module":this.open_delete_popup("",a,o,p,d,r,c);break;case"delete-poll-submission":this.open_delete_popup("poll",a,o,p,d);break;case"paypal":this.open_settings_modal(i,o,a,Forminator.l10n.popup.paypal_settings);break;case"preview_cforms":_.isUndefined(p)&&(p=Forminator.l10n.popup.preview_cforms),this.open_preview_popup(a,p,"forminator_load_form","forminator_forms",u);break;case"preview_polls":_.isUndefined(p)&&(p=Forminator.l10n.popup.preview_polls),this.open_preview_popup(a,p,"forminator_load_poll","forminator_polls",u);break;case"preview_quizzes":_.isUndefined(p)&&(p=Forminator.l10n.popup.preview_quizzes),this.open_quiz_preview_popup(a,p,"forminator_load_quiz","forminator_quizzes",s,l,u);break;case"captcha":this.open_settings_modal(i,o,a,Forminator.l10n.popup.captcha_settings,!1,!0,"wpmudev-ajax-popup");break;case"currency":this.open_settings_modal(i,o,a,Forminator.l10n.popup.currency_settings,!1,!0,"wpmudev-ajax-popup");break;case"pagination_entries":this.open_settings_modal(i,o,a,Forminator.l10n.popup.pagination_entries,!1,!0,"wpmudev-ajax-popup");break;case"pagination_listings":this.open_settings_modal(i,o,a,Forminator.l10n.popup.pagination_listings,!1,!0,"wpmudev-ajax-popup");break;case"email_settings":this.open_settings_modal(i,o,a,Forminator.l10n.popup.email_settings,!1,!0,"wpmudev-ajax-popup");break;case"uninstall_settings":this.open_settings_modal(i,o,a,Forminator.l10n.popup.uninstall_settings,!1,!0,"wpmudev-ajax-popup");break;case"privacy_settings":this.open_settings_modal(i,o,a,Forminator.l10n.popup.privacy_settings,!1,!0,"wpmudev-ajax-popup");break;case"create_preset":this.create_appearance_preset_modal(o,p,d,e);break;case"apply_preset":this.apply_appearance_preset_modal(e);break;case"delete_preset":this.delete_preset_modal(p,d);break;case"export_form":this.open_export_module_modal("form",o,a,Forminator.l10n.popup.export_form,!1,!0,"wpmudev-ajax-popup");break;case"export_poll":this.open_export_module_modal("poll",o,a,Forminator.l10n.popup.export_poll,!1,!0,"wpmudev-ajax-popup");break;case"export_quiz":this.open_export_module_modal("quiz",o,a,Forminator.l10n.popup.export_quiz,!1,!0,"wpmudev-ajax-popup");break;case"import_form":this.open_import_module_modal("form",o,a,Forminator.l10n.popup.import_form,!1,!0,"wpmudev-ajax-popup");break;case"import_form_cf7":this.open_import_module_modal("form_cf7",o,a,Forminator.l10n.popup.import_form_cf7,!1,!0,"wpmudev-ajax-popup");break;case"import_form_ninja":this.open_import_module_modal("form_ninja",o,a,Forminator.l10n.popup.import_form_ninja,!1,!0,"wpmudev-ajax-popup");break;case"import_form_gravity":this.open_import_module_modal("form_gravity",o,a,Forminator.l10n.popup.import_form_gravity,!1,!0,"wpmudev-ajax-popup");break;case"import_poll":this.open_import_module_modal("poll",o,a,Forminator.l10n.popup.import_poll,!1,!0,"wpmudev-ajax-popup");break;case"import_quiz":this.open_import_module_modal("quiz",o,a,Forminator.l10n.popup.import_quiz,!1,!0,"wpmudev-ajax-popup");break;case"reset-plugin-settings":this.open_reset_plugin_settings_popup(o,p,d);break;case"disconnect-stripe":this.open_disconnect_stripe_popup(o,p,d);break;case"disconnect-paypal":this.open_disconnect_paypal_popup(o,p,d);break;case"approve-user-module":var m=e.data("activation-key");this.open_approve_user_popup(o,p,d,m);break;case"delete-unconfirmed-user-module":this.open_unconfirmed_user_popup(e.data("form-id"),o,p,d,e.data("activation-key"),e.data("entry-id"));break;case"addons_page_details":this.open_addons_page_modal(i,o,a,p,!1,!0,"wpmudev-ajax-popup");break;case"addons_page_install":this.open_addons_page_install(i,o,a,p,!1,!0,"wpmudev-ajax-popup");break;case"addons-deactivate":this.open_addons_actions_popup(i,e.data("addon"),o,p,d,e.data("addon-slug"),e.data("is_network"));break;case"configure-report":this.open_reports_notifications_popup(e.data("id"));break;case"delete-report":this.open_delete_popup("",a,o,p,d,r,c)}},open_popup:function(n,e,i,o,a,r,s,l,p){_.isUndefined(e)&&(e=Forminator.l10n.custom_form.popup_label);var d={title:e};_.isUndefined(i)||(d.has_custom_box=i),_.isUndefined(o)||(d.action_text=o),_.isUndefined(a)||(d.action_css_class=a),_.isUndefined(r)||(d.action_callback=r),Forminator.Popup.open(function(){_.isUndefined(n.el)?t(this).append(n):t(this).append(n.el),"function"==typeof s&&s.apply(this)},d,l,p)},open_ajax_popup:function(n,e,i,o,a,r,l,p,d){_.isUndefined(o)&&(o=Forminator.l10n.custom_form.popup_label),_.isUndefined(a)&&(a=!0),_.isUndefined(r)&&(r=!1),_.isUndefined(l)&&(l="sui-box-body");var c=new s({action:n,nonce:e,id:i,enable_loader:!0,className:l}),u={title:o,has_custom_box:r};Forminator.Popup.open(function(){t(this).append(c.el)},u,p,d)},open_delete_popup:function(n,e,i,o,a,r,s){r=r||"delete";var p=new l({module:n,id:e,action:r,nonce:i,referrer:window.location.pathname+window.location.search,button:Forminator.Utils.sanitize_text_field(s),content:Forminator.Utils.sanitize_text_field(a)});p.render();var d=p,c={title:o,has_custom_box:!0};Forminator.Popup.open(function(){_.isUndefined(d.el)?t(this).append(d):t(this).append(d.el)},c,"sm","center")},open_cform_popup:function(){var e=new n({type:"form"});e.render();var i=e,o={title:"",has_custom_box:!0};Forminator.Popup.open(function(){_.isUndefined(i.el)?t(this).append(i):t(this).append(i.el)},o,"lg")},open_polls_popup:function(){var n=new r;n.render();var e=n,i={title:"",has_custom_box:!0};Forminator.Popup.open(function(){_.isUndefined(e.el)?t(this).append(e):t(this).append(e.el)},i,"sm")},open_quizzes_popup:function(){var n=new i;n.render();var e=n,o={title:Forminator.l10n.quiz.choose_quiz_title,has_custom_box:!0};Forminator.Popup.open(function(){_.isUndefined(e.el)?t(this).append(e):t(this).append(e.el)},o,"lg")},open_import_module_modal:function(t,n,e,i,o,a,r){var s="";switch(t){case"form":case"form_cf7":case"form_ninja":case"form_gravity":case"poll":case"quiz":s="import_"+t}this.open_ajax_popup(s,n,e,i,o,a,r,"sm","center")},open_exports_schedule_popup:function(){var t=new o;t.render(),this.open_popup(t,Forminator.l10n.popup.edit_scheduled_export,!0,void 0,void 0,void 0,void 0,"md","inline")},open_reset_plugin_settings_popup:function(n,e,i){var o=new d({nonce:n,referrer:window.location.pathname+window.location.search,content:i});o.render();var a=o,r={title:e,has_custom_box:!0};Forminator.Popup.open(function(){_.isUndefined(a.el)?t(this).append(a):t(this).append(a.el)},r,"sm","center")},open_addons_actions_popup:function(n,e,i,o,a,r,s){s=s||!1;var l=new g({module:n,id:e,nonce:i,is_network:s,referrer:window.location.pathname+window.location.search,content:a,forms:"stripe"===r?forminatorData.stripeForms:[]});l.render();var p=l,d={title:o,has_custom_box:!0};Forminator.Popup.open(function(){_.isUndefined(p.el)?t(this).append(p):t(this).append(p.el)},d,"sm","center")},open_login_popup:function(){var t=new e;t.render(),this.open_popup(t,Forminator.l10n.popup.edit_login_form,void 0,void 0,void 0,void 0,void 0,"md","inline")},open_settings_modal:function(t,n,e,i,o,a,r){this.open_ajax_popup(t,n,e,i,o,a,r,"md","inline")},open_addons_page_modal:function(t,n,e,i,o,a,r){this.open_ajax_popup(t,n,e,i,o,a,r,"md","inline")},open_addons_page_install:function(t,n,e,i,o,a,r){this.open_ajax_popup(t,n,e,i,o,a,r,"lg","inline")},open_export_module_modal:function(t,n,e,i,o,a,r){var s="";switch(t){case"form":case"poll":case"quiz":s="export_"+t}this.open_ajax_popup(s,n,e,i,o,a,r,"md","inline")},open_preview_popup:function(n,e,i,o,a){_.isUndefined(e)&&(e=Forminator.l10n.custom_form.popup_label);var r=new p({action:i,type:o,nonce:a,id:n,enable_loader:!0,className:"sui-box-body"}),s={title:e,has_custom_box:!0};Forminator.Popup.open(function(){t(this).append(r.el)},s,"lg","inline")},open_quiz_preview_popup:function(n,e,i,o,a,r,s){_.isUndefined(e)&&(e=Forminator.l10n.custom_form.popup_label);var l=new p({action:i,type:o,id:n,enable_loader:!0,className:"sui-box-body",has_lead:a,leads_id:r,nonce:s}),d={title:e,has_custom_box:!0};Forminator.Popup.open(function(){t(this).append(l.el)},d,"lg","inline")},apply_appearance_preset_modal:function(n){var e=new v({$target:n});e.render();var i=e;Forminator.Popup.open(function(){t(this).append(i.el)},{title:Forminator.Data.modules.ApplyPreset.title,has_custom_box:!0},"sm","center")},delete_preset_modal:function(n,e){var i=new b({confirmation_message:e,confirm_callback:function(){var t=new Event("deletePreset");window.dispatchEvent(t)}});i.render();var o=i;Forminator.Popup.open(function(){t(this).append(o.el)},{title:n,has_custom_box:!0},"sm","center")},create_appearance_preset_modal:function(n,e,i,o){var a=new h({nonce:n,$target:o,title:e,content:i});a.render();var r=a;Forminator.Popup.open(function(){t(this).append(r.el)},{title:e,has_custom_box:!0},"sm","center")},open_disconnect_stripe_popup:function(n,e,i){var o=new c({nonce:n,referrer:window.location.pathname+window.location.search,content:i});o.render();var a=o,r={title:e,has_custom_box:!0};Forminator.Popup.open(function(){_.isUndefined(a.el)?t(this).append(a):t(this).append(a.el)},r,"sm","center")},open_disconnect_paypal_popup:function(n,e,i){var o=new u({nonce:n,referrer:window.location.pathname+window.location.search,content:i});o.render();var a=o,r={title:e,has_custom_box:!0};Forminator.Popup.open(function(){_.isUndefined(a.el)?t(this).append(a):t(this).append(a.el)},r,"sm","center")},open_approve_user_popup:function(n,e,i,o){var a=new m({nonce:n,referrer:window.location.pathname+window.location.search,content:i,activationKey:o});a.render();var r=a;Forminator.Popup.open(function(){_.isUndefined(r.el)?t(this).append(r):t(this).append(r.el)},{title:e,has_custom_box:!0},"md","inline")},open_unconfirmed_user_popup:function(n,e,i,o,a,r){var s=new f({formId:n,nonce:e,referrer:window.location.pathname+window.location.search,content:o,activationKey:a,entryId:r});s.render();var l=s;Forminator.Popup.open(function(){_.isUndefined(l.el)?t(this).append(l):t(this).append(l.el)},{title:i,has_custom_box:!0},"md","inline")},open_reports_notifications_popup:function(n){var e=new x({type:"reports",report_id:n});e.render();var i=e,o={title:"",has_custom_box:!0};0!==n?Forminator.Popup.open(function(){_.isUndefined(i.el)?t(this).append(i):t(this).append(i.el)},o,"md"):Forminator.Slide_Popup.open(function(){_.isUndefined(i.el)?t(this).append(i):t(this).append(i.el)},o,"md")}});jQuery(function(){new y})})}(jQuery),formintorjs.define("text!tpl/popups.html",[],function(){return'<div>\r\n\r\n\t\x3c!-- Base Structure --\x3e\r\n\t<script type="text/template" id="popup-tpl">\r\n\r\n\t\t<div class="sui-modal">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-popup__title"\r\n\t\t\t\taria-describedby="forminator-popup__description"\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- Modal Header: Center-aligned title with floating close button --\x3e\r\n\t<script type="text/template" id="popup-header-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg">{{ title }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t\x3c!-- Modal Header: Inline title and close button --\x3e\r\n\t<script type="text/template" id="popup-header-inline-tpl">\r\n\r\n\t\t<div class="sui-box-header">\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title">{{ title }}</h3>\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button class="sui-button-icon forminator-popup-close" data-modal-close>\r\n\t\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-integration-tpl">\r\n\r\n\t\t<div class="sui-modal sui-modal-sm">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-integration-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-integration-popup__title"\r\n\t\t\t\taria-describedby="forminator-integration-popup__description"\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-integration-content-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<figure class="sui-box-logo" aria-hidden="true">\r\n\r\n\t\t\t\t<img\r\n\t\t\t\t\tsrc="{{ image }}"\r\n\t\t\t\t\tsrcset="{{ image }} 1x, {{ image_x2 }} 2x"\r\n\t\t\t\t\talt="{{ title }}"\r\n\t\t\t\t/>\r\n\r\n\t\t\t</figure>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--left forminator-addon-back" style="display: none;">\r\n\t\t\t\t<span class="sui-icon-chevron-left sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Back</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-integration-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<div class="forminator-integration-popup__header"></div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="forminator-integration-popup__body sui-box-body"></div>\r\n\r\n\t\t<div class="forminator-integration-popup__footer sui-box-footer sui-flatten sui-content-separated"></div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-loader-tpl">\r\n\r\n\t\t<p style="margin: 0; text-align: center;" aria-hidden="true"><span class="sui-icon-loader sui-md sui-loading"></span></p>\r\n\t\t<p class="sui-screen-reader-text">Loading content...</p>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-stripe-tpl">\r\n\r\n\t\t<div class="sui-modal sui-modal-md">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-stripe-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-stripe-popup__title"\r\n\t\t\t\taria-describedby=""\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-stripe-content-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<figure class="sui-box-logo" aria-hidden="true">\r\n\t\t\t\t<img src="{{ image }}" srcset="{{ image }} 1x, {{ image_x2 }} 2x" alt="{{ title }}" />\r\n\t\t\t</figure>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close">\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-stripe-popup__title" class="sui-box-title sui-lg" style="overflow: initial; display: none; white-space: normal; text-overflow: initial;">{{ title }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10"></div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center"></div>\r\n\r\n\t<\/script>\r\n\r\n\t<script type="text/template" id="popup-slide-tpl">\r\n\t\t<div class="sui-modal sui-modal-lg">\r\n\t\t\t<div\r\n\t\t\t\t\trole="dialog"\r\n\t\t\t\t\tid="forminator-popup"\r\n\t\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\t\taria-modal="true"\r\n\t\t\t\t\taria-labelledby="forminator-slide-popup__title"\r\n\t\t\t\t\taria-describedby="forminator-slide-popup__description"\r\n\t\t\t>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t<\/script>\r\n\r\n</div>\r\n'}),function(t){formintorjs.define("admin/addons/view",["text!tpl/popups.html"],function(n){return Backbone.View.extend({className:"wpmudev-section--integrations",loaderTpl:Forminator.Utils.template(t(n).find("#popup-loader-tpl").html()),model:{},events:{"click .forminator-addon-connect":"connect_addon","click .forminator-addon-disconnect":"disconnect_addon","click .forminator-addon-form-disconnect":"form_disconnect_addon","click .forminator-addon-next":"submit_next_step","click .forminator-addon-back":"go_prev_step","click .forminator-addon-finish":"finish_steps"},initialize:function(t){this.slug=t.slug,this.nonce=t.nonce,this.action=t.action,this.form_id=t.form_id,this.multi_id=t.multi_id,this.global_id=t.global_id,this.step=0,this.next_step=!1,this.prev_step=!1,this.scrollbar_width=this.get_scrollbar_width();var n=this
-;return this.$el.find(".forminator-integration-close, .forminator-addon-close").on("click",function(){n.close(n)}),this.render()},render:function(){var t={};t.action=this.action,t._ajax_nonce=this.nonce,t.data={},t.data.slug=this.slug,t.data.step=this.step,t.data.current_step=this.step,t.data.global_id=this.global_id,this.form_id&&(t.data.form_id=this.form_id),this.multi_id&&(t.data.multi_id=this.multi_id),this.request(t,!1,!0)},request:function(n,e,i){var o=this,a={data:n,close:e,loader:i};i&&(this.$el.find(".forminator-integration-popup__header").html(""),this.$el.find(".forminator-integration-popup__body").html(this.loaderTpl()),this.$el.find(".forminator-integration-popup__footer").html("")),this.$el.find(".sui-button:not(.disable-loader)").addClass("sui-button-onload"),this.ajax=t.post({url:Forminator.Data.ajaxUrl,type:"post",data:n}).done(function(n){if(n&&n.success){o.render_reset(),o.render_body(n),o.render_footer(n),o.hide_elements();var i=n.data.data;o.on_render(i),o.$el.find(".sui-button").removeClass("sui-button-onload"),(e||!_.isUndefined(i.is_close)&&i.is_close)&&o.close(o),o.$el.find(".forminator-addon-close").on("click",function(){o.close(o)}),_.isUndefined(i.notification)||_.isUndefined(i.notification.type)||_.isUndefined(i.notification.text)||Forminator.Notification.open(i.notification.type,i.notification.text,4e3),_.isUndefined(i.has_back)?o.$el.find(".forminator-addon-back").hide():i.has_back?o.$el.find(".forminator-addon-back").show():o.$el.find(".forminator-addon-back").hide(),i.is_poll&&setTimeout(o.request(a.data,a.close,a.loader),5e3);t("#forminator-integration-popup .sui-box").height()>t(window).height()?t("#forminator-integration-popup .sui-dialog-overlay").css("right",o.scrollbar_width+"px"):t("#forminator-integration-popup .sui-dialog-overlay").css("right",0)}}),this.ajax.always(function(){o.$el.find(".fui-loading-dialog").remove()})},render_reset:function(){var n=t(".forminator-integration-popup__body"),e=t(".forminator-integration-popup__footer");n.is(":hidden")&&n.css("display",""),e.is(":hidden")&&e.css("display","")},render_body:function(t){this.$el.find(".forminator-integration-popup__body").html(t.data.data.html);var n=this.$el.find(".forminator-integration-popup__body .forminator-integration-popup__header").remove();n.length>0&&this.$el.find(".forminator-integration-popup__header").html(n.html())},render_footer:function(t){var n=this,e=t.data.data.buttons;n.$el.find(".sui-box-footer").html("");var i=this.$el.find(".forminator-integration-popup__body .forminator-integration-popup__footer-temp").remove();i.length>0&&this.$el.find(".forminator-integration-popup__footer").html(i.html()),_.each(e,function(t){n.$el.find(".sui-box-footer").append(t.markup)}),n.$el.find(".sui-box-footer").removeClass("sui-content-center").addClass("sui-content-separated"),(n.$el.find(".sui-box-footer").children(".forminator-integration-popup__close").length>0||e&&1===Object.keys(e).length)&&n.$el.find(".sui-box-footer").removeClass("sui-content-separated").addClass("sui-content-center")},hide_elements:function(){var n=t(".forminator-integration-popup__body"),e=t(".forminator-integration-popup__footer"),i=n.html(),o=e.html();i.trim().length||n.hide(),o.trim().length||e.hide()},on_render:function(t){this.delegateEvents(),Forminator.Utils.sui_delegate_events(),Forminator.Utils.forminator_select2_tags(this.$el,{}),_.isUndefined(t.forminator_addon_current_step)||(this.step=+t.forminator_addon_current_step),_.isUndefined(t.forminator_addon_has_next_step)||(this.next_step=t.forminator_addon_has_next_step),_.isUndefined(t.forminator_addon_has_prev_step)||(this.prev_step=t.forminator_addon_has_prev_step)},get_step:function(){return this.next_step?this.step+1:this.step},get_prev_step:function(){return this.prev_step?this.step-1:this.step},connect_addon:function(n){var e={},i=this.$el.find("form"),o={slug:this.slug,step:this.get_step(),global_id:this.global_id,current_step:this.step},a=i.serialize();this.form_id&&(o.form_id=this.form_id),this.multi_id&&(o.multi_id=this.multi_id),a=a+"&"+t.param(o),e.action=this.action,e._ajax_nonce=this.nonce,e.data=a,this.request(e,!1,!1)},submit_next_step:function(n){var e={},i=this.$el.find("form"),o={slug:this.slug,step:this.get_step(),global_id:this.global_id,current_step:this.step},a=i.serialize();this.form_id&&(o.form_id=this.form_id),a=a+"&"+t.param(o),e.action=this.action,e._ajax_nonce=this.nonce,e.data=a,this.request(e,!1,!1)},go_prev_step:function(t){var n={},e={slug:this.slug,step:this.get_prev_step(),global_id:this.global_id,current_step:this.step};this.form_id&&(e.form_id=this.form_id),this.multi_id&&(e.multi_id=this.multi_id),n.action=this.action,n._ajax_nonce=this.nonce,n.data=e,this.request(n,!1,!1)},finish_steps:function(n){var e={},i=this.$el.find("form"),o={slug:this.slug,step:this.get_step(),global_id:this.global_id,current_step:this.step},a=i.serialize();this.form_id&&(o.form_id=this.form_id),this.multi_id&&(o.multi_id=this.multi_id),a=a+"&"+t.param(o),e.action=this.action,e._ajax_nonce=this.nonce,e.data=a,this.request(e,!1,!1)},disconnect_addon:function(t){var n={};n.action="forminator_addon_deactivate",n._ajax_nonce=this.nonce,n.data={},n.data.slug=this.slug,n.data.global_id=this.global_id,this.request(n,!0,!1)},form_disconnect_addon:function(t){var n={};n.action="forminator_addon_deactivate_for_module",n._ajax_nonce=this.nonce,n.data={},n.data.slug=this.slug,n.data.form_id=this.form_id,n.data.form_type="form",this.multi_id&&(n.data.multi_id=this.multi_id),this.request(n,!0,!1)},close:function(t){t.ajax.abort(),t.remove(),Forminator.Integrations_Popup.close(),Forminator.Events.trigger("forminator:addons:reload")},get_scrollbar_width:function(){var n=0;if(navigator.userAgent.match("MSIE")){var e=t('<textarea cols="10" rows="2"></textarea>').css({position:"absolute",top:-1e3,left:-1e3}).appendTo("body"),i=t('<textarea cols="10" rows="2" style="overflow: hidden;"></textarea>').css({position:"absolute",top:-1e3,left:-1e3}).appendTo("body");n=e.width()-i.width(),e.add(i).remove()}else{var o=t("<div />").css({width:100,height:100,overflow:"auto",position:"absolute",top:-1e3,left:-1e3}).prependTo("body").append("<div />").find("div").css({width:"100%",height:200});n=100-o.width(),o.parent().remove()}return n}})})}(jQuery),function(t){formintorjs.define("admin/addons/addons",["admin/addons/view"],function(n){var e=Backbone.View.extend({el:".sui-wrap.wpmudev-forminator-forminator-integrations",currentTab:"forminator-integrations",events:{"change .forminator-addon-toggle-enabled":"toggle_state","click .connect-integration":"connect_integration","click .forminator-integrations-wrapper .sui-vertical-tab a":"go_to_tab","change .forminator-integrations-wrapper .sui-sidenav-hide-lg select":"go_to_tab","change .forminator-integrations-wrapper .sui-sidenav-hide-lg.integration-nav":"go_to_tab","keyup input.sui-form-control":"required_settings"},initialize:function(n){if(t(this.el).length>0)return this.listenTo(Forminator.Events,"forminator:addons:reload",this.render_addons_page),this.render()},render:function(){this.render_addons_page(),this.update_tab()},render_addons_page:function(){var n=this,e={};this.$el.find("#forminator-integrations-display").html('<div role="alert" id="forminator-addons-preloader" class="sui-notice sui-active" style="display: block;" aria-live="assertive"><div class="sui-notice-content"><div class="sui-notice-message"><span class="sui-notice-icon sui-icon-loader sui-loading" aria-hidden="true"></span><p>Fetching integration list…</p></div></div></div>'),e.action="forminator_addon_get_addons",e._ajax_nonce=Forminator.Data.addonNonce,e.data={},t.post({url:Forminator.Data.ajaxUrl,type:"post",data:e}).done(function(t){t&&t.success&&n.$el.find("#forminator-integrations-page").html(t.data.data)}).always(function(){n.$el.find("#forminator-addons-preloader").remove()})},connect_integration:function(e){e.preventDefault();var i=t(e.target);i.hasClass("connect-integration")||(i=i.closest(".connect-integration"));var o=i.data("nonce"),a=i.data("slug"),r=i.data("multi-global-id"),s=i.data("title"),l=i.data("image"),p=i.data("imagex2"),d=i.data("action"),c=i.data("form-id"),u=i.data("multi-id");Forminator.Integrations_Popup.open(function(){new n({slug:a,nonce:o,action:d,form_id:c,multi_id:u,global_id:r,el:t(this)})},{title:s,image:l,image_x2:p})},go_to_tab:function(n){n.preventDefault();var e=t(n.target),i=e.attr("href"),o="";if(_.isUndefined(i)){o=e.val()}else o=i.replace("#","",i);_.isEmpty(o)||(this.currentTab=o),this.update_tab(),n.stopPropagation()},update_tab_select:function(){this.$el.hasClass("wpmudev-forminator-forminator-integrations")&&(this.$el.find(".sui-sidenav-hide-lg select").val(this.currentTab),this.$el.find(".sui-sidenav-hide-lg select").trigger("sui:change"))},update_tab:function(){this.$el.hasClass("wpmudev-forminator-forminator-integrations")&&(this.clear_tabs(),this.$el.find("[data-tab-id="+this.currentTab+"]").addClass("current"),this.$el.find(".wpmudev-settings--box#"+this.currentTab).show())},clear_tabs:function(){this.$el.hasClass("wpmudev-forminator-forminator-integrations")&&(this.$el.find(".sui-vertical-tab ").removeClass("current"),this.$el.find(".wpmudev-settings--box").hide())},required_settings:function(n){var e=t(n.target),i=e.parent(),o=i.find(".sui-error-message"),a=e.closest("div[data-nav]"),r=a.find(".sui-box-footer"),s=r.find(".wpmudev-action-done");this.$el.hasClass("wpmudev-forminator-forminator-settings")&&(e.hasClass("forminator-required")&&!e.val()&&i.hasClass("sui-form-field")&&(i.addClass("sui-form-field-error"),o.show()),e.hasClass("forminator-required")&&e.val()&&i.hasClass("sui-form-field")&&(i.removeClass("sui-form-field-error"),o.hide()),a.find("input.sui-form-control").hasClass("forminator-required")&&(0===a.find("div.sui-form-field-error").length?s.prop("disabled",!1):s.prop("disabled",!0))),n.stopPropagation()}});jQuery(function(){new e})})}(jQuery),function(t){formintorjs.define("admin/addons-page",[],function(){var n=Backbone.View.extend({el:".wpmudev-forminator-forminator-addons",events:{"click button.addons-actions":"addons_actions","click a.addons-actions":"addons_actions","click .sui-dialog-close":"close","click .addons-modal-close":"close","click .addons-page-details":"open_addons_detail"},initialize:function(){t(".wpmudev-forminator-forminator-addons").length},addons_actions:function(n){var e=this,i=t(n.target),o={},a=i.data("nonce"),r=i.data("action"),s=i.data("popup"),l=i.data("is_network"),p=i.data("addon");return"addons-connect"===r?(e.$el.find(".ssm-session__button").trigger("click"),!1):(o.action="forminator_"+r,o.pid=p,o.is_network=l,o._ajax_nonce=a,i.addClass("sui-button-onload"),e.$el.find(".sui-button.addons-actions:not(.disable-loader)").attr("disabled",!0),t.post({url:Forminator.Data.ajaxUrl,type:"post",data:o}).done(function(t){if(void 0!==t.data.error)return e.show_notification(t.data.error.message,"error"),!1;if("addons-install"===r)setTimeout(function(){e.active_popup(p,"show","forminator-activate-popup"),e.$el.find(".sui-tab-content .addons-"+p).not(this).replaceWith(t.data.html),e.loader_remove()},1e3);else{if(e.show_notification(t.data.message,"success"),e.$el.find(".sui-tab-content .addons-"+p).not(this).replaceWith(t.data.html),"addons-update"===r){var n=e.$el.find("#forminator-modal-addons-details-"+p);e.$el.find("#updates-addons-content .addons-"+p).remove();var o=e.$el.find("#updates-addons-content .sui-col-md-6").length;o<1&&e.$el.find("#updates-addons span.sui-tag").removeClass("sui-tag-yellow"),e.$el.find("#updates-addons span.sui-tag").html(o),n.find(".forminator-details-header--tags span.addons-update-tag").remove();var a=i.data("version");n.find(".forminator-details-header--tags span.addons-version").html(a),n.find(".forminator-details-header button.addons-actions").remove(),i.remove()}s&&location.reload()}}).fail(function(){e.show_notification(Forminator.l10n.commons.error_message,"error")}),!1)},close:function(n){n.preventDefault();var e=t(n.target),i=e.data("addon"),o=e.data("element");this.active_popup(i,"hide",o)},loader_remove:function(){this.$el.find(".sui-button.addons-actions:not(.disable-loader)").removeClass("sui-button-onload").attr("disabled",!1)},show_notification:function(t,n){var e=void 0!==t?t:Forminator.l10n.commons.error_message;Forminator.Notification.open(n,e,4e3),this.loader_remove()},active_popup:function(t,n,e){var i=e+"-"+t,o="forminator-addon-"+t+"__card";"show"===n?SUI.openModal(i,o):SUI.closeModal()},open_addons_detail:function(n){var e=this,i=t(n.target),o=i.data("form-id");e.active_popup(o,"show","forminator-modal-addons-details")}}),n=new n;return n})}(jQuery),function(t){formintorjs.define("admin/reports-page",[],function(){var n=Backbone.View.extend({el:".wpmudev-forminator-forminator-reports",events:{"click .sui-side-tabs label.sui-tab-item input":"sidetabs","click .sui-sidenav .sui-vertical-tab a":"sidenav","change .sui-sidenav select.sui-mobile-nav":"sidenav_select","apply.daterangepicker input.forminator-reports-filter-date":"filter_report_date","click #forminator-checked-all-reports":"check_all","change label input.notification-status":"change_report_status","change label input.report-checkbox":"change_report_check"},initialize:function(){var n=this;t(".wpmudev-forminator-forminator-reports").length&&(n.render_daterange(),n.chartJs=n.forminator_reports_chart(window.monthDays,window.submissions,window.canvas_spacing))},render_daterange:function(){var n=moment().startOf("month"),e=moment().endOf("month");t("input.forminator-reports-filter-date").daterangepicker({autoUpdateInput:!1,autoApply:!0,alwaysShowCalendars:!0,ranges:window.forminator_reports_datepicker_ranges,locale:forminatorl10n.daterangepicker,startDate:n,endDate:e,showCustomRangeLabel:!1}).val(n.format("MMMM DD, YYYY")+" - "+e.format("MMMM DD, YYYY"))},filter_report_date:function(n,e){var i=this,o=t(n.target),a=e.startDate,r=e.endDate,s=i.$el.find("#forminator-reports select[name=form_id]").val(),l=i.$el.find("#forminator-reports select[name=form_type]").val(),p=a.format("MMMM DD, YYYY")+" - "+r.format("MMMM DD, YYYY");i.add_report_loader(),o.val(p),i.$el.find(".forminator-chart-date").html(forminatorl10n.popup.showing_report_from+" "+p),t.post({url:Forminator.Data.ajaxUrl,type:"post",data:{action:"forminator_filter_report_data",form_id:s,form_type:l,_ajax_nonce:o.data("nonce"),start_date:a.format("YYYY-MM-DD"),end_date:r.format("YYYY-MM-DD"),range_time:e.chosenLabel}}).done(function(n){if(n.data){var e=n.data,o=e.reports,a=e.chart_data,r=i.$el.find(".fui-table--apps"),s=i.$el.find("#forminator-reports");t.each(o,function(n,e){var o=i.$el.find(".increment-"+n);if(o.html(""),e.selected>0||0!==e.selected){var a="high"===e.difference?"fui-trend-green":"fui-trend-red",l="high"===e.difference?"sui-icon-arrow-up":"sui-icon-arrow-down",p='<i class="'+l+' sui-sm" aria-hidden="true"></i>';o.html(p+e.increment),o.removeClass("fui-trend-green").removeClass("fui-trend-red").addClass(a)}s.find(".selected-"+n).html(e.selected),s.find(".previous-"+n).html(e.previous),void 0!==e.average&&s.find(".average-"+n).html(e.average),void 0!==e.stripe&&s.find(".stripe-report").html(e.stripe),void 0!==e.paypal&&s.find(".paypal-report").html(e.paypal),i.$el.find(".forminator-reports-chart li.chart-"+n+" span").html(e.selected),"integration"===n&&t.each(e,function(t,n){var e=r.find(".increment-"+t);if(e.html(""),n.selected>0){var i="high"===n.difference?"fui-trend-green":"fui-trend-red",o="high"===n.difference?"sui-icon-arrow-up":"sui-icon-arrow-down",a='<i class="'+o+' sui-sm" aria-hidden="true"></i>';e.html(a+n.increment),e.removeClass("fui-trend-green").removeClass("fui-trend-red").addClass(i)}r.find(".selected-"+t).html(n.selected),r.find(".previous-"+t).html(n.previous)})});var l=a.monthDays,p=a.submissions,d=a.canvas_spacing;e.geolocation&&(i.$el.find("#forminator_report_geolocation_widget .forminator-report-widget-content").html(e.geolocation),SUI.suiAccordion(t(".sui-accordion"))),setTimeout(function(){i.remove_report_loader(o.entries.selected),i.add_chart_data(i.chartJs,l,p,d)},1e3)}}).fail(function(){i.remove_report_loader()})},add_report_loader:function(){this.$el.find(".forminator-reports-box .sui-box").addClass("sui-box__onload"),this.$el.find(".forminator-reports-chart ul.sui-accordion-item-data").addClass("sui-onload"),this.$el.find(".forminator-reports-chart .sui-chartjs").removeClass("sui-chartjs-loaded"),this.$el.find(".sui-chartjs-message--empty").show()},remove_report_loader:function(t){this.$el.find(".forminator-reports-box .sui-box").removeClass("sui-box__onload"),this.$el.find(".forminator-reports-chart ul.sui-accordion-item-data").removeClass("sui-onload"),this.$el.find(".forminator-reports-chart .sui-chartjs").addClass("sui-chartjs-loaded"),0<t&&this.$el.find(".sui-chartjs-message--empty").hide()},add_chart_data:function(t,n,e,i){void 0!==t&&(t.data.labels=n,t.data.datasets[0].data=e,t.options.scales.yAxes[0].ticks.max=i,t.update())},forminator_reports_chart:function(t,n,e){var i=document.getElementById("forminator-module-"+window.chart_form_id+"-stats"),o={labels:t,datasets:[{label:window.chart_label,data:n,backgroundColor:["#E1F6FF"],borderColor:["#17A8E3"],borderWidth:2,pointRadius:0,pointHitRadius:20,pointHoverRadius:5,pointHoverBorderColor:"#17A8E3",pointHoverBackgroundColor:"#17A8E3"}]},a={maintainAspectRatio:!1,legend:{display:!1},scales:{xAxes:[{display:!1,gridLines:{color:"rgba(0, 0, 0, 0)"}}],yAxes:[{display:!1,gridLines:{color:"rgba(0, 0, 0, 0)"},ticks:{beginAtZero:!1,min:0,max:e,stepSize:1}}]},elements:{line:{tension:0},point:{radius:0}},tooltips:{custom:function(t){t&&(t.displayColors=!1)},callbacks:{title:function(t,n){return t[0].yLabel+" "+window.chart_label},label:function(t,n){return t.xLabel},labelTextColor:function(t,n){return"#AAAAAA"}}},plugins:{datalabels:{display:!1}}};if(i)var r=new Chart(i,{type:"line",fill:"start",data:o,plugins:[ChartDataLabels],options:a});return r},sidetabs:function(t){var n=this.$(t.target),e=n.parent("label"),i=n.data("tab-menu"),o=n.closest(".sui-side-tabs"),a=o.find(".sui-tabs-menu .sui-tab-item"),r=a.find("input");n.is("input")&&(a.removeClass("active"),r.removeAttr("checked"),o.find(".sui-tabs-content > div").removeClass("active"),e.addClass("active"),n.prop("checked","checked"),o.find('.sui-tabs-content div[data-tab-content="'+i+'"]').length&&o.find('.sui-tabs-content div[data-tab-content="'+i+'"]').addClass("active"))},sidenav:function(n){var e=t(n.target).data("nav");e&&this.sidenav_go_to(e,!0),n.preventDefault()},sidenav_select:function(n){var e=t(n.target).val();e&&this.sidenav_go_to(e,!0),n.preventDefault()},sidenav_go_to:function(t,n){var e=this.$el.find('a[data-nav="'+t+'"]'),i=e.closest(".sui-vertical-tabs"),o=i.find(".sui-vertical-tab"),a=this.$el.find(".sui-box-reports[data-nav]"),r=this.$el.find('.sui-box-reports[data-nav="'+t+'"]');if(n){var s="admin.php?page=forminator-reports&section="+t;if("dashboard"===t){var l=this.$el.find("#forminator-reports select[name=form_id]").val(),p=this.$el.find("#forminator-reports select[name=form_type]").val();""!==l&&""!==p&&(s="admin.php?page=forminator-reports&form_type="+p+"&form_id="+l)}history.pushState({selected_tab:t},"Reports",s)}o.removeClass("current"),a.hide(),e.parent().addClass("current"),r.show()},check_all:function(n){var e=this.$(n.target),i=e.is(":checked");if(e.closest("table").find(".sui-checkbox input").each(function(){this.checked=i}),t('form[name="report-bulk-action"] input[name="ids"]').length){var o=t("#forminator-reports-list").find('.sui-checkbox input[id|="report"]:checked').map(function(){if(parseFloat(this.value))return this.value}).get().join(",");t('form[name="report-bulk-action"] input[name="ids"]').val(o)}},change_report_status:function(n){var e=n.target.checked?"active":"inactive",i=t(n.target).val();t.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_report_update_status",nonce:forminatorl10n.popup.save_nonce,report_id:i,status:e},success:function(e){var i=n.target.checked?forminatorl10n.popup.deactivate_report:forminatorl10n.popup.activate_report;t(".report-status-tooltip").attr("data-tooltip",i)}})},change_report_check:function(){if(t('form[name="report-bulk-action"] input[name="ids"]').length){var n=t(".sui-checkbox input.report-checkbox:checked").map(function(){if(parseFloat(this.value))return this.value}).get().join(",");t('form[name="report-bulk-action"] input[name="ids"]').val(n)}"forminator-checked-all-reports"!==t(this).attr("id")&&t("#forminator-checked-all-reports").prop("checked",!1)}}),n=new n;return n})}(jQuery),function(t){formintorjs.define("admin/views",["admin/dashboard","admin/settings-page","admin/popups","admin/addons/addons","admin/addons-page","admin/reports-page"],function(t,n,e,i,o,a){return{Views:{Dashboard:t,SettingsPage:n,Popups:e,AddonsPage:o,ReportsPage:a}}})}(jQuery),function(t){formintorjs.define("admin/application",["admin/views"],function(t){return _.extend(Forminator,t),new(Backbone.Router.extend({app:!1,data:!1,layout:!1,module_id:null,routes:{"":"run","*path":"run"},events:{},init:function(){if(!this.data)return this.app=Forminator.Data.application||!1,this.data={},!1},run:function(t){this.init(),this.module_id=t}}))})}(jQuery),formintorjs.define("jquery",[],function(){return jQuery}),formintorjs.define("forminator_global_data",function(){return forminatorData}),formintorjs.define("forminator_language",function(){return forminatorl10n});var Forminator=window.Forminator||{};Forminator.Events={},Forminator.Data={},Forminator.l10n={},Forminator.openPreset=function(t,n){var e=/([?&]preset)=([^&]*)/g,i=window.location.href.replace(e,"$1="+t);i===window.location.href&&(i+="&preset="+t),n&&(i+="&forminator_notice="+n),window.location.href=i},formintorjs.require.config({baseUrl:".",paths:{js:".",admin:"admin"},shim:{backbone:{deps:["underscore","jquery","forminator_global_data","forminator_language"],exports:"Backbone"},underscore:{exports:"_"}},waitSeconds:60}),formintorjs.require(["admin/utils"],function(t){_.templateSettings={evaluate:/\{\[([\s\S]+?)\]\}/g,interpolate:/\{\{([\s\S]+?)\}\}/g},_.extend(Forminator.Data,forminatorData),_.extend(Forminator.l10n,forminatorl10n),_.extend(Forminator,t),_.extend(Forminator.Events,Backbone.Events),formintorjs.require(["admin/application"],function(t){jQuery(function(){_.extend(Forminator,t),Forminator.Events.trigger("application:booted"),Backbone.history.start()})})}),formintorjs.define("admin/setup",function(){}),formintorjs.define("main",function(){});
+formintorjs.define('text',['module'], function (module) {
+    'use strict';
+
+    var text, fs,
+        progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'],
+        xmlRegExp = /^\s*<\?xml(\s)+version=[\'\"](\d)*.(\d)*[\'\"](\s)*\?>/im,
+        bodyRegExp = /<body[^>]*>\s*([\s\S]+)\s*<\/body>/im,
+        hasLocation = typeof location !== 'undefined' && location.href,
+        defaultProtocol = hasLocation && location.protocol && location.protocol.replace(/\:/, ''),
+        defaultHostName = hasLocation && location.hostname,
+        defaultPort = hasLocation && (location.port || undefined),
+        buildMap = [],
+        masterConfig = (module.config && module.config()) || {};
+
+    text = {
+        version: '2.0.3',
+
+        strip: function (content) {
+            //Strips <?xml ...?> declarations so that external SVG and XML
+            //documents can be added to a document without worry. Also, if the string
+            //is an HTML document, only the part inside the body tag is returned.
+            if (content) {
+                content = content.replace(xmlRegExp, "");
+                var matches = content.match(bodyRegExp);
+                if (matches) {
+                    content = matches[1];
+                }
+            } else {
+                content = "";
+            }
+            return content;
+        },
+
+        jsEscape: function (content) {
+            return content.replace(/(['\\])/g, '\\$1')
+                .replace(/[\f]/g, "\\f")
+                .replace(/[\b]/g, "\\b")
+                .replace(/[\n]/g, "\\n")
+                .replace(/[\t]/g, "\\t")
+                .replace(/[\r]/g, "\\r")
+                .replace(/[\u2028]/g, "\\u2028")
+                .replace(/[\u2029]/g, "\\u2029");
+        },
+
+        createXhr: masterConfig.createXhr || function () {
+            //Would love to dump the ActiveX crap in here. Need IE 6 to die first.
+            var xhr, i, progId;
+            if (typeof XMLHttpRequest !== "undefined") {
+                return new XMLHttpRequest();
+            } else if (typeof ActiveXObject !== "undefined") {
+                for (i = 0; i < 3; i += 1) {
+                    progId = progIds[i];
+                    try {
+                        xhr = new ActiveXObject(progId);
+                    } catch (e) {}
+
+                    if (xhr) {
+                        progIds = [progId];  // so faster next time
+                        break;
+                    }
+                }
+            }
+
+            return xhr;
+        },
+
+        /**
+         * Parses a resource name into its component parts. Resource names
+         * look like: module/name.ext!strip, where the !strip part is
+         * optional.
+         * @param {String} name the resource name
+         * @returns {Object} with properties "moduleName", "ext" and "strip"
+         * where strip is a boolean.
+         */
+        parseName: function (name) {
+            var strip = false, index = name.indexOf("."),
+                modName = name.substring(0, index),
+                ext = name.substring(index + 1, name.length);
+
+            index = ext.indexOf("!");
+            if (index !== -1) {
+                //Pull off the strip arg.
+                strip = ext.substring(index + 1, ext.length);
+                strip = strip === "strip";
+                ext = ext.substring(0, index);
+            }
+
+            return {
+                moduleName: modName,
+                ext: ext,
+                strip: strip
+            };
+        },
+
+        xdRegExp: /^((\w+)\:)?\/\/([^\/\\]+)/,
+
+        /**
+         * Is an URL on another domain. Only works for browser use, returns
+         * false in non-browser environments. Only used to know if an
+         * optimized .js version of a text resource should be loaded
+         * instead.
+         * @param {String} url
+         * @returns Boolean
+         */
+        useXhr: function (url, protocol, hostname, port) {
+            var uProtocol, uHostName, uPort,
+                match = text.xdRegExp.exec(url);
+            if (!match) {
+                return true;
+            }
+            uProtocol = match[2];
+            uHostName = match[3];
+
+            uHostName = uHostName.split(':');
+            uPort = uHostName[1];
+            uHostName = uHostName[0];
+
+            return (!uProtocol || uProtocol === protocol) &&
+                   (!uHostName || uHostName.toLowerCase() === hostname.toLowerCase()) &&
+                   ((!uPort && !uHostName) || uPort === port);
+        },
+
+        finishLoad: function (name, strip, content, onLoad) {
+            content = strip ? text.strip(content) : content;
+            if (masterConfig.isBuild) {
+                buildMap[name] = content;
+            }
+            onLoad(content);
+        },
+
+        load: function (name, req, onLoad, config) {
+            //Name has format: some.module.filext!strip
+            //The strip part is optional.
+            //if strip is present, then that means only get the string contents
+            //inside a body tag in an HTML string. For XML/SVG content it means
+            //removing the <?xml ...?> declarations so the content can be inserted
+            //into the current doc without problems.
+
+            // Do not bother with the work if a build and text will
+            // not be inlined.
+            if (config.isBuild && !config.inlineText) {
+                onLoad();
+                return;
+            }
+
+            masterConfig.isBuild = config.isBuild;
+
+            var parsed = text.parseName(name),
+                nonStripName = parsed.moduleName + '.' + parsed.ext,
+                url = req.toUrl(nonStripName),
+                useXhr = (masterConfig.useXhr) ||
+                         text.useXhr;
+
+            //Load the text. Use XHR if possible and in a browser.
+            if (!hasLocation || useXhr(url, defaultProtocol, defaultHostName, defaultPort)) {
+                text.get(url, function (content) {
+                    text.finishLoad(name, parsed.strip, content, onLoad);
+                }, function (err) {
+                    if (onLoad.error) {
+                        onLoad.error(err);
+                    }
+                });
+            } else {
+                //Need to fetch the resource across domains. Assume
+                //the resource has been optimized into a JS module. Fetch
+                //by the module name + extension, but do not include the
+                //!strip part to avoid file system issues.
+                req([nonStripName], function (content) {
+                    text.finishLoad(parsed.moduleName + '.' + parsed.ext,
+                                    parsed.strip, content, onLoad);
+                });
+            }
+        },
+
+        write: function (pluginName, moduleName, write, config) {
+            if (buildMap.hasOwnProperty(moduleName)) {
+                var content = text.jsEscape(buildMap[moduleName]);
+                write.asModule(pluginName + "!" + moduleName,
+                               "define(function () { return '" +
+                                   content +
+                               "';});\n");
+            }
+        },
+
+        writeFile: function (pluginName, moduleName, req, write, config) {
+            var parsed = text.parseName(moduleName),
+                nonStripName = parsed.moduleName + '.' + parsed.ext,
+                //Use a '.js' file name so that it indicates it is a
+                //script that can be loaded across domains.
+                fileName = req.toUrl(parsed.moduleName + '.' +
+                                     parsed.ext) + '.js';
+
+            //Leverage own load() method to load plugin value, but only
+            //write out values that do not have the strip argument,
+            //to avoid any potential issues with ! in file names.
+            text.load(nonStripName, req, function (value) {
+                //Use own write() method to construct full module value.
+                //But need to create shell that translates writeFile's
+                //write() to the right interface.
+                var textWrite = function (contents) {
+                    return write(fileName, contents);
+                };
+                textWrite.asModule = function (moduleName, contents) {
+                    return write.asModule(moduleName, fileName, contents);
+                };
+
+                text.write(pluginName, nonStripName, textWrite, config);
+            }, config);
+        }
+    };
+
+    if (masterConfig.env === 'node' || (!masterConfig.env &&
+            typeof process !== "undefined" &&
+            process.versions &&
+            !!process.versions.node)) {
+        //Using special require.nodeRequire, something added by r.js.
+        fs = require.nodeRequire('fs');
+
+        text.get = function (url, callback) {
+            var file = fs.readFileSync(url, 'utf8');
+            //Remove BOM (Byte Mark Order) from utf8 files if it is there.
+            if (file.indexOf('\uFEFF') === 0) {
+                file = file.substring(1);
+            }
+            callback(file);
+        };
+    } else if (masterConfig.env === 'xhr' || (!masterConfig.env &&
+            text.createXhr())) {
+        text.get = function (url, callback, errback) {
+            var xhr = text.createXhr();
+            xhr.open('GET', url, true);
+
+            //Allow overrides specified in config
+            if (masterConfig.onXhr) {
+                masterConfig.onXhr(xhr, url);
+            }
+
+            xhr.onreadystatechange = function (evt) {
+                var status, err;
+                //Do not explicitly handle errors, those should be
+                //visible via console output in the browser.
+                if (xhr.readyState === 4) {
+                    status = xhr.status;
+                    if (status > 399 && status < 600) {
+                        //An http 4xx or 5xx error. Signal an error.
+                        err = new Error(url + ' HTTP status: ' + status);
+                        err.xhr = xhr;
+                        errback(err);
+                    } else {
+                        callback(xhr.responseText);
+                    }
+                }
+            };
+            xhr.send(null);
+        };
+    } else if (masterConfig.env === 'rhino' || (!masterConfig.env &&
+            typeof Packages !== 'undefined' && typeof java !== 'undefined')) {
+        //Why Java, why is this so awkward?
+        text.get = function (url, callback) {
+            var stringBuffer, line,
+                encoding = "utf-8",
+                file = new java.io.File(url),
+                lineSeparator = java.lang.System.getProperty("line.separator"),
+                input = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(file), encoding)),
+                content = '';
+            try {
+                stringBuffer = new java.lang.StringBuffer();
+                line = input.readLine();
+
+                // Byte Order Mark (BOM) - The Unicode Standard, version 3.0, page 324
+                // http://www.unicode.org/faq/utf_bom.html
+
+                // Note that when we use utf-8, the BOM should appear as "EF BB BF", but it doesn't due to this bug in the JDK:
+                // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4508058
+                if (line && line.length() && line.charAt(0) === 0xfeff) {
+                    // Eat the BOM, since we've already found the encoding on this file,
+                    // and we plan to concatenating this buffer with others; the BOM should
+                    // only appear at the top of a file.
+                    line = line.substring(1);
+                }
+
+                stringBuffer.append(line);
+
+                while ((line = input.readLine()) !== null) {
+                    stringBuffer.append(lineSeparator);
+                    stringBuffer.append(line);
+                }
+                //Make sure we return a JavaScript string and not a Java string.
+                content = String(stringBuffer.toString()); //String
+            } finally {
+                input.close();
+            }
+            callback(content);
+        };
+    }
+
+    return text;
+});
+
+
+formintorjs.define('text!admin/templates/popups.html',[],function () { return '<div>\r\n\r\n\t<!-- Base Structure -->\r\n\t<script type="text/template" id="popup-tpl">\r\n\r\n\t\t<div class="sui-modal">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-popup__title"\r\n\t\t\t\taria-describedby="forminator-popup__description"\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- Modal Header: Center-aligned title with floating close button -->\r\n\t<script type="text/template" id="popup-header-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg">{{ title }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- Modal Header: Inline title and close button -->\r\n\t<script type="text/template" id="popup-header-inline-tpl">\r\n\r\n\t\t<div class="sui-box-header">\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title">{{ title }}</h3>\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button class="sui-button-icon forminator-popup-close" data-modal-close>\r\n\t\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-integration-tpl">\r\n\r\n\t\t<div class="sui-modal sui-modal-sm">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-integration-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-integration-popup__title"\r\n\t\t\t\taria-describedby="forminator-integration-popup__description"\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-integration-content-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<figure class="sui-box-logo" aria-hidden="true">\r\n\r\n\t\t\t\t<img\r\n\t\t\t\t\tsrc="{{ image }}"\r\n\t\t\t\t\tsrcset="{{ image }} 1x, {{ image_x2 }} 2x"\r\n\t\t\t\t\talt="{{ title }}"\r\n\t\t\t\t/>\r\n\r\n\t\t\t</figure>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--left forminator-addon-back" style="display: none;">\r\n\t\t\t\t<span class="sui-icon-chevron-left sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Back</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-integration-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<div class="forminator-integration-popup__header"></div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="forminator-integration-popup__body sui-box-body"></div>\r\n\r\n\t\t<div class="forminator-integration-popup__footer sui-box-footer sui-flatten sui-content-separated"></div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-loader-tpl">\r\n\r\n\t\t<p style="margin: 0; text-align: center;" aria-hidden="true"><span class="sui-icon-loader sui-md sui-loading"></span></p>\r\n\t\t<p class="sui-screen-reader-text">Loading content...</p>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-stripe-tpl">\r\n\r\n\t\t<div class="sui-modal sui-modal-md">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-stripe-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-stripe-popup__title"\r\n\t\t\t\taria-describedby=""\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-stripe-content-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<figure class="sui-box-logo" aria-hidden="true">\r\n\t\t\t\t<img src="{{ image }}" srcset="{{ image }} 1x, {{ image_x2 }} 2x" alt="{{ title }}" />\r\n\t\t\t</figure>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close">\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-stripe-popup__title" class="sui-box-title sui-lg" style="overflow: initial; display: none; white-space: normal; text-overflow: initial;">{{ title }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10"></div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center"></div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-slide-tpl">\r\n\t\t<div class="sui-modal sui-modal-lg">\r\n\t\t\t<div\r\n\t\t\t\t\trole="dialog"\r\n\t\t\t\t\tid="forminator-popup"\r\n\t\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\t\taria-modal="true"\r\n\t\t\t\t\taria-labelledby="forminator-slide-popup__title"\r\n\t\t\t\t\taria-describedby="forminator-slide-popup__description"\r\n\t\t\t>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</script>\r\n\r\n</div>\r\n';});
+
+(function ($) {
+	window.empty = function (what) { return "undefined" === typeof what ? true : !what; };
+	window.count = function (what) { return "undefined" === typeof what ? 0 : (what && what.length ? what.length : 0); };
+	window.stripslashes = function (what) {
+		return (what + '')
+		.replace(/\\(.?)/g, function (s, n1) {
+			switch (n1) {
+				case '\\':
+					return '\\'
+				case '0':
+					return '\u0000'
+				case '':
+					return ''
+				default:
+					return n1
+			}
+		});
+	};
+	window.forminator_array_value_exists = function ( array, key ) {
+		return ( !_.isUndefined( array[ key ] ) && ! _.isEmpty( array[ key ] ) );
+	};
+	window.decodeHtmlEntity = function(str) {
+		if( typeof str === "undefined" ) return str;
+
+		return str.replace( /&#(\d+);/g, function( match, dec ) {
+			return String.fromCharCode( dec );
+		});
+	};
+	window.encodeHtmlEntity = function(str) {
+		if( typeof str === "undefined" ) return str;
+		var buf = [];
+		for ( var i=str.length-1; i>=0; i-- ) {
+			buf.unshift( ['&#', str[i].charCodeAt(), ';'].join('') );
+		}
+		return buf.join('');
+	};
+	window.singularPluralText = function( count, singular, plural ) {
+		var txt  = '';
+
+		if ( count < 2 ) {
+			txt = singular;
+		} else {
+			txt = plural;
+		}
+
+		return count + ' ' + txt;
+	};
+
+	window.isTrue = function( value ) {
+		if ( 'undefined' === typeof( value ) ) {
+			return false;
+		}
+		if ( 'string' === typeof( value ) ) {
+			value = value.trim().toLowerCase();
+		}
+
+		switch( value ){
+			case true:
+			case "true":
+			case 1:
+			case "1":
+			case "on":
+			case "yes":
+				return true;
+			default:
+				return false;
+		}
+	};
+
+	formintorjs.define('admin/utils',[
+		'text!admin/templates/popups.html'
+	], function ( popupTpl ) {
+		var Utils = {
+			/**
+			 * generated field id
+			 * {
+			 *  type : [id,id]
+			 * }
+			 * sample
+			 * {text:[1,2,3],phone:[1,2,3]}
+			 */
+			fields_ids: [],
+
+			/**
+			 * Forminator_Google_font_families
+			 * @since 1.0.5
+			 */
+			google_font_families: [],
+			/*
+			 * Returns if touch device ( using wp_is_mobile() )
+			 */
+			is_touch: function () {
+				return Forminator.Data.is_touch;
+			},
+
+			/*
+			 * Returns if window resized for browser
+			 */
+			is_mobile_size: function () {
+				if ( window.screen.width <= 782 ) return true;
+
+				return false;
+			},
+
+			/*
+			 * Return if touch or windows mobile width
+			 */
+			is_mobile: function () {
+				if( Forminator.Utils.is_touch() || Forminator.Utils.is_mobile_size() ) return true;
+
+				return false;
+			},
+
+			/*
+			 * Extend default underscore template with mustache style
+			 */
+			template: function( markup ) {
+				// Each time we re-render the dynamic markup we initialize mustache style
+				_.templateSettings = {
+					evaluate : /\{\[([\s\S]+?)\]\}/g,
+					interpolate : /\{\{([\s\S]+?)\}\}/g
+				};
+
+				return _.template( markup );
+			},
+
+			/*
+			 * Extend default underscore template with PHP
+			 */
+			template_php: function( markup ) {
+				var oldSettings = _.templateSettings,
+				tpl = false;
+
+				_.templateSettings = {
+					interpolate : /<\?php echo (.+?) \?>/g,
+					evaluate: /<\?php (.+?) \?>/g
+				};
+
+				tpl = _.template(markup);
+
+				_.templateSettings = oldSettings;
+
+				return function(data){
+					_.each(data, function(value, key){
+						data['$' + key] = value;
+					});
+
+					return tpl(data);
+				};
+			},
+
+			/**
+			 * Capitalize string
+			 *
+			 * @param value
+			 * @returns {string}
+			 */
+			ucfirst: function( value ) {
+				return value.charAt(0).toUpperCase() + value.slice(1);
+			},
+
+			/*
+			 * Returns slug from title
+			 */
+			get_slug: function ( title ) {
+				title = title.replace( ' ', '-' );
+				title = title.replace( /[^-a-zA-Z0-9]/, '' );
+				return title;
+			},
+
+			/*
+			 * Returns slug from title
+			 */
+			sanitize_uri_string: function ( string ) {
+				// Decode URI components
+				var decoded = decodeURIComponent( string );
+
+				// Replace interval with -
+				decoded = decoded.replace( /-/g, ' ' );
+
+				return decoded;
+			},
+
+			/**
+			 * Sanitize the user input string.
+			 *
+			 * @param {string} string
+			 */
+			sanitize_text_field: function ( string ) {
+				if ( !_.isUndefined( string ) ) {
+					var str = String(string).replace(/[&\/\\#^+()$~%.'":*?<>{}!@]/g, '');
+					return str.trim();
+				}
+
+				return string;
+			},
+
+			/*
+			 * Return URL param value
+			 */
+			get_url_param: function ( param ) {
+				var page_url = window.location.search.substring(1),
+					url_params = page_url.split('&')
+				;
+
+				for ( var i = 0; i < url_params.length; i++ ) {
+					var param_name = url_params[i].split('=');
+					if ( param_name[0] === param ) {
+						return param_name[1];
+					}
+				}
+
+				return false;
+			},
+
+			/**
+			 * Check if email acceptable by WP
+			 * @param value
+			 * @returns {boolean}
+			 */
+			is_email_wp: function (value) {
+				if (value.length < 6) {
+					return false;
+				}
+
+				// Test for an @ character after the first position
+				if (value.indexOf('@', 1) < 0) {
+					return false;
+				}
+
+				// Split out the local and domain parts
+				var parts = value.split('@', 2);
+
+				// LOCAL PART
+				// Test for invalid characters
+				if (!parts[0].match(/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~\.-]+$/)) {
+					return false;
+				}
+
+				// DOMAIN PART
+				// Test for sequences of periods
+				if (parts[1].match(/\.{2,}/)) {
+					return false;
+				}
+
+				var domain = parts[1];
+				// Split the domain into subs
+				var subs = domain.split('.');
+				if (subs.length < 2) {
+					return false;
+				}
+
+				var subsLen = subs.length;
+				for (var i = 0; i < subsLen; i++) {
+					// Test for invalid characters
+					if (!subs[i].match(/^[a-z0-9-]+$/i)) {
+						return false;
+					}
+				}
+				return true;
+			},
+
+			forminator_select2_tags: function( $el, options ) {
+				var select = $el.find( 'select.sui-select.fui-multi-select' );
+
+				// SELECT2 forminator-ui-tags
+				select.each( function() {
+					var select       = $( this ),
+						getParent    = select.closest( '.sui-modal-content' ),
+						getParentId  = getParent.attr( 'id' ),
+						selectParent = ( getParent.length ) ? $( '#' + getParentId ) : $( 'SUI_BODY_CLASS' ),
+						hasSearch    = ( 'true' === select.attr( 'data-search' ) ) ? 0 : -1,
+						isSmall      = select.hasClass( 'sui-select-sm' ) ? 'sui-select-dropdown-sm' : '';
+
+					options = _.defaults( options, {
+						dropdownParent: selectParent,
+						minimumResultsForSearch: hasSearch,
+						dropdownCssClass: isSmall
+					});
+
+					// reorder-support, it will preserve order based on user tags added
+					if ( select.attr( 'data-reorder' ) ) {
+						select.on( 'select2:select', function( e ) {
+							var elm  = e.params.data.element,
+							    $elm = $( elm ),
+							    $t   = select;
+
+							$t.append( $elm );
+							$t.trigger( 'change.select2' );
+						});
+					}
+
+					select.SUIselect2( options );
+				});
+			},
+
+			forminator_select2_custom: function ($el, options) {
+				// SELECT2 custom
+				$el.find( 'select.sui-select.custom-select2' ).each( function() {
+					var select       = $( this ),
+						getParent    = select.closest( '.sui-modal-content' ),
+						getParentId  = getParent.attr( 'id' ),
+						selectParent = ( getParent.length ) ? $( '#' + getParentId ) : $( 'body' ),
+						hasSearch    = ( 'true' === select.attr( 'data-search' ) ) ? 0 : -1,
+						isSmall      = select.hasClass( 'sui-select-sm' ) ? 'sui-select-dropdown-sm' : '';
+
+					options = _.defaults( options, {
+						dropdownParent: selectParent,
+						minimumResultsForSearch: hasSearch,
+						dropdownCssClass: isSmall
+					});
+
+					// Reorder-support, it will preserve order based on user tags added.
+					if ( select.attr( 'data-reorder' ) ) {
+						select.on( 'select2:select', function( e ) {
+							var elm  = e.params.data.element,
+							    $elm = $(elm),
+							    $t   = $( this );
+							$t.append( $elm );
+							$t.trigger( 'change.select2' );
+						});
+					}
+
+					select.SUIselect2( options );
+				});
+			},
+
+			/*
+			 * Initialize Select 2
+			 */
+			init_select2: function(){
+				var self = this;
+				if ( 'object' !== typeof window.SUI ) return;
+			},
+
+			load_google_fonts: function (callback) {
+				var self = this;
+				$.ajax({
+					url : Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: {
+						action: "forminator_load_google_fonts",
+						_wpnonce: Forminator.Data.gFontNonce
+					}
+				}).done(function (result) {
+					if (result.success === true) {
+						// cache result
+						self.google_font_families = result.data;
+					}
+					// do callback even font_families is empty
+					callback.apply(result, [self.google_font_families]);
+				});
+			},
+
+			sui_delegate_events: function() {
+				var self = this;
+				if ( 'object' !== typeof window.SUI ) return;
+
+				// Time it out
+				setTimeout( function() {
+					// Rebind Accordion scripts.
+					SUI.suiAccordion($('.sui-accordion'));
+
+					// Rebind Tabs scripts.
+					SUI.suiTabs( $( '.sui-tabs' ) );
+
+					// Rebind Select2 scripts.
+					$( 'select.sui-select[data-theme="icon"]' ).each( function() {
+						SUI.select.initIcon( $( this ) );
+					});
+
+					$( 'select.sui-select[data-theme="color"]' ).each( function() {
+						SUI.select.initColor( $( this ) );
+					});
+
+					$( 'select.sui-select[data-theme="search"]' ).each( function() {
+						SUI.select.initSearch( $( this ) );
+					});
+
+					$( 'select.sui-select:not([data-theme]):not(.custom-select2):not(.fui-multi-select)' ).each( function() {
+						SUI.select.init( $( this ) );
+					});
+
+					// Rebind Variables scripts.
+					$( 'select.sui-variables' ).each( function() {
+						SUI.select.initVars( $( this ) );
+					});
+
+					// Rebind Circle scripts.
+					SUI.loadCircleScore( $( '.sui-circle-score' ) );
+
+					// Rebind Password scripts.
+					SUI.showHidePassword();
+
+				}, 50);
+			},
+		};
+
+		var Popup = {
+			$popup: {},
+			_deferred: {},
+
+			initialize: function () {
+
+				var tpl = Forminator.Utils.template( $( popupTpl ).find( '#popup-tpl' ).html() );
+
+				if ( ! $( "#forminator-popup" ).length ) {
+					$( "main.sui-wrap" ).append( tpl({}) );
+				} else {
+					$( "#forminator-popup" ).remove();
+					this.initialize();
+				}
+
+				this.$popup = $( "#forminator-popup" );
+				this.$popupId = 'forminator-popup';
+				this.$focusAfterClosed = 'wpbody-content';
+
+			},
+
+			open: function ( callback, data, size, title ) {
+				this.data             = data;
+				this.title            = '';
+				this.action_text      = '';
+				this.action_callback  = false;
+				this.action_css_class = '';
+				this.has_custom_box   = false;
+				this.has_footer       = true;
+
+				var header_tpl = '';
+
+				switch ( title ) {
+					case 'inline':
+						header_tpl = Forminator.Utils.template( $( popupTpl ).find( '#popup-header-inline-tpl' ).html() );
+						break;
+
+					case 'center':
+						header_tpl = Forminator.Utils.template( $( popupTpl ).find( '#popup-header-tpl' ).html() );
+						break;
+				}
+
+				if ( !_.isUndefined( this.data ) ) {
+					if ( !_.isUndefined( this.data.title ) ) {
+						this.title = Forminator.Utils.sanitize_text_field( this.data.title );
+					}
+
+					if ( !_.isUndefined( this.data.has_footer ) ) {
+						this.has_footer = this.data.has_footer;
+					}
+
+					if ( !_.isUndefined( this.data.action_callback ) &&
+						!_.isUndefined( this.data.action_text ) ) {
+						this.action_callback = this.data.action_callback;
+						this.action_text = this.data.action_text;
+						if ( !_.isUndefined( this.data.action_css_class ) ) {
+							this.action_css_class = this.data.action_css_class;
+						}
+					}
+
+					if ( !_.isUndefined( this.data.has_custom_box ) ) {
+						this.has_custom_box = this.data.has_custom_box;
+					}
+				}
+
+				this.initialize();
+
+				// restart base structure
+				if ( '' !== header_tpl ) {
+					this.$popup.find( '.sui-box' ).html( header_tpl({
+						title: this.title
+					}) );
+				}
+
+				var self = this,
+					close_click = function () {
+						self.close();
+						return false;
+					}
+				;
+
+				// Set modal size
+				if ( size ) {
+					this.$popup.closest( '.sui-modal' )
+						.addClass( 'sui-modal-' + size );
+				}
+
+				if ( this.has_custom_box ) {
+					callback.apply( this.$popup.find( '.sui-box' ).get(), data );
+				} else {
+					var box_markup = '<div class="sui-box-body">' +
+						'</div>';
+
+					if( this.has_footer ) {
+						box_markup += '<div class="sui-box-footer">' +
+							'<button class="sui-button forminator-popup-cancel">' + Forminator.l10n.popup.cancel +'</button>' +
+						'</div>';
+					}
+
+					this.$popup.find('.sui-box').append( box_markup );
+					callback.apply(this.$popup.find(".sui-box-body").get(), data);
+				}
+
+				// Add additional Button if callback_action available
+				if (this.action_text && this.action_callback) {
+					var action_callback = this.action_callback;
+					this.$popup.find('.sui-box-footer').append(
+						'<div class="sui-actions-right">' +
+							'<button class="forminator-popup-action sui-button ' + this.action_css_class + '">' + this.action_text + '</button>' +
+						'</div>'
+					);
+					this.$popup.find('.forminator-popup-action').on('click', function(){
+						if( action_callback ) {
+							action_callback.apply();
+						}
+						self.close();
+					});
+				} else {
+					this.$popup.find('.forminator-popup-action').remove();
+				}
+
+				// Add closing event
+				this.$popup.find( ".forminator-popup-close" ).on( "click", close_click );
+				this.$popup.find( ".forminator-popup-cancel" ).on( "click", close_click );
+				this.$popup.on( "click", '.forminator-popup-cancel', close_click );
+
+				// Open Modal
+				SUI.openModal(
+					this.$popupId,
+					this.$focusAfterClosed,
+					undefined,
+					true,
+					true
+				);
+
+				// Delegate SUI events
+				Forminator.Utils.sui_delegate_events();
+
+				this._deferred = new $.Deferred();
+				return this._deferred.promise();
+			},
+
+			close: function ( result, callback ) {
+				var self = this;
+				// Close Modal
+				SUI.closeModal();
+
+				setTimeout(function () {
+
+					// Remove modal size.
+					self.$popup.closest( '.sui-modal' )
+						.removeClass( 'sui-modal-sm' )
+						.removeClass( 'sui-modal-md' )
+						.removeClass( 'sui-modal-lg' )
+						.removeClass( 'sui-modal-xl' );
+
+					if( callback ) {
+						callback.apply();
+					}
+				}, 300);
+
+				this._deferred.resolve( this.$popup, result );
+			}
+		};
+
+		var Notification = {
+			$notification: {},
+			_deferred: {},
+
+			initialize: function () {
+
+				if ( ! $( ".sui-floating-notices" ).length ) {
+
+					$( "main.sui-wrap" )
+						.prepend(
+							'<div class="sui-floating-notices">' +
+								'<div role="alert" id="forminator-floating-notification" class="sui-notice" aria-live="assertive"></div>' +
+							'</div>'
+						);
+
+				} else {
+					$( ".sui-floating-notices" ).remove();
+					this.initialize();
+				}
+
+				this.$notification = $( "#forminator-floating-notification" );
+			},
+
+			open: function ( type, text, closeTime ) {
+				var self = this;
+				var noticeTimeOut = closeTime;
+
+				if ( ! _.isUndefined( closeTime ) ) {
+					noticeTimeOut = 5000;
+				}
+
+				this.uniq = 'forminator-floating-notification';
+				this.text = '<p>' + text + '</p>';
+				this.type = '';
+				this.time = closeTime || 5000;
+
+				if ( ! _.isUndefined( type ) && '' !== type ) {
+					this.type = type;
+				}
+
+				if ( ! _.isUndefined( closeTime ) ) {
+					this.time = closeTime;
+				}
+
+				this.opts = {
+					type: this.type,
+					autoclose: {
+						show: true,
+						timeout: this.time
+					}
+				};
+
+				this.initialize();
+
+				SUI.openNotice(
+					this.uniq,
+					this.text,
+					this.opts
+				);
+
+
+				setTimeout( function () {
+					self.close();
+				}, 3000 );
+
+				this._deferred = new $.Deferred();
+				return this._deferred.promise();
+			},
+
+			close: function ( result ) {
+				this._deferred.resolve( this.$popup, result );
+			}
+		};
+
+		var Integrations_Popup = {
+			$popup: {},
+			_deferred: {},
+
+			initialize: function () {
+				var tpl = Forminator.Utils.template( $( popupTpl ).find( '#popup-integration-tpl' ).html() );
+
+				if ( ! $( "#forminator-integration-popup" ).length ) {
+
+					$( "main.sui-wrap" ).append( tpl({
+						provider_image: '',
+						provider_image2: '',
+						provider_title: ''
+					}));
+
+				} else {
+					$( "#forminator-integration-popup" ).remove();
+					this.initialize();
+				}
+
+				this.$popup = $( "#forminator-integration-popup" );
+				this.$popupId = 'forminator-integration-popup';
+				this.$focusAfterClosed = 'forminator-integrations-page';
+
+			},
+
+			open: function ( callback, data, className ) {
+				this.data             = data;
+				this.title            = '';
+				this.image            = '';
+				this.image_x2         = '';
+				this.action_text      = '';
+				this.action_callback  = false;
+				this.action_css_class = '';
+				this.has_custom_box   = false;
+				this.has_footer       = true;
+
+				if ( !_.isUndefined( this.data ) ) {
+					if ( !_.isUndefined( this.data.title ) ) {
+						this.title = this.data.title;
+					}
+
+					if ( !_.isUndefined( this.data.image ) ) {
+						this.image = this.data.image;
+					}
+
+					if ( !_.isUndefined( this.data.image_x2 ) ) {
+						this.image_x2 = this.data.image_x2;
+					}
+				}
+
+				this.initialize();
+
+				// restart base structure
+				var tpl = Forminator.Utils.template( $( popupTpl ).find( '#popup-integration-content-tpl' ).html() );
+
+				this.$popup.find('.sui-box').html(tpl({
+					image: this.image,
+					image_x2: this.image_x2,
+					title: this.title
+				}));
+
+				var self = this,
+					close_click = function () {
+						self.close();
+						return false;
+					}
+				;
+
+				// Add custom class
+				if ( className ) {
+					this.$popup
+						.addClass( className )
+					;
+				}
+
+				callback.apply(this.$popup.get(), data);
+
+				// Add additional Button if callback_action available
+				if (this.action_text && this.action_callback) {
+					var action_callback = this.action_callback;
+					this.$popup.find('.sui-box-footer').append(
+						'<button class="forminator-popup-action sui-button ' + this.action_css_class + '">' + this.action_text + '</button>'
+					);
+					this.$popup.find('.forminator-popup-action').on('click', function(){
+						if( action_callback ) {
+							action_callback.apply();
+						}
+						self.close();
+					});
+				} else {
+					this.$popup.find('.forminator-popup-action').remove();
+				}
+
+				// Add closing event
+				this.$popup.find( ".sui-dialog-close" ).on( "click", close_click );
+				this.$popup.on( "click", '.forminator-popup-cancel', close_click );
+
+				// Open Modal
+				SUI.openModal( this.$popupId, this.$focusAfterClosed );
+
+				// Delegate SUI events
+				Forminator.Utils.sui_delegate_events();
+
+				this._deferred = new $.Deferred();
+				return this._deferred.promise();
+			},
+
+			close: function ( result, callback ) {
+
+				// Refrest add-on list
+				Forminator.Events.trigger( "forminator:addons:reload" );
+
+				// Close Modal
+				SUI.closeModal();
+
+				setTimeout(function () {
+					if( callback ) {
+						callback.apply();
+					}
+				}, 300);
+
+				this._deferred.resolve( this.$popup, result );
+			}
+		};
+
+		var Stripe_Popup = {
+			$popup: {},
+			_deferred: {},
+
+			initialize: function () {
+				var tpl = Forminator.Utils.template( $( popupTpl ).find( '#popup-stripe-tpl' ).html() );
+
+				if ( ! $( "#forminator-stripe-popup" ).length ) {
+
+					$( "main.sui-wrap" ).append( tpl({
+						provider_image: '',
+						provider_image2: '',
+						provider_title: ''
+					}));
+
+				} else {
+					$( "#forminator-stripe-popup" ).remove();
+					this.initialize();
+				}
+
+				this.$popup = $( "#forminator-stripe-popup" );
+				this.$popupId = 'forminator-stripe-popup';
+				this.$focusAfterClosed = 'wpbody-content';
+
+			},
+
+			open: function ( callback, data ) {
+				this.data             = data;
+				this.title            = '';
+				this.image            = '';
+				this.image_x2         = '';
+				this.action_text      = '';
+				this.action_callback  = false;
+				this.action_css_class = '';
+				this.has_custom_box   = false;
+				this.has_footer       = true;
+
+				if ( !_.isUndefined( this.data ) ) {
+					if ( !_.isUndefined( this.data.title ) ) {
+						this.title = this.data.title;
+					}
+
+					if ( !_.isUndefined( this.data.image ) ) {
+						this.image = this.data.image;
+					}
+
+					if ( !_.isUndefined( this.data.image_x2 ) ) {
+						this.image_x2 = this.data.image_x2;
+					}
+				}
+
+				this.initialize();
+
+				// restart base structure
+				var tpl = Forminator.Utils.template( $( popupTpl ).find( '#popup-stripe-content-tpl' ).html() );
+
+				this.$popup.find('.sui-box').html(tpl({
+					image: this.image,
+					image_x2: this.image_x2,
+					title: this.title
+				}));
+
+				this.$popup.find('.sui-box-footer').css({
+					'padding-top': '0',
+				});
+
+				var self = this,
+				    close_click = function () {
+					    self.close();
+					    return false;
+				    }
+				;
+
+				callback.apply(this.$popup.get(), data);
+
+				// Add additional Button if callback_action available
+				if (this.action_text && this.action_callback) {
+					var action_callback = this.action_callback;
+					this.$popup.find('.sui-box-footer').append(
+						'<div class="sui-actions-right">' +
+						'<button class="forminator-popup-action sui-button ' + this.action_css_class + '">' + this.action_text + '</button>' +
+						'</div>'
+					);
+					this.$popup.find('.forminator-popup-action').on('click', function(){
+						if( action_callback ) {
+							action_callback.apply();
+						}
+						self.close();
+					});
+				} else {
+					this.$popup.find('.forminator-popup-action').remove();
+				}
+
+				// Add closing event
+				this.$popup.find( ".forminator-popup-close" ).on( "click", close_click );
+				this.$popup.on( "click", '.forminator-popup-cancel', close_click );
+
+				// Open Modal
+				SUI.openModal(
+					this.$popupId,
+					this.$focusAfterClosed,
+					undefined,
+					true,
+					true
+				);
+
+				// Delegate SUI events
+				Forminator.Utils.sui_delegate_events();
+
+				this._deferred = new $.Deferred();
+				return this._deferred.promise();
+			},
+
+			close: function ( result, callback ) {
+
+				// Close Modal
+				SUI.closeModal();
+
+				var self = this;
+
+				setTimeout(function () {
+
+					// Remove modal size.
+					self.$popup.closest( '.sui-modal' )
+						.removeClass( 'sui-modal-sm' )
+						.removeClass( 'sui-modal-md' )
+						.removeClass( 'sui-modal-lg' )
+						.removeClass( 'sui-modal-xl' );
+
+					if( callback ) {
+						callback.apply();
+					}
+				}, 300);
+
+				this._deferred.resolve( this.$popup, result );
+			}
+		};
+
+		var Slide_Popup = {
+			$popup: {},
+			_deferred: {},
+
+			initialize: function () {
+
+				var tpl = Forminator.Utils.template( $( popupTpl ).find( '#popup-slide-tpl' ).html() );
+
+				if ( ! $( "#forminator-popup" ).length ) {
+					$( "main.sui-wrap" ).append( tpl({}) );
+				} else {
+					$( "#forminator-popup" ).remove();
+					this.initialize();
+				}
+
+				this.$popup = $( "#forminator-popup" );
+				this.$popupId = 'forminator-popup';
+				this.$focusAfterClosed = 'wpbody-content';
+
+			},
+
+			open: function ( callback, data, size, title ) {
+				this.data             = data;
+				this.title            = '';
+				this.action_text      = '';
+				this.action_callback  = false;
+				this.action_css_class = '';
+				this.has_custom_box   = false;
+				this.has_footer       = true;
+
+				var header_tpl = '';
+
+				switch ( title ) {
+					case 'inline':
+						header_tpl = Forminator.Utils.template( $( popupTpl ).find( '#popup-header-inline-tpl' ).html() );
+						break;
+
+					case 'center':
+						header_tpl = Forminator.Utils.template( $( popupTpl ).find( '#popup-header-tpl' ).html() );
+						break;
+				}
+
+				if ( !_.isUndefined( this.data ) ) {
+					if ( !_.isUndefined( this.data.title ) ) {
+						this.title = this.data.title;
+					}
+
+					if ( !_.isUndefined( this.data.has_footer ) ) {
+						this.has_footer = this.data.has_footer;
+					}
+
+					if ( !_.isUndefined( this.data.action_callback ) &&
+						!_.isUndefined( this.data.action_text ) ) {
+						this.action_callback = this.data.action_callback;
+						this.action_text = this.data.action_text;
+						if ( !_.isUndefined( this.data.action_css_class ) ) {
+							this.action_css_class = this.data.action_css_class;
+						}
+					}
+
+					if ( !_.isUndefined( this.data.has_custom_box ) ) {
+						this.has_custom_box = this.data.has_custom_box;
+					}
+				}
+
+				this.initialize();
+
+				// restart base structure
+				if ( '' !== header_tpl ) {
+					this.$popup.html( header_tpl({
+						title: this.title
+					}) );
+				}
+
+				var self = this,
+					close_click = function () {
+						self.close();
+						return false;
+					}
+				;
+
+				// Set modal size
+				if ( size ) {
+					this.$popup.closest( '.sui-modal' )
+						.addClass( 'sui-modal-' + size );
+				}
+
+				if ( this.has_custom_box ) {
+					callback.apply( this.$popup.get(), data );
+				} else {
+					var box_markup = '<div class="sui-box-body">' +
+						'</div>';
+
+					if( this.has_footer ) {
+						box_markup += '<div class="sui-box-footer">' +
+							'<button class="sui-button forminator-popup-cancel">' + Forminator.l10n.popup.cancel +'</button>' +
+							'</div>';
+					}
+
+					this.$popup.append( box_markup );
+					callback.apply(this.$popup.find(".sui-box-body").get(), data);
+				}
+
+				// Add additional Button if callback_action available
+				if (this.action_text && this.action_callback) {
+					var action_callback = this.action_callback;
+					this.$popup.find('.sui-box-footer').append(
+						'<div class="sui-actions-right">' +
+						'<button class="forminator-popup-action sui-button ' + this.action_css_class + '">' + this.action_text + '</button>' +
+						'</div>'
+					);
+					this.$popup.find('.forminator-popup-action').on('click', function(){
+						if( action_callback ) {
+							action_callback.apply();
+						}
+						self.close();
+					});
+				} else {
+					this.$popup.find('.forminator-popup-action').remove();
+				}
+
+				// Add closing event
+				this.$popup.find( ".forminator-popup-close" ).on( "click", close_click );
+				this.$popup.find( ".forminator-popup-cancel" ).on( "click", close_click );
+				this.$popup.on( "click", '.forminator-popup-cancel', close_click );
+
+				// Open Modal
+				SUI.openModal(
+					this.$popupId,
+					this.$focusAfterClosed,
+					undefined,
+					true,
+					true
+				);
+
+				// Delegate SUI events
+				Forminator.Utils.sui_delegate_events();
+
+				this._deferred = new $.Deferred();
+				return this._deferred.promise();
+			},
+
+			close: function ( result, callback ) {
+				var self = this;
+				// Close Modal
+				SUI.closeModal();
+
+				setTimeout(function () {
+
+					// Remove modal size.
+					self.$popup.closest( '.sui-modal' )
+						.removeClass( 'sui-modal-sm' )
+						.removeClass( 'sui-modal-md' )
+						.removeClass( 'sui-modal-lg' )
+						.removeClass( 'sui-modal-xl' );
+
+					if( callback ) {
+						callback.apply();
+					}
+				}, 300);
+
+				this._deferred.resolve( this.$popup, result );
+			}
+		};
+
+		return {
+			Utils: Utils,
+			Popup: Popup,
+			Integrations_Popup: Integrations_Popup,
+			Stripe_Popup: Stripe_Popup,
+			Notification: Notification,
+			Slide_Popup: Slide_Popup,
+		};
+	});
+
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/dashboard',[
+	], function( TemplatesPopup ) {
+		var Dashboard = Backbone.View.extend({
+			el: '.wpmudev-dashboard-section',
+			events: {
+				"click .wpmudev-action-close": "dismiss_welcome"
+			},
+			initialize: function () {
+				var notification = Forminator.Utils.get_url_param( 'notification' ),
+					form_title = Forminator.Utils.get_url_param( 'title' ),
+					create = Forminator.Utils.get_url_param( 'createnew' )
+				;
+
+				setTimeout( function() {
+					if ( $( '.forminator-scroll-to' ).length ) {
+						$('html, body').animate({
+							scrollTop: $( '.forminator-scroll-to' ).offset().top - 50
+						}, 'slow');
+					}
+				}, 100 );
+
+				if( notification ) {
+					var markup = _.template( '<strong>{{ formName }}</strong> {{ Forminator.l10n.options.been_published }}' );
+
+					Forminator.Notification.open( 'success', markup({
+						formName: Forminator.Utils.sanitize_uri_string( form_title )
+					}), 4000 );
+				}
+
+				if ( create ) {
+					setTimeout( function() {
+						jQuery( '.forminator-create-' + create ).click();
+					}, 200 );
+				}
+
+				return this.render();
+			},
+
+			dismiss_welcome: function( e ) {
+				e.preventDefault();
+
+				var $container = $( e.target ).closest( '.sui-box' ),
+					$nonce = $( e.target ).data( "nonce" )
+				;
+
+				$container.slideToggle( 300, function() {
+					$.ajax({
+						url: Forminator.Data.ajaxUrl,
+						type: "POST",
+						data: {
+							action: "forminator_dismiss_welcome",
+							_ajax_nonce: $nonce
+						},
+						complete: function( result ){
+							$container.remove();
+						}
+					});
+				});
+			},
+
+			render: function() {
+
+				if ( $( '#forminator-new-feature' ).length > 0 ) {
+
+					setTimeout( function () {
+						SUI.openModal(
+							'forminator-new-feature',
+							'wpbody-content'
+						);
+					}, 300 );
+				}
+			}
+		});
+
+		var DashView = new Dashboard();
+
+		return DashView;
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/settings-page',[
+	], function() {
+		var SettingsPage = Backbone.View.extend({
+			el: '.wpmudev-forminator-forminator-settings, .wpmudev-forminator-forminator-addons',
+			events: {
+				'click .sui-side-tabs label.sui-tab-item input': 'sidetabs',
+				"click .sui-sidenav .sui-vertical-tab a": "sidenav",
+				"change .sui-sidenav select.sui-mobile-nav": "sidenav_select",
+				"click .stripe-connect-modal" : 'open_stripe_connect_modal', // Button in Global Settings > Payments > Stripe
+				"click .paypal-connect-modal" : 'open_paypal_connect_modal',
+				"click .forminator-stripe-connect" : 'connect_stripe', // Button inside the modal.
+				"click .disconnect_stripe": "disconnect_stripe",
+				"click .forminator-connect-addon" : 'connect_addon',
+				"click .forminator-paypal-connect" : 'connect_paypal',
+				"click .disconnect_paypal": "disconnect_paypal",
+				'click button.sui-tab-item': 'buttonTabs',
+				"click .forminator-toggle-unsupported-settings": "show_unsupported_settings",
+				"click .forminator-dismiss-unsupported": "hide_unsupported_settings",
+				"click button.addons-configure": "open_configure_connect_modal", // Configure button in Add-ons page.
+				'keyup input.forminator-custom-directory-value': 'show_custom_directory',
+			},
+			initialize: function () {
+				var self = this;
+
+				// only trigger on settings page
+				if (!$('.wpmudev-forminator-forminator-settings').length && !$('.wpmudev-forminator-forminator-addons').length ) {
+					return;
+				}
+				// on submit
+				this.$el.find('.forminator-settings-save').submit( function(e) {
+					e.preventDefault();
+
+					var $form = $( this ),
+						nonce = $form.find('.wpmudev-action-done').data( "nonce" ),
+						action = $form.find('.wpmudev-action-done').data( "action" ),
+						title = $form.find('.wpmudev-action-done').data( "title" ),
+						isReload = $form.find('.wpmudev-action-done').data( "isReload" )
+					;
+
+					self.submitForm( $( this ), action, nonce, title, isReload );
+				});
+
+				var hash = window.location.hash;
+				if( ! _.isUndefined( hash ) && ! _.isEmpty( hash ) ) {
+					this.sidenav_go_to( hash.substring(1), true );
+				}
+
+				this.renderHcaptcha();
+				this.render( 'v2' );
+				this.render( 'v2-invisible' );
+				this.render( 'v3' );
+
+				// Save captcha tab last saved
+				this.captchaTab();
+			},
+
+			captchaTab: function() {
+				var $captchaType = this.$el.find( 'input[name="captcha_tab_saved"]' ),
+					$tabs	   	 = this.$el.find( 'button.captcha-main-tab' )
+				;
+
+				$tabs.on( 'click', function ( e ) {
+					e.preventDefault();
+					$captchaType.val( $( this ).data( 'tab-name' ) );
+				} );
+			},
+
+			render: function ( captcha ) {
+				var self = this,
+					$container = this.$el.find( '#' + captcha + '-recaptcha-preview' )
+				;
+
+				var preloader =
+					'<p class="fui-loading-dialog">' +
+					'<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>' +
+					'</p>'
+				;
+
+				$container.html( preloader );
+
+				$.ajax({
+					url : Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: {
+						action: "forminator_load_recaptcha_preview",
+						_ajax_nonce: forminatorData.loadCaptcha,
+						captcha: captcha,
+					}
+				}).done(function (result) {
+					if( result.success ) {
+						$container.html( result.data );
+					}
+				});
+			},
+
+			renderHcaptcha: function () {
+				var $hcontainer = this.$el.find( '#hcaptcha-preview' );
+
+				var preloader =
+					'<p class="fui-loading-dialog">' +
+					'<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>' +
+					'</p>'
+				;
+
+				$hcontainer.html( preloader );
+
+				$.ajax({
+					url : Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: {
+						action: "forminator_load_hcaptcha_preview",
+						_ajax_nonce: forminatorData.loadCaptcha,
+					}
+				}).done(function (result) {
+					if( result.success ) {
+						$hcontainer.html( result.data );
+					}
+				});
+			},
+
+			submitForm: function( $form, action, nonce, title, isReload ) {
+				var data = {},
+					self = this
+				;
+
+				data.action = 'forminator_save_' + action + '_popup';
+				data._ajax_nonce = nonce;
+
+				var ajaxData = $form.serialize() + '&' + $.param(data);
+
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: ajaxData,
+					beforeSend: function() {
+						$form.find('.sui-button').prop( 'disabled', true );
+						$form.find('.wpmudev-action-done').addClass('sui-button-onload');
+					},
+					success: function( result ) {
+						var markup = _.template( '<strong>{{ tab }}</strong> {{ Forminator.l10n.commons.update_successfully }}' ),
+							notifType = 'success',
+							message = markup({ tab: Forminator.Utils.sanitize_text_field( title ) })
+						;
+
+						if ( ! result.success ) {
+							notifType = 'error';
+							message = result.data;
+
+						}
+
+						if (!_.isUndefined(message)) {
+							Forminator.Notification.open( notifType, message, 4000 );
+						}
+
+						if( action === "captcha" ) {
+
+							$captcha_tab_saved = $form.find( 'input[name="captcha_tab_saved"]' ).val();
+							$captcha_tab_saved = '' === $captcha_tab_saved ? 'recaptcha' : $captcha_tab_saved;
+							if ( 'recaptcha' === $captcha_tab_saved ) {
+								self.render( 'v2' );
+								self.render( 'v2-invisible' );
+								self.render( 'v3' );
+							} else if ( 'hcaptcha' === $captcha_tab_saved ) {
+								self.renderHcaptcha();
+							}
+
+						} else if ( 'geolocation_settings' === action ) {
+							// For Geolocation settings.
+							var showError = ! result.success,
+								keyField = $( '#forminator-settings--place-ip' ).parent();
+
+							if ( showError ) {
+								keyField.addClass( 'sui-form-field-error' ).find( '.sui-error-message' ).removeClass( 'sui-hidden' );
+							} else {
+								keyField.removeClass( 'sui-form-field-error' ).find( '.sui-error-message' ).addClass( 'sui-hidden' );
+							}
+						}
+
+						if (isReload) {
+							window.location.reload();
+						}
+					},
+					error: function ( error ) {
+						Forminator.Notification.open( 'error', Forminator.l10n.commons.update_unsuccessfull, 4000 );
+					}
+				}).always(function(){
+					$form.find('.sui-button').prop( 'disabled', false );
+					$form.find('.wpmudev-action-done').removeClass('sui-button-onload');
+				});
+			},
+
+			sidetabs: function( e ) {
+				var $this      = this.$( e.target ),
+					$label     = $this.parent( 'label' ),
+					$data      = $this.data( 'tab-menu' ),
+					$wrapper   = $this.closest( '.sui-side-tabs' ),
+					$alllabels = $wrapper.find( '.sui-tabs-menu .sui-tab-item' ),
+					$allinputs = $alllabels.find( 'input' )
+				;
+
+				if ( $this.is( 'input' ) ) {
+
+					$alllabels.removeClass( 'active' );
+					$allinputs.removeAttr( 'checked' );
+					$wrapper.find( '.sui-tabs-content > div' ).removeClass( 'active' );
+
+					$label.addClass( 'active' );
+					$this.prop( 'checked', 'checked' );
+
+					if ( $wrapper.find( '.sui-tabs-content div[data-tab-content="' + $data + '"]' ).length ) {
+						$wrapper.find( '.sui-tabs-content div[data-tab-content="' + $data + '"]' ).addClass( 'active' );
+					}
+				}
+			},
+
+			sidenav: function( e ) {
+				var tab_name = $( e.target ).data( 'nav' );
+				if ( tab_name ) {
+					this.sidenav_go_to( tab_name, true );
+				}
+				e.preventDefault();
+
+			},
+
+			sidenav_select: function( e ) {
+				var tab_name = $(e.target).val();
+				if ( tab_name ) {
+					this.sidenav_go_to( tab_name, true );
+				}
+				e.preventDefault();
+
+			},
+
+			sidenav_go_to: function( tab_name, update_history ) {
+
+				var $tab 	 = this.$el.find( 'a[data-nav="' + tab_name + '"]' ),
+				    $sidenav = $tab.closest( '.sui-vertical-tabs' ),
+				    $tabs    = $sidenav.find( '.sui-vertical-tab' ),
+				    $content = this.$el.find( '.sui-box[data-nav]' ),
+				    $current = this.$el.find( '.sui-box[data-nav="' + tab_name + '"]' );
+
+				if ( update_history ) {
+					history.pushState( { selected_tab: tab_name }, 'Global Settings', 'admin.php?page=forminator-settings&section=' + tab_name );
+				}
+
+				$tabs.removeClass( 'current' );
+				$content.hide();
+
+				$tab.parent().addClass( 'current' );
+				$current.show();
+			},
+
+			open_configure_connect_modal: function ( e ) {
+				var $target = $(e.target),
+					slug = $target.data('slug'),
+					actions = $target.data('action');
+				if ( 'stripe-connect-modal' === actions ) {
+					this.open_stripe_connect_modal( e );
+				} else if ( 'paypal-connect-modal' === actions ) {
+					this.open_paypal_connect_modal( e );
+				} else if ( slug ) {
+					this.open_connect_modal( e, slug );
+				}
+			},
+
+			open_stripe_connect_modal: function (e) {
+
+				e.preventDefault();
+
+				var self = this;
+				var $target  = $(e.target);
+				var image    = $target.data('modalImage');
+				var image_x2 = $target.data('modalImageX2');
+				var title    = $target.data('modalTitle');
+				var nonce    = $target.data('modalNonce');
+
+				var popup_options = {
+					title: Forminator.Utils.sanitize_text_field( title ),
+					image: image,
+					image_x2: image_x2
+				}
+
+				Forminator.Stripe_Popup.open( function () {
+					var popup = $(this);
+					self.render_stripe_connect_modal_content(popup, nonce, {});
+				}, popup_options );
+
+				return false;
+			},
+
+			render_stripe_connect_modal_content: function (popup, popup_nonce, request_data) {
+				var self = this;
+				request_data.action      = 'forminator_stripe_settings_modal';
+				request_data._ajax_nonce = popup_nonce;
+				request_data.page_slug   = Forminator.Utils.get_url_param( 'page' );
+
+				var preloader =
+					'<p class="fui-loading-modal">' +
+					'<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>' +
+					'</p>'
+				;
+
+				popup.find(".sui-box-body").html(preloader);
+
+				$.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'post',
+					data: request_data
+				})
+					.done(function (result) {
+						if (result && result.success) {
+							// Imitate title loading
+							popup.find(".sui-box-header h3.sui-box-title").show();
+
+							// Render popup body
+							popup.find(".sui-box-body").html(result.data.html);
+
+							// Render popup footer
+							var buttons = result.data.buttons;
+
+							// Clear footer from previous buttons
+							popup.find(".sui-box-footer").html('');
+
+							// Append buttons
+							_.each( buttons, function( button ) {
+								popup.find( '.sui-box-footer' ).append( button.markup );
+							});
+
+							popup.find(".sui-button").removeClass("sui-button-onload");
+
+							// Handle notifications
+							if (!_.isUndefined(result.data.notification) &&
+								!_.isUndefined(result.data.notification.type) &&
+								!_.isUndefined(result.data.notification.text) &&
+								!_.isUndefined(result.data.notification.duration)
+							) {
+
+								Forminator.Notification.open(result.data.notification.type, result.data.notification.text, result.data.notification.duration)
+									.done(function () {
+										// Notification opened
+									});
+
+								self.update_stripe_page( popup_nonce );
+							}
+						}
+					});
+			},
+
+			update_stripe_page: function( nonce ) {
+				var new_request = {
+					action: 'forminator_stripe_update_page',
+					_ajax_nonce: nonce,
+				}
+
+				$.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'get',
+					data: new_request
+				})
+					.done(function (result) {
+						// Update screen
+						jQuery( '#sui-box-stripe' ).html( result.data );
+
+						// Re-init SUI events
+						Forminator.Utils.sui_delegate_events();
+
+						// Close the popup
+						Forminator.Stripe_Popup.close();
+					});
+			},
+
+			show_unsupported_settings: function (e) {
+				e.preventDefault();
+
+				$('.forminator-unsupported-settings').show();
+			},
+
+			hide_unsupported_settings: function (e) {
+				e.preventDefault();
+
+				$('.forminator-unsupported-settings').hide();
+			},
+
+			connect_stripe: function (e) {
+				e.preventDefault();
+
+				var $target = $(e.target);
+				$target.addClass('sui-button-onload');
+
+				var nonce        = $target.data('nonce');
+				var popup        = this.$el.find('#forminator-stripe-popup');
+				var form         = popup.find('form');
+				var data         = form.serializeArray();
+				var indexedArray = {};
+
+				$.map(data, function (n, i) {
+					indexedArray[n['name']] = n['value'];
+				});
+				indexedArray['connect'] = true;
+
+				this.render_stripe_connect_modal_content(popup, nonce, indexedArray);
+
+				return false;
+			},
+
+			connect_addon: function (e) {
+				e.preventDefault();
+
+				var $target = $(e.target);
+				$target.addClass('sui-button-onload');
+
+				var nonce        = $target.data('nonce');
+				var popup        = this.$el.find('#forminator-stripe-popup');
+				var form         = popup.find('form');
+				var addonSlug    = form.data('slug');
+				var data         = form.serializeArray();
+				var indexedArray = {};
+
+				$.map(data, function (n, i) {
+					indexedArray[n['name']] = n['value'];
+				});
+				indexedArray['connect'] = true;
+
+				this.render_connect_modal_content(addonSlug, popup, nonce, indexedArray);
+
+				return false;
+			},
+
+			/**
+			 * WAI-ARIA Side Tabs
+			 *
+			 * @since 1.7.2
+			 */
+			buttonTabs: function( e ) {
+
+				var button = this.$( e.target ),
+					wrapper = button.closest( '.sui-tabs' ),
+					list    = wrapper.find( '.sui-tabs-menu .sui-tab-item' ),
+					panes   = wrapper.find( '.sui-tabs-content .sui-tab-content' )
+					;
+
+				if ( button.is( 'button' ) ) {
+
+					// Reset lists
+					list.removeClass( 'active' );
+					list.attr( 'tabindex', '-1' );
+
+					// Reset panes
+					panes.attr( 'hidden', true );
+					panes.removeClass('active');
+
+					// Select current tab
+					button.removeAttr( 'tabindex' );
+					button.addClass( 'active' );
+
+					// Select current content
+					wrapper.find( '#' + button.attr( 'aria-controls' ) ).addClass( 'active' );
+					wrapper.find( '#' + button.attr( 'aria-controls' ) ).attr( 'hidden', false );
+					wrapper.find( '#' + button.attr( 'aria-controls' ) ).removeAttr( 'hidden' );
+				}
+
+				e.preventDefault();
+
+			},
+
+			/**
+			 * Open addon connection modal
+			 *
+			 * @since 1.26
+			 */
+			open_connect_modal: function ( e, addonSlug ) {
+				e.preventDefault();
+				var self = this;
+				var $target = $(e.target);
+				var nonce    = $target.data('modalNonce');
+				Forminator.Stripe_Popup.open(function () {
+					var popup = $(this);
+					self.render_connect_modal_content( addonSlug, popup, nonce, {});
+				}, {
+					title: forminatorl10n[ addonSlug ].configure_title,
+					image: forminatorData.imagesUrl + '/' + addonSlug + '-logo.png',
+					image_x2: forminatorData.imagesUrl + '/' + addonSlug + '-logo@2x.png',
+				});
+
+				return false;
+			},
+
+			render_connect_modal_content: function (addonSlug, popup, popup_nonce, request_data) {
+				var self = this;
+				request_data.action      = 'forminator_' + addonSlug + '_settings_modal';
+				request_data._ajax_nonce = popup_nonce;
+
+				var preloader =
+					'<p class="fui-loading-modal">' +
+					'<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>' +
+					'</p>'
+				;
+
+				popup.find('.sui-box-body').html(preloader);
+
+				$.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'post',
+					data: request_data
+				})
+				.done(function (result) {
+					if (result && result.success) {
+						// Imitate title loading
+						popup.find('.sui-box-header h3.sui-box-title').show();
+
+						// Render popup body
+						popup.find('.sui-box-body').html(result.data.html);
+
+						// Render popup footer
+						var buttons = result.data.buttons;
+
+						// Clear footer from previous buttons
+						popup.find('.sui-box-footer').html('');
+
+						// Append buttons
+						_.each( buttons, function( button ) {
+							popup.find( '.sui-box-footer' ).append( button.markup );
+						});
+
+						popup.find(".sui-button").removeClass("sui-button-onload");
+
+						// Handle notifications
+						if ( result.data.notification ) {
+							self.openNotificaion( result.data.notification );
+							self.closePopup();
+						}
+					} else {
+						Forminator.Notification.open( 'error', result.data );
+						self.closePopup();
+					}
+				});
+			},
+
+			closePopup: function() {
+				// Re-init SUI events
+				Forminator.Utils.sui_delegate_events();
+
+				// Close the popup
+				Forminator.Stripe_Popup.close();
+			},
+
+			// Handle notifications
+			openNotificaion: function( notification ) {
+				if ( ! _.isUndefined( notification ) &&
+					! _.isUndefined( notification.type ) &&
+					! _.isUndefined( notification.text ) &&
+					! _.isUndefined( notification.duration )
+				) {
+					Forminator.Notification.open( notification.type,  notification.text, notification.duration )
+						.done(function () {
+							// Notification opened
+						});
+				}
+			},
+
+			/**
+			 * Paypal
+			 *
+			 * @param {*} e
+			 * @since 1.7.1
+			 */
+			open_paypal_connect_modal: function (e) {
+				e.preventDefault();
+				var self = this;
+				var $target = $(e.target);
+				var image    = $target.data('modalImage');
+				var image_x2 = $target.data('modalImageX2');
+				var title    = $target.data('modalTitle');
+				var nonce    = $target.data('modalNonce');
+				Forminator.Stripe_Popup.open(function () {
+					var popup = $(this);
+					self.render_paypal_connect_modal_content(popup, nonce, {});
+				}, {
+					title: Forminator.Utils.sanitize_text_field( title ),
+					image: image,
+					image_x2: image_x2,
+				});
+
+				return false;
+			},
+
+			render_paypal_connect_modal_content: function (popup, popup_nonce, request_data) {
+				var self = this;
+				request_data.action      = 'forminator_paypal_settings_modal';
+				request_data._ajax_nonce = popup_nonce;
+
+				$.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'post',
+					data: request_data
+				})
+					.done(function (result) {
+						if (result && result.success) {
+							// Imitate title loading
+							popup.find(".sui-box-header h3.sui-box-title").show();
+
+							// Render popup body
+							popup.find(".sui-box-body").html(result.data.html);
+
+							// Render popup footer
+							var buttons = result.data.buttons;
+
+							// Clear footer from previous buttons
+							popup.find(".sui-box-footer").html('');
+
+							// Append buttons
+							_.each( buttons, function( button ) {
+								popup.find( '.sui-box-footer' ).append( button.markup );
+							});
+
+							popup.find(".sui-button").removeClass("sui-button-onload");
+
+							// Handle notifications
+							if (!_.isUndefined(result.data.notification) &&
+								!_.isUndefined(result.data.notification.type) &&
+								!_.isUndefined(result.data.notification.text) &&
+								!_.isUndefined(result.data.notification.duration)
+							) {
+
+								Forminator.Notification.open(result.data.notification.type, result.data.notification.text, result.data.notification.duration)
+									.done(function () {
+										// Notification opened
+									});
+
+								self.update_paypal_page( popup_nonce );
+							}
+						}
+					});
+			},
+
+			update_paypal_page: function( nonce ) {
+				var new_request = {
+					action: 'forminator_paypal_update_page',
+					_ajax_nonce: nonce,
+				}
+
+				$.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'get',
+					data: new_request
+				})
+					.done(function (result) {
+						// Update screen
+						jQuery( '#sui-box-paypal' ).html( result.data );
+
+						// Re-init SUI events
+						Forminator.Utils.sui_delegate_events();
+
+						// Close the popup
+						Forminator.Stripe_Popup.close();
+					});
+			},
+
+			connect_paypal: function (e) {
+				e.preventDefault();
+
+				var $target = $(e.target);
+				$target.addClass('sui-button-onload');
+
+				var nonce        = $target.data('nonce');
+				var popup        = this.$el.find('#forminator-stripe-popup');
+				var form         = popup.find('form');
+				var data         = form.serializeArray();
+				var indexedArray = {};
+
+				$.map(data, function (n, i) {
+					indexedArray[n['name']] = n['value'];
+				});
+				indexedArray['connect'] = true;
+
+				this.render_paypal_connect_modal_content(popup, nonce, indexedArray);
+
+				return false;
+			},
+
+			disconnect_stripe: function (e) {
+				var $target = $(e.target);
+				var new_request = {
+					action: 'forminator_disconnect_stripe',
+					_ajax_nonce: $target.data('nonce'),
+				}
+				$target.addClass('sui-button-onload');
+
+				$.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'get',
+					data: new_request
+				})
+					.done(function (result) {
+						// Update screen
+						jQuery( '#sui-box-stripe' ).html( result.data.html );
+
+						// Re-init SUI events
+						Forminator.Utils.sui_delegate_events();
+
+						// Close the popup
+						Forminator.Stripe_Popup.close();
+
+						// Handle notifications
+						if (!_.isUndefined(result.data.notification) &&
+							!_.isUndefined(result.data.notification.type) &&
+							!_.isUndefined(result.data.notification.text) &&
+							!_.isUndefined(result.data.notification.duration)
+						) {
+
+							Forminator.Notification.open(result.data.notification.type, result.data.notification.text, result.data.notification.duration)
+								.done(function () {
+									// Notification opened
+								});
+
+						}
+					});
+
+			},
+
+			disconnect_paypal: function (e) {
+				var $target = $(e.target);
+				var new_request = {
+					action: 'forminator_disconnect_paypal',
+					_ajax_nonce: $target.data('nonce'),
+				}
+				$target.addClass('sui-button-onload');
+
+				$.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'get',
+					data: new_request
+				})
+					.done(function (result) {
+						// Update screen
+						jQuery( '#sui-box-paypal' ).html( result.data.html );
+
+						// Re-init SUI events
+						Forminator.Utils.sui_delegate_events();
+
+						// Close the popup
+						Forminator.Stripe_Popup.close();
+
+						// Handle notifications
+						if (!_.isUndefined(result.data.notification) &&
+							!_.isUndefined(result.data.notification.type) &&
+							!_.isUndefined(result.data.notification.text) &&
+							!_.isUndefined(result.data.notification.duration)
+						) {
+
+							Forminator.Notification.open(result.data.notification.type, result.data.notification.text, result.data.notification.duration)
+								.done(function () {
+									// Notification opened
+								});
+
+						}
+					});
+
+			},
+
+			show_custom_directory: function (e) {
+				var $target = $(e.target),
+				directoryValue = $target.val();
+				$('.forminator-custom-directory strong').html( directoryValue );
+			}
+
+		});
+
+		var SettingsPage = new SettingsPage();
+
+		return SettingsPage;
+	});
+})(jQuery);
+
+// noinspection JSUnusedGlobalSymbols
+var forminator_render_admin_captcha = function () {
+	setTimeout( function () {
+		var $captcha = jQuery( '.forminator-g-recaptcha' ),
+			sitekey = $captcha.data('sitekey'),
+			theme = $captcha.data('theme'),
+			size = $captcha.data('size')
+		;
+		window.grecaptcha.render( $captcha[0], {
+			sitekey: sitekey,
+			theme: theme,
+			size: size
+		} );
+	}, 100 );
+};
+
+// noinspection JSUnusedGlobalSymbols
+var forminator_render_admin_captcha_v2 = function () {
+	setTimeout( function () {
+		var $captcha_v2 = jQuery( '.forminator-g-recaptcha-v2' ),
+			sitekey_v2 = $captcha_v2.data('sitekey'),
+			theme_v2 = $captcha_v2.data('theme'),
+			size_v2 = $captcha_v2.data('size')
+		;
+		window.grecaptcha.render( $captcha_v2[0], {
+			sitekey: sitekey_v2,
+			theme: theme_v2,
+			size: size_v2
+		} );
+	}, 100 );
+};
+
+// noinspection JSUnusedGlobalSymbols
+var forminator_render_admin_captcha_v2_invisible = function () {
+	setTimeout( function () {
+		var $captcha = jQuery( '.forminator-g-recaptcha-v2-invisible' ),
+			sitekey = $captcha.data('sitekey'),
+			theme = $captcha.data('theme'),
+			size = $captcha.data('size')
+		;
+		window.grecaptcha.render( $captcha[0], {
+			sitekey: sitekey,
+			theme: theme,
+			size: size,
+			badge: 'inline'
+		} );
+	}, 100 );
+};
+
+var forminator_render_admin_captcha_v3 = function () {
+	setTimeout( function () {
+		var $captcha = jQuery( '.forminator-g-recaptcha-v3' ),
+			sitekey = $captcha.data('sitekey'),
+			theme = $captcha.data('theme'),
+			size = $captcha.data('size')
+		;
+		window.grecaptcha.render( $captcha[0], {
+			sitekey: sitekey,
+			theme: theme,
+			size: size,
+			badge: 'inline'
+		} );
+	}, 100 );
+};
+
+var forminator_render_admin_hcaptcha = function () {
+	setTimeout( function () {
+		var $hcaptcha = jQuery( '.forminator-hcaptcha' ),
+			sitekey = $hcaptcha.data( 'sitekey' )
+			// theme = $captcha.data('theme'),
+			// size = $captcha.data('size')
+		;
+
+		hcaptcha.render( $hcaptcha[0], {
+			sitekey: sitekey
+		} );
+	}, 1000 );
+};
+
+
+formintorjs.define('text!tpl/dashboard.html',[],function () { return '<div>\r\n\r\n\t<!-- TEMPLATE: Delete -->\r\n\t<script type="text/template" id="forminator-delete-popup-tpl">\r\n\r\n\t    <div class="sui-box-body sui-spacing-top--0">\r\n\t\t    <p id="forminator-popup__description" class="sui-description" style="margin: 5px 0 0; text-align: center;">{{ content }}</p>\r\n\t    </div>\r\n\r\n\t    <div class="sui-box-footer sui-flatten sui-content-center sui-spacing-top--10">\r\n\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\r\n\t\t\t<form method="post" class="delete-action">\r\n\r\n\t\t\t\t<input type="hidden" name="forminator_action" value="{{ action }}">\r\n\t\t\t\t<input type="hidden" name="id" value="{{ id }}">\r\n\t\t\t\t<input type="hidden" id="forminatorNonce" name="forminatorNonce" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" id="forminatorEntryNonce" name="forminatorEntryNonce" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" name="_wp_http_referer" value="{{ referrer }}">\r\n\r\n\t\t\t\t<button type="submit" class="sui-button sui-button-ghost sui-button-red popup-confirmation-confirm" style="margin: 0;">\r\n\t\t\t\t\t<span class="sui-icon-trash" aria-hidden="true"></span>\r\n\t\t\t\t\t{{ button }}\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</form>\r\n\r\n\t    </div>\r\n\r\n\t</script>\r\n\r\n\t<!-- TEMPLATE: Create New Form (Base Structure) -->\r\n\t<script type="text/template" id="forminator-new-form-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg">{{ Forminator.l10n.popup.enter_name }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-content-center sui-spacing-top--10"></div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten">\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button id="forminator-build-your-form" class="sui-button sui-button-blue">\r\n\t\t\t\t\t<span class="sui-loading-text">\r\n\t\t\t\t\t\t<i class="sui-icon-plus" aria-hidden="true"></i>\r\n\t\t\t\t\t\t{{Forminator.l10n.popup.create}}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- TEMPLATE: Create New Form (Content) -->\r\n\t<script type="text/template" id="forminator-new-form-content-tpl">\r\n\r\n\t\t<p id="forminator-popup__description" class="sui-description">{{ Forminator.l10n.popup.new_form_desc2 }}</p>\r\n\r\n\t\t<div\r\n\t\t\trole="alert"\r\n\t\t\tid="forminator-template-register-notice"\r\n\t\t\tclass="sui-notice sui-notice-blue"\r\n\t\t\taria-live="assertive"\r\n\t\t>\r\n\r\n\t\t\t<div class="sui-notice-content">\r\n\r\n\t\t\t\t<div class="sui-notice-message">\r\n\r\n\t\t\t\t\t<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>\r\n\r\n\t\t\t\t\t<p style="text-align: left;">{{ Forminator.l10n.popup.registration_notice }}</p>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div\r\n\t\t\trole="alert"\r\n\t\t\tid="forminator-template-login-notice"\r\n\t\t\tclass="sui-notice sui-notice-blue"\r\n\t\t\taria-live="assertive"\r\n\t\t>\r\n\r\n\t\t\t<div class="sui-notice-content">\r\n\r\n\t\t\t\t<div class="sui-notice-message">\r\n\r\n\t\t\t\t\t<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>\r\n\r\n\t\t\t\t\t<p style="text-align: left;">{{ Forminator.l10n.popup.login_notice }}</p>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div id="forminator-form-name-input" class="sui-form-field">\r\n\r\n\t\t\t<label for="forminator-form-name" class="sui-screen-reader-text">{{ Forminator.l10n.popup.input_label }}</label>\r\n\t\t\t<input type="text"\r\n\t\t\t       id="forminator-form-name"\r\n\t\t\t       class="sui-form-control fui-required"\r\n\t\t\t       placeholder="{{Forminator.l10n.popup.new_form_placeholder}}" autofocus>\r\n\t\t\t<span class="sui-error-message" style="display: none;">{{Forminator.l10n.popup.form_name_validation}}</span>\r\n\r\n\t\t</div>\r\n\t</script>\r\n\r\n\t<!-- TEMPLATE: Create Poll -->\r\n\t<script type="text/template" id="forminator-new-poll-content-tpl">\r\n\t\t<p class="sui-description" style="text-align: center;">{{ Forminator.l10n.popup.new_poll_desc2 }}</p>\r\n\r\n\t\t<div id="forminator-form-name-input" class="sui-form-field">\r\n\r\n\t\t\t<label for="forminator-form-name" class="sui-screen-reader-text">{{ Forminator.l10n.popup.input_label }}</label>\r\n\t\t\t<input type="text"\r\n\t\t\t       id="forminator-form-name"\r\n\t\t\t       class="sui-form-control fui-required"\r\n\t\t\t       placeholder="{{Forminator.l10n.popup.new_poll_placeholder}}" autofocus>\r\n\t\t\t<span class="sui-error-message" style="display: none;">{{Forminator.l10n.popup.poll_name_validation}}</span>\r\n\r\n\t\t</div>\r\n\t</script>\r\n\r\n\t<!-- TEMPLATE: Create Quiz, Step 1 -->\r\n\t<script type="text/template" id="forminator-quizzes-popup-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: none;">{{ Forminator.l10n.quiz.choose_quiz_title }}</h3>\r\n\r\n\t\t\t<p id="forminator-popup__description" class="sui-description">{{ Forminator.l10n.quiz.choose_quiz_description }}</p>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-content-center sui-spacing-bottom--10">\r\n\r\n\t\t\t<div id="forminator-form-name-input" class="sui-form-field">\r\n\r\n\t\t\t\t<label for="forminator-form-name" class="sui-label">{{ Forminator.l10n.quiz.quiz_name }}</label>\r\n\r\n\t\t\t\t<input\r\n\t\t\t\t\ttype="text"\r\n\t\t\t\t\tid="forminator-form-name"\r\n\t\t\t\t\tclass="sui-form-control fui-required"\r\n\t\t\t\t\tplaceholder="{{Forminator.l10n.popup.new_quiz_placeholder}}"\r\n\t\t\t\t\tautofocus\r\n\t\t\t\t/>\r\n\t\t\t\t<span class="sui-error-message" style="display: none;">{{Forminator.l10n.popup.quiz_name_validation}}</span>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t\t<label class="sui-label">{{ Forminator.l10n.quiz.quiz_type }}</label>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-selectors" style="margin: 0;">\r\n\r\n\t\t\t<ul>\r\n\r\n\t\t\t\t<li><label for="forminator-new-quiz--knowledge" class="sui-box-selector">\r\n\t\t\t\t\t<input\r\n\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\tname="forminator-new-quiz"\r\n\t\t\t\t\t\tid="forminator-new-quiz--knowledge"\r\n\t\t\t\t\t\tclass="forminator-new-quiz-type"\r\n\t\t\t\t\t\tvalue="knowledge"\r\n\t\t\t\t\t\tchecked="checked"\r\n\t\t\t\t\t/>\r\n\t\t\t\t\t<span>\r\n\t\t\t\t\t\t<i class="sui-icon-academy" aria-hidden="true"></i>\r\n\t\t\t\t\t\t{{ Forminator.l10n.quiz.knowledge_label }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t\t<span>{{ Forminator.l10n.quiz.knowledge_description }}</span>\r\n\t\t\t\t</label></li>\r\n\r\n\t\t\t\t<li><label for="forminator-new-quiz--nowrong" class="sui-box-selector">\r\n\t\t\t\t\t<input\r\n\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\tname="forminator-new-quiz"\r\n\t\t\t\t\t\tid="forminator-new-quiz--nowrong"\r\n\t\t\t\t\t\tclass="forminator-new-quiz-type"\r\n\t\t\t\t\t\tvalue="nowrong"\r\n\t\t\t\t\t/>\r\n\t\t\t\t\t<span>\r\n\t\t\t\t\t\t<i class="sui-icon-community-people" aria-hidden="true"></i>\r\n\t\t\t\t\t\t{{ Forminator.l10n.quiz.nowrong_label }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t\t<span>{{ Forminator.l10n.quiz.nowrong_description }}</span>\r\n\t\t\t\t</label></li>\r\n\r\n\t\t\t</ul>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-spacing-top--30">\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button class="sui-button select-quiz-template">\r\n\t\t\t\t\t<span class="sui-loading-text">{{ Forminator.l10n.quiz.continue_button }}</span>\r\n\t\t\t\t\t<i class="sui-icon-load sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- TEMPLATE: Create Quiz, Step 2 (Pagination) -->\r\n\t<script type="text/template" id="forminator-new-quiz-pagination-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--left forminator-popup-back">\r\n\t\t\t\t<span class="sui-icon-chevron-left sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.go_back }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close">\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg" style="overflow: initial; text-overflow: none; white-space: initial;">{{ Forminator.l10n.quiz.quiz_pagination }}</h3>\r\n\r\n\t\t\t<p id="forminator-popup__description" class="sui-description">\r\n\t\t\t\t{{ Forminator.l10n.quiz.quiz_pagination_descr }}<br>\r\n\t\t\t\t{{ Forminator.l10n.quiz.quiz_pagination_descr2 }}\r\n\t\t\t</p>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-spacing-bottom--10">\r\n\r\n\t\t\t<label class="sui-label">{{ Forminator.l10n.quiz.presentation }}</label>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-selectors" style="margin: 0;">\r\n\r\n\t\t\t<ul>\r\n\r\n\t\t\t\t<li><label class="sui-box-selector">\r\n\t\t\t\t\t<input\r\n\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\tname="forminator-quiz-pagination"\r\n\t\t\t\t\t\tvalue="0"\r\n\t\t\t\t\t/>\r\n\t\t\t\t\t<span>\r\n\t\t\t\t\t\t{{ Forminator.l10n.quiz.no_pagination }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t</label></li>\r\n\r\n\t\t\t\t<li><label class="sui-box-selector">\r\n\t\t\t\t\t<input\r\n\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\tname="forminator-quiz-pagination"\r\n\t\t\t\t\t\tvalue="1"\r\n\t\t\t\t\t/>\r\n\t\t\t\t\t<span>\r\n\t\t\t\t\t\t{{ Forminator.l10n.quiz.paginate_quiz }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t</label></li>\r\n\r\n\t\t\t</ul>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-spacing-top--30">\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button class="sui-button select-quiz-pagination">\r\n\t\t\t\t\t<span class="sui-loading-text">{{ Forminator.l10n.quiz.continue_button }}</span>\r\n\t\t\t\t\t<i class="sui-icon-load sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- TEMPLATE: Create Quiz, Step 3A (Leads Base Structure) -->\r\n\t<script type="text/template" id="forminator-new-quiz-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--left forminator-popup-back">\r\n\t\t\t\t<span class="sui-icon-chevron-left sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.go_back }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close forminator-cancel-create-form">\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg">{{ Forminator.l10n.quiz.collect_leads }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10"></div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-separated">\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button id="forminator-build-your-form" class="sui-button sui-button-blue">\r\n\t\t\t\t\t<span class="sui-loading-text">\r\n\t\t\t\t\t\t<i class="sui-icon-plus" aria-hidden="true"></i> {{ Forminator.l10n.quiz.create_quiz }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- TEMPLATE: Create Quiz, Step 3B (Leads Content) -->\r\n\t<script type="text/template" id="forminator-new-quiz-content-tpl">\r\n\r\n\t\t<p class="sui-description" style="text-align: center;">{{ Forminator.l10n.popup.new_quiz_desc2 }}\r\n\t\t\t{[ if( Forminator.Data.showDocLink ) { ]}\r\n\t\t\t\t<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/?utm_source=forminator&utm_medium=plugin&utm_campaign=capture_leads_learnmore_link#leads" target="_blank">\r\n\t\t\t\t\t{{ Forminator.l10n.popup.learn_more }}\r\n\t\t\t\t</a>\r\n\t\t\t{[ } ]}\r\n\t\t</p>\r\n\r\n\t\t<div class="sui-form-field">\r\n\r\n\t\t\t<label for="forminator-new-quiz-leads" class="sui-toggle fui-highlighted-toggle">\r\n\r\n\t\t\t\t<input\r\n\t\t\t\t\ttype="checkbox"\r\n\t\t\t\t\tid="forminator-new-quiz-leads"\r\n\t\t\t\t\taria-labelledby="forminator-new-quiz-leads-label"\r\n\t\t\t\t/>\r\n\r\n\t\t\t\t<span class="sui-toggle-slider" aria-hidden="true"></span>\r\n\r\n\t\t\t\t<span id="forminator-new-quiz-leads-label" class="sui-toggle-label">{{ Forminator.l10n.quiz.quiz_leads_toggle }}</span>\r\n\r\n\t\t\t</label>\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="alert"\r\n\t\t\t\tid="sui-quiz-leads-description"\r\n\t\t\t\tclass="sui-notice sui-notice-blue"\r\n\t\t\t\taria-live="assertive"\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-notice-content">\r\n\r\n\t\t\t\t\t<div class="sui-notice-message">\r\n\r\n\t\t\t\t\t\t<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>\r\n\r\n\t\t\t\t\t\t<p>{{ Forminator.l10n.quiz.quiz_leads_desc }}</p>\r\n\r\n\t\t\t\t\t</div>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- TEMPLATE: Export Schedule (on Submissions page) -->\r\n\t<script type="text/template" id="forminator-exports-schedule-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body">\r\n\r\n\t\t\t<div class="sui-box-settings-row">\r\n\r\n\t\t\t\t<div class="sui-box-settings-col-2">\r\n\r\n\t\t\t\t\t<span class="sui-settings-label sui-dark">{{ Forminator.l10n.popup.manual_exports }}</span>\r\n\t\t\t\t\t<span class="sui-description">{{ Forminator.l10n.popup.manual_description }}</span>\r\n\r\n\t\t\t\t\t<form method="post" style="margin-top: 10px;">\r\n\r\n\t\t\t\t\t\t<input type="hidden" name="forminator_export" value="1" />\r\n\t\t\t\t\t\t<input type="hidden" name="form_id" value="{{ Forminator.l10n.exporter.form_id }}" />\r\n\t\t\t\t\t\t<input type="hidden" name="form_type" value="{{ Forminator.l10n.exporter.form_type }}" />\r\n\t\t\t\t\t\t<input type="hidden" name="_forminator_nonce" value="{{ Forminator.l10n.exporter.export_nonce }}" />\r\n\r\n\t\t\t\t\t\t<button class="sui-button sui-button-ghost">{{ Forminator.l10n.popup.download_csv }}</button>\r\n\r\n\t\t\t\t\t\t{[ if( \'cform\' === Forminator.l10n.exporter.form_type || \'quiz\' === Forminator.l10n.exporter.form_type ) { ]}\r\n\t\t\t\t\t\t\t<label for="apply-submission-filter" class="sui-checkbox sui-checkbox-sm sui-checkbox-stacked" style="margin-top: 20px;">\r\n\t\t\t\t\t\t\t\t<input type="checkbox" name="submission-filter" id="apply-submission-filter" value="yes" />\r\n\t\t\t\t\t\t\t\t<span aria-hidden="true"></span>\r\n\t\t\t\t\t\t\t\t<span>{{ Forminator.l10n.popup.apply_submission_filter }}</span>\r\n\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t{[ } ]}\r\n\r\n\t\t\t\t\t</form>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t\t<form method="post" class="sui-box-settings-row schedule-action">\r\n\r\n\t\t\t\t<div class="sui-box-settings-col-2">\r\n\r\n\t\t\t\t\t<span class="sui-settings-label sui-dark">{{ Forminator.l10n.popup.scheduled_exports }}</span>\r\n\t\t\t\t\t<span class="sui-description">{{ Forminator.l10n.popup.scheduled_description }}</span>\r\n\r\n\t\t\t\t\t<div class="sui-side-tabs" style="margin-top: 10px;">\r\n\r\n\t\t\t\t\t\t<div class="sui-tabs-menu tab-labels">\r\n\r\n\t\t\t\t\t\t\t<label for="forminator-disable-scheduled-exports" class="sui-tab-item tab-label-disable">\r\n\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\t\t\t\tname="enabled"\r\n\t\t\t\t\t\t\t\t\tvalue="false"\r\n\t\t\t\t\t\t\t\t\tid="forminator-disable-scheduled-exports"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t{{ Forminator.l10n.popup.disable }}\r\n\t\t\t\t\t\t\t</label>\r\n\r\n\t\t\t\t\t\t\t<label for="forminator-enable-scheduled-exports" class="sui-tab-item tab-label-enable">\r\n\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\t\t\t\tname="enabled"\r\n\t\t\t\t\t\t\t\t\tvalue="true"\r\n\t\t\t\t\t\t\t\t\tid="forminator-enable-scheduled-exports"\r\n\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t{{ Forminator.l10n.popup.enable }}\r\n\t\t\t\t\t\t\t</label>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t<div class="sui-tabs-content schedule-enabled">\r\n\r\n\t\t\t\t\t\t\t<div id="forminator-export-schedule-timeframe" class="sui-tab-content sui-tab-boxed active">\r\n\r\n\t\t\t\t\t\t\t\t<div class="sui-row">\r\n\r\n\t\t\t\t\t\t\t\t\t<div class="sui-col-md-6">\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class="sui-form-field">\r\n\r\n\t\t\t\t\t\t\t\t\t\t\t<label class="sui-label">{{ Forminator.l10n.popup.frequency }}</label>\r\n\r\n\t\t\t\t\t\t\t\t\t\t\t<select name="interval" class="sui-select">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="daily">{{ Forminator.l10n.popup.daily }}</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="weekly">{{ Forminator.l10n.popup.weekly }}</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="monthly">{{ Forminator.l10n.popup.monthly }}</option>\r\n\t\t\t\t\t\t\t\t\t\t\t</select>\r\n\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t<div class="sui-col-md-6">\r\n\r\n\t\t\t\t\t\t\t\t\t\t<div class="sui-form-field">\r\n\r\n\t\t\t\t\t\t\t\t\t\t\t<label class="sui-label">{{ Forminator.l10n.popup.day_time }}</label>\r\n\r\n\t\t\t\t\t\t\t\t\t\t\t<select name="hour" class="sui-select">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="00:00">12:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="01:00">01:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="02:00">02:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="03:00">03:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="04:00">04:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="05:00">05:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="06:00">06:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="07:00">07:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="08:00">08:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="09:00">09:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="10:00">10:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="11:00">11:00 AM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="12:00">12:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="13:00">01:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="14:00">02:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="15:00">03:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="16:00">04:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="17:00">05:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="18:00">06:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="19:00">07:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="20:00">08:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="21:00">09:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="22:00">10:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<option value="23:00">11:00 PM</option>\r\n\t\t\t\t\t\t\t\t\t\t\t</select>\r\n\r\n\t\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t<div class="sui-form-field">\r\n\r\n\t\t\t\t\t\t\t\t\t<label class="sui-label">{{ Forminator.l10n.popup.week_day }}</label>\r\n\r\n\t\t\t\t\t\t\t\t\t<select name="day" class="sui-select">\r\n\t\t\t\t\t\t\t\t\t\t<option value="mon">{{ Forminator.l10n.popup.monday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="tue">{{ Forminator.l10n.popup.tuesday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="wed">{{ Forminator.l10n.popup.wednesday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="thu">{{ Forminator.l10n.popup.thursday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="fri">{{ Forminator.l10n.popup.friday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="sat">{{ Forminator.l10n.popup.saturday }}</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="sun">{{ Forminator.l10n.popup.sunday }}</option>\r\n\t\t\t\t\t\t\t\t\t</select>\r\n\r\n\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t<div class="sui-form-field">\r\n\r\n\t\t\t\t\t\t\t\t\t<label class="sui-label">{{ Forminator.l10n.popup.day_month }}</label>\r\n\r\n\t\t\t\t\t\t\t\t\t<select name="month_day" class="sui-select">\r\n\t\t\t\t\t\t\t\t\t\t<option value="1">1</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="2">2</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="3">3</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="4">4</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="5">5</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="6">6</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="7">7</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="8">8</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="9">9</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="10">10</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="11">11</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="12">12</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="13">13</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="14">14</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="15">15</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="16">16</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="17">17</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="18">18</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="19">19</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="20">20</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="21">21</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="22">22</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="23">23</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="24">24</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="25">25</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="26">26</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="27">27</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="28">28</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="29">29</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="30">30</option>\r\n\t\t\t\t\t\t\t\t\t\t<option value="31">31</option>\r\n\t\t\t\t\t\t\t\t\t</select>\r\n\r\n\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t<div id="forminator-export-schedule-email" class="sui-form-field" style="margin-bottom: 20px;">\r\n\r\n\t\t\t\t\t\t\t\t\t<label class="sui-label">{{ Forminator.l10n.popup.email_to }}</label>\r\n\r\n\t\t\t\t\t\t\t\t\t<select name="email[]" class="sui-select fui-multi-select wpmudev-select" multiple="multiple">\r\n\t\t\t\t\t\t\t\t\t\t{[ _.each( Forminator.l10n.exporter.email, function ( email ) { ]}\r\n\t\t\t\t\t\t\t\t\t\t<option value="{{ email }}" selected="selected">{{ email }}</option>\r\n\t\t\t\t\t\t\t\t\t\t{[ }) ]}\r\n\t\t\t\t\t\t\t\t\t</select>\r\n\r\n\t\t\t\t\t\t\t\t\t<input type="hidden" name="form_id" value="{{ Forminator.l10n.exporter.form_id }}"/>\r\n\t\t\t\t\t\t\t\t\t<input type="hidden" name="form_type" value="{{ Forminator.l10n.exporter.form_type }}"/>\r\n\t\t\t\t\t\t\t\t\t<input type="hidden" name="action" value="forminator_export_entries"/>\r\n\t\t\t\t\t\t\t\t\t<input type="hidden" name="_forminator_nonce" value="{{ Forminator.l10n.exporter.export_nonce }}"/>\r\n\r\n\t\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t\t\t<label for="forminator-send-if-new-exports" class="sui-checkbox sui-checkbox-sm sui-checkbox-stacked">\r\n\t\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\ttype="checkbox"\r\n\t\t\t\t\t\t\t\t\t\tname="if_new"\r\n\t\t\t\t\t\t\t\t\t\tvalue="true"\r\n\t\t\t\t\t\t\t\t\t\tid="forminator-send-if-new-exports"\r\n\t\t\t\t\t\t\t\t\t\tclass="forminator-field-singular"\r\n\t\t\t\t\t\t\t\t\t/>\r\n\t\t\t\t\t\t\t\t\t<span aria-hidden="true"></span>\r\n\t\t\t\t\t\t\t\t\t<span class="sui-description">{{ Forminator.l10n.popup.scheduled_export_if_new }}</span>\r\n\t\t\t\t\t\t\t\t</label>\r\n\r\n\t\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t\t</div>\r\n\r\n\t\t\t\t\t</div>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t</form>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer">\r\n\r\n\t\t\t<button class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide="forminator-popup">{{ Forminator.l10n.popup.cancel }}</button>\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button type="submit" class="sui-button wpmudev-action-done">{{ Forminator.l10n.popup.save }}</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- TEMPLATE: Reset Plugin (on Settings page) -->\r\n\t<script type="text/template" id="forminator-reset-plugin-settings-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10">\r\n\t\t\t<p class="sui-description" style="text-align: center;">{{ content }}</p>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center">\r\n\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\r\n\t\t\t<form method="post" class="delete-action">\r\n\t\t\t\t<input type="hidden" name="forminator_action" value="reset_plugin_settings">\r\n\t\t\t\t<input type="hidden" id="forminatorNonce" name="forminatorNonce" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" name="_wp_http_referer" value="{{ referrer }}&forminator_notice=settings_reset">\r\n\t\t\t\t<button type="submit" class="sui-button sui-button-ghost sui-button-red popup-confirmation-confirm">\r\n\t\t\t\t\t<span class="sui-loading-text" aria-hidden="true">\r\n\t\t\t\t\t\t<i class="sui-icon-refresh" aria-hidden="true"></i>\r\n\t\t\t\t\t\t{{ Forminator.l10n.popup.reset }}\r\n\t\t\t\t\t</span>\r\n\t\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\t\t\t</form>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- TEMPLATE: Disconnect PayPal (on Settings page) -->\r\n\t<script type="text/template" id="forminator-disconnect-paypal-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10">\r\n\t\t\t<p class="sui-description" style="text-align: center;">{{ content }}</p>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center">\r\n\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\r\n\t\t\t<button type="submit" class="disconnect_paypal sui-button sui-button-ghost sui-button-red popup-confirmation-confirm" data-nonce="{{ nonce }}" data-action="disconnect_paypal">\r\n\t\t\t\t{{ Forminator.l10n.popup.disconnect }}\r\n\t\t\t</button>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- TEMPLATE: Disconnect Stripe (on Settings page) -->\r\n\t<script type="text/template" id="forminator-disconnect-stripe-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10">\r\n\t\t\t<p class="sui-description" style="text-align: center;">{{ content }}</p>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center">\r\n\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\r\n\t\t\t<button type="submit" class="disconnect_stripe sui-button sui-button-ghost sui-button-red popup-confirmation-confirm" data-nonce="{{ nonce }}" data-action="disconnect_stripe">\r\n\t\t\t\t<i class="sui-icon-refresh" aria-hidden="true"></i>\r\n\t\t\t\t{{ Forminator.l10n.popup.disconnect }}\r\n\t\t\t</button>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n    <script type="text/template" id="forminator-login-popup-tpl">\r\n\r\n        <div class="wpmudev-row">\r\n\r\n            <div class="wpmudev-col col-12 col-sm-6">\r\n\r\n                <a class="wpmudev-popup--logreg" href="{{ loginUrl }}">\r\n\r\n                    <div class="wpmudev-logreg--header">\r\n\r\n                        <span class="wpdui-icon wpdui-icon-key"></span>\r\n\r\n                        <h3 class="wpmudev-logreg--title">{{ Forminator.l10n.login.login_label }}</h3>\r\n\r\n                    </div>\r\n\r\n                    <div class="wpmudev-logreg--section">\r\n\r\n                        <p class="wpmudev-logreg--description">{{ Forminator.l10n.login.login_description }}</p>\r\n\r\n                        <div class="wpmudev-logreg--image">\r\n                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"\r\n                                 width="110" height="140" viewBox="0 0 110 140" preserveAspectRatio="none"\r\n                                 class="wpmudev-svg-login">\r\n                                <defs>\r\n                                    <path id="b" d="M0 40h100v94H0z"/>\r\n                                    <filter id="a" width="116%" height="117%" x="-8%" y="-7.4%"\r\n                                            filterUnits="objectBoundingBox">\r\n                                        <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>\r\n                                        <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1"\r\n                                                        stdDeviation="2.5"/>\r\n                                        <feColorMatrix in="shadowBlurOuter1"\r\n                                                       values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>\r\n                                    </filter>\r\n                                    <path id="c" d="M10 112h6v6h-6z"/>\r\n                                    <path id="d" d="M10 90h80v15H10z"/>\r\n                                    <path id="e" d="M10 60h80v15H10z"/>\r\n                                </defs>\r\n                                <g fill="none" fill-rule="evenodd" transform="translate(5)">\r\n                                    <use fill="#000" filter="url(#a)" xlink:href="#b"/>\r\n                                    <use fill="#FFF" xlink:href="#b"/>\r\n                                    <rect width="22" height="12" x="68" y="112" fill="#0472AC" rx="3"/>\r\n                                    <path fill="#808285" d="M19 114h26v2H19z"/>\r\n                                    <use fill="#FBFBFB" xlink:href="#c"/>\r\n                                    <path stroke="#E1E1E1" d="M10.5 112.5h5v5h-5z"/>\r\n                                    <use fill="#FBFBFB" xlink:href="#d"/>\r\n                                    <path stroke="#E1E1E1" d="M10.5 90.5h79v14h-79z"/>\r\n                                    <path fill="#808285" d="M10 85h26v2H10z"/>\r\n                                    <use fill="#FBFBFB" xlink:href="#e"/>\r\n                                    <path stroke="#E1E1E1" d="M10.5 60.5h79v14h-79z"/>\r\n                                    <path fill="#808285" d="M10 55h50v2H10z"/>\r\n                                    <circle cx="50" cy="15" r="15" fill="#0272AC"/>\r\n                                </g>\r\n                            </svg>\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                </a>\r\n\r\n            </div>\r\n\r\n            <div class="wpmudev-col col-12 col-sm-6">\r\n\r\n                <a class="wpmudev-popup--logreg" href="{{ registerUrl }}">\r\n\r\n                    <div class="wpmudev-logreg--header">\r\n\r\n                        <span class="wpdui-icon wpdui-icon-profile-female"></span>\r\n\r\n                        <h3 class="wpmudev-logreg--title">{{ Forminator.l10n.login.registration_label }}</h3>\r\n\r\n                    </div>\r\n\r\n                    <div class="wpmudev-logreg--section">\r\n\r\n                        <p class="wpmudev-logreg--description">{{ Forminator.l10n.login.registration_description }}</p>\r\n\r\n                        <div class="wpmudev-logreg--image">\r\n                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"\r\n                                 width="183" height="97" viewBox="0 0 183 97" preserveAspectRatio="none"\r\n                                 class="wpmudev-svg-registration">\r\n                                <defs>\r\n                                    <path id="a" d="M0 58h183v15H0z"/>\r\n                                    <path id="b" d="M0 23h183v15H0z"/>\r\n                                </defs>\r\n                                <g fill="none" fill-rule="evenodd">\r\n                                    <rect width="50" height="14" y="83" fill="#353535" rx="3"/>\r\n                                    <path fill="#FBFBFB" stroke="#E1E1E1" d="M.5 58.5h182v14H.5z"/>\r\n                                    <path fill="#808285" d="M0 51h40v2H0z"/>\r\n                                    <path fill="#FBFBFB" stroke="#E1E1E1" d="M.5 23.5h182v14H.5z"/>\r\n                                    <path fill="#808285" d="M0 16h40v2H0z"/>\r\n                                    <path fill="#353535" d="M0 0h120v6H0z"/>\r\n                                </g>\r\n                            </svg>\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                </a>\r\n\r\n            </div>\r\n\r\n        </div>\r\n    </script>\r\n\r\n\t<script type="text/template" id="forminator-form-popup-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close">\r\n\t\t\t\t<span class="sui-icon-close" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg">{{ Forminator.l10n.form.form_template_title }}</h3>\r\n\r\n\t\t\t<p id="forminator-popup__description" class="sui-description">{{ Forminator.l10n.form.form_template_description }}</p>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-selectors sui-box-selectors-col-2">\r\n\r\n\t\t\t<ul>\r\n\r\n\t\t\t\t{[ _.each(templates, function(template){ ]}\r\n\r\n\t\t\t\t\t{[ if( template.options.id !== \'leads\' ) { ]}\r\n\r\n\t\t\t\t\t\t<li>\r\n\r\n\t\t\t\t\t\t\t<label for="forminator-new-quiz--{{ template.options.id }}" class="sui-box-selector">\r\n\r\n\t\t\t\t\t\t\t\t<input\r\n\t\t\t\t\t\t\t\t\t\ttype="radio"\r\n\t\t\t\t\t\t\t\t\t\tname="forminator-form-template"\r\n\t\t\t\t\t\t\t\t\t\tid="forminator-new-quiz--{{ template.options.id }}"\r\n\t\t\t\t\t\t\t\t\t\tclass="forminator-new-form-type"\r\n\t\t\t\t\t\t\t\t\t\tvalue="{{ template.options.id }}"\r\n\t\t\t\t\t\t\t\t\t\t{[ if( template.options.id === \'blank\' ) { ]}\r\n\t\t\t\t\t\t\t\t\t\tchecked="checked"\r\n\t\t\t\t\t\t\t\t\t\t{[ } ]}\r\n\t\t\t\t\t\t\t\t/>\r\n\r\n\t\t\t\t\t\t\t\t<span>\r\n\t\t\t\t\t\t\t\t\t<i class="sui-icon-{{template.options.icon}}" aria-hidden="true"></i>\r\n\t\t\t\t\t\t\t\t\t{{ template.options.name }}\r\n\t\t\t\t\t\t\t\t</span>\r\n\r\n\t\t\t\t\t\t\t</label>\r\n\r\n\t\t\t\t\t\t</li>\r\n\r\n\t\t\t\t\t{[ } ]}\r\n\r\n\t\t\t\t{[ }); ]}\r\n\r\n\t\t\t</ul>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten">\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button class="sui-button select-quiz-template">\r\n\t\t\t\t\t<span class="sui-loading-text">{{ Forminator.l10n.quiz.continue_button }}</span>\r\n\t\t\t\t\t<i class="sui-icon-load sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n    <script type="text/template" id="forminator-new-form-popup-tpl">\r\n\r\n        <div class="wpmudev-box--congrats">\r\n\r\n            <div class="wpmudev-congrats--image"></div>\r\n\r\n            <div class="wpmudev-congrats--message">\r\n\r\n                <p><strong>{{ title }}</strong> {{ Forminator.l10n.popup.is_ready }}<br/>\r\n\t\t\t\t\t{{ Forminator.l10n.popup.new_form_desc }}</p>\r\n\r\n            </div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n    <script type="text/template" id="forminator-confirmation-popup-tpl">\r\n\r\n\t    <div class="sui-box-body sui-content-center">\r\n\t\t    <p>{{ confirmation_message }}</p>\r\n\t    </div>\r\n\r\n        <div class="sui-box-footer sui-flatten sui-content-center">\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost popup-confirmation-cancel">{{ Forminator.l10n.popup.cancel }}</button>\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost sui-button-red popup-confirmation-confirm">\r\n\t\t\t\t<span class="sui-loading-text">{{ Forminator.l10n.popup.delete }}</span>\r\n\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t</button>\r\n        </div>\r\n\r\n    </script>\r\n\r\n\t<script type="text/template" id="forminator-delete-poll-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body">\r\n\t\t\t<span class="sui-description">{{ content }}</span>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer">\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\t\t\t<button type="submit" class="delete-poll-submission sui-button sui-button-ghost sui-button-red popup-confirmation-confirm" data-nonce="{{ nonce }}" data-id="{{ id }}" data-action="delete_poll_submissions">\r\n\t\t\t\t{{ Forminator.l10n.popup.delete }}\r\n\t\t\t</button>\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="forminator-approve-user-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body">\r\n\t\t\t<span class="sui-description">{{ content }}</span>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer">\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\t\t\t<form method="post" class="form-approve-user">\r\n\t\t\t\t<input type="hidden" name="forminator_action" value="approve_user">\r\n\t\t\t\t<input type="hidden" name="id" value="{{ id }}">\r\n\t\t\t\t<input type="hidden" name="activationKey" value="{{ activationKey }}">\r\n\t\t\t\t<input type="hidden" id="forminatorNonce" name="forminatorNonce" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" id="forminatorEntryNonce" name="forminatorEntryNonce" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" name="_wp_http_referer" value="{{ referrer }}">\r\n\t\t\t\t<button type="submit" class="sui-button approve-user popup-confirmation-confirm">\r\n\t\t\t\t\t{{ Forminator.l10n.popup.approve_user }}\r\n\t\t\t\t</button>\r\n\t\t\t</form>\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="forminator-delete-unconfirmed-user-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body">\r\n\t\t\t<span class="sui-description">{{ content }}</span>\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer">\r\n\t\t\t<button type="button" class="sui-button sui-button-ghost forminator-popup-cancel" data-a11y-dialog-hide>{{ Forminator.l10n.popup.cancel }}</button>\r\n\t\t\t<form method="post" class="form-delete-unconfirmed-user">\r\n\t\t\t\t<input type="hidden" name="forminatorAction" value="delete-unconfirmed-user">\r\n\t\t\t\t<input type="hidden" name="formId" value="{{ formId }}">\r\n\t\t\t\t<input type="hidden" name="entryId" value="{{ entryId }}">\r\n\t\t\t\t<input type="hidden" name="activationKey" value="{{ activationKey }}">\r\n\t\t\t\t<input type="hidden" id="forminatorNonceDeleteUnconfirmedUser" name="forminatorNonceDeleteUnconfirmedUser" value="{{ nonce }}">\r\n\t\t\t\t<input type="hidden" name="_wp_http_referer" value="{{ referrer }}">\r\n\t\t\t\t<button type="submit" class="sui-button sui-button-ghost sui-button-red delete-unconfirmed-user popup-confirmation-confirm">\r\n\t\t\t\t\t<i class="sui-icon-trash" aria-hidden="true"></i>\r\n\t\t\t\t\t{{ Forminator.l10n.popup.delete }}\r\n\t\t\t\t</button>\r\n\t\t\t</form>\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="forminator-addons-action-popup-tpl">\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--0">\r\n\r\n\t\t\t{[ if( forms.length <= 0 ) { ]}\r\n\r\n\t\t\t\t<p id="forminator-popup__description" class="sui-description" style="text-align: center;">{{ Forminator.l10n.popup.deactivateContent }}</p>\r\n\r\n\t\t\t{[ } else { ]}\r\n\r\n\t\t\t\t<p id="forminator-popup__description" class="sui-description" style="text-align: center;">{{ content }}</p>\r\n\r\n\t\t\t\t<div class="form-list">\r\n\r\n\t\t\t\t\t<h4 class="sui-table-title" style="margin: 0 0 5px;">{{ Forminator.l10n.popup.forms }}</h4>\r\n\r\n\t\t\t\t\t<table class="sui-table" style="margin: 0;">\r\n\t\t\t\t\t\t<tbody>\r\n\t\t\t\t\t\t{[ _.each( forms, function( value, key ){ ]}\r\n\t\t\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t\t\t<td class="sui-table-item-title">\r\n\t\t\t\t\t\t\t\t\t<span class="sui-icon-clipboard-notes" aria-hidden="true"></span>\r\n\t\t\t\t\t\t\t\t\t{{ value }}\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t\t<td width="73" style="text-align: right;">\r\n\t\t\t\t\t\t\t\t\t<a href="{{ forminatorData.formEditUrl + \'&id=\' + key }}" title="{{ value }}" class="sui-button-icon">\r\n\t\t\t\t\t\t\t\t\t\t<span class="sui-icon-pencil" aria-hidden="true"></span>\r\n\t\t\t\t\t\t\t\t\t</a>\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t</tr>\r\n\t\t\t\t\t\t{[ }) ]}\r\n\t\t\t\t\t\t</tbody>\r\n\t\t\t\t\t</table>\r\n\r\n\t\t\t\t</div>\r\n\r\n\t\t\t{[ } ]}\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-separated">\r\n\r\n\t\t\t<button type="button" class="sui-button forminator-popup-close" data-a11y-dialog-hide>\r\n\t\t\t\t{{ Forminator.l10n.popup.cancel }}\r\n\t\t\t</button>\r\n\r\n\t\t\t{[ if( forms.length <= 0 ) { ]}\r\n\t\t\t\t<button class="sui-button addons-actions" data-addon="{{ id }}" data-nonce="{{ nonce }}" data-popup="true" data-is_network="{{ is_network }}" data-action="addons-deactivate">\r\n\t\t\t\t\t{{ Forminator.l10n.popup.deactivate }}\r\n\t\t\t\t</button>\r\n\t\t\t{[ } else { ]}\r\n\t\t\t\t<button class="sui-button sui-button-ghost sui-button-red addons-actions" data-addon="{{ id }}" data-nonce="{{ nonce }}" data-popup="true" data-is_network="{{ is_network }}" data-action="addons-deactivate">\r\n\t\t\t\t\t{{ Forminator.l10n.popup.deactivateAnyway }}\r\n\t\t\t\t</button>\r\n\t\t\t{[ } ]}\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="forminator-apply-appearance-preset-tpl">\r\n\r\n\t\t<div class="sui-box-body">\r\n\t\t\t<span class="sui-description" style="text-align: center; margin: -15px 0 30px;">{{ description }}</span>\r\n\r\n\t\t\t<div class="sui-form-field" style="margin-bottom: 10px;">\r\n\t\t\t\t{{ selectbox }}\r\n\t\t\t</div>\r\n\r\n\t\t\t<div class="sui-notice" style="margin-top: 10px;">\r\n\t\t\t\t<div class="sui-notice-content">\r\n\t\t\t\t\t<div class="sui-notice-message">\r\n\t\t\t\t\t\t<span class="sui-notice-icon sui-icon-info sui-md" aria-hidden="true"></span>\r\n\t\t\t\t\t\t<p>{{ notice }}</p>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center">\r\n\t\t\t<button id="forminator-apply-preset" class="sui-button sui-button-blue">\r\n\t\t\t\t<span class="sui-button-text-default">\r\n\t\t\t\t\t<i class="sui-icon-check" aria-hidden="true"></i> {{ button }}\r\n\t\t\t\t</span>\r\n\t\t\t\t<span class="sui-button-text-onload">\r\n\t\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t</span>\r\n\t\t\t</button>\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="forminator-create-appearance-preset-tpl">\r\n\r\n\t\t<div class="sui-box-body sui-content-center">\r\n\t\t\t<span class="sui-description" style="margin: -15px 0 30px">{{ content }}</span>\r\n\r\n\t\t\t<div class="sui-form-field">\r\n\t\t\t\t<label for="forminator-preset-name" class="sui-label">{{ nameLabel }}</label>\r\n\t\t\t\t<input type="text"\r\n\t\t\t\t\t   id="forminator-preset-name"\r\n\t\t\t\t\t   class="sui-form-control fui-required"\r\n\t\t\t\t\t   placeholder="{{ namePlaceholder }}">\r\n\t\t\t</div>\r\n\r\n\t\t\t<div class="sui-form-field">\r\n\t\t\t\t<label class="sui-label">{{ formLabel }}</label>\r\n\t\t\t\t{{ forminatorData.forms_select }}\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center">\r\n\t\t\t<button id="forminator-create-preset" class="sui-button sui-button-blue" disabled="disabled">\r\n\t\t\t\t<span class="sui-button-text-default">\r\n\t\t\t\t\t<i class="sui-icon-plus" aria-hidden="true"></i> {{ title }}\r\n\t\t\t\t</span>\r\n\t\t\t\t<span class="sui-button-text-onload">\r\n\t\t\t\t\t<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>\r\n\t\t\t\t\t{{ loadingText }}\r\n\t\t\t\t</span>\r\n\t\t\t</button>\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n</div>\r\n';});
+
+(function ($) {
+	formintorjs.define('admin/popup/templates',[
+		'text!tpl/dashboard.html',
+	], function( popupTpl ) {
+		return Backbone.View.extend({
+			className: 'forminator-popup-create--cform',
+
+			step: '1',
+
+			template: 'blank',
+
+			events: {
+				"click .select-quiz-template": "selectTemplate",
+				"click .forminator-popup-close": "close",
+				"change .forminator-new-form-type": "clickTemplate",
+				"click #forminator-build-your-form": "handleMouseClick",
+				"focus #forminator-form-name": "resetNameSetup",
+				"keyup": "handleKeyClick"
+			},
+
+			popupTpl: Forminator.Utils.template( $( popupTpl ).find( '#forminator-form-popup-tpl' ).html()),
+
+			newFormTpl: Forminator.Utils.template( $( popupTpl ).find( '#forminator-new-form-tpl' ).html()),
+
+			newFormContent: Forminator.Utils.template( $( popupTpl ).find( '#forminator-new-form-content-tpl' ).html() ),
+
+			render: function() {
+				var $popup = jQuery( '#forminator-popup');
+
+				if( this.step === '1' ) {
+					this.$el.html( this.popupTpl({
+						templates: Forminator.Data.modules.custom_form.templates
+					}) );
+
+					this.$el.find( '.select-quiz-template' ).prop( "disabled", false );
+
+					$popup.closest( '.sui-modal' ).removeClass( "sui-modal-sm" );
+				}
+
+				if( this.step === '2' ) {
+					// Add name field
+					this.$el.html( this.newFormTpl() );
+					this.$el.find('.sui-box-body').html( this.newFormContent() );
+					if( this.template === 'registration' ) {
+						this.$el.find('#forminator-template-register-notice').show();
+						this.$el.find('#forminator-form-name').val( Forminator.l10n.popup.registration_name );
+					}
+					if( this.template === 'login' ) {
+						this.$el.find('#forminator-template-login-notice').show();
+						this.$el.find('#forminator-form-name').val( Forminator.l10n.popup.login_name );
+					}
+
+					$popup.closest( '.sui-modal' ).addClass( 'sui-modal-sm' );
+				}
+			},
+
+			close: function( e ) {
+				e.preventDefault();
+
+				Forminator.Popup.close();
+			},
+
+			clickTemplate: function( e ) {
+				this.$el.find( '.select-quiz-template' ).prop( "disabled", false );
+			},
+
+			selectTemplate: function( e ) {
+				e.preventDefault();
+
+				var template = this.$el.find( 'input[name=forminator-form-template]:checked' ).val();
+
+				this.template = template;
+
+				this.step = '2';
+				this.render();
+			},
+
+			handleMouseClick: function( e ) {
+				this.createQuiz( e );
+			},
+
+			handleKeyClick: function( e ) {
+				e.preventDefault();
+
+				// If enter create form
+				if( e.which === 13 ) {
+					this.createQuiz( e );
+				}
+			},
+
+			resetNameSetup: function( e ) {
+				var $error = $( e.target ).next( '.sui-error-message' );
+
+				if ( $error.is( ':visible' ) ) {
+					$error.hide();
+					this.$el.find( '#forminator-build-your-form' ).removeClass( 'sui-button-onload' );
+				}
+			},
+
+			createQuiz: function( e ) {
+				var $form_name = $( e.target ).addClass('sui-button-onload').closest( '.sui-box' ).find( '#forminator-form-name' );
+
+				if( $form_name.val().trim() === "" ) {
+					$( e.target ).closest( '.sui-box' ).find( '.sui-error-message' ).show();
+				}  else {
+					var url = Forminator.Data.modules.custom_form.new_form_url
+
+					$( e.target ).closest( '.sui-box' ).find( '.sui-error-message' ).hide();
+
+					form_url = url + '&name=' + $form_name.val();
+
+					form_url = form_url + '&template=' + this.template;
+
+					window.location.href = form_url;
+				}
+			}
+		});
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/popup/login',[
+		'text!tpl/dashboard.html',
+	], function( popupTpl ) {
+		return Backbone.View.extend({
+			className: 'wpmudev-section--popup',
+
+			popupTpl: Forminator.Utils.template( $( popupTpl ).find( '#forminator-login-popup-tpl' ).html()),
+
+			render: function() {
+				this.$el.html( this.popupTpl({
+					loginUrl: Forminator.Data.modules.login.login_url,
+					registerUrl: Forminator.Data.modules.login.register_url
+				}));
+			},
+		});
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/popup/quizzes',[
+		'text!tpl/dashboard.html',
+	], function( popupTpl ) {
+		return Backbone.View.extend({
+			className: 'forminator-popup-create--quiz',
+
+			step: 1,
+			pagination: 0,
+
+			type: 'knowledge',
+
+			events: {
+				"click .select-quiz-template": "selectTemplate",
+				"click .select-quiz-pagination": "selectPagination",
+				"click .forminator-popup-back": "goBack",
+				"click .forminator-popup-close": "close",
+				"change .forminator-new-quiz-type": "clickTemplate",
+				"click #forminator-build-your-form": "handleMouseClick",
+				"click #forminator-new-quiz-leads": "handleToggle",
+				"focus #forminator-form-name": "resetNameSetup",
+				"keyup": "handleKeyClick"
+			},
+
+			popupTpl: Forminator.Utils.template( $( popupTpl ).find( '#forminator-quizzes-popup-tpl' ).html()),
+
+			newFormTpl: Forminator.Utils.template( $( popupTpl ).find( '#forminator-new-quiz-tpl' ).html()),
+
+			paginationTpl: Forminator.Utils.template( $( popupTpl ).find( '#forminator-new-quiz-pagination-tpl' ).html()),
+
+			newFormContent: Forminator.Utils.template( $( popupTpl ).find( '#forminator-new-quiz-content-tpl' ).html() ),
+
+			render: function() {
+				var $popup = jQuery( '#forminator-popup');
+				$popup.removeClass( "sui-dialog-sm forminator-create-quiz-second-step forminator-create-quiz-pagination-step" );
+
+				if( this.step === 1 ) {
+					this.$el.html( this.popupTpl() );
+
+					if ( this.name ) {
+						this.$el.find( '#forminator-form-name' ).val( this.name );
+						this.$el.find( '#forminator-new-quiz--' + this.type ).prop('checked',true);
+					}
+
+					this.$el.find( '.select-quiz-template' ).prop( "disabled", false );
+
+				}
+
+				if( this.step === 2 ) {
+					this.$el.html( this.paginationTpl() );
+					if ( window.isTrue( this.pagination ) ) {
+						this.$el.find( '[name="forminator-quiz-pagination"]' ).eq(1).prop( 'checked', true );
+					} else {
+						this.$el.find( '[name="forminator-quiz-pagination"]' ).eq(0).prop( 'checked', true );
+					}
+
+					$popup.addClass( "forminator-create-quiz-pagination-step" );
+				}
+
+				if( this.step === 3 ) {
+					// Add name field
+					this.$el.html( this.newFormTpl() );
+					this.$el.find('.sui-box-body').html( this.newFormContent() );
+
+					$popup.addClass( "sui-dialog-sm forminator-create-quiz-second-step" );
+				}
+			},
+
+			close: function( e ) {
+				e.preventDefault();
+
+				Forminator.Popup.close();
+			},
+
+			clickTemplate: function( e ) {
+				this.$el.find( '.select-quiz-template' ).prop( "disabled", false );
+			},
+
+			selectTemplate: function( e ) {
+				e.preventDefault();
+
+				var type = this.$el.find( 'input[name=forminator-new-quiz]:checked' ).val();
+				var form_name = this.$el.find( '#forminator-form-name' ).val();
+
+				if( form_name.trim() === "" ) {
+					$( e.target ).closest( '.sui-box' ).find( '.sui-error-message' ).show();
+				} else {
+					this.type = type;
+					this.name = form_name;
+
+					this.step = 2;
+					this.render();
+				}
+			},
+
+			goBack: function( e ) {
+				e.preventDefault();
+
+				if ( 2 == this.step ) {
+					this.pagination = this.$el.find( 'input[name="forminator-quiz-pagination"]:checked' ).val();
+				}
+
+				this.step--;
+				this.render();
+			},
+
+			selectPagination: function( e ) {
+				e.preventDefault();
+
+				var pagination = this.$el.find( 'input[name="forminator-quiz-pagination"]:checked' ).val();
+
+				this.pagination = pagination;
+
+				this.step = 3;
+				this.render();
+			},
+
+			handleMouseClick: function( e ) {
+				this.createQuiz( e );
+			},
+
+			handleKeyClick: function( e ) {
+				e.preventDefault();
+
+				// If enter create form
+				if( e.which === 13 ) {
+					if( this.step === 1 ) {
+						this.selectTemplate( e );
+					} else {
+						this.createQuiz( e );
+					}
+				}
+			},
+
+			handleToggle: function( e ) {
+				var leads = $( e.target ).is(':checked');
+				var $notice = $( e.target ).closest( '.sui-box' ).find( '#sui-quiz-leads-description' );
+
+				if ( leads ) {
+					$notice.show();
+				} else {
+					$notice.hide();
+				}
+			},
+
+			resetNameSetup: function( e ) {
+				var $error = $( e.target ).next( '.sui-error-message' );
+
+				if ( $error.is( ':visible' ) ) {
+					$error.hide();
+					this.$el.find( '#forminator-build-your-form' ).removeClass( 'sui-button-onload' );
+				}
+			},
+
+			createQuiz: function( e ) {
+				var leads = $( e.target ).addClass('sui-button-onload').closest( '.sui-box' ).find( '#forminator-new-quiz-leads' ).is(':checked');
+
+				var url = Forminator.Data.modules.quizzes.knowledge_url;
+
+				if( this.type === "nowrong" ) {
+					url = Forminator.Data.modules.quizzes.nowrong_url;
+				}
+
+				form_url = url + '&name=' + this.name;
+
+				if ( window.isTrue( this.pagination ) ) {
+					form_url = form_url + '&pagination=true';
+				}
+
+				if ( leads ) {
+					form_url = form_url + '&leads=true';
+				}
+
+				window.location.href = form_url;
+			}
+		});
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/popup/schedule',[
+		'text!tpl/dashboard.html',
+	], function (popupTpl) {
+		return Backbone.View.extend({
+
+			popupTpl: Forminator.Utils.template($(popupTpl).find('#forminator-exports-schedule-popup-tpl').html()),
+
+			events: {
+				'change select[name="interval"]': "on_change_interval",
+				// 'change #forminator-enable-scheduled-exports': 'on_change_enabled',
+				'click .sui-toggle-label': 'click_label',
+				'click .tab-labels .sui-tab-item': 'click_tab_label',
+				'click .wpmudev-action-done': 'submit_schedule',
+			},
+
+			render: function () {
+
+				this.$el.html(this.popupTpl({}));
+
+				// Delegate SUI events
+				Forminator.Utils.sui_delegate_events();
+
+				var data = forminatorl10n.exporter;
+
+				this.$el.find('input[name="if_new"]').prop('checked', data.if_new);
+
+				this.set_enabled(data.enabled);
+
+				this.$el.find('select[name="interval"]').change();
+				if (data.email === null) {
+					return;
+				}
+				this.$el.find('select[name="interval"]').val(data.interval);
+				this.$el.find('select[name="day"]').val(data.day);
+				this.$el.find('select[name="month_day"]').val( (data.month_day ? data.month_day : 1) );
+				this.$el.find('select[name="hour"]').val(data.hour);
+
+				if(data.interval === 'weekly') {
+					this.$el.find('select[name="day"]').closest('.sui-form-field').show();
+				} else if(data.interval === 'monthly') {
+					this.$el.find('select[name="month_day"]').closest('.sui-form-field').show();
+				}
+
+				this.load_select();
+			},
+
+			set_enabled: function(enabled) {
+				if (enabled) {
+					this.$el.find('input[name="enabled"][value="true"]').prop('checked', true);
+					this.$el.find('input[name="enabled"][value="false"]').prop('checked', false);
+
+
+					this.$el.find('.tab-label-disable').removeClass('active');
+					this.$el.find('.tab-label-enable').addClass('active');
+
+					this.$el.find('.schedule-enabled').show();
+					this.$el.find('input[name="email"]').prop('required', true);
+				} else {
+					this.$el.find('input[name="enabled"][value="false"]').prop('checked', true);
+					this.$el.find('input[name="enabled"][value="true"]').prop('checked', false);
+
+					this.$el.find('.tab-label-disable').addClass('active');
+					this.$el.find('.tab-label-enable').removeClass('active');
+
+					this.$el.find('.schedule-enabled').hide();
+				}
+
+			},
+
+			load_select: function() {
+				var data = forminatorl10n.exporter,
+					options = {
+						tags: true,
+						tokenSeparators: [ ',', ' ' ],
+						language: {
+							searching: function() {
+								return data.searching;
+							},
+							noResults: function() {
+								return data.noResults;
+							},
+						},
+						ajax: {
+							url: forminatorData.ajaxUrl,
+							type: 'POST',
+							delay: 350,
+							data: function( params ) {
+								return {
+									action: 'forminator_builder_search_emails',
+									_wpnonce: forminatorData.searchNonce,
+									q: params.term,
+									permission: 'forminator-entries',
+								};
+							},
+							processResults: function( data ) {
+								return {
+									results: data.data,
+								};
+							},
+							cache: true,
+						},
+						createTag: function( params ) {
+							const term = params.term.trim();
+							if ( ! Forminator.Utils.is_email_wp( term ) ) {
+								return null;
+							}
+							return {
+								id: term,
+								text: term,
+							};
+						},
+						insertTag: function( data, tag ) {
+							// Insert the tag at the end of the results
+							data.push( tag );
+						},
+
+					};
+
+				Forminator.Utils.forminator_select2_tags( this.$el, options );
+			},
+
+			on_change_interval: function(e) {
+				//hide column
+				this.$el.find('select[name="day"]').closest('.sui-form-field').hide();
+				this.$el.find('select[name="month_day"]').closest('.sui-form-field').hide();
+				if(e.target.value === 'weekly') {
+					this.$el.find('select[name="month-day"]').closest('.sui-form-field').hide();
+					this.$el.find('select[name="day"]').closest('.sui-form-field').show();
+				} else if(e.target.value === 'monthly') {
+					this.$el.find('select[name="month_day"]').closest('.sui-form-field').show();
+					this.$el.find('select[name="day"]').closest('.sui-form-field').hide();
+				}
+
+			},
+
+			click_label: function(e){
+				e.preventDefault();
+
+				// Simulate label click
+				this.$el.closest('.sui-form-field').find( '.sui-toggle input' ).click();
+			},
+
+			click_tab_label: function (e) {
+				var $target = $(e.target);
+
+				if ($target.closest('.sui-tab-item').hasClass('tab-label-disable')) {
+					this.set_enabled(false);
+				} else if ($target.closest('.sui-tab-item').hasClass('tab-label-enable')) {
+					this.load_select();
+					this.set_enabled(true);
+				}
+			},
+
+			submit_schedule: function (e) {
+				this.$el.find('form.schedule-action').trigger('submit');
+			},
+
+		});
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/popup/new-form',[
+		'text!tpl/dashboard.html',
+	], function( popupTpl ) {
+		return Backbone.View.extend({
+			className: 'wpmudev-section--popup',
+
+			popupTpl: Forminator.Utils.template( $( popupTpl ).find( '#forminator-new-form-popup-tpl' ).html()),
+
+			initialize: function ( options ) {
+				this.title = options.title;
+				this.title = Forminator.Utils.sanitize_uri_string( this.title );
+			},
+
+			render: function() {
+				this.$el.html( this.popupTpl({
+					title: this.title
+				}));
+			},
+		});
+	});
+})(jQuery);
+
+( function( $ ) {
+	formintorjs.define('admin/popup/polls',[
+		'text!tpl/dashboard.html',
+	], function( popupTpl ) {
+
+		return Backbone.View.extend({
+
+			className: 'wpmudev-popup-templates',
+
+			newFormTpl: Forminator.Utils.template( $( popupTpl ).find( '#forminator-new-form-tpl' ).html()),
+			newPollContent: Forminator.Utils.template( $( popupTpl ).find( '#forminator-new-poll-content-tpl' ).html() ),
+
+			events: {
+				'click #forminator-build-your-form': 'handleMouseClick',
+				"focus #forminator-form-name": "resetNameSetup",
+				'keyup': 'handleKeyClick'
+			},
+
+			initialize: function( options ) {
+				this.options = options;
+			},
+
+			render: function() {
+				this.$el.html( this.newFormTpl() );
+				this.$el.find('.sui-box-body').html( this.newPollContent() );
+			},
+
+			handleMouseClick: function( e ) {
+				this.create_poll( e );
+			},
+
+			handleKeyClick: function( e ) {
+				e.preventDefault();
+
+				// If enter create form
+				if( e.which === 13 ) {
+					this.create_poll( e );
+				}
+			},
+
+			resetNameSetup: function( e ) {
+				var $error = $( e.target ).next( '.sui-error-message' );
+
+				if ( $error.is( ':visible' ) ) {
+					$error.hide();
+					this.$el.find( '#forminator-build-your-form' ).removeClass( 'sui-button-onload' );
+				}
+			},
+
+			create_poll: function( e ) {
+				e.preventDefault();
+
+				var $form_name = $( e.target ).addClass('sui-button-onload').closest( '.sui-box' ).find( '#forminator-form-name' );
+
+				if( $form_name.val().trim() === "" ) {
+					$( e.target ).closest( '.sui-box' ).find( '.sui-error-message' ).show();
+				}  else {
+					var form_url = Forminator.Data.modules.polls.new_form_url;
+
+					$( e.target ).closest( '.sui-box' ).find( '.sui-error-message' ).hide();
+
+					form_url = form_url + '&name=' + $form_name.val();
+					window.location.href = form_url;
+				}
+			},
+
+		});
+	});
+}( jQuery ) );
+
+(function ($) {
+	formintorjs.define('admin/popup/ajax',[
+		'text!tpl/dashboard.html',
+	], function( popupTpl ) {
+		return Backbone.View.extend({
+			className: 'sui-box-body',
+
+			events: {
+				"click .wpmudev-action-done": "save",
+				"click .wpmudev-action-ajax-done": "ajax_save",
+				"click .wpmudev-action-ajax-cf7-import": "ajax_cf7_import",
+				"click .wpmudev-button-clear-exports": "clear_exports",
+				// Add poll funcitonality so the custom answer input shows up on preview
+				"click .forminator-radio--field": "show_poll_custom_input",
+				"click .forminator-popup-close": "close_popup",
+				"click .forminator-retry-import": "ajax_cf7_import",
+				"change #forminator-choose-import-form": "import_form_action",
+				"change .forminator-import-forms": "import_form_action",
+			},
+
+			initialize: function( options ) {
+				options            = _.extend({
+					action       : '',
+					nonce        : '',
+					data         : '',
+					id           : '',
+					enable_loader: true
+				}, options);
+
+				this.action        = options.action;
+				this.nonce         = options.nonce;
+				this.data          = options.data;
+				this.id            = options.id;
+				this.enable_loader = options.enable_loader;
+
+				return this.render();
+			},
+
+			render: function() {
+				var self = this,
+					tpl = false,
+					data = {}
+				;
+
+				data.action = 'forminator_load_' + this.action + '_popup';
+				data._ajax_nonce = this.nonce;
+				data.data = this.data;
+
+				if( this.id ) {
+					data.id = this.id;
+				}
+
+				if (this.enable_loader) {
+					var div_preloader = '';
+					if ('sui-box-body' !== this.className) {
+						div_preloader += '<div class="sui-box-body">';
+					}
+					div_preloader +=
+						'<p class="fui-loading-dialog" aria-label="Loading content">' +
+							'<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>' +
+						'</p>'
+					;
+					if ('sui-box-body' !== this.className) {
+						div_preloader += '</div>';
+					}
+
+					self.$el.html(div_preloader);
+				}
+
+				// make slightly bigger
+
+				var ajax = $.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'post',
+					data: data
+				})
+				.done(function (result) {
+					if (result && result.success) {
+						// Append & Show content
+						self.$el.html(result.data);
+						self.$el.find('.wpmudev-hidden-popup').show(400);
+
+						// Delegate SUI events
+						Forminator.Utils.sui_delegate_events();
+
+						// Init Pagination on custom form if exist
+						var custom_form = self.$el.find('.forminator-custom-form');
+
+						// Delegate events
+						self.delegateEvents();
+					}
+				});
+
+				//remove the preloader
+				ajax.always(function () {
+					self.$el.find(".fui-loading-dialog").remove();
+				});
+			},
+
+			save: function ( e ) {
+				e.preventDefault();
+				var data = {},
+					nonce = $( e.target ).data( "nonce" )
+				;
+
+				data.action = 'forminator_save_' + this.action + '_popup';
+				data._ajax_nonce = nonce;
+
+				// Retieve fields
+				$('.wpmudev-popup-form input, .wpmudev-popup-form select').each( function () {
+					var field = $( this );
+					data[ field.attr('name') ] = field.val();
+				});
+
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: data,
+					success: function( result ) {
+						Forminator.Popup.close( false, function() {
+							window.location.reload();
+						});
+					}
+				});
+			},
+			ajax_save: function ( e ) {
+				var self = this;
+				// display error response if avail
+				// redirect to url on response if avail
+				e.preventDefault();
+				var data = {},
+				    nonce = $( e.target ).data( "nonce" )
+				;
+
+				data.action = 'forminator_save_' + this.action + '_popup';
+				data._ajax_nonce = nonce;
+
+				// Retieve fields
+				$('.wpmudev-popup-form input, .wpmudev-popup-form select, .wpmudev-popup-form textarea').each( function () {
+					var field = $( this );
+
+					if (
+						'checkbox' !== field[0].type ||
+						( 'checkbox' === field[0].type && field[0].checked )
+					) {
+						data[ field.attr('name') ] = field.val();
+					}
+				});
+
+				this.$el.find(".sui-button:not(.disable-loader)").addClass("sui-button-onload");
+
+				var ajax = $.ajax({
+					url    : Forminator.Data.ajaxUrl,
+					type   : "POST",
+					data   : data,
+					success: function (result) {
+						if (true === result.success) {
+							var redirect = false;
+							if (!_.isUndefined(result.data.url)) {
+								redirect = result.data.url;
+							}
+							Forminator.Popup.close(false, function () {
+								if (redirect) {
+									location.href = redirect;
+								}
+							});
+						} else {
+							const noticeId = 'wpmudev-ajax-error-placeholder';
+							const noticeMessage = '<p>' + result.data + '</p>';
+							const noticeOption = {
+								type: 'error',
+								autoclose: {
+									timeout: 8000
+								}
+							};
+
+							if (!_.isUndefined(result.data)) {
+								SUI.openNotice( noticeId, noticeMessage, noticeOption );
+							}
+						}
+					}
+				});
+				ajax.always(function () {
+					self.$el.find(".sui-button:not(.disable-loader)").removeClass("sui-button-onload");
+				})
+			},
+
+			clear_exports: function ( e ) {
+				e.preventDefault();
+				var data = {},
+					self = this,
+					nonce = $( e.target ).data( "nonce" ),
+					form_id = $( e.target ).data( "form-id" )
+				;
+
+				data.action = 'forminator_clear_' + this.action + '_popup';
+				data._ajax_nonce = nonce;
+				data.id = form_id;
+
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: data,
+					success: function() {
+						self.render();
+					}
+				});
+			},
+			show_poll_custom_input: function (e) {
+				var self = this,
+					$input = this.$el.find('.forminator-input'),
+					checked = e.target.checked,
+					$id = $(e.target).attr('id');
+
+				$input.hide();
+				if (self.$el.find('.forminator-input#' + $id + '-extra').length) {
+					var $extra = self.$el.find('.forminator-input#' + $id + '-extra');
+					if (checked) {
+						$extra.show();
+					} else {
+						$extra.hide();
+					}
+				}
+			},
+			ajax_cf7_import: function ( e ) {
+				var self = this,
+					data = self.$el.find('form').serializeArray();
+				// display error response if avail
+				// redirect to url on response if avail
+				e.preventDefault();
+
+				this.$el.find(".sui-button:not(.disable-loader)").addClass("sui-button-onload");
+				this.$el.find('.wpmudev-ajax-error-placeholder').addClass('sui-hidden');
+				this.$el.find(".forminator-cf7-imported-fail").addClass("sui-hidden");
+
+				var ajax = $.ajax({
+					url    : Forminator.Data.ajaxUrl,
+					type   : "POST",
+					data   : data,
+					xhr: function () {
+						var xhr = new window.XMLHttpRequest();
+						xhr.upload.addEventListener("progress", function (evt) {
+							if ( evt.lengthComputable ) {
+								var percentComplete = evt.loaded / evt.total;
+								percentComplete = parseInt(percentComplete * 100);
+								self.$el.find(".forminator-cf7-importing .sui-progress-text").html( percentComplete + '%');
+								self.$el.find(".forminator-cf7-importing .sui-progress-bar span").css( 'width', percentComplete + '%');
+							}
+						}, false);
+						return xhr;
+					},
+					success: function (result) {
+						if (true === result.success) {
+							setTimeout(function(){
+								self.$el.find(".forminator-cf7-importing").addClass("sui-hidden");
+								self.$el.find(".forminator-cf7-imported").removeClass("sui-hidden");
+							}, 1000);
+						} else {
+							if (!_.isUndefined(result.data)) {
+								setTimeout(function(){
+										self.$el.find(".forminator-cf7-importing").addClass("sui-hidden");
+										self.$el.find(".forminator-cf7-imported-fail").removeClass("sui-hidden");
+									}, 1000);
+								self.$el.find('.wpmudev-ajax-error-placeholder').removeClass('sui-hidden').find('p').text(result.data);
+							}
+						}
+					}
+				});
+				ajax.always(function (e) {
+					self.$el.find(".sui-button:not(.disable-loader)").removeClass("sui-button-onload");
+					self.$el.find(".forminator-cf7-import").addClass("sui-hidden");
+					self.$el.find(".forminator-cf7-importing").removeClass("sui-hidden");
+				});
+			},
+			close_popup: function() {
+				Forminator.Popup.close();
+			},
+
+			import_form_action: function(e) {
+				e.preventDefault();
+				var target = $(e.target),
+					value = target.val(),
+					btn_action = false;
+				if( 'specific' === value ) {
+					btn_action = true;
+				}
+				if( value == null || ( Array.isArray( value ) && value.length < 1 ) ) {
+					btn_action = true;
+				}
+				this.$el.find('.wpmudev-action-ajax-cf7-import').prop( "disabled", btn_action );
+			},
+		});
+	});
+})(jQuery);
+
+(function ($) {
+    formintorjs.define('admin/popup/delete',[
+        'text!tpl/dashboard.html',
+    ], function (popupTpl) {
+        return Backbone.View.extend({
+            className: 'wpmudev-section--popup',
+
+            popupTpl: Forminator.Utils.template($(popupTpl).find('#forminator-delete-popup-tpl').html()),
+            popupPollTpl: Forminator.Utils.template($(popupTpl).find('#forminator-delete-poll-popup-tpl').html()),
+
+			initialize: function( options ) {
+				this.module = options.module;
+				this.nonce = options.nonce;
+				this.id = options.id;
+				this.action = options.action;
+				this.referrer = options.referrer;
+				this.button = options.button || Forminator.l10n.popup.delete;
+				this.content = options.content || Forminator.l10n.popup.cannot_be_reverted ;
+			},
+
+            render: function () {
+            	if( 'poll' === this.module ) {
+					this.$el.html(this.popupPollTpl({
+						nonce: this.nonce,
+						id: this.id,
+						referrer: this.referrer,
+						content: this.content,
+					}));
+				} else {
+					this.$el.html(this.popupTpl({
+						nonce: this.nonce,
+						id: this.id,
+						action: this.action,
+						referrer: this.referrer,
+						button: this.button,
+						content: this.content,
+					}));
+				}
+            },
+        });
+    });
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/popup/preview',[
+		'text!tpl/dashboard.html',
+	], function( popupTpl ) {
+		return Backbone.View.extend({
+			className: 'sui-box-body',
+
+			initialize: function( options ) {
+				var self = this;
+				var args = {
+					action       : '',
+					type         : '',
+					id           : '',
+					preview_data : {},
+					enable_loader: true
+				};
+				if ( 'forminator_quizzes' === options.type ) {
+					args.has_lead = options.has_lead;
+					args.leads_id  = options.leads_id;
+				}
+				options            = _.extend( args, options );
+
+				this.action        = options.action;
+				this.type          = options.type;
+				this.nonce         = options.nonce;
+				this.id            = options.id;
+				this.render_id     = 0;
+				this.preview_data  = options.preview_data;
+				this.enable_loader = options.enable_loader;
+
+				if ( 'forminator_quizzes' === options.type ) {
+					this.has_lead = options.has_lead;
+					this.leads_id  = options.leads_id;
+				}
+
+				$(document).off('after.load.forminator');
+				$(document).on('after.load.forminator', function(e){
+					self.after_load();
+				});
+
+				return this.render();
+			},
+
+			render: function () {
+				var self = this,
+				    tpl  = false,
+				    data = {}
+				;
+
+				data.action           = this.action;
+				data.type             = this.type;
+				data.id               = this.id;
+				data.render_id        = this.render_id;
+				data.nonce				 = this.nonce;
+				data.is_preview       = 1;
+				data.preview_data     = this.preview_data;
+				data.last_submit_data = {};
+
+				if ( 'forminator_quizzes' === this.type ) {
+					data.has_lead  = this.has_lead;
+					data.leads_id  = this.leads_id;
+				}
+
+				if (this.enable_loader) {
+					var div_preloader = '';
+					if ('sui-box-body' !== this.className) {
+						div_preloader += '<div class="sui-box-body">';
+					}
+					div_preloader +=
+						'<div class="fui-loading-dialog">' +
+							'<p style="margin: 0; text-align: center;" aria-hidden="true"><span class="sui-icon-loader sui-md sui-loading"></span></p>' +
+							'<p class="sui-screen-reader-text">Loading content...</p>' +
+						'</div>';
+					;
+					if ('sui-box-body' !== this.className) {
+						div_preloader += '</div>';
+					}
+
+					self.$el.html(div_preloader);
+				}
+
+				var dummyForm = $('<form id="forminator-module-' + this.id + '" data-forminator-render="' + this.render_id+ '" style="display:none"></form>');
+				self.$el.append(dummyForm);
+
+				$(self.$el.find('#forminator-module-' + this.id +'[data-forminator-render="' + this.render_id+ '"]').get(0)).forminatorLoader(data);
+
+			},
+
+			after_load: function() {
+				var self = this;
+				self.$el.find('div[data-form="forminator-module-' + this.id + '"]').remove();
+				self.$el.find(".fui-loading-dialog").remove();
+			}
+		});
+	});
+})(jQuery);
+
+(function ($) {
+    formintorjs.define('admin/popup/reset-plugin-settings',[
+        'text!tpl/dashboard.html',
+    ], function (popupTpl) {
+        return Backbone.View.extend({
+            className: 'wpmudev-section--popup',
+
+            popupTpl: Forminator.Utils.template($(popupTpl).find('#forminator-reset-plugin-settings-popup-tpl').html()),
+
+			events: {
+				"click .popup-confirmation-confirm": "confirm_action",
+			},
+
+			initialize: function( options ) {
+				this.nonce = options.nonce;
+				this.referrer = options.referrer;
+				this.content = options.content || Forminator.l10n.popup.cannot_be_reverted ;
+			},
+
+            render: function () {
+                this.$el.html(this.popupTpl({
+					nonce: this.nonce,
+					id: this.id,
+					referrer: this.referrer,
+	                content: this.content,
+				}));
+            },
+
+			confirm_action: function(e) {
+				$( e.currentTarget ).addClass( 'sui-button-onload' );
+			},
+
+        });
+    });
+})(jQuery);
+
+(function ($) {
+    formintorjs.define('admin/popup/disconnect-stripe',[
+        'text!tpl/dashboard.html',
+    ], function (popupTpl) {
+        return Backbone.View.extend({
+            className: 'wpmudev-section--popup delete-stripe--popup',
+
+            popupTpl: Forminator.Utils.template($(popupTpl).find('#forminator-disconnect-stripe-popup-tpl').html()),
+
+          initialize: function( options ) {
+            this.nonce = options.nonce;
+            this.referrer = options.referrer;
+            this.content = options.content || Forminator.l10n.popup.cannot_be_reverted ;
+          },
+
+          render: function () {
+              this.$el.html(this.popupTpl({
+                nonce: this.nonce,
+                id: this.id,
+                referrer: this.referrer,
+                content: Forminator.Utils.sanitize_text_field( this.content ),
+              }));
+           },
+        });
+    });
+})(jQuery);
+
+(function ($) {
+    formintorjs.define('admin/popup/disconnect-paypal',[
+        'text!tpl/dashboard.html',
+    ], function (popupTpl) {
+        return Backbone.View.extend({
+            className: 'wpmudev-section--popup',
+
+            popupTpl: Forminator.Utils.template($(popupTpl).find('#forminator-disconnect-paypal-popup-tpl').html()),
+
+          initialize: function( options ) {
+            this.nonce = options.nonce;
+            this.referrer = options.referrer;
+            this.content = options.content || Forminator.l10n.popup.cannot_be_reverted ;
+          },
+
+          render: function () {
+              this.$el.html(this.popupTpl({
+              nonce: this.nonce,
+              id: this.id,
+              referrer: this.referrer,
+              content: Forminator.Utils.sanitize_text_field( this.content ),
+            }));
+          },
+        });
+    });
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/popup/approve-user',[
+		'text!tpl/dashboard.html',
+	], function (popupTpl) {
+		return Backbone.View.extend({
+			className: 'wpmudev-section--popup',
+
+			popupTpl: Forminator.Utils.template($(popupTpl).find('#forminator-approve-user-popup-tpl').html()),
+			events: {
+				"click .approve-user.popup-confirmation-confirm" : 'approveUser',
+			},
+			initialize: function( options ) {
+				this.nonce = options.nonce;
+				this.referrer = options.referrer;
+				this.content = options.content || Forminator.l10n.popup.cannot_be_reverted;
+				this.activationKey = options.activationKey;
+			},
+
+			render: function () {
+				this.$el.html(this.popupTpl({
+					nonce: this.nonce,
+					id: this.id,
+					referrer: this.referrer,
+					content: this.content,
+					activationKey: this.activationKey,
+				}));
+			},
+
+			submitForm: function( $form, nonce, activationKey ) {
+				var data = {},
+					self = this
+				;
+
+				data.action = 'forminator_approve_user_popup';
+				data._ajax_nonce = nonce;
+				data.activation_key = activationKey;
+
+				var ajaxData = $form.serialize() + '&' + $.param(data);
+
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: ajaxData,
+					beforeSend: function() {
+						$form.find('.sui-button').addClass('sui-button-onload');
+					},
+					success: function( result ) {
+						if (result && result.success) {
+							Forminator.Notification.open('success', Forminator.l10n.commons.approve_user_successfull, 4000);
+							window.location.reload();
+						} else {
+							Forminator.Notification.open( 'error', result.data, 4000 );
+						}
+					},
+					error: function ( error ) {
+						Forminator.Notification.open( 'error', Forminator.l10n.commons.approve_user_unsuccessfull, 4000 );
+					}
+				}).always(function(){
+					$form.find('.sui-button').removeClass('sui-button-onload');
+				});
+			},
+
+			approveUser: function(e) {
+				e.preventDefault();
+
+				var $target = $(e.target);
+				$target.addClass('sui-button-onload');
+
+				var popup   = this.$el.find('.form-approve-user');
+				var form    = popup.find('form');
+
+				this.submitForm( form, this.nonce, this.activationKey );
+
+				return false;
+			}
+		});
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/popup/delete-unconfirmed-user',[
+		'text!tpl/dashboard.html',
+	], function (popupTpl) {
+		return Backbone.View.extend({
+			className: 'wpmudev-section--popup',
+
+			popupTpl: Forminator.Utils.template($(popupTpl).find('#forminator-delete-unconfirmed-user-popup-tpl').html()),
+			events: {
+				"click .delete-unconfirmed-user.popup-confirmation-confirm" : 'deleteUnconfirmedUser',
+			},
+			initialize: function( options ) {
+				this.nonce = options.nonce;
+				this.formId = options.formId;
+				this.referrer = options.referrer;
+				this.content = options.content || Forminator.l10n.popup.cannot_be_reverted ;
+				this.activationKey = options.activationKey;
+				this.entryId = options.entryId;
+			},
+
+			render: function () {
+				this.$el.html(this.popupTpl({
+					nonce: this.nonce,
+					formId: this.formId,
+					referrer: this.referrer,
+					content: this.content,
+					activationKey: this.activationKey,
+					entryId: this.entryId,
+				}));
+			},
+
+			submitForm: function( $form, nonce, activationKey, formId, entryId ) {
+				var data = {
+					action: 'forminator_delete_unconfirmed_user_popup',
+					_ajax_nonce: nonce,
+					activation_key: activationKey,
+					form_id: formId,
+					entry_id: entryId,
+				};
+
+				var ajaxData = $form.serialize() + '&' + $.param(data);
+
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: ajaxData,
+					beforeSend: function() {
+						$form.find('.sui-button').addClass('sui-button-onload');
+					},
+					success: function( result ) {
+						if (result && result.success) {
+							window.location.reload();
+						} else {
+							Forminator.Notification.open( 'error', result.data, 4000 );
+						}
+					},
+					error: function ( error ) {
+						Forminator.Notification.open( 'error', error.data, 4000 );
+					}
+				}).always(function(){
+					$form.find('.sui-button').removeClass('sui-button-onload');
+				});
+			},
+
+			deleteUnconfirmedUser: function(e) {
+				e.preventDefault();
+
+				var $target = $(e.target);
+				$target.addClass('sui-button-onload');
+
+				var popup   = this.$el.find('.form-delete-unconfirmed-user');
+				var form    = popup.find('form');
+
+				this.submitForm( form, this.nonce, this.activationKey, this.formId, this.entryId );
+
+				return false;
+			}
+		});
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/popup/create-appearance-preset',[
+		'text!tpl/dashboard.html',
+	], function (popupTpl) {
+		return Backbone.View.extend({
+			className: 'wpmudev-section--popup',
+
+			popupTpl: Forminator.Utils.template($(popupTpl).find('#forminator-create-appearance-preset-tpl').html()),
+			events: {
+				"click #forminator-create-preset" : 'createPreset',
+				"keydown #forminator-preset-name" : 'toggleButton',
+			},
+			initialize: function( options ) {
+				this.nonce = options.nonce;
+				this.title = options.title;
+				this.content = options.content;
+				this.$target = options.$target;
+			},
+
+			render: function () {
+				var	formLabel= this.$target.data('modal-preset-form-label'),
+					loadingText= this.$target.data('modal-preset-loading-text'),
+					nameLabel= this.$target.data('modal-preset-name-label'),
+					namePlaceholder= this.$target.data('modal-preset-name-placeholder');
+
+				this.$el.html(this.popupTpl({
+					title: Forminator.Utils.sanitize_text_field( this.title ),
+					content: Forminator.Utils.sanitize_text_field( this.content ),
+					formLabel: Forminator.Utils.sanitize_text_field( formLabel ),
+					loadingText: Forminator.Utils.sanitize_text_field( loadingText ),
+					nameLabel: Forminator.Utils.sanitize_text_field( nameLabel ),
+					namePlaceholder: Forminator.Utils.sanitize_text_field( namePlaceholder ),
+				}));
+			},
+
+			toggleButton: function(e) {
+				setTimeout( function(){
+					var val = $(e.currentTarget).val().trim();
+					$('#forminator-create-preset').prop( 'disabled', !val );
+				}, 300 );
+			},
+
+			createPreset: function(e) {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+
+				var $target = $(e.target);
+				$target.addClass('sui-button-onload-text');
+
+				var formId = this.$el.find('select[name="form_id"]').val();
+				var name   = this.$el.find('#forminator-preset-name').val();
+
+				var data = {
+					action: 'forminator_create_appearance_preset',
+					_ajax_nonce: this.nonce,
+					form_id: formId,
+					name: name,
+				};
+
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: data,
+					success: function( result ) {
+						if (result && result.success) {
+							Forminator.openPreset( result.data );
+						} else {
+							Forminator.Notification.open( 'error', result.data, 4000 );
+							$target.removeClass('sui-button-onload-text');
+						}
+					},
+					error: function ( error ) {
+						Forminator.Notification.open( 'error', error.data, 4000 );
+						$target.removeClass('sui-button-onload-text');
+					}
+				});
+
+				return false;
+			}
+		});
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/popup/apply-appearance-preset',[
+		'text!tpl/dashboard.html',
+	], function (popupTpl) {
+		return Backbone.View.extend({
+			className: 'wpmudev-section--popup',
+
+			popupTpl: Forminator.Utils.template($(popupTpl).find('#forminator-apply-appearance-preset-tpl').html()),
+			events: {
+				"click #forminator-apply-preset" : 'applyPreset',
+			},
+			initialize: function( options ) {
+				this.$target = options.$target;
+			},
+
+			render: function () {
+				this.$el.html(this.popupTpl({
+					description: Forminator.Data.modules.ApplyPreset.description,
+					notice: Forminator.Data.modules.ApplyPreset.notice,
+					button: Forminator.Data.modules.ApplyPreset.button,
+					selectbox: Forminator.Data.modules.ApplyPreset.selectbox,
+				}));
+			},
+
+			applyPreset: function(e) {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+
+				var $target = $(e.target);
+				$target.addClass('sui-button-onload-text');
+
+				var	id = this.$target.data('form-id'),
+					ids = [],
+					presetId = this.$el.find('select[name="appearance_preset"]').val();
+
+				if ( id ) {
+					ids = [ id ];
+				} else {
+					ids = $('#forminator_bulk_ids').val().split(',');
+				}
+
+				var data = {
+					action: 'forminator_apply_appearance_preset',
+					_ajax_nonce: Forminator.Data.modules.ApplyPreset.nonce,
+					preset_id: presetId,
+					ids: ids,
+				};
+
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: data,
+					success: function( result ) {
+						if (result && result.success) {
+							Forminator.Notification.open( 'success', result.data, 4000 );
+							Forminator.Popup.close();
+						} else {
+							Forminator.Notification.open( 'error', result.data, 4000 );
+							$target.removeClass('sui-button-onload-text');
+						}
+					},
+					error: function ( error ) {
+						Forminator.Notification.open( 'error', error.data, 4000 );
+						$target.removeClass('sui-button-onload-text');
+					}
+				});
+
+				return false;
+			}
+		});
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/popup/confirm',[
+		'text!tpl/dashboard.html',
+	], function (popupTpl) {
+		return Backbone.View.extend({
+			className: 'wpmudev-section--popup',
+
+			popupTpl: Forminator.Utils.template($(popupTpl).find('#forminator-confirmation-popup-tpl').html()),
+
+			default_options: {
+				confirmation_message: Forminator.l10n.popup.confirm_action,
+				confirmation_title: Forminator.l10n.popup.confirm_title,
+				confirm_callback: function () {
+					this.close();
+				},
+				cancel_callback: function () {
+					this.close();
+				}
+			},
+			confirm_options: {},
+			events: {
+				"click .popup-confirmation-confirm": "confirm_action",
+				"click .popup-confirmation-cancel": "cancel_action"
+			},
+
+			initialize: function (options) {
+				this.confirm_options = _.defaults(options, this.default_options);
+			},
+
+			render: function () {
+				this.$el.html(this.popupTpl(this.confirm_options));
+				return this;
+			},
+
+			confirm_action: function(){
+				this.confirm_options.confirm_callback.apply(this, []);
+			},
+
+			cancel_action: function(){
+				this.confirm_options.cancel_callback.apply(this, []);
+			},
+
+			close: function () {
+				Forminator.Popup.close();
+			}
+		});
+	});
+})(jQuery);
+
+(function ($) {
+    formintorjs.define('admin/popup/addons-actions',[
+        'text!tpl/dashboard.html',
+    ], function( popupTpl ) {
+        return Backbone.View.extend({
+            className: 'wpmudev-section--popup',
+
+            popupTpl: Forminator.Utils.template( $( popupTpl ).find( '#forminator-addons-action-popup-tpl' ).html() ),
+
+			initialize: function( options ) {
+				this.nonce = options.nonce;
+				this.is_network = options.is_network;
+				this.id = options.id;
+				this.referrer = options.referrer;
+				this.content = options.content || Forminator.l10n.popup.cannot_be_reverted;
+				this.forms = options.forms || [];
+			},
+
+            render: function () {
+                this.$el.html(this.popupTpl({
+					nonce: this.nonce,
+					is_network: this.is_network,
+					id: this.id,
+					referrer: this.referrer,
+	                content: this.content,
+	                forms: this.forms,
+				}));
+            },
+        });
+    });
+})(jQuery);
+
+
+formintorjs.define('text!tpl/reports.html',[],function () { return '<div>\n    <script type="text/template" id="forminator-add-reports-content">\n        <div\n            id="forminator-notifications-slide-settings"\n            class="sui-modal-slide sui-active sui-loaded"\n            data-modal-size="lg"\n        >\n            <div class="sui-box">\n                <div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\n                    <button class="sui-button-icon sui-button-float--right forminator-popup-close">\n                        <span class="sui-icon-close" aria-hidden="true"></span>\n                        <span class="sui-screen-reader-text">Close</span>\n                    </button>\n                    <h3 id="forminator-settings__title" class="sui-box-title sui-lg">\n                        {{ Forminator.l10n.popup.settings_label }}\n                    </h3>\n                    <p id="forminator-settings__description" class="sui-description">\n                        {{ Forminator.l10n.popup.settings_description }}\n                    </p>\n                </div>\n                <div class="sui-box-body reports-settings-content"></div>\n\n                <div class="sui-box-footer sui-content-separated">\n                    <button class="sui-button sui-button-ghost forminator-cancel-report">\n                        <span class="sui-loading-text">{{ Forminator.l10n.popup.cancel }}</span>\n                        <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                    </button>\n                    <button\n                            id="forminator-notifications-slide-settings-next"\n                            class="sui-button forminator-popup-slide"\n                            data-modal-slide="forminator-notifications-slide-schedule"\n                            data-modal-slide-focus=""\n                            data-modal-slide-intro="next"\n                    >\n                        <span class="sui-loading-text">{{ Forminator.l10n.form.continue_button }}</span>\n                    </button>\n                </div>\n            </div>\n        </div>\n        <div\n            id="forminator-notifications-slide-schedule"\n            class="sui-modal-slide"\n            data-modal-size="lg"\n            aria-hidden="true"\n            tabindex="-1"\n        >\n            <div class="sui-box">\n                <div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\n                    <button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\n                        <span class="sui-icon-close sui-md" aria-hidden="true"></span>\n                        <span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\n                    </button>\n\n                    <h3 id="forminator-schedule__title" class="sui-box-title sui-lg">\n                        {{ Forminator.l10n.popup.schedule_label }}\n                    </h3>\n\n                    <p id="forminator-schedule__description" class="sui-description">\n                        {{ Forminator.l10n.popup.schedule_description }}\n                    </p>\n\n                </div>\n\n                <div class="sui-box-body reports-schedule-content"></div>\n                <div class="sui-box-footer sui-content-separated">\n\n                    <button id="forminator-notifications-slide-schedule-back"\n                            class="forminator-popup-slide sui-button sui-button-ghost"\n                            data-modal-slide="forminator-notifications-slide-settings"\n                            data-modal-slide-focus=""\n                            data-modal-slide-intro="back">\n                        <span class="sui-loading-text">{{ Forminator.l10n.popup.back }}</span>\n                        <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                    </button>\n                    <button id="forminator-notifications-slide-schedule-next"\n                            class="sui-button forminator-popup-slide"\n                            data-modal-slide="forminator-notifications-slide-recipients"\n                            data-modal-slide-focus=""\n                            data-modal-slide-intro="next">\n                        <span class="sui-loading-text">{{ Forminator.l10n.quiz.continue_button }}</span>\n                        <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                    </button>\n                </div>\n            </div>\n        </div>\n\n        <div\n                id="forminator-notifications-slide-recipients"\n                class="sui-modal-slide"\n                data-modal-size="lg"\n                aria-hidden="true"\n                tabindex="-1"\n        >\n            <div class="sui-box">\n                <div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\n                    <button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\n                        <span class="sui-icon-close sui-md" aria-hidden="true"></span>\n                        <span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\n                    </button>\n                    <h3 id="forminator-popup__title" class="sui-box-title sui-lg">\n                        {{ Forminator.l10n.popup.recipients_label }}\n                    </h3>\n                    <p id="forminator-popup__description" class="sui-description">\n                        {{ Forminator.l10n.popup.recipients_description }}\n                    </p>\n                </div>\n                <div class="sui-box-body reports-recipients-content"></div>\n                <div class="sui-box-footer sui-content-separated">\n                    <button id="forminator-notifications-slide-recipients-back"\n                            class="forminator-popup-slide sui-button sui-button-ghost"\n                            data-modal-slide="forminator-notifications-slide-schedule"\n                            data-modal-slide-focus=""\n                            data-modal-slide-intro="back">\n                        <span class="sui-loading-text">{{ Forminator.l10n.popup.back }}</span>\n                        <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                    </button>\n                    <div class="report-button-with-toggle">\n                        <label for="notification-status-slide" class="sui-toggle">\n                            <input type="checkbox" id="notification-status-slide" class="notification-save-status"\n                                   aria-labelledby="notification-status-slide-label"\n                                   {{ \'active\' === notification.report_status ? \'checked="checked"\' : \'\' }}>\n                            <span class="sui-toggle-slider" aria-hidden="true"></span>\n                            <span id="notification-status-slide-label" class="sui-toggle-label">\n                                {{ Forminator.l10n.popup.status_label }}\n                            </span>\n                        </label>\n                        <button class="sui-button forminator-report-save sui-button-blue" data-id="0">\n                            <span class="sui-loading-text">{{ Forminator.l10n.popup.save_changes }}</span>\n                            <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                        </button>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </script>\n    <script type="text/template" id="forminator-reports-settings-content">\n        <div>\n            <div class="sui-box-settings-row">\n                <div class="sui-box-settings-col-2">\n                    <div class="sui-form-field">\n                        <label for="report-title"\n                               id="label-report-title" class="sui-label">\n                            {{ Forminator.l10n.commons.label }}\n                        </label>\n                        <input\n                                placeholder="Placeholder"\n                                id="report-title"\n                                name="label"\n                                value="{{ settings.label }}"\n                                class="sui-form-control"\n                                aria-labelledby="label-report-title"\n                                aria-describedby="error-report-title description-report-title"\n                        />\n                        <span id="description-report-title" class="sui-description">\n                            {{ Forminator.l10n.popup.label_description }}\n                        </span>\n                    </div>\n                </div>\n            </div>\n            <div class="sui-box-settings-row">\n                <div class="sui-box-settings-col-2">\n                    <label class="sui-settings-label">\n                        {{ Forminator.l10n.commons.module }}\n                    </label>\n                    <span class="sui-description">\n                       {{ Forminator.l10n.popup.module_description }}\n                    </span>\n                    <div class="sui-form-field">\n                        <div class="sui-side-tabs">\n                            <div class="sui-tabs-menu">\n                                <label for="module_forms" class="sui-tab-item {{ \'forms\' === settings.module ? \'active\' : \'\' }}">\n                                    <input type="radio"\n                                           name="module"\n                                           id="module_forms"\n                                           value="forms"\n                                           aria-controls="module_forms__content"\n                                           data-tab-menu="report-module">\n                                    {{ Forminator.l10n.popup.forms }}\n                                </label>\n                                <label for="module_quizzes" class="sui-tab-item {{ \'quizzes\' === settings.module ? \'active\' : \'\' }}">\n                                    <input type="radio"\n                                           name="module"\n                                           id="module_quizzes"\n                                           value="quizzes"\n                                           aria-controls="module_quizzes__content"\n                                           data-tab-menu="report-module">\n                                    {{ Forminator.l10n.popup.quizzes }}\n                                </label>\n                                <label for="module_polls" class="sui-tab-item {{ \'polls\' === settings.module ? \'active\' : \'\' }}">\n                                    <input type="radio"\n                                           name="module"\n                                           id="module_polls"\n                                           value="polls"\n                                           aria-controls="module_polls__content"\n                                           data-tab-menu="report-module">\n                                    {{ Forminator.l10n.popup.polls }}\n                                </label>\n                            </div>\n    \n                            <div class="sui-tabs-content">\n    \n                                <div role="tabpanel" id="module_forms__content"\n                                     class="sui-tab-content {{ \'forms\' === settings.module ? \'active\' : \'\' }}"\n                                     aria-labelledby="module_forms__tab" tabindex="0"\n                                     data-tab-content="report-module">\n                                    <div class="sui-border-frame">\n                                        <label class="sui-settings-label sui-sm">\n                                            {{ Forminator.l10n.popup.select_forms }}\n                                        </label>\n    \n                                        <span class="sui-description">\n                                            {{ Forminator.l10n.popup.select_forms_description }}\n                                        </span>\n    \n                                        <div class="sui-form-field">\n    \n                                            <div class="sui-side-tabs">\n                                                <div class="sui-tabs-menu">\n                                                    <label for="all_forms" class="sui-tab-item {{ undefined === settings.forms_type || \'all\' === settings.forms_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="forms_type"\n                                                               id="all_forms"\n                                                               value="all"\n                                                               aria-controls="all_forms__content"\n                                                               data-tab-menu="select-form">\n                                                        {{ Forminator.l10n.popup.all_forms }}\n                                                    </label>\n                                                    <label for="selected_forms" class="sui-tab-item {{ \'selected\' === settings.forms_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="forms_type"\n                                                               id="selected_forms"\n                                                               value="selected"\n                                                               aria-controls="selected_forms__content"\n                                                               data-tab-menu="select-form">\n                                                        {{ Forminator.l10n.popup.selected_forms }}\n                                                    </label>\n                                                </div>\n    \n                                                <div class="sui-tabs-content">\n    \n                                                    <div role="tabpanel" id="selected_forms__content"\n                                                         class="sui-tab-content {{ \'selected\' === settings.forms_type ? \'active\' : \'\' }}"\n                                                         aria-labelledby="selected_forms" tabindex="0" hidden\n                                                         data-tab-content="select-form">\n                                                        <div class="sui-border-frame">\n                                                            <div class="sui-form-field">\n                                                                <label class="sui-label">\n                                                                    {{ Forminator.l10n.popup.select_forms }}\n                                                                </label>\n    \n                                                                <select name="select_forms" class="sui-select" multiple>\n                                                                    {[ let selected_form = settings.selected_forms;\n                                                                    _.each(Forminator.Data.form_modules, function(forms){ ]}\n                                                                        <option value="{{ forms.id }}"\n                                                                            {[ if( undefined !== selected_form && selected_form.indexOf(forms.id.toString()) !== -1 ) { ]}\n                                                                                selected="selected"\n                                                                            {[ } ]}>\n                                                                            {{ forms.name }}\n                                                                        </option>\n                                                                    {[ }); ]}\n                                                                </select>\n    \n                                                                <p id="selected-forms-description" class="sui-description">\n                                                                    {{ Forminator.l10n.popup.selected_forms_description }}\n                                                                </p>\n                                                            </div>\n                                                        </div>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                </div>\n    \n                                <div role="tabpanel" id="module_quizzes__content"\n                                     class="sui-tab-content {{ \'quizzes\' === settings.module ? \'active\' : \'\' }}"\n                                     aria-labelledby="module_quizzes__tab" tabindex="0" hidden\n                                     data-tab-content="report-module">\n                                    <div class="sui-border-frame">\n                                        <label class="sui-settings-label sui-sm">\n                                            {{ Forminator.l10n.popup.select_quizzes }}\n                                        </label>\n    \n                                        <span class="sui-description">\n                                            {{ Forminator.l10n.popup.select_quizzes_description }}\n                                        </span>\n    \n                                        <div class="sui-form-field">\n    \n                                            <div class="sui-side-tabs">\n                                                <div class="sui-tabs-menu">\n                                                    <label for="all_quizzes" class="sui-tab-item {{ undefined === settings.quizzes_type || \'all\' === settings.quizzes_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="quizzes_type"\n                                                               id="all_quizzes"\n                                                               value="all"\n                                                               aria-controls="all_quizzes__content"\n                                                               data-tab-menu="select-quiz">\n                                                        {{ Forminator.l10n.popup.all_quizzes }}\n                                                    </label>\n                                                    <label for="selected_quizzes" class="sui-tab-item {{ \'selected\' === settings.quizzes_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="quizzes_type"\n                                                               id="selected_quizzes"\n                                                               value="selected"\n                                                               aria-controls="selected_quizzes__content"\n                                                               data-tab-menu="select-quiz">\n                                                        {{ Forminator.l10n.popup.selected_quizzes }}\n                                                    </label>\n                                                </div>\n    \n                                                <div class="sui-tabs-content">\n    \n                                                    <div role="tabpanel" id="selected_quizzes__content"\n                                                         class="sui-tab-content {{ \'selected\' === settings.quizzes_type ? \'active\' : \'\' }}"\n                                                         aria-labelledby="selected_quizzes__tab" tabindex="0" hidden\n                                                         data-tab-content="select-quiz">\n                                                        <div class="sui-border-frame">\n                                                            <div class="sui-form-field">\n                                                                <label class="sui-label">\n                                                                    {{ Forminator.l10n.popup.select_quizzes }}\n                                                                </label>\n    \n                                                                <select name="select_quizzes" class="sui-select" multiple>\n                                                                    {[ let selected_quiz = settings.selected_quizzes;\n                                                                    _.each(Forminator.Data.quiz_modules, function(quizzes){ ]}\n                                                                        <option value="{{ quizzes.id }}"\n                                                                        {[ if( undefined !== selected_quiz && selected_quiz.indexOf(quizzes.id.toString()) !== -1 ) { ]}selected="selected"{[ } ]}>\n                                                                            {{ quizzes.name }}\n                                                                        </option>\n                                                                    {[ }); ]}\n                                                                </select>\n    \n                                                                <p id="selected-quizzes-description" class="sui-description">\n                                                                    {{ Forminator.l10n.popup.selected_quizzes_description }}\n                                                                </p>\n                                                            </div>\n                                                        </div>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                </div>\n    \n                                <div role="tabpanel" id="module_polls__content"\n                                     class="sui-tab-content {{ \'polls\' === settings.module ? \'active\' : \'\' }}"\n                                     aria-labelledby="module_polls__tab" tabindex="0" hidden\n                                     data-tab-content="report-module">\n                                    <div class="sui-border-frame">\n                                        <label class="sui-settings-label sui-sm">\n                                            {{ Forminator.l10n.popup.select_polls }}\n                                        </label>\n    \n                                        <span class="sui-description">\n                                            {{ Forminator.l10n.popup.select_polls_description }}\n                                        </span>\n    \n                                        <div class="sui-form-field">\n    \n                                            <div class="sui-side-tabs">\n                                                <div class="sui-tabs-menu">\n                                                    <label for="all_polls" class="sui-tab-item {{ undefined === settings.polls_type || \'all\' === settings.polls_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="polls_type"\n                                                               id="all_polls"\n                                                               value="all"\n                                                               aria-controls="all_polls__content"\n                                                               data-tab-menu="select-poll">\n                                                        {{ Forminator.l10n.popup.all_polls }}\n                                                    </label>\n                                                    <label for="all_polls" class="sui-tab-item {{ \'selected\' === settings.polls_type ? \'active\' : \'\' }}">\n                                                        <input type="radio"\n                                                               name="polls_type"\n                                                               id="selected_polls"\n                                                               value="selected"\n                                                               aria-controls="selected_polls__content"\n                                                               data-tab-menu="select-quiz">\n                                                        {{ Forminator.l10n.popup.selected_polls }}\n                                                    </label>\n                                                </div>\n    \n                                                <div class="sui-tabs-content">\n    \n                                                    <div role="tabpanel" id="selected_polls__content"\n                                                         class="sui-tab-content {{ \'selected\' === settings.polls_type ? \'active\' : \'\' }}"\n                                                         aria-labelledby="selected_polls__tab" tabindex="0" hidden\n                                                         data-tab-content="select-quiz">\n                                                        <div class="sui-border-frame">\n                                                            <div class="sui-form-field">\n                                                                <label class="sui-label">\n                                                                    {{ Forminator.l10n.popup.select_polls }}\n                                                                </label>\n    \n                                                                <select name="select_polls" class="sui-select" multiple>\n                                                                    {[ let selected_polls = settings.selected_polls;\n                                                                    _.each(Forminator.Data.poll_modules, function(polls){ ]}\n                                                                        <option value="{{ polls.id }}"\n                                                                         {[ if( undefined !== selected_polls && selected_polls.indexOf(polls.id.toString()) !== -1 ) { ]}selected="selected"{[ } ]}>\n                                                                            {{ polls.name }}\n                                                                        </option>\n                                                                    {[ }); ]}\n                                                                </select>\n    \n                                                                <p id="selected-poll-description" class="sui-description">\n                                                                    {{ Forminator.l10n.popup.selected_polls_description }}\n                                                                </p>\n                                                            </div>\n                                                        </div>\n                                                    </div>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </script>\n    <script type="text/template" id="forminator-reports-schedule-content">\n        <div class="sui-box-settings-row">\n\n            <div class="sui-box-settings-col-2">\n                <div class="sui-side-tabs">\n                    <div class="sui-tabs-menu">\n                        <label for="frequency_daily" class="sui-tab-item {{ \'daily\' === schedule.frequency ? \'active\' : \'\' }}">\n                            <input type="radio"\n                                   id="frequency_daily"\n                                   name="frequency"\n                                   aria-controls="frequency_daily__content"\n                                   value="daily"\n                                   data-tab-menu="report-frequency">\n                            {{ Forminator.l10n.popup.daily }}\n                        </label>\n                        <label for="frequency_weekly" class="sui-tab-item {{ \'weekly\' === schedule.frequency ? \'active\' : \'\' }}">\n                            <input type="radio"\n                                   name="frequency"\n                                   id="frequency_weekly"\n                                   aria-controls="frequency_weekly__content"\n                                   value="weekly"\n                                   data-tab-menu="report-frequency">\n                            {{ Forminator.l10n.popup.weekly }}\n                        </label>\n                        <label for="frequency_monthly" class="sui-tab-item {{ \'monthly\' === schedule.frequency ? \'active\' : \'\' }}">\n                            <input type="radio"\n                                   name="frequency"\n                                   id="frequency_monthly"\n                                   aria-controls="frequency_monthly__content"\n                                   value="monthly"\n                                   data-tab-menu="report-frequency">\n                            {{ Forminator.l10n.popup.monthly }}\n                        </label>\n                    </div>\n\n                    <div class="sui-tabs-content">\n\n                        <div role="tabpanel" id="frequency_daily__content" class="sui-tab-content\n                            {{ \'daily\' === schedule.frequency ? \'active\' : \'\' }}"\n                             aria-labelledby="frequency_daily__tab" tabindex="0"\n                             data-tab-content="report-frequency">\n                            <div class="sui-border-frame">\n                                <div class="sui-form-field sui-no-margin-bottom">\n                                    <label class="sui-label" for="report-time">\n                                        {{ Forminator.l10n.popup.day_time }}\n                                    </label>\n                                    <select name="report-time" id="report-time" class="sui-select">\n                                        {[ _.each(Forminator.l10n.popup.time_interval, function(interval){ ]}\n                                        <option value="{{ interval }}"\n                                            {[ if( undefined !== schedule.time && schedule.time === interval ) { ]}\n                                                selected="selected"\n                                            {[ } ]}\n                                        >{{ interval }}</option>\n                                        {[ }); ]}\n                                    </select>\n                                    <p id="select-single-frequency_time" class="sui-description">\n                                        {{ Forminator.l10n.popup.frequency_time }}\n                                    </p>\n                                </div>\n                            </div>\n                        </div>\n\n                        <div role="tabpanel" id="frequency_weekly__content" class="sui-tab-content\n                            {{ \'weekly\' === schedule.frequency ? \'active\' : \'\' }}"\n                             aria-labelledby="frequency_weekly__tab" tabindex="0" hidden\n                             data-tab-content="report-frequency">\n                            <div class="sui-border-frame">\n                                <div class="sui-row sui-no-margin-bottom schedule-box">\n                                    <div class="sui-col sui-form-field sui-no-margin-bottom">\n                                        <label class="sui-label" for="week-days">\n                                            {{ Forminator.l10n.popup.week_day }}\n                                        </label>\n                                        <select name="week-days" class="sui-select" id="week-days">\n                                            {[ _.each(Forminator.l10n.popup.week_days, function(week, days){ ]}\n                                            <option value="{{ days }}"\n                                                {[ if( undefined !== schedule.weekDay && schedule.weekDay === days ) { ]}\n                                                    selected="selected"\n                                                {[ } ]}\n                                            >{{ week }}</option>\n                                            {[ }); ]}\n                                        </select>\n                                    </div>\n                                    <div class="sui-col sui-form-field sui-no-margin-bottom">\n                                        <label class="sui-label" for="week-time">\n                                            {{ Forminator.l10n.popup.day_time }}\n                                        </label>\n                                        <select name="week-time" class="sui-select" id="week-time">\n                                            {[ _.each(Forminator.l10n.popup.time_interval, function(interval){ ]}\n                                            <option value="{{ interval }}"\n                                                {[ if( undefined !== schedule.weekTime && schedule.weekTime === interval ) { ]}\n                                                    selected="selected"\n                                                {[ } ]}\n                                            >{{ interval }}</option>\n                                            {[ }); ]}\n                                        </select>\n                                    </div>\n                                    <p id="select-single-default-helper" class="sui-col-12 sui-description">\n                                        {{ Forminator.l10n.popup.frequency_time }}\n                                    </p>\n                                </div>\n                            </div>\n                        </div>\n\n                        <div role="tabpanel" id="frequency_monthly__content" class="sui-tab-content\n                            {{ \'monthly\' === schedule.frequency ? \'active\' : \'\' }}"\n                             aria-labelledby="frequency_monthly__tab" tabindex="0" hidden\n                             data-tab-content="report-frequency">\n                            <div class="sui-border-frame">\n                                <div class="sui-row sui-no-margin-bottom schedule-box">\n                                    <div class="sui-col sui-form-field sui-no-margin-bottom">\n                                        <label class="sui-label" for="week-days">\n                                            {{ Forminator.l10n.popup.month_day }}\n                                        </label>\n                                        <select name="month-days" class="sui-select" id="month-days">\n                                            {[ _.each(Forminator.l10n.popup.month_days, function(month){ ]}\n                                            <option value="{{ month }}"\n                                                {[ if( undefined !== schedule.monthDay && schedule.monthDay === month.toString() ) { ]}\n                                                    selected="selected"\n                                                {[ } ]}\n                                            >{{ month }}</option>\n                                            {[ }); ]}\n                                        </select>\n                                    </div>\n                                    <div class="sui-col sui-form-field sui-no-margin-bottom">\n                                        <label class="sui-label" for="week-time">\n                                            {{ Forminator.l10n.popup.day_time }}\n                                        </label>\n                                        <select name="month-time" class="sui-select" id="month-time">\n                                            {[ _.each(Forminator.l10n.popup.time_interval, function(interval){ ]}\n                                            <option value="{{ interval }}"\n                                                {[ if( undefined !== schedule.monthTime && schedule.monthTime === interval ) { ]}\n                                                    selected="selected"\n                                                {[ } ]}\n                                            >{{ interval }}</option>\n                                            {[ }); ]}\n                                        </select>\n                                    </div>\n                                    <p id="select-month-default-helper" class="sui-col-12 sui-description">\n                                        {{ Forminator.l10n.popup.frequency_time }}\n                                    </p>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </script>\n    <script type="text/template" id="forminator-reports-recipients-content">\n        <div class="sui-box-settings-row">\n            <div class="sui-box-settings-col-2">\n                <div class="sui-tabs sui-tabs-overflow">\n                    <div role="tablist" class="sui-tabs-menu">\n                        <button type="button" role="tab" id="notifications-add-users" class="sui-tab-item active"\n                                aria-controls="notifications-add-users-content" aria-selected="true">\n                            {{ Forminator.l10n.popup.add_users }}\n                        </button>\n                        <button type="button" role="tab" id="notifications-invite-users" class="sui-tab-item"\n                                aria-controls="notifications-invite-users-content" aria-selected="false" tabindex="-1">\n                            {{ Forminator.l10n.popup.add_by_email }}\n                        </button>\n                    </div>\n                    <div class="sui-tabs-content">\n                        <div role="tabpanel" tabindex="0" id="notifications-add-users-content"\n                             class="sui-tab-content active" aria-labelledby="notifications-add-users">\n                            <div class="sui-form-field sui-no-margin-bottom">\n                                <label for="forminator-search-users" class="sui-label">\n                                    {{ Forminator.l10n.popup.search_user }}\n                                </label>\n                                <select id="forminator-search-users" class="sui-select" data-theme="search"\n                                        data-placeholder="{{ Forminator.l10n.popup.search_placeholder }}"\n                                        multiple>\n                                </select>\n                            </div>\n                            {[ const hasUserRecipients = recipients.find( r => undefined !== r.role && \'\' !== r.role ); ]}\n                            <div class="{{ undefined === hasUserRecipients ? \'sui-hidden\' : \'sui-margin-top\' }}">\n                                <strong>{{ Forminator.l10n.popup.added_users }}</strong>\n                                <div class="sui-recipients" id="modal-user-recipients-list">\n                                    {[ for ( const recipient of recipients ) {\n                                    if ( \'\' !== recipient.role ) { ]}\n                                    <div class="sui-recipient sui-recipient-rounded" data-id="{{ recipient.id }}" data-email="{{ recipient.email }}">\n                                        {[ let subClass = \'\';\n                                        if ( \'undefined\' !== typeof recipient.is_pending ) {\n                                        if ( ! recipient.is_pending && \'undefined\' !== typeof recipient.is_subscribed && ! recipient.is_subscribed ) {\n                                        subClass = \'unsubscribed\';\n                                        } else {\n                                        subClass = recipient.is_pending ? \'pending\' : \'confirmed\';\n                                        }\n                                        } ]}\n                                        <span class="sui-recipient-name">\n                                            <span class="subscriber {{ subClass }}">\n                                                {[ if ( \'pending\' === subClass ) { ]}\n                                                <span class="sui-tooltip" data-tooltip="{{ Forminator.l10n.popup.awaiting_confirmation }}">\n                                                {[ } ]}\n                                                    <img src="{{ recipient.avatar }}" alt="{{ recipient.email }}">\n                                                {[ if ( \'pending\' === subClass ) { ]}\n                                                </span>\n                                                 {[ } ]}\n                                            </span>\n                                            <span class="forminator-recipient-name">{{ recipient.name }}</span>\n                                        </span>\n                                        <span class="sui-recipient-email">{{ recipient.role }}</span>\n                                        {[ if ( \'pending\' === subClass || \'unsubscribed\' === subClass ) { ]}\n                                        <button\n                                                type="button"\n                                                class="resend-invite sui-button-icon sui-tooltip"\n                                                data-tooltip="{{ Forminator.l10n.popup.resend_invite }}"\n                                        >\n                                            <span class="sui-icon-send" aria-hidden="true"></span>\n                                        </button>\n                                        {[ } ]}\n                                        <button\n                                                type="button"\n                                                class="sui-button-icon sui-tooltip forminator-remove-recipient"\n                                                data-tooltip="{{ Forminator.l10n.popup.remove_user }}"\n                                                data-id="{{ recipient.id }}"\n                                                data-email="{{ recipient.email }}"\n                                                data-type="user">\n                                            <span class="sui-icon-trash" aria-hidden="true"></span>\n                                        </button>\n                                    </div>\n                                    {[ } ]}\n                                    {[ } ]}\n                                </div>\n                            </div>\n                            <div class="sui-margin-top sui-hidden">\n                                <strong>{{ Forminator.l10n.popup.users }}</strong>\n                                <div class="sui-recipients" id="forminator-user-list"></div>\n                            </div>\n                            <div class="sui-notice sui-notice-warning sui-margin-top notifications-recipients-notice sui-hidden">\n                                <div class="sui-notice-content">\n                                    <div class="sui-notice-message">\n                                        <span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>\n                                        <p></p>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                        <div role="tabpanel" tabindex="0" id="notifications-invite-users-content" class="sui-tab-content" aria-labelledby="notifications-invite-users" hidden>\n                            <p class="sui-description">\n                                {{ Forminator.l10n.popup.invite_description }}\n                            </p>\n                            <div class="sui-form-field">\n                                <label for="recipient-name" id="label-recipient-name" class="sui-label">\n                                    {{ Forminator.l10n.popup.first_name }}\n                                </label>\n\n                                <input\n                                        placeholder="{{ Forminator.l10n.popup.name_placeholder }}"\n                                        id="recipient-name"\n                                        class="sui-form-control"\n                                        aria-labelledby="label-recipient-name"\n                                />\n                            </div>\n\n                            <div class="sui-form-field">\n                                <label for="recipient-email" id="label-recipient-email" class="sui-label">\n                                    {{ Forminator.l10n.popup.email_address }}\n                                </label>\n\n                                <input\n                                        placeholder="{{ Forminator.l10n.popup.email_placeholder }}"\n                                        id="recipient-email"\n                                        class="sui-form-control"\n                                        aria-labelledby="label-recipient-email"\n                                />\n                                <span id="error-recipient-email" class="sui-error-message" role="alert"></span>\n                            </div>\n\n                            <div class="sui-form-field sui-no-margin-bottom">\n                                <button type="button" id="add-recipient-button" class="sui-button" aria-live="polite" disabled="disabled">\n                                    <span class="sui-button-text-default">{{ Forminator.l10n.popup.add_recipient }}</span>\n                                    <span class="sui-button-text-onload">\n                                        <span class="sui-icon-loader sui-loading" aria-hidden="true"></span>\n                                        {{ Forminator.l10n.popup.adding_recipient }}\n                                    </span>\n                                </button>\n                            </div>\n\n                            {[ const hasInvitedRecipients = recipients.find( r => undefined === r.role || \'\' === r.role ); ]}\n                            <div class="{{ undefined === hasInvitedRecipients ? \'sui-hidden\' : \'sui-margin-top\' }}">\n                                <strong>{{ Forminator.l10n.popup.added_users }}</strong>\n                                <div class="sui-recipients" id="modal-email-recipients-list">\n                                    {[ for ( const recipient of recipients ) {\n                                    if ( undefined === recipient.role || \'\' === recipient.role ) { ]}\n                                    <div class="sui-recipient sui-recipient-rounded" data-id="{{ recipient.id }}" data-email="{{ recipient.email }}">\n                                        {[ let subClass = \'\';\n                                        if ( \'undefined\' !== typeof recipient.is_pending ) {\n                                        if ( ! recipient.is_pending && \'undefined\' !== typeof recipient.is_subscribed && ! recipient.is_subscribed ) {\n                                        subClass = \'unsubscribed\';\n                                        } else {\n                                        subClass = recipient.is_pending ? \'pending\' : \'confirmed\';\n                                        }\n                                        } ]}\n                                        <span class="sui-recipient-name">\n                                            <span class="subscriber {{ subClass }}">\n                                                {[ if ( \'pending\' === subClass ) { ]}\n                                                    <span class="sui-tooltip" data-tooltip="{{ Forminator.l10n.popup.awaiting_confirmation }}">\n                                                {[ } ]}\n                                                    <img src="{{ recipient.avatar }}" alt="{{ recipient.email }}">\n                                                {[ if ( \'pending\' === subClass ) { ]}\n                                                    </span>\n                                                {[ } ]}\n                                            </span>\n                                            <span>{{ recipient.name }}</span>\n                                        </span>\n                                        <span class="sui-recipient-email">{{ recipient.email }}</span>\n                                        {[ if ( \'pending\' === subClass || \'unsubscribed\' === subClass ) { ]}\n                                        <button\n                                                type="button"\n                                                class="resend-invite sui-button-icon sui-tooltip"\n                                                data-tooltip="{{ Forminator.l10n.popup.resend_invite }}"\n                                                data-name="{{ recipient.name }}"\n                                                data-email="{{ recipient.email }}">\n                                            <span class="sui-icon-send" aria-hidden="true"></span>\n                                        </button>\n                                        {[ } ]}\n                                        <button\n                                                type="button"\n                                                class="sui-button-icon sui-tooltip forminator-remove-recipient"\n                                                data-tooltip="{{ Forminator.l10n.popup.remove_user }}"\n                                                data-id="{{ recipient.id }}"\n                                                data-email="{{ recipient.email }}"\n                                                data-type="email">\n                                            <span class="sui-icon-trash" aria-hidden="true"></span>\n                                        </button>\n                                    </div>\n                                    {[ } ]}\n                                    {[ } ]}\n                                </div>\n                            </div>\n\n                            <div class="sui-notice sui-notice-warning sui-margin-top notifications-recipients-notice sui-hidden">\n                                <div class="sui-notice-content">\n                                    <div class="sui-notice-message">\n                                        <span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>\n                                        <p></p>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </script>\n    <script type="text/template" id="forminator-edit-reports-content">\n        <div class="sui-box">\n            <div class="sui-box-header">\n                <h3 id="notification-modal-title" class="sui-box-title">{{ Forminator.l10n.popup.configure }}</h3>\n\n                <div class="sui-actions-right">\n                    <button class="sui-button-icon forminator-popup-close">\n                        <span class="sui-icon-close" aria-hidden="true"></span>\n                        <span class="sui-screen-reader-text">Close this modal</span>\n                    </button>\n                </div>\n\n            </div>\n\n            <div class="sui-box-body">\n                <div class="sui-tabs sui-tabs-flushed">\n                    <div role="tablist" class="sui-tabs-menu">\n                        <button type="button" role="tab" id="report-tab-settings"\n                                class="sui-tab-item active" aria-controls="report-tab-settings-content"\n                                aria-selected="true">\n                            {{ Forminator.l10n.popup.settings_label }}\n                        </button>\n\n                        <button type="button" role="tab" id="report-tab-schedule"\n                                class="sui-tab-item" aria-controls="report-tab-schedule-content"\n                                aria-selected="false" tabindex="-1">\n                            {{ Forminator.l10n.popup.schedule_label }}\n                        </button>\n\n                        <button type="button" role="tab" id="report-tab-recipients"\n                                class="sui-tab-item" aria-controls="report-tab-recipients-content"\n                                aria-selected="false" tabindex="-1">\n                            {{ Forminator.l10n.popup.recipients_label }}\n                        </button>\n                    </div>\n\n                    <div class="sui-tabs-content">\n                        <div role="tabpanel" tabindex="0" id="report-tab-settings-content"\n                             class="sui-tab-content reports-settings-content active" aria-labelledby="report-tab-settings">\n                        </div>\n                        <div role="tabpanel" tabindex="0" id="report-tab-schedule-content"\n                             class="sui-tab-content reports-schedule-content" aria-labelledby="report-tab-schedule">\n                        </div>\n                        <div role="tabpanel" tabindex="0" id="report-tab-recipients-content"\n                             class="sui-tab-content reports-recipients-content" aria-labelledby="report-tab-recipients">\n                        </div>\n                    </div>\n                </div>\n            </div>\n\n            <div class="sui-box-footer sui-content-separated">\n                <button class="sui-button sui-button-ghost forminator-cancel-report">\n                    <span class="sui-loading-text">{{ Forminator.l10n.popup.cancel }}</span>\n                    <i class="sui-icon-load sui-loading" aria-hidden="true"></i>\n                </button>\n                <div class="report-button-with-toggle">\n                    <label for="notification-tab-status" class="sui-toggle">\n                        <input type="checkbox" id="notification-tab-status" class="notification-save-status"\n                               aria-labelledby="notification-tab-status-label"\n                               {{ \'active\' === notification.report_status ? \'checked="checked"\' : \'\' }}>\n                        <span class="sui-toggle-slider" aria-hidden="true"></span>\n                        <span id="notification-tab-status-label" class="sui-toggle-label">\n                            {{ Forminator.l10n.popup.status_label }}\n                        </span>\n                    </label>\n                    <button type="button" class="sui-button sui-button-blue forminator-report-save" aria-live="polite"\n                            data-id="{{ notification.report_id }}">\n                        <span class="sui-button-text-default">\n                            <span class="sui-icon-save" aria-hidden="true"></span>\n                            {{ Forminator.l10n.popup.save_changes }}\n                        </span>\n                        <span class="sui-button-text-onload">\n                            <span class="sui-icon-loader sui-loading" aria-hidden="true"></span>\n                            {{ Forminator.l10n.popup.saving_changes }}\n                        </span>\n                    </button>\n                </div>\n            </div>\n        </div>\n    </script>\n</div>';});
+
+(function ($) {
+	formintorjs.define('admin/popup/reports-notification',[
+		'text!tpl/reports.html',
+	], function( popupTpl ) {
+		return Backbone.View.extend({
+			className: 'forminator-popup-create--report-notification',
+
+			events: {
+				'click label.sui-tab-item': 'inputTabs',
+				"click .forminator-popup-close": "close",
+				"click .forminator-cancel-report": "close",
+				"click button.forminator-popup-slide": "slide_modal",
+				"click button.forminator-add-recipient": "add_recipient",
+				"click button.forminator-remove-recipient": "remove_recipient",
+				"click button#add-recipient-button": "invite_add_recipient",
+				"click button.forminator-report-save": "report_save",
+			},
+
+			initialize: function( options ) {
+				this.report_id = options.report_id;
+			},
+
+			reportAddPopup: Forminator.Utils.template( $( popupTpl ).find( '#forminator-add-reports-content' ).html()),
+			reportEditPopup: Forminator.Utils.template( $( popupTpl ).find( '#forminator-edit-reports-content' ).html()),
+			settingsPopup: Forminator.Utils.template( $( popupTpl ).find( '#forminator-reports-settings-content' ).html()),
+			schedulePopup: Forminator.Utils.template( $( popupTpl ).find( '#forminator-reports-schedule-content' ).html()),
+			recipientsPopup: Forminator.Utils.template( $( popupTpl ).find( '#forminator-reports-recipients-content' ).html()),
+
+			notification: {
+				report_id: 0,
+				exclude: [],
+				settings: {
+					label: forminatorl10n.popup.form_reports,
+					module: 'forms',
+					forms_type: 'all',
+				},
+				schedule: {
+					frequency: 'daily',
+				},
+				report_status: 'active',
+				recipients: [],
+			},
+
+			render: function() {
+				if ( 0 !== this.report_id ) {
+					var div_preloader = '';
+					if ('sui-box-body' !== this.className) {
+						div_preloader += '<div class="sui-box-body">';
+					}
+					div_preloader +=
+						'<p class="fui-loading-dialog" aria-label="Loading content">' +
+							'<i class="sui-icon-loader sui-loading" aria-hidden="true"></i>' +
+						'</p>'
+					;
+					if ('sui-box-body' !== this.className) {
+						div_preloader += '</div>';
+					}
+
+					this.$el.html(div_preloader);
+
+					this.fetch_report_data( this.report_id );
+				} else {
+					this.load_users();
+					this.$el.html( this.reportAddPopup({
+						notification: this.notification
+					}) );
+					this.render_html();
+				}
+			},
+
+			render_html: function () {
+				var self = this;
+				this.render_content();
+				setTimeout(function() {
+					self.initSUI();
+					self.mapActions();
+				}, 500);
+			},
+
+			render_content: function () {
+				this.$el.find('.reports-settings-content').html( this.settingsPopup({
+					settings: this.notification.settings
+				}) );
+				this.$el.find('.reports-schedule-content').html( this.schedulePopup({
+					schedule: this.notification.schedule
+				}) );
+				this.$el.find('.reports-recipients-content').html( this.recipientsPopup({
+					recipients: this.notification.recipients
+				}) );
+			},
+
+			initSUI: function() {
+				$( '.sui-select' ).each( function() {
+					const select = $( this );
+					if ( 'search' === select.data( 'theme' ) ) {
+						SUI.select.initSearch( select );
+					} else {
+						SUI.select.init( select );
+					}
+				} );
+				SUI.tabs();
+			},
+
+			mapActions: function () {
+				this.initUserSelects();
+				this.toggleAddButton();
+			},
+
+			slide_modal: function( e ) {
+				e.preventDefault();
+
+				const newSlideId     = $( e.currentTarget ).data( 'modal-slide' ),
+					newSlideFocus    = $( e.currentTarget ).data( 'modal-slide-focus' ),
+					newSlideEntrance = $( e.currentTarget ).data( 'modal-slide-intro' )
+				;
+
+				SUI.slideModal( newSlideId, newSlideFocus, newSlideEntrance );
+			},
+
+			close: function( e ) {
+				e.preventDefault();
+
+				Forminator.Popup.close();
+			},
+
+			toggleAddButton: function () {
+				const inputs = $(
+					'#notifications-invite-users-content input[id^="recipient-"]'
+				);
+
+				inputs.on( 'keyup', function() {
+					var empty = false;
+					inputs.each( function() {
+						if ( '' === $( this ).val() ) {
+							empty = true;
+						}
+					} );
+
+					if ( empty ) {
+						$( '#add-recipient-button' ).attr( 'disabled', 'disabled' );
+					} else {
+						$( '#add-recipient-button' ).attr( 'disabled', false );
+					}
+				} );
+			},
+
+			inputTabs: function( e ) {
+
+				var label  = this.$( e.target ),
+					input   = label.find('input'),
+					$data   = input.data( 'tab-menu' ),
+					wrapper = label.closest( '.sui-side-tabs' ),
+					list    = label.closest('.sui-tabs-menu').find( '.sui-tab-item' );
+
+				if ( label.is( 'label' ) ) {
+
+					// Reset lists
+					list.removeClass( 'active' );
+
+					// Reset panes
+					if ( wrapper.find( '.sui-tabs-content div[data-tab-content="' + $data + '"]' ).length ) {
+						wrapper.find( '.sui-tabs-content div[data-tab-content="' + $data + '"]' ).attr( 'hidden', true );
+						wrapper.find( '.sui-tabs-content div[data-tab-content="' + $data + '"]' ).removeClass( 'active' );
+					}
+
+					label.addClass( 'active' );
+
+					// Select current content
+					wrapper.find( '#' + input.attr( 'aria-controls' ) ).addClass( 'active' );
+					wrapper.find( '#' + input.attr( 'aria-controls' ) ).attr( 'hidden', false );
+					wrapper.find( '#' + input.attr( 'aria-controls' ) ).removeAttr( 'hidden' );
+				}
+
+				e.preventDefault();
+
+			},
+
+			load_users: function () {
+				var self = this;
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: {
+						'action': 'forminator_search_users',
+						'nonce': forminatorl10n.popup.fetch_nonce,
+						'exclude': this.notification.exclude
+					},
+					success: function( response ) {
+						if ( 'undefined' === typeof response.data ) {
+							return;
+						}
+
+						var i = 0;
+						response.data.forEach( function( user ) {
+							self.addToUsersList( user, 0 === i++ );
+						} );
+
+						// Fix overflow for user selectors.
+						self.fixRecipientCSS( $( '#forminator-user-list' ) );
+					},
+				});
+			},
+
+			addToUsersList: function ( user, first ) {
+				const recipientList = $( '#forminator-user-list' );
+				const tooltipClass = first
+					? 'sui-tooltip-bottom-right'
+					: 'sui-tooltip-top-right';
+				var row = '<div class="sui-recipient sui-recipient-rounded" data-id="' + user.id + '" data-email="' + user.email + '">' +
+						'<span class="sui-recipient-name">' +
+							'<span class="subscriber"><img alt="" src="' + user.avatar + '" alt="' + user.email + '"></span>' +
+							'<span class="forminator-recipient-name">' + user.name + '</span>' +
+						'</span>' +
+						'<span class="sui-recipient-email">' + user.role + '</span>' +
+						'<button type="button" class="sui-button-icon forminator-add-recipient sui-tooltip ' + tooltipClass + '" ' +
+							'data-tooltip="' + forminatorl10n.popup.add_user + '"';
+							row += "data-user='" + JSON.stringify( user ) + "'>";
+							row += '<span class="sui-icon-plus" aria-hidden="true"></span>' +
+						'</button>' +
+					'</div>';
+				recipientList.append( row );
+				this.toggleRecipientList( recipientList, true );
+			},
+
+			toggleRecipientList: function ( el, userNotice ) {
+				if ( undefined === el.html() ) {
+					return;
+				}
+				const hasItems = 0 === el.html().trim().length;
+
+				el.parent( 'div' )
+					.toggleClass( 'sui-hidden', hasItems )
+					.toggleClass( 'sui-margin-top', ! hasItems );
+
+				if ( userNotice ) {
+					this.toggleUserNotice( false );
+				}
+			},
+
+			toggleUserNotice: function ( recipientExists ) {
+				const notice = $( '.notifications-recipients-notice' );
+				const btn = $( '#forminator-popup .sui-button.sui-button-blue' );
+				const saveButton = $( '.forminator-report-save' );
+
+				var text = forminatorl10n.popup.no_recipients;
+				if ( recipientExists ) {
+					text = forminatorl10n.popup.recipient_exists;
+				} else if ( 0 !== this.notification.report_id ) {
+					text = forminatorl10n.popup.no_recipient_disable;
+				}
+
+				notice.find( 'p' ).html( text );
+				if ( recipientExists ) {
+					notice.removeClass( 'sui-hidden' );
+					setTimeout( function() {
+						notice.addClass( 'sui-hidden' );
+					}, 3000);
+				} else if ( 0 === this.notification.recipients.length ) {
+					btn.attr( 'disabled', 'disabled' );
+					saveButton.attr( 'disabled', 'disabled' );
+					notice.removeClass( 'sui-hidden' );
+				} else {
+					btn.attr( 'disabled', false );
+					saveButton.attr( 'disabled', false );
+					notice.addClass( 'sui-hidden' );
+				}
+			},
+
+			fixRecipientCSS: function ( list ) {
+				const val = list.children().length > 1 ? 'hidden' : 'unset';
+				list.css( 'overflow-x', val );
+
+				list.find( '.sui-recipient:first-of-type .sui-tooltip' )
+					.removeClass( 'sui-tooltip-top-right' )
+					.addClass( 'sui-tooltip-bottom-right' );
+			},
+
+			add_recipient: function ( e, user ) {
+				e.preventDefault();
+				if ( '' === user || undefined === user ) {
+					user = $( e.currentTarget ).data( 'user' );
+				}
+				if ( 'object' !== jQuery.type( user ) ) {
+					return;
+				}
+
+				this.addUser( user, 'user' );
+
+				const recipientList = $( '#forminator-user-list' );
+				const el = '.sui-recipient[data-email="' + user.email + '"]';
+
+				// Remove Div.
+				recipientList.find( el ).remove();
+
+				this.fixRecipientCSS( recipientList );
+				this.toggleRecipientList( recipientList, false );
+			},
+
+			addUser: function( user, type ) {
+				// Check if recipient already exists.
+				const index = this.notification.recipients.findIndex(function(r) {
+					return user.email === r.email
+				});
+				if ( index > -1 ) {
+					this.toggleUserNotice( true );
+					return;
+				}
+
+				const recipientList = $( '#modal-' + type + '-recipients-list' );
+				const role = '' === user.role ? user.email : user.role;
+
+				var subClass = '';
+				if ( 'undefined' !== typeof user.is_pending ) {
+					if (
+						! user.is_pending &&
+						'undefined' !== typeof user.is_subscribed &&
+						! user.is_subscribed
+					) {
+						subClass = 'unsubscribed';
+					} else {
+						subClass = user.is_pending ? 'pending' : 'confirmed';
+					}
+				}
+
+				var img = '<img src="' + user.avatar + '" alt="' + user.email + '">';
+				var confirmBtn = '';
+				if ( 'pending' === subClass || 'unsubscribed' === subClass ) {
+					img = '<span class="sui-tooltip" data-tooltip="' + forminatorl10n.popup.awaiting_confirmation +'">' + img + '</span>';
+					confirmBtn = '<button type="button" class="resend-invite sui-button-icon sui-tooltip" data-tooltip="' + forminatorl10n.popup.resend_invite + '">' +
+						'<span class="sui-icon-send" aria-hidden="true"></span>' +
+					'</button>';
+				}
+
+				const row = '<div class="sui-recipient sui-recipient-rounded" data-id="' + user.id + '" data-email="' + user.email + '">' +
+						'<span class="sui-recipient-name">' +
+							'<span class="subscriber ' + subClass + '">' + img + '</span>' +
+							'<span class="forminator-recipient-name">' + user.name + '</span>' +
+						'</span>' +
+						'<span class="sui-recipient-email">' + role + '</span>' + confirmBtn + '' +
+						'<button type="button" class="sui-button-icon forminator-remove-recipient sui-tooltip" ' +
+							'data-tooltip="' + forminatorl10n.popup.remove_user + '" ' +
+							'data-id="' + user.id + '" ' +
+							'data-email="' + user.email + '"' +
+							'data-type="' + type + '">' +
+							'<span class="sui-icon-trash" aria-hidden="true"></span>' +
+						'</button>' +
+					'</div>';
+
+				recipientList.append( row );
+				// Add to the recipients and exclude arrays.
+				this.notification.recipients.push( user );
+				if ( 'user' === type ) {
+					this.notification.exclude.push( user.id );
+				}
+
+				this.toggleRecipientList( recipientList, true );
+			},
+
+			remove_recipient: function ( e ) {
+				e.preventDefault();
+				const id = $( e.currentTarget ).data( 'id' ),
+					email = $( e.currentTarget ).data( 'email' ),
+					type = $( e.currentTarget ).data( 'type' ),
+					recipientList = $( '#modal-' + type + '-recipients-list' ),
+					el = '.sui-recipient[data-email="' + email + '"]';
+
+				// Remove Div.
+				const row = recipientList.find( el );
+				row.remove();
+
+				// Remove from exclude list.
+				var index;
+				if ( 'user' === type ) {
+					index = this.notification.exclude.indexOf( id.toString() );
+					if ( index > -1 ) {
+						this.notification.exclude.splice( index, 1 );
+					}
+					this.returnToList( row );
+				}
+
+				// Remove from recipients array.
+				index = this.notification.recipients.findIndex(function(r) {
+					return id === parseInt(r.id) && email === r.email
+				});
+				if ( index > -1 ) {
+					this.notification.recipients.splice( index, 1 );
+				}
+
+				// Hide title if no more elements.
+				this.toggleRecipientList( recipientList, true );
+			},
+
+			returnToList: function ( el ) {
+				const recipientList = $( '#forminator-user-list' );
+
+				const user = {
+					id: el.data( 'id' ),
+					name: el.find( '.forminator-recipient-name' ).text(),
+					email: el.data( 'email' ),
+					role: el.find( '.sui-recipient-email' ).text(),
+					avatar: el.find( 'img' ).attr( 'src' ),
+				};
+
+				// Remove the resend icon.
+				el.find( '.resend-invite' ).remove();
+
+				el.find( '.sui-icon-trash' )
+					.removeClass( 'sui-icon-trash' )
+					.addClass( 'sui-icon-plus' );
+
+				el.find( 'button' )
+					.removeClass('forminator-remove-recipient')
+					.attr( 'data-user', JSON.stringify( user ) )
+					.attr( 'data-tooltip', forminatorl10n.popup.add_recipient )
+					.addClass( 'forminator-add-recipient sui-tooltip-top-right' );
+
+				recipientList.append( el );
+
+				this.fixRecipientCSS( recipientList );
+				this.toggleRecipientList( recipientList, false );
+			},
+
+			initUserSelects: function () {
+				const userSelect = $( '#forminator-search-users' );
+				const self = this;
+				userSelect.SUIselect2( {
+					minimumInputLength: 3,
+					maximumSelectionLength: 1,
+					ajax: {
+						url: ajaxurl,
+						type: 'POST',
+						dataType: 'json',
+						delay: 250,
+						data: function ( params ) {
+							return {
+								action: 'forminator_search_users',
+								nonce: forminatorl10n.popup.fetch_nonce,
+								query: params.term,
+								exclude: self.notification.exclude,
+							};
+						},
+						processResults: function ( data ) {
+							return {
+								results: jQuery.map(
+									data.data,
+									function( item, index ) {
+										return {
+											text: item.name,
+											id: index,
+											user: {
+												name: item.name,
+												email: item.email,
+												role: item.role,
+												avatar: item.avatar,
+												id: item.id,
+											},
+										};
+									}
+								),
+							};
+						},
+					},
+				} );
+				userSelect.on( 'select2:select', function( e ) {
+					self.add_recipient( e, e.params.data.user );
+					userSelect.val( null ).trigger( 'change' );
+				} );
+			},
+
+			invite_add_recipient: function () {
+				const btn = event.target;
+				var self = this;
+				btn.classList.add( 'sui-button-onload-text' );
+
+				const name = $( 'input#recipient-name' ),
+					email = $( 'input#recipient-email' ),
+					err = $( '#error-recipient-email' );
+
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: {
+						'action': 'forminator_get_avatar',
+						'nonce': forminatorl10n.popup.fetch_nonce,
+						'email': email.val()
+					},
+					success: function( response ) {
+						if ( 'undefined' === typeof response.data ) {
+							return;
+						}
+
+						err.parents().removeClass( 'sui-form-field-error' );
+						err.html('');
+
+						if ( ! response.success ) {
+							err.html( response.data.message );
+							err.parents().addClass( 'sui-form-field-error' );
+							btn.classList.remove( 'sui-button-onload-text' );
+
+							return;
+						}
+						const user = {
+							name: Forminator.Utils.sanitize_text_field( name.val() ),
+							email: email.val(),
+							role: '',
+							avatar: response.data,
+							id: 0,
+						};
+
+						self.addUser( user, 'email' );
+
+						// Reset inputs.
+						name.val( '' ).trigger( 'keyup' );
+						email.val( '' ).trigger( 'keyup' );
+						btn.classList.remove( 'sui-button-onload-text' );
+					},
+				});
+			},
+
+			process_settings: function () {
+				this.notification.settings = {
+					label: $( 'input#report-title' ).val(),
+					module: $( 'label.active input[name="module"]' ).val(),
+					forms_type: $( 'label.active input[name="forms_type"]' ).val(),
+					selected_forms: $( 'select[name="select_forms"]' ).val(),
+					quizzes_type: $( 'label.active input[name="quizzes_type"]' ).val(),
+					selected_quizzes: $( 'select[name="select_quizzes"]' ).val(),
+					polls_type: $( 'label.active input[name="polls_type"]' ).val(),
+					selected_polls: $( 'select[name="select_polls"]' ).val(),
+				};
+			},
+
+			process_schedule : function () {
+				this.notification.schedule = {
+					frequency: $( 'label.active input[name="frequency"]' ).val(),
+					time: $( 'select[name="report-time"]' ).val(),
+					weekDay: $( 'select[name="week-days"]' ).val(),
+					weekTime: $( 'select[name="week-time"]' ).val(),
+					monthDay: $( 'select[name="month-days"]' ).val(),
+					monthTime: $( 'select[name="month-time"]' ).val(),
+					yearMonth: $( 'select[name="year-month"]' ).val(),
+					yearDays: $( 'select[name="year-days"]' ).val(),
+					yearTime: $( 'select[name="year-time"]' ).val(),
+				}
+			},
+
+			report_save: function ( e ) {
+				e.preventDefault();
+				const report_id = $( e.currentTarget ).data( 'id' );
+				this.process_settings();
+				this.process_schedule();
+				if ( 0 !== this.notification.recipients.length ) {
+					this.save(this.notification, report_id);
+				}
+			},
+
+			save: function ( reports, report_id ) {
+				var status = $('input.notification-save-status').is(':checked');
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: {
+						'action': 'forminator_save_report',
+						'nonce': forminatorl10n.popup.save_nonce,
+						'report_id': report_id,
+						'reports': reports,
+						'status': status ? 'active' : 'inactive'
+					},
+					success: function( response ) {
+						if ( response.success ) {
+							location.reload();
+						}
+					},
+				});
+			},
+
+			fetch_report_data: function ( report_id ) {
+				const self = this;
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: {
+						'action': 'forminator_fetch_report',
+						'nonce': forminatorl10n.popup.fetch_nonce,
+						'report_id': report_id,
+					},
+					success: function( response ) {
+						if ( response.success && 'undefined' !== typeof response.data ) {
+							self.notification = response.data
+							self.load_users();
+							self.$el.html( self.reportEditPopup({
+								notification: self.notification
+							}) );
+							self.render_html();
+						}
+					},
+				}).always(function () {
+					self.$el.find(".fui-loading-dialog").remove();
+				});
+			},
+		});
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/popups',[
+		'admin/popup/templates',
+		'admin/popup/login',
+		'admin/popup/quizzes',
+		'admin/popup/schedule',
+		'admin/popup/new-form',
+		'admin/popup/polls',
+		'admin/popup/ajax',
+		'admin/popup/delete',
+		'admin/popup/preview',
+		'admin/popup/reset-plugin-settings',
+		'admin/popup/disconnect-stripe',
+		'admin/popup/disconnect-paypal',
+		'admin/popup/approve-user',
+		'admin/popup/delete-unconfirmed-user',
+		'admin/popup/create-appearance-preset',
+		'admin/popup/apply-appearance-preset',
+		'admin/popup/confirm',
+		'admin/popup/addons-actions',
+		'admin/popup/reports-notification'
+	], function(
+		TemplatesPopup,
+		LoginPopup,
+		QuizzesPopup,
+		SchedulePopup,
+		NewFormPopup,
+		PollsPopup,
+		AjaxPopup,
+		DeletePopup,
+		PreviewPopup,
+		ResetPluginSettingsPopup,
+		DisconnectStripePopup,
+		DisconnectPaypalPopup,
+		ApproveUserPopup,
+		DeleteUnconfirmedPopup,
+		CreateAppearancePresetPopup,
+		ApplyAppearancePresetPopup,
+		confirmationPopup,
+		AddonsActions,
+		ReportNotificationsPopup
+	) {
+		var Popups = Backbone.View.extend({
+			el: 'main.sui-wrap',
+
+			events: {
+				"click .wpmudev-open-modal": "open_modal",
+				"click .wpmudev-button-open-modal": "open_modal"
+			},
+
+			initialize: function () {
+				var new_form = Forminator.Utils.get_url_param( 'new' ),
+					form_title = Forminator.Utils.get_url_param( 'title' )
+				;
+
+				if( new_form ) {
+					var newForm = new NewFormPopup({
+						title: form_title
+					});
+					newForm.render();
+
+					this.open_popup( newForm, Forminator.l10n.popup.congratulations );
+				}
+
+				this.open_export();
+				this.open_delete();
+
+				this.maybeShowNotice();
+
+				return this.render();
+			},
+
+			render: function() {
+				return this;
+			},
+
+			maybeShowNotice: function() {
+				var notices = Forminator.l10n.notices;
+				if ( notices ) {
+					$.each(notices, function(i, message) {
+						var delay = 4000;
+						if ( 'custom_notice' === i ) {
+							delay = undefined;
+						}
+						Forminator.Notification.open( 'success', message, delay );
+					});
+				}
+			},
+
+			open_delete: function() {
+				var has_delete = Forminator.Utils.get_url_param( 'delete' ),
+					id = Forminator.Utils.get_url_param( 'module_id' ),
+					nonce = Forminator.Utils.get_url_param( 'nonce' ),
+					type = Forminator.Utils.get_url_param( 'module_type'),
+					title = Forminator.l10n.popup.delete_form,
+					desc = Forminator.l10n.popup.are_you_sure_form,
+					self = this
+				;
+
+				if ( type === 'poll' ) {
+					title = Forminator.l10n.popup.delete_poll;
+					desc = Forminator.l10n.popup.are_you_sure_poll;
+				}
+
+				if ( type === 'quiz' ) {
+					title = Forminator.l10n.popup.delete_quiz;
+					desc = Forminator.l10n.popup.are_you_sure_quiz;
+				}
+
+				if ( has_delete ) {
+					setTimeout( function() {
+						self.open_delete_popup( '', id, nonce, title, desc );
+					}, 100 );
+				}
+			},
+
+			open_export: function() {
+				var has_export = Forminator.Utils.get_url_param( 'export' ),
+					id = Forminator.Utils.get_url_param( 'module_id' ),
+					nonce = Forminator.Utils.get_url_param( 'exportnonce' ),
+					type = Forminator.Utils.get_url_param( 'module_type'),
+					self = this
+				;
+
+				if ( has_export ) {
+					setTimeout( function() {
+						self.open_export_module_modal( type, nonce, id, Forminator.l10n.popup.export_form, false, true, 'wpmudev-ajax-popup' );
+					}, 100 );
+				}
+			},
+
+			open_modal: function( e ) {
+				e.preventDefault();
+
+				var $target = $( e.target ),
+					$container = $( e.target ).closest( '.wpmudev-split--item' );
+
+				if( ! $target.hasClass( 'wpmudev-open-modal' ) && ! $target.hasClass( 'wpmudev-button-open-modal' ) ) {
+					$target = $target.closest( '.wpmudev-open-modal,.wpmudev-button-open-modal' );
+				}
+
+				var $module = $target.data( 'modal' ),
+					nonce = $target.data( 'nonce' ),
+					id = $target.data( 'form-id' ),
+					action = $target.data( 'action' ),
+					has_leads = $target.data( 'has-leads' ),
+					leads_id = $target.data( 'leads-id' ),
+					title = $target.data( 'modal-title' ),
+					content = $target.data('modal-content'),
+					button = $target.data('button-text'),
+					preview_nonce = $target.data('nonce-preview')
+				;
+
+				// Open appropriate popup
+				switch ( $module ) {
+					case 'custom_forms':
+						this.open_cform_popup();
+						break;
+					case 'login_registration_forms':
+						this.open_login_popup();
+						break;
+					case 'polls':
+						this.open_polls_popup();
+						break;
+					case 'quizzes':
+						this.open_quizzes_popup();
+						break;
+					case 'exports':
+						this.open_settings_modal( $module, nonce, id, Forminator.l10n.popup.your_exports );
+						break;
+					case 'exports-schedule':
+						this.open_exports_schedule_popup();
+						break;
+					case 'delete-module':
+						this.open_delete_popup( '', id, nonce, title, content, action, button );
+						break;
+					case 'delete-poll-submission':
+						this.open_delete_popup( 'poll', id, nonce, title, content );
+						break;
+					case 'paypal':
+						this.open_settings_modal( $module, nonce, id, Forminator.l10n.popup.paypal_settings );
+						break;
+					case 'preview_cforms':
+						if (_.isUndefined(title)) {
+							title = Forminator.l10n.popup.preview_cforms
+						}
+						this.open_preview_popup( id, title, 'forminator_load_form', 'forminator_forms', preview_nonce );
+						break;
+					case 'preview_polls':
+						if (_.isUndefined(title)) {
+							title = Forminator.l10n.popup.preview_polls
+						}
+						this.open_preview_popup( id, title, 'forminator_load_poll', 'forminator_polls', preview_nonce );
+						break;
+					case 'preview_quizzes':
+						if (_.isUndefined(title)) {
+							title = Forminator.l10n.popup.preview_quizzes
+						}
+						this.open_quiz_preview_popup( id, title, 'forminator_load_quiz', 'forminator_quizzes', has_leads, leads_id, preview_nonce );
+						break;
+					case 'captcha':
+						this.open_settings_modal( $module, nonce, id, Forminator.l10n.popup.captcha_settings, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'currency':
+						this.open_settings_modal( $module, nonce, id, Forminator.l10n.popup.currency_settings, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'pagination_entries':
+						this.open_settings_modal( $module, nonce, id, Forminator.l10n.popup.pagination_entries, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'pagination_listings':
+						this.open_settings_modal( $module, nonce, id, Forminator.l10n.popup.pagination_listings, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'email_settings':
+						this.open_settings_modal( $module, nonce, id, Forminator.l10n.popup.email_settings, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'uninstall_settings':
+						this.open_settings_modal( $module, nonce, id, Forminator.l10n.popup.uninstall_settings, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'privacy_settings':
+						this.open_settings_modal( $module, nonce, id, Forminator.l10n.popup.privacy_settings, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'create_preset':
+						this.create_appearance_preset_modal( nonce, title, content, $target );
+						break;
+					case 'apply_preset':
+						this.apply_appearance_preset_modal( $target );
+						break;
+					case 'delete_preset':
+						this.delete_preset_modal( title, content );
+						break;
+					case 'export_form':
+						this.open_export_module_modal( 'form', nonce, id, Forminator.l10n.popup.export_form, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'export_poll':
+						this.open_export_module_modal( 'poll', nonce, id, Forminator.l10n.popup.export_poll, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'export_quiz':
+						this.open_export_module_modal( 'quiz', nonce, id, Forminator.l10n.popup.export_quiz, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'import_form':
+						this.open_import_module_modal( 'form', nonce, id, Forminator.l10n.popup.import_form, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'import_form_cf7':
+						this.open_import_module_modal( 'form_cf7', nonce, id, Forminator.l10n.popup.import_form_cf7, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'import_form_ninja':
+						this.open_import_module_modal( 'form_ninja', nonce, id, Forminator.l10n.popup.import_form_ninja, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'import_form_gravity':
+						this.open_import_module_modal( 'form_gravity', nonce, id, Forminator.l10n.popup.import_form_gravity, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'import_poll':
+						this.open_import_module_modal( 'poll', nonce, id, Forminator.l10n.popup.import_poll, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'import_quiz':
+						this.open_import_module_modal( 'quiz', nonce, id, Forminator.l10n.popup.import_quiz, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'reset-plugin-settings':
+						this.open_reset_plugin_settings_popup( nonce, title, content );
+						break;
+					case 'disconnect-stripe':
+						this.open_disconnect_stripe_popup( nonce, title, content );
+						break;
+					case 'disconnect-paypal':
+						this.open_disconnect_paypal_popup( nonce, title, content );
+						break;
+					case 'approve-user-module':
+						var activationKey = $target.data('activation-key');
+						this.open_approve_user_popup( nonce, title, content, activationKey );
+						break;
+					case 'delete-unconfirmed-user-module':
+						this.open_unconfirmed_user_popup( $target.data( 'form-id' ), nonce, title, content, $target.data('activation-key'), $target.data( 'entry-id' ) );
+						break;
+					case 'addons_page_details':
+						this.open_addons_page_modal( $module, nonce, id, title, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'addons_page_install':
+						this.open_addons_page_install( $module, nonce, id, title, false, true, 'wpmudev-ajax-popup' );
+						break;
+					case 'addons-deactivate':
+						this.open_addons_actions_popup( $module, $target.data( 'addon' ), nonce, title, content, $target.data( 'addon-slug' ), $target.data( 'is_network' ) );
+						break;
+					case 'configure-report':
+						this.open_reports_notifications_popup( $target.data( 'id' ) );
+						break;
+					case 'delete-report':
+						this.open_delete_popup( '', id, nonce, title, content, action, button );
+						break;
+
+				}
+			},
+
+			open_popup: function ( view, title, has_custom_box, action_text, action_css_class, action_callback, rendered_call_back, modalSize, modalTitle ) {
+				if( _.isUndefined( title ) ) {
+					title = Forminator.l10n.custom_form.popup_label;
+				}
+
+				var popup_options = {
+					title: title
+				};
+				if (!_.isUndefined(has_custom_box)) {
+					popup_options.has_custom_box = has_custom_box;
+				}
+				if (!_.isUndefined(action_text)) {
+					popup_options.action_text = action_text;
+				}
+				if (!_.isUndefined(action_css_class)) {
+					popup_options.action_css_class = action_css_class;
+				}
+				if (!_.isUndefined(action_callback)) {
+					popup_options.action_callback = action_callback;
+				}
+
+				Forminator.Popup.open( function () {
+					// If not a view append directly
+					if( ! _.isUndefined( view.el ) ) {
+						$( this ).append( view.el );
+					} else {
+						$( this ).append( view );
+					}
+
+					if (typeof rendered_call_back === 'function') {
+						rendered_call_back.apply(this);
+					}
+				}, popup_options, modalSize, modalTitle );
+			},
+
+			open_ajax_popup: function( action, nonce, id, title, enable_loader, has_custom_box, ajax_div_class_name, modalSize, modalTitle) {
+				if( _.isUndefined( title ) ) {
+					title = Forminator.l10n.custom_form.popup_label;
+				}
+				if( _.isUndefined( enable_loader ) ) {
+					enable_loader = true;
+				}
+				if( _.isUndefined( has_custom_box ) ) {
+					has_custom_box = false;
+				}
+
+				if( _.isUndefined( ajax_div_class_name ) ) {
+					ajax_div_class_name = 'sui-box-body';
+				}
+
+				var view = new AjaxPopup({
+					action: action,
+					nonce: nonce,
+					id: id,
+					enable_loader: true,
+					className: ajax_div_class_name,
+				});
+
+				var popup_options = {
+					title         : title,
+					has_custom_box: has_custom_box
+				};
+
+				Forminator.Popup.open(function () {
+					$(this).append(view.el);
+				}, popup_options, modalSize, modalTitle );
+			},
+
+			// MODAL: Delete.
+			open_delete_popup: function ( module, id, nonce, title, content, action, button) {
+				action = action || 'delete';
+				var newForm = new DeletePopup({
+					module: module,
+					id: id,
+					action: action,
+					nonce: nonce,
+					referrer: window.location.pathname + window.location.search,
+					button: Forminator.Utils.sanitize_text_field( button ),
+					content: Forminator.Utils.sanitize_text_field( content )
+				});
+				newForm.render();
+
+				var view = newForm;
+
+				var popup_options = {
+					title: title,
+					has_custom_box: true
+				}
+
+				var modalSize = 'sm';
+
+				var modalTitle = 'center';
+
+				Forminator.Popup.open( function () {
+					// If not a view append directly
+					if( ! _.isUndefined( view.el ) ) {
+						$( this ).append( view.el );
+					} else {
+						$( this ).append( view );
+					}
+				}, popup_options, modalSize, modalTitle );
+			},
+
+			// MODAL: Create Form.
+			open_cform_popup: function () {
+				var newForm = new TemplatesPopup({
+					type: 'form'
+				});
+				newForm.render();
+
+				var view = newForm;
+
+				var modalSize = 'lg';
+
+				var popup_options = {
+					title: '',
+					has_custom_box: true
+				};
+
+				Forminator.Popup.open( function () {
+					// If not a view append directly
+					if( ! _.isUndefined( view.el ) ) {
+						$( this ).append( view.el );
+					} else {
+						$( this ).append( view );
+					}
+				}, popup_options, modalSize );
+
+			},
+
+			// MODAL: Create Poll.
+			open_polls_popup: function() {
+				var newForm = new PollsPopup();
+				newForm.render();
+
+				var view = newForm;
+
+				var popup_options = {
+					title: '',
+					has_custom_box: true
+				};
+
+				var modalSize = 'sm';
+
+				Forminator.Popup.open( function() {
+					// If not a view append directly
+					if( ! _.isUndefined( view.el ) ) {
+						$( this ).append( view.el );
+					} else {
+						$( this ).append( view );
+					}
+				}, popup_options, modalSize );
+			},
+
+			// MODAL: Create Quiz.
+			open_quizzes_popup: function () {
+
+				var self = this,
+					newForm = new QuizzesPopup();
+
+				newForm.render();
+
+				var view = newForm;
+
+				var popup_options = {
+					title: Forminator.l10n.quiz.choose_quiz_title,
+					has_custom_box: true
+				}
+
+				var modalSize = 'lg';
+
+				Forminator.Popup.open( function () {
+
+					// If not a view append directly
+					if( ! _.isUndefined( view.el ) ) {
+						$( this ).append( view.el );
+					} else {
+						$( this ).append( view );
+					}
+				}, popup_options, modalSize );
+
+				//this.open_popup( newForm, Forminator.l10n.quiz.choose_quiz_type, true );
+			},
+
+			// MODAL: Import.
+			open_import_module_modal: function(module, nonce, id, label, enable_loader, has_custom_box, ajax_div_class_name ) {
+				var action = '';
+				switch(module){
+					case 'form':
+					case 'form_cf7':
+					case 'form_ninja':
+					case 'form_gravity':
+					case 'poll':
+					case 'quiz':
+						action = 'import_' + module;
+						break;
+				}
+				this.open_ajax_popup(
+					action,
+					nonce,
+					id,
+					label,
+					enable_loader,
+					has_custom_box,
+					ajax_div_class_name,
+					'sm',
+					'center'
+				);
+			},
+
+			// MODAL: Export (on Submissions page).
+			open_exports_schedule_popup: function () {
+				var newForm = new SchedulePopup();
+				newForm.render();
+
+				this.open_popup(
+					newForm,
+					Forminator.l10n.popup.edit_scheduled_export,
+					true,
+					undefined,
+					undefined,
+					undefined,
+					undefined,
+					'md',
+					'inline'
+				);
+			},
+
+			// MODAL: Reset Plugin (on Settings page).
+			open_reset_plugin_settings_popup: function (nonce, title, content) {
+				var self = this,
+					newForm = new ResetPluginSettingsPopup({
+						nonce: nonce,
+						referrer: window.location.pathname + window.location.search,
+						content: content
+					});
+				newForm.render();
+
+				var view = newForm;
+
+				var popup_options = {
+					title: title,
+					has_custom_box: true
+				}
+
+				var modalSize = 'sm';
+
+				var modalTitle = 'center';
+
+				Forminator.Popup.open( function () {
+					// If not a view append directly
+					if( ! _.isUndefined( view.el ) ) {
+						$( this ).append( view.el );
+					} else {
+						$( this ).append( view );
+					}
+				}, popup_options, modalSize, modalTitle );
+			},
+
+			// MODAL: Disconnect PayPal (on Settings page).
+			open_addons_actions_popup: function ( module, id, nonce, title, content, slug, is_network ) {
+				is_network = is_network || false;
+				var self = this,
+					newForm = new AddonsActions({
+						module: module,
+						id: id,
+						nonce: nonce,
+						is_network: is_network,
+						referrer: window.location.pathname + window.location.search,
+						content: content,
+						forms: 'stripe' === slug ? forminatorData.stripeForms : []
+					});
+
+				newForm.render();
+				var view = newForm;
+
+				var popup_options = {
+					title: title,
+					has_custom_box: true
+				}
+
+				var modalSize = 'sm';
+
+				var modalTitle = 'center';
+
+				Forminator.Popup.open( function () {
+					// If not a view append directly
+					if( ! _.isUndefined( view.el ) ) {
+						$( this ).append( view.el );
+					} else {
+						$( this ).append( view );
+					}
+				}, popup_options, modalSize, modalTitle );
+			},
+
+			open_login_popup: function () {
+				var newForm = new LoginPopup();
+				newForm.render();
+
+				this.open_popup(
+					newForm,
+					Forminator.l10n.popup.edit_login_form,
+					undefined,
+					undefined,
+					undefined,
+					undefined,
+					undefined,
+					'md',
+					'inline'
+				);
+			},
+
+			open_settings_modal: function ( type, nonce, id, label, enable_loader, has_custom_box, ajax_div_class_name ) {
+				this.open_ajax_popup(
+					type,
+					nonce,
+					id,
+					label,
+					enable_loader,
+					has_custom_box,
+					ajax_div_class_name,
+					'md',
+					'inline'
+				);
+			},
+
+			open_addons_page_modal: function ( type, nonce, id, label, enable_loader, has_custom_box, ajax_div_class_name ) {
+				this.open_ajax_popup(
+					type,
+					nonce,
+					id,
+					label,
+					enable_loader,
+					has_custom_box,
+					ajax_div_class_name,
+					'md',
+					'inline'
+				);
+			},
+
+			open_addons_page_install: function ( type, nonce, id, label, enable_loader, has_custom_box, ajax_div_class_name ) {
+				this.open_ajax_popup(
+					type,
+					nonce,
+					id,
+					label,
+					enable_loader,
+					has_custom_box,
+					ajax_div_class_name,
+					'lg',
+					'inline'
+				);
+			},
+
+			open_export_module_modal: function(module, nonce, id, label, enable_loader, has_custom_box, ajax_div_class_name ) {
+				var action = '';
+				switch(module){
+					case 'form':
+					case 'poll':
+					case 'quiz':
+						action = 'export_' + module;
+						break;
+				}
+				this.open_ajax_popup(
+					action,
+					nonce,
+					id,
+					label,
+					enable_loader,
+					has_custom_box,
+					ajax_div_class_name,
+					'md',
+					'inline'
+				);
+			},
+
+			open_preview_popup: function( id, title, action, type, nonce ) {
+				if( _.isUndefined( title ) ) {
+					title = Forminator.l10n.custom_form.popup_label;
+				}
+
+				var view = new PreviewPopup( {
+					action: action,
+					type: type,
+					nonce: nonce,
+					id: id,
+					enable_loader: true,
+					className: 'sui-box-body',
+				} );
+
+				var popup_options = {
+					title         : title,
+					has_custom_box: true
+				};
+
+				var modalSize = 'lg';
+
+				var modalTitle = 'inline';
+
+				Forminator.Popup.open( function () {
+					$( this ).append( view.el );
+				}, popup_options, modalSize, modalTitle );
+			},
+
+			open_quiz_preview_popup: function( id, title, action, type, has_leads, leads_id, nonce ) {
+				if( _.isUndefined( title ) ) {
+					title = Forminator.l10n.custom_form.popup_label;
+				}
+
+				var view = new PreviewPopup( {
+					action: action,
+					type: type,
+					id: id,
+					enable_loader: true,
+					className: 'sui-box-body',
+					has_lead: has_leads,
+					leads_id: leads_id,
+					nonce: nonce,
+				} );
+
+				var popup_options = {
+					title         : title,
+					has_custom_box: true
+				};
+
+				var modalSize = 'lg';
+
+				var modalTitle = 'inline';
+
+				Forminator.Popup.open(function () {
+					$(this).append(view.el);
+
+				}, popup_options, modalSize, modalTitle );
+			},
+
+			apply_appearance_preset_modal: function ($target) {
+				var newForm = new ApplyAppearancePresetPopup({
+					$target: $target
+				});
+				newForm.render();
+
+				var view = newForm;
+
+				Forminator.Popup.open( function () {
+					$( this ).append( view.el );
+				}, {
+					title: Forminator.Data.modules.ApplyPreset.title,
+					has_custom_box: true,
+				}, 'sm', 'center' );
+			},
+
+			delete_preset_modal: function (title, content) {
+				var newForm = new confirmationPopup({
+					confirmation_message: content,
+					confirm_callback: function () {
+						var deletePreset = new Event('deletePreset');
+						window.dispatchEvent( deletePreset );
+					},
+				});
+				newForm.render();
+
+				var view = newForm;
+
+				Forminator.Popup.open( function () {
+					$( this ).append( view.el );
+				}, {
+					title: title,
+					has_custom_box: true,
+				}, 'sm', 'center' );
+			},
+
+			create_appearance_preset_modal: function (nonce, title, content, $target) {
+				var newForm = new CreateAppearancePresetPopup({
+					nonce: nonce,
+					$target: $target,
+					title: title,
+					content: content
+				});
+				newForm.render();
+
+				var view = newForm;
+
+				Forminator.Popup.open( function () {
+					$( this ).append( view.el );
+				}, {
+					title: title,
+					has_custom_box: true,
+				}, 'sm', 'center' );
+			},
+
+			open_disconnect_stripe_popup: function (nonce, title, content) {
+				var self = this;
+				var newForm = new DisconnectStripePopup({
+					nonce: nonce,
+					referrer: window.location.pathname + window.location.search,
+					content: content
+				});
+				newForm.render();
+
+				var view = newForm;
+
+				var popup_options = {
+					title: title,
+					has_custom_box: true
+				}
+
+				var modalSize = 'sm';
+
+				var modalTitle = 'center';
+
+				Forminator.Popup.open( function () {
+					// If not a view append directly
+					if( ! _.isUndefined( view.el ) ) {
+						$( this ).append( view.el );
+					} else {
+						$( this ).append( view );
+					}
+				}, popup_options, modalSize, modalTitle );
+			},
+
+			open_disconnect_paypal_popup: function (nonce, title, content) {
+				var self = this;
+				var newForm = new DisconnectPaypalPopup({
+					nonce: nonce,
+					referrer: window.location.pathname + window.location.search,
+					content: content
+				});
+				newForm.render();
+
+				var view = newForm;
+
+				var popup_options = {
+					title: title,
+					has_custom_box: true
+				}
+
+				var modalSize = 'sm';
+
+				var modalTitle = 'center';
+
+				Forminator.Popup.open( function () {
+					// If not a view append directly
+					if( ! _.isUndefined( view.el ) ) {
+						$( this ).append( view.el );
+					} else {
+						$( this ).append( view );
+					}
+				}, popup_options, modalSize, modalTitle );
+			},
+
+			open_approve_user_popup: function (nonce, title, content, activationKey) {
+				var self = this;
+				var newForm = new ApproveUserPopup({
+					nonce: nonce,
+					referrer: window.location.pathname + window.location.search,
+					content: content,
+					activationKey: activationKey
+				});
+				newForm.render();
+
+				var view = newForm;
+
+				Forminator.Popup.open( function () {
+					// If not a view append directly
+					if( ! _.isUndefined( view.el ) ) {
+						$( this ).append( view.el );
+					} else {
+						$( this ).append( view );
+					}
+				}, {
+					title: title,
+					has_custom_box: true,
+				}, 'md', 'inline' );
+			},
+
+			open_unconfirmed_user_popup: function ( formId, nonce, title, content, activationKey, entryId ) {
+				var newForm = new DeleteUnconfirmedPopup({
+					formId: formId,
+					nonce: nonce,
+					referrer: window.location.pathname + window.location.search,
+					content: content,
+					activationKey: activationKey,
+					entryId: entryId
+				});
+				newForm.render();
+
+				var view = newForm;
+
+				Forminator.Popup.open( function () {
+					// If not a view append directly
+					if( ! _.isUndefined( view.el ) ) {
+						$( this ).append( view.el );
+					} else {
+						$( this ).append( view );
+					}
+				}, {
+					title: title,
+					has_custom_box: true,
+				}, 'md', 'inline');
+			},
+
+			open_reports_notifications_popup: function ( report_id ) {
+				var reports = new ReportNotificationsPopup({
+					type: 'reports',
+					report_id: report_id
+				});
+				reports.render();
+
+				var view = reports;
+
+				var modalSize = 'md';
+
+				var popup_options = {
+					title: '',
+					has_custom_box: true
+				};
+
+				if ( 0 !== report_id ) {
+					Forminator.Popup.open( function () {
+						// If not a view append directly
+						if( ! _.isUndefined( view.el ) ) {
+							$( this ).append( view.el );
+						} else {
+							$( this ).append( view );
+						}
+					}, popup_options, modalSize );
+				} else {
+					Forminator.Slide_Popup.open( function () {
+						// If not a view append directly
+						if( ! _.isUndefined( view.el ) ) {
+							$( this ).append( view.el );
+						} else {
+							$( this ).append( view );
+						}
+					}, popup_options, modalSize );
+				}
+			},
+		});
+
+		//init after jquery ready
+		jQuery( function() {
+			new Popups();
+		});
+	});
+})(jQuery);
+
+
+
+formintorjs.define('text!tpl/popups.html',[],function () { return '<div>\r\n\r\n\t<!-- Base Structure -->\r\n\t<script type="text/template" id="popup-tpl">\r\n\r\n\t\t<div class="sui-modal">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-popup__title"\r\n\t\t\t\taria-describedby="forminator-popup__description"\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- Modal Header: Center-aligned title with floating close button -->\r\n\t<script type="text/template" id="popup-header-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title sui-lg">{{ title }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<!-- Modal Header: Inline title and close button -->\r\n\t<script type="text/template" id="popup-header-inline-tpl">\r\n\r\n\t\t<div class="sui-box-header">\r\n\r\n\t\t\t<h3 id="forminator-popup__title" class="sui-box-title">{{ title }}</h3>\r\n\r\n\t\t\t<div class="sui-actions-right">\r\n\r\n\t\t\t\t<button class="sui-button-icon forminator-popup-close" data-modal-close>\r\n\t\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t\t</button>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-integration-tpl">\r\n\r\n\t\t<div class="sui-modal sui-modal-sm">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-integration-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-integration-popup__title"\r\n\t\t\t\taria-describedby="forminator-integration-popup__description"\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-integration-content-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<figure class="sui-box-logo" aria-hidden="true">\r\n\r\n\t\t\t\t<img\r\n\t\t\t\t\tsrc="{{ image }}"\r\n\t\t\t\t\tsrcset="{{ image }} 1x, {{ image_x2 }} 2x"\r\n\t\t\t\t\talt="{{ title }}"\r\n\t\t\t\t/>\r\n\r\n\t\t\t</figure>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--left forminator-addon-back" style="display: none;">\r\n\t\t\t\t<span class="sui-icon-chevron-left sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Back</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-integration-close" data-modal-close>\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">Close</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<div class="forminator-integration-popup__header"></div>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="forminator-integration-popup__body sui-box-body"></div>\r\n\r\n\t\t<div class="forminator-integration-popup__footer sui-box-footer sui-flatten sui-content-separated"></div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-loader-tpl">\r\n\r\n\t\t<p style="margin: 0; text-align: center;" aria-hidden="true"><span class="sui-icon-loader sui-md sui-loading"></span></p>\r\n\t\t<p class="sui-screen-reader-text">Loading content...</p>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-stripe-tpl">\r\n\r\n\t\t<div class="sui-modal sui-modal-md">\r\n\r\n\t\t\t<div\r\n\t\t\t\trole="dialog"\r\n\t\t\t\tid="forminator-stripe-popup"\r\n\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\taria-modal="true"\r\n\t\t\t\taria-labelledby="forminator-stripe-popup__title"\r\n\t\t\t\taria-describedby=""\r\n\t\t\t>\r\n\r\n\t\t\t\t<div class="sui-box"></div>\r\n\r\n\t\t\t</div>\r\n\r\n\t\t</div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-stripe-content-tpl">\r\n\r\n\t\t<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">\r\n\r\n\t\t\t<figure class="sui-box-logo" aria-hidden="true">\r\n\t\t\t\t<img src="{{ image }}" srcset="{{ image }} 1x, {{ image_x2 }} 2x" alt="{{ title }}" />\r\n\t\t\t</figure>\r\n\r\n\t\t\t<button class="sui-button-icon sui-button-float--right forminator-popup-close">\r\n\t\t\t\t<span class="sui-icon-close sui-md" aria-hidden="true"></span>\r\n\t\t\t\t<span class="sui-screen-reader-text">{{ Forminator.l10n.popup.close_label }}</span>\r\n\t\t\t</button>\r\n\r\n\t\t\t<h3 id="forminator-stripe-popup__title" class="sui-box-title sui-lg" style="overflow: initial; display: none; white-space: normal; text-overflow: initial;">{{ title }}</h3>\r\n\r\n\t\t</div>\r\n\r\n\t\t<div class="sui-box-body sui-spacing-top--10"></div>\r\n\r\n\t\t<div class="sui-box-footer sui-flatten sui-content-center"></div>\r\n\r\n\t</script>\r\n\r\n\t<script type="text/template" id="popup-slide-tpl">\r\n\t\t<div class="sui-modal sui-modal-lg">\r\n\t\t\t<div\r\n\t\t\t\t\trole="dialog"\r\n\t\t\t\t\tid="forminator-popup"\r\n\t\t\t\t\tclass="sui-modal-content"\r\n\t\t\t\t\taria-modal="true"\r\n\t\t\t\t\taria-labelledby="forminator-slide-popup__title"\r\n\t\t\t\t\taria-describedby="forminator-slide-popup__description"\r\n\t\t\t>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</script>\r\n\r\n</div>\r\n';});
+
+(function ($) {
+	formintorjs.define('admin/addons/view',[
+		'text!tpl/popups.html'
+	], function( popupsTpl ) {
+		return Backbone.View.extend({
+			className: 'wpmudev-section--integrations',
+
+			loaderTpl: Forminator.Utils.template( $( popupsTpl ).find( '#popup-loader-tpl' ).html() ),
+
+			model: {},
+
+			events: {
+				"click .forminator-addon-connect": "connect_addon",
+				"click .forminator-addon-disconnect" : "disconnect_addon",
+				"click .forminator-addon-form-disconnect" : "form_disconnect_addon",
+				"click .forminator-addon-next" : "submit_next_step",
+				"click .forminator-addon-back" : "go_prev_step",
+				"click .forminator-addon-finish" : "finish_steps"
+			},
+
+			initialize: function( options ) {
+				this.slug      = options.slug;
+				this.nonce     = options.nonce;
+				this.action    = options.action;
+				this.form_id   = options.form_id;
+				this.multi_id  = options.multi_id;
+				this.global_id = options.global_id;
+				this.step      = 0;
+				this.next_step = false;
+				this.prev_step = false;
+				this.scrollbar_width = this.get_scrollbar_width();
+
+				var self = this;
+
+				// Add closing event
+				this.$el.find( ".forminator-integration-close, .forminator-addon-close" ).on("click", function () {
+					self.close(self);
+				});
+
+				return this.render();
+			},
+
+			render: function() {
+				var data = {};
+
+				data.action = this.action;
+				data._ajax_nonce = this.nonce;
+				data.data = {};
+				data.data.slug = this.slug;
+				data.data.step = this.step;
+				data.data.current_step = this.step;
+				data.data.global_id = this.global_id;
+				if (this.form_id) {
+					data.data.form_id = this.form_id;
+				}
+				if (this.multi_id) {
+					data.data.multi_id = this.multi_id;
+				}
+
+				this.request( data, false, true );
+			},
+
+			request: function ( data, close, loader ) {
+				var self            = this,
+				    function_params = {
+					    data  : data,
+					    close : close,
+					    loader: loader,
+				    };
+
+				if ( loader ) {
+					this.$el.find(".forminator-integration-popup__header").html( '' );
+					this.$el.find(".forminator-integration-popup__body").html( this.loaderTpl() );
+					this.$el.find(".forminator-integration-popup__footer").html( '' );
+				}
+
+				this.$el.find(".sui-button:not(.disable-loader)").addClass("sui-button-onload");
+
+				this.ajax = $.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'post',
+					data: data
+				})
+				.done(function (result) {
+					if (result && result.success) {
+						// Reset hidden elements.
+						self.render_reset();
+
+						// Render popup body
+						self.render_body( result );
+
+						// Render popup footer
+						self.render_footer( result );
+
+						// Hide elements when empty
+						self.hide_elements();
+
+						// Shorten result data
+						var result_data = result.data.data;
+
+						self.on_render( result_data );
+
+						self.$el.find(".sui-button").removeClass("sui-button-onload");
+
+						// Handle close modal
+						if( close || ( !_.isUndefined( result_data.is_close ) && result_data.is_close ) ) {
+							self.close( self );
+						}
+
+						// Add closing event
+						self.$el.find( ".forminator-addon-close" ).on("click", function () {
+							self.close(self);
+						});
+
+						// Handle notifications
+						if( !_.isUndefined( result_data.notification ) &&
+							!_.isUndefined( result_data.notification.type ) &&
+							!_.isUndefined( result_data.notification.text ) ) {
+
+							Forminator.Notification.open( result_data.notification.type, result_data.notification.text, 4000 );
+						}
+
+						// Handle back button
+						if( !_.isUndefined( result_data.has_back ) ) {
+							if( result_data.has_back ) {
+								self.$el.find('.forminator-addon-back').show();
+							} else {
+								self.$el.find('.forminator-addon-back').hide();
+							}
+						} else {
+							self.$el.find('.forminator-addon-back').hide();
+						}
+
+						if (result_data.is_poll) {
+							setTimeout(self.request(function_params.data, function_params.close, function_params.loader), 5000);
+						}
+
+						//check the height
+						var $popup_box = $( "#forminator-integration-popup .sui-box" ),
+						    $popup_box_height = $popup_box.height(),
+						    $window_height = $(window).height();
+
+						// scrollbar appear
+						if ($popup_box_height > $window_height) {
+							// make scrollbar clickable
+							$("#forminator-integration-popup .sui-dialog-overlay").css('right', self.scrollbar_width + 'px');
+						} else {
+							$("#forminator-integration-popup .sui-dialog-overlay").css('right', 0);
+						}
+					}
+				});
+
+				//remove the preloader
+				this.ajax.always(function () {
+					self.$el.find(".fui-loading-dialog").remove();
+				});
+			},
+
+			render_reset: function() {
+				var integration_body = $( '.forminator-integration-popup__body' ),
+					integration_footer = $( '.forminator-integration-popup__footer' );
+
+				// Show hidden body.
+				if ( integration_body.is( ':hidden' ) ) {
+					integration_body.css( 'display', '' );
+				}
+
+				// Show empty footer.
+				if ( integration_footer.is( ':hidden' ) ) {
+					integration_footer.css( 'display', '' );
+				}
+			},
+
+			render_body: function ( result ) {
+				// Render content inside `body`.
+				this.$el.find(".forminator-integration-popup__body").html( result.data.data.html );
+
+				// Append header elements to `sui-box-header`.
+				var integration_header = this.$el.find( '.forminator-integration-popup__body .forminator-integration-popup__header' ).remove();
+				if ( integration_header.length > 0 ) {
+					this.$el.find( '.forminator-integration-popup__header' ).html( integration_header.html() );
+				}
+			},
+
+			render_footer: function ( result ) {
+				var self = this,
+					buttons  = result.data.data.buttons
+				;
+
+				// Clear footer from previous buttons
+				self.$el.find(".sui-box-footer").html('');
+
+				// Append footer elements from `body`.
+				var integration_footer = this.$el.find( '.forminator-integration-popup__body .forminator-integration-popup__footer-temp' ).remove();
+				if ( integration_footer.length > 0 ) {
+					this.$el.find( '.forminator-integration-popup__footer' ).html( integration_footer.html() );
+				}
+
+				// Append buttons from php template.
+				_.each( buttons, function (button) {
+					self.$el.find( '.sui-box-footer' ).append( button.markup );
+				});
+
+				// Align buttons.
+				self.$el.find( '.sui-box-footer' )
+					.removeClass( 'sui-content-center' )
+					.addClass( 'sui-content-separated' );
+
+				if ( self.$el.find( '.sui-box-footer' ).children( '.forminator-integration-popup__close' ).length > 0
+						|| buttons && 1 === Object.keys( buttons ).length
+						) {
+					self.$el.find( '.sui-box-footer' )
+						.removeClass( 'sui-content-separated' )
+						.addClass( 'sui-content-center' );
+				}
+			},
+
+			hide_elements: function() {
+				var integration_body = $( '.forminator-integration-popup__body' ),
+					integration_footer = $( '.forminator-integration-popup__footer' ),
+					integration_content = integration_body.html(),
+					integration_footer_html = integration_footer.html();
+
+				// Hide empty body.
+				if ( ! integration_content.trim().length ) {
+					integration_body.hide();
+				}
+
+				// Hide empty footer.
+				if ( ! integration_footer_html.trim().length ) {
+					integration_footer.hide();
+				}
+			},
+
+			on_render: function ( result ) {
+				this.delegateEvents();
+
+				// Delegate SUI events
+				Forminator.Utils.sui_delegate_events();
+				// multi select (Tags)
+				Forminator.Utils.forminator_select2_tags( this.$el, {} );
+
+				// Update current step
+				if( !_.isUndefined( result.forminator_addon_current_step ) ) {
+					this.step = +result.forminator_addon_current_step;
+				}
+
+				// Update has next step
+				if( !_.isUndefined( result.forminator_addon_has_next_step ) ) {
+					this.next_step = result.forminator_addon_has_next_step;
+				}
+
+				// Update has prev step
+				if( !_.isUndefined( result.forminator_addon_has_prev_step ) ) {
+					this.prev_step = result.forminator_addon_has_prev_step;
+				}
+			},
+
+			get_step: function () {
+				if( this.next_step ) {
+					return this.step + 1;
+				}
+
+				return this.step;
+			},
+
+			get_prev_step: function () {
+				if( this.prev_step ) {
+					return this.step - 1;
+				}
+
+				return this.step;
+			},
+
+			connect_addon: function ( e ) {
+				var data     = {},
+					form     = this.$el.find( 'form' ),
+					params   = {
+						'slug' : this.slug,
+						'step' : this.get_step(),
+						'global_id' : this.global_id,
+						'current_step' : this.step,
+					},
+					formData = form.serialize()
+				;
+
+				if (this.form_id) {
+					params.form_id = this.form_id;
+				}
+				if (this.multi_id) {
+					params.multi_id = this.multi_id;
+				}
+
+				formData = formData + '&' + $.param( params );
+				data.action = this.action;
+				data._ajax_nonce = this.nonce;
+				data.data = formData;
+
+				this.request( data, false, false );
+			},
+
+			submit_next_step: function(e) {
+				var data     = {},
+				    form     = this.$el.find( 'form' ),
+				    params   = {
+					    'slug' : this.slug,
+					    'step' : this.get_step(),
+						'global_id' : this.global_id,
+					    'current_step' : this.step,
+				    },
+				    formData = form.serialize()
+				;
+
+				if (this.form_id) {
+					params.form_id = this.form_id;
+				}
+
+				formData = formData + '&' + $.param( params );
+				data.action = this.action;
+				data._ajax_nonce = this.nonce;
+				data.data = formData;
+
+				this.request( data, false, false );
+			},
+
+			go_prev_step: function(e) {
+				var data     = {},
+				    params   = {
+					    'slug' : this.slug,
+					    'step' : this.get_prev_step(),
+						'global_id' : this.global_id,
+					    'current_step' : this.step,
+				    }
+				;
+
+				if (this.form_id) {
+					params.form_id = this.form_id;
+				}
+				if (this.multi_id) {
+					params.multi_id = this.multi_id;
+				}
+
+				data.action = this.action;
+				data._ajax_nonce = this.nonce;
+				data.data = params;
+
+				this.request( data, false, false );
+			},
+
+			finish_steps: function ( e ) {
+				var data     = {},
+					form     = this.$el.find( 'form' ),
+					params   = {
+						'slug' : this.slug,
+						'step' : this.get_step(),
+						'global_id' : this.global_id,
+						'current_step' : this.step,
+					},
+					formData = form.serialize()
+				;
+
+				if (this.form_id) {
+					params.form_id = this.form_id;
+				}
+				if (this.multi_id) {
+					params.multi_id = this.multi_id;
+				}
+
+				formData = formData + '&' + $.param( params );
+				data.action = this.action;
+				data._ajax_nonce = this.nonce;
+				data.data = formData;
+
+				this.request( data, false, false );
+			},
+
+			disconnect_addon: function ( e ) {
+				var data = {};
+				data.action = 'forminator_addon_deactivate';
+				data._ajax_nonce = this.nonce;
+				data.data = {};
+				data.data.slug = this.slug;
+				data.data.global_id = this.global_id;
+
+				this.request( data, true, false );
+			},
+
+			form_disconnect_addon: function ( e ) {
+				var data = {};
+				data.action = 'forminator_addon_deactivate_for_module';
+				data._ajax_nonce = this.nonce;
+				data.data = {};
+				data.data.slug = this.slug;
+				data.data.form_id = this.form_id;
+				data.data.form_type = 'form';
+				if (this.multi_id) {
+					data.data.multi_id = this.multi_id;
+				}
+
+				this.request( data, true, false );
+			},
+
+			close: function( self ) {
+				// Kill AJAX hearbeat
+				self.ajax.abort();
+
+				// Remove the view
+				self.remove();
+
+				// Close the modal
+				Forminator.Integrations_Popup.close();
+
+				// Refrest add-on list
+				Forminator.Events.trigger( "forminator:addons:reload" );
+			},
+
+			get_scrollbar_width: function () {
+				//https://github.com/brandonaaron/jquery-getscrollbarwidth/
+				var scrollbar_width = 0;
+				if ( navigator.userAgent.match( "MSIE" ) ) {
+					var $textarea1 = $('<textarea cols="10" rows="2"></textarea>')
+						    .css({ position: 'absolute', top: -1000, left: -1000 }).appendTo('body'),
+					    $textarea2 = $('<textarea cols="10" rows="2" style="overflow: hidden;"></textarea>')
+						    .css({ position: 'absolute', top: -1000, left: -1000 }).appendTo('body');
+					scrollbar_width = $textarea1.width() - $textarea2.width();
+					$textarea1.add($textarea2).remove();
+				} else {
+					var $div = $('<div />')
+						.css({ width: 100, height: 100, overflow: 'auto', position: 'absolute', top: -1000, left: -1000 })
+						.prependTo('body').append('<div />').find('div')
+						.css({ width: '100%', height: 200 });
+					scrollbar_width = 100 - $div.width();
+					$div.parent().remove();
+				}
+				return scrollbar_width;
+			}
+		});
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/addons/addons',[
+		'admin/addons/view'
+	], function (SettingsView) {
+		var Addons = Backbone.View.extend({
+			el: '.sui-wrap.wpmudev-forminator-forminator-integrations',
+
+			currentTab: 'forminator-integrations',
+
+			events: {
+				"change .forminator-addon-toggle-enabled" : "toggle_state",
+				"click .connect-integration" : "connect_integration",
+				"click .forminator-integrations-wrapper .sui-vertical-tab a" : "go_to_tab",
+				"change .forminator-integrations-wrapper .sui-sidenav-hide-lg select" : "go_to_tab",
+				"change .forminator-integrations-wrapper .sui-sidenav-hide-lg.integration-nav" : "go_to_tab",
+				"keyup input.sui-form-control": "required_settings"
+			},
+
+			initialize: function( options ) {
+				if( $( this.el ).length > 0 ) {
+					this.listenTo( Forminator.Events, "forminator:addons:reload", this.render_addons_page );
+					return this.render();
+				}
+			},
+
+			render: function () {
+				// Check if addons wrapper exist
+				this.render_addons_page();
+
+				this.update_tab();
+			},
+
+			render_addons_page: function () {
+				var self = this,
+					data = {}
+				;
+
+				this.$el.find( '#forminator-integrations-display' ).html(
+					'<div role="alert" id="forminator-addons-preloader" class="sui-notice sui-active" style="display: block;" aria-live="assertive">' +
+						'<div class="sui-notice-content">' +
+							'<div class="sui-notice-message">' +
+								'<span class="sui-notice-icon sui-icon-loader sui-loading" aria-hidden="true"></span>' +
+								'<p>Fetching integration list…</p>' +
+							'</div>' +
+						'</div>' +
+					'</div>'
+				);
+
+				data.action      = 'forminator_addon_get_addons';
+				data._ajax_nonce = Forminator.Data.addonNonce;
+				data.data = {};
+
+				var ajax = $.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'post',
+					data: data
+				})
+				.done(function (result) {
+					if (result && result.success) {
+						self.$el.find( '#forminator-integrations-page' ).html( result.data.data );
+					}
+				});
+
+				//remove the preloader
+				ajax.always(function () {
+					self.$el.find("#forminator-addons-preloader").remove();
+				});
+			},
+
+			connect_integration: function (e) {
+				e.preventDefault();
+
+				var $target = $(e.target);
+
+				if (!$target.hasClass('connect-integration')) {
+					$target = $target.closest('.connect-integration');
+				}
+
+				var nonce    = $target.data('nonce'),
+				    slug     = $target.data('slug'),
+				    global_id= $target.data('multi-global-id'),
+				    title    = $target.data('title'),
+				    image    = $target.data('image'),
+				    image_x2 = $target.data('imagex2'),
+				    action   = $target.data('action'),
+				    form_id  = $target.data('form-id'),
+				    multi_id = $target.data('multi-id')
+				;
+
+				Forminator.Integrations_Popup.open(function () {
+					var view = new SettingsView({
+						slug    : slug,
+						nonce   : nonce,
+						action  : action,
+						form_id : form_id,
+						multi_id : multi_id,
+						global_id : global_id,
+						el      : $(this)
+					});
+				}, {
+					title   : title,
+					image   : image,
+					image_x2: image_x2,
+				});
+			},
+
+			go_to_tab: function (e) {
+				e.preventDefault();
+				var target = $(e.target),
+					href   = target.attr('href'),
+					tab_id = '';
+				if (!_.isUndefined(href)) {
+					tab_id = href.replace('#', '', href);
+				} else {
+					var val = target.val();
+					tab_id  = val;
+				}
+
+				if (!_.isEmpty(tab_id)) {
+					this.currentTab = tab_id;
+				}
+
+				this.update_tab();
+
+				e.stopPropagation();
+			},
+
+			update_tab_select: function() {
+
+				if ( this.$el.hasClass( 'wpmudev-forminator-forminator-integrations' ) ) {
+					this.$el.find('.sui-sidenav-hide-lg select').val(this.currentTab);
+					this.$el.find('.sui-sidenav-hide-lg select').trigger('sui:change');
+				}
+			},
+
+			update_tab: function () {
+
+				if ( this.$el.hasClass( 'wpmudev-forminator-forminator-integrations' ) ) {
+
+					this.clear_tabs();
+
+					this.$el.find( '[data-tab-id=' + this.currentTab + ']' ).addClass( 'current' );
+					this.$el.find( '.wpmudev-settings--box#' + this.currentTab ).show();
+				}
+			},
+
+			clear_tabs: function () {
+
+				if ( this.$el.hasClass( 'wpmudev-forminator-forminator-integrations' ) ) {
+					this.$el.find( '.sui-vertical-tab ').removeClass( 'current' );
+					this.$el.find( '.wpmudev-settings--box' ).hide();
+				}
+			},
+
+			required_settings: function( e ) {
+
+				var input = $( e.target ),
+					field = input.parent(),
+					error = field.find( '.sui-error-message' )
+					;
+
+				var tabWrapper = input.closest( 'div[data-nav]' ),
+					tabFooter  = tabWrapper.find( '.sui-box-footer' ),
+					saveButton = tabFooter.find( '.wpmudev-action-done' )
+					;
+
+				if ( this.$el.hasClass( 'wpmudev-forminator-forminator-settings' ) ) {
+
+					if ( input.hasClass( 'forminator-required' ) && ! input.val() ) {
+
+						if ( field.hasClass( 'sui-form-field' ) ) {
+							field.addClass( 'sui-form-field-error' );
+							error.show();
+						}
+					}
+
+					if ( input.hasClass( 'forminator-required' ) && input.val() ) {
+
+						if ( field.hasClass( 'sui-form-field' ) ) {
+							field.removeClass( 'sui-form-field-error' );
+							error.hide();
+						}
+					}
+
+					if ( tabWrapper.find( 'input.sui-form-control' ).hasClass( 'forminator-required' ) ) {
+
+						if ( tabWrapper.find( 'div.sui-form-field-error' ).length === 0 ) {
+							saveButton.prop( 'disabled', false );
+						} else {
+							saveButton.prop( 'disabled', true );
+						}
+					}
+				}
+
+				e.stopPropagation();
+
+			},
+		});
+
+		//init after jquery ready
+		jQuery(function () {
+			new Addons();
+		});
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/addons-page',[
+	], function() {
+		var AddonsPage = Backbone.View.extend({
+			el: '.wpmudev-forminator-forminator-addons',
+			events: {
+				"click button.addons-actions": "addons_actions",
+				"click a.addons-actions": "addons_actions",
+				"click .sui-dialog-close": "close",
+				"click .addons-modal-close": "close",
+				"click .addons-page-details": "open_addons_detail",
+			},
+			initialize: function () {
+				var self = this;
+				// only trigger on settings page
+				if (!$('.wpmudev-forminator-forminator-addons').length) {
+					return;
+				}
+			},
+
+			addons_actions: function ( e ) {
+				var self = this,
+					$target = $( e.target ),
+					request_data = {},
+					nonce = $target.data('nonce'),
+					actions = $target.data('action'),
+					popup = $target.data('popup'),
+					is_network = $target.data('is_network'),
+					pid = $target.data('addon');
+
+				if ( 'addons-connect' === actions ) {
+					self.$el.find( ".ssm-session__button" ).trigger( 'click' );
+					return false;
+				}
+
+				request_data.action = 'forminator_' + actions;
+				request_data.pid = pid;
+				request_data.is_network = is_network;
+				request_data._ajax_nonce = nonce;
+
+				$target.addClass("sui-button-onload");
+				self.$el.find(".sui-button.addons-actions:not(.disable-loader)")
+					.attr( 'disabled', true );
+
+				$.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'post',
+					data: request_data
+				}).done(function ( result ) {
+
+					if ( 'undefined' !== typeof result.data.error ) {
+						self.show_notification( result.data.error.message, 'error' );
+						return false;
+					}
+
+					if ( 'addons-install' === actions ) {
+						setTimeout(function () {
+							self.active_popup( pid, 'show', 'forminator-activate-popup' );
+							self.$el.find( '.sui-tab-content .addons-' + pid )
+								.not( this )
+								.replaceWith( result.data.html );
+							self.loader_remove();
+						}, 1000);
+
+					} else {
+						self.show_notification( result.data.message, 'success' );
+						self.$el.find( '.sui-tab-content .addons-' + pid )
+							.not( this )
+							.replaceWith( result.data.html );
+
+						if ( 'addons-update' === actions ) {
+
+							var detailPopup = self.$el.find( '#forminator-modal-addons-details-' + pid );
+							self.$el.find( '#updates-addons-content .addons-' + pid ).remove();
+
+							var updateCounter = self.$el.find('#updates-addons-content .sui-col-md-6').length;
+							if ( updateCounter < 1 ) {
+								self.$el.find( '#updates-addons span.sui-tag').removeClass('sui-tag-yellow');
+							}
+							self.$el.find( '#updates-addons span.sui-tag').html( updateCounter );
+
+							detailPopup.find( '.forminator-details-header--tags span.addons-update-tag').remove();
+
+							var version = $target.data('version');
+							detailPopup.find( '.forminator-details-header--tags span.addons-version').html( version );
+
+							detailPopup.find( '.forminator-details-header button.addons-actions').remove();
+							$target.remove();
+						}
+						if ( popup ) {
+							location.reload();
+						}
+                    }
+				}).fail( function () {
+					self.show_notification( Forminator.l10n.commons.error_message, 'error' );
+				});
+
+				return false;
+			},
+
+			close: function( e ) {
+				e.preventDefault();
+
+				var $target = $( e.target ),
+					pid = $target.data('addon'),
+					element = $target.data('element');
+				this.active_popup( pid, 'hide', element );
+			},
+
+			loader_remove: function () {
+				this.$el.find(".sui-button.addons-actions:not(.disable-loader)")
+					.removeClass("sui-button-onload")
+					.attr( 'disabled', false );
+			},
+
+			show_notification: function ( message, status ) {
+				var error_message = 'undefined' !== typeof message
+					? message :
+					Forminator.l10n.commons.error_message;
+				Forminator.Notification.open( status, error_message, 4000 );
+				this.loader_remove();
+			},
+
+			active_popup: function ( pid, status, element ) {
+				var modalId = element + '-' + pid,
+					focusAfterClosed = 'forminator-addon-' + pid + '__card';
+
+				if ( 'show' === status ) {
+					SUI.openModal(
+						modalId,
+						focusAfterClosed
+					);
+				} else {
+					SUI.closeModal();
+				}
+			},
+
+			open_addons_detail: function ( e ) {
+				var self = this,
+					$target = $( e.target ),
+					pid = $target.data('form-id');
+				self.active_popup( pid, 'show', 'forminator-modal-addons-details' );
+			}
+		});
+
+		var AddonsPage = new AddonsPage();
+
+		return AddonsPage;
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/reports-page',[
+	], function() {
+		var ReportsPage = Backbone.View.extend({
+			el: '.wpmudev-forminator-forminator-reports',
+			events: {
+				'click .sui-side-tabs label.sui-tab-item input': 'sidetabs',
+				"click .sui-sidenav .sui-vertical-tab a": "sidenav",
+				"change .sui-sidenav select.sui-mobile-nav": "sidenav_select",
+				"apply.daterangepicker input.forminator-reports-filter-date": "filter_report_date",
+				"click #forminator-checked-all-reports": "check_all",
+				"change label input.notification-status": "change_report_status",
+				"change label input.report-checkbox": "change_report_check",
+			},
+			initialize: function () {
+				var self = this;
+				// only trigger on reports page
+				if (!$('.wpmudev-forminator-forminator-reports').length) {
+					return;
+				}
+				self.render_daterange();
+
+				self.chartJs = self.forminator_reports_chart( window.monthDays, window.submissions, window.canvas_spacing );
+			},
+
+			render_daterange: function () {
+				var default_start_date = moment().startOf('month'),
+					default_end_date = moment().endOf('month');
+				$('input.forminator-reports-filter-date').daterangepicker({
+					autoUpdateInput: false,
+					autoApply: true,
+					alwaysShowCalendars: true,
+					ranges: window.forminator_reports_datepicker_ranges,
+					locale: forminatorl10n.daterangepicker,
+					startDate: default_start_date,
+					endDate: default_end_date,
+					showCustomRangeLabel: false
+				}).val( default_start_date.format( 'MMMM DD, YYYY' ) + ' - ' + default_end_date.format( 'MMMM DD, YYYY' ) );
+			},
+
+			filter_report_date: function ( e, picker ) {
+				var self = this,
+					$target = $( e.target ),
+					startDate = picker.startDate,
+					endDate = picker.endDate,
+					form_id = self.$el.find('#forminator-reports select[name=form_id]').val(),
+					form_type = self.$el.find('#forminator-reports select[name=form_type]').val(),
+					date_range_text = startDate.format( 'MMMM DD, YYYY' ) + ' - ' + endDate.format( 'MMMM DD, YYYY' );
+
+				self.add_report_loader();
+				$target.val( date_range_text );
+				self.$el.find('.forminator-chart-date').html( forminatorl10n.popup.showing_report_from + ' ' + date_range_text );
+				$.post({
+					url: Forminator.Data.ajaxUrl,
+					type: 'post',
+					data: {
+						action: 'forminator_filter_report_data',
+						form_id: form_id,
+						form_type: form_type,
+						_ajax_nonce: $target.data('nonce'),
+						start_date: startDate.format( 'YYYY-MM-DD' ),
+						end_date: endDate.format( 'YYYY-MM-DD' ),
+						range_time: picker.chosenLabel
+					},
+				}).done(function ( result ) {
+					if ( result.data ) {
+						var result_data = result.data,
+							reports_data = result_data.reports,
+							chart_data = result_data.chart_data,
+							app_table_container = self.$el.find('.fui-table--apps'),
+							report_container = self.$el.find('#forminator-reports');
+						$.each( reports_data, function (result_key, result_value) {
+							var result_key_class = self.$el.find('.increment-' + result_key);
+							result_key_class.html('');
+							if ( result_value.selected > 0 || 0 !== result_value.selected ) {
+								var arrow_color = 'high' === result_value.difference ? 'fui-trend-green' : 'fui-trend-red',
+								arrow_icon = 'high' === result_value.difference ? 'sui-icon-arrow-up' : 'sui-icon-arrow-down',
+								increment_html = '<i class="' + arrow_icon + ' sui-sm" aria-hidden="true"></i>';
+								result_key_class.html( increment_html + result_value.increment );
+								result_key_class.removeClass('fui-trend-green')
+									.removeClass('fui-trend-red')
+									.addClass( arrow_color );
+							}
+							report_container.find('.selected-' + result_key).html( result_value.selected );
+							report_container.find('.previous-' + result_key).html( result_value.previous );
+							if ( 'undefined' !== typeof result_value.average ) {
+								report_container.find('.average-' + result_key).html(result_value.average);
+							}
+							if ( 'undefined' !== typeof result_value.stripe ) {
+								report_container.find('.stripe-report').html(result_value.stripe);
+							}
+							if ( 'undefined' !== typeof result_value.paypal ) {
+								report_container.find('.paypal-report').html(result_value.paypal);
+							}
+							self.$el.find('.forminator-reports-chart li.chart-' + result_key + ' span').html( result_value.selected );
+							if ( 'integration' === result_key ) {
+								$.each( result_value, function (key, value) {
+									var app_increment_container = app_table_container.find('.increment-' + key);
+									app_increment_container.html('');
+									if ( value.selected > 0 ) {
+										var app_arrow_color = 'high' === value.difference ? 'fui-trend-green' : 'fui-trend-red',
+											app_arrow_icon = 'high' === value.difference ? 'sui-icon-arrow-up' : 'sui-icon-arrow-down',
+											increment_html = '<i class="' + app_arrow_icon + ' sui-sm" aria-hidden="true"></i>';
+										app_increment_container.html( increment_html + value.increment );
+										app_increment_container.removeClass('fui-trend-green')
+											.removeClass('fui-trend-red')
+											.addClass( app_arrow_color );
+									}
+									app_table_container.find('.selected-' + key).html( value.selected );
+									app_table_container.find('.previous-' + key).html( value.previous );
+								});
+							}
+						});
+						var chartMonth = chart_data.monthDays,
+							chartSubmissions = chart_data.submissions,
+							canvas_spacing = chart_data.canvas_spacing;
+
+						if ( result_data.geolocation ) {
+							self.$el.find('#forminator_report_geolocation_widget .forminator-report-widget-content').html( result_data.geolocation );
+							// Rebind Accordion scripts
+							SUI.suiAccordion( $( '.sui-accordion' ) );
+						}
+						setTimeout(function () {
+							self.remove_report_loader( reports_data.entries.selected );
+							self.add_chart_data( self.chartJs, chartMonth, chartSubmissions, canvas_spacing );
+						}, 1000);
+					}
+
+				}).fail( function () {
+					self.remove_report_loader();
+				});
+			},
+
+			add_report_loader: function () {
+				this.$el.find('.forminator-reports-box .sui-box').addClass('sui-box__onload');
+				this.$el.find('.forminator-reports-chart ul.sui-accordion-item-data').addClass('sui-onload');
+				this.$el.find('.forminator-reports-chart .sui-chartjs').removeClass('sui-chartjs-loaded');
+				this.$el.find('.sui-chartjs-message--empty').show();
+			},
+
+			remove_report_loader: function ( entries ) {
+				this.$el.find('.forminator-reports-box .sui-box').removeClass('sui-box__onload');
+				this.$el.find('.forminator-reports-chart ul.sui-accordion-item-data').removeClass('sui-onload');
+				this.$el.find('.forminator-reports-chart .sui-chartjs').addClass('sui-chartjs-loaded');
+				if ( 0 < entries ) {
+					this.$el.find('.sui-chartjs-message--empty').hide();
+				}
+			},
+			
+			add_chart_data: function ( chart, label, data, max ) {
+				if ( 'undefined' !== typeof chart ) {
+					chart.data.labels = label;
+					chart.data.datasets[0].data = data;
+					chart.options.scales.yAxes[0].ticks.max = max;
+					chart.update();
+				}
+			},
+
+			forminator_reports_chart: function ( monthDays, submissions, canvas_max ) {
+				var ctx = document.getElementById('forminator-module-' + window.chart_form_id + '-stats');
+				var chartData = {
+					labels: monthDays,
+					datasets: [{
+						label: window.chart_label,
+						data: submissions,
+						backgroundColor: [
+							'#E1F6FF'
+						],
+						borderColor: [
+							'#17A8E3'
+						],
+						borderWidth: 2,
+						pointRadius: 0,
+						pointHitRadius: 20,
+						pointHoverRadius: 5,
+						pointHoverBorderColor: '#17A8E3',
+						pointHoverBackgroundColor: '#17A8E3'
+					}]
+				};
+				var chartOptions = {
+					maintainAspectRatio: false,
+					legend: {
+						display: false
+					},
+					scales: {
+						xAxes: [{
+							display: false,
+							gridLines: {
+								color: 'rgba(0, 0, 0, 0)'
+							}
+						}],
+						yAxes: [{
+							display: false,
+							gridLines: {
+								color: 'rgba(0, 0, 0, 0)'
+							},
+							ticks: {
+								beginAtZero: false,
+								min: 0,
+								max: canvas_max,
+								stepSize: 1
+							}
+						}]
+					},
+					elements: {
+						line: {
+							tension: 0
+						},
+						point: {
+							radius: 0
+						}
+					},
+					tooltips: {
+						custom: function (tooltip) {
+							if (!tooltip) return;
+							// disable displaying the color box;.
+							tooltip.displayColors = false;
+						},
+						callbacks: {
+							title: function (tooltipItem, data) {
+								return tooltipItem[0].yLabel + " " + window.chart_label;
+							},
+							label: function (tooltipItem, data) {
+								return tooltipItem.xLabel;
+							},
+							// Set label text color.
+							labelTextColor: function (tooltipItem, chart) {
+								return '#AAAAAA';
+							}
+						}
+					},
+					plugins: {
+						datalabels: {
+							display: false
+						}
+					}
+				};
+
+				if (ctx) {
+					var reportChart = new Chart(ctx, {
+						type: 'line',
+						fill: 'start',
+						data: chartData,
+						plugins: [
+							ChartDataLabels
+						],
+						options: chartOptions
+					});
+				}
+
+				return reportChart;
+			},
+
+			sidetabs: function( e ) {
+				var $this      = this.$( e.target ),
+					$label     = $this.parent( 'label' ),
+					$data      = $this.data( 'tab-menu' ),
+					$wrapper   = $this.closest( '.sui-side-tabs' ),
+					$alllabels = $wrapper.find( '.sui-tabs-menu .sui-tab-item' ),
+					$allinputs = $alllabels.find( 'input' )
+				;
+
+				if ( $this.is( 'input' ) ) {
+
+					$alllabels.removeClass( 'active' );
+					$allinputs.removeAttr( 'checked' );
+					$wrapper.find( '.sui-tabs-content > div' ).removeClass( 'active' );
+
+					$label.addClass( 'active' );
+					$this.prop( 'checked', 'checked' );
+
+					if ( $wrapper.find( '.sui-tabs-content div[data-tab-content="' + $data + '"]' ).length ) {
+						$wrapper.find( '.sui-tabs-content div[data-tab-content="' + $data + '"]' ).addClass( 'active' );
+					}
+				}
+			},
+
+			sidenav: function( e ) {
+				var tab_name = $( e.target ).data( 'nav' );
+				if ( tab_name ) {
+					this.sidenav_go_to( tab_name, true );
+				}
+				e.preventDefault();
+
+			},
+
+			sidenav_select: function( e ) {
+				var tab_name = $(e.target).val();
+				if ( tab_name ) {
+					this.sidenav_go_to( tab_name, true );
+				}
+				e.preventDefault();
+
+			},
+
+			sidenav_go_to: function( tab_name, update_history ) {
+
+				var $tab 	 = this.$el.find( 'a[data-nav="' + tab_name + '"]' ),
+					$sidenav = $tab.closest( '.sui-vertical-tabs' ),
+					$tabs    = $sidenav.find( '.sui-vertical-tab' ),
+					$content = this.$el.find( '.sui-box-reports[data-nav]' ),
+					$current = this.$el.find( '.sui-box-reports[data-nav="' + tab_name + '"]' );
+
+				if ( update_history ) {
+					var tab_url = 'admin.php?page=forminator-reports&section=' + tab_name;
+					if ( 'dashboard' === tab_name ) {
+						var form_id = this.$el.find('#forminator-reports select[name=form_id]').val(),
+							form_type = this.$el.find('#forminator-reports select[name=form_type]').val();
+						if ( '' !== form_id && '' !== form_type ){
+							tab_url = 'admin.php?page=forminator-reports&form_type=' + form_type + '&form_id=' + form_id;
+						}
+					}
+					history.pushState( { selected_tab: tab_name }, 'Reports', tab_url );
+				}
+
+				$tabs.removeClass( 'current' );
+				$content.hide();
+
+				$tab.parent().addClass( 'current' );
+				$current.show();
+			},
+
+			check_all: function ( e ) {
+				var $this = this.$( e.target ),
+					$checked = $this.is(':checked'),
+					$table = $this.closest('table');
+				$table.find( ".sui-checkbox input" ).each( function () {
+					this.checked = $checked;
+				});
+				if ($('form[name="report-bulk-action"] input[name="ids"]').length) {
+					var ids = $('#forminator-reports-list').find('.sui-checkbox input[id|="report"]:checked').map(function () {
+							if (parseFloat(this.value)) return this.value;
+						}
+					).get().join(',');
+					$('form[name="report-bulk-action"] input[name="ids"]').val(ids);
+				}
+			},
+			change_report_status: function ( e ) {
+				var status = e.target.checked ? 'active' : 'inactive',
+					report_id = $(e.target).val();
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: {
+						'action': 'forminator_report_update_status',
+						'nonce': forminatorl10n.popup.save_nonce,
+						'report_id': report_id,
+						'status': status
+					},
+					success: function( response ) {
+						var tooltip = e.target.checked ? forminatorl10n.popup.deactivate_report : forminatorl10n.popup.activate_report;
+						$('.report-status-tooltip').attr( 'data-tooltip', tooltip );
+					},
+				});
+			},
+
+			change_report_check: function () {
+				if ( $( 'form[name="report-bulk-action"] input[name="ids"]' ).length ) {
+					var ids = $( ".sui-checkbox input.report-checkbox:checked" ).map( function()
+					{ if ( parseFloat( this.value ) ) return this.value; } ).get().join( ',' );
+					$( 'form[name="report-bulk-action"] input[name="ids"]' ).val( ids );
+				}
+				if( $(this).attr('id') !== 'forminator-checked-all-reports') {
+					$('#forminator-checked-all-reports').prop("checked", false);
+				}
+			}
+
+		});
+
+		var ReportsPage = new ReportsPage();
+
+		return ReportsPage;
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/views',[
+		'admin/dashboard',
+		'admin/settings-page',
+		'admin/popups',
+		'admin/addons/addons',
+		'admin/addons-page',
+		'admin/reports-page',
+	], function( Dashboard, SettingsPage, Popups, Addons, AddonsPage, ReportsPage ) {
+		return {
+			"Views": {
+				"Dashboard": Dashboard,
+				"SettingsPage": SettingsPage,
+				"Popups": Popups,
+				"AddonsPage": AddonsPage,
+				"ReportsPage": ReportsPage,
+			}
+		}
+	});
+})(jQuery);
+
+(function ($) {
+	formintorjs.define('admin/application',[
+		'admin/views',
+	], function ( Views )  {
+		_.extend(Forminator, Views);
+
+		var Application = new ( Backbone.Router.extend({
+			app: false,
+			data: false,
+			layout: false,
+			module_id: null,
+
+			routes: {
+				""              : "run",
+				"*path"         : "run"
+			},
+
+			events: {},
+
+			init: function () {
+				// Load Forminator Data only first time
+				if( ! this.data ) {
+					this.app = Forminator.Data.application || false;
+
+					// Retrieve current data
+					this.data = {};
+
+					return false;
+				}
+			},
+
+			run: function (id) {
+
+				this.init();
+
+				this.module_id = id;
+			},
+		}));
+
+		return Application;
+	});
+
+})(jQuery);
+
+formintorjs.define( 'jquery', [], function () {
+	return jQuery;
+});
+
+formintorjs.define( 'forminator_global_data', function() {
+   var data = forminatorData;
+	return data;
+});
+
+formintorjs.define( 'forminator_language', function() {
+   var l10n = forminatorl10n;
+	return l10n;
+});
+
+var Forminator = window.Forminator || {};
+Forminator.Events = {};
+Forminator.Data = {};
+Forminator.l10n = {};
+Forminator.openPreset = function( presetId, notice ) {
+	// replace preset param to the new one.
+	var regEx = /([?&]preset)=([^&]*)/g,
+		newUrl = window.location.href.replace( regEx, '$1=' + presetId );
+
+	// if it didn't have preset param - add it.
+	if ( newUrl === window.location.href ) {
+		newUrl += '&preset=' + presetId;
+	}
+
+	if ( notice ) {
+		newUrl += '&forminator_notice=' + notice;
+	}
+
+	window.location.href = newUrl;
+};
+
+formintorjs.require.config({
+	baseUrl: ".",
+	paths: {
+		"js": ".",
+		"admin": "admin",
+	},
+	shim: {
+		'backbone': {
+			//These script dependencies should be loaded before loading
+			//backbone.js
+			deps: [ 'underscore', 'jquery', 'forminator_global_data', 'forminator_language' ],
+			//Once loaded, use the global 'Backbone' as the
+			//module value.
+			exports: 'Backbone'
+		},
+		'underscore': {
+			exports: '_'
+		}
+	},
+	"waitSeconds": 60,
+});
+
+formintorjs.require([  'admin/utils' ], function ( Utils ) {
+	// Fix Underscore templating to Mustache style
+	_.templateSettings = {
+		evaluate : /\{\[([\s\S]+?)\]\}/g,
+		interpolate : /\{\{([\s\S]+?)\}\}/g
+	};
+
+	_.extend( Forminator.Data, forminatorData );
+	_.extend( Forminator.l10n, forminatorl10n );
+	_.extend( Forminator, Utils );
+	_.extend(Forminator.Events, Backbone.Events);
+
+	formintorjs.require([ 'admin/application' ], function ( Application ) {
+		jQuery( function() {
+			_.extend(Forminator, Application);
+
+			Forminator.Events.trigger("application:booted");
+			Backbone.history.start();
+		});
+	});
+});
+
+formintorjs.define("admin/setup", function(){});
+
+
+formintorjs.define("main", function(){});

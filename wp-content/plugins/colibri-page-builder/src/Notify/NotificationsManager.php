@@ -16,7 +16,7 @@ class NotificationsManager {
 	}
 
 	public static function getRemoteNotifications() {
-
+		check_ajax_referer('extendthemes_get_remote_data_notifications_nonce');
 		$transientKey  = apply_filters( 'extendthemes_demo_import_transient_key', get_template() . '_notifications' );
 		$notifications = null;
 		if ( ! NotificationsManager::isDevMode() ) {
@@ -53,15 +53,23 @@ class NotificationsManager {
 	}
 
 	public static function getRemoteNotificationsURL() {
-		$dev_mode = NotificationsManager::isDevMode();
-		$base     = NotificationsManager::$remote_data_url_base;
+		$dev_mode                       = NotificationsManager::isDevMode();
+		$base                           = NotificationsManager::$remote_data_url_base;
+        $theme                          = get_template();
+        $option                         = "${theme}_start-source";
+        $start_source                   = get_option($option);
+        $builder_activation_time        = get_option('colibri_page_builder_activation_time', "0");
+        $builder_pro_activation_time    = get_option('colibri_page_builder_pro_activation_time', "0");
 
 		$query = array(
-			'theme'      => apply_filters( 'mesmerize_notifications_template_slug', get_template() ),
-			'stylesheet' => apply_filters( 'mesmerize_notifications_stylesheet_slug', get_stylesheet() ),
-			'license'    => urlencode( '' ),
-			'dev_mode'   => $dev_mode ? "1" : "0",
-		);
+            'theme'                 => apply_filters( 'mesmerize_notifications_template_slug', $theme ),
+            'stylesheet'            => apply_filters( 'mesmerize_notifications_stylesheet_slug', get_stylesheet() ),
+            'license'               => urlencode( '' ),
+            'dev_mode'              => $dev_mode ? "1" : "0",
+            'utm_install_source'    => $start_source,
+            'utm_activation_on'     => $builder_activation_time,
+            'utm_pro_activation_on' => $builder_pro_activation_time,
+        );
 
 		$query_string = build_query( $query );
 
@@ -75,10 +83,14 @@ class NotificationsManager {
 
 	public static function load( $notifications ) {
 
-		add_action( "wp_ajax_extendthemes_get_remote_data_notifications", array(
-			__CLASS__,
-			'getRemoteNotifications'
-		) );
+        add_action( "wp_ajax_extendthemes_get_remote_data_notifications", array(
+            __CLASS__,
+            'getRemoteNotifications'
+        ) );
+        if ( ! wp_next_scheduled( NotificationsManager::class . '::getRemoteNotifications' ) ) {
+            wp_schedule_event( time(), 'twicedaily', NotificationsManager::class . '::getRemoteNotifications' );
+        }
+
 		if ( ! is_admin() ) {
 			return;
 		}
@@ -140,7 +152,8 @@ class NotificationsManager {
                 jQuery.post(
                     "<?php echo admin_url( "/admin-ajax.php" ); ?>",
                     {
-                        action: "extendthemes_get_remote_data_notifications"
+                        action: "extendthemes_get_remote_data_notifications",
+                        _wpnonce: '<?php echo wp_create_nonce('extendthemes_get_remote_data_notifications_nonce');?>'
                     }
                 )
             </script>
@@ -168,6 +181,7 @@ class NotificationsManager {
 	}
 
 	public static function dismissNotification() {
+		check_ajax_referer('cp_dismiss_notification_nonce');
 		if ( ! is_user_logged_in() || ! current_user_can( 'edit_theme_options' ) ) {
 			die();
 		}

@@ -657,7 +657,8 @@ add_action( 'admin_notices', function () {
                 jQuery(function ($) {
                     $(document).on('click', '.wpmu-forminator-recommendation .notice-dismiss', function () {
                         $.post("<?php echo admin_url( "/admin-ajax.php" ); ?>", {
-                            action: 'colibri_wpmu_forminator_hide_notice'
+                            action: 'colibri_wpmu_forminator_hide_notice',
+                            _wpnonce: '<?php echo wp_create_nonce('colibri_wpmu_forminator_hide_notice_nonce');?>'
                         })
                     });
                 });
@@ -669,6 +670,7 @@ add_action( 'admin_notices', function () {
 
 
 add_action( 'wp_ajax_colibri_wpmu_forminator_hide_notice', function () {
+	check_ajax_referer('colibri_wpmu_forminator_hide_notice_nonce');
 	set_transient( 'colibri_wpmu_forminator_hide_notice', true, WEEK_IN_SECONDS );
 } );
 

@@ -68,8 +68,7 @@ class ContextFactory {
         'public' => $type->public,
       ];
     },
-    $postTypes
-    ));
+    $postTypes));
   }
 
   /**

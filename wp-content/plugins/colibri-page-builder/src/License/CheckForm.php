@@ -72,7 +72,11 @@ class CheckForm {
                 }
 
                 wp.ajax
-                    .send('colibriwp-page-builder-check-license')
+                    .send('colibriwp-page-builder-check-license', {
+                        data: {
+                            _wpnonce: '<?php echo wp_create_nonce( 'colibriwp-page-builder-check-license-nonce' );?>'
+                        }
+                    })
                     .fail(function (response) {
                         notice.removeClass('hidden');
                         message.html(getHTMLContent(response.responseJSON.data))
@@ -84,6 +88,7 @@ class CheckForm {
 	}
 
 	public function callCheckLicenseEndpoint() {
+		check_ajax_referer('colibriwp-page-builder-check-license-nonce');
 		$response         = Endpoint::check();
 		$response_message = $response->getMessage( true );
 

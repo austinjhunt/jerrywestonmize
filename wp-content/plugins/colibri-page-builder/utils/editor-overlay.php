@@ -71,7 +71,8 @@ global $post;
         if (response) {
             var data = {
                 action: 'cp_open_in_default_editor',
-                page: page
+                page: page,
+                _wpnonce: '<?php echo wp_create_nonce('cp_open_in_default_editor_nonce');?>'
             };
 
             jQuery.post(ajaxurl, data).done(function (response) {

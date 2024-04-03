@@ -302,7 +302,8 @@ class Subscriber extends Model {
       $orm = $orm->select_expr(
         'IFNULL(GROUP_CONCAT(CASE WHEN ' .
         MP_CUSTOM_FIELDS_TABLE . '.id=' . $customField['id'] . ' THEN ' .
-        MP_SUBSCRIBER_CUSTOM_FIELD_TABLE . '.value END), NULL) as "' . $customField['name'] . '"');
+        MP_SUBSCRIBER_CUSTOM_FIELD_TABLE . '.value END), NULL) as "' . $customField['name'] . '"'
+      );
     }
     $orm = $orm
       ->leftOuterJoin(
@@ -759,7 +760,9 @@ class Subscriber extends Model {
                     $subscriber[$columnPosition],
                   ] :
                   'WHEN email = ? THEN ?';
-              }, $subscribers);
+              },
+              $subscribers
+            );
             return ($type === 'values') ?
               Helpers::flattenArray($query) :
               $columnName . '= (CASE ' . implode(' ', $query) . ' END)';

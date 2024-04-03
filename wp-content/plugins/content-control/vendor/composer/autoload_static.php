@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitcdb71d3d3b2a90ce94d4553380a52504
+class ComposerStaticInit853ae0679741ef2cc10dcfede9bac995
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -139,12 +139,15 @@ class ComposerStaticInitcdb71d3d3b2a90ce94d4553380a52504
         'ContentControl\\Controllers\\Compatibility\\Divi' => __DIR__ . '/../..' . '/classes/Controllers/Compatibility/Divi.php',
         'ContentControl\\Controllers\\Compatibility\\Elementor' => __DIR__ . '/../..' . '/classes/Controllers/Compatibility/Elementor.php',
         'ContentControl\\Controllers\\Compatibility\\QueryMonitor' => __DIR__ . '/../..' . '/classes/Controllers/Compatibility/QueryMonitor.php',
+        'ContentControl\\Controllers\\Compatibility\\TheEventsCalendar' => __DIR__ . '/../..' . '/classes/Controllers/Compatibility/TheEventsCalendar.php',
         'ContentControl\\Controllers\\Frontend' => __DIR__ . '/../..' . '/classes/Controllers/Frontend.php',
         'ContentControl\\Controllers\\Frontend\\Blocks' => __DIR__ . '/../..' . '/classes/Controllers/Frontend/Blocks.php',
         'ContentControl\\Controllers\\Frontend\\Restrictions' => __DIR__ . '/../..' . '/classes/Controllers/Frontend/Restrictions.php',
         'ContentControl\\Controllers\\Frontend\\Restrictions\\MainQuery' => __DIR__ . '/../..' . '/classes/Controllers/Frontend/Restrictions/MainQuery.php',
         'ContentControl\\Controllers\\Frontend\\Restrictions\\PostContent' => __DIR__ . '/../..' . '/classes/Controllers/Frontend/Restrictions/PostContent.php',
         'ContentControl\\Controllers\\Frontend\\Restrictions\\QueryPosts' => __DIR__ . '/../..' . '/classes/Controllers/Frontend/Restrictions/QueryPosts.php',
+        'ContentControl\\Controllers\\Frontend\\Restrictions\\QueryTerms' => __DIR__ . '/../..' . '/classes/Controllers/Frontend/Restrictions/QueryTerms.php',
+        'ContentControl\\Controllers\\Frontend\\Restrictions\\RestAPI' => __DIR__ . '/../..' . '/classes/Controllers/Frontend/Restrictions/RestAPI.php',
         'ContentControl\\Controllers\\Frontend\\Widgets' => __DIR__ . '/../..' . '/classes/Controllers/Frontend/Widgets.php',
         'ContentControl\\Controllers\\PostTypes' => __DIR__ . '/../..' . '/classes/Controllers/PostTypes.php',
         'ContentControl\\Controllers\\RestAPI' => __DIR__ . '/../..' . '/classes/Controllers/RestAPI.php',
@@ -224,14 +227,15 @@ class ComposerStaticInitcdb71d3d3b2a90ce94d4553380a52504
         'ContentControl\\Vendor\\TrustedLogin\\SiteAccess' => __DIR__ . '/../..' . '/vendor-prefixed/trustedlogin/client/src/SiteAccess.php',
         'ContentControl\\Vendor\\TrustedLogin\\SupportRole' => __DIR__ . '/../..' . '/vendor-prefixed/trustedlogin/client/src/SupportRole.php',
         'ContentControl\\Vendor\\TrustedLogin\\SupportUser' => __DIR__ . '/../..' . '/vendor-prefixed/trustedlogin/client/src/SupportUser.php',
+        'ContentControl\\Vendor\\TrustedLogin\\Utils' => __DIR__ . '/../..' . '/vendor-prefixed/trustedlogin/client/src/Utils.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitcdb71d3d3b2a90ce94d4553380a52504::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitcdb71d3d3b2a90ce94d4553380a52504::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitcdb71d3d3b2a90ce94d4553380a52504::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit853ae0679741ef2cc10dcfede9bac995::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit853ae0679741ef2cc10dcfede9bac995::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit853ae0679741ef2cc10dcfede9bac995::$classMap;
 
         }, null, ClassLoader::class);
     }

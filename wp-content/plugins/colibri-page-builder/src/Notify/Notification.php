@@ -80,7 +80,8 @@ class Notification
                         jQuery('[data-cp-notification-name="<?php echo esc_attr($self->name) ?>"]').on('click', '.notice-dismiss', function () {
                             var data = {
                                 'action': 'cp_dismiss_notification',
-                                'notification': <?php echo wp_json_encode($self->name); ?>
+                                'notification': <?php echo wp_json_encode($self->name); ?>,
+                                _wpnonce: '<?php echo wp_create_nonce('cp_dismiss_notification_nonce');?>'
                             };
                             jQuery.post(ajaxurl, data).done(function (response) {
 

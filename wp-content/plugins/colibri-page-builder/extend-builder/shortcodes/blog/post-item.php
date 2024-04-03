@@ -205,13 +205,19 @@ function colibri_post_title( $attrs = array() ) {
 		$attrs
 	);
 
+	$heading_type = $atts['heading_type'];
+
+	if (!in_array($heading_type, array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'))) {
+		$heading_type = 'h3';
+	}
+
 	$title_tempalte = '<a href="%1$s"><%2$s class="%4$s">%3$s</%2$s></a>';
 
 	return sprintf( $title_tempalte,
 		get_the_permalink(),
-		$atts['heading_type'],
+		$heading_type,
 		get_the_title(),
-		$atts['classes']
+		esc_attr($atts['classes'])
 	);
 
 }

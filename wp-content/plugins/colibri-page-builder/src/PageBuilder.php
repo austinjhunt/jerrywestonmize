@@ -770,6 +770,7 @@ class PageBuilder
 
 	public function openPageInDefaultEditor()
 	{
+		check_ajax_referer('cp_open_in_default_editor_nonce');
 		$post_id = is_numeric($_REQUEST['page']) ? intval($_REQUEST['page']) : null;
 
 		$post = get_post($post_id);
@@ -1225,7 +1226,8 @@ class PageBuilder
 					function doAjaxCall(pageName) {
 						var data = {
 							action: 'cp_open_in_customizer',
-							page: page
+							page: page,
+                            _wpnonce: '<?php echo wp_create_nonce('cp_open_in_customizer_nonce');?>'
 						};
 
 						if (pageName) {
@@ -1313,6 +1315,7 @@ class PageBuilder
 
 	public function openPageInCustomizer()
 	{
+		check_ajax_referer('cp_open_in_customizer_nonce');
 		$post_id = is_numeric($_REQUEST['page']) ? intval($_REQUEST['page']) : null;
 
 		$post = get_post($post_id);

@@ -9,6 +9,7 @@ use MailPoet\AdminPages\AssetsController;
 use MailPoet\AdminPages\PageRenderer;
 use MailPoet\Automation\Engine\Control\SubjectTransformerHandler;
 use MailPoet\Automation\Engine\Data\Automation;
+use MailPoet\Automation\Engine\Data\Field;
 use MailPoet\Automation\Engine\Hooks;
 use MailPoet\Automation\Engine\Integration\Trigger;
 use MailPoet\Automation\Engine\Mappers\AutomationMapper;
@@ -108,13 +109,18 @@ class AutomationEditor {
 
     $subjects = [];
     foreach ($this->registry->getSubjects() as $key => $subject) {
+      $subjectFields = $subject->getFields();
+      usort($subjectFields, function (Field $a, Field $b) {
+        return $a->getName() <=> $b->getName();
+      });
+
       $subjects[$key] = [
         'key' => $subject->getKey(),
         'name' => $subject->getName(),
         'args_schema' => $subject->getArgsSchema()->toArray(),
         'field_keys' => array_map(function ($field) {
           return $field->getKey();
-        }, $subject->getFields()),
+        }, $subjectFields),
       ];
     }
 

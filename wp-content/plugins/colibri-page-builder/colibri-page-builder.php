@@ -6,7 +6,7 @@
  *
  * License: GPLv3 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
- * Version: 1.0.260
+ * Version: 1.0.272
  * Text Domain: colibri-page-builder
  */
 
@@ -35,6 +35,15 @@ $current_file = basename(__FILE__);
 $is_free = $current_file === 'colibri-page-builder.php';
 if ($is_free) {
 	$pro_builder_is_active = false;
+
+    add_action('shutdown', function () {
+        if (!is_admin() || get_option('colibri_page_builder_activation_time')) {
+            return;
+        }
+        $time = get_option(\ColibriWP\PageBuilder\Notify\NotificationsManager::INITIALIZATION_NOTIFICATIONS_OPTION, time());
+        update_option('colibri_page_builder_activation_time', $time);
+    });
+
 	$active_plugins = get_option('active_plugins');
 	foreach ($active_plugins as $active_plugin) {
 		if (strpos($active_plugin, 'colibri-page-builder-pro') !== false) {
@@ -55,7 +64,7 @@ if (!defined("COLIBRI_PAGE_BUILDER_AUTOLOAD")) {
 }
 
 if (!defined("COLIBRI_PAGE_BUILDER_VERSION")) {
-	define("COLIBRI_PAGE_BUILDER_VERSION", "1.0.260");
+	define("COLIBRI_PAGE_BUILDER_VERSION", "1.0.272");
 }
 
 require_once 'support/wp-5.8.php';
@@ -67,3 +76,17 @@ add_filter('colibri_page_builder/installed', '__return_true');
 require_once 'extend-builder/extend-builder.php';
 require_once 'recommendations/wpmu.php';
 
+if (!function_exists('colibriwp_check_builder_activation_source')) {
+    function colibriwp_check_builder_activation_source()
+    {
+        $theme = get_template();
+        $option = "${theme}_start-source";
+        $start_source = get_option($option);
+
+        if (!$start_source) {
+            update_option($option, 'manual');
+        }
+    }
+
+    add_action('colibri_page_builder/activated', 'colibriwp_check_builder_activation_source');
+}

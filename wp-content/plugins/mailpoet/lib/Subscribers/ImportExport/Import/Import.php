@@ -252,7 +252,9 @@ class Import {
               $invalidRecords[] = $index;
             }
             return strtolower($email);
-          }, array_keys($data), $data
+          },
+          array_keys($data),
+          $data
         );
       }
       if (in_array($column, ['created_at', 'confirmed_at'], true)) {
@@ -266,7 +268,9 @@ class Import {
               return null;
             }
             return $ip;
-          }, array_keys($data), $data
+          },
+          array_keys($data),
+          $data
         );
       }
       // if this is a custom column
@@ -306,7 +310,9 @@ class Import {
           $invalidRecords[] = $index;
         }
         return $date;
-      }, array_keys($data), $data
+      },
+      array_keys($data),
+      $data
     );
   }
 
@@ -441,7 +447,6 @@ class Import {
       0,
       $subscribersCount,
       $fieldValue
-
     );
     $subscribers['fields'][] = $fieldName;
 
@@ -482,7 +487,8 @@ class Import {
     $subscribersData['data']['link_token'] = array_map(
       function () {
         return Security::generateRandomString(SubscriberEntity::LINK_TOKEN_LENGTH);
-      }, array_fill(0, $subscribersCount, null)
+      },
+      array_fill(0, $subscribersCount, null)
     );
     return $subscribersData;
   }

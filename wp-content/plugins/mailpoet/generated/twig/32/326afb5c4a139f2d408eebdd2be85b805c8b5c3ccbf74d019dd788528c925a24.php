@@ -58,8 +58,12 @@ class __TwigTemplate_1453f1606febf8a9b6e30a893bcc22827936ceb21531b5a8f8a196260a5
         echo "    var mailpoet_welcome_wizard_url = ";
         echo json_encode(($context["welcome_wizard_url"] ?? null));
         echo ";
+    var mailpoet_welcome_wizard_current_step = ";
+        // line 9
+        echo json_encode(($context["welcome_wizard_current_step"] ?? null));
+        echo ";
   ";
-        // line 10
+        // line 11
         echo "</script>
 ";
     }
@@ -76,7 +80,7 @@ class __TwigTemplate_1453f1606febf8a9b6e30a893bcc22827936ceb21531b5a8f8a196260a5
 
     public function getDebugInfo()
     {
-        return array (  60 => 10,  55 => 8,  50 => 4,  46 => 3,  35 => 1,);
+        return array (  64 => 11,  60 => 9,  55 => 8,  50 => 4,  46 => 3,  35 => 1,);
     }
 
     public function getSourceContext()

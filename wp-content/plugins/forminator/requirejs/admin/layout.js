@@ -1,1 +1,516 @@
-function copyToClipboard(e){var t=jQuery("<input />");jQuery("body").append(t),t.val(e).select(),document.execCommand("copy"),t.remove()}function copyToClipboardModal(e){e.trigger("select"),document.execCommand("copy")}!function(e,t){"use strict";!function(){e(function(){if("object"==typeof window.Forminator&&"object"==typeof window.Forminator.Utils&&Forminator.Utils.sui_delegate_events(),e(".forminator-toggle-entries-filter").on("click",function(t){return e(this).toggleClass("sui-active"),e(this).closest(".sui-box-body").find(".sui-pagination-filter").toggleClass("sui-open"),!1}),void 0!==e.fn.daterangepicker){var t={},i=e("input.forminator-entries-filter-date");void 0!==window.forminator_entries_datepicker_ranges&&(t=window.forminator_entries_datepicker_ranges);var n={autoUpdateInput:!1,autoApply:!0,alwaysShowCalendars:!0,ranges:t,locale:forminatorl10n.daterangepicker};i.daterangepicker(n),i.on("apply.daterangepicker",function(t,i){e(this).val(i.startDate.format("YYYY-MM-DD")+" - "+i.endDate.format("YYYY-MM-DD"))})}if(e("form.forminator-entries-actions").on("submit",function(){return""===e(this).find("select[name=entries-action]").val()&&""===e(this).find("select[name=entries-action-bottom]").val()?e(this).find("fieldset.forminator-entries-nonce").attr("disabled","disabled"):e(this).find("fieldset.forminator-entries-nonce").removeAttr("disabled"),!0}),e(".forminator-entries-clear-filter").on("click",function(){return e(this).closest(".sui-pagination-filter").find("input[name=date_range]").val("").trigger("change"),e(this).closest(".sui-pagination-filter").find("input[name=search]").val("").trigger("change"),e(this).closest(".sui-pagination-filter").find("input[name=min_id]").val("").trigger("change"),e(this).closest(".sui-pagination-filter").find("input[name=max_id]").val("").trigger("change"),e(this).closest(".sui-pagination-filter").find("select[name=order_by] option").removeAttr("selected"),e(this).closest(".sui-pagination-filter").find("select[name=order_by]").val("").trigger("change"),e(this).closest(".sui-pagination-filter").find("select[name=order_by] option").removeAttr("selected"),e(this).closest(".sui-pagination-filter").find("select[name=order_by]").val("").trigger("change"),e(this).closest(".sui-pagination-filter").find("select[name=order] option").removeAttr("selected"),e(this).closest(".sui-pagination-filter").find("select[name=order]").val("").trigger("change"),e(this).closest(".sui-pagination-filter").find(".forminator-field-select-tab .sui-tabs-menu label[data-tab-index=1]").trigger("click"),e(this).closest(".sui-pagination-filter").find("fieldset.forminator-entries-fields-filter").attr("disabled","disabled"),!1}),e(".forminator-field-select-tab .sui-tabs-menu label").on("click",function(){var t=e(this).data("tab-index");t=+t,e(this).closest(".sui-side-tabs").find(".sui-tabs-menu label").removeClass("active"),e(this).addClass("active"),e(this).closest(".sui-side-tabs").find(".sui-tabs-content .sui-tab-content").removeClass("active"),e(this).closest(".sui-side-tabs").find(".sui-tabs-content .sui-tab-content[data-tab-index="+t+"]").addClass("active"),1===t?e(this).closest(".sui-side-tabs").find("fieldset.forminator-entries-fields-filter").attr("disabled","disabled"):e(this).closest(".sui-side-tabs").find("fieldset.forminator-entries-fields-filter").removeAttr("disabled")}),e("#wpf-cform-check_all").on("click",function(t){var i=this.checked,n=e(this).closest("table");e(n).find(".sui-checkbox input").each(function(){this.checked=i})}),e(document).on("click",".resend-activation-btn",function(t){t.preventDefault();const i=e(t.currentTarget);i.prop("disabled",!0),e.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_resend_activation_link",key:i.data("activation-key"),_ajax_nonce:i.data("nonce")},success:function(e){var t="success";e.success||(t="error"),Forminator.Notification.open(t,e.data,4e3)}}).always(function(){i.prop("disabled",!1)})}),e(document).on("click",".forminator-resend-notification-email",function(t){t.preventDefault();const i=e(t.currentTarget);i.prop("disabled",!0),e.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_resend_notification_email",entry_id:i.data("entry-id"),_ajax_nonce:i.data("nonce")},success:function(e){var t="success";e.success||(t="error"),Forminator.Notification.open(t,e.data,4e3)}}).always(function(){i.prop("disabled",!1)})}),e("#forminator-check-all-modules").on("click",function(){var t=this.checked;if(e("#forminator-modules-list").length&&(e("#forminator-modules-list").find('.sui-checkbox input[id|="wpf-module"]').each(function(){this.checked=t}),e('form[name="bulk-action-form"] input[name="ids"]').length)){var i=e("#forminator-modules-list").find('.sui-checkbox input[id|="wpf-module"]:checked').map(function(){if(parseFloat(this.value))return this.value}).get().join(",");e('form[name="bulk-action-form"] input[name="ids"]').val(i)}}),0!==e('form[name="bulk-action-form"]').length&&e(document).on("click",".sui-checkbox input",function(){if(e('form[name="bulk-action-form"] input[name="ids"]').length){var t=e(".sui-checkbox input:checked").map(function(){if(parseFloat(this.value))return this.value}).get().join(",");e('form[name="bulk-action-form"] input[name="ids"]').val(t)}"forminator-check-all-modules"!==e(this).attr("id")&&e("#forminator-check-all-modules").prop("checked",!1)}),e(function(){e(".wpmudev-can--hide").find(".wpmudev-box-header").on("click",function(){e(this).closest(".wpmudev-can--hide").toggleClass("wpmudev-is--hidden")})}),e(document).on("click",".wpmudev-open-entry",function(t){if("checkbox"!==e(t.target).attr("type")&&!e(t.target).hasClass("wpdui-icon-check")){t.preventDefault(),t.stopPropagation();var i=e(this),n=i.data("entry"),a=e("#forminator-"+n),o=!0;a.hasClass("wpmudev-is_open")&&(o=!1),e(".wpmudev-entries--result").removeClass("wpmudev-is_open"),o&&a.toggleClass("wpmudev-is_open")}}),e(function(){e(".wpmudev-result--menu").find(".wpmudev-button-action").on("click",function(){var t=e(this).next(".wpmudev-menu");e(".wpmudev-result--menu.wpmudev-active").removeClass("wpmudev-active"),e(".wpmudev-button-action.wpmudev-active").not(e(this)).removeClass("wpmudev-active"),e(".wpmudev-menu").not(t).addClass("wpmudev-hidden"),e(this).toggleClass("wpmudev-active"),t.toggleClass("wpmudev-hidden")})}),e(function(){var t=e(".wpmudev-list"),i=t.find(".wpmudev-list-table"),n=i.find(".wpmudev-table-body tr"),a=n.length,o=a;n.each(function(){e(this).find(".wpmudev-body-menu").css("z-index",o),o--})}),e(function(){e("body").on("change",".sui-insert-variables select",function(t){var i=e(t.target),n=i.data("textarea-id");if(n){if(t.preventDefault(),e("#"+n).length>0){var a=e("input#"+n+",textarea#"+n),o=a.val();a.val(o+" "+i.val()),a.trigger("change",a.val())}return!1}}),e(document).on("click",".copy-clipboard",function(t){t.preventDefault(),copyToClipboard(e(this).data("shortcode")),Forminator.Notification.open("success",Forminator.l10n.options.shortcode_copied,4e3)}),e("body").on("click",".delete-poll-submission",function(t){var i=e(t.target),n={action:"forminator_delete_poll_submissions",id:i.data("id"),_ajax_nonce:i.data("nonce")};i.addClass("sui-button-onload"),e.post({url:Forminator.Data.ajaxUrl,type:"post",data:n}).done(function(e){e.success&&jQuery(".sui-poll-submission").addClass("sui-message").html("").html(e.data.html),Forminator.Popup.close(),_.isUndefined(e.data.notification)||_.isUndefined(e.data.notification.type)||_.isUndefined(e.data.notification.text)||_.isUndefined(e.data.notification.duration)||Forminator.Notification.open(e.data.notification.type,e.data.notification.text,e.data.notification.duration).done(function(){})})}),e(".forminator-grouped-notice .notice-dismiss").on("click",function(t){t.preventDefault();const i=e(t.currentTarget).closest(".forminator-grouped-notice");jQuery.post(ajaxurl,{action:"forminator_dismiss_notice",slug:i.data("notice-slug"),_ajax_nonce:i.data("nonce")}).always(function(){i.hide()})})}),0!==e("#forminator-search-modules").length){var a=e("#forminator-search-modules"),o=a.find('input[name="page"]').val(),r=forminatorData.adminUrl+"admin.php?page="+o,s=a.find('input[name="search"]'),c=s.val(),d=e("#forminator-modules-list"),l=e("#search_loader");a.on("submit",function(t){if(t.preventDefault(),s=e(this).find('input[name="search"]'),c=s.val(),0===c.length)return void("true"===e(this).data("searched")&&(window.location.href=r));e(this).data("searched","true"),e.ajax({url:Forminator.Data.ajaxUrl,type:"POST",data:{action:"forminator_module_search",_ajax_nonce:e(this).find("#forminator-nonce-search-module").val(),search_keyword:c,modules:e(this).find('input[name="modules"]').val(),module_slug:e(this).find('input[name="module_slug"]').val(),preview_title:e(this).find('input[name="preview_title"]').val(),sql_month_start_date:e(this).find('input[name="sql_month_start_date"]').val(),wizard_page:e(this).find('input[name="wizard_page"]').val(),preview_dialog:e(this).find('input[name="preview_dialog"]').val(),export_dialog:e(this).find('input[name="export_dialog"]').val(),post_type:e(this).find('input[name="post_type"]').val(),page:o},beforeSend:function(){d.empty(),l.show(),s.prop("disabled",!0),e(".sui-pagination").remove(),e(".sui-pagination-results").html(""),e("#forminator-search-modules .search-reset").hide()},success:function(t){l.hide(),d.html(t.data),e("html").animate({scrollTop:d.offset().top-150},300),e('form[name="bulk-action-form"]').find('input[name="msearch"]').val(c),d.find('.module-actions input[name="msearch"]').val(c),s.prop("disabled",!1),e(".sui-pagination-results").html(window.singularPluralText(d.find(".sui-accordion-item").length,Forminator.l10n.form.result,Forminator.l10n.form.results)),e("#forminator-search-modules .search-reset").show()}})}),0!==s.length&&0!==c.length&&a.submit(),e(document).on("click","#forminator-search-modules .search-reset",function(e){e.preventDefault(),window.location.href=r})}e(document).on("click",".sui-box-search .sui-button",function(t){"apply-preset-forms"===e('select[name="forminator_action"]').val()&&(t.preventDefault(),e("#forminator_bulk_apply_preset").trigger("click"))})}),e(window).on("load",function(){"object"==typeof window.Forminator&&"object"==typeof window.Forminator.Utils&&"forminator-entries"===Forminator.Utils.get_url_param("page")&&!1===Forminator.Utils.get_url_param("form_type")&&!1===Forminator.Utils.get_url_param("form_id")&&e(".show-submissions").trigger("click")}),e(window).on("pageshow",function(e){(e.persisted||void 0!==window.performance&&"back_forward"===window.performance.getEntriesByType("navigation")[0].type)&&window.location.reload()})}()}(jQuery,document);var forminator_render_captcha=function(){jQuery(".forminator-g-recaptcha").each(function(){var e=jQuery(this).data("size"),t={sitekey:jQuery(this).data("sitekey"),theme:jQuery(this).data("theme"),badge:jQuery(this).data("badge"),size:e};if(""!==t.sitekey){window.grecaptcha.render(jQuery(this)[0],t)}})};
+(function( $, doc ) {
+    "use strict";
+
+    (function () {
+
+        $( function () {
+        	if (typeof window.Forminator === 'object' && typeof window.Forminator.Utils === 'object') {
+        		Forminator.Utils.sui_delegate_events();
+	        }
+
+	        /**
+	         * ======START Entries Page=====
+	         */
+	        // filter entries toggle
+	        $('.forminator-toggle-entries-filter').on("click", function (e) {
+		        $(this).toggleClass('sui-active');
+		        $(this).closest('.sui-box-body').find('.sui-pagination-filter').toggleClass('sui-open');
+		        return false
+	        });
+
+
+	        //Datepicker
+	        if ( typeof $.fn.daterangepicker !== 'undefined' ) {
+		        var date_picker_range = {},
+					date_picker_input = $('input.forminator-entries-filter-date'),
+					date_picker_format = 'YYYY-MM-DD';
+		        if (typeof window.forminator_entries_datepicker_ranges !== 'undefined') {
+			        date_picker_range = window.forminator_entries_datepicker_ranges;
+		        }
+				var date_args = {
+					autoUpdateInput: false,
+					autoApply: true,
+					alwaysShowCalendars: true,
+					ranges: date_picker_range,
+					locale: forminatorl10n.daterangepicker
+				};
+				date_picker_input.daterangepicker( date_args );
+				date_picker_input.on('apply.daterangepicker', function (ev, picker) {
+                    var $this = $( this );
+					$this.val( picker.startDate.format( date_picker_format ) + ' - ' + picker.endDate.format( date_picker_format ) );
+				});
+	        }
+
+	        // before filter submit
+	        // remove nonce and http referer
+	        $('form.forminator-entries-actions').on('submit', function () {
+		        if ($(this).find('select[name=entries-action]').val() === '' && $(this).find('select[name=entries-action-bottom]').val() === '') {
+			        $(this).find('fieldset.forminator-entries-nonce').attr('disabled', 'disabled');
+		        } else {
+			        $(this).find('fieldset.forminator-entries-nonce').removeAttr('disabled')
+		        }
+		        return true;
+	        });
+
+	        // on clear filters
+	        $('.forminator-entries-clear-filter').on("click", function () {
+		        $(this).closest('.sui-pagination-filter').find('input[name=date_range]').val('').trigger('change');
+		        $(this).closest('.sui-pagination-filter').find('input[name=search]').val('').trigger('change');
+		        $(this).closest('.sui-pagination-filter').find('input[name=min_id]').val('').trigger('change');
+		        $(this).closest('.sui-pagination-filter').find('input[name=max_id]').val('').trigger('change');
+
+		        $(this).closest('.sui-pagination-filter').find('select[name=order_by] option').removeAttr('selected');
+		        $(this).closest('.sui-pagination-filter').find('select[name=order_by]').val('').trigger('change');
+
+		        $(this).closest('.sui-pagination-filter').find('select[name=order_by] option').removeAttr('selected');
+		        $(this).closest('.sui-pagination-filter').find('select[name=order_by]').val('').trigger('change');
+
+		        $(this).closest('.sui-pagination-filter').find('select[name=order] option').removeAttr('selected');
+		        $(this).closest('.sui-pagination-filter').find('select[name=order]').val('').trigger('change');
+
+		        $(this).closest('.sui-pagination-filter').find('.forminator-field-select-tab .sui-tabs-menu label[data-tab-index=1]').trigger('click');
+
+		        $(this).closest('.sui-pagination-filter').find('fieldset.forminator-entries-fields-filter').attr('disabled', 'disabled');
+
+		        return false;
+
+	        });
+
+	        // Display fields tabs
+	        $('.forminator-field-select-tab .sui-tabs-menu label').on("click", function () {
+		        var tab_index = $(this).data('tab-index');
+		        tab_index     = +tab_index;
+
+		        $(this).closest('.sui-side-tabs').find('.sui-tabs-menu label').removeClass('active');
+		        $(this).addClass('active');
+
+		        $(this).closest('.sui-side-tabs').find('.sui-tabs-content .sui-tab-content').removeClass('active');
+		        $(this).closest('.sui-side-tabs').find('.sui-tabs-content .sui-tab-content[data-tab-index=' + tab_index + ']').addClass('active');
+
+
+		        if (tab_index === 1) {
+			        $(this).closest('.sui-side-tabs').find('fieldset.forminator-entries-fields-filter').attr('disabled', 'disabled');
+		        } else {
+			        $(this).closest('.sui-side-tabs').find('fieldset.forminator-entries-fields-filter').removeAttr('disabled');
+		        }
+
+	        });
+
+            $( "#wpf-cform-check_all" ).on( "click", function ( e ) {
+				var checked = this.checked;
+				var table = $(this).closest('table');
+				$(table).find( ".sui-checkbox input" ).each( function () {
+					this.checked = checked;
+				});
+			});
+
+			// Resend Activation link
+			$( document ).on( 'click', '.resend-activation-btn', function(e){
+				e.preventDefault();
+				const $btn = $( e.currentTarget );
+				$btn.prop( 'disabled', true );
+
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: {
+						action: 'forminator_resend_activation_link',
+						key: $btn.data( 'activation-key' ),
+						_ajax_nonce: $btn.data( 'nonce' )
+					},
+					success: function( result ){
+						var status = 'success';
+
+						if ( ! result.success ) {
+							status = 'error';
+						}
+
+						Forminator.Notification.open( status, result.data, 4000 );
+					}
+				}).always(function () {
+					$btn.prop( 'disabled', false );
+				});
+			});
+
+			// Resend Notification Email.
+			$( document ).on( 'click', '.forminator-resend-notification-email', function(e){
+				e.preventDefault();
+				const $btn = $( e.currentTarget );
+				$btn.prop( 'disabled', true );
+
+				$.ajax({
+					url: Forminator.Data.ajaxUrl,
+					type: "POST",
+					data: {
+						action: 'forminator_resend_notification_email',
+						entry_id: $btn.data( 'entry-id' ),
+						_ajax_nonce: $btn.data( 'nonce' )
+					},
+					success: function( result ){
+						var status = 'success';
+
+						if ( ! result.success ) {
+							status = 'error';
+						}
+
+						Forminator.Notification.open( status, result.data, 4000 );
+					}
+				}).always(function () {
+					$btn.prop( 'disabled', false );
+				});
+			});
+
+            /** ====== END Entries Page===== **/
+
+
+            //cform,poll and quiz all check
+            $('#forminator-check-all-modules').on("click", function () {
+	            var checked = this.checked;
+	            if ($('#forminator-modules-list').length) {
+		            //Selects elements that have the specified attribute with a value
+		            // either equal to a given string or starting with that string followed by a hyphen (-).
+		            $('#forminator-modules-list').find('.sui-checkbox input[id|="wpf-module"]').each(function () {
+			            this.checked = checked;
+		            });
+
+		            if ($('form[name="bulk-action-form"] input[name="ids"]').length) {
+			            var ids = $('#forminator-modules-list').find('.sui-checkbox input[id|="wpf-module"]:checked').map(function () {
+					            if (parseFloat(this.value)) return this.value;
+				            }
+			            ).get().join(',');
+			            $('form[name="bulk-action-form"] input[name="ids"]').val(ids);
+		            }
+	            }
+            });
+
+			//cform,poll and quiz single check
+			if ( 0 !== $( 'form[name="bulk-action-form"]' ).length ) {
+				$( document ).on( "click", ".sui-checkbox input", function(){
+					if ( $( 'form[name="bulk-action-form"] input[name="ids"]' ).length ) {
+						var ids = $( ".sui-checkbox input:checked" ).map( function() { if ( parseFloat( this.value ) ) return this.value; } ).get().join( ',' );
+							$( 'form[name="bulk-action-form"] input[name="ids"]' ).val( ids );
+					}
+					if( $(this).attr('id') !== 'forminator-check-all-modules') {
+						$('#forminator-check-all-modules').prop("checked", false);
+					}
+				});
+			}
+
+			// ACTION minimize
+			$( function () {
+				var $this = $( ".wpmudev-can--hide" ),
+					$button = $this.find( ".wpmudev-box-header" )
+				;
+
+				$button.on( "click", function () {
+					var $parent = $( this ).closest( ".wpmudev-can--hide" );
+					$parent.toggleClass( "wpmudev-is--hidden" );
+				});
+			});
+
+			// ACTION open entries
+			$(document).on('click', '.wpmudev-open-entry', function(e){
+
+				if ($(e.target).attr('type') === 'checkbox' || $(e.target).hasClass('wpdui-icon-check') ) {
+					return;
+				}
+				e.preventDefault();
+				e.stopPropagation();
+
+				var $this = $(this),
+					$entry_id = $this.data('entry'),
+					$entry = $("#forminator-" + $entry_id),
+					$open = true;
+
+				if ( $entry.hasClass( 'wpmudev-is_open' ) ) {
+					$open = false;
+				}
+				$('.wpmudev-entries--result').removeClass('wpmudev-is_open');
+				if ( $open ) {
+					$entry.toggleClass('wpmudev-is_open');
+				}
+			});
+
+			// OPEN control menu
+			$( function () {
+				var $this = $( ".wpmudev-result--menu" ),
+					$button = $this.find( ".wpmudev-button-action" );
+
+				$button.on( "click", function () {
+					var $menu = $( this ).next( ".wpmudev-menu" );
+
+					// Close all already opened menus
+					$( ".wpmudev-result--menu.wpmudev-active" ).removeClass( "wpmudev-active" );
+					$( ".wpmudev-button-action.wpmudev-active" ).not( $( this ) ).removeClass( "wpmudev-active" );
+					$( ".wpmudev-menu" ).not( $menu ).addClass( "wpmudev-hidden" );
+
+					$( this ).toggleClass( "wpmudev-active" );
+					$menu.toggleClass( "wpmudev-hidden" );
+				});
+
+			});
+
+			// ITEMS position
+			$( function () {
+
+				var $this   = $( ".wpmudev-list" ),
+					$table  = $this.find( ".wpmudev-list-table" ),
+					$item   = $table.find( ".wpmudev-table-body tr" )
+				;
+
+				var $totalItems = $item.length,
+					$itemCount  = $totalItems
+				;
+
+				$item.each(function(){
+					$( this ).find( '.wpmudev-body-menu' ).css( 'z-index', $itemCount );
+					$itemCount--;
+				});
+
+			});
+
+	        // insert text
+	        $( function () {
+		        $('body').on('change', '.sui-insert-variables select', function (e) {
+			        var $this = $(e.target);
+
+			        var textarea_id = $this.data('textarea-id');
+			        if (textarea_id) {
+				        e.preventDefault();
+				        if ($('#' + textarea_id).length > 0) {
+					        var textarea     = $('input#' + textarea_id + ',textarea#' + textarea_id);
+					        var textarea_val = textarea.val();
+					        textarea.val(textarea_val + ' ' + $this.val());
+					        textarea.trigger('change', textarea.val());
+				        }
+				        return false;
+			        }
+
+		        });
+
+				$( document ).on( "click", '.copy-clipboard', function ( e ) {
+					e.preventDefault();
+
+					copyToClipboard( $( this ).data( 'shortcode' ) );
+
+					Forminator.Notification.open( 'success', Forminator.l10n.options.shortcode_copied, 4000 );
+				});
+
+
+				$('body').on('click', '.delete-poll-submission', function (e) {
+					var $target = $(e.target);
+					var new_request = {
+						action: 'forminator_delete_poll_submissions',
+						id: $target.data('id'),
+						_ajax_nonce: $target.data('nonce'),
+					};
+					$target.addClass('sui-button-onload');
+
+					$.post({
+						url: Forminator.Data.ajaxUrl,
+						type: 'post',
+						data: new_request
+					})
+						.done(function (result) {
+							// Update screen
+							if( result.success ) {
+								jQuery('.sui-poll-submission').addClass('sui-message').html('').html(result.data.html);
+							}
+
+							Forminator.Popup.close();
+
+							// Handle notifications
+							if (!_.isUndefined(result.data.notification) &&
+								!_.isUndefined(result.data.notification.type) &&
+								!_.isUndefined(result.data.notification.text) &&
+								!_.isUndefined(result.data.notification.duration)
+							) {
+
+								Forminator.Notification.open(
+									result.data.notification.type,
+									result.data.notification.text,
+									result.data.notification.duration
+								)
+									.done(function () {});
+
+							}
+						});
+
+				});
+
+				// Dismiss admin notice.
+				$('.forminator-grouped-notice .notice-dismiss').on('click', function(e){
+					e.preventDefault();
+					const $notice = $(e.currentTarget).closest('.forminator-grouped-notice');
+
+					jQuery.post(
+						ajaxurl,
+						{
+							action: 'forminator_dismiss_notice',
+							slug: $notice.data('notice-slug'),
+							_ajax_nonce: $notice.data('nonce')
+						}
+					).always(function () {
+						$notice.hide();
+					});
+				});
+			});
+
+			/*
+			 * Ajax module Search
+			 */
+			if ( 0 !== $( '#forminator-search-modules' ).length ) {
+
+				var $searchForm   = $( '#forminator-search-modules' );
+				var $pageParam 	  = $searchForm.find( 'input[name="page"]' ).val();
+				var $resetUrl 	  = forminatorData.adminUrl + 'admin.php?page=' + $pageParam;
+				var $searchInput  = $searchForm.find( 'input[name="search"]' );
+				var $searchKey 	  = $searchInput.val();
+				var $modulesList  = $( '#forminator-modules-list' );
+				var $searchLoader = $( '#search_loader' );
+
+				$searchForm.on( 'submit', function ( e ) {
+					e.preventDefault();
+
+					// Redefine here to get the right value
+					$searchInput = $( this ).find( 'input[name="search"]' );
+					$searchKey 	 = $searchInput.val();
+
+					// if submitted without search key, reload to original state
+					if ( 0 === $searchKey.length ) {
+
+						if ( 'true' === $( this ).data( 'searched' ) ) {
+							window.location.href = $resetUrl;
+						}
+
+						return;
+					}
+
+					// Set searched data to true to check if page needs to be reloaded if search key is empty
+					$( this ).data( 'searched', 'true' );
+
+					$.ajax({
+						url: Forminator.Data.ajaxUrl,
+						type: "POST",
+						data: {
+							action				: "forminator_module_search",
+							_ajax_nonce			: $( this ).find( '#forminator-nonce-search-module' ).val(),
+							search_keyword		: $searchKey,
+							modules				: $( this ).find( 'input[name="modules"]' ).val(),
+							module_slug			: $( this ).find( 'input[name="module_slug"]' ).val(),
+							preview_title		: $( this ).find( 'input[name="preview_title"]' ).val(),
+							sql_month_start_date: $( this ).find( 'input[name="sql_month_start_date"]' ).val(),
+							wizard_page			: $( this ).find( 'input[name="wizard_page"]' ).val(),
+							preview_dialog		: $( this ).find( 'input[name="preview_dialog"]' ).val(),
+							export_dialog		: $( this ).find( 'input[name="export_dialog"]' ).val(),
+							post_type			: $( this ).find( 'input[name="post_type"]' ).val(),
+							page				: $pageParam
+						},
+						beforeSend: function () {
+							$modulesList.empty();
+							$searchLoader.show();
+							$searchInput.prop( 'disabled', true );
+							$( '.sui-pagination' ).remove();
+							$( '.sui-pagination-results' ).html('');
+							$( '#forminator-search-modules .search-reset' ).hide();
+						},
+						success: function( result ){
+							$searchLoader.hide();
+							$modulesList.html( result.data );
+							$( 'html' ).animate( { scrollTop: $modulesList.offset().top - 150 }, 300);
+							$( 'form[name="bulk-action-form"]' ).find( 'input[name="msearch"]' ).val( $searchKey );
+							$modulesList.find( '.module-actions input[name="msearch"]' ).val( $searchKey );
+							$searchInput.prop( 'disabled', false );
+							$( '.sui-pagination-results' ).html( window.singularPluralText(
+																	$modulesList.find( '.sui-accordion-item' ).length,
+																	Forminator.l10n.form.result,
+																	Forminator.l10n.form.results
+																 ) );
+							$( '#forminator-search-modules .search-reset' ).show();
+						}
+					});
+				});
+
+				// Auto submit search after page reload from module actions (publish, duplicate, etc)
+				if ( 0 !== $searchInput.length && 0 !== $searchKey.length ) {
+					$searchForm.submit();
+				}
+
+				$( document ).on( 'click', '#forminator-search-modules .search-reset', function( e ) {
+					e.preventDefault();
+					window.location.href = $resetUrl;
+				});
+			}
+
+			// Open popup for Apply Appearance Preset action.
+			$( document ).on( 'click', '.sui-box-search .sui-button', function( e ) {
+				var action = $( 'select[name="forminator_action"]' ).val();
+				if ( 'apply-preset-forms' === action ) {
+					e.preventDefault();
+					$( '#forminator_bulk_apply_preset' ).trigger( 'click' );
+				}
+			});
+
+    	});
+
+        $( window ).on( 'load', function () {
+            // On page load, trigger show submissions
+            if (
+				typeof window.Forminator === 'object' &&
+                typeof window.Forminator.Utils === 'object' &&
+                 'forminator-entries' === Forminator.Utils.get_url_param( 'page' ) &&
+                 false === Forminator.Utils.get_url_param( 'form_type' ) &&
+                 false === Forminator.Utils.get_url_param( 'form_id' )
+               ) {
+                $( '.show-submissions' ).trigger( 'click' );
+            }
+        });
+
+        /*
+         * Refresh page when back button is used
+         * @url https://stackoverflow.com/questions/43043113/how-to-force-reloading-a-page-when-using-browser-back-button
+         */
+        $( window ).on( 'pageshow', function ( event ) {
+            if ( event.persisted ||
+                 ( typeof window.performance != "undefined" &&
+                 window.performance.getEntriesByType("navigation")[0].type === "back_forward" )
+               ) {
+                window.location.reload();
+            }
+        });
+
+    }());
+}( jQuery, document ));
+
+function copyToClipboard( data ) {
+    var $temp = jQuery( '<input />' );
+    jQuery( "body" ).append( $temp );
+    $temp.val( data ).select();
+    document.execCommand( "copy" );
+    $temp.remove();
+}
+
+function copyToClipboardModal( el ) {
+    el.trigger( 'select' );
+    document.execCommand( "copy" );
+}
+
+// noinspection JSUnusedGlobalSymbols
+var forminator_render_captcha = function () {
+	// TODO: avoid conflict with another plugins that provide recaptcha
+	//  notify forminator front that grecaptcha loaded. anc can be used
+	jQuery('.forminator-g-recaptcha').each(function () {
+		var size = jQuery( this ).data('size'),
+			data = {
+				sitekey: jQuery( this ).data('sitekey'),
+				theme: jQuery( this ).data('theme'),
+				badge: jQuery( this ).data('badge'),
+				size: size
+			};
+
+		if (data.sitekey !== "") {
+			// noinspection Annotator
+			var widget = window.grecaptcha.render( jQuery(this)[0], data );
+		}
+	});
+};

@@ -102,7 +102,9 @@
 
             colibriLoadingScreen.show('Preparing theme styles...');
 
-            wp.ajax.post('get_after_import_builder_data', {}).done(function (data) {
+            wp.ajax.post('get_after_import_builder_data', {
+                _wpnonce: extendthemes_ocdi.ajax_nonce
+            }).done(function (data) {
                 for (var key in data) {
                     if (!data.hasOwnProperty(key)) {
                         continue;

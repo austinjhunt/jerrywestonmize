@@ -111,6 +111,30 @@ class ColibriThemeDataImporter {
 		$this->current_data = $parials_structured_data;
 	}
 
+	private function updateIconListSocialIconsDataNoArrayFormat(& $data, $initial_path = 'icon_list', $icons_path = 'iconList') {
+		$key = "$initial_path.localProps.$icons_path";
+		//check for multiple icons, if it's not found they will not be added because we do a check before inserting. 
+		//This is added for social icons in case the user added more icons
+		$nr_of_icons = 10;
+		$icons = [];
+		for($i = 0; $i < $nr_of_icons; $i++) {
+			$icon = [
+				"type" => "svg",
+				'icon' => isset($data["$key.$i.icon.name"]) ? $data["$key.$i.icon.name"] : null,
+				"name" =>  isset($data["$key.$i.icon.name"]) ? $data["$key.$i.icon.name"] : null,
+				"link" => array(
+					"value" =>  isset($data["$key.$i.link_value"]) ? $data["$key.$i.link_value"] : null,
+				),
+				"text" => isset($data["$key.$i.text"]) ? $data["$key.$i.text"] : ''
+			];
+			if(!empty($icon['name'])) {
+				$icons[] = $icon;
+			}
+
+		}
+		$data[$key] = $icons;
+	}
+
 	private function processForArea( $area, $data ) {
         // fix default opacity not working//
 	   	if (!isset($data['hero.style.background.overlay.color.opacity_']) && isset($data['hero.style.background.overlay.color.opacity'])) {
@@ -228,21 +252,12 @@ class ColibriThemeDataImporter {
 					break;
 					//For althea. The data is saved differently in this theme for iconList
 				case 'icon_list.localProps.iconList.0.icon.name':
-					$key = 'icon_list.localProps.iconList';
-					$icons = [];
-					for($i = 0; $i < 3; $i++) {
-						$icon = [
-							"type" => "svg",
-							'icon' => isset($data["icon_list.localProps.iconList.$i.icon.name"]) ? $data["icon_list.localProps.iconList.$i.icon.name"] : null,
-							"name" =>  isset($data["icon_list.localProps.iconList.$i.icon.name"]) ? $data["icon_list.localProps.iconList.$i.icon.name"] : null,
-							"link" => array(
-								"value" =>  isset($data["icon_list.localProps.iconList.$i.link_value"]) ? $data["icon_list.localProps.iconList.$i.link_value"] : null,
-							),
-							"text" => isset($data["icon_list.localProps.iconList.$i.text"]) ? $data["icon_list.localProps.iconList.$i.text"] : ''
-						];
-						$icons[] = $icon;
-					}
-				$data[ $key ] = $icons;
+
+					$this->updateIconListSocialIconsDataNoArrayFormat($data, 'icon_list', 'iconList', 3);
+					break;
+				//For althea. The data is saved differently in this theme for social icons
+				case 'social_icons.localProps.icons.0.icon.name':
+					$this->updateIconListSocialIconsDataNoArrayFormat($data, 'social_icons', 'icons', 4);
 					break;
 				case 'hero.style.background.overlay.color.opacity_':
 					//rewrite opacity_ to opacity (there was a problem with customizer controls that prevented usage of opacity)

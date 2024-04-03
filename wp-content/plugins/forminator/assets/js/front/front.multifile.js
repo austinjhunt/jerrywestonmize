@@ -325,7 +325,7 @@
 			 * Get the name of the uploaded file (extension included).
 			 */
 
-			var name = '<p class="forminator-uploaded-file--title">' + filename + '</p>';
+			var name = '<p class="forminator-uploaded-file--title">' + filename.replace( /[<>:"/\\|?*]+/g, '_' ) + '</p>';
 
 			/**
 			 * File Size.

@@ -32,8 +32,10 @@ use MailPoet\Segments\DynamicSegments\Filters\WooCommerceNumberOfOrders;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceNumberOfReviews;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceProduct;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommercePurchaseDate;
+use MailPoet\Segments\DynamicSegments\Filters\WooCommercePurchasedWithAttribute;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceSingleOrderValue;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceSubscription;
+use MailPoet\Segments\DynamicSegments\Filters\WooCommerceTag;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceTotalSpent;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceUsedCouponCode;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceUsedPaymentMethod;
@@ -41,33 +43,36 @@ use MailPoet\Segments\DynamicSegments\Filters\WooCommerceUsedShippingMethod;
 use MailPoet\WP\Functions as WPFunctions;
 
 class FilterDataMapper {
-  /** @var WPFunctions */
-  private $wp;
+  private WPFunctions $wp;
 
-  /** @var DateFilterHelper */
-  private $dateFilterHelper;
+  private DateFilterHelper $dateFilterHelper;
 
-  /** @var WooCommerceNumberOfReviews */
-  private $wooCommerceNumberOfReviews;
+  private WooCommerceNumberOfReviews $wooCommerceNumberOfReviews;
 
-  /** @var FilterHelper */
-  private $filterHelper;
+  private FilterHelper $filterHelper;
 
-  /** @var WooCommerceUsedCouponCode */
-  private $wooCommerceUsedCouponCode;
+  private WooCommerceUsedCouponCode $wooCommerceUsedCouponCode;
+
+  private WooCommerceTag $wooCommerceTag;
+
+  private WooCommercePurchasedWithAttribute $wooCommercePurchasedWithAttribute;
 
   public function __construct(
     WPFunctions $wp,
     DateFilterHelper $dateFilterHelper,
     FilterHelper $filterHelper,
     WooCommerceNumberOfReviews $wooCommerceNumberOfReviews,
-    WooCommerceUsedCouponCode $wooCommerceUsedCouponCode
+    WooCommerceUsedCouponCode $wooCommerceUsedCouponCode,
+    WooCommercePurchasedWithAttribute $wooCommercePurchasedWithAttribute,
+    WooCommerceTag $wooCommerceTag
   ) {
     $this->wp = $wp;
     $this->dateFilterHelper = $dateFilterHelper;
     $this->filterHelper = $filterHelper;
     $this->wooCommerceNumberOfReviews = $wooCommerceNumberOfReviews;
     $this->wooCommerceUsedCouponCode = $wooCommerceUsedCouponCode;
+    $this->wooCommercePurchasedWithAttribute = $wooCommercePurchasedWithAttribute;
+    $this->wooCommerceTag = $wooCommerceTag;
   }
 
   /**
@@ -512,6 +517,18 @@ class FilterDataMapper {
       $filterData['coupon_code_ids'] = $data['coupon_code_ids'];
       $filterData['days'] = $data['days'];
       $filterData['timeframe'] = $data['timeframe'];
+    } elseif ($data['action'] === WooCommercePurchasedWithAttribute::ACTION) {
+      $this->wooCommercePurchasedWithAttribute->validateFilterData($data);
+      $filterData['operator'] = $data['operator'];
+      $filterData['attribute_taxonomy_slug'] = $data['attribute_taxonomy_slug'] ?? null;
+      $filterData['attribute_term_ids'] = $data['attribute_term_ids'] ?? null;
+      $filterData['attribute_type'] = $data['attribute_type'];
+      $filterData['attribute_local_name'] = $data['attribute_local_name'] ?? null;
+      $filterData['attribute_local_values'] = $data['attribute_local_values'] ?? null;
+    } elseif ($data['action'] === WooCommerceTag::ACTION) {
+      $this->wooCommerceTag->validateFilterData($data);
+      $filterData['operator'] = $data['operator'];
+      $filterData['tag_ids'] = $data['tag_ids'];
     } else {
       throw new InvalidFilterException("Unknown action " . $data['action'], InvalidFilterException::MISSING_ACTION);
     }

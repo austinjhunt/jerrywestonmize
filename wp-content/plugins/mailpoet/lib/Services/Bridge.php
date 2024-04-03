@@ -161,6 +161,9 @@ class Bridge {
 
     $allSenderDomains = [];
     $data = $this->getRawSenderDomainData();
+    if ($data === null) {
+      return [];
+    }
 
     foreach ($data as $subarray) {
       if (isset($subarray['domain'])) {
@@ -176,11 +179,10 @@ class Bridge {
     return $allSenderDomains;
   }
 
-  public function getRawSenderDomainData(): array {
-    $data = $this
+  public function getRawSenderDomainData(): ?array {
+    return $this
       ->getApi($this->settings->get(self::API_KEY_SETTING_NAME))
       ->getAuthorizedSenderDomains();
-    return $data ?? [];
   }
 
   /**
@@ -344,8 +346,8 @@ class Bridge {
     $key = $this->settings->get(self::API_KEY_SETTING_NAME);
     $this->storeMSSKeyAndState($key, $this->buildKeyState(
       self::KEY_INVALID,
-      [ 'code' => API::RESPONSE_CODE_KEY_INVALID ],
-      null)
-    );
+      ['code' => API::RESPONSE_CODE_KEY_INVALID],
+      null
+    ));
   }
 }

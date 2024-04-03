@@ -81,6 +81,9 @@ class NewsletterSaveController {
   /*** @var NewsletterCoupon */
   private $newsletterCoupon;
 
+  /** @var EmailEditor */
+  private $emailEditor;
+
   public function __construct(
     AuthorizedEmailsController $authorizedEmailsController,
     Emoji $emoji,
@@ -97,7 +100,8 @@ class NewsletterSaveController {
     WPFunctions $wp,
     ApiDataSanitizer $dataSanitizer,
     Scheduler $scheduler,
-    NewsletterCoupon $newsletterCoupon
+    NewsletterCoupon $newsletterCoupon,
+    EmailEditor $emailEditor
   ) {
     $this->authorizedEmailsController = $authorizedEmailsController;
     $this->emoji = $emoji;
@@ -115,6 +119,7 @@ class NewsletterSaveController {
     $this->dataSanitizer = $dataSanitizer;
     $this->scheduler = $scheduler;
     $this->newsletterCoupon = $newsletterCoupon;
+    $this->emailEditor = $emailEditor;
   }
 
   public function save(array $data = []): NewsletterEntity {
@@ -207,6 +212,18 @@ class NewsletterSaveController {
         // translators: %s is the campaign name of the mail which has been copied.
         'post_title' => sprintf(__('Copy of %s', 'mailpoet'), $post->post_title), // @phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
       ]);
+      // Post meta duplication
+      $originalPostMeta = $this->wp->getPostMeta($post->ID);
+      foreach ($originalPostMeta as $key => $values) {
+        foreach ($values as $value) {
+          // Unserialize the value if it was serialized to avoid invalid data format
+          if (is_string($value) && is_serialized($value)) {
+            $value = unserialize($value);
+          }
+          update_post_meta($newPostId, $key, $value);
+        }
+      }
+
       $duplicate->setWpPost($this->entityManager->getReference(WpPostEntity::class, $newPostId));
     }
 
@@ -449,7 +466,7 @@ class NewsletterSaveController {
     }
 
     $newPostId = $this->wp->wpInsertPost([
-      'post_content' => '',
+      'post_content' => $this->emailEditor->getEmailDefaultContent(),
       'post_type' => EmailEditor::MAILPOET_EMAIL_POST_TYPE,
       'post_status' => 'draft',
       'post_author' => $this->wp->getCurrentUserId(),

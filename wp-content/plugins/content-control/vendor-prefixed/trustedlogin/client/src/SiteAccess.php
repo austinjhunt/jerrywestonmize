@@ -7,7 +7,7 @@
  * @copyright 2021 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by code-atlantic on 08-December-2023 using {@see https://github.com/BrianHenryIE/strauss}.
+ * Modified by code-atlantic on 21-March-2024 using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace ContentControl\Vendor\TrustedLogin;
@@ -199,11 +199,7 @@ class SiteAccess {
 			return true;
 		}
 
-		$body = array(
-			'publicKey' => $this->config->get_setting( 'auth/api_key' ),
-		);
-
-		$api_response = $remote->send( 'sites/' . $secret_id, $body, 'DELETE' );
+		$api_response = $remote->send( 'sites/' . $secret_id, array(), 'DELETE' );
 
 		if ( is_wp_error( $api_response ) ) {
 			return $api_response;

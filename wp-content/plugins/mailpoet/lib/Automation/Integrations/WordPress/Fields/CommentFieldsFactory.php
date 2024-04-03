@@ -181,7 +181,8 @@ class CommentFieldsFactory {
           'name' => $name,
         ];
       },
-      $statuses, array_keys($statuses)
+      $statuses,
+      array_keys($statuses)
     ));
   }
 }

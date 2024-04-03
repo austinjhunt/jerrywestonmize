@@ -11,6 +11,8 @@ namespace ContentControl;
 
 use function ContentControl\plugin;
 use function ContentControl\set_rules_query;
+use function ContentControl\is_frontend;
+use function ContentControl\is_rest;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -67,7 +69,7 @@ function user_can_view_content( $post_id = null ) {
 	if ( false === (bool) apply_filters( 'content_control/check_all_restrictions', false, $post_id ) ) {
 		$restriction = get_applicable_restriction( $post_id );
 
-		if ( null !== $restriction ) {
+		if ( $restriction ) {
 			$can_view       = $restriction->user_meets_requirements();
 			$restrictions[] = $restriction;
 		}
@@ -202,8 +204,17 @@ function get_restriction_matches_for_queried_posts( $query ) {
 	set_rules_query( $query );
 
 	foreach ( $query->posts as $post ) {
+		/**
+		 * Post ID.
+		 *
+		 * @var \WP_Post $post
+		 */
 		if ( content_is_restricted( $post->ID ) ) {
 			$restriction = get_applicable_restriction( $post->ID );
+
+			if ( ! $restriction ) {
+				continue;
+			}
 
 			if ( ! isset( $restrictions[ $cache_key ][ $restriction->priority ] ) ) {
 				// Handles deduplication & sorting.
@@ -233,6 +244,108 @@ function get_restriction_matches_for_queried_posts( $query ) {
 }
 
 /**
+ * Check if query has restrictions.
+ *
+ * @param \WP_Term_Query $query Query object.
+ *
+ * @return array<array{restriction:\ContentControl\Models\Restriction,term_ids:int[]}>|false
+ *
+ * @since 2.0.0
+ */
+function get_restriction_matches_for_queried_terms( $query ) {
+	if ( empty( $query->terms ) ) {
+		return false;
+	}
+
+	static $restrictions;
+
+	// Generate cache key from hasing $wp_query.
+	$cache_key = md5( (string) wp_json_encode( $query ) );
+
+	if ( isset( $restrictions[ $cache_key ] ) ) {
+		return $restrictions[ $cache_key ];
+	}
+
+	set_rules_query( $query );
+
+	foreach ( $query->terms as $term ) {
+		$term_id = false;
+
+		if ( is_object( $term ) && isset( $term->term_id ) ) {
+			$term_id = (int) $term->term_id;
+		} elseif ( is_numeric( $term ) ) {
+			$term_id = absint( $term );
+		}
+
+		if ( $term_id > 0 && content_is_restricted( $term_id ) ) {
+			$restriction = get_applicable_restriction( $term_id );
+
+			if ( ! $restriction ) {
+				continue;
+			}
+
+			if ( ! isset( $restrictions[ $cache_key ][ $restriction->priority ] ) ) {
+				// Handles deduplication & sorting.
+				$restrictions[ $cache_key ][ $restriction->priority ] = [
+					'restriction' => $restriction,
+					'term_ids'    => [],
+				];
+			}
+
+			// Add term to restriction.
+			$restrictions[ $cache_key ][ $restriction->priority ]['term_ids'][] = $term_id;
+		}
+	}
+
+	set_rules_query( null );
+
+	if ( empty( $restrictions[ $cache_key ] ) ) {
+		$restrictions[ $cache_key ] = false;
+	} else {
+		// Sort by priority.
+		ksort( $restrictions[ $cache_key ] );
+		// Remove priority keys.
+		$restrictions[ $cache_key ] = array_values( $restrictions[ $cache_key ] );
+	}
+
+	return $restrictions[ $cache_key ];
+}
+
+/**
+ * Check if the referrer is the sites admin area.
+ *
+ * @return bool
+ *
+ * @since 2.2.0
+ */
+function check_referrer_is_admin() {
+	$ref = wp_get_raw_referer();
+
+	if ( empty( $ref ) ) {
+		return false;
+	}
+
+	$ref = wp_parse_url( $ref );
+
+	if ( empty( $ref['host'] ) ) {
+		return false;
+	}
+
+	$ref_host = strtolower( $ref['host'] );
+
+	/**
+	 *  Admin root URL.
+	 *
+	 * @var string $admin_url
+	 */
+	$admin_url = wp_parse_url( admin_url(), PHP_URL_HOST );
+
+	$admin_url = strtolower( $admin_url );
+
+	return $ref_host === $admin_url;
+}
+
+/**
  * Check if protection methods should be disabled.
  *
  * Generally used to bypass protections when using page editors.
@@ -242,15 +355,33 @@ function get_restriction_matches_for_queried_posts( $query ) {
  * @since 2.0.0
  */
 function protection_is_disabled() {
-	$checks = [
-		// Disable protection when not on the frontend.
-		! \ContentControl\is_frontend(),
-		// Disable protection when user is excluded.
-		user_is_excluded(),
-		// Disable protection when viewing post previews.
-		is_preview() && current_user_can( 'edit_post', get_the_ID() ),
-	];
+	$is_disabled = false;
 
+	if (
+		// Disable protection when user is excluded.
+		( user_is_excluded() ) ||
+
+		// Check if doing cron.
+		( defined( 'DOING_CRON' ) && DOING_CRON ) ||
+
+		// Check if doing ADMIN AJAX from valid admin referrer.
+		( defined( 'DOING_AJAX' ) && DOING_AJAX && check_referrer_is_admin() ) ||
+
+		// Check if doing REST API from valid admin referrer.
+		( is_rest() && check_referrer_is_admin() ) ||
+
+		// If this is rest request and not core wp namespace.
+		( is_rest() && ! is_wp_core_rest_namespace() ) ||
+		
+		// Disable protection when viewing post previews.
+		( is_preview() && current_user_can( 'edit_post', get_the_ID() ) ) ||
+
+		// Disable protection when not on the frontend.
+		( ! is_frontend() && ! is_rest() )
+	 ) {
+		$is_disabled = true;
+	}
+ 
 	/**
 	 * Filter whether protection is disabled.
 	 *
@@ -260,8 +391,5 @@ function protection_is_disabled() {
 	 *
 	 * @since 2.0.0
 	 */
-	return apply_filters(
-		'content_control/protection_is_disabled',
-		in_array( true, $checks, true )
-	);
+	return apply_filters( 'content_control/protection_is_disabled', $is_disabled );
 }

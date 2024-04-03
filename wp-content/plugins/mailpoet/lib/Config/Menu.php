@@ -125,22 +125,6 @@ class Menu {
 
     $this->registerMailPoetMenu();
 
-    // @ToDo Remove Beta once Automation is no longer beta.
-    $this->wp->addAction('admin_head', function () {
-      echo '<style>
-#adminmenu .toplevel_page_mailpoet-homepage a[href="admin.php?page=mailpoet-automation"] {
-  white-space: nowrap;
-}
-.mailpoet-beta-badge {
-  text-transform: uppercase;
-  font-size: 9px;
-  position: relative;
-  top: -5px;
-  color: #ffab66;
-}
-</style>';
-    });
-
     if (!self::isOnMailPoetAdminPage()) {
       return;
     }
@@ -534,8 +518,7 @@ class Menu {
     $automationPage = $this->wp->addSubmenuPage(
       self::MAIN_PAGE_SLUG,
       $this->setPageTitle(__('Automations', 'mailpoet')),
-      // @ToDo Remove Beta once Automation is no longer beta.
-      '<span>' . esc_html__('Automations', 'mailpoet') . '</span><span class="mailpoet-beta-badge">Beta</span>',
+      esc_html__('Automations', 'mailpoet'),
       AccessControl::PERMISSION_MANAGE_EMAILS,
       self::AUTOMATIONS_PAGE_SLUG,
       [$this, 'automation']

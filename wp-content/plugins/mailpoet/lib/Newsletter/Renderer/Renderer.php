@@ -6,7 +6,6 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\Config\Env;
-use MailPoet\Config\ServicesChecker;
 use MailPoet\EmailEditor\Engine\Renderer\Renderer as GuntenbergRenderer;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\SendingQueueEntity;
@@ -16,6 +15,7 @@ use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Newsletter\Renderer\EscapeHelper as EHelper;
 use MailPoet\Newsletter\Sending\SendingQueuesRepository;
 use MailPoet\NewsletterProcessingException;
+use MailPoet\Util\License\Features\CapabilitiesManager;
 use MailPoet\Util\pQuery\DomNode;
 use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Html2Text\Html2Text;
@@ -36,9 +36,6 @@ class Renderer {
   /** @var \MailPoetVendor\CSS */
   private $cSSInliner;
 
-  /** @var ServicesChecker */
-  private $servicesChecker;
-
   /** @var WPFunctions */
   private $wp;
 
@@ -54,28 +51,30 @@ class Renderer {
   /** @var FeaturesController */
   private $featuresController;
 
+  private CapabilitiesManager $capabilitiesManager;
+
   public function __construct(
     BodyRenderer $bodyRenderer,
     GuntenbergRenderer $guntenbergRenderer,
     Preprocessor $preprocessor,
     \MailPoetVendor\CSS $cSSInliner,
-    ServicesChecker $servicesChecker,
     WPFunctions $wp,
     LoggerFactory $loggerFactory,
     NewslettersRepository $newslettersRepository,
     SendingQueuesRepository $sendingQueuesRepository,
-    FeaturesController $featuresController
+    FeaturesController $featuresController,
+    CapabilitiesManager $capabilitiesManager
   ) {
     $this->bodyRenderer = $bodyRenderer;
     $this->guntenbergRenderer = $guntenbergRenderer;
     $this->preprocessor = $preprocessor;
     $this->cSSInliner = $cSSInliner;
-    $this->servicesChecker = $servicesChecker;
     $this->wp = $wp;
     $this->loggerFactory = $loggerFactory;
     $this->newslettersRepository = $newslettersRepository;
     $this->sendingQueuesRepository = $sendingQueuesRepository;
     $this->featuresController = $featuresController;
+    $this->capabilitiesManager = $capabilitiesManager;
   }
 
   public function render(NewsletterEntity $newsletter, SendingQueueEntity $sendingQueue = null, $type = false) {
@@ -105,8 +104,9 @@ class Renderer {
         ? $body['globalStyles']
         : [];
 
+      $mailPoetLogoInEmails = $this->capabilitiesManager->getCapability('mailpoetLogoInEmails');
       if (
-        !$this->servicesChecker->isUserActivelyPaying() && !$preview
+        (isset($mailPoetLogoInEmails) && $mailPoetLogoInEmails->isRestricted) && !$preview
       ) {
         $content = $this->addMailpoetLogoContentBlock($content, $styles);
       }

@@ -70,6 +70,26 @@ function is_rest() {
 }
 
 /**
+ * Check if this is a core WP REST namespace.
+ *
+ * @return boolean
+ *
+ * @since 2.2.0
+ */
+function is_wp_core_rest_namespace() {
+	if ( ! is_rest() ) {
+		return false;
+	}
+
+	global $wp;
+
+	$rest_route = isset( $wp->query_vars['rest_route'] ) ? $wp->query_vars['rest_route'] : '';
+
+	// Check if this is core WP REST namespace.
+	return strpos( $rest_route, '/wp/v2' ) === 0;
+}
+
+/**
  * Check if this is a cron request.
  *
  * @return boolean
@@ -93,9 +113,17 @@ function is_ajax() {
  * @return boolean
  */
 function is_frontend() {
-	global $wp_rewrite;
+	// Cached.
+	static $is_frontend;
+
+	if ( isset( $is_frontend ) ) {
+		// Not fully tested, but if we have a cached value, we can return it.
+		// return $is_frontend;
+	}
 
 	$query = get_query();
+
+	$wp_query = $query instanceof \WP_Query ? $query : null;
 
 	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
@@ -106,17 +134,18 @@ function is_frontend() {
 		is_admin() ||
 		is_ajax() ||
 		is_cron() ||
-		( $query && $query->is_admin ) ||
-		( $query && $query->is_favicon() ) ||
-		( $query && $query->is_robots() ) ||
+		( $wp_query && $wp_query->is_admin ) ||
+		( $wp_query && $wp_query->is_favicon() ) ||
+		( $wp_query && $wp_query->is_robots() ) ||
 		strpos( $request_uri, 'favicon.ico' ) !== false ||
-		strpos( $request_uri, 'robots.txt' ) !== false ||
-		( $wp_rewrite && is_rest() )
+		strpos( $request_uri, 'robots.txt' ) !== false
 	) {
-		return false;
+		$is_frontend = false;
+	} else {
+		$is_frontend = true;
 	}
 
-	return true;
+	return $is_frontend;
 }
 
 /**

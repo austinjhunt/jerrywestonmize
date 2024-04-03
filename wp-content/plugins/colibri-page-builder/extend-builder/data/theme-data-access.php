@@ -18,11 +18,11 @@ class OptionThemeData
 
     public function set($value)
     {
-        update_option(self::OPTION_NAME, $value);
+        update_option(self::OPTION_NAME, $value, 'no');
     }
 
     public function backup() {
-        update_option(self::OPTION_NAME."_".time(), $this->get());
+        update_option(self::OPTION_NAME."_".time(), $this->get(), 'no');
     }
 }
 
