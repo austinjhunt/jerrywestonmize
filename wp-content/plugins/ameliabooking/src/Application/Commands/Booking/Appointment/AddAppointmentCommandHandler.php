@@ -115,6 +115,10 @@ class AddAppointmentCommandHandler extends CommandHandler
         /** @var Service $service */
         $service = $bookableAS->getAppointmentService($appointmentData['serviceId'], $appointmentData['providerId']);
 
+        $appointmentData = apply_filters('amelia_before_appointment_added_filter', $appointmentData, $service ? $service->toArray() : null, $paymentData);
+
+        do_action('amelia_before_appointment_added', $appointmentData, $service ? $service->toArray() : null, $paymentData);
+
         $maxDuration = 0;
 
         foreach ($appointmentData['bookings'] as $booking) {
@@ -283,6 +287,8 @@ class AddAppointmentCommandHandler extends CommandHandler
         );
 
         $appointmentRepo->commit();
+
+        do_action('amelia_after_appointment_added', $appointment ? $appointment->toArray() : null, $service ? $service->toArray() : null, $paymentData);
 
         return $result;
     }

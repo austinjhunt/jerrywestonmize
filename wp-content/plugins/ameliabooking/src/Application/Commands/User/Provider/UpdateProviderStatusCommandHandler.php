@@ -49,7 +49,13 @@ class UpdateProviderStatusCommandHandler extends CommandHandler
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
 
-        $providerRepository->updateFieldById($command->getArg('id'), $command->getField('status'), 'status');
+        $status = $command->getField('status');
+
+        do_action('amelia_before_provider_status_updated', $status, $command->getArg('id'));
+
+        $providerRepository->updateFieldById($command->getArg('id'), $status, 'status');
+
+        do_action('amelia_after_provider_status_updated', $status, $command->getArg('id'));
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated user');

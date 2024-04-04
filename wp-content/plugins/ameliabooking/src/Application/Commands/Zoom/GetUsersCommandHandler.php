@@ -84,6 +84,10 @@ class GetUsersCommandHandler extends CommandHandler
             return $result;
         }
 
+        $zoomResult = apply_filters('amelia_get_zoom_users_filter', $zoomResult);
+
+        do_action('amelia_get_zoom_users', $zoomResult);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved users');
         $result->setData(

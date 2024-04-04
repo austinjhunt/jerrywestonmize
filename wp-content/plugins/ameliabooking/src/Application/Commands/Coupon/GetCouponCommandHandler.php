@@ -51,11 +51,17 @@ class GetCouponCommandHandler extends CommandHandler
         /** @var Coupon $coupon */
         $coupon = $couponRepository->getById($command->getArg('id'));
 
+        $couponArray = $coupon->toArray();
+
+        $couponArray = apply_filters('amelia_get_coupon_filter', $couponArray);
+
+        do_action('amelia_get_coupon', $couponArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved coupon.');
         $result->setData(
             [
-                Entities::COUPON => $coupon->toArray(),
+                Entities::COUPON => $couponArray,
             ]
         );
 

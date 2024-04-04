@@ -48,11 +48,17 @@ class GetWPUsersCommandHandler extends CommandHandler
         /** @var WPUserRepository $wpUserRepository */
         $wpUserRepository = $this->getContainer()->get('domain.wpUsers.repository');
 
+        $wpUsers = $wpUserRepository->getAllNonRelatedWPUsers($command->getFields(), $adminIds);
+
+        $wpUsers = apply_filters('amelia_get_wp_users_filter', $wpUsers);
+
+        do_action('amelia_get_wp_users', $wpUsers);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved users.');
 
         $result->setData([
-            Entities::USER . 's' => $wpUserRepository->getAllNonRelatedWPUsers($command->getFields(), $adminIds)
+            Entities::USER . 's' => $wpUsers
         ]);
 
         return $result;

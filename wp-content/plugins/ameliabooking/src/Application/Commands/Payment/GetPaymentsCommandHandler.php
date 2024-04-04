@@ -61,11 +61,17 @@ class GetPaymentsCommandHandler extends CommandHandler
 
         $paymentsData = $paymentAS->getPaymentsData($params, $settingsService->getSetting('general', 'itemsPerPageBackEnd'));
 
+        $payments = array_values($paymentsData);
+
+        $payments = apply_filters('amelia_get_payments_filter', $payments);
+
+        do_action('amelia_get_payments', $payments);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved payments.');
         $result->setData(
             [
-                Entities::PAYMENTS => array_values($paymentsData),
+                Entities::PAYMENTS => $payments,
                 'filteredCount'    => (int)$paymentRepository->getCount($params),
                 'totalCount'       => (int)$paymentRepository->getCount([]),
             ]

@@ -258,6 +258,9 @@ class GetSearchCommandHandler extends CommandHandler
 
         $resultDataPaginated = array_slice($resultData, ($params['page'] - 1) * $itemsPerPage, $itemsPerPage);
 
+        $resultDataPaginated = apply_filters('amelia_get_search_slots_filter', $resultDataPaginated);
+
+        do_action('amelia_get_search_slots', $resultDataPaginated);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved searched services.');

@@ -73,6 +73,10 @@ class UpdateServiceCommandHandler extends CommandHandler
 
         $entityService->removeMissingEntitiesForService($serviceData);
 
+        $serviceData = apply_filters('amelia_before_service_updated_filter', $serviceData);
+
+        do_action('amelia_before_service_updated', $serviceData);
+
         /** @var Service $service */
         $service = ServiceFactory::create($serviceData);
 
@@ -88,9 +92,8 @@ class UpdateServiceCommandHandler extends CommandHandler
                     )
                 )
             );
-            if ($newSettings) {
-                $service->setSettings($newSettings);
-            }
+
+            $service->setSettings($newSettings);
         }
 
         if (!($service instanceof Service)) {
@@ -155,6 +158,8 @@ class UpdateServiceCommandHandler extends CommandHandler
         );
 
         $serviceRepository->commit();
+
+        do_action('amelia_after_service_updated', $service->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated service.');

@@ -56,6 +56,8 @@ class DeletePaymentCommandHandler extends CommandHandler
 
         $paymentRepository->beginTransaction();
 
+        do_action('amelia_before_payment_deleted', $payment ? $payment->toArray() : null);
+
         if (!$paymentAS->delete($payment)) {
             $paymentRepository->rollback();
 
@@ -66,6 +68,8 @@ class DeletePaymentCommandHandler extends CommandHandler
         }
 
         $paymentRepository->commit();
+
+        do_action('amelia_after_payment_deleted', $payment ? $payment->toArray() : null);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Payment successfully deleted.');

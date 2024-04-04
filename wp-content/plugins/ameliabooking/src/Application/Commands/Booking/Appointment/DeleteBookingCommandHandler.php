@@ -63,6 +63,9 @@ class DeleteBookingCommandHandler extends CommandHandler
 
         $hasMultipleBookings = $appointment->getBookings()->length() > 1;
 
+        do_action('amelia_before_package_booking_deleted', $appointment ? $appointment->toArray() : null, $removedBooking ? $removedBooking->toArray() : null);
+
+
         if ($appointment->getBookings()->length() === 1) {
             $resultData = $appointmentApplicationService->removeBookingFromNonGroupAppointment(
                 $appointment,
@@ -99,6 +102,8 @@ class DeleteBookingCommandHandler extends CommandHandler
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted booking');
         $result->setData($resultData);
+
+        do_action('amelia_after_package_booking_deleted', $appointment ? $appointment->toArray() : null, $removedBooking ? $removedBooking->toArray() : null);
 
         return $result;
     }

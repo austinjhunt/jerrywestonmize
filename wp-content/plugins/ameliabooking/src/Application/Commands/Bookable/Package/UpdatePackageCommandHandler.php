@@ -63,6 +63,10 @@ class UpdatePackageCommandHandler extends CommandHandler
 
         $entityService->removeMissingEntitiesForPackage($packageData);
 
+        $packageData = apply_filters('amelia_before_package_updated_filter', $packageData);
+
+        do_action('amelia_before_package_updated', $packageData);
+
         /** @var Package $package */
         $package = PackageFactory::create($packageData);
 
@@ -105,6 +109,8 @@ class UpdatePackageCommandHandler extends CommandHandler
         $galleryService->manageGalleryForEntityUpdate($package->getGallery(), $packageId, Entities::PACKAGE);
 
         $packageRepository->commit();
+
+        do_action('amelia_after_package_updated', $package->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated package.');

@@ -22,6 +22,7 @@ use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
+use AmeliaBooking\Infrastructure\WP\Translations\LiteBackendStrings;
 
 /**
  * Class GetCustomersCommandHandler
@@ -276,6 +277,19 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         /** @var HelperService $helperService */
         $helperService = $this->container->get('application.helper.service');
+
+        if (in_array('duration', $params['fields'], true)) {
+            if ($booking) {
+                $row[LiteBackendStrings::getCommonStrings()['duration']] = $helperService->secondsToNiceDuration(!empty($booking['duration']) ? $booking['duration'] : $appointment['service']['duration']);
+            } else {
+                $durations = [];
+                foreach ($appointment['bookings'] as $booking2) {
+                    $durations[] = $helperService->secondsToNiceDuration(!empty($booking2['duration']) ? $booking2['duration'] : $appointment['service']['duration']);
+                }
+                $row[LiteBackendStrings::getCommonStrings()['duration']] = count(array_unique($durations)) === 1 ? $durations[0] : implode(', ', $durations);
+            }
+        }
+
         if (in_array('price', $params['fields'], true)) {
             if ($booking) {
                 if ($booking['packageCustomerService']) {

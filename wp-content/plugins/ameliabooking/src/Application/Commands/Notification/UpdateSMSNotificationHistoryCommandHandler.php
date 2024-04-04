@@ -33,7 +33,13 @@ class UpdateSMSNotificationHistoryCommandHandler extends CommandHandler
             'price'  => $command->getField('price')
         ];
 
+        $updateData = apply_filters('amelia_before_sms_notification_history_updated_filter', $updateData, $command->getArg('id'));
+
+        do_action('amelia_before_sms_notification_history_updated', $updateData, $command->getArg('id'));
+
         if ($notificationsSMSHistoryRepo->update((int)$command->getArg('id'), $updateData)) {
+            do_action('amelia_after_sms_notification_history_updated', $updateData, $command->getArg('id'));
+
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully updated SMS notification history.');
         }

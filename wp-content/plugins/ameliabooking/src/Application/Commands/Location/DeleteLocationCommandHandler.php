@@ -52,6 +52,8 @@ class DeleteLocationCommandHandler extends CommandHandler
 
         $locationRepository->beginTransaction();
 
+        do_action('amelia_before_location_deleted', $location->toArray());
+
         if (!$locationApplicationService->delete($location)) {
             $locationRepository->rollback();
 
@@ -70,6 +72,8 @@ class DeleteLocationCommandHandler extends CommandHandler
         );
 
         $locationRepository->commit();
+
+        do_action('amelia_after_location_deleted', $location->toArray());
 
         return $result;
     }

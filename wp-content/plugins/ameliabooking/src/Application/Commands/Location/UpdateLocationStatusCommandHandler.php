@@ -54,9 +54,13 @@ class UpdateLocationStatusCommandHandler extends CommandHandler
 
         $locationRepository->beginTransaction();
 
+        $status = $command->getField('status');
+
+        do_action('amelia_before_location_status_updated', $status, $command->getArg('id'));
+
         $locationRepository->updateStatusById(
             $command->getArg('id'),
-            $command->getField('status')
+            $status
         );
 
         if ($command->getField('status') === Status::VISIBLE) {
@@ -84,6 +88,8 @@ class UpdateLocationStatusCommandHandler extends CommandHandler
         $result->setData(true);
 
         $locationRepository->commit();
+
+        do_action('amelia_after_location_status_updated', $status, $command->getArg('id'));
 
         return $result;
     }

@@ -29,6 +29,10 @@ class GetOutlookAuthURLCommandHandler extends CommandHandler
 
         $authUrl = $outlookCalendarService->createAuthUrl((int)$command->getField('id'));
 
+        $authUrl = apply_filters('amelia_get_outlook_calendar_auth_url_filter', $authUrl, $command->getField('id'));
+
+        do_action('amelia_get_outlook_calendar_auth_url', $authUrl, $command->getField('id'));
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved outlook authorization URL');
         $result->setData(

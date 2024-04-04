@@ -163,6 +163,8 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
 
         $appointmentRepo->beginTransaction();
 
+        do_action('amelia_before_appointment_status_updated', $appointment->toArray(), $requestedStatus);
+
         if ($packageCustomerId) {
             /** @var CustomerBooking $booking */
             foreach ($appointment->getBookings()->getItems() as $booking) {
@@ -178,6 +180,8 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
         }
 
         $appointmentRepo->commit();
+
+        do_action('amelia_after_appointment_status_updated', $appointment->toArray(), $requestedStatus);
 
         /** @var CustomerBooking $booking */
         foreach ($appointment->getBookings()->getItems() as $booking) {

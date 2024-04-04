@@ -49,6 +49,11 @@ class WhatsAppWebhookCommandHandler extends CommandHandler
         $data = $command->getFields();
 
         $phones = [];
+
+        $data = apply_filters('amelia_before_whatsapp_webhook_filter', $data);
+
+        do_action('amelia_before_whatsapp_webhook', $data);
+
         foreach ($data['entry'] as $entry) {
             foreach ($entry['changes'] as $change) {
                 if ($change['field'] === 'messages') {
@@ -59,6 +64,8 @@ class WhatsAppWebhookCommandHandler extends CommandHandler
                 }
             }
         }
+
+        do_action('amelia_after_whatsapp_webhook', $data, $phones);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Auto-reply successfully sent');

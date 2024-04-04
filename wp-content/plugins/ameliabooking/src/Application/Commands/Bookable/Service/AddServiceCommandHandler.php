@@ -74,6 +74,10 @@ class AddServiceCommandHandler extends CommandHandler
 
         $entityService->removeMissingEntitiesForService($serviceData);
 
+        $serviceData = apply_filters('amelia_before_service_added_filter', $serviceData);
+
+        do_action('amelia_before_service_added', $serviceData);
+
         /** @var Service $service */
         $service = ServiceFactory::create($serviceData);
 
@@ -122,6 +126,8 @@ class AddServiceCommandHandler extends CommandHandler
         $galleryService->manageGalleryForEntityAdd($service->getGallery(), $serviceId);
 
         $serviceRepository->commit();
+
+        do_action('amelia_after_service_added', $service->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully added new service.');

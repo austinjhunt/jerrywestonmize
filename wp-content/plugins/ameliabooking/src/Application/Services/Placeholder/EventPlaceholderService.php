@@ -70,6 +70,7 @@ class EventPlaceholderService extends PlaceholderService
 
         return [
             'attendee_code'             => '12345',
+            'event_id'                  => '123',
             'event_name'                => 'Event Name',
             'reservation_name'          => 'Reservation Name',
             'event_location'            => $companySettings['address'],
@@ -640,6 +641,7 @@ class EventPlaceholderService extends PlaceholderService
             [
             'attendee_code'            => is_array($attendeeCode) ?  implode(', ', $attendeeCode) : substr($attendeeCode, 0, 5),
             'reservation_name'         => $eventName,
+            'event_id'                 => $event['id'],
             'event_name'               => $eventName,
             'event_name_url'           => sanitize_title($event['name']),
             'event_price'              => $ticketsPrice !== null ?

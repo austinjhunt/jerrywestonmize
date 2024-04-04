@@ -54,10 +54,16 @@ class GetLocationsCommandHandler extends CommandHandler
             return $result;
         }
 
+        $locationsArray = $locations->toArray();
+
+        $locationsArray = apply_filters('amelia_get_locations_filter', $locationsArray);
+
+        do_action('amelia_get_locations', $locationsArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved locations.');
         $result->setData([
-            Entities::LOCATIONS => $locations->toArray(),
+            Entities::LOCATIONS => $locationsArray,
             'countFiltered'     => (int)$locationRepository->getCount($command->getField('params')),
             'countTotal'        => (int)$locationRepository->getCount([])
         ]);

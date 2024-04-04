@@ -313,6 +313,10 @@ class GetEventsCommandHandler extends CommandHandler
             $customersNoShowCount = $bookingRepository->countByNoShowStatus($customersNoShowCountIds);
         }
 
+        $eventsArray = apply_filters('amelia_get_events_filter', $eventsArray);
+
+        do_action('amelia_get_events', $eventsArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved events');
         $result->setData(

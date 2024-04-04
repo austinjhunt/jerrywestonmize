@@ -121,7 +121,13 @@ class UpdateCouponCommandHandler extends CommandHandler
             }
         }
 
-        $newCoupon = CouponFactory::create($command->getFields());
+        $couponData = $command->getFields();
+
+        $couponData = apply_filters('amelia_before_coupon_updated_filter', $couponData, $oldCoupon ? $oldCoupon->toArray() : null);
+
+        do_action('amelia_before_coupon_updated', $couponData, $oldCoupon ? $oldCoupon->toArray() : null);
+
+        $newCoupon = CouponFactory::create($couponData);
 
         $newCoupon->setServiceList($services);
 
@@ -148,6 +154,8 @@ class UpdateCouponCommandHandler extends CommandHandler
         }
 
         $couponRepository->commit();
+
+        do_action('amelia_after_coupon_updated', $newCoupon ? $newCoupon->toArray() : null, $oldCoupon ? $oldCoupon->toArray() : null);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Coupon successfully updated.');

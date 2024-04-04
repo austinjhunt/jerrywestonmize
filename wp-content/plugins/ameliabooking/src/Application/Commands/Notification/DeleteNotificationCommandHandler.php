@@ -70,6 +70,8 @@ class DeleteNotificationCommandHandler extends CommandHandler
 
         $notificationRepo->beginTransaction();
 
+        do_action('amelia_before_notification_deleted', $notification->toArray());
+
         if (!$notificationRepo->delete($notification->getId()->getValue())) {
             $notificationRepo->rollback();
             $result->setResult(CommandResult::RESULT_ERROR);
@@ -87,6 +89,8 @@ class DeleteNotificationCommandHandler extends CommandHandler
         );
 
         $notificationRepo->commit();
+
+        do_action('amelia_after_notification_deleted', $notification->toArray());
 
         return $result;
     }

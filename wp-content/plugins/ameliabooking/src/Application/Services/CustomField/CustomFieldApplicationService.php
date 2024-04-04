@@ -119,6 +119,8 @@ class CustomFieldApplicationService extends AbstractCustomFieldApplicationServic
     {
         $uploadPath = $this->getUploadsPath() . $folder;
 
+        do_action('amelia_before_cf_file_uploaded', $bookingId, $uploadPath, $uploadedCustomFieldFilesNames);
+
         if ($uploadedCustomFieldFilesNames) {
             !is_dir($uploadPath) && !mkdir($uploadPath, 0755, true) && !is_dir($uploadPath);
 

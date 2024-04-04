@@ -32,6 +32,10 @@ class GetGoogleAuthURLCommandHandler extends CommandHandler
             $command->getField('redirectUri')
         );
 
+        $authUrl = apply_filters('amelia_get_google_calendar_auth_url_filter', $authUrl, $command->getField('id'));
+
+        do_action('amelia_get_google_calendar_auth_url', $authUrl, $command->getField('id'));
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved google authorization URL');
         $result->setData(

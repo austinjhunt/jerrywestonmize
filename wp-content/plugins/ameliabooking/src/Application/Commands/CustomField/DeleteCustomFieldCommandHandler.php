@@ -55,6 +55,8 @@ class DeleteCustomFieldCommandHandler extends CommandHandler
             return $result;
         }
 
+        do_action('amelia_before_cf_deleted', $customField->toArray());
+
         if (!$customFieldApplicationService->delete($customField)) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Could not delete custom field.');
@@ -65,6 +67,8 @@ class DeleteCustomFieldCommandHandler extends CommandHandler
         }
 
         $customFieldRepository->commit();
+
+        do_action('amelia_after_cf_deleted', $customField->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted custom field.');

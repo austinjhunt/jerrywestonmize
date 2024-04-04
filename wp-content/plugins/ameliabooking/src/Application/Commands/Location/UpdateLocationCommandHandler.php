@@ -52,7 +52,13 @@ class UpdateLocationCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
-        $location = LocationFactory::create($command->getFields());
+        $locationArray = $command->getFields();
+
+        $locationArray = apply_filters('amelia_before_location_updated_filter', $locationArray);
+
+        do_action('amelia_before_location_updated', $locationArray);
+
+        $location = LocationFactory::create($locationArray);
         if (!$location instanceof Location) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Could not update location.');
@@ -62,8 +68,11 @@ class UpdateLocationCommandHandler extends CommandHandler
 
         /** @var LocationRepository $locationRepository */
         $locationRepository = $this->container->get('domain.locations.repository');
+
         if ($locationRepository->update($command->getArg('id'), $location)) {
             $location->setId(new Id($command->getArg('id')));
+            do_action('amelia_after_location_updated', $location->toArray());
+
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully updated location.');
             $result->setData([

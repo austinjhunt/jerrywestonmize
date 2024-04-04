@@ -3,7 +3,7 @@ Contributors: mailpoet, woocommerce, automattic
 Tags: email, email marketing, post notification, woocommerce emails, email automation, newsletter, newsletter builder, newsletter subscribers
 Requires at least: 6.3
 Tested up to: 6.4
-Stable tag: 4.48.0
+Stable tag: 4.48.1
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -28,7 +28,7 @@ Schedule your newsletters, send them right away, or set up new blog post notific
 
 Trusted by 700,000 WordPress websites since 2011.
 
-**With a free plan for up to 1,000 subscribers, and scaling paid plans with enhanced functionality available, MailPoet is an email marketing solution suitable for both beginners and proficient email marketers.**
+**With a free plan to get started, and scaling paid plans with enhanced functionality available, MailPoet is an email marketing solution suitable for both beginners and proficient email marketers.**
 
 [Visit our website for more information on plans and pricing](https://www.mailpoet.com/)
 
@@ -76,7 +76,7 @@ In addition, you’ll also be able to increase brand recognition by customizing 
 
 = MailPoet Sending Service =
 
-**The MailPoet Sending Service is free for your first 1,000 subscribers, with scaling plans available thereafter. [Read more.](https://www.mailpoet.com/pricing/)**
+**The MailPoet Sending Service is free if you only have a few subscribers, with scaling plans available thereafter. [Read more.](https://www.mailpoet.com/pricing/)**
 
 Sending emails and newsletters with your host is not a good idea. You might face sending speed limitations and see your emails ending up in the spam box.
 
@@ -99,7 +99,7 @@ MailPoet is available to download for free. Our free download includes all of th
 
 Or if you opt for a MailPoet plan, you’ll get access to the MailPoet Sending Service.
 
-A free Starter plan is available for those who have 1,000 subscribers or less and would like to use the MailPoet Sending Service. And our paid plans offer features and functionality for those with larger lists who are looking to grow their business using email marketing.
+A free plan is available for those who want to get started with a few subscribers and would like to use the MailPoet Sending Service. And our paid plans offer features and functionality for those with larger lists who are looking to grow their business using email marketing.
 
 Take a look at [our pricing page](https://www.mailpoet.com/pricing) for full details on what’s included in each plan.
 
@@ -235,6 +235,9 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 6. WooCommerce emails
 
 == Changelog ==
+
+= 4.48.1 - 2024-04-03 =
+* Improved: when creating a tag, pressing Enter is no longer required.
 
 = 4.48.0 - 2024-03-22 =
 * Improved: minor changes and fixes.
@@ -610,7 +613,7 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 * Added: filter allowing to configure PHPMailer when sending via SMTP;
 * Added: a coupon block in email editor;
 * Added: notice when a MailPoet subscription is pending approval;
-* Improved: Starter plan users are directed to upgrade their plan from the Upgrade page;
+* Improved: Free plan users are directed to upgrade their plan from the Upgrade page;
 * Improved: email templates now include coupon block;
 * Fixed: inactive subscribers weren't recalculated since August 2022. They'll be again recalculated within one week after updating. Sorry about this bug.
 

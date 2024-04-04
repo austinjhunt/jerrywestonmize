@@ -131,9 +131,13 @@ class EventReservationService extends AbstractReservationService
             $event->setCustomTickets($eventApplicationService->getTicketsPriceByDateRange($event->getCustomTickets()));
         }
 
-        $booking = CustomerBookingFactory::create(
-            array_merge($eventData['bookings'][0], ['status' => BookingStatus::APPROVED])
-        );
+        $bookingArray =  array_merge($eventData['bookings'][0], ['status' => BookingStatus::APPROVED]);
+
+        $bookingArray = apply_filters('amelia_before_event_booking_saved_filter', $bookingArray, $event ? $event->toArray() : null);
+
+        do_action('amelia_before_event_booking_saved', $bookingArray, $event ? $event->toArray() : null);
+
+        $booking = CustomerBookingFactory::create($bookingArray);
 
         if ($event->getCustomPricing()->getValue()) {
             $booking->setPersons(new IntegerValue(0));
@@ -355,6 +359,8 @@ class EventReservationService extends AbstractReservationService
             }
 
             $event->getBookings()->addItem($booking, $booking->getId()->getValue());
+
+            do_action('amelia_after_event_booking_saved', $booking ? $booking->toArray() : null, $event ? $event->toArray() : null);
         }
 
         if ($event->getLocationId()) {

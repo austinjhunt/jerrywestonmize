@@ -64,6 +64,8 @@ class UpdateEventStatusCommandHandler extends CommandHandler
 
         $eventRepository->beginTransaction();
 
+        do_action('amelia_before_event_status_updated', $event ? $event->toArray() : null, $requestedStatus, $command->getField('applyGlobally'));
+
         try {
             /** @var Collection $updatedEvents */
             $updatedEvents = $eventApplicationService->updateStatus(
@@ -77,6 +79,8 @@ class UpdateEventStatusCommandHandler extends CommandHandler
         }
 
         $eventRepository->commit();
+
+        do_action('amelia_after_event_status_updated', $event ? $event->toArray() : null, $requestedStatus, $command->getField('applyGlobally'));
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated event status');

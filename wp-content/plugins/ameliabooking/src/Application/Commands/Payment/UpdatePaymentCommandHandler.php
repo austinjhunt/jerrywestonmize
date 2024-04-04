@@ -43,7 +43,14 @@ class UpdatePaymentCommandHandler extends CommandHandler
         $result = new CommandResult();
 
         $this->checkMandatoryFields($command);
-        $payment = PaymentFactory::create($command->getFields());
+
+        $paymentArray = $command->getFields();
+
+        $paymentArray = apply_filters('amelia_before_payment_updated_filter', $paymentArray);
+
+        do_action('amelia_before_payment_updated', $paymentArray);
+
+        $payment = PaymentFactory::create($paymentArray);
 
         if (!$payment instanceof Payment) {
             $result->setResult(CommandResult::RESULT_ERROR);
@@ -58,6 +65,8 @@ class UpdatePaymentCommandHandler extends CommandHandler
         $paymentId = (int)$command->getArg('id');
         if ($paymentRepository->update($paymentId, $payment)) {
             $payment->setId(new Id($paymentId));
+            do_action('amelia_after_payment_updated', $payment->toArray());
+
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Payment successfully updated.');
             $result->setData(

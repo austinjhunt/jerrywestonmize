@@ -136,11 +136,17 @@ class GetCouponsCommandHandler extends CommandHandler
             }
         }
 
+        $couponsArray = $coupons->toArray();
+
+        $couponsArray = apply_filters('amelia_get_coupons_filter', $couponsArray);
+
+        do_action('amelia_get_coupons', $couponsArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved coupons.');
         $result->setData(
             [
-                Entities::COUPONS => $coupons->toArray(),
+                Entities::COUPONS => $couponsArray,
                 'filteredCount'   => (int)$couponRepository->getCount($command->getField('params')),
                 'totalCount'      => (int)$couponRepository->getCount([]),
             ]

@@ -58,7 +58,13 @@ class AddLocationCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
-        $location = LocationFactory::create($command->getFields());
+        $locationArray = $command->getFields();
+
+        $locationArray = apply_filters('amelia_before_location_added_filter', $locationArray);
+
+        do_action('amelia_before_location_added', $locationArray);
+
+        $location = LocationFactory::create($locationArray);
         if (!$location instanceof Location) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Could not create a new location.');
@@ -119,6 +125,8 @@ class AddLocationCommandHandler extends CommandHandler
             );
 
             $locationRepository->commit();
+
+            do_action('amelia_after_location_added', $location->toArray());
         }
 
         return $result;

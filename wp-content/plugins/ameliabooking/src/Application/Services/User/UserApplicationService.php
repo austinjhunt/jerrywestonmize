@@ -149,6 +149,8 @@ class UserApplicationService
      */
     public function setWpUserIdForNewUser($userId, $user)
     {
+        do_action('amelia_set_wp_user_for_new_customer', $user ? $user->toArray() : null);
+
         if (!$user->getEmail() || !$user->getEmail()->getValue() || !trim($user->getEmail()->getValue())) {
             return;
         }
@@ -185,6 +187,8 @@ class UserApplicationService
     {
         /** @var CreateWPUser $createWPUserService */
         $createWPUserService = $this->container->get('user.create.wp.user');
+
+        do_action('amelia_set_wp_user_for_existing_customer', $user ? $user->toArray() : null);
 
         $externalId = $user->getExternalId() ? $user->getExternalId()->getValue() : null;
 
@@ -251,6 +255,8 @@ class UserApplicationService
     public function getAuthenticatedUserResponse($user, $sendToken, $checkIfSavedPassword, $loginType, $cabinetType, $changePass = false)
     {
         $result = new CommandResult();
+
+        do_action('amelia_login', $user ? $user->toArray() : null, $sendToken, $loginType, $cabinetType, $changePass);
 
         if ($user->getType() !== $cabinetType && $user->getType() !== AbstractUser::USER_ROLE_ADMIN) {
             $result->setResult(CommandResult::RESULT_ERROR);
@@ -541,7 +547,7 @@ class UserApplicationService
 
     /**
      * @param AbstractUser $currentUser
-     * @param AbstractUser $token
+     * @param string $token
      *
      * @return boolean
      */

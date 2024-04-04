@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Infrastructure\Repository\Bookable\Service;
 
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
 use AmeliaBooking\Infrastructure\Licence;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -118,57 +119,28 @@ class ProviderServiceRepository extends AbstractRepository
     }
 
     /**
-     * @param $serviceId
+     * @param int    $id
+     * @param string $type
      *
      * @return array
      * @throws QueryExecutionException
      */
-    public function getAllForService($serviceId)
+    public function getAllForEntity($id, $type)
     {
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT
-                ps.id,
-                ps.userId,
-                ps.serviceId,
-                ps.minCapacity,
-                ps.maxCapacity,
-                ps.price,
-                ps.customPricing
-              FROM {$this->table} ps 
-              WHERE ps.serviceId = :serviceId"
-            );
+        $columnName = '';
 
-            $params = [
-                ':serviceId' => $serviceId
-            ];
+        switch ($type) {
+            case (Entities::EMPLOYEE):
+                $columnName = 'userId';
 
-            $statement->execute($params);
+                break;
 
-            $rows = $statement->fetchAll();
+            case (Entities::SERVICE):
+                $columnName = 'serviceId';
 
-            foreach ($rows as &$row) {
-                $row['id']          = (int)$row['id'];
-                $row['userId']      = (int)$row['userId'];
-                $row['serviceId']   = (int)$row['serviceId'];
-                $row['minCapacity'] = (int)$row['minCapacity'];
-                $row['maxCapacity'] = (int)$row['maxCapacity'];
-            }
-
-            return $rows;
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+                break;
         }
-    }
 
-    /**
-     * @param $providerId
-     *
-     * @return array
-     * @throws QueryExecutionException
-     */
-    public function getAllForProvider($providerId)
-    {
         try {
             $statement = $this->connection->prepare(
                 "SELECT
@@ -180,11 +152,11 @@ class ProviderServiceRepository extends AbstractRepository
                 ps.price,
                 ps.customPricing
               FROM {$this->table} ps 
-              WHERE ps.userId = :providerId"
+              WHERE ps.{$columnName} = :entityId"
             );
 
             $params = array(
-                ':providerId' => $providerId
+                ':entityId' => $id
             );
 
             $statement->execute($params);
@@ -269,6 +241,55 @@ class ProviderServiceRepository extends AbstractRepository
         try {
             $statement = $this->connection->prepare(
                 "DELETE FROM {$this->table} WHERE 1 = 1 $services AND userId = :providerId"
+            );
+
+            return $statement->execute($params);
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__, $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * @param int $entityId
+     * @param int $entityType
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function deleteDuplicated($entityId, $entityType)
+    {
+        $matchColumnName = '';
+
+        $entityColumnName = '';
+
+        switch ($entityType) {
+            case (Entities::EMPLOYEE):
+                $matchColumnName = 'serviceId';
+
+                $entityColumnName = 'userId';
+
+                break;
+
+            case (Entities::SERVICE):
+                $matchColumnName = 'userId';
+
+                $entityColumnName = 'serviceId';
+
+                break;
+        }
+
+        $params = [
+            ':entityId1' => $entityId,
+            ':entityId2' => $entityId,
+        ];
+
+        try {
+            $statement = $this->connection->prepare(
+                "DELETE t1 FROM {$this->table} t1, {$this->table} t2 WHERE
+                t1.{$entityColumnName} = :entityId1 AND
+                t2.{$entityColumnName} = :entityId2 AND
+                t1.id < t2.id AND
+                t1.{$matchColumnName} = t2.{$matchColumnName}"
             );
 
             return $statement->execute($params);

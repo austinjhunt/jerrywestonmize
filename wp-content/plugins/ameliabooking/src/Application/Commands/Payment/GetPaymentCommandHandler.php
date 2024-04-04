@@ -55,11 +55,17 @@ class GetPaymentCommandHandler extends CommandHandler
             return $result;
         }
 
+        $paymentArray = $payment->toArray();
+
+        $paymentArray = apply_filters('amelia_get_payment_filter', $paymentArray);
+
+        do_action('amelia_get_payment', $paymentArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved payment.');
         $result->setData(
             [
-                Entities::PAYMENT => $payment->toArray(),
+                Entities::PAYMENT => $paymentArray,
             ]
         );
 

@@ -77,7 +77,11 @@ class DisconnectFromOutlookAccountCommandHandler extends CommandHandler
             return $result;
         }
 
+        do_action('amelia_before_outlook_calendar_deleted', $outlookCalendar ? $outlookCalendar->toArray() : null, $command->getArg('id'));
+
         if ($outlookCalendarRepository->delete($outlookCalendar->getId()->getValue())) {
+            do_action('amelia_after_outlook_calendar_deleted', $outlookCalendar->toArray(), $command->getArg('id'));
+
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Outlook calendar successfully deleted.');
         }

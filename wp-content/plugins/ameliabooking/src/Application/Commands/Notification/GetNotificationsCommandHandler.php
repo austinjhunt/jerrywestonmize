@@ -79,12 +79,17 @@ class GetNotificationsCommandHandler extends CommandHandler
             return $result;
         }
 
+        $notificationsArray = $notifications->toArray();
+
+        $notificationsArray = apply_filters('amelia_get_notifications_filter', $notificationsArray);
+
+        do_action('amelia_get_notifications', $notificationsArray);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved notifications.');
         $result->setData(
             [
-            Entities::NOTIFICATIONS => $notifications->toArray(),
+            Entities::NOTIFICATIONS => $notificationsArray,
             'whatsAppTemplates'     => !empty($whatsAppTemplates[1]) ? $whatsAppTemplates[1] : []
             ]
         );

@@ -245,6 +245,7 @@ class CustomerApplicationService extends UserApplicationService
                     $userAS->setWpUserIdForNewUser($customer->getId()->getValue(), $customer);
 
                     do_action('AmeliaCustomerWPCreated', $customer->toArray(), $this->container);
+                    do_action('amelia_customer_wp_created', $customer->toArray(), $this->container);
                 }
             } catch (Exception $e) {
             }

@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the MailPoet plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MailPoet 4.48.0\n"
+"Project-Id-Version: MailPoet 4.48.1\n"
 "Report-Msgid-Bugs-To: http://support.mailpoet.com/\n"
 "Last-Translator: MailPoet i18n (https://www.transifex.com/organization/wysija)\n"
 "Language-Team: MailPoet i18n <https://www.transifex.com/organization/wysija>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-03-22T17:33:12+00:00\n"
+"POT-Creation-Date: 2024-04-03T09:13:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -543,7 +543,7 @@ msgstr ""
 #: views/subscription/manage_subscription.html:9
 #: lib/API/MP/v1/CustomFields.php:27
 #: lib/Automation/Integrations/WordPress/Subjects/UserSubject.php:63
-#: lib/Config/Menu.php:259
+#: lib/Config/Menu.php:263
 #: lib/EmailEditor/Integrations/MailPoet/EmailEditor.php:50
 #: lib/Form/Templates/Templates/InitialForm.php:22
 #: lib/Subscribers/ImportExport/ImportExportFactory.php:60
@@ -1145,8 +1145,8 @@ msgid "<strong>Tip:</strong> check out [link]this list[/link] of form plugins th
 msgstr ""
 
 #: views/forms.html:35
-#: lib/Config/Menu.php:282
-#: lib/Config/Menu.php:283
+#: lib/Config/Menu.php:286
+#: lib/Config/Menu.php:287
 msgid "Forms"
 msgstr ""
 
@@ -1327,8 +1327,8 @@ msgstr ""
 #: views/forms.html:65
 #: views/segments/translations.html:2
 #: views/subscribers/subscribers.html:74
-#: lib/Config/Menu.php:391
-#: lib/Config/Menu.php:392
+#: lib/Config/Menu.php:395
+#: lib/Config/Menu.php:396
 #: assets/dist/js/admin.js:2
 msgid "Lists"
 msgstr ""
@@ -1791,6 +1791,7 @@ msgid "Detailed analytics"
 msgstr ""
 
 #: views/homepage.html:58
+#: views/upgrade_tiers.html:214
 msgid "Advanced subscriber segmentation"
 msgstr ""
 
@@ -1808,8 +1809,8 @@ msgstr ""
 
 #: views/homepage.html:64
 #: views/subscribers/subscribers.html:16
-#: lib/Config/Menu.php:340
-#: lib/Config/Menu.php:341
+#: lib/Config/Menu.php:344
+#: lib/Config/Menu.php:345
 #: assets/dist/js/automation.js:1
 #: assets/dist/js/automation_analytics.js:9
 #: assets/dist/js/commons.js:9
@@ -2114,6 +2115,7 @@ msgstr ""
 #: views/layout.html:110
 #: views/layout.html:173
 #: views/upgrade.html:9
+#: views/upgrade_tiers.html:9
 #: assets/dist/js/commons.js:9
 msgid "Back to section root"
 msgstr ""
@@ -2377,7 +2379,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: views/logs.html:18
-#: lib/Config/Menu.php:506
+#: lib/Config/Menu.php:509
 msgid "Logs"
 msgstr ""
 
@@ -2520,7 +2522,7 @@ msgid "MailPoet account connected"
 msgstr ""
 
 #: views/newsletter/editor.html:340
-#: lib/Config/Menu.php:247
+#: lib/Config/Menu.php:251
 msgid "Newsletter Editor"
 msgstr ""
 
@@ -4379,8 +4381,8 @@ msgstr ""
 
 #: views/segments/translations.html:74
 #: lib/Automation/Integrations/MailPoet/Fields/SubscriberFieldsFactory.php:233
-#: lib/Config/Menu.php:416
-#: lib/Config/Menu.php:417
+#: lib/Config/Menu.php:420
+#: lib/Config/Menu.php:421
 msgid "Segments"
 msgstr ""
 
@@ -4682,8 +4684,8 @@ msgid "1 segment was permanently deleted."
 msgstr ""
 
 #: views/segments/translations.html:180
-#: lib/Config/Menu.php:517
-#: lib/Config/Menu.php:518
+#: lib/Config/Menu.php:520
+#: lib/Config/Menu.php:521
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/automation.js:1
 #: assets/dist/js/automation_analytics.js:9
@@ -4809,8 +4811,8 @@ msgstr ""
 
 #: views/segments/translations.html:233
 #: views/subscribers/subscribers.html:121
-#: lib/Config/Menu.php:469
-#: lib/Config/Menu.php:470
+#: lib/Config/Menu.php:472
+#: lib/Config/Menu.php:473
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/commons.js:9
 #: assets/dist/js/email-editor/email_editor.js:15
@@ -4972,8 +4974,8 @@ msgstr ""
 
 #: views/settings_translations.html:2
 #: lib/Config/Hooks.php:521
-#: lib/Config/Menu.php:441
-#: lib/Config/Menu.php:442
+#: lib/Config/Menu.php:445
+#: lib/Config/Menu.php:446
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/automation_editor.js:1
 #: assets/dist/js/commons.js:9
@@ -5025,6 +5027,8 @@ msgid "These email addresses will be selected by default for each new email."
 msgstr ""
 
 #: views/settings_translations.html:15
+#: views/upgrade_tiers.html:113
+#: views/upgrade_tiers.html:176
 #: assets/dist/js/admin.js:2
 msgid "From"
 msgstr ""
@@ -5887,8 +5891,8 @@ msgstr ""
 #: views/subscribers/importExport/export.html:6
 #: views/subscribers/importExport/export.html:79
 #: views/subscribers/subscribers.html:114
-#: lib/Config/Menu.php:378
-#: lib/Config/Menu.php:379
+#: lib/Config/Menu.php:382
+#: lib/Config/Menu.php:383
 msgid "Export"
 msgstr ""
 
@@ -5953,8 +5957,8 @@ msgstr ""
 #: views/subscribers/importExport/import.html:6
 #: views/subscribers/importExport/import.html:88
 #: views/subscribers/subscribers.html:113
-#: lib/Config/Menu.php:365
-#: lib/Config/Menu.php:366
+#: lib/Config/Menu.php:369
+#: lib/Config/Menu.php:370
 msgid "Import"
 msgstr ""
 
@@ -6810,13 +6814,245 @@ msgctxt "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoe
 msgid "And if you’re not sure which plan is the right one for you, our [link]Customer Support team[/link] are on hand to help you decide."
 msgstr ""
 
+#: views/upgrade/upgrade_button.html:7
+msgid "Your current plan"
+msgstr ""
+
+#: views/upgrade_tiers.html:21
+msgid "Find the plan that fits your flock"
+msgstr ""
+
+#: views/upgrade_tiers.html:24
+msgid "Whether you’re just starting out, or already have an established list of loyal subscribers, our plans are flexible enough for every flock."
+msgstr ""
+
+#: views/upgrade_tiers.html:30
+msgid "Pay monthly"
+msgstr ""
+
+#: views/upgrade_tiers.html:30
+msgid "Pay yearly"
+msgstr ""
+
+#: views/upgrade_tiers.html:32
+msgid "Save up to 15% on yearly plans"
+msgstr ""
+
+#: views/upgrade_tiers.html:33
+msgid "You are saving up to 15%!"
+msgstr ""
+
+#: views/upgrade_tiers.html:42
+#: views/upgrade_tiers.html:50
+msgid "Free"
+msgstr ""
+
+#: views/upgrade_tiers.html:45
+msgid "Essential email marketing tools for small businesses."
+msgstr ""
+
+#: views/upgrade_tiers.html:52
+msgid "Up to 500 subscribers"
+msgstr ""
+
+#: views/upgrade_tiers.html:54
+msgid "Get Free"
+msgstr ""
+
+#: views/upgrade_tiers.html:56
+msgid "<b>1,500</b> emails per month, <b>500</b> emails per day"
+msgstr ""
+
+#: views/upgrade_tiers.html:60
+#: views/upgrade_tiers.html:139
+#: views/upgrade_tiers.html:202
+msgid "Automate communications with subscribers based on how and when they engage with your brand."
+msgstr ""
+
+#: views/upgrade_tiers.html:61
+msgid "Customize automations based on email engagement."
+msgstr ""
+
+#: views/upgrade_tiers.html:63
+msgid "Basic email automations"
+msgstr ""
+
+#: views/upgrade_tiers.html:69
+msgid "Send bulk promotional and informational newsletters and new post notifications to your subscribers."
+msgstr ""
+
+#: views/upgrade_tiers.html:71
+msgid "Email and ecommerce marketing"
+msgstr ""
+
+#: views/upgrade_tiers.html:77
+msgid "Leverage built-in or create custom subscription forms to grow your email list."
+msgstr ""
+
+#: views/upgrade_tiers.html:78
+msgid "Includes popups, slide-ins, top/bottom bars and widgets."
+msgstr ""
+
+#: views/upgrade_tiers.html:80
+msgid "Widget and popup subscription forms"
+msgstr ""
+
+#: views/upgrade_tiers.html:86
+msgid "Segment and email subscribers by custom field values, email, site, or shopping behavior."
+msgstr ""
+
+#: views/upgrade_tiers.html:87
+msgid "Leverage pre-built segment templates or create your own simple segments."
+msgstr ""
+
+#: views/upgrade_tiers.html:89
+msgid "Basic subscriber segmentation"
+msgstr ""
+
+#: views/upgrade_tiers.html:95
+msgid "Leverage 70+ built-in email templates or create your own with an easy-to-use drag&drop editor."
+msgstr ""
+
+#: views/upgrade_tiers.html:97
+msgid "Customizable  email templates"
+msgstr ""
+
+#: views/upgrade_tiers.html:107
+msgid "Basic"
+msgstr ""
+
+#: views/upgrade_tiers.html:110
+msgid "Fuel business growth with data-driven email marketing tools and insights."
+msgstr ""
+
+#: views/upgrade_tiers.html:122
+#: views/upgrade_tiers.html:127
+#: views/upgrade_tiers.html:185
+#: views/upgrade_tiers.html:190
+msgid " / month"
+msgstr ""
+
+#: views/upgrade_tiers.html:129
+#: views/upgrade_tiers.html:192
+msgid "for 500 subscribers"
+msgstr ""
+
+#: views/upgrade_tiers.html:131
+msgid "Get Basic"
+msgstr ""
+
+#: views/upgrade_tiers.html:133
+msgid "<b>All Free plan features</b>, plus:"
+msgstr ""
+
+#: views/upgrade_tiers.html:135
+msgid "<b>5,000</b> emails per month, <b>no daily limit</b>"
+msgstr ""
+
+#: views/upgrade_tiers.html:140
+msgid "Customize automations based on email engagement, site or shopping patterns."
+msgstr ""
+
+#: views/upgrade_tiers.html:142
+msgid "Custom email automations"
+msgstr ""
+
+#: views/upgrade_tiers.html:148
+msgid "Understand how subscribers are engaging with your emails and automations, and how that translates to conversions."
+msgstr ""
+
+#: views/upgrade_tiers.html:149
+msgid "See who engaged with emails and how it influenced their purchasing behaviors."
+msgstr ""
+
+#: views/upgrade_tiers.html:151
+msgid "Detailed email and automation statistics"
+msgstr ""
+
+#: views/upgrade_tiers.html:154
+msgid "Google Analytics tracking"
+msgstr ""
+
+#: views/upgrade_tiers.html:155
+msgid "No MailPoet logo in emails"
+msgstr ""
+
+#: views/upgrade_tiers.html:156
+#: views/upgrade_tiers.html:217
+msgid "24/7 email support"
+msgstr ""
+
+#: views/upgrade_tiers.html:163
+msgid "Most popular"
+msgstr ""
+
+#: views/upgrade_tiers.html:170
+msgid "Pro"
+msgstr ""
+
+#: views/upgrade_tiers.html:173
+msgid "Increase engagement (and conversions!) with personalized email campaigns."
+msgstr ""
+
+#: views/upgrade_tiers.html:194
+msgid "Get Pro"
+msgstr ""
+
+#: views/upgrade_tiers.html:196
+msgid "<b>All Basic features</b>, plus:"
+msgstr ""
+
+#: views/upgrade_tiers.html:198
+msgid "<b>7,500</b> emails per month, <b>no daily limit</b>"
+msgstr ""
+
+#: views/upgrade_tiers.html:203
+msgid "Automate multi-day journeys and refine further actions with conditional if/else logic based on email and shopping behavior."
+msgstr ""
+
+#: views/upgrade_tiers.html:205
+msgid "Email automation journeys with branching"
+msgstr ""
+
+#: views/upgrade_tiers.html:211
+msgid "Segment and email subscribers by custom field values, email, site or shopping behavior."
+msgstr ""
+
+#: views/upgrade_tiers.html:212
+msgid "Segment subscribers by multiple properties using AND/OR operators."
+msgstr ""
+
+#: views/upgrade_tiers.html:226
+msgid "Compare full plan features and view more pricing options on [link]MailPoet.com[/link]"
+msgstr ""
+
+#: views/upgrade_tiers.html:237
+msgid "Have questions?"
+msgstr ""
+
+#: views/upgrade_tiers.html:240
+msgid "Visit our website to learn more about our plans."
+msgstr ""
+
+#: views/upgrade_tiers.html:243
+msgid "And if you’re not sure which plan is the right one for you, our [link]Customer Support team[/link] are on hand to help you decide."
+msgstr ""
+
+#: views/upgrade_tiers.html:251
+msgid "Compare plans"
+msgstr ""
+
+#: views/upgrade_tiers.html:254
+msgid "Read FAQ"
+msgstr ""
+
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: views/woo_system_info.html:5
 #: lib/Config/Capabilities.php:80
-#: lib/Config/Menu.php:191
-#: lib/Config/Menu.php:192
-#: lib/Config/Menu.php:671
+#: lib/Config/Menu.php:195
+#: lib/Config/Menu.php:196
+#: lib/Config/Menu.php:674
 #: lib/Config/PrivacyPolicy.php:12
 #: lib/WooCommerce/MultichannelMarketing/MPMarketingChannel.php:49
 #: lib/WooCommerce/WooSystemInfoController.php:41
@@ -8760,29 +8996,29 @@ msgstr ""
 msgid "Unable to connect to the database (the database is unable to open a file or folder), the connection is likely not configured correctly. Please read our [link] Knowledge Base article [/link] for steps how to resolve it."
 msgstr ""
 
-#: lib/Config/Menu.php:178
-#: lib/Config/Menu.php:179
+#: lib/Config/Menu.php:182
+#: lib/Config/Menu.php:183
 msgid "Welcome Wizard"
 msgstr ""
 
-#: lib/Config/Menu.php:208
-#: lib/Config/Menu.php:209
+#: lib/Config/Menu.php:212
+#: lib/Config/Menu.php:213
 msgid "Home"
 msgstr ""
 
-#: lib/Config/Menu.php:221
-#: lib/Config/Menu.php:222
+#: lib/Config/Menu.php:225
+#: lib/Config/Menu.php:226
 #: lib/EmailEditor/Integrations/MailPoet/EmailEditor.php:49
 #: assets/dist/js/automation_analytics.js:9
 msgid "Emails"
 msgstr ""
 
-#: lib/Config/Menu.php:234
+#: lib/Config/Menu.php:238
 msgctxt "newsletters per page (screen options)"
 msgid "Number of newsletters per page"
 msgstr ""
 
-#: lib/Config/Menu.php:246
+#: lib/Config/Menu.php:250
 #: lib/Newsletter/Shortcodes/ShortcodesHelper.php:42
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/commons.js:9
@@ -8790,66 +9026,66 @@ msgstr ""
 msgid "Newsletter"
 msgstr ""
 
-#: lib/Config/Menu.php:260
+#: lib/Config/Menu.php:264
 msgid "Email Editor"
 msgstr ""
 
-#: lib/Config/Menu.php:295
+#: lib/Config/Menu.php:299
 msgctxt "forms per page (screen options)"
 msgid "Number of forms per page"
 msgstr ""
 
-#: lib/Config/Menu.php:307
-#: lib/Config/Menu.php:308
+#: lib/Config/Menu.php:311
+#: lib/Config/Menu.php:312
 msgid "Form Editor"
 msgstr ""
 
-#: lib/Config/Menu.php:327
-#: lib/Config/Menu.php:328
+#: lib/Config/Menu.php:331
+#: lib/Config/Menu.php:332
 msgid "Select Form Template"
 msgstr ""
 
-#: lib/Config/Menu.php:353
+#: lib/Config/Menu.php:357
 msgctxt "subscribers per page (screen options)"
 msgid "Number of subscribers per page"
 msgstr ""
 
-#: lib/Config/Menu.php:404
+#: lib/Config/Menu.php:408
 msgctxt "lists per page (screen options)"
 msgid "Number of lists per page"
 msgstr ""
 
-#: lib/Config/Menu.php:429
+#: lib/Config/Menu.php:433
 msgctxt "segments per page (screen options)"
 msgid "Number of segments per page"
 msgstr ""
 
-#: lib/Config/Menu.php:454
-#: lib/Config/Menu.php:455
+#: lib/Config/Menu.php:458
+#: lib/Config/Menu.php:459
 msgid "Help"
 msgstr ""
 
-#: lib/Config/Menu.php:483
-#: lib/Config/Menu.php:484
+#: lib/Config/Menu.php:486
+#: lib/Config/Menu.php:487
 msgid "WooCommerce Setup"
 msgstr ""
 
-#: lib/Config/Menu.php:496
+#: lib/Config/Menu.php:499
 msgid "Experimental Features"
 msgstr ""
 
-#: lib/Config/Menu.php:527
-#: lib/Config/Menu.php:528
+#: lib/Config/Menu.php:530
+#: lib/Config/Menu.php:531
 msgid "Automation Editor"
 msgstr ""
 
-#: lib/Config/Menu.php:537
-#: lib/Config/Menu.php:538
+#: lib/Config/Menu.php:540
+#: lib/Config/Menu.php:541
 msgid "Automation Analytics"
 msgstr ""
 
-#: lib/Config/Menu.php:547
-#: lib/Config/Menu.php:548
+#: lib/Config/Menu.php:550
+#: lib/Config/Menu.php:551
 msgid "Automation Templates"
 msgstr ""
 

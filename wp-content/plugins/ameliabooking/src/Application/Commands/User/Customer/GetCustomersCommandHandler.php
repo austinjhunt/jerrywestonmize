@@ -140,6 +140,10 @@ class GetCustomersCommandHandler extends CommandHandler
             );
         }
 
+        $users = apply_filters('amelia_get_customers_filter', $users);
+
+        do_action('amelia_get_customers', $users);
+
         $resultData = [
             Entities::USER . 's' => $users,
         ];

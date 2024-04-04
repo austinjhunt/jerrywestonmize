@@ -17,6 +17,7 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\PackageService;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Schedule\Period;
@@ -375,7 +376,7 @@ class BookableApplicationService
                 if ($providerService->getId()->getValue() === $service->getId()->getValue()) {
                     $providerDomainService->setProviderServices($provider, $services, true);
 
-                    $serviceProviders->addItem($provider);
+                    $serviceProviders->addItem($provider, $provider->getId()->getValue());
 
                     break;
                 }
@@ -476,6 +477,11 @@ class BookableApplicationService
                 $providerServiceRepo->add($service, (int)$providerId);
             }
         }
+
+        $providerServiceRepo->deleteDuplicated(
+            $service->getId()->getValue(),
+            Entities::SERVICE
+        );
     }
 
     /**

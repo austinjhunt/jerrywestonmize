@@ -28,15 +28,21 @@ class WooCommerceProductsCommandHandler extends CommandHandler
 
         $params = $command->getField('params');
 
+        $products = WooCommerceService::getAllProducts(
+            [
+                's'       => !empty($params['name']) ? $params['name'] : '',
+                'include' => !empty($params['id']) ? $params['id'] : null
+            ]
+        );
+
+        $products = apply_filters('amelia_get_wc_products_filter', $products);
+
+        do_action('amelia_get_wc_products', $products);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setData(
             [
-                'products' => WooCommerceService::getAllProducts(
-                    [
-                        's'       => !empty($params['name']) ? $params['name'] : '',
-                        'include' => !empty($params['id']) ? $params['id'] : null
-                    ]
-                )
+                'products' => $products
             ]
         );
 

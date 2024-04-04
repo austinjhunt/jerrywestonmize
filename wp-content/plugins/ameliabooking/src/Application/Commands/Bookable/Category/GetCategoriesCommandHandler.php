@@ -63,10 +63,16 @@ class GetCategoriesCommandHandler extends CommandHandler
 
         $bookableService->addServicesToCategories($categories, $services);
 
+        $categoriesArray = $categories->toArray();
+
+        $categoriesArray = apply_filters('amelia_get_categories_filter', $categoriesArray);
+
+        do_action('amelia_get_categories', $categoriesArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved categories.');
         $result->setData([
-            Entities::CATEGORIES => $categories->toArray()
+            Entities::CATEGORIES => $categoriesArray
         ]);
 
         return $result;

@@ -46,7 +46,13 @@ class AddPaymentCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
-        $payment = PaymentFactory::create($command->getFields());
+        $paymentArray = $command->getFields();
+
+        $paymentArray = apply_filters('amelia_before_payment_added_filter', $paymentArray);
+
+        do_action('amelia_before_payment_added', $paymentArray);
+
+        $payment = PaymentFactory::create($paymentArray);
         if (!$payment instanceof Payment) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Unable to create payment.');
@@ -56,9 +62,11 @@ class AddPaymentCommandHandler extends CommandHandler
 
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
-        if ($paymentId = $paymentRepository->add($payment)) {
 
+        if ($paymentId = $paymentRepository->add($payment)) {
             $payment->setId(new Id($paymentId));
+
+            do_action('amelia_after_payment_added', $payment->toArray());
 
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('New payment successfully created.');

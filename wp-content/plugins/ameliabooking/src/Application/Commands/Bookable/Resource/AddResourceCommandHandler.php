@@ -64,6 +64,10 @@ class AddResourceCommandHandler extends CommandHandler
         /** @var ResourceRepository $resourceRepository */
         $resourceRepository = $this->container->get('domain.bookable.resource.repository');
 
+        $resourceData = apply_filters('amelia_before_resource_added_filter', $resourceData);
+
+        do_action('amelia_before_resource_added', $resourceData);
+
         /** @var Resource $resource */
         $resource = ResourceFactory::create($resourceData);
 
@@ -96,6 +100,8 @@ class AddResourceCommandHandler extends CommandHandler
             $entity['resourceId'] = $resourceId;
             $resourceEntitiesRepository->add($entity);
         }
+
+        do_action('amelia_after_resource_added', $resource->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully added new resource.');

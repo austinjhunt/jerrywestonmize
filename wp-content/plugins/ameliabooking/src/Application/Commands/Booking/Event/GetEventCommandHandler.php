@@ -120,11 +120,18 @@ class GetEventCommandHandler extends CommandHandler
 
         $customerAS->removeBookingsForOtherCustomers($user, new Collection([$event]));
 
+        $eventArray = $event->toArray();
+
+        $eventArray = apply_filters('amelia_get_event_filter', $eventArray);
+
+        do_action('amelia_get_event', $eventArray);
+
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved event');
         $result->setData(
             [
-                Entities::EVENT => $event->toArray()
+                Entities::EVENT => $eventArray
             ]
         );
 

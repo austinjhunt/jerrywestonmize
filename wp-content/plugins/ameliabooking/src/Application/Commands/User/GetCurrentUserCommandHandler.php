@@ -63,10 +63,16 @@ class GetCurrentUserCommandHandler extends CommandHandler
             $user->setEmail(new Email($wpUser->user_email));
         }
 
+        $userArray = $user ? $user->toArray()  : null;
+
+        $userArray = apply_filters('amelia_get_current_user_filter', $userArray);
+
+        do_action('amelia_get_current_user', $userArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved current user');
         $result->setData([
-            Entities::USER => $user ? $user->toArray()  : null
+            Entities::USER => $userArray
         ]);
 
         return $result;

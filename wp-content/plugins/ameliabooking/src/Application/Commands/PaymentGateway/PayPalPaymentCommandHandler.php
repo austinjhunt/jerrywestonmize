@@ -94,6 +94,10 @@ class PayPalPaymentCommandHandler extends CommandHandler
         /** @var PaymentServiceInterface $paymentService */
         $paymentService = $this->container->get('infrastructure.payment.payPal.service');
 
+        $paymentAmount = apply_filters('amelia_before_paypal_execute_filter', $paymentAmount, $reservation->getReservation()->toArray());
+
+        do_action('amelia_before_paypal_execute', $paymentAmount, $reservation->getReservation()->toArray());
+
         $response = $paymentService->execute(
             [
                 'returnUrl'   => AMELIA_ACTION_URL . '/payment/payPal/callback&status=true',
@@ -118,6 +122,10 @@ class PayPalPaymentCommandHandler extends CommandHandler
 
             return $result;
         }
+
+        $response = apply_filters('amelia_after_paypal_execute_filter', $response, $reservation->getReservation()->toArray());
+
+        do_action('amelia_after_paypal_execute', $response, $reservation->getReservation()->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setData(

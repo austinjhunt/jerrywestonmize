@@ -56,6 +56,9 @@ class DeleteEventCommandHandler extends CommandHandler
 
         $eventRepository->beginTransaction();
 
+
+        do_action('amelia_before_event_deleted', $event ? $event->toArray() : null);
+
         try {
             $deletedEvents = $eventApplicationService->delete($event, $command->getField('applyGlobally'));
         } catch (QueryExecutionException $e) {
@@ -64,6 +67,8 @@ class DeleteEventCommandHandler extends CommandHandler
         }
 
         $eventRepository->commit();
+
+        do_action('amelia_after_event_deleted', $event ? $event->toArray() : null);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted event');

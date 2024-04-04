@@ -69,13 +69,26 @@ class GetValidCouponCommandHandler extends CommandHandler
 
         $entitiesIds = explode(',', $command->getField('id'));
 
+        $code = $command->getField('code');
+
+        $data = [
+          'code' => $code,
+          'entitiesIds' => $entitiesIds,
+          'type' => $command->getField('type'),
+          'user' => ($user && $user->getId()) ? $user->getId()->getValue() : null,
+        ];
+
+        $data = apply_filters('amelia_before_validate_coupon_filter', $data);
+
+        do_action('amelia_before_validate_coupon', $data);
+
         try {
             /** @var Coupon $coupon */
             $coupon = $couponAS->processCoupon(
-                $command->getField('code'),
-                $entitiesIds,
-                $command->getField('type'),
-                ($user && $user->getId()) ? $user->getId()->getValue() : null,
+                $data['code'],
+                $data['entitiesIds'],
+                $data['type'],
+                $data['user'],
                 true
             );
 
@@ -144,6 +157,8 @@ class GetValidCouponCommandHandler extends CommandHandler
 
             return $result;
         }
+
+        do_action('amelia_after_validate_coupon', $data, $coupon->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved coupon.');

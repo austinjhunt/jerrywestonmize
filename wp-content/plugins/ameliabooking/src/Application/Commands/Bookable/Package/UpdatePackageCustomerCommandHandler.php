@@ -77,18 +77,26 @@ class UpdatePackageCustomerCommandHandler extends CommandHandler
         /** @var PackageCustomerRepository $packageCustomerRepository */
         $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
 
+        $packageCustomerId = $command->getArg('id');
+
+        $packageCustomerId = apply_filters('amelia_before_package_customer_status_updated_filter', $packageCustomerId, $command->getField('status'));
+
         /** @var PackageCustomer $packageCustomer */
-        $packageCustomer = $packageCustomerRepository->getById($command->getArg('id'));
+        $packageCustomer = $packageCustomerRepository->getById($packageCustomerId);
 
         if ($user && $packageCustomer->getCustomerId()->getValue() !== $user->getId()->getValue()) {
             throw new AccessDeniedException('You are not allowed to update status');
         }
+
+        do_action('amelia_before_package_customer_status_updated', $packageCustomer->toArray(), $command->getField('status'));
 
         $packageCustomerRepository->updateFieldById(
             $command->getArg('id'),
             $command->getField('status'),
             'status'
         );
+
+        do_action('amelia_after_package_customer_status_updated', $packageCustomer->toArray(), $command->getField('status'));
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated package');

@@ -3,7 +3,7 @@
 Plugin Name: Amelia
 Plugin URI: https://wpamelia.com/
 Description: Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!
-Version: 7.4.1
+Version: 7.4.3
 Author: TMS
 Author URI: https://tmsproducts.io/
 Text Domain: wpamelia
@@ -104,7 +104,7 @@ if (!defined('AMELIA_LOGIN_URL')) {
 
 // Const for Amelia version
 if (!defined('AMELIA_VERSION')) {
-    define('AMELIA_VERSION', '7.4.1');
+    define('AMELIA_VERSION', '7.4.3');
 }
 
 // Const for site URL
@@ -138,7 +138,7 @@ if (!defined('AMELIA_DEV')) {
 }
 
 if (!defined('AMELIA_NGROK_URL')) {
-    define('AMELIA_NGROK_URL', '797cbe83306a.ngrok.app');
+    define('AMELIA_NGROK_URL', '94e67ab6d82b.ngrok.app');
 }
 
 require_once AMELIA_PATH . '/vendor/autoload.php';
@@ -445,6 +445,7 @@ class Plugin
             // Delete Settings
             delete_option('amelia_settings');
             delete_option('amelia_stash');
+            delete_option('amelia_show_wpdt_promo');
 
             // Delete Files
             foreach (['/amelia/css', '/amelia/files/tmp', '/amelia/files', '/amelia'] as $path) {
@@ -470,9 +471,41 @@ class Plugin
          </div>";
         }
     }
+
+    /**
+     * Show WPDT promo notice
+     **/
+    public static function wpdt_dashboard_promo()
+    {
+        $wpAmeliaPage = isset($_GET['page']) ? $_GET['page'] : '';
+
+        require_once AMELIA_PATH . '/extensions/wpdt/functions.php';
+
+        if( is_admin() && (strpos($wpAmeliaPage,'wpamelia-dashboard') !== false) &&
+            amelia_installed_plugins_wpdt_promotion() &&
+            get_option( 'amelia_show_wpdt_promo' ) == 'yes'
+        ) {
+            include AMELIA_PATH . '/extensions/wpdt/promote_wpdt.php';
+            wp_enqueue_style('wdt-promo-css', AMELIA_URL . 'public/css/backend/promote_wpdt.css');
+        }
+    }
+
+    /**
+     * Remove WPDT promo notice
+     **/
+    public static function amelia_remove_wpdt_promo_notice()
+    {
+        update_option( 'amelia_show_wpdt_promo', 'no' );
+        echo json_encode( array("success") );
+        exit;
+    }
+
 }
 
+add_action('wp_ajax_amelia_remove_wpdt_promo_notice', array('AmeliaBooking\Plugin', 'amelia_remove_wpdt_promo_notice'));
+
 add_action('admin_notices', array('AmeliaBooking\Plugin', 'elementor_popup_notice'));
+add_action('admin_notices', array('AmeliaBooking\Plugin', 'wpdt_dashboard_promo'));
 
 /** Redirect For Outlook Calendar */
 if (is_admin()) {

@@ -136,6 +136,10 @@ class GetCalendarEventsCommandHandler extends CommandHandler
                 $events = array_merge($events, $googleCalendarService->getEvents($provider, $periodStart, $periodStartEnd, $periodEnd, $eventIds));
                 $events = array_merge($events, $outlookCalendarService->getEvents($provider, $periodStart, $periodStartEnd, $periodEnd, $eventIds));
 
+                $events = apply_filters('amelia_get_calendar_events_filter', $events, $period->toArray(), $provider);
+
+                do_action('amelia_get_calendar_events', $events, $period->toArray(), $provider);
+
                 if (count($events) > 0) {
                     $result->setResult(CommandResult::RESULT_CONFLICT);
                     $result->setMessage("Conflict with the event in employee's google/outlook calendar");

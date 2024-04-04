@@ -74,10 +74,16 @@ class GetCategoryCommandHandler extends CommandHandler
             $category->getServiceList()->addItem($service, $service->getId()->getValue());
         }
 
+        $categoryArray = $category->toArray();
+
+        $categoryArray = apply_filters('amelia_get_category_filter', $categoryArray);
+
+        do_action('amelia_get_category', $categoryArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved category.');
         $result->setData([
-            Entities::CATEGORY => $category->toArray()
+            Entities::CATEGORY => $categoryArray
         ]);
 
         return $result;

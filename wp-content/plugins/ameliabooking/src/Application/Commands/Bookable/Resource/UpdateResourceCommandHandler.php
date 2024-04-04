@@ -60,6 +60,10 @@ class UpdateResourceCommandHandler extends CommandHandler
 
         $entityService->removeMissingEntitiesForResource($resourceData);
 
+        $resourceData = apply_filters('amelia_before_resource_updated_filter', $resourceData);
+
+        do_action('amelia_before_resource_updated', $resourceData);
+
         /** @var Resource $resource */
         $resource = ResourceFactory::create($resourceData);
 
@@ -107,6 +111,7 @@ class UpdateResourceCommandHandler extends CommandHandler
             }
         }
 
+        do_action('amelia_after_resource_updated', $resource->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated resource.');

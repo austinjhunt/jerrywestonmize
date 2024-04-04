@@ -608,6 +608,10 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     {
         $event = $this->createEvent($appointment, $provider, $period);
 
+        $event = apply_filters('amelia_before_outlook_calendar_event_added_filter', $event, $appointment->toArray(), $provider->toArray());
+
+        do_action('amelia_before_outlook_calendar_event_added', $event, $appointment->toArray(), $provider->toArray());
+
         try {
             $event = $this->graph->createRequest(
                 'POST',
@@ -632,6 +636,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             $appointmentRepository->update($appointment->getId()->getValue(), $appointment);
         }
 
+        do_action('amelia_after_outlook_calendar_event_added', $event, $appointment->toArray(), $provider->toArray());
+
         return true;
     }
 
@@ -653,6 +659,11 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $entity = $period ?: $appointment;
         if ($entity->getOutlookCalendarEventId()) {
             $event = $this->createEvent($appointment, $provider, $period, $newProviders, $removeProviders);
+
+            $event = apply_filters('amelia_before_outlook_calendar_event_updated_filter', $event, $appointment->toArray(), $provider->toArray());
+
+            do_action('amelia_before_outlook_calendar_event_updated', $event, $appointment->toArray(), $provider->toArray());
+
             try {
                 $this->graph->createRequest(
                     'PATCH',
@@ -662,6 +673,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                         $entity->getOutlookCalendarEventId()->getValue()
                     )
                 )->attachBody($event)->setReturnType(get_class($event))->execute();
+
+                do_action('amelia_after_outlook_calendar_event_updated', $event, $appointment->toArray(), $provider->toArray());
             } catch (GraphException $e) {
                 return false;
             }
@@ -682,6 +695,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     private function deleteEvent($appointment, $provider)
     {
         if ($appointment->getOutlookCalendarEventId()) {
+            do_action('amelia_before_outlook_calendar_event_deleted', $appointment->toArray(), $provider->toArray());
+
             $this->graph->createRequest(
                 'DELETE',
                 sprintf(
@@ -701,6 +716,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 $repository = $this->container->get('domain.booking.event.period.repository');
             }
             $repository->updateFieldById($appointment->getId()->getValue(), null, 'outlookCalendarEventId');
+
+            do_action('amelia_after_outlook_calendar_event_deleted', $appointment->toArray(), $provider->toArray());
         }
     }
 

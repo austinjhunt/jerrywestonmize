@@ -72,11 +72,17 @@ class GetServicesCommandHandler extends CommandHandler
             }
         }
 
+        $servicesArray = $services->toArray();
+
+        $servicesArray = apply_filters('amelia_get_services_filter', $servicesArray);
+
+        do_action('amelia_get_services', $servicesArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved services.');
         $result->setData(
             [
-                Entities::SERVICES => $services->toArray(),
+                Entities::SERVICES => $servicesArray,
                 'countFiltered'    => (int)$serviceRepository->getCount($command->getField('params')),
                 'countTotal'       => (int)$serviceRepository->getCount([]),
             ]

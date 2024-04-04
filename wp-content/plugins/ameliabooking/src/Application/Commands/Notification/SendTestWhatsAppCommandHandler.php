@@ -84,12 +84,17 @@ class SendTestWhatsAppCommandHandler extends CommandHandler
         $dummyData['recurring_appointments_details'] = $placeholderService->applyPlaceholders($recPh, $dummyData);
         $dummyData['package_appointments_details']   =  $placeholderService->applyPlaceholders($packPh, $dummyData);
 
+        $dummyData = apply_filters('amelia_before_send_test_whatsapp_filter', $dummyData, $notification->toArray(), $command->getField('recipientWhatsApp'));
+
+        do_action('amelia_before_send_test_whatsapp', $dummyData, $notification->toArray(), $command->getField('recipientWhatsApp'));
 
         $response = $whatsAppNotificationService->sendTestNotification(
             $command->getField('recipientWhatsApp'),
             $notification,
             $dummyData
         );
+
+        do_action('amelia_after_send_test_whatsapp', $dummyData, $notification->toArray(), $command->getField('recipientWhatsApp'));
 
         if (!empty($response['error'])) {
             $result->setResult(CommandResult::RESULT_ERROR);

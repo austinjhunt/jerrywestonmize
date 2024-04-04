@@ -77,6 +77,10 @@ class UpdateCustomFieldCommandHandler extends CommandHandler
         /** @var array $customFieldOptionsArray */
         $customFieldOptionsArray = $customFieldData['options'];
 
+        $customFieldData = apply_filters('amelia_before_cf_updated_filter', $customFieldData);
+
+        do_action('amelia_before_cf_updated', $customFieldData);
+
         /** @var CustomField $customField */
         $customField = CustomFieldFactory::create($customFieldData);
 
@@ -105,6 +109,8 @@ class UpdateCustomFieldCommandHandler extends CommandHandler
         }
 
         $customFieldRepository->commit();
+
+        do_action('amelia_after_cf_updated', $customField->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Custom field successfully updated.');

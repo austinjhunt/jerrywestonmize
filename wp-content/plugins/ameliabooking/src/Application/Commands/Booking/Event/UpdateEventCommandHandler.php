@@ -96,19 +96,10 @@ class UpdateEventCommandHandler extends CommandHandler
 
         $entityService->removeMissingEntitiesForEvent($eventData);
 
-        try {
-            /** @var Event $event */
-            $event = $eventApplicationService->build($eventData);
-        } catch (Exception $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage($e->getMessage());
-            $result->setData(['message' => $e->getMessage()]);
-            return $result;
-        }
 
         /** @var Event $event */
         $oldEvent = $eventApplicationService->getEventById(
-            $event->getId()->getValue(),
+            $eventData['id'],
             [
                 'fetchEventsPeriods'    => true,
                 'fetchEventsTickets'    => true,
@@ -121,6 +112,20 @@ class UpdateEventCommandHandler extends CommandHandler
                 'fetchBookingsPayments' => true,
             ]
         );
+
+        $eventData = apply_filters('amelia_before_event_updated_filter', $eventData, $oldEvent ? $oldEvent->toArray() : null, $command->getField('applyGlobally'));
+
+        do_action('amelia_before_event_updated', $eventData, $oldEvent ? $oldEvent->toArray() : null, $command->getField('applyGlobally'));
+
+        try {
+            /** @var Event $event */
+            $event = $eventApplicationService->build($eventData);
+        } catch (Exception $e) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage($e->getMessage());
+            $result->setData(['message' => $e->getMessage()]);
+            return $result;
+        }
 
         if ($oldEvent->getRecurring() &&
             $event->getRecurring() &&
@@ -169,6 +174,7 @@ class UpdateEventCommandHandler extends CommandHandler
 
         $eventRepository->commit();
 
+        do_action('amelia_after_event_updated', $event ? $event->toArray() : null, $oldEvent ? $oldEvent->toArray() : null, $command->getField('applyGlobally'));
 
         $providersRemoved = array_udiff(
             $oldEvent->getProviders()->getItems(),

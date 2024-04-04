@@ -1054,6 +1054,21 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             $where[] = '(' . $where1 . ' OR ' . $where2 . ')';
         }
 
+        $customerJoin = '';
+
+        $customerBookingsTable = CustomerBookingsTable::getTableName();
+        $customerBookingsEventsPeriods = CustomerBookingsToEventsPeriodsTable::getTableName();
+
+        if (!empty($criteria['customerId'])) {
+            $customerJoin = "
+            LEFT JOIN {$customerBookingsEventsPeriods} cbe ON cbe.eventPeriodId = ep.id
+            LEFT JOIN {$customerBookingsTable} cb ON cb.id = cbe.customerBookingId";
+
+            $params[':customerId'] = $criteria['customerId'];
+
+            $where[] = 'cb.customerId = :customerId';
+        }
+
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         try {
@@ -1063,6 +1078,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 INNER JOIN {$eventsPeriodsTable} ep ON ep.eventId = e.id
                 {$tagJoin}
                 {$providerJoin}
+                {$customerJoin}
                 {$where}
                 GROUP BY e.id
                 ORDER BY ep.periodStart"

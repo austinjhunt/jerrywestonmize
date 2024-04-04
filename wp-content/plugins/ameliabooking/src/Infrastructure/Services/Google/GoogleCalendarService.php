@@ -543,6 +543,11 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
         }
 
         $event = $this->createEvent($appointment, $provider, $period);
+
+        $event = apply_filters('amelia_before_google_calendar_event_added_filter', $event, $appointment->toArray(), $provider->toArray());
+
+        do_action('amelia_before_google_calendar_event_added', $event, $appointment->toArray(), $provider->toArray());
+
         try {
             $event = $this->service->events->insert(
                 $provider->getGoogleCalendar()->getCalendarId()->getValue(),
@@ -570,6 +575,8 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
             $appointmentRepository->update($appointment->getId()->getValue(), $appointment);
         }
+
+        do_action('amelia_after_google_calendar_event_added', $event, $appointment->toArray(), $provider->toArray());
     }
 
     /**
@@ -590,12 +597,18 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
         $entity = $period ?: $appointment;
         if ($entity->getGoogleCalendarEventId()) {
+            $event = apply_filters('amelia_before_google_calendar_event_updated_filter', $event, $appointment->toArray(), $provider->toArray());
+
+            do_action('amelia_before_google_calendar_event_updated', $event, $appointment->toArray(), $provider->toArray());
+
             $this->service->events->update(
                 $provider->getGoogleCalendar()->getCalendarId()->getValue(),
                 $entity->getGoogleCalendarEventId()->getValue(),
                 $event,
                 ['sendNotifications' => $this->settings['sendEventInvitationEmail']]
             );
+
+            do_action('amelia_after_google_calendar_event_updated', $event, $appointment->toArray(), $provider->toArray());
         }
     }
 
@@ -618,12 +631,18 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
         $entity = $period ?: $appointment;
         if ($entity->getGoogleCalendarEventId()) {
+            $event = apply_filters('amelia_before_google_calendar_event_patched_filter', $event, $appointment->toArray(), $provider->toArray());
+
+            do_action('amelia_before_google_calendar_event_patched', $event, $appointment->toArray(), $provider->toArray());
+
             $this->service->events->patch(
                 $provider->getGoogleCalendar()->getCalendarId()->getValue(),
                 $entity->getGoogleCalendarEventId()->getValue(),
                 $event,
                 ['sendNotifications' => $this->settings['sendEventInvitationEmail']]
             );
+
+            do_action('amelia_after_google_calendar_event_patched', $event, $appointment->toArray(), $provider->toArray());
         }
     }
 
@@ -638,10 +657,14 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
     private function deleteEvent($appointment, $provider)
     {
         if ($appointment->getGoogleCalendarEventId()) {
+            do_action('amelia_before_google_calendar_event_deleted', $appointment->toArray(), $provider->toArray());
+
             $this->service->events->delete(
                 $provider->getGoogleCalendar()->getCalendarId()->getValue(),
                 $appointment->getGoogleCalendarEventId()->getValue()
             );
+
+            do_action('amelia_after_google_calendar_event_deleted', $appointment->toArray(), $provider->toArray());
         }
     }
 

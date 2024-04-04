@@ -53,10 +53,14 @@ class UpdatePackageStatusCommandHandler extends CommandHandler
         /** @var PackageRepository $packageRepository */
         $packageRepository = $this->container->get('domain.bookable.package.repository');
 
+        do_action('amelia_before_package_status_updated', $command->getArg('id'), $command->getField('status'));
+
         $packageRepository->updateStatusById(
             $command->getArg('id'),
             $command->getField('status')
         );
+
+        do_action('amelia_after_package_status_updated', $command->getArg('id'), $command->getField('status'));
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated package');

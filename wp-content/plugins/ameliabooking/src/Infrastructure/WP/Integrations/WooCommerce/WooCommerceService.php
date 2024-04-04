@@ -1099,6 +1099,7 @@ class WooCommerceService
         }
 
         do_action('AmeliaAddBookingToWcCart', $data);
+        do_action('amelia_add_booking_to_wc_cart', $data);
 
         $wcSettings = self::$settingsService->getSetting('payments', 'wc');
 

@@ -50,11 +50,17 @@ class GetResourcesCommandHandler extends CommandHandler
         /** @var Collection $resources */
         $resources = $resourceApplicationService->getAll(['search' => $params['search']]);
 
+        $resourcesArray = $resources->toArray();
+
+        $resourcesArray = apply_filters('amelia_get_resources_filter', $resourcesArray);
+
+        do_action('amelia_get_resources', $resourcesArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved resources.');
         $result->setData(
             [
-                Entities::RESOURCES => $resources->toArray(),
+                Entities::RESOURCES => $resourcesArray,
             ]
         );
 

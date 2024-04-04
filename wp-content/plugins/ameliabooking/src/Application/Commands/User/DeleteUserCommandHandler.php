@@ -73,6 +73,8 @@ class DeleteUserCommandHandler extends CommandHandler
 
         $userRepository->beginTransaction();
 
+        do_action('amelia_before_user_deleted', $user ? $user->toArray() : null);
+
         if ($user->getType() === AbstractUser::USER_ROLE_PROVIDER) {
             /** @var ProviderApplicationService $providerApplicationService */
             $providerApplicationService = $this->getContainer()->get('application.user.provider.service');
@@ -119,6 +121,8 @@ class DeleteUserCommandHandler extends CommandHandler
         }
 
         $userRepository->commit();
+
+        do_action('amelia_after_user_deleted', $user->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted user.');

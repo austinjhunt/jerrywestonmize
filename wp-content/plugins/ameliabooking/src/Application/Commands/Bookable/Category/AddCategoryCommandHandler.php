@@ -49,8 +49,14 @@ class AddCategoryCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
+        $categoryArray = $command->getFields();
+
+        $categoryArray = apply_filters('amelia_before_category_added_filter', $categoryArray);
+
+        do_action('amelia_before_category_added', $categoryArray);
+
         /** @var Category $category */
-        $category = CategoryFactory::create($command->getFields());
+        $category = CategoryFactory::create($categoryArray);
 
         if (!($category instanceof Category)) {
             $result->setResult(CommandResult::RESULT_ERROR);
@@ -93,6 +99,8 @@ class AddCategoryCommandHandler extends CommandHandler
         }
 
         $categoryRepository->commit();
+
+        do_action('amelia_after_category_added', $categoryArray);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully added new category.');

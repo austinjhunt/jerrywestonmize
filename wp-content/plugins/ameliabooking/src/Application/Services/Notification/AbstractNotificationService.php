@@ -942,6 +942,10 @@ abstract class AbstractNotificationService
                     /** @var CustomerBooking $bookingObject */
                     $bookingObject = $reservationObject->getBookings()->getItem($reservationObject->getBookings()->keys()[$bookingKey]);
 
+                    if ($appointmentArray['type'] === 'event' && $bookingObject->getStatus()->getValue() !== BookingStatus::APPROVED) {
+                        continue;
+                    }
+
                     if ($notification->getContent() && $notification->getContent()->getValue() && strpos($notification->getContent()->getValue(), '%payment_link_') !== false) {
                         $data['booking']  = $bookingObject ? $bookingObject->toArray() : $appointmentArray['bookings'][$bookingKey];
                         $data['customer'] =  $data['booking']['customer'];

@@ -91,6 +91,11 @@ class AddPackageCommandHandler extends CommandHandler
         /** @var Collection $services */
         $services = $serviceRepository->getByCriteria(['services' => array_keys($bookableServices)]);
 
+
+        $packageData = apply_filters('amelia_before_package_added_filter', $packageData);
+
+        do_action('amelia_before_package_added', $packageData);
+
         /** @var Package $package */
         $package = PackageFactory::create(array_merge($packageData, ['bookable' => []]));
 
@@ -134,6 +139,8 @@ class AddPackageCommandHandler extends CommandHandler
         $galleryService->manageGalleryForEntityAdd($package->getGallery(), $packageId);
 
         $packageRepository->commit();
+
+        do_action('amelia_after_package_added', $package->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully added new package.');

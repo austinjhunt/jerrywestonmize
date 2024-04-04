@@ -25,7 +25,11 @@ class LogoutCabinetCommandHandler extends CommandHandler
         /** @var UserService $userService */
         $userService = $this->container->get('users.service');
 
+        do_action('amelia_before_logout_user');
+
         $userService->logoutWordPressUser();
+
+        do_action('amelia_after_logout_user');
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setData([]);

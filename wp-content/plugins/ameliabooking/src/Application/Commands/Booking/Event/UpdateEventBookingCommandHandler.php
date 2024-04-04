@@ -96,6 +96,8 @@ class UpdateEventBookingCommandHandler extends CommandHandler
         /** @var CustomerBooking $customerBooking */
         $customerBooking = $event->getBookings()->getItem((int)$command->getField('id'));
 
+        do_action('amelia_before_event_booking_updated', $customerBooking ? $customerBooking->toArray() : null, $bookingData);
+
         if ($user &&
             $userAS->isProvider($user) &&
             (
@@ -201,6 +203,8 @@ class UpdateEventBookingCommandHandler extends CommandHandler
             $isBookingStatusChanged = true;
         }
 
+
+
         $customerBookingRepository->update($customerBooking->getId()->getValue(), $customerBooking);
 
         /** @var Payment $payment */
@@ -244,6 +248,8 @@ class UpdateEventBookingCommandHandler extends CommandHandler
                 }
             }
         }
+
+        do_action('amelia_after_event_booking_updated', $customerBooking->toArray(), $bookingData);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated booking');

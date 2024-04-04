@@ -46,10 +46,16 @@ class UpdateCouponStatusCommandHandler extends CommandHandler
         /** @var CouponRepositoryInterface $couponRepository */
         $couponRepository = $this->getContainer()->get('domain.coupon.repository');
 
+        $status = $command->getField('status');
+
+        do_action('amelia_before_coupon_status_updated', $command->getArg('id'), $status);
+
         $couponRepository->updateStatusById(
             $command->getArg('id'),
-            $command->getField('status')
+            $status
         );
+
+        do_action('amelia_after_coupon_status_updated', $command->getArg('id'), $status);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated coupon');

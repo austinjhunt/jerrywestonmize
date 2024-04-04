@@ -81,6 +81,10 @@ class GetTransactionAmountCommandHandler extends CommandHandler
             $amount = $paymentService->getTransactionAmount($payment->getTransactionId());
         }
 
+        $amount = apply_filters('amelia_get_transaction_amount_filter', $amount, $payment ? $payment->toArray() : null);
+
+        do_action('amelia_get_transaction_amount', $amount, $payment ? $payment->toArray() : null);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Retrieved transaction successfully.');
         $result->setData(

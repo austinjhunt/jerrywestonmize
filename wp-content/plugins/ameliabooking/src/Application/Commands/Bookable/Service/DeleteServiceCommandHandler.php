@@ -68,6 +68,8 @@ class DeleteServiceCommandHandler extends CommandHandler
 
         $serviceRepository->beginTransaction();
 
+        do_action('amelia_before_service_deleted', $service->toArray());
+
         if (!$bookableApplicationService->deleteService($service)) {
             $serviceRepository->rollback();
 
@@ -78,6 +80,8 @@ class DeleteServiceCommandHandler extends CommandHandler
         }
 
         $serviceRepository->commit();
+
+        do_action('amelia_after_service_deleted', $service->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted service.');

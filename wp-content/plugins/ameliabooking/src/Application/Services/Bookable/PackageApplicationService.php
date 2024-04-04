@@ -84,6 +84,14 @@ class PackageApplicationService extends AbstractPackageApplicationService
         );
 
         if ($save) {
+            $packageCustomerArray = $packageCustomer->toArray();
+
+            $packageCustomerArray = apply_filters('amelia_before_package_customer_added_filter', $packageCustomerArray);
+
+            do_action('amelia_before_package_customer_added', $packageCustomerArray);
+
+            $packageCustomer = PackageCustomerFactory::create($packageCustomerArray);
+
             $packageCustomerId = $packageCustomerRepository->add($packageCustomer);
 
             $packageCustomer->setId(new Id($packageCustomerId));

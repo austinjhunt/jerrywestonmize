@@ -184,6 +184,8 @@ class UpdateAppointmentTimeCommandHandler extends CommandHandler
             return $result;
         }
 
+        do_action('amelia_before_booking_rescheduled', $appointment->toArray());
+
         $appointmentRepo->update((int)$command->getArg('id'), $appointment);
 
         foreach ($appointment->getBookings()->getItems() as $booking) {
@@ -205,6 +207,9 @@ class UpdateAppointmentTimeCommandHandler extends CommandHandler
             $appointment->getProviderId()->getValue(),
             Entities::PROVIDER
         );
+
+
+        do_action('amelia_after_booking_rescheduled', $appointment->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated appointment time');

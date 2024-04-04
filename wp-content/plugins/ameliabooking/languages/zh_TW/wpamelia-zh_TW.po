@@ -1,14 +1,16 @@
 # Date created: 2024-01-18 00:58:31 by https://dichthuatphuongdong.com/tienich/csv2po.html
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-01-18 03:13:39+0000\n"
+"Project-Id-Version: PO File 5.8.1\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2024-03-01 10:52+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: GlotPress/3.0.0-alpha.2\n"
-"Language: en_GB\n"
-"Project-Id-Version: PO File 5.8.1\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "Admin"
 msgstr "管理員"
@@ -67,7 +69,7 @@ msgstr "由參與者取消"
 msgid "Spots"
 msgstr "斑點"
 
-msgid "Don\'t use Text mode option if you already have HTML code in the description,<br>since once this option is enabled the existing HTML tags could be lost."
+msgid "Don't use Text mode option if you already have HTML code in the description,<br>since once this option is enabled the existing HTML tags could be lost."
 msgstr "如果描述中已經有HTML代碼，請不要使用文本模式選項，<br>因為一旦啟用此選項，現有的HTML標籤可能會丟失"
 
 msgid "Confirm"
@@ -307,19 +309,19 @@ msgstr "需要幫助"
 msgid "No"
 msgstr "無"
 
-msgid "You don\'t have any employees here yet..."
+msgid "You don't have any employees here yet..."
 msgstr "您在這裡還沒有員工…"
 
 msgid "There are no results..."
 msgstr "沒有結果…"
 
-msgid "You don\'t have any packages here yet..."
+msgid "You don't have any packages here yet..."
 msgstr "您這裡還沒有任何套裝…"
 
-msgid "You don\'t have any resources yet..."
+msgid "You don't have any resources yet..."
 msgstr "您還沒有任何資源…"
 
-msgid "You don\'t have any services here yet..."
+msgid "You don't have any services here yet..."
 msgstr "您這裡還沒有任何服務…"
 
 msgid "No-show"
@@ -583,13 +585,13 @@ msgstr "Zoom識別"
 msgid "Select Zoom User"
 msgstr "選擇 Zoom 使用者"
 
-msgid "Certain employees that are assigned to the service are not connected to Zoom users. Please go to employees\' profiles and connect them to Zoom users in order to use this integration properly."
+msgid "Certain employees that are assigned to the service are not connected to Zoom users. Please go to employees' profiles and connect them to Zoom users in order to use this integration properly."
 msgstr "被指派到此服務的某些員工並未連接到 Zoom 使用者。請前往員工的個人資料頁面，並將他們連接到 Zoom 使用者，以便正確使用此整合功能。"
 
 msgid "Unlimited"
 msgstr "無限制"
 
-msgid "What\'s new"
+msgid "What's new"
 msgstr "最新消息"
 
 msgid "Order"
@@ -643,7 +645,7 @@ msgstr "< div >嘿!</div><span>我們想更了解您一點!您能抽出一兩分
 msgid "New 6.5 update is here!"
 msgstr "新的6.5更新在這裡!"
 
-msgid "Go to the What\'s New page"
+msgid "Go to the What's New page"
 msgstr "進入最新消息頁面"
 
 msgid "Activate"
@@ -658,7 +660,7 @@ msgstr "插件已被啟動"
 msgid "Plugin has been deactivated"
 msgstr "插件已停用"
 
-msgid "It seems that Envato API is currently busy (please try again) or you don\'t have a valid purchase of Amelia"
+msgid "It seems that Envato API is currently busy (please try again) or you don't have a valid purchase of Amelia"
 msgstr "似乎Envato API目前很忙(請重試)或您沒有有效的Amelia購買激活設置"
 
 msgid "Activation Settings"
@@ -733,10 +735,10 @@ msgstr "設定他們的特殊日"
 msgid "Allow booking above maximum capacity"
 msgstr "允許超過最大座位數的預約"
 
-msgid "If this is disabled, your front-end customers won\'t be able to book appointment with Pending status above the maximum capacity.<br/>Once the maximum capacity is reached appointment will close and time slot will become unavailable."
+msgid "If this is disabled, your front-end customers won't be able to book appointment with Pending status above the maximum capacity.<br/>Once the maximum capacity is reached appointment will close and time slot will become unavailable."
 msgstr "如果停用此功能，您的前端客戶將無法以高於最大容量的Pending狀態預約預約。 <br/>一旦達到最大容量，預約將關閉，時間段將不可用。"
 
-msgid "If this is disabled, your front-end customers won\'t be able to submit a booking unless they fill in the minimum service capacity,<br/>but once they book for any capacity above minimum, the time slot will become unavailable for booking for others.<br/>If enabled, multiple customers will be able to book the same time slot, without having to fill in the minimum capacity."
+msgid "If this is disabled, your front-end customers won't be able to submit a booking unless they fill in the minimum service capacity,<br/>but once they book for any capacity above minimum, the time slot will become unavailable for booking for others.<br/>If enabled, multiple customers will be able to book the same time slot, without having to fill in the minimum capacity."
 msgstr "如果停用此功能，您的前端客戶將無法提交預約，除非他們填寫了最小服務容量<br/>，但是一旦他們預約了超過最小容量的任何容量，則該時間段將不可用於其他人預約。 <br/>如果啟用，多個客戶將能夠預約同一時間段，而不必填寫最小容量。"
 
 msgid "Allow customers to reschedule their own appointments"
@@ -748,7 +750,7 @@ msgstr "如果您希望允許客戶重新安排自己的預約，請啟用此選
 msgid "Allow customers to delete their profile"
 msgstr "允許客戶刪除他們的個人資料"
 
-msgid "Enable this option if you want to allow your customers to delete their profile data (bookings won\'t be deleted)."
+msgid "Enable this option if you want to allow your customers to delete their profile data (bookings won't be deleted)."
 msgstr "如果您希望允許您的客戶刪除他們的個人資料(預約不會被刪除)，請啟用此選項。"
 
 msgid "Allow customers to cancel packages"
@@ -811,7 +813,7 @@ msgstr "日曆"
 msgid "Unsuccessful Cancellation Redirect URL"
 msgstr "取消失敗重定向URL"
 
-msgid "URL on which will user be redirected if appointment can\'t be canceled<br/>because of \'Minimum time required before canceling\' value"
+msgid "URL on which will user be redirected if appointment can't be canceled<br/>because of 'Minimum time required before canceling' value"
 msgstr "URL上的使用者將被重新導向，如果預約無法取消<br/>，因為「取消前所需的最小時間」值"
 
 msgid "Successful Cancellation Redirect URL"
@@ -886,7 +888,7 @@ msgstr "新增/編輯自訂字段"
 msgid "Custom fields settings"
 msgstr "自訂字段設定"
 
-msgid "Add Event\'s Attendees"
+msgid "Add Event's Attendees"
 msgstr "新增活動參與者"
 
 msgid "Enable this option if you want your employees to see<br/>in the event customers that attend the appointment."
@@ -1066,7 +1068,7 @@ msgstr "新增Google地圖API鍵顯示Google靜態地圖在<br/>「地址」頁�
 msgid "Google Calendar Settings"
 msgstr "Google Calendar設定"
 
-msgid "Allow synchronizing employee\'s calendar with Google Calendar for smoother personal scheduling"
+msgid "Allow synchronizing employee's calendar with Google Calendar for smoother personal scheduling"
 msgstr "允許同步員工行事曆與Google行事曆更順暢的個人行程安排"
 
 msgid "Zoom Settings"
@@ -1166,7 +1168,7 @@ msgid "Limit events per customer"
 msgstr "限制每個客戶的活動數"
 
 msgid "‘Booking date and time’ will set the limit based on the date when the booking is created, regardless of the event’s date and time.<br>The ‘Event start date and time’ will set it based on the event’s start date and time."
-msgstr "無論活動的日期和時間如何，「預約日期和時間」將根據建立預約的日期設定限制。 <br> \'活動開始日期和時間\'將根據活動的開始日期和時間設定它。"
+msgstr "無論活動的日期和時間如何，「預約日期和時間」將根據建立預約的日期設定限制。 <br> '活動開始日期和時間'將根據活動的開始日期和時間設定它。"
 
 msgid "Event start date and time"
 msgstr "活動開始日期和時間"
@@ -1219,7 +1221,7 @@ msgstr "8小時"
 msgid "9h"
 msgstr "9小時"
 
-msgid "Identify country code by user\'s IP address"
+msgid "Identify country code by user's IP address"
 msgstr "透過使用者的IP位址識別國家代碼"
 
 msgid "Insert Pending Appointments"
@@ -1234,10 +1236,10 @@ msgstr "為未決預約建立會議"
 msgid "Enable this option if you want to create zoom meetings for appointments with pending status."
 msgstr "如果要為具有待處理狀態的預約建立縮放會議，請啟用此選項。"
 
-msgid "Check customer\'s name for existing email when booking"
+msgid "Check customer's name for existing email when booking"
 msgstr "預約時請檢查客戶的姓名以查找現有的電子郵件"
 
-msgid "Enable this option if you don\'t want to allow \"existing customer\"<br/>to use different first and last name when booking."
+msgid "Enable this option if you don't want to allow \"existing customer\"<br/>to use different first and last name when booking."
 msgstr "如果您不希望「現有客戶」<br/>在預約時使用不同的姓氏和名，請啟用此選項。"
 
 msgid "Instructions"
@@ -1528,13 +1530,13 @@ msgstr "一旦客戶安排了預約或套裝，他將被重定向到此URL。"
 msgid "Remove Google Calendar Busy Slots"
 msgstr "刪除Google Calendar繁忙插槽"
 
-msgid "Enable this option if you want to remove busy slots in<br/>Google Calendar from Employee\'s working schedule."
+msgid "Enable this option if you want to remove busy slots in<br/>Google Calendar from Employee's working schedule."
 msgstr "如果您想從員工的工作日程中刪除<br/>Google Calendar中的繁忙時段，請啓用此選項。"
 
 msgid "Remove Outlook Calendar Busy Slots"
 msgstr "刪除Outlook calendar繁忙插槽"
 
-msgid "Enable this option if you want to remove busy slots in<br/>Outlook Calendar from Employee\'s working schedule."
+msgid "Enable this option if you want to remove busy slots in<br/>Outlook Calendar from Employee's working schedule."
 msgstr "如果您想從員工的工作日程中刪除<br/>Outlook calendar中的繁忙時段，請啓用此選項。"
 
 msgid "Include Buffer time in Google events"
@@ -2008,7 +2010,7 @@ msgstr "隱藏預約表格上的貨幣符號"
 msgid "Custom Currency Symbol"
 msgstr "自定義貨幣符號"
 
-msgid "What\'s New"
+msgid "What's New"
 msgstr "有什麽新鮮事"
 
 msgid "Accepted"
@@ -2146,21 +2148,13 @@ msgstr "日期:"
 msgid "Dear <b>%customer_full_name%</b>, <br><br>Thank you for choosing our company, <br> <b>%company_name%</b>"
 msgstr "親愛的<b>%客戶全名%</b>， <br><br>感謝您選擇我們公司，<br><b >%公司名稱%</b>"
 
-msgid ""
-"Dear %customer_full_name%, "
-"            "
-"Thank you for choosing our company, "
-"%company_name%"
+msgid "Dear %customer_full_name%,             Thank you for choosing our company, %company_name%"
 msgstr "“親愛的%客戶全名%，感謝您選擇我們公司，%公司名稱%”"
 
 msgid "Hi <b>%employee_full_name%</b>, <br><br>Thank you, <br> <b>%company_name%</b>"
 msgstr "您好< b > %員工全名% < / b >, < br > < br >謝謝您,< br > < b > % 公司名稱% < / b >"
 
-msgid ""
-"Hi %employee_full_name%, "
-"            "
-"Thank you, "
-"%company_name%"
+msgid "Hi %employee_full_name%,             Thank you, %company_name%"
 msgstr "“您好，員工全名，謝謝，%公司名稱%”"
 
 msgid "Delivered"
@@ -2169,10 +2163,10 @@ msgstr "交付"
 msgid "Details Changed"
 msgstr "細節改變"
 
-msgid "Are you sure you want to delete this notification? <br> You can\'t undo this action"
+msgid "Are you sure you want to delete this notification? <br> You can't undo this action"
 msgstr "您確定要刪除此通知嗎?<br>無法撤消此操作"
 
-msgid "Don\'t have an account?"
+msgid "Don't have an account?"
 msgstr "沒有賬戶?"
 
 msgid "Duplicate of "
@@ -2829,7 +2823,7 @@ msgstr "發送方用戶最多支持11個字符"
 msgid "Your ID must include at least one letter"
 msgstr "您的身份證明必須包含至少一個字母"
 
-msgid "Alpha Sender ID can\'t be empty"
+msgid "Alpha Sender ID can't be empty"
 msgstr "Alpha發件者用戶不能爲空"
 
 msgid "Alpha Sender ID has been saved"
@@ -2961,7 +2955,7 @@ msgstr "選擇模板"
 msgid "Default language"
 msgstr "默認的語言"
 
-msgid "Only templates that are in the default language will be displayed on the backend. <br> If the template doesn\'t exist in customer\'s language it will be sent in the default language."
+msgid "Only templates that are in the default language will be displayed on the backend. <br> If the template doesn't exist in customer's language it will be sent in the default language."
 msgstr "只有默認語言的模板才會顯示在後端。<br>如果模板不存在客戶的語言，它將以默認語言發送。"
 
 msgid "Enter Permanent access token "
@@ -3051,7 +3045,7 @@ msgstr "新"
 msgid "There are no appointments for today"
 msgstr "今天沒有預約"
 
-msgid "You don\'t have any upcoming appointments yet"
+msgid "You don't have any upcoming appointments yet"
 msgstr "您還沒有即將到來的預約"
 
 msgid "Times bought"
@@ -3078,7 +3072,7 @@ msgstr "收入"
 msgid "Shows the total income for paid appointments<br/>in the chosen date range."
 msgstr "顯示所選日期範圍內<br/>的付費預約的總收入。"
 
-msgid "Today\'s appointments"
+msgid "Today's appointments"
 msgstr "今天的預約"
 
 msgid "Views"
@@ -3114,7 +3108,7 @@ msgstr "YouTube"
 msgid "channel"
 msgstr "通道"
 
-msgid "Don\'t show again"
+msgid "Don't show again"
 msgstr "別再出現了"
 
 msgid "1. November at 4Pm cest"
@@ -3282,7 +3276,7 @@ msgstr "地圖"
 msgid "New Location"
 msgstr "新地址"
 
-msgid "You don\'t have any locations here yet..."
+msgid "You don't have any locations here yet..."
 msgstr "您在這裏還沒有任何地址…"
 
 msgid "This is not the right address?"
@@ -3498,7 +3492,7 @@ msgstr "新資源"
 msgid "New Service"
 msgstr "新服務"
 
-msgid "You don\'t have any categories here yet..."
+msgid "You don't have any categories here yet..."
 msgstr "這裏還沒有任何類別……"
 
 msgid "Notify the customer"
@@ -3732,7 +3726,7 @@ msgstr "如果禁用此選項，則服務將僅用於從後端頁面預約。"
 msgid "Set recurring appointment"
 msgstr "設置定期預約"
 
-msgid "If this option is disabled, your customers won\'t be able to book recurring appointments at the same time."
+msgid "If this option is disabled, your customers won't be able to book recurring appointments at the same time."
 msgstr "如果禁用此選項，您的客戶將無法同時預約定期預約。"
 
 msgid "Handle unavailable recurring dates"
@@ -3780,7 +3774,7 @@ msgstr "生日"
 msgid "Create New"
 msgstr "建立新的"
 
-msgid "Don\'t import"
+msgid "Don't import"
 msgstr "不輸入"
 
 msgid "Please enter first name"
@@ -3915,10 +3909,10 @@ msgstr "從Outlook退出"
 msgid "Unable to connect to Google Calendar"
 msgstr "無法連接到Google Calendar"
 
-msgid "Here you can connect employee with Google Calendar,<br/>so once the appointment is scheduled it will be<br/>automatically added to employee\'s calendar."
+msgid "Here you can connect employee with Google Calendar,<br/>so once the appointment is scheduled it will be<br/>automatically added to employee's calendar."
 msgstr "在這裏，您可以連接員工與Google Calendar，<br/>所以一旦預約安排，它將<br/>自動添加到員工的日曆。"
 
-msgid "Here you can connect employee with Outlook Calendar,<br/>so once the appointment is scheduled it will be<br/>automatically added to employee\'s calendar."
+msgid "Here you can connect employee with Outlook Calendar,<br/>so once the appointment is scheduled it will be<br/>automatically added to employee's calendar."
 msgstr "在這裏，您可以將員工與Outlook calendar連接，<br/>因此，一旦安排預約，它將<br/>自動添加到員工的日曆。"
 
 msgid "Grid View"
@@ -4065,7 +4059,7 @@ msgstr "最後一次預約降序"
 msgid "New Customer"
 msgstr "新客戶"
 
-msgid "You don\'t have any customers here yet..."
+msgid "You don't have any customers here yet..."
 msgstr "您這裏還沒有客戶……"
 
 msgid "Required fields are: <b>First Name</b> and <b>Last Name</b>."
@@ -4119,7 +4113,7 @@ msgstr "爲不同的值選擇了多個相同類型的字段"
 msgid "Overwrite records"
 msgstr "覆蓋記錄"
 
-msgid "We\'ve prepared a .csv document for you, with customers that were not imported. After fixing issues, you can try again."
+msgid "We've prepared a .csv document for you, with customers that were not imported. After fixing issues, you can try again."
 msgstr "我們爲您准備了一個.csv文件，裏面有沒有輸入的客戶。修複問題後，您可以再試一次。"
 
 msgid "Skip import"
@@ -4281,10 +4275,10 @@ msgstr "新的優惠券"
 msgid "Coupon needs to have discount or deduction"
 msgstr "優惠券需要有折扣或扣減"
 
-msgid "You don\'t have any coupons here yet"
+msgid "You don't have any coupons here yet"
 msgstr "您這裏還沒有優惠券"
 
-msgid "You don\'t have any payments here yet"
+msgid "You don't have any payments here yet"
 msgstr "您這裏還沒有付款"
 
 msgid "Select at least one service or event"
@@ -4482,7 +4476,7 @@ msgstr "您確定要刪除此預約嗎?"
 msgid "Are you sure you want to delete these appointments?"
 msgstr "您確定要刪除這些預約嗎?"
 
-msgid "Are you sure you want to delete this package purchase and it\'s appointments?"
+msgid "Are you sure you want to delete this package purchase and it's appointments?"
 msgstr "您確定要刪除此套裝購買及其預約嗎?"
 
 msgid "Are you sure you want to duplicate this appointment?"
@@ -4527,7 +4521,7 @@ msgstr "多封電子郵件"
 msgid "New Appointment"
 msgstr "新的預約"
 
-msgid "You don\'t have any appointments here yet..."
+msgid "You don't have any appointments here yet..."
 msgstr "您在這裏還沒有預約……"
 
 msgid "There are no selected customers"
@@ -4653,10 +4647,10 @@ msgstr "時間段不可用"
 msgid "Booking is unavailable"
 msgstr "無法預約"
 
-msgid "Appointment can\'t be canceled"
+msgid "Appointment can't be canceled"
 msgstr "預約不能取消"
 
-msgid "Appointment can\'t be rescheduled"
+msgid "Appointment can't be rescheduled"
 msgstr "預約不能重新安排"
 
 msgid "Check this option if you want your<br> customers to have the option to choose<br> whether they will pay a full amount<br> or just a deposit. If unchecked,<br> customers will only have deposit<br> as a payment option."
@@ -4992,7 +4986,7 @@ msgstr "在網站上顯示活動"
 msgid "Booking status has been changed to "
 msgstr "預約狀態已變更為"
 
-msgid "You don\'t have any events here yet..."
+msgid "You don't have any events here yet..."
 msgstr "您這裡還沒有任何活動..."
 
 msgid "There are no attendees yet..."
@@ -5034,19 +5028,19 @@ msgstr "所有員工"
 msgid "This will change the time of the appointment. Continue?"
 msgstr "這將改變約會的時間。 繼續？"
 
-msgid "Appointment can\'t be moved because of employee break in the selected period"
+msgid "Appointment can't be moved because of employee break in the selected period"
 msgstr "由於員工在所選時間內休假，因此無法重新安排預約"
 
 msgid "There is already an appointment for this employee in selected time period"
 msgstr "在所選時間內已有該員工的預約"
 
-msgid "Appointment can\'t be moved because the employee doesn\'t provide this service at the selected time"
+msgid "Appointment can't be moved because the employee doesn't provide this service at the selected time"
 msgstr "由於工作人員不在所選時間提供此項服務，因此無法重新安排預約"
 
-msgid "Appointment can\'t be moved in past time period"
+msgid "Appointment can't be moved in past time period"
 msgstr "預約不能超過該時段"
 
-msgid "Appointment can\'t be moved out of employee working hours"
+msgid "Appointment can't be moved out of employee working hours"
 msgstr "預約不能移至員工工作時間以外"
 
 msgid "Appointment has been rescheduled"
@@ -5181,7 +5175,7 @@ msgstr "字體"
 msgid "Label name"
 msgstr "標簽名稱"
 
-msgid "You don\'t have any custom fields here yet..."
+msgid "You don't have any custom fields here yet..."
 msgstr "這裏還沒有任何自定義字段。"
 
 msgid "Notification Placeholder"
@@ -6690,7 +6684,7 @@ msgstr "當您希望以目錄的形式顯示您的服務時，前端預約目錄
 msgid "Amelia - Events"
 msgstr "Amelia - 活動"
 
-msgid "Event Booking is shortcode that gives your customers the option to book one of the events that you\'ve created on the back-end in a simple event list view."
+msgid "Event Booking is shortcode that gives your customers the option to book one of the events that you've created on the back-end in a simple event list view."
 msgstr "活動預約是一個短代碼，它讓您的客戶可以選擇在一個簡單的活動列表視圖中預約您在後端建立的活動之一。"
 
 msgid "Amelia - Events List"
@@ -6867,10 +6861,10 @@ msgstr "第一個名字:"
 msgid "This file is forbidden for upload"
 msgstr "這個文件禁止上傳"
 
-msgid "Your card\'s security code is incomplete"
+msgid "Your card's security code is incomplete"
 msgstr "您的卡片的安全碼不完整"
 
-msgid "Your card\'s expiration date is incomplete"
+msgid "Your card's expiration date is incomplete"
 msgstr "您的卡片的有效期不完整"
 
 msgid "Your card number is incomplete"
@@ -6879,7 +6873,7 @@ msgstr "您的卡號不完整"
 msgid "Your postal code is incomplete"
 msgstr "您的郵政編碼不完整"
 
-msgid "Your card\'s expiration year is in the past"
+msgid "Your card's expiration year is in the past"
 msgstr "您卡片的有效期已經過去了"
 
 msgid "Your card number is invalid"
@@ -6963,7 +6957,7 @@ msgstr "搜索結果"
 msgid "Select the Appointment Time"
 msgstr "選擇預約時間"
 
-msgid "Select the Extras you\'d like"
+msgid "Select the Extras you'd like"
 msgstr "選擇您想要的附加功能"
 
 msgid "Time Range:"
@@ -7074,7 +7068,7 @@ msgstr "若要重新安排約會，請從日曆中選擇可用的日期時間，
 msgid "Appointments to book"
 msgstr "預約"
 
-msgid "Booking can\'t be canceled"
+msgid "Booking can't be canceled"
 msgstr "預約不能取消"
 
 msgid "Booking Closes"
@@ -7277,3 +7271,4 @@ msgstr "Amelia是一個簡單而強大的自動預約專家，24/7工作，以�
 
 msgid "Please select service"
 msgstr "請選擇服務"
+

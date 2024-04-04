@@ -699,11 +699,12 @@ class NotificationLogRepository extends AbstractRepository
 
             $where = '';
             if ($notification->getTimeAfter()) {
-                $timeAfter = $notification->getTimeAfter()->getValue();
-                $lastTime  = $timeAfter + 259200;
-                $where     = "{$currentDateTime} BETWEEN DATE_ADD(a.bookingEnd, INTERVAL {$timeAfter} SECOND) AND DATE_ADD(a.bookingEnd, INTERVAL {$lastTime} SECOND)";
+                $timeAfter = apply_filters('amelia_modify_scheduled_notification_time_after', $notification->getTimeAfter()->getValue(), $notification->toArray());
+                $lastTime  = apply_filters('amelia_modify_scheduled_notification_last_time', $timeAfter + 259200, $notification->toArray());
+
+                $where = "{$currentDateTime} BETWEEN DATE_ADD(a.bookingEnd, INTERVAL {$timeAfter} SECOND) AND DATE_ADD(a.bookingEnd, INTERVAL {$lastTime} SECOND)";
             } else if ($notification->getTimeBefore()) {
-                $timeBefore = $notification->getTimeBefore()->getValue();
+                $timeBefore = apply_filters('amelia_modify_scheduled_notification_time_before', $notification->getTimeBefore()->getValue(), $notification->toArray());
                 $where      = "({$currentDateTime} BETWEEN DATE_SUB(a.bookingStart, INTERVAL {$timeBefore} SECOND) AND a.bookingStart) AND (a.bookingStart >= DATE_ADD(cb.created, INTERVAL {$timeBefore} SECOND))";
             }
 

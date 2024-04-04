@@ -55,15 +55,21 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
             return $result;
         }
 
+        $token = apply_filters('amelia_before_outlook_calendar_added_filter', $token, $command->getField('userId'));
+
         $outlookCalendar = OutlookCalendarFactory::create(['token' => $token['result']]);
 
         $outlookCalendarRepository->beginTransaction();
+
+        do_action('amelia_before_outlook_calendar_added', $outlookCalendar ? $outlookCalendar->toArray() : null, $command->getField('userId'));
 
         if (!$outlookCalendarRepository->add($outlookCalendar, $command->getField('userId'))) {
             $outlookCalendarRepository->rollback();
         }
 
         $outlookCalendarRepository->commit();
+
+        do_action('amelia_after_outlook_calendar_added', $outlookCalendar ? $outlookCalendar->toArray() : null, $command->getField('userId'));
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully fetched access token');

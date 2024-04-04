@@ -100,8 +100,12 @@ class UpdateCustomerCommandHandler extends CommandHandler
             $customerData['birthday'] = !empty($customerData['birthday']) ? $customerData['birthday'] : null;
         }
 
+        $newUserData = array_merge($oldUser->toArray(), $customerData);
+
+        $newUserData = apply_filters('amelia_before_customer_updated_filter', $newUserData);
+
         /** @var Customer $newUser */
-        $newUser = UserFactory::create(array_merge($oldUser->toArray(), $customerData));
+        $newUser = UserFactory::create($newUserData);
 
         if (!($newUser instanceof AbstractUser)) {
             $result->setResult(CommandResult::RESULT_ERROR);
@@ -132,6 +136,8 @@ class UpdateCustomerCommandHandler extends CommandHandler
             }
         }
 
+        do_action('amelia_before_customer_updated', $newUser? $newUser->toArray() : null);
+
         if (!$userRepository->update($command->getArg('id'), $newUser)) {
             $userRepository->rollback();
 
@@ -156,6 +162,8 @@ class UpdateCustomerCommandHandler extends CommandHandler
         }
 
         $userRepository->commit();
+
+        do_action('amelia_after_customer_updated', $newUser ? $newUser->toArray() : null);
 
         $result = $userAS->getAuthenticatedUserResponse(
             $newUser,

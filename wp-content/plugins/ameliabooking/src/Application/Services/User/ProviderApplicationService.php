@@ -1057,7 +1057,7 @@ class ProviderApplicationService
      *
      * @param Provider $newUser
      *
-     * @return boolean
+     * @return void
      * @throws QueryExecutionException
      * @throws ContainerException
      */
@@ -1067,6 +1067,8 @@ class ProviderApplicationService
         $providerServiceRepo = $this->container->get('domain.bookable.service.providerService.repository');
 
         $servicesIds = [];
+
+        /** @var Collection $services */
         $services = $newUser->getServiceList();
 
         /** @var Service $service */
@@ -1076,7 +1078,7 @@ class ProviderApplicationService
 
         $providerServiceRepo->deleteAllNotInServicesArrayForProvider($servicesIds, $newUser->getId()->getValue());
 
-        $existingServices = $providerServiceRepo->getAllForProvider($newUser->getId()->getValue());
+        $existingServices = $providerServiceRepo->getAllForEntity($newUser->getId()->getValue(), Entities::EMPLOYEE);
 
         $existingServicesIds = [];
 
@@ -1084,6 +1086,7 @@ class ProviderApplicationService
             $existingServicesIds[] = $existingService['serviceId'];
         }
 
+        /** @var Service $service */
         foreach ($services->getItems() as $service) {
             if (!in_array($service->getId()->getValue(), $existingServicesIds, false)) {
                 $providerServiceRepo->add($service, $newUser->getId()->getValue());
@@ -1097,7 +1100,10 @@ class ProviderApplicationService
             }
         }
 
-        return true;
+        $providerServiceRepo->deleteDuplicated(
+            $newUser->getId()->getValue(),
+            Entities::EMPLOYEE
+        );
     }
 
     /**

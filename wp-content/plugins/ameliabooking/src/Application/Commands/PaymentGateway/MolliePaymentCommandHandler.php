@@ -75,13 +75,18 @@ class MolliePaymentCommandHandler extends CommandHandler
         /** @var CacheRepository $cacheRepository */
         $cacheRepository = $this->container->get('domain.cache.repository');
 
+        $bookingData = $bookingAS->getAppointmentData($command->getFields());
+
+        $bookingData = apply_filters('amelia_before_mollie_redirect_filter', $bookingData);
+
+        do_action('amelia_before_mollie_redirect', $bookingData);
 
         /** @var Reservation $reservation */
         $reservation = $reservationService->getNew(true, true, true);
 
         $reservationService->processBooking(
             $result,
-            $bookingAS->getAppointmentData($command->getFields()),
+            $bookingData,
             $reservation,
             false
         );

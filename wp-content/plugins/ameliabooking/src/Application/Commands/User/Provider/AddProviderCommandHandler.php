@@ -55,6 +55,16 @@ class AddProviderCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
-        return $providerAS->createProvider($command->getFields());
+        $providerData = $command->getFields();
+
+        $providerData = apply_filters('amelia_before_provider_added_filter', $providerData);
+
+        do_action('amelia_before_provider_added', $providerData);
+
+        $result = $providerAS->createProvider($providerData);
+
+        do_action('amelia_after_provider_added', $result ? $result->getData() : null);
+
+        return $result;
     }
 }

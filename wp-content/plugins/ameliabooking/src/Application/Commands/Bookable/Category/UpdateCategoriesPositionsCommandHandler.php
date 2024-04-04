@@ -39,6 +39,12 @@ class UpdateCategoriesPositionsCommandHandler extends CommandHandler
 
         /** @var array $categorized */
         $categorized = $command->getFields()['categories'];
+
+        $categorized = apply_filters('amelia_before_category_position_updated_filter', $categorized);
+
+        do_action('amelia_before_category_position_updated', $categorized);
+
+
         $categories = [];
 
         foreach ($categorized as $category) {
@@ -53,11 +59,14 @@ class UpdateCategoriesPositionsCommandHandler extends CommandHandler
             $categories[] = $category;
         }
 
+
         /** @var CategoryRepository $categoryRepository */
         $categoryRepository = $this->container->get('domain.bookable.category.repository');
         foreach ($categories as $category) {
             $categoryRepository->update($category->getId()->getValue(), $category);
         }
+
+        do_action('amelia_after_category_position_updated', $categorized);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated bookable categories positions.');

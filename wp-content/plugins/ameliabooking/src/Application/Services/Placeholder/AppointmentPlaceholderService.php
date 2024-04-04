@@ -59,15 +59,20 @@ class AppointmentPlaceholderService extends PlaceholderService
         $dateFormat = $settingsService->getSetting('wordpress', 'dateFormat');
         $timeFormat = $settingsService->getSetting('wordpress', 'timeFormat');
 
-        $timestamp = date_create()->getTimestamp();
+        $timeZone = get_option('timezone_string');
+        $dateTime = new DateTime("now", new \DateTimeZone($timeZone));
 
+        $appointment_date = $dateTime->format($dateFormat);
+        $appointment_date_time = $dateTime->format($dateFormat . ' ' . $timeFormat);
+        $appointment_start_time = $dateTime->format($timeFormat);
+        $appointment_end_time = (new DateTime("now +1 hour", new \DateTimeZone($timeZone)))->format($timeFormat);
 
         return [
             'appointment_id'          => '1',
-            'appointment_date'        => date_i18n($dateFormat, $timestamp),
-            'appointment_date_time'   => date_i18n($dateFormat . ' ' . $timeFormat, $timestamp),
-            'appointment_start_time'  => date_i18n($timeFormat, $timestamp),
-            'appointment_end_time'    => date_i18n($timeFormat, date_create('1 hour')->getTimestamp()),
+            'appointment_date'        => $appointment_date,
+            'appointment_date_time'   => $appointment_date_time,
+            'appointment_start_time'  => $appointment_start_time,
+            'appointment_end_time'    => $appointment_end_time,
             'appointment_notes'       => 'Appointment note',
             'appointment_price'       => $helperService->getFormattedPrice(100),
             'appointment_cancel_url'  => 'http://cancel_url.com',
@@ -89,6 +94,7 @@ class AppointmentPlaceholderService extends PlaceholderService
             'reservation_description' => 'Service Description',
             'service_duration'        => $helperService->secondsToNiceDuration(5400),
             'service_name'            => 'Service Name',
+            'service_id'              => '123',
             'reservation_name'        => 'Service Name',
             'service_price'           => $helperService->getFormattedPrice(100),
             'service_extras'          => 'Extra1, Extra2, Extra3',
@@ -376,10 +382,12 @@ class AppointmentPlaceholderService extends PlaceholderService
 
         $data = [
             'category_name'           => $categoryName,
+            'category_id'             => $category->getId()->getValue(),
             'service_description'     => $serviceDescription,
             'reservation_description' => $serviceDescription,
             'service_duration'        => implode(', ', $serviceDurations),
             'service_name'            => $serviceName,
+            'service_id'              => $service->getId()->getValue(),
             'reservation_name'        => $serviceName,
             'service_price'           => implode(', ', array_unique($servicePrices)),
         ];
@@ -580,6 +588,7 @@ class AppointmentPlaceholderService extends PlaceholderService
         ) ?: ($user->getDescription() ? $user->getDescription()->getValue() : '');
 
         return [
+            'employee_id'          => $user->getId()->getValue(),
             'employee_email'       => $user->getEmail()->getValue(),
             'employee_first_name'  => $firstName,
             'employee_last_name'   => $lastName,
@@ -595,6 +604,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                 $settingsService->getSetting('company', 'address') : $location->getAddress()->getValue(),
             'location_phone'       => !$location ?
                 $settingsService->getSetting('company', 'phone') : $location->getPhone()->getValue(),
+            'location_id'          => $locationId,
             'location_name'        => $locationName,
             'location_description' => $locationDescription
         ];

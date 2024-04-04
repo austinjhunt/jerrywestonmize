@@ -135,6 +135,12 @@ class UpdateAppointmentCommandHandler extends CommandHandler
 
         $appointmentAS->convertTime($appointmentData);
 
+        $removedBookingsData = $command->getField('removedBookings');
+
+        $appointment = apply_filters('amelia_before_appointment_updated_filter', $appointmentData, $removedBookingsData, $service ? $service->toArray() : null);
+
+        do_action('amelia_before_appointment_updated', $appointment, $removedBookingsData, $service ? $service->toArray() : null);
+
         /** @var Appointment $appointment */
         $appointment = $appointmentAS->build($appointmentData, $service);
 
@@ -254,7 +260,7 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         /** @var Collection $removedBookings */
         $removedBookings = new Collection();
 
-        foreach ($command->getField('removedBookings') as $removedBookingData) {
+        foreach ($removedBookingsData as $removedBookingData) {
             $removedBookings->addItem(CustomerBookingFactory::create($removedBookingData), $removedBookingData['id']);
         }
 
@@ -284,7 +290,6 @@ class UpdateAppointmentCommandHandler extends CommandHandler
             }
         }
 
-
         $paymentData = !empty($command->getField('payment')) ? array_merge($command->getField('payment'), ['isBackendBooking' => true]) :
             ['amount' => 0, 'gateway' => 'onSite', 'isBackendBooking' => true];
 
@@ -302,6 +307,9 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         }
 
         $appointmentRepo->commit();
+
+        do_action('amelia_after_appointment_updated', $appointment, $oldAppointment, $removedBookings, $service, $paymentData);
+
 
         $appointmentStatusChanged = $appointmentAS->isAppointmentStatusChanged($appointment, $oldAppointment);
 

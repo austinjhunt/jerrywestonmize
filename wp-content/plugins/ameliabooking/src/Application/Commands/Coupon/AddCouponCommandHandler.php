@@ -75,8 +75,14 @@ class AddCouponCommandHandler extends CommandHandler
             'services' => $command->getFields()['services']
         ]) : new Collection();
 
+        $couponArray = $command->getFields();
+
+        $couponArray = apply_filters('amelia_before_coupon_added_filter', $couponArray);
+
+        do_action('amelia_before_coupon_added', $couponArray);
+
         /** @var Coupon $coupon */
-        $coupon = CouponFactory::create($command->getFields());
+        $coupon = CouponFactory::create($couponArray);
 
         $coupon->setServiceList($services);
 
@@ -128,6 +134,8 @@ class AddCouponCommandHandler extends CommandHandler
         ]);
 
         $couponRepository->commit();
+
+        do_action('amelia_after_coupon_added', $coupon->toArray());
 
         return $result;
     }

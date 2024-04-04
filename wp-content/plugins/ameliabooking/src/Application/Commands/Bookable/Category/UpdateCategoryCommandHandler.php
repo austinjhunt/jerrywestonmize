@@ -38,7 +38,13 @@ class UpdateCategoryCommandHandler extends CommandHandler
 
         $result = new CommandResult();
 
-        $category = CategoryFactory::create($command->getFields());
+        $categoryArray = $command->getFields();
+
+        $categoryArray = apply_filters('amelia_before_category_updated_filter', $categoryArray);
+
+        do_action('amelia_before_category_updated', $categoryArray);
+
+        $category = CategoryFactory::create($categoryArray);
         if (!$category instanceof Category) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Could not update bookable category.');
@@ -50,6 +56,8 @@ class UpdateCategoryCommandHandler extends CommandHandler
         $categoryRepository = $this->container->get('domain.bookable.category.repository');
         if ($categoryRepository->update($command->getArg('id'), $category)) {
             $category->setId(new Id($command->getArg('id')));
+
+            do_action('amelia_after_category_updated', $category->toArray());
 
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully updated bookable category.');

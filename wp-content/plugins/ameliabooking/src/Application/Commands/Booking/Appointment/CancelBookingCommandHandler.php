@@ -81,6 +81,8 @@ class CancelBookingCommandHandler extends CommandHandler
             throw new AccessDeniedException('You are not allowed to update booking status');
         }
 
+        do_action('amelia_before_booking_canceled', $booking ? $booking->toArray() : null);
+
         try {
             $bookingData = $reservationService->updateStatus($booking, BookingStatus::CANCELED);
         } catch (BookingCancellationException $e) {
@@ -108,6 +110,8 @@ class CancelBookingCommandHandler extends CommandHandler
                 ]
             )
         );
+
+        do_action('amelia_after_booking_canceled', $bookingData);
 
         return $result;
     }

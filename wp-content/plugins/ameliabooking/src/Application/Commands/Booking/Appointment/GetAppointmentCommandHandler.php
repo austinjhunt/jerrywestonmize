@@ -183,6 +183,11 @@ class GetAppointmentCommandHandler extends CommandHandler
             $appointmentArray['notifyParticipants'] = intval($appointmentArray['notifyParticipants']);
         }
 
+        $appointmentArray = apply_filters('amelia_get_appointment_filter', $appointmentArray);
+
+        do_action('amelia_get_appointment', $appointmentArray);
+
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved appointment');
         $result->setData(

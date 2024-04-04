@@ -44,11 +44,23 @@ class AddStatsCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
-        $statsAS->addEmployeesViewsStats($command->getField('providerId'));
+        $data = [
+          'providerId' => $command->getField('providerId'),
+          'serviceId'  => $command->getField('serviceId'),
+          'locationId' => $command->getField('locationId')
+        ];
 
-        $statsAS->addServicesViewsStats($command->getField('serviceId'));
+        $data = apply_filters('amelia_before_stats_added_filter', $data);
 
-        $statsAS->addLocationsViewsStats($command->getField('locationId'));
+        do_action('amelia_before_stats_added', $data);
+
+        $statsAS->addEmployeesViewsStats($data['providerId']);
+
+        $statsAS->addServicesViewsStats($data['serviceId']);
+
+        $statsAS->addLocationsViewsStats($data['locationId']);
+
+        do_action('amelia_after_stats_added', $data);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully added stats.');

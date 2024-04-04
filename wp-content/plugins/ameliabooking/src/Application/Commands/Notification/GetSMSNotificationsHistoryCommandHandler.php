@@ -47,6 +47,10 @@ class GetSMSNotificationsHistoryCommandHandler extends CommandHandler
 
         $notifications = $notificationsSMSHistoryRepo->getFiltered($params, $itemsPerPage);
 
+        $notifications = apply_filters('amelia_get_sms_history_filter', $notifications);
+
+        do_action('amelia_get_sms_history', $notifications);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved notifications.');
         $result->setData([

@@ -274,6 +274,7 @@ class SettingsStorage implements SettingsStorageInterface
                 ],
                 'mollie'                     => [
                     'enabled'   => $this->getSetting('payments', 'mollie')['enabled'],
+                    'cancelBooking'   => $this->getSetting('payments', 'mollie')['cancelBooking'],
                 ],
                 'razorpay'                     => [
                     'enabled'   => $this->getSetting('payments', 'razorpay')['enabled'],
@@ -394,6 +395,10 @@ class SettingsStorage implements SettingsStorageInterface
         $settingsCopy = $this->settingsCache;
 
         Licence\DataModifier::restoreSettings($settingsCopy, self::getSavedSettings());
+
+        if (get_option('amelia_show_wpdt_promo') === false) {
+            update_option('amelia_show_wpdt_promo', 'yes' );
+        }
 
         unset($settingsCopy['wordpress']);
         update_option('amelia_settings', json_encode($settingsCopy));

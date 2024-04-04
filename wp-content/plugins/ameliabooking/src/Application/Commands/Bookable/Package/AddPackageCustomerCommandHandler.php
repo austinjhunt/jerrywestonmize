@@ -149,6 +149,8 @@ class AddPackageCustomerCommandHandler extends CommandHandler
         $packageCustomer->setPayments($payments);
 
 
+        do_action('amelia_after_package_booked_backend', $packageCustomer->toArray());
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully added new package booking.');
         $result->setData(

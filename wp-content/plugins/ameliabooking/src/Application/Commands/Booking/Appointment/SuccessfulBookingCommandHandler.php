@@ -69,16 +69,33 @@ class SuccessfulBookingCommandHandler extends CommandHandler
             }
         }
 
+        $resultData = [
+            'bookingId' => (int)$command->getArg('id'),
+            'type' => $command->getField('type') ?: Entities::APPOINTMENT,
+            'recurring' => !empty($command->getFields()['recurring']) ? $command->getFields()['recurring'] : [],
+            'isCart' => $command->getField('type') === Entities::CART,
+            'appointmentStatusChanged' => $command->getFields()['appointmentStatusChanged'],
+            'packageId' => $command->getField('packageId'),
+            'customer' => $command->getField('customer'),
+            'paymentId' => $command->getField('paymentId'),
+            'packageCustomerId' => $command->getField('packageCustomerId')
+        ];
+
+        $resultData = apply_filters('amelia_before_post_booking_actions_filter', $resultData);
+
+        do_action('amelia_before_post_booking_actions', $resultData);
+
+
         return $reservationService->getSuccessBookingResponse(
-            (int)$command->getArg('id'),
-            $type,
-            !empty($command->getFields()['recurring']) ? $command->getFields()['recurring'] : [],
-            $command->getField('type') === Entities::CART,
-            $command->getFields()['appointmentStatusChanged'],
-            $command->getField('packageId'),
-            $command->getField('customer'),
-            $command->getField('paymentId'),
-            $command->getField('packageCustomerId')
+            $resultData['bookingId'],
+            $resultData['type'],
+            $resultData['recurring'],
+            $resultData['isCart'],
+            $resultData['appointmentStatusChanged'],
+            $resultData['packageId'],
+            $resultData['customer'],
+            $resultData['paymentId'],
+            $resultData['packageCustomerId']
         );
     }
 }

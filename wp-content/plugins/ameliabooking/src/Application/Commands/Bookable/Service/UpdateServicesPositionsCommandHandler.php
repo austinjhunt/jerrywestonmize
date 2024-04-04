@@ -73,11 +73,17 @@ class UpdateServicesPositionsCommandHandler extends CommandHandler
 
         $serviceRepository->beginTransaction();
 
+        $servicesArray = apply_filters('amelia_before_service_position_updated_filter', $servicesArray);
+
+        do_action('amelia_before_service_position_updated', $servicesArray);
+
         foreach ($servicesArray as $index => $serviceArray) {
             $serviceRepository->updateFieldById($serviceArray['id'], $index + 1, 'position');
         }
 
         $serviceRepository->commit();
+
+        do_action('amelia_after_service_position_updated', $servicesArray);
 
         /** @var SettingsService $settingsService */
         $settingsService = $this->getContainer()->get('domain.settings.service');

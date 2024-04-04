@@ -58,6 +58,8 @@ class DeleteAppointmentCommandHandler extends CommandHandler
 
         $appointmentRepository->beginTransaction();
 
+        do_action('amelia_before_appointment_deleted', $appointment ? $appointment->toArray() : null);
+
         if (!$appointmentApplicationService->delete($appointment)) {
             $appointmentRepository->rollback();
 
@@ -99,6 +101,8 @@ class DeleteAppointmentCommandHandler extends CommandHandler
             Entities::APPOINTMENT       => $appointment->toArray(),
             'bookingsWithChangedStatus' => $bookingsWithChangedStatus
         ]);
+
+        do_action('amelia_after_appointment_deleted', $appointment->toArray());
 
         return $result;
     }

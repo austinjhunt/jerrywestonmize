@@ -48,10 +48,16 @@ class GetCustomerCommandHandler extends CommandHandler
             throw new AccessDeniedException('You are not allowed to read user');
         }
 
+        $userArray = $user->toArray();
+
+        $userArray = apply_filters('amelia_get_customer_filter', $userArray);
+
+        do_action('amelia_get_customer', $userArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved user');
         $result->setData([
-            Entities::USER => $user->toArray()
+            Entities::USER => $userArray
         ]);
 
         return $result;

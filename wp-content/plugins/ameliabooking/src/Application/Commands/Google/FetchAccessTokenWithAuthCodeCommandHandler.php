@@ -48,15 +48,21 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
                 : $command->getField('redirectUri')
         );
 
+        $accessToken = apply_filters('amelia_before_google_calendar_added_filter', $accessToken, $command->getField('userId'));
+
         $googleCalendar = GoogleCalendarFactory::create(['token' => $accessToken]);
 
         $googleCalendarRepository->beginTransaction();
+
+        do_action('amelia_before_google_calendar_added', $googleCalendar ? $googleCalendar->toArray() : null, $command->getField('userId'));
 
         if (!$googleCalendarRepository->add($googleCalendar, $command->getField('userId'))) {
             $googleCalendarRepository->rollback();
         }
 
         $googleCalendarRepository->commit();
+
+        do_action('amelia_after_google_calendar_added', $googleCalendar ? $googleCalendar->toArray() : null, $command->getField('userId'));
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully fetched access token');

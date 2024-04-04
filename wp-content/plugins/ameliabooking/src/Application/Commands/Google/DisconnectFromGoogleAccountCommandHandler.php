@@ -76,7 +76,11 @@ class DisconnectFromGoogleAccountCommandHandler extends CommandHandler
             return $result;
         }
 
+        do_action('amelia_before_google_calendar_deleted', $googleCalendar->toArray(), $command->getArg('id'));
+
         if ($googleCalendarRepository->delete($googleCalendar->getId()->getValue())) {
+            do_action('amelia_after_google_calendar_deleted', $googleCalendar, $command->getArg('id'));
+
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Google calendar successfully deleted.');
         }

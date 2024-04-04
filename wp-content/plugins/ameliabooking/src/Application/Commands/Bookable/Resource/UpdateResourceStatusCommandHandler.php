@@ -53,10 +53,14 @@ class UpdateResourceStatusCommandHandler extends CommandHandler
         /** @var ResourceRepository $resourceRepository */
         $resourceRepository = $this->container->get('domain.bookable.resource.repository');
 
+        do_action('amelia_before_resource_status_updated', $command->getArg('id'), $command->getField('status'));
+
         $resourceRepository->updateStatusById(
             $command->getArg('id'),
             $command->getField('status')
         );
+
+        do_action('amelia_after_resource_status_updated', $command->getArg('id'), $command->getField('status'));
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated resource');

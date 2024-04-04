@@ -75,6 +75,8 @@ class RefundPaymentCommandHandler extends CommandHandler
 
         $amount = $paymentAS->hasRelatedRefundablePayment($payment) ? $payment->getAmount()->getValue() : null;
 
+        do_action('amelia_before_payment_refunded', $payment->toArray(), $amount);
+
         if ($payment->getGateway()->getName()->getValue() === PaymentType::WC) {
             $response = WooCommerceService::refund(
                 $payment->getWcOrderId()->getValue(),
@@ -108,6 +110,8 @@ class RefundPaymentCommandHandler extends CommandHandler
             PaymentStatus::REFUNDED,
             'status'
         );
+
+        do_action('amelia_after_payment_refunded', $payment->toArray(), $amount);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Payment successfully refunded.');

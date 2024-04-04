@@ -47,10 +47,16 @@ class GetCustomFieldsCommandHandler extends CommandHandler
             return $result;
         }
 
+        $customFieldsArray = $customFields->toArray();
+
+        $customFieldsArray = apply_filters('amelia_get_cfs_filter', $customFieldsArray);
+
+        do_action('amelia_get_cfs', $customFieldsArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved custom fields.');
         $result->setData([
-            'customFields' => $customFields->toArray(),
+            'customFields' => $customFieldsArray,
         ]);
 
         return $result;

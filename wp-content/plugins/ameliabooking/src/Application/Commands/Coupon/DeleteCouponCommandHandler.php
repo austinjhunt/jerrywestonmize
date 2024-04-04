@@ -62,6 +62,8 @@ class DeleteCouponCommandHandler extends CommandHandler
 
         $couponRepository->beginTransaction();
 
+        do_action('amelia_before_coupon_deleted', $coupon->toArray());
+
         if (!$couponApplicationService->delete($coupon)) {
             $couponRepository->rollback();
 
@@ -72,6 +74,8 @@ class DeleteCouponCommandHandler extends CommandHandler
         }
 
         $couponRepository->commit();
+
+        do_action('amelia_after_coupon_deleted', $coupon->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Coupon successfully deleted.');

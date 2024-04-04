@@ -69,11 +69,17 @@ class GetServiceCommandHandler extends CommandHandler
             null
         );
 
+        $serviceArray = $service->toArray();
+
+        $serviceArray = apply_filters('amelia_get_service_filter', $serviceArray);
+
+        do_action('amelia_get_service', $serviceArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved service.');
         $result->setData(
             [
-                Entities::SERVICE                => $service->toArray(),
+                Entities::SERVICE                => $serviceArray,
                 'futureAppointmentsProvidersIds' => $futureAppointmentsProvidersIds,
             ]
         );

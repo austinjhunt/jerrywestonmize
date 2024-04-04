@@ -249,6 +249,10 @@ class ZoomService extends AbstractZoomService
      */
     public function createMeeting($userId, $data)
     {
+        $data = apply_filters('amelia_before_zoom_meeting_created_filter', $data, $userId);
+
+        do_action('amelia_before_zoom_meeting_created', $data, $userId);
+
         return $this->execute("https://api.zoom.us/v2/users/{$userId}/meetings", $data, 'POST');
     }
 
@@ -260,6 +264,10 @@ class ZoomService extends AbstractZoomService
      */
     public function updateMeeting($meetingId, $data)
     {
+        $data = apply_filters('amelia_before_zoom_meeting_updated_filter', $data, $meetingId);
+
+        do_action('amelia_before_zoom_meeting_updated', $data, $meetingId);
+
         return $this->execute("https://api.zoom.us/v2/meetings/{$meetingId}", $data, 'PATCH');
     }
 
@@ -270,6 +278,10 @@ class ZoomService extends AbstractZoomService
      */
     public function deleteMeeting($meetingId)
     {
+        $meetingId = apply_filters('amelia_before_zoom_meeting_deleted_filter', $meetingId);
+
+        do_action('amelia_before_zoom_meeting_deleted', $meetingId);
+
         return $this->execute("https://api.zoom.us/v2/meetings/{$meetingId}", null, 'DELETE');
     }
 

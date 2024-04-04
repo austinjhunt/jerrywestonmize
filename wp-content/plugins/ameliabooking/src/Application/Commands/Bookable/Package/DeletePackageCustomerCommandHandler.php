@@ -62,6 +62,8 @@ class DeletePackageCustomerCommandHandler extends CommandHandler
 
         $packageRepository->beginTransaction();
 
+        do_action('amelia_before_package_customer_deleted', $packageCustomer->toArray());
+
         if (($resultData = $bookableApplicationService->deletePackageCustomer($packageCustomer)) === false) {
             $packageRepository->rollback();
 
@@ -72,6 +74,8 @@ class DeletePackageCustomerCommandHandler extends CommandHandler
         }
 
         $packageRepository->commit();
+
+        do_action('amelia_after_package_customer_deleted', $packageCustomer->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted package purchase.');

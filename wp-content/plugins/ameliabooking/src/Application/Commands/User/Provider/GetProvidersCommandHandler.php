@@ -77,6 +77,10 @@ class GetProvidersCommandHandler extends CommandHandler
         $companyDayOff = $providerService->checkIfTodayIsCompanyDayOff($companyDaysOff);
         $providers = $providerService->manageProvidersActivity($providers, $companyDayOff);
 
+        $providers = apply_filters('amelia_get_providers_filter', $providers);
+
+        do_action('amelia_get_providers', $providers);
+
         $result->setData([
             Entities::USERS => $providers,
             'countFiltered' => (int)$providerRepository->getCount($command->getField('params')),

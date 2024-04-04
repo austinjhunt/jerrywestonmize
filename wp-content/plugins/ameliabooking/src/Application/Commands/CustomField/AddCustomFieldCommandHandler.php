@@ -40,6 +40,10 @@ class AddCustomFieldCommandHandler extends CommandHandler
 
         $customFieldArray = $command->getFields()['customField'];
 
+        $customFieldArray = apply_filters('amelia_before_cf_added_filter', $customFieldArray);
+
+        do_action('amelia_before_cf_added', $customFieldArray);
+
         $customField = CustomFieldFactory::create($customFieldArray);
 
         if (!$customField instanceof CustomField) {
@@ -69,6 +73,8 @@ class AddCustomFieldCommandHandler extends CommandHandler
         }
 
         $customFieldRepository->commit();
+
+        do_action('amelia_after_cf_added', $customField->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully added new custom field.');

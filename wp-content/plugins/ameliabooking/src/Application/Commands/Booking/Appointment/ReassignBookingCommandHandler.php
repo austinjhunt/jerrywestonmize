@@ -281,6 +281,8 @@ class ReassignBookingCommandHandler extends CommandHandler
 
         $appointmentRepository->beginTransaction();
 
+        do_action('amelia_before_booking_rescheduled', $oldAppointment->toArray(), $booking->toArray(), $bookingStart);
+
         if ($existingAppointment === null &&
             (
                 $oldAppointment->getBookings()->length() === 1 ||
@@ -480,6 +482,8 @@ class ReassignBookingCommandHandler extends CommandHandler
         }
 
         $appointmentRepository->commit();
+
+        do_action('amelia_after_booking_rescheduled', $oldAppointment->toArray(), $booking->toArray(), $bookingStart);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated appointment');

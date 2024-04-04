@@ -7,7 +7,9 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Payment\PaymentGateway;
+use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
@@ -51,8 +53,17 @@ class PaymentCallbackCommandHandler extends CommandHandler
 
         $gateway = $command->getField('paymentMethod');
 
+        $redirectLink = '';
+
+        $payment = null;
+
         if ($paymentId) {
+            /** @var Payment $payment */
             $payment = $paymentRepository->getById($paymentId);
+
+            $paymentArray = apply_filters('amelia_before_payment_link_callback_filter', $payment ? $payment->toArray() : null, $command->getFields());
+
+            $payment = PaymentFactory::create($paymentArray);
 
             /** @var ReservationServiceInterface $reservationService */
             $reservationService = $this->container->get('application.reservation.service')->get(
@@ -76,6 +87,8 @@ class PaymentCallbackCommandHandler extends CommandHandler
 
             $transactionId = null;
             $paymentRepository->beginTransaction();
+
+            do_action('amelia_before_payment_link_callback', $payment ? $payment->toArray() : null, $command->getFields());
 
             try {
                 $status = PaymentStatus::PAID;
@@ -193,11 +206,14 @@ class PaymentCallbackCommandHandler extends CommandHandler
 
         $paymentRepository->commit();
 
+        if ($payment) {
+            do_action('amelia_after_payment_link_callback', $payment->toArray(), $command->getFields());
+        }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('');
         $result->setData([]);
-        if ($gateway !== 'mollie') {
+        if ($gateway !== 'mollie' && $redirectLink) {
             $result->setUrl($redirectLink);
         }
 

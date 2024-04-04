@@ -93,27 +93,19 @@ class UpdateNotificationCommandHandler extends CommandHandler
 
         $isCustom = $command->getField('customName') !== null ;
 
+        $notificationData['id'] = $notificationId;
+        $notificationData['name'] = $isCustom ? $command->getField('name') : $currentNotification->getName()->getValue();
+        $notificationData['status'] = $command->getField('status') ?: $currentNotification->getStatus()->getValue();
+        $notificationData['type'] = $currentNotification->getType()->getValue();
+        $notificationData['sendTo'] = $currentNotification->getSendTo()->getValue();
+        $notificationData['content'] = $content;
+
+        $notificationData = apply_filters('amelia_before_notification_updated_filter', $notificationData);
+
+        do_action('amelia_before_notification_updated', $notificationData);
+
         /** @var Notification $notification */
-        $notification = NotificationFactory::create(
-            [
-            'id'           => $notificationId,
-            'name'         => $isCustom ? $command->getField('name') : $currentNotification->getName()->getValue(),
-            'customName'   => $command->getField('customName'),
-            'status'       => $command->getField('status') ?: $currentNotification->getStatus()->getValue(),
-            'type'         => $currentNotification->getType()->getValue(),
-            'time'         => $command->getField('time'),
-            'timeBefore'   => $command->getField('timeBefore'),
-            'timeAfter'    => $command->getField('timeAfter'),
-            'sendTo'       => $currentNotification->getSendTo()->getValue(),
-            'subject'      => $command->getField('subject'),
-            'entity'       => $command->getField('entity'),
-            'content'      => $content,
-            'translations' => $command->getField('translations'),
-            'entityIds'    => $notificationData['entityIds'],
-            'sendOnlyMe'   => $command->getField('sendOnlyMe'),
-            'whatsAppTemplate' => $command->getField('whatsAppTemplate'),
-            ]
-        );
+        $notification = NotificationFactory::create($notificationData);
 
         $minimumTime = $command->getField('minimumTimeBeforeBooking');
         if (!empty($minimumTime) && json_encode($minimumTime)) {
@@ -156,6 +148,8 @@ class UpdateNotificationCommandHandler extends CommandHandler
                 $notificationEntitiesRepo->addEntity($notificationId, $recurringMain ?: $addEntity, $notification->getEntity()->getValue());
             }
         }
+
+        do_action('amelia_after_notification_updated', $notification->toArray());
 
         return $result;
     }

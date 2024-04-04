@@ -48,11 +48,17 @@ class GetPackagesCommandHandler extends CommandHandler
         /** @var Collection $packages */
         $packages = $packageRepository->getAll();
 
+        $packagesArray = $packages->toArray();
+
+        $packagesArray = apply_filters('amelia_get_packages_filter', $packagesArray);
+
+        do_action('amelia_get_packages', $packagesArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved packages.');
         $result->setData(
             [
-                Entities::PACKAGES => $packages->toArray()
+                Entities::PACKAGES => $packagesArray
             ]
         );
 

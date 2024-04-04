@@ -188,6 +188,10 @@ class PaymentApplicationService
 
         $paymentAmount = $reservationService->getReservationPaymentAmount($reservation);
 
+        $paymentData = apply_filters('amelia_before_payment_processed_filter', $paymentData, $reservation->getReservation()->toArray());
+
+        do_action('amelia_before_payment_processed', $paymentData, $reservation->getReservation()->toArray());
+
         if (!$paymentAmount &&
             (
                 $paymentData['gateway'] === 'stripe' ||
@@ -755,7 +759,13 @@ class PaymentApplicationService
                 'wc'       => $paymentSettings['wc']['enabled']
             ];
 
-            if (!empty($methods['wc']) && WooCommerceService::isEnabled()) {
+            $methods = apply_filters('amelia_payment_link_methods', $methods, $data);
+
+            $amount = apply_filters('amelia_payment_link_amount', $amount, $data);
+
+            do_action('amelia_before_payment_links_created', $methods, $data, $amount);
+
+            if (!empty($methods['wc'])  && WooCommerceService::isEnabled()) {
                 /** @var ReservationServiceInterface $reservationService */
                 $reservationService = $this->container->get('application.reservation.service')->get($type);
 
@@ -793,7 +803,7 @@ class PaymentApplicationService
                     $paymentLinks['payment_link_woocommerce'] = $paymentLink['link'];
                 }
 
-                return $paymentLinks;
+                return apply_filters('amelia_wc_payment_link', $paymentLinks, $amount, $data);
             }
 
             if (!empty($methods['payPal'])) {
@@ -905,6 +915,10 @@ class PaymentApplicationService
                     $paymentLinks['payment_link_razorpay_error_message'] = $paymentLink['message'];
                 }
             }
+
+            $paymentLinks = apply_filters('amelia_payment_links', $paymentLinks, $amount, $data);
+
+            do_action('amelia_after_payment_links_created', $paymentLinks, $data, $amount);
 
             return $paymentLinks;
         } catch (Exception $e) {

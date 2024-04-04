@@ -54,6 +54,8 @@ class DeleteResourceCommandHandler extends CommandHandler
 
         $resourceRepository->beginTransaction();
 
+        do_action('amelia_before_resource_deleted', $resourceId);
+
         if (!$resourceEntitiesRepository->deleteByEntityId($resourceId, 'resourceId') ||
             !$resourceRepository->delete($resourceId)
         ) {
@@ -66,6 +68,8 @@ class DeleteResourceCommandHandler extends CommandHandler
         }
 
         $resourceRepository->commit();
+
+        do_action('amelia_after_resource_deleted', $resourceId);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted resource.');

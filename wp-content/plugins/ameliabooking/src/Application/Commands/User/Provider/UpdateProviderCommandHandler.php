@@ -99,8 +99,12 @@ class UpdateProviderCommandHandler extends CommandHandler
             $providerData['badgeId'] = null;
         }
 
+        $newUserData = array_merge($oldUser->toArray(), $providerData);
+
+        $newUserData = apply_filters('amelia_before_provider_updated_filter', $newUserData, $oldUser->toArray());
+
         /** @var Provider $newUser */
-        $newUser = UserFactory::create(array_merge($oldUser->toArray(), $providerData));
+        $newUser = UserFactory::create($newUserData);
 
         if (!($newUser instanceof AbstractUser)) {
             $result->setResult(CommandResult::RESULT_ERROR);
@@ -153,6 +157,8 @@ class UpdateProviderCommandHandler extends CommandHandler
             }
         }
 
+        do_action('amelia_before_provider_updated', $newUser ? $newUser->toArray() : null, $oldUser ? $oldUser->toArray() : null);
+
         try {
             if (!$providerAS->update($oldUser, $newUser)) {
                 $providerRepository->rollback();
@@ -189,6 +195,8 @@ class UpdateProviderCommandHandler extends CommandHandler
         );
 
         $providerRepository->commit();
+
+        do_action('amelia_after_provider_updated', $newUser ? $newUser->toArray() : null, $oldUser ? $oldUser->toArray() : null);
 
         return $result;
     }

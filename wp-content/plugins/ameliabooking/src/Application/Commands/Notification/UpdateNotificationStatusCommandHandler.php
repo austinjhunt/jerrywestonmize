@@ -50,7 +50,13 @@ class UpdateNotificationStatusCommandHandler extends CommandHandler
         /** @var NotificationRepository $notificationRepo */
         $notificationRepo = $this->container->get('domain.notification.repository');
 
-        if ($notificationRepo->updateFieldById($notificationId, $command->getField('status'), 'status')) {
+        $status = $command->getField('status');
+
+        do_action('amelia_before_notification_status_updated', $status, $notificationId);
+
+        if ($notificationRepo->updateFieldById($notificationId, $status, 'status')) {
+            do_action('amelia_after_notification_status_updated', $status, $notificationId);
+
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully updated notification.');
             $result->setData(true);

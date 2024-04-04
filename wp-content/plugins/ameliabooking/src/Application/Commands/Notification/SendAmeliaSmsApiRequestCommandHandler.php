@@ -35,8 +35,19 @@ class SendAmeliaSmsApiRequestCommandHandler extends CommandHandler
         /** @var SMSAPIService $smsApiService */
         $smsApiService = $this->getContainer()->get('application.smsApi.service');
 
+
+        $action = $command->getField('process');
+
+        $data = $command->getField('data');
+
+        $data = apply_filters('amelia_before_send_sms_request_filter', $data, $action);
+
+        do_action('amelia_before_send_sms_request', $data, $action);
+
         // Call method dynamically and pass data to the function. Method name is the request field.
-        $apiResponse = $smsApiService->{$command->getField('process')}($command->getField('data'));
+        $apiResponse = $smsApiService->{$action}($data);
+
+        do_action('amelia_after_send_sms_request', $data, $action);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Amelia SMS API request successful');

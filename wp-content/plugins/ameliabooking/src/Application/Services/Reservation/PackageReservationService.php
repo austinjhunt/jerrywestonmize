@@ -336,6 +336,8 @@ class PackageReservationService extends AppointmentReservationService
             }
 
             $packageCustomer->setPayments($payments);
+
+            do_action('amelia_after_package_booked_frontend', $packageCustomer->toArray());
         }
 
         if ($reservation->hasAvailabilityValidation()->getValue() &&

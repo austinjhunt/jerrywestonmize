@@ -57,6 +57,10 @@ class AddBookingCommandHandler extends CommandHandler
 
         $appointmentData = $bookingAS->getAppointmentData($command->getFields());
 
+        $appointmentData = apply_filters('amelia_before_booking_added_filter', $appointmentData);
+
+        do_action('amelia_before_booking_added', $appointmentData);
+
         $validateCoupon = true;
 
         if ($command->getField('validateCoupon') === false &&
@@ -180,6 +184,8 @@ class AddBookingCommandHandler extends CommandHandler
                 $result->setData($data);
             }
         }
+
+        do_action('amelia_after_booking_added', $result ? $result->getData() : null);
 
         return $result;
     }

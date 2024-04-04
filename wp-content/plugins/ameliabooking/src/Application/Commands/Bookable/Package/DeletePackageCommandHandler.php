@@ -56,6 +56,8 @@ class DeletePackageCommandHandler extends CommandHandler
 
         $packageRepository->beginTransaction();
 
+        do_action('amelia_before_package_deleted', $package->toArray());
+
         if (!$bookableApplicationService->deletePackage($package)) {
             $packageRepository->rollback();
 
@@ -66,6 +68,8 @@ class DeletePackageCommandHandler extends CommandHandler
         }
 
         $packageRepository->commit();
+
+        do_action('amelia_after_package_deleted', $package->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted package.');

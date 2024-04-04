@@ -54,6 +54,16 @@ class AddCustomerCommandHandler extends CommandHandler
             $command->setField('externalId', null);
         }
 
-        return $customerAS->createCustomer($command->getFields());
+        $userData = $command->getFields();
+
+        $userData = apply_filters('amelia_before_customer_added_filter', $userData);
+
+        do_action('amelia_before_customer_added', $userData);
+
+        $response = $customerAS->createCustomer($userData);
+
+        do_action('amelia_after_customer_added', $response? $response->getData() : null);
+
+        return $response;
     }
 }

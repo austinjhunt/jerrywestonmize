@@ -102,6 +102,9 @@ class RazorpayPaymentCommandHandler extends CommandHandler
             "notes"   => $additionalInformation['metaData'] ?: [],
         ];
 
+        $orderData = apply_filters('amelia_before_razorpay_execute_filter', $orderData, $reservation->getReservation()->toArray());
+
+        do_action('amelia_before_razorpay_execute', $orderData, $reservation->getReservation()->toArray());
 
         try {
             $razorpayOrder = $paymentService->execute($orderData);
@@ -134,6 +137,10 @@ class RazorpayPaymentCommandHandler extends CommandHandler
             "order_id"          => $razorpayOrderId,
             "notes"             => $additionalInformation['metaData'] ?: [],
         ];
+
+        $data = apply_filters('amelia_after_razorpay_execute_filter', $data, $reservation->getReservation()->toArray());
+
+        do_action('amelia_after_razorpay_execute', $data, $reservation->getReservation()->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Proceed to Razorpay Payment Module');

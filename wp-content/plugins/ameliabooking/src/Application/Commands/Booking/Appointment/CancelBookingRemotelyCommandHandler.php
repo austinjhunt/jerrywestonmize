@@ -70,6 +70,11 @@ class CancelBookingRemotelyCommandHandler extends CommandHandler
         /** @var CustomerBooking $booking */
         $booking = $bookingRepository->getById((int)$command->getArg('id'));
 
+        if (!$booking) {
+            $result->setData(['message' => "Booking doesn't exists"]);
+            return $result;
+        }
+
         $token = $bookingRepository->getToken((int)$command->getArg('id'));
 
         if (empty($token['token'])) {
@@ -89,6 +94,8 @@ class CancelBookingRemotelyCommandHandler extends CommandHandler
         $settingsService = $this->container->get('domain.settings.service');
 
         $status = BookingStatus::CANCELED;
+
+        do_action('amelia_before_booking_canceled', $booking ? $booking->toArray() : null);
 
         try {
             $bookingData = $reservationService->updateStatus($booking, $status);
@@ -111,8 +118,15 @@ class CancelBookingRemotelyCommandHandler extends CommandHandler
 
         $notificationSettings = $settingsService->getCategorySettings('notifications');
 
+        if (!empty($command->getField('fromForm'))) {
+            $result->setData(['fromForm' => true]);
+            return $result;
+        }
+
         if ($notificationSettings['cancelSuccessUrl'] && $result->getResult() === CommandResult::RESULT_SUCCESS) {
             $result->setUrl($notificationSettings['cancelSuccessUrl']);
+
+            do_action('amelia_after_booking_canceled', $booking ? $booking->toArray() : null);
         } elseif ($notificationSettings['cancelErrorUrl'] && $result->getResult() === CommandResult::RESULT_ERROR) {
             $result->setUrl($notificationSettings['cancelErrorUrl']);
         } else {

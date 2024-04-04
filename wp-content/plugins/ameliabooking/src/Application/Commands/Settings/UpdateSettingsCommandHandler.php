@@ -415,11 +415,17 @@ class UpdateSettingsCommandHandler extends CommandHandler
             }
         }
 
+        $settingsFields = apply_filters('amelia_before_settings_updated_filter', $settingsFields);
+
+        do_action('amelia_before_settings_updated', $settingsFields);
+
         $settingsService->setAllSettings($settingsFields);
 
         $settings = $settingsService->getAllSettingsCategorized();
         $settings['general']['phoneDefaultCountryCode'] = $settings['general']['phoneDefaultCountryCode'] === 'auto' ?
             $locationService->getCurrentLocationCountryIso() : $settings['general']['phoneDefaultCountryCode'];
+
+        do_action('amelia_after_settings_updated', $settingsFields);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated settings.');

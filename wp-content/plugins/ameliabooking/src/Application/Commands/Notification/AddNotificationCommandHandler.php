@@ -85,25 +85,15 @@ class AddNotificationCommandHandler extends CommandHandler
             $content       = $contentRes[1];
         }
 
-        $notification = NotificationFactory::create(
-            [
-            'name'         => $command->getField('name'),
-            'customName'   => $command->getField('customName'),
-            'status'       => $command->getField('status'),
-            'type'         => $command->getField('type'),
-            'time'         => $command->getField('time'),
-            'timeBefore'   => $command->getField('timeBefore'),
-            'timeAfter'    => $command->getField('timeAfter'),
-            'sendTo'       => $command->getField('sendTo'),
-            'subject'      => $command->getField('subject'),
-            'entity'       => $command->getField('entity'),
-            'content'      => $content,
-            'translations' => $command->getField('translations'),
-            'entityIds'    => $notificationData['entityIds'],
-            'sendOnlyMe'   => $command->getField('sendOnlyMe'),
-            'whatsAppTemplate' => $command->getField('whatsAppTemplate'),
-            ]
-        );
+        $notificationArray = $command->getFields();
+
+        $notificationArray['content'] = $content;
+
+        $notificationArray = apply_filters('amelia_before_notification_added_filter', $notificationArray);
+
+        do_action('amelia_before_notification_added', $notificationArray);
+
+        $notification = NotificationFactory::create($notificationArray);
 
         $minimumTime = $command->getField('minimumTimeBeforeBooking');
         if (!empty($minimumTime) && json_encode($minimumTime)) {
@@ -142,6 +132,8 @@ class AddNotificationCommandHandler extends CommandHandler
             }
             $notificationEntitiesRepo->addEntity($id, $recurringMain ?: $addEntity, $notification->getEntity()->getValue());
         }
+
+        do_action('amelia_after_notification_added', $notification->toArray());
 
         return $result;
     }

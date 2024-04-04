@@ -90,6 +90,10 @@ class AddEventCommandHandler extends CommandHandler
 
         $eventRepository->beginTransaction();
 
+        $eventData = apply_filters('amelia_before_event_added_filter', $eventData);
+
+        do_action('amelia_before_event_added', $eventData);
+
         try {
             /** @var Event $event */
             $event = $eventApplicationService->build($eventData);
@@ -100,6 +104,7 @@ class AddEventCommandHandler extends CommandHandler
             return $result;
         }
 
+
         try {
             /** @var Collection $events */
             $events = $eventApplicationService->add($event);
@@ -109,6 +114,8 @@ class AddEventCommandHandler extends CommandHandler
         }
 
         $eventRepository->commit();
+
+        do_action('amelia_after_event_added', $event ? $event->toArray() : null);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully added new event.');

@@ -7,7 +7,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use Interop\Container\Exception\ContainerException;
+use Slim\Exception\ContainerException;
 
 /**
  * Class PaymentLinkCommandHandler
@@ -40,6 +40,10 @@ class PaymentLinkCommandHandler extends CommandHandler
             $data['data']['bookable'] = $data['data'][$data['data']['type']];
         }
 
+        $data = apply_filters('amelia_before_payment_from_panel_created_filter', $data);
+
+        do_action('amelia_before_payment_from_panel_created', $data);
+
         $paymentLinks = $paymentApplicationService->createPaymentLink(
             $data['data'],
             0,
@@ -47,6 +51,10 @@ class PaymentLinkCommandHandler extends CommandHandler
             [$data['paymentMethod'] => true],
             $command->getField('redirectUrl')
         );
+
+        $paymentLinks = apply_filters('amelia_after_payment_from_panel_created_filter', $paymentLinks, $data);
+
+        do_action('amelia_after_payment_from_panel_created', $data, $paymentLinks);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage(

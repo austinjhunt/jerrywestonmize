@@ -86,6 +86,8 @@ class DeleteCategoryCommandHandler extends CommandHandler
 
         $categoryRepository->beginTransaction();
 
+        do_action('amelia_before_category_deleted', $category->toArray());
+
         if (!$bookableApplicationService->deleteCategory($category)) {
             $categoryRepository->rollback();
 
@@ -96,6 +98,9 @@ class DeleteCategoryCommandHandler extends CommandHandler
         }
 
         $categoryRepository->commit();
+
+        do_action('amelia_after_category_deleted', $category->toArray());
+
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted bookable category.');

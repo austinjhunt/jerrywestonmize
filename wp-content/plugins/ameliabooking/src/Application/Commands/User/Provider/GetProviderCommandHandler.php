@@ -109,6 +109,10 @@ class GetProviderCommandHandler extends CommandHandler
             $successfulOutlookConnection = false;
         }
 
+        $providerArray = apply_filters('amelia_get_provider_filter', $providerArray);
+
+        do_action('amelia_get_provider', $providerArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved user.');
         $result->setData(

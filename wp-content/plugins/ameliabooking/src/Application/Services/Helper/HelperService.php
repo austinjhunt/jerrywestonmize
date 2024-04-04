@@ -168,6 +168,8 @@ class HelperService
             if ($changePass) {
                 $cabinetPlaceholder .= '&changePass=' . $changePass;
             }
+
+            $cabinetPlaceholder = apply_filters('amelia_customer_panel_placeholder_filter', $cabinetPlaceholder);
         }
 
         return $cabinetPlaceholder;
@@ -212,6 +214,8 @@ class HelperService
             if ($changePass) {
                 $cabinetPlaceholder .= '&changePass=' . $changePass;
             }
+
+            $cabinetPlaceholder = apply_filters('amelia_employee_panel_placeholder_filter', $cabinetPlaceholder);
         }
 
         return $cabinetPlaceholder;

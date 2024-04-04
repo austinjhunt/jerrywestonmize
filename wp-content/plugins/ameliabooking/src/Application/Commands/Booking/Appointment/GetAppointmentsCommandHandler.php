@@ -427,11 +427,16 @@ class GetAppointmentsCommandHandler extends CommandHandler
             $customersNoShowCount = $bookingRepository->countByNoShowStatus($customersNoShowCountIds);
         }
 
+        $groupedAppointments = apply_filters('amelia_get_appointments_filter', $groupedAppointments);
+
+        do_action('amelia_get_appointments', $groupedAppointments);
+
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved appointments');
         $result->setData(
             [
-                Entities::APPOINTMENTS     => $groupedAppointments,
+                Entities::APPOINTMENTS     => !empty($params['asArray']) && filter_var($params['asArray'], FILTER_VALIDATE_BOOLEAN) ? $appointments->toArray() : $groupedAppointments,
                 'availablePackageBookings' => $availablePackageBookings,
                 'emptyPackageBookings'     => !empty($emptyBookedPackages) ? $emptyBookedPackages->toArray() : [],
                 'occupied'                 => $occupiedTimes,

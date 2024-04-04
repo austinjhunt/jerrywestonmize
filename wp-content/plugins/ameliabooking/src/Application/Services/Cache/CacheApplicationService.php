@@ -50,7 +50,9 @@ class CacheApplicationService
             $cacheRepository->getByIdAndName($data[0], $data[1]) : null;
 
         if ($cache && $cache->getData()) {
-            return json_decode($cache->getData()->getValue(), true);
+            $cacheData = json_decode($cache->getData()->getValue(), true);
+
+            return apply_filters('amelia_mollie_cache_data_filter', $cacheData);
         }
 
         return null;
@@ -66,8 +68,8 @@ class CacheApplicationService
      */
     public function getWcCacheByName($name)
     {
-        /** @var Cache $cache */
-        return ($data = explode('_', $name)) && isset($data[0], $data[1]) ?
+        $cacheData = ($data = explode('_', $name)) && isset($data[0], $data[1]) ?
             WooCommerceService::getCacheData($data[0]) : null;
+        return apply_filters('amelia_woocommerce_cache_data_filter', $cacheData);
     }
 }

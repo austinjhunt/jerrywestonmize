@@ -95,6 +95,8 @@ class DeleteEventBookingCommandHandler extends CommandHandler
 
         $customerBookingRepository->beginTransaction();
 
+        do_action('amelia_before_event_booking_deleted', $customerBooking->toArray(), $event ? $event->toArray() : null);
+
         if (!$eventApplicationService->deleteEventBooking($customerBooking)) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Could not delete booking');
@@ -122,6 +124,9 @@ class DeleteEventBookingCommandHandler extends CommandHandler
         if ($payments && count($payments->getItems())) {
             $customerBooking->setPayments($payments);
         }
+
+
+        do_action('amelia_after_event_booking_deleted', $customerBooking->toArray(), $event->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted event booking');

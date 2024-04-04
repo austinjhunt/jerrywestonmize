@@ -728,6 +728,7 @@ This message does not have an option for responding. If you need additional info
                     'cart'        => '',
                 ],
                 'method'          => [],
+                'cancelBooking'   => false
             ],
             'razorpay'         => [
                 'enabled'         => false,
@@ -810,6 +811,7 @@ This message does not have an option for responding. If you need additional info
                 ['razorpay', 'name', 'cart'],
                 ['mollie', 'description', 'cart'],
                 ['mollie', 'metaData', 'cart'],
+                ['mollie', 'cancelBooking'],
             ],
             $settings
         );

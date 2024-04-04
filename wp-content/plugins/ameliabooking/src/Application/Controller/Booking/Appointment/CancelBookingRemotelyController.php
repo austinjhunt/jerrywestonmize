@@ -24,6 +24,7 @@ class CancelBookingRemotelyController extends Controller
     protected $allowedFields = [
         'token',
         'type',
+        'fromForm'
     ];
 
     /**
@@ -41,6 +42,7 @@ class CancelBookingRemotelyController extends Controller
         $requestBody = $request->getParsedBody();
         $command->setField('token', (string)$request->getQueryParam('token', ''));
         $command->setField('type', (string)$request->getQueryParam('type', ''));
+        $command->setField('fromForm', $request->getQueryParam('fromForm', false));
         $this->setCommandFields($command, $requestBody);
 
         return $command;
@@ -54,6 +56,8 @@ class CancelBookingRemotelyController extends Controller
      */
     protected function emitSuccessEvent(DomainEventBus $eventBus, CommandResult $result)
     {
-        $eventBus->emit('BookingCanceled', $result);
+        if ($result->getData() && empty($result->getData()['fromForm'])) {
+            $eventBus->emit('BookingCanceled', $result);
+        }
     }
 }

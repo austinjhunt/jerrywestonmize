@@ -70,6 +70,11 @@ class SendUndeliveredNotificationsCommandHandler extends CommandHandler
         /** @var Collection $payments */
         $payments = $paymentRepository->getUncompletedActionsForPayments();
 
+        /** @var Collection $bookings */
+        $bookings = $bookingRepository->getUncompletedActionsForBookings();
+
+        do_action('amelia_before_run_uncompleted_actions', $payments->toArray(), $bookings->toArray());
+
         /** @var Payment $payment */
         foreach ($payments->getItems() as $payment) {
             /** @var ReservationServiceInterface $reservationService */
@@ -83,9 +88,6 @@ class SendUndeliveredNotificationsCommandHandler extends CommandHandler
             );
         }
 
-        /** @var Collection $bookings */
-        $bookings = $bookingRepository->getUncompletedActionsForBookings();
-
         /** @var CustomerBooking $booking */
         foreach ($bookings->getItems() as $booking) {
             /** @var ReservationServiceInterface $reservationService */
@@ -98,6 +100,8 @@ class SendUndeliveredNotificationsCommandHandler extends CommandHandler
                 $this->container
             );
         }
+
+        do_action('amelia_after_run_uncompleted_actions', $payments->toArray(), $bookings->toArray());
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Email notifications successfully sent');

@@ -84,6 +84,11 @@ class GetTimeSlotsCommandHandler extends CommandHandler
             'totalPersons'         => $command->getField('persons'),
         ];
 
+        $props = apply_filters('amelia_before_get_timeslots_filter', $props);
+
+        do_action('amelia_before_get_timeslots', $command->getFields());
+
+
         $lastBookedProviderId = null;
 
         /** @var SlotsEntities $filteredSlotEntities */
@@ -374,23 +379,39 @@ class GetTimeSlotsCommandHandler extends CommandHandler
             $lastBookedProviderId = $appointmentRepository->getLastBookedEmployee($props['providerIds']);
         }
 
+        $resultData = [
+          'slots' =>  $converted['available'] ?: $freeSlots['available'],
+          'occupied' => $converted['occupied'] ?: $freeSlots['occupied'],
+          'minimum' => $isUtcResponse ?
+            $minimumDateTime->setTimezone(
+                new DateTimeZone('UTC')
+            )->format('Y-m-d H:i') : $minimumDateTime->format('Y-m-d H:i'),
+          'maximum' => $isUtcResponse ?
+            $maximumDateTime->setTimezone(
+                new DateTimeZone('UTC')
+            )->format('Y-m-d H:i') : $maximumDateTime->format('Y-m-d H:i'),
+          'busyness' => $busyness,
+          'lastBookedProviderId' => $lastBookedProviderId,
+          'appCount' => $freeSlots['appCount']
+        ];
+
+
+        $resultData = apply_filters('amelia_get_timeslots_filter', $resultData, $command->getFields());
+
+        do_action('amelia_get_timeslots', $resultData, $command->getFields());
+
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved free slots');
         $result->setData(
             [
-                'minimum' => $isUtcResponse ?
-                    $minimumDateTime->setTimezone(
-                        new DateTimeZone('UTC')
-                    )->format('Y-m-d H:i') : $minimumDateTime->format('Y-m-d H:i'),
-                'maximum'   => $isUtcResponse ?
-                    $maximumDateTime->setTimezone(
-                        new DateTimeZone('UTC')
-                    )->format('Y-m-d H:i') : $maximumDateTime->format('Y-m-d H:i'),
-                'slots'     => $converted['available'] ?: $freeSlots['available'],
-                'occupied'  => $converted['occupied'] ?: $freeSlots['occupied'],
-                'busyness'  => $busyness,
-                'lastProvider' => $lastBookedProviderId,
-                'appCount' => $freeSlots['appCount']
+                'minimum' => $resultData['minimum'],
+                'maximum'   => $resultData['maximum'],
+                'slots'     => $resultData['slots'],
+                'occupied'  => $resultData['occupied'],
+                'busyness'  => $resultData['busyness'],
+                'lastProvider' => $resultData['lastBookedProviderId'],
+                'appCount' => $resultData['appCount']
             ]
         );
 

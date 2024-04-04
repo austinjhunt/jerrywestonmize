@@ -38,8 +38,14 @@ class GetSettingsCommandHandler extends CommandHandler
             $settings['activation']['purchaseCodeStore'] = null;
         }
 
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved settings.');
+
+        $settings = apply_filters('amelia_get_settings_filter', $settings);
+
+        do_action('amelia_get_settings', $settings);
+
         $result->setData(
             [
                 'settings' => $settings

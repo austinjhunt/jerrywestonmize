@@ -48,10 +48,16 @@ class GetLocationCommandHandler extends CommandHandler
             return $result;
         }
 
+        $locationArray = $location->toArray();
+
+        $locationArray = apply_filters('amelia_get_location_filter', $locationArray);
+
+        do_action('amelia_get_location', $locationArray);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved location.');
         $result->setData([
-            Entities::LOCATION => $location->toArray()
+            Entities::LOCATION => $locationArray
         ]);
 
         return $result;

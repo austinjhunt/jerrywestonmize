@@ -51,10 +51,14 @@ class UpdateServiceStatusCommandHandler extends CommandHandler
         /** @var ServiceRepository $serviceRepository */
         $serviceRepository = $this->container->get('domain.bookable.service.repository');
 
+        do_action('amelia_before_service_status_updated', $command->getArg('id'), $command->getField('status'));
+
         $serviceRepository->updateStatusById(
             $command->getArg('id'),
             $command->getField('status')
         );
+
+        do_action('amelia_after_service_status_updated', $command->getArg('id'), $command->getField('status'));
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated service');

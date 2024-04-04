@@ -187,6 +187,10 @@ class GetStatsCommandHandler extends CommandHandler
             $customersNoShowCount = $bookingRepository->countByNoShowStatus($customersNoShowCountIds);
         }
 
+        $selectedPeriodStatistics = apply_filters('amelia_get_stats_filter', $selectedPeriodStatistics);
+
+        do_action('amelia_get_stats', $selectedPeriodStatistics);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved appointments.');
         $result->setData(

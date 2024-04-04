@@ -59,9 +59,13 @@ class WooCommercePaymentCommandHandler extends CommandHandler
 
         WooCommerceService::setContainer($this->container);
 
+        $data = $command->getFields();
+
+        $data['isCart'] = !!$data['isCart'];
+
         $reservation = $reservationService->getNew(true, true, true);
 
-        $appointmentData = $bookingAS->getAppointmentData($command->getFields());
+        $appointmentData = $bookingAS->getAppointmentData($data);
 
         $reservationService->processBooking(
             $result,
@@ -86,7 +90,7 @@ class WooCommercePaymentCommandHandler extends CommandHandler
 
         $appointmentData = $reservationService->getWooCommerceData(
             $reservation,
-            $command->getFields()['payment']['gateway'],
+            $data['payment']['gateway'],
             $appointmentData
         );
 
@@ -171,6 +175,9 @@ class WooCommercePaymentCommandHandler extends CommandHandler
             ]
         );
 
+        $data = apply_filters('amelia_before_wc_cart_filter', $data);
+
+        do_action('amelia_before_wc_cart', $data);
 
         try {
             $bookableSettings = $reservation->getBookable()->getSettings() ?

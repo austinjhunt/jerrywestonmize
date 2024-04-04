@@ -124,6 +124,8 @@ class SendTestEmailCommandHandler extends CommandHandler
             ]
         );
 
+        do_action('amelia_before_send_test_email', $emailData);
+
         if (empty($emailData['skipSending'])) {
             $mailService->send(
                 $emailData['email'],
@@ -132,6 +134,8 @@ class SendTestEmailCommandHandler extends CommandHandler
                 $emailData['bcc']
             );
         }
+
+        do_action('amelia_after_send_test_email', $emailData);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Test email successfully sent');
