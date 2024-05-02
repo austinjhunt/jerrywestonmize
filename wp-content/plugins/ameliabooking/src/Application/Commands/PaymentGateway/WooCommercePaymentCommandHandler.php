@@ -175,16 +175,16 @@ class WooCommercePaymentCommandHandler extends CommandHandler
             ]
         );
 
-        $data = apply_filters('amelia_before_wc_cart_filter', $data);
-
-        do_action('amelia_before_wc_cart', $data);
-
         try {
             $bookableSettings = $reservation->getBookable()->getSettings() ?
                 json_decode($reservation->getBookable()->getSettings()->getValue(), true) : null;
 
             $appointmentData['wcProductId'] = $bookableSettings && isset($bookableSettings['payments']['wc']['productId']) ?
                 $bookableSettings['payments']['wc']['productId'] : null;
+
+            $appointmentData = apply_filters('amelia_before_wc_cart_filter', $appointmentData);
+
+            do_action('amelia_before_wc_cart', $appointmentData);
 
             WooCommerceService::addToCart($appointmentData);
         } catch (Exception $e) {

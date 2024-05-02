@@ -32,6 +32,7 @@ function extend_builder_path() {
 }
 
 require_once __DIR__ . '/utils.php';
+require_once __DIR__ . '/filters/index.php';
 require_once __DIR__ . '/updates.php';
 
 require_once __DIR__ . '/custom-posts.php';
@@ -242,6 +243,7 @@ function colibri_add_images_alts( $content ) {
 		if ( strpos( $context, "custom-image-cropper" ) !== false ) {
 			delete_post_meta( $attachment_id, '_wp_attachment_context' );
 		}
+        $image_alt = esc_attr($image_alt);
 		$new_image = preg_replace( '/<img ([^>]+?)[\/ ]*>/', '<img $1 alt="' . $image_alt . '" />', $image );
 		$content   = str_replace( $image, $new_image, $content );
 	}

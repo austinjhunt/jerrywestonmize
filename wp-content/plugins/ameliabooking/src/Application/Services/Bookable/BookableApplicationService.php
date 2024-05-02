@@ -645,10 +645,6 @@ class BookableApplicationService
             ];
         }
 
-        $futureAppointments = 0;
-
-        $pastAppointments = 0;
-
         /** @var Collection $appointments */
         $appointments = $appointmentRepository->getFiltered(['services' => $servicesIds]);
 
@@ -659,8 +655,8 @@ class BookableApplicationService
         $packageApplicationService = $this->container->get('application.bookable.package');
 
         return [
-            'futureAppointments'  => $futureAppointments,
-            'pastAppointments'    => $pastAppointments,
+            'futureAppointments'  => $futureAppointmentsCount,
+            'pastAppointments'    => $pastAppointmentsCount,
             'packageAppointments' => $packageApplicationService->getPackageUnusedBookingsCount(
                 $packageCustomerServices,
                 $appointments

@@ -336,11 +336,17 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             }
 
             if (!empty($criteria['location'])) {
-                $params[':location'] = $criteria['location'];
+                $queryLocations = [];
+
+                foreach ((array)$criteria['location'] as $index => $value) {
+                    $param = ':location' . $index;
+                    $queryLocations[] = $param;
+                    $params[$param] = $value;
+                }
 
                 $where[] = "u.id IN (
                     SELECT plt.userId FROM {$this->providerLocationTable} plt
-                    WHERE plt.userId = u.id AND plt.locationId = :location)";
+                    WHERE plt.userId = u.id AND plt.locationId IN ( " . implode(', ', $queryLocations) . "))";
             }
 
             $where[] = "u.status NOT LIKE 'disabled'";
@@ -643,11 +649,17 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             }
 
             if (!empty($criteria['location'])) {
-                $params[':location'] = $criteria['location'];
+                $queryLocations = [];
+
+                foreach ((array)$criteria['location'] as $index => $value) {
+                    $param = ':location' . $index;
+                    $queryLocations[] = $param;
+                    $params[$param] = $value;
+                }
 
                 $where[] = "u.id IN (
                     SELECT plt.userId FROM {$this->providerLocationTable} plt
-                    WHERE plt.userId = u.id AND plt.locationId = :location)";
+                    WHERE plt.userId = u.id AND plt.locationId IN ( " . implode(', ', $queryLocations) . "))";
             }
 
             $where = $where ? ' AND ' . implode(' AND ', $where) : '';

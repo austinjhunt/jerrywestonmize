@@ -960,7 +960,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
                         $packageCustomer->getBookingsCount()->getValue(),
                     'sharedPackageCustomerServices' => $sharedPackageCustomerServices,
                     'payments' => $packageCustomer->getPayments()->toArray(),
-                    'coupon' => $coupon ?: null
+                    'coupon' => $coupon ?: null,
+                    'price'      => $packageCustomer->getPrice()->getValue(),
                 ];
             }
         }

@@ -1294,6 +1294,10 @@ class ProviderApplicationService
                 $hasVisibleLocations
             );
 
+            if ($providerLocation && !$availablePeriodLocations->keyExists($providerLocation->getId()->getValue())) {
+                $availablePeriodLocations->addItem($providerLocation, $providerLocation->getId()->getValue());
+            }
+
             if ($hasVisibleLocations && !$availablePeriodLocations->length()) {
                 continue;
             }

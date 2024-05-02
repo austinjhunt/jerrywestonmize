@@ -620,6 +620,7 @@ This message does not have an option for responding. If you need additional info
                     'cart'        => '',
                 ],
                 'manualCapture'   => false,
+                'returnUrl'       => '',
             ],
             'wc'                         => [
                 'enabled'      => false,
@@ -785,6 +786,7 @@ This message does not have an option for responding. If you need additional info
                 ['stripe', 'metaData', 'package'],
                 ['stripe', 'metaData', 'cart'],
                 ['stripe', 'manualCapture'],
+                ['stripe', 'returnUrl'],
                 ['payPal', 'description'],
                 ['payPal', 'description', 'package'],
                 ['payPal', 'description', 'cart'],
@@ -851,6 +853,7 @@ This message does not have an option for responding. If you need additional info
             ],
             'v3RelativePath'                => false,
             'v3AsyncLoading'                => false,
+            'premiumBannerVisibility'       => true,
         ];
 
         self::initSettings('activation', $settings);
@@ -1521,6 +1524,12 @@ This message does not have an option for responding. If you need additional info
             [
                 ['customerCabinet', 'filterDate'],
                 ['customerCabinet', 'translations'],
+                ['customerCabinet', 'headerJwtSecret'],
+                ['customerCabinet', 'urlJwtSecret'],
+                ['providerCabinet', 'headerJwtSecret'],
+                ['providerCabinet', 'urlJwtSecret'],
+                ['urlAttachment', 'headerJwtSecret'],
+                ['urlAttachment', 'urlJwtSecret'],
             ],
             $settings
         );

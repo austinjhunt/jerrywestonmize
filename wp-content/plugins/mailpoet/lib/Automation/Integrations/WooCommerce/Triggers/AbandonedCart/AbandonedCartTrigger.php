@@ -57,7 +57,7 @@ class AbandonedCartTrigger implements Trigger {
 
   public function getName(): string {
     // translators: automation trigger title
-    return __('Abandoned cart', 'mailpoet');
+    return __('User abandons cart', 'mailpoet');
   }
 
   public function getSubjectKeys(): array {

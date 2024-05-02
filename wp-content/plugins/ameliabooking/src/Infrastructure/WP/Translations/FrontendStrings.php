@@ -54,7 +54,8 @@ class FrontendStrings
             self::getSearchStrings(),
             self::getLabelsFromSettings(),
             self::getEventStrings(),
-            self::getCabinetStrings()
+            self::getCabinetStrings(),
+            self::getFrontendCabinetAuthStrings()
         );
     }
 
@@ -111,6 +112,8 @@ class FrontendStrings
             'booking_completed_pending'    => __('Thank you! Your booking is completed and now is pending confirmation.', 'wpamelia'),
             'client_time_colon'            => __('Client Time:', 'wpamelia'),
             'cart_info'                    => __('Summary', 'wpamelia'),
+            'close'                        => __('Close', 'wpamelia'),
+            'closed'                       => __('Closed', 'wpamelia'),
             'expired'                      => __('Expired', 'wpamelia'),
             'coupon_invalid'               => __('This coupon is not valid anymore', 'wpamelia'),
             'coupon_expired'               => __('This coupon has expired', 'wpamelia'),
@@ -472,6 +475,7 @@ class FrontendStrings
             'add_ticket_category'       => __('Add Pricing Category', 'wpamelia'),
             'apply_to_all'              => __('Apply this to all recurring events', 'wpamelia'),
             'custom_pricing_warning'    => __('Custom pricing spots will override Maximum allowed spots value.', 'wpamelia'),
+            'custom_pricing_adjustment' => __('Custom/regular pricing adjustments are not permitted for events with confirmed attendees.', 'wpamelia'),
             'custom_pricing_date_warning' => __('Set event period first to enable pricing by date range.', 'wpamelia'),
             'event'                     => __('Event', 'wpamelia'),
             'events'                    => __('Events', 'wpamelia'),
@@ -503,6 +507,7 @@ class FrontendStrings
             'event_many_people'         => __('How many people are coming?', 'wpamelia'),
             'event_upcoming_empty'      => __('There are no upcoming events for this period', 'wpamelia'),
             'event_ticket_name'         => __('Ticket name', 'wpamelia'),
+            'event_ticket'              => __('Ticket', 'wpamelia'),
             'event_tickets'             => __('Tickets', 'wpamelia'),
             'event_tickets_context'     => __('Select the number of tickets that you want to book for each ticket type', 'wpamelia'),
             'event_ticket_types'        => __('Ticket Types', 'wpamelia'),
@@ -570,6 +575,52 @@ class FrontendStrings
     }
 
     /**
+     * Returns the array of the frontend strings for the cabinet shortcode
+     *
+     * @return array
+     */
+    public static function getFrontendCabinetAuthStrings()
+    {
+        return [
+            'access_link_send'                       => __('Send Access Link', 'wpamelia'),
+            'access_link_send_description'           => __('Enter your account email address and we will send you an access link to your inbox.', 'wpamelia'),
+            'access_link_send_check'                 => __('Check your email', 'wpamelia'),
+            'access_link_send_click'                 => __('Click on the activation link in the e-mail we sent to', 'wpamelia'),
+            'access_link_send_inbox'                 => __('Did not receive the email? Check your spam filter, or', 'wpamelia'),
+            'access_link_send_retry'                 => __('try different email', 'wpamelia'),
+
+            'enter_credentials'                      => __('Enter your credentials to access your account.', 'wpamelia'),
+            'email_or_username'                      => __('Email or Username', 'wpamelia'),
+            'enter_email_or_username_warning'        => __('Please enter email or username', 'wpamelia'),
+            'enter_password_warning'                 => __('Please enter password', 'wpamelia'),
+
+            'forgot_password'                        => __('Forgot Password?', 'wpamelia'),
+            'forgot_your_password'                   => __('Forgot your password?', 'wpamelia'),
+            'reset_password'                         => __('Reset Password', 'wpamelia'),
+
+            'curr_password_colon'                    => __('Current Password', 'wpamelia'),
+            'curr_password_required'                 => __('Not match to your current password', 'wpamelia'),
+            'new_password_set'                       => __('Set Password', 'wpamelia'),
+            'new_password_set_action'                => __('Set Password', 'wpamelia'),
+            'new_password_set_description'           => __('Enter, and re-enter your new password to continue', 'wpamelia'),
+            'new_password_colon'                     => __('New Password:', 'wpamelia'),
+            'new_password_colon_retype'              => __('Re-type New Password:', 'wpamelia'),
+            'new_password_required'                  => __('Please enter new password', 'wpamelia'),
+            'new_password_length'                    => __('Password must be longer than 3 characters', 'wpamelia'),
+            'new_password_changed'                   => __('Password Updated!', 'wpamelia'),
+            'new_password_changed_description'       => __('Your password has been changed successfully. Use your new password to log in.', 'wpamelia'),
+            'passwords_not_match'                    => __('Passwords do not match', 'wpamelia'),
+
+            'password'                               => __('Password', 'wpamelia'),
+
+            'send'                                   => __('Send', 'wpamelia'),
+            'sign_in'                                => __('Sign In', 'wpamelia'),
+
+            'welcome_back'                           => __('Welcome Back', 'wpamelia'),
+        ];
+    }
+
+    /**
      * Returns the array of the frontend strings for the event shortcode
      *
      * @return array
@@ -583,12 +634,15 @@ class FrontendStrings
             'add_period'                             => __('Add Period', 'wpamelia'),
             'add_special_day'                        => __('Add Special Day', 'wpamelia'),
             'apply_to_all_days'                      => __('Apply to All Days', 'wpamelia'),
+            'booking_added_success'                  => __('Successfully added booking', 'wpamelia'),
             'appointment_canceled'                   => __('Appointment Canceled', 'wpamelia'),
             'appointment_change_time'                => __('To reschedule your appointment, select an available date time from the calendar, then click Confirm.', 'wpamelia'),
             'appointment_deleted'                    => __('Appointment has been deleted', 'wpamelia'),
             'appointment_rescheduled'                => __('Appointment has been rescheduled', 'wpamelia'),
             'appointment_saved'                      => __('Appointment has been saved', 'wpamelia'),
             'appointments'                           => __('Appointments', 'wpamelia'),
+            'appointment_booked'                     => __('Appointment booked', 'wpamelia'),
+            'appointments_booked'                    => __('Appointments booked', 'wpamelia'),
             'appointments_to_book'                   => __('Appointments to book', 'wpamelia'),
             'approved'                               => __('Approved', 'wpamelia'),
             'assigned_services'                      => __('Assigned Services', 'wpamelia'),
@@ -641,6 +695,8 @@ class FrontendStrings
             'customize'                              => __('Customize', 'wpamelia'),
             'date'                                   => __('Date', 'wpamelia'),
             'date_of_birth'                          => __('Date of Birth', 'wpamelia'),
+            'enter_date_of_birth'                    => __('Enter date of birth', 'wpamelia'),
+            'enter_date_of_birth_warning'            => __('Please enter date of birth', 'wpamelia'),
             'day1'                                   => __('1 day', 'wpamelia'),
             'day_off_name'                           => __('Day Off name', 'wpamelia'),
             'dayoff'                                 => __('Day Off', 'wpamelia'),
@@ -657,6 +713,7 @@ class FrontendStrings
             'delete'                                 => __('Delete', 'wpamelia'),
             'delete_following'                       => __('Delete following', 'wpamelia'),
             'delete_profile'                         => __('Delete profile', 'wpamelia'),
+            'delete_profile_confirm'                 => __('Delete profile', 'wpamelia'),
             'delete_profile_description'             => __('Are you sure you want to delete your profile? You will lose access to all your bookings and access to the customer panel.', 'wpamelia'),
             'description'                            => __('Description', 'wpamelia'),
             'details'                                => __('Details', 'wpamelia'),
@@ -667,14 +724,11 @@ class FrontendStrings
             'edit_appointment'                       => __('Edit Appointment', 'wpamelia'),
             'edit_event'                             => __('Edit Event', 'wpamelia'),
             'email'                                  => __('Email', 'wpamelia'),
-            'email_or_username'                      => __('Email or Username', 'wpamelia'),
             'employee_days_off'                      => __('Employee Days off', 'wpamelia'),
             'enter_address'                          => __('Enter Address', 'wpamelia'),
-            'enter_email_warning'                    => __('Please enter email', 'wpamelia'),
             'enter_event_name'                       => __('Enter Event Name', 'wpamelia'),
             'enter_event_name_warning'               => __('Please enter name', 'wpamelia'),
             'enter_location_warning'                 => __('Please select location', 'wpamelia'),
-            'enter_password_warning'                 => __('Please enter password', 'wpamelia'),
             'enter_valid_email_warning'              => __('Please enter a valid email address', 'wpamelia'),
             'error'                                  => __('Error', 'wpamelia'),
             'event_add_attendee'                     => __('Add Attendee', 'wpamelia'),
@@ -731,10 +785,10 @@ class FrontendStrings
             'event_tags'                             => __('Tags', 'wpamelia'),
             'event_tags_create'                      => __('No Tags. Create a new one.', 'wpamelia'),
             'event_tags_select_or_create'            => __('Select or Create Tag', 'wpamelia'),
+            'events_dropdown'                        => __('Event', 'wpamelia'),
             'export'                                 => __('Export', 'wpamelia'),
             'export_tooltip_attendees'               => __('You can use this option to export attendees in CSV file<br/>for the selected event.', 'wpamelia'),
             'extras'                                 => __('Extras', 'wpamelia'),
-            'forgot_password'                        => __('Forgot Password?', 'wpamelia'),
             'general'                                => __('General', 'wpamelia'),
             'google_calendar'                        => __('Google Calendar', 'wpamelia'),
             'google_calendar_tooltip'                => __('Connect your Google Calendar here so once<br/>the appointment is scheduled it can be added<br/>to your Google Calendar automatically.', 'wpamelia'),
@@ -762,6 +816,7 @@ class FrontendStrings
             'limit_extra_people_set'                 => __('Set Limit', 'wpamelia'),
             'limit_extra_people_tooltip'             => __('Limit the number of people that one customer can add during the booking', 'wpamelia'),
             'loader_message'                         => __('Please Wait', 'wpamelia'),
+            'locations_dropdown'                     => __('Location', 'wpamelia'),
             'login'                                  => __('Login', 'wpamelia'),
             'login_email_placeholder'                => __('Enter your email', 'wpamelia'),
             'login_password_placeholder'             => __('Enter your password', 'wpamelia'),
@@ -785,9 +840,6 @@ class FrontendStrings
             'my_profile'                             => __('My Profile', 'wpamelia'),
             'new_appointment'                        => __('New Appointment', 'wpamelia'),
             'new_event'                              => __('New Event', 'wpamelia'),
-            'new_password_colon'                     => __('New Password:', 'wpamelia'),
-            'new_password_length'                    => __('Password must be longer than 3 characters', 'wpamelia'),
-            'new_password_required'                  => __('Please enter new password', 'wpamelia'),
             'no_attendees_yet'                       => __('There are no attendees yet...', 'wpamelia'),
             'no_selected_extras_requirements'        => __('Select customer, employee and service', 'wpamelia'),
             'no_selected_slot_requirements'          => __('Select date and time', 'wpamelia'),
@@ -813,9 +865,9 @@ class FrontendStrings
             'package_deal'                           => __('This booking is part of a package deal', 'wpamelia'),
             'package_service_info'                   => __('Service info', 'wpamelia'),
             'package_price'                          => __('Package price', 'wpamelia'),
+            'packages_dropdown'                      => __('Package', 'wpamelia'),
             'partially_paid'                         => __('Partially Paid', 'wpamelia'),
             'partially_refunded'                     => __('Partially Refunded', 'wpamelia'),
-            'password'                               => __('Password', 'wpamelia'),
             'password_has_been_changed'              => __('Password has been changed', 'wpamelia'),
             'password_is_set'                        => __('Password is set', 'wpamelia'),
             'passwords_do_not_match'                 => __('Passwords do not match', 'wpamelia'),
@@ -846,6 +898,7 @@ class FrontendStrings
             'price_per_spot'                         => __('Price per Spot', 'wpamelia'),
             'profile_deleted'                        => __('Profile deleted', 'wpamelia'),
             'profile_saved'                          => __('Profile has been updated', 'wpamelia'),
+            'providers_dropdown'                     => __('Employee', 'wpamelia'),
             'provider_profile'                       => __('Employee Profile', 'wpamelia'),
             'purchased'                              => __('Purchased', 'wpamelia'),
             're_type_requred'                        => __('Please enter new password again', 'wpamelia'),
@@ -862,7 +915,6 @@ class FrontendStrings
             'rejected'                               => __('Rejected', 'wpamelia'),
             'repeat_every_year'                      => __('Repeat Every Year', 'wpamelia'),
             'reschedule'                             => __('Reschedule', 'wpamelia'),
-            'retype_new_password_colon'              => __('Re-type New Password:', 'wpamelia'),
             'save'                                   => __('Save', 'wpamelia'),
             'duplicate'                              => __('Duplicate', 'wpamelia'),
             'save_changes'                           => __('Save Changes', 'wpamelia'),
@@ -888,17 +940,13 @@ class FrontendStrings
             'select_time'                            => __('Select Time', 'wpamelia'),
             'select_time_warning'                    => __('Please select time', 'wpamelia'),
             'selected_customers'                     => __('Selected Customers', 'wpamelia'),
-            'send'                                   => __('Send', 'wpamelia'),
-            'send_recovery_email'                    => __('Send Access Link', 'wpamelia'),
-            'send_recovery_email_description'        => __('Enter your account email address and we will send you an access link to your inbox.', 'wpamelia'),
             'service_category'                       => __('Service Category', 'wpamelia'),
+            'services_dropdown'                      => __('Service', 'wpamelia'),
             'service_no_extras'                      => __('This service does not have any extras', 'wpamelia'),
             'service_price'                          => __('Service Price', 'wpamelia'),
             'service_provider_remove_fail'           => __('You have appointments for this service', 'wpamelia'),
             'service_provider_remove_fail_all'       => __('You have appointments for', 'wpamelia'),
-            'set_password'                           => __('Set Password', 'wpamelia'),
             'settings'                               => __('Settings', 'wpamelia'),
-            'sign_in'                                => __('Sign In', 'wpamelia'),
             'special_day_date_warning'               => __('Please enter date', 'wpamelia'),
             'special_day_end_time_warning'           => __('Please enter end time', 'wpamelia'),
             'special_day_start_time_warning'         => __('Please enter start time', 'wpamelia'),
@@ -949,6 +997,17 @@ class FrontendStrings
             'tax'                                    => __('Tax', 'wpamelia'),
             'due'                                    => __('Due', 'wpamelia'),
             'google_meet_link'                       => __('Google Meet Link', 'wpamelia'),
+            'personal_info'                          => __('Personal Information', 'wpamelia'),
+            'password_tab'                           => __('Password', 'wpamelia'),
+            'profile_data_success'                   => __('Profile data updated successfully', 'wpamelia'),
+            'password_success'                       => __('Password changed successfully', 'wpamelia'),
+            'menu_title'                             => __('Menu', 'wpamelia'),
+            'log_out'                                => __('Log out', 'wpamelia'),
+            'toggle_sidebar'                         => __('Toggle Sidebar', 'wpamelia'),
+            'filters'                                => __('Filters', 'wpamelia'),
+            'package_deal_expire_in'                 => __('This package deal will expire in', 'wpamelia'),
+            'appointments_deal_expire'               => __('book appointments before the deal expires!', 'wpamelia'),
+            'pay_now_btn'                            => __('Pay now', 'wpamelia'),
         ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getCabinetStrings());

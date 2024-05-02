@@ -45,6 +45,12 @@ abstract class AbstractNotificationService
     /** @var string */
     protected $type;
 
+    /** @var array */
+    protected $sendNotifications = true;
+
+    /** @var array */
+    protected $preparedNotificationData = [];
+
     /**
      * AbstractNotificationService constructor.
      *
@@ -57,6 +63,43 @@ abstract class AbstractNotificationService
 
         $this->type = $type;
     }
+
+    /**
+     * @param bool $value
+     */
+    public function setSend($value)
+    {
+        $this->sendNotifications = $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getSend()
+    {
+        return $this->sendNotifications;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getPreparedNotificationData()
+    {
+        return $this->preparedNotificationData;
+    }
+
+    /**
+     * @param array $data
+     */
+    protected function addPreparedNotificationData($data)
+    {
+        $this->preparedNotificationData[] = $data;
+    }
+
+    /**
+     * @return void
+     */
+    abstract public function sendPreparedNotifications();
 
     /**
      * @param array        $appointmentArray

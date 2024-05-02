@@ -161,10 +161,22 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
      * @return Collection|mixed
      * @throws QueryExecutionException
      */
-    public function getAll()
+    public function getAll($criteria = [])
     {
+        $params = [];
+
+        $where = [];
+
+        if (!empty($criteria['eventId'])) {
+            $params[':eventId'] = $criteria['eventId'];
+
+            $where[] = 'e.id = :eventId || cf.allEvents = 1';
+        }
+
+        $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+
         try {
-            $statement = $this->connection->query(
+            $statement = $this->connection->prepare(
                 "SELECT
                     cf.id AS cf_id,
                     cf.label AS cf_label,
@@ -200,8 +212,11 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                 LEFT JOIN {$this->customFieldsEventsTable} cfe ON cfe.customFieldId = cf.id
                 LEFT JOIN {$this->servicesTable} s ON s.id = cfs.serviceId
                 LEFT JOIN {$this->eventsTable} e ON e.id = cfe.eventId
+                {$where}
                 ORDER BY cf.position, cfo.position, cf.position"
             );
+
+            $statement->execute($params);
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {

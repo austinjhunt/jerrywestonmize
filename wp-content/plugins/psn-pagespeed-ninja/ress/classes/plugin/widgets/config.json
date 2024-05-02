@@ -1,0 +1,17 @@
+{
+  "delay_widgets": true,
+  "delay_async_js": false,
+  "delay_scripts": [
+    "//connect.facebook.net/%LANG%/all.js",
+    "//connect.facebook.net/%LANG%/sdk.js",
+    "//platform.twitter.com/widgets.js",
+    "//apis.google.com/js/api.js",
+    "//apis.google.com/js/platform.js",
+    "//apis.google.com/js/plusone.js",
+    "//s.sharethis.com/loader.js",
+    "//gravatar.com/js/gprofiles.js",
+    "//s.gravatar.com/js/gprofiles.js",
+    "//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js",
+    "//reactandshare.azureedge.net/plugin/rns.js"
+  ]
+}

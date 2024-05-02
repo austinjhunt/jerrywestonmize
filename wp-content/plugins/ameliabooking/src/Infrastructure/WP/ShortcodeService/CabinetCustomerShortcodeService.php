@@ -13,7 +13,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  *
  * @package AmeliaBooking\Infrastructure\WP\ShortcodeService
  */
-class CabinetCustomerShortcodeService extends AmeliaShortcodeService
+class CabinetCustomerShortcodeService
 {
     /**
      * @param array $atts
@@ -23,25 +23,39 @@ class CabinetCustomerShortcodeService extends AmeliaShortcodeService
      */
     public static function shortcodeHandler($atts)
     {
-        $atts = shortcode_atts(
-            [
-                'trigger'      => '',
-                'counter'      => self::$counter,
-                'appointments' => null,
-                'events'       => null
-            ],
-            $atts
-        );
+        if (empty($atts['version']) || $atts['version'] === '1') {
+            $atts = shortcode_atts(
+                [
+                    'trigger'      => '',
+                    'counter'      => AmeliaShortcodeService::$counter,
+                    'appointments' => null,
+                    'events'       => null,
+                    'version'      => null,
+                ],
+                $atts
+            );
+            AmeliaShortcodeService::prepareScriptsAndStyles();
 
-        self::prepareScriptsAndStyles();
-
-        // Enqueue Styles
-        wp_enqueue_style(
-            'amelia_booking_styles_quill',
-            AMELIA_URL . 'public/css/frontend/quill.css',
-            [],
-            AMELIA_VERSION
-        );
+            // Enqueue Styles
+            wp_enqueue_style(
+                'amelia_booking_styles_quill',
+                AMELIA_URL . 'public/css/frontend/quill.css',
+                [],
+                AMELIA_VERSION
+            );
+        } else {
+            $atts = shortcode_atts(
+                [
+                    'trigger'      => '',
+                    'counter'      => AmeliaBookingShortcodeService::$counter,
+                    'appointments' => null,
+                    'events'       => null,
+                    'version'      => null,
+                ],
+                $atts
+            );
+            AmeliaBookingShortcodeService::prepareScriptsAndStyles();
+        }
 
         ob_start();
         include AMELIA_PATH . '/view/frontend/cabinet-customer.inc.php';

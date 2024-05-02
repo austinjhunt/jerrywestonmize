@@ -42,6 +42,10 @@
         type: 'string',
         default: ''
       },
+      version: {
+        type: 'string',
+        default: ''
+      },
       appointmentsPanel: {
         type: 'boolean',
         default: true
@@ -61,6 +65,10 @@
         if (!attributes.appointmentsPanel && !attributes.eventsPanel) {
           shortCode = 'Notice: Please select at least one panel.'
         } else {
+          if (attributes.version) {
+            shortCode += ' version=' + attributes.version + ''
+          }
+
           if (attributes.trigger) {
             shortCode += ' trigger=' + attributes.trigger + ''
           }
@@ -80,6 +88,19 @@
 
         return shortCode
       }
+
+      inspectorElements.push(el(components.SelectControl, {
+        id: 'amelia-js-version',
+        label: wpAmeliaLabels.choose_panel_version,
+        value: attributes.version,
+        options: [
+          {value: 1, label: wpAmeliaLabels.panel_version_old},
+          {value: 2, label: wpAmeliaLabels.panel_version_new}
+        ],
+        onChange: function (selectControl) {
+          return props.setAttributes({version: selectControl})
+        }
+      }))
 
       inspectorElements.push(el(components.PanelRow,
         {},

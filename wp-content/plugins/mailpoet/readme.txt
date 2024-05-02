@@ -1,9 +1,9 @@
 === MailPoet - Newsletters, Email Marketing, and Automation ===
 Contributors: mailpoet, woocommerce, automattic
 Tags: email, email marketing, post notification, woocommerce emails, email automation, newsletter, newsletter builder, newsletter subscribers
-Requires at least: 6.3
-Tested up to: 6.4
-Stable tag: 4.48.1
+Requires at least: 6.4
+Tested up to: 6.5
+Stable tag: 4.49.1
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -235,6 +235,18 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 6. WooCommerce emails
 
 == Changelog ==
+
+= 4.49.1 - 2024-04-29 =
+* Improved: Add additional transactional email triggers;
+* Improved: new design of Segments listing page.
+
+= 4.49.0 - 2024-04-23 =
+* Fixed: manually confirming a subscriber in the UI doesn't trigger automations;
+* Fixed: some automation filter values rendering as "Unknown value".
+
+= 4.48.2 - 2024-04-08 =
+* Improved: 1-click unsubscribe headers for non MailPoet sending methods;
+* Fixed: rare issue of abandoned cart block rendered in preview for non abandoned cart automations.
 
 = 4.48.1 - 2024-04-03 =
 * Improved: when creating a tag, pressing Enter is no longer required.

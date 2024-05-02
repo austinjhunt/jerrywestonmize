@@ -3,8 +3,8 @@
 Contributors:      google
 Requires at least: 5.2
 Tested up to:      6.5
-Requires PHP:      5.6
-Stable tag:        1.123.1
+Requires PHP:      7.4
+Stable tag:        1.125.0
 License:           Apache License 2.0
 License URI:       https://www.apache.org/licenses/LICENSE-2.0
 Tags:              google, search-console, analytics, adsense, pagespeed-insights
@@ -74,7 +74,7 @@ The Site Kit plugin is free and open source, and will remain so. Individual Goog
 In order to successfully install and use Site Kit, your site must meet the following requirements:
 
 * WordPress version 5.2+
-* PHP version 5.6+
+* PHP version 7.4+
 * Modern browser – Internet Explorer is not supported
 * Is publicly accessible – it isn’t in maintenance mode, accessible only via password, or otherwise blocked
 * REST API is available – Site Kit must be able to communicate via REST API with Google services. To ensure that the REST API is available for your site, go to Tools > Site Health.
@@ -109,10 +109,33 @@ Please create a new topic on our [WordPress.org support forum](https://wordpress
 
 == Changelog ==
 
-= 1.123.1 =
+= 1.125.0 =
+
+**Enhanced**
+
+* Add "Learn more" link in the Ads Module setup screen. See [#8532](https://github.com/google/site-kit-wp/issues/8532).
+* Add the `Conversion_Events_Provider` Interface. See [#8529](https://github.com/google/site-kit-wp/issues/8529).
+* Block Ads module setup when ad blocker is detected. See [#8515](https://github.com/google/site-kit-wp/issues/8515).
+* Add a "New" badge to the Ads module in Site Kit settings. See [#8448](https://github.com/google/site-kit-wp/issues/8448).
+* Extend the Consent Mode conditions for determining whether Ads is connected to include a check for the presence of an Ads tag as the destination of the connected Analytics property's Google tag. See [#8432](https://github.com/google/site-kit-wp/issues/8432).
+* Update the description copy in the Consent Mode modal, simplifying the text and making it clear that measurement from visitors from the UK may also be affected by disabling Consent Mode. See [#8389](https://github.com/google/site-kit-wp/issues/8389).
+* Ensure that the check for a conversion tracking ID is maintained for the Consent Mode feature with the conversion ID having been migrated to the Ads module. See [#8365](https://github.com/google/site-kit-wp/issues/8365).
+* Add Site Health entries for the current Consent Mode status, and the presence of the WP Consent API. See [#8356](https://github.com/google/site-kit-wp/issues/8356).
+* Add an error state for the Audience tile component. See [#8228](https://github.com/google/site-kit-wp/issues/8228).
+
+**Changed**
+
+* Track GA events for the lifecycle of the Ads Conversion ID migration notification. See [#8458](https://github.com/google/site-kit-wp/issues/8458).
+* Update minimum required version of PHP to 7.4. See [#8030](https://github.com/google/site-kit-wp/issues/8030).
 
 **Fixed**
 
-* Fix a bug in the regional configuration of Consent Mode which caused defaults to be applied globally. See [#8444](https://github.com/google/site-kit-wp/issues/8444).
+* Add AMP tag with Conversion Tracking ID when Ads module is enabled. See [#8518](https://github.com/google/site-kit-wp/issues/8518).
+* Ensure Ads module cannot be saved when settings are invalid. See [#8508](https://github.com/google/site-kit-wp/issues/8508).
+* Fix unstable time based PHPUnit tests. See [#8488](https://github.com/google/site-kit-wp/issues/8488).
+* Fix bug that caused "Top search queries" widget to overflow on small screens. See [#8417](https://github.com/google/site-kit-wp/issues/8417).
+* Fix a bug where the Enhanced Measurement toggle may not have the intended effect when creating a new property during Analytics module setup. See [#8409](https://github.com/google/site-kit-wp/issues/8409).
+* Prevent a Consent Mode related console error on the view-only dashboard. See [#8408](https://github.com/google/site-kit-wp/issues/8408).
+* Exclude connection check requests from internal error reporting. See [#8268](https://github.com/google/site-kit-wp/issues/8268).
 
 [See changelog for all versions](https://raw.githubusercontent.com/google/site-kit-wp/main/changelog.txt).

@@ -231,7 +231,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
         $expirationDate = null;
 
         // get coupon for WC description
-        if ($coupon === null && isset($package['bookings']) && $package['bookings'][0]['couponId']) {
+        if ($coupon === null && !empty($package['bookings']) && $package['bookings'][0]['couponId']) {
             /** @var CouponRepository $couponRepository */
             $couponRepository = $this->container->get('domain.coupon.repository');
 

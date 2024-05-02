@@ -62,7 +62,7 @@ class GetEventAttendeesCommandHandler extends CommandHandler
         $customFieldRepository = $this->container->get('domain.customField.repository');
 
         /** @var Collection $customFieldsList */
-        $customFieldsList = $customFieldRepository->getAll();
+        $customFieldsList = $customFieldRepository->getAll(['eventId' => $params['id']]);
 
         /** @var EventRepository $eventRepository */
         $eventRepository = $this->container->get('domain.booking.event.repository');
@@ -106,44 +106,25 @@ class GetEventAttendeesCommandHandler extends CommandHandler
                 json_decode($booking->getCustomFields()->getValue(), true) : [];
 
 
-            foreach ((array)$customFieldsJson as $customFieldId => $customFiled) {
-                /** @var Collection $customFieldEvents */
-                $customFieldEvents = $customFieldsList->keyExists($customFieldId) && $customFieldsList->getItem($customFieldId)->getEvents() ? $customFieldsList->getItem($customFieldId)->getEvents(): new Collection();
-
-                $eventHasCustomField = false;
-
-                if ($customFieldsList->keyExists($customFieldId) && $customFieldsList->getItem($customFieldId)->getAllEvents() && $customFieldsList->getItem($customFieldId)->getAllEvents()->getValue()) {
-                    $eventHasCustomField = true;
-                } else {
-                    /** @var Event $customFieldEvent */
-                    foreach ($customFieldEvents->getItems() as $customFieldEvent) {
-                        if ($customFieldEvent->getId()->getValue() === (int)$params['id']) {
-                            $eventHasCustomField = true;
-                            break;
-                        }
-                    }
-                }
-
-
-                if (!$eventHasCustomField) {
-                    continue;
-                }
-
+            /** @var CustomField $customFiled*/
+            foreach ($customFieldsList->getItems() as $customFieldId => $customFiled) {
                 /** @var CustomField $item **/
-                $item = $customFieldsList->keyExists($customFieldId) ? $customFieldsList->getItem($customFieldId) : null;
+                $item = $customFieldsJson && !empty($customFieldsJson[$customFieldId]) ? $customFieldsJson[$customFieldId] : null;
                 if ($item) {
-                    if ($customFiled['type'] === 'file') {
-                        $rowCF[$item->getLabel()->getValue()] = '';
-                        foreach ($customFiled['value'] as $cfIndex => $cfFile) {
-                            $rowCF[$item->getLabel()->getValue()] .= ($cfIndex === 0 ? '' : ' | ')  . (AMELIA_UPLOADS_FILES_PATH_USE ? AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking->getId()->getValue() . '/' . $cfIndex :
-                                AMELIA_UPLOADS_FILES_URL . $booking->getId()->getValue() . '_' . $customFiled['value'][$cfIndex]['name']);
+                    if ($item['type'] === 'file') {
+                        $rowCF[$item['label']] = '';
+                        foreach ($item['value'] as $cfIndex => $cfFile) {
+                            $rowCF[$item['label']] .= ($cfIndex === 0 ? '' : ' | ')  . (AMELIA_UPLOADS_FILES_PATH_USE ? AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking->getId()->getValue() . '/' . $cfIndex :
+                                AMELIA_UPLOADS_FILES_URL . $booking->getId()->getValue() . '_' . $item['value'][$cfIndex]['name']);
                         }
-                        $rowCF[$item->getLabel()->getValue()] .= $delimiterSeparate;
-                    } else if (is_array($customFiled['value'])) {
-                        $rowCF[$item->getLabel()->getValue()] .= implode('|', $customFiled['value']) . $delimiterSeparate;
+                        $rowCF[$item['label']] .= $delimiterSeparate;
+                    } else if (is_array($item['value'])) {
+                        $rowCF[$item['label']] .= implode('|', $item['value']) . $delimiterSeparate;
                     } else {
-                        $rowCF[$item->getLabel()->getValue()] .= $customFiled['value'] . $delimiterSeparate;
+                        $rowCF[$item['label']] .= $item['value'] . $delimiterSeparate;
                     }
+                } else {
+                    $rowCF[$customFiled->getLabel()->getValue()] .= ' ' . $delimiterSeparate;
                 }
             }
 
@@ -278,7 +259,7 @@ class GetEventAttendeesCommandHandler extends CommandHandler
                 $row[BackendStrings::getCommonStrings()['coupon_code']] .= ($booking->getCoupon() && $booking->getCoupon()->getCode() ? $booking->getCoupon()->getCode()->getValue() : '') . $delimiterSeparate;
             }
 
-            $mergedRow = array_merge($row, $rowCF);
+            $mergedRow = array_merge($row, in_array('customFields', $fields, true) ? $rowCF : []);
 
             $mergedRow = apply_filters('amelia_before_csv_export_event', $mergedRow, $event->toArray(), $params['separate']);
 

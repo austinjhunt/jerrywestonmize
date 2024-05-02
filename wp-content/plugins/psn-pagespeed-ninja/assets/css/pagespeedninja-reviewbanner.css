@@ -1,0 +1,108 @@
+/* PageSpeed Ninja 1.3.13 | pagespeed.ninja/license.html */
+@-webkit-keyframes psn-grow-vert {
+    from { opacity: 0; max-height: 0;     }
+    to   { opacity: 1; max-height: 500px; }
+}
+@keyframes psn-grow-vert {
+    from { opacity: 0; max-height: 0;     }
+    to   { opacity: 1; max-height: 500px; }
+}
+
+#psn-review-banner-wrapper {
+    display: none;
+    opacity: 0;
+    max-height: 0;
+}
+
+#psn-review-banner-wrapper.show {
+    display: block;
+    opacity: 1;
+    max-height: 500px;
+    -webkit-animation: psn-grow-vert ease-in 1s;
+            animation: psn-grow-vert ease-in 1s;
+}
+
+#psn-review-banner {
+    position: relative;
+    z-index: 4;
+    padding: 10px 1.5rem;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+            align-items: center;
+    gap: 0.5rem 1.5rem;
+    background-color: #fff;
+    border: 1px dashed #8D8F94;
+    border-radius: 0.25rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+#psn-review-banner-text {
+    -webkit-flex: 1 0 0;
+            flex: 1 0 0;
+}
+
+#psn-review-banner p {
+    margin: 0;
+}
+
+#psn-review-banner p.title {
+    margin-bottom: 0.5em;
+}
+
+#psn-review-banner b {
+    white-space: nowrap;
+}
+
+#psn-review-banner i {
+    color: #545454;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+#psn-review-banner-btn {
+    min-width: 12rem;
+    text-align: center;
+}
+
+#psn-review-banner-btn a {
+    display: inline-block;
+    padding: 0 2rem;
+    color: #fff;
+    background-color: #E24B5D;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    border: none;
+    height: 40px;
+    line-height: 40px;
+}
+
+@media screen and (max-width: 782px) {
+    #psn-review-banner {
+        -webkit-flex-direction: column;
+                flex-direction: column;
+        -webkit-align-items: center;
+                align-items: center;
+        text-align: center;
+    }
+
+    #psn-review-banner-text {
+        -webkit-align-self: stretch;
+                align-self: stretch;
+    }
+}
+
+@media screen and (max-width: 1135px) {
+    #psn-review-banner i {
+        display: block;
+        margin-top: 0.5em;
+    }
+}

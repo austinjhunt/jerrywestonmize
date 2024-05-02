@@ -378,6 +378,39 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     }
 
     /**
+     * @param string $phone
+     *
+     * @return Admin|Customer|Manager|Provider
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public function getByPhone($phone)
+    {
+        try {
+            $statement = $this->connection->prepare($this->selectQuery() . ' WHERE phone = :phone');
+
+            $statement->execute(
+                array(
+                    ':phone' => $phone
+                )
+            );
+
+            $row = $statement->fetch();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        if (!$row) {
+            return null;
+        }
+
+        /** @var Admin|Customer|Manager|Provider $user */
+        $user = UserFactory::create($row);
+
+        return $user;
+    }
+
+    /**
      * @return array
      * @throws QueryExecutionException
      */

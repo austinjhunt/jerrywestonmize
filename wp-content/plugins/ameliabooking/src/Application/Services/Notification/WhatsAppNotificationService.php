@@ -88,7 +88,7 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         $defaultLanguage = $settingsService->getSetting('notifications', 'whatsAppLanguage');
 
         $usedLanguages     = $settingsService->getSetting('general', 'usedLanguages');
-        $defaultWpLanguage = get_locale();
+        $defaultWpLanguage = AMELIA_LOCALE;
         if (!in_array($defaultWpLanguage, $usedLanguages)) {
             $usedLanguages[] = $defaultWpLanguage;
         }
@@ -687,5 +687,12 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         );
 
         $whatsAppService->sendMessage($to, $text);
+    }
+
+    /**
+     * @return void
+     */
+    public function sendPreparedNotifications()
+    {
     }
 }

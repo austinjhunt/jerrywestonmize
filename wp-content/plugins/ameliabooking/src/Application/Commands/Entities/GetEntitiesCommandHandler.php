@@ -31,6 +31,7 @@ use AmeliaBooking\Domain\Services\User\ProviderService;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Licence\Licence as Licence;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\CategoryRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
@@ -99,6 +100,9 @@ class GetEntitiesCommandHandler extends CommandHandler
         $result = new CommandResult();
 
         $this->checkMandatoryFields($command);
+
+        /** @var Collection $allServices */
+        $allServices = new Collection();
 
         /** @var Collection $services */
         $services = new Collection();
@@ -178,6 +182,7 @@ class GetEntitiesCommandHandler extends CommandHandler
             /** @var Service $service */
             foreach ($allServices->getItems() as $service) {
                 if ($service->getStatus()->getValue() === Status::VISIBLE ||
+                    Licence::$premium ||
                     ($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_ADMIN)
                 ) {
                     $services->addItem($service, $service->getId()->getValue());
@@ -366,7 +371,7 @@ class GetEntitiesCommandHandler extends CommandHandler
                     $coupon = $coupons->getItem($ids['couponId']);
 
                     $coupon->getServiceList()->addItem(
-                        $services->getItem($ids['serviceId']),
+                        $allServices->getItem($ids['serviceId']),
                         $ids['serviceId']
                     );
                 }

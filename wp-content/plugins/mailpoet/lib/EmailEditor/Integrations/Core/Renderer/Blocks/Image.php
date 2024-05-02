@@ -5,12 +5,11 @@ namespace MailPoet\EmailEditor\Integrations\Core\Renderer\Blocks;
 if (!defined('ABSPATH')) exit;
 
 
-use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\BlockRenderer;
 use MailPoet\EmailEditor\Engine\SettingsController;
 use MailPoet\EmailEditor\Integrations\Utils\DomDocumentHelper;
 
-class Image implements BlockRenderer {
-  public function render($blockContent, array $parsedBlock, SettingsController $settingsController): string {
+class Image extends AbstractBlockRenderer {
+  protected function renderContent($blockContent, array $parsedBlock, SettingsController $settingsController): string {
     $parsedHtml = $this->parseBlockContent($blockContent);
 
     if (!$parsedHtml) {
@@ -74,7 +73,7 @@ class Image implements BlockRenderer {
       $borderStyles['box-sizing'] = 'border-box';
     }
 
-    return $this->addStyleToElement($blockContent, ['tag_name' => 'img'], $settingsController->convertStylesToString($borderStyles));
+    return $this->addStyleToElement($blockContent, ['tag_name' => 'img'], \WP_Style_Engine::compile_css($borderStyles, ''));
   }
 
   /**
@@ -114,7 +113,7 @@ class Image implements BlockRenderer {
     ];
 
     $styles['font-size'] = $parsedBlock['email_attrs']['font-size'] ?? $themeData['styles']['typography']['fontSize'];
-    return $settingsController->convertStylesToString($styles);
+    return \WP_Style_Engine::compile_css($styles, '');
   }
 
   /**
@@ -146,7 +145,7 @@ class Image implements BlockRenderer {
         border="0"
         cellpadding="0"
         cellspacing="0"
-        style="' . $settingsController->convertStylesToString($styles) . '"
+        style="' . \WP_Style_Engine::compile_css($styles, '') . '"
         width="100%"
       >
         <tr>
@@ -156,7 +155,7 @@ class Image implements BlockRenderer {
               border="0"
               cellpadding="0"
               cellspacing="0"
-              style="' . $settingsController->convertStylesToString($wrapperStyles) . '"
+              style="' . \WP_Style_Engine::compile_css($wrapperStyles, '') . '"
               width="' . $wrapperWidth . '"
             >
               <tr>

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -46,6 +45,10 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 'payment_method_types' => ['card'],
             ];
 
+            if ($stripeSettings['returnUrl']) {
+                $stripeData['return_url'] = $stripeSettings['returnUrl'];
+            }
+
             if ($stripeSettings['manualCapture']) {
                 $stripeData['capture_method'] = 'manual';
             }
@@ -54,14 +57,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 $stripeData['metadata'] = $data['metaData'];
             }
 
-            if ($data['metaData']['Customer Email']) {
-                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
-            }
-            // also added a fallback description since that was appearing as null on the Stripe side
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
-            } else {
-                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
 
             $stripeData = apply_filters(
@@ -119,9 +116,9 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
         $price = $stripe->prices->create(
             [
-                'unit_amount' => $data['amount'],
-                'currency' => $data['currency'],
-                'product_data' => ['name' => $data['description']],
+            'unit_amount' => $data['amount'],
+            'currency' => $data['currency'],
+            'product_data' => ['name' => $data['description']],
             ]
         );
 
@@ -139,7 +136,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                         'url' => $data['returnUrl'] . '&session_id={CHECKOUT_SESSION_ID}'
                     ]
                 ],
-                //                'invoice_creation' => ['enabled' => true],
+//                'invoice_creation' => ['enabled' => true],
             ];
 
             if (!empty($data['metaData'])) {
@@ -209,6 +206,6 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
         $stripe   = new StripeClient($secretKey);
         $response = $stripe->paymentIntents->retrieve($id);
-        return $response->getLastResponse()->code === 200 ? $response->toArray()['amount'] / 100 : null;
+        return $response->getLastResponse()->code === 200 ? $response->toArray()['amount']/100 : null;
     }
 }

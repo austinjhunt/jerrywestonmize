@@ -625,11 +625,11 @@ class Forminator_Form_Entry_Model {
 		}
 		$order_by = 'ORDER BY entries.entry_id';
 		if ( isset( $filters['order_by'] ) ) {
-			$order_by = 'ORDER BY ' . esc_sql( $filters['order_by'] ); // unesacaped.
+			$order_by = 'ORDER BY ' . $wpdb->prepare("%s", $filters['order_by'] );
 		}
 		$order = 'DESC';
 		if ( isset( $filters['order'] ) ) {
-			$order = esc_sql( $filters['order'] );
+			$order = $wpdb->prepare("%s", $filters['order'] );
 		}
 
 		// group.

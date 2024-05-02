@@ -430,7 +430,7 @@ class __TwigTemplate_c260ca698e3584b2cbf2795424a7e23a50fca4519ec42363a4acb3eb996
                 <div id=\"pro-segmentation\" role=\"tooltip\">
                   <p>";
         // line 211
-        echo $this->extensions['MailPoet\Twig\I18n']->translateEscHTML("Segment and email subscribers by custom field values, email, site or shopping behavior.");
+        echo $this->extensions['MailPoet\Twig\I18n']->translateEscHTML("Segment and email subscribers by custom field values, email, site, or shopping behavior.");
         echo "</p>
                   <p>";
         // line 212

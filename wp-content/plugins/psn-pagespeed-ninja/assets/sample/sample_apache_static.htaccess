@@ -1,0 +1,54 @@
+## PageSpeed Ninja
+
+# default mime-types
+<IfModule mod_mime.c>
+	AddType font/truetype .ttf
+	AddType font/opentype .otf
+	AddType font/woff .woff
+	AddType font/woff2 .woff2
+	AddType application/vnd.ms-fontobject .eot
+	AddType image/svg+xml .svg
+	AddType image/webp .webp
+	AddType image/avif .avif
+</IfModule>
+
+<If "-z reqenv('MATCH_PAGESPEEDNINJA')">
+	# disable ETag
+	FileETag None
+	<IfModule mod_headers.c>
+		Header unset ETag
+		Header unset Last-Modified
+		Header unset Expires
+		Header set Pragma "public"
+		Header set Cache-Control "public, max-age=8640000, immutable"
+	</IfModule>
+</If>
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	<IfModule mod_headers.c>
+		RewriteCond %{HTTP:Accept-Encoding} br
+		RewriteCond %{REQUEST_FILENAME}.br -f
+		RewriteRule ^.*\.(js|css|svg)$ $0.br
+		RewriteCond %{HTTP:Accept-Encoding} gzip
+		RewriteCond %{REQUEST_FILENAME}.gz -f
+		RewriteRule ^.*\.(js|css|svg)$ $0.gz
+		RewriteRule \.css\.(br|gz)$ - [L,T=text/css,E=no-brotli,E=no-gzip]
+		RewriteRule \.js\.(br|gz)$  - [L,T=text/javascript,E=no-brotli,E=no-gzip]
+		RewriteRule \.svg\.(br|gz)$ - [L,T=image/svg+xml,E=no-brotli,E=no-gzip]
+		<FilesMatch "\.(js|css|svg)(\.(br|gz))?$">
+			Header append Vary Accept-Encoding
+		</FilesMatch>
+		<Files *.br>
+			Header set Content-Encoding br
+		</Files>
+		<Files *.gz>
+			Header set Content-Encoding gzip
+		</Files>
+	</IfModule>
+	<IfModule !mod_headers.c>
+		RewriteCond %{ENV:MATCH_PAGESPEEDNINJA} ^$
+		RewriteCond %{REQUEST_FILENAME}.gz -f
+		RewriteRule ^.*\.(js|css)$ f.php?$0 [L]
+	</IfModule>
+</IfModule>

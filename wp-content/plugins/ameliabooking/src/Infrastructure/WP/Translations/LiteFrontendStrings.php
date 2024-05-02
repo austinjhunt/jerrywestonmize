@@ -116,6 +116,7 @@ class LiteFrontendStrings
             'oops'                         => __('Oops...'),
             'open'                         => __('Open', 'wpamelia'),
             'phone_colon'                  => __('Phone:', 'wpamelia'),
+            'phone_exist_error'            => __('Phone already exists with different name. Please check your name.', 'wpamelia'),
             'price_colon'                  => __('Price:', 'wpamelia'),
             'service'                      => __('service', 'wpamelia'),
             'select_calendar'              => __('Select Calendar', 'wpamelia'),

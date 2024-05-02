@@ -125,7 +125,7 @@ class SMSNotificationService extends AbstractNotificationService
                     ];
 
                 try {
-                    $sent = $this->saveAndSend(
+                    $this->saveAndSend(
                         $notification,
                         $user,
                         $appointmentArray,
@@ -134,14 +134,10 @@ class SMSNotificationService extends AbstractNotificationService
                         $user['phone']
                     );
 
-                    if ($sent && !$this->sentSmsLowEmail) {
-                        $this->sendSmsBalanceLowEmail();
-                    }
-
                     $additionalPhoneNumbers = $settingsAS->getBccSms();
 
                     foreach ($additionalPhoneNumbers as $phoneNumber) {
-                        $sent = $this->saveAndSend(
+                        $this->saveAndSend(
                             $notification,
                             null,
                             $appointmentArray,
@@ -149,10 +145,6 @@ class SMSNotificationService extends AbstractNotificationService
                             $logNotification,
                             $phoneNumber
                         );
-
-                        if ($sent && !$this->sentSmsLowEmail) {
-                            $this->sendSmsBalanceLowEmail();
-                        }
                     }
                 } catch (QueryExecutionException $e) {
                 } catch (ContainerException $e) {
@@ -343,7 +335,7 @@ class SMSNotificationService extends AbstractNotificationService
      * @param bool $logNotification
      * @param string $sendTo
      *
-     * @return bool
+     * @return void
      *
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
@@ -411,23 +403,24 @@ class SMSNotificationService extends AbstractNotificationService
             );
         }
 
-        $apiResponse = $smsApiService->send(
-            $sendTo,
-            $reParsedData['body'],
-            AMELIA_ACTION_URL . '/notifications/sms/history/' . $historyId
-        );
 
-        if ($apiResponse->status === 'OK') {
-            $this->updateSmsHistory($historyId, $apiResponse);
 
-            if ($logNotificationId) {
-                $notificationsLogRepository->updateFieldById((int)$logNotificationId, 1, 'sent');
+        $data = [
+            'sendTo'            => $sendTo,
+            'body'              => $reParsedData['body'],
+            'historyId'         => $historyId,
+            'logNotificationId' => $logNotificationId,
+        ];
+
+        if ($this->getSend()) {
+            $this->sendSms($data);
+        } else {
+            $this->addPreparedNotificationData($data);
+
+            if ($data['logNotificationId']) {
+                $notificationsLogRepository->updateFieldById((int)$data['logNotificationId'], 1, 'sent');
             }
-
-            return true;
         }
-
-        return false;
     }
 
     /**
@@ -450,5 +443,52 @@ class SMSNotificationService extends AbstractNotificationService
                 'segments' => $apiResponse->message->segments
             ]
         );
+    }
+
+    /**
+     * @param $data array
+     *
+     * @return void
+     * @throws QueryExecutionException
+     */
+    protected function sendSms($data)
+    {
+        /** @var NotificationLogRepository $notificationsLogRepository */
+        $notificationsLogRepository = $this->container->get('domain.notificationLog.repository');
+        /** @var SMSAPIService $smsApiService */
+        $smsApiService = $this->container->get('application.smsApi.service');
+
+        $apiResponse = $smsApiService->send(
+            $data['sendTo'],
+            $data['body'],
+            AMELIA_ACTION_URL . '/notifications/sms/history/' . $data['historyId']
+        );
+
+        if ($apiResponse->status === 'OK') {
+            $this->updateSmsHistory($data['historyId'], $apiResponse);
+
+            if ($data['logNotificationId']) {
+                $notificationsLogRepository->updateFieldById((int)$data['logNotificationId'], 1, 'sent');
+            }
+
+            if (!$this->sentSmsLowEmail) {
+                $this->sendSmsBalanceLowEmail();
+            }
+        } else {
+            if ($data['logNotificationId']) {
+                $notificationsLogRepository->updateFieldById((int)$data['logNotificationId'], 0, 'sent');
+            }
+        }
+    }
+
+    /**
+     * @return void
+     * @throws QueryExecutionException
+     */
+    public function sendPreparedNotifications()
+    {
+        foreach ($this->getPreparedNotificationData() as $item) {
+            $this->sendSms($item);
+        }
     }
 }

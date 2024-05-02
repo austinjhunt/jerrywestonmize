@@ -745,7 +745,7 @@ class PaymentApplicationService
 
             $amount = $totalPrice - $amountWithoutTax;
 
-            $callbackLink = AMELIA_ACTION_URL . '/payments/callback&fromLink=true&paymentAmeliaId=' . $oldPaymentId . '&chargedAmount=' . $amount . '&fromPanel=' . (!empty($paymentMethod));
+            $callbackLink = AMELIA_ACTION_URL . '/payments/callback&fromLink=true&paymentAmeliaId=' . $oldPaymentId . '&chargedAmount=' . $amount . '&fromPanel=' . (!empty($data['fromPanel']));
 
             $paymentSettings = $settingsService->getCategorySettings('payments');
 
@@ -772,6 +772,12 @@ class PaymentApplicationService
                 $appointmentData = $reservationService->getWooCommerceDataFromArray($data, $index);
                 $appointmentData['redirectUrl'] = $redirectUrl;
 
+                $bookableSettings = $data['bookable']['settings'] ?
+                    json_decode($data['bookable']['settings'], true) : null;
+
+                $appointmentData['wcProductId'] = $bookableSettings && isset($bookableSettings['payments']['wc']['productId']) ?
+                    $bookableSettings['payments']['wc']['productId'] : null;
+
                 $linkPayment = PaymentFactory::create($oldPayment);
 
                 $linkPayment->setStatus(new PaymentStatus(PaymentStatus::PENDING));
@@ -785,20 +791,12 @@ class PaymentApplicationService
                     $linkPayment->setPackageCustomerId(new Id($data['packageCustomerId']));
                 }
 
-
                 $appointmentData['payment'] = $linkPayment->toArray();
                 $appointmentData['payment']['fromLink']   = true;
+                $appointmentData['payment']['fromPanel']  = !empty($data['fromPanel']);
                 $appointmentData['payment']['newPayment'] = $oldPayment['gateway'] !== 'onSite';
 
-                $bookableSettings = $data['bookable']['settings'] ?
-                    json_decode($data['bookable']['settings'], true) : null;
-
-                $productId = $bookableSettings && isset($bookableSettings['payments']['wc']) && isset($bookableSettings['payments']['wc']['productId']) ?
-                    $bookableSettings['payments']['wc']['productId'] : $settingsService->getCategorySettings('payments')['wc']['productId'];
-
-                $orderId = WooCommerceService::createWcOrder($productId, $appointmentData, $amount, $oldPayment['wcOrderId'], $customer);
-
-                $paymentLink = WooCommerceService::getPaymentLink($orderId);
+                $paymentLink = WooCommerceService::createWcOrder($appointmentData, $amount, $oldPayment['wcOrderId']);
                 if (!empty($paymentLink['link'])) {
                     $paymentLinks['payment_link_woocommerce'] = $paymentLink['link'];
                 }

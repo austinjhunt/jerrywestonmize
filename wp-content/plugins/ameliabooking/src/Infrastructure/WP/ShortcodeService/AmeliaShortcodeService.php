@@ -60,7 +60,7 @@ class AmeliaShortcodeService
         if ($gmapApiKey) {
             wp_enqueue_script(
                 'amelia_google_maps_api',
-                "https://maps.googleapis.com/maps/api/js?key={$gmapApiKey}&libraries=places"
+                "https://maps.googleapis.com/maps/api/js?key={$gmapApiKey}&libraries=places&loading=async"
             );
         }
 
@@ -200,5 +200,6 @@ class AmeliaShortcodeService
         );
 
         do_action('ameliaScriptsLoaded');
+        do_action('amelia_scripts_loaded');
     }
 }

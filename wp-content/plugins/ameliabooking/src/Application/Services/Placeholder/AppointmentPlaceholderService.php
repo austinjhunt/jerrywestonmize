@@ -60,6 +60,12 @@ class AppointmentPlaceholderService extends PlaceholderService
         $timeFormat = $settingsService->getSetting('wordpress', 'timeFormat');
 
         $timeZone = get_option('timezone_string');
+
+        if (empty($timeZone)) {
+            $gmtOffset = get_option('gmt_offset');
+            $timeZone = sprintf('Etc/GMT%+d', -$gmtOffset);
+        }
+
         $dateTime = new DateTime("now", new \DateTimeZone($timeZone));
 
         $appointment_date = $dateTime->format($dateFormat);

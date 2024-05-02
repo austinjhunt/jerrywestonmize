@@ -165,7 +165,8 @@ abstract class Forminator_Render_Form {
 	public function render_shortcode( $atts = array() ) {
 		// use already created instance if already available.
 		$view = new static();
-		if ( ! isset( $atts['id'] ) ) {
+		$id   =  ! empty( $atts['id'] ) ? (string) (int) $atts['id'] : 0;
+		if ( ! $id ) {
 			return $view->message_required();
 		}
 
@@ -182,7 +183,7 @@ abstract class Forminator_Render_Form {
 
 		ob_start();
 
-		$view->display( $atts['id'], $is_preview, $preview_data );
+		$view->display( $id, $is_preview, $preview_data );
 		$lead_data = ! empty( static::$lead_data ) ? static::$lead_data : array();
 		$view->ajax_loader( $is_preview, $preview_data, $lead_data );
 
@@ -261,7 +262,7 @@ abstract class Forminator_Render_Form {
 	 * @return mixed|void
 	 */
 	public function get_form( $id, $render = true, $hide = true, $render_id_ajax = 0 ) {
-
+		$id            = (int) $id;
 		$html          = '';
 		$forminator_ui = '';
 
@@ -507,6 +508,7 @@ abstract class Forminator_Render_Form {
 	 */
 	public function get_form_placeholder( $id, $render = true ) {
 		$html      = '';
+		$id        = (int) $id;
 		$form_type = $this->get_form_type();
 		// if rendered on Preview, the array is empty and sometimes PHP notices show up.
 		if ( $this->is_admin && ( empty( self::$render_ids ) || ! $id ) ) {
@@ -1281,7 +1283,7 @@ abstract class Forminator_Render_Form {
 			return;
 		}
 
-		$id                        = $this->model->id;
+		$id                        = (string) (int) $this->model->id;
 		$this->last_submitted_data = Forminator_Core::sanitize_array( $_POST );
 		// if rendered on Preview, the array is empty and sometimes PHP notices show up.
 		if ( $this->is_admin && ( empty( self::$render_ids ) || ! $id ) ) {

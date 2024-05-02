@@ -28,7 +28,7 @@ class Button extends AbstractBlockRenderer {
       'color' => [
         'text' => $blockStyles['color']['text'] ?? '',
       ],
-      'typography' => $blockStyles['typography'],
+      'typography' => $blockStyles['typography'] ?? [],
     ]);
     return (object)[
       'css' => $this->compileCss($styles['declarations'], ['display' => 'block']),
@@ -36,7 +36,7 @@ class Button extends AbstractBlockRenderer {
     ];
   }
 
-  public function render($blockContent, array $parsedBlock, SettingsController $settingsController): string {
+  protected function renderContent($blockContent, array $parsedBlock, SettingsController $settingsController): string {
     if (empty($parsedBlock['innerHTML'])) {
       return '';
     }
@@ -68,10 +68,6 @@ class Button extends AbstractBlockRenderer {
           'background' => $blockAttributes['backgroundColor'] ? $settingsController->translateSlugToColor($blockAttributes['backgroundColor']) : null,
           'text' => $blockAttributes['textColor'] ? $settingsController->translateSlugToColor($blockAttributes['textColor']) : null,
         ]),
-        'typography' => [
-          'fontSize' => $parsedBlock['email_attrs']['font-size'] ?? 'inherit',
-          'textDecoration' => $parsedBlock['email_attrs']['text-decoration'] ?? 'none',
-        ],
       ],
       $blockAttributes['style'] ?? []
     );
@@ -98,7 +94,7 @@ class Button extends AbstractBlockRenderer {
       esc_attr($linkStyles->classname),
       esc_attr($linkStyles->css),
       esc_url($buttonUrl),
-      wp_kses_post($buttonText),
+      $buttonText,
     );
   }
 }

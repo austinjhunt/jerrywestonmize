@@ -12,7 +12,6 @@ use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\BlocksWid
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\CleanupPreprocessor;
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\Preprocessor;
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\SpacingPreprocessor;
-use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\TopLevelPreprocessor;
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\TypographyPreprocessor;
 
 class ProcessManager {
@@ -24,7 +23,6 @@ class ProcessManager {
 
   public function __construct(
     CleanupPreprocessor $cleanupPreprocessor,
-    TopLevelPreprocessor $topLevelPreprocessor,
     BlocksWidthPreprocessor $blocksWidthPreprocessor,
     TypographyPreprocessor $typographyPreprocessor,
     SpacingPreprocessor $spacingPreprocessor,
@@ -32,7 +30,6 @@ class ProcessManager {
     VariablesPostprocessor $variablesPostprocessor
   ) {
     $this->registerPreprocessor($cleanupPreprocessor);
-    $this->registerPreprocessor($topLevelPreprocessor);
     $this->registerPreprocessor($blocksWidthPreprocessor);
     $this->registerPreprocessor($typographyPreprocessor);
     $this->registerPreprocessor($spacingPreprocessor);

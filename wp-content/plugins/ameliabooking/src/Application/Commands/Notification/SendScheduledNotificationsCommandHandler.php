@@ -38,6 +38,7 @@ class SendScheduledNotificationsCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
+        $notificationService->setSend(false);
 
         do_action('amelia_before_send_scheduled_notifications');
 
@@ -62,6 +63,9 @@ class SendScheduledNotificationsCommandHandler extends CommandHandler
             $whatsAppNotificationService->sendScheduledNotifications(Entities::EVENT);
             $whatsAppNotificationService->sendBirthdayGreetingNotifications();
         }
+
+        $smsNotificationService->sendPreparedNotifications();
+        $notificationService->sendPreparedNotifications();
 
         do_action('amelia_after_send_scheduled_notifications');
 

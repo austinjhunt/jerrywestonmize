@@ -13,4 +13,10 @@ namespace AmeliaBooking\Application\Services\Notification;
  */
 class BasicWhatsAppNotificationService extends AbstractWhatsAppNotificationService
 {
+    /**
+     * @return void
+     */
+    public function sendPreparedNotifications()
+    {
+    }
 }

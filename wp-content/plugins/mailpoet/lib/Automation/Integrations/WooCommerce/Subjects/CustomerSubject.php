@@ -48,10 +48,15 @@ class CustomerSubject implements Subject {
   }
 
   public function getPayload(SubjectData $subjectData): Payload {
-    $customerId = $subjectData->getArgs()['customer_id'];
-    $orderId = $subjectData->getArgs()['order_id'] ?? null;
+    $args = $subjectData->getArgs();
+    $customerId = isset($args['customer_id']) ? (int)$args['customer_id'] : null;
+    $orderId = isset($args['order_id']) ? (int)$args['order_id'] : null;
+
+    $order = $orderId === null ? null : wc_get_order($orderId);
+    $order = $order instanceof WC_Order ? $order : null;
+
     if (!$customerId) {
-      return new CustomerPayload(null, $orderId);
+      return new CustomerPayload(null, $order);
     }
 
     $customer = new WC_Customer($customerId);
@@ -60,8 +65,7 @@ class CustomerSubject implements Subject {
       throw NotFoundException::create()->withMessage(sprintf(__("Customer with ID '%d' not found.", 'mailpoet'), $customerId));
     }
 
-    $order = wc_get_order($orderId);
-    return new CustomerPayload($customer, $order instanceof WC_Order ? $order : null);
+    return new CustomerPayload($customer, $order);
   }
 
   /** @return Field[] */

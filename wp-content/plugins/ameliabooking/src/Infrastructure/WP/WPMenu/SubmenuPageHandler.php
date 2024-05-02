@@ -61,7 +61,7 @@ class SubmenuPageHandler
             if ($gmapApiKey) {
                 wp_enqueue_script(
                     'google_maps_api',
-                    "https://maps.googleapis.com/maps/api/js?key={$gmapApiKey}&libraries=places"
+                    "https://maps.googleapis.com/maps/api/js?key={$gmapApiKey}&libraries=places&loading=async&callback=Function.prototype"
                 );
             }
         }
@@ -388,7 +388,7 @@ class SubmenuPageHandler
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/admin.831c1a93.js',
+                AMELIA_URL . 'v3/public/assets/admin.13955f3c.js',
                 [],
                 AMELIA_VERSION,
                 true

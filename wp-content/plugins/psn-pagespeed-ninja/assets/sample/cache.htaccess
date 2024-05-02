@@ -1,0 +1,6 @@
+## PageSpeed Ninja
+<IfModule mod_headers.c>
+	Header set Pragma "public"
+	# 100 days = 8640000 seconds
+	Header set Cache-Control "public, max-age=8640000"
+</IfModule>

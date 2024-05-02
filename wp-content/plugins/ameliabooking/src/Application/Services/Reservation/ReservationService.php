@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Application\Services\Reservation;
 
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Infrastructure\Common\Container;
 use InvalidArgumentException;
@@ -34,6 +35,8 @@ class ReservationService
      */
     public function get($type)
     {
-        return $this->container->get("application.reservation.{$type}.service");
+        $entityType = $type === Entities::CART ? Entities::APPOINTMENT : $type;
+
+        return $this->container->get("application.reservation.{$entityType}.service");
     }
 }

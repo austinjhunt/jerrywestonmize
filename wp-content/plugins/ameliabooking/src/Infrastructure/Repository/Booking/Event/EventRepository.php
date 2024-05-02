@@ -863,6 +863,19 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             $where[] = 'e.locationId = :locationId';
         }
 
+
+        if (!empty($criteria['locations'])) {
+            foreach ((array)$criteria['locations'] as $index => $value) {
+                $param = ':location' . $index;
+                $queryLocations[] = $param;
+                $params[$param] = $value;
+            }
+
+            $where3 = 'e.locationId IN (' . implode(', ', $queryLocations) . ')';
+
+            $where[] = '(' . $where3 . ')';
+        }
+
         $providerJoin = '';
 
         if (!empty($criteria['providers'])) {
@@ -2315,7 +2328,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         $compareToDate    = 'ep.periodStart';
 
         if ($limitPerCustomer['from'] === 'bookingDate') {
-            $eventStartDate =  $event->getPeriods()->getItems()[0]->getPeriodStart()->getValue()->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i');
+            $eventStartDate = (clone $event->getPeriods()->getItems()[0]->getPeriodStart()->getValue())->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i');
         } else {
             $paymentTableJoin = 'INNER JOIN ' . PaymentsTable::getTableName() . ' p ON p.customerBookingId = cb.id';
             $eventStartDate   = DateTimeService::getNowDateTimeObject()->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i');

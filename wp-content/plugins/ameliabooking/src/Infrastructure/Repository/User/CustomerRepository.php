@@ -58,13 +58,14 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
             }
 
             if (!empty($criteria['search'])) {
-                $params[':search1'] = $params[':search2'] = $params[':search3'] = $params[':search4'] =
+                $params[':search1'] = $params[':search2'] = $params[':search3'] = $params[':search4'] = $params[':search5'] =
                     "%{$criteria['search']}%";
 
                 $where[] = "((CONCAT(u.firstName, ' ', u.lastName) LIKE :search1
                             OR wpu.display_name LIKE :search2
                             OR u.email LIKE :search3
-                            OR u.note LIKE :search4))";
+                            OR u.phone LIKE :search4
+                            OR u.note LIKE :search5))";
             }
 
             if (!empty($criteria['customers'])) {

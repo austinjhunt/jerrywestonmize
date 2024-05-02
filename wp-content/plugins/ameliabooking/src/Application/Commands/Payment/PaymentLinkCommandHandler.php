@@ -40,6 +40,8 @@ class PaymentLinkCommandHandler extends CommandHandler
             $data['data']['bookable'] = $data['data'][$data['data']['type']];
         }
 
+        $data['data']['fromPanel'] = true;
+
         $data = apply_filters('amelia_before_payment_from_panel_created_filter', $data);
 
         do_action('amelia_before_payment_from_panel_created', $data);

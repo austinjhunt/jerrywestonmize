@@ -319,8 +319,8 @@ class LiteBackendStrings
             'identify_country_code'                  => __('Identify country code by user\'s IP address', 'wpamelia'),
             'insert_pending_appointments'            => __('Insert Pending Appointments', 'wpamelia'),
             'pending_appointments_meetings'          => __('Create Meetings For Pending Appointments', 'wpamelia'),
-            'inspect_customer_info'                  => __('Check customer\'s name for existing email when booking', 'wpamelia'),
-            'inspect_customer_info_tooltip'          => __('Enable this option if you don\'t want to allow "existing customer"<br/>to use different first and last name when booking.', 'wpamelia'),
+            'inspect_customer_info'                  => __('Check customer\'s name for existing email/phone when booking', 'wpamelia'),
+            'inspect_customer_info_tooltip'          => __('Enable this option to ensure that customers using an existing email or phone number maintain consistent first and last names.', 'wpamelia'),
             'label_employee'                         => __('Employee', 'wpamelia'),
             'label_employees'                        => __('Employees', 'wpamelia'),
             'label_service'                          => __('Service', 'wpamelia'),
@@ -430,6 +430,8 @@ class LiteBackendStrings
             'hide_currency_symbol_frontend'          => __('Hide Currency Symbol on the booking form', 'wpamelia'),
             'custom_currency_symbol'                 => __('Custom Currency Symbol', 'wpamelia'),
             'your_api_key'                           => __('Your API key', 'wpamelia'),
+            'admin_time_slot_service_duration'       => __('Booking Time Slots will depend on the service duration', 'wpamelia'),
+            'admin_time_slot_service_duration_tt'    => __('When this option is deactivated, the booking will be<br/>determined based on the Default Time Slot Step', 'wpamelia'),
         ];
     }
 
@@ -832,6 +834,8 @@ class LiteBackendStrings
             'employee_panel_password'          => __('Employee Panel Password', 'wpamelia'),
             'period_services_filter'           => __('Applied for all assigned services', 'wpamelia'),
             'period_services_filter1_tooltip'  => __('Select only specific services for this period.<br/>If no services are selected, then all assigned services for this employee<br/>will be available for booking in this period.', 'wpamelia'),
+            'period_services_filter2_tooltip'  => __('Select specific services for each period.', 'wpamelia'),
+            'special_days_reflect_services'    => __('Reflect On', 'wpamelia'),
             'price'                            => __('Price', 'wpamelia'),
             'special_days'                     => __('Special Days', 'wpamelia'),
             'service_provider_remove_fail'     => __('Provider has appointments for this service', 'wpamelia'),
@@ -1304,8 +1308,8 @@ class LiteBackendStrings
             'choose_form_for_customize'          => __('Choose a form you want to customize. The Step-by-Step 2.0 form is the new and improved version which provides you with better design and user experience, as well as better speed.', 'wpamelia'),
             'sbs_booking_form'                   => __('Step-by-Step Booking Form 2.0', 'wpamelia'),
             'sbs_booking_form_old'               => __('Booking Forms 1.0', 'wpamelia'),
-            'redesigned_sbs_booking_form'        => __('Redesigned and upgraded Step-by-Step Booking form with a better user experience, animations, improved speed, and a stand-out design!', 'wpamelia'),
-            'old_forms_text'                     => __('Step-by-Step 1.0 Booking, Catalog Booking, Search Booking, Event List and Event Calendar Bookings.', 'wpamelia'),
+            'redesigned_sbs_booking_form'        => __('Use the upgraded Step-by-Step Booking Form 2.0 for a simplified, direct booking process on your page. Customize its design and labels to enhance user experience and meet your business needs.', 'wpamelia'),
+            'old_forms_text'                     => __('The original booking forms—Step-by-Step, Catalog, Event List, and Event Calendar—feature basic customization and label changes, serving as the foundation for our newer versions.', 'wpamelia'),
             'primary_and_state_colors'           => __('Primary and state colors', 'wpamelia'),
             'sidebar'                            => __('Sidebar', 'wpamelia'),
             'background_color'                   => __('Background Color', 'wpamelia'),
@@ -1325,6 +1329,8 @@ class LiteBackendStrings
             'primary_text'                       => __('Primary Button Text Color', 'wpamelia'),
             'secondary_background'               => __('Secondary Button Background Color', 'wpamelia'),
             'secondary_text'                     => __('Secondary Button Text Color', 'wpamelia'),
+            'danger_background'                  => __('Danger Button Background Color', 'wpamelia'),
+            'danger_text'                        => __('Danger Button Text Color', 'wpamelia'),
             'layout_and_inputs'                  => __('Layout & Inputs', 'wpamelia'),
             'colors'                             => __('Colors', 'wpamelia'),
             'fonts'                              => __('Fonts', 'wpamelia'),
@@ -1338,6 +1344,7 @@ class LiteBackendStrings
             'payment_segment'                    => __('Payment Segment', 'wpamelia'),
             'heading_title'                      => __('Heading Title', 'wpamelia'),
             'sub_steps'                          => __('Sub Steps', 'wpamelia'),
+            'step_popups'                        => __('Step Popups', 'wpamelia'),
 
             /* csb - customize side bar */
             'csb_global_settings_content'        => __('Fonts and colors', 'wpamelia'),
@@ -1393,7 +1400,7 @@ class LiteBackendStrings
             'booking_form_content'               => __('Set options, colors and labels for booking form', 'wpamelia'),
 
             'cat_booking_form'                   => __('Catalog Booking Form 2.0', 'wpamelia'),
-            'redesigned_cat_booking_form'        => __('Modernized Catalog Booking Form 2.0 with better user experience, improved speed, animation and a stand-out design!', 'wpamelia'),
+            'redesigned_cat_booking_form'        => __(' Discover the modernized Catalog Booking Form 2.0 that showcases services in stylish card layouts. Easily add categories and adjust the appearance to reflect your brand.', 'wpamelia'),
 
             // cl - categories list
             'card_services_number'               => __('Total Number of Services', 'wpamelia'),
@@ -1437,7 +1444,7 @@ class LiteBackendStrings
 
             // elf - event list form
             'elf_booking_form'                   => __('Event List Booking Form 2.0', 'wpamelia'),
-            'redesigned_elf_booking_form'        => __('Modernized Event List Booking Form 2.0 with better user experience, improved speed, animation and a stand-out design!', 'wpamelia'),
+            'redesigned_elf_booking_form'        => __('The Event List Booking Form 2.0 offers an intuitive and fast booking experience, with a design that stands out. Customers can effortlessly browse and book from a list of events.', 'wpamelia'),
 
             'csb_events_list'                    => __('Events List', 'wpamelia'),
             'csb_events_list_content'            => __('Set up Location, Images, Filters, Capacity, Price, and Status visibility options', 'wpamelia'),

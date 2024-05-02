@@ -77,9 +77,19 @@ class Submenu
         }
 
         if ($menu['menuSlug'] === 'wpamelia-lite-vs-premium') {
-            $menu['menuTitle'] = '<span class="dashicons dashicons-star-filled" style="color: #ff8c00"></span>
-                <span style="color: #ff8c00;font-weight: 500;display: inline-block;margin-left: 5px;margin-top: 2px;">'
-                . $menu['menuTitle'] . '</span>';
+            $menu['menuTitle'] = '<span style="color: #ff8c00;font-weight: 500;display: inline-block;margin-top: 2px;">'
+                . $menu['menuTitle'] . '</span>
+                <span class="dashicons dashicons-star-filled" style="color: #ff8c00;margin-left: 5px;"></span>';
+        }
+
+        if ($menu['menuSlug'] === 'wpamelia-locations') {
+            $menu['menuTitle'] = ($isLite ? '<span style="display: inline-block;margin-top: 2px;color:inherit;">' : '')
+                . $menu['menuTitle'] . ($isLite ? '</span><span class="dashicons dashicons-star-filled" style="color: #ff8c00;margin-left: 5px;"></span>' : '');
+        }
+
+        if ($menu['menuSlug'] === 'wpamelia-cf') {
+            $menu['menuTitle'] = ($isLite ? '<span style="display: inline-block;margin-top: 2px;color:inherit;">' : '')
+                . $menu['menuTitle'] . ($isLite ? '</span><span class="dashicons dashicons-star-filled" style="color: #ff8c00;margin-left: 5px;"></span>' : '');
         }
 
         $this->addSubmenuPage(

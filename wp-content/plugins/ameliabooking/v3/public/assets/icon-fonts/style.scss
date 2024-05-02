@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?uji337');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?uji337#iefix') format('embedded-opentype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?uji337') format('truetype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?uji337') format('woff'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?uji337##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?7qpq29');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?7qpq29#iefix') format('embedded-opentype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?7qpq29') format('truetype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?7qpq29') format('woff'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?7qpq29##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -27,6 +27,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.am-icon-password {
+  &:before {
+    content: $am-icon-password;
+  }
+}
+.am-icon-globe-watch {
+  &:before {
+    content: $am-icon-globe-watch;
+  }
+}
 .am-icon-search-close {
   &:before {
     content: $am-icon-search-close;
@@ -45,6 +55,11 @@
 .am-icon-clearable {
   &:before {
     content: $am-icon-clearable;
+  }
+}
+.am-icon-checkmark-circle-full {
+  &:before {
+    content: $am-icon-checkmark-circle-full;
   }
 }
 .am-icon-checkmark-circle {
@@ -262,6 +277,11 @@
     content: $am-icon-settings;
   }
 }
+.am-icon-triangle-info {
+  &:before {
+    content: $am-icon-triangle-info;
+  }
+}
 .am-icon-circle-info {
   &:before {
     content: $am-icon-circle-info;
@@ -392,3 +412,4 @@
     content: $am-icon-yahoo;
   }
 }
+

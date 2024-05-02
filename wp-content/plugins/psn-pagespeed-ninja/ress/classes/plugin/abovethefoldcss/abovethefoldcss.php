@@ -1,0 +1,142 @@
+<?php
+/*
+ * RESSIO Responsive Server Side Optimizer
+ * https://github.com/ressio/
+ *
+ * @copyright   Copyright (C) 2013-2024 Kuneri Ltd. / Denis Ryabov, PageSpeed Ninja Team. All rights reserved.
+ * @license     GNU General Public License version 2
+ */
+
+defined('RESSIO_PATH') || die();
+
+class Ressio_Plugin_AboveTheFoldCSS extends Ressio_Plugin
+{
+    /** @var bool */
+    protected $relayout = false;
+
+    /**
+     * @param Ressio_DI $di
+     * @param null|stdClass $params
+     */
+    public function __construct($di, $params)
+    {
+        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
+
+        parent::__construct($di, $params);
+    }
+
+    /**
+     * @param Ressio_Event $event
+     * @param IRessio_HtmlOptimizer $optimizer
+     * @return void
+     */
+    public function onHtmlIterateBefore($event, $optimizer)
+    {
+        $loadAboveTheFoldCSS = false;
+        if (empty($this->params->cookie)) {
+            $loadAboveTheFoldCSS = true;
+        } elseif (!isset($_COOKIE[$this->params->cookie])) {
+            $loadAboveTheFoldCSS = true;
+
+            $this->di->httpHeaders->setCookie($this->params->cookie, '1', time() + $this->params->cookietime, '/', $_SERVER['HTTP_HOST'], false, true);
+        }
+
+        if ($loadAboveTheFoldCSS) {
+            $this->di->dispatcher->addListener('HtmlIterateTagLINK', array($this, 'processHtmlIterateTagLINK'));
+            $this->di->dispatcher->addListener('HtmlIterateTagSCRIPTBefore', array($this, 'processHtmlIterateTagSCRIPTBefore'));
+            $this->di->dispatcher->addListener('HtmlIterateAfter', array($this, 'processHtmlIterateAfter'));
+            $this->di->dispatcher->addListener('CssCombinerNodeList', array($this, 'processCssCombinerNodeList'));
+        }
+    }
+
+    /**
+     * @param Ressio_Event $event
+     * @param IRessio_HtmlOptimizer $optimizer
+     * @param IRessio_HtmlNode $node
+     * @return void
+     */
+    public function processHtmlIterateTagLINK($event, $optimizer, $node)
+    {
+        if ($optimizer->nodeIsDetached($node)) {
+            return;
+        }
+
+        if ($node->hasAttribute('rel') && $node->hasAttribute('href')
+            && $node->getAttribute('rel') === 'stylesheet'
+            && (!$node->hasAttribute('type') || $node->getAttribute('type') === 'text/css')
+            && !$node->hasAttribute('onload')
+        ) {
+            $media = $node->hasAttribute('media') ? $node->getAttribute('media') : 'all';
+            if ($media !== 'print') {
+                $optimizer->nodeInsertAfter($node, 'noscript', null, $optimizer->nodeToString($node));
+                $node->setAttribute('media', 'print');
+                $node->setAttribute('onload', "this.media='$media'");
+            }
+        }
+    }
+
+    /**
+     * @param Ressio_Event $event
+     * @param IRessio_HtmlOptimizer $optimizer
+     * @param IRessio_HtmlNode $node
+     * @return void
+     */
+    public function processHtmlIterateTagSCRIPTBefore($event, $optimizer, $node)
+    {
+        if ($this->relayout) {
+            return;
+        }
+
+        if ($node->hasAttribute('type') && $node->getAttribute('type') !== 'text/javascript') {
+            return;
+        }
+
+        if ($node->hasAttribute('src')) {
+            $src = $node->getAttribute('src');
+            if (strpos($src, 'masonry') !== false) {
+                $this->relayout = true;
+            }
+        }
+    }
+
+    /**
+     * @param Ressio_Event $event
+     * @param IRessio_HtmlOptimizer $optimizer
+     * @return void
+     */
+    public function processHtmlIterateAfter($event, $optimizer)
+    {
+        if ($this->relayout) {
+            $scriptData = file_get_contents(__DIR__ . '/js/relayout.min.js');
+            $optimizer->appendScriptDeclaration($scriptData, array('defer' => true));
+        }
+
+        // Process CSS with image optimizer and FontDisplaySwap plugin
+        $abovethefoldcss = $this->di->cssRelocator->run($this->params->abovethefoldcss);
+        $optimizer->prependHead(array('style', null, $abovethefoldcss));
+    }
+
+    /**
+     * @param Ressio_Event $event
+     * @param stdClass $wrapper
+     * @return void
+     */
+    public function processCssCombinerNodeList($event, $wrapper)
+    {
+        $noscript = '';
+        foreach ($wrapper->nodes as $node) {
+            /** Ressio_NodeWrapper $node */
+            if ($node->tagName === 'link') {
+                $media = isset($node->attributes['media']) ? $node->attributes['media'] : 'all';
+                if ($media !== 'print') {
+                    $noscript .= $node;
+                    $node->attributes['media'] = 'print';
+                    $node->attributes['onload'] = "this.media='$media'";
+                }
+            }
+        }
+        if ($noscript !== '') {
+            $wrapper->nodes[] = new Ressio_NodeWrapper('noscript', $noscript);
+        }
+    }
+}

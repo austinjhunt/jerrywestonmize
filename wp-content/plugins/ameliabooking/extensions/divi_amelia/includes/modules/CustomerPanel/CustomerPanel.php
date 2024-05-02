@@ -65,6 +65,16 @@ class DIVI_Customer extends ET_Builder_Module
                 'option_category' => 'basic_option',
                 'description'     => BackendStrings::getWordPressStrings()['manually_loading_description'],
             ),
+            'version' => array(
+                'label'           => esc_html__(BackendStrings::getWordPressStrings()['choose_panel_version'], 'divi-divi_amelia'),
+                'type'            => 'select',
+                'options' => array(
+                    1  => esc_html__(BackendStrings::getWordPressStrings()['panel_version_old'], 'divi-divi_amelia'),
+                    2  => esc_html__(BackendStrings::getWordPressStrings()['panel_version_new'], 'divi-divi_amelia'),
+                ),
+                'toggle_slug'     => 'main_content',
+                'option_category' => 'basic_option',
+            )
         );
     }
 
@@ -72,10 +82,14 @@ class DIVI_Customer extends ET_Builder_Module
     {
         $shortcode    = '[ameliacustomerpanel';
         $trigger      = $this->props['trigger'];
+        $version      = $this->props['version'];
         $appointments = $this->props['appointments'];
         $events       = $this->props['events'];
         if ($trigger !== null && $trigger !== '') {
             $shortcode .= ' trigger='.$trigger;
+        }
+        if ($version !== null && $version !== '') {
+            $shortcode .= ' version='.$version;
         }
         if ($appointments === 'on') {
             $shortcode .= ' appointments=1';

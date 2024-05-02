@@ -173,23 +173,28 @@ class CustomerApplicationService extends UserApplicationService
         // Check if email already exists
         $userWithSameMail = $userRepository->getByEmail($user->getEmail()->getValue());
 
-        if ($userWithSameMail) {
+        // Check if phone already exists
+        $userWithSamePhone = $user->getPhone() ? $userRepository->getByPhone($user->getPhone()->getValue()) : null;
+
+        if ($userWithSameMail || $userWithSamePhone) {
+            $userWithSameValue = $userWithSameMail ?: $userWithSamePhone;
+
             /** @var SettingsService $settingsService */
             $settingsService = $this->container->get('domain.settings.service');
 
             // If email already exists, check if First Name and Last Name from request are same with the First Name
             // and Last Name from $userWithSameMail. If these are not same return error message.
             if ($settingsService->getSetting('roles', 'inspectCustomerInfo') &&
-                (strtolower(trim($userWithSameMail->getFirstName()->getValue())) !==
+                (strtolower(trim($userWithSameValue->getFirstName()->getValue())) !==
                     strtolower(trim($user->getFirstName()->getValue())) ||
-                    strtolower(trim($userWithSameMail->getLastName()->getValue())) !==
+                    strtolower(trim($userWithSameValue->getLastName()->getValue())) !==
                     strtolower(trim($user->getLastName()->getValue())))
             ) {
                 $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setData(['emailError' => true]);
+                $result->setData($userWithSameMail ? ['emailError' => true] : ['phoneError' => true]);
             }
 
-            return $userWithSameMail;
+            return $userWithSameValue;
         }
 
         return $user;

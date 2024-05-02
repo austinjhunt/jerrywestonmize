@@ -1,0 +1,11 @@
+## PageSpeed Ninja
+
+# Set an env variable (MATCH_PAGESPEEDNINJA) to distinguish /s and /s/** directories
+<IfModule mod_setenvif.c>
+	SetEnvIfExpr true MATCH_PAGESPEEDNINJA 1
+</IfModule>
+<IfModule !mod_setenvif.c>
+	<FilesMatch "^(?<pagespeedninja>.*)$">
+		# sets %{ENV:MATCH_PAGESPEEDNINJA} (requires Apache 2.4.8+)
+	</FilesMatch>
+</IfModule>

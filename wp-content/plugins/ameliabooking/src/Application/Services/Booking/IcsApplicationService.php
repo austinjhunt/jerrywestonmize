@@ -321,9 +321,11 @@ class IcsApplicationService
                 break;
         }
 
+        $bookingKey = array_search($id, array_keys($reservation->getBookings()->getItems())) ?: 0;
+
         $placeholdersData = $description || $descriptionTr ? $placeholderService->getPlaceholdersData(
             $reservation->toArray(),
-            0,
+            $bookingKey,
             'email',
             null
         ) : [];

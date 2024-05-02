@@ -1,0 +1,68 @@
+# Put inside of your server config
+        # Common optimizations
+        gzip on;
+        gzip_vary on;
+        gzip_types text/css text/javascript image/svg+xml;
+        #gzip_types text/plain text/css image/x-icon image/svg+xml text/javascript text/js application/javascript application/x-javascript;
+        #Note: images [image/png image/jpg image/jpeg] may contain large text meta data, but not in the case of optimized ones
+        gzip_static on; # Note: may be not built
+
+        location /s {
+                # Common optimizations
+                gzip on;
+                gzip_types text/css text/javascript image/svg+xml;
+                #gzip_types text/plain text/css image/x-icon image/svg+xml text/javascript text/js application/javascript application/x-javascript;
+                #Note: images [image/png image/jpg image/jpeg] may contain large text meta data, but not in the case of optimized ones
+
+                # Optimizations for /s only
+                #access_log off;
+                gzip_static on; # Note: may be not built
+                etag off;
+                expires off;
+                add_header Last-Modified "";
+                add_header Cache-Control "public, max-age=8640000";
+                add_header Vary "Accept-Encoding";
+                location ~ \.svg$ {
+                        if ($http_accept_encoding ~ "gzip") {
+                                set $gz 1$gz;
+                        }
+                        if (-f $request_filename.gz) {
+                                set $gz 2$gz;
+                        }
+                        if ($gz = "21") {
+                                rewrite ^/(.*)$ /$1.gz last;
+                        }
+                }
+                location ~ \.svgz$ {
+                        gzip off;
+                        add_header Content-Encoding gzip;
+                        add_header Last-Modified "";
+                        add_header Cache-Control "public, max-age=8640000";
+                        add_header Vary "Accept-Encoding";
+                        default_type image/svg+xml;
+                        type { image/svg+xml svgz; }
+                }
+        }
+
+        # Support *.svgz files
+        location ~ \.svg$ {
+                if ($http_accept_encoding ~ "gzip") {
+                        set $gz 1$gz;
+                }
+                if ($request_filename ~ "^(.*).svg$") {
+                        set $basename $1;
+                }
+                if (-f $basename.svgz) {
+                        set $gz 2$gz;
+                }
+                if ($gz = "21") {
+                        rewrite ^/(.*)\.svg$ /$1.svgz last;
+                }
+        }
+        location ~ \.svgz$ {
+                gzip off;
+                add_header Content-Encoding gzip;
+                add_header Vary "Accept-Encoding";
+                default_type image/svg+xml;
+                type { image/svg+xml svgz; }
+        }

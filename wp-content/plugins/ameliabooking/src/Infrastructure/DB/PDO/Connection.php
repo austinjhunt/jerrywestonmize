@@ -113,7 +113,7 @@ class Connection extends \AmeliaBooking\Infrastructure\Connection
 
         $settingsService = new SettingsService(new SettingsStorage());
 
-        $ssl = $settingsService->getSetting('db', 'ssl');
+        $ssl = apply_filters('amelia_change_ssl_settings', $settingsService->getSetting('db', 'ssl'));
 
         if ($ssl['enable']) {
             if ($ssl['enable']) {

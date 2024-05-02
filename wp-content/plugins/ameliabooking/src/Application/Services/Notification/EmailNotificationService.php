@@ -241,13 +241,17 @@ class EmailNotificationService extends AbstractNotificationService
                         );
                     }
 
-                    if (empty($emailData['skipSending'])) {
+                    if ($this->getSend() && empty($emailData['skipSending'])) {
                         $mailService->send(
                             $emailData['email'],
                             $emailData['subject'],
                             $emailData['body'],
                             $emailData['bcc'],
                             $emailData['attachments']
+                        );
+                    } else if (empty($emailData['skipSending'])) {
+                        $this->addPreparedNotificationData(
+                            array_merge($emailData, ['logNotificationId' => $logNotificationId])
                         );
                     }
 
@@ -717,5 +721,34 @@ class EmailNotificationService extends AbstractNotificationService
             ';
 
         $mailService->send($to, $subject, $body);
+    }
+
+    /**
+     * @return void
+     * @throws QueryExecutionException
+     */
+    public function sendPreparedNotifications()
+    {
+        /** @var PHPMailService|SMTPService|MailgunService $mailService */
+        $mailService = $this->container->get('infrastructure.mail.service');
+
+        /** @var NotificationLogRepository $notificationLogRepo */
+        $notificationLogRepo = $this->container->get('domain.notificationLog.repository');
+
+        foreach ($this->getPreparedNotificationData() as $item) {
+            try {
+                $mailService->send(
+                    $item['email'],
+                    $item['subject'],
+                    $item['body'],
+                    $item['bcc'],
+                    $item['attachments']
+                );
+            } catch (\Exception $e) {
+                if ($item['id']) {
+                    $notificationLogRepo->updateFieldById((int)$item['id'], 0, 'sent');
+                }
+            }
+        }
     }
 }

@@ -118,7 +118,7 @@ class PackageCustomerRepository extends AbstractRepository
 
         $where = [];
 
-        if ($criteria['customerId']) {
+        if (!empty($criteria['customerId'])) {
             $params[':customerId'] = $criteria['customerId'];
 
             $where[] = 'pc.customerId = :customerId';

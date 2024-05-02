@@ -63,6 +63,18 @@ class AmeliaCustomerPanelElementorWidget extends Widget_Base
             ]
         );
         $this->add_control(
+            'select_version',
+            [
+                'label' => BackendStrings::getWordPressStrings()['choose_panel_version'],
+                'type' => Controls_Manager::SELECT,
+                'options' => [
+                    '1' => BackendStrings::getWordPressStrings()['panel_version_old'],
+                    '2' => BackendStrings::getWordPressStrings()['panel_version_new']
+                ],
+                'default' => '2',
+            ]
+        );
+        $this->add_control(
             'load_manually',
             [
                 'label' => BackendStrings::getWordPressStrings()['manually_loading'],
@@ -80,8 +92,9 @@ class AmeliaCustomerPanelElementorWidget extends Widget_Base
         $appointments = $settings['appointments'] ? ' appointments=1' : '';
         $trigger = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
         $events = $settings['events'] ? ' events=1' : '';
+        $version = $settings['select_version'] ? ' version=' . $settings['select_version'] : '';
         if ($settings['appointments'] || $settings['events']) {
-            echo esc_html('[ameliacustomerpanel' . $trigger . $appointments . $events . ']');
+            echo esc_html('[ameliacustomerpanel' . $version . $trigger . $appointments . $events . ']');
         }
         else {
             echo esc_html(BackendStrings::getWordPressStrings()['notice_panel']);

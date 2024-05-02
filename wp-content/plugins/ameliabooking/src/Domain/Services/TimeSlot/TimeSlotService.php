@@ -830,7 +830,7 @@ class TimeSlotService
 
                     $newEndInSeconds = $startInSeconds + $realRequiredTime;
 
-                    if ($newEndInSeconds > $endInSeconds) {
+                    if ($newEndInSeconds > $endInSeconds && $newEndInSeconds !== 86400) {
                         if ($dateKey !== $appointmentData['endDate']) {
                             $nextDateString = DateTimeService::getDateTimeObjectInTimeZone(
                                 $dateKey . ' 00:00:00',

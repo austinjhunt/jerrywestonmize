@@ -29,7 +29,7 @@ function colibri_breadcrumb_element_shortcode( $atts ) {
     $home_as_icon            = ! ! $atts['home_as_icon'];
     $home_icon               = urldecode( base64_decode( $atts['home_icon'] ) );
     //remove the script tag
-    $home_icon               = preg_replace('/script/i', '', $home_icon);
+    $home_icon               = wp_kses_post($home_icon);
     $lana_breadcrumb_options = array(
         'home_as_icon' => $home_as_icon,
         'home_label'   => $atts['home_label']

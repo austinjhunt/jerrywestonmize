@@ -9,6 +9,7 @@ namespace AmeliaBooking\Infrastructure\WP\ShortcodeService;
 use AmeliaBooking\Application\Services\Cache\CacheApplicationService;
 use AmeliaBooking\Application\Services\Stash\StashApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
@@ -58,7 +59,7 @@ class AmeliaBookingShortcodeService
         if ($gmapApiKey) {
             wp_enqueue_script(
                 'amelia_google_maps_api',
-                "https://maps.googleapis.com/maps/api/js?key={$gmapApiKey}&libraries=places"
+                "https://maps.googleapis.com/maps/api/js?key={$gmapApiKey}&libraries=places&loading=async"
             );
         }
 
@@ -83,7 +84,7 @@ class AmeliaBookingShortcodeService
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/public.1b0d3740.js',
+                AMELIA_URL . 'v3/public/assets/public.de036552.js',
                 [],
                 AMELIA_VERSION,
                 true
@@ -107,6 +108,12 @@ class AmeliaBookingShortcodeService
             $scriptId,
             'wpAmeliaLabels',
             FrontendStrings::getAllStrings()
+        );
+
+        wp_localize_script(
+            $scriptId,
+            'wpAmeliaTimeZone',
+            [DateTimeService::getTimeZone()->getName()]
         );
 
         $ameliaUrl = AMELIA_URL;
