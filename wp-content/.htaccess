@@ -1,0 +1,45 @@
+
+# BEGIN Page Speed Ninja
+# The directives (lines) between "BEGIN Page Speed Ninja" and "END Page Speed Ninja" are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
+## PageSpeed Ninja
+
+# default mime-types
+<IfModule mod_mime.c>
+	AddType font/truetype .ttf
+	AddType font/opentype .otf
+	AddType font/woff .woff
+	AddType font/woff2 .woff2
+	AddType application/vnd.ms-fontobject .eot
+	AddType image/svg+xml .svg
+	AddType image/webp .webp
+	AddType image/avif .avif
+</IfModule>
+
+<IfModule mod_filter.c>
+	<IfModule mod_brotli.c>
+		AddOutputFilterByType BROTLI_COMPRESS text/css text/csv
+		AddOutputFilterByType BROTLI_COMPRESS text/html text/xml text/plain application/xml application/rss+xml
+		AddOutputFilterByType BROTLI_COMPRESS text/javascript application/javascript application/x-javascript application/ecmascript application/json
+		AddOutputFilterByType BROTLI_COMPRESS image/vnd.microsoft.icon image/x-icon image/svg+xml image/bmp
+		AddOutputFilterByType BROTLI_COMPRESS application/x-font-ttf application/font-woff application/vnd.ms-fontobject font/opentype font/truetype
+	</IfModule>
+	<IfModule mod_deflate.c>
+		AddOutputFilterByType DEFLATE text/css text/csv
+		AddOutputFilterByType DEFLATE text/html text/xml text/plain application/xml application/rss+xml
+		AddOutputFilterByType DEFLATE text/javascript application/javascript application/x-javascript application/ecmascript application/json
+		AddOutputFilterByType DEFLATE image/vnd.microsoft.icon image/x-icon image/svg+xml image/bmp
+		AddOutputFilterByType DEFLATE application/x-font-ttf application/font-woff application/vnd.ms-fontobject font/opentype font/truetype
+	</IfModule>
+</IfModule>
+
+## PageSpeed Ninja
+<IfModule mod_headers.c>
+	Header set Pragma "public"
+	# 100 days = 8640000 seconds
+	Header set Cache-Control "public, max-age=8640000"
+</IfModule>
+
+
+# END Page Speed Ninja

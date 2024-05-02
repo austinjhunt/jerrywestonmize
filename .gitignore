@@ -26,6 +26,10 @@ wp-config.php
 # Example plugin
 /wp-content/plugins/hello.php
 
+/wp-content/cache
+
+/s
+
 # Uploads
 /wp-content/uploads/
 
