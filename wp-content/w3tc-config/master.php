@@ -1,5 +1,5 @@
 <?php exit; ?>{
-    "version": "2.7.1",
+    "version": "2.7.2",
     "cluster.messagebus.debug": false,
     "cluster.messagebus.enabled": false,
     "cluster.messagebus.sns.region": "",
@@ -334,6 +334,7 @@
     "pgcache.prime.limit": 10,
     "pgcache.prime.sitemap": "",
     "pgcache.prime.post.enabled": false,
+    "pgcache.prime.post.update.enabled": false,
     "pgcache.rest": "",
     "pgcache.cookiegroups.enabled": false,
     "pgcache.cookiegroups.groups": {
@@ -1047,5 +1048,9 @@
     "page": "w3tc_minify",
     "_wpnonce": "16eaee76d6",
     "_wp_http_referer": "\/wp-admin\/admin.php?page=w3tc_minify&w3tc_message=6616d18fd490d",
-    "w3tc_save_options": "Save Settings"
+    "w3tc_save_options": "Save Settings",
+    "pgcache.bad_behavior_path": "",
+    "newrelic": {
+        "monitoring_type": "apm"
+    }
 }
