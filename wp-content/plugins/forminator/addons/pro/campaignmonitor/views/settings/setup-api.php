@@ -27,49 +27,15 @@ foreach ( $template_vars as $key => $val ) {
 	<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Set Up Campaign Monitor API Access.', 'forminator' ); ?></p>
 
 	<?php if ( ! empty( $vars['client_name'] ) ) : ?>
-		<div
-			role="alert"
-			class="sui-notice sui-notice-green sui-active"
-			style="display: block; text-align: left;"
-			aria-live="assertive"
-		>
-
-			<div class="sui-notice-content">
-
-				<div class="sui-notice-message">
-
-					<span class="sui-notice-icon sui-icon-check-tick" aria-hidden="true"></span>
-
-					<p><?php esc_html_e( 'Campaign Monitor Integrations currently connected to API Client: ', 'forminator' ); ?> <strong><?php echo esc_html( $vars['client_name'] ); ?></strong></p>
-
-				</div>
-
-			</div>
-
-		</div>
+		<?php
+		echo Forminator_Admin::get_green_notice(
+			esc_html__( 'Campaign Monitor Integrations currently connected to API Client: ', 'forminator' ) . '<strong>' . esc_html( $vars['client_name'] ) . '</strong>'
+		);
+		?>
 	<?php endif; ?>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<div
-			role="alert"
-			class="sui-notice sui-notice-red sui-active"
-			style="display: block; text-align: left;"
-			aria-live="assertive"
-		>
-
-			<div class="sui-notice-content">
-
-				<div class="sui-notice-message">
-
-					<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
-
-					<p><?php echo esc_html( $vars['error_message'] ); ?></p>
-
-				</div>
-
-			</div>
-
-		</div>
+		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
 	<?php endif; ?>
 
 </div>

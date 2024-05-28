@@ -575,6 +575,32 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    .am-drag-handle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: move;
+      cursor: -webkit-grabbing;
+      margin-right: @margin-small;
+      vertical-align: middle;
+
+      svg {
+        max-height: 20px;
+        vertical-align: sub;
+
+        rect {
+          fill: @color-text-second;
+        }
+      }
+
+      &:hover {
+        rect {
+          fill: @color-text-prime;
+        }
+      }
+    }
+
   }
 
   &-photo {

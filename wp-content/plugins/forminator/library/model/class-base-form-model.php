@@ -1087,7 +1087,7 @@ abstract class Forminator_Base_Form_Model {
 		foreach ( $connected_addons as $connected_addon ) {
 			try {
 				$settings = $connected_addon->get_addon_settings( $model_id, 'form' );
-				if ( $settings instanceof Forminator_Addon_Settings_Abstract ) {
+				if ( $settings instanceof Forminator_Integration_Settings ) {
 					$exportable_integrations[ $connected_addon->get_slug() ] = $settings->to_exportable_data();
 				}
 			} catch ( Exception $e ) {
@@ -1317,12 +1317,12 @@ abstract class Forminator_Base_Form_Model {
 		foreach ( $integrations_data as $slug => $integrations_datum ) {
 			try {
 				$addon = forminator_get_addon( $slug );
-				if ( $addon instanceof Forminator_Addon_Abstract ) {
+				if ( $addon instanceof Forminator_Integration ) {
 					$method = 'get_addon_settings';
 					if ( method_exists( $addon, $method ) ) {
 						$settings = $addon->$method( $model->id, static::$module_slug );
 					}
-					if ( ! empty( $settings ) && $settings instanceof Forminator_Addon_Form_Settings_Abstract ) {
+					if ( ! empty( $settings ) && $settings instanceof Forminator_Integration_Form_Settings ) {
 						$settings->import_data( $integrations_datum );
 					}
 				}

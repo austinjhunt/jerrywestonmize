@@ -44,7 +44,10 @@ class UpdateExtraController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new UpdateExtraCommand($args);
+
         $requestBody = $request->getParsedBody();
+
+        $this->filter($requestBody);
         $this->setCommandFields($command, $requestBody);
 
         return $command;

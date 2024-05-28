@@ -31,6 +31,7 @@ class PackagesServicesTable extends AbstractDatabaseTable
                   `minimumScheduled` INT(5) DEFAULT 1,
                   `maximumScheduled` INT(5) DEFAULT 1,
                   `allowProviderSelection` TINYINT(1) DEFAULT 1,
+                  `position` INT(11) DEFAULT 0,
                   PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     }

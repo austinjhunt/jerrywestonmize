@@ -36,13 +36,13 @@ class Forminator_Integrations_Page extends Forminator_Admin_Page {
 	 */
 	public function before_render() {
 		// cleanup addons on integrations page.
-		Forminator_Addon_Loader::get_instance()->cleanup_activated_addons();
+		Forminator_Integration_Loader::get_instance()->cleanup_activated_addons();
 
 		$this->addons_list                      = forminator_get_registered_addons_list();
 		$this->addons_list_grouped_by_connected = forminator_get_registered_addons_grouped_by_connected();
 
-		Forminator_Addon_Admin_Ajax::get_instance()->generate_nonce();
-		$this->addon_nonce = Forminator_Addon_Admin_Ajax::get_instance()->get_nonce();
+		Forminator_Integration_Admin_Ajax::get_instance()->generate_nonce();
+		$this->addon_nonce = Forminator_Integration_Admin_Ajax::get_instance()->get_nonce();
 		add_filter( 'forminator_data', array( $this, 'add_addons_js_data' ) );
 
 		$this->validate_addon_page();

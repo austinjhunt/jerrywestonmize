@@ -183,9 +183,9 @@ class AddBookingCommandHandler extends CommandHandler
 
                 $result->setData($data);
             }
-        }
 
-        do_action('amelia_after_booking_added', $result ? $result->getData() : null);
+            do_action('amelia_after_booking_added', $result ? $result->getData() : null);
+        }
 
         return $result;
     }

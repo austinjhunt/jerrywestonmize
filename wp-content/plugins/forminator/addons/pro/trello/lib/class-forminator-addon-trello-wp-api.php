@@ -1,12 +1,8 @@
 <?php
-
-require_once dirname( __FILE__ ) . '/class-forminator-addon-trello-wp-api-exception.php';
-require_once dirname( __FILE__ ) . '/class-forminator-addon-trello-wp-api-not-found-exception.php';
-
 /**
- * Class Forminator_Addon_Trello_Wp_Api
+ * Class Forminator_Trello_Wp_Api
  */
-class Forminator_Addon_Trello_Wp_Api {
+class Forminator_Trello_Wp_Api {
 
 	/**
 	 * Trello API endpoint
@@ -54,23 +50,23 @@ class Forminator_Addon_Trello_Wp_Api {
 	private $_last_url_request = '';
 
 	/**
-	 * Forminator_Addon_Trello_Wp_Api constructor.
+	 * Forminator_Trello_Wp_Api constructor.
 	 *
 	 * @since 1.0 Trello Addon
 	 *
 	 * @param string $app_key
 	 * @param string $token
 	 *
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function __construct( $app_key, $token ) {
 		//prerequisites
 		if ( ! $app_key ) {
-			throw new Forminator_Addon_Trello_Wp_Api_Exception( esc_html__( 'Missing required APP Key', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Missing required APP Key', 'forminator' ) );
 		}
 
 		if ( ! $token ) {
-			throw new Forminator_Addon_Trello_Wp_Api_Exception( esc_html__( 'Missing required Token', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Missing required Token', 'forminator' ) );
 		}
 
 		$this->_app_key = $app_key;
@@ -111,8 +107,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array  $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	private function request( $verb, $path, $args = array() ) {
 		// Adding extra user agent for wp remote request.
@@ -181,7 +176,7 @@ class Forminator_Addon_Trello_Wp_Api {
 
 		if ( is_wp_error( $res ) || ! $res ) {
 			forminator_addon_maybe_log( __METHOD__, $res );
-			throw new Forminator_Addon_Trello_Wp_Api_Exception(
+			throw new Forminator_Integration_Exception(
 				esc_html__( 'Failed to process request, make sure you authorized Trello and your server has internet connection.', 'forminator' )
 			);
 		}
@@ -195,12 +190,12 @@ class Forminator_Addon_Trello_Wp_Api {
 				}
 
 				if ( 404 === $status_code ) {
-					throw new Forminator_Addon_Trello_Wp_Api_Not_Found_Exception( sprintf(
+					throw new Forminator_Integration_Exception( sprintf(
 						/* translators: %s: Error message */
 						esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
 					);
 				}
-				throw new Forminator_Addon_Trello_Wp_Api_Exception( sprintf(
+				throw new Forminator_Integration_Exception( sprintf(
 					/* translators: %s: Error message */
 					esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
 				);
@@ -244,8 +239,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array  $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function post_( $path, $args = array() ) {
 		$default_args = array(
@@ -271,8 +265,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array  $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_( $path, $args = array() ) {
 		$default_args = array(
@@ -298,8 +291,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array  $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function put_( $path, $args = array() ) {
 		$default_args = array(
@@ -325,8 +317,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array  $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function delete_( $path, $args = array() ) {
 		$default_args = array(
@@ -351,8 +342,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_boards( $args = array() ) {
 		$default_args = array();
@@ -370,8 +360,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array  $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_board_lists( $board_id, $args = array() ) {
 		$default_args = array();
@@ -389,8 +378,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array  $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_board_members( $board_id, $args = array() ) {
 		$default_args = array();
@@ -407,8 +395,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function create_card( $args = array() ) {
 		$default_args = array(
@@ -418,7 +405,7 @@ class Forminator_Addon_Trello_Wp_Api {
 		$args         = array_merge( $default_args, $args );
 
 		if ( ! isset( $args['idList'] ) ) {
-			throw new Forminator_Addon_Trello_Wp_Api_Exception( esc_html__( 'idList Required to create a Trello Card', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'idList Required to create a Trello Card', 'forminator' ) );
 		}
 
 		return $this->post_( 'cards', $args );
@@ -433,8 +420,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function add_attachment( $card_id, $upload ) {
 		$arg			 = [];
@@ -453,8 +439,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function delete_card( $card_id, $args = array() ) {
 		$default_args = array();
@@ -472,8 +457,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function close_card( $card_id, $args = array() ) {
 		$default_args = array(
@@ -493,8 +477,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function update_card( $card_id, $args = array() ) {
 		$default_args = array();
@@ -512,8 +495,7 @@ class Forminator_Addon_Trello_Wp_Api {
 	 * @param array  $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Trello_Wp_Api_Exception
-	 * @throws Forminator_Addon_Trello_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_board_labels( $board_id, $args = array() ) {
 		$default_args = array();

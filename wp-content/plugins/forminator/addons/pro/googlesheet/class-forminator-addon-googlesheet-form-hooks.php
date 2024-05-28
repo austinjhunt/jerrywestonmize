@@ -1,149 +1,36 @@
 <?php
 
 /**
- * Class Forminator_Addon_Googlesheet_Form_Hooks
+ * Class Forminator_Googlesheet_Form_Hooks
  *
  * @since 1.0 Google Sheets Addon
  *
  */
-class Forminator_Addon_Googlesheet_Form_Hooks extends Forminator_Addon_Form_Hooks_Abstract {
+class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
 	/**
-	 * Addon instance are auto available form abstract
-	 * Its added here for development purpose,
-	 * Auto-complete will resolve addon directly to `Google Sheets` instance instead of the abstract
-	 * And its public properties can be exposed
+	 * Return custom entry fields
 	 *
-	 * @since 1.0 Google Sheets Addon
-	 * @var Forminator_Addon_Googlesheet
-	 */
-	protected $addon;
-
-	/**
-	 * Form Settings Instance
-	 *
-	 * @since 1.0 Google Sheets Addon
-	 * @var Forminator_Addon_Googlesheet_Form_Settings | null
-	 */
-	protected $form_settings_instance;
-
-	/**
-	 * Forminator_Addon_Googlesheet_Form_Hooks constructor.
-	 *
-	 * @since 1.0 Google Sheets Addon
-	 *
-	 * @param Forminator_Addon_Abstract $addon
-	 * @param                           $form_id
-	 *
-	 * @throws Forminator_Addon_Exception
-	 */
-	public function __construct( Forminator_Addon_Abstract $addon, $form_id ) {
-		parent::__construct( $addon, $form_id );
-		$this->_submit_form_error_message = esc_html__( 'Google Sheets failed to process submitted data. Please check your form and try again', 'forminator' );
-	}
-
-	/**
-	 * Save status of request sent and received for each connected Google Sheets
-	 *
-	 * @since 1.0 Google Sheets Addon
-	 *
-	 * @param array $submitted_data
-	 * @param array $form_entry_fields
-	 *
+	 * @param array $submitted_data Submitted data.
+	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	public function add_entry_fields( $submitted_data, $form_entry_fields = array() ) {
-
-		$form_id                = $this->form_id;
-		$form_settings_instance = $this->form_settings_instance;
-
-		/**
-		 * Filter Google Sheets submitted form data to be processed
-		 *
-		 * @since 1.2
-		 *
-		 * @param array                                      $submitted_data
-		 * @param array                                      $form_entry_fields
-		 * @param int                                        $form_id                current Form ID.
-		 * @param Forminator_Addon_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
-		 */
-		$submitted_data = apply_filters(
-			'forminator_addon_googlesheet_form_submitted_data',
-			$submitted_data,
-			$form_entry_fields,
-			$form_id,
-			$form_settings_instance
-		);
-
-		/**
-		 * Filter current form entry fields data to be processed by Google Sheets
-		 *
-		 * @since 1.2
-		 *
-		 * @param array                                      $form_entry_fields
-		 * @param array                                      $submitted_data
-		 * @param int                                        $form_id                current Form ID.
-		 * @param Forminator_Addon_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
-		 */
-		$form_entry_fields = apply_filters(
-			'forminator_addon_googlesheet_form_entry_fields',
-			$form_entry_fields,
-			$submitted_data,
-			$form_id,
-			$form_settings_instance
-		);
-
-		forminator_addon_maybe_log( __METHOD__, $submitted_data );
-
-		$addon_setting_values = $this->form_settings_instance->get_form_settings_values();
-
-		$data = array();
-
-		/**
-		 * Fires before create row on Google Sheets
-		 *
-		 * @since 1.2
-		 *
-		 * @param int                                        $form_id                current Form ID.
-		 * @param array                                      $submitted_data
-		 * @param Forminator_Addon_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
-		 */
-		do_action( 'forminator_addon_googlesheet_before_create_row', $form_id, $submitted_data, $form_settings_instance );
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+		$addon_setting_values = $this->settings_instance->get_settings_values();
+		$data                 = array();
 
 		foreach ( $addon_setting_values as $key => $addon_setting_value ) {
 			// save it on entry field, with name `status-$MULTI_ID`, and value is the return result on sending data to Google Sheets.
-			if ( $form_settings_instance->is_multi_form_settings_complete( $key ) ) {
+			if ( $this->settings_instance->is_multi_id_completed( $key ) ) {
 				// exec only on completed connection.
 				$data[] = array(
 					'name'  => 'status-' . $key,
-					'value' => $this->get_status_on_create_row( $key, $submitted_data, $addon_setting_value, $form_entry_fields ),
+					'value' => $this->get_status_on_create_row( $key, $submitted_data, $addon_setting_value, $current_entry_fields ),
 				);
 			}
 		}
 
-		$entry_fields = $data;
-		/**
-		 * Filter Google Sheets entry fields to be saved to entry model
-		 *
-		 * @since 1.2
-		 *
-		 * @param array                                      $entry_fields
-		 * @param int                                        $form_id                current Form ID.
-		 * @param array                                      $submitted_data
-		 * @param array                                      $form_entry_fields
-		 * @param Forminator_Addon_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
-		 */
-		$data = apply_filters(
-			'forminator_addon_googlesheet_entry_fields',
-			$entry_fields,
-			$form_id,
-			$submitted_data,
-			$form_entry_fields,
-			$form_settings_instance
-		);
-
 		return $data;
-
 	}
 
 	/**
@@ -162,8 +49,8 @@ class Forminator_Addon_Googlesheet_Form_Hooks extends Forminator_Addon_Form_Hook
 		// initialize as null.
 		$api = null;
 
-		$form_id                = $this->form_id;
-		$form_settings_instance = $this->form_settings_instance;
+		$form_id                = $this->module_id;
+		$form_settings_instance = $this->settings_instance;
 
 		try {
 			/**
@@ -175,7 +62,7 @@ class Forminator_Addon_Googlesheet_Form_Hooks extends Forminator_Addon_Form_Hook
 			 * @param int                                        $form_id                current Form ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $form_entry_fields
-			 * @param Forminator_Addon_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
+			 * @param Forminator_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
 			 */
 			do_action( 'forminator_addon_googlesheet_before_prepare_sheet_headers', $connection_settings, $form_id, $submitted_data, $form_entry_fields, $form_settings_instance );
 
@@ -192,7 +79,7 @@ class Forminator_Addon_Googlesheet_Form_Hooks extends Forminator_Addon_Form_Hook
 			 * @param int                                        $form_id                current Form ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $form_entry_fields
-			 * @param Forminator_Addon_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
+			 * @param Forminator_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
 			 */
 			$header_fields = apply_filters(
 				'forminator_addon_googlesheet_sheet_headers',
@@ -214,7 +101,7 @@ class Forminator_Addon_Googlesheet_Form_Hooks extends Forminator_Addon_Form_Hook
 			 * @param int                                        $form_id                current Form ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $form_entry_fields
-			 * @param Forminator_Addon_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
+			 * @param Forminator_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
 			 */
 			do_action( 'forminator_addon_googlesheet_after_prepare_sheet_headers', $header_fields, $connection_settings, $form_id, $submitted_data, $form_entry_fields, $form_settings_instance );
 
@@ -305,7 +192,7 @@ class Forminator_Addon_Googlesheet_Form_Hooks extends Forminator_Addon_Form_Hook
 				'description'     => $e->getMessage(),
 				'connection_name' => $connection_settings['name'],
 			);
-		} catch ( Forminator_Addon_Googlesheet_Exception $e ) {
+		} catch ( Forminator_Integration_Exception $e ) {
 			forminator_addon_maybe_log( __METHOD__, 'Failed to Send to Google Sheets' );
 
 			return array(
@@ -343,10 +230,10 @@ class Forminator_Addon_Googlesheet_Form_Hooks extends Forminator_Addon_Form_Hook
 	 * @param $file_id
 	 *
 	 * @return array
-	 * @throws Forminator_Addon_Googlesheet_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_sheet_headers( $file_id ) {
-		$form_fields = $this->form_settings_instance->get_form_fields();
+		$form_fields = $this->settings_instance->get_form_fields();
 		$form_fields = self::maybe_add_group_cloned_fields( $form_fields );
 
 		$google_client = $this->addon->get_google_client();
@@ -357,16 +244,16 @@ class Forminator_Addon_Googlesheet_Form_Hooks extends Forminator_Addon_Form_Hook
 		$sheets              = $spreadsheet->getSheets();
 
 		if ( ! isset( $sheets[0] ) || ! isset( $sheets[0]->properties ) ) {
-			throw new Forminator_Addon_Googlesheet_Exception( esc_html__( 'No sheet found', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'No sheet found', 'forminator' ) );
 		}
 		$sheet_id = $sheets[0]->properties->sheetId;
 
 		if ( ! isset( $sheets[0]->properties->title ) || empty( $sheets[0]->properties->title ) ) {
-			throw new Forminator_Addon_Googlesheet_Exception( esc_html__( 'Sheet title not found', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Sheet title not found', 'forminator' ) );
 		}
 
 		if ( ! isset( $sheets[0]->properties->gridProperties ) || ! isset( $sheets[0]->properties->gridProperties->columnCount ) ) {
-			throw new Forminator_Addon_Googlesheet_Exception( esc_html__( 'Failed to get column count of the sheet', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Failed to get column count of the sheet', 'forminator' ) );
 		}
 
 		$sheet_title        = $sheets[0]->properties->title;
@@ -492,270 +379,6 @@ class Forminator_Addon_Googlesheet_Form_Hooks extends Forminator_Addon_Form_Hook
 
 		return $header_fields;
 
-	}
-
-	/**
-	 * It wil add new row on entry table of submission page, with couple of subentries
-	 * subentries included are defined in @see Forminator_Addon_Googlesheet_Form_Hooks::get_additional_entry_item()
-	 *
-	 * @since 1.0 Google Sheets Addon
-	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param                             $addon_meta_data
-	 *
-	 * @return array
-	 */
-	public function on_render_entry( Forminator_Form_Entry_Model $entry_model, $addon_meta_data ) {
-
-		$form_id                = $this->form_id;
-		$form_settings_instance = $this->form_settings_instance;
-
-		/**
-		 *
-		 * Filter Google Sheets metadata that previously saved on db to be processed
-		 *
-		 * @since 1.2
-		 *
-		 * @param array                                      $addon_meta_data
-		 * @param int                                        $form_id                current Form ID.
-		 * @param Forminator_Addon_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
-		 */
-		$addon_meta_data = apply_filters(
-			'forminator_addon_googlesheet_metadata',
-			$addon_meta_data,
-			$form_id,
-			$form_settings_instance
-		);
-
-		$addon_meta_datas = $addon_meta_data;
-		if ( ! isset( $addon_meta_data[0] ) || ! is_array( $addon_meta_data[0] ) ) {
-			return array();
-		}
-
-		return $this->on_render_entry_multi_connection( $addon_meta_datas );
-
-	}
-
-	/**
-	 * Loop through addon meta data on multiple Google Sheets setup(s)
-	 *
-	 * @since 1.0 Google Sheets Addon
-	 *
-	 * @param $addon_meta_datas
-	 *
-	 * @return array
-	 */
-	private function on_render_entry_multi_connection( $addon_meta_datas ) {
-		$additional_entry_item = array();
-		foreach ( $addon_meta_datas as $addon_meta_data ) {
-			$additional_entry_item[] = $this->get_additional_entry_item( $addon_meta_data );
-		}
-
-		return $additional_entry_item;
-
-	}
-
-	/**
-	 * Format additional entry item as label and value arrays
-	 *
-	 * - Integration Name : its defined by user when they adding Google Sheets integration on their form
-	 * - Sent To Google Sheets : will be Yes/No value, that indicates whether sending data to Google Sheets API was successful
-	 * - Info : Text that are generated by addon when building and sending data to Google Sheets @see Forminator_Addon_Googlesheet_Form_Hooks::add_entry_fields()
-	 *
-	 * @param $addon_meta_data
-	 *
-	 * @since 1.0 Google Sheets Addon
-	 * @return array
-	 */
-	private function get_additional_entry_item( $addon_meta_data ) {
-
-		if ( ! isset( $addon_meta_data['value'] ) || ! is_array( $addon_meta_data['value'] ) ) {
-			return array();
-		}
-		$status                = $addon_meta_data['value'];
-		$additional_entry_item = array(
-			'label' => esc_html__( 'Google Sheets Integration', 'forminator' ),
-			'value' => '',
-		);
-
-		$sub_entries = array();
-		if ( isset( $status['connection_name'] ) ) {
-			$sub_entries[] = array(
-				'label' => esc_html__( 'Integration Name', 'forminator' ),
-				'value' => $status['connection_name'],
-			);
-		}
-
-		if ( isset( $status['is_sent'] ) ) {
-			$is_sent       = true === $status['is_sent'] ? esc_html__( 'Yes', 'forminator' ) : esc_html__( 'No', 'forminator' );
-			$sub_entries[] = array(
-				'label' => esc_html__( 'Sent To Google Sheets', 'forminator' ),
-				'value' => $is_sent,
-			);
-		}
-
-		if ( isset( $status['description'] ) ) {
-			$sub_entries[] = array(
-				'label' => esc_html__( 'Info', 'forminator' ),
-				'value' => $status['description'],
-			);
-		}
-
-		$additional_entry_item['sub_entries'] = $sub_entries;
-
-		// return single array.
-		return $additional_entry_item;
-	}
-
-	/**
-	 * Google Sheets will add a column on the title/header row
-	 * its called `Google Sheets Info` which can be translated on forminator lang
-	 *
-	 * @since 1.0 Google Sheets Addon
-	 * @return array
-	 */
-	public function on_export_render_title_row() {
-
-		$export_headers = array(
-			'info' => esc_html__( 'Google Sheets Info', 'forminator' ),
-		);
-
-		$form_id                = $this->form_id;
-		$form_settings_instance = $this->form_settings_instance;
-
-		/**
-		 * Filter Google Sheets headers on export file
-		 *
-		 * @since 1.2
-		 *
-		 * @param array                                      $export_headers         headers to be displayed on export file.
-		 * @param int                                        $form_id                current Form ID.
-		 * @param Forminator_Addon_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
-		 */
-		$export_headers = apply_filters(
-			'forminator_addon_googlesheet_export_headers',
-			$export_headers,
-			$form_id,
-			$form_settings_instance
-		);
-
-		return $export_headers;
-	}
-
-	/**
-	 * Google Sheets will add a column that give user information whether sending data to Google Sheets successfully or not
-	 * It will only add one column even its multiple connection, every connection will be separated by comma
-	 *
-	 * @since 1.0 Google Sheets Addon
-	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param                             $addon_meta_data
-	 *
-	 * @return array
-	 */
-	public function on_export_render_entry( Forminator_Form_Entry_Model $entry_model, $addon_meta_data ) {
-
-		$form_id                = $this->form_id;
-		$form_settings_instance = $this->form_settings_instance;
-
-		/**
-		 *
-		 * Filter Google Sheets metadata that previously saved on db to be processed
-		 *
-		 * @since 1.2
-		 *
-		 * @param array                                      $addon_meta_data
-		 * @param int                                        $form_id                current Form ID.
-		 * @param Forminator_Addon_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
-		 */
-		$addon_meta_data = apply_filters(
-			'forminator_addon_googlesheet_metadata',
-			$addon_meta_data,
-			$form_id,
-			$form_settings_instance
-		);
-
-		$export_columns = array(
-			'info' => $this->get_from_addon_meta_data( $addon_meta_data, 'description', '' ),
-		);
-
-		/**
-		 * Filter Google Sheets columns to be displayed on export submissions
-		 *
-		 * @since 1.2
-		 *
-		 * @param array                                      $export_columns         column to be exported.
-		 * @param int                                        $form_id                current Form ID.
-		 * @param Forminator_Form_Entry_Model                $entry_model            Form Entry Model.
-		 * @param array                                      $addon_meta_data        meta data saved by addon on entry fields.
-		 * @param Forminator_Addon_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
-		 */
-		$export_columns = apply_filters(
-			'forminator_addon_googlesheet_export_columns',
-			$export_columns,
-			$form_id,
-			$entry_model,
-			$addon_meta_data,
-			$form_settings_instance
-		);
-
-		return $export_columns;
-	}
-
-	/**
-	 * Get Addon meta data, will be recursive if meta data is multiple because of multiple connection added
-	 *
-	 * @since 1.0 Google Sheets Addon
-	 *
-	 * @param        $addon_meta_data
-	 * @param        $key
-	 * @param string $default
-	 *
-	 * @return string
-	 */
-	private function get_from_addon_meta_data( $addon_meta_data, $key, $default = '' ) {
-		$addon_meta_datas = $addon_meta_data;
-		if ( ! isset( $addon_meta_data[0] ) || ! is_array( $addon_meta_data[0] ) ) {
-			return $default;
-		}
-
-		$addon_meta_data = $addon_meta_data[0];
-
-		// make sure its `status`, because we only add this.
-		if ( 'status' !== $addon_meta_data['name'] ) {
-			if ( stripos( $addon_meta_data['name'], 'status-' ) === 0 ) {
-				$meta_data = array();
-				foreach ( $addon_meta_datas as $addon_meta_data ) {
-					// make it like single value so it will be processed like single meta data.
-					$addon_meta_data['name'] = 'status';
-
-					// add it on an array for next recursive process.
-					$meta_data[] = $this->get_from_addon_meta_data( array( $addon_meta_data ), $key, $default );
-				}
-
-				return implode( ', ', $meta_data );
-			}
-
-			return $default;
-
-		}
-
-		if ( ! isset( $addon_meta_data['value'] ) || ! is_array( $addon_meta_data['value'] ) ) {
-			return $default;
-		}
-		$status = $addon_meta_data['value'];
-		if ( isset( $status[ $key ] ) ) {
-			$connection_name = '';
-			if ( 'connection_name' !== $key ) {
-				if ( isset( $status['connection_name'] ) ) {
-					$connection_name = '[' . $status['connection_name'] . '] ';
-				}
-			}
-
-			return $connection_name . $status[ $key ];
-		}
-
-		return $default;
 	}
 
 	/**

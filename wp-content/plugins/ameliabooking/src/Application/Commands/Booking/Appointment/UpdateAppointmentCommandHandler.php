@@ -137,6 +137,9 @@ class UpdateAppointmentCommandHandler extends CommandHandler
 
         $removedBookingsData = $command->getField('removedBookings');
 
+        // added check for API call when removedBookings not sent
+        $removedBookingsData = empty($removedBookingsData) ? [] : $removedBookingsData;
+
         $appointment = apply_filters('amelia_before_appointment_updated_filter', $appointmentData, $removedBookingsData, $service ? $service->toArray() : null);
 
         do_action('amelia_before_appointment_updated', $appointment, $removedBookingsData, $service ? $service->toArray() : null);

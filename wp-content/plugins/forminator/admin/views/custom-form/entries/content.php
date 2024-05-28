@@ -20,31 +20,9 @@ if ( $this->has_payments() && $count <= 100 ) {
 	);
 }
 
-if ( $this->error_message() ) : ?>
-
-		<div
-			role="alert"
-			class="sui-notice sui-notice-red sui-active"
-			style="display: block; text-align: left;"
-			aria-live="assertive"
-		>
-
-			<div class="sui-notice-content">
-
-				<div class="sui-notice-message">
-
-					<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
-
-					<p><?php echo esc_html( $this->error_message() ); ?></p>
-
-				</div>
-
-			</div>
-
-		</div>
-
-	<?php
-endif;
+if ( $this->error_message() ) {
+	echo Forminator_Admin::get_red_notice( esc_html( $this->error_message() ) );
+}
 
 if ( $this->total_entries() > 0 ) :
 

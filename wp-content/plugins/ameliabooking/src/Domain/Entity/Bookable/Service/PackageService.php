@@ -43,6 +43,9 @@ class PackageService
     /** @var BooleanValueObject */
     private $allowProviderSelection;
 
+    /** @var PositiveInteger */
+    protected $position;
+
     /**
      * @return Id
      */
@@ -171,6 +174,22 @@ class PackageService
         $this->allowProviderSelection = $allowProviderSelection;
     }
 
+    /**
+     * @return PositiveInteger
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param PositiveInteger $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
+
 
     /**
      * @return array
@@ -187,6 +206,7 @@ class PackageService
                 'providers'        => $this->getProviders() ? $this->getProviders()->toArray() : [],
                 'locations'        => $this->getLocations() ? $this->getLocations()->toArray() : [],
                 'allowProviderSelection' => $this->getAllowProviderSelection() ? $this->getAllowProviderSelection()->getValue() : null,
+                'position'         => null !== $this->getPosition() ? $this->getPosition()->getValue() : null,
             ]
         );
     }

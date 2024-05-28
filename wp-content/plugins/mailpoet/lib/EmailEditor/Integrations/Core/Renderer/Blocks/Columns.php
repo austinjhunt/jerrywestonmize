@@ -51,8 +51,28 @@ class Columns extends AbstractBlockRenderer {
       $columnsStyles['background-size'] = 'cover';
     }
 
-    return '<table class="' . esc_attr('email_columns ' . $originalWrapperClassname) . '" style="width:100%;border-collapse:separate;text-align:left;' . esc_attr(WP_Style_Engine::compile_css($columnsStyles, '')) . '" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation">
-      <tr>{columns_content}</tr>
+    $renderedColumns = '<table class="' . esc_attr('email-block-columns ' . $originalWrapperClassname) . '" style="width:100%;border-collapse:separate;text-align:left;' . esc_attr(WP_Style_Engine::compile_css($columnsStyles, '')) . '" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation">
+      <tbody>
+        <tr>{columns_content}</tr>
+      </tbody>
     </table>';
+
+    // Margins are not supported well in outlook for tables, so wrap in another table.
+    $margins = $block_attributes['style']['spacing']['margin'] ?? [];
+
+    if (!empty($margins)) {
+      $marginToPaddingStyles = $this->getStylesFromBlock([
+        'spacing' => [ 'margin' => $margins ],
+      ])['css'];
+      $renderedColumns = '<table class="email-block-columns-wrapper" style="width:100%;border-collapse:separate;text-align:left;' . esc_attr($marginToPaddingStyles) . '" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation">
+        <tbody>
+          <tr>
+            <td>' . $renderedColumns . '</td>
+          </tr>
+        </tbody>
+      </table>';
+    }
+
+    return $renderedColumns;
   }
 }

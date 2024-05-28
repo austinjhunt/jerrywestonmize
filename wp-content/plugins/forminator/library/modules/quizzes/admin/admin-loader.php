@@ -874,6 +874,11 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 					$description = wp_kses_post( $result['description'] );
 				}
 				$results[ $key ]['description'] = $description;
+
+				// Check if order exists.
+				if ( ! isset( $result['order'] ) ) {
+					$results[ $key ]['order'] = $key;
+				}
 			}
 
 			$form_model->results = $results;

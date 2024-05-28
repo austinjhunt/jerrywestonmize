@@ -5,8 +5,9 @@ namespace MailPoet\EmailEditor\Engine;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\EmailEditor\Engine\Patterns\Patterns;
+use MailPoet\EmailEditor\Engine\Templates\Templates;
 use MailPoet\Entities\NewsletterEntity;
-use MailPoet\Validator\Builder;
 use WP_Post;
 use WP_Theme_JSON;
 
@@ -17,22 +18,36 @@ use WP_Theme_JSON;
 class EmailEditor {
   public const MAILPOET_EMAIL_META_THEME_TYPE = 'mailpoet_email_theme';
 
-  /** @var EmailApiController */
-  private $emailApiController;
+  private EmailApiController $emailApiController;
+  private Templates $templates;
+  private Patterns $patterns;
 
   public function __construct(
-    EmailApiController $emailApiController
+    EmailApiController $emailApiController,
+    Templates $templates,
+    Patterns $patterns
   ) {
     $this->emailApiController = $emailApiController;
+    $this->templates = $templates;
+    $this->patterns = $patterns;
   }
 
   public function initialize(): void {
     do_action('mailpoet_email_editor_initialized');
     add_filter('mailpoet_email_editor_rendering_theme_styles', [$this, 'extendEmailThemeStyles'], 10, 2);
+    $this->registerBlockTemplates();
+    $this->registerBlockPatterns();
     $this->registerEmailPostTypes();
-    $this->registerEmailMetaFields();
     $this->registerEmailPostSendStatus();
     $this->extendEmailPostApi();
+  }
+
+  private function registerBlockTemplates(): void {
+    $this->templates->initialize();
+  }
+
+  private function registerBlockPatterns(): void {
+    $this->patterns->initialize();
   }
 
   /**
@@ -44,23 +59,6 @@ class EmailEditor {
       register_post_type(
         $postType['name'],
         array_merge($this->getDefaultEmailPostArgs(), $postType['args'])
-      );
-    }
-  }
-
-  private function registerEmailMetaFields(): void {
-    foreach ($this->getPostTypes() as $postType) {
-      register_post_meta(
-        $postType['name'],
-        self::MAILPOET_EMAIL_META_THEME_TYPE,
-        [
-          'show_in_rest' => [
-            'schema' => $this->getEmailThemeDataSchema(),
-          ],
-          'single' => true,
-          'type' => 'object',
-          'default' => ['version' => 2], // The version 2 is important to merge themes correctly
-        ]
       );
     }
   }
@@ -106,60 +104,7 @@ class EmailEditor {
   }
 
   public function getEmailThemeDataSchema(): array {
-    $typographyProps = Builder::object([
-      'fontFamily' => Builder::string()->nullable(),
-      'fontSize' => Builder::string()->nullable(),
-      'fontStyle' => Builder::string()->nullable(),
-      'fontWeight' => Builder::string()->nullable(),
-      'letterSpacing' => Builder::string()->nullable(),
-      'lineHeight' => Builder::string()->nullable(),
-      'textTransform' => Builder::string()->nullable(),
-      'textDecoration' => Builder::string()->nullable(),
-    ])->nullable();
-    return Builder::object([
-      'version' => Builder::integer(),
-      'styles' => Builder::object([
-        'spacing' => Builder::object([
-          'padding' => Builder::object([
-            'top' => Builder::string(),
-            'right' => Builder::string(),
-            'bottom' => Builder::string(),
-            'left' => Builder::string(),
-          ])->nullable(),
-          'blockGap' => Builder::string()->nullable(),
-        ])->nullable(),
-        'typography' => $typographyProps,
-        'elements' => Builder::object([
-          'heading' => Builder::object([
-            'typography' => $typographyProps,
-          ])->nullable(),
-          'button' => Builder::object([
-            'typography' => $typographyProps,
-          ])->nullable(),
-          'link' => Builder::object([
-            'typography' => $typographyProps,
-          ])->nullable(),
-          'h1' => Builder::object([
-            'typography' => $typographyProps,
-          ])->nullable(),
-          'h2' => Builder::object([
-            'typography' => $typographyProps,
-          ])->nullable(),
-          'h3' => Builder::object([
-            'typography' => $typographyProps,
-          ])->nullable(),
-          'h4' => Builder::object([
-            'typography' => $typographyProps,
-          ])->nullable(),
-          'h5' => Builder::object([
-            'typography' => $typographyProps,
-          ])->nullable(),
-          'h6' => Builder::object([
-            'typography' => $typographyProps,
-          ])->nullable(),
-        ])->nullable(),
-      ])->nullable(),
-    ])->toArray();
+    return (new EmailStylesSchema())->getSchema();
   }
 
   public function extendEmailThemeStyles(WP_Theme_JSON $theme, WP_Post $post): WP_Theme_JSON {

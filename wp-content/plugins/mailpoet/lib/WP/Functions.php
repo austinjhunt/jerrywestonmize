@@ -975,4 +975,8 @@ class Functions {
   public function getTaxonomy($taxonomy) {
     return get_taxonomy($taxonomy);
   }
+
+  public function wpIsMaintenanceMode(): bool {
+    return wp_is_maintenance_mode();
+  }
 }

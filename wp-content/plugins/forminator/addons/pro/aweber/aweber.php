@@ -11,23 +11,8 @@
 
 define( 'FORMINATOR_ADDON_AWEBER_VERSION', '1.0' );
 
-function forminator_addon_aweber_url() {
-	return trailingslashit( forminator_plugin_url() . 'addons/pro/aweber' );
-}
-
 function forminator_addon_aweber_dir() {
 	return trailingslashit( dirname( __FILE__ ) );
 }
 
-function forminator_addon_aweber_assets_url() {
-	return trailingslashit( forminator_addon_aweber_url() . 'assets' );
-}
-
-require_once dirname( __FILE__ ) . '/class-forminator-addon-aweber.php';
-require_once dirname( __FILE__ ) . '/class-forminator-addon-aweber-form-settings.php';
-require_once dirname( __FILE__ ) . '/class-forminator-addon-aweber-form-hooks.php';
-
-require_once dirname( __FILE__ ) . '/class-forminator-addon-aweber-quiz-settings.php';
-require_once dirname( __FILE__ ) . '/class-forminator-addon-aweber-quiz-hooks.php';
-//Direct Load
-Forminator_Addon_Loader::get_instance()->register( 'Forminator_Addon_Aweber' );
+Forminator_Integration_Loader::get_instance()->register( 'aweber' );

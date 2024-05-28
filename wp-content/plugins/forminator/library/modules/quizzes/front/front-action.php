@@ -134,7 +134,6 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 
 		$result_data['result'] = $final_res;
 
-		//ADDON on_form_submit
 		$addon_error = $this->attach_addons_on_quiz_submit( $model->id, $model );
 		if ( true !== $addon_error ) {
 			wp_send_json_error(
@@ -514,7 +513,6 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 			$result_data[] = $meta;
 		}
 
-		// ADDON on_form_submit.
 		$addon_error = $this->attach_addons_on_quiz_submit( $model->id, $model );
 		if ( true !== $addon_error ) {
 			wp_send_json_error(
@@ -718,7 +716,6 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 			$result_data[] = $meta;
 		}
 
-		// ADDON on_form_submit.
 		$addon_error = $this->attach_addons_on_quiz_submit( $model->id, $model );
 		if ( true !== $addon_error ) {
 			wp_send_json_error(
@@ -956,7 +953,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 	/**
 	 * Executor On quiz submit for attached addons
 	 *
-	 * @see   Forminator_Addon_Quiz_Hooks_Abstract::on_quiz_submit()
+	 * @see   Forminator_Integration_Quiz_Hooks::on_module_submit()
 	 * @since 1.6.2
 	 *
 	 * @param                              $quiz_id
@@ -971,11 +968,11 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 
 		foreach ( $connected_addons as $connected_addon ) {
 			try {
-				$quiz_hooks = $connected_addon->get_addon_quiz_hooks( $quiz_id );
-				if ( $quiz_hooks instanceof Forminator_Addon_Quiz_Hooks_Abstract ) {
-					$addon_return = $quiz_hooks->on_quiz_submit( $submitted_data );
+				$quiz_hooks = $connected_addon->get_addon_hooks( $quiz_id, 'quiz' );
+				if ( $quiz_hooks instanceof Forminator_Integration_Quiz_Hooks ) {
+					$addon_return = $quiz_hooks->on_module_submit( $submitted_data );
 					if ( true !== $addon_return ) {
-						return $quiz_hooks->get_submit_quiz_error_message();
+						return $quiz_hooks->get_submit_error_message();
 					}
 				}
 			} catch ( Exception $e ) {

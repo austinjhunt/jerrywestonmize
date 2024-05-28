@@ -8,10 +8,7 @@ $addons_slug = Forminator_Admin_Addons_page::get_addon_slug( $addons->pid );
 
 $is_network_active = $addons->is_network_admin && is_plugin_active_for_network( $addons->filename );
 
-$tags = array(
-	'label' => esc_html__( 'PRO', 'forminator' ),
-	'class' => 'sui-tag sui-tag-sm sui-tag-purple',
-);
+$tags = array();
 
 if ( FORMINATOR_PRO ) {
 
@@ -120,7 +117,9 @@ if ( FORMINATOR_PRO ) {
 
 				    <div class="forminator-addon-card--tags">
 
-						<span class="<?php echo esc_attr( $tags['class'] ); ?>"><?php echo esc_html( $tags['label'] ); ?></span>
+						<?php if ( ! empty( $tags['label'] ) ) { ?>
+							<span class="<?php echo esc_attr( $tags['class'] ); ?>"><?php echo esc_html( $tags['label'] ); ?></span>
+						<?php } ?>
 
 						<?php if ( FORMINATOR_PRO && $addons->is_installed && $addons->has_update ) { ?>
 						    <?php /* translators: Plugin latest version */ ?>
@@ -139,20 +138,22 @@ if ( FORMINATOR_PRO ) {
 
 		<div class="forminator-addon-card--footer">
 
-		    <div class="forminator-addon-card--footer-left">
-				<a
-					role="button"
-					class="forminator-pseudo-link addons-page-details"
-					data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_addons_page_details' ) ); ?>"
-					data-form-id="<?php echo esc_attr( $addons->pid ); ?>"
-					data-modal-title="<?php echo esc_attr( $addons->name ); ?>"
-					data-modal-open="forminator-modal-addons-details-<?php echo esc_attr( $addons->pid ); ?>"
-					data-modal-mask="false"
-					data-modal="addons_page_details"
-				>
-					<?php esc_html_e( 'Details', 'forminator' ); ?>
-				</a>
-		    </div>
+			<?php if ( FORMINATOR_PRO ) { ?>
+				<div class="forminator-addon-card--footer-left">
+					<a
+						role="button"
+						class="forminator-pseudo-link addons-page-details"
+						data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_addons_page_details' ) ); ?>"
+						data-form-id="<?php echo esc_attr( $addons->pid ); ?>"
+						data-modal-title="<?php echo esc_attr( $addons->name ); ?>"
+						data-modal-open="forminator-modal-addons-details-<?php echo esc_attr( $addons->pid ); ?>"
+						data-modal-mask="false"
+						data-modal="addons_page_details"
+					>
+						<?php esc_html_e( 'Details', 'forminator' ); ?>
+					</a>
+				</div>
+			<?php } ?>
 
 		    <div class="forminator-addon-card--footer-right">
 
@@ -287,21 +288,16 @@ if ( FORMINATOR_PRO ) {
 				    }
 					?>
 				<?php } else { ?>
-				    <button
-						data-form-id="<?php echo esc_attr( $addons->pid ); ?>"
-						data-modal-title="<?php echo esc_attr( $addons->name ); ?>"
-						data-modal-open="forminator-modal-addons-install-<?php echo esc_attr( $addons->pid ); ?>"
-						data-modal-mask="false"
-						data-modal="addons_page_install"
-						data-addons="<?php echo esc_attr( $addons->pid ); ?>"
-						class="sui-button sui-button-blue"
+					<a
+						href="<?php echo esc_url( 'https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_' . $addons_slug . '-addon' ); ?>"
+						target="_blank"
+						class="sui-button sui-button-ghost sui-button-purple"
 					>
-						<span class="sui-icon-download" aria-hidden="true"></span>
-						<?php esc_html_e( 'Install', 'forminator' ); ?>
-					</button>
+						<?php esc_html_e( 'Upgrade to PRO', 'forminator' ); ?>
+					</a>
 				<?php } ?>
 
-		    </div>
+			</div>
 
 		</div>
 

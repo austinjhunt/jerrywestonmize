@@ -17,6 +17,7 @@ class SettingsController {
     'core/image',
     'core/list',
     'core/list-item',
+    'core/group',
   ];
 
   const DEFAULT_SETTINGS = [
@@ -41,7 +42,7 @@ class SettingsController {
   }
 
   public function getSettings(): array {
-    $coreDefaultSettings = get_default_block_editor_settings();
+    $coreDefaultSettings = \get_default_block_editor_settings();
     $themeSettings = $this->themeController->getSettings();
 
     // body selector is later transformed to .editor-styles-wrapper
@@ -69,11 +70,13 @@ class SettingsController {
   }
 
   /**
-   * @return array{contentSize: string, layout: string}
+   * @return array{contentSize: string, wideSize: string, layout: string}
    */
   public function getLayout(): array {
+    $themeSettings = $this->themeController->getSettings();
     return [
-      'contentSize' => self::EMAIL_WIDTH,
+      'contentSize' => $themeSettings['layout']['contentSize'],
+      'wideSize' => $themeSettings['layout']['wideSize'],
       'layout' => 'constrained',
     ];
   }
@@ -85,7 +88,7 @@ class SettingsController {
    *     padding: array{bottom: string, left: string, right: string, top: string}
    *   },
    *   color: array{
-   *     background: array{layout: string, content: string}
+   *     background: string
    *   },
    *   typography: array{
    *     fontFamily: string

@@ -1035,7 +1035,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		$data = self::get_submitted_data();
 
 		foreach ( wp_list_pluck( $current_entry_fields, 'name' ) as $element_id ) {
-			$data[ $element_id ] = Forminator_Addon_Form_Hooks_Abstract::prepare_field_value_for_addon( $element_id, $current_entry_fields, $data );
+			$data[ $element_id ] = Forminator_Integration_Form_Hooks::prepare_field_value_for_addon( $element_id, $current_entry_fields, $data );
 		}
 
 		// Remove technical info.
@@ -1573,7 +1573,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	/**
 	 * Executor On form submit for attached addons
 	 *
-	 * @see   Forminator_Addon_Form_Hooks_Abstract::on_form_submit()
+	 * @see   Forminator_Integration_Form_Hooks::on_module_submit()
 	 * @since 1.1
 	 *
 	 * @return bool true on success|string error message from addon otherwise
@@ -1588,11 +1588,11 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 
 		foreach ( $connected_addons as $connected_addon ) {
 			try {
-				$form_hooks = $connected_addon->get_addon_form_hooks( self::$module_id );
-				if ( ! $form_hooks instanceof Forminator_Addon_Form_Hooks_Abstract ) {
+				$form_hooks = $connected_addon->get_addon_hooks( self::$module_id, 'form' );
+				if ( ! $form_hooks instanceof Forminator_Integration_Form_Hooks ) {
 					continue;
 				}
-				$addon_return = $form_hooks->on_form_submit( self::$prepared_data );
+				$addon_return = $form_hooks->on_module_submit( self::$prepared_data );
 			} catch ( Exception $e ) {
 				forminator_addon_maybe_log( $connected_addon->get_slug(), 'failed to attach_addons_on_form_submit', $e->getMessage() );
 			}

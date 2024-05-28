@@ -116,6 +116,7 @@ return array(
     'ContentControl\\Controllers\\Assets' => $baseDir . '/classes/Controllers/Assets.php',
     'ContentControl\\Controllers\\BlockEditor' => $baseDir . '/classes/Controllers/BlockEditor.php',
     'ContentControl\\Controllers\\Compatibility' => $baseDir . '/classes/Controllers/Compatibility.php',
+    'ContentControl\\Controllers\\Compatibility\\BetterDocs' => $baseDir . '/classes/Controllers/Compatibility/BetterDocs.php',
     'ContentControl\\Controllers\\Compatibility\\Divi' => $baseDir . '/classes/Controllers/Compatibility/Divi.php',
     'ContentControl\\Controllers\\Compatibility\\Elementor' => $baseDir . '/classes/Controllers/Compatibility/Elementor.php',
     'ContentControl\\Controllers\\Compatibility\\QueryMonitor' => $baseDir . '/classes/Controllers/Compatibility/QueryMonitor.php',

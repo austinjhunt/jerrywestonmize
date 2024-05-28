@@ -1,13 +1,11 @@
 <?php
 
 require_once dirname( __FILE__ ) . '/class-forminator-addon-aweber-oauth.php';
-require_once dirname( __FILE__ ) . '/class-forminator-addon-aweber-wp-api-exception.php';
-require_once dirname( __FILE__ ) . '/class-forminator-addon-aweber-wp-api-not-found-exception.php';
 
 /**
- * Class Forminator_Addon_Aweber_Wp_Api
+ * Class Forminator_Aweber_Wp_Api
  */
-class Forminator_Addon_Aweber_Wp_Api {
+class Forminator_Aweber_Wp_Api {
 
 	/**
 	 * Instances of aweber api
@@ -51,7 +49,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 	private $_last_url_request = '';
 
 	/**
-	 * Forminator_Addon_Aweber_Wp_Api constructor.
+	 * Forminator_Aweber_Wp_Api constructor.
 	 *
 	 * @since 1.0 Aweber Addon
 	 *
@@ -61,12 +59,12 @@ class Forminator_Addon_Aweber_Wp_Api {
 	 * @param $_oauth_token
 	 * @param $_oauth_token_secret
 	 *
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function __construct( $_application_key, $_application_secret, $_oauth_token, $_oauth_token_secret ) {
 		//prerequisites
 		if ( ! $_application_key || ! $_application_secret || ! $_oauth_token || ! $_oauth_token_secret ) {
-			throw new Forminator_Addon_Aweber_Wp_Api_Exception( esc_html__( 'Missing required API Credentials', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Missing required API Credentials', 'forminator' ) );
 		}
 
 		$this->_application_key    = $_application_key;
@@ -86,8 +84,8 @@ class Forminator_Addon_Aweber_Wp_Api {
 	 * @param $_oauth_token
 	 * @param $_oauth_token_secret
 	 *
-	 * @return Forminator_Addon_Aweber_Wp_Api|null
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Exception
+	 * @return Forminator_Aweber_Wp_Api|null
+	 * @throws Forminator_Integration_Exception
 	 */
 	public static function get_instance( $_application_key, $_application_secret, $_oauth_token, $_oauth_token_secret ) {
 		$args         = func_get_args();
@@ -136,8 +134,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 	 * @param array  $headers
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Exception
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	private function request( $verb, $url, $args = array(), $headers = array() ) {
 		// Adding extra user agent for wp remote request.
@@ -226,7 +223,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 		remove_filter( 'http_headers_useragent', array( $this, 'filter_user_agent' ) );
 
 		if ( is_wp_error( $res ) || ! $res ) {
-			throw new Forminator_Addon_Aweber_Wp_Api_Exception(
+			throw new Forminator_Integration_Exception(
 				esc_html__( 'Failed to process request, make sure your API URL is correct and your server has internet connection.', 'forminator' )
 			);
 		}
@@ -248,11 +245,11 @@ class Forminator_Addon_Aweber_Wp_Api {
 				}
 
 				if ( 404 === $status_code ) {
-					throw new Forminator_Addon_Aweber_Wp_Api_Not_Found_Exception( sprintf(
+					throw new Forminator_Integration_Exception( sprintf(
 						/* translators: %s: Error message */
 						esc_html__( 'Failed to process request : %s', 'forminator' ), $msg ) );
 				}
-				throw new Forminator_Addon_Aweber_Wp_Api_Exception( sprintf(
+				throw new Forminator_Integration_Exception( sprintf(
 					/* translators: %s: Error message */
 					esc_html__( 'Failed to process request : %s', 'forminator' ), $msg ) );
 			}
@@ -305,7 +302,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 			'oauth_version'          => self::OAUTH_VERSION,
 			'oauth_timestamp'        => $timestamp,
 			'oauth_signature_method' => 'HMAC-SHA1',
-			'oauth_nonce'            => Forminator_Addon_Aweber_Oauth::generate_oauth_nonce( $timestamp ),
+			'oauth_nonce'            => Forminator_Aweber_Oauth::generate_oauth_nonce( $timestamp ),
 		);
 
 		/**
@@ -336,9 +333,9 @@ class Forminator_Addon_Aweber_Wp_Api {
 		$application_secret = $this->_application_secret;
 		$oauth_token_secret = $this->get_oauth_token_secret();
 
-		$base                    = Forminator_Addon_Aweber_Oauth::create_signature_base( $method, $url, $data );
-		$key                     = Forminator_Addon_Aweber_Oauth::create_signature_key( $application_secret, $oauth_token_secret );
-		$data['oauth_signature'] = Forminator_Addon_Aweber_Oauth::create_signature( $base, $key );
+		$base                    = Forminator_Aweber_Oauth::create_signature_base( $method, $url, $data );
+		$key                     = Forminator_Aweber_Oauth::create_signature_key( $application_secret, $oauth_token_secret );
+		$data['oauth_signature'] = Forminator_Aweber_Oauth::create_signature( $base, $key );
 		$signed_request          = $data;
 
 		/**
@@ -400,8 +397,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 	 *
 	 * @return object contains oauth_token and oauth_token_secret
 	 *
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Exception
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_access_token( $oauth_verifier, $args = array() ) {
 		$default_args = array(
@@ -413,11 +409,11 @@ class Forminator_Addon_Aweber_Wp_Api {
 		$access_tokens = $this->request( 'POST', self::$_access_token_url, $args );
 
 		if ( ! is_object( $access_tokens ) ) {
-			throw new Forminator_Addon_Aweber_Wp_Api_Exception( esc_html__( 'Invalid access token', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Invalid access token', 'forminator' ) );
 		}
 
 		if ( ! isset( $access_tokens->oauth_token_secret ) || ! isset( $access_tokens->oauth_token ) ) {
-			throw new Forminator_Addon_Aweber_Wp_Api_Exception( esc_html__( 'Invalid access token', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Invalid access token', 'forminator' ) );
 		}
 
 		return $access_tokens;
@@ -431,8 +427,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Exception
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_accounts( $args = array() ) {
 		$default_args = array();
@@ -450,8 +445,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Exception
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_account_lists( $account_id, $args = array() ) {
 		$default_args = array();
@@ -470,8 +464,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Exception
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_account_list_custom_fields( $account_id, $list_id, $args = array() ) {
 		$default_args = array();
@@ -499,8 +492,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Exception
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function add_account_list_subscriber( $account_id, $list_id, $args = array() ) {
 		$default_args = array(
@@ -510,7 +502,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 		$args         = array_merge( $default_args, $args );
 
 		if ( empty( $args['email'] ) ) {
-			throw new Forminator_Addon_Aweber_Wp_Api_Exception( esc_html__( 'Email is required on add AWeber subscriber.', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Email is required on add AWeber subscriber.', 'forminator' ) );
 		}
 
 		return $this->request(
@@ -536,8 +528,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Exception
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function update_account_list_subscriber( $account_id, $list_id, $subscriber_id, $args = array() ) {
 		$default_args = array(
@@ -560,7 +551,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 		}
 
 		if ( empty( $args['email'] ) ) {
-			throw new Forminator_Addon_Aweber_Wp_Api_Exception( esc_html__( 'Email is required on update AWeber subscriber.', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Email is required on update AWeber subscriber.', 'forminator' ) );
 		}
 
 		return $this->request(
@@ -590,8 +581,7 @@ class Forminator_Addon_Aweber_Wp_Api {
 	 * @param array $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Exception
-	 * @throws Forminator_Addon_Aweber_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function find_account_list_subscriber( $account_id, $list_id, $args = array() ) {
 		$default_args = array(

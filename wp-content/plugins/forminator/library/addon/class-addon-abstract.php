@@ -2834,4 +2834,40 @@ abstract class Forminator_Addon_Abstract implements Forminator_Addon_Interface {
 		/* translators: integration title */
 		return sprintf( esc_html__( 'We couldn\'t connect to your %s account. Please resolve the errors below and try again.', 'forminator' ), $this->get_title() );
 	}
+
+	/**
+	 * Temp method to check if module connected.
+	 * @return bool
+	 */
+	public function is_module_connected( $module_id, $module_slug = 'form', $check_lead = false ) {
+		switch ( $module_slug ) {
+			case 'poll':
+				return $this->is_poll_connected( $module_id );
+			case 'quiz':
+				if ( $check_lead ) {
+					return $this->is_quiz_lead_connected( $module_id );
+				}
+				return $this->is_quiz_connected( $module_id );
+			default:
+				return $this->is_form_connected( $module_id );
+
+		}
+
+		return false;
+	}
+
+	/**
+	 * Temp method to get addon hooks object.
+	 * @return object
+	 */
+	final public function get_addon_hooks( $module_id, $module_type ) {
+		switch ( $module_type ) {
+			case 'poll':
+				return $this->get_addon_poll_hooks( $module_id );
+			case 'quiz':
+				return $this->get_addon_quiz_hooks( $module_id );
+			default:
+				return $this->get_addon_form_hooks( $module_id );
+		}
+	}
 }

@@ -73,18 +73,19 @@ class Forminator_PayPal extends Forminator_Field {
 		}
 
 		return array(
-			'mode'        => 'sandbox',
-			'currency'    => $default_currency,
-			'amount_type' => 'fixed',
-			'label'       => 'checkout',
-			'color'       => 'gold',
-			'shape'       => 'rect',
-			'layout'      => 'vertical',
-			'tagline'     => 'true',
-			'locale'      => 'en_US',
-			'debug_mode'  => 'disable',
-			'height'      => '40',
-			'options'     => array(),
+			'mode'             => 'sandbox',
+			'currency'         => $default_currency,
+			'amount_type'      => 'fixed',
+			'label'            => 'checkout',
+			'color'            => 'gold',
+			'shape'            => 'rect',
+			'layout'           => 'vertical',
+			'tagline'          => 'true',
+			'shipping_address' => 'disable',
+			'locale'           => 'en_US',
+			'debug_mode'       => 'disable',
+			'height'           => '40',
+			'options'          => array(),
 		);
 	}
 

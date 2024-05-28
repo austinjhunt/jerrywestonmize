@@ -60,7 +60,10 @@ class AddPackageController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new AddPackageCommand($args);
+
         $requestBody = $request->getParsedBody();
+
+        $this->filter($requestBody);
         $this->setCommandFields($command, $requestBody);
 
         return $command;

@@ -268,8 +268,7 @@
 			paypalConfig.amount_type = this.getPayPalData('amount_type') ? this.getPayPalData('amount_type') : 'fixed';
 			paypalConfig.variable = this.getPayPalData('variable') ? this.getPayPalData('variable') : '';
 			paypalConfig.height = this.getPayPalData('height') ? this.getPayPalData('height') : 55;
-			paypalConfig.shipping_address = this.getPayPalData('shipping_address') ? this.getPayPalData('shipping_address') : 55;
-
+			paypalConfig.shipping_address = this.getPayPalData('shipping_address') ? this.getPayPalData('shipping_address') : 'disable';
 			var	amountType = this.getPayPalData('amount_type');
 			if (amountType === 'fixed') {
 				paypalConfig.amount = this.getPayPalData('amount');
@@ -388,7 +387,7 @@
 					value: paypalData.amount
 				}
 			}];
-			if ( 'disable' === shipping_address ) {
+			if ( 'enable' !== shipping_address ) {
 				paypal_data.application_context = {
 					shipping_preference: "NO_SHIPPING",
 				};

@@ -257,7 +257,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      */
     public function processBooking($result, $appointmentData, $reservation, $save)
     {
-        $appointmentData['bookings'][0]['info'] = json_encode(
+        $appointmentData['bookings'][0]['info'] = !empty($appointmentData['bookings'][0]['customer']) ? json_encode(
             [
                 'firstName' => $appointmentData['bookings'][0]['customer']['firstName'],
                 'lastName'  => $appointmentData['bookings'][0]['customer']['lastName'],
@@ -266,7 +266,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 'timeZone'  => isset($appointmentData['timeZone']) ? $appointmentData['timeZone'] : null,
                 'urlParams' => !empty($appointmentData['urlParams']) ? $appointmentData['urlParams'] : null,
             ]
-        );
+        ) : null;
 
         // add customer language from booking info
         $appointmentData['bookings'][0]['customer'] = array_merge(
@@ -541,13 +541,13 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     'recurring' => $recurringReservations,
                     'package'   => $packageReservations,
                     'packageId' => $packageReservations ? $reservation->getBookable()->getId()->getValue() : null,
-                    'customer'  => array_merge(
+                    'customer'  => $reservation->getCustomer() ? array_merge(
                         $reservation->getCustomer()->toArray(),
                         [
                             'locale'   => $reservation->getLocale()->getValue(),
                             'timeZone' => $reservation->getTimeZone()->getValue()
                         ]
-                    ),
+                    ) : [],
                     'bookable'  => $reservation->getBookable()->toArray(),
                     'paymentId' => $payment ? $payment->getId()->getValue() : null,
                     'packageCustomerId' => $payment && $payment->getPackageCustomerId() ?

@@ -157,6 +157,47 @@ class Forminator_Addon_Loader {
 	}
 
 	/**
+	 * Get custom plugin name
+	 *
+	 * @return string
+	 */
+	private static function get_custom_plugin(): string {
+		$custom_plugin = '';
+		$trace         = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 10 );
+		foreach ( $trace as $trace_item ) {
+			if ( empty( $trace_item['function'] ) || 'register' !== $trace_item['function'] ) {
+				continue;
+			}
+			if ( empty( $trace_item['file'] ) ) {
+				continue;
+			}
+			$custom_plugin = self::get_plugin_name_from_path( $trace_item['file'] );
+			break;
+		}
+
+		if ( 'forminator' === $custom_plugin || 'forminator-pro' === $custom_plugin ) {
+			$custom_plugin = '';
+		}
+
+		return $custom_plugin;
+	}
+
+	/**
+	 * Get plugin name from path
+	 *
+	 * @param string $path Dir path.
+	 * @return string
+	 */
+	private static function get_plugin_name_from_path( $path ): string {
+		$parts = explode( '/', $path );
+		$pluginsIndex = array_search( 'plugins', $parts, true );
+		if ( false !== $pluginsIndex && isset( $parts[ $pluginsIndex + 1 ] ) ) {
+			return $parts[ $pluginsIndex + 1 ];
+		}
+		return '';
+	}
+
+	/**
 	 * Register new Addon
 	 *
 	 * @since 1.1
@@ -168,6 +209,13 @@ class Forminator_Addon_Loader {
 	public function register( $class_name ) {
 		if ( 'FortressDB_Forminator_Addon' === $class_name ) {
 			return;
+		}
+		// send deprecated notice.
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$custom_plugin = self::get_custom_plugin();
+			if ( $custom_plugin ) {
+				error_log( 'Forminator_Addon_Loader class is deprecated and will be removed soon. Use Forminator_Integration_Loader instead. Please, contact "' . $custom_plugin . '" developer to update the integration.' );
+			}
 		}
 		try {
 

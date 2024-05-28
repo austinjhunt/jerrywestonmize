@@ -241,6 +241,7 @@ class PackageReservationService extends AppointmentReservationService
                     'recurring'          => [],
                     'package'            => [],
                     'payment'            => null,
+                    'isMollie'           => !empty($appointmentData['payment']['gateway']) ? $appointmentData['payment']['gateway'] === PaymentType::MOLLIE : false
                 ]
             );
 

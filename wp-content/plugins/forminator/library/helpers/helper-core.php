@@ -1504,21 +1504,6 @@ function forminator_can_install_pro() {
 		$has_access = false;
 	}
 
-	/**
-	 * Filter to modify WPMUDEV membership status.
-	 *
-	 * @since 1.13
-	 * @since 1.18.2 Deprecated forminator_wpmudev_membership_status filter
-	 *
-	 * @param string $status Status.
-	 */
-	$has_access = apply_filters_deprecated(
-		'forminator_wpmudev_membership_status',
-		array( $has_access ),
-		'1.18.2',
-		'forminator_wpmudev_can_install_pro'
-	);
-
 	return apply_filters( 'forminator_wpmudev_can_install_pro', $has_access );
 }
 

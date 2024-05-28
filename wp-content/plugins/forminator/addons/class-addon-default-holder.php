@@ -2,14 +2,14 @@
 
 
 /**
- * Class Forminator_Addon_Default_Holder
+ * Class Forminator_Integration_Default_Holder
  * Placeholder for nonexistent PRO Addon
  *
  * @since 1.1
  */
-class Forminator_Addon_Default_Holder extends Forminator_Addon_Abstract {
+class Forminator_Integration_Default_Holder extends Forminator_Integration {
 
-	private static $_instance = null;
+	protected static $instance = null;
 
 	protected $_slug                   = '';
 	protected $_version                = '1.0';
@@ -17,26 +17,6 @@ class Forminator_Addon_Default_Holder extends Forminator_Addon_Abstract {
 	protected $_short_title            = '';
 	protected $_title                  = '';
 	protected $_url                    = '';
-	protected $_image                  = '';
-	protected $_image_x2               = '';
-	protected $_icon                   = '';
-	protected $_icon_x2                = '';
-	protected $_full_path              = '';
-
-	/**
-	 * Get Instance
-	 *
-	 * @since 1.1
-	 * @return self|null
-	 */
-	public static function get_instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();// @codeCoverageIgnore.
-		}
-
-		return self::$_instance;
-	}
-
 
 	/**
 	 * Dynamically set fields form array
@@ -68,15 +48,24 @@ class Forminator_Addon_Default_Holder extends Forminator_Addon_Abstract {
 	}
 
 	/**
-	 * Mark non existent addon as form not connected always
-	 *
-	 * @since 1.1
-	 *
-	 * @param $form_id
+	 * Authorized Callback
 	 *
 	 * @return bool
 	 */
-	public function is_form_connected( $form_id ) {
+	public function is_authorized() {
+		return false;
+	}
+
+	/**
+	 * Mark non existent addon as form not connected always
+	 *
+	 * @since 1.1
+	 * @param int    $module_id Form ID.
+	 * @param string $module_slug Module type.
+	 * @param bool   $check_lead Check is lead connected or not.
+	 * @return bool
+	 */
+	public function is_module_connected( $module_id, $module_slug = 'form', $check_lead = false ) {
 		return false;
 	}
 
@@ -87,21 +76,6 @@ class Forminator_Addon_Default_Holder extends Forminator_Addon_Abstract {
 	 * @return bool
 	 */
 	public function check_is_activable() {
-		return false;
-	}
-
-	/**
-	 * Flag for check if and addon connected to a poll(poll settings such as list id completed)
-	 *
-	 * Please apply necessary WordPress hook on the inheritance class
-	 *
-	 * @since   1.6.1
-	 *
-	 * @param $poll_id
-	 *
-	 * @return boolean
-	 */
-	public function is_poll_connected( $poll_id ) {
 		return false;
 	}
 }

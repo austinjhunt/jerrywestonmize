@@ -4,7 +4,7 @@ Contributors:      google
 Requires at least: 5.2
 Tested up to:      6.5
 Requires PHP:      7.4
-Stable tag:        1.125.0
+Stable tag:        1.127.0
 License:           Apache License 2.0
 License URI:       https://www.apache.org/licenses/LICENSE-2.0
 Tags:              google, search-console, analytics, adsense, pagespeed-insights
@@ -109,33 +109,40 @@ Please create a new topic on our [WordPress.org support forum](https://wordpress
 
 == Changelog ==
 
-= 1.125.0 =
+= 1.127.0 =
 
 **Enhanced**
 
-* Add "Learn more" link in the Ads Module setup screen. See [#8532](https://github.com/google/site-kit-wp/issues/8532).
-* Add the `Conversion_Events_Provider` Interface. See [#8529](https://github.com/google/site-kit-wp/issues/8529).
-* Block Ads module setup when ad blocker is detected. See [#8515](https://github.com/google/site-kit-wp/issues/8515).
-* Add a "New" badge to the Ads module in Site Kit settings. See [#8448](https://github.com/google/site-kit-wp/issues/8448).
-* Extend the Consent Mode conditions for determining whether Ads is connected to include a check for the presence of an Ads tag as the destination of the connected Analytics property's Google tag. See [#8432](https://github.com/google/site-kit-wp/issues/8432).
-* Update the description copy in the Consent Mode modal, simplifying the text and making it clear that measurement from visitors from the UK may also be affected by disabling Consent Mode. See [#8389](https://github.com/google/site-kit-wp/issues/8389).
-* Ensure that the check for a conversion tracking ID is maintained for the Consent Mode feature with the conversion ID having been migrated to the Ads module. See [#8365](https://github.com/google/site-kit-wp/issues/8365).
-* Add Site Health entries for the current Consent Mode status, and the presence of the WP Consent API. See [#8356](https://github.com/google/site-kit-wp/issues/8356).
-* Add an error state for the Audience tile component. See [#8228](https://github.com/google/site-kit-wp/issues/8228).
-
-**Changed**
-
-* Track GA events for the lifecycle of the Ads Conversion ID migration notification. See [#8458](https://github.com/google/site-kit-wp/issues/8458).
-* Update minimum required version of PHP to 7.4. See [#8030](https://github.com/google/site-kit-wp/issues/8030).
+* Update PAX conversion tracking service code to improve compatibility with the new PAX version 1 API. See [#8693](https://github.com/google/site-kit-wp/issues/8693).
+* Add date range support to PAX app. See [#8687](https://github.com/google/site-kit-wp/issues/8687).
+* Add the partner authentication service to the PAX app. See [#8686](https://github.com/google/site-kit-wp/issues/8686).
+* Add support for the Partner Ads Experience `reportingStyle` config. See [#8637](https://github.com/google/site-kit-wp/issues/8637).
+* Add support for `supportedConversionEvents` in Ads datastore. See [#8619](https://github.com/google/site-kit-wp/issues/8619).
+* Add REST API routes to the Conversion Tracking class. See [#8613](https://github.com/google/site-kit-wp/issues/8613).
+* Add settings infrastructure for conversion tracking. See [#8612](https://github.com/google/site-kit-wp/issues/8612).
+* Add conversion infrastructure for Contact Form 7. See [#8574](https://github.com/google/site-kit-wp/issues/8574).
+* Add conversion infrastructure for WPForms. See [#8572](https://github.com/google/site-kit-wp/issues/8572).
+* Add conversion infrastructure for Mailchimp. See [#8571](https://github.com/google/site-kit-wp/issues/8571).
+* Add conversion infrastructure for Popup Maker. See [#8570](https://github.com/google/site-kit-wp/issues/8570).
+* Update Ads settings edit view with PAX-specific alternate when connected via PAX. See [#8564](https://github.com/google/site-kit-wp/issues/8564).
+* Provide conversion tracking service to PAX. See [#8561](https://github.com/google/site-kit-wp/issues/8561).
+* Create Ads placeholder reporting widget. See [#8559](https://github.com/google/site-kit-wp/issues/8559).
+* Introduce initial setup experience for Ads via PAX. See [#8558](https://github.com/google/site-kit-wp/issues/8558).
+* Implement the PAX component to display the embedded app. See [#8557](https://github.com/google/site-kit-wp/issues/8557).
+* Add conversion infrastructure for OptinMonster. See [#8554](https://github.com/google/site-kit-wp/issues/8554).
+* Add support for Analytics events when WooCommerce is connected. See [#8553](https://github.com/google/site-kit-wp/issues/8553).
+* Remove the `adsModule` feature flag. See [#8541](https://github.com/google/site-kit-wp/issues/8541).
+* Add conversion event providers information to the site debug data. See [#8530](https://github.com/google/site-kit-wp/issues/8530).
+* Update the settings view for Ads to display "None" in conversion tracking and external customer ID only when those settings are actually empty. See [#8516](https://github.com/google/site-kit-wp/issues/8516).
+* Update the CTA link color in the post Ads module setup success banner. See [#8514](https://github.com/google/site-kit-wp/issues/8514).
+* Fix typo in the "Visitor groups" admin setting. See [#8496](https://github.com/google/site-kit-wp/issues/8496).
+* Add partial data states infrastructure for Analytics resources. See [#8141](https://github.com/google/site-kit-wp/issues/8141).
+* Add datastore API for determining audience type. See [#8129](https://github.com/google/site-kit-wp/issues/8129).
 
 **Fixed**
 
-* Add AMP tag with Conversion Tracking ID when Ads module is enabled. See [#8518](https://github.com/google/site-kit-wp/issues/8518).
-* Ensure Ads module cannot be saved when settings are invalid. See [#8508](https://github.com/google/site-kit-wp/issues/8508).
-* Fix unstable time based PHPUnit tests. See [#8488](https://github.com/google/site-kit-wp/issues/8488).
-* Fix bug that caused "Top search queries" widget to overflow on small screens. See [#8417](https://github.com/google/site-kit-wp/issues/8417).
-* Fix a bug where the Enhanced Measurement toggle may not have the intended effect when creating a new property during Analytics module setup. See [#8409](https://github.com/google/site-kit-wp/issues/8409).
-* Prevent a Consent Mode related console error on the view-only dashboard. See [#8408](https://github.com/google/site-kit-wp/issues/8408).
-* Exclude connection check requests from internal error reporting. See [#8268](https://github.com/google/site-kit-wp/issues/8268).
+* Fix the GTM edit screen stuck issue when the user doesn't have access to the connected property. See [#8596](https://github.com/google/site-kit-wp/issues/8596).
+* Fix bug that caused "00%" to appear instead of "0%" when there was no change in data in Analytics widget. See [#8416](https://github.com/google/site-kit-wp/issues/8416).
+* Ensure the "Most popular products" Key Metric widget supports the case where the required custom dimension does not exist. See [#8402](https://github.com/google/site-kit-wp/issues/8402).
 
 [See changelog for all versions](https://raw.githubusercontent.com/google/site-kit-wp/main/changelog.txt).

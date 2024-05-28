@@ -75,16 +75,16 @@ class Forminator_Addon_Autoload {
 		}
 
 		// Load unavailable Pro Addons.
-		$pro_slugs        = Forminator_Addon_Loader::get_instance()->get_addons()->get_slugs();
+		$pro_slugs        = Forminator_Integration_Loader::get_instance()->get_addons()->get_slugs();
 		$unavailable_pros = array_diff( array_keys( $pro_addons ), $pro_slugs );
 
 		foreach ( $unavailable_pros as $unavailable_pro ) {
 			if ( array_key_exists( $unavailable_pro, $pro_addons ) ) {
-				$addon                                   = new Forminator_Addon_Default_Holder();
+				$addon                                   = new Forminator_Integration_Default_Holder();
 				$pro_addons[ $unavailable_pro ]['_slug'] = $unavailable_pro;
 
 				$addon->from_array( $pro_addons[ $unavailable_pro ] );
-				Forminator_Addon_Loader::get_instance()->register( $addon );
+				Forminator_Integration_Loader::get_instance()->register( $addon );
 			}
 		}
 	}

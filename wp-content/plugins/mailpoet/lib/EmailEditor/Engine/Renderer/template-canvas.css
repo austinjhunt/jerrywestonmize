@@ -8,6 +8,7 @@ body {
   padding: 0;
   -webkit-text-size-adjust: 100%; /* From MJMJ - Automatic test adjustment on mobile max to 100% */
   -ms-text-size-adjust: 100%; /* From MJMJ - Automatic test adjustment on mobile max to 100% */
+  word-spacing: normal;
 }
 
 .email_layout_wrapper {
@@ -44,7 +45,7 @@ body {
 }
 
 @media screen and (max-width: 660px) {
-  .email_column {
+  .email-block-column-content {
     max-width: 100% !important;
   }
   .block {

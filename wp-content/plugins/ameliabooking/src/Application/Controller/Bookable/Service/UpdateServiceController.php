@@ -74,8 +74,12 @@ class UpdateServiceController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new UpdateServiceCommand($args);
+
         $command->setField('id', (int)$command->getArg('id'));
+
         $requestBody = $request->getParsedBody();
+
+        $this->filter($requestBody);
         $this->setCommandFields($command, $requestBody);
 
         return $command;

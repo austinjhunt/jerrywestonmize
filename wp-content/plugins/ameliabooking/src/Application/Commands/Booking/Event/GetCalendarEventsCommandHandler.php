@@ -118,10 +118,12 @@ class GetCalendarEventsCommandHandler extends CommandHandler
                 new Collection($periodList)
             );
 
-            if ($recurringEventsPeriods->length()) {
+            if (!empty($recurringEventsPeriods)) {
                 /** @var Collection $recurringPeriod */
-                foreach ($recurringEventsPeriods->getItems() as $recurringPeriod) {
-                    $periodList = array_merge($periodList, $recurringPeriod->getItems());
+                foreach ($recurringEventsPeriods as $recurringPeriod) {
+                    if (!empty($recurringPeriod['periods'])) {
+                        $periodList = array_merge($periodList, $recurringPeriod['periods']->getItems());
+                    }
                 }
             }
         }

@@ -319,30 +319,83 @@ function get_restriction_matches_for_queried_terms( $query ) {
  * @since 2.2.0
  */
 function check_referrer_is_admin() {
-	$ref = wp_get_raw_referer();
-
-	if ( empty( $ref ) ) {
+	$referrer = wp_get_raw_referer();
+	if ( empty( $referrer ) ) {
 		return false;
 	}
 
-	$ref = wp_parse_url( $ref );
+	$admin_url = admin_url();
+	// Normalize URLs for comparison.
+	$normalized_referrer  = strtolower( $referrer );
+	$normalized_admin_url = strtolower( $admin_url );
 
-	if ( empty( $ref['host'] ) ) {
-		return false;
+	// Compare the beginning of the referrer with the admin URL.
+	return str_starts_with( $normalized_referrer, $normalized_admin_url );
+}
+
+/**
+ * Check if request is excluded.
+ *
+ * @return bool
+ *
+ * @since 2.3.0
+ */
+function request_is_excluded() {
+	static $is_excluded;
+
+	if ( isset( $is_excluded ) ) {
+		return $is_excluded;
 	}
 
-	$ref_host = strtolower( $ref['host'] );
+	$is_excluded = false;
 
-	/**
-	 *  Admin root URL.
-	 *
-	 * @var string $admin_url
-	 */
-	$admin_url = wp_parse_url( admin_url(), PHP_URL_HOST );
+	if (
+		// Check if doing cron.
+		is_cron()
 
-	$admin_url = strtolower( $admin_url );
+		// If this is rest request and not core wp namespace.
+		// || ( is_rest() && ! is_wp_core_rest_namespace() ).
 
-	return $ref_host === $admin_url;
+		// Disable protection when not on the frontend.
+		// || ( ! is_frontend() && ! is_rest() ).
+	) {
+		$is_excluded = true;
+	}
+
+	return $is_excluded;
+}
+
+/**
+ * Check if the request is for a priveleged user in the admin area.
+ *
+ * @return bool
+ *
+ * @since 2.3.0
+ */
+function request_for_user_is_excluded() {
+	// Check if user has permission to manage settings and is on the admin area.
+	if ( user_is_excludable() ) {
+		if (
+			// Is in the admin area.
+			is_admin() ||
+			// Is an ajax request from the admin area.
+			(
+				( is_ajax() || is_rest() ) &&
+				check_referrer_is_admin()
+			)
+		) {
+			return true;
+		}
+	}
+
+	$post_id = get_the_ID();
+
+	// Disable protection when viewing post previews or editing a post.
+	if ( ( $post_id > 0 || is_preview() ) && current_user_can( 'edit_post', $post_id ) ) {
+		return true;
+	}
+
+	return false;
 }
 
 /**
@@ -355,33 +408,8 @@ function check_referrer_is_admin() {
  * @since 2.0.0
  */
 function protection_is_disabled() {
-	$is_disabled = false;
+	$is_disabled = user_is_excluded() || request_is_excluded() || request_for_user_is_excluded();
 
-	if (
-		// Disable protection when user is excluded.
-		( user_is_excluded() ) ||
-
-		// Check if doing cron.
-		( defined( 'DOING_CRON' ) && DOING_CRON ) ||
-
-		// Check if doing ADMIN AJAX from valid admin referrer.
-		( defined( 'DOING_AJAX' ) && DOING_AJAX && check_referrer_is_admin() ) ||
-
-		// Check if doing REST API from valid admin referrer.
-		( is_rest() && check_referrer_is_admin() ) ||
-
-		// If this is rest request and not core wp namespace.
-		( is_rest() && ! is_wp_core_rest_namespace() ) ||
-		
-		// Disable protection when viewing post previews.
-		( is_preview() && current_user_can( 'edit_post', get_the_ID() ) ) ||
-
-		// Disable protection when not on the frontend.
-		( ! is_frontend() && ! is_rest() )
-	 ) {
-		$is_disabled = true;
-	}
- 
 	/**
 	 * Filter whether protection is disabled.
 	 *

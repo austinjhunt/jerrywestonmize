@@ -62,7 +62,10 @@ class AddProviderController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new AddProviderCommand($args);
+
         $requestBody = $request->getParsedBody();
+
+        $this->filter($requestBody);
         $this->setCommandFields($command, $requestBody);
 
         return $command;

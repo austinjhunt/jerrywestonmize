@@ -75,6 +75,10 @@ class PackageServiceFactory
             }
         }
 
+        if (!empty($data['position'])) {
+            $packageService->setPosition(new PositiveInteger($data['position']));
+        }
+
         return $packageService;
     }
 }

@@ -1,21 +1,20 @@
 <?php
 /** @noinspection HtmlUnknownTarget */
 
-require_once dirname( __FILE__ ) . '/class-forminator-addon-mailjet-exception.php';
 require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-mailjet-wp-api.php';
 
 /**
- * Class Forminator_Addon_Mailjet
+ * Class Forminator_Mailjet
  * The class that defines mailjet addon
  */
-class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
+class Forminator_Mailjet extends Forminator_Integration {
 
 	/**
 	 * Mailjet Addon Instance
 	 *
 	 * @var self|null
 	 */
-	private static $instance = null;
+	protected static $instance = null;
 
 	/**
 	 * @var string
@@ -43,46 +42,8 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 	protected $_title = 'Mailjet';
 
 	/**
-	 * @var string
-	 */
-	protected $_url = 'https://wpmudev.com';
-
-	/**
-	 * @var string
-	 */
-	protected $_full_path = __FILE__;
-
-	/**
-	 * Class name of form settings
-	 *
-	 * @var string
-	 */
-	protected $_form_settings = 'Forminator_Addon_Mailjet_Form_Settings';
-
-	/**
-	 * Class name of form hooks
-	 *
-	 * @var string
-	 */
-	protected $_form_hooks = 'Forminator_Addon_Mailjet_Form_Hooks';
-
-	/**
-	 * Class name of quiz settings
-	 *
-	 * @var string
-	 */
-	protected $_quiz_settings = 'Forminator_Addon_Mailjet_Quiz_Settings';
-
-	/**
-	 * Class name of quiz hooks
-	 *
-	 * @var string
-	 */
-	protected $_quiz_hooks = 'Forminator_Addon_Mailjet_Quiz_Hooks';
-
-	/**
 	 * Hold account information that currently connected
-	 * Will be saved to @see Forminator_Addon_Mailjet::save_settings_values()
+	 * Will be saved to @see Forminator_Mailjet::save_settings_values()
 	 *
 	 * @var array
 	 */
@@ -91,7 +52,7 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 	protected $_position = 3;
 
 	/**
-	 * Forminator_Addon_Mailjet constructor.
+	 * Forminator_Mailjet constructor.
 	 * - Set dynamic translatable text(s) that will be displayed to end-user
 	 * - Set dynamic icons and images
 	 */
@@ -100,29 +61,11 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 		$this->_description    = esc_html__( 'Get awesome by your form.', 'forminator' );
 		$this->is_multi_global = true;
 
-		$this->_icon     = forminator_addon_mailjet_assets_url() . 'icon.png';
-		$this->_icon_x2  = forminator_addon_mailjet_assets_url() . 'icon@2x.png';
-		$this->_image    = forminator_addon_mailjet_assets_url() . 'image.png';
-		$this->_image_x2 = forminator_addon_mailjet_assets_url() . 'image@2x.png';
-
-	}
-
-	/**
-	 * Get addon instance
-	 *
-	 * @return self|null
-	 */
-	public static function get_instance() {
-		if ( is_null( self::$instance ) ) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
 	}
 
 	/**
 	 * Hook before save settings values
-	 * to include @see Forminator_Addon_Mailjet::$_connected_account
+	 * to include @see Forminator_Mailjet::$_connected_account
 	 * for future reference
 	 *
 	 * @param array $values Values to save.
@@ -140,144 +83,15 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 	}
 
 	/**
-	 * Flag for check whether mailjet addon is connected globally
-	 *
-	 * @return bool
-	 */
-	public function is_connected() {
-		try {
-			// check if its active.
-			if ( ! $this->is_active() ) {
-				throw new Forminator_Addon_Mailjet_Exception( esc_html__( 'Mailjet is not active', 'forminator' ) );
-			}
-
-			// if user completed settings.
-			$is_connected = $this->settings_is_complete();
-
-		} catch ( Forminator_Addon_Mailjet_Exception $e ) {
-			$is_connected = false;
-		}
-
-		/**
-		 * Filter connected status of mailjet
-		 *
-		 * @param bool $is_connected
-		 */
-		$is_connected = apply_filters( 'forminator_addon_mailjet_is_connected', $is_connected );
-
-		return $is_connected;
-	}
-
-	/**
 	 * Check if user already completed settings
 	 *
 	 * @return bool
 	 */
-	private function settings_is_complete() {
+	public function is_authorized() {
 		$setting_values = $this->get_settings_values();
 
 		// check api_key and connected_account exists and not empty.
 		return ! empty( $setting_values['api_key'] ) && ! empty( $setting_values['secret_key'] ) && ! empty( $setting_values['connected_account'] );
-	}
-
-	/**
-	 * Flag for check if and addon connected to a form
-	 * by default it will check if last step of form settings already completed by user
-	 *
-	 * @param $form_id
-	 *
-	 * @return bool
-	 */
-	public function is_form_connected( $form_id ) {
-
-		try {
-			// initialize with null.
-			$form_settings_instance = null;
-			if ( ! $this->is_connected() ) {
-				throw new Forminator_Addon_Mailjet_Exception( esc_html__( 'Mailjet addon not connected.', 'forminator' ) );
-			}
-
-			$form_settings_instance = $this->get_addon_settings( $form_id, 'form' );
-			if ( ! $form_settings_instance instanceof Forminator_Addon_Mailjet_Form_Settings ) {
-				throw new Forminator_Addon_Mailjet_Exception( esc_html__( 'Form settings instance is not valid Forminator_Addon_Mailjet_Form_Settings.', 'forminator' ) );
-			}
-			$wizards = $form_settings_instance->form_settings_wizards();
-			//last step is completed
-			$last_step             = end( $wizards );
-			$last_step_is_complete = call_user_func( $last_step['is_completed'] );
-			if ( ! $last_step_is_complete ) {
-				throw new Forminator_Addon_Mailjet_Exception( esc_html__( 'Form settings is not yet completed.', 'forminator' ) );
-			}
-
-			$is_form_connected = true;
-		} catch ( Forminator_Addon_Mailjet_Exception $e ) {
-			$is_form_connected = false;
-
-			forminator_addon_maybe_log( __METHOD__, $e->getMessage() );
-		}
-
-		/**
-		 * Filter connected status of mailjet with the form
-		 *
-		 * @param bool                                          $is_form_connected
-		 * @param int                                           $form_id                Current Form ID.
-		 * @param Forminator_Addon_Mailjet_Form_Settings|null $form_settings_instance Instance of form settings, or null when unavailable.
-		 *
-		 */
-		$is_form_connected = apply_filters( 'forminator_addon_mailjet_is_form_connected', $is_form_connected, $form_id, $form_settings_instance );
-
-		return $is_form_connected;
-
-	}
-
-	/**
-	 * Flag for check if and addon connected to a form
-	 * by default it will check if last step of form settings already completed by user
-	 *
-	 * @param $quiz_id
-	 *
-	 * @return bool
-	 */
-	public function is_quiz_connected( $quiz_id ) {
-
-		try {
-			// initialize with null.
-			$quiz_settings_instance = null;
-			if ( ! $this->is_connected() ) {
-				throw new Forminator_Addon_Mailjet_Exception( esc_html__( 'Mailjet addon not connected.', 'forminator' ) );
-			}
-
-			$quiz_settings_instance = $this->get_addon_settings( $quiz_id, 'quiz' );
-			if ( ! $quiz_settings_instance instanceof Forminator_Addon_Mailjet_Quiz_Settings ) {
-				throw new Forminator_Addon_Mailjet_Exception( esc_html__( 'Form settings instance is not valid Forminator_Addon_Mailjet_Quiz_Settings.', 'forminator' ) );
-			}
-			$wizards = $quiz_settings_instance->quiz_settings_wizards();
-			//last step is completed
-			$last_step             = end( $wizards );
-			$last_step_is_complete = call_user_func( $last_step['is_completed'] );
-			if ( ! $last_step_is_complete ) {
-				throw new Forminator_Addon_Mailjet_Exception( esc_html__( 'Form settings is not yet completed.', 'forminator' ) );
-			}
-
-			$is_quiz_connected = true;
-		} catch ( Forminator_Addon_Mailjet_Exception $e ) {
-			$is_quiz_connected = false;
-
-			forminator_addon_maybe_log( __METHOD__, $e->getMessage() );
-		}
-
-		/**
-		 * Filter connected status of mailjet with the form
-		 *
-		 * @param bool                                          $is_quiz_connected
-		 * @param int                                           $quiz_id                Current Form ID.
-		 * @param Forminator_Addon_Mailjet_Quiz_Settings|null $quiz_settings_instance Instance of form settings, or null when unavailable.
-		 *
-		 */
-		$is_quiz_connected = apply_filters( 'forminator_addon_mailjet_is_form_connected', $is_quiz_connected, $quiz_id, $quiz_settings_instance );
-
-		return $is_quiz_connected;
-
 	}
 
 	/**
@@ -299,7 +113,7 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 				'email'        => $info->data[0]->email ?? '',
 			);
 
-		} catch ( Forminator_Addon_Mailjet_Wp_Api_Exception $e ) {
+		} catch ( Forminator_Integration_Exception $e ) {
 			$this->_update_settings_error_message = $e->getMessage();
 			return false;
 		}
@@ -312,7 +126,7 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 	 *
 	 * @param null $api_key
 	 *
-	 * @return Forminator_Addon_Mailjet_Wp_Api|null
+	 * @return Forminator_Mailjet_Wp_Api|null
 	 */
 	public function get_api( $api_key = null, $secret_key = null ) {
 		if ( is_null( $api_key ) ) {
@@ -321,7 +135,7 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 		if ( is_null( $secret_key ) ) {
 			$secret_key = $this->get_secret_key();
 		}
-		$api = Forminator_Addon_Mailjet_Wp_Api::get_instance( $api_key, $secret_key );
+		$api = Forminator_Mailjet_Wp_Api::get_instance( $api_key, $secret_key );
 		return $api;
 	}
 
@@ -416,41 +230,19 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 			$connected_account = $settings['connected_account'];
 
 			// Show currently connected mailjet account if its already connected.
-			$myaccount .= sprintf(
+			$notice = sprintf(
 				/* translators:  placeholder is Name and Email of Connected MailJet Account */
 				esc_html__( 'Your Mailjet is connected to %1$s: %2$s.', 'forminator' ),
 				'<strong>' . esc_html( $connected_account['account_name'] ) . '</strong>',
 				sanitize_email( $connected_account['email'] )
 			);
 
-			$myaccount = '<div role="alert" class="sui-notice sui-notice-red sui-active" style="display: block; text-align: left;" aria-live="assertive">
-				<div class="sui-notice-content">
-					<div class="sui-notice-message">
-						<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
-						<p>' . $myaccount . '</p>
-					</div>
-				</div>
-			</div>';
+			$myaccount = Forminator_Admin::get_red_notice( $notice );
 
 		}
 
 		return $myaccount;
 
-	}
-
-	/**
-	 * Flag to show full log on entries
-	 * By default API request(s) are not shown on submissions page
-	 * set @see FORMINATOR_ADDON_MAILJET_SHOW_FULL_LOG to `true` on wp-config.php to show it
-	 *
-	 * @return bool
-	 */
-	public static function is_show_full_log() {
-		if ( defined( 'FORMINATOR_ADDON_MAILJET_SHOW_FULL_LOG' ) && FORMINATOR_ADDON_MAILJET_SHOW_FULL_LOG ) {
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
@@ -462,7 +254,7 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 		return array(
 			array(
 				'callback'     => array( $this, 'configure_api_key' ),
-				'is_completed' => array( $this, 'settings_is_complete' ),
+				'is_completed' => array( $this, 'is_authorized' ),
 			),
 		);
 	}
@@ -516,9 +308,9 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 					);
 
 					if ( ! forminator_addon_is_active( $this->_slug ) ) {
-						$activated = Forminator_Addon_Loader::get_instance()->activate_addon( $this->_slug );
+						$activated = Forminator_Integration_Loader::get_instance()->activate_addon( $this->_slug );
 						if ( ! $activated ) {
-							$error_message = Forminator_Addon_Loader::get_instance()->get_last_error_message();
+							$error_message = Forminator_Integration_Loader::get_instance()->get_last_error_message();
 						} else {
 							$this->save_settings_values( $save_values );
 							$show_success = true;
@@ -536,19 +328,9 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 					return $this->get_form_settings_wizard( array(), $form_id, 0, 0 );
 				}
 
-				$html = '<div class="forminator-integration-popup__header">';
-				/* translators: ... */
-				$html .= '<h3 id="dialogTitle2" class="sui-box-title sui-lg" style="overflow: initial; text-overflow: none; white-space: normal;">' . /* translators: 1: Add-on name */ sprintf( esc_html__( '%1$s Added', 'forminator' ), 'Mailjet' ) . '</h3>';
-				$html .= '</div>';
-				$html .= '<p class="sui-description" style="text-align: center;">' . esc_html__( 'You can now go to your forms and assign them to this integration.', 'forminator' ) . '</p>';
-
+				$html = $this->success_authorize();
 				return array(
 					'html'         => $html,
-					'buttons'      => array(
-						'close' => array(
-							'markup' => self::get_button_markup( esc_html__( 'Close', 'forminator' ), 'forminator-addon-close forminator-integration-popup__close' ),
-						),
-					),
 					'redirect'     => false,
 					'has_errors'   => false,
 					'notification' => array(
@@ -624,67 +406,5 @@ class Forminator_Addon_Mailjet extends Forminator_Addon_Abstract {
 			'redirect'   => false,
 			'has_errors' => ! empty( $error_message ) || ! empty( $api_key_error_message ) || ! empty( $secret_key_error ),
 		);
-	}
-
-	/**
-	 * Flag for check if and addon connected to a poll(poll settings such as list id completed)
-	 *
-	 * Please apply necessary WordPress hook on the inheritance class
-	 *
-	 * @param $poll_id
-	 *
-	 * @return boolean
-	 */
-	public function is_poll_connected( $poll_id ) {
-		return false;
-	}
-
-	/**
-	 * Flag for check if has lead form addon connected to a quiz
-	 * by default it will check if last step of form settings already completed by user
-	 *
-	 * @param $quiz_id
-	 *
-	 * @return bool
-	 */
-	public function is_quiz_lead_connected( $quiz_id ) {
-
-		try {
-			// initialize with null.
-			$quiz_settings_instance = null;
-			if ( ! $this->is_connected() ) {
-				throw new Forminator_Addon_Mailjet_Exception( esc_html__( 'Mailjet addon not connected.', 'forminator' ) );
-			}
-			$quiz_settings_instance = $this->get_addon_settings( $quiz_id, 'quiz' );
-
-			if ( ! $quiz_settings_instance instanceof Forminator_Addon_Mailjet_Quiz_Settings ) {
-				throw new Forminator_Addon_Mailjet_Exception( esc_html__( 'Form settings instance is not valid Forminator_Addon_Mailjet_Quiz_Settings.', 'forminator' ) );
-			}
-
-			$quiz_settings = $quiz_settings_instance->get_quiz_settings();
-
-			if ( isset( $quiz_settings['hasLeads'] ) && $quiz_settings['hasLeads'] ) {
-				$is_quiz_connected = true;
-			} else {
-				$is_quiz_connected = false;
-			}
-		} catch ( Forminator_Addon_Mailjet_Exception $e ) {
-			$is_quiz_connected = false;
-
-			forminator_addon_maybe_log( __METHOD__, $e->getMessage() );
-		}
-
-		/**
-		 * Filter connected status of mailjet with the form
-		 *
-		 * @param bool                                          $is_quiz_connected
-		 * @param int                                           $quiz_id                Current Form ID.
-		 * @param Forminator_Addon_Mailjet_Quiz_Settings|null $quiz_settings_instance Instance of form settings, or null when unavailable.
-		 *
-		 */
-		$is_quiz_connected = apply_filters( 'forminator_addon_mailjet_is_quiz_lead_connected', $is_quiz_connected, $quiz_id, $quiz_settings_instance );
-
-		return $is_quiz_connected;
-
 	}
 }

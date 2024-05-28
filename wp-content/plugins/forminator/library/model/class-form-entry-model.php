@@ -623,14 +623,21 @@ class Forminator_Form_Entry_Model {
 		if ( isset( $filters['max_id'] ) ) {
 			$where .= $wpdb->prepare( ' AND entries.entry_id <= %d', esc_sql( $filters['max_id'] ) );
 		}
-		$order_by = 'ORDER BY entries.entry_id';
-		if ( isset( $filters['order_by'] ) ) {
-			$order_by = 'ORDER BY ' . $wpdb->prepare("%s", $filters['order_by'] );
+
+		if ( isset( $filters['entry_status'] ) ) {
+			if ( 'completed' === $filters['entry_status'] ) {
+				$where .= ' AND entries.draft_id IS NULL ';
+			} elseif ( 'draft' === $filters['entry_status'] ) {
+				$where .= ' AND entries.draft_id IS NOT NULL ';
+			}
 		}
-		$order = 'DESC';
-		if ( isset( $filters['order'] ) ) {
-			$order = $wpdb->prepare("%s", $filters['order'] );
+
+		$order_by      = 'ORDER BY entries.entry_id';
+		$valid_columns =  apply_filters( 'forminator_entries_order_by', array( 'entries.entry_id', 'entries.date_created' ), $form_id );
+		if ( isset( $filters['order_by'] ) && in_array( $filters['order_by'], $valid_columns, true ) ) {
+			$order_by = 'ORDER BY ' . esc_sql( $filters['order_by'] );
 		}
+		$order = isset( $filters['order'] ) && 'ASC' === $filters['order'] ? 'ASC' : 'DESC';
 
 		// group.
 		$group_by = 'GROUP BY entries.entry_id';
@@ -2114,7 +2121,7 @@ class Forminator_Form_Entry_Model {
 	 *
 	 * @param $module_id
 	 *
-	 * @return array|Forminator_Addon_Abstract[]
+	 * @return array|Forminator_Integration[]
 	 * @since 1.1
 	 *
 	 */
@@ -2126,16 +2133,12 @@ class Forminator_Form_Entry_Model {
 
 			foreach ( $connected_addons as $connected_addon ) {
 				try {
-					$method = "get_addon_{$module_slug}_hooks";
-					if ( ! method_exists( $connected_addon, $method ) ) {
-						throw new Exception( 'Method ' . $method . ' doesn\'t exist.' );
-					}
-					$module_hooks = $connected_addon->$method( $module_id );
-					if ( $module_hooks instanceof Forminator_Addon_Hooks_Abstract ) {
+					$module_hooks = $connected_addon->get_addon_hooks( $module_id, $module_slug );
+					if ( $module_hooks instanceof Forminator_Integration_Hooks ) {
 						self::$connected_addons[ $module_id ][] = $connected_addon;
 					}
 				} catch ( Exception $e ) {
-					forminator_addon_maybe_log( $connected_addon->get_slug(), 'failed to get_addon_module_hooks', $e->getMessage() );
+					forminator_addon_maybe_log( $connected_addon->get_slug(), 'failed to get_addon_hooks', $e->getMessage() );
 				}
 			}
 		}

@@ -174,21 +174,20 @@ class EventApplicationService
 
 
         if ($event->getRecurring()) {
-            /** @var Collection $recurringEventsPeriods */
             $recurringEventsPeriods = $eventDomainService->getRecurringEventsPeriods(
                 $event->getRecurring(),
                 $event->getPeriods()
             );
 
             /** @var Collection $recurringEventPeriods */
-            foreach ($recurringEventsPeriods->getItems() as $key => $recurringEventPeriods) {
-                $order = $event->getRecurring()->getOrder()->getValue() + 1;
+            foreach ($recurringEventsPeriods as $key => $recurringEventPeriods) {
+                $order = $recurringEventPeriods['order'];
 
                 $event = EventFactory::create($event->toArray());
 
                 $event->getRecurring()->setOrder(new WholeNumber($order));
 
-                $event->setPeriods($recurringEventPeriods);
+                $event->setPeriods($recurringEventPeriods['periods']);
 
                 $periodStart = $event->getPeriods()->getItem(0)->getPeriodStart()->getValue()->format('Y-m-d H:i:s');
                 if (!$bookingOpensSame) {
@@ -430,8 +429,8 @@ class EventApplicationService
                                 'monthlyOnDay'  => $newEvent->getRecurring()->getMonthlyOnDay(),
                                 'monthDate'  => $newEvent->getRecurring()->getMonthDate() ? $newEvent->getRecurring()->getMonthDate()->getValue()->format('Y-m-d H:i:s') : null,
                                 'until' => $newEvent->getRecurring()->getUntil()->getValue()->format('Y-m-d H:i:s'),
-                                'order' => $isNewRecurring ?
-                                    ++$followingRecurringOrder : $followingEvent->getRecurring()->getOrder()->getValue()
+                                'order' => $followingEvent->getRecurring() && $followingEvent->getRecurring()->getOrder() && $followingEvent->getRecurring()->getOrder()->getValue() ?
+                                    $followingEvent->getRecurring()->getOrder()->getValue() : ++$followingRecurringOrder
                             ]
                         )
                     );
@@ -578,11 +577,16 @@ class EventApplicationService
 
                 $lastEvent->setPeriods($eventDomainService->getClonedEventPeriods($clonedOriginEventPeriods, false));
 
-                $eventDomainService->buildFollowingEvent(
+                $success = $eventDomainService->buildFollowingEvent(
                     $lastEvent,
                     $newEvent,
                     $eventDomainService->getClonedEventPeriods($clonedOriginEventPeriods, false)
                 );
+
+                if (!$success) {
+                    ++$lastRecurringOrder;
+                    continue;
+                }
 
                 $lastEvent->setParentId(
                     !$isNewRecurring && $newEvent->getParentId() ?

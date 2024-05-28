@@ -12,6 +12,11 @@ use MailPoet\EmailEditor\Engine\SettingsController;
  */
 class Text extends AbstractBlockRenderer {
   protected function renderContent(string $blockContent, array $parsedBlock, SettingsController $settingsController): string {
+    // Do not render empty blocks.
+    if (empty(trim(strip_tags($blockContent)))) {
+      return '';
+    }
+
     $blockContent = $this->adjustStyleAttribute($blockContent);
     $blockAttributes = wp_parse_args($parsedBlock['attrs'] ?? [], [
       'textAlign' => 'left',
@@ -48,7 +53,6 @@ class Text extends AbstractBlockRenderer {
             border="0"
             cellpadding="0"
             cellspacing="0"
-            style="min-width: 100%%;"
             width="100%%"
           >
             <tr>
@@ -80,7 +84,7 @@ class Text extends AbstractBlockRenderer {
       // to prevent CSS Inliner from adding a default value and overriding the value set by user, which is on the wrapper element.
       // The value provided by WP uses clamp() function which is not supported in many email clients
       $elementStyle = preg_replace('/font-size:[^;]+;?/', 'font-size: inherit;', $elementStyle);
-      $html->set_attribute('style', $elementStyle);
+      $html->set_attribute('style', esc_attr($elementStyle));
       $blockContent = $html->get_updated_html();
     }
 

@@ -1,13 +1,9 @@
 <?php
-
-require_once dirname( __FILE__ ) . '/class-forminator-addon-mailjet-wp-api-exception.php';
-require_once dirname( __FILE__ ) . '/class-forminator-addon-mailjet-wp-api-not-found-exception.php';
-
 /**
- * Class Forminator_Addon_Mailjet_Wp_Api
+ * Class Forminator_Mailjet_Wp_Api
  * Wrapper @see wp_remote_request() to be used to do request to mailjet server
  */
-class Forminator_Addon_Mailjet_Wp_Api {
+class Forminator_Mailjet_Wp_Api {
 
 	/**
 	 * Mailjet API instance
@@ -59,18 +55,18 @@ class Forminator_Addon_Mailjet_Wp_Api {
 	private $last_url_request = '';
 
 	/**
-	 * Forminator_Addon_Mailjet_Wp_Api constructor.
+	 * Forminator_Mailjet_Wp_Api constructor.
 	 *
 	 * @param $api_key
 	 */
 	public function __construct( $api_key, $secret_key ) {
 		if ( ! $api_key ) {
-			throw new Forminator_Addon_Mailjet_Wp_Api_Exception( __( 'Missing required API Key', 'forminator' ) );
+			throw new Forminator_Integration_Exception( __( 'Missing required API Key', 'forminator' ) );
 		}
 
 		$this->api_key = $api_key;
 		if ( ! $secret_key ) {
-			throw new Forminator_Addon_Mailjet_Wp_Api_Exception( __( 'Missing required Secret Key', 'forminator' ) );
+			throw new Forminator_Integration_Exception( __( 'Missing required Secret Key', 'forminator' ) );
 		}
 
 		$this->secret_key = $secret_key;
@@ -81,7 +77,7 @@ class Forminator_Addon_Mailjet_Wp_Api {
 	 *
 	 * @param null $api_key
 	 *
-	 * @return Forminator_Addon_Mailjet_Wp_Api|null
+	 * @return Forminator_Mailjet_Wp_Api|null
 	 */
 	public static function get_instance( $api_key, $secret_key ) {
 		if ( is_null( self::$instance ) || self::$instance->api_key !== $api_key || self::$instance->secret_key !== $secret_key ) {
@@ -130,7 +126,7 @@ class Forminator_Addon_Mailjet_Wp_Api {
 
 		if ( is_wp_error( $res ) || ! $res ) {
 			forminator_addon_maybe_log( __METHOD__, $res );
-			throw new Forminator_Addon_Mailjet_Wp_Api_Exception( $default_error );
+			throw new Forminator_Integration_Exception( $default_error );
 		}
 
 		$body = wp_remote_retrieve_body( $res );
@@ -138,7 +134,7 @@ class Forminator_Addon_Mailjet_Wp_Api {
 		// Got no response from API.
 		if ( empty( $body ) ) {
 			forminator_addon_maybe_log( __METHOD__, $res );
-			throw new Forminator_Addon_Mailjet_Wp_Api_Exception( $default_error );
+			throw new Forminator_Integration_Exception( $default_error );
 		}
 
 		$response = null;
@@ -157,12 +153,12 @@ class Forminator_Addon_Mailjet_Wp_Api {
 					}
 					$this->last_data_received = $response;
 					if ( 404 === $response_code ) {
-						throw new Forminator_Addon_Mailjet_Wp_Api_Not_Found_Exception( sprintf(
+						throw new Forminator_Integration_Exception( sprintf(
 						/* translators: %s: Error message */
 							esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
 						);
 					}
-					throw new Forminator_Addon_Mailjet_Wp_Api_Exception( sprintf(
+					throw new Forminator_Integration_Exception( sprintf(
 						/* translators: %s: Error message */
 						esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
 					);
@@ -173,7 +169,7 @@ class Forminator_Addon_Mailjet_Wp_Api {
 			if ( is_null( $response ) ) {
 				$this->last_data_received = $body;
 				forminator_addon_maybe_log( __METHOD__, $res );
-				throw new Forminator_Addon_Mailjet_Wp_Api_Exception( sprintf(
+				throw new Forminator_Integration_Exception( sprintf(
 					/* translators: %s: Error message */
 					esc_html__( 'Failed to process request : %s', 'forminator' ), json_last_error_msg() )
 				);
@@ -263,7 +259,7 @@ class Forminator_Addon_Mailjet_Wp_Api {
 		try {
 			$lists = $this->get_all_lists( $force );
 			$lists = wp_list_pluck( $lists, 'name', 'id' );
-		} catch ( Forminator_Addon_Mailjet_Wp_Api_Exception $e ) {
+		} catch ( Forminator_Integration_Exception $e ) {
 			forminator_addon_maybe_log( __METHOD__, $e->getMessage() );
 			return array();
 		}
@@ -348,28 +344,33 @@ class Forminator_Addon_Mailjet_Wp_Api {
 	 *
 	 * @param string $list_id List ID.
 	 * @param string $email Email.
-	 * @param string $name Contact name.
 	 * @param array  $args Additional arguments.
 	 *
 	 * @return array|mixed|object
 	 */
-	public function add_or_update_member( $list_id, $email, $name, $args ) {
+	public function add_or_update_member( $list_id, $email, $args ) {
 		$data = array(
 			'Email'  => $email,
 			'Action' => 'addnoforce',
 		);
-		if ( ! empty( $name ) ) {
-			$data['Name'] = $name;
+		if ( ! empty( $args['name'] ) ) {
+			$data['Name'] = $args['name'];
 		}
 		if ( ! empty( $args['merge_fields'] ) ) {
 			$data['Properties'] = $args['merge_fields'];
 		}
 
-		return $this->request(
+		$result = $this->request(
 			'POST',
 			'contactslist/' . $list_id . '/managecontact',
 			$data
 		);
+
+		if ( empty( $result->total ) ) {
+			return false;
+		}
+
+		return $result;
 	}
 
 	/**

@@ -683,11 +683,10 @@ abstract class Forminator_Front_Action {
 				continue;
 			}
 			try {
-				$method = 'get_addon_' . static::$module_slug . '_hooks';
-				if ( method_exists( $connected_addon, $method ) ) {
-					$hooks = $connected_addon->$method( static::$module_id );
+				if ( method_exists( $connected_addon, 'get_addon_hooks' ) ) {
+					$hooks = $connected_addon->get_addon_hooks( static::$module_id, static::$module_slug );
 				}
-				if ( isset( $hooks ) && $hooks instanceof Forminator_Addon_Hooks_Abstract ) {
+				if ( isset( $hooks ) && $hooks instanceof Forminator_Integration_Hooks ) {
 					$addon_fields = $hooks->add_entry_fields( $submitted_data, $current_entry_fields, $entry );
 					// reformat additional fields.
 					$addon_fields           = self::format_addon_additional_fields( $connected_addon, $addon_fields );
@@ -768,11 +767,10 @@ abstract class Forminator_Front_Action {
 				continue;
 			}
 			try {
-				$method = 'get_addon_' . static::$module_slug . '_hooks';
-				if ( method_exists( $connected_addon, $method ) ) {
-					$hooks = $connected_addon->$method( self::$module_id );
+				if ( method_exists( $connected_addon, 'get_addon_hooks' ) ) {
+					$hooks = $connected_addon->get_addon_hooks( static::$module_id, static::$module_slug );
 				}
-				if ( isset( $hooks ) && $hooks instanceof Forminator_Addon_Hooks_Abstract ) {
+				if ( isset( $hooks ) && $hooks instanceof Forminator_Integration_Hooks ) {
 					$hooks->after_entry_saved( $entry_model );// run and forget.
 				}
 			} catch ( Exception $e ) {
@@ -968,12 +966,12 @@ abstract class Forminator_Front_Action {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param Forminator_Addon_Abstract $addon
+	 * @param Forminator_Integration $addon
 	 * @param                           $additional_fields
 	 *
 	 * @return array
 	 */
-	protected static function format_addon_additional_fields( Forminator_Addon_Abstract $addon, $additional_fields ) {
+	protected static function format_addon_additional_fields( Forminator_Integration $addon, $additional_fields ) {
 		// to `name` and `value` basis.
 		$formatted_additional_fields = array();
 		if ( ! is_array( $additional_fields ) ) {

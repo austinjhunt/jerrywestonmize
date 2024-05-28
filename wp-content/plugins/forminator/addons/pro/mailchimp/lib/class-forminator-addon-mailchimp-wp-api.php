@@ -1,15 +1,11 @@
 <?php
-
-require_once dirname( __FILE__ ) . '/class-forminator-addon-mailchimp-wp-api-exception.php';
-require_once dirname( __FILE__ ) . '/class-forminator-addon-mailchimp-wp-api-not-found-exception.php';
-
 /**
- * Class Forminator_Addon_Mailchimp_Wp_Api
+ * Class Forminator_Mailchimp_Wp_Api
  * Wrapper @see wp_remote_request() to be used to do request to mailchimp server
  *
  * @since 1.0 Mailchimp Addon
  */
-class Forminator_Addon_Mailchimp_Wp_Api {
+class Forminator_Mailchimp_Wp_Api {
 
 	/**
 	 * Mailchimp API instance
@@ -60,18 +56,18 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	private $_last_url_request = '';
 
 	/**
-	 * Forminator_Addon_Mailchimp_Wp_Api constructor.
+	 * Forminator_Mailchimp_Wp_Api constructor.
 	 *
 	 * @since 1.0 Mailchimp Addon
 	 *
 	 * @param $api_key
 	 *
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function __construct( $api_key ) {
 		// prerequisite
 		if ( ! $api_key ) {
-			throw new Forminator_Addon_Mailchimp_Wp_Api_Exception( esc_html__( 'Missing required API Key', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Missing required API Key', 'forminator' ) );
 		}
 
 		$this->_api_key = $api_key;
@@ -90,8 +86,8 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 *
 	 * @param null $api_key
 	 *
-	 * @return Forminator_Addon_Mailchimp_Wp_Api|null
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @return Forminator_Mailchimp_Wp_Api|null
+	 * @throws Forminator_Integration_Exception
 	 */
 	public static function get_instance( $api_key = null ) {
 		if ( is_null( self::$_instance ) || self::$_instance->_api_key !== $api_key ) {
@@ -136,8 +132,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param array  $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	private function request( $verb, $path, $args = array() ) {
 		try {
@@ -207,7 +202,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 
 			if ( is_wp_error( $res ) || ! $res ) {
 				forminator_addon_maybe_log( __METHOD__, $res );
-				throw new Forminator_Addon_Mailchimp_Wp_Api_Exception( esc_html__( 'Failed to process request, make sure API KEY is correct and your server has internet connection.', 'forminator' ) );
+				throw new Forminator_Integration_Exception( esc_html__( 'Failed to process request, make sure API KEY is correct and your server has internet connection.', 'forminator' ) );
 			}
 
 			$body = wp_remote_retrieve_body( $res );
@@ -219,7 +214,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 				// Got no response from API.
 				if ( empty( $body ) ) {
 					forminator_addon_maybe_log( __METHOD__, $res );
-					throw new Forminator_Addon_Mailchimp_Wp_Api_Exception(
+					throw new Forminator_Integration_Exception(
 						esc_html__(
 							'Failed to process request, make sure API KEY is correct and your server has internet connection.',
 							'forminator'
@@ -243,12 +238,12 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 						}
 						$this->_last_data_received = $response;
 						if ( 404 === $response_code ) {
-							throw new Forminator_Addon_Mailchimp_Wp_Api_Not_Found_Exception( sprintf(
+							throw new Forminator_Integration_Exception( sprintf(
 							/* translators: %s: Error message */
 								esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
 							);
 						}
-						throw new Forminator_Addon_Mailchimp_Wp_Api_Exception( sprintf(
+						throw new Forminator_Integration_Exception( sprintf(
 							/* translators: %s: Error message */
 							esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
 						);
@@ -259,7 +254,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 				if ( is_null( $response ) ) {
 					$this->_last_data_received = $body;
 					forminator_addon_maybe_log( __METHOD__, $res );
-					throw new Forminator_Addon_Mailchimp_Wp_Api_Exception( sprintf(
+					throw new Forminator_Integration_Exception( sprintf(
 						/* translators: %s: Error message */
 						esc_html__( 'Failed to process request : %s', 'forminator' ), json_last_error_msg() )
 					);
@@ -284,7 +279,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 			$response = apply_filters( 'forminator_addon_mailchimp_api_response', $response, $body, $wp_response );
 
 			$this->_last_data_received = $response;
-		} catch ( Forminator_Addon_Mailchimp_Wp_Api_Exception $e ) {
+		} catch ( Forminator_Integration_Exception $e ) {
 			$response = $e;
 		}
 
@@ -299,7 +294,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function ping() {
 		return $this->request(
@@ -316,7 +311,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param $fields
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_info( $fields = array() ) {
 		if ( empty( $fields ) ) {
@@ -340,7 +335,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_lists( $args ) {
 		$default_args = array(
@@ -412,7 +407,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_list_merge_fields( $list_id, $args ) {
 		$default_args = array(
@@ -440,7 +435,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function add_merge_field_to_list( $list_id, $args ) {
 		$available_types = array(
@@ -463,7 +458,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 
 		$args = array_merge( $default_args, $args );
 		if ( ! in_array( $args['type'], $available_types, true ) ) {
-			throw new Forminator_Addon_Mailchimp_Wp_Api_Exception( esc_html__( 'Invalid Field Type', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Invalid Field Type', 'forminator' ) );
 		}
 
 		return $this->request(
@@ -482,7 +477,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_list_categories( $list_id, $args ) {
 		$default_args = array(
@@ -591,7 +586,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_category_interests( $list_id, $category_id, $args ) {
 		$default_args = array(
@@ -647,8 +642,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param        $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_member( $list_id, $subscriber_hash, $args ) {
 		$default_args = array(
@@ -673,7 +667,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function add_member_to_list( $list_id, $args ) {
 		$default_args = array(
@@ -685,7 +679,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 		$args = array_merge( $default_args, $args );
 
 		if ( ! isset( $args['email_address'] ) ) {
-			throw new Forminator_Addon_Mailchimp_Wp_Api_Exception( esc_html__( 'email_address are required for mailchimp', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'email_address are required for mailchimp', 'forminator' ) );
 		}
 
 		return $this->request(
@@ -705,7 +699,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param $args
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function add_or_update_member( $list_id, $subscriber_hash, $args ) {
 		$default_args = array(
@@ -717,7 +711,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 
 		$args = array_merge( $default_args, $args );
 		if ( ! isset( $args['email_address'] ) ) {
-			throw new Forminator_Addon_Mailchimp_Wp_Api_Exception( esc_html__( 'email_address are required for adding member to mailchimp list', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'email_address are required for adding member to mailchimp list', 'forminator' ) );
 		}
 
 		if ( empty( $args['merge_fields'] ) ) {
@@ -752,8 +746,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param string  $subscriber_hash The MD5 hash of the lowercase version of the list member’s email address.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function delete_member( $list_id, $subscriber_hash ) {
 		return $this->request(
@@ -773,8 +766,7 @@ class Forminator_Addon_Mailchimp_Wp_Api {
 	 * @param string $url href from _links response which will be converted to path.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Not_Found_Exception
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function delete_( $url ) {
 		$path = str_ireplace( $this->_endpoint, '', $url );

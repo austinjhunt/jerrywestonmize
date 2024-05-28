@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\Automation\Engine\Integration;
 use MailPoet\Automation\Engine\Registry;
+use MailPoet\Automation\Engine\WordPress;
 use MailPoet\Automation\Integrations\MailPoet\Actions\SendEmailAction;
 use MailPoet\Automation\Integrations\MailPoet\Analytics\Analytics;
 use MailPoet\Automation\Integrations\MailPoet\Hooks\AutomationEditorLoadingHooks;
@@ -68,6 +69,9 @@ class MailPoetIntegration implements Integration {
   /** @var Analytics */
   private $registerAnalytics;
 
+  /** @var WordPress */
+  private $wordPress;
+
   public function __construct(
     ContextFactory $contextFactory,
     SegmentSubject $segmentSubject,
@@ -83,7 +87,8 @@ class MailPoetIntegration implements Integration {
     AutomationEditorLoadingHooks $automationEditorLoadingHooks,
     CreateAutomationRunHook $createAutomationRunHook,
     TemplatesFactory $templatesFactory,
-    Analytics $registerAnalytics
+    Analytics $registerAnalytics,
+    WordPress $wordPress
   ) {
     $this->contextFactory = $contextFactory;
     $this->segmentSubject = $segmentSubject;
@@ -100,6 +105,7 @@ class MailPoetIntegration implements Integration {
     $this->createAutomationRunHook = $createAutomationRunHook;
     $this->templatesFactory = $templatesFactory;
     $this->registerAnalytics = $registerAnalytics;
+    $this->wordPress = $wordPress;
   }
 
   public function register(Registry $registry): void {
@@ -127,6 +133,9 @@ class MailPoetIntegration implements Integration {
       [$this->sendEmailAction, 'saveEmailSettings'],
       $this->sendEmailAction->getKey()
     );
+
+    // execute send email step progress when email is sent
+    $this->wordPress->addAction('mailpoet_automation_email_sent', [$this->sendEmailAction, 'handleEmailSent']);
 
     $this->automationEditorLoadingHooks->init();
     $this->createAutomationRunHook->init();

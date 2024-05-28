@@ -29,13 +29,13 @@ class EventDomainService
      * @param Recurring  $recurring
      * @param Collection $eventPeriods
      *
-     * @return Collection
+     * @return array
      *
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      */
     public function getRecurringEventsPeriods($recurring, $eventPeriods)
     {
-        $recurringPeriods = new Collection();
+        $recurringPeriods = [];
 
         if (!($recurring && $recurring->getCycle() && $recurring->getUntil())) {
             return $recurringPeriods;
@@ -73,6 +73,8 @@ class EventDomainService
 
         $recurringOrder = 1;
 
+        $recurringOrderEvent = 2;
+
         while ($hasMoreRecurringPeriods) {
             $periods = new Collection();
 
@@ -83,6 +85,14 @@ class EventDomainService
 
             if (isset($repeatPeriod)) {
                 $periodStart0  = $this->getNextPeriodStartDate($periodStartDate0, $modifyValue, $repeatPeriod);
+                if ($periodStart0 === null) {
+                    if ($periodStart0 > $recurring->getUntil()->getValue()) {
+                        break;
+                    }
+                    $recurringOrder++;
+                    $recurringOrderEvent++;
+                    continue;
+                }
                 $dayDifference = $periodStartDate0->diff($periodStart0);
             } else if ($dateNew) {
                 $periodStartNew = DateTimeService::getCustomDateTimeObject($dateNew->getValue()->format('Y-m-d H:i:s'));
@@ -123,7 +133,8 @@ class EventDomainService
             }
 
             if ($hasMoreRecurringPeriods) {
-                $recurringPeriods->addItem($periods);
+                $recurringPeriods[] = ['order' => $recurringOrderEvent, 'periods' => $periods];
+                $recurringOrderEvent++;
                 $recurringOrder++;
             }
         }
@@ -199,7 +210,7 @@ class EventDomainService
      * @param Event      $originEvent
      * @param Collection $clonedOriginEventPeriods
      *
-     * @return void
+     * @return boolean
      *
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws \Interop\Container\Exception\ContainerException
@@ -362,6 +373,10 @@ class EventDomainService
 
         if (isset($repeatPeriod)) {
             $periodStart0  = $this->getNextPeriodStartDate($periodStartDate0, $modifyValue, $repeatPeriod);
+            if ($periodStart0 === null) {
+                // for added events
+                return false;
+            }
             $dayDifference = $periodStartDate0->diff($periodStart0);
         } else if ($dateNew) {
             $thisPeriodStart = DateTimeService::getCustomDateTimeObject($originEvent->getPeriods()->getItem(0)->getPeriodStart()->getValue()->format('Y-m-d H:i:s'));
@@ -443,6 +458,8 @@ class EventDomainService
                 $followingEvent->getPeriods()->addItem($newFollowingEventPeriod);
             }
         }
+
+        return true;
     }
 
     /**
@@ -488,6 +505,7 @@ class EventDomainService
         $time   = (int)$periodStartDate0->format('H')*60 + (int)$periodStartDate0->format('i');
 
         $periodStart0 = DateTimeService::getCustomDateTimeObject($repeatPeriod . " of $year-$month");
-        return $periodStart0->add(new \DateInterval('PT' . $time . 'M'));
+        return explode(' ', $repeatPeriod)[0] === 'fifth'
+            && (int)$periodStart0->format('m') !== (int)$month ? null : $periodStart0->add(new \DateInterval('PT' . $time . 'M'));
     }
 }

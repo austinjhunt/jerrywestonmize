@@ -1,31 +1,12 @@
 <?php
 
 /**
- * Class Forminator_Addon_Googlesheet_Poll_Hooks
+ * Class Forminator_Googlesheet_Poll_Hooks
  *
  * @since 1.6.1
  *
  */
-class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hooks_Abstract {
-
-	/**
-	 * Addon instance are auto available form abstract
-	 * Its added here for development purpose,
-	 * Auto-complete will resolve addon directly to `Google Sheets` instance instead of the abstract
-	 * And its public properties can be exposed
-	 *
-	 * @since 1.6.1
-	 * @var Forminator_Addon_Googlesheet
-	 */
-	protected $addon;
-
-	/**
-	 * Poll Settings Instance
-	 *
-	 * @since 1.6.1
-	 * @var Forminator_Addon_Googlesheet_Poll_Settings | null
-	 */
-	protected $poll_settings_instance;
+class Forminator_Googlesheet_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 
 	/**
 	 * Google sheet column titles
@@ -34,90 +15,19 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 	const GSHEET_EXTRA_COLUMN_NAME  = 'Extra';
 
 	/**
-	 * Forminator_Addon_Googlesheet_Poll_Hooks constructor.
+	 * Return custom entry fields
 	 *
-	 * @since 1.6.1
-	 *
-	 * @param Forminator_Addon_Abstract $addon
-	 * @param                           $poll_id
-	 *
-	 * @throws Forminator_Addon_Exception
-	 */
-	public function __construct( Forminator_Addon_Abstract $addon, $poll_id ) {
-		parent::__construct( $addon, $poll_id );
-		$this->_submit_poll_error_message = esc_html__( 'Google Sheets failed to process submitted data. Please check your poll and try again', 'forminator' );
-	}
-
-	/**
-	 * Save status of request sent and received for each connected Google Sheets
-	 *
-	 * @since 1.6.1
-	 *
-	 * @param array $submitted_data
-	 * @param array $current_entry_fields
-	 *
+	 * @param array $submitted_data Submitted data.
+	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	public function add_entry_fields( $submitted_data, $current_entry_fields = array() ) {
-		$poll_id                = $this->poll_id;
-		$poll_settings_instance = $this->poll_settings_instance;
-
-		/**
-		 * Filter Google Sheets submitted poll data to be processed
-		 *
-		 * @since 1.6.1
-		 *
-		 * @param array                                      $submitted_data
-		 * @param array                                      $current_entry_fields
-		 * @param int                                        $poll_id                current Poll ID.
-		 * @param Forminator_Addon_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon poll Settings instance.
-		 */
-		$submitted_data = apply_filters(
-			'forminator_addon_googlesheet_poll_submitted_data',
-			$submitted_data,
-			$current_entry_fields,
-			$poll_id,
-			$poll_settings_instance
-		);
-
-		/**
-		 * Filter current poll entry fields data to be processed by Google Sheets
-		 *
-		 * @since 1.6.1
-		 *
-		 * @param array                                      $current_entry_fields
-		 * @param array                                      $submitted_data
-		 * @param int                                        $poll_id                current Poll ID.
-		 * @param Forminator_Addon_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
-		 */
-		$current_entry_fields = apply_filters(
-			'forminator_addon_googlesheet_poll_entry_fields',
-			$current_entry_fields,
-			$submitted_data,
-			$poll_id,
-			$poll_settings_instance
-		);
-
-		forminator_addon_maybe_log( __METHOD__, $submitted_data );
-
-		$addon_setting_values = $this->poll_settings_instance->get_poll_settings_values();
-
-		$data = array();
-
-		/**
-		 * Fires before poll create row on Google Sheets
-		 *
-		 * @since 1.6.1
-		 *
-		 * @param int                                        $poll_id                current Poll ID.
-		 * @param array                                      $submitted_data
-		 * @param Forminator_Addon_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
-		 */
-		do_action( 'forminator_addon_googlesheet_poll_before_create_row', $poll_id, $submitted_data, $poll_settings_instance );
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+		$addon_setting_values = $this->settings_instance->get_settings_values();
+		$data                 = array();
 
 		foreach ( $addon_setting_values as $key => $addon_setting_value ) {
 			// save it on entry field, with name `status-$MULTI_ID`, and value is the return result on sending data to Google Sheets.
-			if ( $poll_settings_instance->is_multi_poll_settings_complete( $key ) ) {
+			if ( $this->settings_instance->is_multi_id_completed( $key ) ) {
 				// exec only on completed connection.
 				$data[] = array(
 					'name'  => 'status-' . $key,
@@ -125,27 +35,6 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 				);
 			}
 		}
-
-		$entry_fields = $data;
-		/**
-		 * Filter Google Sheets entry fields to be saved to entry model
-		 *
-		 * @since 1.6.1
-		 *
-		 * @param array                                      $entry_fields
-		 * @param int                                        $poll_id                current Poll ID.
-		 * @param array                                      $submitted_data
-		 * @param array                                      $current_entry_fields
-		 * @param Forminator_Addon_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
-		 */
-		$data = apply_filters(
-			'forminator_addon_poll_googlesheet_entry_fields',
-			$entry_fields,
-			$poll_id,
-			$submitted_data,
-			$current_entry_fields,
-			$poll_settings_instance
-		);
 
 		return $data;
 	}
@@ -166,8 +55,8 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 		// initialize as null.
 		$api = null;
 
-		$poll_id                = $this->poll_id;
-		$poll_settings_instance = $this->poll_settings_instance;
+		$poll_id                = $this->module_id;
+		$poll_settings_instance = $this->settings_instance;
 
 		try {
 
@@ -180,7 +69,7 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 			 * @param int                                        $poll_id                current Poll ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $poll_entry_fields
-			 * @param Forminator_Addon_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
+			 * @param Forminator_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
 			 */
 			do_action( 'forminator_addon_poll_googlesheet_before_prepare_sheet_headers', $connection_settings, $poll_id, $submitted_data, $poll_entry_fields, $poll_settings_instance );
 
@@ -197,7 +86,7 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 			 * @param int                                        $poll_id                current Poll ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $poll_entry_fields
-			 * @param Forminator_Addon_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
+			 * @param Forminator_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
 			 */
 			$header_fields = apply_filters(
 				'forminator_addon_poll_googlesheet_sheet_headers',
@@ -219,7 +108,7 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 			 * @param int                                        $poll_id                current Poll ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $poll_entry_fields
-			 * @param Forminator_Addon_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
+			 * @param Forminator_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
 			 */
 			do_action( 'forminator_addon_poll_googlesheet_after_prepare_sheet_headers', $header_fields, $connection_settings, $poll_id, $submitted_data, $poll_entry_fields, $poll_settings_instance );
 
@@ -310,7 +199,7 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 				'description'     => $e->getMessage(),
 				'connection_name' => $connection_settings['name'],
 			);
-		} catch ( Forminator_Addon_Googlesheet_Exception $e ) {
+		} catch ( Forminator_Integration_Exception $e ) {
 			forminator_addon_maybe_log( __METHOD__, 'Failed to Send to Google Sheets' );
 
 			return array(
@@ -337,7 +226,7 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 	 * @param $file_id
 	 *
 	 * @return array
-	 * @throws Forminator_Addon_Googlesheet_Exception
+	 * @throws Forminator_Integration_Exception
 	 * @throws Exception
 	 */
 	public function get_sheet_headers( $file_id ) {
@@ -350,15 +239,15 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 		$sheets              = $spreadsheet->getSheets();
 
 		if ( ! isset( $sheets[0] ) || ! isset( $sheets[0]->properties ) ) {
-			throw new Forminator_Addon_Googlesheet_Exception( esc_html__( 'No sheet found', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'No sheet found', 'forminator' ) );
 		}
 
 		if ( ! isset( $sheets[0]->properties->title ) || empty( $sheets[0]->properties->title ) ) {
-			throw new Forminator_Addon_Googlesheet_Exception( esc_html__( 'Sheet title not found', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Sheet title not found', 'forminator' ) );
 		}
 
 		if ( ! isset( $sheets[0]->properties->gridProperties ) || ! isset( $sheets[0]->properties->gridProperties->columnCount ) ) {
-			throw new Forminator_Addon_Googlesheet_Exception( esc_html__( 'Failed to get column count of the sheet', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Failed to get column count of the sheet', 'forminator' ) );
 		}
 
 		$sheet_title        = $sheets[0]->properties->title;
@@ -380,7 +269,7 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 		$columns_filled = 0;
 		if ( isset( $values[0] ) && is_array( $values[0] ) ) {
 			foreach ( $values[0] as $value ) {
-				$key_range = $sheet_title . '!' . Forminator_Addon_Googlesheet_Form_Hooks::column_number_to_letter( $column_number ) . '1';
+				$key_range = $sheet_title . '!' . Forminator_Googlesheet_Form_Hooks::column_number_to_letter( $column_number ) . '1';
 				// forminator poll header format = 'Answer,Extra'.
 				$header_fields[ $value ] = array(
 					'range' => $key_range,
@@ -400,7 +289,7 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 			$expected_header_value = $required_header_column;
 			if ( ! in_array( $required_header_column, array_keys( $header_fields ), true ) ) {
 				//add
-				$new_range = $sheet_title . '!' . Forminator_Addon_Googlesheet_Form_Hooks::column_number_to_letter( $column_number ) . '1';
+				$new_range = $sheet_title . '!' . Forminator_Googlesheet_Form_Hooks::column_number_to_letter( $column_number ) . '1';
 
 				// update headers map.
 				$header_fields[ $required_header_column ] = array(
@@ -484,101 +373,6 @@ class Forminator_Addon_Googlesheet_Poll_Hooks extends Forminator_Addon_Poll_Hook
 
 		return $header_fields;
 
-	}
-
-	/**
-	 * Google Sheets will add a column on the title/header row
-	 * its called `Google Sheets Info` which can be translated on forminator lang
-	 *
-	 * @since 1.6.1
-	 * @return array
-	 */
-	public function on_export_render_title_row() {
-
-		$export_headers = array(
-			'info' => esc_html__( 'Google Sheets Info', 'forminator' ),
-		);
-
-		$poll_id                = $this->poll_id;
-		$poll_settings_instance = $this->poll_settings_instance;
-
-		/**
-		 * Filter Google Sheets headers on export file
-		 *
-		 * @since 1.6.1
-		 *
-		 * @param array                                      $export_headers         headers to be displayed on export file.
-		 * @param int                                        $poll_id                current Poll ID.
-		 * @param Forminator_Addon_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
-		 */
-		$export_headers = apply_filters(
-			'forminator_addon_poll_googlesheet_export_headers',
-			$export_headers,
-			$poll_id,
-			$poll_settings_instance
-		);
-
-		return $export_headers;
-	}
-
-	/**
-	 * Google Sheets will add a column that give user information whether sending data to Google Sheets successfully or not
-	 * It will only add one column even its multiple connection, every connection will be separated by comma
-	 *
-	 * @since 1.6.1
-	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param                             $addon_meta_data
-	 *
-	 * @return array
-	 */
-	public function on_export_render_entry( Forminator_Form_Entry_Model $entry_model, $addon_meta_data ) {
-
-		$poll_id                = $this->poll_id;
-		$poll_settings_instance = $this->poll_settings_instance;
-
-		/**
-		 *
-		 * Filter Google Sheets metadata that previously saved on db to be processed
-		 *
-		 * @since 1.6.1
-		 *
-		 * @param array                                      $addon_meta_data
-		 * @param int                                        $poll_id                current Poll ID.
-		 * @param Forminator_Addon_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Form Settings instance.
-		 */
-		$addon_meta_data = apply_filters(
-			'forminator_addon_poll_googlesheet_metadata',
-			$addon_meta_data,
-			$poll_id,
-			$poll_settings_instance
-		);
-
-		$export_columns = array(
-			'info' => $this->get_from_addon_meta_data( $addon_meta_data, 'description', '' ),
-		);
-
-		/**
-		 * Filter Google Sheets columns to be displayed on export submissions
-		 *
-		 * @since 1.2
-		 *
-		 * @param array                                      $export_columns         column to be exported.
-		 * @param int                                        $poll_id                current Poll ID.
-		 * @param Forminator_Form_Entry_Model                $entry_model            Form Entry Model.
-		 * @param array                                      $addon_meta_data        meta data saved by addon on entry fields.
-		 * @param Forminator_Addon_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
-		 */
-		$export_columns = apply_filters(
-			'forminator_addon_poll_googlesheet_export_columns',
-			$export_columns,
-			$poll_id,
-			$entry_model,
-			$addon_meta_data,
-			$poll_settings_instance
-		);
-
-		return $export_columns;
 	}
 
 }

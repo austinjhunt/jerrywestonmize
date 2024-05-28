@@ -153,20 +153,12 @@ class Forminator_MultiValue extends Forminator_Field {
 		);
 
 		if ( $label ) {
-			if ( $required ) {
-				$html .= sprintf(
-					'<h4 id="%s" class="forminator-label">%s %s</h4>',
-					'forminator-checkbox-group-' . $uniq_id . '-label',
-					$label,
-					forminator_get_required_icon()
-				);
-			} else {
-				$html .= sprintf(
-					'<h4 id="%s" class="forminator-label">%s</h4>',
-					'forminator-checkbox-group-' . $uniq_id . '-label',
-					$label
-				);
-			}
+			$label .= $required ? ' ' . forminator_get_required_icon() : '';
+			$html  .= sprintf(
+				'<span id="%s" class="forminator-label">%s</span>',
+				'forminator-checkbox-group-' . $uniq_id . '-label',
+				$label
+			);
 		}
 
 		$hidden_calc_behavior = '';

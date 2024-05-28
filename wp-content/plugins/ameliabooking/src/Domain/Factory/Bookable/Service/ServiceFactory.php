@@ -276,11 +276,11 @@ class ServiceFactory
                 $row['service_customPricing'] : null;
             $services[$serviceId]['limitPerCustomer'] = isset($row['service_limitPerCustomer']) ?
                 $row['service_limitPerCustomer'] : null;
-            $services[$serviceId]['deposit'] = isset($row['service_deposit']) ? $row['service_deposit'] : null;
+            $services[$serviceId]['deposit'] = isset($row['service_deposit']) ? $row['service_deposit'] : 0;
             $services[$serviceId]['depositPayment'] = isset($row['service_depositPayment']) ?
-                $row['service_depositPayment'] : null;
+                $row['service_depositPayment'] : 'disabled';
             $services[$serviceId]['depositPerPerson'] = isset($row['service_depositPerPerson']) ?
-                $row['service_depositPerPerson'] : null;
+                $row['service_depositPerPerson'] : 1;
             $services[$serviceId]['mandatoryExtra'] = isset($row['service_mandatoryExtra']) ?
                 $row['service_mandatoryExtra'] : null;
             $services[$serviceId]['minSelectedExtras'] = isset($row['service_minSelectedExtras']) ?

@@ -1,16 +1,15 @@
 <?php
 /** @noinspection HtmlUnknownTarget */
 
-require_once dirname( __FILE__ ) . '/class-forminator-addon-mailchimp-exception.php';
 require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-mailchimp-wp-api.php';
 
 /**
- * Class Forminator_Addon_Mailchimp
+ * Class Forminator_Mailchimp
  * The class that defines mailchimp addon
  *
  * @since 1.0 Mailchimp Addon
  */
-class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
+class Forminator_Mailchimp extends Forminator_Integration {
 
 	/**
 	 * Mailchimp Addon Instance
@@ -19,7 +18,7 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 	 *
 	 * @var self|null
 	 */
-	private static $_instance = null;
+	protected static $instance = null;
 
 	/**
 	 * @since 1.0 Mailchimp Addon
@@ -52,54 +51,8 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 	protected $_title = 'Mailchimp';
 
 	/**
-	 * @since 1.0 Mailchimp Addon
-	 * @var string
-	 */
-	protected $_url = 'https://wpmudev.com';
-
-	/**
-	 * @since 1.0 Mailchimp Addon
-	 * @var string
-	 */
-	protected $_full_path = __FILE__;
-
-	/**
-	 * Class name of form settings
-	 *
-	 * @since 1.0 Mailchimp Addon
-	 *
-	 * @var string
-	 */
-	protected $_form_settings = 'Forminator_Addon_Mailchimp_Form_Settings';
-
-	/**
-	 * Class name of form hooks
-	 *
-	 * @since 1.0 Mailchimp Addon
-	 * @var string
-	 */
-	protected $_form_hooks = 'Forminator_Addon_Mailchimp_Form_Hooks';
-
-	/**
-	 * Class name of quiz settings
-	 *
-	 * @since 1.0 Mailchimp Addon
-	 *
-	 * @var string
-	 */
-	protected $_quiz_settings = 'Forminator_Addon_Mailchimp_Quiz_Settings';
-
-	/**
-	 * Class name of quiz hooks
-	 *
-	 * @since 1.0 Mailchimp Addon
-	 * @var string
-	 */
-	protected $_quiz_hooks = 'Forminator_Addon_Mailchimp_Quiz_Hooks';
-
-	/**
 	 * Hold account information that currently connected
-	 * Will be saved to @see Forminator_Addon_Mailchimp::save_settings_values()
+	 * Will be saved to @see Forminator_Mailchimp::save_settings_values()
 	 *
 	 * @since 1.0 Mailchimp Addon
 	 * @var array
@@ -109,7 +62,7 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 	protected $_position = 2;
 
 	/**
-	 * Forminator_Addon_Mailchimp constructor.
+	 * Forminator_Mailchimp constructor.
 	 * - Set dynamic translatable text(s) that will be displayed to end-user
 	 * - Set dynamic icons and images
 	 *
@@ -119,11 +72,6 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 		// late init to allow translation.
 		$this->_description                = esc_html__( 'Make form data as Mailchimp List', 'forminator' );
 
-		$this->_icon     = forminator_addon_mailchimp_assets_url() . 'icons/mailchimp.png';
-		$this->_icon_x2  = forminator_addon_mailchimp_assets_url() . 'icons/mailchimp@2x.png';
-		$this->_image    = forminator_addon_mailchimp_assets_url() . 'img/mailchimp.png';
-		$this->_image_x2 = forminator_addon_mailchimp_assets_url() . 'img/mailchimp@2x.png';
-
 		if ( wp_doing_ajax() ) {
 			add_action( 'wp_ajax_forminator_mailchimp_get_group_interests', array( $this, 'ajax_group_interests' ) );
 		}
@@ -132,22 +80,8 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 	}
 
 	/**
-	 * Get addon instance
-	 *
-	 * @since 1.0 Mailchimp Addon
-	 * @return self|null
-	 */
-	public static function get_instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-
-		return self::$_instance;
-	}
-
-	/**
 	 * Hook before save settings values
-	 * to include @see Forminator_Addon_Mailchimp::$_connected_account
+	 * to include @see Forminator_Mailchimp::$_connected_account
 	 * for future reference
 	 *
 	 * @since 1.0 Mailchimp Addon
@@ -167,156 +101,16 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 	}
 
 	/**
-	 * Flag for check whether mailchimp addon is connected globally
-	 *
-	 * @since 1.0 Mailchimp Addon
-	 * @return bool
-	 */
-	public function is_connected() {
-		try {
-			// check if its active.
-			if ( ! $this->is_active() ) {
-				throw new Forminator_Addon_Mailchimp_Exception( esc_html__( 'Mailchimp is not active', 'forminator' ) );
-			}
-
-			// if user completed settings.
-			$is_connected = $this->settings_is_complete();
-
-		} catch ( Forminator_Addon_Mailchimp_Exception $e ) {
-			$is_connected = false;
-		}
-
-		/**
-		 * Filter connected status of mailchimp
-		 *
-		 * @since 1.1
-		 *
-		 * @param bool $is_connected
-		 */
-		$is_connected = apply_filters( 'forminator_addon_mailchimp_is_connected', $is_connected );
-
-		return $is_connected;
-	}
-
-	/**
 	 * Check if user already completed settings
 	 *
 	 * @since 1.0 Mailchimp Addon
 	 * @return bool
 	 */
-	private function settings_is_complete() {
+	public function is_authorized() {
 		$setting_values = $this->get_settings_values();
 
 		// check api_key and connected_account exists and not empty.
-		return isset( $setting_values['api_key'] ) && $setting_values['api_key'] && isset( $setting_values['connected_account'] ) && ! empty( $setting_values['connected_account'] );
-	}
-
-	/**
-	 * Flag for check if and addon connected to a form
-	 * by default it will check if last step of form settings already completed by user
-	 *
-	 * @since 1.0 Mailchimp Addon
-	 *
-	 * @param $form_id
-	 *
-	 * @return bool
-	 */
-	public function is_form_connected( $form_id ) {
-
-		try {
-			// initialize with null.
-			$form_settings_instance = null;
-			if ( ! $this->is_connected() ) {
-				throw new Forminator_Addon_Mailchimp_Exception( esc_html__( 'Mailchimp addon not connected.', 'forminator' ) );
-			}
-
-			$form_settings_instance = $this->get_addon_settings( $form_id, 'form' );
-			if ( ! $form_settings_instance instanceof Forminator_Addon_Mailchimp_Form_Settings ) {
-				throw new Forminator_Addon_Mailchimp_Exception( esc_html__( 'Form settings instance is not valid Forminator_Addon_Mailchimp_Form_Settings.', 'forminator' ) );
-			}
-			$wizards = $form_settings_instance->form_settings_wizards();
-			//last step is completed
-			$last_step             = end( $wizards );
-			$last_step_is_complete = call_user_func( $last_step['is_completed'] );
-			if ( ! $last_step_is_complete ) {
-				throw new Forminator_Addon_Mailchimp_Exception( esc_html__( 'Form settings is not yet completed.', 'forminator' ) );
-			}
-
-			$is_form_connected = true;
-		} catch ( Forminator_Addon_Mailchimp_Exception $e ) {
-			$is_form_connected = false;
-
-			forminator_addon_maybe_log( __METHOD__, $e->getMessage() );
-		}
-
-		/**
-		 * Filter connected status of mailchimp with the form
-		 *
-		 * @since 1.1
-		 *
-		 * @param bool                                          $is_form_connected
-		 * @param int                                           $form_id                Current Form ID.
-		 * @param Forminator_Addon_Mailchimp_Form_Settings|null $form_settings_instance Instance of form settings, or null when unavailable.
-		 *
-		 */
-		$is_form_connected = apply_filters( 'forminator_addon_mailchimp_is_form_connected', $is_form_connected, $form_id, $form_settings_instance );
-
-		return $is_form_connected;
-
-	}
-
-	/**
-	 * Flag for check if and addon connected to a form
-	 * by default it will check if last step of form settings already completed by user
-	 *
-	 * @since 1.0 Mailchimp Addon
-	 *
-	 * @param $quiz_id
-	 *
-	 * @return bool
-	 */
-	public function is_quiz_connected( $quiz_id ) {
-
-		try {
-			// initialize with null.
-			$quiz_settings_instance = null;
-			if ( ! $this->is_connected() ) {
-				throw new Forminator_Addon_Mailchimp_Exception( esc_html__( 'Mailchimp addon not connected.', 'forminator' ) );
-			}
-
-			$quiz_settings_instance = $this->get_addon_settings( $quiz_id, 'quiz' );
-			if ( ! $quiz_settings_instance instanceof Forminator_Addon_Mailchimp_Quiz_Settings ) {
-				throw new Forminator_Addon_Mailchimp_Exception( esc_html__( 'Form settings instance is not valid Forminator_Addon_Mailchimp_Quiz_Settings.', 'forminator' ) );
-			}
-			$wizards = $quiz_settings_instance->quiz_settings_wizards();
-			//last step is completed
-			$last_step             = end( $wizards );
-			$last_step_is_complete = call_user_func( $last_step['is_completed'] );
-			if ( ! $last_step_is_complete ) {
-				throw new Forminator_Addon_Mailchimp_Exception( esc_html__( 'Form settings is not yet completed.', 'forminator' ) );
-			}
-
-			$is_quiz_connected = true;
-		} catch ( Forminator_Addon_Mailchimp_Exception $e ) {
-			$is_quiz_connected = false;
-
-			forminator_addon_maybe_log( __METHOD__, $e->getMessage() );
-		}
-
-		/**
-		 * Filter connected status of mailchimp with the form
-		 *
-		 * @since 1.1
-		 *
-		 * @param bool                                          $is_quiz_connected
-		 * @param int                                           $quiz_id                Current Form ID.
-		 * @param Forminator_Addon_Mailchimp_Quiz_Settings|null $quiz_settings_instance Instance of form settings, or null when unavailable.
-		 *
-		 */
-		$is_quiz_connected = apply_filters( 'forminator_addon_mailchimp_is_form_connected', $is_quiz_connected, $quiz_id, $quiz_settings_instance );
-
-		return $is_quiz_connected;
-
+		return ! empty( $setting_values['api_key'] ) && ! empty( $setting_values['connected_account'] );
 	}
 
 	/**
@@ -342,8 +136,8 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 			$info = $this->get_api( $api_key )->get_info();
 			forminator_addon_maybe_log( __METHOD__, $info );
 
-			if ( 'Forminator_Addon_Mailchimp_Wp_Api_Exception' === get_class( $info ) ) {
-				throw new Forminator_Addon_Mailchimp_Wp_Api_Exception( $info->getMessage() );
+			if ( 'Forminator_Integration_Exception' === get_class( $info ) ) {
+				throw new Forminator_Integration_Exception( $info->getMessage() );
 			}
 
 			$this->_connected_account = array(
@@ -352,7 +146,7 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 				'email'        => $info->email,
 			);
 
-		} catch ( Forminator_Addon_Mailchimp_Wp_Api_Exception $e ) {
+		} catch ( Forminator_Integration_Exception $e ) {
 			$this->_update_settings_error_message = $e->getMessage();
 
 			return false;
@@ -368,14 +162,14 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 	 *
 	 * @param null $api_key
 	 *
-	 * @return Forminator_Addon_Mailchimp_Wp_Api|null
-	 * @throws Forminator_Addon_Mailchimp_Wp_Api_Exception
+	 * @return Forminator_Mailchimp_Wp_Api|null
+	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_api( $api_key = null ) {
 		if ( is_null( $api_key ) ) {
 			$api_key = $this->get_api_key();
 		}
-		$api = Forminator_Addon_Mailchimp_Wp_Api::get_instance( $api_key );
+		$api = Forminator_Mailchimp_Wp_Api::get_instance( $api_key );
 		return $api;
 	}
 
@@ -471,42 +265,19 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 			$connected_account = $setting_values['connected_account'];
 
 			// Show currently connected mailchimp account if its already connected.
-			$myaccount .= sprintf(
+			$notice = sprintf(
 				/* translators:  placeholder is Name and Email of Connected MailChimp Account */
 				esc_html__( 'Your Mailchimp is connected to %1$s: %2$s.', 'forminator' ),
 				'<strong>' . esc_html( $connected_account['account_name'] ) . '</strong>',
 				sanitize_email( $connected_account['email'] )
 			);
 
-			$myaccount = '<div role="alert" class="sui-notice sui-notice-red sui-active" style="display: block; text-align: left;" aria-live="assertive">
-				<div class="sui-notice-content">
-					<div class="sui-notice-message">
-						<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
-						<p>' . $myaccount . '</p>
-					</div>
-				</div>
-			</div>';
+			$myaccount = Forminator_Admin::get_red_notice( $notice );
 
 		}
 
 		return $myaccount;
 
-	}
-
-	/**
-	 * Flag to show full log on entries
-	 * By default API request(s) are not shown on submissions page
-	 * set @see FORMINATOR_ADDON_MAILCHIMP_SHOW_FULL_LOG to `true` on wp-config.php to show it
-	 *
-	 * @since 1.0 Mailchimp Addon
-	 * @return bool
-	 */
-	public static function is_show_full_log() {
-		if ( defined( 'FORMINATOR_ADDON_MAILCHIMP_SHOW_FULL_LOG' ) && FORMINATOR_ADDON_MAILCHIMP_SHOW_FULL_LOG ) {
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
@@ -552,7 +323,7 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 		return array(
 			array(
 				'callback'     => array( $this, 'configure_api_key' ),
-				'is_completed' => array( $this, 'settings_is_complete' ),
+				'is_completed' => array( $this, 'is_authorized' ),
 			),
 		);
 	}
@@ -602,9 +373,9 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 			} else {
 				$show_success = true;
 				if ( ! forminator_addon_is_active( $this->_slug ) ) {
-					$activated = Forminator_Addon_Loader::get_instance()->activate_addon( $this->_slug );
+					$activated = Forminator_Integration_Loader::get_instance()->activate_addon( $this->_slug );
 					if ( ! $activated ) {
-						$error_message = '<div class="sui-notice sui-notice-error"><p>' . Forminator_Addon_Loader::get_instance()->get_last_error_message() . '</p></div>';
+						$error_message = '<div class="sui-notice sui-notice-error"><p>' . Forminator_Integration_Loader::get_instance()->get_last_error_message() . '</p></div>';
 						$show_success  = false;
 					} else {
 						$this->save_settings_values( $save_values );
@@ -619,19 +390,8 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 						return $this->get_form_settings_wizard( array(), $form_id, 0, 0 );
 					}
 
-					$html  = '<div class="forminator-integration-popup__header">';
-						/* translators: ... */
-						$html .= '<h3 id="dialogTitle2" class="sui-box-title sui-lg" style="overflow: initial; text-overflow: none; white-space: normal;">' . /* translators: 1: Add-on name */ sprintf( esc_html__( '%1$s Added', 'forminator' ), 'Mailchimp' ) . '</h3>';
-					$html .= '</div>';
-					$html .= '<p class="sui-description" style="text-align: center;">' . esc_html__( 'You can now go to your forms and assign them to this integration.', 'forminator' ) . '</p>';
-
 					return array(
-						'html'         => $html,
-						'buttons'      => array(
-							'close' => array(
-								'markup' => self::get_button_markup( esc_html__( 'Close', 'forminator' ), 'forminator-addon-close forminator-integration-popup__close' ),
-							),
-						),
+						'html'         => $this->success_authorize(),
 						'redirect'     => false,
 						'has_errors'   => false,
 						'notification' => array(
@@ -703,74 +463,6 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 	}
 
 	/**
-	 * Flag for check if and addon connected to a poll(poll settings such as list id completed)
-	 *
-	 * Please apply necessary WordPress hook on the inheritance class
-	 *
-	 * @since   1.6.1
-	 *
-	 * @param $poll_id
-	 *
-	 * @return boolean
-	 */
-	public function is_poll_connected( $poll_id ) {
-		return false;
-	}
-
-	/**
-	 * Flag for check if has lead form addon connected to a quiz
-	 * by default it will check if last step of form settings already completed by user
-	 *
-	 * @since 1.0 Mailchimp Addon
-	 *
-	 * @param $quiz_id
-	 *
-	 * @return bool
-	 */
-	public function is_quiz_lead_connected( $quiz_id ) {
-
-		try {
-			// initialize with null.
-			$quiz_settings_instance = null;
-			if ( ! $this->is_connected() ) {
-				throw new Forminator_Addon_Mailchimp_Exception( esc_html__( 'Mailchimp addon not connected.', 'forminator' ) );
-			}
-			$quiz_settings_instance = $this->get_addon_settings( $quiz_id, 'quiz' );
-
-			if ( ! $quiz_settings_instance instanceof Forminator_Addon_Mailchimp_Quiz_Settings ) {
-				throw new Forminator_Addon_Mailchimp_Exception( esc_html__( 'Form settings instance is not valid Forminator_Addon_Mailchimp_Quiz_Settings.', 'forminator' ) );
-			}
-
-			$quiz_settings = $quiz_settings_instance->get_quiz_settings();
-
-			if ( isset( $quiz_settings['hasLeads'] ) && $quiz_settings['hasLeads'] ) {
-				$is_quiz_connected = true;
-			} else {
-				$is_quiz_connected = false;
-			}
-		} catch ( Forminator_Addon_Mailchimp_Exception $e ) {
-			$is_quiz_connected = false;
-
-			forminator_addon_maybe_log( __METHOD__, $e->getMessage() );
-		}
-
-		/**
-		 * Filter connected status of mailchimp with the form
-		 *
-		 * @since 1.1
-		 *
-		 * @param bool                                          $is_quiz_connected
-		 * @param int                                           $quiz_id                Current Form ID.
-		 * @param Forminator_Addon_Mailchimp_Quiz_Settings|null $quiz_settings_instance Instance of form settings, or null when unavailable.
-		 *
-		 */
-		$is_quiz_connected = apply_filters( 'forminator_addon_mailchimp_is_quiz_lead_connected', $is_quiz_connected, $quiz_id, $quiz_settings_instance );
-
-		return $is_quiz_connected;
-
-	}
-
-	/**
 	 * AJAX load group interests
 	 */
 	public function ajax_group_interests() {
@@ -779,8 +471,8 @@ class Forminator_Addon_Mailchimp extends Forminator_Addon_Abstract {
 		$post_data = isset( $_POST['data'] ) ? Forminator_Core::sanitize_array( $_POST['data'], 'data' ) : array();
 		$data      = array();
 		wp_parse_str( $post_data, $data );
-		$module_id = isset( $data['module_id'] ) ? $data['module_id'] : '';
-		$module_type = isset( $data['module_type'] ) ? $data['module_type'] : '';
+		$module_id = $data['module_id'] ?? '';
+		$module_type = $data['module_type'] ?? '';
 		if ( $module_id ) {
 			$module_settings_instance = $this->get_addon_settings( $module_id, $module_type );
 			$html                   = $module_settings_instance->get_group_interests( $data );

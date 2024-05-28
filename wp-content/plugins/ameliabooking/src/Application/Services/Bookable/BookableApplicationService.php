@@ -249,6 +249,7 @@ class BookableApplicationService
                         'allowProviderSelection' => $data['allowProviderSelection'],
                         'providers'        => $data['providers'],
                         'locations'        => $data['locations'],
+                        'position'         => $data['position'],
                     ]
                 );
 
@@ -285,6 +286,10 @@ class BookableApplicationService
 
                 $oldPackageService->setAllowProviderSelection(
                     new BooleanValueObject($bookableServices[$serviceId]['allowProviderSelection'])
+                );
+
+                $oldPackageService->setPosition(
+                    new PositiveInteger($bookableServices[$serviceId]['position'])
                 );
 
                 $packageServiceRepository->update($oldPackageService->getId()->getValue(), $oldPackageService);

@@ -74,6 +74,8 @@ class AddEventController extends Controller
         $command = new AddEventCommand($args);
 
         $requestBody = $request->getParsedBody();
+
+        $this->filter($requestBody);
         $this->setCommandFields($command, $requestBody);
         $command->setToken($request);
 

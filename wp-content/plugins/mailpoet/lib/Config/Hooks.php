@@ -5,6 +5,7 @@ namespace MailPoet\Config;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Cron\CronTrigger;
 use MailPoet\Form\DisplayFormInWPContent;
 use MailPoet\Mailer\WordPress\WordpressMailerReplacer;
 use MailPoet\Newsletter\Scheduler\PostNotificationScheduler;
@@ -69,6 +70,9 @@ class Hooks {
   /** @var WooSystemInfoController */
   private $wooSystemInfoController;
 
+  /** @var CronTrigger */
+  private $cronTrigger;
+
   public function __construct(
     Form $subscriptionForm,
     Comment $subscriptionComment,
@@ -85,7 +89,8 @@ class Hooks {
     WP $wpSegment,
     DotcomLicenseProvisioner $dotcomLicenseProvisioner,
     AutomateWooHooks $automateWooHooks,
-    WooSystemInfoController $wooSystemInfoController
+    WooSystemInfoController $wooSystemInfoController,
+    CronTrigger $cronTrigger
   ) {
     $this->subscriptionForm = $subscriptionForm;
     $this->subscriptionComment = $subscriptionComment;
@@ -103,6 +108,7 @@ class Hooks {
     $this->dotcomLicenseProvisioner = $dotcomLicenseProvisioner;
     $this->automateWooHooks = $automateWooHooks;
     $this->wooSystemInfoController = $wooSystemInfoController;
+    $this->cronTrigger = $cronTrigger;
   }
 
   public function init() {
@@ -122,6 +128,7 @@ class Hooks {
     $this->setupSettingsLinkInPluginPage();
     $this->setupChangeNotifications();
     $this->setupLicenseProvisioning();
+    $this->deactivateMailPoetCronBeforePluginUpgrade();
   }
 
   public function initEarlyHooks() {
@@ -541,5 +548,61 @@ class Hooks {
       10,
       3
     );
+  }
+
+  public function deactivateMailPoetCronBeforePluginUpgrade(): void {
+    $this->wp->addFilter(
+      'upgrader_pre_install',
+      [$this, 'deactivateCronActions'],
+      10,
+      2
+    );
+
+    $this->wp->addAction(
+      'action_scheduler_before_process_queue',
+      [$this, 'deactivateCronWhenInMaintenanceMode']
+    );
+  }
+
+  /**
+   * Deactivates the MailPoet Cron actions.
+   *
+   * Hooked to the 'upgrader_pre_install' filter
+   *
+   * The cron will be reactivated automatically later in Initializer::initialize -> setupCronTrigger()
+   *
+   * @param bool|\WP_Error $response The installation response before the installation has started.
+   * @param array         $plugin   Plugin package arguments.
+   * @return bool|\WP_Error The original `$response` parameter or WP_Error.
+   */
+  public function deactivateCronActions($response, array $plugin) {
+    if (is_wp_error($response)) { // skip
+      return $response;
+    }
+
+    $pluginId = $plugin['plugin'] ?? '';
+
+    if ($pluginId !== Env::$pluginPath) {
+      // not updating MailPoet;
+      return $response;
+    }
+
+    $this->cronTrigger->disable();
+
+    return $response;
+  }
+
+  public function deactivateCronWhenInMaintenanceMode(): void {
+    if (!$this->wp->wpIsMaintenanceMode()) {
+      return;
+    }
+
+    $this->wp->addFilter('action_scheduler_queue_runner_batch_size', function () {
+      // return 0 batch sizes to prevent the queue runner from running;
+      // this is the fastest way to stop the current running cron
+      return 0;
+    });
+
+    $this->cronTrigger->disable();
   }
 }

@@ -11,9 +11,9 @@ if ( ! class_exists( 'Forminator_Google_Logger_Abstract' ) ) {
 
 
 /**
- * Class Forminator_Addon_Wp_Googlesheet_Client_Logger
+ * Class Forminator_Wp_Googlesheet_Client_Logger
  */
-class Forminator_Addon_Wp_Googlesheet_Client_Logger extends Forminator_Google_Logger_Abstract {
+class Forminator_Wp_Googlesheet_Client_Logger extends Forminator_Google_Logger_Abstract {
 
 	/**
 	 * Writes a message to the current log implementation.

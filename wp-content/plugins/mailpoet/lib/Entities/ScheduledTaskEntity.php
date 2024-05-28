@@ -98,15 +98,8 @@ class ScheduledTaskEntity {
    */
   private $sendingQueue;
 
-  /**
-   * @ORM\OneToMany(targetEntity="MailPoet\Entities\ScheduledTaskSubscriberEntity", mappedBy="task", orphanRemoval=true)
-   * @var Collection<int, ScheduledTaskSubscriberEntity>
-   */
-  private $scheduledTaskSubscribers;
-
   public function __construct() {
     $this->subscribers = new ArrayCollection();
-    $this->scheduledTaskSubscribers = new ArrayCollection();
   }
 
   /**

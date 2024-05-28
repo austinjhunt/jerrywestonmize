@@ -8,7 +8,8 @@
       "gradients": []
     },
     "layout": {
-      "contentSize": "660px"
+      "contentSize": "660px",
+      "wideSize": "660px"
     },
     "background": {
       "backgroundImage": true
@@ -17,7 +18,7 @@
       "units": ["px"],
       "blockGap": true,
       "padding": true,
-      "margin": false,
+      "margin": true,
       "spacingSizes": [
         {
           "name": "1",
@@ -60,6 +61,7 @@
     "typography": {
       "dropCap": false,
       "fontWeight": true,
+      "lineHeight": true,
       "fontFamilies": [
         {
           "name": "Arial",
@@ -213,10 +215,7 @@
       }
     },
     "color": {
-      "background": {
-        "layout": "#f0f0f0",
-        "content": "#ffffff"
-      },
+      "background": "#f0f0f0",
       "text": "#000000"
     },
     "typography": {

@@ -941,7 +941,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 	 *
 	 * @since 1.1
 	 *
-	 * @return array|Forminator_Addon_Abstract[]
+	 * @return array|Forminator_Integration[]
 	 */
 	public function get_connected_addons() {
 		if ( is_null( self::$connected_addons ) ) {
@@ -950,12 +950,12 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			$connected_addons = forminator_get_addons_instance_connected_with_module( $this->form_id, 'form' );
 			foreach ( $connected_addons as $connected_addon ) {
 				try {
-					$form_hooks = $connected_addon->get_addon_form_hooks( $this->form_id );
-					if ( $form_hooks instanceof Forminator_Addon_Form_Hooks_Abstract ) {
+					$form_hooks = $connected_addon->get_addon_hooks( $this->form_id, 'form' );
+					if ( $form_hooks instanceof Forminator_Integration_Form_Hooks ) {
 						self::$connected_addons[] = $connected_addon;
 					}
 				} catch ( Exception $e ) {
-					forminator_addon_maybe_log( $connected_addon->get_slug(), 'failed to get_addon_form_hooks', $e->getMessage() );
+					forminator_addon_maybe_log( $connected_addon->get_slug(), 'failed to get_addon_hooks', $e->getMessage() );
 				}
 			}
 		}
@@ -1036,7 +1036,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 	/**
 	 * Executor of adding additional items on entry page
 	 *
-	 * @see   Forminator_Addon_Form_Hooks_Abstract::on_render_entry()
+	 * @see   Forminator_Integration_Form_Hooks::on_render_entry()
 	 * @since 1.1
 	 *
 	 * @param Forminator_Form_Entry_Model $entry_model
@@ -1051,7 +1051,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 
 		foreach ( $registered_addons as $registered_addon ) {
 			try {
-				$form_hooks = $registered_addon->get_addon_form_hooks( $this->form_id );
+				$form_hooks = $registered_addon->get_addon_hooks( $this->form_id, 'form' );
 				$meta_data  = forminator_find_addon_meta_data_from_entry_model( $registered_addon, $entry_model );
 
 				$addon_additional_items = $form_hooks->on_render_entry( $entry_model, $meta_data );// run and forget.

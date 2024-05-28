@@ -29,17 +29,17 @@ class Forminator_Export {
 	private $global_fields_to_export = array();
 
 	/**
-	 * @var Forminator_Addon_Abstract[]
+	 * @var Forminator_Integration[]
 	 */
 	private static $form_registered_addons = array();
 
 	/**
-	 * @var Forminator_Addon_Abstract[]
+	 * @var Forminator_Integration[]
 	 */
 	private static $poll_registered_addons = array();
 
 	/**
-	 * @var Forminator_Addon_Abstract[]
+	 * @var Forminator_Integration[]
 	 */
 	private static $quiz_registered_addons = array();
 
@@ -1132,7 +1132,7 @@ class Forminator_Export {
 	/**
 	 * Additional Column on Title(first) Row of Export data from Addon [Form]
 	 *
-	 * @see   Forminator_Addon_Form_Hooks_Abstract::on_export_render_title_row()
+	 * @see   Forminator_Integration_Form_Hooks::on_export_render_title_row()
 	 *
 	 * @since 1.1
 	 * @since 1.5.3 add $entries param to find addons that probably is/was connected
@@ -1150,7 +1150,7 @@ class Forminator_Export {
 
 		foreach ( $registered_addons as $registered_addon ) {
 			try {
-				$form_hooks         = $registered_addon->get_addon_form_hooks( $form_id );
+				$form_hooks         = $registered_addon->get_addon_hooks( $form_id, 'form' );
 				$addon_headers      = $form_hooks->on_export_render_title_row();
 				$addon_headers      = $this->format_addon_additional_headers( $registered_addon, $addon_headers );
 				$additional_headers = array_merge( $additional_headers, $addon_headers );
@@ -1168,12 +1168,12 @@ class Forminator_Export {
 	 *
 	 * @since 1.1
 	 *
-	 * @param Forminator_Addon_Abstract $addon
+	 * @param Forminator_Integration $addon
 	 * @param                           $addon_headers
 	 *
 	 * @return array
 	 */
-	private function format_addon_additional_headers( Forminator_Addon_Abstract $addon, $addon_headers ) {
+	private function format_addon_additional_headers( Forminator_Integration $addon, $addon_headers ) {
 		$formatted_headers = array();
 		if ( ! is_array( $addon_headers ) || empty( $addon_headers ) ) {
 			return $formatted_headers;
@@ -1196,7 +1196,7 @@ class Forminator_Export {
 	/**
 	 * Add addons export render entry row [Form]
 	 *
-	 * @see   Forminator_Addon_Form_Hooks_Abstract::on_export_render_entry()
+	 * @see   Forminator_Integration_Form_Hooks::on_export_render_entry()
 	 * @since 1.1
 	 * @since 1.6.1 rename to attach_form_addons_on_export_render_entry_row
 	 *
@@ -1212,7 +1212,7 @@ class Forminator_Export {
 
 		foreach ( $registered_addons as $registered_addon ) {
 			try {
-				$form_hooks      = $registered_addon->get_addon_form_hooks( $form_id );
+				$form_hooks      = $registered_addon->get_addon_hooks( $form_id, 'form' );
 				$meta_data       = forminator_find_addon_meta_data_from_entry_model( $registered_addon, $entry_model );
 				$addon_data      = $form_hooks->on_export_render_entry( $entry_model, $meta_data );
 				$addon_data      = $this->format_addon_additional_data( $registered_addon, $addon_data );
@@ -1231,12 +1231,12 @@ class Forminator_Export {
 	 *
 	 * @since 1.1
 	 *
-	 * @param Forminator_Addon_Abstract $addon
+	 * @param Forminator_Integration $addon
 	 * @param                           $addon_data
 	 *
 	 * @return array
 	 */
-	private function format_addon_additional_data( Forminator_Addon_Abstract $addon, $addon_data ) {
+	private function format_addon_additional_data( Forminator_Integration $addon, $addon_data ) {
 		$formatted_data = array();
 		if ( ! is_array( $addon_data ) || empty( $addon_data ) ) {
 			return $formatted_data;
@@ -1263,7 +1263,7 @@ class Forminator_Export {
 	 * @param                               $form_id
 	 * @param Forminator_Form_Entry_Model[] $entries
 	 *
-	 * @return array|Forminator_Addon_Abstract[]
+	 * @return array|Forminator_Integration[]
 	 */
 	public function get_form_registered_addons( $form_id, $entries = array() ) {
 		if ( empty( self::$form_registered_addons ) ) {
@@ -1283,14 +1283,14 @@ class Forminator_Export {
 						// check if already in static $registered_addons.
 						if ( ! in_array( $entry_addon_slug, array_keys( self::$form_registered_addons ), true ) ) {
 							$addon = forminator_get_addon( $entry_addon_slug );
-							if ( $addon instanceof Forminator_Addon_Abstract ) {
+							if ( $addon instanceof Forminator_Integration ) {
 								try {
-									$form_hooks = $addon->get_addon_form_hooks( $form_id );
-									if ( $form_hooks instanceof Forminator_Addon_Form_Hooks_Abstract ) {
+									$form_hooks = $addon->get_addon_hooks( $form_id, 'form' );
+									if ( $form_hooks instanceof Forminator_Integration_Form_Hooks ) {
 										self::$form_registered_addons[ $addon->get_slug() ] = $addon;
 									}
 								} catch ( Exception $e ) {
-									forminator_addon_maybe_log( $addon->get_slug(), 'failed to get_addon_form_hooks one export', $e->getMessage() );
+									forminator_addon_maybe_log( $addon->get_slug(), 'failed to get_addon_hooks one export', $e->getMessage() );
 								}
 							}
 						}
@@ -1579,7 +1579,7 @@ class Forminator_Export {
 	 * @param                               $poll_id
 	 * @param Forminator_Form_Entry_Model[] $entries
 	 *
-	 * @return array|Forminator_Addon_Abstract[]
+	 * @return array|Forminator_Integration[]
 	 */
 	public function get_poll_registered_addons( $poll_id, $entries = array() ) {
 		if ( empty( self::$poll_registered_addons ) ) {
@@ -1599,14 +1599,14 @@ class Forminator_Export {
 						// check if already in static $registered_addons.
 						if ( ! in_array( $entry_addon_slug, array_keys( self::$poll_registered_addons ), true ) ) {
 							$addon = forminator_get_addon( $entry_addon_slug );
-							if ( $addon instanceof Forminator_Addon_Abstract ) {
+							if ( $addon instanceof Forminator_Integration ) {
 								try {
-									$poll_hooks = $addon->get_addon_poll_hooks( $poll_id );
-									if ( $poll_hooks instanceof Forminator_Addon_Poll_Hooks_Abstract ) {
+									$poll_hooks = $addon->get_addon_hooks( $poll_id, 'poll' );
+									if ( $poll_hooks instanceof Forminator_Integration_Poll_Hooks ) {
 										self::$poll_registered_addons[ $addon->get_slug() ] = $addon;
 									}
 								} catch ( Exception $e ) {
-									forminator_addon_maybe_log( $addon->get_slug(), 'failed to get_addon_poll_hooks on export', $e->getMessage() );
+									forminator_addon_maybe_log( $addon->get_slug(), 'failed to get_addon_hooks on export', $e->getMessage() );
 								}
 							}
 						}
@@ -1621,7 +1621,7 @@ class Forminator_Export {
 	/**
 	 * Additional Column on Title(first) Row of Export data from Addon [Poll]
 	 *
-	 * @see   Forminator_Addon_Poll_Hooks_Abstract::on_export_render_title_row()
+	 * @see   Forminator_Integration_Poll_Hooks::on_export_render_title_row()
 	 *
 	 * @since 1.6.1
 	 *
@@ -1637,7 +1637,7 @@ class Forminator_Export {
 
 		foreach ( $registered_addons as $registered_addon ) {
 			try {
-				$poll_hooks         = $registered_addon->get_addon_poll_hooks( $poll_id );
+				$poll_hooks         = $registered_addon->get_addon_hooks( $poll_id, 'poll' );
 				$addon_headers      = $poll_hooks->on_export_render_title_row();
 				$addon_headers      = $this->format_addon_additional_headers( $registered_addon, $addon_headers );
 				$additional_headers = array_merge( $additional_headers, $addon_headers );
@@ -1652,7 +1652,7 @@ class Forminator_Export {
 	/**
 	 * Add addons export render entry row [Poll]
 	 *
-	 * @see   Forminator_Addon_Poll_Hooks_Abstract::on_export_render_entry()
+	 * @see   Forminator_Integration_Poll_Hooks::on_export_render_entry()
 	 * @since 1.6.1
 	 *
 	 * @param                             $form_id
@@ -1667,7 +1667,7 @@ class Forminator_Export {
 
 		foreach ( $registered_addons as $registered_addon ) {
 			try {
-				$poll_hooks      = $registered_addon->get_addon_poll_hooks( $form_id );
+				$poll_hooks      = $registered_addon->get_addon_hooks( $form_id, 'poll' );
 				$meta_data       = forminator_find_addon_meta_data_from_entry_model( $registered_addon, $entry_model );
 				$addon_data      = $poll_hooks->on_export_render_entry( $entry_model, $meta_data );
 				$addon_data      = $this->format_addon_additional_data( $registered_addon, $addon_data );
@@ -1688,7 +1688,7 @@ class Forminator_Export {
 	 * @param                               $quiz_id
 	 * @param Forminator_Form_Entry_Model[] $entries
 	 *
-	 * @return array|Forminator_Addon_Abstract[]
+	 * @return array|Forminator_Integration[]
 	 */
 	public function get_quiz_registered_addons( $quiz_id, $entries = array() ) {
 		if ( empty( self::$quiz_registered_addons ) ) {
@@ -1708,14 +1708,14 @@ class Forminator_Export {
 						// check if already in static $registered_addons.
 						if ( ! in_array( $entry_addon_slug, array_keys( self::$quiz_registered_addons ), true ) ) {
 							$addon = forminator_get_addon( $entry_addon_slug );
-							if ( $addon instanceof Forminator_Addon_Abstract ) {
+							if ( $addon instanceof Forminator_Integration ) {
 								try {
-									$quiz_hooks = $addon->get_addon_quiz_hooks( $quiz_id );
-									if ( $quiz_hooks instanceof Forminator_Addon_Quiz_Hooks_Abstract ) {
+									$quiz_hooks = $addon->get_addon_hooks( $quiz_id, 'quiz' );
+									if ( $quiz_hooks instanceof Forminator_Integration_Quiz_Hooks ) {
 										self::$quiz_registered_addons[ $addon->get_slug() ] = $addon;
 									}
 								} catch ( Exception $e ) {
-									forminator_addon_maybe_log( $addon->get_slug(), 'failed to get_addon_quiz_hooks on export', $e->getMessage() );
+									forminator_addon_maybe_log( $addon->get_slug(), 'failed to get_addon_hooks on export', $e->getMessage() );
 								}
 							}
 						}
@@ -1730,7 +1730,7 @@ class Forminator_Export {
 	/**
 	 * Additional Column on Title(first) Row of Export data from Addon [Quiz]
 	 *
-	 * @see   Forminator_Addon_Quiz_Hooks_Abstract::on_export_render_title_row()
+	 * @see   Forminator_Integration_Quiz_Hooks::on_export_render_title_row()
 	 *
 	 * @since 1.6.2
 	 *
@@ -1746,7 +1746,7 @@ class Forminator_Export {
 
 		foreach ( $registered_addons as $registered_addon ) {
 			try {
-				$quiz_hooks         = $registered_addon->get_addon_quiz_hooks( $quiz_id );
+				$quiz_hooks         = $registered_addon->get_addon_hooks( $quiz_id, 'quiz' );
 				$addon_headers      = $quiz_hooks->on_export_render_title_row();
 				$addon_headers      = $this->format_addon_additional_headers( $registered_addon, $addon_headers );
 				$additional_headers = array_merge( $additional_headers, $addon_headers );
@@ -1761,7 +1761,7 @@ class Forminator_Export {
 	/**
 	 * Add addons export render entry row [Quiz]
 	 *
-	 * @see   Forminator_Addon_Quiz_Hooks_Abstract::on_export_render_entry()
+	 * @see   Forminator_Integration_Quiz_Hooks::on_export_render_entry()
 	 * @since 1.6.2
 	 *
 	 * @param                             $form_id
@@ -1776,7 +1776,7 @@ class Forminator_Export {
 
 		foreach ( $registered_addons as $registered_addon ) {
 			try {
-				$quiz_hooks      = $registered_addon->get_addon_quiz_hooks( $form_id );
+				$quiz_hooks      = $registered_addon->get_addon_hooks( $form_id, 'quiz' );
 				$meta_data       = forminator_find_addon_meta_data_from_entry_model( $registered_addon, $entry_model );
 				$addon_data      = $quiz_hooks->on_export_render_entry( $entry_model, $meta_data );
 				$addon_data      = $this->format_addon_additional_data( $registered_addon, $addon_data );

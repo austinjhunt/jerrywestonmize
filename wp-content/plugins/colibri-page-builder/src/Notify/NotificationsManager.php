@@ -57,7 +57,7 @@ class NotificationsManager {
 		$base                           = NotificationsManager::$remote_data_url_base;
         $theme                          = get_template();
         $option                         = "${theme}_start-source";
-        $start_source                   = get_option($option);
+        $start_source                   = get_option($option, "other");
         $builder_activation_time        = get_option('colibri_page_builder_activation_time', "0");
         $builder_pro_activation_time    = get_option('colibri_page_builder_pro_activation_time', "0");
 
@@ -66,9 +66,10 @@ class NotificationsManager {
             'stylesheet'            => apply_filters( 'mesmerize_notifications_stylesheet_slug', get_stylesheet() ),
             'license'               => urlencode( '' ),
             'dev_mode'              => $dev_mode ? "1" : "0",
-            'utm_install_source'    => $start_source,
-            'utm_activation_on'     => $builder_activation_time,
-            'utm_pro_activation_on' => $builder_pro_activation_time,
+            'source'    => $start_source,
+            'activated_on'     => $builder_activation_time,
+            'pro_activated_on' => $builder_pro_activation_time,
+            'locale' => get_locale()
         );
 
 		$query_string = build_query( $query );

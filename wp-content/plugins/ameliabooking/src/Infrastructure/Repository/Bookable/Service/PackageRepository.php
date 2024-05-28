@@ -226,7 +226,7 @@ class PackageRepository extends AbstractRepository
 
         $where = [];
 
-        $order = 'ORDER BY p.name, ps.id ASC';
+        $order = 'ORDER BY p.name, ps.position ASC, ps.id ASC';
 
         if (isset($criteria['sort'])) {
             if ($criteria['sort'] === '') {
@@ -323,6 +323,7 @@ class PackageRepository extends AbstractRepository
                 ps.minimumScheduled AS package_service_minimumScheduled,
                 ps.maximumScheduled AS package_service_maximumScheduled,
                 ps.allowProviderSelection AS package_service_allowProviderSelection,
+                ps.position AS package_service_position,
                                 
                 s.id AS service_id,
                 s.price AS service_price,
@@ -437,6 +438,7 @@ class PackageRepository extends AbstractRepository
                 ps.minimumScheduled AS package_service_minimumScheduled,
                 ps.maximumScheduled AS package_service_maximumScheduled,
                 ps.allowProviderSelection AS package_service_allowProviderSelection,
+                ps.position AS package_service_position,
                                 
                 s.id AS service_id,
                 s.price AS service_price,

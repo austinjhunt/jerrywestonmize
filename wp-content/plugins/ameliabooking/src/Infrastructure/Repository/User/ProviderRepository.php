@@ -1480,9 +1480,9 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 'recurringSub'     => isset($row['service_recurringSub']) ? $row['service_recurringSub'] : null,
                 'recurringPayment' => isset($row['service_recurringPayment']) ? $row['service_recurringPayment'] : null,
                 'translations'     => isset($row['service_translations']) ? $row['service_translations'] : null,
-                'deposit'          => isset($row['service_deposit']) ? $row['service_deposit'] : null,
-                'depositPayment'   => isset($row['service_depositPayment']) ? $row['service_depositPayment'] : null,
-                'depositPerPerson' => isset($row['service_depositPerPerson']) ? $row['service_depositPerPerson'] : null,
+                'deposit'          => isset($row['service_deposit']) ? $row['service_deposit'] : 0,
+                'depositPayment'   => isset($row['service_depositPayment']) ? $row['service_depositPayment'] : 'disabled',
+                'depositPerPerson' => isset($row['service_depositPerPerson']) ? $row['service_depositPerPerson'] : 1,
             ];
         }
 

@@ -990,7 +990,7 @@ Thank you,
             'included_plan_higher'           => __('Included in Higher Plans', 'wpamelia'),
             'current_version'                => __('You are currently using Version ', 'wpamelia'),
             'version'                        => __('Version ', 'wpamelia'),
-            'version_subtitle'               => __('Update with a great redesign, a couple of improvements and bug fixes:', 'wpamelia'),
+            'version_subtitle'               => __('Update with a couple of improvements and bug fixes:', 'wpamelia'),
             'see_previous_versions'          => __('See Previous Versions', 'wpamelia'),
         ] : [];
 
@@ -1681,6 +1681,7 @@ Thank you,
             'package_block'                      => __('Packages Block', 'wpamelia'),
             'cil_filter_employee'                => __('“Filter by Employee” option', 'wpamelia'),
             'cil_filter_location'                => __('“Filter by Location” option', 'wpamelia'),
+            'page_scroll_visibility'             => __('Page Scroll Visibility', 'wpamelia'),
 
             // keys used on back and front
             'filter_employee'                    => __('Filter by Employee', 'wpamelia'),
@@ -1961,6 +1962,7 @@ Thank you,
             'recurring_date_second'    => __('Second', 'wpamelia'),
             'recurring_date_third'     => __('Third', 'wpamelia'),
             'recurring_date_fourth'    => __('Fourth', 'wpamelia'),
+            'recurring_date_fifth'     => __('Fifth', 'wpamelia'),
             'recurring_date_last'      => __('Last', 'wpamelia'),
         ] : [];
 

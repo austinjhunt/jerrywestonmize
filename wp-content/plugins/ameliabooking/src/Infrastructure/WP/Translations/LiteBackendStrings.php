@@ -1022,6 +1022,7 @@ class LiteBackendStrings
             'create_customer'                   => __('Create Customer', 'wpamelia'),
             'custom_fields'                     => __('Custom Fields', 'wpamelia'),
             'customer_email'                    => __('Customer Email', 'wpamelia'),
+            'customer_phone'                    => __('Customer Phone', 'wpamelia'),
             'customers_singular_plural'         => __('Customer(s)', 'wpamelia'),
             'customers_tooltip'                 => __('Here you can define the number of people that are coming<br/>with this customer. The number you can choose depends<br/>on the service and employee capacity.', 'wpamelia'),
             'edit_payment_details'              => __('Edit Payment Details', 'wpamelia'),

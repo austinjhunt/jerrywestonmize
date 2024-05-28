@@ -85,6 +85,13 @@ abstract class Forminator_Admin_Module {
 	public function hide_menu_pages() {
 		remove_submenu_page( 'forminator', $this->page_edit );
 		remove_submenu_page( 'forminator', $this->page_entries );
+		echo '<style>
+			#toplevel_page_forminator ul.wp-submenu li a[href="admin.php?page=forminator-addons"] { color: #fecf2f !important; }
+		</style>';
+		if ( ! FORMINATOR_PRO ) {
+			echo '<style>#toplevel_page_forminator ul.wp-submenu li:last-child a[href^="https://wpmudev.com"] { background-color: #8d00b1 !important; color: #fff !important; font-weight: 700 !important; }</style>';
+			echo '<script>jQuery(function() {jQuery(\'#toplevel_page_forminator ul.wp-submenu li:last-child a[href^="https://wpmudev.com"]\').attr("target", "_blank");});</script>';
+		}
 	}
 
 	/**

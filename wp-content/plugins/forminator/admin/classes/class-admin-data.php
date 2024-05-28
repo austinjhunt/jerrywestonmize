@@ -89,7 +89,7 @@ class Forminator_Admin_Data {
 	 */
 	public function admin_js_defaults() {
 		// Generate addon nonce.
-		Forminator_Addon_Admin_Ajax::get_instance()->generate_nonce();
+		Forminator_Integration_Admin_Ajax::get_instance()->generate_nonce();
 		$id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 		$user = wp_get_current_user();
 
@@ -131,7 +131,7 @@ class Forminator_Admin_Data {
 			'addons_enabled'                 => Forminator::is_addons_feature_enabled(),
 			'pluginUrl'                      => forminator_plugin_url(),
 			'imagesUrl'                      => forminator_plugin_url() . 'assets/images',
-			'addonNonce'                     => Forminator_Addon_Admin_Ajax::get_instance()->get_nonce(),
+			'addonNonce'                     => Forminator_Integration_Admin_Ajax::get_instance()->get_nonce(),
 			'countries'                      => forminator_get_countries_list(),
 			'userList'                       => forminator_list_users(),
 			'variables'                      => forminator_get_vars(),
@@ -173,7 +173,6 @@ class Forminator_Admin_Data {
 			'poll_modules'                   => $this->get_modules( 'get_polls' ),
 			'pdfAddonActive'                 => class_exists( 'Forminator_PDF_Addon' ),
 			'wpmudevMembership'              => forminator_get_wpmudev_membership(), // 'free'
-			'upsellModalText'                => Forminator_Admin_Addons_page::get_upsell_modal_info(),
 			'pdfExtensionsEnabled'           => $this->pdf_extensions_enabled(),
 			'userPermissions'                => $user->get_role_caps(),
 		);

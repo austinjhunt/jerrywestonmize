@@ -382,7 +382,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 	/**
 	 * Executor On form submit for attached addons
 	 *
-	 * @see   Forminator_Addon_Poll_Hooks_Abstract::on_poll_submit()
+	 * @see   Forminator_Integration_Poll_Hooks::on_module_submit()
 	 * @since 1.6.1
 	 *
 	 * @return bool true on success|string error message from addon otherwise
@@ -394,16 +394,16 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 
 		foreach ( $connected_addons as $connected_addon ) {
 			try {
-				$poll_hooks = $connected_addon->get_addon_poll_hooks( self::$module_id );
-				if ( ! $poll_hooks instanceof Forminator_Addon_Poll_Hooks_Abstract ) {
+				$poll_hooks = $connected_addon->get_addon_hooks( self::$module_id, 'poll' );
+				if ( ! $poll_hooks instanceof Forminator_Integration_Poll_Hooks ) {
 					continue;
 				}
-				$addon_return = $poll_hooks->on_poll_submit( $submitted_data );
+				$addon_return = $poll_hooks->on_module_submit( $submitted_data );
 			} catch ( Exception $e ) {
 				forminator_addon_maybe_log( $connected_addon->get_slug(), 'failed to attach_addons_on_poll_submit', $e->getMessage() );
 			}
 			if ( true !== $addon_return ) {
-				throw new Exception( $poll_hooks->get_submit_poll_error_message() );
+				throw new Exception( $poll_hooks->get_submit_error_message() );
 			}
 		}
 

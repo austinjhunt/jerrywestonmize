@@ -62,8 +62,12 @@ class UpdatePackageController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new UpdatePackageCommand($args);
+
         $command->setField('id', (int)$command->getArg('id'));
+
         $requestBody = $request->getParsedBody();
+
+        $this->filter($requestBody);
         $this->setCommandFields($command, $requestBody);
 
         return $command;

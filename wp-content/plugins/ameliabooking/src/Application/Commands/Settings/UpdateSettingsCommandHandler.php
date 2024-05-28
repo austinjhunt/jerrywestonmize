@@ -411,7 +411,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
             /** @var BasicApiService $apiService */
             $apiService = $this->getContainer()->get('domain.api.service');
             foreach ($settingsFields['apiKeys']['apiKeys'] as $index => $apiKey) {
-                if ($apiKey['isNew']) {
+                if (!empty($apiKey['isNew'])) {
                     $settingsFields['apiKeys']['apiKeys'][$index]['key'] = $apiService->createHash($settingsFields['apiKeys']['apiKeys'][$index]['key']);
                 }
                 unset($settingsFields['apiKeys']['apiKeys'][$index]['isNew']);

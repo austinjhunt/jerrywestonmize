@@ -19,7 +19,7 @@ class Forminator_Quiz_View_Page extends Forminator_Admin_View_Page {
 
 	/**
 	 * @since 1.6.2
-	 * @var Forminator_Addon_Abstract[]
+	 * @var Forminator_Integration[]
 	 */
 	protected $lead_cform = null;
 

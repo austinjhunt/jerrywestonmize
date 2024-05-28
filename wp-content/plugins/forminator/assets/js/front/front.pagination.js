@@ -82,7 +82,6 @@
 			this.render_bar_navigation();
 			this.render_footer_navigation( this.form_id );
 			this.init_events();
-			this.update_buttons();
 			this.update_navigation();
 
 			this.$el.find('.forminator-button.forminator-button-back, .forminator-button.forminator-button-next, .forminator-button.forminator-button-submit').on("click", function (e) {
@@ -96,6 +95,7 @@
 				$(this).trigger('forminator.front.pagination.move');
 			});
 
+			this.update_buttons();
 		},
 		init_events: function () {
 			var self = this;

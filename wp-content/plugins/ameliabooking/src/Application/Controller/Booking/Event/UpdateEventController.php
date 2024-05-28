@@ -78,6 +78,8 @@ class UpdateEventController extends Controller
         $command = new UpdateEventCommand($args);
 
         $requestBody = $request->getParsedBody();
+
+        $this->filter($requestBody);
         $this->setCommandFields($command, $requestBody);
         $command->setToken($request);
 

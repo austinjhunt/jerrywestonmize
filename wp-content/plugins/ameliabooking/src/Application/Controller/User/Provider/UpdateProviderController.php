@@ -64,8 +64,10 @@ class UpdateProviderController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new UpdateProviderCommand($args);
+
         $requestBody = $request->getParsedBody();
 
+        $this->filter($requestBody);
         $this->setCommandFields($command, $requestBody);
         $command->setToken($request);
 

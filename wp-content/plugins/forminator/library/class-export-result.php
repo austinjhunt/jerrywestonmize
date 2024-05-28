@@ -57,13 +57,14 @@ class Forminator_Export_Result {
 	 * @since 1.5.4
 	 */
 	public function request_filters() {
-		$data_range = Forminator_Core::sanitize_text_field( 'date_range' );
-		$search     = Forminator_Core::sanitize_text_field( 'search' );
-		$min_id     = Forminator_Core::sanitize_text_field( 'min_id' );
-		$max_id     = Forminator_Core::sanitize_text_field( 'max_id' );
-		$order_by   = Forminator_Core::sanitize_text_field( 'order_by' );
-		$order      = Forminator_Core::sanitize_text_field( 'order' );
-		$user_stat  = Forminator_Core::sanitize_text_field( 'user_status' );
+		$data_range   = Forminator_Core::sanitize_text_field( 'date_range' );
+		$search       = Forminator_Core::sanitize_text_field( 'search' );
+		$min_id       = Forminator_Core::sanitize_text_field( 'min_id' );
+		$max_id       = Forminator_Core::sanitize_text_field( 'max_id' );
+		$order_by     = Forminator_Core::sanitize_text_field( 'order_by' );
+		$order        = Forminator_Core::sanitize_text_field( 'order' );
+		$user_stat    = Forminator_Core::sanitize_text_field( 'user_status' );
+		$entry_status = Forminator_Core::sanitize_text_field( 'entry_status' );
 
 		$filters = array();
 		if ( ! empty( $data_range ) ) {
@@ -103,6 +104,10 @@ class Forminator_Export_Result {
 
 		if ( ! empty( $user_stat ) ) {
 			$filters['user_status'] = $user_stat;
+		}
+
+		if ( $entry_status ) {
+			$filters['entry_status'] = $entry_status;
 		}
 
 		return $filters;

@@ -2518,8 +2518,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		ob_start();
 		foreach ( $connected_addons as $connected_addon ) {
 			try {
-				$form_hooks = $connected_addon->get_addon_form_hooks( $this->model->id );
-				if ( $form_hooks instanceof Forminator_Addon_Form_Hooks_Abstract ) {
+				$form_hooks = $connected_addon->get_addon_hooks( $this->model->id, 'form' );
+				if ( $form_hooks instanceof Forminator_Integration_Form_Hooks ) {
 					$form_hooks->on_after_render_form();
 				}
 			} catch ( Exception $e ) {
@@ -2545,8 +2545,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		ob_start();
 		foreach ( $connected_addons as $connected_addon ) {
 			try {
-				$form_hooks = $connected_addon->get_addon_form_hooks( $this->model->id );
-				if ( $form_hooks instanceof Forminator_Addon_Form_Hooks_Abstract ) {
+				$form_hooks = $connected_addon->get_addon_hooks( $this->model->id, 'form' );
+				if ( $form_hooks instanceof Forminator_Integration_Form_Hooks ) {
 					$form_hooks->on_before_render_form_fields();
 				}
 			} catch ( Exception $e ) {
@@ -2573,8 +2573,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		ob_start();
 		foreach ( $connected_addons as $connected_addon ) {
 			try {
-				$form_hooks = $connected_addon->get_addon_form_hooks( $this->model->id );
-				if ( $form_hooks instanceof Forminator_Addon_Form_Hooks_Abstract ) {
+				$form_hooks = $connected_addon->get_addon_hooks( $this->model->id, 'form' );
+				if ( $form_hooks instanceof Forminator_Integration_Form_Hooks ) {
 					$form_hooks->on_after_render_form_fields();
 				}
 			} catch ( Exception $e ) {

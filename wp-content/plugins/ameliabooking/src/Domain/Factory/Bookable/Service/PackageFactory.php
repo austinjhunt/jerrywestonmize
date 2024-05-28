@@ -236,6 +236,7 @@ class PackageFactory
                 $packages[$packageId]['bookable'][$bookableId]['minimumScheduled'] = $row['package_service_minimumScheduled'];
                 $packages[$packageId]['bookable'][$bookableId]['maximumScheduled'] = $row['package_service_maximumScheduled'];
                 $packages[$packageId]['bookable'][$bookableId]['allowProviderSelection'] = $row['package_service_allowProviderSelection'];
+                $packages[$packageId]['bookable'][$bookableId]['position'] = $row['package_service_position'];
                 $packages[$packageId]['bookable'][$bookableId]['service']['show'] = !empty($row['service_show']) ? $row['service_show'] : null;
             }
 

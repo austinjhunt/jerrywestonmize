@@ -18,36 +18,24 @@ if (!defined('ABSPATH')) exit;
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="format-detection" content="telephone=no" />
-  <?php echo $metaRobots; ?>
-  <style type="text/css">
-    <?php echo $templateStyles; ?>
-  </style>
+  <?php echo $metaRobots; // HTML defined by MailPoet--do not escape ?>
 </head>
-<body style="word-spacing:normal;background:<?php echo esc_attr($layoutBackground); ?>;">
-    <div class="email_layout_wrapper" style="background:<?php echo esc_attr($layoutBackground); ?>">
-      <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" width="<?php echo esc_attr($width); ?>" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-      <div style="margin:0px auto;max-width:<?php echo esc_attr($width); ?>">
+<body>
+    <div class="email_layout_wrapper">
         <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
           <tbody>
             <tr>
               <td class="email_preheader" height="1">
-                <?php echo $preHeader; ?>
+                <?php echo esc_html(wp_strip_all_tags($preHeader)); ?>
               </td>
             </tr>
             <tr>
-              <td class="email_content_wrapper" style="font-family: <?php echo esc_attr($contentFontFamily); ?>;padding-top: <?php echo esc_attr($paddingTop); ?>;padding-bottom: <?php echo esc_attr($paddingBottom); ?>;background: <?php echo esc_attr($contentBackground); ?>;">
+              <td class="email_content_wrapper">
                 <?php echo $templateHtml; ?>
-              </td>
-            </tr>
-            <tr>
-              <td class="email_footer">
-                <?php echo $logoHtml; ?>
               </td>
             </tr>
           </tbody>
         </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
 </html>

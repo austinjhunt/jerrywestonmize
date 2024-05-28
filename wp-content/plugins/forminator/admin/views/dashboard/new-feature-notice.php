@@ -15,7 +15,7 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 		aria-labelledby="forminator-new-feature__title"
 	>
 
-		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1290" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
+		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1300" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
 
 			<div class="sui-box-header sui-flatten sui-content-center">
 
@@ -33,25 +33,15 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 				</button>
 
 				<h3 class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: initial;">
-					<?php esc_html_e( 'New! Range Slider and Receipt Template', 'forminator' ); ?>
+					<?php esc_html_e( 'New: Mailer Lite Integration', 'forminator' ); ?>
 				</h3>
 
 				<p class="sui-description">
 					<?php
 					printf(
-						/* translators: 1. Open 'b' tag 2. Close 'b' tag */
-						esc_html__( 'We\'re thrilled to announce two exciting additions to our toolkit: the %1$sSlider Field%2$s and a brand-new %1$sReceipt template%2$s  for the %1$sForminator PDF Generator Add-on%2$s. The Slider Field supports single and range slider types that enhance user interaction by allowing easy numeric value selections.', 'forminator' ),
-						'<b>',
-						'</b>'
-					);
-					?>
-				</p>
-				<br />
-				<p class="sui-description">
-					<?php
-					printf(
-						/* translators: 1. Open 'b' tag 2. Close 'b' tag */
-						esc_html__( 'Whereas, the %1$sReceipt template%2$s helps you generate professional-looking receipts that you can send to your clients after they make a payment on your site. Both features are guaranteed to enrich your experience and efficiency.', 'forminator' ),
+						/* translators: 1. Admin name */
+						esc_html__( 'Hey %s, we’re excited to introduce our latest integration with MailerLite - an impressive digital marketing tool that can help grow your audience and drive more revenue. You can now seamlessly connect Forminator with MailerLite to effectively manage your email marketing campaigns and send newsletters to drive better engagements and conversions.', 'forminator' ),
+						esc_html( ucfirst( $user->display_name ) ),
 						'<b>',
 						'</b>'
 					);
@@ -63,7 +53,7 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 			<div class="sui-box-footer sui-flatten sui-content-center">
 
 				<button class="sui-button forminator-dismiss-new-feature" data-modal-close>
-					<?php esc_html_e( 'Got it!', 'forminator' ); ?>
+					<?php esc_html_e( 'Ok, got it!', 'forminator' ); ?>
 				</button>
 
 			</div>

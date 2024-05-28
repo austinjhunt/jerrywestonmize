@@ -959,6 +959,8 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
 
                     $couponsCriteria['entityType'] = Entities::EVENT;
 
+                    $couponsCriteria['entityIds'] = [$appointment['id']];
+
                     $customerReservations = $eventRepository->getFiltered(
                         [
                             'customerId'    => $customerId,

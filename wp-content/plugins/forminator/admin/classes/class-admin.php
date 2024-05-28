@@ -124,7 +124,6 @@ class Forminator_Admin {
 		include_once forminator_plugin_dir() . 'admin/pages/entries-page.php';
 		include_once forminator_plugin_dir() . 'admin/pages/integrations-page.php';
 		include_once forminator_plugin_dir() . 'admin/pages/settings-page.php';
-		include_once forminator_plugin_dir() . 'admin/pages/upgrade-page.php';
 		include_once forminator_plugin_dir() . 'admin/pages/addons-page.php';
 		include_once forminator_plugin_dir() . 'admin/pages/reports-page.php';
 
@@ -199,7 +198,10 @@ class Forminator_Admin {
 		);
 
 		// TODO: remove this after converted to JS.
-		$addons = Forminator_Addon_Loader::get_instance()->get_addons()->to_array();
+		$addons = Forminator_Integration_Loader::get_instance()->get_addons()->to_array();
+
+		$old_addon_list = Forminator_Addon_Loader::get_instance()->get_addons()->to_array();
+		$addons         = array_merge( $addons, $old_addon_list );
 		foreach ( $addons as $slug => $addon_array ) {
 			$addon_class = forminator_get_addon( $slug );
 
@@ -267,7 +269,13 @@ class Forminator_Admin {
 	 * @since 1.0
 	 */
 	public function init_upgrade_page() {
-		$this->pages['forminator-upgrade'] = new Forminator_Upgrade_Page( 'forminator-upgrade', 'upgrade', esc_html__( 'Upgrade to Forminator Pro', 'forminator' ), esc_html__( 'Forminator Pro', 'forminator' ), 'forminator' );
+		add_submenu_page(
+			'forminator',
+			esc_html__( 'Upgrade for 80% Off!', 'forminator' ),
+			esc_html__( 'Upgrade for 80% Off!', 'forminator' ),
+			forminator_get_permission( 'forminator-upgrade' ),
+			'https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_submenu_upsell'
+		);
 	}
 
 	/**
@@ -1145,5 +1153,46 @@ class Forminator_Admin {
 		}
 
 		update_option( 'forminator_permissions', $permissions );
+	}
+
+	/**
+	 * Get error notice
+	 *
+	 * @param string $error Error message. It should be already escaped.
+	 * @return string
+	 */
+	public static function get_red_notice( string $error ) : string {
+		return static::get_notice( 'error', $error );
+	}
+
+	/**
+	 * Get success notice
+	 *
+	 * @param string $message Success message. It should be already escaped.
+	 * @return string
+	 */
+	public static function get_green_notice( string $message ) : string {
+		return static::get_notice( 'green', $message );
+	}
+
+	/**
+	 * Get SUI notice
+	 *
+	 * @param string $type Notice type.
+	 * @param string $message Message. It should be already escaped.
+	 * @return string
+	 */
+	public static function get_notice( string $type , string $message ) : string {
+		$notice_class = 'green' === $type ? 'sui-notice-green' : 'sui-notice-red';
+		$icon_class   = 'green' === $type ? 'sui-icon-check-tick' : 'sui-icon-info';
+		return '<div role="alert" class="sui-notice ' . $notice_class . ' sui-active"
+				style="display: block; text-align: left;" aria-live="assertive">
+			<div class="sui-notice-content">
+				<div class="sui-notice-message">
+					<span class="sui-notice-icon ' . $icon_class . '" aria-hidden="true"></span>
+					<p>' . $message . '</p>
+				</div>
+			</div>
+		</div>';
 	}
 }

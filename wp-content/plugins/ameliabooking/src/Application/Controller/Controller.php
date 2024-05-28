@@ -239,4 +239,50 @@ abstract class Controller
                 $params['date'] : DateTimeService::getNowDate();
         }
     }
+
+    /**
+     * @param array  $data
+     * @param string $field
+     * @param string $translationField
+     *
+     * @return void
+     */
+    private function filterField(&$data, $field, $translationField)
+    {
+        if (!empty($data[$field])) {
+            global $allowedposttags;
+
+            $data[$field] = wp_kses($data[$field], $allowedposttags);
+
+            if (!empty($data['translations']) && ($translations = json_decode($data['translations'], true)) !== null) {
+                if (!empty($translations[$translationField])) {
+                    foreach ($translations[$translationField] as $lang => $translation) {
+                        $translations[$translationField][$lang] = wp_kses(
+                            $translations[$translationField][$lang],
+                            $allowedposttags
+                        );
+                    }
+
+                    $data['translations'] = json_encode($translations);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param array $requestBody
+     *
+     * @return void
+     */
+    protected function filter(&$requestBody)
+    {
+        if (empty(get_role('administrator')->capabilities['unfiltered_html']) && $requestBody) {
+            $this->filterField($requestBody, 'description', 'description');
+            $this->filterField($requestBody, 'label', 'name');
+
+            foreach (!empty($requestBody['extras']) ? $requestBody['extras'] : [] as $index => $extra) {
+                $this->filterField($requestBody['extras'][$index], 'description', 'description');
+            }
+        }
+    }
 }

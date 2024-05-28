@@ -28,30 +28,11 @@ foreach ( $template_vars as $key => $val ) {
     ?>
 </span>
 
-<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-
-	<div
-		role="alert"
-		class="sui-notice sui-notice-red sui-active"
-		style="display: block; text-align: left;"
-		aria-live="assertive"
-	>
-
-		<div class="sui-notice-content">
-
-			<div class="sui-notice-message">
-
-				<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
-
-				<p><?php echo esc_html( $vars['error_message'] ); ?></p>
-
-			</div>
-
-		</div>
-
-	</div>
-
-<?php endif; ?>
+<?php
+if ( ! empty( $vars['error_message'] ) ) {
+	echo Forminator_Admin::get_red_notice( esc_html( $this->error_message() ) );
+}
+?>
 
 <form class="sui-form-field">
 

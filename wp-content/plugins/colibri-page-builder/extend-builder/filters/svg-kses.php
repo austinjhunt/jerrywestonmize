@@ -1,6 +1,7 @@
 <?php
+namespace ExtendBuilder;
 
-function kubio_get_svg_kses_allowed_elements( $allowed_html = array() ) {
+function colibri_get_svg_kses_allowed_elements( $allowed_html = array() ) {
 
 	$svg_elements = array(
 		'svg'     =>
@@ -78,4 +79,4 @@ function kubio_get_svg_kses_allowed_elements( $allowed_html = array() ) {
 
 }
 
-add_filter( 'wp_kses_allowed_html', 'kubio_get_svg_kses_allowed_elements' );
+add_filter( 'wp_kses_allowed_html', '\ExtendBuilder\colibri_get_svg_kses_allowed_elements' );

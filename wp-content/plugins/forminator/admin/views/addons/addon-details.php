@@ -146,18 +146,6 @@ $addon_slug = Forminator_Admin_Addons_page::get_addon_slug( $pid );
 						<button
 							type="button"
 							role="tab"
-							id="tab-features-<?php echo esc_attr( $pid ); ?>"
-							class="sui-tab-item"
-							aria-controls="tab-content-features-<?php echo esc_attr( $pid ); ?>"
-							aria-selected="false"
-							tabindex="-1"
-						>
-							<?php esc_html_e( 'Features', 'forminator' ); ?>
-						</button>
-
-						<button
-							type="button"
-							role="tab"
 							id="tab-changelog-<?php echo esc_attr( $pid ); ?>"
 							class="sui-tab-item"
 							aria-controls="tab-content-changelog-<?php echo esc_attr( $pid ); ?>"
@@ -183,20 +171,11 @@ $addon_slug = Forminator_Admin_Addons_page::get_addon_slug( $pid );
 
 							<p><?php echo isset( $res->info ) ? esc_html( $res->info ) : ''; ?></p>
 
-						</div>
-
-						<div
-							role="tabpanel"
-							tabindex="0"
-							id="tab-content-features-<?php echo esc_attr( $pid ); ?>"
-							class="sui-tab-content"
-							aria-labelledby="tab-features-<?php echo esc_attr( $pid ); ?>"
-							hidden
-						>
+							<h4><?php esc_html_e( 'Features', 'forminator' ); ?></h4>
 
 							<?php foreach ( $features as $group => $feature ) : ?>
 
-								<ul>
+								<ul style="margin: 0;">
 
 									<?php foreach ( $feature as $item ) : ?>
 
@@ -288,88 +267,6 @@ $addon_slug = Forminator_Admin_Addons_page::get_addon_slug( $pid );
 
 		</div><!-- END .sui-box -->
 
-	</div><!-- END .sui-modal-content -->
-
-</div><!-- END .sui-modal -->
-
-
-<!-- Upsell modal for addon install -->
-<?php $addon_data = self::get_upsell_modal_info( $addon_slug ); ?>
-<div class="sui-modal sui-modal-lg">
-
-	<div
-		role="dialog"
-		id="forminator-modal-addons-install-<?php echo esc_attr( $pid ); ?>"
-		class="sui-modal-content"
-		aria-modal="true"
-		aria-labelledby="forminator-modal-addons-install-<?php echo esc_attr( $pid ); ?>__title"
-		aria-describedby="forminator-modal-addons-install-<?php echo esc_attr( $pid ); ?>__description"
-	>
-		<div class="sui-box">
-
-			<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">
-
-				<figure class="sui-box-banner" aria-hidden="true">
-					<img
-						src="<?php echo esc_url( forminator_plugin_url() . 'assets/images/' . $addon_slug . '-header.png' ) ?>"
-						srcset="<?php echo esc_url( forminator_plugin_url() . 'assets/images/' . $addon_slug . '-header.png' ) ?> 1x,
-						<?php echo esc_url( forminator_plugin_url() . 'assets/images/' . $addon_slug . '-header@2x.png' ) ?> 2x"
-						alt=""
-					/>
-				</figure>
-
-				<button class="sui-button-icon sui-button-white sui-button-float--right" data-modal-close>
-					<span class="sui-icon-close sui-md" aria-hidden="true"></span>
-					<span class="sui-screen-reader-text"><?php esc_html_e( 'Close this modal', 'forminator' ); ?></span>
-				</button>
-
-				<h3 class="sui-box-title sui-lg"><?php echo $addon_data[ $addon_slug . '_title' ]; // Escaped already. ?></h3>
-
-				<p class="sui-description" style="margin-top: 5px; margin-bottom: 30px;"><?php echo $addon_data[ $addon_slug . '_desc' ];  // Escaped already. ?></p>
-
-				<a
-					class="sui-button sui-button-purple"
-					style="margin-right: 0;"
-					target="_blank"
-					href="https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_<?php echo esc_html( $addon_slug ); ?>-addon"
-				>
-					<?php echo $addon_data['button_text']; // Escaped already. ?>
-				</a>
-
-				<p class="sui-description" style="font-weight: 500; margin-top: 17px;">
-					<?php echo $addon_data['after_button_text']; // Escaped already. ?>&nbsp;
-					<a target="_blank" href="https://wpmudev.com/hub2/connect/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_addons_<?php echo esc_url( $addon_slug ); ?>-addon_existing">
-						<?php echo $addon_data['login_text']; // Escaped already. ?>
-					</a>
-				</p>
-
-			</div>
-
-			<div class="sui-box-body">
-				<h4 style="margin: 0;"><?php echo $addon_data['features_title']; // Escaped already. ?></h4>
-				<ul class="sui-modal-features-list">
-					<?php
-					foreach( $addon_data['features'] as $feature ) {
-					// Each feature is escaped already.
-					?>
-						<li>
-							<span class="sui-modal-list-icon">
-								<span class="sui-icon-check" aria-hidden="true"></span>
-							</span>
-							<h4>
-								<?php echo $feature['title']; ?>&nbsp;
-								<?php
-								if ( isset( $feature['tag'] ) ) {
-									echo '<span class="sui-tag sui-tag-blue sui-tag-sm">' . $feature['tag'] . '</span>';
-								}
-								?>
-							</h4>
-							<p><?php echo $feature['desc']; ?></p>
-						</li>
-					<?php } ?>
-				</ul>
-			</div>
-		</div>
 	</div><!-- END .sui-modal-content -->
 
 </div><!-- END .sui-modal -->

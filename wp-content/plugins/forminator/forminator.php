@@ -1,19 +1,20 @@
 <?php
 /**
  * Plugin Name: Forminator
- * Version: 1.29.3
+ * Version: 1.30.2
  * Plugin URI:  https://wpmudev.com/project/forminator/
  * Description: Capture user information (as detailed as you like), engage users with interactive polls that show real-time results and graphs, “no wrong answer” Facebook-style quizzes and knowledge tests.
  * Author: WPMU DEV
  * Author URI: https://wpmudev.com
+ * Tested up to: 6.5
+ * Requires PHP: 7.4
  * Text Domain: forminator
  * Domain Path: /languages/
  *
  */
 /*
-Copyright 2009-2018 Incsub (http://incsub.com)
-Author – Cvetan Cvetanov (cvetanov), Dixita Dusara (dency)
-Contributors –
+Copyright 2009-2024 Incsub (http://incsub.com)
+Author – WPMU DEV
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License (Version 2 – GPLv2) as published by
@@ -69,7 +70,7 @@ if ( ! class_exists( 'Forminator' ) ) {
 		public $forminator;
 
 		/**
-		 * @var Forminator_Addon_Loader
+		 * @var Forminator_Integration_Loader
 		 */
 		private $forminator_addon_loader;
 
@@ -299,21 +300,21 @@ if ( ! class_exists( 'Forminator' ) ) {
 			 * Triggered before load and registering internal addons
 			 *
 			 * Only triggered when addons feature is enabled @see Forminator::is_addons_feature_enabled()
-			 * Keep in mind that @see Forminator_Addon_Loader not yet instantiated
+			 * Keep in mind that @see Forminator_Integration_Loader not yet instantiated
 			 *
 			 * @since 1.1
 			 */
 			do_action( 'forminator_before_load_addons' );
 
 			include_once forminator_plugin_dir() . 'library/helpers/helper-addon.php';
-			$this->forminator_addon_loader = Forminator_Addon_Loader::get_instance();
+			$this->forminator_addon_loader = Forminator_Integration_Loader::get_instance();
 			$this->load_forminator_addons();
 
 			/**
 			 * Triggered after internal addons of forminator loaded
 			 *
 			 * This action will be used by external addon to register
-			 * Registering addon will use @see Forminator_Addon_Loader::register()
+			 * Registering addon will use @see Forminator_Integration_Loader::register()
 			 *
 			 * @since 1.1
 			 */
@@ -346,6 +347,7 @@ if ( ! class_exists( 'Forminator' ) ) {
 			/* @noinspection PhpIncludeInspection */
 			include_once forminator_plugin_dir() . 'library/class-core.php';
 			include_once forminator_plugin_dir() . 'library/class-addon-loader.php';
+			include_once forminator_plugin_dir() . 'library/class-integration-loader.php';
 			include_once forminator_plugin_dir() . 'library/calculator/class-calculator.php';
 		}
 

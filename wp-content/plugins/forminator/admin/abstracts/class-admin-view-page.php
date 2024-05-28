@@ -132,12 +132,12 @@ abstract class Forminator_Admin_View_Page extends Forminator_Admin_Page {
 	public $fields_is_filtered = false;
 
 	/**
-	 * @var Forminator_Addon_Abstract[]
+	 * @var Forminator_Integration[]
 	 */
 	protected static $connected_addons = null;
 
 	/**
-	 * @var Forminator_Addon_Abstract[]
+	 * @var Forminator_Integration[]
 	 */
 	protected static $registered_addons = null;
 
@@ -488,10 +488,9 @@ abstract class Forminator_Admin_View_Page extends Forminator_Admin_Page {
 		// find all registered addons, so history can be shown even for deactivated addons.
 		$registered_addons = $this->get_registered_addons();
 
-		$method = 'get_addon_' . static::$module_slug . '_hooks';
 		foreach ( $registered_addons as $registered_addon ) {
 			try {
-				$hooks     = $registered_addon->{$method}( $this->form_id );
+				$hooks     = $registered_addon->get_addon_hooks( $this->form_id, static::$module_slug );
 				$meta_data = forminator_find_addon_meta_data_from_entry_model( $registered_addon, $entry_model );
 
 				$addon_additional_items = $hooks->on_render_entry( $entry_model, $meta_data );// run and forget.
@@ -512,7 +511,10 @@ abstract class Forminator_Admin_View_Page extends Forminator_Admin_Page {
 	 * @return bool
 	 */
 	protected function is_filter_box_enabled() {
-		return ( ! empty( $this->filters ) && ! empty( $this->order ) );
+		$order    = Forminator_Core::sanitize_text_field( 'order' );
+		$order_by = Forminator_Core::sanitize_text_field( 'order_by' );
+
+		return ( ! empty( $this->filters ) || ( ! empty( $order ) && ! empty( $order_by ) ) );
 	}
 
 	/**
@@ -529,23 +531,22 @@ abstract class Forminator_Admin_View_Page extends Forminator_Admin_Page {
 	/**
 	 * Get Globally registered Addons, avoid overhead for checking registered addons many times
 	 *
-	 * @return array|Forminator_Addon_Abstract[]
+	 * @return array|Forminator_Integration[]
 	 */
 	public function get_registered_addons() {
 		if ( empty( self::$registered_addons ) ) {
 			self::$registered_addons = array();
 
 			$registered_addons = forminator_get_registered_addons();
-			$method            = 'get_addon_' . static::$module_slug . '_hooks';
-			$class_name        = 'Forminator_Addon_' . static::$module_slug . '_Hooks_Abstract';
+			$class_name        = 'Forminator_Integration_' . static::$module_slug . '_Hooks';
 			foreach ( $registered_addons as $registered_addon ) {
 				try {
-					$hooks = $registered_addon->{$method}( $this->form_id );
+					$hooks = $registered_addon->get_addon_hooks( $this->form_id, static::$module_slug );
 					if ( $hooks instanceof $class_name ) {
 						self::$registered_addons[] = $registered_addon;
 					}
 				} catch ( Exception $e ) {
-					forminator_addon_maybe_log( $registered_addon->get_slug(), 'failed to ' . $method, $e->getMessage() );
+					forminator_addon_maybe_log( $registered_addon->get_slug(), 'failed to get_addon_hooks', $e->getMessage() );
 				}
 			}
 		}

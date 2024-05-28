@@ -83,7 +83,7 @@
                     <div style="background:#ffffff;max-width:600px;margin-top:40px;margin-left:auto;margin-right:auto;border-radius:20px;overflow:hidden;">
                         <!-- Header image -->
                         <div style="padding-top:35px;padding-bottom:35px;background:#1F2852;text-align:center;">
-                            <img src="https://i.postimg.cc/HW03YpSX/mail-wpmudev-logo.png" alt="" style="max-width:195px;">
+                            <img src="<?php echo esc_url( forminator_plugin_url() . 'assets/images/mail-wpmudev-logo.png' ) ?>" alt="" style="max-width:195px;">
                         </div>
                         <!-- END Header image -->
                         <div style="padding:30px 25px 40px;">
@@ -172,7 +172,7 @@
                         </div>
                         <!-- Footer Image -->
                         <div style="background: #E7F1FB;padding-top: 25px;padding-bottom: 25px;margin-top: 40px;text-align: center;">
-                            <img src="https://i.postimg.cc/Jz0Q5jR5/mail-wpmudev-logo-text.png" alt="" style="max-width:195px;">
+                            <img src="<?php echo esc_url( forminator_plugin_url() . 'assets/images/mail-wpmudev-logo-text.png' ) ?>" alt="" style="max-width:195px;">
                         </div>
                         <!-- END Footer image -->
                     </div>
@@ -213,7 +213,7 @@
                                                                     <tr>
                                                                         <td style="font-size:0;height:25px;vertical-align:middle;width:25px;">
                                                                             <a href="https://www.facebook.com/wpmudev" target="_blank">
-                                                                                <img height="25" src="https://i.postimg.cc/hv00prJp/mail-button-logo-facebook.png" style="border-radius:3px;display:block;" width="25" />
+                                                                                <img height="25" src="<?php echo esc_url( forminator_plugin_url() . 'assets/images/mail-button-logo-facebook.png' ) ?>" style="border-radius:3px;display:block;" width="25" />
                                                                             </a>
                                                                         </td>
                                                                     </tr>
@@ -229,7 +229,7 @@
                                                                     <tr>
                                                                         <td style="font-size:0;height:25px;vertical-align:middle;width:25px;">
                                                                             <a href="https://www.instagram.com/wpmu_dev/" target="_blank">
-                                                                                <img height="25" src="https://i.postimg.cc/GhcK9ZNN/mail-button-logo-instagram.png" style="border-radius:3px;display:block;" width="25" />
+                                                                                <img height="25" src="<?php echo esc_url( forminator_plugin_url() . 'assets/images/mail-button-logo-instagram.png' ) ?>" style="border-radius:3px;display:block;" width="25" />
                                                                             </a>
                                                                         </td>
                                                                     </tr>
@@ -245,7 +245,7 @@
                                                                     <tr>
                                                                         <td style="font-size:0;height:25px;vertical-align:middle;width:25px;">
                                                                             <a href="https://twitter.com/wpmudev" target="_blank">
-                                                                                <img height="25" src="https://i.postimg.cc/RVXRtgx0/mail-button-logo-twitter.png" style="border-radius:3px;display:block;" width="25" />
+                                                                                <img height="25" src="<?php echo esc_url( forminator_plugin_url() . 'assets/images/mail-button-logo-x.png' ) ?>" style="border-radius:3px;display:block;" width="25" />
                                                                             </a>
                                                                         </td>
                                                                     </tr>

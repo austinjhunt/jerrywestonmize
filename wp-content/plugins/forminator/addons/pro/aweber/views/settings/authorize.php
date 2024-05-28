@@ -21,31 +21,10 @@ foreach ( $template_vars as $key => $val ) {
 	</h3>
 
 	<?php if ( ! empty( $vars['account_id'] ) ) : ?>
-		<div
-			role="alert"
-			class="sui-notice sui-notice-green sui-active"
-			style="display: block; text-align: left;"
-			aria-live="assertive"
-		>
-
-			<div class="sui-notice-content">
-
-				<div class="sui-notice-message">
-
-					<span class="sui-notice-icon sui-icon-check-tick" aria-hidden="true"></span>
-
-					<p>
-						<?php
-						/* translators: 1: Add-on name */
-                        printf( esc_html__( 'Your %1$s account is already authorized.', 'forminator' ), 'AWeber' );
-						?>
-					</p>
-
-				</div>
-
-			</div>
-
-		</div>
+		<?php echo Forminator_Admin::get_green_notice(
+			/* translators: 1: Add-on name */
+			sprintf( esc_html__( 'Your %1$s account is already authorized.', 'forminator' ), 'AWeber' )
+		); ?>
 	<?php else : ?>
 		<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Authorize Forminator to connect with your AWeber account in order to send data from your forms.', 'forminator' ); ?></p>
 	<?php endif; ?>
@@ -89,8 +68,10 @@ foreach ( $template_vars as $key => $val ) {
 				if ( href ) {
 					var index = href.indexOf('identifier');
 
-					if ( index ) {
+					if ( -1 !== index ) {
 						href = href.slice(0, index);
+					} else {
+						href += encodeURIComponent( '&' );
 					}
 					href += encodeURIComponent( 'identifier=' + encodeURIComponent( val ) );
 					link.prop('href', href);

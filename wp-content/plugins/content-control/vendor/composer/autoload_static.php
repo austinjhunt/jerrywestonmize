@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit853ae0679741ef2cc10dcfede9bac995
+class ComposerStaticInite49cb9dbab9b634416f58f51de31371d
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -136,6 +136,7 @@ class ComposerStaticInit853ae0679741ef2cc10dcfede9bac995
         'ContentControl\\Controllers\\Assets' => __DIR__ . '/../..' . '/classes/Controllers/Assets.php',
         'ContentControl\\Controllers\\BlockEditor' => __DIR__ . '/../..' . '/classes/Controllers/BlockEditor.php',
         'ContentControl\\Controllers\\Compatibility' => __DIR__ . '/../..' . '/classes/Controllers/Compatibility.php',
+        'ContentControl\\Controllers\\Compatibility\\BetterDocs' => __DIR__ . '/../..' . '/classes/Controllers/Compatibility/BetterDocs.php',
         'ContentControl\\Controllers\\Compatibility\\Divi' => __DIR__ . '/../..' . '/classes/Controllers/Compatibility/Divi.php',
         'ContentControl\\Controllers\\Compatibility\\Elementor' => __DIR__ . '/../..' . '/classes/Controllers/Compatibility/Elementor.php',
         'ContentControl\\Controllers\\Compatibility\\QueryMonitor' => __DIR__ . '/../..' . '/classes/Controllers/Compatibility/QueryMonitor.php',
@@ -233,9 +234,9 @@ class ComposerStaticInit853ae0679741ef2cc10dcfede9bac995
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit853ae0679741ef2cc10dcfede9bac995::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit853ae0679741ef2cc10dcfede9bac995::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit853ae0679741ef2cc10dcfede9bac995::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite49cb9dbab9b634416f58f51de31371d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite49cb9dbab9b634416f58f51de31371d::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInite49cb9dbab9b634416f58f51de31371d::$classMap;
 
         }, null, ClassLoader::class);
     }

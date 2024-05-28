@@ -1,8 +1,7 @@
 <?php
 
-final class Forminator_Addon_Simple extends Forminator_Addon_Abstract {
+final class Forminator_Integration_Simple extends Forminator_Integration {
 
-	private static $_instance = null;
 	/**
 	 * Use this trait to mark this addon as PRO
 	 */
@@ -11,27 +10,10 @@ final class Forminator_Addon_Simple extends Forminator_Addon_Abstract {
 	protected $_min_forminator_version = '1.1';
 	protected $_short_title            = 'simple';
 	protected $_title                  = 'Simple';
-	protected $_url                    = 'http://wpmudev.com';
-	protected $_full_path              = __FILE__;
-	protected $_icon                   = '';
-	protected $_icon_x2                = '';
-	protected $_image                  = '';
-	protected $_image_x2               = '';
 
 	public function __construct() {
 		// late init to allow translation.
 		$this->_description                = esc_html__( 'Make your form Simple-able', 'forminator' );
-	}
-
-	/**
-	 * @return self|null
-	 */
-	public static function get_instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-
-		return self::$_instance;
 	}
 
 	/**
@@ -44,13 +26,23 @@ final class Forminator_Addon_Simple extends Forminator_Addon_Abstract {
 	}
 
 	/**
-	 * Flag for check if and addon connected to a form(form settings suchs as list name completed)
-	 *
-	 * @param $form_id
+	 * Authorized Callback
 	 *
 	 * @return bool
 	 */
-	public function is_form_connected( $form_id ) {
+	public function is_authorized() {
+		return false;
+	}
+
+	/**
+	 * Flag for check if and addon connected to a form(form settings such as list name completed)
+	 *
+	 * @param int    $module_id Form ID.
+	 * @param string $module_slug Module type.
+	 * @param bool   $check_lead Check is lead connected or not.
+	 * @return bool
+	 */
+	public function is_module_connected( $module_id, $module_slug = 'form', $check_lead = false ) {
 		return false;
 	}
 }

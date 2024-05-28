@@ -382,8 +382,8 @@ class AppointmentReservationService extends AbstractReservationService
             $existingAppointments->getItem($existingAppointments->keys()[0]) : null;
 
         if ((
-                !empty($appointmentData['payment']['gateway']) &&
-                $appointmentData['payment']['gateway'] === PaymentType::MOLLIE
+                (!empty($appointmentData['payment']['gateway']) &&
+                $appointmentData['payment']['gateway'] === PaymentType::MOLLIE) || !empty($appointmentData['isMollie'])
             ) && !(
                 !empty($appointmentData['bookings'][0]['packageCustomerService']['id']) &&
                 $reservation->getLoggedInUser() &&

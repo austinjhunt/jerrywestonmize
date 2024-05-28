@@ -249,15 +249,15 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 
 	private function prepare_addons() {
 		// cleanup activated addons.
-		Forminator_Addon_Loader::get_instance()->cleanup_activated_addons();
+		Forminator_Integration_Loader::get_instance()->cleanup_activated_addons();
 
-		Forminator_Addon_Admin_Ajax::get_instance()->generate_nonce();
+		Forminator_Integration_Admin_Ajax::get_instance()->generate_nonce();
 
 		$addons_list = forminator_get_registered_addons_list();
 
 		$this->addons_data = array(
 			'addons_list' => $addons_list,
-			'nonce'       => Forminator_Addon_Admin_Ajax::get_instance()->get_nonce(),
+			'nonce'       => Forminator_Integration_Admin_Ajax::get_instance()->get_nonce(),
 		);
 
 		$this->addons_list = forminator_get_registered_addons_list();

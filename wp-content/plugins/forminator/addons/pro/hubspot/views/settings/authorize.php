@@ -32,36 +32,17 @@ foreach ( $template_vars as $key => $val ) {
 
 <?php if ( ! empty( $vars['token'] ) ) : ?>
 
-	<div
-		role="alert"
-		class="sui-notice sui-notice-green sui-active"
-		style="display: block; text-align: left;"
-		aria-live="assertive"
-	>
-
-		<div class="sui-notice-content">
-
-			<div class="sui-notice-message">
-
-				<span class="sui-notice-icon sui-icon-check-tick" aria-hidden="true"></span>
-
-				<p>
-					<?php
-					printf(
-					/* Translators: 1. Opening <strong> tag, 2. User 3. closing <strong> tag. */
-						esc_html__( 'You are connected to %1$s%2$s%3$s.', 'forminator' ),
-						'<strong>',
-						esc_html( $vars['user'] ),
-						'</strong>'
-					);
-					?>
-				</p>
-
-			</div>
-
-		</div>
-
-	</div>
+	<?php
+	echo Forminator_Admin::get_green_notice(
+		sprintf(
+		/* Translators: 1. Opening <strong> tag, 2. User 3. closing <strong> tag. */
+			esc_html__( 'You are connected to %1$s%2$s%3$s.', 'forminator' ),
+			'<strong>',
+			esc_html( $vars['user'] ),
+			'</strong>'
+		)
+	);
+	?>
 
 <?php endif; ?>
 

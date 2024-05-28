@@ -102,6 +102,10 @@ class Forminator_Addon_Admin_Ajax {
 		$slug  = $data['slug'];
 		$addon = forminator_get_addon( $slug );
 
+		if ( ! $addon instanceof Forminator_Addon_Abstract ) {
+			return;
+		}
+
 		if ( ! empty( $data['global_id'] ) ) {
 			$addon->multi_global_id = $data['global_id'];
 			unset( $data['global_id'] );
@@ -150,6 +154,9 @@ class Forminator_Addon_Admin_Ajax {
 			$form_id = $sanitized_post_data['form_id'];
 			unset( $sanitized_post_data['form_id'] );
 		}
+		if ( ! forminator_get_addon( $slug ) instanceof Forminator_Addon_Abstract ) {
+			return;
+		}
 		$addon = $this->validate_addon_from_slug( $slug );
 
 		if ( ! $addon->is_settings_available() ) {
@@ -189,6 +196,9 @@ class Forminator_Addon_Admin_Ajax {
 		$module_type         = $sanitized_post_data['module_type'];
 
 		$addon = $this->validate_addon_from_slug( $slug );
+		if ( ! $addon instanceof Forminator_Addon_Abstract ) {
+			return;
+		}
 		if ( ! empty( $sanitized_post_data['global_id'] ) ) {
 			$addon->multi_global_id = $sanitized_post_data['global_id'];
 			unset( $sanitized_post_data['global_id'] );
@@ -502,6 +512,9 @@ class Forminator_Addon_Admin_Ajax {
 		$module_type         = $sanitized_post_data['module_type'];
 
 		$addon = $this->validate_addon_from_slug( $slug );
+		if ( ! $addon instanceof Forminator_Addon_Abstract ) {
+			return;
+		}
 
 		$is_settings_available = 'is_' . $module_type . '_settings_available';
 		if ( ! $addon->$is_settings_available( $module_id ) ) {

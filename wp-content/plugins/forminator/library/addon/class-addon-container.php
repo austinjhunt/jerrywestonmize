@@ -10,7 +10,7 @@ class Forminator_Addon_Container implements ArrayAccess, Countable, Iterator {
 
 	/**
 	 * @since 1.1
-	 * @var Forminator_Addon_Abstract[]
+	 * @var Forminator_Integration[]
 	 */
 	private $addons = array();
 
@@ -31,7 +31,7 @@ class Forminator_Addon_Container implements ArrayAccess, Countable, Iterator {
 	 *
 	 * @param mixed $offset
 	 *
-	 * @return Forminator_Addon_Abstract|mixed|null
+	 * @return Forminator_Integration|mixed|null
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {

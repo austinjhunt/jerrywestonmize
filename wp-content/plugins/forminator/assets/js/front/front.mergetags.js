@@ -200,6 +200,10 @@
          	return '';
 			}
 
+			if ( $element.length === 0 ) {
+				return '';
+			}
+
 			if ( this.is_calculation( element_id ) ) {
 				var $element_id = this.get_form_field(element_id),
 					$column_field = $element_id.closest('.forminator-col'),

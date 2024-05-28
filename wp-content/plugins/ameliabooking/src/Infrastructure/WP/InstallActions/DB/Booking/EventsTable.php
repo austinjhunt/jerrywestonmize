@@ -45,7 +45,7 @@ class EventsTable extends AbstractDatabaseTable
                    `recurringInterval` int(11) DEFAULT 1,
                    `recurringMonthly` ENUM('each' , 'on') DEFAULT 'each',
                    `monthlyDate` DATETIME NULL,
-                   `monthlyOnRepeat` ENUM('first', 'second', 'third', 'fourth', 'last') DEFAULT NULL,
+                   `monthlyOnRepeat` ENUM('first', 'second', 'third', 'fourth', 'fifth', 'last') DEFAULT NULL,
                    `monthlyOnDay` ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday') DEFAULT NULL,
                    `recurringUntil` DATETIME NULL,
                    `maxCapacity` int(11) NOT NULL,

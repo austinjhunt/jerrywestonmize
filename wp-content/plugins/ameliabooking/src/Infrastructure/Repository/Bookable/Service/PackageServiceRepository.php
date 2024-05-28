@@ -34,14 +34,15 @@ class PackageServiceRepository extends AbstractRepository
             ':minimumScheduled' => $data['minimumScheduled'],
             ':maximumScheduled' => $data['maximumScheduled'],
             ':allowProviderSelection' => $data['allowProviderSelection'] ? 1 : 0,
+            ':position'         => $data['position']
         ];
 
         try {
             $statement = $this->connection->prepare(
                 "INSERT INTO {$this->table}
-                (`packageId`, `serviceId`, `quantity`, `minimumScheduled`, `maximumScheduled`, `allowProviderSelection`)
+                (`packageId`, `serviceId`, `quantity`, `minimumScheduled`, `maximumScheduled`, `allowProviderSelection`, `position`)
                 VALUES
-                (:packageId, :serviceId, :quantity, :minimumScheduled, :maximumScheduled, :allowProviderSelection)"
+                (:packageId, :serviceId, :quantity, :minimumScheduled, :maximumScheduled, :allowProviderSelection, :position)"
             );
 
             $res = $statement->execute($params);
@@ -71,7 +72,8 @@ class PackageServiceRepository extends AbstractRepository
             ':minimumScheduled' => $data['minimumScheduled'],
             ':maximumScheduled' => $data['maximumScheduled'],
             ':allowProviderSelection' => $data['allowProviderSelection'] ? 1 : 0,
-            ':id'               => $id
+            ':id'               => $id,
+            ':position'         => $data['position'],
         ];
 
 
@@ -82,7 +84,8 @@ class PackageServiceRepository extends AbstractRepository
                 `quantity`         = :quantity,
                 `minimumScheduled` = :minimumScheduled,
                 `maximumScheduled` = :maximumScheduled,
-                `allowProviderSelection` = :allowProviderSelection
+                `allowProviderSelection` = :allowProviderSelection,
+                `position`         = :position
                 WHERE
                 id = :id"
             );

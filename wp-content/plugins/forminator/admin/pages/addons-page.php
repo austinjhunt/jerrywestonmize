@@ -23,13 +23,13 @@ class Forminator_Addons_Page extends Forminator_Admin_Page {
 				array(
 					'pid' => Forminator_Admin_Addons_page::GEOLOCATION_PID, // Geolocation Add-on.
 				),
-				// Stripe Add-on
-				array(
-					'pid' => 3953609,
-				),
 				// PDF Add-on
 				array(
 					'pid' => 4262971,
+				),
+				// Stripe Add-on
+				array(
+					'pid' => 3953609,
 				),
 			);
 

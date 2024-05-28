@@ -388,7 +388,7 @@ class SubmenuPageHandler
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/admin.13955f3c.js',
+                AMELIA_URL . 'v3/public/assets/admin.3a46c07a.js',
                 [],
                 AMELIA_VERSION,
                 true
@@ -429,6 +429,12 @@ class SubmenuPageHandler
             $scriptId,
             'localeLanguage',
             [AMELIA_LOCALE]
+        );
+
+        wp_localize_script(
+            $scriptId,
+            'wpAmeliaTimeZone',
+            [DateTimeService::getTimeZone()->getName()]
         );
 
         wp_localize_script(

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Class Forminator_Addon_Aweber_Oauth
+ * Class Forminator_Aweber_Oauth
  * Helpers for OAuth
  */
-class Forminator_Addon_Aweber_Oauth {
+class Forminator_Aweber_Oauth {
 
 	/**
 	 * Create Signature Base

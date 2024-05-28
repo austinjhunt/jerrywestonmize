@@ -21,33 +21,12 @@ foreach ( $template_vars as $key => $val ) {
 </div>
 
 <?php if ( ! empty( $vars['token'] ) ) : ?>
-
-	<div
-		role="alert"
-		class="sui-notice sui-notice-green sui-active"
-		style="display: block; text-align: left;"
-		aria-live="assertive"
-	>
-
-		<div class="sui-notice-content">
-
-			<div class="sui-notice-message">
-
-				<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
-
-				<p>
-					<?php
-					/* translators: 1: Add-on name */
-					printf( esc_html__( 'Your %1$s account is already authorized.', 'forminator' ), 'HubSpot' );
-					?>
-				</p>
-
-			</div>
-
-		</div>
-
-	</div>
-
+	<?php
+	echo Forminator_Admin::get_green_notice(
+		/* translators: 1: Add-on name */
+		sprintf( esc_html__( 'Your %1$s account is already authorized.', 'forminator' ), 'HubSpot' )
+	);
+	?>
 <?php else : ?>
 
 	<p id="forminator-integration-popup__description" class="sui-description" style="text-align: center;">
