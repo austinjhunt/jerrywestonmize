@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\Cron\Workers\WorkersFactory;
 use MailPoet\Logging\LoggerFactory;
+use MailPoet\Util\Helpers;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 
 class Daemon {
@@ -64,6 +65,8 @@ class Daemon {
           $worker->process($this->timer); // BC for workers not implementing CronWorkerInterface
         }
       } catch (\Exception $e) {
+        Helpers::mySqlGoneAwayExceptionHandler($e);
+
         $workerClassNameParts = explode('\\', get_class($worker));
         $workerName = end($workerClassNameParts);
         $errors[] = [

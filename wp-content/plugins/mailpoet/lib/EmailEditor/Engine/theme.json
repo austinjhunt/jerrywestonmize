@@ -5,7 +5,10 @@
     "color": {
       "customGradient": false,
       "defaultGradients": false,
-      "gradients": []
+      "gradients": [],
+      "background": true,
+      "text": true,
+      "link": true
     },
     "layout": {
       "contentSize": "660px",
@@ -16,7 +19,7 @@
     },
     "spacing": {
       "units": ["px"],
-      "blockGap": true,
+      "blockGap": false,
       "padding": true,
       "margin": true,
       "spacingSizes": [

@@ -3,7 +3,7 @@ Contributors: mailpoet, woocommerce, automattic
 Tags: email, email marketing, post notification, woocommerce emails, email automation, newsletter, newsletter builder, newsletter subscribers
 Requires at least: 6.4
 Tested up to: 6.5
-Stable tag: 4.50.1
+Stable tag: 4.51.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -11,14 +11,6 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Send beautiful newsletters from WordPress. Collect subscribers with signup forms, automate your emails for WooCommerce, blog post notifications & more
 
 == Description ==
-
-= Save up to 30% on MailPoet annual plans and upgrades =
-
-Our sale is live. Save up to 30% when you switch to or upgrade an annual plan — no coupon needed. Offer ends 3 pm UTC on March 29, 2024.
-
-[Shop annual plans](https://account.mailpoet.com/?billing=yearly&ref=sale-2024-h1-wporg&utm_source=wordpress.org&utm_medium=description&utm_campaign=2024-h1-sale)
-
-= What is MailPoet? =
 
 Use MailPoet to create, send, manage, and grow your email marketing campaigns – all without leaving your WordPress dashboard.
 
@@ -235,6 +227,11 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 6. WooCommerce emails
 
 == Changelog ==
+
+= 4.51.0 - 2024-05-27 =
+* Fixed: marking plugin as incompatible with WooCommerce HPOS on multisite;
+* Fixed: incorrect order links in subscriber stats;
+* Fixed: Overlapping between controlbar and the block in the form editor.
 
 = 4.50.1 - 2024-05-21 =
 * Added: the date when a subscriber was added to the subscribers' list;
