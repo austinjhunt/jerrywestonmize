@@ -3,14 +3,15 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 
 abstract class PagespeedNinja_ErrorLogging
 {
+    /** @var array<int,string> */
     protected static $error_types_map = array(
         E_ERROR => 'ERROR',
         E_WARNING => 'WARNING',
@@ -30,12 +31,14 @@ abstract class PagespeedNinja_ErrorLogging
         65536 => 'EXCEPTION'
     );
 
+    /** @var string */
     protected static $error_log;
 
+    /** @return void */
     public static function init()
     {
 
-        /** @var array $options */
+        /** @var array<string,string> $options */
         $options = get_option('pagespeedninja_config');
         if (isset($options['errorlogging']) && !$options['errorlogging']) {
             return;
@@ -62,7 +65,7 @@ abstract class PagespeedNinja_ErrorLogging
             $header[] = '';
             $header[] = 'WordPress version: ' . $GLOBALS['wp_version'];
             $header[] = 'Activated plugins:';
-            /** @var array $plugins */
+            /** @var string[] $plugins */
             $plugins = get_option('active_plugins');
             $plugins_dir = plugin_dir_path(dirname(__DIR__));
             foreach ($plugins as $plugin) {
@@ -79,6 +82,7 @@ abstract class PagespeedNinja_ErrorLogging
         register_shutdown_function(array(__CLASS__, 'log_fatal'));
     }
 
+    /** @return void */
     public static function log_fatal()
     {
         $error = error_get_last();
@@ -89,6 +93,7 @@ abstract class PagespeedNinja_ErrorLogging
 
     /**
      * @param Exception $e
+     * @return void
      */
     public static function log_exception($e)
     {
@@ -110,7 +115,7 @@ abstract class PagespeedNinja_ErrorLogging
             $trace = debug_backtrace();
         }
         $strTrace = array();
-        /** @var array $trace */
+        /** @var array[] $trace */
         foreach ($trace as $item) {
             if (isset($item['file'], $item['line'])) {
                 $strTrace[] = $item['file'] . ':' . $item['line'];

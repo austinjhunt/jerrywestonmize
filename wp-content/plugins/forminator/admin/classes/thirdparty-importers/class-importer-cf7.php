@@ -814,12 +814,12 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 * @return float|string
 	 */
 	public function convert_limit_to_mb( $limit ) {
-		if ( strpos( $limit, 'mb' ) !== false ) {
+		if ( stripos( $limit, 'mb' ) !== false ) {
 			// Limit is already in MB, return value.
 			return mb_substr( $limit, 0, - 2 );
 		}
 
-		if ( strpos( $limit, 'kb' ) !== false ) {
+		if ( stripos( $limit, 'kb' ) !== false ) {
 			$limit = mb_substr( $limit, 0, - 2 );
 
 			// Limit is in KB, we need to convert to MB.

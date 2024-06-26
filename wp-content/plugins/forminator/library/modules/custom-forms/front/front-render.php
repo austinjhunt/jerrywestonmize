@@ -843,7 +843,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 
 		// We have more than one field in the row, abort.
 		if ( count( $wrapper['fields'] ) > 1 ) {
-			return false;
+			// Checks if all fields are hidden.
+			return ! array_diff( wp_list_pluck( $wrapper['fields'], 'type' ), array( 'hidden' ) );
 		}
 
 		// Check if the field type is hidden.

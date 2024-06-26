@@ -3,14 +3,14 @@
  * Class Forminator_Mailchimp_Wp_Api
  * Wrapper @see wp_remote_request() to be used to do request to mailchimp server
  *
- * @since 1.0 Mailchimp Addon
+ * @since 1.0 Mailchimp Integration
  */
 class Forminator_Mailchimp_Wp_Api {
 
 	/**
 	 * Mailchimp API instance
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var self|null
 	 */
 	private static $_instance = null;
@@ -18,7 +18,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Endpoint of Mailchimp API
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	private $_endpoint = 'https://{dc}.api.mailchimp.com/3.0/';
@@ -26,7 +26,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * API Key used to send request
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	private $_api_key = '';
@@ -34,7 +34,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Last data sent to mailchimp API
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var array
 	 */
 	private $_last_data_sent = array();
@@ -42,7 +42,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Last data received from mailchimp API
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var array
 	 */
 	private $_last_data_received = array();
@@ -50,7 +50,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Last URL requested
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	private $_last_url_request = '';
@@ -58,7 +58,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Forminator_Mailchimp_Wp_Api constructor.
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $api_key
 	 *
@@ -82,7 +82,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get singleton
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param null $api_key
 	 *
@@ -100,7 +100,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Add extra info on user agent header used to send request
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $user_agent
 	 *
@@ -125,7 +125,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * HTTP Request
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param string $verb
 	 * @param        $path
@@ -268,7 +268,7 @@ class Forminator_Mailchimp_Wp_Api {
 				$response = $wp_response;
 			}
 			/**
-			 * Filter mailchimp api response returned to addon
+			 * Filter mailchimp api response returned to integration
 			 *
 			 * @since 1.1
 			 *
@@ -289,7 +289,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Ping Mailchimp API to check if API key is valid
 	 *
-	 * @since 1.21.0 Mailchimp Addon
+	 * @since 1.21.0 Mailchimp Integration
 	 *
 	 * @param $args
 	 *
@@ -306,7 +306,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get User Info for the current API KEY
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $fields
 	 *
@@ -330,7 +330,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get Mailchimp Lists
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $args
 	 *
@@ -401,7 +401,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get List of merge fields
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $list_id
 	 * @param $args
@@ -429,7 +429,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Add new Merge Field To List
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $list_id
 	 * @param $args
@@ -471,7 +471,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get Created categories withing a list
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $list_id
 	 * @param $args
@@ -579,7 +579,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get Created Interest Groups within a category
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $list_id
 	 * @param $category_id
@@ -635,7 +635,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get detail of member
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param        $list_id
 	 * @param string  $subscriber_hash The MD5 hash of the lowercase version of the list member’s email address.
@@ -661,7 +661,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Add Member to list
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $list_id
 	 * @param $args
@@ -692,7 +692,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Add member if not available, or update member if exist
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $list_id
 	 * @param $subscriber_hash
@@ -740,7 +740,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get detail of member
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param        $list_id
 	 * @param string  $subscriber_hash The MD5 hash of the lowercase version of the list member’s email address.
@@ -761,7 +761,7 @@ class Forminator_Mailchimp_Wp_Api {
 	 *
 	 * Useful to interact with mailchimp schema _links.
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param string $url href from _links response which will be converted to path.
 	 *
@@ -777,7 +777,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get last data sent
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @return array
 	 */
@@ -788,7 +788,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @return array
 	 */
@@ -799,7 +799,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @return string
 	 */
@@ -810,7 +810,7 @@ class Forminator_Mailchimp_Wp_Api {
 	/**
 	 * Get current endpoint to send to Malchimp
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @return string
 	 */
 	public function get_endpoint() {

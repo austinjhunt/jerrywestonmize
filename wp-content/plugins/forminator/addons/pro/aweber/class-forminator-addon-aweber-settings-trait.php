@@ -3,7 +3,7 @@
  * Trait for common methods for Aweber settings classes
  *
  * @since 1.30
- * @package Aweber Addon
+ * @package Aweber Integration
  */
 
 /**
@@ -15,7 +15,7 @@ trait Forminator_Aweber_Settings_Trait {
 	/**
 	 * Aweber Module Settings wizard
 	 *
-	 * @since 1.0 Aweber Addon
+	 * @since 1.0 Aweber Integration
 	 * @return array
 	 */
 	public function module_settings_wizards() {
@@ -43,7 +43,7 @@ trait Forminator_Aweber_Settings_Trait {
 	/**
 	 * Set up Connection Name
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -114,7 +114,7 @@ trait Forminator_Aweber_Settings_Trait {
 	/**
 	 * Set up List
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -227,7 +227,7 @@ trait Forminator_Aweber_Settings_Trait {
 	/**
 	 * Set up fields map
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -369,7 +369,7 @@ trait Forminator_Aweber_Settings_Trait {
 	 * - misc_notes
 	 * - tags
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -496,7 +496,7 @@ trait Forminator_Aweber_Settings_Trait {
 	/**
 	 * Check if setup options completed
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */
@@ -508,7 +508,7 @@ trait Forminator_Aweber_Settings_Trait {
 	/**
 	 * Check if fields mapped
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */

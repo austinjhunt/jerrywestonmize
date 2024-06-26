@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Addon Name: Aweber
+ * Integration Name: Aweber
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: Integrate Forminator Custom Forms with Aweber to get notified in real time.

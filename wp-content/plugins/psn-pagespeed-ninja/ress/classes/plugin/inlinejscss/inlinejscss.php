@@ -15,11 +15,10 @@ class Ressio_Plugin_InlineJsCss extends Ressio_Plugin
      * @param Ressio_DI $di
      * @param null|stdClass $params
      */
-    public function __construct($di, $params)
+    public function __construct($di, $params = null)
     {
-        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
-
-        parent::__construct($di, $params);
+        parent::__construct($di);
+        $this->loadConfig(__DIR__ . '/config.json', $params);
     }
 
     /**
@@ -33,11 +32,11 @@ class Ressio_Plugin_InlineJsCss extends Ressio_Plugin
             $this->di->httpHeaders->setCookie($this->params->cookie, '1', time() + $this->params->cookietime, '/', $_SERVER['HTTP_HOST'], false, true);
             if ($this->params->css) {
                 $this->di->dispatcher->addListener('HtmlIterateTagLINK', array($this, 'processHtmlIterateTagLINK'));
-                $this->di->dispatcher->addListener('CssCombinerNodeList', array($this, 'processCssCombinerNodeList'), IRessio_Dispatcher::ORDER_FIRST);
+                $this->di->dispatcher->addListener('CssCombinerNodeList', array($this, 'processCssCombinerNodeList'), -10);
             }
             if ($this->params->js) {
                 $this->di->dispatcher->addListener('HtmlIterateTagScript', array($this, 'processHtmlIterateTagScript'));
-                $this->di->dispatcher->addListener('JsCombinerNodeList', array($this, 'processJsCombinerNodeList'), IRessio_Dispatcher::ORDER_FIRST);
+                $this->di->dispatcher->addListener('JsCombinerNodeList', array($this, 'processJsCombinerNodeList'), -10);
             }
         }
     }
@@ -68,8 +67,8 @@ class Ressio_Plugin_InlineJsCss extends Ressio_Plugin
                     if ($media !== 'all') {
                         $attrs['media'] = $media;
                     }
-                    $optimizer->nodeInsertBefore($node, 'link', array('rel' => 'prefetch', 'href' => $href));
                     $optimizer->nodeInsertBefore($node, 'style', $attrs, $content);
+                    $optimizer->nodeInsertBefore($node, 'link', array('rel' => 'prefetch-delayed', 'href' => $href));
                     $optimizer->nodeDetach($node);
                 }
             }
@@ -97,7 +96,7 @@ class Ressio_Plugin_InlineJsCss extends Ressio_Plugin
                             $attrs['media'] = $media;
                         }
                         $node = new Ressio_NodeWrapper('style', $content, $attrs);
-                        $styleList[] = new Ressio_NodeWrapper('link', null, array('rel' => 'prefetch', 'href' => $href));
+                        $styleList[] = new Ressio_NodeWrapper('link', null, array('rel' => 'prefetch-delayed', 'href' => $href));
                     }
                 }
             }
@@ -132,7 +131,8 @@ class Ressio_Plugin_InlineJsCss extends Ressio_Plugin
         } else {
             $content = $this->di->filesystem->getContents($filename);
             if ($content !== false) {
-                $content = $this->di->cssRelocator->run($content, dirname($href), '/');
+                $abs_url = $this->di->urlRewriter->filepathToUrl($filename);
+                $content = $this->di->cssRelocator->run($content, dirname($abs_url), '/');
             }
             $cache->storeAndUnlock($cache_id, json_encode($content));
         }
@@ -153,7 +153,7 @@ class Ressio_Plugin_InlineJsCss extends Ressio_Plugin
         }
 
         if ($node->hasAttribute('src')
-            && (!$node->hasAttribute('type') || $node->getAttribute('type') === 'text/javascript')
+            && (!$node->hasAttribute('type') || $optimizer->isJavaScriptMime($node->getAttribute('type')))
             && !$node->hasAttribute('nomodule') && !$node->hasAttribute('onload')
         ) {
             $src = $node->getAttribute('src');
@@ -161,7 +161,7 @@ class Ressio_Plugin_InlineJsCss extends Ressio_Plugin
             if ($filename !== null) {
                 $content = $this->di->filesystem->getContents($filename);
                 if ($content !== false) {
-                    $optimizer->nodeInsertBefore($node, 'link', array('rel' => 'prefetch', 'href' => $src));
+                    $optimizer->nodeInsertBefore($node, 'link', array('rel' => 'prefetch-delayed', 'href' => $src));
                     $attrs = array();
                     if ($node->hasAttribute('defer')) {
                         $attrs['defer'] = false;
@@ -198,10 +198,10 @@ class Ressio_Plugin_InlineJsCss extends Ressio_Plugin
                         } elseif ($node->hasAttribute('defer')) {
                             $attrs['defer'] = false;
                             $attrs['src'] = 'data:text/javascript,' . rawurlencode($content);
-                            $content = null;
+                            $content = '';
                         }
                         $node = new Ressio_NodeWrapper('script', $content, $attrs);
-                        $scriptList[] = new Ressio_NodeWrapper('link', null, array('rel' => 'prefetch', 'href' => $src));
+                        $scriptList[] = new Ressio_NodeWrapper('link', null, array('rel' => 'prefetch-delayed', 'href' => $src));
                     }
                 }
             }
@@ -209,4 +209,15 @@ class Ressio_Plugin_InlineJsCss extends Ressio_Plugin
         }
         $wrapper->nodes = $scriptList;
     }
-}
+
+    /**
+     * @param Ressio_Event $event
+     * @param IRessio_HtmlOptimizer $optimizer
+     * @return void
+     */
+    public function onHtmlIterateAfter($event, $optimizer)
+    {
+        $scriptData = file_get_contents(__DIR__ . '/js/prefetch-delayed.min.js');
+        $optimizer->appendScriptDeclaration($scriptData, array('defer' => true));
+    }
+    }

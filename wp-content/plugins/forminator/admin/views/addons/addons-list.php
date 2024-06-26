@@ -15,14 +15,14 @@ if ( FORMINATOR_PRO ) {
 	if ( $addons->is_installed ) {
 
 		if ( is_plugin_active( $addons->filename ) ) {
-			$tags['label'] = esc_html__( 'Active' );
+			$tags['label'] = esc_html__( 'Active', 'forminator' );
 			$tags['class'] = 'sui-tag sui-tag-sm sui-tag-blue';
 		} else {
-			$tags['label'] = esc_html__( 'Inactive' );
+			$tags['label'] = esc_html__( 'Inactive', 'forminator' );
 			$tags['class'] = 'sui-tag sui-tag-sm';
 		}
 	} else {
-		$tags['label'] = esc_html__( 'Not Installed' );
+		$tags['label'] = esc_html__( 'Not Installed', 'forminator' );
 		$tags['class'] = 'sui-tag sui-tag-sm sui-tag-grey';
 	}
 

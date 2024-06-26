@@ -20898,7 +20898,7 @@ html.sui-has-overlay {
   background-color: rgba(0,0,0,0);
 }
 
-.sui-2-12-23 .sui-wrap .multivalue-modal div[id^=forminator-modal-body-] .sui-tab-content.active {
+.sui-2-12-23 .sui-wrap .multivalue-modal div[id^=forminator-modal-body-] .sui-tab-content.active:not(:has(.sui-tooltip)) {
   overflow: hidden;
 }
 

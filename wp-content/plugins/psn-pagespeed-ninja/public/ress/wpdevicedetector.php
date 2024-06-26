@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 defined('RESSIO_PATH') || die();
 
@@ -21,41 +21,49 @@ class Ressio_DeviceDetector_Wordpress extends Ressio_DeviceDetector_Base impleme
         parent::__construct($ua);
     }
 
+    /** @inheritdoc */
     public function screen_width()
     {
         return false;
     }
 
+    /** @inheritdoc */
     public function screen_height()
     {
         return false;
     }
 
+    /** @inheritdoc */
     public function screen_dpr()
     {
         return false;
     }
 
+    /** @inheritdoc */
     public function browser_imgformats()
     {
         return null;
     }
 
+    /** @inheritdoc */
     public function browser_js()
     {
         return true;
     }
 
+    /** @inheritdoc */
     public function category()
     {
         return '';
     }
 
+    /** @inheritdoc */
     public function isDesktop()
     {
         return true;
     }
 
+    /** @inheritdoc */
     public function isMobile()
     {
         return false;

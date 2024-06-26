@@ -23,7 +23,7 @@ class Ressio_Cache_File implements IRessio_Cache, IRessio_DIAware
     private $update_time;
     /** @var string */
     private $prefix;
-    /** @var array */
+    /** @var array<int,string> */
     private $id2file = array();
 
     /**
@@ -53,7 +53,7 @@ class Ressio_Cache_File implements IRessio_Cache, IRessio_DIAware
     }
 
     /**
-     * @param string|array $deps
+     * @param string|string[] $deps
      * @param string $suffix
      * @return string
      */
@@ -80,7 +80,15 @@ class Ressio_Cache_File implements IRessio_Cache, IRessio_DIAware
             }
             return $this->fs->getContents($filename);
         }
-        return $this->filelock->lock($filename);
+
+        $lock = $this->filelock->lock($filename);
+        if ($lock && $this->fs->isFile($filename)) {
+            $content = $this->fs->getContents($filename);
+            $this->filelock->unlock($filename);
+            return $content;
+        }
+
+        return $lock;
     }
 
     /**
@@ -168,7 +176,7 @@ class Ressio_Cache_File implements IRessio_Cache, IRessio_DIAware
         $this->prefix = $params->prefix;
 
         $time = time();
-        $this->update_time = $time - 0.9 * $params->ttl;
+        $this->update_time = $time - (int)round(0.5 * $params->ttl);
 
         return true;
     }

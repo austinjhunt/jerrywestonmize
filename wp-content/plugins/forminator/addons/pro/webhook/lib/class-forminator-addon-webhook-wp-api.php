@@ -121,7 +121,7 @@ class Forminator_Webhook_Wp_Api {
 		// Adding extra user agent for wp remote request.
 		add_filter( 'http_headers_useragent', array( $this, 'filter_user_agent' ) );
 
-		if ( strpos( $this->_endpoint, '?' ) ) {
+		if ( strpos( $this->_endpoint, '?' ) || empty( $path ) ) {
 			$url = $this->_endpoint;
 		} else {
 			$url = trailingslashit( $this->_endpoint ) . $path;
@@ -236,7 +236,7 @@ class Forminator_Webhook_Wp_Api {
 
 		$response = $res;
 		/**
-		 * Filterwebhook api response returned to addon
+		 * Filterwebhook api response returned to integration
 		 *
 		 * @since 1.1
 		 *

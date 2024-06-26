@@ -211,7 +211,7 @@ class Ressio
     private static function merge_objects(&$obj, $obj2)
     {
         if (is_array($obj)) {
-            $obj = (object) $obj;
+            $obj = (object)$obj;
         }
         foreach ($obj2 as $key => $value) {
             if ((is_array($value) && count($value) && !isset($value[0])) || is_object($value)) {
@@ -313,7 +313,7 @@ class Ressio
             $this->di->dispatcher->triggerEvent('RunBeforeSendHeaders', array(&$buffer));
             $this->di->httpHeaders->sendHeaders();
         } catch (Exception $e) {
-            $this->di->logger->warning('Catched error in ' . __METHOD__ . ': ' . $e->getMessage());
+            $this->di->logger->warning('Catched error in ' . __METHOD__ . ': ' . $e->getMessage() . ' in ' . $e->getTraceAsString());
             return $content;
         }
 

@@ -20,6 +20,12 @@ interface IRessio_HtmlOptimizer
     public function run($buffer);
 
     /**
+     * @pure
+     * @return string
+     */
+    public function getQueryDelim();
+
+    /**
      * @param string $url
      * @param array|null $attribs
      * @return void
@@ -126,6 +132,18 @@ interface IRessio_HtmlOptimizer
      * @return bool
      */
     public function isPictureState();
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    public function isJavaScriptMime($type);
+
+    /**
+     * @param string $srcset
+     * @return string[]
+     */
+    public function parseSrcset($srcset);
 
     /**
      * @param IRessio_HtmlNode $node

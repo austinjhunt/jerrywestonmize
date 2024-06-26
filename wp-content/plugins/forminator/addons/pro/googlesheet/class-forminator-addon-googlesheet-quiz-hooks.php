@@ -73,7 +73,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 			 * @param int $quiz_id current Quiz ID.
 			 * @param array $submitted_data
 			 * @param array $quiz_entry_fields
-			 * @param Forminator_Googlesheet_Quiz_Settings $quiz_settings_instance Google Sheets Addon Quiz Settings instance.
+			 * @param Forminator_Googlesheet_Quiz_Settings $quiz_settings_instance Google Sheets Integration Quiz Settings instance.
 			 */
 			do_action( 'forminator_addon_quiz_googlesheet_before_prepare_sheet_headers', $connection_settings, $quiz_id, $submitted_data, $quiz_entry_fields, $quiz_settings_instance );
 
@@ -90,7 +90,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 			 * @param int $quiz_id current Quiz ID.
 			 * @param array $submitted_data
 			 * @param array $quiz_entry_fields
-			 * @param Forminator_Googlesheet_Quiz_Settings $quiz_settings_instance Google Sheets Addon Quiz Settings instance.
+			 * @param Forminator_Googlesheet_Quiz_Settings $quiz_settings_instance Google Sheets Integration Quiz Settings instance.
 			 */
 			$header_fields = apply_filters(
 				'forminator_addon_quiz_googlesheet_sheet_headers',
@@ -112,7 +112,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 			 * @param int $quiz_id current Quiz ID.
 			 * @param array $submitted_data
 			 * @param array $quiz_entry_fields
-			 * @param Forminator_Googlesheet_Quiz_Settings $quiz_settings_instance Google Sheets Addon Quiz Settings instance.
+			 * @param Forminator_Googlesheet_Quiz_Settings $quiz_settings_instance Google Sheets Integration Quiz Settings instance.
 			 */
 			do_action( 'forminator_addon_quiz_googlesheet_after_prepare_sheet_headers', $header_fields, $connection_settings, $quiz_id, $submitted_data, $quiz_entry_fields, $quiz_settings_instance );
 

@@ -3,7 +3,7 @@
 /**
  * Class Forminator_Trello_Form_Hooks
  *
- * @since 1.0 Trello Addon
+ * @since 1.0 Trello Integration
  */
 class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
@@ -36,7 +36,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	/**
 	 * Get status on create Trello card
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param string $connection_id
 	 * @param array  $submitted_data
@@ -83,7 +83,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				 * @param array $connection_settings current connection setting, contains options of like `name`, `list_id` etc.
 				 * @param array $form_entry_fields default entry fields of form.
 				 * @param array $form_settings Displayed Form settings.
-				 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Addon Form Settings instance.
+				 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Integration Form Settings instance.
 				 */
 				$card_name    = apply_filters(
 					'forminator_addon_trello_card_name',
@@ -118,7 +118,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				 * @param array $connection_settings current connection setting, contains options of like `name`, `list_id` etc.
 				 * @param array $form_entry_fields default entry fields of form.
 				 * @param array $form_settings Displayed Form settings.
-				 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Addon Form Settings instance.
+				 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Integration Form Settings instance.
 				 */
 				$card_description = apply_filters(
 					'forminator_addon_trello_card_description',
@@ -176,7 +176,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 			 * @param array $submitted_data
 			 * @param array $connection_settings current connection setting, contains options of like `name`, `list_id` etc.
 			 * @param array $form_settings Displayed Form settings.
-			 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Addon Form Settings instance.
+			 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Integration Form Settings instance.
 			 */
 			$args = apply_filters(
 				'forminator_addon_trello_create_card_args',
@@ -304,7 +304,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	/**
 	 * Get Markdown for single field
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param $type
 	 * @param $label
@@ -339,7 +339,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	/**
 	 * It will delete card on trello list
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param Forminator_Form_Entry_Model $entry_model
 	 * @param  array                       $addon_meta_data
@@ -353,14 +353,14 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
 		/**
 		 *
-		 * Filter Trello addon metadata that previously saved on db to be processed
+		 * Filter Trello integration metadata that previously saved on db to be processed
 		 *
 		 * @since 1.1
 		 *
 		 * @param array $addon_meta_data
 		 * @param int $form_id current Form ID.
 		 * @param Forminator_Form_Entry_Model $entry_model Forminator Entry Model.
-		 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Addon Form Settings instance.
+		 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Integration Form Settings instance.
 		 */
 		$addon_meta_data = apply_filters(
 			'forminator_addon_trello_metadata',
@@ -377,8 +377,8 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 		 *
 		 * @param int $form_id current Form ID.
 		 * @param Forminator_Form_Entry_Model $entry_model Forminator Entry Model.
-		 * @param array $addon_meta_data addon meta data.
-		 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Addon Form Settings instance.
+		 * @param array $addon_meta_data integration meta data.
+		 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Integration Form Settings instance.
 		 */
 		do_action(
 			'forminator_addon_trello_on_before_delete_submission',
@@ -434,12 +434,12 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 			return true;
 
 		} catch ( Forminator_Integration_Exception $e ) {
-			// handle all internal addon exceptions with `Forminator_Integration_Exception`.
+			// handle all internal integration exceptions with `Forminator_Integration_Exception`.
 
 			// use wp_error, for future usage it can be returned to page entries.
 			$wp_error
 				= new WP_Error( 'forminator_addon_trello_delete_card', $e->getMessage() );
-			// handle this in addon by self, since page entries cant handle error messages on delete yet.
+			// handle this in integration by self, since page entries cant handle error messages on delete yet.
 			wp_die(
 				esc_html( $wp_error->get_error_message() ),
 				esc_html( $this->addon->get_title() ),
@@ -457,7 +457,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	/**
 	 * Delete card hooked
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param $card_id
 	 * @param $card_delete_mode
@@ -481,7 +481,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 		 * @param string $card_delete_mode
 		 * @param array $addon_meta_datum
 		 * @param int $form_id
-		 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Addon Form Settings instance.
+		 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Integration Form Settings instance.
 		 */
 		$args = apply_filters(
 			'forminator_addon_trello_delete_card_args',
@@ -514,7 +514,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 		 * @param string $card_delete_mode
 		 * @param array $addon_meta_datum
 		 * @param int $form_id
-		 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Addon Form Settings instance.
+		 * @param Forminator_Trello_Form_Settings $form_settings_instance Trello Integration Form Settings instance.
 		 */
 		do_action(
 			'forminator_addon_trello_delete_card',

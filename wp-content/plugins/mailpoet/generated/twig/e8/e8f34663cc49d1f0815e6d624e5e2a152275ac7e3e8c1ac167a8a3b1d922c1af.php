@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Environment;
 use MailPoetVendor\Twig\Error\LoaderError;
 use MailPoetVendor\Twig\Error\RuntimeError;
+use MailPoetVendor\Twig\Extension\CoreExtension;
 use MailPoetVendor\Twig\Extension\SandboxExtension;
 use MailPoetVendor\Twig\Markup;
 use MailPoetVendor\Twig\Sandbox\SecurityError;
@@ -42,71 +43,71 @@ class __TwigTemplate_040602ebc7669cdfb9da26116daadadf72855abd5f9690ec0e527b909dc
     {
         $macros = $this->macros;
         $this->parent = $this->loadTemplate("layout.html", "welcome_wizard.html", 1);
-        $this->parent->display($context, array_merge($this->blocks, $blocks));
+        yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
     }
 
     public function block_content($context, array $blocks = [])
     {
         $macros = $this->macros;
         // line 2
-        echo "<script>
+        yield "<script>
   var mailpoet_logo_url = '";
         // line 3
-        echo $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/mailpoet-logo.20200623.png");
-        echo "';
+        yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/mailpoet-logo.20200623.png");
+        yield "';
   var wizard_sender_illustration_url = '";
         // line 4
-        echo $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/sender.20200623.png");
-        echo "';
+        yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/sender.20200623.png");
+        yield "';
   var wizard_tracking_illustration_url = '";
         // line 5
-        echo $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/tracking.20200623.png");
-        echo "';
+        yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/tracking.20200623.png");
+        yield "';
   var wizard_woocommerce_illustration_url = '";
         // line 6
-        echo $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/woocommerce.20200623.png");
-        echo "';
+        yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/woocommerce.20200623.png");
+        yield "';
   var wizard_MSS_pitch_illustration_url = '";
         // line 7
-        echo $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/illu-pitch-mss.20190912.png");
-        echo "';
+        yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/illu-pitch-mss.20190912.png");
+        yield "';
   var finish_wizard_url = '";
         // line 8
-        echo \MailPoetVendor\twig_escape_filter($this->env, ($context["finish_wizard_url"] ?? null), "html", null, true);
-        echo "';
+        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["finish_wizard_url"] ?? null), "html", null, true);
+        yield "';
   var admin_email = ";
         // line 9
-        echo json_encode(($context["admin_email"] ?? null));
-        echo ";
+        yield json_encode(($context["admin_email"] ?? null));
+        yield ";
   var hide_mailpoet_beacon = true;
   var mailpoet_show_customers_import = ";
         // line 11
-        echo json_encode(($context["show_customers_import"] ?? null));
-        echo ";
+        yield json_encode(($context["show_customers_import"] ?? null));
+        yield ";
   var mailpoet_account_url = '";
         // line 12
-        echo $this->extensions['MailPoet\Twig\Functions']->addReferralId(((("https://account.mailpoet.com/?s=" . ($context["subscriber_count"] ?? null)) . "&email=") . \MailPoetVendor\twig_escape_filter($this->env, \MailPoetVendor\twig_get_attribute($this->env, $this->source, ($context["current_wp_user"] ?? null), "user_email", [], "any", false, false, false, 12), "js")));
-        echo "';
+        yield $this->extensions['MailPoet\Twig\Functions']->addReferralId(((("https://account.mailpoet.com/?s=" . ($context["subscriber_count"] ?? null)) . "&email=") . $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, ($context["current_wp_user"] ?? null), "user_email", [], "any", false, false, false, 12), "js")));
+        yield "';
   var mailpoet_settings = ";
         // line 13
-        echo json_encode(($context["settings"] ?? null));
-        echo ";
+        yield json_encode(($context["settings"] ?? null));
+        yield ";
   var mailpoet_premium_key_valid = ";
         // line 14
-        echo json_encode(($context["premium_key_valid"] ?? null));
-        echo ";
+        yield json_encode(($context["premium_key_valid"] ?? null));
+        yield ";
   var mailpoet_mss_key_valid = ";
         // line 15
-        echo json_encode(($context["mss_key_valid"] ?? null));
-        echo ";
+        yield json_encode(($context["mss_key_valid"] ?? null));
+        yield ";
   var wizard_has_tracking_settings = ";
         // line 16
-        echo json_encode(($context["has_tracking_settings"] ?? null));
-        echo ";
+        yield json_encode(($context["has_tracking_settings"] ?? null));
+        yield ";
   var mailpoet_welcome_wizard_current_step = ";
         // line 17
-        echo json_encode(($context["welcome_wizard_current_step"] ?? null));
-        echo ";
+        yield json_encode(($context["welcome_wizard_current_step"] ?? null));
+        yield ";
 </script>
 
 <div id=\"mailpoet-wizard-container\"></div>
@@ -122,29 +123,39 @@ class __TwigTemplate_040602ebc7669cdfb9da26116daadadf72855abd5f9690ec0e527b909dc
 
 ";
         // line 31
-        $this->loadTemplate("mss_pitch_translations.html", "welcome_wizard.html", 31)->display($context);
+        yield from         $this->loadTemplate("mss_pitch_translations.html", "welcome_wizard.html", 31)->unwrap()->yield($context);
         // line 32
-        $this->loadTemplate("premium_key_validation_strings.html", "welcome_wizard.html", 32)->display($context);
+        yield from         $this->loadTemplate("premium_key_validation_strings.html", "welcome_wizard.html", 32)->unwrap()->yield($context);
         // line 33
-        $this->loadTemplate("settings_translations.html", "welcome_wizard.html", 33)->display($context);
+        yield from         $this->loadTemplate("settings_translations.html", "welcome_wizard.html", 33)->unwrap()->yield($context);
         // line 34
-        echo "
+        yield "
 ";
+        return; yield '';
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getTemplateName()
     {
         return "welcome_wizard.html";
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function isTraitable()
     {
         return false;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugInfo()
     {
-        return array (  128 => 34,  126 => 33,  124 => 32,  122 => 31,  105 => 17,  101 => 16,  97 => 15,  93 => 14,  89 => 13,  85 => 12,  81 => 11,  76 => 9,  72 => 8,  68 => 7,  64 => 6,  60 => 5,  56 => 4,  52 => 3,  49 => 2,  35 => 1,);
+        return array (  129 => 34,  127 => 33,  125 => 32,  123 => 31,  106 => 17,  102 => 16,  98 => 15,  94 => 14,  90 => 13,  86 => 12,  82 => 11,  77 => 9,  73 => 8,  69 => 7,  65 => 6,  61 => 5,  57 => 4,  53 => 3,  50 => 2,  36 => 1,);
     }
 
     public function getSourceContext()

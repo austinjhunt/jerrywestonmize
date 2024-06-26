@@ -3,16 +3,16 @@
 /**
  * Class Forminator_Mailchimp_Form_Hooks
  *
- * Hooks that used by Mailchimp Addon defined here
+ * Hooks that used by Mailchimp Integration defined here
  *
- * @since 1.0 Mailchimp Addon
+ * @since 1.0 Mailchimp Integration
  */
 class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
 	/**
 	 * Flag of gpdr field checked on submit
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @var bool
 	 */
@@ -21,7 +21,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	/**
 	 * Render extra fields after all forms fields rendered
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 */
 	public function on_after_render_form_fields() {
 		// Render GDPR field if enabled.
@@ -55,7 +55,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	/**
 	 * Render GDPR Field - Experimental
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $addon_setting_values
 	 */
@@ -109,7 +109,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	/**
 	 * Helper Get form setting value with fixed var type
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param array      $form_settings
 	 * @param string     $key
@@ -129,7 +129,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	/**
 	 * Helper to convert value to expected var type
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $value
 	 * @param $type
@@ -170,7 +170,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	/**
 	 * Check GDPR field - Experimental
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $submitted_data
 	 *
@@ -302,7 +302,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 							// GDPR not checked, add error.
 							throw new Forminator_Integration_Exception(
 								esc_html__(
-									'Forminator Addon Mailchimp was not sending subscriber to mailchimp as GDPR field is not checked on input',
+									'Forminator Integration Mailchimp was not sending subscriber to mailchimp as GDPR field is not checked on input',
 									'forminator'
 								)
 							);
@@ -505,7 +505,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 			);
 
 			/**
-			 * Fires before Addon send request `add_or_update_member` to Mailchimp API
+			 * Fires before Integration send request `add_or_update_member` to Mailchimp API
 			 *
 			 * If this action throw an error,
 			 * then `add_or_update_member` process will be cancelled
@@ -568,7 +568,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	 * Add additional data if needed.
 	 *
 	 * @param array $args Existed arguments.
-	 * @param array $addon_setting_values Addon settings.
+	 * @param array $addon_setting_values Integration settings.
 	 * @param bool  $gdpr Is a GDPR field exist or not.
 	 * @return array
 	 */
@@ -611,7 +611,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	 * Add member status information
 	 *
 	 * @param array $sub_entries Sub-entries.
-	 * @param array $addon_data Addon meta data.
+	 * @param array $addon_data Integration meta data.
 	 * @return void
 	 */
 	public static function add_extra_entry_items( array &$sub_entries, array $addon_data ) {
@@ -629,7 +629,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	/**
 	 * It will delete members on mailchimp list
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param Forminator_Form_Entry_Model $entry_model
 	 * @param  array                      $addon_meta_data
@@ -643,19 +643,19 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 
 		/**
 		 *
-		 * Filter mailchimp addon metadata that previously saved on db to be processed
+		 * Filter mailchimp integration metadata that previously saved on db to be processed
 		 *
-		 * Although it can be used for all addon.
-		 * Please keep in mind that if the addon override this method,
+		 * Although it can be used for all integration.
+		 * Please keep in mind that if the integration override this method,
 		 * then this filter probably won't be applied.
-		 * To be sure please check individual addon documentations.
+		 * To be sure please check individual integration documentations.
 		 *
 		 * @since 1.1
 		 *
 		 * @param array                                        $addon_meta_data
 		 * @param int                                          $form_id                current Form ID.
 		 * @param Forminator_Form_Entry_Model                  $entry_model            Forminator Entry Model.
-		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Addon Form Settings.
+		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Integration Form Settings.
 		 */
 		$addon_meta_data = apply_filters(
 			'forminator_addon_mailchimp_metadata',
@@ -668,17 +668,17 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 		/**
 		 * Fires when mailchimp connected form delete a submission
 		 *
-		 * Although it can be used for all addon.
-		 * Please keep in mind that if the addon override this method,
+		 * Although it can be used for all integration.
+		 * Please keep in mind that if the integration override this method,
 		 * then this action won't be triggered.
-		 * To be sure please check individual addon documentations.
+		 * To be sure please check individual integration documentations.
 		 *
 		 * @since 1.1
 		 *
 		 * @param int                                          $form_id                current Form ID.
 		 * @param Forminator_Form_Entry_Model                  $entry_model            Forminator Entry Model.
-		 * @param array                                        $addon_meta_data        addon meta data.
-		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Addon Form Settings.
+		 * @param array                                        $addon_meta_data        integration meta data.
+		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Integration Form Settings.
 		 */
 		do_action(
 			'forminator_addon_mailchimp_on_before_delete_submission',
@@ -723,11 +723,11 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 			// its not found, probably already deleted on mailchimp.
 			return true;
 		} catch ( Forminator_Integration_Exception $e ) {
-			// handle all internal addon exceptions with `Forminator_Integration_Exception`.
+			// handle all internal integration exceptions with `Forminator_Integration_Exception`.
 
 			// use wp_error, for future usage it can be returned to page entries.
 			$wp_error = new WP_Error( 'forminator_addon_mailchimp_delete_member', $e->getMessage() );
-			// handle this in addon by self, since page entries cant handle error messages on delete yet.
+			// handle this in integration by self, since page entries cant handle error messages on delete yet.
 			wp_die(
 				esc_html( $wp_error->get_error_message() ),
 				esc_html( $this->addon->get_title() ),
@@ -743,16 +743,16 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	}
 
 	/**
-	 * Get valid addon meta data
+	 * Get valid integration meta data
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param array $addon_meta_data
 	 *
 	 * @return array
 	 */
 	public static function get_valid_addon_meta_data_value( $addon_meta_data ) {
-		// preliminary check of addon_meta_data.
+		// preliminary check of integration_meta_data.
 		if ( ! isset( $addon_meta_data[0] ) || ! is_array( $addon_meta_data[0] ) ) {
 			return array();
 		}
@@ -771,9 +771,9 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	}
 
 	/**
-	 * Get DELETE member url form saved addon meta data
+	 * Get DELETE member url form saved integration meta data
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $addon_meta_data
 	 *
@@ -782,7 +782,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	public static function get_delete_member_url_from_addon_meta_data( $addon_meta_data ) {
 
 		// delete links available on data_received of mailchimp.
-		/** == Addon meta data reference ==*/
+		/** == Integration meta data reference ==*/
 		//[
 		//  {.
 		//	  "name": "status",
@@ -816,7 +816,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 		//    }.
 		//  }.
 		//]
-		/** == Addon meta data reference ==*/
+		/** == Integration meta data reference ==*/
 
 		$delete_member_url = '';
 
@@ -832,14 +832,14 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 		}
 
 		if ( ! isset( $meta_data_value['data_received'] ) || ! is_object( $meta_data_value['data_received'] ) ) {
-			// something is happened on addon meta data.
+			// something is happened on integration meta data.
 			return '';
 		}
 
 		$data_received = $meta_data_value['data_received'];
 
 		if ( ! isset( $data_received->_links ) || ! is_array( $data_received->_links ) ) {
-			// something is happened on addon meta data.
+			// something is happened on integration meta data.
 			return '';
 		}
 

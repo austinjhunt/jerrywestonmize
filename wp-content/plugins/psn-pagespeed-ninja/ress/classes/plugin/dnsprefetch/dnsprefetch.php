@@ -24,11 +24,20 @@ class Ressio_Plugin_DNSPrefetch extends Ressio_Plugin
      * @param Ressio_DI $di
      * @param null|stdClass $params
      */
-    public function __construct($di, $params)
+    public function __construct($di, $params = null)
     {
-        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
+        parent::__construct($di);
+        $this->loadConfig(__DIR__ . '/config.json', $params);
+    }
 
-        parent::__construct($di, $params);
+    /**
+     * @return array
+     */
+    public function getEventPriorities()
+    {
+        return array(
+            'HtmlBeforeStringify' => -2
+        );
     }
 
     /**
@@ -63,6 +72,14 @@ class Ressio_Plugin_DNSPrefetch extends Ressio_Plugin
 
         if (count($tags)) {
             $optimizer->prependHead(...$tags);
+        }
+
+        if ($this->params->linkheader) {
+            foreach ($tags as $tag) {
+                $attrs = $tag[1];
+                $href = $attrs['href'];
+                $this->di->httpHeaders->setHeader("Link: <{$href}>; rel=dns-prefetch", false);
+            }
         }
     }
 

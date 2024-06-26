@@ -113,14 +113,13 @@ class Forminator_Website extends Forminator_Field {
 		$html        = '';
 		$id          = self::get_property( 'element_id', $field );
 		$name        = $id;
-		$ariaid      = $id;
 		$id          = self::get_field_id( $id );
 		$required    = $this->get_property( 'required', $field, false );
 		$ariareq     = 'false';
 		$placeholder = $this->sanitize_value( $this->get_property( 'placeholder', $field ) );
 		$value       = esc_html( self::get_post_data( $name, $this->get_property( 'default', $field ) ) );
 		$label       = esc_html( $this->get_property( 'field_label', $field, '' ) );
-		$description = esc_html( $this->get_property( 'description', $field, '' ) );
+		$description = $this->get_property( 'description', $field, '' );
 		$design      = $this->get_form_style( $settings );
 
 		if ( (bool) $required ) {

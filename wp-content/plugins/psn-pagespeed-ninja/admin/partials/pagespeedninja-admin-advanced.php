@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 defined('ABSPATH') || die();
 
@@ -106,11 +106,14 @@ unset($values);
                 <?php foreach ($presets_list as $preset): ?>
                     <label data-tooltip="<?php echo esc_attr($preset->tooltip); ?>"><input type="radio" name="preset" id="pagespeedninja_preset_<?php echo $preset->name; ?>" onclick="pagespeedninjaLoadPreset('<?php echo $preset->name; ?>')"> <?php echo $preset->title; ?></label>
                 <?php endforeach; ?>
-                <label data-tooltip="<?php _e('Your current preset.', 'psn-pagespeed-ninja'); ?>"><input type="radio" name="preset" id="pagespeedninja_preset_custom" onclick="pagespeedninjaLoadPreset('')"> <?php _e('Custom', 'psn-pagespeed-ninja'); ?></label>
+                <label data-tooltip="<?php esc_attr_e('Your current preset.', 'psn-pagespeed-ninja'); ?>"><input type="radio" name="preset" id="pagespeedninja_preset_custom" onclick="pagespeedninjaLoadPreset('')"> <?php _e('Custom', 'psn-pagespeed-ninja'); ?></label>
             </div>
 
-            <form id="pagespeedninja_form" action="<?php echo esc_html(admin_url('options.php')); ?>" method="post">
+            <form id="pagespeedninja_form" action="<?php echo esc_attr(admin_url('options.php')); ?>" method="post">
                 <?php settings_fields('pagespeedninja_config'); ?>
+                <div class="pagespeedninja_filter_wrapper">
+                    <input type="text" id="pagespeedninja_filter" placeholder="<?php esc_attr_e('Search settings...', 'psn-pagespeed-ninja'); ?>">
+                </div>
                 <?php
                 $first = true;
                 /** @var stdClass $section */
@@ -171,13 +174,13 @@ unset($values);
                     </div>
                 <?php endforeach; ?>
                 <div id="psnprobanner" data-html-tooltip data-html-tooltip-active data-html-tooltip-pos="baseline" style="max-width: 480px">
-                    🚨 <?php printf(__('This feature is only available in %s'),
+                    🚨 <?php printf(__('This feature is only available in %s', 'psn-pagespeed-ninja'),
                         '<a href="https://pagespeed.ninja/download/?utm_source=psnbackend-popupbanner&amp;utm_medium=Advanced-tab-upgrade&amp;utm_campaign=Admin-upgrade" target="_blank">PageSpeed Ninja Pro</a>'
                     ); ?>
                 </div>
             </form>
         </div>
-        <div class="footer"><?php printf(__('Need help? Ask a question in the PageSpeed Ninja <a %s>Support Forum</a>.'), 'href="https://wordpress.org/support/plugin/psn-pagespeed-ninja/" target="_blank"'); ?></div>
+        <div class="footer"><?php printf(__('Need help? Ask a question in the PageSpeed Ninja <a %s>Support Forum</a>.', 'psn-pagespeed-ninja'), 'href="https://wordpress.org/support/plugin/psn-pagespeed-ninja/" target="_blank"'); ?></div>
     </div>
     <?php do_action('psn_advanced_after'); ?>
 </div>

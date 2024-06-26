@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 defined('ABSPATH') || die();
 
@@ -26,7 +26,7 @@ if (get_transient('pagespeedninja_show_tour')) {
 ?>
 <div class="pagespeedninja pagespeedninja-general">
 <div id="psnwrap">
-    <form action="<?php echo esc_html(admin_url('options.php')); ?>" method="post" id="pagespeedninja_form">
+    <form action="<?php echo esc_attr(admin_url('options.php')); ?>" method="post" id="pagespeedninja_form">
         <?php settings_fields('pagespeedninja_config'); ?>
         <?php $this->hidden($config, 'apikey'); ?>
         <?php $this->hidden($config, 'css_abovethefoldlocal'); ?>
@@ -69,7 +69,7 @@ if (get_transient('pagespeedninja_show_tour')) {
                     <div class="gps">
                         <div class="gps_result_orig"><span class="gps_loading" id="pagespeed_<?php echo $mode; ?>_orig" title="<?php esc_attr_e('Original score'); ?>">&nbsp;</span></div>
                         <div class="gps_result"><span class="gps_loading" id="pagespeed_<?php echo $mode; ?>" title="<?php esc_attr_e('Current score'); ?>">&nbsp;</span></div>
-                        <div class="gps_result_new hide"><a href="#" class="thickbox"><span id="pagespeed_<?php echo $mode; ?>_new" title="<?php esc_attr_e('Estimated new score (click to test website in popup)'); ?>">&nbsp;</span></a></div>
+                        <div class="gps_result_new hide"><a href="#" class="thickbox" title="<?php esc_attr_e('Website Preview'); ?>"><span id="pagespeed_<?php echo $mode; ?>_new" title="<?php esc_attr_e('Estimated new score (click to test website in popup)'); ?>">&nbsp;</span></a></div>
                     </div>
                 </h2>
                 <div class="settings">
@@ -109,7 +109,7 @@ if (get_transient('pagespeedninja_show_tour')) {
                 <?php /* _e('Note that some settings have interrelated effects, so other switches may also change color.', 'psn-pagespeed-ninja'); */ ?>
             </div>
         </div>
-        <div class="footer"><?php printf(__('Need help? Ask a question in the PageSpeed Ninja <a %s>Support Forum</a>.'), 'href="https://wordpress.org/support/plugin/psn-pagespeed-ninja/" target="_blank"'); ?></div>
+        <div class="footer"><?php printf(__('Need help? Ask a question in the PageSpeed Ninja <a %s>Support Forum</a>.', 'psn-pagespeed-ninja'), 'href="https://wordpress.org/support/plugin/psn-pagespeed-ninja/" target="_blank"'); ?></div>
     </div>
 </div>
 </div>

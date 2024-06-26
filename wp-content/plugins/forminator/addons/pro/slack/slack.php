@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Addon Name: Slack
+ * Integration Name: Slack
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: Integrate Forminator Custom Forms with Slack to get notified in real time.

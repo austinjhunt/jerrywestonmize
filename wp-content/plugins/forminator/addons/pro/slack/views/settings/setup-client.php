@@ -30,7 +30,7 @@ foreach ( $template_vars as $key => $val ) {
 
 	<?php else : ?>
 
-		<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Set up Slack to be used by Forminator to communicating with Slack server.', 'forminator' ); ?></p>
+		<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Set up Slack to be used by Forminator for communicating with Slack server.', 'forminator' ); ?></p>
 
 		<?php if ( ! empty( $vars['error_message'] ) ) : ?>
 			<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>

@@ -4,9 +4,9 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-trello-wp-api.ph
 
 /**
  * Class Forminator_Trello
- * Trello Addon Main Class
+ * Trello Integration Main Class
  *
- * @since 1.0 Trello Addon
+ * @since 1.0 Trello Integration
  */
 final class Forminator_Trello extends Forminator_Integration {
 
@@ -63,7 +63,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Forminator_Trello constructor.
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 */
 	public function __construct() {
 		// late init to allow translation.
@@ -77,7 +77,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Override settings available,
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return bool
 	 */
 	public function is_settings_available() {
@@ -89,7 +89,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	 *
 	 * Its disabled by default
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return bool
 	 */
 	public static function is_enable_delete_card() {
@@ -115,7 +115,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	 *
 	 * @see   Forminator_Trello::is_enable_delete_card()
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return string
 	 */
 	public static function get_card_delete_mode() {
@@ -145,7 +145,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Allow multiple connection on one form
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return bool
 	 */
 	public function is_allow_multi_on_form() {
@@ -157,7 +157,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	 *
 	 * @see   https://trello.com/app-key
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @return string;
 	 */
@@ -183,7 +183,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Settings wizard
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return array
 	 */
 	public function settings_wizards() {
@@ -293,7 +293,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Authorize Access wizard
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return array
 	 */
 	public function authorize_access() {
@@ -324,7 +324,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Wait Authorize Access wizard
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return array
 	 */
 	public function wait_authorize_access() {
@@ -359,7 +359,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Authorized Callback
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return bool
 	 */
 	public function is_authorized() {
@@ -371,7 +371,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Pseudo step
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return bool
 	 */
 	public function authorize_access_is_completed() {
@@ -381,7 +381,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Get Connected Account
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @return array
 	 */
@@ -392,7 +392,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Register a page for redirect url of trello auth
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @return array
 	 */
@@ -405,7 +405,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Trello Authorize Page
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param $query_args
 	 *
@@ -456,7 +456,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Get Trello Auth URL
 	 *
-	 * @since 1.1 Trello Addon
+	 * @since 1.1 Trello Integration
 	 *
 	 * @param string $return_url
 	 *
@@ -499,7 +499,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	 *
 	 * using `members/me`
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param $token
 	 *
@@ -555,7 +555,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Before get Setting Values
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param $values
 	 *
@@ -577,7 +577,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Revoke token on Trello before deactivate
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return bool
 	 */
 	public function deactivate() {
@@ -600,7 +600,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Get available card delete modes
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return array
 	 */
 	public static function get_card_delete_modes() {

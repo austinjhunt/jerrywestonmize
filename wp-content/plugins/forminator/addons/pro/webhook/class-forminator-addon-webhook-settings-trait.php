@@ -3,7 +3,7 @@
  * Trait for common methods for Webhook settings classes
  *
  * @since 1.30
- * @package Webhook Addon
+ * @package Webhook Integration
  */
 
 /**

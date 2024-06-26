@@ -1,4 +1,4 @@
-/* PageSpeed Ninja 1.3.13 | pagespeed.ninja/license.html */
+/* PageSpeed Ninja 1.4.2 | pagespeed.ninja/license.html */
 #wpcontent,
 .auto-fold #wpcontent {
     background-color: #fff;
@@ -111,6 +111,7 @@
     padding: 53px 0 0;
     box-sizing: border-box;
     z-index: 5;
+    pointer-events: none;
 }
 .pagespeedninja .buttonbar > a.save {
     display: block;
@@ -122,6 +123,12 @@
     border: none;
     background-color: #258aff;
     box-shadow: 0 4px 16px rgba(0,0,0,.2) !important;
+    pointer-events: all;
+}
+@media screen and (max-width: 480px) {
+    .pagespeedninja .buttonbar > a.save {
+        margin-right: 10px;
+    }
 }
 .pagespeedninja .buttonbar > a.save.disabled {
     border: 1px solid #DCDCDE;
@@ -212,7 +219,7 @@
     margin: 0 48px;
     background-color: #fff;
     box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
-    padding: 48px 32px 48px 48px;
+    padding: 48px;
     position: relative;
 }
 
@@ -238,6 +245,11 @@
     margin: 0 48px 24px 0;
     vertical-align: top;
     max-width: 490px;
+}
+@media screen and (max-width: 479px) {
+    .pagespeedninja .main > .column {
+        margin-right: 0;
+    }
 }
 
 .pagespeedninja .main > .column > .settings > h2 {
@@ -300,9 +312,9 @@
     width: 320px;
     font-weight: 300;
 }
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 479px) {
     .pagespeedninja .header > .title {
-        width: 200px;
+        width: 190px;
     }
 }
 
@@ -471,9 +483,10 @@
 
 .pagespeedninja .gps_result_new > a.thickbox {
     display: inline-block;
-    padding: 1px 4px;
+    padding: 1px;
     background-color: #258aff;
     box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
 }
 
 .pagespeedninja #pagespeed_desktop_new,
@@ -630,7 +643,7 @@
 }
 
 .pagespeedninja .column-wide .content.disabled > .line {
-    opacity: .6;
+    opacity: .7;
 }
 
 .pagespeedninja .column-wide .content > .line > .title,
@@ -1002,4 +1015,15 @@
 .pagespeedninja .footer {
     text-align: center;
     margin: 2rem 0 1rem;
+}
+
+#pagespeedninja_filter {
+    width: 100%;
+}
+#pagespeedninja_form .unmatched {
+    display: none;
+}
+
+.pagespeedninja .pagespeedninja_filter_wrapper {
+    margin-top: 13px;
 }

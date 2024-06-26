@@ -3,7 +3,7 @@
  * Trait for common methods for Googlesheet settings classes
  *
  * @since 1.30
- * @package Googlesheet Addon
+ * @package Googlesheet Integration
  */
 
 /**
@@ -14,7 +14,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 	/**
 	 * Google Sheets Module Settings wizard
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return array
 	 */
 	public function module_settings_wizards() {
@@ -34,7 +34,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 	/**
 	 * Setup Connection Name
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -105,7 +105,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 	/**
 	 * Setup Contact List
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 * @throws Exception
@@ -239,7 +239,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 	/**
 	 * Check if select contact list completed
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */

@@ -77,12 +77,7 @@
 		removeCountryCode: function( form ) {
 			form.find('.forminator-field--phone').each(function() {
 				var phone_element = $(this);
-				if ( !phone_element.data('required') && 'international' === phone_element.data('validation') ) {
-					var dialCode = '+' + phone_element.intlTelInput( 'getSelectedCountryData' ).dialCode + ' ';
-					var currentInput = phone_element.val();
-					if (dialCode === currentInput)
-						phone_element.val('');
-				} else if ( !phone_element.data('required') && 'standard' === phone_element.data('validation') ) {
+				if ( !phone_element.data('required') ) {
 					var dialCode = '+' + phone_element.intlTelInput( 'getSelectedCountryData' ).dialCode;
 					var currentInput = phone_element.val();
 					if (dialCode === currentInput)
@@ -475,6 +470,25 @@
 												}
 											});
 										});
+
+										// Reset slider.
+										$this.find('.forminator-slider').each(function () {
+											var $element = $(this),
+												$slide = $element.find('.forminator-slide'),
+												$slider = $slide.slider("option"),
+												$minRange = parseInt($slide.data('min')) || 0,
+												$maxRange = parseInt($slide.data('max')) || 100,
+												$value = parseInt($slide.data('value')) || $minRange,
+												$valueMax = parseInt($slide.data('value-max')) || $maxRange;
+
+											$slider.create();
+											if (true === $slider.range) {
+												$slide.slider('values', [$value, $valueMax]);
+											} else {
+												$slide.slider('value', $value);
+											}
+										});
+										
 										self.multi_upload_disable( $this, false );
 										$this.trigger('forminator:form:submit:success', formData);
 

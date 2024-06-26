@@ -67,6 +67,15 @@ class Ressio_HtmlOptimizer_Stream extends Ressio_HtmlOptimizer_Base
     );
 
     /**
+     * @pure
+     * @return string
+     */
+    public function getQueryDelim()
+    {
+        return '&amp;';
+    }
+
+    /**
      * @param string $buffer
      * @return string
      */
@@ -235,7 +244,7 @@ class Ressio_HtmlOptimizer_Stream extends Ressio_HtmlOptimizer_Base
                 continue;
             }
 
-            $this->dispatcher->triggerEvent("HtmlIterateNodeBefore", array($this, $node, $tagName));
+            $this->dispatcher->triggerEvent('HtmlIterateNodeBefore', array($this, $node, $tagName));
             $this->dispatcher->triggerEvent("HtmlIterateTag{$tagName_uc}Before", array($this, $node));
             if ($node->tag === null) {
                 $pos = $end + 1;
@@ -351,11 +360,6 @@ class Ressio_HtmlOptimizer_Stream extends Ressio_HtmlOptimizer_Base
                         // array_key_last
                         $jsNode->index = key(array_slice($this->dom, -1, 1, true));
                     }
-
-                    $this->dom[] = $node->prepend;
-                    $this->dom[] = $node->tag;
-                    $this->dom[] = $node->append;
-                    $node->tag = null;
                     break;
 
                 case 'img':
@@ -802,7 +806,7 @@ class Ressio_HtmlOptimizer_Stream extends Ressio_HtmlOptimizer_Base
             }
             if ($tagName[0] === '/' || isset($this->tags_selfclose[$tagName])) {
                 $this->dispatcher->triggerEvent('HtmlIterateTag' . ltrim($tagName_uc, '/') . 'AfterEnd', array($this, $node));
-                $this->dispatcher->triggerEvent("HtmlIterateNodeAfter", array($this, $node, $tagName));
+                $this->dispatcher->triggerEvent('HtmlIterateNodeAfter', array($this, $node, $tagName));
             }
 
             if ($node->tag !== null) {
@@ -907,6 +911,9 @@ class Ressio_HtmlOptimizer_Stream extends Ressio_HtmlOptimizer_Base
     {
         if ($tagName === '!--') {
             return "<!--{$content}-->";
+        }
+        if ($tagName[0] === '/') {
+            return "<{$tagName}>";
         }
         $out = "<{$tagName}";
         if (is_array($attributes)) {

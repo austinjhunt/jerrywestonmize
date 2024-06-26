@@ -4,9 +4,9 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-aweber-wp-api.ph
 
 /**
  * Class Forminator_Aweber
- * Aweber Addon Main Class
+ * Aweber Integration Main Class
  *
- * @since 1.0 Aweber Addon
+ * @since 1.0 Aweber Integration
  */
 final class Forminator_Aweber extends Forminator_Integration {
 
@@ -34,7 +34,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Forminator_Aweber constructor.
 	 *
-	 * @since 1.0 Aweber Addon
+	 * @since 1.0 Aweber Integration
 	 */
 	public function __construct() {
 		// late init to allow translation.
@@ -48,7 +48,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Override settings available,
 	 *
-	 * @since 1.0 Aweber Addon
+	 * @since 1.0 Aweber Integration
 	 * @return bool
 	 */
 	public function is_settings_available() {
@@ -58,7 +58,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Allow multiple connection on one form
 	 *
-	 * @since 1.0 Aweber Addon
+	 * @since 1.0 Aweber Integration
 	 * @return bool
 	 */
 	public function is_allow_multi_on_form() {
@@ -68,7 +68,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Settings wizard
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 * @return array
 	 */
 	public function settings_wizards() {
@@ -87,7 +87,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Authorize Access wizard
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 * @return array
 	 */
 	public function authorize_access() {
@@ -112,7 +112,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Wait Authorize Access wizard
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 * @return array
 	 */
 	public function wait_authorize_access() {
@@ -143,7 +143,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Authorized Callback
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 * @return bool
 	 */
 	public function is_authorized() {
@@ -156,7 +156,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Pseudo step
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 * @return bool
 	 */
 	public function authorize_access_is_completed() {
@@ -166,7 +166,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Register a page for redirect url of AWeber auth
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 *
 	 * @return array
 	 */
@@ -179,7 +179,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * AWeber Authorize Page
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 *
 	 * @param $query_args
 	 *
@@ -247,7 +247,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Get AWeber Auth URL
 	 *
-	 * @since 1.1 AWeber Addon
+	 * @since 1.1 AWeber Integration
 	 *
 	 * @param string $return_url
 	 *
@@ -286,7 +286,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	 *
 	 * @see   https://labs.aweber.com/docs/authentication
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 *
 	 * @return string;
 	 */

@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 
 class PagespeedNinja_Public
@@ -73,7 +73,8 @@ class PagespeedNinja_Public
         }
     }
 
-    public function template_redirect()
+    /** @return void */
+    public function plugins_loaded()
     {
         if (
             $this->disabled
@@ -89,20 +90,31 @@ class PagespeedNinja_Public
             || is_favicon() || is_robots() || is_404() || is_admin() || is_feed() || is_comment_feed() || is_preview()
             || is_trackback() || is_customize_preview()
             || headers_sent()
-            // disable for AMP plugin
-            || (defined('AMP_QUERY_VAR') && get_query_var(AMP_QUERY_VAR, 0))
-
         ) {
+            $this->disabled = true;
             return;
         }
 
         $options = get_option('pagespeedninja_config');
         if ($options['afterinstall_popup'] !== '1') {
+            $this->disabled = true;
             return;
         }
 
         ob_start(array($this, 'ob_callback'));
         $this->started = true;
+    }
+
+    /** @return void */
+    public function template_redirect()
+    {
+
+
+        if ($this->disabled) {
+            return;
+        }
+
+        $options = get_option('pagespeedninja_config');
 
         if ($options['psi_total-byte-weight']) {
             if ($options['js_merge']) {
@@ -126,7 +138,7 @@ class PagespeedNinja_Public
     }
 
     /**
-     * @param array $wp_cache_meta
+     * @param array<string,array<string,string>> $wp_cache_meta
      * @return array
      */
     public function wp_cache_meta($wp_cache_meta)
@@ -152,7 +164,8 @@ class PagespeedNinja_Public
     {
         $buffer = ltrim($buffer);
         if (
-            $buffer === '' // empty page
+            $this->disabled
+            || $buffer === '' // empty page
             || (defined('DONOTMINIFY') && DONOTMINIFY) // disabled optimization
             || $buffer[0] !== '<' // bypass non-HTML (partials, json, etc.)
             || strncmp($buffer, '<?xml ', 6) === 0 // bypass XML (sitemap, etc.)
@@ -161,7 +174,7 @@ class PagespeedNinja_Public
             return false;
         }
 
-        /** @var array $options */
+        /** @var array<string,string> $options */
         $options = get_option('pagespeedninja_config');
 
         // skip logged users
@@ -206,6 +219,9 @@ class PagespeedNinja_Public
                         'cookie' => ($options['css_abovethefoldcookie'] && !$cacheEnabled) ? 'psn_visitor' : '',
                         'abovethefoldcss' => $options['css_abovethefoldstyle']
                     );
+                    if (isset($ress_options['plugins'][Ressio_Plugin_InlineJsCss::class])) {
+                        $ress_options['plugins'][Ressio_Plugin_InlineJsCss::class]['css'] = false;
+                    }
                 }
             }
         }
@@ -297,6 +313,7 @@ class PagespeedNinja_Public
      * @param Ressio_Event $event
      * @param IRessio_HtmlOptimizer $optimizer
      * @param IRessio_HtmlNode $node
+     * @return void
      */
     public function RessioRemoveTag($event, $optimizer, $node)
     {
@@ -306,6 +323,7 @@ class PagespeedNinja_Public
     /**
      * @param Ressio_Event $event
      * @param string $buffer
+     * @return void
      */
     public function onRunAfter($event, $buffer)
     {
@@ -334,6 +352,7 @@ class PagespeedNinja_Public
 
     /**
      * @param Ressio $ressio
+     * @return void
      */
     protected function tryPurgeCache($ressio)
     {
@@ -368,6 +387,7 @@ class PagespeedNinja_Public
      * @param Ressio_Event $event
      * @param IRessio_HtmlOptimizer $optimizer
      * @param IRessio_HtmlNode $node
+     * @return void
      */
     public function collectScriptURLs($event, $optimizer, $node)
     {
@@ -380,6 +400,7 @@ class PagespeedNinja_Public
      * @param Ressio_Event $event
      * @param IRessio_HtmlOptimizer $optimizer
      * @param IRessio_HtmlNode $node
+     * @return void
      */
     public function collectStyleURLs($event, $optimizer, $node)
     {
@@ -391,6 +412,7 @@ class PagespeedNinja_Public
         }
     }
 
+    /** @return void */
     public function wp_footer()
     {
         if (!$this->started) {
@@ -410,6 +432,7 @@ class PagespeedNinja_Public
         }
     }
 
+    /** @return void */
     public function print_emoji_detection_script()
     {
         $settings = array(
@@ -423,6 +446,6 @@ class PagespeedNinja_Public
         $file = apply_filters('script_loader_src', includes_url("js/wp-emoji-release.min.js?$version"), 'concatemoji');
 
         ?><script defer>window._wpemojiSettings=<?php echo wp_json_encode($settings); ?>;</script><?php
-        ?><script defer src="<?php echo $file; ?>"></script><?php
+        ?><script defer src="<?php echo esc_attr($file); ?>"></script><?php
     }
 }

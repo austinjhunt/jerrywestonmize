@@ -21,7 +21,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Last data sent to campaignmonitor
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 * @var array
 	 */
 	private $_last_data_sent = array();
@@ -29,7 +29,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Last data received from campaignmonitor
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 * @var array
 	 */
 	private $_last_data_received = array();
@@ -37,7 +37,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Last URL requested
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 * @var string
 	 */
 	private $_last_url_request = '';
@@ -53,7 +53,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Forminator_Campaignmonitor_Wp_Api constructor.
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param $api_key
 	 *
@@ -71,7 +71,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Get singleton
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param string $api_key
 	 *
@@ -89,7 +89,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Add custom user agent on request
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param $user_agent
 	 *
@@ -113,7 +113,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * HTTP Request
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param string $verb
 	 * @param        $path
@@ -234,7 +234,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 
 		$response = $res;
 		/**
-		 * Filter campaignmonitor api response returned to addon
+		 * Filter campaignmonitor api response returned to integration
 		 *
 		 * @since 1.1
 		 *
@@ -255,7 +255,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Send data to static webhook campaignmonitor URL
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param $args
 	 *
@@ -275,7 +275,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Get Primary Contact
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param array $args
 	 *
@@ -298,7 +298,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Get Current Data on Campaign Monitor
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param array $args
 	 *
@@ -321,7 +321,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Get List Detail
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param       $list_id
 	 * @param array $args
@@ -345,7 +345,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Get Lists on a Client
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param       $client_id
 	 * @param array $args
@@ -369,7 +369,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Get Clients
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param array $args
 	 *
@@ -392,7 +392,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Get Client Details
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param       $client_id
 	 * @param array $args
@@ -416,7 +416,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Get Custom Fields on Lists
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param       $list_id
 	 * @param array $args
@@ -440,7 +440,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Add Subscriber to the list
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param       $list_id
 	 * @param       $email_address
@@ -467,7 +467,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Delete Subscriber from the list
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @param       $list_id
 	 * @param       $email_address
@@ -494,7 +494,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Get last data sent
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @return array
 	 */
@@ -505,7 +505,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @return array
 	 */
@@ -516,7 +516,7 @@ class Forminator_Campaignmonitor_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 *
 	 * @return string
 	 */

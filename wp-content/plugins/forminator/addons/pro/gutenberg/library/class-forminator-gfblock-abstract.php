@@ -4,14 +4,14 @@
  * Class Forminator_GFBlock_Abstract
  * Extend this class to create new gutenberg block
  *
- * @since 1.0 Gutenber Addon
+ * @since 1.0 Gutenber Integration
  */
 abstract class Forminator_GFBlock_Abstract {
 
 	/**
 	 * Type will be used as identifier
 	 *
-	 * @since 1.0 Gutenber Addon
+	 * @since 1.0 Gutenber Integration
 	 *
 	 * @var string
 	 */
@@ -20,7 +20,7 @@ abstract class Forminator_GFBlock_Abstract {
 	/**
 	 * Get block type
 	 *
-	 * @since  1.0 Gutenber Addon
+	 * @since  1.0 Gutenber Integration
 	 * @return string
 	 */
 	final public function get_slug() {
@@ -30,7 +30,7 @@ abstract class Forminator_GFBlock_Abstract {
 	/**
 	 * Initialize block
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 */
 	public function init() {
 		// Register block.
@@ -50,7 +50,7 @@ abstract class Forminator_GFBlock_Abstract {
 	 * Register block type callback
 	 * Shouldn't be overridden on block class
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 */
 	public function register_block() {
 		register_block_type(
@@ -64,7 +64,7 @@ abstract class Forminator_GFBlock_Abstract {
 	/**
 	 * Register REST API route for block preview.
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 */
 	public function block_preview_api() {
 		register_rest_route(
@@ -90,7 +90,7 @@ abstract class Forminator_GFBlock_Abstract {
 	/**
 	 * Print block preview markup
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 * @param $data
 	 */
 	public function preview_block_markup( $data ) {
@@ -114,7 +114,7 @@ abstract class Forminator_GFBlock_Abstract {
 	 * Render block on front-end
 	 * Should be overriden in block class
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 * @param array $properties Block properties.
 	 *
 	 * @return string
@@ -127,7 +127,7 @@ abstract class Forminator_GFBlock_Abstract {
 	 * Preview form in the block
 	 * Should be overriden in block class
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 * @param array $properties Block properties.
 	 *
 	 * @return string
@@ -140,7 +140,7 @@ abstract class Forminator_GFBlock_Abstract {
 	 * Enqueue assets ( scritps / styles )
 	 * Should be overriden in block class
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 */
 	public function load_assets() {
 		return true;

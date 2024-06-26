@@ -5,33 +5,40 @@ namespace Forminator\Stripe;
 
 /**
  * This is an object representing a Stripe account. You can retrieve it to see
- * properties on the account like its current e-mail address or if the account is
- * enabled yet to make live charges.
+ * properties on the account like its current requirements or if the account is
+ * enabled to make live charges or receive payouts.
  *
- * Some properties, marked below, are available only to platforms that want to <a
- * href="https://stripe.com/docs/connect/accounts">create and manage Express or
- * Custom accounts</a>.
+ * For accounts where <a href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a>
+ * is <code>application</code>, which includes Custom accounts, the properties below are always
+ * returned.
+ *
+ * For accounts where <a href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a>
+ * is <code>stripe</code>, which includes Standard and Express accounts, some properties are only returned
+ * until you create an <a href="/api/account_links">Account Link</a> or <a href="/api/account_sessions">Account Session</a>
+ * to start Connect Onboarding. Learn about the <a href="/connect/accounts">differences between accounts</a>.
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property null|\Stripe\StripeObject $business_profile Business information about the account.
- * @property null|string $business_type The business type.
- * @property \Stripe\StripeObject $capabilities
- * @property bool $charges_enabled Whether the account can create live charges.
- * @property \Stripe\StripeObject $company
- * @property string $country The account's country.
- * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
- * @property string $default_currency Three-letter ISO currency code representing the default currency for the account. This must be a currency that <a href="https://stripe.com/docs/payouts">Stripe supports in the account's country</a>.
- * @property bool $details_submitted Whether account details have been submitted. Standard accounts cannot receive payouts before this is true.
- * @property null|string $email The primary user's email address.
- * @property \Stripe\Collection $external_accounts External accounts (bank accounts and debit cards) currently attached to this account
- * @property \Stripe\Person $individual <p>This is an object representing a person associated with a Stripe account.</p><p>Related guide: <a href="https://stripe.com/docs/connect/identity-verification-api#person-information">Handling Identity Verification with the API</a>.</p>
- * @property \Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
- * @property bool $payouts_enabled Whether Stripe can send payouts to this account.
- * @property \Stripe\StripeObject $requirements
+ * @property null|string $business_type The business type. After you create an <a href="/api/account_links">Account Link</a> or <a href="/api/account_sessions">Account Session</a>, this property is only returned for accounts where <a href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a> is <code>application</code>, which includes Custom accounts.
+ * @property null|\Stripe\StripeObject $capabilities
+ * @property null|bool $charges_enabled Whether the account can create live charges.
+ * @property null|\Stripe\StripeObject $company
+ * @property null|\Stripe\StripeObject $controller
+ * @property null|string $country The account's country.
+ * @property null|int $created Time at which the account was connected. Measured in seconds since the Unix epoch.
+ * @property null|string $default_currency Three-letter ISO currency code representing the default currency for the account. This must be a currency that <a href="https://stripe.com/docs/payouts">Stripe supports in the account's country</a>.
+ * @property null|bool $details_submitted Whether account details have been submitted. Accounts with Stripe Dashboard access, which includes Standard accounts, cannot receive payouts before this is true. Accounts where this is false should be directed to <a href="/connect/onboarding">an onboarding flow</a> to finish submitting account details.
+ * @property null|string $email An email address associated with the account. It's not used for authentication and Stripe doesn't market to this field without explicit approval from the platform.
+ * @property null|\Stripe\Collection<\Stripe\BankAccount|\Stripe\Card> $external_accounts External accounts (bank accounts and debit cards) currently attached to this account. External accounts are only returned for requests where <code>controller[is_controller]</code> is true.
+ * @property null|\Stripe\StripeObject $future_requirements
+ * @property null|\Stripe\Person $individual <p>This is an object representing a person associated with a Stripe account.</p><p>A platform cannot access a person for an account where <a href="/api/accounts/object#account_object-controller-requirement_collection">account.controller.requirement_collection</a> is <code>stripe</code>, which includes Standard and Express accounts, after creating an Account Link or Account Session to start Connect onboarding.</p><p>See the <a href="/connect/standard-accounts">Standard onboarding</a> or <a href="/connect/express-accounts">Express onboarding</a> documentation for information about prefilling information and account onboarding steps. Learn more about <a href="/connect/handling-api-verification#person-information">handling identity verification with the API</a>.</p>
+ * @property null|\Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property null|bool $payouts_enabled Whether Stripe can send payouts to this account.
+ * @property null|\Stripe\StripeObject $requirements
  * @property null|\Stripe\StripeObject $settings Options for customizing how the account functions within Stripe.
- * @property \Stripe\StripeObject $tos_acceptance
- * @property string $type The Stripe account type. Can be <code>standard</code>, <code>express</code>, or <code>custom</code>.
+ * @property null|\Stripe\StripeObject $tos_acceptance
+ * @property null|string $type The Stripe account type. Can be <code>standard</code>, <code>express</code>, <code>custom</code>, or <code>none</code>.
  */
 class Account extends ApiResource
 {
@@ -45,15 +52,9 @@ class Account extends ApiResource
     const BUSINESS_TYPE_GOVERNMENT_ENTITY = 'government_entity';
     const BUSINESS_TYPE_INDIVIDUAL = 'individual';
     const BUSINESS_TYPE_NON_PROFIT = 'non_profit';
-    const CAPABILITY_CARD_PAYMENTS = 'card_payments';
-    const CAPABILITY_LEGACY_PAYMENTS = 'legacy_payments';
-    const CAPABILITY_PLATFORM_PAYMENTS = 'platform_payments';
-    const CAPABILITY_TRANSFERS = 'transfers';
-    const CAPABILITY_STATUS_ACTIVE = 'active';
-    const CAPABILITY_STATUS_INACTIVE = 'inactive';
-    const CAPABILITY_STATUS_PENDING = 'pending';
     const TYPE_CUSTOM = 'custom';
     const TYPE_EXPRESS = 'express';
+    const TYPE_NONE = 'none';
     const TYPE_STANDARD = 'standard';
     use ApiOperations\Retrieve {
         retrieve as protected _retrieve;
@@ -72,6 +73,23 @@ class Account extends ApiResource
             return '/v1/account';
         }
         return parent::instanceUrl();
+    }
+    /**
+     * @param null|array|string $id the ID of the account to retrieve, or an
+     *     options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \Stripe\Account
+     */
+    public static function retrieve($id = null, $opts = null)
+    {
+        if (!$opts && \is_string($id) && 'sk_' === \substr($id, 0, 3)) {
+            $opts = $id;
+            $id = null;
+        }
+        return self::_retrieve($id, $opts);
     }
     public function serializeParameters($force = \false)
     {
@@ -115,23 +133,6 @@ class Account extends ApiResource
         return $updateArr;
     }
     /**
-     * @param null|array|string $id the ID of the account to retrieve, or an
-     *     options array containing an `id` key
-     * @param null|array|string $opts
-     *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
-     *
-     * @return \Stripe\Account
-     */
-    public static function retrieve($id = null, $opts = null)
-    {
-        if (!$opts && \is_string($id) && 'sk_' === \substr($id, 0, 3)) {
-            $opts = $id;
-            $id = null;
-        }
-        return self::_retrieve($id, $opts);
-    }
-    /**
      * @param null|array $clientId
      * @param null|array|string $opts
      *
@@ -150,23 +151,7 @@ class Account extends ApiResource
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \Stripe\Collection the list of persons
-     */
-    public function persons($params = null, $opts = null)
-    {
-        $url = $this->instanceUrl() . '/persons';
-        list($response, $opts) = $this->_request('get', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response, $opts);
-        $obj->setLastResponse($response);
-        return $obj;
-    }
-    /**
-     * @param null|array $params
-     * @param null|array|string $opts
-     *
-     * @throws \Stripe\Exception\ApiErrorException if the request fails
-     *
-     * @return Account the rejected account
+     * @return \Stripe\Account the rejected account
      */
     public function reject($params = null, $opts = null)
     {
@@ -175,11 +160,6 @@ class Account extends ApiResource
         $this->refreshFrom($response, $opts);
         return $this;
     }
-    /*
-     * Capabilities methods
-     * We can not add the capabilities() method today as the Account object already has a
-     * capabilities property which is a hash and not the sub-list of capabilities.
-     */
     const PATH_CAPABILITIES = '/capabilities';
     /**
      * @param string $id the ID of the account on which to retrieve the capabilities
@@ -188,7 +168,7 @@ class Account extends ApiResource
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \Stripe\Collection the list of capabilities
+     * @return \Stripe\Collection<\Stripe\Capability> the list of capabilities
      */
     public static function allCapabilities($id, $params = null, $opts = null)
     {
@@ -230,7 +210,7 @@ class Account extends ApiResource
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \Stripe\Collection the list of external accounts (BankAccount or Card)
+     * @return \Stripe\Collection<\Stripe\BankAccount|\Stripe\Card> the list of external accounts (BankAccount or Card)
      */
     public static function allExternalAccounts($id, $params = null, $opts = null)
     {
@@ -313,7 +293,7 @@ class Account extends ApiResource
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \Stripe\Collection the list of persons
+     * @return \Stripe\Collection<\Stripe\Person> the list of persons
      */
     public static function allPersons($id, $params = null, $opts = null)
     {

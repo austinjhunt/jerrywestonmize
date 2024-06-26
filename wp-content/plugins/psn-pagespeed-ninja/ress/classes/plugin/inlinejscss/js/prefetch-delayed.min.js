@@ -1,0 +1,1 @@
+addEventListener("load",function(){setTimeout(function(){[...document.querySelectorAll("link[rel=prefetch-delayed]")].forEach(function(e){e.rel="prefetch"})})});

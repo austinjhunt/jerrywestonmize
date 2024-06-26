@@ -22,7 +22,7 @@
         if (observer) {
             observer.unobserve(el);
         }
-        el.onload = function() {
+        el.onload = function () {
             this.classList.remove(lazyHidden);
         };
         el[el.tagName === 'IMG' ? 'srcset' : 'src'] = el.getAttribute(dataSrc);
@@ -34,9 +34,11 @@
     function ready(i, el, classes, elems) {
         if (IntersectionObserver && !observer) {
             observer = new IntersectionObserver(function (entries) {
-                for (i = 0; i < entries.length; i++) {
-                    load(entries[i].target);
-                }
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        load(entry.target);
+                    }
+                });
             }, {rootMargin: (window.lazyLoadXT && lazyLoadXT.edgeY) || ''});
         }
         elems = document.querySelectorAll('[' + dataSrc + ']');

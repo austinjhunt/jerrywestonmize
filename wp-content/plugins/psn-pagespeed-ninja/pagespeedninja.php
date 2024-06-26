@@ -2,12 +2,12 @@
 /**
  * PageSpeed Ninja
  *
- * @link              http://pagespeed.ninja
+ * @link              https://pagespeed.ninja
  * @wordpress-plugin
  * Plugin Name:       PageSpeed Ninja
  * Plugin URI:        https://pagespeed.ninja/download/
  * Description:       Unleash lightning fast page speed performance: image, CSS, JS optimization, lazy loading, compression, caching, convert to WebP, and more!
- * Version:           1.3.13
+ * Version:           1.4.2
  * Requires at least: 4.6
  * Requires PHP:      5.6
  * Author:            PageSpeed Ninja
@@ -20,6 +20,7 @@
 
 defined('WPINC') || die;
 
+/** @return void */
 function run_pagespeedninja()
 {
     define('PAGESPEEDNINJA_PLUGIN_FILE', __FILE__);

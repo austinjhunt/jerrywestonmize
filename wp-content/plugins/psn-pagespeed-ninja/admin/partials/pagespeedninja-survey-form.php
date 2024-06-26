@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 defined('ABSPATH') || die();
 
@@ -104,7 +104,7 @@ $email_link = '<a href="mailto:' . $support_email . '">' . $support_email . '</a
         border: 1px solid #DCDCDE;
         background-color: #F6F7F7;
         color: #A8AAAD;
-        /*pointer-events: none;*/
+        pointer-events: none;
     }
     #psn-survey-form-cancel {
         background-color: #fff;
@@ -118,10 +118,15 @@ $email_link = '<a href="mailto:' . $support_email . '">' . $support_email . '</a
         $('tr[data-slug="psn-pagespeed-ninja"] .deactivate a')
             .attr('id', 'deactivate-psn-pagespeed-ninja')
             .click(function (e) {
-                var next = 'localStorage' in window && localStorage.getItem(keyHideSurvey);
-                if (!e.ctrlKey && (!next || next < Date.now())) {
+                if (e.ctrlKey) {
                     e.preventDefault();
-                    tb_show('<?php echo esc_js(__('PageSpeed Ninja Deactivation', 'psn-pagespeed-ninja')); ?>', 'TB_inline?inlineId=psn-deactivation-survey-form-wrapper');
+                    location.href = e.target.href;
+                    return;
+                }
+                var next = 'localStorage' in window && localStorage.getItem(keyHideSurvey);
+                if (!next || next < Date.now()) {
+                    e.preventDefault();
+                    tb_show(<?php echo wp_json_encode(__('PageSpeed Ninja Deactivation', 'psn-pagespeed-ninja')); ?>, 'TB_inline?inlineId=psn-deactivation-survey-form-wrapper');
                     $('#TB_window').css({display: 'flex', 'flex-direction': 'column', 'max-height': '40em'});
                     $('#TB_ajaxContent').css({width: '100%', height: 'auto', 'box-sizing': 'border-box'});
                 }
@@ -140,7 +145,7 @@ $email_link = '<a href="mailto:' . $support_email . '">' . $support_email . '</a
         });
         jQuery('#psn-survey-form-submit').click(function (e) {
             e.preventDefault();
-            jQuery('#deactivate-psn-pagespeed-ninja').trigger('psn_submit_survey_form', {'form': jQuery('form.psn-deactivation-survey-form')});
+            jQuery('#deactivate-psn-pagespeed-ninja').trigger('psn_submit_survey_form', {'form': jQuery('#psn-deactivation-survey-form')});
         });
         jQuery('#psn-survey-form-cancel').click(function (e) {
             e.preventDefault();

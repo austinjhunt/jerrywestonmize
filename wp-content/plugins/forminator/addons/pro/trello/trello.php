@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Addon Name: Trello
+ * Integration Name: Trello
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: Integrate Forminator Custom Forms with Trello to get notified in real time.

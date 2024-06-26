@@ -17,9 +17,8 @@ class Ressio_Plugin_Imagesize extends Ressio_Plugin
      */
     public function __construct($di, $params = null)
     {
-        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
-
-        parent::__construct($di, $params);
+        parent::__construct($di);
+        $this->loadConfig(__DIR__ . '/config.json', $params);
     }
 
     /**
@@ -56,13 +55,20 @@ class Ressio_Plugin_Imagesize extends Ressio_Plugin
                 // default fread buffer size is 8192, but we don't need such a long string to grab the header tag
                 $chunk = fread($f, 1024);
                 fclose($f);
-                if (preg_match('/<svg\s.*?>/', $chunk, $match)) {
+                if (preg_match('/<svg\s.*?>/s', $chunk, $match)) {
                     $tag = $match[0];
-                    if (preg_match('/\bwidth=[\'"](\d+)[\'"]/', $tag, $match)) {
-                        $src_width = (int)$match[1];
+                    if (preg_match('/\bwidth=[\'"](\d+(?:\.\d+)?)[\'"]/', $tag, $match)) {
+                        $src_width = $match[1];
                     }
-                    if (preg_match('/\bheight=[\'"](\d+)[\'"]/', $tag, $match)) {
-                        $src_height = (int)$match[1];
+                    if (preg_match('/\bheight=[\'"](\d+(?:\.\d+)?)[\'"]/', $tag, $match)) {
+                        $src_height = $match[1];
+                    }
+                    if (
+                        $src_width === false && $src_height === false &&
+                        preg_match('/\bviewBox=[\'"](\d+(?:\.\d+)?) (\d+(?:\.\d+)?) (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)[\'"]/', $tag, $match)
+                    ) {
+                        $src_width = $this->formatFloatNumber((float)$match[3] - (float)$match[1]);
+                        $src_height = $this->formatFloatNumber((float)$match[4] - (float)$match[2]);
                     }
                 }
             } else {
@@ -76,5 +82,15 @@ class Ressio_Plugin_Imagesize extends Ressio_Plugin
                 $node->setAttribute('height', $src_height);
             }
         }
+    }
+
+    /**
+     * @param float $x
+     * @return string
+     */
+    private function formatFloatNumber($x)
+    {
+        $s = number_format($x, 3, '.', '');
+        return rtrim(rtrim($s, '0'), '.');
     }
 }

@@ -157,9 +157,9 @@ class Forminator_Radio extends Forminator_Field {
 		}
 
 		$html .= sprintf(
-			'<div role="radiogroup" class="forminator-field" aria-labelledby="%s" aria-describedby="%s">',
+			'<div role="radiogroup" class="forminator-field" aria-labelledby="%s"%s>',
 			esc_attr( 'forminator-radiogroup-' . $uniq_id . '-label' ),
-			esc_attr( 'forminator-radiogroup-' . $uniq_id . '-description' )
+			( ! empty( $description ) ? ' aria-describedby="' . esc_attr( 'forminator-radiogroup-' . $uniq_id . '-description' ) . '"' : '' )
 		);
 
 		if ( $label ) {
@@ -288,7 +288,7 @@ class Forminator_Radio extends Forminator_Field {
 			$html .= '<label id="'. esc_attr( $label_id ) .'" for="' . esc_attr( $input_id ) . '" class="' . esc_attr( $class ) . '" title="' . esc_attr( $option['label'] ) . '">';
 
 				$html .= sprintf(
-					'<input type="radio" name="%s" value="%s" id="%s" aria-labelledby="%s" data-calculation="%s" %s %s aria-describedby="%s"/>',
+					'<input type="radio" name="%s" value="%s" id="%s" aria-labelledby="%s" data-calculation="%s" %s %s%s/>',
 					$name,
 					$value,
 					$input_id,
@@ -296,7 +296,7 @@ class Forminator_Radio extends Forminator_Field {
 					$calculation_value,
 					$selected,
 					$hidden_calc_behavior,
-					esc_attr( $id . '-' . $uniq_id . '-description' )
+					( ! empty( $description ) ? ' aria-describedby="' . esc_attr( $id . '-' . $uniq_id . '-description' ) . '"' : '' )
 				);
 
 			if ( $input_visibility && ( $images_enabled && ! empty( $option_image_url ) ) ) {

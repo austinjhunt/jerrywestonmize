@@ -24,7 +24,7 @@ class Ressio_CssRelocator implements IRessio_CssRelocator, IRessio_DIAware
     /** @var int */
     protected $level;
 
-    /** @var array */
+    /** @var array<string,string> */
     protected $saved = array();
     /** @var int */
     protected $saved_idx = 10000; // to have keys of equal length (speed up strtr, see php_strtr_array sources)

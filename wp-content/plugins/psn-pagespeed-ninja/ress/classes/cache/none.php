@@ -12,7 +12,7 @@ defined('RESSIO_PATH') || die();
 class Ressio_Cache_None implements IRessio_Cache
 {
     /**
-     * @param string|array $deps
+     * @param string|string[] $deps
      * @param string $suffix
      * @return string
      */

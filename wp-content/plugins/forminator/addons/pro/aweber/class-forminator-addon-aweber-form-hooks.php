@@ -3,7 +3,7 @@
 /**
  * Class Forminator_Aweber_Form_Hooks
  *
- * @since 1.0 Aweber Addon
+ * @since 1.0 Aweber Integration
  */
 class Forminator_Aweber_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
@@ -35,7 +35,7 @@ class Forminator_Aweber_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	/**
 	 * Get status on add subscriber to AWeber
 	 *
-	 * @since 1.0 AWeber Addon
+	 * @since 1.0 AWeber Integration
 	 *
 	 * @param $connection_id
 	 * @param $submitted_data
@@ -90,7 +90,7 @@ class Forminator_Aweber_Form_Hooks extends Forminator_Integration_Form_Hooks {
 			 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 			 * @param array                                 $form_entry_fields      default entry fields of form.
 			 * @param array                                 $form_settings          Displayed Form settings.
-			 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Addon Form Settings instance.
+			 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Integration Form Settings instance.
 			 */
 			$args = apply_filters(
 				'forminator_addon_aweber_find_subscriber_args',
@@ -169,7 +169,7 @@ class Forminator_Aweber_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 				 * @param array                                 $form_entry_fields      default entry fields of form.
 				 * @param array                                 $form_settings          Displayed Form settings.
-				 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Addon Form Settings instance.
+				 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Integration Form Settings instance.
 				 */
 				$ad_tracking = apply_filters(
 					'forminator_addon_aweber_subscriber_ad_tracking',
@@ -227,7 +227,7 @@ class Forminator_Aweber_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 				 * @param array                                 $form_entry_fields      default entry fields of form.
 				 * @param array                                 $form_settings          Displayed Form settings.
-				 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Addon Form Settings instance.
+				 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Integration Form Settings instance.
 				 */
 				$tags = apply_filters(
 					'forminator_addon_aweber_subscriber_tags',
@@ -261,7 +261,7 @@ class Forminator_Aweber_Form_Hooks extends Forminator_Integration_Form_Hooks {
 			 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 			 * @param array                                 $form_entry_fields      default entry fields of form.
 			 * @param array                                 $form_settings          Displayed Form settings.
-			 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Addon Form Settings instance.
+			 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Integration Form Settings instance.
 			 */
 			$ip_address = apply_filters(
 				'forminator_addon_aweber_subscriber_ip_address',
@@ -290,7 +290,7 @@ class Forminator_Aweber_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 				 * @param array                                 $form_entry_fields      default entry fields of form.
 				 * @param array                                 $form_settings          Displayed Form settings.
-				 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Addon Form Settings instance.
+				 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Integration Form Settings instance.
 				 */
 				$args = apply_filters(
 					'forminator_addon_aweber_add_subscriber_args',
@@ -345,7 +345,7 @@ class Forminator_Aweber_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 				 * @param array                                 $form_entry_fields      default entry fields of form.
 				 * @param array                                 $form_settings          Displayed Form settings.
-				 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Addon Form Settings instance.
+				 * @param Forminator_Aweber_Form_Settings $form_settings_instance AWeber Integration Form Settings instance.
 				 */
 				$args = apply_filters(
 					'forminator_addon_aweber_update_subscriber_args',

@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 
 class PagespeedNinja_Cache_Hooks
@@ -34,6 +34,7 @@ class PagespeedNinja_Cache_Hooks
         $this->version = $version;
     }
 
+    /** @return void */
     public function define_cache_hooks()
     {
         add_action('psn_cache_disable', array($this, 'disable_cache'));
@@ -129,7 +130,7 @@ class PagespeedNinja_Cache_Hooks
     /**
      * @param int $post_id
      * @param WP_Post $post_after
-     * @param WP_Post $post_before
+     * @param ?WP_Post $post_before
      * @return void
      */
     public function post_updated($post_id, $post_after, $post_before)
@@ -263,7 +264,7 @@ class PagespeedNinja_Cache_Hooks
 
     /**
      * @param WP_Post $post
-     * @return array
+     * @return string[]
      */
     private function getPostTags($post)
     {

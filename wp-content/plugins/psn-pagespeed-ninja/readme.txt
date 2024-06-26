@@ -1,8 +1,8 @@
 === PageSpeed Ninja - Cache, Minify, Defer CSS JavaScript, Critical CSS, Optimize Images, Convert WebP ===
 
-Stable tag: 1.3.13
+Stable tag: 1.4.2
 Requires at least: 4.6
-Tested up to: 6.5
+Tested up to: 6.5.4
 Requires PHP: 5.6
 Contributors: pagespeed
 Tags: performance, convert webp, critical css, defer css javascript, optimize images, cache, pagespeed, optimization, minify css, minify javascript, core web vitals, lazy load
@@ -201,64 +201,36 @@ Yes, PageSpeed Ninja allows you to undo optimizations through the plugin's setti
 
 == Changelog ==
 
-= 1.3.13 Stable Release [25 March 2024]
-- Fixed possible warning at addon's initialization
-
-= 1.3.12 Stable Release [25 March 2024]
-- Fixed issue with lazy video loading
-
-= 1.3.11 Stable Release [23 March 2024]
-- Fixed issue with LQIP and native lazy loading of transparent images
-- Fixed possible warning message during JS merging
-
-= 1.3.10 Stable Release [20 March 2024]
-- Fixed issue with incorrect URLs in multisite mode
-
-= 1.3.9 Stable Release [19 March 2024]
-- Added "Depend on HTTP headers" settings
-
-= 1.3.8 Stable Release [18 March 2024]
-- Fixed issue with merging of pre-minified CSS files
-- Improve CSS optimization
-- Improve loading of external fonts [Pro]
-- Performance optimizations
-
-= 1.3.7 Stable Release [18 March 2024]
-- Fixed issue with inactive Backup button [Pro]
-
-= 1.3.6 Stable Release [18 March 2024]
-- Fixed possible issue with first time saving settings
-
-= 1.3.5 Stable Release [16 March 2024]
-- Fixed possible issue with validation of WebP header
-
-= 1.3.4 Stable Release [16 March 2024]
-- Added auto-detection of directory for optimized files
-- Fixed error with reading of invalid WebP files
-- Improved javascript merging
+= 1.4.2 Stable Release [11 June 2024]
+- Added support of JavaScript modules in "Preload key requests"
+- Fixed issue with CSS relocation in "Inline CSS for First-Time Visitors"
+- Fixed issue with scripts execution order in "Non-blocking JavaScript" mode
+- Fixed work of lazy image loading
+- Fixed processing of query delimiters in Stream and Pharse parsers
+- Improved detection of width and height for SVG images
+- Adjusted "Ultra" and "Experimenntal" optimzation presets
 - Minor bugfixes
 
-= 1.3.3 Stable Release [04 March 2024]
-- Added more logging to image processing
-- Fixed several possible PHP notices and warnings
+= 1.4.1 Stable Release [07 June 2024]
+- Fixed issue with missed files [Free]
 
-= 1.3.2 Stable Release [19 February 2024]
-- Fixed PHP warning on wrong image file
-
-= 1.3.1 Stable Release [13 February 2024]
-- Added support of class-based selectors in Elements to Hide [Pro]
-- Fixed first-time visitor cookie expiration
-- Fixed typo in tooltip
-
-= 1.3.0 Stable Release [12 February 2024]
-- Added optimization for "Avoid serving legacy JavaScript to modern browsers"
-- Added optimization of video's poster and input[type=image] images
-- Added support of inlining JS/CSS for first-time visitors
-- Added support of DOM size reduction [Pro]
-- Added lazy YouTube loading feature [Pro]
-- Fixed issue with empty @media in optimized CSS
-- Fixed issue with lazy loading of background images [Pro]
-- Performance optimizations
-- Improved backend UI
+= 1.4.0 Stable Release [03 June 2024]
+- Added "Display" options for loading Web Fonts/Google Fonts
+- Added "Auto Update" option
+- Added search field in the Advanced settings
+- Added warning about incompatibility with other optimization plugins
+- Added new "Does not use passive listeners" section [Pro]
+- Added initial support for Redis/KeyDB cache [Pro]
+- Fixed issue with disabled Save button
+- Fixed issue with JavaScript minification
+- Fixed issue with CSS minification
+- Fixed check for updates [Pro]
+- Improved caching under heavy load
+- Improved work of Non-blocking JavaScript feature
+- Improved asynchronous loading of CSS with Critical CSS feature
+- Improved work of preload tags generation
+- Adjusted "Ultra" optimzation preset
+- Changed initial setup wizard
+- Minor bugfixes/typos
 
 [See changelog for all PageSpeed Ninja versions.](https://plugins.svn.wordpress.org/psn-pagespeed-ninja/trunk/changelog.txt)

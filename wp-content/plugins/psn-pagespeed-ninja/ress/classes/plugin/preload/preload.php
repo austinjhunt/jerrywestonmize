@@ -21,29 +21,42 @@ class Ressio_Plugin_Preload extends Ressio_Plugin
     );
     /** @var array */
     public $modulepreloads = array();
+    /** @var boolean */
+    private $remove_preloads;
+    /** @var string[]  */
+    private $font_ext_to_mime = array(
+        'otf' => 'font/opentype',
+        'ttf' => 'font/truetype',
+        'woff' => 'font/woff',
+        'woff2' => 'font/woff2',
+    );
 
     /**
      * @param Ressio_DI $di
      * @param ?stdClass $params
      */
-    public function __construct($di, $params)
+    public function __construct($di, $params = null)
     {
-        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
+        parent::__construct($di);
+        $this->loadConfig(__DIR__ . '/config.json', $params);
 
-        parent::__construct($di, $params);
-
-        foreach ($params->style as $url) {
+        foreach ($this->params->style as $url) {
             $this->addURL($url, 'style');
         }
-        foreach ($params->font as $url) {
+        foreach ($this->params->font as $url) {
             $this->addURL($url, 'font', array('crossorigin' => false));
         }
-        foreach ($params->script as $url) {
+        foreach ($this->params->script as $url) {
             $this->addURL($url, 'script');
         }
-        foreach ($params->image as $url) {
+        foreach ($this->params->module as $url) {
+            $this->addModule($url);
+        }
+        foreach ($this->params->image as $url) {
             $this->addURL($url, 'image');
         }
+
+        $this->remove_preloads = $this->params->remove;
     }
 
     /**
@@ -65,11 +78,6 @@ class Ressio_Plugin_Preload extends Ressio_Plugin
                 if ($extras !== false) {
                     $attributes += $extras;
                 }
-                //if ($as === 'font') {
-                //    $attributes['crossorigin'] = false;
-                //    $type = pathinfo(parse_url($href, PHP_URL_PATH), PATHINFO_EXTENSION);
-                //    $attributes['type'] = "font/$type"; // valid for otf/ttf/woff/woff2 (see //www.iana.org/assignments/media-types/media-types.xhtml)
-                //}
                 $tags[] = array('link', $attributes, false);
             }
         }
@@ -115,7 +123,30 @@ class Ressio_Plugin_Preload extends Ressio_Plugin
         if (strncmp($url, 'data:', 5) === 0) {
             return;
         }
+        if ($as === 'font') {
+            if ($extras === false) {
+                $extras = array('crossorigin' => false);
+            }
+            if (!isset($extras['type'])) {
+                $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
+                if (isset($this->font_ext_to_mime[$ext])) {
+                    $extras['type'] = $this->font_ext_to_mime[$ext];
+                }
+            }
+        }
         $this->preloads[$as][$url] = $extras;
+    }
+
+    /**
+     * @param string $url
+     * @return void
+     */
+    public function addModule($url)
+    {
+        if (strncmp($url, 'data:', 5) === 0) {
+            return;
+        }
+        $this->modulepreloads[$url] = 'script';
     }
 
     /**
@@ -130,9 +161,10 @@ class Ressio_Plugin_Preload extends Ressio_Plugin
             return;
         }
         if ($node->hasAttribute('src') && !$node->hasAttribute('nomodule')) {
-            if ($node->hasAttribute('type') && $node->getAttribute('type') === 'module') {
-                $this->modulepreloads[$node->getAttribute('src')] = 'script';
-            } elseif (!$node->hasAttribute('type') || $node->getAttribute('type') === 'text/javascript') {
+            $hasType = $node->hasAttribute('type');
+            if ($hasType && $node->getAttribute('type') === 'module') {
+                $this->addModule($node->getAttribute('src'));
+            } elseif (!$hasType || $optimizer->isJavaScriptMime($node->getAttribute('type'))) {
                 $this->addURL($node->getAttribute('src'), 'script');
             }
         }
@@ -149,12 +181,17 @@ class Ressio_Plugin_Preload extends Ressio_Plugin
         if ($optimizer->isNoscriptState() || $optimizer->nodeIsDetached($node)) {
             return;
         }
-        if (
-            $node->hasAttribute('href') &&
-            $node->hasAttribute('rel') && $node->getAttribute('rel') === 'stylesheet' &&
-            (!$node->hasAttribute('type') || $node->getAttribute('type') === 'text/css')
-        ) {
-            $this->addURL($node->getAttribute('href'), 'style');
+
+        if ($node->hasAttribute('href') && $node->hasAttribute('rel')) {
+            $rel = $node->getAttribute('rel');
+
+            if ($rel === 'stylesheet' && (!$node->hasAttribute('type') || $node->getAttribute('type') === 'text/css')) {
+                $this->addURL($node->getAttribute('href'), 'style');
+            }
+
+            if ($this->remove_preloads && $rel === 'preload') {
+                $optimizer->nodeDetach($node);
+            }
         }
     }
 
@@ -167,7 +204,10 @@ class Ressio_Plugin_Preload extends Ressio_Plugin
     {
         foreach ($wrapper->nodes as $node) {
             /** Ressio_NodeWrapper $node */
-            if (isset($node->attributes['src'])) {
+            if (
+                isset($node->attributes['src']) &&
+                (!isset($node->attributes['type']) || $node->attributes['type'] === 'text/javascript')
+            ) {
                 $this->addURL($node->attributes['src'], 'script');
             }
         }
@@ -182,7 +222,11 @@ class Ressio_Plugin_Preload extends Ressio_Plugin
     {
         foreach ($wrapper->nodes as $node) {
             /** Ressio_NodeWrapper $node */
-            if (isset($node->attributes['rel'], $node->attributes['href']) && $node->attributes['rel'] === 'stylesheet') {
+            if (
+                isset($node->attributes['rel'], $node->attributes['href']) &&
+                $node->attributes['rel'] === 'stylesheet' &&
+                (!isset($node->attributes['media']) || $node->attributes['media'] !== 'print')
+            ) {
                 $this->addURL($node->attributes['href'], 'style');
             }
         }

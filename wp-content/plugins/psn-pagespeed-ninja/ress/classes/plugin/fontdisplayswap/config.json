@@ -1,5 +1,7 @@
 {
+  "display": "swap",
   "excludedFonts": [
-    "FontAwesome"
+    "FontAwesome",
+    "Font Awesome"
   ]
 }

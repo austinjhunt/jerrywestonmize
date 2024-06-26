@@ -3,7 +3,7 @@
  * Trait for common methods for Mailchimp settings classes
  *
  * @since 1.30
- * @package Mailchimp Addon
+ * @package Mailchimp Integration
  */
 
 /**
@@ -35,7 +35,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 	/**
 	 * For settings Wizard steps
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @return array
 	 */
 	public function module_settings_wizards() {
@@ -94,7 +94,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 	/**
 	 * Choose Mail wizard
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @param $submitted_data
 	 * @return array
 	 */
@@ -319,7 +319,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 	/**
 	 * Choose Tags wizard
 	 *
-	 * @since 1.15.3 Mailchimp Addon
+	 * @since 1.15.3 Mailchimp Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -394,7 +394,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 	/**
 	 * Choose Groups wizard
 	 *
-	 * @since 1.15.3 Mailchimp Addon
+	 * @since 1.15.3 Mailchimp Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -468,7 +468,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 	/**
 	 * Choose GDPR wizard
 	 *
-	 * @since 1.15.3 Mailchimp Addon
+	 * @since 1.15.3 Mailchimp Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -711,7 +711,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 	/**
 	 * Step mapping fields on wizard
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @since 1.2 Refactor `hasBack` to `has_back`
 	 * @param array $submitted_data Submitted data.
 	 * @return array
@@ -853,7 +853,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 	 * Get input of Map Fields
 	 * its table with html select options as input
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $mailchimp_fields_list
 	 * @param $current_data
@@ -948,7 +948,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 	/**
 	 * Get mail List Name of submitted data
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $mail_lists
 	 * @param $submitted_data
@@ -1069,12 +1069,12 @@ trait Forminator_Mailchimp_Settings_Trait {
 	/**
 	 * Validate submitted data by user as expected by merge field on mailchimp mail list
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $mailchimp_fields_list
 	 * @param $post_data
 	 *
-	 * @return array current addon form settings
+	 * @return array current integration form settings
 	 * @throws Forminator_Integration_Exception
 	 * @throws Forminator_Integration_Settings_Exception
 	 */
@@ -1193,7 +1193,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 	/**
 	 * Check if map fields is completed
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @return bool
 	 */
 	public function step_map_fields_is_completed() {
@@ -1230,7 +1230,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 	/**
 	 * Check if mail list already selected completed
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @return bool
 	 */
 	public function step_choose_mail_list_is_completed() {

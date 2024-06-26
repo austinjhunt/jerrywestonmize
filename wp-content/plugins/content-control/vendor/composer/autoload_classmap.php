@@ -163,6 +163,7 @@ return array(
     'ContentControl\\RestAPI\\Settings' => $baseDir . '/classes/RestAPI/Settings.php',
     'ContentControl\\RuleEngine\\Handler' => $baseDir . '/classes/RuleEngine/Handler.php',
     'ContentControl\\RuleEngine\\Rules' => $baseDir . '/classes/RuleEngine/Rules.php',
+    'ContentControl\\Services\\Globals' => $baseDir . '/classes/Services/Globals.php',
     'ContentControl\\Services\\Restrictions' => $baseDir . '/classes/Services/Restrictions.php',
     'ContentControl\\Services\\UpgradeStream' => $baseDir . '/classes/Services/UpgradeStream.php',
     'ContentControl\\Upgrades\\Backup' => $baseDir . '/classes/Upgrades/Backup.php',

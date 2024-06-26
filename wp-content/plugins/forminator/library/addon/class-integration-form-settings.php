@@ -193,7 +193,7 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 
 	/**
 	 * Override this function to set wizardable settings
-	 * Default its and empty array which is indicating that Addon doesnt have settings
+	 * Default its and empty array which is indicating that Integration doesnt have settings
 	 *
 	 * Its multi array, with numerical key, start with `0`
 	 * Every step on wizard, will consist at least
@@ -329,7 +329,7 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 	/**
 	 * Mailchimp Address type fields array
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @return array
 	 */
 	public function mail_address_fields() {

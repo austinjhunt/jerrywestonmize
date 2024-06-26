@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 
 class PagespeedNinja_AdminAjax
@@ -159,6 +159,7 @@ class PagespeedNinja_AdminAjax
             $config = get_option('pagespeedninja_config');
             return array($config['staticdir']);
         }
+        /** @var array<string,int> $staticdirs */
         $staticdirs = array();
         foreach (get_sites() as $site) {
             $config = get_blog_option($site->blog_id, 'pagespeedninja_config');
@@ -197,11 +198,12 @@ class PagespeedNinja_AdminAjax
 
     /**
      * @param int $ttl (seconds)
+     * @return void
      */
     protected function clear_cache($ttl)
     {
 
-        /** @var array $options */
+        /** @var array<string,string> $options */
         $options = get_option('pagespeedninja_config');
 
         if (!preg_match('#^/[^/]#', $options['staticdir'])) {
@@ -231,9 +233,9 @@ class PagespeedNinja_AdminAjax
             $di->set('filelock', Ressio_FileLock_flock::class);
 
             $lock = $di->config->cachedir . '/filecachecleaner.stamp';
-            unlink($lock);
+            @unlink($lock);
 
-            $plugin = new Ressio_Plugin_FileCacheCleaner($di, null);
+            $plugin = new Ressio_Plugin_FilecacheCleaner($di, null);
         } catch (ERessio_UnknownDiKey $e) {
             return;
         }
@@ -255,7 +257,7 @@ class PagespeedNinja_AdminAjax
     {
         check_ajax_referer('psn-ajax-token');
 
-        /** @var array $options */
+        /** @var array<string,string> $options */
         $options = get_option('pagespeedninja_config');
         $ttl = (int)$options['caching_ttl'] * 60;
         $this->clear_cache($ttl);
@@ -275,6 +277,7 @@ class PagespeedNinja_AdminAjax
 
     /**
      * @param int $ttl (seconds)
+     * @return void
      */
     protected function clear_pagecache($ttl)
     {
@@ -297,7 +300,7 @@ class PagespeedNinja_AdminAjax
     {
         check_ajax_referer('psn-ajax-token');
 
-        /** @var array $options */
+        /** @var array<string,string> $options */
         $options = get_option('pagespeedninja_config');
         $ttl = (int)$options['caching_ttl'] * 60;
         $this->clear_pagecache($ttl);
@@ -354,7 +357,7 @@ class PagespeedNinja_AdminAjax
     }
 
     /**
-     * @param array[] $options
+     * @param array<string,string> $options
      * @return string
      */
     private function loadATFCSS($options)

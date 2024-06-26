@@ -3,7 +3,7 @@
  * Trait for common methods for Hubspot settings classes
  *
  * @since 1.30
- * @package Hubspot Addon
+ * @package Hubspot Integration
  */
 
 /**
@@ -13,7 +13,7 @@ trait Forminator_Hubspot_Settings_Trait {
 	/**
 	 * HubSpot Module Settings wizard
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @return array
 	 */
 	public function module_settings_wizards() {
@@ -176,7 +176,7 @@ trait Forminator_Hubspot_Settings_Trait {
 	/**
 	 * Check if pick name step completed
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */
@@ -416,7 +416,7 @@ trait Forminator_Hubspot_Settings_Trait {
 	/**
 	 * Check if setup list completed
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */

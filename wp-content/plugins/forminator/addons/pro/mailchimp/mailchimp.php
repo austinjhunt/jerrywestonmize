@@ -1,6 +1,6 @@
 <?php
 /**
- * Addon Name: Mailchimp
+ * Integration Name: Mailchimp
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: Integrate Forminator Custom Forms with Mailchimp email list easily

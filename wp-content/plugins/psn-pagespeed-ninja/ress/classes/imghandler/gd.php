@@ -490,6 +490,7 @@ class Ressio_ImgHandler_GD implements IRessio_ImgHandlerOptimize, IRessio_ImgHan
                         return imagecreatefromwebp($src_file);
                     }
                 }
+                break;
 
             case 'avif':
                 return imagecreatefromavif($src_file);

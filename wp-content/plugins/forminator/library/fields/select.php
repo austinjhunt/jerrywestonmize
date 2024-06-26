@@ -163,9 +163,9 @@ class Forminator_Select extends Forminator_Field {
 			$draft_value = isset( $draft_value['value'] ) ? array_map( 'trim', $draft_value['value'] ) : '';
 
 			$html .= sprintf(
-				'<div class="forminator-multiselect" aria-labelledby="%s" aria-describedby="%s">',
+				'<div class="forminator-multiselect" aria-labelledby="%s"%s>',
 				esc_attr( $id . '-label' ),
-				esc_attr( $id . '-description' )
+				( ! empty( $description ) ? ' aria-describedby="' . esc_attr( $id . '-description' ) . '"' : '' )
 			);
 
 			// Multi values.
@@ -358,7 +358,7 @@ class Forminator_Select extends Forminator_Field {
 			}
 
 			$html .= sprintf(
-				'<select id="%s" class="%s" data-required="%s" name="%s" data-default-value="%s"%s data-placeholder="%s" data-search="%s" aria-labelledby="%s" aria-describedby="%s">',
+				'<select id="%s" class="%s" data-required="%s" name="%s" data-default-value="%s"%s data-placeholder="%s" data-search="%s" aria-labelledby="%s"%s>',
 				$id,
 				'forminator-select--field forminator-select2', // class.
 				$required,
@@ -368,7 +368,7 @@ class Forminator_Select extends Forminator_Field {
 				$placeholder,
 				$search,
 				esc_attr( $id . '-label' ),
-				esc_attr( $id . '-description' )
+				( ! empty( $description ) ? ' aria-describedby="' . esc_attr( $id . '-description' ) . '"' : '' )
 			);
 
 			$html .= $options_markup;

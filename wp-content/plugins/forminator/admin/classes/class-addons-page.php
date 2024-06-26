@@ -249,8 +249,7 @@ class Forminator_Admin_Addons_page {
 	public function get_addons( $pid ) {
 		$addon = array();
 		if ( $pid ) {
-			$dash  = WPMUDEV_Dashboard::instance();
-			$addon = $dash::$site->get_project_info( $pid );
+			$addon = self::get_project_info_from_wpmudev_dashboard( $pid );
 		}
 
 		return $addon;
@@ -362,7 +361,7 @@ class Forminator_Admin_Addons_page {
 	public static function forminator_addon_by_pid( $pid ) {
 		$res = array();
 		if ( class_exists( 'WPMUDEV_Dashboard' ) ) {
-			$res = WPMUDEV_Dashboard::$site->get_project_info( $pid, true );
+			$res = self::get_project_info_from_wpmudev_dashboard( $pid, true );
 		} else {
 			$addons = self::forminator_get_static_addons();
 			foreach ( $addons as $addon ) {
@@ -370,6 +369,54 @@ class Forminator_Admin_Addons_page {
 					$res = $addon;
 				}
 			}
+		}
+
+		return $res;
+	}
+
+	/**
+	 * Replace the addon name, info, features from static addon.
+	 * To display the translated content.
+	 *
+	 * @since 1.31
+	 *
+	 * @param mixed $project The addon object.
+	 * @return mixed
+	 */
+	private static function override_content_from_static_addons( $project ) {
+		if ( ! empty( $project->pid ) ) {
+			$addons = self::forminator_get_static_addons();
+			foreach ( $addons as $addon ) {
+				if ( $project->pid === $addon->pid ) {
+					$project->name     = $addon->name;
+					$project->info     = $addon->info;
+					$project->features = $addon->features;
+				}
+			}
+		}
+
+		return $project;
+	}
+
+	/**
+	 * Get project details from WPMUDEV dashboard.
+	 *
+	 * @since  1.31
+	 *
+	 * @param  int  $pid        The Project ID.
+	 * @param  bool $fetch_full Optional. If true, then even potentially
+	 *                          time-consuming preparation is done.
+	 *                          e.g. load changelog via API.
+	 *
+	 * @return object Details about the project.
+	 */
+	public static function get_project_info_from_wpmudev_dashboard( $pid, $fetch_full = false ) {
+		$res = array();
+		if ( class_exists( 'WPMUDEV_Dashboard' ) ) {
+			$res = clone WPMUDEV_Dashboard::$site->get_project_info( $pid, $fetch_full );
+
+			// Override the content from plugin to load the translated content.
+			$res = self::override_content_from_static_addons( $res );
 		}
 
 		return $res;

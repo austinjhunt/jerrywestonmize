@@ -54,6 +54,15 @@ class Ressio_HtmlOptimizer_Dom extends Ressio_HtmlOptimizer_Base
     private $prependHeadRefNode;
 
     /**
+     * @pure
+     * @return string
+     */
+    public function getQueryDelim()
+    {
+        return '&';
+    }
+
+    /**
      * @param string $buffer
      * @return string
      * @throws ERessio_UnknownDiKey
@@ -1183,7 +1192,7 @@ class Ressio_HtmlOptimizer_Dom extends Ressio_HtmlOptimizer_Base
                 while ($injectBeforeNode) {
                     if ($injectBeforeNode instanceof DOMElement) {
                         $tagName = strtoupper($injectBeforeNode->tagName);
-                        if ($tagName !== 'META' && $tagName !== 'TITLE') {
+                        if ($tagName !== 'META' && $tagName !== 'TITLE' && $tagName !== 'RESSSCRIPT' && $tagName !== 'RESSCSS') {
                             break;
                         }
                     }

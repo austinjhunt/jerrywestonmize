@@ -33,7 +33,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Last data sent to slack
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @var array
 	 */
 	private $_last_data_sent = array();
@@ -41,7 +41,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Last data received from slack
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @var array
 	 */
 	private $_last_data_received = array();
@@ -49,7 +49,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Last URL requested
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @var string
 	 */
 	private $_last_url_request = '';
@@ -59,7 +59,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Forminator_Slack_Wp_Api constructor.
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param $_token
 	 *
@@ -77,7 +77,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Get singleton
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param $_token
 	 *
@@ -95,7 +95,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Add custom user agent on request
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param $user_agent
 	 *
@@ -119,7 +119,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * HTTP Request
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param string $verb
 	 * @param        $path
@@ -245,7 +245,7 @@ class Forminator_Slack_Wp_Api {
 
 		$response = $res;
 		/**
-		 * Filter slack api response returned to addon
+		 * Filter slack api response returned to integration
 		 *
 		 * @since 1.1
 		 *
@@ -286,7 +286,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Get Users / members List
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param array $args
 	 *
@@ -310,7 +310,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Get Public Channels List
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param array $args
 	 *
@@ -336,7 +336,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Get Private Channels List
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param array $args
 	 *
@@ -363,7 +363,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Send Message
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param       $channel
 	 * @param       $text
@@ -390,7 +390,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Delete Message
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param       $channel
 	 * @param       $chat_ts
@@ -417,7 +417,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Get last data sent
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @return array
 	 */
@@ -428,7 +428,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @return array
 	 */
@@ -439,7 +439,7 @@ class Forminator_Slack_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @return string
 	 */

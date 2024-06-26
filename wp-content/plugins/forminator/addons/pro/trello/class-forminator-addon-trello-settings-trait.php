@@ -3,7 +3,7 @@
  * Trait for common methods for Trello settings classes
  *
  * @since 1.30
- * @package Trello Addon
+ * @package Trello Integration
  */
 
 /**
@@ -14,7 +14,7 @@ trait Forminator_Trello_Settings_Trait {
 	/**
 	 * Trello Module Settings wizard
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @return array
 	 */
 	public function module_settings_wizards() : array {
@@ -41,7 +41,7 @@ trait Forminator_Trello_Settings_Trait {
 	/**
 	 * Setup Name
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param array $submitted_data Submitted data.
 	 * @return array
@@ -112,7 +112,7 @@ trait Forminator_Trello_Settings_Trait {
 	/**
 	 * Setup Board
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param array $submitted_data Submitted data.
 	 * @return array
@@ -217,7 +217,7 @@ trait Forminator_Trello_Settings_Trait {
 	/**
 	 * Check if setup board is completed
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */
@@ -227,7 +227,7 @@ trait Forminator_Trello_Settings_Trait {
 	/**
 	 * Setup List on Board
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -583,7 +583,7 @@ trait Forminator_Trello_Settings_Trait {
 	/**
 	 * Check if card completed
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */

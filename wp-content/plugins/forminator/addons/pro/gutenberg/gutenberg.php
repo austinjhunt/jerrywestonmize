@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Addon Name: Gutenberg
+ * Integration Name: Gutenberg
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: Gutenberg blocks for Forminator
@@ -23,7 +23,7 @@ class Forminator_Gutenberg {
 	/**
 	 * Get Instance
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 * @return self|null
 	 */
 	public static function get_instance() {
@@ -35,9 +35,9 @@ class Forminator_Gutenberg {
 	}
 
 	/**
-	 * Initialize addon
+	 * Initialize integration
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 */
 	public static function init() {
 		// Load abstracts.
@@ -50,7 +50,7 @@ class Forminator_Gutenberg {
 	/**
 	 * Automatically include blocks files
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 */
 	public static function load_blocks() {
 		// Load blocks automatically.
@@ -60,9 +60,9 @@ class Forminator_Gutenberg {
 	}
 
 	/**
-	 * Return Addon URL
+	 * Return Integration URL
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 *
 	 * @return mixed
 	 */
@@ -71,9 +71,9 @@ class Forminator_Gutenberg {
 	}
 
 	/**
-	 * Return Addon DIR
+	 * Return Integration DIR
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 *
 	 * @return mixed
 	 */
@@ -83,9 +83,9 @@ class Forminator_Gutenberg {
 }
 
 /**
- * Instance of Gutenberb Addon
+ * Instance of Gutenberb Integration
  *
- * @since 1.0 Gutenberg Addon
+ * @since 1.0 Gutenberg Integration
  *
  * @return Forminator_Gutenberg
  */

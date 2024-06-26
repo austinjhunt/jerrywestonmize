@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Addon Name: HubSpot
+ * Integration Name: HubSpot
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: Integrate Forminator Custom Forms with HubSpot to get notified in real time.

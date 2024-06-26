@@ -64,7 +64,7 @@ class Forminator_Integration_Loader {
 	private static $pre_activated_addons = array();
 
 	/**
-	 * Array Access-able of Registered Addons
+	 * Array Access-able of Registered Integrations
 	 *
 	 * @since 1.1
 	 * @var Forminator_Addon_Container
@@ -160,7 +160,7 @@ class Forminator_Integration_Loader {
 	/**
 	 * Load default addon files
 	 *
-	 * @param string $addon_slug Addon slug.
+	 * @param string $addon_slug Integration slug.
 	 * @return void
 	 */
 	private static function load_default_files( $addon_slug ) {
@@ -184,11 +184,11 @@ class Forminator_Integration_Loader {
 	}
 
 	/**
-	 * Register new Addon
+	 * Register new Integration
 	 *
 	 * @since 1.1
 	 *
-	 * @param Forminator_Integration|string $class_name instance of Addon or its classname.
+	 * @param Forminator_Integration|string $class_name instance of Integration or its classname.
 	 *
 	 * @return bool
 	 */
@@ -205,7 +205,7 @@ class Forminator_Integration_Loader {
 			 *
 			 * @since 1.1
 			 *
-			 * @param Forminator_Integration|string $class_name instance of Addon or its class name.
+			 * @param Forminator_Integration|string $class_name instance of Integration or its class name.
 			 */
 			do_action( 'forminator_before_addon_registered', $class_name );
 
@@ -213,7 +213,7 @@ class Forminator_Integration_Loader {
 				$addon_class = $class_name;
 			} else {
 				if ( ! strpos( $class_name, '_') ) {
-					// Addon slug is passed.
+					// Integration slug is passed.
 					$class_slug = $class_name;
 					$class_name = 'Forminator_' . ucfirst( $class_name );
 					self::load_default_files( $class_slug );
@@ -233,7 +233,7 @@ class Forminator_Integration_Loader {
 			 *
 			 * @since 1.1
 			 *
-			 * @param Forminator_Integration $addon_class       Current Addon class instance.
+			 * @param Forminator_Integration $addon_class       Current Integration class instance.
 			 * @param array                     $registered_addons Current registered addons.
 			 */
 			$addon_class = apply_filters( 'forminator_addon_instance', $addon_class, $registered_addons );
@@ -271,7 +271,7 @@ class Forminator_Integration_Loader {
 	}
 
 	/**
-	 * Validate Addon by its class name
+	 * Validate Integration by its class name
 	 *
 	 * @since 1.1
 	 *
@@ -282,11 +282,11 @@ class Forminator_Integration_Loader {
 	 */
 	private function validate_addon_class( $class_name ) {
 		if ( ! class_exists( $class_name ) ) {
-			throw new Forminator_Integration_Exception( 'Addon with ' . $class_name . ' does not exist' );
+			throw new Forminator_Integration_Exception( 'Integration with ' . $class_name . ' does not exist' );
 		}
 
 		if ( ! is_callable( array( $class_name, 'get_instance' ) ) ) {
-			throw new Forminator_Integration_Exception( 'Addon with ' . $class_name . ' does not have get_instance method' );
+			throw new Forminator_Integration_Exception( 'Integration with ' . $class_name . ' does not have get_instance method' );
 		}
 
 		$addon_class = call_user_func( array( $class_name, 'get_instance' ) );
@@ -311,21 +311,21 @@ class Forminator_Integration_Loader {
 		$class_name  = get_class( $instance );
 
 		if ( ! $addon_class instanceof Forminator_Integration ) {
-			throw new Forminator_Integration_Exception( 'Addon with ' . $class_name . ' is not instanceof Forminator_Integration' );
+			throw new Forminator_Integration_Exception( 'Integration with ' . $class_name . ' is not instanceof Forminator_Integration' );
 		}
 		$slug    = $addon_class->get_slug();
 		$version = $addon_class->get_version();
 
 		if ( empty( $slug ) ) {
-			throw new Forminator_Integration_Exception( 'Addon with ' . $class_name . ' does not have slug' );
+			throw new Forminator_Integration_Exception( 'Integration with ' . $class_name . ' does not have slug' );
 		}
 
 		// FIFO.
 		if ( isset( $this->addons[ $slug ] ) ) {
-			throw new Forminator_Integration_Exception( 'Addon with slug ' . $slug . ' already exist' );
+			throw new Forminator_Integration_Exception( 'Integration with slug ' . $slug . ' already exist' );
 		}
 		if ( empty( $version ) ) {
-			throw new Forminator_Integration_Exception( 'Addon with slug ' . $slug . ' does not have valid version' );
+			throw new Forminator_Integration_Exception( 'Integration with slug ' . $slug . ' does not have valid version' );
 		}
 
 		// check version changed if active.
@@ -344,7 +344,7 @@ class Forminator_Integration_Loader {
 	}
 
 	/**
-	 * Get Addon Instance
+	 * Get Integration Instance
 	 *
 	 * @since 1.1
 	 *
@@ -357,7 +357,7 @@ class Forminator_Integration_Loader {
 	}
 
 	/**
-	 * Get All registered Addons
+	 * Get All registered Integrations
 	 *
 	 * @since 1.1
 	 * @return Forminator_Addon_Container
@@ -384,7 +384,7 @@ class Forminator_Integration_Loader {
 	}
 
 	/**
-	 * Deactivate Addon
+	 * Deactivate Integration
 	 * This function will call `deactivate` function of addon class if available
 	 *
 	 * @since 1.1
@@ -396,13 +396,13 @@ class Forminator_Integration_Loader {
 	public function deactivate_addon( $slug ) {
 		$addon = $this->get_addon( $slug );
 		if ( is_null( $addon ) ) {
-			$this->last_error_message = esc_html__( 'Addon not found', 'forminator' );
+			$this->last_error_message = esc_html__( 'Integration not found', 'forminator' );
 
 			return false;
 		}
 
 		if ( ! $this->addon_is_active( $slug ) ) {
-			$this->last_error_message = esc_html__( 'Addon is not activated before', 'forminator' );
+			$this->last_error_message = esc_html__( 'Integration is not activated before', 'forminator' );
 
 			return false;
 		}
@@ -469,8 +469,10 @@ class Forminator_Integration_Loader {
 			$settions_options_name = $addon->get_settings_options_name();
 
 			$options = get_option( $settions_options_name );
-			unset( $options[ $addon->multi_global_id ] );
-			update_option( $settions_options_name, $options );
+			if ( is_array( $options ) ) {
+				unset( $options[ $addon->multi_global_id ] );
+				update_option( $settions_options_name, $options );
+			}
 			$setting_form_meta_name .= '_' . $addon->multi_global_id;
 		} else {
 			// probably just want to remove the options.
@@ -501,13 +503,13 @@ class Forminator_Integration_Loader {
 		 * @since 1.1
 		 *
 		 * @param string $slug addon `slug` removed.
-		 * @param Forminator_Integration|null Addon instance or null when addon instance unavailable
+		 * @param Forminator_Integration|null Integration instance or null when addon instance unavailable
 		 */
 		do_action( 'forminator_after_activated_addons_removed', $slug, $addon );
 	}
 
 	/**
-	 * Activate Addon
+	 * Activate Integration
 	 * This function will call `activate` function on addon if available
 	 *
 	 * @since 1.1
@@ -520,7 +522,7 @@ class Forminator_Integration_Loader {
 		$addon = $this->get_addon( $slug );
 
 		/**
-		 * Fires before Addon activated
+		 * Fires before Integration activated
 		 *
 		 * @since 1.1
 		 *
@@ -530,19 +532,19 @@ class Forminator_Integration_Loader {
 		do_action( 'forminator_before_addon_activated', $slug, $addon );
 
 		if ( is_null( $addon ) ) {
-			$this->last_error_message = esc_html__( 'Addon not found', 'forminator' );
+			$this->last_error_message = esc_html__( 'Integration not found', 'forminator' );
 
 			return false;
 		}
 
 		if ( $this->addon_is_active( $slug ) ) {
-			$this->last_error_message = esc_html__( 'Addon already activated before', 'forminator' );
+			$this->last_error_message = esc_html__( 'Integration already activated before', 'forminator' );
 
 			return false;
 		}
 
 		if ( ! $addon->is_activable() ) {
-			$this->last_error_message = esc_html__( 'Addon is not activable', 'forminator' );
+			$this->last_error_message = esc_html__( 'Integration is not activable', 'forminator' );
 
 			return false;
 		}
@@ -561,7 +563,7 @@ class Forminator_Integration_Loader {
 		$this->add_activated_addons( $slug );
 
 		/**
-		 * Fires when an Addon activated
+		 * Fires when an Integration activated
 		 *
 		 * @since 1.1
 		 *
@@ -607,7 +609,7 @@ class Forminator_Integration_Loader {
 		 *
 		 * @since 1.1
 		 *
-		 * @param array $default_addon_error_messages Default addon error messages that created by loader and used if Addon not specify any.
+		 * @param array $default_addon_error_messages Default addon error messages that created by loader and used if Integration not specify any.
 		 */
 		$default_addon_error_messages = apply_filters( 'forminator_addon_loader_default_messages', $default_addon_error_messages );
 

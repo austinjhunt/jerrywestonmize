@@ -156,7 +156,7 @@ class Forminator_Mailerlite_Wp_Api {
 			$response = $wp_response;
 		}
 		/**
-		 * Filter mailerlite api response returned to addon
+		 * Filter mailerlite api response returned to integration
 		 *
 		 * @param mixed          $response
 		 * @param string         $body        original content of http response's body.

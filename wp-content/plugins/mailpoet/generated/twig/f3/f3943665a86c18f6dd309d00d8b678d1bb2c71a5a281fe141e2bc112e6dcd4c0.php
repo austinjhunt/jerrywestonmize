@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Environment;
 use MailPoetVendor\Twig\Error\LoaderError;
 use MailPoetVendor\Twig\Error\RuntimeError;
+use MailPoetVendor\Twig\Extension\CoreExtension;
 use MailPoetVendor\Twig\Extension\SandboxExtension;
 use MailPoetVendor\Twig\Markup;
 use MailPoetVendor\Twig\Sandbox\SecurityError;
@@ -39,31 +40,41 @@ class __TwigTemplate_9faa4e87f1ef54ddc698a901ff5f80ef1be75b3ed754540e3a33f2e606c
         // line 1
         if ($this->extensions['MailPoet\Twig\Functions']->libs3rdPartyEnabled()) {
             // line 2
-            echo "  ";
-            $this->loadTemplate("deactivationPoll/embedded-poll.html", "deactivationPoll/index.html", 2)->display($context);
+            yield "  ";
+            yield from             $this->loadTemplate("deactivationPoll/embedded-poll.html", "deactivationPoll/index.html", 2)->unwrap()->yield($context);
         } else {
             // line 4
-            echo "  ";
-            $this->loadTemplate("deactivationPoll/link-poll.html", "deactivationPoll/index.html", 4)->display($context);
+            yield "  ";
+            yield from             $this->loadTemplate("deactivationPoll/link-poll.html", "deactivationPoll/index.html", 4)->unwrap()->yield($context);
         }
         // line 6
-        echo "
+        yield "
 ";
+        return; yield '';
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getTemplateName()
     {
         return "deactivationPoll/index.html";
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function isTraitable()
     {
         return false;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugInfo()
     {
-        return array (  47 => 6,  43 => 4,  39 => 2,  37 => 1,);
+        return array (  48 => 6,  44 => 4,  40 => 2,  38 => 1,);
     }
 
     public function getSourceContext()

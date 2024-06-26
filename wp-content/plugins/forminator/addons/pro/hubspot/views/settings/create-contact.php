@@ -157,7 +157,7 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 					<tr class="custom-field" id="custom-field">
 						<td>
 							<div class="sui-form-field">
-								<select name=custom_property[]" class="sui-select sui-select-sm">
+								<select name=custom_property[]" data-search="true" class="sui-select sui-select-sm">
 									<option value=""><?php esc_html_e( 'None', 'forminator' ); ?></option>
 									<?php if ( ! empty( $vars['properties'] ) ) {
 										foreach ( $vars['properties'] as $p => $prop ) { ?>
@@ -171,7 +171,7 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 							<div class="fui-select-with-delete">
 
 								<div class="sui-form-field">
-									<select name="custom_field[]" class="sui-select sui-select-sm">
+									<select name="custom_field[]" data-search="true" class="sui-select sui-select-sm">
 										<option value=""><?php esc_html_e( 'None', 'forminator' ); ?></option>
 										<?php
 										if ( ! empty( $forminator_fields ) ) :

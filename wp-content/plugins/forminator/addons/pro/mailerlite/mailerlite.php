@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Addon Name: MailerLite
+ * Integration Name: MailerLite
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: Integrate Forminator Custom Forms with MailerLite to get notified in real time.

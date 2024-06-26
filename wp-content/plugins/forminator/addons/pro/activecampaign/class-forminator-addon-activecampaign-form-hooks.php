@@ -3,7 +3,7 @@
 /**
  * Class Forminator_Activecampaign_Form_Hooks
  *
- * @since 1.0 Activecampaign Addon
+ * @since 1.0 Activecampaign Integration
  *
  */
 class Forminator_Activecampaign_Form_Hooks extends Forminator_Integration_Form_Hooks {
@@ -36,7 +36,7 @@ class Forminator_Activecampaign_Form_Hooks extends Forminator_Integration_Form_H
 	/**
 	 * Get status on contact sync to ActiveCampaign
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 * @since 1.7 Add $form_entry_fields
 	 *
 	 * @param       $connection_id
@@ -164,7 +164,7 @@ class Forminator_Activecampaign_Form_Hooks extends Forminator_Integration_Form_H
 			 * @param string                                        $connection_id          ID of current connection.
 			 * @param array                                         $submitted_data
 			 * @param array                                         $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
-			 * @param Forminator_Activecampaign_Form_Settings $form_settings_instance ActiveCampaign Addon Form Settings instance.
+			 * @param Forminator_Activecampaign_Form_Settings $form_settings_instance ActiveCampaign Integration Form Settings instance.
 			 */
 			$args = apply_filters(
 				'forminator_addon_activecampaign_contact_sync_args',
@@ -206,7 +206,7 @@ class Forminator_Activecampaign_Form_Hooks extends Forminator_Integration_Form_H
 	/**
 	 * It will delete contact on ActiveCampaign list
 	 *
-	 * @since 1.0 ActiveCampaign Addon
+	 * @since 1.0 ActiveCampaign Integration
 	 *
 	 * @param Forminator_Form_Entry_Model $entry_model
 	 * @param  array                      $addon_meta_data
@@ -220,7 +220,7 @@ class Forminator_Activecampaign_Form_Hooks extends Forminator_Integration_Form_H
 
 		/**
 		 *
-		 * Filter ActiveCampaign addon metadata that previously saved on db to be processed
+		 * Filter ActiveCampaign integration metadata that previously saved on db to be processed
 		 *
 		 * @since 1.1
 		 *
@@ -244,7 +244,7 @@ class Forminator_Activecampaign_Form_Hooks extends Forminator_Integration_Form_H
 		 *
 		 * @param int                                           $form_id                current Form ID.
 		 * @param Forminator_Form_Entry_Model                   $entry_model            Forminator Entry Model.
-		 * @param array                                         $addon_meta_data        addon meta data.
+		 * @param array                                         $addon_meta_data        integration meta data.
 		 * @param Forminator_Activecampaign_Form_Settings $form_settings_instance Activecampaign Form Settings instance.
 		 */
 		do_action(
@@ -299,7 +299,7 @@ class Forminator_Activecampaign_Form_Hooks extends Forminator_Integration_Form_H
 			 *
 			 * @param array                                         $subscriber_ids_to_delete
 			 * @param int                                           $form_id                current Form ID.
-			 * @param array                                         $addon_meta_data        addon meta data.
+			 * @param array                                         $addon_meta_data        integration meta data.
 			 * @param Forminator_Activecampaign_Form_Settings $form_settings_instance Activecampaign Form Settings instance.
 			 *
 			 */
@@ -325,11 +325,11 @@ class Forminator_Activecampaign_Form_Hooks extends Forminator_Integration_Form_H
 			return true;
 
 		} catch ( Forminator_Integration_Exception $e ) {
-			// handle all internal addon exceptions with `Forminator_Integration_Exception`.
+			// handle all internal integration exceptions with `Forminator_Integration_Exception`.
 
 			// use wp_error, for future usage it can be returned to page entries.
 			$wp_error = new WP_Error( 'forminator_addon_activecampaign_delete_contact', $e->getMessage() );
-			// handle this in addon by self, since page entries cant handle error messages on delete yet.
+			// handle this in integration by self, since page entries cant handle error messages on delete yet.
 			wp_die(
 				esc_html( $wp_error->get_error_message() ),
 				esc_html( $this->addon->get_title() ),

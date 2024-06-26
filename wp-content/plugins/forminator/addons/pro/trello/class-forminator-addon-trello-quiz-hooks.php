@@ -91,7 +91,7 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 				 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 				 * @param array                                 $current_entry_fields   default entry fields of quiz.
 				 * @param array                                 $quiz_settings          Displayed Quiz settings.
-				 * @param Forminator_Trello_Quiz_Settings $quiz_settings_instance Trello Addon Quiz Settings instance.
+				 * @param Forminator_Trello_Quiz_Settings $quiz_settings_instance Trello Integration Quiz Settings instance.
 				 */
 				$card_name    = apply_filters(
 					'forminator_addon_trello_quiz_card_name',
@@ -132,7 +132,7 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 				 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 				 * @param array                                 $current_entry_fields   default entry fields of quiz.
 				 * @param array                                 $quiz_settings          Displayed Quiz settings.
-				 * @param Forminator_Trello_Quiz_Settings $quiz_settings_instance Trello Addon Quiz Settings instance.
+				 * @param Forminator_Trello_Quiz_Settings $quiz_settings_instance Trello Integration Quiz Settings instance.
 				 */
 				$card_description = apply_filters(
 					'forminator_addon_trello_quiz_card_description',
@@ -181,7 +181,7 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 			 * @param array                                 $submitted_data
 			 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 			 * @param array                                 $quiz_settings          Displayed Quiz settings.
-			 * @param Forminator_Trello_Quiz_Settings $quiz_settings_instance Trello Addon Quiz Settings instance.
+			 * @param Forminator_Trello_Quiz_Settings $quiz_settings_instance Trello Integration Quiz Settings instance.
 			 */
 			$args = apply_filters(
 				'forminator_addon_trello_quiz_create_card_args',

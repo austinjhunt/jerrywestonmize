@@ -11,15 +11,22 @@ use MailPoetVendor\Sabberworm\CSS\Property\Import as CssImport;
 use MailPoetVendor\Sabberworm\CSS\Renderable as CssRenderable;
 use MailPoetVendor\Sabberworm\CSS\RuleSet\DeclarationBlock as CssDeclarationBlock;
 use MailPoetVendor\Sabberworm\CSS\RuleSet\RuleSet as CssRuleSet;
+use MailPoetVendor\Sabberworm\CSS\Settings as ParserSettings;
 class CssDocument
 {
  private $sabberwormCssDocument;
  private $isImportRuleAllowed = \true;
- public function __construct(string $css)
+ public function __construct(string $css, bool $debug)
  {
- $cssParser = new CssParser($css);
- $sabberwormCssDocument = $cssParser->parse();
- $this->sabberwormCssDocument = $sabberwormCssDocument;
+ // CSS Parser currently throws exception with nested at-rules (like `@media`) in strict parsing mode
+ $parserSettings = ParserSettings::create()->withLenientParsing(!$debug || $this->hasNestedAtRule($css));
+ // CSS Parser currently throws exception with non-empty whitespace-only CSS in strict parsing mode, so `trim()`
+ // @see https://github.com/sabberworm/PHP-CSS-Parser/issues/349
+ $this->sabberwormCssDocument = (new CssParser(\trim($css), $parserSettings))->parse();
+ }
+ private function hasNestedAtRule(string $css) : bool
+ {
+ return \preg_match('/@(?:media|supports|(?:-webkit-|-moz-|-ms-|-o-)?+(keyframes|document))\\b/', $css) === 1;
  }
  public function getStyleRulesData(array $allowedMediaTypes) : array
  {
@@ -50,8 +57,7 @@ class CssDocument
  }
  $atRulesDocument = new SabberwormCssDocument();
  $atRulesDocument->setContents($atRules);
- $renderedRules = $atRulesDocument->render();
- return $renderedRules;
+ return $atRulesDocument->render();
  }
  private function getFilteredAtIdentifierAndRule(CssAtRuleBlockList $rule, array $allowedMediaTypes) : ?string
  {

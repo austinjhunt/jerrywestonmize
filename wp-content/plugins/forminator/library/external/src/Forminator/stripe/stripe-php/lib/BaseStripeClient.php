@@ -2,7 +2,7 @@
 
 namespace Forminator\Stripe;
 
-class BaseStripeClient implements StripeClientInterface
+class BaseStripeClient implements StripeClientInterface, StripeStreamingClientInterface
 {
     /** @var string default base URL for Stripe's API */
     const DEFAULT_API_BASE = 'https://api.stripe.com';
@@ -10,6 +10,8 @@ class BaseStripeClient implements StripeClientInterface
     const DEFAULT_CONNECT_BASE = 'https://connect.stripe.com';
     /** @var string default base URL for Stripe's Files API */
     const DEFAULT_FILES_BASE = 'https://files.stripe.com';
+    /** @var array<string, null|string> */
+    const DEFAULT_CONFIG = ['api_key' => null, 'client_id' => null, 'stripe_account' => null, 'stripe_version' => \Forminator\Stripe\Util\ApiVersion::CURRENT, 'api_base' => self::DEFAULT_API_BASE, 'connect_base' => self::DEFAULT_CONNECT_BASE, 'files_base' => self::DEFAULT_FILES_BASE];
     /** @var array<string, mixed> */
     private $config;
     /** @var \Stripe\Util\RequestOptions */
@@ -49,7 +51,7 @@ class BaseStripeClient implements StripeClientInterface
         } elseif (!\is_array($config)) {
             throw new \Forminator\Stripe\Exception\InvalidArgumentException('$config must be a string or an array');
         }
-        $config = \array_merge($this->getDefaultConfig(), $config);
+        $config = \array_merge(self::DEFAULT_CONFIG, $config);
         $this->validateConfig($config);
         $this->config = $config;
         $this->defaultOpts = \Forminator\Stripe\Util\RequestOptions::parse(['stripe_account' => $config['stripe_account'], 'stripe_version' => $config['stripe_version']]);
@@ -102,7 +104,7 @@ class BaseStripeClient implements StripeClientInterface
     /**
      * Sends a request to Stripe's API.
      *
-     * @param string $method the HTTP method
+     * @param 'delete'|'get'|'post' $method the HTTP method
      * @param string $path the path of the request
      * @param array $params the parameters of the request
      * @param array|\Stripe\Util\RequestOptions $opts the special modifiers of the request
@@ -114,16 +116,34 @@ class BaseStripeClient implements StripeClientInterface
         $opts = $this->defaultOpts->merge($opts, \true);
         $baseUrl = $opts->apiBase ?: $this->getApiBase();
         $requestor = new \Forminator\Stripe\ApiRequestor($this->apiKeyForRequest($opts), $baseUrl);
-        list($response, $opts->apiKey) = $requestor->request($method, $path, $params, $opts->headers);
+        list($response, $opts->apiKey) = $requestor->request($method, $path, $params, $opts->headers, ['stripe_client']);
         $opts->discardNonPersistentHeaders();
         $obj = \Forminator\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
         return $obj;
     }
     /**
+     * Sends a request to Stripe's API, passing chunks of the streamed response
+     * into a user-provided $readBodyChunkCallable callback.
+     *
+     * @param 'delete'|'get'|'post' $method the HTTP method
+     * @param string $path the path of the request
+     * @param callable $readBodyChunkCallable a function that will be called
+     * @param array $params the parameters of the request
+     * @param array|\Stripe\Util\RequestOptions $opts the special modifiers of the request
+     * with chunks of bytes from the body if the request is successful
+     */
+    public function requestStream($method, $path, $readBodyChunkCallable, $params, $opts)
+    {
+        $opts = $this->defaultOpts->merge($opts, \true);
+        $baseUrl = $opts->apiBase ?: $this->getApiBase();
+        $requestor = new \Forminator\Stripe\ApiRequestor($this->apiKeyForRequest($opts), $baseUrl);
+        list($response, $opts->apiKey) = $requestor->requestStream($method, $path, $readBodyChunkCallable, $params, $opts->headers, ['stripe_client']);
+    }
+    /**
      * Sends a request to Stripe's API.
      *
-     * @param string $method the HTTP method
+     * @param 'delete'|'get'|'post' $method the HTTP method
      * @param string $path the path of the request
      * @param array $params the parameters of the request
      * @param array|\Stripe\Util\RequestOptions $opts the special modifiers of the request
@@ -136,6 +156,27 @@ class BaseStripeClient implements StripeClientInterface
         if (!$obj instanceof \Forminator\Stripe\Collection) {
             $received_class = \get_class($obj);
             $msg = "Expected to receive `Stripe\\Collection` object from Stripe API. Instead received `{$received_class}`.";
+            throw new \Forminator\Stripe\Exception\UnexpectedValueException($msg);
+        }
+        $obj->setFilters($params);
+        return $obj;
+    }
+    /**
+     * Sends a request to Stripe's API.
+     *
+     * @param 'delete'|'get'|'post' $method the HTTP method
+     * @param string $path the path of the request
+     * @param array $params the parameters of the request
+     * @param array|\Stripe\Util\RequestOptions $opts the special modifiers of the request
+     *
+     * @return \Stripe\SearchResult of ApiResources
+     */
+    public function requestSearchResult($method, $path, $params, $opts)
+    {
+        $obj = $this->request($method, $path, $params, $opts);
+        if (!$obj instanceof \Forminator\Stripe\SearchResult) {
+            $received_class = \get_class($obj);
+            $msg = "Expected to receive `Stripe\\SearchResult` object from Stripe API. Instead received `{$received_class}`.";
             throw new \Forminator\Stripe\Exception\UnexpectedValueException($msg);
         }
         $obj->setFilters($params);
@@ -156,15 +197,6 @@ class BaseStripeClient implements StripeClientInterface
             throw new \Forminator\Stripe\Exception\AuthenticationException($msg);
         }
         return $apiKey;
-    }
-    /**
-     * TODO: replace this with a private constant when we drop support for PHP < 5.
-     *
-     * @return array<string, mixed>
-     */
-    private function getDefaultConfig()
-    {
-        return ['api_key' => null, 'client_id' => null, 'stripe_account' => null, 'stripe_version' => null, 'api_base' => self::DEFAULT_API_BASE, 'connect_base' => self::DEFAULT_CONNECT_BASE, 'files_base' => self::DEFAULT_FILES_BASE];
     }
     /**
      * @param array<string, mixed> $config
@@ -210,7 +242,7 @@ class BaseStripeClient implements StripeClientInterface
             throw new \Forminator\Stripe\Exception\InvalidArgumentException('files_base must be a string');
         }
         // check absence of extra keys
-        $extraConfigKeys = \array_diff(\array_keys($config), \array_keys($this->getDefaultConfig()));
+        $extraConfigKeys = \array_diff(\array_keys($config), \array_keys(self::DEFAULT_CONFIG));
         if (!empty($extraConfigKeys)) {
             // Wrap in single quote to more easily catch trailing spaces errors
             $invalidKeys = "'" . \implode("', '", $extraConfigKeys) . "'";

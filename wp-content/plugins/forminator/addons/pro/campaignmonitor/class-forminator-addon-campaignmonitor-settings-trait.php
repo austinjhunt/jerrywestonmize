@@ -3,7 +3,7 @@
  * Trait for common methods for Campaignmonitor settings classes
  *
  * @since 1.30
- * @package Campaignmonitor Addon
+ * @package Campaignmonitor Integration
  */
 
 /**
@@ -14,7 +14,7 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 	/**
 	 * Campaignmonitor Module Settings wizard
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 * @return array
 	 */
 	public function module_settings_wizards() {
@@ -42,7 +42,7 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 	/**
 	 * Setup Connection Name
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -113,7 +113,7 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 	/**
 	 * Setup List
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -218,7 +218,7 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 	/**
 	 * Setup fields map
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -356,7 +356,7 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 	/**
 	 * Check if fields mapped
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */
@@ -392,7 +392,7 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 	 * - RestartSubscriptionBasedAutoresponders
 	 * - ConsentToTrack
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -498,7 +498,7 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 	/**
 	 * Check if setup options completed
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */

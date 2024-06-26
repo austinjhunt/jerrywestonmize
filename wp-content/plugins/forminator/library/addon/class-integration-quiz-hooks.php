@@ -41,7 +41,7 @@ abstract class Forminator_Integration_Quiz_Hooks extends Forminator_Integration_
 	/**
 	 * Forminator_Integration_Quiz_Hooks constructor.
 	 *
-	 * @param Forminator_Integration $addon Addon.
+	 * @param Forminator_Integration $addon Integration.
 	 * @param int                       $module_id Module ID.
 	 *
 	 * @since 1.6.2
@@ -83,7 +83,7 @@ abstract class Forminator_Integration_Quiz_Hooks extends Forminator_Integration_
 		 *
 		 * @param int                                          $quiz_id                current Quiz ID.
 		 * @param Forminator_Form_Entry_Model                  $entry_model            Forminator Entry Model.
-		 * @param Forminator_Integration_Quiz_Settings|null $quiz_settings_instance of Addon Quiz Settings.
+		 * @param Forminator_Integration_Quiz_Settings|null $quiz_settings_instance of Integration Quiz Settings.
 		 */
 		do_action(
 			'forminator_addon_quiz_' . $addon_slug . '_after_entry_saved',
@@ -117,7 +117,7 @@ abstract class Forminator_Integration_Quiz_Hooks extends Forminator_Integration_
 		 *
 		 * @param array                                        $export_columns         column to be exported.
 		 * @param int                                          $quiz_id                current quiz ID.
-		 * @param Forminator_Integration_Quiz_Settings|null $quiz_settings_instance of Addon quiz Settings.
+		 * @param Forminator_Integration_Quiz_Settings|null $quiz_settings_instance of Integration quiz Settings.
 		 */
 		$error_message = apply_filters(
 			'forminator_addon_' . $addon_slug . '_submit_quiz_error_message',

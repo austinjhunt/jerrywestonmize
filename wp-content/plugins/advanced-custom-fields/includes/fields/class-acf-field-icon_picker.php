@@ -104,6 +104,10 @@ if ( ! class_exists( 'acf_field_icon_picker' ) ) :
 				)
 			);
 
+			if ( ! is_array( $field['tabs'] ) ) {
+				$field['tabs'] = array();
+			}
+
 			$tabs  = $this->get_tabs();
 			$shown = array_filter(
 				$tabs,
@@ -114,15 +118,17 @@ if ( ! class_exists( 'acf_field_icon_picker' ) ) :
 			);
 
 			foreach ( $shown as $name => $label ) {
-				acf_render_field_wrap(
-					array(
-						'type'           => 'tab',
-						'label'          => $label,
-						'key'            => 'acf_icon_picker_tabs',
-						'selected'       => $name === $field['value']['type'],
-						'unique_tab_key' => $name,
-					)
-				);
+				if ( count( $shown ) > 1 ) {
+					acf_render_field_wrap(
+						array(
+							'type'           => 'tab',
+							'label'          => $label,
+							'key'            => 'acf_icon_picker_tabs',
+							'selected'       => $name === $field['value']['type'],
+							'unique_tab_key' => $name,
+						)
+					);
+				}
 
 				$wrapper_class = str_replace( '_', '-', $name );
 				echo '<div class="acf-icon-picker-tabs acf-icon-picker-' . esc_attr( $wrapper_class ) . '-tabs">';
@@ -159,10 +165,17 @@ if ( ! class_exists( 'acf_field_icon_picker' ) ) :
 						?>
 						<div class="acf-icon-picker-tab" data-category="<?php echo esc_attr( $name ); ?>">
 							<div class="acf-icon-picker-media-library">
+								<?php
+								$button_style = 'display: none;';
+
+								if ( in_array( $field['value']['type'], array( 'media_library', 'dashicons' ), true ) && ! empty( $field['value']['value'] ) ) {
+									$button_style = '';
+								}
+								?>
 								<button
 									aria-label="<?php esc_attr_e( 'Click to change the icon in the Media Library', 'acf' ); ?>"
 									class="acf-icon-picker-media-library-preview"
-									style="<?php echo esc_attr( 'media_library' === $field['value']['type'] || 'dashicons' === $field['value']['type'] && ! empty( $field['value']['value'] ) ? '' : 'display: none;' ); ?>"
+									style="<?php echo esc_attr( $button_style ); ?>"
 								>
 									<div class="acf-icon-picker-media-library-preview-img" style="<?php echo esc_attr( 'media_library' !== $field['value']['type'] ? 'display: none;' : '' ); ?>">
 										<?php
@@ -208,7 +221,6 @@ if ( ! class_exists( 'acf_field_icon_picker' ) ) :
 
 			echo '</div>';
 		}
-
 
 		/**
 		 * Renders field settings for the icon picker field.

@@ -5,47 +5,47 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-mailchimp-wp-api
 
 /**
  * Class Forminator_Mailchimp
- * The class that defines mailchimp addon
+ * The class that defines mailchimp integration
  *
- * @since 1.0 Mailchimp Addon
+ * @since 1.0 Mailchimp Integration
  */
 class Forminator_Mailchimp extends Forminator_Integration {
 
 	/**
-	 * Mailchimp Addon Instance
+	 * Mailchimp Integration Instance
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @var self|null
 	 */
 	protected static $instance = null;
 
 	/**
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	protected $_slug = 'mailchimp';
 
 	/**
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	protected $_version = FORMINATOR_ADDON_MAILCHIMP_VERSION;
 
 	/**
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	protected $_min_forminator_version = '1.1';
 
 	/**
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	protected $_short_title = 'Mailchimp';
 
 	/**
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	protected $_title = 'Mailchimp';
@@ -54,7 +54,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 * Hold account information that currently connected
 	 * Will be saved to @see Forminator_Mailchimp::save_settings_values()
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @var array
 	 */
 	private $_connected_account = array();
@@ -66,7 +66,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 * - Set dynamic translatable text(s) that will be displayed to end-user
 	 * - Set dynamic icons and images
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 */
 	public function __construct() {
 		// late init to allow translation.
@@ -84,7 +84,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 * to include @see Forminator_Mailchimp::$_connected_account
 	 * for future reference
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param array $values
 	 *
@@ -103,7 +103,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	/**
 	 * Check if user already completed settings
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @return bool
 	 */
 	public function is_authorized() {
@@ -118,7 +118,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 *
 	 * @see   _update_settings_error_message
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param $api_key
 	 *
@@ -158,7 +158,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	/**
 	 * Get API Instance
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param null $api_key
 	 *
@@ -176,7 +176,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	/**
 	 * Get currently saved api key
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @return string|null
 	 */
 	private function get_api_key() {
@@ -192,7 +192,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	/**
 	 * Build settings help on settings
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @return string
 	 */
 	public function settings_help() {
@@ -298,11 +298,11 @@ class Forminator_Mailchimp extends Forminator_Integration {
 
 	/**
 	 * Flag to show full if GDPR feature enabled
-	 * GDPR is experimental feature on 1.0 version of this mailchimp addon
+	 * GDPR is experimental feature on 1.0 version of this mailchimp integration
 	 * And disabled by default to enable it set @see FORMINATOR_ADDON_MAILCHIMP_ENABLE_GDPR to true in wp-config.php
 	 * Please bear in mind that currently its experimental, means not properly and thoroughly tested
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @return bool
 	 */
 	public static function is_enable_gdpr() {
@@ -316,7 +316,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	/**
 	 * Settings wizard
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 * @return array
 	 */
 	public function settings_wizards() {
@@ -331,7 +331,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	/**
 	 * Wizard of configure_api_key
 	 *
-	 * @since 1.0 Mailchimp Addon
+	 * @since 1.0 Mailchimp Integration
 	 *
 	 * @param     $submitted_data
 	 * @param int $form_id

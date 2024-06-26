@@ -170,8 +170,8 @@ if ( $clear_data ) {
 }
 
 include_once plugin_dir_path( __FILE__ ) . 'constants.php';
-if ( file_exists( plugin_dir_path( __FILE__ ) . 'library/external/src/Forminator/mixpanel/mixpanel-php/lib/Mixpanel.php' ) ) {
-	include_once plugin_dir_path( __FILE__ ) . 'library/external/src/Forminator/mixpanel/mixpanel-php/lib/Mixpanel.php';
+if ( file_exists( plugin_dir_path( __FILE__ ) . 'library/lib/analytics/autoload.php' ) ) {
+	include_once plugin_dir_path( __FILE__ ) . 'library/lib/analytics/autoload.php';
 	include_once plugin_dir_path( __FILE__ ) . 'library/mixpanel/class-mixpanel.php';
 	Forminator_Mixpanel::get_instance();
 

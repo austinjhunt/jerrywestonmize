@@ -168,8 +168,7 @@ abstract class Ressio_PageCache
             // Randomize TTL (reduce up to 20%)
             'ttlfactor' => 1.0 - 0.2 * mt_rand() / mt_getrandmax(),
             'headers' => $this->headers,
-            'content' => $content
-        ));
+        )) . "\0" . $content;
 
         if (!$this->writeData($data)) {
             return null;
@@ -377,8 +376,15 @@ abstract class Ressio_PageCache
         }
 
         $cache_data = $this->readFileThreadSafe($this->cache_file);
-
-        $cache_data = json_decode($cache_data, true);
+        $cache_data = explode("\0", $cache_data, 2);
+        if (isset($cache_data[1])) {
+            $json = $cache_data[0];
+            $content = $cache_data[1];
+            $cache_data = json_decode($json, true);
+            $cache_data['content'] = $content;
+        } else {
+            $cache_data = json_decode($cache_data[0], true);
+        }
         if (!isset($cache_data['timestamp'], $cache_data['tags'], $cache_data['etag'], $cache_data['ttlfactor'], $cache_data['headers'], $cache_data['content'])) {
             return false;
         }

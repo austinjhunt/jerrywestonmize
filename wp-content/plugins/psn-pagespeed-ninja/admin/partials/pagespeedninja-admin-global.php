@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 defined('ABSPATH') || die();
 
@@ -51,7 +51,7 @@ if (get_transient('pagespeedninja_show_tour')) {
         </div>
 
         <div class="main column-wide tooltip-container">
-            <form id="pagespeedninja_form" action="<?php echo esc_html(network_admin_url('admin.php?page=pagespeedninja_global')); ?>" method="post">
+            <form id="pagespeedninja_form" action="<?php echo esc_attr(network_admin_url('admin.php?page=pagespeedninja_global')); ?>" method="post">
                 <input type="hidden" name="action" value="update" />
                 <?php wp_nonce_field('pagespeedninja_config'); ?>
 
@@ -92,7 +92,7 @@ if (get_transient('pagespeedninja_show_tour')) {
                 <?php endforeach; ?>
             </form>
         </div>
-        <div class="footer"><?php printf(__('Need help? Ask a question in the PageSpeed Ninja <a %s>Support Forum</a>.'), 'href="https://wordpress.org/support/plugin/psn-pagespeed-ninja/" target="_blank"'); ?></div>
+        <div class="footer"><?php printf(__('Need help? Ask a question in the PageSpeed Ninja <a %s>Support Forum</a>.', 'psn-pagespeed-ninja'), 'href="https://wordpress.org/support/plugin/psn-pagespeed-ninja/" target="_blank"'); ?></div>
     </div>
 
 </div>

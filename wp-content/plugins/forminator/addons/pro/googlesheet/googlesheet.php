@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Addon Name: Google Sheets
+ * Integration Name: Google Sheets
  * Version: 1.1
  * Plugin URI:  https://wpmudev.com/
  * Description: Integrate Forminator Custom Forms and Polls with Google Sheets to get notified in real time.

@@ -95,7 +95,7 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 			 * @param array                                $connection_settings    current connection setting, contains options of like `name`, `target_id` etc.
 			 * @param array                                $quiz_entry_fields      default entry fields of form.
 			 * @param array                                $quiz_settings          Displayed Quiz settings.
-			 * @param Forminator_Slack_Quiz_Settings $quiz_settings_instance Slack Addon Quiz Settings instance.
+			 * @param Forminator_Slack_Quiz_Settings $quiz_settings_instance Slack Integration Quiz Settings instance.
 			 */
 			$attachments = apply_filters(
 				'forminator_addon_slack_quiz_message_attachments',
@@ -126,7 +126,7 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 			 * @param array                                $connection_settings    current connection setting, contains options of like `name`, `target_id` etc.
 			 * @param array                                $quiz_entry_fields      default entry fields of form.
 			 * @param array                                $quiz_settings          Displayed Quiz settings.
-			 * @param Forminator_Slack_Quiz_Settings $quiz_settings_instance Slack Addon Quiz Settings instance.
+			 * @param Forminator_Slack_Quiz_Settings $quiz_settings_instance Slack Integration Quiz Settings instance.
 			 */
 			$args = apply_filters(
 				'forminator_addon_slack_quiz_send_message_args',
@@ -304,7 +304,7 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	/**
 	 * Get All Form Fields as attachments
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param $submitted_data
 	 * @param $form_entry_fields

@@ -4,5 +4,7 @@
   "style": [],
   "font": [],
   "script": [],
-  "image": []
+  "module": [],
+  "image": [],
+  "remove": true
 }

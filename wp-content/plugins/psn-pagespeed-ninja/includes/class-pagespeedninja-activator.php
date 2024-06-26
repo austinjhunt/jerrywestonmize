@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 
 abstract class PagespeedNinja_Activator
@@ -15,6 +15,7 @@ abstract class PagespeedNinja_Activator
      * @param string $plugin_slug
      * @param string $plugin_name
      * @param string $version
+     * @return void
      * @throws ERessio_Exception
      * @throws ERessio_UnknownDiKey
      */
@@ -31,7 +32,7 @@ abstract class PagespeedNinja_Activator
         }
 
         add_option('pagespeedninja_config', array());
-        /** @var array $config */
+        /** @var array<string,string> $config */
         $config = get_option('pagespeedninja_config');
         if (!is_array($config)) {
             $config = array();
@@ -67,7 +68,7 @@ abstract class PagespeedNinja_Activator
                 $dirs = array('s', 'wp-content/psn', 'wp-content/uploads/psn');
             }
             foreach ($dirs as $dir) {
-                $path = ABSPATH  . $dir;
+                $path = ABSPATH . $dir;
                 $dir_exists = is_dir($path);
                 if (file_exists($path) && !$dir_exists) {
                     continue;
@@ -178,6 +179,7 @@ abstract class PagespeedNinja_Activator
      * @param string $plugin_slug
      * @param string $plugin_name
      * @param string $version
+     * @return void
      */
     public static function deactivate_site($plugin_slug, $plugin_name, $version)
     {
@@ -197,13 +199,14 @@ abstract class PagespeedNinja_Activator
      * @param string $plugin_slug
      * @param string $plugin_name
      * @param string $version
+     * @return void
      * @throws ERessio_Exception
      * @throws ERessio_UnknownDiKey
      */
     public static function activate_network($plugin_slug, $plugin_name, $version)
     {
         add_site_option('pagespeedninja_config', array());
-        /** @var array $config */
+        /** @var array<string,string> $config */
         $config = get_site_option('pagespeedninja_config');
         if (!is_array($config)) {
             $config = array();
@@ -266,6 +269,7 @@ abstract class PagespeedNinja_Activator
      * @param string $plugin_slug
      * @param string $plugin_name
      * @param string $version
+     * @return void
      */
     public static function deactivate_network($plugin_slug, $plugin_name, $version)
     {
@@ -280,6 +284,7 @@ abstract class PagespeedNinja_Activator
     /**
      * @param int $status (1-activate, 2-deactivate)
      * @param string $version
+     * @return void
      */
     public static function ping($status, $version)
     {

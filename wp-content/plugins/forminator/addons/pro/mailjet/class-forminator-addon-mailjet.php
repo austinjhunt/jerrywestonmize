@@ -5,12 +5,12 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-mailjet-wp-api.p
 
 /**
  * Class Forminator_Mailjet
- * The class that defines mailjet addon
+ * The class that defines mailjet integration
  */
 class Forminator_Mailjet extends Forminator_Integration {
 
 	/**
-	 * Mailjet Addon Instance
+	 * Mailjet Integration Instance
 	 *
 	 * @var self|null
 	 */

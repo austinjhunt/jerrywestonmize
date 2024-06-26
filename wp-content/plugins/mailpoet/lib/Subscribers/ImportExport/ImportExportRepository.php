@@ -16,8 +16,8 @@ use MailPoet\Segments\DynamicSegments\FilterHandler;
 use MailPoet\Subscribers\SubscriberCustomFieldRepository;
 use MailPoet\Subscribers\SubscribersRepository;
 use MailPoetVendor\Doctrine\DBAL\Connection;
-use MailPoetVendor\Doctrine\DBAL\Driver\Statement;
 use MailPoetVendor\Doctrine\DBAL\Query\QueryBuilder;
+use MailPoetVendor\Doctrine\DBAL\Result;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 use MailPoetVendor\Doctrine\ORM\Mapping\ClassMetadata;
 
@@ -121,7 +121,8 @@ class ImportExportRepository {
       }, $columns);
 
       foreach ($item as $columnKey => $column) {
-        $parameters[$paramNames[$columnKey]] = $column;
+        // We need to remove the colon character from the query parameter name that is passed to the query builder
+        $parameters[substr($paramNames[$columnKey], 1)] = $column;
       }
       $rows[] = "(" . implode(', ', $paramNames) . ")";
     }
@@ -246,7 +247,7 @@ class ImportExportRepository {
     }
 
     $statement = $qb->execute();
-    return $statement instanceof Statement ? $statement->fetchAll() : [];
+    return $statement instanceof Result ? $statement->fetchAll() : [];
   }
 
   private function createSubscribersQueryBuilder(int $limit, int $offset): QueryBuilder {

@@ -133,12 +133,12 @@ class Forminator_Consent extends Forminator_Field {
 				$html .= sprintf( '<label for="%s" id="%s__label" class="forminator-checkbox forminator-consent" style="margin: 0;">', $id, $id );
 
 					$html .= sprintf(
-						'<input type="checkbox" name="%1$s" id="%2$s" value="%3$s" aria-labelledby="%4$s" aria-describedby="%5$s" data-required="%6$s" aria-required="%7$s" />',
+						'<input type="checkbox" name="%1$s" id="%2$s" value="%3$s" aria-labelledby="%4$s"%5$s data-required="%6$s" aria-required="%7$s" />',
 						$name,
 						$id,
 						esc_html__( 'checked', 'forminator' ),
 						$id . '-label',
-						$id . '__description',
+						( ! empty( $description ) ? ' aria-describedby="' . esc_attr( $id . '__description' ) . '"' : '' ),
 						$ariareq,
 						$ariareq
 					);

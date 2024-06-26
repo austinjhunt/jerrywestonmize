@@ -20,9 +20,8 @@ class Ressio_Plugin_AboveTheFoldCSS extends Ressio_Plugin
      */
     public function __construct($di, $params)
     {
-        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
-
-        parent::__construct($di, $params);
+        parent::__construct($di);
+        $this->loadConfig(__DIR__ . '/config.json', $params);
     }
 
     /**
@@ -42,10 +41,10 @@ class Ressio_Plugin_AboveTheFoldCSS extends Ressio_Plugin
         }
 
         if ($loadAboveTheFoldCSS) {
-            $this->di->dispatcher->addListener('HtmlIterateTagLINK', array($this, 'processHtmlIterateTagLINK'));
+            $this->di->dispatcher->addListener('HtmlIterateTagLINK', array($this, 'processHtmlIterateTagLINK'), IRessio_Dispatcher::ORDER_FIRST);
             $this->di->dispatcher->addListener('HtmlIterateTagSCRIPTBefore', array($this, 'processHtmlIterateTagSCRIPTBefore'));
             $this->di->dispatcher->addListener('HtmlIterateAfter', array($this, 'processHtmlIterateAfter'));
-            $this->di->dispatcher->addListener('CssCombinerNodeList', array($this, 'processCssCombinerNodeList'));
+            $this->di->dispatcher->addListener('CssCombinerNodeList', array($this, 'processCssCombinerNodeList'), IRessio_Dispatcher::ORDER_FIRST);
         }
     }
 
@@ -69,8 +68,7 @@ class Ressio_Plugin_AboveTheFoldCSS extends Ressio_Plugin
             $media = $node->hasAttribute('media') ? $node->getAttribute('media') : 'all';
             if ($media !== 'print') {
                 $optimizer->nodeInsertAfter($node, 'noscript', null, $optimizer->nodeToString($node));
-                $node->setAttribute('media', 'print');
-                $node->setAttribute('onload', "this.media='$media'");
+                $node->setAttribute('rel', 'ress-css');
             }
         }
     }
@@ -87,7 +85,7 @@ class Ressio_Plugin_AboveTheFoldCSS extends Ressio_Plugin
             return;
         }
 
-        if ($node->hasAttribute('type') && $node->getAttribute('type') !== 'text/javascript') {
+        if ($node->hasAttribute('type') && !$optimizer->isJavaScriptMime($node->getAttribute('type'))) {
             return;
         }
 
@@ -106,6 +104,9 @@ class Ressio_Plugin_AboveTheFoldCSS extends Ressio_Plugin
      */
     public function processHtmlIterateAfter($event, $optimizer)
     {
+        $scriptData = file_get_contents(__DIR__ . '/js/async_css_loader.min.js');
+        $optimizer->appendScriptDeclaration($scriptData, array('defer' => true));
+
         if ($this->relayout) {
             $scriptData = file_get_contents(__DIR__ . '/js/relayout.min.js');
             $optimizer->appendScriptDeclaration($scriptData, array('defer' => true));
@@ -113,7 +114,14 @@ class Ressio_Plugin_AboveTheFoldCSS extends Ressio_Plugin
 
         // Process CSS with image optimizer and FontDisplaySwap plugin
         $abovethefoldcss = $this->di->cssRelocator->run($this->params->abovethefoldcss);
-        $optimizer->prependHead(array('style', null, $abovethefoldcss));
+        $optimizer->prependHead(array('style', array('id' => 'psn-critical-css'), $abovethefoldcss));
+
+        /*
+        $optimizer->prependHead(array('script', array(
+            'defer' => false,
+            'src' => 'data:text/javascript,' . rawurlencode('document.body.appendChild(document.getElementById("psn-critical-css"));'),
+        ), ''));
+        */
     }
 
     /**
@@ -126,7 +134,7 @@ class Ressio_Plugin_AboveTheFoldCSS extends Ressio_Plugin
         $noscript = '';
         foreach ($wrapper->nodes as $node) {
             /** Ressio_NodeWrapper $node */
-            if ($node->tagName === 'link') {
+            if ($node->tagName === 'link' && $node->attributes['rel'] === 'stylesheet') {
                 $media = isset($node->attributes['media']) ? $node->attributes['media'] : 'all';
                 if ($media !== 'print') {
                     $noscript .= $node;

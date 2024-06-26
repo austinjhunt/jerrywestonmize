@@ -145,17 +145,6 @@ return array(
 
     'plugins' => array(
 /*
-        Ressio_Plugin_Rescale::class => array(
-            'bufferwidth' => 0,
-            'hiresimages' => true,
-            'hiresjpegquality' => 75,
-            'keeporig' => false,
-            'scaletype' => 'fit',
-            'setdimension' => true,
-            'templatewidth' => 960,
-        ),
-*/
-/*
         Ressio_Plugin_Lazyload::class => array(
             'image' => true,
             'iframe' => true,

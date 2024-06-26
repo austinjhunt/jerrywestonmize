@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 defined('ABSPATH') || die();
 
@@ -88,7 +88,7 @@ jQuery(document).ready(function ($) { setTimeout(function () {
 global $current_user;
 
 ?>
-<div class="pagespeedninja psn-licensekey-notice notice notice-alt notice-info<?php echo $isPSNpage ? '' : ' is-dismissible'; ?>">
+<div class="pagespeedninja psn-licensekey-notice notice notice-alt notice-large notice-info<?php echo $isPSNpage ? '' : ' is-dismissible'; ?>">
     <div id="psn-licensekey-notice-wrap">
         <div id="psn-licensekey-notice-text">
             <b><?php _e('Please activate your PageSpeed Ninja license key (free)', 'psn-pagespeed-ninja'); ?></b>

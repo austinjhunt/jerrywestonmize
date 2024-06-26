@@ -28,6 +28,7 @@ use MailPoet\Util\License\Features\CapabilitiesManager;
 use MailPoet\Util\License\Features\Subscribers as SubscribersFeature;
 use MailPoet\Util\License\License;
 use MailPoet\WooCommerce;
+use MailPoet\WP\DateTime;
 use MailPoet\WP\Functions as WPFunctions;
 use MailPoet\WP\Notice as WPNotice;
 use MailPoetVendor\Carbon\Carbon;
@@ -173,6 +174,7 @@ class PageRenderer {
       'track_wizard_loaded_via_woocommerce_marketing_dashboard' => (bool)$this->settings->get(WelcomeWizard::TRACK_LOADDED_VIA_WOOCOMMERCE_MARKETING_DASHBOARD_SETTING_NAME),
       'mail_function_enabled' => function_exists('mail') && is_callable('mail'),
       'admin_plugins_url' => WPFunctions::get()->adminUrl('plugins.php'),
+      'server_timezone_in_minutes' => (new DateTime())->getServerTimezoneInMinutes(),
 
       // Premium & plan upgrade info
       'current_wp_user_email' => $this->wp->wpGetCurrentUser()->user_email,
@@ -213,6 +215,7 @@ class PageRenderer {
       }, $this->tagRepository->findAll()),
       'display_docsbot_widget' => $this->displayDocsBotWidget(),
       'is_woocommerce_subscriptions_active' => $this->wooCommerceSubscriptionsHelper->isWooCommerceSubscriptionsActive(),
+      'cron_trigger_method' => $this->settings->get('cron_trigger.method'),
     ];
 
     if (!$defaults['premium_plugin_active']) {

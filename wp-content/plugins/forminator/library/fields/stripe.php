@@ -147,7 +147,7 @@ class Forminator_Stripe extends Forminator_Field {
 		$this->form_settings = $settings;
 
 		$id               = self::get_property( 'element_id', $field );
-		$description      = esc_html( self::get_property( 'description', $field, '' ) );
+		$description      = self::get_property( 'description', $field, '' );
 		$label            = esc_html( self::get_property( 'field_label', $field, '' ) );
 		$element_name     = $id;
 		$field_id         = $id . '-field';
@@ -247,8 +247,11 @@ class Forminator_Stripe extends Forminator_Field {
 			'data-icon-color-hover' => $this->get_form_setting( 'input-icon-hover', $settings, '#17A8E3' ),
 			'data-icon-color-focus' => $this->get_form_setting( 'input-icon-focus', $settings, '#17A8E3' ),
 			'data-icon-color-error' => $this->get_form_setting( 'label-validation-color', $settings, '#E04562' ),
-			'aria-describedby'      => esc_attr( 'card-element-' . $uniqid . '-description' ),
 		);
+
+		if ( ! empty( $description ) ) {
+			$attr['aria-describedby'] = esc_attr( 'card-element-' . $uniqid . '-description' );
+		}
 
 		$attributes = self::implode_attr( $attr );
 
@@ -333,8 +336,11 @@ class Forminator_Stripe extends Forminator_Field {
 			'amount'              => $this->calculate_amount( $amount, $currency ),
 			'currency'            => $currency,
 			'capture_method'      => 'manual',
-			'confirmation_method' => 'manual',
 			'confirm'             => false,
+			'automatic_payment_methods' => array(
+				'enabled'         => true,
+				'allow_redirects' => 'never',
+			),
 		);
 
 		// Check if metadata is not empty and add it to the options.
@@ -344,7 +350,7 @@ class Forminator_Stripe extends Forminator_Field {
 
 		// Check if statement_description is not empty and add it to the options.
 		if ( ! empty( $company ) ) {
-			$options['statement_descriptor'] = $company;
+			$options['statement_descriptor_suffix'] = $company;
 		}
 
 		// Check if description is not empty and add it to the options.

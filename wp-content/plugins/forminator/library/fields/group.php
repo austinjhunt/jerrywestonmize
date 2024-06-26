@@ -101,7 +101,8 @@ class Forminator_Group extends Forminator_Field {
 	 * @return mixed
 	 */
 	public function markup( $field, $views_obj ) {
-		$wrappers = $views_obj::get_grouped_wrappers( $field['element_id'] );
+		$name     = self::get_property( 'element_id', $field );
+		$wrappers = $views_obj::get_grouped_wrappers( $name );
 		$options  = self::prepare_field_options( $field );
 		$html     = '';
 
@@ -112,10 +113,11 @@ class Forminator_Group extends Forminator_Field {
 			);
 		}
 
-		if ( ! empty( $field['description'] ) ) {
+		$description = self::get_property( 'description', $field );
+		if ( ! empty( $description ) ) {
 			$html .= sprintf(
 				'<span class="forminator-description forminator-repeater-description">%s</span>',
-				esc_html( $field['description'] )
+				self::esc_description( $description, $name )
 			);
 		}
 
@@ -143,7 +145,7 @@ class Forminator_Group extends Forminator_Field {
 					$wrappers
 				);
 
-				$html .= '<input name="' . esc_attr( $field['element_id'] ) . '-copies[]" type="hidden" value="' . intval( $i ) . '" />';
+				$html .= '<input name="' . esc_attr( $name ) . '-copies[]" type="hidden" value="' . intval( $i ) . '" />';
 			}
 			$html .= $views_obj->render_wrappers( $wrappers );
 
@@ -152,7 +154,7 @@ class Forminator_Group extends Forminator_Field {
 				$html .= self::render_action_buttons( $options );
 			}
 			$html .= '</div>';
-		} while ( ! empty( $views_obj->draft_data[ $field['element_id'] . '-copies' ] ) && $views_obj->draft_data[ $field['element_id'] . '-copies' ]['value'] >= ( ++$i ) );
+		} while ( ! empty( $views_obj->draft_data[ $name . '-copies' ] ) && $views_obj->draft_data[ $name . '-copies' ]['value'] >= ( ++$i ) );
 
 		$html .= '</div>';
 

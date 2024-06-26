@@ -3,7 +3,7 @@
  * Trait for common methods for Slack settings classes
  *
  * @since 1.30
- * @package Slack Addon
+ * @package Slack Integration
  */
 
 /**
@@ -16,7 +16,7 @@ trait Forminator_Slack_Settings_Trait {
 	/**
 	 * Forminator_Slack_Form_Settings constructor.
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param Forminator_Integration $addon
 	 * @param                           $form_id
@@ -36,7 +36,7 @@ trait Forminator_Slack_Settings_Trait {
 	/**
 	 * Slack Module Settings wizard
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @return array
 	 */
 	public function module_settings_wizards() {
@@ -64,7 +64,7 @@ trait Forminator_Slack_Settings_Trait {
 	/**
 	 * Setup Connection Name
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -134,7 +134,7 @@ trait Forminator_Slack_Settings_Trait {
 	/**
 	 * Select Message Type
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -213,7 +213,7 @@ trait Forminator_Slack_Settings_Trait {
 	/**
 	 * Check if select type completed
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */
@@ -241,7 +241,7 @@ trait Forminator_Slack_Settings_Trait {
 	/**
 	 * Select Target
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -362,7 +362,7 @@ trait Forminator_Slack_Settings_Trait {
 	/**
 	 * Check if select target completed
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */
@@ -374,7 +374,7 @@ trait Forminator_Slack_Settings_Trait {
 	/**
 	 * Setup Message
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
 	 */
@@ -468,7 +468,7 @@ trait Forminator_Slack_Settings_Trait {
 	/**
 	 * Check if setup message completed
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return bool
 	 */

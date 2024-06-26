@@ -3,7 +3,7 @@
 
 /**
  * Class Forminator_Integration_Default_Holder
- * Placeholder for nonexistent PRO Addon
+ * Placeholder for nonexistent PRO Integration
  *
  * @since 1.1
  */
@@ -38,7 +38,7 @@ class Forminator_Integration_Default_Holder extends Forminator_Integration {
 	}
 
 	/**
-	 * Mark non existent addon as not connected always
+	 * Mark non existent integration as not connected always
 	 *
 	 * @since 1.1
 	 * @return bool
@@ -57,7 +57,7 @@ class Forminator_Integration_Default_Holder extends Forminator_Integration {
 	}
 
 	/**
-	 * Mark non existent addon as form not connected always
+	 * Mark non existent integration as form not connected always
 	 *
 	 * @since 1.1
 	 * @param int    $module_id Form ID.

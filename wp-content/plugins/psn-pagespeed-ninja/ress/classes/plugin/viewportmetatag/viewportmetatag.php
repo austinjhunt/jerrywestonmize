@@ -17,9 +17,18 @@ class Ressio_Plugin_ViewportMetaTag extends Ressio_Plugin
      */
     public function __construct($di, $params = null)
     {
-        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
+        parent::__construct($di);
+        $this->loadConfig(__DIR__ . '/config.json', $params);
+    }
 
-        parent::__construct($di, $params);
+    /**
+     * @return array
+     */
+    public function getEventPriorities()
+    {
+        return array(
+            'HtmlBeforeStringify' => -2
+        );
     }
 
     /**

@@ -49,7 +49,7 @@ abstract class Forminator_Integration_Poll_Hooks extends Forminator_Integration_
 		 *
 		 * @param int                                          $poll_id                current Poll ID.
 		 * @param Forminator_Form_Entry_Model                  $entry_model            Forminator Entry Model.
-		 * @param Forminator_Integration_Poll_Settings|null $poll_settings_instance of Addon Poll Settings.
+		 * @param Forminator_Integration_Poll_Settings|null $poll_settings_instance of Integration Poll Settings.
 		 */
 		do_action(
 			'forminator_addon_poll_' . $addon_slug . '_after_entry_saved',
@@ -83,7 +83,7 @@ abstract class Forminator_Integration_Poll_Hooks extends Forminator_Integration_
 		 *
 		 * @param array                                        $export_columns         column to be exported.
 		 * @param int                                          $poll_id                current poll ID.
-		 * @param Forminator_Integration_Poll_Settings|null $poll_settings_instance of Addon Poll Settings.
+		 * @param Forminator_Integration_Poll_Settings|null $poll_settings_instance of Integration Poll Settings.
 		 */
 		$error_message = apply_filters(
 			'forminator_addon_' . $addon_slug . '_submit_poll_error_message',

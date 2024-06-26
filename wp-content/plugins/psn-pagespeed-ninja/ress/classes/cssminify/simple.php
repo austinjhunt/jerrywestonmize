@@ -189,8 +189,8 @@ class Ressio_CssMinify_Simple extends Ressio_CssMinify_Base
 
         // merge whitespaces (if exists after merging of chunks)
         $buffer = preg_replace('/\s{2,}/', ' ', $buffer);
-        // remove whitespaces around "{", "}", ";", ":"
-        $buffer = preg_replace('/\s?([{};:])\s?/', '\1', $buffer);
+        // remove whitespaces around "{", "}", ";"
+        $buffer = preg_replace('/\s?([{};])\s?/', '\1', $buffer);
         // remove semicolons before "}"
         $buffer = preg_replace('/;+(?=\})/', '', $buffer);
         // remove rules with empty declarations

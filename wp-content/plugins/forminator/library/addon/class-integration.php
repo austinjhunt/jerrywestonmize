@@ -46,7 +46,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	protected $_min_forminator_version;
 
 	/**
-	 * URL info to of the Addon website / doc / info
+	 * URL info to of the Integration website / doc / info
 	 *
 	 * @since  1.1
 	 * @var string
@@ -72,7 +72,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	protected $_short_title;
 
 	/**
-	 * Addon Brief Desription, of what it does
+	 * Integration Brief Desription, of what it does
 	 *
 	 * @since  1.1
 	 * @var string
@@ -80,7 +80,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	protected $_description = '';
 
 	/**
-	 * Addon promotion description
+	 * Integration promotion description
 	 *
 	 * @since  1.7.1
 	 * @var string
@@ -88,7 +88,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	protected $_promotion = '';
 
 	/**
-	 * Addon documentation link
+	 * Integration documentation link
 	 *
 	 * @since  1.7.1
 	 * @var string
@@ -491,7 +491,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * @since 1.1
 		 *
 		 * @param string                    $settings_options_name
-		 * @param Forminator_Integration $addon Addon instance.
+		 * @param Forminator_Integration $addon Integration instance.
 		 */
 		$settings_options_name = apply_filters( 'forminator_addon_' . $addon_slug . '_settings_options_name', $settings_options_name, $addon );
 
@@ -515,7 +515,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * @since 1.1
 		 *
 		 * @param string                    $version_options_name
-		 * @param Forminator_Integration $addon Addon instance.
+		 * @param Forminator_Integration $addon Integration instance.
 		 */
 		$version_options_name = apply_filters( 'forminator_addon_' . $addon_slug . '_version_options_name', $version_options_name, $addon );
 
@@ -581,7 +581,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 *
 		 * @param array                     $to_array array of addonn properties.
 		 * @param int                       $form_id  Form ID.
-		 * @param Forminator_Integration $addon    Addon Instance.
+		 * @param Forminator_Integration $addon    Integration Instance.
 		 */
 		$to_array = apply_filters( 'forminator_addon_' . $addon_slug . '_to_array', $to_array, $addon );
 
@@ -625,7 +625,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 *
 		 * @param array                     $to_array_with_form array of addonn properties.
 		 * @param int                       $form_id            Form ID.
-		 * @param Forminator_Integration $addon              Addon instance.
+		 * @param Forminator_Integration $addon              Integration instance.
 		 */
 		$to_array_with_form = apply_filters( 'forminator_addon_' . $addon_slug . '_to_array_with_form', $to_array_with_form, $form_id, $addon );
 
@@ -813,7 +813,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 
 	/**
 	 * Override this function to set wizardable settings
-	 * Default its and empty array which is indicating that Addon doesnt have settings
+	 * Default its and empty array which is indicating that Integration doesnt have settings
 	 *
 	 * Its multi array, with numerical key, start with `0`
 	 * Every step on wizard, will consist at least
@@ -1036,8 +1036,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * @param int                                          $form_id                Form ID requested for.
 		 * @param int                                          $current_step           Current Step displayed to user, start from 0.
 		 * @param int                                          $step                   Step requested by client, start from 0.
-		 * @param Forminator_Integration                    $addon                  Addon Instance.
-		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance Addon Form settings instancce, or null if unavailable.
+		 * @param Forminator_Integration                    $addon                  Integration Instance.
+		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance Integration Form settings instancce, or null if unavailable.
 		 */
 		$form_settings_wizard = apply_filters(
 			'forminator_addon_' . $addon_slug . '_form_settings_wizard',
@@ -1076,7 +1076,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 *
 		 * More detail : @param array $form_settings_steps
 		 * @param int                                     $form_id current form id.
-		 * @param Forminator_Integration_Form_Settings $addon   Addon instance.
+		 * @param Forminator_Integration_Form_Settings $addon   Integration instance.
 		 * @param Forminator_Integration_Form_Settings|null Form settings of addon if available, or null otherwise
 		 *@see Forminator_Integration_Form_Settings::module_settings_wizards()
 		 *
@@ -1112,8 +1112,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * @since 1.1
 		 *
 		 * @param array                                   $multi_ids
-		 * @param Forminator_Integration_Form_Settings $addon                  Addon Instance.
-		 * @param Forminator_Integration_Form_Settings $form_settings_instance Addon Form Settings Instance.
+		 * @param Forminator_Integration_Form_Settings $addon                  Integration Instance.
+		 * @param Forminator_Integration_Form_Settings $form_settings_instance Integration Form Settings Instance.
 		 */
 		$multi_ids = apply_filters( 'forminator_addon_' . $addon_slug . '_form_settings_multi_ids', $multi_ids, $addon, $form_settings_instance );
 
@@ -1523,12 +1523,12 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		try {
 			$addon_settings = null;
 			if ( ! $this->is_connected() ) {
-				throw new Forminator_Integration_Exception( esc_html__( ' Addon is not connected', 'forminator' ) );
+				throw new Forminator_Integration_Exception( esc_html__( ' Integration is not connected', 'forminator' ) );
 			}
 
 			$addon_settings = $this->get_addon_settings( $module_id, $module_slug );
 			if ( ! $addon_settings instanceof Forminator_Integration_Settings ) {
-				throw new Forminator_Integration_Exception( esc_html__( 'Invalid Module Addon Settings', 'forminator' ) );
+				throw new Forminator_Integration_Exception( esc_html__( 'Invalid Module Integration Settings', 'forminator' ) );
 			}
 
 			if ( $check_lead ) {
@@ -1536,7 +1536,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 			} else {
 				// Mark as active when there is at least one active connection.
 				if ( false === $addon_settings->find_one_active_connection() ) {
-					throw new Forminator_Integration_Exception( esc_html__( 'No active Addon connection found in this module', 'forminator' ) );
+					throw new Forminator_Integration_Exception( esc_html__( 'No active Integration connection found in this module', 'forminator' ) );
 				}
 
 				$is_connected = true;
@@ -1690,7 +1690,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 
 
 	/**
-	 * Get Hooks object of Addons
+	 * Get Hooks object of Integrations
 	 *
 	 * @param int $module_id Module ID.
 	 *
@@ -1805,7 +1805,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		$markup .= '</button>';
 
 		/**
-		 * Filter Addon button markup for setting
+		 * Filter Integration button markup for setting
 		 *
 		 * Its possible @see Forminator_Integration::get_button_markup() overridden.
 		 * Thus this filter wont be called
@@ -1849,7 +1849,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		$markup .= '</a>';
 
 		/**
-		 * Filter Addon link markup for setting
+		 * Filter Integration link markup for setting
 		 *
 		 * Its possible @see Forminator_Integration::get_link_markup() overridden.
 		 * Thus this filter wont be called
@@ -1977,8 +1977,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * @since 1.2
 		 *
 		 * @param string                                  $multi_id
-		 * @param Forminator_Integration_Form_Settings $addon                  Addon Instance.
-		 * @param Forminator_Integration_Form_Settings $form_settings_instance Addon Form Settings Instance.
+		 * @param Forminator_Integration_Form_Settings $addon                  Integration Instance.
+		 * @param Forminator_Integration_Form_Settings $form_settings_instance Integration Form Settings Instance.
 		 */
 		$multi_ids = apply_filters( 'forminator_addon_' . $addon_slug . '_form_settings_multi_id', $multi_id, $addon, $form_settings_instance );
 
@@ -2121,8 +2121,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * @param int                                          $poll_id                poll ID requested for.
 		 * @param int                                          $current_step           Current Step displayed to user, start from 0.
 		 * @param int                                          $step                   Step requested by client, start from 0.
-		 * @param Forminator_Integration                    $addon                  Addon Instance.
-		 * @param Forminator_Integration_Poll_Settings|null $poll_settings_instance Addon Form settings instance, or null if unavailable.
+		 * @param Forminator_Integration                    $addon                  Integration Instance.
+		 * @param Forminator_Integration_Poll_Settings|null $poll_settings_instance Integration Form settings instance, or null if unavailable.
 		 */
 		$poll_settings_wizard = apply_filters(
 			'forminator_addon_' . $addon_slug . '_poll_settings_wizard',
@@ -2161,7 +2161,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 *
 		 * More detail : @param array $poll_settings_steps
 		 * @param int                                          $poll_id                current form id.
-		 * @param Forminator_Integration                    $addon                  Addon instance.
+		 * @param Forminator_Integration                    $addon                  Integration instance.
 		 * @param Forminator_Integration_Poll_Settings|null $poll_settings_instance Form settings of addon if available, or null otherwise.
 		 *@see Forminator_Integration_Poll_Settings::module_settings_wizards()
 		 *
@@ -2197,8 +2197,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * @since 1.6.1
 		 *
 		 * @param array                                   $multi_ids
-		 * @param Forminator_Integration               $addon                  Addon Instance.
-		 * @param Forminator_Integration_Poll_Settings $poll_settings_instance Addon Form Settings Instance.
+		 * @param Forminator_Integration               $addon                  Integration Instance.
+		 * @param Forminator_Integration_Poll_Settings $poll_settings_instance Integration Form Settings Instance.
 		 */
 		$multi_ids = apply_filters( 'forminator_addon_' . $addon_slug . '_poll_settings_multi_ids', $multi_ids, $addon, $poll_settings_instance );
 
@@ -2252,7 +2252,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 *
 		 * @param array                     $to_array_with_poll array of addon properties.
 		 * @param int                       $poll_id            Poll ID.
-		 * @param Forminator_Integration $addon              Addon instance.
+		 * @param Forminator_Integration $addon              Integration instance.
 		 */
 		$to_array_with_poll = apply_filters( 'forminator_addon_' . $addon_slug . '_to_array_with_poll', $to_array_with_poll, $poll_id, $addon );
 
@@ -2313,8 +2313,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * @since 1.6.1
 		 *
 		 * @param string                                  $multi_id
-		 * @param Forminator_Integration               $addon                  Addon Instance.
-		 * @param Forminator_Integration_Poll_Settings $poll_settings_instance Addon Poll Settings Instance.
+		 * @param Forminator_Integration               $addon                  Integration Instance.
+		 * @param Forminator_Integration_Poll_Settings $poll_settings_instance Integration Poll Settings Instance.
 		 */
 		$multi_ids = apply_filters( 'forminator_addon_' . $addon_slug . '_poll_settings_multi_id', $multi_id, $addon, $poll_settings_instance );
 
@@ -2452,8 +2452,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * @param int                                          $quiz_id                quiz ID requested for.
 		 * @param int                                          $current_step           Current Step displayed to user, start from 0.
 		 * @param int                                          $step                   Step requested by client, start from 0.
-		 * @param Forminator_Integration                    $addon                  Addon Instance.
-		 * @param Forminator_Integration_Quiz_Settings|null $quiz_settings_instance Addon Form settings instance, or null if unavailable.
+		 * @param Forminator_Integration                    $addon                  Integration Instance.
+		 * @param Forminator_Integration_Quiz_Settings|null $quiz_settings_instance Integration Form settings instance, or null if unavailable.
 		 */
 		$quiz_settings_wizard = apply_filters(
 			'forminator_addon_' . $addon_slug . '_quiz_settings_wizard',
@@ -2492,7 +2492,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 *
 		 * More detail : @param array $quiz_settings_steps
 		 * @param int                                          $quiz_id                current quiz id.
-		 * @param Forminator_Integration                    $addon                  Addon instance.
+		 * @param Forminator_Integration                    $addon                  Integration instance.
 		 * @param Forminator_Integration_Quiz_Settings|null $quiz_settings_instance Quiz settings of addon if available, or null otherwise.
 		 *@see Forminator_Integration_Quiz_Settings::module_settings_wizards()
 		 *
@@ -2528,8 +2528,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * @since 1.6.2
 		 *
 		 * @param array                                   $multi_ids
-		 * @param Forminator_Integration               $addon                  Addon Instance.
-		 * @param Forminator_Integration_Quiz_Settings $quiz_settings_instance Addon Quiz Settings Instance.
+		 * @param Forminator_Integration               $addon                  Integration Instance.
+		 * @param Forminator_Integration_Quiz_Settings $quiz_settings_instance Integration Quiz Settings Instance.
 		 */
 		$multi_ids = apply_filters( 'forminator_addon_' . $addon_slug . '_quiz_settings_multi_ids', $multi_ids, $addon, $quiz_settings_instance );
 
@@ -2582,7 +2582,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 *
 		 * @param array                     $to_array_with_quiz array of addon properties.
 		 * @param int                       $quiz_id            Quiz ID.
-		 * @param Forminator_Integration $addon              Addon instance.
+		 * @param Forminator_Integration $addon              Integration instance.
 		 */
 		$to_array_with_quiz = apply_filters( 'forminator_addon_' . $addon_slug . '_to_array_with_quiz', $to_array_with_quiz, $quiz_id, $addon );
 
@@ -2643,8 +2643,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * @since 1.6.2
 		 *
 		 * @param string                                  $multi_id
-		 * @param Forminator_Integration               $addon                  Addon Instance.
-		 * @param Forminator_Integration_Quiz_Settings $quiz_settings_instance Addon Quiz Settings Instance.
+		 * @param Forminator_Integration               $addon                  Integration Instance.
+		 * @param Forminator_Integration_Quiz_Settings $quiz_settings_instance Integration Quiz Settings Instance.
 		 */
 		$multi_ids = apply_filters( 'forminator_addon_' . $addon_slug . '_quiz_settings_multi_id', $multi_id, $addon, $quiz_settings_instance );
 

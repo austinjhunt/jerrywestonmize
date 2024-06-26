@@ -1,13 +1,13 @@
 === Forminator - Contact Form, Payment Form & Custom Form Builder ===
 Plugin Name: Forminator - Contact Form, Payment Form & Custom Form Builder
-Version: 1.30.2
+Version: 1.31.0
 Author: WPMU DEV
 Author URI: https://wpmudev.com/
 Contributors: WPMUDEV
 Tags: forms, contact form, wordpress form plugin, payment form, custom form, form builder, paypal form wordpress, form maker, quiz, quiz builder, order form, stripe payments, paypal payments, stripe form, paypal form
 Requires at least: 5.2
 Tested up to: 6.5
-Stable tag: 1.30.2
+Stable tag: 1.31
 Requires PHP: 7.4
 License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -222,6 +222,39 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 9. Allow simple drag and drop multi-file uploads for users.
 
 == Changelog ==
+
+= 1.31.0 ( 2024-06-03 ) =
+
+ - Enhancement: Update Stripe library to the latest version
+ - Enhancement: Add the ability to align ReCaptcha to the right
+ - Enhancement: Prevent disabling calculation option on fields that are used in Calculations field formulas
+ - Fix: Workato Webhook does not connect
+ - Fix: Password is sent as plain text in Login form when using a webhook
+ - Fix: Some fields do not support HTML tags in the description
+ - Fix: Incorrect password on Forminator Login form for a specific password
+ - Fix: Conflicts with the Suremember plugin
+ - Fix: Stripe field is not showing on PopUp plugins
+ - Fix: International phone validation field prevents submission even if the field is optional
+ - Fix: Quiz Final Count message is erased even after saving
+ - Fix: Open the GDPR links in a new browser tab by default
+ - Fix: Form expands when loaded via Ajax while having conditionally visible fields
+ - Fix: Number field is not working for Stripe pre-filled postal code
+ - Fix: Pagination custom button text is not working if you start the form with a Slider field
+ - Fix: Post data field shows only the first Category and first tag in email notification when Multiple option is selected for tags and categories
+ - Fix: Replace statement_descriptor_suffix to fit the Stripe API
+ - Fix: Some Custom CSS classes in the PDF add-on are no longer working
+ - Fix: Slider values are not getting reset when a form is submitted
+ - Fix: Sorting submissions does not apply to exported CSV
+ - Fix: Upload field issue with WebP file type
+ - Fix: HTML Validation for select fields
+ - Fix: Can't assign Name field to username in User Login Form
+ - Fix: Escaping characters in redirect URL breaks form pre-population
+ - Fix: Contact Form 7 image file size limit is not imported
+ - Fix: Scheduled Exports in Submissions do not allow editing of the email on Forms
+ - Fix: Columns break when custom spacing value is set to 0
+ - Fix: Search bar on matching Hubspot fields isn't working
+ - Fix: Incorrect scrolling in paginated forms with long HTML field content on mobile devices
+
 
 = 1.30.2 ( 2024-04-30 ) =
 

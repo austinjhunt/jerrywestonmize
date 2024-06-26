@@ -308,6 +308,9 @@
                 }
 			} else if ( this.field_has_inputMask( $element ) ) {
 				value = parseFloat( $element.inputmask('unmaskedvalue').replace(',','.') );
+				if ( 0 <= element_id.indexOf( 'calculation-' ) ) {
+					return value;
+				}
 			}
 			if (!value) return "";
 

@@ -143,9 +143,11 @@ function colibri_post_tags( $attrs = array() ) {
 	}
 	if ( $tags ) {
 		foreach ( $tags as $tag ) {
-			$tag_link = get_tag_link( $tag->term_id );
-			$html     .= "<a class=\"d-inline-block colibri-post-tag\" href=\"{$tag_link}\" title=\"{$tag->name} Tag\">";
-			$html     .= "{$tag->name}</a>";
+			$tag_link       = get_tag_link( $tag->term_id );
+			$sanitized_name = preg_replace( '/[^[a-z|A-Z|0-9|\-|_\s]]*/i', "", $tag->name );
+
+			$html .= "<a class=\"d-inline-block colibri-post-tag\" href=\"{$tag_link}\" title=\"{$sanitized_name} Tag\">";
+			$html .= "{$sanitized_name}</a>";
 		}
 	} else {
 		$html .= sprintf( '<span class="d-inline-block colibri-post-tag">%s</span>', 'No Tag' );

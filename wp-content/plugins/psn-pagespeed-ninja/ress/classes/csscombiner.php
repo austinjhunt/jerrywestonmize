@@ -27,7 +27,7 @@ class Ressio_CssCombiner implements IRessio_CssCombiner, IRessio_DIAware
 
     /**
      * Returns list of combined nodes
-     * @param array $styleList
+     * @param array[] $styleList
      * @return Ressio_NodeWrapper[]
      */
     public function combineToNodes($styleList)
@@ -126,7 +126,7 @@ class Ressio_CssCombiner implements IRessio_CssCombiner, IRessio_DIAware
     }
 
     /**
-     * @param array $styleList
+     * @param array[] $styleList
      * @param string $targetUrl
      * @param IRessio_CssMinify $minifyCss
      * @param bool $crossFileOptimization

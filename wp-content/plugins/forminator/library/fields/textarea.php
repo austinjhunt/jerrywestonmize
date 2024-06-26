@@ -120,10 +120,8 @@ class Forminator_Textarea extends Forminator_Field {
 		$this->form_settings = $settings;
 
 		$html           = '';
-		$id             = self::get_property( 'element_id', $field );
-		$name           = $id;
-		$ariaid         = $id;
-		$id             = self::get_field_id( $id );
+		$name           = self::get_property( 'element_id', $field );
+		$id             = self::get_field_id( $name );
 		$required       = self::get_property( 'required', $field, false, 'bool' );
 		$default        = esc_html( self::get_property( 'default', $field, false ) );
 		$placeholder    = $this->sanitize_value( self::get_property( 'placeholder', $field ) );
@@ -172,7 +170,7 @@ class Forminator_Textarea extends Forminator_Field {
 			$textarea['class'] .= esc_attr( ' do-validate forminator-wp-editor-required' );
 		}
 
-		if ( ! empty( $description ) || '' !== $description ) {
+		if ( ! empty( $description ) ) {
 			$textarea['aria-describedby'] = $id . '-description';
 		}
 
@@ -203,7 +201,7 @@ class Forminator_Textarea extends Forminator_Field {
 			$html .= sprintf( '<span id="%s" class="forminator-description">', esc_attr( $desc_id ) );
 
 			if ( ! empty( $description ) ) {
-				$html .= esc_html( $description );
+				$html .= self::esc_description( $description, $name );
 			}
 
 			if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {

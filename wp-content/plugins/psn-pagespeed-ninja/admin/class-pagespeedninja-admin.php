@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 
 class PagespeedNinja_Admin
@@ -20,7 +20,7 @@ class PagespeedNinja_Admin
     /** @var string The current version of this plugin. */
     private $version;
 
-    /** @var array */
+    /** @var string[] */
     protected $messages = array();
 
     /** @var string The menu slug of the General settings page. */
@@ -176,7 +176,10 @@ class PagespeedNinja_Admin
         $this->add_promo_link($this->page_global_slug);
     }
 
-    /** @return void */
+    /**
+     * @param string $parent_slug
+     * @return void
+     */
     private function add_promo_link($parent_slug)
     {
         if (!apply_filters('psn_is_pro', false)) {
@@ -195,6 +198,7 @@ class PagespeedNinja_Admin
     public function admin_head()
     {
         add_action('admin_notices', array($this, 'activation_admin_notices'));
+        add_action('admin_notices', array($this, 'incompatibilities_admin_notices'), 0);
 
         if (!apply_filters('psn_is_pro', false)) {
             add_action('admin_notices', array($this, 'admin_notices_licensekey_notice'));
@@ -224,7 +228,7 @@ class PagespeedNinja_Admin
             //$active_plugins = apply_filters('active_plugins', get_option('active_plugins'));
 
             if (!($config['psi_server-response-time'] && $config['caching'])) {
-                $this->enqueueMessage(__('Note that some PageSpeed Ninja features (e.g. "Remove IE conditionals") may not be compatible with caching plugin'));
+                $this->enqueueMessage(__('Note that some PageSpeed Ninja features (e.g. "Remove IE conditionals") may not be compatible with caching plugin', 'psn-pagespeed-ninja'));
             }
         }
 
@@ -233,7 +237,7 @@ class PagespeedNinja_Admin
             $logSize = filesize($logFilename);
             if ($logSize > 10 * 1024 * 1024) {
                 $logSize = number_format($logSize / (1024 * 1024), 1, '.', '');
-                $this->enqueueMessage(sprintf(__('Size of %1$s file is %2$sMb.'), $logFilename, $logSize));
+                $this->enqueueMessage(sprintf(__('Size of %1$s file is %2$sMb.', 'psn-pagespeed-ninja'), $logFilename, $logSize));
             }
         }
     }
@@ -249,7 +253,7 @@ class PagespeedNinja_Admin
     /** @return void */
     public function admin_styles()
     {
-        wp_enqueue_style('pagespeedninja_google_fonts', '//fonts.googleapis.com/css?family=Montserrat:300,400,600&display=swap', array(), null);
+        wp_enqueue_style('pagespeedninja_google_fonts', 'https://fonts.googleapis.com/css?family=Montserrat:300,400,600&display=swap', array(), null);
         wp_enqueue_style('pagespeedninja_style');
 
         $config = get_option('pagespeedninja_config');
@@ -265,17 +269,18 @@ class PagespeedNinja_Admin
         $cache_timestamp = @filemtime($cache_dir . '/tags/GLOBAL');
         $config = get_option('pagespeedninja_config');
 
-        wp_enqueue_script('pagespeedninja_atfbundle_script');
-        wp_enqueue_script('pagespeedninja_areyousure_script');
-        wp_enqueue_script('pagespeedninja_script');
-        wp_add_inline_script('pagespeedninja_script',
-            "var pagespeedninja_version='" . esc_js($this->get_version()) . "',\n" .
-            "    pagespeedninja_nonce='" . esc_js(wp_create_nonce('psn-ajax-token')) . "';"
-        );
-        wp_enqueue_script('pagespeedninja_tooltip_script');
         add_thickbox();
 
         if ($config['afterinstall_popup'] === '1') {
+            wp_enqueue_script('pagespeedninja_atfbundle_script');
+            wp_enqueue_script('pagespeedninja_areyousure_script');
+            wp_enqueue_script('pagespeedninja_script');
+            wp_add_inline_script('pagespeedninja_script',
+                'var pagespeedninja_version=' . wp_json_encode($this->get_version()) . ",\n" .
+                '    pagespeedninja_nonce=' . wp_json_encode(wp_create_nonce('psn-ajax-token')) . ';'
+            );
+            wp_enqueue_script('pagespeedninja_tooltip_script');
+
             global $plugin_page;
             switch ($plugin_page) {
                 case $this->page_general_slug:
@@ -293,8 +298,8 @@ class PagespeedNinja_Admin
     }
 
     /**
-     * @param array $links
-     * @return array
+     * @param string[] $links
+     * @return string[]
      */
     public function admin_plugin_settings_link($links)
     {
@@ -308,8 +313,8 @@ class PagespeedNinja_Admin
     }
 
     /**
-     * @param array $links
-     * @return array
+     * @param string[] $links
+     * @return string[]
      */
     public function network_admin_plugin_settings_link($links)
     {
@@ -323,9 +328,9 @@ class PagespeedNinja_Admin
     }
 
     /**
-     * @param array $links
+     * @param string[] $links
      * @param string $file
-     * @return array
+     * @return string[]
      */
     public function admin_plugin_meta_links($links, $file)
     {
@@ -409,9 +414,55 @@ class PagespeedNinja_Admin
             __('To initialize PageSpeed Ninja, open its <a href="%s">Settings page</a>.', 'psn-pagespeed-ninja'),
             esc_url(admin_url('admin.php?page=' . $this->page_general_slug))
         );
-        echo '<div class="notice notice-alt notice-warning is-dismissible">' .
+        echo '<div class="notice notice-alt notice-large notice-warning is-dismissible">' .
             '<p><b>' . $message . '</b></p>' .
             '</div>';
+    }
+
+    /** @return void */
+    public function incompatibilities_admin_notices()
+    {
+        $config = get_option('pagespeedninja_config');
+        if ($config['incompat_audit'] !== '0' && current_user_can('manage_options')) {
+            // @TODO Check Network activation, but blog/site admin, should the message be displayed there?
+            $incompatible_plugins_list = explode("\n", file_get_contents(dirname(__DIR__) . '/includes/incompatible_plugins.txt'));
+            $installed_plugins = get_option('active_plugins');
+            $incompatible_plugins = array_intersect($installed_plugins, $incompatible_plugins_list);
+            if (count($incompatible_plugins)) {
+?><script>
+jQuery(document).ready(function () {
+    jQuery('.psn-incompat-plugin').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $this = jQuery(this);
+        if (!$this.is('.disabled')) {
+            $this.removeClass('button-primary').addClass('disabled updating-message');
+            jQuery.get($this.attr('href'), function () {
+                $this.removeClass('updating-message');
+            });
+        }
+    });
+});
+</script><?php
+                echo '<div class="notice notice-large notice-warning is-dismissible">' .
+                    '<p><b>' . esc_html(__('Some plugins may be in conflict with PageSpeed Ninja', 'psn-pagespeed-ninja')) . '</b></p>' .
+                    '<p>' . esc_html(__('Please deactivate other optimization plugins to prevent conflicts and ensure optimal performance with PageSpeed Ninja:', 'psn-pagespeed-ninja')) . '</p>' .
+                    '<ul class="ul-disc">';
+                foreach ($incompatible_plugins as $plugin_file) {
+                    $plugin_data = get_file_data(WP_PLUGIN_DIR . '/' . $plugin_file, array('Plugin Name' => 'Plugin Name'));
+                    $deactivate_url = wp_nonce_url('plugins.php?action=deactivate&plugin=' . urlencode($plugin_file), 'deactivate-plugin_' . $plugin_file);
+                    echo '<li><p>' .
+                        $plugin_data['Plugin Name'] .
+                        ' &nbsp; <a href="' . esc_attr($deactivate_url) . '" target="_blank" class="button button-primary psn-incompat-plugin">' .
+                        __('Deactivate', 'psn-pagespeed-ninja') .
+                        '</a>' .
+                        '</p></li>';
+                }
+                echo '</ul>' .
+                    '<p>' . esc_html(__('You can disable this audit in the Advanced settings of PageSpeed Ninja plugin.', 'psn-pagespeed-ninja')) . '</p>' .
+                    '</div>';
+            }
+        }
     }
 
     /** @return void */
@@ -441,7 +492,7 @@ class PagespeedNinja_Admin
     public function admin_notices()
     {
         foreach ($this->messages as $message) {
-            echo '<div class="notice notice-alt notice-warning is-dismissible">' .
+            echo '<div class="notice notice-alt notice-large notice-warning is-dismissible">' .
                 '<p>' . esc_html($message) . '</p>' .
                 '</div>';
         }
@@ -449,8 +500,8 @@ class PagespeedNinja_Admin
 
         global $plugin_page;
         if ($plugin_page === $this->page_general_slug) {
-            echo '<div class="notice notice-alt notice-info is-dismissible hidden" id="pagespeedninja_atfcss_notice">' .
-                '<p>' . esc_html(__('Critical CSS styles have been generated. Save changes to apply. You can view and edit generated styles in Advanced settings page.')) . '</p>' .
+            echo '<div class="notice notice-alt notice-large notice-info is-dismissible hidden" id="pagespeedninja_atfcss_notice">' .
+                '<p>' . esc_html(__('Critical CSS styles have been generated. Save changes to apply. You can view and edit generated styles in Advanced settings page.', 'psn-pagespeed-ninja')) . '</p>' .
                 '</div>';
         }
         echo '<div class="is-dismissible hidden" id="pagespeedninja_afternotices"></div>';
@@ -464,17 +515,18 @@ class PagespeedNinja_Admin
         }
         $html = '';
         foreach ($this->messages as $message) {
-            $html .= '<div class="notice notice-alt notice-warning is-dismissible">' .
+            $html .= '<div class="notice notice-alt notice-large notice-warning is-dismissible">' .
                 '<p>' . esc_html($message) . '</p>' .
                 '</div>';
         }
         ?>
-        <script>jQuery('#pagespeedninja_afternotices').after('<?php echo esc_js($html); ?>');</script><?php
+        <script>jQuery('#pagespeedninja_afternotices').after(<?php echo wp_json_encode($html); ?>);</script><?php
         $this->messages = array();
     }
 
     /**
      * @param string $message
+     * @return void
      */
     public function enqueueMessage($message)
     {

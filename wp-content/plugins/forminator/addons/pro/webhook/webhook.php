@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Addon Name: Webhook
+ * Integration Name: Webhook
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: Integrate Forminator Custom Forms with Webhook to execute various action you like

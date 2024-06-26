@@ -3,16 +3,19 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 
 class PagespeedNinja_View
 {
     /** @var PagespeedNinja_Admin */
     private $admin;
+
+    /** @var string */
+    private $template;
 
     /**
      * PagespeedNinja_View constructor.
@@ -26,14 +29,17 @@ class PagespeedNinja_View
     /**
      * @param string $template
      * @param array $config
+     * @return void
      */
     public function load($template, $config = array())
     {
+        $this->template = $template;
         include_once __DIR__ . '/partials/pagespeedninja-' . $template . '.php';
     }
 
     /**
      * @param string $message
+     * @return void
      */
     protected function enqueueMessage($message)
     {
@@ -43,6 +49,7 @@ class PagespeedNinja_View
     /**
      * @param string $title
      * @param string $tooltip
+     * @return void
      */
     public function title($title, $tooltip = '')
     {
@@ -63,6 +70,7 @@ class PagespeedNinja_View
      * @param string $enabledValue
      * @param string $disabledValue
      * @param bool $disabled
+     * @return void
      */
     public function checkbox($id, $name, $value = '0', $class = '', $enabledValue = '1', $disabledValue = '0', $disabled = false)
     {
@@ -76,8 +84,8 @@ class PagespeedNinja_View
     }
 
     /**
-     * @param array|stdClass $items
-     * @return array
+     * @param array[]|stdClass[] $items
+     * @return array<string,string>
      */
     protected function toList($items)
     {
@@ -96,6 +104,7 @@ class PagespeedNinja_View
      * @param string $value
      * @param array $values
      * @param string $class
+     * @return void
      */
     public function select($id, $name, $value, $values, $class = '')
     {
@@ -117,6 +126,7 @@ class PagespeedNinja_View
      * @param string $value
      * @param array $values
      * @param string $class
+     * @return void
      */
     public function selectlist($id, $name, $value, $values, $class = '')
     {
@@ -140,6 +150,7 @@ class PagespeedNinja_View
      * @param string $class
      * @param int $rows
      * @param int $cols
+     * @return void
      */
     public function textarea($id, $name, $value, $class = '', $rows = 5, $cols = 80)
     {
@@ -155,6 +166,7 @@ class PagespeedNinja_View
      * @param string $name
      * @param int $value
      * @param string $class
+     * @return void
      */
     public function number($id, $name, $value, $class = '')
     {
@@ -168,6 +180,7 @@ class PagespeedNinja_View
      * @param string $name
      * @param string $value
      * @param string $class
+     * @return void
      */
     public function text($id, $name, $value, $class = '')
     {
@@ -181,6 +194,7 @@ class PagespeedNinja_View
      * @param string $name
      * @param string $value
      * @param string $class
+     * @return void
      */
     public function time($id, $name, $value, $class = '')
     {
@@ -190,15 +204,16 @@ class PagespeedNinja_View
     }
 
     /**
-     * @param array $config
+     * @param array<string,string> $config
      * @param string $param
+     * @return void
      */
     public function hidden($config, $param)
     {
         $id = 'pagespeedninja_config_' . $param;
         $name = 'pagespeedninja_config[' . $param . ']';
         if (!isset($config[$param])) {
-            $this->enqueueMessage(sprintf(__('Configuration field doesn\'t exist: %s'), $param));
+            $this->enqueueMessage(sprintf(__('Configuration field doesn\'t exist: %s', 'psn-pagespeed-ninja'), $param));
         }
         $value = $config[$param];
         echo "<input type=\"hidden\" id=\"$id\"" . ($name ? " name=\"$name\"" : '') . " value=\"" . esc_attr($value) . '" />';
@@ -207,8 +222,9 @@ class PagespeedNinja_View
     /**
      * @param string $type
      * @param string $param
-     * @param array $config
+     * @param array<string,string> $config
      * @param stdClass $item
+     * @return void
      */
     public function render($type, $param, $config, $item = null)
     {
@@ -218,7 +234,7 @@ class PagespeedNinja_View
         }
 
         if (!isset($config[$param])) {
-            $this->enqueueMessage(sprintf(__('Configuration field doesn\'t exist: %s'), $param));
+            $this->enqueueMessage(sprintf(__('Configuration field doesn\'t exist: %s', 'psn-pagespeed-ninja'), $param));
             //return;
         }
 
@@ -232,6 +248,27 @@ class PagespeedNinja_View
                 <div class="field"><?php
                 $this->checkbox($id, $name, $value, isset($item->class) ? $item->class : '');
                 ?></div><?php
+                break;
+            case 'autoupdate':
+                global $wp_version;
+                if (version_compare($wp_version, '5.5', '>=')) {
+                    if ($this->template === 'admin-popup') {
+                        $value = true;
+                    } else {
+                        $plugin = 'psn-pagespeed-ninja/pagespeedninja.php';
+                        $auto_updates = (array) get_site_option('auto_update_plugins', array());
+                        $value = in_array($plugin, $auto_updates, true);
+                    }
+                    ?>
+                    <div class="field"><?php
+                    $this->checkbox($id, $name, $value);
+                    ?></div><?php
+                } else {
+                    ?>
+                    <div class="field"><?php
+                    esc_html_e('Requires WordPress 5.5 or higher', 'psn-pagespeed-ninja');
+                    ?></div><?php
+                }
                 break;
             case 'cachingcheckbox':
                 ?>
@@ -295,14 +332,15 @@ class PagespeedNinja_View
                 $logFilename = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'error_log.php';
                 ?>
                 <div class="field fullline"><?php
-                echo __('Log file:', 'psn-pagespeed-ninja') . " <span class=\"filename\">$logFilename</span> " . (is_file($logFilename) ? sprintf(__('(%d bytes)'), filesize($logFilename)) : '');
+                echo __('Log file:', 'psn-pagespeed-ninja') . " <span class=\"filename\">$logFilename</span> " . (is_file($logFilename) ? sprintf(__('(%d bytes)', 'psn-pagespeed-ninja'), filesize($logFilename)) : '');
                 ?></div><?php
                 break;
             case 'apikey':
+                $utm_medium = $config['afterinstall_popup'] ? 'Advanced-tab-upgrade' : 'Onboarding-upgrade';
                 ?>
                 <div class="field fullline">
                     <?php $this->text($id, $name, $value); ?>
-                    <a id="do_subscription_getapikey" href="https://pagespeed.ninja/download/?utm_source=psnbackend-apikey&amp;utm_medium=Advanced-tab-upgrade&amp;utm_campaign=Admin-upgrade" target="_blank">Get License Key</a>
+                    <a id="do_subscription_getapikey" href="https://pagespeed.ninja/download/?utm_source=psnbackend-apikey&amp;utm_medium=<?php echo $utm_medium; ?>&amp;utm_campaign=Admin-upgrade" target="_blank"><?php esc_html_e('Get License Key', 'psn-pagespeed-ninja'); ?></a>
                 </div><?php
                 break;
             case 'do_subscription':
@@ -310,16 +348,16 @@ class PagespeedNinja_View
                 <div class="field">
                     <div class="do_subscription">
                         <span class="loading" id="do_subscription_title"></span>
-                        <a class="button" id="do_subscription_upgrade" href="https://pagespeed.ninja/download/?utm_source=psnbackend-subscription&amp;utm_medium=Advanced-tab-upgrade&amp;utm_campaign=Admin-upgrade" target="_blank">Upgrade</a>
+                        <a class="button" id="do_subscription_upgrade" href="https://pagespeed.ninja/download/?utm_source=psnbackend-subscription&amp;utm_medium=Advanced-tab-upgrade&amp;utm_campaign=Admin-upgrade" target="_blank"><?php esc_html_e('Upgrade', 'psn-pagespeed-ninja'); ?></a>
                         <br>
-                        <?php printf(__('%s request(s)/week'), '<span id="do_subscription_limit">?</span>'); ?>
+                        <?php printf(__('%s request(s)/week', 'psn-pagespeed-ninja'), '<span id="do_subscription_limit">?</span>'); ?>
                     </div>
                 </div><?php
                 break;
             case 'do_backup':
                 ?>
                 <div class="field">
-                    <a id="do_backup_create" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=psn_backup_backup'), 'psn_backup_backup')); ?>" target="_blank" class="button"><?php _e('Backup', 'psn-pagespeed-ninja'); ?></a>
+                    <a id="do_backup_create" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=psn_backup_backup'), 'psn_backup_backup')); ?>" target="_blank" class="button"><?php esc_html_e('Backup', 'psn-pagespeed-ninja'); ?></a>
                 </div>
                 <?php
                 break;
@@ -327,7 +365,7 @@ class PagespeedNinja_View
                 ?>
                 <div class="field">
                     <input type="file" accept="application/json" name="backupfile" id="backupfile">
-                    <a id="do_backup_restore" href="#" class="button disabled"><?php _e('Upload & Restore', 'psn-pagespeed-ninja'); ?></a>
+                    <a id="do_backup_restore" href="#" class="button disabled"><?php esc_html_e('Upload & Restore', 'psn-pagespeed-ninja'); ?></a>
                 </div>
                 <?php
                 break;
@@ -339,6 +377,16 @@ class PagespeedNinja_View
                          onclick="autoGenerateATF('pagespeedninja_config_<?php echo $item->name; ?>', document.getElementById('pagespeedninja_config_css_abovethefoldlocal').checked);return false;"><?php
                 _e('&#x2191; Generate Critical CSS styles', 'psn-pagespeed-ninja');
                 ?></a></div><?php
+                break;
+            case 'cachingdriver':
+                ?>
+                <div class="field"><?php
+                $values = $this->toList($item->values);
+                if (!isset($values[$value])) {
+                    $value = $item->default;
+                }
+                $this->select($id, $name, $value, $values, isset($item->class) ? $item->class : null);
+                ?></div><?php
                 break;
             case 'imgdriver':
                 ?>
@@ -452,7 +500,7 @@ class PagespeedNinja_View
     }
 
     /**
-     * @return array
+     * @return stdClass[]
      */
     protected function getUrlsList()
     {

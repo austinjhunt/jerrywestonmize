@@ -187,7 +187,7 @@ class Forminator_Custom extends Forminator_Field {
 		$name          = $id;
 		$field_type    = self::get_property( 'field_type', $field );
 		$placeholder   = esc_html( self::get_property( 'placeholder', $field ) );
-		$description   = esc_html( self::get_property( 'description', $field ) );
+		$description   = self::get_property( 'description', $field );
 		$label         = esc_html( self::get_property( 'field_label', $field ) );
 		$id            = $id . '-field';
 		$html          = '';

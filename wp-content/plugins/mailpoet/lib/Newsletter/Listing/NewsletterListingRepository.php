@@ -207,11 +207,21 @@ class NewsletterListingRepository extends ListingRepository {
       ->setParameter('status', $group);
   }
 
-  protected function applySearch(QueryBuilder $queryBuilder, string $search) {
+  protected function applySearch(QueryBuilder $queryBuilder, string $search, array $parameters = []) {
     $search = Helpers::escapeSearch($search);
-    $queryBuilder
-      ->andWhere('n.subject LIKE :search')
-      ->setParameter('search', "%$search%");
+
+    $type = $parameters['type'] ?? null;
+
+    if ($type && $type === NewsletterEntity::TYPE_NOTIFICATION_HISTORY) {
+      $queryBuilder
+        ->leftJoin('n.queues', 'sq')
+        ->andWhere('sq.newsletterRenderedSubject LIKE :search or n.subject LIKE :search')
+        ->setParameter('search', "%$search%");
+    } else {
+      $queryBuilder
+        ->andWhere('n.subject LIKE :search')
+        ->setParameter('search', "%$search%");
+    }
   }
 
   protected function applyFilters(QueryBuilder $queryBuilder, array $filters) {

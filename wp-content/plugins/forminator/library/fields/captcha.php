@@ -71,6 +71,7 @@ class Forminator_Captcha extends Forminator_Field {
 
 		return array(
 			'captcha_provider'		  => 'recaptcha',
+			'captcha_alignment'       => 'left',
 			'captcha_type'            => 'v2_checkbox',
 			'hcaptcha_type'           => 'hc_checkbox',
 			'score_threshold'         => '0.5',
@@ -135,12 +136,13 @@ class Forminator_Captcha extends Forminator_Field {
 		$captcha_badge	 = '';
 		$hcaptcha_notice = '';
 		$provider		 = self::get_property( 'captcha_provider', $field, 'recaptcha' );
+		$alignment        = self::get_property( 'captcha_alignment', $field, 'left' );
 
 		if ( 'recaptcha' === $provider ) {
 			$captcha_type  = self::get_property( 'captcha_type', $field, 'v3_recaptcha' );
 			$captcha_theme = self::get_property( 'captcha_theme', $field, 'light' );
 			$captcha_size  = self::get_property( 'captcha_size', $field, 'normal' );
-			$captcha_class = 'forminator-g-recaptcha';
+			$captcha_class = 'forminator-captcha-' . $alignment . ' forminator-g-recaptcha';
 
 			if ( $this->is_invisible_recaptcha( $field ) ) {
 				$captcha_badge  = 'data-badge="' . esc_attr( self::get_property( 'captcha_badge', $field, 'inline' ) ) . '"';
@@ -165,7 +167,7 @@ class Forminator_Captcha extends Forminator_Field {
 			$captcha_type  = self::get_property( 'hcaptcha_type', $field, 'hc_checkbox' );
 			$captcha_theme = self::get_property( 'hcaptcha_theme', $field, 'light' );
 			$captcha_size  = self::get_property( 'hcaptcha_size', $field, 'normal' );
-			$captcha_class = 'forminator-hcaptcha';
+			$captcha_class = 'forminator-captcha-' . $alignment . ' forminator-hcaptcha';
 
 			if ( 'hc_invisible' === $captcha_type ) {
 				$captcha_size 	  = 'invisible';

@@ -537,7 +537,7 @@ class Forminator_Address extends Forminator_Field {
 
 		$html = '';
 
-		if ( ! empty( $description ) || '' !== $description ) {
+		if ( ! empty( $description ) ) {
 			$attr['aria-describedby'] = $attr['id'] . '-description';
 		}
 

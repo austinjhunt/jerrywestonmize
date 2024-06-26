@@ -4,9 +4,9 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-campaignmonitor-
 
 /**
  * Class Forminator_Campaignmonitor
- * Campaignmonitor Addon Main Class
+ * Campaignmonitor Integration Main Class
  *
- * @since 1.0 Campaignmonitor Addon
+ * @since 1.0 Campaignmonitor Integration
  */
 final class Forminator_Campaignmonitor extends Forminator_Integration {
 
@@ -25,7 +25,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	/**
 	 * Forminator_Campaignmonitor constructor.
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 */
 	public function __construct() {
 		// late init to allow translation.
@@ -37,7 +37,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	/**
 	 * Override settings available,
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 * @return bool
 	 */
 	public function is_settings_available() {
@@ -47,7 +47,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	/**
 	 * Flag delete subscriber on delete submission
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 * @return bool
 	 */
 	public static function is_enable_delete_subscriber() {
@@ -71,7 +71,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	/**
 	 * Allow multiple connection on one form
 	 *
-	 * @since 1.0 Campaignmonitor Addon
+	 * @since 1.0 Campaignmonitor Integration
 	 * @return bool
 	 */
 	public function is_allow_multi_on_form() {
@@ -81,7 +81,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	/**
 	 * Setting wizard of Campaign Monitor
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 * @return array
 	 */
 	public function settings_wizards() {
@@ -97,7 +97,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	/**
 	 * Setup API Wizard
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 *
 	 * @param     $submitted_data
 	 * @param int $form_id
@@ -248,7 +248,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	/**
 	 * Get API Instance
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 *
 	 * @param null $api_key
 	 *
@@ -288,7 +288,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	/**
 	 * Validate API
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 *
 	 * @param $api_key
 	 *
@@ -307,7 +307,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	/**
 	 * Validate Client
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 *
 	 * @param $api_key
 	 * @param $client_id
@@ -328,7 +328,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	/**
 	 * Get Client ID
 	 *
-	 * @since 1.0 Campaign Monitor Addon
+	 * @since 1.0 Campaign Monitor Integration
 	 * @return string
 	 */
 	public function get_client_id() {

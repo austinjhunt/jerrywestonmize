@@ -21,7 +21,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * Last data sent to activecampaign
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 * @var array
 	 */
 	private $_last_data_sent = array();
@@ -29,7 +29,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * Last data received from activecampaign
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 * @var array
 	 */
 	private $_last_data_received = array();
@@ -37,7 +37,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * Last URL requested
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 * @var string
 	 */
 	private $_last_url_request = '';
@@ -45,7 +45,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * Forminator_Activecampaign_Wp_Api constructor.
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @param string $_endpoint
 	 *
@@ -70,7 +70,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * Add custom user agent on request
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @param $user_agent
 	 *
@@ -94,7 +94,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * HTTP Request
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @param string $verb
 	 * @param        $path
@@ -221,7 +221,7 @@ class Forminator_Activecampaign_Wp_Api {
 
 		$response = $res;
 		/**
-		 * Filter activecampaign api response returned to addon
+		 * Filter activecampaign api response returned to integration
 		 *
 		 * @since 1.1
 		 *
@@ -242,7 +242,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * Send data to activecampaign API URL
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @param $args
 	 *
@@ -261,7 +261,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * Get Account Detail
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @return array|mixed|object
 	 * @throws Forminator_Integration_Exception
@@ -282,7 +282,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * Get Lists
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @param array $args
 	 *
@@ -435,7 +435,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * Get last data sent
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @return array
 	 */
@@ -446,7 +446,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @return array
 	 */
@@ -457,7 +457,7 @@ class Forminator_Activecampaign_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @return string
 	 */

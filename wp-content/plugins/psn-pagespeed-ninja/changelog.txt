@@ -1,5 +1,37 @@
 == Changelog ==
 
+= 1.4.2 Stable Release [11 June 2024]
+- Added support of JavaScript modules in "Preload key requests"
+- Fixed issue with CSS relocation in "Inline CSS for First-Time Visitors"
+- Fixed issue with scripts execution order in "Non-blocking JavaScript" mode
+- Fixed work of lazy image loading
+- Fixed processing of query delimiters in Stream and Pharse parsers
+- Improved detection of width and height for SVG images
+- Adjusted "Ultra" and "Experimenntal" optimzation presets
+- Minor bugfixes
+
+= 1.4.1 Stable Release [07 June 2024]
+- Fixed issue with missed files [Free]
+
+= 1.4.0 Stable Release [03 June 2024]
+- Added "Display" options for loading Web Fonts/Google Fonts
+- Added "Auto Update" option
+- Added search field in the Advanced settings
+- Added warning about incompatibility with other optimization plugins
+- Added new "Does not use passive listeners" section [Pro]
+- Added initial support for Redis/KeyDB cache [Pro]
+- Fixed issue with disabled Save button
+- Fixed issue with JavaScript minification
+- Fixed issue with CSS minification
+- Fixed check for updates [Pro]
+- Improved caching under heavy load
+- Improved work of Non-blocking JavaScript feature
+- Improved asynchronous loading of CSS with Critical CSS feature
+- Improved work of preload tags generation
+- Adjusted "Ultra" optimzation preset
+- Changed initial setup wizard
+- Minor bugfixes/typos
+
 = 1.3.13 Stable Release [25 March 2024]
 - Fixed possible warning at addon's initialization
 

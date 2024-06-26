@@ -31,18 +31,17 @@ class Ressio_Plugin_Widgets extends Ressio_Plugin
      */
     public function __construct($di, $params = null)
     {
-        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
+        parent::__construct($di);
+        $this->loadConfig(__DIR__ . '/config.json', $params);
 
-        parent::__construct($di, $params);
-
-        if ($params->delay_widgets) {
+        if ($this->params->delay_widgets) {
             $this->generateEmbeds();
             foreach ($this->widgetsEmbed as $i => $regex_replace) {
                 $this->widgetsEmbed[$i][0] = '#' . $regex_replace[0] . '#';
             }
         }
 
-        $this->widgetsSrc = array_fill_keys($params->delay_scripts, true);
+        $this->widgetsSrc = array_fill_keys($this->params->delay_scripts, true);
     }
 
     /**
@@ -65,7 +64,7 @@ class Ressio_Plugin_Widgets extends Ressio_Plugin
      */
     public function onHtmlIterateTagSCRIPTBefore($event, $optimizer, $node)
     {
-        if ($node->hasAttribute('type') && $node->getAttribute('type') !== 'text/javascript') {
+        if ($node->hasAttribute('type') && $optimizer->isJavaScriptMime($node->getAttribute('type'))) {
             return;
         }
         if ($this->config->js->rules_merge_exclude && $optimizer->matchExcludeRule($node, $this->config->js->rules_merge_exclude)) {

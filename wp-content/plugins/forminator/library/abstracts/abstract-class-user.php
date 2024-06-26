@@ -23,7 +23,7 @@ abstract class Forminator_User {
 	 */
 	public function __construct() {
 		// Remove {password-N} in mail data.
-		add_filter( 'forminator_custom_form_mail_data', array( $this, 'remove_password_in_form_mail_data' ) );
+		add_filter( 'forminator_custom_form_mail_data', array( 'Forminator_Password', 'remove_password_field_values' ) );
 	}
 
 	/**

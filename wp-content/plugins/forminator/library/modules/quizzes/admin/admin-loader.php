@@ -91,8 +91,8 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 		global $plugin_page;
 
 		$page = Forminator_Core::sanitize_text_field( 'page' );
-		if ( empty( $plugin_page ) && $page ) {
-			$plugin_page = $page;
+		if ( empty( $plugin_page ) ) {
+			return $this->page_edit_knowledge === $page;
 		}
 
 		return $this->page_edit_knowledge === $plugin_page;
@@ -108,8 +108,8 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 		global $plugin_page;
 
 		$page = Forminator_Core::sanitize_text_field( 'page' );
-		if ( empty( $plugin_page ) && $page ) {
-			$plugin_page = $page;
+		if ( empty( $plugin_page ) ) {
+			return $this->page_edit_nowrong === $page;
 		}
 
 		return $this->page_edit_nowrong === $plugin_page;

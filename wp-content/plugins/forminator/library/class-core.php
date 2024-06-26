@@ -454,7 +454,9 @@ class Forminator_Core {
 			in_array( $current_key, $skipped_keys, true ) ||
 			0 === strpos( $current_key, 'url-' ) ||
 			0 === strpos( $current_key, 'select-' ) ||
-			0 === strpos( $current_key, 'checkbox-' )
+			0 === strpos( $current_key, 'checkbox-' ) ||
+			0 === strpos( $current_key, 'password-' ) ||
+			0 === strpos( $current_key, 'confirm_password-' )
 		) {
 			return $data;
 		}
@@ -572,12 +574,6 @@ class Forminator_Core {
 		} else {
 			// Plugin is being uninstalled, unschedule all and all forminator scheduled actions.
 			$is_uninstall = true;
-
-			as_unschedule_action( 'forminator_action_scheduler_cleanup', array(), 'forminator' );
-			as_unschedule_action( 'forminator_send_export', array(), 'forminator' );
-			as_unschedule_action( 'forminator_daily_cron', array(), 'forminator' );
-			as_unschedule_action( 'forminator_process_report', array(), 'forminator' );
-			as_unschedule_action( 'forminator_general_data_protection_cleanup', array(), 'forminator' );
 		}
 
 		$table_actions = $db_prefix . 'actionscheduler_actions';
@@ -598,7 +594,7 @@ class Forminator_Core {
 			WHERE as_actions.group_id = %s
 			" . $and . "
 			LIMIT 100",
-			$group_id,
+			$group_id
 		);
 
 		// Delete all AS forminator actions and logs.

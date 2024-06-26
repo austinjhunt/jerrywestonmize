@@ -4,9 +4,9 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-hubspot-wp-api.p
 
 /**
  * Class Forminator_Hubspot
- * HubSpot Addon Main Class
+ * HubSpot Integration Main Class
  *
- * @since 1.0 HubSpot Addon
+ * @since 1.0 HubSpot Integration
  */
 final class Forminator_Hubspot extends Forminator_Integration {
 
@@ -34,7 +34,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * Forminator_Hubspot constructor.
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 */
 	public function __construct() {
 		// late init to allow translation.
@@ -52,7 +52,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	 * Clear Database
 	 *
 	 * @param string $slug Slug.
-	 * @param object $addon Addon.
+	 * @param object $addon Integration.
 	 */
 	public function clear_db( $slug, $addon ) {
 		if ( $this->_slug === $slug ) {
@@ -64,7 +64,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * Override settings available,
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @return bool
 	 */
 	public function is_settings_available() {
@@ -74,7 +74,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * Allow multiple connection on one form
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @return bool
 	 */
 	public function is_allow_multi_on_form() {
@@ -84,7 +84,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * Settings wizard
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @return array
 	 */
 	public function settings_wizards() {
@@ -146,7 +146,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * Wait Authorize Access wizard
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @return array
 	 */
 	public function wait_authorize_access() {
@@ -195,7 +195,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * Authorized Callback
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @return bool
 	 */
 	public function is_authorized() {
@@ -207,7 +207,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * Get Access Token
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @return string
 	 */
 	public function get_client_access_token() {
@@ -232,7 +232,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * Register a page for redirect url of HubSpot auth
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @return array
 	 */
@@ -323,7 +323,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * HubSpot Authorize Page
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @param $query_args
 	 *
@@ -415,7 +415,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * Before get Setting Values
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @param $values
 	 *

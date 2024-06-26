@@ -3,17 +3,17 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 
 class PagespeedNinja_AdminConfig
 {
     /**
-     * @param array $newConfig
-     * @param array $oldConfig
+     * @param array<string,string> $newConfig
+     * @param array<string,string> $oldConfig
      * @return array
      */
     public function validate_config($newConfig, $oldConfig)
@@ -59,7 +59,7 @@ class PagespeedNinja_AdminConfig
             // load default presets
             foreach ($options as $section) {
                 if (isset($section->items)) {
-                    /** @var array {$section->items} */
+                    /** @var array<stdClass> {$section->items} */
                     foreach ($section->items as $item) {
                         if (isset($item->presets) && !in_array($item->name, $skip_presets, true)) {
                             foreach ($presets as $preset_name => $preset) {
@@ -145,8 +145,8 @@ class PagespeedNinja_AdminConfig
     }
 
     /**
-     * @param array $options
-     * @return array
+     * @param array<string,string> $options
+     * @return array<string,mixed>
      */
     public static function generateRessConfig($options)
     {
@@ -209,9 +209,6 @@ class PagespeedNinja_AdminConfig
                 'imgOptimizer.bmp' => Ressio_ImgHandler_GD::class,
                 'worker' => Ressio_Worker_SyncOnly::class,
             ),
-            'plugins' => array(
-                Ressio_Plugin_FilecacheCleaner::class => null
-            ),
         );
 
         $webrooturi = parse_url(get_option('siteurl'), PHP_URL_PATH);
@@ -269,20 +266,6 @@ class PagespeedNinja_AdminConfig
             }
         }
 
-        if ($options['psi_uses-rel-preload']) {
-            $preload_style = $options['preload_style'];
-            $preload_font = $options['preload_font'];
-            $preload_script = $options['preload_script'];
-            $preload_image = $options['preload_image'];
-            $ress_options['plugins'][Ressio_Plugin_Preload::class] = array(
-                'linkheader' => false,
-                'style' => self::split($preload_style),
-                'font' => self::split($preload_font),
-                'script' => self::split($preload_script),
-                'image' => self::split($preload_image),
-            );
-        }
-
         if ($options['psi_unminified-css']) {
             switch ($options['css_di_cssMinify']) {
                 case 'none':
@@ -338,21 +321,32 @@ class PagespeedNinja_AdminConfig
 
         if ($options['psi_font-display']) {
             switch ($options['css_googlefonts']) {
+                case 'swap':
                 case 'fout':
-                    $ress_options['plugins'][Ressio_Plugin_GoogleFont::class] = array('method' => 'fout');
-                    break;
-                case 'foit':
-                case 'sync':
-                    $ress_options['plugins'][Ressio_Plugin_GoogleFont::class] = array('method' => 'foit');
-                    break;
                 case 'async':
-                    $ress_options['plugins'][Ressio_Plugin_GoogleFont::class] = array('method' => 'async');
+                    $ress_options['plugins'][Ressio_Plugin_GoogleFont::class] = array('method' => 'swap');
+                    break;
+                case 'auto':
+                case 'foit':
+                case 'first':
+                case 'sync':
+                    $ress_options['plugins'][Ressio_Plugin_GoogleFont::class] = array('method' => 'auto');
+                    break;
+                case 'block':
+                    $ress_options['plugins'][Ressio_Plugin_GoogleFont::class] = array('method' => 'block');
+                    break;
+                case 'fallback':
+                    $ress_options['plugins'][Ressio_Plugin_GoogleFont::class] = array('method' => 'fallback');
+                    break;
+                case 'optional':
+                    $ress_options['plugins'][Ressio_Plugin_GoogleFont::class] = array('method' => 'optional');
                     break;
                 case 'none':
                     break;
             }
-            if ($options['css_fontdisplayswap']) {
+            if ($options['css_fontdisplay']) {
                 $ress_options['plugins'][Ressio_Plugin_FontDisplaySwap::class] = array(
+                    'display' => $options['css_fontdisplay'],
                     'excludedFonts' => self::split($options['css_fontdisplayswap_exclude'])
                 );
             }
@@ -508,6 +502,24 @@ class PagespeedNinja_AdminConfig
                 'regex' => '@' . implode('|', $regexps) . '@'
             );
         }
+
+        if ($options['psi_uses-rel-preload']) {
+            // Note: preload should be the last loaded plugin
+            $preload_style = $options['preload_style'];
+            $preload_font = $options['preload_font'];
+            $preload_script = $options['preload_script'];
+            $preload_module = $options['preload_module'];
+            $preload_image = $options['preload_image'];
+            $ress_options['plugins'][Ressio_Plugin_Preload::class] = array(
+                'linkheader' => false,
+                'style' => self::split($preload_style),
+                'font' => self::split($preload_font),
+                'script' => self::split($preload_script),
+                'module' => self::split($preload_module),
+                'image' => self::split($preload_image),
+            );
+        }
+        //if ($options['psi_uses-passive-event-listeners']) {} //<= available in Pro
         //if ($options['psi_duplicated-javascript']) {}
         //if ($options['psi_third-party-summary']) {}
         //if ($options['psi_third-party-facades']) {}
@@ -515,8 +527,6 @@ class PagespeedNinja_AdminConfig
         //if ($options['psi_no-document-write']) {}
         //if ($options['psi_interactive']) {}
         //if ($options['psi_max-potential-fid']) {}
-        //if ($options['psi_uses-passive-event-listeners']) {}
-
         $ress_options = apply_filters('psn_prepare_ressio_config', $ress_options, $options);
 
         return $ress_options;
@@ -607,6 +617,7 @@ class PagespeedNinja_AdminConfig
                 $cache_dir = $dataDir . '/pagecache';
                 if (!is_dir($cache_dir)) {
                     @mkdir($cache_dir, 0775, true);
+                    @copy("$pluginDir/assets/sample/sample_apache_denied.htaccess", "$cache_dir/.htaccess");
                 }
 
                 $deviceDependent_webp = is_network_admin() || ($newConfig['psi_modern-image-format'] && $newConfig['img_webp']);
@@ -711,6 +722,21 @@ class PagespeedNinja_AdminConfig
                     insert_with_markers($homeDir . '/' . $dir . '/.htaccess', $marker, $htaccess);
                 }
             }
+
+            if (isset($newConfig['autoupdate'])) {
+                $new_autoupdate = (bool)$newConfig['autoupdate'];
+                $plugin = 'psn-pagespeed-ninja/pagespeedninja.php';
+                $auto_updates = (array) get_site_option('auto_update_plugins', array());
+                $current_autoupdate = in_array($plugin, $auto_updates, true);
+                if ($new_autoupdate !== $current_autoupdate) {
+                    if ($new_autoupdate) {
+                        $auto_updates[] = $plugin;
+                    } else {
+                        $auto_updates = array_diff($auto_updates, array($plugin));
+                    }
+                    update_site_option('auto_update_plugins', $auto_updates);
+                }
+            }
         }
 
         $safeSettings = array('errorlogging', 'html_gzip', 'htaccess_gzip', 'afterinstall_popup',
@@ -767,6 +793,7 @@ class PagespeedNinja_AdminConfig
     /**
      * @param string $srcDir
      * @param string $destDir
+     * @return void
      */
     private function copyGetPhp($srcDir, $destDir)
     {
@@ -783,6 +810,7 @@ class PagespeedNinja_AdminConfig
 
     /**
      * @param bool $enabled
+     * @return void
      */
     private function update_WP_CACHE($enabled)
     {

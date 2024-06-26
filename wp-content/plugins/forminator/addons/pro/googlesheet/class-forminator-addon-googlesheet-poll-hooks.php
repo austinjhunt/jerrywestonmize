@@ -69,7 +69,7 @@ class Forminator_Googlesheet_Poll_Hooks extends Forminator_Integration_Poll_Hook
 			 * @param int                                        $poll_id                current Poll ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $poll_entry_fields
-			 * @param Forminator_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
+			 * @param Forminator_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Integration Poll Settings instance.
 			 */
 			do_action( 'forminator_addon_poll_googlesheet_before_prepare_sheet_headers', $connection_settings, $poll_id, $submitted_data, $poll_entry_fields, $poll_settings_instance );
 
@@ -86,7 +86,7 @@ class Forminator_Googlesheet_Poll_Hooks extends Forminator_Integration_Poll_Hook
 			 * @param int                                        $poll_id                current Poll ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $poll_entry_fields
-			 * @param Forminator_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
+			 * @param Forminator_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Integration Poll Settings instance.
 			 */
 			$header_fields = apply_filters(
 				'forminator_addon_poll_googlesheet_sheet_headers',
@@ -108,7 +108,7 @@ class Forminator_Googlesheet_Poll_Hooks extends Forminator_Integration_Poll_Hook
 			 * @param int                                        $poll_id                current Poll ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $poll_entry_fields
-			 * @param Forminator_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Addon Poll Settings instance.
+			 * @param Forminator_Googlesheet_Poll_Settings $poll_settings_instance Google Sheets Integration Poll Settings instance.
 			 */
 			do_action( 'forminator_addon_poll_googlesheet_after_prepare_sheet_headers', $header_fields, $connection_settings, $poll_id, $submitted_data, $poll_entry_fields, $poll_settings_instance );
 

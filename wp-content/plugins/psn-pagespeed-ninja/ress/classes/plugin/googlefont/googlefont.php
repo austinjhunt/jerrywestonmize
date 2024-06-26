@@ -23,9 +23,8 @@ class Ressio_Plugin_GoogleFont extends Ressio_Plugin
      */
     public function __construct($di, $params = null)
     {
-        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
-
-        parent::__construct($di, $params);
+        parent::__construct($di);
+        $this->loadConfig(__DIR__ . '/config.json', $params);
     }
 
     /**
@@ -61,6 +60,7 @@ class Ressio_Plugin_GoogleFont extends Ressio_Plugin
     public function onHtmlBeforeStringify($event, $optimizer)
     {
         $isHtml5 = ($optimizer->doctype === IRessio_HtmlOptimizer::DOCTYPE_HTML5);
+        $query_delim = $optimizer->getQueryDelim();
 
         if (count($this->googlefonts) > 0) {
             $optimizer->prependHead(
@@ -69,7 +69,7 @@ class Ressio_Plugin_GoogleFont extends Ressio_Plugin
                 //array('link', array('rel' => 'preconnect', 'href' => '//fonts.googleapis.com'), false),
                 array('link', array('rel' => 'preconnect', 'href' => '//fonts.gstatic.com', 'crossorigin' => false), false)
             );
-            $attrs = $this->generateLinkTagAttrs('//fonts.googleapis.com/css?family=', $this->googlefonts, $isHtml5);
+            $attrs = $this->generateLinkTagAttrs('https://fonts.googleapis.com/css?family=', $this->googlefonts, $isHtml5, $query_delim);
             $this->injectLinkTag($optimizer, $attrs, $isHtml5);
         }
 
@@ -79,7 +79,7 @@ class Ressio_Plugin_GoogleFont extends Ressio_Plugin
             //    array('link', array('rel' => 'preconnect', 'href' => '//fonts.bunny.net'), false),
             //    array('link', array('rel' => 'preconnect', 'href' => '//fonts.bunny.net', 'crossorigin' => false), false)
             //);
-            $attrs = $this->generateLinkTagAttrs('//fonts.bunny.net/css?family=', $this->bunnyfonts, $isHtml5);
+            $attrs = $this->generateLinkTagAttrs('https://fonts.bunny.net/css?family=', $this->bunnyfonts, $isHtml5, $query_delim);
             $this->injectLinkTag($optimizer, $attrs, $isHtml5);
         }
     }
@@ -88,27 +88,36 @@ class Ressio_Plugin_GoogleFont extends Ressio_Plugin
      * @param string $baseurl
      * @param string[] $fonts
      * @param bool $isHtml5
+     * @param string $query_delim
      * @return string[]
      */
-    private function generateLinkTagAttrs($baseurl, $fonts, $isHtml5)
+    private function generateLinkTagAttrs($baseurl, $fonts, $isHtml5, $query_delim)
     {
         $url = $baseurl . implode('%7C', $fonts);
 
         switch ($this->params->method) {
-            case 'async':
-            case 'fout':
-                $url .= '&display=swap';
-                /** @fallthrough */
-            case 'first':
-            case 'foit':
-            default:
-                $attrs = array(
-                    'rel' => 'stylesheet',
-                    'href' => $url
-                );
-                if (!$isHtml5) {
-                    $attrs['type'] = 'text/css';
-                }
+            case 'block':
+                $url .= $query_delim . 'display=block';
+                break;
+            case 'swap':
+                $url .= $query_delim . 'display=swap';
+                break;
+            case 'fallback':
+                $url .= $query_delim . 'display=fallback';
+                break;
+            case 'optional':
+                $url .= $query_delim . 'display=optional';
+                break;
+            case 'auto':
+                break;
+        }
+
+        $attrs = array(
+            'rel' => 'stylesheet',
+            'href' => $url
+        );
+        if (!$isHtml5) {
+            $attrs['type'] = 'text/css';
         }
 
         return $attrs;
@@ -123,10 +132,6 @@ class Ressio_Plugin_GoogleFont extends Ressio_Plugin
     private function injectLinkTag($optimizer, $attrs, $isHtml5)
     {
         if ($this->params->async) {
-            $preload_attrs = $attrs;
-            $preload_attrs['rel'] = 'preload';
-            $preload_attrs['as'] = 'style';
-
             $stylesheet_attrs = $attrs;
             $stylesheet_attrs['media'] = 'print';
             $stylesheet_attrs['onload'] = "this.media='all'";
@@ -134,7 +139,6 @@ class Ressio_Plugin_GoogleFont extends Ressio_Plugin
             $noscript_node = new Ressio_NodeWrapper('link', null, $attrs, $isHtml5 ? '' : '/');
 
             $optimizer->prependHead(
-                array('link', $preload_attrs, false),
                 array('link', $stylesheet_attrs, false),
                 array('noscript', array(), (string)$noscript_node)
             );

@@ -2,6 +2,10 @@
 
 namespace Forminator\Stripe\Util;
 
+/**
+ * @phpstan-type RequestOptionsArray array{api_key?: string, idempotency_key?: string, stripe_account?: string, stripe_version?: string, api_base?: string }
+ * @psalm-type RequestOptionsArray = array{api_key?: string, idempotency_key?: string, stripe_account?: string, stripe_version?: string, api_base?: string }
+ */
 class RequestOptions
 {
     /**
@@ -77,7 +81,7 @@ class RequestOptions
     public static function parse($options, $strict = \false)
     {
         if ($options instanceof self) {
-            return $options;
+            return clone $options;
         }
         if (null === $options) {
             return new RequestOptions(null, [], null);
@@ -122,8 +126,12 @@ class RequestOptions
         $message = 'The second argument to Stripe API method calls is an ' . 'optional per-request apiKey, which must be a string, or ' . 'per-request options, which must be an array. (HINT: you can set ' . 'a global apiKey by "Stripe::setApiKey(<apiKey>)")';
         throw new \Forminator\Stripe\Exception\InvalidArgumentException($message);
     }
+    /** @return string */
     private function redactedApiKey()
     {
+        if (null === $this->apiKey) {
+            return '';
+        }
         $pieces = \explode('_', $this->apiKey, 3);
         $last = \array_pop($pieces);
         $redactedLast = \strlen($last) > 4 ? \str_repeat('*', \strlen($last) - 4) . \substr($last, -4) : $last;

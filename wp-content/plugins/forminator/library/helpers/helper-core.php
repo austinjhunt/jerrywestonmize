@@ -46,7 +46,7 @@ function forminator_is_user_allowed( $slug = '' ) {
  * @return bool
  */
 function forminator_array_value_exists( $array, $key ) {
-	return ( isset( $array[ $key ] ) && ! empty( $array[ $key ] ) );
+	return isset( $array[ $key ] ) && ( ! empty( $array[ $key ] ) || in_array( $array[ $key ], array( 0, '0' ), true ) );
 }
 
 /**

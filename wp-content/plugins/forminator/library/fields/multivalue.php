@@ -244,7 +244,7 @@ class Forminator_MultiValue extends Forminator_Field {
 			);
 
 				$html .= sprintf(
-					'<input type="checkbox" name="%s" value="%s" id="%s" aria-labelledby="%s" data-calculation="%s" %s %s aria-describedby="%s"/>',
+					'<input type="checkbox" name="%s" value="%s" id="%s" aria-labelledby="%s" data-calculation="%s" %s %s%s/>',
 					$name,
 					$value,
 					$input_id,
@@ -252,7 +252,7 @@ class Forminator_MultiValue extends Forminator_Field {
 					$calculation_value,
 					$selected,
 					$hidden_calc_behavior,
-					esc_attr( $id . '-' . $uniq_id . '-description' )
+					( ! empty( $description ) ? ' aria-describedby="' . esc_attr( $id . '-' . $uniq_id . '-description' ) . '"' : '' )
 				);
 
 			if ( $input_visibility && ( $images_enabled && ! empty( $option_image_url ) ) ) {

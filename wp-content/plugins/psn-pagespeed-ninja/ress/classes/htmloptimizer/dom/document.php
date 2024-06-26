@@ -176,7 +176,7 @@ class Ressio_HtmlOptimizer_Dom_Document extends DOMDocument
     protected function saveTagContent($matches)
     {
         if (isset($matches[3]) && $matches[3] !== '') {
-            $id = (string) (++$this->tagsSavedContentId);
+            $id = (string)(++$this->tagsSavedContentId);
             $this->tagsSavedContent[$id] = $matches[3];
             return $matches[1] . $id . '</' . $matches[2] . '>';
         }
@@ -224,7 +224,7 @@ class Ressio_HtmlOptimizer_Dom_Document extends DOMDocument
     protected function getTagContent($matches)
     {
         if (isset($matches[3]) && $matches[3] !== '') {
-            $id = (int) $matches[3];
+            $id = (int)$matches[3];
             return $matches[1] . $this->tagsSavedContent[$id] . '</' . $matches[2] . '>';
         }
         return $matches[0];

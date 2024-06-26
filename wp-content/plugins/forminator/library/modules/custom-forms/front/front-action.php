@@ -804,7 +804,10 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 				return $intent;
 			}
 
-			$result = $intent->confirm();
+			// Don't process confirm if status is requires_capture as it confirmed already.
+			if ( 'requires_capture' !== $intent->status ) {
+				$result = $intent->confirm();
+			}
 		} catch ( Exception $e ) {
 			// Delete entry if paymentIntent confirmation is not successful
 			$entry->delete();
@@ -812,15 +815,18 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			return new WP_Error( 'forminator_stripe_error', $e->getMessage() );
 		}
 
-		// If we have 3D security on the card return for verification
-		if ( 'requires_action' === $result->status ) {
-			// Delete entry if 3d security is needed, we will store it on next attempt
-			$entry->delete();
+		// Don't process confirm result if status is requires_capture.
+		if ( 'requires_capture' !== $intent->status ) {
+			// If we have 3D security on the card return for verification
+			if ( 'requires_action' === $result->status ) {
+				// Delete entry if 3d security is needed, we will store it on next attempt
+				$entry->delete();
 
-			self::$response_attrs['stripe3d'] = true;
-			self::$response_attrs['secret']   = $result->client_secret;
+				self::$response_attrs['stripe3d'] = true;
+				self::$response_attrs['secret']   = $result->client_secret;
 
-			return new WP_Error( 'forminator_stripe_error', esc_html__( 'This payment require 3D Secure authentication! Please follow the instructions.', 'forminator' ) );
+				return new WP_Error( 'forminator_stripe_error', esc_html__( 'This payment require 3D Secure authentication! Please follow the instructions.', 'forminator' ) );
+			}
 		}
 
 		// Try to capture payment
@@ -833,7 +839,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			return new WP_Error( 'forminator_stripe_error', $e->getMessage() );
 		}
 
-		if ( ! isset( $capture->charges->data[0]->captured ) || true !== $capture->charges->data[0]->captured ) {
+		if ( ! isset( $capture->status ) || 'succeeded' !== $capture->status ) {
 			// Delete entry if capture is not successful.
 			$entry->delete();
 
@@ -1279,7 +1285,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			// replace misc data vars with value.
 			$redirect_url                   = forminator_replace_variables( $redirect_url, self::$module_id );
 			$newtab                         = forminator_replace_variables( $newtab, self::$module_id );
-			self::$response_attrs['url']    = esc_url( $redirect_url );
+			self::$response_attrs['url']    = esc_url_raw( $redirect_url );
 			self::$response_attrs['newtab'] = esc_html( $newtab );
 		}
 
@@ -2372,6 +2378,10 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 							'{}'
 						);
 						break;
+				}
+
+				if ( 'submission_id' === $field['value'] ) {
+					self::$info['field_data_array'][ $key ]['value'] = $entry->entry_id;
 				}
 			}
 		}

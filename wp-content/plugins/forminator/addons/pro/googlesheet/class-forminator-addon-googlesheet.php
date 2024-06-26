@@ -2,9 +2,9 @@
 
 /**
  * Class Forminator_Googlesheet
- * Google Sheets Addon Main Class
+ * Google Sheets Integration Main Class
  *
- * @since 1.0 Google Sheets Addon
+ * @since 1.0 Google Sheets Integration
  */
 final class Forminator_Googlesheet extends Forminator_Integration {
 
@@ -27,7 +27,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Forminator_Googlesheet constructor.
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 */
 	public function __construct() {
 		// late init to allow translation.
@@ -41,7 +41,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Override on is_connected
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 *
 	 * @return bool
 	 */
@@ -78,7 +78,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Override settings available,
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return bool
 	 */
 	public function is_settings_available() {
@@ -88,7 +88,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Allow multiple connection on one form
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return bool
 	 */
 	public function is_allow_multi_on_form() {
@@ -98,7 +98,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Settings wizard
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return array
 	 */
 	public function settings_wizards() {
@@ -121,7 +121,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Authorize Access wizard
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 *
 	 * @param $submitted_data
 	 *
@@ -247,7 +247,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Authorize Access wizard
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return array
 	 * @throws Exception
 	 */
@@ -282,7 +282,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Wait Authorize Access wizard
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return array
 	 * @throws Exception
 	 */
@@ -315,7 +315,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Authorized Callback
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return bool
 	 */
 	public function is_authorized() {
@@ -340,7 +340,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Get Client ID
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return string
 	 */
 	public function get_client_id() {
@@ -365,7 +365,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Get Client secret
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return string
 	 */
 	public function get_client_secret() {
@@ -390,7 +390,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Get Access Token
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return string
 	 */
 	public function get_client_access_token() {
@@ -415,7 +415,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Update Access Token
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 *
 	 * @param $access_token
 	 *
@@ -430,7 +430,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Register a page for redirect url of Goolge auth
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 *
 	 * @return array
 	 */
@@ -444,7 +444,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Google Sheets Authorize Page
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 *
 	 * @param $query_args
 	 *
@@ -493,7 +493,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Get Forminator_Google_Client Object
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return Forminator_Google_Client
 	 * @throws Exception
 	 */
@@ -539,7 +539,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Revoke token on Google before deactivate
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 * @return bool
 	 * @throws Forminator_Google_Auth_Exception
 	 * @throws Exception

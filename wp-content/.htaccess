@@ -23,14 +23,14 @@
 		AddOutputFilterByType BROTLI_COMPRESS text/html text/xml text/plain application/xml application/rss+xml
 		AddOutputFilterByType BROTLI_COMPRESS text/javascript application/javascript application/x-javascript application/ecmascript application/json
 		AddOutputFilterByType BROTLI_COMPRESS image/vnd.microsoft.icon image/x-icon image/svg+xml image/bmp
-		AddOutputFilterByType BROTLI_COMPRESS application/x-font-ttf application/font-woff application/vnd.ms-fontobject font/opentype font/truetype
+		AddOutputFilterByType BROTLI_COMPRESS application/x-font-ttf application/font-woff font/woff application/vnd.ms-fontobject font/opentype font/truetype
 	</IfModule>
 	<IfModule mod_deflate.c>
 		AddOutputFilterByType DEFLATE text/css text/csv
 		AddOutputFilterByType DEFLATE text/html text/xml text/plain application/xml application/rss+xml
 		AddOutputFilterByType DEFLATE text/javascript application/javascript application/x-javascript application/ecmascript application/json
 		AddOutputFilterByType DEFLATE image/vnd.microsoft.icon image/x-icon image/svg+xml image/bmp
-		AddOutputFilterByType DEFLATE application/x-font-ttf application/font-woff application/vnd.ms-fontobject font/opentype font/truetype
+		AddOutputFilterByType DEFLATE application/x-font-ttf application/font-woff font/woff application/vnd.ms-fontobject font/opentype font/truetype
 	</IfModule>
 </IfModule>
 

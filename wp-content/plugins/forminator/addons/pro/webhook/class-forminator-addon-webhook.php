@@ -4,7 +4,7 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-webhook-wp-api.p
 
 /**
  * Class Forminator_Webhook
- * Webhook Addon Main Class
+ * Webhook Integration Main Class
  *
  *
  */
@@ -45,7 +45,7 @@ final class Forminator_Webhook extends Forminator_Integration {
 	}
 
 	/**
-	 * Setting apier Addon
+	 * Setting apier Integration
 	 *
 	 *
 	 * @return array

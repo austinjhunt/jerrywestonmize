@@ -28,7 +28,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Last data sent to trello
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @var array
 	 */
 	private $_last_data_sent = array();
@@ -36,7 +36,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Last data received from trello
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @var array
 	 */
 	private $_last_data_received = array();
@@ -44,7 +44,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Last URL requested
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 * @var string
 	 */
 	private $_last_url_request = '';
@@ -52,7 +52,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Forminator_Trello_Wp_Api constructor.
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param string $app_key
 	 * @param string $token
@@ -76,7 +76,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Add custom user agent on request
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param $user_agent
 	 *
@@ -100,7 +100,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * HTTP Request
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param string $verb
 	 * @param        $path
@@ -212,7 +212,7 @@ class Forminator_Trello_Wp_Api {
 
 		$response = $res;
 		/**
-		 * Filter trello api response returned to addon
+		 * Filter trello api response returned to integration
 		 *
 		 * @since 1.1
 		 *
@@ -233,7 +233,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Send POST Request
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param string $path
 	 * @param array  $args
@@ -259,7 +259,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Send GET Request
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param string $path
 	 * @param array  $args
@@ -285,7 +285,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Send PUT Request
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param string $path
 	 * @param array  $args
@@ -311,7 +311,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Send DELETE Request
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param string $path
 	 * @param array  $args
@@ -337,7 +337,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Get Boards
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param array $args
 	 *
@@ -354,7 +354,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Get List
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param string $board_id
 	 * @param array  $args
@@ -372,7 +372,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Get Members
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param string $board_id
 	 * @param array  $args
@@ -390,7 +390,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Get Members
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param array $args
 	 *
@@ -414,7 +414,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Add Attachment
 	 *
-	 * @since 1.15.? Trello Addon
+	 * @since 1.15.? Trello Integration
 	 *
 	 * @param       $card_id
 	 * @param array $args
@@ -433,7 +433,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Delete Card (not reversible)
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param       $card_id
 	 * @param array $args
@@ -451,7 +451,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Close card shortcut
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param       $card_id
 	 * @param array $args
@@ -471,7 +471,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Update Card
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param       $card_id
 	 * @param array $args
@@ -489,7 +489,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Get Labels
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @param string $board_id
 	 * @param array  $args
@@ -507,7 +507,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Get last data sent
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @return array
 	 */
@@ -518,7 +518,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @return array
 	 */
@@ -529,7 +529,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @return string
 	 */
@@ -540,7 +540,7 @@ class Forminator_Trello_Wp_Api {
 	/**
 	 * Get card ID
 	 *
-	 * @since 1.0 Trello Addon
+	 * @since 1.0 Trello Integration
 	 *
 	 * @return array
 	 */

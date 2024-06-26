@@ -20,10 +20,10 @@ class Ressio_Plugin_FontDisplaySwap extends Ressio_Plugin
      */
     public function __construct($di, $params = null)
     {
-        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
-        parent::__construct($di, $params);
+        parent::__construct($di);
+        $this->loadConfig(__DIR__ . '/config.json', $params);
 
-        $this->excludedFonts = array_fill_keys($params->excludedFonts, true);
+        $this->excludedFonts = array_fill_keys($this->params->excludedFonts, true);
     }
 
     /**
@@ -50,7 +50,7 @@ class Ressio_Plugin_FontDisplaySwap extends Ressio_Plugin
         if (preg_match('/\bfont-family:\s*("[^"]*"|\'[^\']*\'|\w+)/', $fontface_rule, $match)) {
             $fontFamily = trim($match[1], " \t\n\r\0\x0B'\"");
             if (!isset($this->excludedFonts[$fontFamily])) {
-                return $fontface_rule_matches[1] . 'font-display:swap;' . $fontface_rule;
+                return $fontface_rule_matches[1] . 'font-display:' . $this->params->display . ';' . $fontface_rule;
             }
         }
         return $fontface_rule_matches[0];

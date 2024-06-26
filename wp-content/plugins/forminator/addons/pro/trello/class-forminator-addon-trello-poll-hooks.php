@@ -85,7 +85,7 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 				 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 				 * @param array                                 $current_entry_fields   default entry fields of poll.
 				 * @param array                                 $poll_settings          Displayed Poll settings.
-				 * @param Forminator_Trello_Poll_Settings $poll_settings_instance Trello Addon Poll Settings instance.
+				 * @param Forminator_Trello_Poll_Settings $poll_settings_instance Trello Integration Poll Settings instance.
 				 */
 				$card_name    = apply_filters(
 					'forminator_addon_trello_poll_card_name',
@@ -124,7 +124,7 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 				 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 				 * @param array                                 $current_entry_fields   default entry fields of poll.
 				 * @param array                                 $poll_settings          Displayed Poll settings.
-				 * @param Forminator_Trello_Poll_Settings $poll_settings_instance Trello Addon Poll Settings instance.
+				 * @param Forminator_Trello_Poll_Settings $poll_settings_instance Trello Integration Poll Settings instance.
 				 */
 				$card_description = apply_filters(
 					'forminator_addon_trello_poll_card_description',
@@ -175,7 +175,7 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 			 * @param array                                 $submitted_data
 			 * @param array                                 $connection_settings    current connection setting, contains options of like `name`, `list_id` etc.
 			 * @param array                                 $poll_settings          Displayed Poll settings.
-			 * @param Forminator_Trello_Poll_Settings $poll_settings_instance Trello Addon Poll Settings instance.
+			 * @param Forminator_Trello_Poll_Settings $poll_settings_instance Trello Integration Poll Settings instance.
 			 */
 			$args = apply_filters(
 				'forminator_addon_trello_poll_create_card_args',

@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 
 defined('WP_UNINSTALL_PLUGIN') || die;
@@ -14,6 +14,10 @@ defined('WP_UNINSTALL_PLUGIN') || die;
 // stops worker threads
 @touch(WP_CONTENT_DIR . '/uploads/psn-pagespeed-ninja/cache/worker_config.stamp');
 
+/**
+ * @param string $dir
+ * @return void
+ */
 function psn_rmdir_recursive($dir)
 {
     $entries = scandir($dir, SCANDIR_SORT_NONE);

@@ -3,7 +3,7 @@
 /**
  * Class Forminator_Hubspot_Form_Hooks
  *
- * @since 1.0 HubSpot Addon
+ * @since 1.0 HubSpot Integration
  */
 class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
@@ -35,7 +35,7 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	/**
 	 * Get status on send message to HubSpot
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @param $connection_id
 	 * @param $submitted_data
@@ -133,7 +133,7 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 			 * @param array $submitted_data
 			 * @param array $connection_settings current connection setting, contains options of like `name`, `list_id` etc.
 			 * @param array $form_settings Displayed Form settings.
-			 * @param Forminator_Hubspot_Form_Settings $form_settings_instance HubSpot Addon Form Settings instance.
+			 * @param Forminator_Hubspot_Form_Settings $form_settings_instance HubSpot Integration Form Settings instance.
 			 */
 			$args       = apply_filters(
 				'forminator_addon_hubspot_create_contact_args',
@@ -217,7 +217,7 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	/**
 	 * It will delete sent chat
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @param Forminator_Form_Entry_Model $entry_model
 	 * @param  array                       $addon_meta_data
@@ -231,14 +231,14 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
 		/**
 		 *
-		 * Filter HubSpot addon metadata that previously saved on db to be processed
+		 * Filter HubSpot integration metadata that previously saved on db to be processed
 		 *
 		 * @since 1.4
 		 *
 		 * @param array $addon_meta_data
 		 * @param int $form_id current Form ID.
 		 * @param Forminator_Form_Entry_Model $entry_model Forminator Entry Model.
-		 * @param Forminator_Hubspot_Form_Settings $form_settings_instance HubSpot Addon Form Settings instance.
+		 * @param Forminator_Hubspot_Form_Settings $form_settings_instance HubSpot Integration Form Settings instance.
 		 */
 		$addon_meta_data = apply_filters(
 			'forminator_addon_hubspot_metadata',
@@ -255,8 +255,8 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 		 *
 		 * @param int $form_id current Form ID.
 		 * @param Forminator_Form_Entry_Model $entry_model Forminator Entry Model.
-		 * @param array $addon_meta_data addon meta data.
-		 * @param Forminator_Hubspot_Form_Settings $form_settings_instance HubSpot Addon Form Settings instance.
+		 * @param array $addon_meta_data integration meta data.
+		 * @param Forminator_Hubspot_Form_Settings $form_settings_instance HubSpot Integration Form Settings instance.
 		 */
 		do_action(
 			'forminator_addon_hubspot_on_before_delete_submission',
@@ -330,7 +330,7 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 			// use wp_error, for future usage it can be returned to page entries.
 			$wp_error
 				= new WP_Error( 'forminator_addon_hubspot_delete_contact', $e->getMessage() );
-			// handle this in addon by self, since page entries cant handle error messages on delete yet.
+			// handle this in integration by self, since page entries cant handle error messages on delete yet.
 			wp_die(
 				esc_html( $wp_error->get_error_message() ),
 				esc_html( $this->addon->get_title() ),

@@ -269,7 +269,7 @@ class Ressio_UrlRewriter implements IRessio_DIAware
             $normal_url .= '//' . $parsed['host'];
         }
 
-        if ($normal_url === '' && strpos($parsed['path'], $this->base_path) === 0) {
+        if ($normal_url === '' && $this->base_path !== '/' && strpos($parsed['path'], $this->base_path) === 0) {
             $normal_url = substr($parsed['path'], strlen($this->base_path));
             if ($normal_url === false) {
                 $normal_url = '';

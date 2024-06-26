@@ -33,9 +33,8 @@ class Ressio_Plugin_Lazyload extends Ressio_Plugin
      */
     public function __construct($di, $params = null)
     {
-        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
-
-        parent::__construct($di, $params);
+        parent::__construct($di);
+        $this->loadConfig(__DIR__ . '/config.json', $params);
 
         if ($this->params->image) {
             $di->dispatcher->addListener('HtmlIterateTagIMG', array($this, 'processHtmlIterateTagIMG'));
@@ -175,7 +174,7 @@ class Ressio_Plugin_Lazyload extends Ressio_Plugin
                 $node->setAttribute('data-src', $src);
                 $node->setAttribute('data-youtube', $id);
                 $this->di->dispatcher->triggerEvent('PreconnectDomain', $src);
-                $this->di->dispatcher->triggerEvent('PreconnectDomain', '//i.ytimg.com/');
+                $this->di->dispatcher->triggerEvent('PreconnectDomain', 'https://i.ytimg.com/');
                 return;
             }
         }
@@ -274,19 +273,6 @@ class Ressio_Plugin_Lazyload extends Ressio_Plugin
             return;
         }
 
-        switch ($this->params->noscriptpos) {
-            case 'none':
-                break;
-            case 'before':
-                $optimizer->nodeInsertBefore($node, 'noscript', null, $optimizer->nodeToString($node));
-                break;
-            case 'after':
-                $optimizer->nodeInsertAfter($node, 'noscript', null, $optimizer->nodeToString($node));
-                break;
-        }
-
-        $node->addClass('lazy');
-
         if ($this->params->method === 'native') {
             $node->setAttribute('loading', 'lazy');
             if ($this->params->lqip !== 'none' && $node->getTag() === 'img' && !$node->hasAttribute('onload')) {
@@ -299,6 +285,18 @@ class Ressio_Plugin_Lazyload extends Ressio_Plugin
                 }
             }
         } else {
+            switch ($this->params->noscriptpos) {
+                case 'none':
+                    break;
+                case 'before':
+                    $optimizer->nodeInsertBefore($node, 'noscript', null, $optimizer->nodeToString($node));
+                    break;
+                case 'after':
+                    $optimizer->nodeInsertAfter($node, 'noscript', null, $optimizer->nodeToString($node));
+                    break;
+            }
+
+            $node->addClass('lazy');
             if ($node->getTag() === 'img') {
                 // img
                 $srcset = $node->getAttribute($node->hasAttribute('srcset') ? 'srcset' : 'src');
@@ -343,6 +341,10 @@ class Ressio_Plugin_Lazyload extends Ressio_Plugin
      */
     public function onHtmlIterateTagHEADAfterEnd($event, $optimizer, $node)
     {
+        if ($this->params->method === 'native') {
+            return;
+        }
+
         if ($this->params->noscriptpos !== 'none') {
             $optimizer->prependHead(
                 array('noscript', array(), '<style>.lazy{display:none}</style>')
@@ -404,7 +406,7 @@ class Ressio_Plugin_Lazyload extends Ressio_Plugin
 
         $urlRewriter = $this->di->urlRewriter;
         $src_imagepath = $urlRewriter->urlToFilepath($src_url);
-        if ($this->di->filesystem->isFile($src_imagepath)) {
+        if ($src_imagepath !== null && $this->di->filesystem->isFile($src_imagepath)) {
             if ($src_ext === 'svg') {
                 $xml = simplexml_load_file($src_imagepath);
                 if ($xml->getName() === 'svg') {

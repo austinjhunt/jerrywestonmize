@@ -1,4 +1,4 @@
-/* PageSpeed Ninja 1.3.13 | pagespeed.ninja/license.html */
+/* PageSpeed Ninja 1.4.2 | pagespeed.ninja/license.html */
 (function () {
     'use strict';
 
@@ -137,6 +137,10 @@
         jQuery('table.rules-list').each(function () {
             updateExcludeRulesTable(this.getAttribute('data-rules-id'));
         });
+
+        jQuery('#pagespeedninja_filter')
+            .on('change', applyFilter)
+            .on('keyup', applyFilter);
     });
 
     function detectPreset() {
@@ -318,6 +322,7 @@
         configInput.value = newRules.join('\n');
         updateExcludeRulesTable(id);
         tb_remove();
+        jQuery('#pagespeedninja_form').trigger('checkform.areYouSure');
     };
 
     window.showExcludeRulesPopup = function (id) {
@@ -333,5 +338,57 @@
             document.getElementById('psn-rules-popup-textarea').value;
         updateExcludeRulesTable(id);
         tb_remove();
+        jQuery('#pagespeedninja_form').trigger('checkform.areYouSure');
     };
+
+    function isMatched(text, query) {
+        return text.toLowerCase().indexOf(query) >= 0;
+    }
+
+    function applyFilter () {
+        var query = jQuery('#pagespeedninja_filter').val().toLowerCase();
+
+        jQuery('#pagespeedninja_form div.line').each(function () {
+            var $line = jQuery(this),
+                match = false;
+            if (query === '') {
+                match = true;
+            } else {
+                var $title = $line.children('div.title');
+                if ($title.length) {
+                    match = isMatched($title.text(), query) || isMatched($title.data('tooltip'), query);
+                    if (!match) {
+                        var $field = $line.children('.field');
+                        match =
+                            $field.children('input[type=text], input[type=button], textarea').is(function () {
+                                return isMatched(jQuery(this).val(), query);
+                            }) ||
+                            $field.children('label, table.rules-list').is(function () {
+                                return isMatched(jQuery(this).text(), query);
+                            }) ||
+                            $field.find('select > option').is(function () {
+                                return isMatched(jQuery(this).text(), query);
+                            });
+                    }
+                }
+            }
+            $line.toggleClass('unmatched', !match);
+        });
+
+        var nSections = 0;
+        jQuery('#pagespeedninja_form div.content').each(function () {
+            var $section = jQuery(this),
+                match = $section.children('div.line:not(.unmatched)').length > 0;
+            $section.parent().toggleClass('hidden', !match);
+            if (match) {
+                nSections++;
+            }
+        });
+        if (nSections <= 2) {
+            jQuery('#pagespeedninja_form > div:not(.hidden) > div.content')
+                .addClass('show')
+                .prev('.header').children('.expando').addClass('open');
+        }
+    }
+
 })();

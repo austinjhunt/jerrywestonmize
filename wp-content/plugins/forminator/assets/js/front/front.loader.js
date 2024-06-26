@@ -187,6 +187,10 @@
 			    .replaceWith(html);
 			}
 
+			// Show form only after initialized ForminatorFront to avoid showing hidden fields.
+			let $element = $('#forminator-module-' + id + '[data-forminator-render=' + render_id + ']');
+			$element.hide();
+
 			if (message) {
 				$('#forminator-module-' + id + '[data-forminator-render=' + render_id + '] .forminator-response-message')
 					.replaceWith(message);

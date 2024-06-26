@@ -5,7 +5,7 @@
  */
 abstract class Forminator_Integration_Hooks {
 	/**
-	 * Addon Instance
+	 * Integration Instance
 	 *
 	 * @since 1.1
 	 * @var Forminator_Integration
@@ -61,7 +61,7 @@ abstract class Forminator_Integration_Hooks {
 	/**
 	 * Forminator_Integration_Hooks constructor.
 	 *
-	 * @param Forminator_Integration $addon Addon.
+	 * @param Forminator_Integration $addon Integration.
 	 * @param int                       $module_id Module ID.
 	 *
 	 * @since 1.1
@@ -123,7 +123,7 @@ abstract class Forminator_Integration_Hooks {
 		 *
 		 * @param array                                        $submitted_data Submitted data.
 		 * @param int                                          $module_id Current Module ID.
-		 * @param Forminator_Integration_Form_Settings|null $settings_instance Addon Settings instance.
+		 * @param Forminator_Integration_Form_Settings|null $settings_instance Integration Settings instance.
 		 */
 		$submitted_data = apply_filters(
 			'forminator_addon_' . $addon_slug . '_' . static::$slug . '_submitted_data',
@@ -156,7 +156,7 @@ abstract class Forminator_Integration_Hooks {
 		 * @param array                              $entry_fields Entry fields.
 		 * @param int                                $module_id Current Module ID.
 		 * @param array                              $submitted_data Submitted data.
-		 * @param Forminator_Integration_Settings $settings_instance Addon Settings instance.
+		 * @param Forminator_Integration_Settings $settings_instance Integration Settings instance.
 		 * @param array                              $current_entry_fields Current entry fields.
 		 */
 		$entry_fields = apply_filters(
@@ -214,7 +214,7 @@ abstract class Forminator_Integration_Hooks {
 			if ( ! isset( $addon_setting_values['fields_map']['email'] ) ) {
 				throw new Forminator_Integration_Exception(
 				/* translators: 1: email */
-					sprintf( esc_html__( 'Required Field %1$s not mapped yet to Forminator Field, Please check your Addon Configuration on Module Settings', 'forminator' ), 'email' )
+					sprintf( esc_html__( 'Required Field %1$s not mapped yet to Forminator Field, Please check your Integration Configuration on Module Settings', 'forminator' ), 'email' )
 				);
 			}
 
@@ -255,17 +255,17 @@ abstract class Forminator_Integration_Hooks {
 			$mail_list_id = $addon_setting_values['mail_list_id'];
 
 			/**
-			 * Filter mail list id to send to Addon API
+			 * Filter mail list id to send to Integration API
 			 *
-			 * Change $mail_list_id that will be sent to Addon API,
+			 * Change $mail_list_id that will be sent to Integration API,
 			 * Any validation required by the mail list should be done.
-			 * Else if it's rejected by Addon API, It will only add Request to Log.
+			 * Else if it's rejected by Integration API, It will only add Request to Log.
 			 * Log can be viewed on Entries Page
 			 *
 			 * @param string                                  $mail_list_id
 			 * @param int                                     $module_id Module ID.
 			 * @param array                                   $submitted_data Submitted data.
-			 * @param Forminator_Integration_Settings $settings_instance Addon Settings.
+			 * @param Forminator_Integration_Settings $settings_instance Integration Settings.
 			 */
 			$mail_list_id = apply_filters(
 				'forminator_addon_' . $this->addon->get_slug() . '_add_update_member_request_mail_list_id',
@@ -276,14 +276,14 @@ abstract class Forminator_Integration_Hooks {
 			);
 
 			/**
-			 * Filter Addon API request arguments
+			 * Filter Integration API request arguments
 			 *
 			 * Request Arguments will be added to request body.
 			 *
 			 * @param array                              $args
 			 * @param int                                $module_id Module ID.
 			 * @param array                              $submitted_data Submitted data.
-			 * @param Forminator_Integration_Settings $settings_instance Addon Settings.
+			 * @param Forminator_Integration_Settings $settings_instance Integration Settings.
 			 */
 			$args = apply_filters(
 				'forminator_addon_' . $this->addon->get_slug() . '_add_update_member_request_args',
@@ -294,21 +294,21 @@ abstract class Forminator_Integration_Hooks {
 			);
 
 			/**
-			 * Fires before Addon send request `add_or_update_member` to Addon API
+			 * Fires before Integration send request `add_or_update_member` to Integration API
 			 *
 			 * If this action throw an error,
 			 * then `add_or_update_member` process will be cancelled
 			 *
 			 * @param int                                $module_id Module ID.
 			 * @param array                              $submitted_data Submitted data.
-			 * @param Forminator_Integration_Settings $settings_instance Addon Settings.
+			 * @param Forminator_Integration_Settings $settings_instance Integration Settings.
 			 */
 			do_action( 'forminator_addon_' . $this->addon->get_slug() . '_before_add_update_member', $module_id, $submitted_data, $settings_instance );
 
 			$add_member_request = $addon_api->add_or_update_member( $mail_list_id, $email, $args );
 			if ( ! $add_member_request ) {
 				throw new Forminator_Integration_Exception(
-					esc_html__( 'Failed adding or updating member on Addon list', 'forminator' )
+					esc_html__( 'Failed adding or updating member on Integration list', 'forminator' )
 				);
 			}
 
@@ -352,7 +352,7 @@ abstract class Forminator_Integration_Hooks {
 	 * Return special addon args
 	 *
 	 * @param array $submitted_data Submitted data.
-	 * @param array $addon_setting_values Addon settings.
+	 * @param array $addon_setting_values Integration settings.
 	 * @return array
 	 */
 	protected function get_special_addon_args( $submitted_data, $addon_setting_values ) {
@@ -368,7 +368,7 @@ abstract class Forminator_Integration_Hooks {
 	public function on_export_render_title_row() : array {
 
 		$export_headers = array(
-			/* translators: Addon name */
+			/* translators: Integration name */
 			'info' => sprintf( esc_html__( '%s Info', 'forminator' ), $this->addon->get_title() ),
 		);
 
@@ -382,7 +382,7 @@ abstract class Forminator_Integration_Hooks {
 		 *
 		 * @param array                              $export_headers Headers to be displayed on export file.
 		 * @param int                                $module_id Current Module ID.
-		 * @param Forminator_Integration_Settings $settings_instance Addon Settings instance.
+		 * @param Forminator_Integration_Settings $settings_instance Integration Settings instance.
 		 */
 		$export_headers = apply_filters(
 			'forminator_addon_' . $this->addon->get_slug() . '_export_headers',
@@ -417,7 +417,7 @@ abstract class Forminator_Integration_Hooks {
 	}
 
 	/**
-	 * Addon will add a column that give user information whether sending data to the Addon successfully or not
+	 * Integration will add a column that give user information whether sending data to the Integration successfully or not
 	 * It will only add one column even its multiple connection, every connection will be separated by comma
 	 *
 	 * @since 1.0
@@ -433,7 +433,7 @@ abstract class Forminator_Integration_Hooks {
 		$settings_instance = $this->settings_instance;
 
 		/**
-		 * Filter Addon metadata that previously saved on db to be processed
+		 * Filter Integration metadata that previously saved on db to be processed
 		 *
 		 *  Although it can be used for all addon.
 		 *  Please keep in mind that if the addon override this method,
@@ -442,7 +442,7 @@ abstract class Forminator_Integration_Hooks {
 		 *
 		 * @param array                              $addon_meta_data
 		 * @param int                                $module_id Current Module ID.
-		 * @param Forminator_Integration_Settings $settings_instance Addon Settings instance.
+		 * @param Forminator_Integration_Settings $settings_instance Integration Settings instance.
 		 *@since 1.1
 		 *
 		 */
@@ -458,7 +458,7 @@ abstract class Forminator_Integration_Hooks {
 		);
 
 		/**
-		 * Filter Addon columns to be displayed on export submissions
+		 * Filter Integration columns to be displayed on export submissions
 		 *
 		 * @since 1.1
 		 *
@@ -466,7 +466,7 @@ abstract class Forminator_Integration_Hooks {
 		 * @param int                                            $module_id                current Module ID.
 		 * @param Forminator_Form_Entry_Model                    $entry_model            Form Entry Model.
 		 * @param array                                          $addon_meta_data        meta data saved by addon on entry fields.
-		 * @param Forminator_Integration_Settings             $settings_instance Addon Settings instance.
+		 * @param Forminator_Integration_Settings             $settings_instance Integration Settings instance.
 		 */
 		$export_columns = apply_filters(
 			'forminator_addon_' . static::$slug . '_' . $addon_slug . '_export_columns',
@@ -484,14 +484,14 @@ abstract class Forminator_Integration_Hooks {
 	 * Format additional entry item as label and value arrays
 	 *
 	 * - Integration Name : its defined by user when they are adding integration on their module
-	 * - Sent To {Addon name} : will be Yes/No value, that indicates whether sending data to the addon was successful
+	 * - Sent To {Integration name} : will be Yes/No value, that indicates whether sending data to the addon was successful
 	 * - Info : Text that are generated by addon when building and sending data to it
 	 * - Below subentries will be added if full log enabled, @see Forminator_Integration::is_show_full_log()
 	 *      - API URL : URL that wes requested when sending data to the addon
-	 *      - Data sent to {Addon name} : json encoded body request that was sent
-	 *      - Data received from {Addon name} : json encoded body response that was received
+	 *      - Data sent to {Integration name} : json encoded body request that was sent
+	 *      - Data received from {Integration name} : json encoded body response that was received
 	 *
-	 * @param array $addon_meta_data Addon metadata.
+	 * @param array $addon_meta_data Integration metadata.
 	 *
 	 * @return array
 	 */
@@ -591,10 +591,10 @@ abstract class Forminator_Integration_Hooks {
 		 * then this filter probably won't be applied.
 		 * To be sure please check individual addon documentations.
 		 *
-		 * @param array  $addon_meta_data Addon metadata.
+		 * @param array  $addon_meta_data Integration metadata.
 		 * @param int    $module_id Current Module ID.
 		 * @param Forminator_Form_Entry_Model $entry_model Forminator Entry Model.
-		 * @param object $settings_instance Addon Settings instance.
+		 * @param object $settings_instance Integration Settings instance.
 		 */
 		$addon_meta_data = apply_filters(
 			'forminator_addon_' . $this->addon->get_slug() . '_metadata',
@@ -608,7 +608,7 @@ abstract class Forminator_Integration_Hooks {
 	}
 
 	/**
-	 * Get Addon meta data, will be recursive if meta data is multiple because of multiple connection added
+	 * Get Integration meta data, will be recursive if meta data is multiple because of multiple connection added
 	 *
 	 * @since 1.6.2
 	 *
@@ -674,7 +674,7 @@ abstract class Forminator_Integration_Hooks {
 	 * @since 1.1
 	 *
 	 * @param Forminator_Form_Entry_Model $entry_model Forminator Entry Model.
-	 * @param array                       $addon_meta_data Addon meta data.
+	 * @param array                       $addon_meta_data Integration meta data.
 	 */
 	public function on_before_delete_entry( Forminator_Form_Entry_Model $entry_model, $addon_meta_data ) {
 		$addon_slug        = $this->addon->get_slug();
@@ -693,8 +693,8 @@ abstract class Forminator_Integration_Hooks {
 		 *
 		 * @param int                                     $module_id Current Module ID.
 		 * @param Forminator_Form_Entry_Model             $entry_model Forminator Entry Model.
-		 * @param array                                   $addon_meta_data Addon meta data.
-		 * @param Forminator_Integration_Settings|null $settings_instance Addon Settings.
+		 * @param array                                   $addon_meta_data Integration meta data.
+		 * @param Forminator_Integration_Settings|null $settings_instance Integration Settings.
 		 */
 		do_action(
 			'forminator_addon_' . static::$slug . '_' . $addon_slug . '_on_before_delete_submission',
@@ -735,7 +735,7 @@ abstract class Forminator_Integration_Hooks {
 		 *
 		 * @param array                                   $submitted_data
 		 * @param int                                     $module_id Current Module ID.
-		 * @param Forminator_Integration_Settings|null $settings_instance Addon Settings instance.
+		 * @param Forminator_Integration_Settings|null $settings_instance Integration Settings instance.
 		 */
 		$submitted_data = apply_filters(
 			'forminator_addon_' . $addon_slug . '_' . static::$slug . '_submitted_data',
@@ -759,7 +759,7 @@ abstract class Forminator_Integration_Hooks {
 		 * @param bool                                    $is_success
 		 * @param int                                     $module_id Current Module ID.
 		 * @param array                                   $submitted_data
-		 * @param Forminator_Integration_Settings|null $settings_instance Addon Settings instance.
+		 * @param Forminator_Integration_Settings|null $settings_instance Integration Settings instance.
 		 */
 		$is_success = apply_filters(
 			'forminator_addon_' . $addon_slug . '_on_' . static::$slug . '_submit_result',

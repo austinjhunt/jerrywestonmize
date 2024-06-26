@@ -203,7 +203,7 @@ abstract class Forminator_Integration_Poll_Settings extends Forminator_Integrati
 
 	/**
 	 * Override this function to set wizardable settings
-	 * Default its and empty array which is indicating that Addon doesnt have settings
+	 * Default its and empty array which is indicating that Integration doesnt have settings
 	 *
 	 * Its multi array, with numerical key, start with `0`
 	 * Every step on wizard, will consist at least

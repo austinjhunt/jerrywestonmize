@@ -41,22 +41,23 @@ class Ressio_Plugin
     /**
      * @param string $filename
      * @param ?stdClass $override
-     * @return stdClass
      */
     protected function loadConfig($filename, $override)
     {
         if (!is_file($filename)) {
-            return $override ?: new stdClass();
+            $this->di->logger->notice("File $filename not found");
+            $this->params = $override ?: new stdClass();
         }
         $params = json_decode(file_get_contents($filename));
         if ($override !== null) {
             foreach ($override as $key => $value) {
-                // Note: this method is usually called before constructor, so $this->>di is not available to log messages
-                //if (isset($params->$key) || property_exists($params, $key)) {
-                $params->$key = $value;
-                //}
+                if (isset($params->$key) || property_exists($params, $key)) {
+                    $params->$key = $value;
+                } else {
+                    $this->di->logger->notice("The key '$key' is not found in $filename");
+                }
             }
         }
-        return $params;
+        $this->params = $params;
     }
 }

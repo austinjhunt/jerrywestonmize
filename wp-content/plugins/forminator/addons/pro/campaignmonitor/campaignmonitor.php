@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Addon Name: Campaignmonitor
+ * Integration Name: Campaignmonitor
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: Integrate Forminator Custom Forms with Campaignmonitor to get notified in real time.

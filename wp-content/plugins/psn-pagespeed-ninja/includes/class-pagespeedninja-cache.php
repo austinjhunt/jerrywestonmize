@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 
 include_once dirname(__DIR__) . '/ress/classes/pagecache.php';
@@ -43,6 +43,7 @@ class PagespeedNinja_Cache extends Ressio_PageCache
         parent::__construct($uri, PAGESPEEDNINJA_CACHE_DIR, PAGESPEEDNINJA_CACHE_TTL, PAGESPEEDNINJA_CACHE_DEPS_VENDOR);
     }
 
+    /** @return void */
     public function register_hooks()
     {
         if (!$this->caching) {
@@ -55,8 +56,8 @@ class PagespeedNinja_Cache extends Ressio_PageCache
     }
 
     /**
-     * @param array $headers
-     * @return array
+     * @param array<string,string> $headers
+     * @return string[]
      */
     public function save_headers($headers)
     {
@@ -87,6 +88,7 @@ class PagespeedNinja_Cache extends Ressio_PageCache
 
     /**
      * @param string $content
+     * @return void
      */
     public function save($content)
     {
@@ -150,7 +152,7 @@ class PagespeedNinja_Cache extends Ressio_PageCache
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     protected function getRequestHashArray()
     {

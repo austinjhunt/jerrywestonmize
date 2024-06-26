@@ -18,7 +18,6 @@ class Forminator_Addons_Page extends Forminator_Admin_Page {
 	public function get_addons_data() {
 		$project_data = array();
 		if ( class_exists( 'WPMUDEV_Dashboard' ) ) {
-			$dash         = WPMUDEV_Dashboard::instance();
 			$project_info = array(
 				array(
 					'pid' => Forminator_Admin_Addons_page::GEOLOCATION_PID, // Geolocation Add-on.
@@ -34,7 +33,7 @@ class Forminator_Addons_Page extends Forminator_Admin_Page {
 			);
 
 			foreach ( $project_info as $project ) {
-				$project_data[] = $dash::$site->get_project_info( $project['pid'] );
+				$project_data[] = Forminator_Admin_Addons_page::get_project_info_from_wpmudev_dashboard( $project['pid'] );
 			}
 		}
 

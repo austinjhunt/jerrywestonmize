@@ -38,6 +38,7 @@
   var mailpoet_datetime_format = "<%= wp_datetime_format()|escape('js') %>";
   var mailpoet_date_format = "<%= wp_date_format()|escape('js') %>";
   var mailpoet_time_format = "<%= wp_time_format()|escape('js') %>";
+  var mailpoet_server_timezone_in_minutes = <%= server_timezone_in_minutes %>;
   var mailpoet_version = "<%= mailpoet_version() %>";
   var mailpoet_locale = "<%= mailpoet_locale() %>";
   var mailpoet_wp_week_starts_on = "<%= wp_start_of_week() %>";
@@ -71,6 +72,7 @@
   var mailpoet_mail_function_enabled = '<%= mail_function_enabled %>';
   var mailpoet_admin_plugins_url = '<%= admin_plugins_url %>';
   var mailpoet_is_dotcom = <%= json_encode(is_dotcom()) %>;
+  var mailpoet_cron_trigger_method = <%= json_encode(cron_trigger_method) %>;
 
   var mailpoet_site_name = '<%= site_name %>';
   var mailpoet_site_url = "<%= site_url %>";
@@ -155,7 +157,18 @@
 
   'allSendingPausedHeader': __('All sending is currently paused!'),
   'allSendingPausedBody': __('Your [link]API key[/link] to send with MailPoet is invalid.'),
+  'allSendingPausedPremiumValidBody': __('You are not allowed to use the MailPoet sending service with your current API key. Kindly upgrate to a [link]MailPoet sending plan[/link] or switch your [link]sending method[/link].'),
   'allSendingPausedLink': __('Purchase a key'),
+  'allSendingPausedPremiumValidLink': __('Upgrade the plan'),
+
+  'cronPingErrorHeader': __('There is an issue with the MailPoet task scheduler'),
+  'systemStatusConnectionSuccessful': __('Connection successful.'),
+  'systemStatusConnectionUnsuccessful': __('Connection unsuccessful.'),
+  'systemStatusCronConnectionUnsuccessfulInfo': __('Please consult our [link]knowledge base article[/link] for troubleshooting tips.'),
+  'systemStatusIntroCron': __('For the plugin to work, it must be able to establish connection with the task scheduler.'),
+
+  'bridgePingErrorHeader': __('There is an issue with the connection to the MailPoet Sending Service'),
+  'systemStatusMSSConnectionCanNotConnect': __('Currently, your installation can not reach the sending service. If you want to use our service please consult our [link]knowledge base article[/link] for troubleshooting tips.'),
 
   'transactionalEmailNoticeTitle': __('Good news! MailPoet can now send your website’s emails too'),
   'transactionalEmailNoticeBody': __('All of your WordPress and WooCommerce emails are sent with your hosting company, unless you have an SMTP plugin. Would you like such emails to be delivered with MailPoet’s active sending method for better deliverability?'),

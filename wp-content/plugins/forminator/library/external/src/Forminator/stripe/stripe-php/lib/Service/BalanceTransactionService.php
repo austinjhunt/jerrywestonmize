@@ -3,6 +3,12 @@
 // File generated from our OpenAPI spec
 namespace Forminator\Stripe\Service;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
+ */
+/**
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
+ */
 class BalanceTransactionService extends \Forminator\Stripe\Service\AbstractService
 {
     /**
@@ -14,11 +20,11 @@ class BalanceTransactionService extends \Forminator\Stripe\Service\AbstractServi
      * path <code>/v1/balance/history</code>.
      *
      * @param null|array $params
-     * @param null|array|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \Stripe\Collection
+     * @return \Stripe\Collection<\Stripe\BalanceTransaction>
      */
     public function all($params = null, $opts = null)
     {
@@ -32,7 +38,7 @@ class BalanceTransactionService extends \Forminator\Stripe\Service\AbstractServi
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *

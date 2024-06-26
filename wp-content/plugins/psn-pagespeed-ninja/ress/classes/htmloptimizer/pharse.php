@@ -72,6 +72,15 @@ class Ressio_HtmlOptimizer_Pharse extends Ressio_HtmlOptimizer_Base
     }
 
     /**
+     * @pure
+     * @return string
+     */
+    public function getQueryDelim()
+    {
+        return '&amp;';
+    }
+
+    /**
      * @param string $buffer
      * @return string
      * @throws ERessio_UnknownDiKey
@@ -544,7 +553,7 @@ class Ressio_HtmlOptimizer_Pharse extends Ressio_HtmlOptimizer_Base
                     $scriptBlob = $this->scriptCleanInlined($node->children[0]->text);
                     $node->children[0]->text = $scriptBlob;
 
-                    if ($config->js->skipinits  && $this->isInitScript($scriptBlob)) {
+                    if ($config->js->skipinits && $this->isInitScript($scriptBlob)) {
                         // skip (probable page-dependent) js variables initialization from merging
                         break;
                     }
@@ -1025,7 +1034,7 @@ class Ressio_HtmlOptimizer_Pharse extends Ressio_HtmlOptimizer_Base
      */
     public function nodeGetInnerText($node)
     {
-        return $node->children[0]->text;
+        return isset($node->children[0]->text) ? $node->children[0]->text : '';
     }
 
     /**

@@ -44,6 +44,13 @@
         "type": "subsection"
       },
       {
+        "name": "autoupdate",
+        "global": 1,
+        "title": "<?php _e('Auto Update', 'psn-pagespeed-ninja'); ?>",
+        "tooltip": "<?php _e('PageSpeed Ninja plugin will be updated automatically.', 'psn-pagespeed-ninja'); ?>",
+        "type": "autoupdate"
+      },
+      {
         "name": "enablelogged",
         "title": "<?php _e('Enable for Logged Users', 'psn-pagespeed-ninja'); ?>",
         "tooltip": "<?php _e('It\'s possible to enable optimization of pages for logged users too. Note that in this case page cache is disabled and other optimizations (HTML, styles, scripts, images) are enabled.', 'psn-pagespeed-ninja'); ?>",
@@ -95,6 +102,7 @@
         "name": "footer",
         "title": "<?php _e('Support Badge', 'psn-pagespeed-ninja'); ?>",
         "tooltip": "<?php _e('Displays a small text link to the PageSpeed Ninja website in the footer (\'Optimized with PageSpeed Ninja\'). A BIG thank you if you use this! :).', 'psn-pagespeed-ninja'); ?>",
+        "wizard_description": "<?php _e('Adds a non-obtrusive support badge at the bottom of your website'); ?>",
         "type": "checkbox",
         "default": 1
       },
@@ -102,6 +110,14 @@
         "name": "allow_ext_stats",
         "title": "<?php _e('Send Anonymous Statistics', 'psn-pagespeed-ninja'); ?>",
         "tooltip": "<?php _e('Send anonymous usage data to PageSpeed Ninja to help us further optimize the plugin for best performance.', 'psn-pagespeed-ninja'); ?>",
+        "wizard_description": "<?php _e('Shares non-sensitive, anonymous data, so that we can improve features, fix problems.'); ?>",
+        "type": "checkbox",
+        "default": 1
+      },
+      {
+        "name": "incompat_audit",
+        "title": "<?php _e('Compatibility Audit', 'psn-pagespeed-ninja'); ?>",
+        "tooltip": "<?php _e('Enable compatibility audit to detect potential issues (incompatibility with other plugins, etc.).', 'psn-pagespeed-ninja'); ?>",
         "type": "checkbox",
         "default": 1
       },
@@ -554,6 +570,32 @@
         }
       },
       {
+        "name": "caching_driver",
+        "global": 1,
+        "title": "<?php _e('Cache Storage', 'psn-pagespeed-ninja'); ?>",
+        "tooltip": "<?php _e('Select the preferred storage method for cached data to optimize performance (file system, Redis server).', 'psn-pagespeed-ninja'); ?>",
+        "type": "cachingdriver",
+        "values": [
+          {
+            "file": "<?php _e('File system', 'psn-pagespeed-ninja'); ?>"
+          },
+          {
+            "$redis": "<?php _e('Redis', 'psn-pagespeed-ninja'); ?>"
+          }
+        ],
+        "default": "file",
+        "pro": 1
+      },
+      {
+        "name": "redis_uri",
+        "global": 1,
+        "title": "<?php _e('Redis Server', 'psn-pagespeed-ninja'); ?>",
+        "tooltip": "<?php _e('Specify the address and port for connecting to the Redis server, separated by a colon.', 'psn-pagespeed-ninja'); ?>",
+        "type": "text",
+        "default": "localhost:6379",
+        "pro": 1
+      },
+      {
         "name": "caching_fast",
         "global": 1,
         "title": "<?php _e('Fast Caching', 'psn-pagespeed-ninja'); ?>",
@@ -913,6 +955,13 @@
         "default": ""
       },
       {
+        "name": "preload_module",
+        "title": "<?php _e('JavaScript Modules', 'psn-pagespeed-ninja'); ?>",
+        "tooltip": "<?php _e('List of JavaScript module files to preload.', 'psn-pagespeed-ninja'); ?>",
+        "type": "textarea",
+        "default": ""
+      },
+      {
         "name": "preload_image",
         "title": "<?php _e('Images', 'psn-pagespeed-ninja'); ?>",
         "tooltip": "<?php _e('List of image files to preload.', 'psn-pagespeed-ninja'); ?>",
@@ -1072,6 +1121,7 @@
         "name": "allow_ext_atfcss",
         "title": "<?php _e('Remote Critical CSS Generation', 'psn-pagespeed-ninja'); ?>",
         "tooltip": "<?php _e('Allow the use of PageSpeed.Ninja critical CSS generation service on the PageSpeed Ninja server. When this setting is disabled, this plugin contains a simplified version of the generation tool that works directly in the browser, but using it requires you to manually visit the PageSpeed settings page to regenerate the critical CSS after each change to the website. Enabling this setting allows the use of the PageSpeed Ninja server to have the critical CSS regenerated automatically.', 'psn-pagespeed-ninja'); ?>",
+        "wizard_description": "<?php _e('Generates critical CSS automatically, rather than you doing it manually.'); ?>",
         "type": "checkbox",
         "default": 1
       },
@@ -1103,7 +1153,7 @@
       {
         "name": "css_abovethefoldautoupdate",
         "title": "<?php _e('Auto Update Critical CSS', 'psn-pagespeed-ninja'); ?>",
-        "tooltip": "<?php _e('Updatecritical CSS styles daily.', 'psn-pagespeed-ninja'); ?>",
+        "tooltip": "<?php _e('Update critical CSS styles daily.', 'psn-pagespeed-ninja'); ?>",
         "type": "checkbox",
         "default": 1,
         "pro": 1,
@@ -1155,6 +1205,7 @@
         "type": "checkbox",
         "default": 0,
         "presets": {
+          "ultra": 1,
           "experimental": 1
         }
       }
@@ -1168,23 +1219,32 @@
       {
         "name": "css_googlefonts",
         "title": "<?php _e('Google Fonts Loading', 'psn-pagespeed-ninja'); ?>",
-        "tooltip": "<?php _e('Used to optimize the loading of Google Fonts. \'Flash of invisible text\': load fonts in a standard way at the beginning of a HTML page - most browsers do not display text until the font is loaded. \'Flash of unstyled text\': load fonts asynchronously and switch from default font to the loaded one when ready. \'WebFont Loader\': load fonts asynchronously using the webfont.js library. \'None\': disable optimization.', 'psn-pagespeed-ninja'); ?>",
+        "tooltip": "<?php _e('Used to optimize the loading of Google Fonts. Auto: browser-defined strategy. Block: uses invisible font for 3s, then fallback font (Flash of Invisible Text). Swap: invisible font for 0.1s, then fallback (Flash of Unstyled Text). Fallback: invisible font for 0.1s, then fallback, no switch to custom font after 3s. Optional: invisible font for 0.1s, then no switch to custom font. None: disable optimization.', 'psn-pagespeed-ninja'); ?>",
         "type": "select",
         "values": [
           {
-            "none": "<?php _e('None', 'psn-pagespeed-ninja'); ?>"
+            "": "<?php _e('None', 'psn-pagespeed-ninja'); ?>"
           },
           {
-            "foit": "<?php _e('Flash of invisible text', 'psn-pagespeed-ninja'); ?>"
+            "auto": "<?php _e('Auto', 'psn-pagespeed-ninja'); ?>"
           },
           {
-            "fout": "<?php _e('Flash of unstyled text', 'psn-pagespeed-ninja'); ?>"
+            "block": "<?php _e('Block', 'psn-pagespeed-ninja'); ?>"
           },
           {
-            "async": "<?php _e('WebFont Loader', 'psn-pagespeed-ninja'); ?>"
+            "swap": "<?php _e('Swap', 'psn-pagespeed-ninja'); ?>"
+          },
+          {
+            "fallback": "<?php _e('Fallback', 'psn-pagespeed-ninja'); ?>"
+          },
+          {
+            "optional": "<?php _e('Optional', 'psn-pagespeed-ninja'); ?>"
           }
         ],
-        "default": "fout"
+        "default": "swap",
+        "presets": {
+          "experimental": "optional"
+        }
       },
       {
         "name": "css_googlefont_async",
@@ -1198,13 +1258,31 @@
         "pro": 1
       },
       {
-        "name": "css_fontdisplayswap",
-        "title": "<?php _e('Swap Web-fonts', 'psn-pagespeed-ninja'); ?>",
-        "tooltip": "<?php _e('Use a fallback font while the Web font is being loading, and then swap the font after the Web font has been loaded.', 'psn-pagespeed-ninja'); ?>",
-        "type": "checkbox",
-        "default": 1,
+        "name": "css_fontdisplay",
+        "title": "<?php _e('Display Web-fonts', 'psn-pagespeed-ninja'); ?>",
+        "tooltip": "<?php _e('Used to optimize the loading of Web Fonts. \'Block\': uses invisible font for 3s, then fallback font (Flash of Invisible Text). \'Swap\': invisible font for 0.1s, then fallback (Flash of Unstyled Text). \'Fallback\': invisible font for 0.1s, then fallback, no switch to custom font after 3s. \'Optional\': invisible font for 0.1s, then no switch to custom font. \'None\': disable optimization.', 'psn-pagespeed-ninja'); ?>",
+        "type": "select",
+        "values": [
+          {
+            "": "<?php _e('None', 'psn-pagespeed-ninja'); ?>"
+          },
+          {
+            "block": "<?php _e('Block', 'psn-pagespeed-ninja'); ?>"
+          },
+          {
+            "swap": "<?php _e('Swap', 'psn-pagespeed-ninja'); ?>"
+          },
+          {
+            "fallback": "<?php _e('Fallback', 'psn-pagespeed-ninja'); ?>"
+          },
+          {
+            "optional": "<?php _e('Optional', 'psn-pagespeed-ninja'); ?>"
+          }
+        ],
+        "default": "swap",
         "presets": {
-          "safe": 0
+          "safe": "",
+          "experimental": "optional"
         }
       },
       {
@@ -1212,7 +1290,7 @@
         "title": "<?php _e('Exclude Web-fonts', 'psn-pagespeed-ninja'); ?>",
         "tooltip": "<?php _e('Do not affect loading of the following Web fonts.', 'psn-pagespeed-ninja'); ?>",
         "type": "textarea",
-        "default": "FontAwesome"
+        "default": "FontAwesome\nFont Awesome"
       }
     ]
   },
@@ -1369,6 +1447,7 @@
         "type": "checkbox",
         "default": 1,
         "presets": {
+          "ultra": 0
         }
       },
       {
@@ -1391,7 +1470,7 @@
         "presets": {
           "safe": "0",
           "compact": "0",
-          "ultra": "1",
+          "ultra": "0",
           "experimental": "1"
         }
       },
@@ -2117,6 +2196,24 @@
     ]
   },
   {
+    "id": "uses-passive-event-listeners",
+    "title": "<?php _e('Does not use passive listeners to improve scrolling performance', 'psn-pagespeed-ninja'); ?>",
+    "type": "speed",
+    "items": [
+      {
+        "name": "passive_listeners",
+        "title": "<?php _e('Force Passive Listeners', 'psn-pagespeed-ninja'); ?>",
+        "tooltip": "<?php _e('Enables passive event listeners for mouse and touch events.', 'psn-pagespeed-ninja'); ?>",
+        "type": "checkbox",
+        "default": 1,
+        "presets": {
+          "safe": 0
+        },
+        "pro": 1
+      }
+    ]
+  },
+  {
     "id": "duplicated-javascript",
     "title": "<?php _e('Remove duplicate modules in JavaScript bundles', 'psn-pagespeed-ninja'); ?>",
     "type": "speed",
@@ -2161,13 +2258,6 @@
   {
     "id": "max-potential-fid",
     "title": "<?php _e('Max Potential First Input Delay', 'psn-pagespeed-ninja'); ?>",
-    "type": "speed",
-    "items": [
-    ]
-  },
-  {
-    "id": "uses-passive-event-listeners",
-    "title": "<?php _e('Does not use passive listeners to improve scrolling performance', 'psn-pagespeed-ninja'); ?>",
     "type": "speed",
     "items": [
     ]

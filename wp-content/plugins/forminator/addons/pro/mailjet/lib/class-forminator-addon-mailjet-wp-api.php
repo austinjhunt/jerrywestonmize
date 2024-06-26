@@ -185,7 +185,7 @@ class Forminator_Mailjet_Wp_Api {
 			$response = self::array_change_key_case_recursive( $response );
 		}
 		/**
-		 * Filter mailjet api response returned to addon
+		 * Filter mailjet api response returned to integration
 		 *
 		 * @param mixed          $response
 		 * @param string         $body        original content of http response's body.

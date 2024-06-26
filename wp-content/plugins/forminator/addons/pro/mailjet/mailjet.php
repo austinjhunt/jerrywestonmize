@@ -1,6 +1,6 @@
 <?php
 /**
- * Addon Name: Mailjet
+ * Integration Name: Mailjet
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: Integrate Forminator Modules with Mailjet email list easily

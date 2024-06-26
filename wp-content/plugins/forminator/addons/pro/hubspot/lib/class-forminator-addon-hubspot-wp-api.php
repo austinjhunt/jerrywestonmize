@@ -26,7 +26,7 @@ class Forminator_Hubspot_Wp_Api {
 	/**
 	 * Last data sent to hubspot
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @var array
 	 */
 	private $_last_data_sent = array();
@@ -34,7 +34,7 @@ class Forminator_Hubspot_Wp_Api {
 	/**
 	 * Last data received from hubspot
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @var array
 	 */
 	private $_last_data_received = array();
@@ -42,7 +42,7 @@ class Forminator_Hubspot_Wp_Api {
 	/**
 	 * Last URL requested
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 * @var string
 	 */
 	private $_last_url_request = '';
@@ -59,7 +59,7 @@ class Forminator_Hubspot_Wp_Api {
 	/**
 	 * Forminator_Hubspot_Wp_Api constructor.
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @param $_token
 	 *
@@ -86,7 +86,7 @@ class Forminator_Hubspot_Wp_Api {
 	/**
 	 * Get singleton
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @param $_token
 	 *
@@ -104,7 +104,7 @@ class Forminator_Hubspot_Wp_Api {
 	/**
 	 * Add custom user agent on request
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @param $user_agent
 	 *
@@ -128,7 +128,7 @@ class Forminator_Hubspot_Wp_Api {
 	/**
 	 * HTTP Request
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @param string $verb
 	 * @param        $path
@@ -277,7 +277,7 @@ class Forminator_Hubspot_Wp_Api {
 
 		$response = $res;
 		/**
-		 * Filter hubspot api response returned to addon
+		 * Filter hubspot api response returned to integration
 		 *
 		 * @since 1.1
 		 *
@@ -295,7 +295,7 @@ class Forminator_Hubspot_Wp_Api {
 	/**
 	 * Get last data sent
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @return array
 	 */
@@ -306,7 +306,7 @@ class Forminator_Hubspot_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @return array
 	 */
@@ -317,7 +317,7 @@ class Forminator_Hubspot_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 * @since 1.0 HubSpot Addon
+	 * @since 1.0 HubSpot Integration
 	 *
 	 * @return string
 	 */

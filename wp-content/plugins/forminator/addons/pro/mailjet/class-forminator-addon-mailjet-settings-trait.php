@@ -3,7 +3,7 @@
  * Trait for common methods for Mailjet settings classes
  *
  * @since 1.30
- * @package Mailjet Addon
+ * @package Mailjet Integration
  */
 
 /**
@@ -161,7 +161,7 @@ trait Forminator_Mailjet_Settings_Trait {
 	}
 
 	/**
-	 * Get additional addon fields.
+	 * Get additional integration fields.
 	 *
 	 * @return array
 	 */

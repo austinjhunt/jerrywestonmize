@@ -104,12 +104,12 @@
 
 			// Listen for fields change to update ZIP mapping
 			this.$el.find(
-				'input.forminator-input, .forminator-checkbox, .forminator-radio, select.forminator-select2'
+				'input.forminator-input, .forminator-field-textarea textarea, .forminator-checkbox input, .forminator-radio input, select.forminator-select2'
 			).each(function () {
 				$(this).on('change', function (e) {
 					self.mapZip(e);
 				});
-			});
+			}).trigger( 'change' );
 		},
 
 		validate3d: function( e, secret, subscription ) {
@@ -134,13 +134,18 @@
 					secret
 				).then(function(result) {
 					if ( result.paymentIntent.status === 'requires_action' ||  result.paymentIntent.status === 'requires_source_action' ) {
-						self._stripe.handleCardAction(
-							secret
-						).then(function(result) {
-							if (self._beforeSubmitCallback) {
-								self._beforeSubmitCallback.call();
-							}
-						});
+						self._stripe
+							.confirmCardPayment( secret, {
+								payment_method: {
+									card: self._cardElement,
+									...self.getBillingData(),
+								},
+							} )
+							.then( function ( result ) {
+								if ( self._beforeSubmitCallback ) {
+									self._beforeSubmitCallback.call();
+								}
+							} );
 					}
 				});
 			}
@@ -309,20 +314,23 @@
 			var verifyZip = this.getStripeData('veifyZip');
 			var zipField = this.getStripeData('zipField');
 			var changedField = $(e.currentTarget).attr('name');
+			const fieldType = $( e.currentTarget ).attr( 'type' );
+			// To handle the checkbox name[]
+			if ( 'checkbox' === fieldType ) {
+				changedField = changedField.replace( '[]', '' );
+			}
 
 			// Verify ZIP is enabled, mapped field is not empty and changed field is the mapped field, proceed
 			if (verifyZip && zipField !== "" && changedField === zipField) {
-				if (e.originalEvent !== undefined) {
-					// Get field
-					var value = this.get_field_value(zipField);
+				// Get field
+				var value = this.get_field_value(zipField).toString();
 
-					// Update card element
-					this._cardElement.update({
-						value: {
-							postalCode: value
-						}
-					});
-				}
+				// Update card element
+				this._cardElement.update({
+					value: {
+						postalCode: value
+					}
+				});
 			}
 		},
 

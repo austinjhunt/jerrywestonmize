@@ -123,7 +123,7 @@ class Forminator_Date extends Forminator_Field {
 		$required        = self::get_property( 'required', $field, false );
 		$placeholder     = $this->sanitize_value( self::get_property( 'placeholder', $field ) );
 		$label           = $this->sanitize_value( self::get_property( 'field_label', $field ) );
-		$description     = $this->sanitize_value( self::get_property( 'description', $field ) );
+		$description     = self::get_property( 'description', $field );
 		$type            = trim( self::get_property( 'field_type', $field ) );
 		$has_icon        = self::get_property( 'icon', $field, false, 'bool' );
 		$has_icon        = filter_var( $has_icon, FILTER_VALIDATE_BOOLEAN );
@@ -134,7 +134,7 @@ class Forminator_Date extends Forminator_Field {
 		$disabled_dates  = self::get_property( 'disabled-dates', $field, array() );
 		$disabled_range  = self::get_property( 'disable-date-range', $field, array() );
 		$id              = self::get_field_id( $name );
-		$describedby     = $id . '-description';
+		$describedby     = esc_attr( $id . '-description' );
 
 		if ( false !== strpos( $date_format, '-' ) ) {
 			$sep = '-';
@@ -375,13 +375,16 @@ class Forminator_Date extends Forminator_Field {
 						$html .= '<div class="forminator-field">';
 
 						$day_data = array(
-							'name'             => $day_id,
-							'id'               => self::get_field_id( $settings['form_id'] . '__field--' . $day_id ),
-							'class'            => 'forminator-select2',
-							'data-format'      => $date_format,
-							'data-parent'      => $name,
-							'aria-describedby' => $describedby,
+							'name'        => $day_id,
+							'id'          => self::get_field_id( $settings['form_id'] . '__field--' . $day_id ),
+							'class'       => 'forminator-select2',
+							'data-format' => $date_format,
+							'data-parent' => $name,
 						);
+
+						if ( ! empty( $description ) ) {
+							$day_data['aria-describedby'] = $describedby;
+						}
 
 						if ( $required ) {
 
@@ -426,13 +429,16 @@ class Forminator_Date extends Forminator_Field {
 						$html .= '<div class="forminator-field">';
 
 						$month_data = array(
-							'name'             => $month_id,
-							'id'               => self::get_field_id( $settings['form_id'] . '__field--' . $month_id ),
-							'class'            => 'forminator-select2',
-							'data-format'      => $date_format,
-							'data-parent'      => $name,
-							'aria-describedby' => $describedby,
+							'name'        => $month_id,
+							'id'          => self::get_field_id( $settings['form_id'] . '__field--' . $month_id ),
+							'class'       => 'forminator-select2',
+							'data-format' => $date_format,
+							'data-parent' => $name,
 						);
+
+						if ( ! empty( $description ) ) {
+							$month_data['aria-describedby'] = $describedby;
+						}
 
 						if ( $required ) {
 
@@ -477,13 +483,16 @@ class Forminator_Date extends Forminator_Field {
 						$html .= '<div class="forminator-field">';
 
 						$year_data = array(
-							'name'             => $year_id,
-							'id'               => self::get_field_id( $settings['form_id'] . '__field--' . $year_id ),
-							'class'            => 'forminator-select2',
-							'data-format'      => $date_format,
-							'data-parent'      => $name,
-							'aria-describedby' => $describedby,
+							'name'        => $year_id,
+							'id'          => self::get_field_id( $settings['form_id'] . '__field--' . $year_id ),
+							'class'       => 'forminator-select2',
+							'data-format' => $date_format,
+							'data-parent' => $name,
 						);
+
+						if ( ! empty( $description ) ) {
+							$year_data['aria-describedby'] = $describedby;
+						}
 
 						if ( $required ) {
 
@@ -576,8 +585,11 @@ class Forminator_Date extends Forminator_Field {
 							'data-field'  => 'day',
 							'data-format' => $date_format,
 							'data-parent' => $name,
-							'aria-describedby' => $describedby,
 						);
+
+						if ( ! empty( $description ) ) {
+							$day_data['aria-describedby'] = $describedby;
+						}
 
 						if ( $required ) {
 
@@ -636,8 +648,11 @@ class Forminator_Date extends Forminator_Field {
 							'data-field'  => 'month',
 							'data-format' => $date_format,
 							'data-parent' => $name,
-							'aria-describedby' => $describedby,
 						);
+
+						if ( ! empty( $description ) ) {
+							$month_data['aria-describedby'] = $describedby;
+						}
 
 						if ( $required ) {
 
@@ -693,8 +708,11 @@ class Forminator_Date extends Forminator_Field {
 							'value'       => esc_attr( $year_value ),
 							'data-format' => $date_format,
 							'data-parent' => $name,
-							'aria-describedby' => $describedby,
 						);
+
+						if ( ! empty( $description ) ) {
+							$year_data['aria-describedby'] = $describedby;
+						}
 
 						if ( $required ) {
 

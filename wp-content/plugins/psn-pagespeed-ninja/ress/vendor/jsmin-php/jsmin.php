@@ -155,7 +155,7 @@ class JSMin {
                 if (($this->b === ' ' && !isset($this->keepSpace[$a]))
                     || ($this->b === "\n" && (false === strpos('}])+-/"\'`', $a)))) {
                     $command = self::ACTION_DELETE_B;
-                } elseif ($a === ';' && $this->b === '}') {
+                } elseif ($a === ';' && $this->b === '}' && $this->lastByteOut !== ')' && substr($this->output, -4) !== 'else') {
                     $command = self::ACTION_DELETE_A;
                 }
             }

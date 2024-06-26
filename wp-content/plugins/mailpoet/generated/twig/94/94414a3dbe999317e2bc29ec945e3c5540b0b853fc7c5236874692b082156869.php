@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Environment;
 use MailPoetVendor\Twig\Error\LoaderError;
 use MailPoetVendor\Twig\Error\RuntimeError;
+use MailPoetVendor\Twig\Extension\CoreExtension;
 use MailPoetVendor\Twig\Extension\SandboxExtension;
 use MailPoetVendor\Twig\Markup;
 use MailPoetVendor\Twig\Sandbox\SecurityError;
@@ -37,7 +38,7 @@ class __TwigTemplate_52b5c9ea631c938881f989f0726722fe169a98767c0b2a4158d04455a1e
     {
         $macros = $this->macros;
         // line 1
-        echo "<div class=\"mailpoet-deactivate-survey-modal\" id=\"mailpoet-deactivate-survey-modal\">
+        yield "<div class=\"mailpoet-deactivate-survey-modal\" id=\"mailpoet-deactivate-survey-modal\">
   <div class=\"mailpoet-deactivate-survey-wrap\">
     <div class=\"mailpoet-deactivate-survey\">
       <script type=\"text/javascript\">
@@ -86,32 +87,42 @@ class __TwigTemplate_52b5c9ea631c938881f989f0726722fe169a98767c0b2a4158d04455a1e
 
       <noscript><a href=\"https://poll.fm/11161195\">";
         // line 48
-        echo $this->extensions['MailPoet\Twig\I18n']->translate("We're sorry to see you leave. Could you tell us more why are you deactivating MailPoet?");
-        echo "</a></noscript>
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("We're sorry to see you leave. Could you tell us more why are you deactivating MailPoet?");
+        yield "</a></noscript>
 
       <a class=\"button\" id=\"mailpoet-deactivate-survey-close\">";
         // line 50
-        echo $this->extensions['MailPoet\Twig\I18n']->translate("Skip survey and deactivate MailPoet");
-        echo " &rarr;</a>
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Skip survey and deactivate MailPoet");
+        yield " &rarr;</a>
     </div>
   </div>
 </div>
 ";
+        return; yield '';
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getTemplateName()
     {
         return "deactivationPoll/embedded-poll.html";
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function isTraitable()
     {
         return false;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugInfo()
     {
-        return array (  91 => 50,  86 => 48,  37 => 1,);
+        return array (  92 => 50,  87 => 48,  38 => 1,);
     }
 
     public function getSourceContext()

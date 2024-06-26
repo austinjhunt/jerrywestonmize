@@ -14,7 +14,7 @@
 	AddType font/truetype .ttf
 	AddType font/opentype .otf
 	AddType font/woff2 .woff2
-	AddType application/font-woff .woff
+	AddType font/woff .woff
 	AddType application/vnd.ms-fontobject .eot
 	AddType image/svg+xml .svg
 	AddType image/svg+xml .svgz
@@ -64,6 +64,7 @@
 				FilterProvider COMPRESS DEFLATE resp=Content-Type $image/bmp
 				FilterProvider COMPRESS DEFLATE resp=Content-Type $application/x-font-ttf
 				FilterProvider COMPRESS DEFLATE resp=Content-Type $application/font-woff
+				FilterProvider COMPRESS DEFLATE resp=Content-Type $font/woff
 				FilterProvider COMPRESS DEFLATE resp=Content-Type $application/vnd.ms-fontobject
 				FilterProvider COMPRESS DEFLATE resp=Content-Type $font/opentype
 				FilterProvider COMPRESS DEFLATE resp=Content-Type $font/truetype
@@ -86,6 +87,7 @@
 				FilterProvider COMPRESS DEFLATE "%{Content_Type} = 'image/bmp'"
 				FilterProvider COMPRESS DEFLATE "%{Content_Type} = 'application/x-font-ttf'"
 				FilterProvider COMPRESS DEFLATE "%{Content_Type} = 'application/font-woff'"
+				FilterProvider COMPRESS DEFLATE "%{Content_Type} = 'font/woff'"
 				FilterProvider COMPRESS DEFLATE "%{Content_Type} = 'application/vnd.ms-fontobject'"
 				FilterProvider COMPRESS DEFLATE "%{Content_Type} = 'font/opentype'"
 				FilterProvider COMPRESS DEFLATE "%{Content_Type} = 'font/truetype'"
@@ -100,7 +102,7 @@
 			AddOutputFilterByType DEFLATE text/html text/xml text/plain
 			AddOutputFilterByType DEFLATE text/javascript application/javascript application/x-javascript application/json
 			AddOutputFilterByType DEFLATE image/vnd.microsoft.icon image/x-icon image/svg+xml image/bmp
-			AddOutputFilterByType DEFLATE application/x-font-ttf application/font-woff application/vnd.ms-fontobject
+			AddOutputFilterByType DEFLATE application/x-font-ttf application/font-woff font/woff application/vnd.ms-fontobject
 			AddOutputFilterByType DEFLATE font/opentype font/truetype
 		</IfModule>
 	</IfModule>

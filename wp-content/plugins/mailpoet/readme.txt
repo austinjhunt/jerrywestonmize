@@ -1,9 +1,9 @@
 === MailPoet - Newsletters, Email Marketing, and Automation ===
 Contributors: mailpoet, woocommerce, automattic
-Tags: email, email marketing, post notification, woocommerce emails, email automation, newsletter, newsletter builder, newsletter subscribers
+Tags: email marketing, post notification, woocommerce emails, email automation, newsletter
 Requires at least: 6.4
 Tested up to: 6.5
-Stable tag: 4.51.0
+Stable tag: 4.53.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -227,6 +227,39 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 6. WooCommerce emails
 
 == Changelog ==
+
+= 4.53.0 - 2024-06-25 =
+* Updated: npm dependencies;
+* Improved: Processing Captcha image;
+* Improved: Search for post notification history items now return updated results;
+* Improved: Newsletter social icons style and images;
+* Improved: MailPoet form editor button styles;
+* Fixed: Update abandoned cart email task status;
+* Fixed: link to Setup abandoned cart email from homepage.
+
+= 4.52.0 - 2024-06-17 =
+* Updated: composer dependencies;
+* Updated: Gutenberg dependencies;
+* Improved: sender domain authentication screen contains more information;
+* Improved: display API connection error notice in more places;
+* Fixed: displaying product discounts in product block;
+* Fixed: display correct time for scheduled newsletters;
+* Fixed: removed WordPress Users list from lists to import to.
+
+= 4.51.2 - 2024-06-11 =
+* Added: an error message when ping is not working;
+* Added: a notice when switching to Creator plan with MailPoet Sending Service active;
+* Added: an error message when cron is disabled;
+* Added: an error message for invalid API endpoints;
+* Improved: an error message when sending through MailPoet Sending Service on a Creator plan;
+* Improved: an error message when sending a campaign from an unauthorized sender domain;
+* Changed: Twitter to X in email editor social icons block;
+* Fixed: potential error when throttling subscriptions signups;
+* Fixed: WooCommerce customers sync breaks when there is an order without a customer.
+
+= 4.51.1 - 2024-06-03 =
+* Updated: composer dependencies;
+* Improved: added URL validator when inserting link in email blocks.
 
 = 4.51.0 - 2024-05-27 =
 * Fixed: marking plugin as incompatible with WooCommerce HPOS on multisite;

@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 defined('ABSPATH') || die();
 
@@ -38,11 +38,20 @@ defined('ABSPATH') || die();
         line-height: 1.7;
     }
 
+    .driver-popover-progress-text {
+        margin-right: 24px;
+    }
+
+    .driver-popover-footer {
+        margin-top: 24px;
+    }
+
     .driver-popover-footer button {
         padding: 8px 16px;
         min-width: 100px;
         border-radius: 0;
-        line-height: 1;
+        font-size: 14px;
+        line-height: 34px;
         text-transform: uppercase;
         text-align: center;
         font-weight: bold;
@@ -71,7 +80,7 @@ defined('ABSPATH') || die();
         window.driver.js.driver({
             showProgress: true,
             smoothScroll: true,
-            progressText: "<?php printf(__('%s of %s'), '{{current}}', '{{total}}'); ?>",
+            progressText: "<?php printf(__('%1$s of %2$s', 'psn-pagespeed-ninja'), '{{current}}', '{{total}}'); ?>",
             prevBtnText: "<?php _e('Previous', 'psn-pagespeed-ninja'); ?>",
             nextBtnText: "<?php _e('Next', 'psn-pagespeed-ninja'); ?>",
             doneBtnText: "<?php _e('Done', 'psn-pagespeed-ninja'); ?>",

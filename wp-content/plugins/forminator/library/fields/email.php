@@ -115,14 +115,13 @@ class Forminator_Email extends Forminator_Field {
 		$id          = self::get_property( 'element_id', $field );
 		$name        = $id;
 		$design      = $this->get_form_style( $settings );
-		$ariaid      = $id;
 		$id          = self::get_field_id( $id );
 		$required    = self::get_property( 'required', $field, false );
 		$ariareq     = 'false';
 		$placeholder = $this->sanitize_value( self::get_property( 'placeholder', $field ) );
 		$value       = esc_html( self::get_property( 'value', $field ) );
 		$label       = esc_html( self::get_property( 'field_label', $field ) );
-		$description = esc_html( self::get_property( 'description', $field ) );
+		$description = self::get_property( 'description', $field );
 
 		if ( (bool) $required ) {
 			$ariareq = 'true';

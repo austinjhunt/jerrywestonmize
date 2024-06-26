@@ -212,8 +212,11 @@ class Forminator_Time extends Forminator_Field {
 					'id'               => self::get_field_id( $hour_id ),
 					'class'            => 'forminator-input time-hours ' . $has_limiter,
 					'data-field'       => 'hours',
-					'aria-describedby' => $id . '-description',
 				);
+
+				if ( ! empty( $description ) ) {
+					$hours['aria-describedby'] = esc_attr( $id . '-description' );
+				}
 
 				$hours ['value'] = '0';
 				if ( isset( $default_time_hour ) ) {
@@ -236,8 +239,11 @@ class Forminator_Time extends Forminator_Field {
 						'id'               => self::get_field_id( $settings['form_id'] . '__field--' . $hour_id ),
 						'class'            => 'forminator-select2 time-hours ' . $has_limiter,
 						'data-field'       => 'hours',
-						'aria-describedby' => $id . '-description',
 					);
+
+					if ( ! empty( $description ) ) {
+						$hours_data['aria-describedby'] = esc_attr( $id . '-description' );
+					}
 
 					$limits = array();
 					if ( 'twentyfour' === $type && 'specific' === $restrict_time ) {
@@ -282,8 +288,11 @@ class Forminator_Time extends Forminator_Field {
 					'id'          => self::get_field_id( $min_id ),
 					'class'       => 'forminator-input time-minutes ' . $has_limiter,
 					'data-field'  => 'minutes',
-					'aria-describedby' => $id . '-description',
 				);
+
+				if ( ! empty( $description ) ) {
+					$minutes['aria-describedby'] = esc_attr( $id . '-description' );
+				}
 
 				$minutes ['value'] = '0';
 				if ( isset( $default_time_minute ) ) {
@@ -305,8 +314,11 @@ class Forminator_Time extends Forminator_Field {
 						'id'         => self::get_field_id( $settings['form_id'] . '__field--' . $min_id ),
 						'class'      => 'forminator-select2 time-minutes ' . $has_limiter,
 						'data-field' => 'minutes',
-						'aria-describedby' => $id . '-description',
 					);
+
+					if ( ! empty( $description ) ) {
+						$minutes_data['aria-describedby'] = esc_attr( $id . '-description' );
+					}
 
 					$html .= self::create_select(
 						$minutes_data,
@@ -341,8 +353,11 @@ class Forminator_Time extends Forminator_Field {
 						'id'         => self::get_field_id( $settings['form_id'] . '__field--' . $ampm_id ),
 						'class'      => 'forminator-select2 time-ampm ' . $has_limiter,
 						'data-field' => 'ampm',
-						'aria-describedby' => $id . '-description',
 					);
+
+					if ( ! empty( $description ) ) {
+						$ampm['aria-describedby'] = esc_attr( $id . '-description' );
+					}
 
 					$options = array(
 

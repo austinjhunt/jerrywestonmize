@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoet\Doctrine\Repository;
 use MailPoet\Entities\NewsletterLinkEntity;
 use MailPoet\Entities\StatisticsClickEntity;
-use MailPoetVendor\Doctrine\DBAL\Driver\Statement;
+use MailPoetVendor\Doctrine\DBAL\Result;
 
 /**
  * @extends Repository<NewsletterLinkEntity>
@@ -34,7 +34,7 @@ class NewsletterLinkRepository extends Repository {
       ->orderBy('counter', 'desc')
       ->setMaxResults(1)
       ->execute();
-    if (!$topIdQuery instanceof Statement) {
+    if (!$topIdQuery instanceof Result) {
       return null;
     }
     $topId = $topIdQuery->fetch();

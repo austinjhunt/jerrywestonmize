@@ -44,7 +44,7 @@ class CssInliner extends AbstractHtmlProcessor
  if ($this->isStyleBlocksParsingEnabled) {
  $combinedCss .= $this->getCssFromAllStyleNodes();
  }
- $parsedCss = new CssDocument($combinedCss);
+ $parsedCss = new CssDocument($combinedCss, $this->debug);
  $excludedNodes = $this->getNodesToExclude();
  $cssRules = $this->collateCssRules($parsedCss);
  $cssSelectorConverter = $this->getCssSelectorConverter();
@@ -195,7 +195,9 @@ class CssInliner extends AbstractHtmlProcessor
  }
  $css = '';
  foreach ($styleNodes as $styleNode) {
+ if (\is_string($styleNode->nodeValue)) {
  $css .= "\n\n" . $styleNode->nodeValue;
+ }
  $parentNode = $styleNode->parentNode;
  if ($parentNode instanceof \DOMNode) {
  $parentNode->removeChild($styleNode);

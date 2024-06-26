@@ -172,7 +172,7 @@ class ReEngagementScheduler {
     $statement->bindParam('newsletterId', $newsletterId, ParameterType::INTEGER);
     $statement->bindParam('segmentId', $segmentId, ParameterType::INTEGER);
 
-    $statement->executeQuery();
-    return (int)$statement->rowCount();
+    $result = $statement->executeQuery();
+    return $result->rowCount();
   }
 }

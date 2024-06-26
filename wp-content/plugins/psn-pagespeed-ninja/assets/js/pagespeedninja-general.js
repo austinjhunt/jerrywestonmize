@@ -1,4 +1,4 @@
-/* PageSpeed Ninja 1.3.13 | pagespeed.ninja/license.html */
+/* PageSpeed Ninja 1.4.2 | pagespeed.ninja/license.html */
 (function () {
     'use strict';
 
@@ -386,7 +386,7 @@
         });
     });
 
-    jQuery(window).on('load', function() {
+    jQuery(window).on('load', function () {
         if (window.localStorage && loadPageSpeedCached()) {
             showReviewBanner();
         } else {

@@ -11,7 +11,7 @@
  */
 
 if ( ! defined( 'FORMINATOR_VERSION' ) ) {
-	define( 'FORMINATOR_VERSION', '1.30.2' );
+	define( 'FORMINATOR_VERSION', '1.31.0' );
 }
 
 if ( ! defined( 'FORMINATOR_SUI_VERSION' ) ) {
@@ -19,11 +19,11 @@ if ( ! defined( 'FORMINATOR_SUI_VERSION' ) ) {
 }
 
 if ( ! defined( 'FORMINATOR_STRIPE_LIB_VERSION' ) ) {
-	define( 'FORMINATOR_STRIPE_LIB_VERSION', '7.67.0' );
+	define( 'FORMINATOR_STRIPE_LIB_VERSION', '14.6.0' );
 }
 
 if ( ! defined( 'FORMINATOR_STRIPE_LIB_DATE' ) ) {
-	define( 'FORMINATOR_STRIPE_LIB_DATE', '2019-12-03' );
+	define( 'FORMINATOR_STRIPE_LIB_DATE', '2024-04-10' );
 }
 
 if ( ! defined( 'FORMINATOR_STRIPE_PARTNER_ID' ) ) {

@@ -15,7 +15,7 @@ abstract class Ressio_HtmlOptimizer_Base implements IRessio_HtmlOptimizer, IRess
     protected $di;
     /** @var Ressio_Config */
     protected $config;
-    /** @var Ressio_Dispatcher */
+    /** @var IRessio_Dispatcher */
     protected $dispatcher;
     /** @var Ressio_UrlRewriter $urlRewriter */
     protected $urlRewriter;
@@ -247,7 +247,7 @@ abstract class Ressio_HtmlOptimizer_Base implements IRessio_HtmlOptimizer, IRess
         $this->urlRewriter = $di->urlRewriter;
     }
 
-    /** @var array */
+    /** @var array<string,int> */
     protected $cmpAttrFirst;
 
     /**
@@ -261,6 +261,15 @@ abstract class Ressio_HtmlOptimizer_Base implements IRessio_HtmlOptimizer, IRess
         $value1 = isset($this->cmpAttrFirst[$attr1]) ? $this->cmpAttrFirst[$attr1] : 1000;
         $value2 = isset($this->cmpAttrFirst[$attr2]) ? $this->cmpAttrFirst[$attr2] : 1000;
         return $value1 - $value2;
+    }
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    public function isJavaScriptMime($type)
+    {
+        return isset($this->jsMime[$type]);
     }
 
     /**
@@ -297,7 +306,7 @@ abstract class Ressio_HtmlOptimizer_Base implements IRessio_HtmlOptimizer, IRess
     /**
      * Parse srcset attribute
      * @param string $srcset
-     * @return array
+     * @return string[]
      */
     public function parseSrcset($srcset)
     {
@@ -487,7 +496,7 @@ abstract class Ressio_HtmlOptimizer_Base implements IRessio_HtmlOptimizer, IRess
     }
 
     /**
-     * @param array $attribs
+     * @param array<string,string|false> $attribs
      * @return int
      */
     protected function getJsMode($attribs)
@@ -542,7 +551,7 @@ abstract class Ressio_HtmlOptimizer_Base implements IRessio_HtmlOptimizer, IRess
 
     /**
      * @param string $url
-     * @param array|null $attribs
+     * @param array<string,string|false>|null $attribs
      * @param IRessio_HtmlNode|null $before
      * @return void
      */
@@ -566,7 +575,7 @@ abstract class Ressio_HtmlOptimizer_Base implements IRessio_HtmlOptimizer, IRess
 
     /**
      * @param string $content
-     * @param array|null $attribs
+     * @param array<string,string|false>|null $attribs
      * @param IRessio_HtmlNode|null $before
      * @return void
      */
@@ -596,18 +605,20 @@ abstract class Ressio_HtmlOptimizer_Base implements IRessio_HtmlOptimizer, IRess
     /**
      * @param IRessio_HtmlNode $jsListNode
      * @param IRessio_HtmlNode|null $before
+     * @return void
      */
     abstract protected function insertJsListNode($jsListNode, $before);
 
     /**
      * @param IRessio_HtmlNode $jsListNode
      * @param array $data
+     * @return void
      */
     abstract protected function appendJsList($jsListNode, $data);
 
     /**
      * @param string $url
-     * @param array|null $attribs
+     * @param array<string,string|false>|null $attribs
      * @param IRessio_HtmlNode|null $before
      * @return void
      */
@@ -629,7 +640,7 @@ abstract class Ressio_HtmlOptimizer_Base implements IRessio_HtmlOptimizer, IRess
 
     /**
      * @param string $content
-     * @param array|null $attribs
+     * @param array<string,string|false>|null $attribs
      * @param IRessio_HtmlNode|null $before
      * @return void
      */
@@ -657,12 +668,14 @@ abstract class Ressio_HtmlOptimizer_Base implements IRessio_HtmlOptimizer, IRess
     /**
      * @param IRessio_HtmlNode $cssListNode
      * @param IRessio_HtmlNode|null $before
+     * @return void
      */
     abstract protected function insertCssListNode($cssListNode, $before);
 
     /**
      * @param IRessio_HtmlNode $cssListNode
      * @param array $data
+     * @return void
      */
     abstract protected function appendCssList($cssListNode, $data);
 

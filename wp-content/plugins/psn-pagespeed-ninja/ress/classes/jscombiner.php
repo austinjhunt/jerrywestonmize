@@ -169,6 +169,8 @@ class Ressio_JsCombiner implements IRessio_JsCombiner, IRessio_DIAware
                     $isMinified = substr_compare($path, '.min.js', -7) === 0;
                     if ($isMinified || (isset($rules->attrs->src) && preg_match($rules->attrs->src, $src))) {
                         $content = $this->removeUseScript($content);
+                        // remove source mapping
+                        $content = preg_replace('|//#\s+sourceMappingURL=\S+;$|', '', $content);
                         $minified = $content;
                     } else {
                         $dispatcher->triggerEvent('JsFileMinifyBefore', array($item['src'], &$content));
@@ -246,7 +248,7 @@ class Ressio_JsCombiner implements IRessio_JsCombiner, IRessio_DIAware
         if ($type === 'inline' && ($async || $defer)) {
             $type = 'ref';
             $src = 'data:text/javascript,' . rawurlencode($content);
-            $content = null;
+            $content = '';
         }
 
         if ($type === 'inline') {

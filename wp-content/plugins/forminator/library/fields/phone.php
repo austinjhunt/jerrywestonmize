@@ -161,7 +161,6 @@ class Forminator_Phone extends Forminator_Field {
 		$html                  = '';
 		$id                    = self::get_property( 'element_id', $field );
 		$name                  = $id;
-		$ariaid                = $id;
 		$id                    = self::get_field_id( $id );
 		$required              = self::get_property( 'required', $field, false, 'bool' );
 		$ariareq               = 'false';

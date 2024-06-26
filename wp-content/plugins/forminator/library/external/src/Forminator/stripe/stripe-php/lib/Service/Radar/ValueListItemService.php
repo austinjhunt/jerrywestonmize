@@ -3,6 +3,12 @@
 // File generated from our OpenAPI spec
 namespace Forminator\Stripe\Service\Radar;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
+ */
+/**
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
+ */
 class ValueListItemService extends \Forminator\Stripe\Service\AbstractService
 {
     /**
@@ -11,11 +17,11 @@ class ValueListItemService extends \Forminator\Stripe\Service\AbstractService
      * appearing first.
      *
      * @param null|array $params
-     * @param null|array|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \Stripe\Collection
+     * @return \Stripe\Collection<\Stripe\Radar\ValueListItem>
      */
     public function all($params = null, $opts = null)
     {
@@ -26,7 +32,7 @@ class ValueListItemService extends \Forminator\Stripe\Service\AbstractService
      * parent value list.
      *
      * @param null|array $params
-     * @param null|array|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
@@ -42,7 +48,7 @@ class ValueListItemService extends \Forminator\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
@@ -57,7 +63,7 @@ class ValueListItemService extends \Forminator\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *

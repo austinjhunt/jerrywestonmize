@@ -60,7 +60,7 @@ abstract class Ressio_Worker implements IRessio_Worker, IRessio_DIAware
         $this->lockDir = isset($config->lockdir) ? $config->lockdir : RESSIO_PATH . '/cache';
         $this->actionMap = (array)$config->actors;
         // preload all classes from actionMap to work properly in case of updates
-        foreach ($this->actionMap as $action => $className) {
+        foreach ($this->actionMap as $className) {
             class_exists($className);
         }
 

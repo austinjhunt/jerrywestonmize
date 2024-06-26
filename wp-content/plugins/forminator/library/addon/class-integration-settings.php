@@ -19,7 +19,7 @@ abstract class Forminator_Integration_Settings {
 	protected $module_id;
 
 	/**
-	 * Addon instance
+	 * Integration instance
 	 *
 	 * @since 1.1
 	 * @var Forminator_Integration
@@ -328,7 +328,7 @@ abstract class Forminator_Integration_Settings {
 			// If required field is empty or value is not in forminator field list.
 			if ( ! in_array( $forminator_field_id, $forminator_field_element_ids, true ) ) {
 				$input_exceptions->add_input_exception(
-				/* translators: %s: Addon Field name */
+				/* translators: %s: Integration Field name */
 					sprintf( esc_html__( 'Please choose valid Forminator field for %s.', 'forminator' ), esc_html( $addon_field->name ) ),
 					$field_tag
 				);
@@ -345,7 +345,7 @@ abstract class Forminator_Integration_Settings {
 	/**
 	 * Save module settings
 	 *
-	 * @param type $addon_settings Addon settings.
+	 * @param type $addon_settings Integration settings.
 	 */
 	final public function save_module_settings_values( $addon_settings = null ) {
 		if ( is_null( $addon_settings ) ) {
@@ -709,7 +709,7 @@ abstract class Forminator_Integration_Settings {
 	 * Get input of Map Fields
 	 * its table with html select options as input
 	 *
-	 * @param array $addon_fields Addon fields.
+	 * @param array $addon_fields Integration fields.
 	 * @param array $fields_map Fields map.
 	 * @return string HTML table
 	 */
@@ -719,7 +719,7 @@ abstract class Forminator_Integration_Settings {
 		<table class="sui-table">
 			<thead>
 			<tr>
-				<th><?php esc_html_e( 'Addon Fields', 'forminator' ); ?></th>
+				<th><?php esc_html_e( 'Integration Fields', 'forminator' ); ?></th>
 				<th><?php esc_html_e( 'Forminator Field', 'forminator' ); ?></th>
 			</tr>
 			</thead>
@@ -790,7 +790,7 @@ abstract class Forminator_Integration_Settings {
 	}
 
 	/**
-	 * Get prepared array of Addon lists
+	 * Get prepared array of Integration lists
 	 *
 	 * @return array
 	 */

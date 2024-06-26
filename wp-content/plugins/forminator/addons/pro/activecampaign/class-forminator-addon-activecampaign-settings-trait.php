@@ -3,7 +3,7 @@
  * Trait for common methods for Activecampaign settings classes
  *
  * @since 1.30
- * @package Activecampaign Addon
+ * @package Activecampaign Integration
  */
 
 /**
@@ -20,7 +20,7 @@ trait Forminator_Activecampaign_Settings_Trait {
 	/**
 	 * Activecampaign Quiz Settings wizard
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 * @return array
 	 */
 	public function module_settings_wizards() {
@@ -49,7 +49,7 @@ trait Forminator_Activecampaign_Settings_Trait {
 	/**
 	 * Set up Connection Name
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @param $submitted_data
 	 *
@@ -121,7 +121,7 @@ trait Forminator_Activecampaign_Settings_Trait {
 	/**
 	 * Set up Contact List
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @param $submitted_data
 	 *
@@ -222,7 +222,7 @@ trait Forminator_Activecampaign_Settings_Trait {
 	/**
 	 * Set up fields map
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @param $submitted_data
 	 *
@@ -364,7 +364,7 @@ trait Forminator_Activecampaign_Settings_Trait {
 	/**
 	 * Check if fields mapped
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @param $submitted_data
 	 *
@@ -399,7 +399,7 @@ trait Forminator_Activecampaign_Settings_Trait {
 	 * - instant-responder,
 	 * - send last broadcast
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @param $submitted_data
 	 *
@@ -560,7 +560,7 @@ trait Forminator_Activecampaign_Settings_Trait {
 	/**
 	 * Check if set up options completed
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 *
 	 * @param $submitted_data
 	 *

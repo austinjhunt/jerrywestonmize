@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoetVendor\Twig\Extension\AbstractExtension;
+use MailPoetVendor\Twig\Extension\CoreExtension;
 use MailPoetVendor\Twig\TwigFunction;
 
 class Handlebars extends AbstractExtension {
@@ -46,7 +47,7 @@ class Handlebars extends AbstractExtension {
         return;
     }
 
-    $renderedTemplate = \MailPoetVendor\twig_include($env, $context, $file);
+    $renderedTemplate = CoreExtension::include($env, $context, $file);
 
     $output = <<<EOL
 <script id="$id" type="text/x-handlebars-template">

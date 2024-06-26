@@ -1254,15 +1254,27 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 
                                         // Category
                                         if ( ! empty( $data['value']['category'] ) ) {
-                                            $post_category = $data['value']['category'];
-                                            $post_category = get_the_category_by_ID( $post_category );
-                                            // In case of deleted categories.
-                                            if ( ! empty( $post_category ) ) {
-                                                $output .= '<li>';
-                                                $output .= '<b>' . esc_html__( 'Category', 'forminator' ) . ':</b> ';
-                                                $output .= $post_category;
-                                                $output .= '</li>';
-                                            }
+											$categories = $data['value']['category'];
+											$post_category = array();
+											if ( is_array( $categories ) ) {
+												foreach ( $categories as $category_id ) {
+													$post_category[] = get_the_category_by_ID( $category_id );
+												}
+											} else {
+												$post_category[] = get_the_category_by_ID( $categories );
+											}
+											// In case of deleted categories.
+											if ( ! empty( $post_category ) ) {
+												$category_count = count( $post_category );
+												$label          = ( 1 === $category_count ) ?
+													esc_html__( 'Category', 'forminator' ) :
+													esc_html__( 'Categories', 'forminator' );
+
+												$output .= '<li>';
+												$output .= '<b>' . $label . ':</b> ';
+												$output .= implode( ',', $post_category );
+												$output .= '</li>';
+											}
                                         }
 
                                         // Tags
@@ -1277,10 +1289,15 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
                                             $term_query = new WP_Term_Query( $term_args );
 
                                             // In case of deleted tags.
-                                            if ( ! empty( $tag = $term_query->terms ) ) {
+                                            if ( ! empty( $term_query->terms ) ) {
+												$term_count = count( $term_query->terms );
+												$label      = ( 1 === $term_count ) ?
+													esc_html__( 'Tag', 'forminator' ) :
+													esc_html__( 'Tags', 'forminator' );
+
                                                 $output .= '<li>';
-                                                $output .= '<b>' . esc_html__( 'Tag', 'forminator' ) . ':</b> ';
-                                                $output .= $tag[0];
+                                                $output .= '<b>' . $label . ':</b> ';
+                                                $output .= implode( ',', $term_query->terms );
                                                 $output .= '</li>';
                                             }
                                         }
@@ -1795,8 +1812,7 @@ function forminator_get_countries_list() {
 			'VI' => esc_html__( 'Virgin Islands, U.S.', 'forminator' ),
 			'WF' => esc_html__( 'Wallis And Futuna Islands', 'forminator' ),
 			'EH' => esc_html__( 'Western Sahara', 'forminator' ),
-			'YE' => esc_html__( 'Yemen Arab Rep.', 'forminator' ),
-			'YD' => esc_html__( 'Yemen Democratic', 'forminator' ),
+			'YE' => esc_html__( 'Yemen', 'forminator' ),
 			'ZM' => esc_html__( 'Zambia', 'forminator' ),
 			'ZW' => esc_html__( 'Zimbabwe', 'forminator' ),
 		)
@@ -1879,6 +1895,7 @@ function forminator_get_ext_types() {
 			'psd'          => 'application/octet-stream',
 			'xcf'          => 'application/octet-stream',
 			'heic'         => 'image/heic',
+			'webp'         => 'image/webp',
 		),
 		'audio'       => array(
 			// Audio formats.

@@ -36,11 +36,11 @@ abstract class Ressio_Helper
         $num = (int)$str;
         switch ($unit) {
             case 'G':
-                $num *= 1024;
-                /** @fallthrough */
+                $num *= 1024 * 1024 * 1024;
+                break;
             case 'M':
-                $num *= 1024;
-                /** @fallthrough */
+                $num *= 1024 * 1024;
+                break;
             case 'K':
                 $num *= 1024;
         }

@@ -15,11 +15,10 @@ class Ressio_Plugin_NonBlockJS extends Ressio_Plugin
      * @param Ressio_DI $di
      * @param ?stdClass $params
      */
-    public function __construct($di, $params)
+    public function __construct($di, $params = null)
     {
-        $params = $this->loadConfig(__DIR__ . '/config.json', $params);
-
-        parent::__construct($di, $params);
+        parent::__construct($di);
+        $this->loadConfig(__DIR__ . '/config.json', $params);
     }
 
     /**
@@ -30,6 +29,10 @@ class Ressio_Plugin_NonBlockJS extends Ressio_Plugin
      */
     public function onHtmlIterateTagSCRIPT($event, $optimizer, $node)
     {
+        if ($optimizer->isNoscriptState() || $optimizer->nodeIsDetached($node)) {
+            return;
+        }
+
         $jsType = $node->hasAttribute('type') ? $node->getAttribute('type') : null;
 
         $supportedTypes = array('text/javascript', 'module');
@@ -41,6 +44,8 @@ class Ressio_Plugin_NonBlockJS extends Ressio_Plugin
             return;
         }
 
+        $nomodule = $node->hasAttribute('nomodule');
+
         $node->setAttribute('type', 'text/ress');
         if ($node->hasAttribute('src')) {
             $src = $node->getAttribute('src');
@@ -51,7 +56,7 @@ class Ressio_Plugin_NonBlockJS extends Ressio_Plugin
 
         if ($jsType === 'module') {
             $node->setAttribute('ress-type', 'module');
-        } elseif ($node->hasAttribute('nomodule')) {
+        } elseif ($nomodule) {
             $node->setAttribute('ress-type', 'nomodule');
         }
     }
@@ -64,8 +69,7 @@ class Ressio_Plugin_NonBlockJS extends Ressio_Plugin
     public function onHtmlIterateAfter($event, $optimizer)
     {
         $scriptData = file_get_contents(__DIR__ . '/js/nonblockjs.min.js');
-        $optimizer->prependHead(array('script', null, $scriptData));
-
+        $optimizer->prependHead(array('script', array('defer' => false), $scriptData));
     }
 
     /**
@@ -75,12 +79,15 @@ class Ressio_Plugin_NonBlockJS extends Ressio_Plugin
      */
     public function onJsCombinerNodeList($event, $wrapper)
     {
+        $newNodes = array();
         foreach ($wrapper->nodes as $node) {
+            $node->attributes['type'] = 'text/ress';
             if (isset($node->attributes['src'])) {
-                $node->attributes['type'] = 'text/ress';
                 $node->attributes['ress-src'] = $node->attributes['src'];
                 unset($node->attributes['src']);
             }
+            $newNodes[] = $node;
         }
+        $wrapper->nodes = $newNodes;
     }
 }

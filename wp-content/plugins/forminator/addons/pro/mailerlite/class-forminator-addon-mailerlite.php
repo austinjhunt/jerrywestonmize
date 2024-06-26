@@ -1,12 +1,12 @@
 <?php
 /**
  * Class Forminator_Mailerlite
- * The class that defines mailerlite addon
+ * The class that defines mailerlite integration
  */
 class Forminator_Mailerlite extends Forminator_Integration {
 
 	/**
-	 * Mailerlite Addon Instance
+	 * Mailerlite Integration Instance
 	 *
 	 * @var self|null
 	 */
@@ -295,7 +295,7 @@ class Forminator_Mailerlite extends Forminator_Integration {
 	}
 
 	/**
-	 * Flag for check if has lead form addon connected to a quiz
+	 * Flag for check if has lead form integration connected to a quiz
 	 * by default it will check if last step of form settings already completed by user
 	 *
 	 * @param $quiz_id
@@ -308,7 +308,7 @@ class Forminator_Mailerlite extends Forminator_Integration {
 			// initialize with null.
 			$quiz_settings_instance = null;
 			if ( ! $this->is_connected() ) {
-				throw new Forminator_Integration_Exception( esc_html__( 'MailerLite addon not connected.', 'forminator' ) );
+				throw new Forminator_Integration_Exception( esc_html__( 'MailerLite integration not connected.', 'forminator' ) );
 			}
 			$quiz_settings_instance = $this->get_addon_settings( $quiz_id, 'quiz' );
 

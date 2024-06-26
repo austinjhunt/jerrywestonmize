@@ -3,7 +3,7 @@
  * Trait for common methods for Mailerlite settings classes
  *
  * @since 1.30
- * @package Mailerlite Addon
+ * @package Mailerlite Integration
  */
 
 /**

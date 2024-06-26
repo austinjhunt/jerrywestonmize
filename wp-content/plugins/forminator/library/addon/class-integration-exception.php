@@ -2,7 +2,7 @@
 
 /**
  * Class Forminator_Integration_Exception
- * Exception used for Addon
+ * Exception used for Integration
  *
  * @since 1.1
  */

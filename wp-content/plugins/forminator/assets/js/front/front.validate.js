@@ -420,7 +420,7 @@
 	});
 	$.validator.addMethod("forminatorPhoneInternational", function (value, element) {
 		// check whether phone field is international and optional
-		if ( !$(element).data('required') && value === '+' +$(element).intlTelInput( 'getSelectedCountryData' ).dialCode + ' ' ) {
+		if ( !$(element).data('required') && value === '+' +$(element).intlTelInput( 'getSelectedCountryData' ).dialCode ) {
 			return true;
 		}
 

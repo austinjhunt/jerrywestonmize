@@ -4,9 +4,9 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-slack-wp-api.php
 
 /**
  * Class Forminator_Slack
- * Slack Addon Main Class
+ * Slack Integration Main Class
  *
- * @since 1.0 Slack Addon
+ * @since 1.0 Slack Integration
  */
 final class Forminator_Slack extends Forminator_Integration {
 
@@ -39,7 +39,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Forminator_Slack constructor.
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 */
 	public function __construct() {
 		// late init to allow translation.
@@ -51,7 +51,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Override settings available,
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @return bool
 	 */
 	public function is_settings_available() {
@@ -61,7 +61,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Flag to enable delete chat
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @return bool
 	 */
 	public static function enable_delete_chat() {
@@ -85,7 +85,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Allow multiple connection on one form
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @return bool
 	 */
 	public function is_allow_multi_on_form() {
@@ -95,7 +95,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Settings wizard
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @return array
 	 */
 	public function settings_wizards() {
@@ -118,7 +118,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Authorize Access wizard
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param $submitted_data
 	 *
@@ -241,7 +241,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Authorize Access wizard
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @return array
 	 */
 	public function authorize_access() {
@@ -275,7 +275,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Wait Authorize Access wizard
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @return array
 	 */
 	public function wait_authorize_access() {
@@ -322,7 +322,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Authorized Callback
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @return bool
 	 */
 	public function is_authorized() {
@@ -334,7 +334,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Get Client ID
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @return string
 	 */
 	public function get_client_id() {
@@ -365,7 +365,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Get Client secret
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @return string
 	 */
 	public function get_client_secret() {
@@ -396,7 +396,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Get Access Token
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 * @return string
 	 */
 	public function get_client_access_token() {
@@ -427,7 +427,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Get slack settings while app is being connected
 	 *
-	 * @since 1.18 Slack Addon
+	 * @since 1.18 Slack Integration
 	 *
 	 * @return array
 	 */
@@ -444,7 +444,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Register a page for redirect url of Slack auth
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @return array
 	 */
@@ -502,7 +502,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Slack Authorize Page
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param $query_args
 	 *
@@ -563,7 +563,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Get API Instance
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param null|string $access_token
 	 *
@@ -586,7 +586,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Before get Setting Values
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param $values
 	 *
@@ -611,7 +611,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	 * - on get access token it uses Basic realm of encoded client id and secret
 	 * - on web API request it uses Bearer realm of access token which default of @see Forminator_Slack_Wp_Api
 	 *
-	 * @since 1.0 Slack Addon
+	 * @since 1.0 Slack Integration
 	 *
 	 * @param $headers
 	 * @param $verb

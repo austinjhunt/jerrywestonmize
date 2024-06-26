@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Addon Name: Activecampaign
+ * Integration Name: Activecampaign
  * Version: 1.0
  * Plugin URI:  https://wpmudev.com/
  * Description: Integrate Forminator Custom Forms with Activecampaign to get notified in real time.

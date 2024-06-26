@@ -161,8 +161,8 @@ abstract class Forminator_Admin_Module {
 
 		// $plugin_page may not be set if we call the function too early, retrieve the page slug from GET.
 		$page = Forminator_Core::sanitize_text_field( 'page' );
-		if ( empty( $plugin_page ) && $page ) {
-			$plugin_page = sanitize_text_field( $page );
+		if ( empty( $plugin_page ) ) {
+			return $this->page_edit === $page;
 		}
 
 		return $this->page_edit === $plugin_page;

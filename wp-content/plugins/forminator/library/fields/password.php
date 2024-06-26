@@ -128,7 +128,6 @@ class Forminator_Password extends Forminator_Field {
 		$html        = '';
 		$id          = self::get_property( 'element_id', $field );
 		$name        = $id;
-		$ariaid      = $id;
 		$id          = self::get_field_id( $id );
 		$required    = self::get_property( 'required', $field, false );
 		$ariareq     = 'false';
@@ -550,13 +549,60 @@ class Forminator_Password extends Forminator_Field {
 	 */
 	public function sanitize( $field, $data ) {
 		$original_data = $data;
-		// Sanitize.
 		if ( is_array( $data ) ) {
-			$data = forminator_sanitize_array_field( $data );
+			$data = $this->sanitize_array_field( $data );
 		} else {
-			$data = forminator_sanitize_field( $data );
+			$data = $this->sanitize_field( $data );
 		}
 
 		return apply_filters( 'forminator_field_text_sanitize', $data, $field, $original_data );
+	}
+
+	/**
+	 * Sanitize password array field.
+	 *
+	 * @param array $data Array values.
+	 *
+	 * @return mixed
+	 */
+	private function sanitize_array_field( $data ) {
+		foreach ( $data as &$value ) {
+			if ( is_array( $value ) ) {
+				$value = $this->sanitize_array_field( $value );
+			} else {
+				$value = $this->sanitize_field( $value );
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Sanitize password field.
+	 *
+	 * @param string $data Password value.
+	 *
+	 * @return string
+	 */
+	private function sanitize_field( $data ) {
+		// Password doesn't required sanitize as it is hashed while processing/save. Also it fails to support tags and characters like %1d, %20.
+		// Add slashes as we removed from original post while sanitize post data (It fails to support quotation marks).
+		return wp_slash( $data );
+	}
+
+	/**
+	 * Remove password-N fields
+	 *
+	 * @param array $data Submitted data.
+	 * @return array
+	 */
+	public static function remove_password_field_values( $data ) {
+		foreach ( $data as $key => $value ) {
+			if ( false !== stripos( $key, 'password-' ) ) {
+				unset( $data[ $key ] );
+			}
+		}
+
+		return $data;
 	}
 }

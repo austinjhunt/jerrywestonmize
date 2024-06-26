@@ -3,7 +3,7 @@
 /**
  * Class Forminator_GFBlock_Forms
  *
- * @since 1.0 Gutenber Addon
+ * @since 1.0 Gutenber Integration
  */
 class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 
@@ -15,7 +15,7 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 	/**
 	 * Block identifier
 	 *
-	 * @since 1.0 Gutenber Addon
+	 * @since 1.0 Gutenber Integration
 	 *
 	 * @var string
 	 */
@@ -24,7 +24,7 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 	/**
 	 * Get Instance
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 * @return self|null
 	 */
 	public static function get_instance() {
@@ -38,7 +38,7 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 	/**
 	 * Forminator_GFBlock_Forms constructor.
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 */
 	public function __construct() {
 		// Initialize block.
@@ -48,7 +48,7 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 	/**
 	 * Render block markup on front-end
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 * @param array $properties Block properties.
 	 *
 	 * @return string
@@ -60,7 +60,7 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 	/**
 	 * Preview form markup in block
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 * @param array $properties Block properties.
 	 *
 	 * @return string
@@ -77,7 +77,7 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 	 * Enqueue assets ( scritps / styles )
 	 * Should be overriden in block class
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 */
 	public function load_assets() {
 		// Scripts.
@@ -107,7 +107,7 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 	/**
 	 * Print block preview markup
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 * @param WP_REST_Request $data
 	 */
 	public function preview_block_markup( $data ) {
@@ -138,7 +138,7 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 	/**
 	 * Return forms IDs and Names
 	 *
-	 * @since 1.0 Gutenberg Addon
+	 * @since 1.0 Gutenberg Integration
 	 * @return array
 	 */
 	public function get_forms() {

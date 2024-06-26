@@ -3,7 +3,7 @@
 /**
  * Class Forminator_Googlesheet_Form_Hooks
  *
- * @since 1.0 Google Sheets Addon
+ * @since 1.0 Google Sheets Integration
  *
  */
 class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hooks {
@@ -36,7 +36,7 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 	/**
 	 * Get status on create Google Sheets row
 	 *
-	 * @since 1.0 Google Sheets Addon
+	 * @since 1.0 Google Sheets Integration
 	 *
 	 * @param string $connection_id
 	 * @param array  $submitted_data
@@ -62,7 +62,7 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 			 * @param int                                        $form_id                current Form ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $form_entry_fields
-			 * @param Forminator_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
+			 * @param Forminator_Googlesheet_Form_Settings $form_settings_instance Google Sheets Integration Form Settings instance.
 			 */
 			do_action( 'forminator_addon_googlesheet_before_prepare_sheet_headers', $connection_settings, $form_id, $submitted_data, $form_entry_fields, $form_settings_instance );
 
@@ -79,7 +79,7 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 			 * @param int                                        $form_id                current Form ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $form_entry_fields
-			 * @param Forminator_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
+			 * @param Forminator_Googlesheet_Form_Settings $form_settings_instance Google Sheets Integration Form Settings instance.
 			 */
 			$header_fields = apply_filters(
 				'forminator_addon_googlesheet_sheet_headers',
@@ -101,7 +101,7 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 			 * @param int                                        $form_id                current Form ID.
 			 * @param array                                      $submitted_data
 			 * @param array                                      $form_entry_fields
-			 * @param Forminator_Googlesheet_Form_Settings $form_settings_instance Google Sheets Addon Form Settings instance.
+			 * @param Forminator_Googlesheet_Form_Settings $form_settings_instance Google Sheets Integration Form Settings instance.
 			 */
 			do_action( 'forminator_addon_googlesheet_after_prepare_sheet_headers', $header_fields, $connection_settings, $form_id, $submitted_data, $form_entry_fields, $form_settings_instance );
 

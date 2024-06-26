@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Environment;
 use MailPoetVendor\Twig\Error\LoaderError;
 use MailPoetVendor\Twig\Error\RuntimeError;
+use MailPoetVendor\Twig\Extension\CoreExtension;
 use MailPoetVendor\Twig\Extension\SandboxExtension;
 use MailPoetVendor\Twig\Markup;
 use MailPoetVendor\Twig\Sandbox\SecurityError;
@@ -37,7 +38,7 @@ class __TwigTemplate_24e96a0e6a17ce2c93cf643ff67585ab8fe18e1a7ba8b35cfd7b474c101
     {
         $macros = $this->macros;
         // line 1
-        echo "<div class=\"mailpoet-deactivate-survey-modal\" id=\"mailpoet-deactivate-survey-modal\">
+        yield "<div class=\"mailpoet-deactivate-survey-modal\" id=\"mailpoet-deactivate-survey-modal\">
   <div class=\"mailpoet-deactivate-survey-wrap\">
     <div class=\"mailpoet-deactivate-survey\">
 
@@ -82,12 +83,12 @@ class __TwigTemplate_24e96a0e6a17ce2c93cf643ff67585ab8fe18e1a7ba8b35cfd7b474c101
 
         ";
         // line 44
-        echo $this->extensions['MailPoet\Twig\I18n']->translate("We're sorry to see you go. Would you be open to sharing how MailPoet didn't work for you so we could improve it?");
-        echo "
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("We're sorry to see you go. Would you be open to sharing how MailPoet didn't work for you so we could improve it?");
+        yield "
       </strong><br>";
         // line 45
-        echo $this->extensions['MailPoet\Twig\I18n']->translate("It will take only a minute.");
-        echo "</p>
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("It will take only a minute.");
+        yield "</p>
       <a
         class=\"button button-primary\"
         id=\"mailpoet-deactivate-survey-participate\"
@@ -96,8 +97,8 @@ class __TwigTemplate_24e96a0e6a17ce2c93cf643ff67585ab8fe18e1a7ba8b35cfd7b474c101
         rel=\"noopener nofollow\"
       >";
         // line 52
-        echo $this->extensions['MailPoet\Twig\I18n']->translate("Yes");
-        echo " &rarr;</a>
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Yes");
+        yield " &rarr;</a>
 
       <a
         class=\"button\"
@@ -105,28 +106,38 @@ class __TwigTemplate_24e96a0e6a17ce2c93cf643ff67585ab8fe18e1a7ba8b35cfd7b474c101
       >
         ";
         // line 58
-        echo $this->extensions['MailPoet\Twig\I18n']->translate("No");
-        echo "
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("No");
+        yield "
       </a>
     </div>
   </div>
 </div>
 ";
+        return; yield '';
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getTemplateName()
     {
         return "deactivationPoll/link-poll.html";
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function isTraitable()
     {
         return false;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugInfo()
     {
-        return array (  105 => 58,  96 => 52,  86 => 45,  82 => 44,  37 => 1,);
+        return array (  106 => 58,  97 => 52,  87 => 45,  83 => 44,  38 => 1,);
     }
 
     public function getSourceContext()

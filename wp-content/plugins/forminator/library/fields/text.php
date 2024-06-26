@@ -119,10 +119,8 @@ class Forminator_Text extends Forminator_Field {
 		$this->form_settings = $settings;
 
 		$html        = '';
-		$id          = self::get_property( 'element_id', $field );
-		$name        = $id;
-		$ariaid      = $id;
-		$id          = self::get_field_id( $id );
+		$name        = self::get_property( 'element_id', $field );
+		$id          = self::get_field_id( $name );
 		$required    = self::get_property( 'required', $field, false );
 		$ariareq     = 'false';
 		$default     = esc_html( self::get_property( 'default', $field, false ) );
@@ -171,7 +169,7 @@ class Forminator_Text extends Forminator_Field {
 				unset( $autofill_markup['value'] );
 			}
 
-			if ( ! empty( $description ) || '' !== $description ) {
+			if ( ! empty( $description ) ) {
 				$textarea['aria-describedby'] = $id . '-description';
 			}
 
@@ -194,7 +192,7 @@ class Forminator_Text extends Forminator_Field {
 				$html .= sprintf( '<span id="%s" class="forminator-description">', esc_attr( $id . '-description' ) );
 
 				if ( ! empty( $description ) ) {
-					$html .= $description;
+					$html .= self::esc_description( $description, $name );
 				}
 
 				if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
@@ -233,7 +231,7 @@ class Forminator_Text extends Forminator_Field {
 				$input_text['value'] = $default;
 			}
 
-			if ( ! empty( $description ) || '' !== $description ) {
+			if ( ! empty( $description ) ) {
 				$input_text['aria-describedby'] = $id . '-description';
 			}
 
@@ -255,7 +253,7 @@ class Forminator_Text extends Forminator_Field {
 				$html .= sprintf( '<span id="%s" class="forminator-description">', esc_attr( $id . '-description' ) );
 
 				if ( ! empty( $description ) ) {
-					$html .= wp_kses_post( $description );
+					$html .= self::esc_description( $description, $name );
 				}
 
 				if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {

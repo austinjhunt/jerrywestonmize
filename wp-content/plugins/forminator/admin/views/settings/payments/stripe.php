@@ -28,7 +28,7 @@ foreach ( $template_vars as $key => $val ) {
 
 <?php
 if ( ! empty( $vars['error_message'] ) ) {
-	echo Forminator_Admin::get_red_notice( esc_html( $this->error_message() ) );
+	echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
 }
 ?>
 

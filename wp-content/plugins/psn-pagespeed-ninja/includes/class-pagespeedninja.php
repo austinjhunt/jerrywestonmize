@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.3.13
+ * @version    1.4.2
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       March 2024
+ * @date       June 2024
  */
 
 class PagespeedNinja
@@ -23,9 +23,10 @@ class PagespeedNinja
     /** @var string $plugin_dir_path Path to plugin files */
     protected $plugin_dir_path;
 
-    /** @var array $option Plugin settings */
+    /** @var array<string,string> $options Plugin settings */
     protected $options;
 
+    /** @var array<string,string> */
     public static $classmap = array();
 
     /**
@@ -36,7 +37,7 @@ class PagespeedNinja
     {
         $this->plugin_slug = $plugin_slug;
         $this->plugin_name = $plugin_name;
-        $this->version = '1.3.13';
+        $this->version = '1.4.2';
         $this->plugin_dir_path = plugin_dir_path(__DIR__);
 
         self::$classmap = array(
@@ -70,6 +71,7 @@ class PagespeedNinja
 
     /**
      * @param bool $network_wide
+     * @return void
      * @throws ERessio_Exception
      * @throws ERessio_UnknownDiKey
      */
@@ -96,6 +98,7 @@ class PagespeedNinja
 
     /**
      * @param bool $network_deactivating
+     * @return void
      */
     public function deactivate($network_deactivating)
     {
@@ -149,7 +152,6 @@ class PagespeedNinja
                 'connect_timeout' => 5,
             )
         );
-        wp_send_json_success();
     }
 
     /**
@@ -159,6 +161,7 @@ class PagespeedNinja
      * @param string $path
      * @param int $site_id
      * @param array $meta
+     * @return void
      * @throws ERessio_Exception
      * @throws ERessio_UnknownDiKey
      */
@@ -169,6 +172,7 @@ class PagespeedNinja
         restore_current_blog();
     }
 
+    /** @return void */
     public function run()
     {
         add_action('upgrader_process_complete', array($this, 'upgrader_process_complete'), 10, 2);
@@ -192,6 +196,7 @@ class PagespeedNinja
         }
     }
 
+    /** @return void */
     public function init()
     {
         $this->options = get_option('pagespeedninja_config');
@@ -203,7 +208,8 @@ class PagespeedNinja
 
     /**
      * @param Plugin_Upgrader $upgrader_object
-     * @param array $upgrader_options
+     * @param array<string,mixed> $upgrader_options
+     * @return void
      */
     public function upgrader_process_complete($upgrader_object, $upgrader_options)
     {
@@ -216,8 +222,11 @@ class PagespeedNinja
         }
     }
 
+    /** @return void */
     public function cron_daily()
     {
+        require_once __DIR__ . '/class-pagespeedninja-activator.php';
+        PagespeedNinja_Activator::schedule_next_daily_event();
 
 
 
@@ -272,13 +281,11 @@ class PagespeedNinja
             $di->config->change_group = null;
             $di->set('filesystem', Ressio_Filesystem_Native::class);
             $di->set('filelock', Ressio_FileLock_flock::class);
-            $plugin = new Ressio_Plugin_FileCacheCleaner($di, null);
+            $plugin = new Ressio_Plugin_FilecacheCleaner($di, null);
         }
-
-        require_once __DIR__ . '/class-pagespeedninja-activator.php';
-        PagespeedNinja_Activator::schedule_next_daily_event();
     }
 
+    /** @return void */
     public function admin_bar_menu()
     {
         if (!current_user_can('manage_options')) {
@@ -297,13 +304,13 @@ class PagespeedNinja
         wp_enqueue_style('pagespeedninja_adminbar_style');
         wp_enqueue_script('pagespeedninja_adminbar_dummy_script');
 
-        $ajaxNonce = esc_js(wp_create_nonce('psn-ajax-token'));
+        $ajaxNonce = wp_json_encode(wp_create_nonce('psn-ajax-token'));
         wp_add_inline_script('pagespeedninja_adminbar_dummy_script',
 <<<END
 (function () {
     function doAjax(e, action) {
         e.preventDefault();
-        jQuery.post(ajaxurl, {action: action, _ajax_nonce: '$ajaxNonce'});
+        jQuery.post(ajaxurl, {action: action, _ajax_nonce: $ajaxNonce});
         jQuery('#wp-admin-bar-pagespeed-ninja').removeClass('hover');
     }
     jQuery(document).ready(function () {
@@ -389,6 +396,7 @@ END
         return '';
     }
 
+    /** @return void */
     private function update_config()
     {
         include_once(ABSPATH . 'wp-admin/includes/plugin.php');
@@ -397,6 +405,7 @@ END
         $this->options = get_option('pagespeedninja_config');
     }
 
+    /** @return void */
     private function set_locale()
     {
         require_once $this->plugin_dir_path . 'includes/class-pagespeedninja-i18n.php';
@@ -405,6 +414,7 @@ END
         add_action('plugins_loaded', array($plugin_i18n, 'load_plugin_textdomain'));
     }
 
+    /** @return void */
     private function define_config_hooks()
     {
         require_once $this->plugin_dir_path . 'admin/class-pagespeedninja-admin-config.php';
@@ -415,6 +425,7 @@ END
         add_action('update_site_option_pagespeedninja_config', array($plugin_admin_config, 'update_config'), 10, 2);
     }
 
+    /** @return void */
     private function define_cache_hooks()
     {
         require_once $this->plugin_dir_path . 'includes/class-pagespeedninja-cache-hooks.php';
@@ -422,6 +433,7 @@ END
         $plugin_cache_hooks->define_cache_hooks();
     }
 
+    /** @return void */
     private function define_admin_hooks()
     {
         require_once $this->plugin_dir_path . 'admin/class-pagespeedninja-admin.php';
@@ -457,11 +469,13 @@ END
         add_action('wp_ajax_pagespeedninja_dismiss_licensekey_notice', array($plugin_admin_ajax, 'dismiss_licensekey_notice'));
     }
 
+    /** @return void */
     private function define_public_hooks()
     {
         require_once $this->plugin_dir_path . 'public/class-pagespeedninja-public.php';
         $plugin_public = new PagespeedNinja_Public($this->get_plugin_name(), $this->get_version());
 
+        add_action('plugins_loaded', array($plugin_public, 'plugins_loaded'), 0);
         // Smart Slider 3: priority=-100
         // Better AMP: priority=2 (redirect to AMP)
         add_action('template_redirect', array($plugin_public, 'template_redirect'), -150);

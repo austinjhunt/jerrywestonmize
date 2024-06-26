@@ -6,6 +6,7 @@ namespace Forminator\Stripe\Service\BillingPortal;
 /**
  * Service factory class for API resources in the BillingPortal namespace.
  *
+ * @property ConfigurationService $configurations
  * @property SessionService $sessions
  */
 class BillingPortalServiceFactory extends \Forminator\Stripe\Service\AbstractServiceFactory
@@ -13,7 +14,7 @@ class BillingPortalServiceFactory extends \Forminator\Stripe\Service\AbstractSer
     /**
      * @var array<string, string>
      */
-    private static $classMap = ['sessions' => SessionService::class];
+    private static $classMap = ['configurations' => ConfigurationService::class, 'sessions' => SessionService::class];
     protected function getServiceClass($name)
     {
         return \array_key_exists($name, self::$classMap) ? self::$classMap[$name] : null;

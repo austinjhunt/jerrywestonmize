@@ -92,7 +92,7 @@ class Forminator_Integration_Admin_Ajax {
 
 
 	/**
-	 * Deactivate Addon
+	 * Deactivate Integration
 	 *
 	 * @since 1.1
 	 */
@@ -128,7 +128,7 @@ class Forminator_Integration_Admin_Ajax {
 		}
 
 		$this->send_json_success(
-			esc_html__( 'Addon Deactivated', 'forminator' ),
+			esc_html__( 'Integration Deactivated', 'forminator' ),
 			array(
 				'notification' => array(
 					'type' => 'success',
@@ -160,7 +160,7 @@ class Forminator_Integration_Admin_Ajax {
 		$addon = $this->validate_addon_from_slug( $slug );
 
 		if ( ! $addon->is_settings_available() ) {
-			$this->send_json_errors( esc_html__( 'This Addon does not have settings available', 'forminator' ) );
+			$this->send_json_errors( esc_html__( 'This Integration does not have settings available', 'forminator' ) );
 		}
 
 		if ( isset( $sanitized_post_data['global_id'] ) ) {
@@ -262,7 +262,7 @@ class Forminator_Integration_Admin_Ajax {
 	}
 
 	/**
-	 * Get Addons list, grouped by connected status
+	 * Get Integrations list, grouped by connected status
 	 *
 	 * @since 1.1
 	 */
@@ -407,7 +407,7 @@ class Forminator_Integration_Admin_Ajax {
 
 		if ( ! $addon || ! $addon instanceof Forminator_Integration && ! $addon instanceof Forminator_Addon_Abstract ) {
 			$this->send_json_errors(
-				esc_html__( 'Addon not found', 'forminator' ),
+				esc_html__( 'Integration not found', 'forminator' ),
 				array(),
 				array(
 					'notification' => array(
@@ -422,7 +422,7 @@ class Forminator_Integration_Admin_Ajax {
 	}
 
 	/**
-	 * Remove instance of Addon Admin Ajax
+	 * Remove instance of Integration Admin Ajax
 	 *
 	 * @since 1.1
 	 */
@@ -474,7 +474,7 @@ class Forminator_Integration_Admin_Ajax {
 	}
 
 	/**
-	 * Get Addons List, grouped by connected status with module
+	 * Get Integrations List, grouped by connected status with module
 	 *
 	 * @since 1.1
 	 */
@@ -519,7 +519,7 @@ class Forminator_Integration_Admin_Ajax {
 
 		$is_settings_available = 'is_' . $module_type . '_settings_available';
 		if ( ! $addon->$is_settings_available( $module_id ) ) {
-			$this->send_json_errors( esc_html__( 'This Addon does not have module settings available', 'forminator' ) );
+			$this->send_json_errors( esc_html__( 'This Integration does not have module settings available', 'forminator' ) );
 		}
 
 		forminator_maybe_attach_addon_hook( $addon );

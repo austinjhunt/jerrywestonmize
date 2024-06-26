@@ -24,7 +24,7 @@ class Ressio_Config
     public $cachettl;
     /** @var bool */
     public $cachefast;
-    /** @var array */
+    /** @var string[] */
     public $cachedeps;
     /** @var int */
     public $logginglevel;
@@ -55,13 +55,16 @@ class Ressio_Config
     /** @var Ressio_ConfigRddb */
     public $rddb;
 
-    /** @var array */
+    /** @var array<string,mixed> */
     public $plugins;
-    /** @var array */
+    /** @var array<string,mixed> */
     public $di;
 
     /** @var Ressio_ConfigDB */
     public $db;
+
+    /** @var ?Ressio_ConfigRedis */
+    public $redis;
 
     /** @var Ressio_ConfigWorker */
     public $worker;
@@ -119,7 +122,7 @@ class Ressio_ConfigImg
     public $webp;
     /** @var bool */
     public $srcsetgeneration;
-    /** @var array */
+    /** @var int[] */
     public $srcsetwidths;
 
     /** @var ?Ressio_ConfigExcludeRules */
@@ -275,7 +278,7 @@ class Ressio_ConfigWorker
     public $memorylimit;
     /** @var ?string */
     public $lockdir;
-    /** @var array */
+    /** @var array<string,string> */
     public $actors;
     /** @var Ressio_ConfigWorkerDB */
     public $db;
@@ -319,4 +322,34 @@ class Ressio_ConfigExcludeRules
     public $content;
     /** @var ?stdClass */
     public $attrs;
+}
+
+class Ressio_ConfigRedis
+{
+    /** @var ?Redis */
+    public $instance;
+    /** @var ?Ressio_ConfigRedisConfig */
+    public $config;
+    /** @var string */
+    public $key_prefix;
+}
+
+class Ressio_ConfigRedisConfig
+{
+    /** @var ?string */
+    public $host;
+    /** @var ?int */
+    public $port;
+    /** @var ?int */
+    public $timeout;
+    /** @var ?int */
+    public $retry_interval;
+    /** @var ?int */
+    public $read_timeout;
+    /** @var ?array */
+    public $context;
+    /** @var string|array|null */
+    public $auth;
+    /** @var ?int */
+    public $dbindex;
 }

@@ -4,9 +4,9 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-activecampaign-w
 
 /**
  * Class Forminator_Activecampaign
- * Activecampaign Addon Main Class
+ * Activecampaign Integration Main Class
  *
- * @since 1.0 Activecampaign Addon
+ * @since 1.0 Activecampaign Integration
  */
 final class Forminator_Activecampaign extends Forminator_Integration {
 
@@ -32,7 +32,7 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	/**
 	 * Forminator_Activecampaign constructor.
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 */
 	public function __construct() {
 		// late init to allow translation.
@@ -44,7 +44,7 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	/**
 	 * Override settings available,
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 * @return bool
 	 */
 	public function is_settings_available() {
@@ -56,7 +56,7 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	 *
 	 * Its disabled by default
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 * @return bool
 	 */
 	public static function is_enable_delete_contact() {
@@ -80,7 +80,7 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	/**
 	 * Allow multiple connection on one form
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 * @return bool
 	 */
 	public function is_allow_multi_on_form() {
@@ -90,7 +90,7 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	/**
 	 * Setting wizard of Active Campaign
 	 *
-	 * @since 1.0 Activecampaign Addon
+	 * @since 1.0 Activecampaign Integration
 	 * @return array
 	 */
 	public function settings_wizards() {
@@ -106,7 +106,7 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	/**
 	 * Set up API Wizard
 	 *
-	 * @since 1.0 Active Campaign Addon
+	 * @since 1.0 Active Campaign Integration
 	 *
 	 * @param     $submitted_data
 	 *
@@ -271,7 +271,7 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	/**
 	 * Validate API
 	 *
-	 * @since 1.0 Active Campaign Addon
+	 * @since 1.0 Active Campaign Integration
 	 *
 	 * @param $api_url
 	 * @param $api_key
@@ -292,7 +292,7 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	/**
 	 * Get API Instance
 	 *
-	 * @since 1.0 Active Campaign Addon
+	 * @since 1.0 Active Campaign Integration
 	 *
 	 * @param null $api_url
 	 * @param null $api_key

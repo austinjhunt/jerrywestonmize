@@ -154,6 +154,9 @@
 
 			// Init small form for all type of form
 			this.small_form();
+
+			// trigger form added in the DOM
+			$(document).trigger('forminator:form:added')
 		},
 		init_custom_form: function ( form_selector ) {
 
@@ -201,7 +204,7 @@
 				}
 
 				// Show Stripe on modal display.
-				$( document ).on( "hustle:module:displayed", function () {
+				$( document ).on( "forminator:form:added", function () {
 					self.renderStripe( self, stripe_payment );
 				});
 			}

@@ -378,7 +378,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\Form\BlocksRenderer::class);
     $container->autowire(\MailPoet\Form\BlockStylesRenderer::class);
     $container->autowire(\MailPoet\Form\BlockWrapperRenderer::class);
-    $container->autowire(\MailPoet\Form\Block\BlockRendererHelper::class);
+    $container->autowire(\MailPoet\Form\Block\BlockRendererHelper::class)->setPublic(true);
     $container->autowire(\MailPoet\Form\Block\Column::class);
     $container->autowire(\MailPoet\Form\Block\Columns::class);
     $container->autowire(\MailPoet\Form\Block\Checkbox::class);
@@ -437,7 +437,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\Statistics\StatisticsClicksRepository::class)->setPublic(true);
     $container->autowire(\MailPoet\Statistics\StatisticsNewslettersRepository::class)->setPublic(true);
     $container->autowire(\MailPoet\Statistics\StatisticsOpensRepository::class)->setPublic(true);
-    $container->autowire(\MailPoet\Statistics\StatisticsUnsubscribesRepository::class);
+    $container->autowire(\MailPoet\Statistics\StatisticsUnsubscribesRepository::class)->setPublic(true);
     $container->autowire(\MailPoet\Statistics\StatisticsWooCommercePurchasesRepository::class)->setPublic(true);
     $container->autowire(\MailPoet\Statistics\UserAgentsRepository::class)->setPublic(true);
     $container->autowire(\MailPoet\Router\Router::class)
@@ -470,7 +470,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\Subscribers\ImportExport\PersonalDataExporters\NewslettersExporter::class)->setPublic(true);
     $container->autowire(\MailPoet\Subscribers\ImportExport\PersonalDataExporters\NewsletterOpensExporter::class)->setPublic(true);
     $container->autowire(\MailPoet\Subscribers\ImportExport\PersonalDataExporters\NewsletterClicksExporter::class)->setPublic(true);
-    $container->autowire(\MailPoet\Subscribers\Statistics\SubscriberStatisticsRepository::class);
+    $container->autowire(\MailPoet\Subscribers\Statistics\SubscriberStatisticsRepository::class)->setPublic(true);
     $container->autowire(\MailPoet\Subscribers\SubscribersCountsController::class)->setPublic(true);
     $container->autowire(\MailPoet\Subscribers\ConfirmationEmailCustomizer::class)->setPublic(true);
     // Segments
@@ -543,7 +543,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     // Subscription
     $container->autowire(\MailPoet\Subscription\Captcha\CaptchaConstants::class)->setPublic(true);
     $container->autowire(\MailPoet\Subscription\CaptchaFormRenderer::class)->setPublic(true);
-    $container->autowire(\MailPoet\Subscription\Captcha\CaptchaSession::class);
+    $container->autowire(\MailPoet\Subscription\Captcha\CaptchaSession::class)->setPublic(true);
     $container->autowire(\MailPoet\Subscription\Captcha\CaptchaRenderer::class)->setPublic(true);
     $container->autowire(\MailPoet\Subscription\Captcha\CaptchaPhrase::class);
     $container->autowire(\MailPoet\Subscription\Captcha\Validator\BuiltInCaptchaValidator::class)->setPublic(true);
@@ -617,7 +617,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\NewsletterTemplates\ThumbnailSaver::class)->setPublic(true);
     $container->autowire(\MailPoet\NewsletterTemplates\BrandStyles::class)->setPublic(true);
     // Util
-    $container->autowire(\MailPoet\Util\Cookies::class);
+    $container->autowire(\MailPoet\Util\Cookies::class)->setPublic(true);
     $container->autowire(\MailPoet\Util\DBCollationChecker::class);
     $container->autowire(\MailPoet\Util\FreeDomains::class);
     $container->autowire(\MailPoet\Util\Url::class)->setPublic(true);

@@ -127,56 +127,19 @@ class Ressio_DI
         $value = $this->_di[$key];
 
         if (is_string($value)) {
-//            if (strpos($value, ':') === false) {
-                // "classname"
-                return new $value($this);
-//            }
-            // "classname:methodname"
-//            list($className, $methodName) = explode(':', $value, 2);
-//            return call_user_func(array($className, $methodName), $this);
+            // class name
+            return new $value($this);
         }
 
         if (is_object($value)) {
             if ($value instanceof Closure) {
-                // function()
+                // function
                 return $value($this);
             }
             // object
             return $value;
         }
-/*
-        if (is_array($value)) {
-            if (is_string($value[0])) {
-                $className = $value[0];
-                $params = isset($value[1]) ? (array)$value[1] : array();
-                if (strpos($className, ':') === false) {
-                    // array("classname", (array)options)
-                    try {
-                        return (new ReflectionClass($className))->newInstanceArgs($params);
-                    } catch (ReflectionException $e) {
-                        // don't use di->logger to avoid self-call
-                        trigger_error('PageSpeed Ninja: reflection error ' . $e->getMessage());
-                    }
-                    return null;
-                }
-                // array("classname:methodname", (array)options)
-                return call_user_func_array(explode(':', $className, 2), $params);
-            }
-            if (is_object($value[0])) {
-                if ($value[0] instanceof Closure) {
-                    // array(function(), option)
-                    // @var Closure $fn
-                    list($fn, $params) = $value;
-                    return call_user_func($fn, $this, $params);
-                }
-                // array($obj, "methodname" [, (array)option])
-                // @var object $obj
-                list($obj, $methodName) = $value;
-                $params = isset($value[2]) ? (array)$value[2] : array();
-                return call_user_func_array(array($obj, $methodName), $params);
-            }
-        }
-*/
+
         return null;
     }
 }

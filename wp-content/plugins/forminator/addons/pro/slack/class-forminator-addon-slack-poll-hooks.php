@@ -85,7 +85,7 @@ class Forminator_Slack_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 			 * @param array                                $connection_settings    current connection setting, contains options of like `name`, `target_id` etc.
 			 * @param array                                $poll_entry_fields      default entry fields of form.
 			 * @param array                                $poll_settings          Displayed Poll settings.
-			 * @param Forminator_Slack_Poll_Settings $poll_settings_instance Slack Addon Poll Settings instance.
+			 * @param Forminator_Slack_Poll_Settings $poll_settings_instance Slack Integration Poll Settings instance.
 			 */
 			$attachments = apply_filters(
 				'forminator_addon_slack_poll_message_attachments',
@@ -116,7 +116,7 @@ class Forminator_Slack_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 			 * @param array                                $connection_settings    current connection setting, contains options of like `name`, `target_id` etc.
 			 * @param array                                $poll_entry_fields      default entry fields of form.
 			 * @param array                                $poll_settings          Displayed Poll settings.
-			 * @param Forminator_Slack_Poll_Settings $poll_settings_instance Slack Addon Poll Settings instance.
+			 * @param Forminator_Slack_Poll_Settings $poll_settings_instance Slack Integration Poll Settings instance.
 			 */
 			$args = apply_filters(
 				'forminator_addon_slack_poll_send_message_args',

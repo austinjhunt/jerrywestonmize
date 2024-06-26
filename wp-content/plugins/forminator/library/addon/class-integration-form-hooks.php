@@ -45,7 +45,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 		 * @since 1.1
 		 *
 		 * @param int                                          $form_id                current Form ID.
-		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Addon Form Settings.
+		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Integration Form Settings.
 		 */
 		do_action(
 			'forminator_addon_' . $this->addon->get_slug() . '_on_before_render_form_fields',
@@ -76,7 +76,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 		 * @since 1.1
 		 *
 		 * @param int                                          $form_id                current Form ID.
-		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Addon Form Settings.
+		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Integration Form Settings.
 		 */
 		do_action(
 			'forminator_addon_' . $this->addon->get_slug() . '_on_after_render_form_fields',
@@ -107,7 +107,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 		 * @since 1.1
 		 *
 		 * @param int                                          $form_id                current Form ID.
-		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Addon Form Settings.
+		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Integration Form Settings.
 		 */
 		do_action(
 			'forminator_addon_' . $this->addon->get_slug() . '_on_after_render_form',
@@ -143,7 +143,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 		 *
 		 * @param int                                          $form_id                current Form ID.
 		 * @param Forminator_Form_Entry_Model                  $entry_model            Forminator Entry Model.
-		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Addon Form Settings.
+		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Integration Form Settings.
 		 */
 		do_action(
 			'forminator_addon_' . $addon_slug . '_after_entry_saved',
@@ -177,7 +177,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 		 *
 		 * @param array                                        $export_columns         column to be exported.
 		 * @param int                                          $form_id                current Form ID.
-		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Addon Form Settings.
+		 * @param Forminator_Integration_Form_Settings|null $form_settings_instance of Integration Form Settings.
 		 */
 		$error_message = apply_filters(
 			'forminator_addon_' . $addon_slug . '_submit_form_error_message',
