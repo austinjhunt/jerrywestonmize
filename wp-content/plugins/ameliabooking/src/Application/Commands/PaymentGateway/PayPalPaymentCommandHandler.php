@@ -98,13 +98,16 @@ class PayPalPaymentCommandHandler extends CommandHandler
 
         do_action('amelia_before_paypal_execute', $paymentAmount, $reservation->getReservation()->toArray());
 
+        $transfers = [];
+
         $response = $paymentService->execute(
             [
                 'returnUrl'   => AMELIA_ACTION_URL . '/payment/payPal/callback&status=true',
                 'cancelUrl'   => AMELIA_ACTION_URL . '/payment/payPal/callback&status=false',
                 'amount'      => $paymentAmount,
                 'description' => $additionalInformation['description']
-            ]
+            ],
+            $transfers
         );
 
         if (!$response->isSuccessful()) {

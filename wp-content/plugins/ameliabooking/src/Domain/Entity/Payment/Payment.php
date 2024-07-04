@@ -8,6 +8,7 @@ namespace AmeliaBooking\Domain\Entity\Payment;
 
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
@@ -81,6 +82,9 @@ class Payment
 
     /** @var string */
     private $transactionId;
+
+    /** @var Json */
+    private $transfers;
 
     /**
      * Payment constructor.
@@ -425,11 +429,26 @@ class Payment
     /**
      * @param string|null $transactionId
      */
-    public function setTransactionId(string $transactionId)
+    public function setTransactionId($transactionId)
     {
         $this->transactionId = $transactionId;
     }
 
+    /**
+     * @return Json
+     */
+    public function getTransfers()
+    {
+        return $this->transfers;
+    }
+
+    /**
+     * @param Json $transfers
+     */
+    public function setTransfers($transfers)
+    {
+        $this->transfers = $transfers;
+    }
 
 
     /**
@@ -458,6 +477,7 @@ class Payment
             'wcItemCouponValue' => $this->getWcItemCouponValue() ? $this->getWcItemCouponValue()->getValue() : null,
             'wcItemTaxValue'    => $this->getWcItemTaxValue() ? $this->getWcItemTaxValue()->getValue() : null,
             'transactionId'     => $this->getTransactionId(),
+            'transfers'         => $this->getTransfers() ? $this->getTransfers()->getValue() : null,
         ];
     }
 }

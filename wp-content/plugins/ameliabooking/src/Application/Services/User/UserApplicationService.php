@@ -312,6 +312,8 @@ class UserApplicationService
                 $companyDayOff
             )[0];
 
+            $userArray['mandatoryServicesIds'] = $providerService->getMandatoryServicesIds($user->getId()->getValue());
+
             try {
                 $userArray['outlookCalendar']['calendarList'] = $outlookCalendarService->listCalendarList($user);
 

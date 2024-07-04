@@ -488,7 +488,7 @@
 												$slide.slider('value', $value);
 											}
 										});
-										
+
 										self.multi_upload_disable( $this, false );
 										$this.trigger('forminator:form:submit:success', formData);
 
@@ -505,10 +505,10 @@
 												self.$el.hide();
 											}
 											//new tab redirection
-											window.open( self.decodeHtmlEntity( decodeURIComponent( data.data.url ) ), '_blank' );
+											window.open( self.decodeHtmlEntity( data.data.url ), '_blank' );
 										} else {
 											//same tab redirection
-											window.location.href = self.decodeHtmlEntity( decodeURIComponent( data.data.url ) );
+											window.location.href = self.decodeHtmlEntity( data.data.url );
 										}
 
 									}

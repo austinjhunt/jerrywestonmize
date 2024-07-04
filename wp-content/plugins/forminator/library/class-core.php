@@ -112,6 +112,7 @@ class Forminator_Core {
 
 		// HACK: Add settings and entries page at the end of the list.
 		if ( is_admin() ) {
+			$this->admin->add_templates_page();
 			$this->admin->add_entries_page();
 			$this->admin->add_addons_page();
 			if ( Forminator::is_addons_feature_enabled() ) {
@@ -243,7 +244,8 @@ class Forminator_Core {
 		include_once forminator_plugin_dir() . 'library/class-export-result.php';
 		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'library/class-export.php';
-        /* @noinspection PhpIncludeInspection */
+		include_once forminator_plugin_dir() . 'library/class-template-api.php';
+		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'library/class-reports.php';
 		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'library/render/class-render-form.php';
@@ -421,7 +423,7 @@ class Forminator_Core {
 	 *
 	 * @param string $key POST key.
 	 * @param mixed  $default_value Default value.
-	 * @return type
+	 * @return mixed
 	 */
 	public static function sanitize_text_field( $key, $default_value = '' ) {
 		if ( ! empty( $_POST[ $key ] ) ) {

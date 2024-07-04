@@ -19,6 +19,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
+use Exception;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -37,6 +38,7 @@ class GetTransactionAmountCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws ContainerException
      * @throws InvalidArgumentException
+     * @throws Exception
      */
     public function handle(GetTransactionAmountCommand $command)
     {
@@ -78,7 +80,10 @@ class GetTransactionAmountCommandHandler extends CommandHandler
                 'infrastructure.payment.' . $payment->getGateway()->getName()->getValue() . '.service'
             );
 
-            $amount = $paymentService->getTransactionAmount($payment->getTransactionId());
+            $amount = $paymentService->getTransactionAmount(
+                $payment->getTransactionId(),
+                $payment->getTransfers() ? json_decode($payment->getTransfers()->getValue(), true) : null
+            );
         }
 
         $amount = apply_filters('amelia_get_transaction_amount_filter', $amount, $payment ? $payment->toArray() : null);

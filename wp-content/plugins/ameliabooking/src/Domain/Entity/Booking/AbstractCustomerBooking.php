@@ -6,7 +6,6 @@
 
 namespace AmeliaBooking\Domain\Entity\Booking;
 
-use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\ValueObjects\Json;
@@ -33,9 +32,6 @@ abstract class AbstractCustomerBooking
     /** @var BookingStatus */
     protected $status;
 
-    /** @var  Collection */
-    protected $extras;
-
     /** @var Id */
     protected $couponId;
 
@@ -46,24 +42,7 @@ abstract class AbstractCustomerBooking
     protected $coupon;
 
     /** @var Json */
-    protected $customFields;
-
-    /** @var Json */
-    protected $info;
-
-    /**
-     * AbstractCustomerBooking constructor.
-     *
-     * @param Id            $customerId
-     * @param BookingStatus $status
-     */
-    public function __construct(
-        Id $customerId,
-        BookingStatus $status
-    ) {
-        $this->customerId = $customerId;
-        $this->status = $status;
-    }
+    protected $tax;
 
     /**
      * @return Id
@@ -130,22 +109,6 @@ abstract class AbstractCustomerBooking
     }
 
     /**
-     * @return Collection
-     */
-    public function getExtras()
-    {
-        return $this->extras;
-    }
-
-    /**
-     * @param Collection $extras
-     */
-    public function setExtras(Collection $extras)
-    {
-        $this->extras = $extras;
-    }
-
-    /**
      * @return Id
      */
     public function getCouponId()
@@ -196,33 +159,17 @@ abstract class AbstractCustomerBooking
     /**
      * @return Json
      */
-    public function getCustomFields()
+    public function getTax()
     {
-        return $this->customFields;
+        return $this->tax;
     }
 
     /**
-     * @param Json $customFields
+     * @param Json $tax
      */
-    public function setCustomFields($customFields)
+    public function setTax(Json $tax)
     {
-        $this->customFields = $customFields;
-    }
-
-    /**
-     * @return Json
-     */
-    public function getInfo()
-    {
-        return $this->info;
-    }
-
-    /**
-     * @param Json $info
-     */
-    public function setInfo(Json $info)
-    {
-        $this->info = $info;
+        $this->tax = $tax;
     }
 
     /**
@@ -232,15 +179,13 @@ abstract class AbstractCustomerBooking
     {
         return [
             'id'           => null !== $this->getId() ? $this->getId()->getValue() : null,
-            'customerId'   => $this->getCustomerId()->getValue(),
+            'customerId'   => null !== $this->getCustomerId() ? $this->getCustomerId()->getValue() : null,
             'customer'     => null !== $this->getCustomer() ? $this->getCustomer()->toArray() : null,
-            'status'       => $this->getStatus()->getValue(),
-            'extras'       => null !== $this->getExtras() ? $this->getExtras()->toArray() : null,
+            'status'       => null !== $this->getStatus() ? $this->getStatus()->getValue() : null,
             'couponId'     => null !== $this->getCouponId() ? $this->getCouponId()->getValue() : null,
             'price'        => null !== $this->getPrice() ? $this->getPrice()->getValue() : null,
             'coupon'       => null !== $this->getCoupon() ? $this->getCoupon()->toArray() : null,
-            'customFields' => null !== $this->getCustomFields() ? $this->getCustomFields()->getValue() : null,
-            'info'         => null !== $this->getInfo() ? $this->getInfo()->getValue() : null,
+            'tax'          => null !== $this->getTax() ? json_decode($this->getTax()->getValue(), true) : null,
         ];
     }
 }

@@ -142,6 +142,8 @@ class DataModifier
             $settings['payments']['wc']['enabled'] = $paymentSettings['wc']['enabled'];
 
             $settings['payments']['paymentLinks']['enabled'] = $paymentSettings['paymentLinks']['enabled'];
+
+            $settings['payments']['taxes']['enabled'] = $paymentSettings['taxes']['enabled'];
         }
 
         if ($settings && isset($settings['roles'])) {

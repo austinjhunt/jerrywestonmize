@@ -5,11 +5,13 @@ namespace MailPoet\Automation\Engine\Builder;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Automation\Engine\Control\ActionScheduler;
 use MailPoet\Automation\Engine\Data\Automation;
 use MailPoet\Automation\Engine\Data\Step;
 use MailPoet\Automation\Engine\Exceptions;
 use MailPoet\Automation\Engine\Exceptions\UnexpectedValueException;
 use MailPoet\Automation\Engine\Hooks;
+use MailPoet\Automation\Engine\Storage\AutomationRunStorage;
 use MailPoet\Automation\Engine\Storage\AutomationStatisticsStorage;
 use MailPoet\Automation\Engine\Storage\AutomationStorage;
 use MailPoet\Automation\Engine\Validation\AutomationValidator;
@@ -30,11 +32,17 @@ class UpdateAutomationController {
   /** @var UpdateStepsController */
   private $updateStepsController;
 
+  private AutomationRunStorage $automationRunStorage;
+
+  private ActionScheduler $actionScheduler;
+
   public function __construct(
     Hooks $hooks,
     AutomationStorage $storage,
     AutomationStatisticsStorage $statisticsStorage,
     AutomationValidator $automationValidator,
+    AutomationRunStorage $automationRunStorage,
+    ActionScheduler $actionScheduler,
     UpdateStepsController $updateStepsController
   ) {
     $this->hooks = $hooks;
@@ -42,6 +50,8 @@ class UpdateAutomationController {
     $this->statisticsStorage = $statisticsStorage;
     $this->automationValidator = $automationValidator;
     $this->updateStepsController = $updateStepsController;
+    $this->automationRunStorage = $automationRunStorage;
+    $this->actionScheduler = $actionScheduler;
   }
 
   public function updateAutomation(int $id, array $data): Automation {
@@ -54,6 +64,7 @@ class UpdateAutomationController {
     if (array_key_exists('name', $data)) {
       $automation->setName($data['name']);
     }
+    $originalStatus = $automation->getStatus();
 
     if (array_key_exists('status', $data)) {
       $this->checkAutomationStatus($data['status']);
@@ -67,6 +78,10 @@ class UpdateAutomationController {
         $this->hooks->doAutomationStepBeforeSave($step, $automation);
         $this->hooks->doAutomationStepByKeyBeforeSave($step, $automation);
       }
+    }
+
+    if (($automation->getStatus() === Automation::STATUS_DRAFT) && ($originalStatus === Automation::STATUS_ACTIVE)) {
+      $this->unscheduleAutomationRuns($automation);
     }
 
     if (array_key_exists('meta', $data)) {
@@ -143,5 +158,23 @@ class UpdateAutomationController {
     unset($aData['args']);
     unset($bData['args']);
     return $aData === $bData;
+  }
+
+  private function unscheduleAutomationRuns(Automation $automation): void {
+    $runIds = [];
+    $runs = $this->automationRunStorage->getAutomationRunsForAutomation($automation);
+    foreach ($runs as $run) {
+      $runIds[$run->getId()] = $run;
+    }
+
+    $actions = $this->actionScheduler->getScheduledActions(['hook' => Hooks::AUTOMATION_STEP, 'status' => \ActionScheduler_Store::STATUS_PENDING]);
+
+    foreach ($actions as $action) {
+      $args = $action->get_args();
+      $automationArgs = reset($args);
+      if (isset($automationArgs['automation_run_id']) && isset($runIds[$automationArgs['automation_run_id']])) {
+        $this->actionScheduler->unscheduleAction(Hooks::AUTOMATION_STEP, $args);
+      }
+    }
   }
 }

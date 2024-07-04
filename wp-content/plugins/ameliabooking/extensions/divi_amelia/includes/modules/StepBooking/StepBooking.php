@@ -91,8 +91,11 @@ class DIVI_StepBooking extends ET_Builder_Module
                 ),
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
-            ),
-            'categories' => array(
+            )
+        );
+
+        if ($this->categories && sizeof($this->categories) > 1) {
+            $array['categories'] = array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_category'], 'divi-divi_amelia'),
                 'type'            => 'amelia_multi_select',
                 'showAllText'     => BackendStrings::getWordPressStrings()['show_all_categories'],
@@ -102,8 +105,11 @@ class DIVI_StepBooking extends ET_Builder_Module
                 'show_if'         => array(
                     'booking_params' => 'on',
                 ),
-            ),
-            'services' => array(
+            );
+        }
+
+        if ($this->services && sizeof($this->services) > 1) {
+            $array['services'] = array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_service'], 'divi-divi_amelia'),
                 'type'            => 'amelia_multi_select',
                 'toggle_slug'     => 'main_content',
@@ -113,8 +119,11 @@ class DIVI_StepBooking extends ET_Builder_Module
                 'show_if'         => array(
                     'booking_params' => 'on',
                 ),
-            ),
-            'employees' => array(
+            );
+        }
+
+        if ($this->employees && sizeof($this->employees) > 1) {
+            $array['employees'] = array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_employee'], 'divi-divi_amelia'),
                 'type'            => 'amelia_multi_select',
                 'options'         => $this->employees,
@@ -124,8 +133,11 @@ class DIVI_StepBooking extends ET_Builder_Module
                 'show_if'         => array(
                     'booking_params' => 'on',
                 ),
-            ),
-            'locations' => array(
+            );
+        }
+
+        if ($this->locations && sizeof($this->locations) > 1) {
+            $array['locations'] = array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_location'], 'divi-divi_amelia'),
                 'type'            => 'amelia_multi_select',
                 'options'         => $this->locations,
@@ -135,8 +147,8 @@ class DIVI_StepBooking extends ET_Builder_Module
                 'show_if'         => array(
                     'booking_params' => 'on',
                 ),
-            ),
-        );
+            );
+        }
 
         if ($this->showPackages) {
             $array['packages'] = array(

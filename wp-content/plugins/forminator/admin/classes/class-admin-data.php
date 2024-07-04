@@ -93,6 +93,8 @@ class Forminator_Admin_Data {
 		$id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 		$user = wp_get_current_user();
 
+		$dashboard = class_exists( 'WPMUDEV_Dashboard' );
+
 		return array(
 			'ajaxUrl'                        => forminator_ajax_url(),
 			'adminUrl'                       => admin_url(),
@@ -128,6 +130,10 @@ class Forminator_Admin_Data {
 			'quizProcessNonce'               => wp_create_nonce( 'forminator_quiz_request' ),
 			'quizExportNonce'                => wp_create_nonce( 'forminator_popup_export_quiz' ),
 			'cloneNonce'                     => wp_create_nonce( 'forminator-nonce-clone-' . $id ),
+			'load_cloud_templates'           => wp_create_nonce( 'forminator_load_cloud_templates' ),
+			'save_cloud_templates'           => wp_create_nonce( 'forminator_save_cloud_templates' ),
+			'create_form_nonce'              => wp_create_nonce( 'forminator_create_form_from_template' ),
+			'templates_per_page'             => apply_filters( 'forminator_templates_per_page', 100 ),
 			'addons_enabled'                 => Forminator::is_addons_feature_enabled(),
 			'pluginUrl'                      => forminator_plugin_url(),
 			'imagesUrl'                      => forminator_plugin_url() . 'assets/images',
@@ -158,6 +164,9 @@ class Forminator_Admin_Data {
 			'postTypeList'                   => forminator_post_type_list(),
 			'postCategories'                 => forminator_post_categories(),
 			'isPro'                          => FORMINATOR_PRO,
+			'dashboardPlugin'                => $dashboard,
+			'isWPMUDEVloggedIn'              => $dashboard && WPMUDEV_Dashboard::$api->get_key(),
+			'expiredMembership'              => $dashboard && forminator_get_wpmudev_membership() === 'expired',
 			'userRoles'                      => get_editable_roles(),
 			'pages'                          => self::get_pages(),
 			'hasPayPal'                      => forminator_has_paypal_settings(),
@@ -175,6 +184,7 @@ class Forminator_Admin_Data {
 			'wpmudevMembership'              => forminator_get_wpmudev_membership(), // 'free'
 			'pdfExtensionsEnabled'           => $this->pdf_extensions_enabled(),
 			'userPermissions'                => $user->get_role_caps(),
+			'manage_forminator_templates'    => forminator_is_user_allowed( 'forminator-templates' ),
 		);
 	}
 

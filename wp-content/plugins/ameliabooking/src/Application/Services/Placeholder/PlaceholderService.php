@@ -14,7 +14,6 @@ use AmeliaBooking\Domain\Common\Exceptions\CouponExpiredException;
 use AmeliaBooking\Domain\Common\Exceptions\CouponUnknownException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
-use AmeliaBooking\Domain\Entity\Booking\Event\CustomerBookingEventTicket;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\CustomField\CustomField;
@@ -30,7 +29,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
-use AmeliaBooking\Infrastructure\Repository\Booking\Event\CustomerBookingEventTicketRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
@@ -213,12 +211,8 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
         /** @var string $break */
         $break = $type === 'email' ? '<p><br></p>' : ($type === 'whatsapp' ? '; ' : PHP_EOL);
 
-        $numberOfPersons = null;
-        $icsFiles        = [];
-
         $couponsUsed = [];
 
-        $appointmentPrice = $appointment['type'] === Entities::EVENT ? $appointment['price'] : 0;
         $payment = null;
 
         $paymentLinks = [
@@ -229,7 +223,6 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             'payment_link_mollie' => '',
         ];
 
-        $ticketsPrice = null;
         // If notification is for provider: Appointment price will be sum of all bookings prices
         // If notification is for customer: Appointment price will be price of his booking
         if ($bookingKey === null) {
@@ -244,72 +237,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             ];
 
             foreach ((array)$appointment['bookings'] as $customerBooking) {
-                $isAggregatedPrice = isset($customerBooking['aggregatedPrice']) && $customerBooking['aggregatedPrice'];
-
-                $appointmentPrice = $customerBooking['price'] *
-                    ($isAggregatedPrice ? $customerBooking['persons'] : 1);
-
-                /** @var CustomerBookingEventTicketRepository $bookingEventTicketRepository */
-                $bookingEventTicketRepository =
-                    $this->container->get('domain.booking.customerBookingEventTicket.repository');
-
-                $ticketsBookings = $bookingEventTicketRepository->getByEntityId(
-                    $customerBooking['id'],
-                    'customerBookingId'
-                );
-
-                if ($ticketsBookings->length()) {
-                    $ticketsPrice = 0;
-                    /** @var CustomerBookingEventTicket $bookingToEventTicket */
-                    foreach ($ticketsBookings->getItems() as $key => $bookingToEventTicket) {
-                        $ticketsPrice +=
-                            ($isAggregatedPrice ? $bookingToEventTicket->getPersons()->getValue() : 1) * $bookingToEventTicket->getPrice()->getValue();
-                    }
-                    $appointmentPrice = $ticketsPrice;
-                } elseif (!empty($customerBooking['ticketsData'])) {
-                    $ticketsPrice = 0;
-                    foreach ($customerBooking['ticketsData'] as $key => $bookingToEventTicket) {
-                        if ($bookingToEventTicket['price']) {
-                            $ticketsPrice +=
-                                ($isAggregatedPrice ? $bookingToEventTicket['persons'] : 1) * $bookingToEventTicket['price'];
-                        }
-                    }
-                    $appointmentPrice = $ticketsPrice;
-                }
-
-                foreach ((array)$customerBooking['extras'] as $extra) {
-                    $isExtraAggregatedPrice = isset($extra['aggregatedPrice']) && $extra['aggregatedPrice'] !== null ?
-                        $extra['aggregatedPrice'] : $isAggregatedPrice;
-
-                    $appointmentPrice += $extra['price'] *
-                        $extra['quantity'] *
-                        ($isExtraAggregatedPrice ? $customerBooking['persons'] : 1);
-                }
-
-                $discountValue = 0;
-
-                if (!empty($customerBooking['couponId']) && empty($customerBooking['coupon'])) {
-                    /** @var CouponRepository $couponRepository */
-                    $couponRepository          = $this->container->get('domain.coupon.repository');
-                    $customerBooking['coupon'] = $couponRepository->getById($customerBooking['couponId']);
-                    $customerBooking['coupon'] = $customerBooking['coupon'] ? $customerBooking['coupon']->toArray() : null;
-                }
-
-                if (!empty($customerBooking['coupon']['discount'])) {
-                    $discountValue = $appointmentPrice -
-                        (1 - $customerBooking['coupon']['discount'] / 100) * $appointmentPrice;
-
-                    $appointmentPrice =
-                        (1 - $customerBooking['coupon']['discount'] / 100) * $appointmentPrice;
-                }
-
-                $deductionValue = 0;
-
-                if (!empty($customerBooking['coupon']['deduction'])) {
-                    $deductionValue = $customerBooking['coupon']['deduction'];
-
-                    $appointmentPrice -= $customerBooking['coupon']['deduction'];
-                }
+                $amountData = $this->getAmountData($customerBooking, $appointment);
 
                 $expirationDate = null;
 
@@ -317,7 +245,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     $expirationDate = $customerBooking['coupon']['expirationDate'];
                 }
 
-                if (($discountValue || $deductionValue) && !empty($customerBooking['info'])) {
+                if (($amountData['discount'] || $amountData['deduction']) && !empty($customerBooking['info'])) {
                     $customerData = json_decode($customerBooking['info'], true);
 
                     if (!$customerData) {
@@ -332,10 +260,10 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                         $customerData['firstName'] . ' ' . $customerData['lastName'] . ' ' .$break .
                         BackendStrings::getFinanceStrings()['code'] . ': ' .
                         $customerBooking['coupon']['code'] . ' ' . $break .
-                        ($discountValue ? BackendStrings::getPaymentStrings()['discount_amount'] . ': ' .
-                            $helperService->getFormattedPrice($discountValue) . ' ' . $break : '') .
-                        ($deductionValue ? BackendStrings::getPaymentStrings()['deduction'] . ': ' .
-                            $helperService->getFormattedPrice($deductionValue) . ' ' . $break : '') .
+                        ($amountData['discount'] ? BackendStrings::getPaymentStrings()['discount_amount'] . ': ' .
+                            $helperService->getFormattedPrice($amountData['discount']) . ' ' . $break : '') .
+                        ($amountData['deduction'] ? BackendStrings::getPaymentStrings()['deduction'] . ': ' .
+                            $helperService->getFormattedPrice($amountData['deduction']) . ' ' . $break : '') .
                         ($expirationDate ? BackendStrings::getPaymentStrings()['expiration_date'] . ': ' .
                             $expirationDate : '');
                 }
@@ -358,69 +286,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
 
             $icsFiles = !empty($appointment['bookings'][0]['icsFiles']) ? $appointment['bookings'][0]['icsFiles'] : [];
         } else {
-            $isAggregatedPrice = isset($appointment['bookings'][$bookingKey]['aggregatedPrice']) &&
-                $appointment['bookings'][$bookingKey]['aggregatedPrice'];
-
-            $appointmentPrice = $appointment['bookings'][$bookingKey]['price'] *
-                ($isAggregatedPrice ? $appointment['bookings'][$bookingKey]['persons'] : 1);
-
-            /** @var CustomerBookingEventTicketRepository $bookingEventTicketRepository */
-            $bookingEventTicketRepository =
-                $this->container->get('domain.booking.customerBookingEventTicket.repository');
-
-            $ticketsBookings = !empty($appointment['bookings'][$bookingKey]['id']) ? $bookingEventTicketRepository->getByEntityId(
-                $appointment['bookings'][$bookingKey]['id'],
-                'customerBookingId'
-            ) : new Collection();
-
-            if ($ticketsBookings->length()) {
-                $ticketsPrice = 0;
-                /** @var CustomerBookingEventTicket $bookingToEventTicket */
-                foreach ($ticketsBookings->getItems() as $key => $bookingToEventTicket) {
-                    $ticketsPrice +=
-                        ($isAggregatedPrice ? $bookingToEventTicket->getPersons()->getValue() : 1) * $bookingToEventTicket->getPrice()->getValue();
-                }
-                $appointmentPrice = $ticketsPrice;
-            } elseif (!empty($event['bookings'][$bookingKey]['ticketsData'])) {
-                $ticketsPrice = 0;
-                foreach ($event['bookings'][$bookingKey]['ticketsData'] as $key => $bookingToEventTicket) {
-                    if ($bookingToEventTicket['price']) {
-                        $ticketsPrice +=
-                            ($isAggregatedPrice ? $bookingToEventTicket['persons'] : 1) * $bookingToEventTicket['price'];
-                    }
-                }
-                $appointmentPrice = $ticketsPrice;
-            }
-
-            foreach ((array)$appointment['bookings'][$bookingKey]['extras'] as $extra) {
-                $isExtraAggregatedPrice = isset($extra['aggregatedPrice']) && $extra['aggregatedPrice'] !== null ? $extra['aggregatedPrice'] :
-                    $isAggregatedPrice;
-
-                $extra['price']    = isset($extra['price']) ? $extra['price'] : 0;
-                $appointmentPrice +=
-                    $extra['price'] *
-                    $extra['quantity'] *
-                    ($isExtraAggregatedPrice ? $appointment['bookings'][$bookingKey]['persons'] : 1);
-            }
-
-            if (!empty($appointment['bookings'][$bookingKey]['couponId']) && empty($appointment['bookings'][$bookingKey]['coupon'])) {
-                /** @var CouponRepository $couponRepository */
-                $couponRepository          = $this->container->get('domain.coupon.repository');
-                $appointment['bookings'][$bookingKey]['coupon'] = $couponRepository->getById($appointment['bookings'][$bookingKey]['couponId']);
-                $appointment['bookings'][$bookingKey]['coupon'] = $appointment['bookings'][$bookingKey]['coupon'] ? $appointment['bookings'][$bookingKey]['coupon']->toArray() : null;
-            }
-
-            $discountValue = 0;
-            if (!empty($appointment['bookings'][$bookingKey]['coupon']['discount'])) {
-                $discountValue = $appointmentPrice - (1 - $appointment['bookings'][$bookingKey]['coupon']['discount'] / 100) * $appointmentPrice;;
-                $appointmentPrice = (1 - $appointment['bookings'][$bookingKey]['coupon']['discount'] / 100) * $appointmentPrice;
-            }
-
-            $deductionValue = 0;
-            if (!empty($appointment['bookings'][$bookingKey]['coupon']['deduction'])) {
-                $deductionValue = $appointment['bookings'][$bookingKey]['coupon']['deduction'];
-                $appointmentPrice -= $deductionValue;
-            }
+            $amountData = $this->getAmountData($appointment['bookings'][$bookingKey], $appointment);
 
             $expirationDate = null;
 
@@ -431,10 +297,10 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             if (!empty($appointment['bookings'][$bookingKey]['coupon']['code'])) {
                 $couponsUsed[] =
                     $appointment['bookings'][$bookingKey]['coupon']['code'] . ' ' . $break .
-                    ($discountValue ? BackendStrings::getPaymentStrings()['discount_amount'] . ': ' .
-                        $helperService->getFormattedPrice($discountValue) . ' ' . $break : '') .
-                    ($deductionValue ? BackendStrings::getPaymentStrings()['deduction'] . ': ' .
-                        $helperService->getFormattedPrice($deductionValue) . ' ' . $break : '') .
+                    ($amountData['discount'] ? BackendStrings::getPaymentStrings()['discount_amount'] . ': ' .
+                        $helperService->getFormattedPrice($amountData['discount']) . ' ' . $break : '') .
+                    ($amountData['deduction'] ? BackendStrings::getPaymentStrings()['deduction'] . ': ' .
+                        $helperService->getFormattedPrice($amountData['deduction']) . ' ' . $break : '') .
                     ($expirationDate ? BackendStrings::getPaymentStrings()['expiration_date'] . ': ' .
                         $expirationDate : '');
             }
@@ -471,7 +337,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             }
         }
 
-        $appointmentPrice = $helperService->getFormattedPrice($appointmentPrice >= 0 ? $appointmentPrice : 0);
+        $appointmentPrice = $helperService->getFormattedPrice($amountData['price'] >= 0 ? $amountData['price'] : 0);
 
         $bookingKeyForEmployee = null;
 

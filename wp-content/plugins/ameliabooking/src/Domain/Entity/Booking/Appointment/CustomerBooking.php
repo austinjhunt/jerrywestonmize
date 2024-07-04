@@ -11,8 +11,8 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomerService;
 use AmeliaBooking\Domain\Entity\Booking\AbstractCustomerBooking;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\PositiveDuration;
-use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
@@ -26,6 +26,9 @@ class CustomerBooking extends AbstractCustomerBooking
 {
     /** @var Id */
     private $appointmentId;
+
+    /** @var  Collection */
+    protected $extras;
 
     /** @var IntegerValue */
     private $persons;
@@ -69,22 +72,11 @@ class CustomerBooking extends AbstractCustomerBooking
     /** @var  BooleanValueObject */
     private $isUpdated;
 
+    /** @var Json */
+    protected $customFields;
 
-    /**
-     * CustomerBooking constructor.
-     *
-     * @param Id            $customerId
-     * @param BookingStatus $status
-     * @param IntegerValue  $persons
-     */
-    public function __construct(
-        Id $customerId,
-        BookingStatus $status,
-        IntegerValue $persons
-    ) {
-        parent::__construct($customerId, $status);
-        $this->persons = $persons;
-    }
+    /** @var Json */
+    protected $info;
 
     /**
      * @return Id
@@ -100,6 +92,22 @@ class CustomerBooking extends AbstractCustomerBooking
     public function setAppointmentId(Id $appointmentId)
     {
         $this->appointmentId = $appointmentId;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getExtras()
+    {
+        return $this->extras;
+    }
+
+    /**
+     * @param Collection $extras
+     */
+    public function setExtras(Collection $extras)
+    {
+        $this->extras = $extras;
     }
 
     /**
@@ -327,6 +335,37 @@ class CustomerBooking extends AbstractCustomerBooking
         $this->isUpdated = $isUpdated;
     }
 
+    /**
+     * @return Json
+     */
+    public function getCustomFields()
+    {
+        return $this->customFields;
+    }
+
+    /**
+     * @param Json $customFields
+     */
+    public function setCustomFields($customFields)
+    {
+        $this->customFields = $customFields;
+    }
+
+    /**
+     * @return Json
+     */
+    public function getInfo()
+    {
+        return $this->info;
+    }
+
+    /**
+     * @param Json $info
+     */
+    public function setInfo(Json $info)
+    {
+        $this->info = $info;
+    }
 
     /**
      * @return array
@@ -337,7 +376,8 @@ class CustomerBooking extends AbstractCustomerBooking
             parent::toArray(),
             [
                 'appointmentId'   => null !== $this->getAppointmentId() ? $this->getAppointmentId()->getValue() : null,
-                'persons'         => $this->getPersons()->getValue(),
+                'extras'          => null !== $this->getExtras() ? $this->getExtras()->toArray() : null,
+                'persons'         => null !== $this->getPersons() ? $this->getPersons()->getValue() : null,
                 'token'           => $this->getToken() ? $this->getToken()->getValue() : null,
                 'payments'        => null !== $this->getPayments() ? $this->getPayments()->toArray() : null,
                 'utcOffset'       => null !== $this->getUtcOffset() ? $this->getUtcOffset()->getValue() : null,
@@ -352,6 +392,8 @@ class CustomerBooking extends AbstractCustomerBooking
                 'created'         => $this->getCreated() ? $this->getCreated()->getValue()->format('Y-m-d H:i:s') : null,
                 'actionsCompleted' => $this->getActionsCompleted() ? $this->getActionsCompleted()->getValue() : null,
                 'isUpdated'       => $this->isUpdated() ? $this->isUpdated()->getValue() : null,
+                'customFields'    => null !== $this->getCustomFields() ? $this->getCustomFields()->getValue() : null,
+                'info'            => null !== $this->getInfo() ? $this->getInfo()->getValue() : null,
             ]
         );
     }

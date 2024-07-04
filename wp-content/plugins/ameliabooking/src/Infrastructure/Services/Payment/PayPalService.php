@@ -43,11 +43,12 @@ class PayPalService extends AbstractPaymentService implements PaymentServiceInte
 
     /**
      * @param array $data
+     * @param array $transfers
      *
      * @return mixed
      * @throws \Exception
      */
-    public function execute($data)
+    public function execute($data, &$transfers)
     {
         try {
             $payPalData = [
@@ -100,7 +101,9 @@ class PayPalService extends AbstractPaymentService implements PaymentServiceInte
      */
     public function getPaymentLink($data)
     {
-        $response = $this->execute($data);
+        $transfers = [];
+
+        $response = $this->execute($data, $transfers);
         if ($response->isSuccessful() && $response->getData() && $response->getData()['links'] && count($response->getData()['links']) > 1) {
             return ['link' => $response->getData()['links'][1]['href'], 'status' => 200];
         }
@@ -136,9 +139,13 @@ class PayPalService extends AbstractPaymentService implements PaymentServiceInte
     }
 
     /**
+     * @param string $id
+     * @param array|null $transfers
+     *
+     * @return mixed
      * @throws \Exception
      */
-    public function getTransactionAmount($id)
+    public function getTransactionAmount($id, $transfers)
     {
         $transaction = $this->getTransaction($id);
         return $transaction ? $transaction['transactions'][0]['amount']['total'] : null;

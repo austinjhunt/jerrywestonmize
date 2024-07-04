@@ -327,6 +327,7 @@ function forminator_get_allowed_field_types_for_addon() {
 		'signature',
 		// 1.15.
 		'currency',
+		'rating',
 	);
 
 	/**

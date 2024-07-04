@@ -33,6 +33,7 @@ class CustomFieldsTable extends AbstractDatabaseTable
                    `allServices` TINYINT(1) NULL DEFAULT NULL,
                    `allEvents` TINYINT(1) NULL DEFAULT NULL,
                    `useAsLocation` TINYINT(1) NULL DEFAULT NULL,
+                   `width` INT(11) NOT NULL DEFAULT 50,
                     PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     }

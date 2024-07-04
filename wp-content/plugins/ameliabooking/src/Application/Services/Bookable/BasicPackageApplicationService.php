@@ -3,6 +3,9 @@
 namespace AmeliaBooking\Application\Services\Bookable;
 
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
+use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
+use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use Exception;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -13,6 +16,38 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class BasicPackageApplicationService extends AbstractPackageApplicationService
 {
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param Package $package
+     * @param int     $customerId
+     * @param Coupon  $coupon
+     * @param bool    $save
+     *
+     * @return PackageCustomer|null
+     *
+     * @throws ContainerValueNotFoundException
+     */
+    public function addPackageCustomer($package, $customerId, $coupon, $save)
+    {
+        return null;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param Package         $package
+     * @param PackageCustomer $packageCustomer
+     * @param array           $packageRules
+     * @param bool            $save
+     *
+     * @return Collection
+     *
+     * @throws ContainerValueNotFoundException
+     */
+    public function addPackageCustomerServices($package, $packageCustomer, $packageRules, $save)
+    {
+        return new Collection();
+    }
 
     /**
      * @param Collection $packageCustomerServices

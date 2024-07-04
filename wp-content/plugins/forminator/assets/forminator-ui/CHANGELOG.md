@@ -1,5 +1,49 @@
 # Change Log
 
+## [1.12.14](https://github.com/wpmudev/forminator-ui/compare/v1.12.13...v1.12.14) (2024-03-22)
+####  🐛 Bug Fix
+- `rating`
+  - fix(rating): rating field design improvements. [#73](https://github.com/wpmudev/forminator-ui/pull/73) ([FOR-4494](https://incsub.atlassian.net/browse/FOR-4494)) ([@creador-dev](https://github.com/creador-dev))
+
+## [1.12.13](https://github.com/wpmudev/forminator-ui/compare/v1.12.12...v1.12.13) (2024-03-22)
+####  🐛 Bug Fix
+- `rating`
+  - fix(rating): wrap rating field items. [#69](https://github.com/wpmudev/forminator-ui/pull/69) ([FOR-4494](https://incsub.atlassian.net/browse/FOR-4494)) ([@creador-dev](https://github.com/creador-dev))
+  - fix(rating): rating field init and onChange fix. [#70](https://github.com/wpmudev/forminator-ui/pull/70) ([FOR-4496](https://incsub.atlassian.net/browse/FOR-4496)) ([@creador-dev](https://github.com/creador-dev))
+  - fix(rating): rating field data-total-value added. [#72](https://github.com/wpmudev/forminator-ui/pull/72) ([@creador-dev](https://github.com/creador-dev))
+- `multiselect`
+  - fix(multiselect): multiselect design fix. [#71](https://github.com/wpmudev/forminator-ui/pull/71) ([@creador-dev](https://github.com/creador-dev))
+
+## [1.12.12](https://github.com/wpmudev/forminator-ui/compare/v1.12.11...v1.12.12) (2024-03-22)
+
+#### ✨ New Features
+- `multiselect`
+  - new(multiselect): multi-select new variation. [#67](https://github.com/wpmudev/forminator-ui/pull/67) ([FOR-4423](https://incsub.atlassian.net/browse/FOR-4423)) ([@creador-dev](https://github.com/creador-dev))
+
+- `rating`
+  - new(rating): new rating field. [#68](https://github.com/wpmudev/forminator-ui/pull/68) ([FOR-4470](https://incsub.atlassian.net/browse/FOR-4470)) ([@creador-dev](https://github.com/creador-dev))
+
+#### 📖 Docs
+- `checkbox`
+  - fix(checkbox): checkbox docs updated. [#65](https://github.com/wpmudev/forminator-ui/pull/65) ([@creador-dev](https://github.com/creador-dev))
+
+- `select`
+  - fix(select): select field docs updated. [#66](https://github.com/wpmudev/forminator-ui/pull/66) ([@creador-dev](https://github.com/creador-dev))
+
+## [1.12.11](https://github.com/wpmudev/forminator-ui/compare/v1.12.10...v1.12.11) (2024-03-22)
+
+#### ✨ New Features
+- `icon`
+  - new(icon): updated twitter icon. [#64](https://github.com/wpmudev/forminator-ui/pull/64) ([FOR-4263](https://incsub.atlassian.net/browse/FOR-4263)) ([@creador-dev](https://github.com/creador-dev))
+
+#### ✨ New Features
+- `captcha`
+  - new(captcha): captcha alignment styling. [#63](https://github.com/wpmudev/forminator-ui/pull/56) ([FOR-85](https://incsub.atlassian.net/browse/FOR-85)) ([@creador-dev](https://github.com/creador-dev))
+
+#### 🐛 Bug Fix
+- `textarea`
+  - fix(textarea): textarea label overlaps with default text. [#51](https://github.com/wpmudev/forminator-ui/pull/51) ([FOR-2920](https://incsub.atlassian.net/browse/FOR-2920)) ([@creador-dev](https://github.com/creador-dev))
+
 ## [1.12.10](https://github.com/wpmudev/forminator-ui/compare/v1.12.9...v1.12.10) (2024-01-12)
 
 #### 🚀 Improvement

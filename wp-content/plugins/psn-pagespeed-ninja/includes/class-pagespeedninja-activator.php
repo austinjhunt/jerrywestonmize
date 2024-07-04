@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.4.2
+ * @version    1.4.3
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       June 2024
+ * @date       July 2024
  */
 
 abstract class PagespeedNinja_Activator
@@ -29,6 +29,8 @@ abstract class PagespeedNinja_Activator
         $cache_dir = WP_CONTENT_DIR . '/uploads/psn-pagespeed-ninja/cache';
         if (!file_exists($cache_dir)) {
             @mkdir($cache_dir, 0775, true);
+            $pluginDir = dirname(__DIR__);
+            @copy("$pluginDir/assets/sample/sample_apache_denied.htaccess", "$cache_dir/.htaccess");
         }
 
         add_option('pagespeedninja_config', array());
@@ -171,8 +173,9 @@ abstract class PagespeedNinja_Activator
      */
     public static function schedule_next_daily_event()
     {
-        $next_time = apply_filters('psn_next_daily_event', strtotime('tomorrow'));
-        wp_schedule_single_event($next_time, 'pagespeedninja_daily_event');
+        // choose a random time between 00:00 and 02:59
+        $next_time = apply_filters('psn_next_daily_event', strtotime(sprintf('tomorrow %02d:%02d', mt_rand(0,2), mt_rand(0,59))));
+        wp_schedule_event($next_time, 'daily', 'pagespeedninja_daily_event');
     }
 
     /**

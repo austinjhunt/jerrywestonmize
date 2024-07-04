@@ -2,6 +2,7 @@
 
 use AmeliaBooking\Infrastructure\WP\GutenbergBlock\GutenbergBlock;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
+use AmeliaBooking\Infrastructure\Licence;
 
 class DIVI_Events extends ET_Builder_Module
 {
@@ -24,8 +25,11 @@ class DIVI_Events extends ET_Builder_Module
     {
         $this->name = esc_html__(BackendStrings::getWordPressStrings()['events_divi'], 'divi-divi_amelia');
 
-        $this->type['list']     = BackendStrings::getWordPressStrings()['show_event_view_list'];
-        $this->type['calendar'] = BackendStrings::getWordPressStrings()['show_event_view_calendar'];
+        $isLite = !Licence\Licence::$premium;
+        if (!$isLite) {
+            $this->type['list']     = BackendStrings::getWordPressStrings()['show_event_view_list'];
+            $this->type['calendar'] = BackendStrings::getWordPressStrings()['show_event_view_calendar'];
+        }
 
         if (!is_admin()) {
             return;
@@ -58,7 +62,9 @@ class DIVI_Events extends ET_Builder_Module
 
     public function get_fields()
     {
-        return array(
+        $isLite = !Licence\Licence::$premium;
+
+        $typeArr = array(
             'type' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['show_event_view_type'], 'divi-divi_amelia'),
                 'type'            => 'select',
@@ -66,7 +72,10 @@ class DIVI_Events extends ET_Builder_Module
                 'default'         => array_keys($this->type)[0],
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
-            ),
+            )
+        );
+
+        $mainArr = array(
             'booking_params' => array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['filter'], 'divi-divi_amelia'),
                 'type'            => 'yes_no_button',
@@ -118,6 +127,12 @@ class DIVI_Events extends ET_Builder_Module
                 'description'     => BackendStrings::getWordPressStrings()['manually_loading_description'],
             ),
         );
+
+        if (!$isLite) {
+            return array_merge($typeArr, $mainArr);
+        } else {
+            return $mainArr;
+        }
     }
 
     public function checkValues($val)

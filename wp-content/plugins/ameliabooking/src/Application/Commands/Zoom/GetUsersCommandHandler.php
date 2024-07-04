@@ -55,10 +55,7 @@ class GetUsersCommandHandler extends CommandHandler
 
         $zoomSettings = $settingsDS->getCategorySettings('zoom');
 
-        if ($zoomSettings['s2sEnabled'] ?
-            (!$zoomSettings['accountId'] || !$zoomSettings['clientId'] || !$zoomSettings['clientSecret'])
-            : (!$zoomSettings['apiKey'] || !$zoomSettings['apiSecret'])
-        ) {
+        if (!$zoomSettings['accountId'] || !$zoomSettings['clientId'] || !$zoomSettings['clientSecret']) {
             $result->setResult(CommandResult::RESULT_SUCCESS);
 
             return $result;

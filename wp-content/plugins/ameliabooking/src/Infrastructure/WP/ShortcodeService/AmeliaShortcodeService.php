@@ -51,10 +51,6 @@ class AmeliaShortcodeService
             wp_enqueue_script('amelia_razorpay_script', 'https://checkout.razorpay.com/v1/checkout.js');
         }
 
-        if ($settingsService->getSetting('activation', 'enablePolyfill')) {
-            wp_enqueue_script('amelia_polyfill', 'https://polyfill.io/v2/polyfill.js?features=Intl.~locale.en');
-        }
-
         $gmapApiKey = $settingsService->getSetting('general', 'gMapApiKey');
 
         if ($gmapApiKey) {

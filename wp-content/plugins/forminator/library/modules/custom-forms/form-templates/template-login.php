@@ -20,9 +20,11 @@ class Forminator_Template_Login extends Forminator_Template {
 		return array(
 			'id'          => 'login',
 			'name'        => esc_html__( 'Login', 'forminator' ),
-			'description' => esc_html__( 'A simple contact form for your users to contact you', 'forminator' ),
+			'description' => esc_html__( 'Standard login form for returning users with fields for username/email and password, and links for account recovery or registration.', 'forminator' ),
 			'icon'        => 'profile-male',
-			'priortiy'    => 6,
+			'priority'    => 6,
+			'category'    => 'custom-form',
+			'pro'         => false,
 		);
 	}
 
@@ -139,6 +141,11 @@ class Forminator_Template_Login extends Forminator_Template {
 			'cform-multiselect-custom-font' => '',
 			'cform-multiselect-font-size'   => '16',
 			'cform-multiselect-font-weight' => 'normal',
+			// Typography - Multi Select tag.
+			'cform-multiselect-tag-font-family' => 'Roboto',
+			'cform-multiselect-tag-custom-font' => '',
+			'cform-multiselect-tag-font-size'   => '12',
+			'cform-multiselect-tag-font-weight' => 'medium',
 			// Typography - Dropdown.
 			'cform-dropdown-font-family'    => 'Roboto',
 			'cform-dropdown-custom-font'    => '',

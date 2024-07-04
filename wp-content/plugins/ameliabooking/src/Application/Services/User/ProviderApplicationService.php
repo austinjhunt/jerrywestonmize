@@ -1566,4 +1566,20 @@ class ProviderApplicationService
 
         return $customers;
     }
+
+    /**
+     * @param int $providerId
+     *
+     * @return array
+     * @throws ContainerValueNotFoundException
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     */
+    public function getMandatoryServicesIds($providerId)
+    {
+        /** @var ProviderServiceRepository $providerServiceRepository */
+        $providerServiceRepository = $this->container->get('domain.bookable.service.providerService.repository');
+
+        return $providerServiceRepository->getMandatoryServicesIdsForProvider($providerId);
+    }
 }

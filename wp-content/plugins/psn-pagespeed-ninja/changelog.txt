@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 1.4.3 Stable Release [04 July 2024]
+- Fixed issue with daily scheduler
+- Fixed issue with Redis cache cleaning [Pro]
+- Disabled directory index of cache directory in Apache
+
 = 1.4.2 Stable Release [11 June 2024]
 - Added support of JavaScript modules in "Preload key requests"
 - Fixed issue with CSS relocation in "Inline CSS for First-Time Visitors"
@@ -7,7 +12,7 @@
 - Fixed work of lazy image loading
 - Fixed processing of query delimiters in Stream and Pharse parsers
 - Improved detection of width and height for SVG images
-- Adjusted "Ultra" and "Experimenntal" optimzation presets
+- Adjusted "Ultra" and "Experimental" optimization presets
 - Minor bugfixes
 
 = 1.4.1 Stable Release [07 June 2024]
@@ -28,7 +33,7 @@
 - Improved work of Non-blocking JavaScript feature
 - Improved asynchronous loading of CSS with Critical CSS feature
 - Improved work of preload tags generation
-- Adjusted "Ultra" optimzation preset
+- Adjusted "Ultra" optimization preset
 - Changed initial setup wizard
 - Minor bugfixes/typos
 

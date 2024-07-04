@@ -35,6 +35,16 @@ class ApplicationService
     /**
      * @param Container $c
      *
+     * @return ApplicationServices\Tax\AbstractTaxApplicationService
+     */
+    public static function getTaxService($c)
+    {
+        return new ApplicationServices\Tax\StarterTaxApplicationService($c);
+    }
+
+    /**
+     * @param Container $c
+     *
      * @return ApplicationServices\Coupon\AbstractCouponApplicationService
      */
     public static function getCouponService($c)

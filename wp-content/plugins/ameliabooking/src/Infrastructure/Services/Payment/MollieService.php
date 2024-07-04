@@ -37,11 +37,12 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
 
     /**
      * @param array $data
+     * @param array $transfers
      *
      * @return mixed
      * @throws \Exception
      */
-    public function execute($data)
+    public function execute($data, &$transfers)
     {
         try {
             $mollieData = [
@@ -184,7 +185,7 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
      */
     public function refund($data)
     {
-        $amount = $this->getTransactionAmount($data['id']);
+        $amount = $this->getTransactionAmount($data['id'], null);
 
         $response = $this->getGateway()->refund(
             array(
@@ -197,7 +198,14 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
         return ['error' => $response->getData()['status'] !== 200 ? $response->getData()['detail'] : false];
     }
 
-    public function getTransactionAmount($id)
+    /**
+     * @param string $id
+     * @param array|null $transfers
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getTransactionAmount($id, $transfers)
     {
         try {
             $response = $this->getGateway()->fetchTransaction(['transactionReference' => $id])->send();

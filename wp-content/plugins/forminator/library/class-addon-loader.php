@@ -420,7 +420,7 @@ class Forminator_Addon_Loader {
 		}
 
 		if ( ! $this->addon_is_active( $slug ) ) {
-			$this->last_error_message = esc_html__( 'Addon is not activated before', 'forminator' );
+			$this->last_error_message = esc_html__( 'Addon was not activated before', 'forminator' );
 
 			return false;
 		}

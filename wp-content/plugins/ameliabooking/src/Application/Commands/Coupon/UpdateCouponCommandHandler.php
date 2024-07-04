@@ -12,6 +12,7 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
@@ -127,6 +128,7 @@ class UpdateCouponCommandHandler extends CommandHandler
 
         do_action('amelia_before_coupon_updated', $couponData, $oldCoupon ? $oldCoupon->toArray() : null);
 
+        /** @var Coupon $newCoupon */
         $newCoupon = CouponFactory::create($couponData);
 
         $newCoupon->setServiceList($services);

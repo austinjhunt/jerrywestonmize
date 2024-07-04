@@ -20,9 +20,11 @@ class Forminator_Template_Quote extends Forminator_Template {
 		return array(
 			'id'          => 'quote',
 			'name'        => esc_html__( 'Quote Request', 'forminator' ),
-			'description' => esc_html__( 'A simple contact form for your users to contact you', 'forminator' ),
+			'description' => esc_html__( 'Enables customers to request a quote for products or services, with fields for personal details, specific needs, and preferences.', 'forminator' ),
 			'icon'        => 'clipboard-notes',
-			'priortiy'    => 3,
+			'priority'    => 3,
+			'category'    => 'customer-service',
+			'pro'         => false,
 		);
 	}
 
@@ -199,6 +201,11 @@ class Forminator_Template_Quote extends Forminator_Template {
 			'cform-multiselect-custom-font' => '',
 			'cform-multiselect-font-size'   => '16',
 			'cform-multiselect-font-weight' => 'normal',
+			// Typography - Multi Select tag.
+			'cform-multiselect-tag-font-family' => 'Roboto',
+			'cform-multiselect-tag-custom-font' => '',
+			'cform-multiselect-tag-font-size'   => '12',
+			'cform-multiselect-tag-font-weight' => 'medium',
 			// Typography - Dropdown.
 			'cform-dropdown-font-family'    => 'Roboto',
 			'cform-dropdown-custom-font'    => '',

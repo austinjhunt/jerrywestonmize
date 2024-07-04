@@ -9,6 +9,7 @@ namespace AmeliaBooking\Domain\Entity\Booking;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
+use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
@@ -66,6 +67,9 @@ class Reservation
 
     /** @var Collection  */
     private $packageCustomerServices;
+
+    /** @var PackageCustomer  */
+    private $packageCustomer;
 
     /** @var BooleanValueObject  */
     private $couponValidation;
@@ -269,6 +273,22 @@ class Reservation
     public function setPackageCustomerServices(Collection $packageCustomerServices)
     {
         $this->packageCustomerServices = $packageCustomerServices;
+    }
+
+    /**
+     * @return PackageCustomer
+     */
+    public function getPackageCustomer()
+    {
+        return $this->packageCustomer;
+    }
+
+    /**
+     * @param PackageCustomer $packageCustomer
+     */
+    public function setPackageCustomer(PackageCustomer $packageCustomer)
+    {
+        $this->packageCustomer = $packageCustomer;
     }
 
     /**

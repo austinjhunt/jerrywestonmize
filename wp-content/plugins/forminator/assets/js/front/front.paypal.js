@@ -305,11 +305,14 @@
 							//find element by select name
 							$element = this.$el.find('select[name="' + element_id + '"]');
 							if ($element.length === 0) {
-								//find element by direct id (for name field mostly)
-								//will work for all field with element_id-[somestring]
-								$element = this.$el.find('#' + element_id);
-								if ( $element.length === 0 ) {
-									$element = this.$el.find('select[name=' + element_id + ']');
+								$element = this.$el.find('select[name="' + element_id + '[]"]');
+								if ($element.length === 0) {
+									//find element by direct id (for name field mostly)
+									//will work for all field with element_id-[somestring]
+									$element = this.$el.find('#' + element_id);
+									if ( $element.length === 0 ) {
+										$element = this.$el.find('select[name=' + element_id + ']');
+									}
 								}
 							}
 						}

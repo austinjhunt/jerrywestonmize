@@ -29,6 +29,7 @@ class CustomerBookingsToExtrasTable extends AbstractDatabaseTable
                     `extraId` INT(11) NOT NULL,
                     `quantity` INT(11) NOT NULL,
                     `price` DOUBLE NOT NULL,
+                    `tax` VARCHAR(255) DEFAULT NULL,
                     `aggregatedPrice` TINYINT(1) DEFAULT NULL,
                     PRIMARY KEY (`id`),
                     UNIQUE KEY `bookingExtra` (`customerBookingId` ,`extraId`)

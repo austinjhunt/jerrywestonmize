@@ -121,6 +121,7 @@ class ActivationSettingsHook
             'backendSlotsDaysInFuture'               => SettingsService::NUMBER_OF_DAYS_AVAILABLE_FOR_BOOKING,
             'backendSlotsDaysInPast'                 => SettingsService::NUMBER_OF_DAYS_AVAILABLE_FOR_BOOKING,
             'phoneDefaultCountryCode'                => 'auto',
+            'ipLocateApiKey'                         => '',
             'requiredPhoneNumberField'               => false,
             'requiredEmailField'                     => true,
             'itemsPerPage'                           => 12,
@@ -440,8 +441,7 @@ This message does not have an option for responding. If you need additional info
             'meetingAgenda'               => '%reservation_description%',
             'pendingAppointmentsMeetings' => false,
             'maxUsersCount'               => 300,
-            's2sEnabled'                  =>
-                !$savedSettings || (!$savedSettings['apiKey'] && !$savedSettings['apiSecret']),
+            's2sEnabled'                  => true,
             'accountId'                   => '',
             'clientId'                    => '',
             'clientSecret'                => '',
@@ -583,6 +583,10 @@ This message does not have an option for responding. If you need additional info
                 'changeBookingStatus'  => false,
                 'redirectUrl'          => AMELIA_SITE_URL
             ],
+            'taxes'                      => [
+                'enabled'  => false,
+                'excluded' => true,
+            ],
             'payPal'                     => [
                 'enabled'         => false,
                 'sandboxMode'     => false,
@@ -621,6 +625,12 @@ This message does not have an option for responding. If you need additional info
                 ],
                 'manualCapture'   => false,
                 'returnUrl'       => '',
+                'connect'         => [
+                    'enabled' => false,
+                    'method'  => 'transfer',
+                    'amount'  => 0,
+                    'type'    => 'percentage',
+                ],
             ],
             'wc'                         => [
                 'enabled'      => false,
@@ -645,7 +655,7 @@ This message does not have an option for responding. If you need additional info
                 'skipGetItemDataProcessing'      => !isset($savedSettings['wc']),
                 'redirectPage' => 1,
                 'bookMultiple' => false,
-                'bookUnpaid'   => false,
+                'bookUnpaid'   => empty($savedSettings['wc']),
                 'rules'        => [
                     'appointment' => [
                         [
@@ -779,6 +789,7 @@ This message does not have an option for responding. If you need additional info
         self::setNewSettingsToExistingSettings(
             'payments',
             [
+                ['stripe', 'connect'],
                 ['stripe', 'description'],
                 ['stripe', 'description', 'package'],
                 ['stripe', 'description', 'cart'],
@@ -841,7 +852,6 @@ This message does not have an option for responding. If you need additional info
             'showAmeliaSurvey'              => true,
             'stash'                         => false,
             'responseErrorAsConflict'       => $savedSettings ? false : true,
-            'enablePolyfill'                => $savedSettings ? true : false,
             'hideUnavailableFeatures'       => true,
             'disableUrlParams'              => $savedSettings ? false : true,
             'enableThriveItems'             => false,
@@ -854,6 +864,7 @@ This message does not have an option for responding. If you need additional info
             'v3RelativePath'                => false,
             'v3AsyncLoading'                => false,
             'premiumBannerVisibility'       => true,
+            'dismissibleBannerVisibility'   => true,
         ];
 
         self::initSettings('activation', $settings);

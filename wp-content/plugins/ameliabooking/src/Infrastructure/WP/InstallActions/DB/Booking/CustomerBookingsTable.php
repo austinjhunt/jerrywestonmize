@@ -32,6 +32,7 @@ class CustomerBookingsTable extends AbstractDatabaseTable
                     `customerId` INT(11) NOT NULL,
                     `status` ENUM('approved', 'pending', 'canceled', 'rejected', 'no-show') NULL,
                     `price` DOUBLE NOT NULL,
+                    `tax` VARCHAR(255) DEFAULT NULL,
                     `persons` INT(11) NOT NULL,
                     `couponId` INT(11) NULL,
                     `token` VARCHAR({$token}) NULL,

@@ -22,7 +22,7 @@ class Forminator_Template_Leads extends Forminator_Template {
 			'name'        => esc_html__( 'Leads for Quizzes & Polls', 'forminator' ),
 			'description' => esc_html__( '...', 'forminator' ),
 			'icon'        => 'mail',
-			'priortiy'    => 2,
+			'priority'    => 2,
 		);
 	}
 
@@ -176,6 +176,11 @@ class Forminator_Template_Leads extends Forminator_Template {
 			'cform-multiselect-custom-font' => '',
 			'cform-multiselect-font-size'   => '16',
 			'cform-multiselect-font-weight' => 'normal',
+			// Typography - Multi Select tag.
+			'cform-multiselect-tag-font-family' => 'Roboto',
+			'cform-multiselect-tag-custom-font' => '',
+			'cform-multiselect-tag-font-size'   => '12',
+			'cform-multiselect-tag-font-weight' => 'medium',
 			// Typography - Dropdown.
 			'cform-dropdown-font-family'    => 'Roboto',
 			'cform-dropdown-custom-font'    => '',

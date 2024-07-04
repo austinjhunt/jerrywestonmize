@@ -16,15 +16,23 @@ class CurrentLocation extends AbstractCurrentLocation
     /**
      * Get country ISO code by public IP address
      *
+     * @param string $ipLocateApyKey
+     *
      * @return string
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function getCurrentLocationCountryIso()
+    public function getCurrentLocationCountryIso($ipLocateApyKey)
     {
         try {
             $curlHandle = curl_init();
-            curl_setopt($curlHandle, CURLOPT_URL, 'https://www.iplocate.io/api/lookup/' . $_SERVER['REMOTE_ADDR']);
+
+            curl_setopt(
+                $curlHandle,
+                CURLOPT_URL,
+                'https://www.iplocate.io/api/lookup/' . $_SERVER['REMOTE_ADDR'] . ($ipLocateApyKey ? ('?apikey=' . $ipLocateApyKey): '')
+            );
+
             curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 2);
             curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curlHandle, CURLOPT_USERAGENT, 'Amelia');

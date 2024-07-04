@@ -156,6 +156,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			$data['form_data']['purchase_units'][0]['amount'] = self::prepare_pp_price( $data['form_data']['purchase_units'][0]['amount'] );
 
 			$data = $this->get_temporary_country_code( $data );
+			$data = $this->get_state_code( $data );
 
 			$paypal = new Forminator_PayPal_Express();
 
@@ -240,6 +241,20 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			}
 		}
 
+		return $data;
+	}
+
+	/**
+	 * Get state code
+	 *
+	 * @param array $data Data for paypal order.
+	 *
+	 * @return array
+	 */
+	private function get_state_code( $data ) {
+		if ( ! empty( $data['form_data']['payer']['address']['admin_area_1'] ) ) {
+			$data['form_data']['payer']['address']['admin_area_1'] = forminator_get_state_code( $data['form_data']['payer']['address']['admin_area_1'] );
+		}
 		return $data;
 	}
 
@@ -1278,8 +1293,13 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		self::$response_attrs['behav'] = self::get_submission_behaviour( $behavior_options );
 		if ( 'behaviour-redirect' === $behavior_options['submission-behaviour'] && ! empty( $behavior_options['redirect-url'] ) ) {
 			self::$response_attrs['redirect'] = true;
+			$url_encode                       = true;
+			if ( '{' === substr( $behavior_options['redirect-url'], 0, 1 ) && '}' === substr( $behavior_options['redirect-url'], -1 ) ) {
+				$url_encode = false;
+			}
 			// replace form data vars with value.
-			$redirect_url = forminator_replace_form_data( $behavior_options['redirect-url'], $custom_form, $entry, false, true );
+			$redirect_url = forminator_replace_form_data( $behavior_options['redirect-url'], $custom_form, $entry, false, $url_encode );
+			$redirect_url = html_entity_decode( $redirect_url );
 			$tab_value    = isset( $behavior_options['newtab'] ) ? $behavior_options['newtab'] : 'sametab';
 			$newtab       = forminator_replace_form_data( $tab_value, $custom_form, $entry );
 			// replace misc data vars with value.
@@ -2215,6 +2235,18 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		} else {
 			self::$prepared_data[ $field_id ] = '';
 		}
+	}
+
+	/**
+	 * Handle rating field
+	 *
+	 * @param array $field_settings Field settings.
+	 */
+	private static function handle_rating_field( $field_settings ) {
+		$max_rating                       = Forminator_Field::get_property( 'max_rating', $field_settings, 5 );
+		$field_id                         = Forminator_Field::get_property( 'element_id', $field_settings );
+		$rating_value                     = self::$prepared_data[ $field_id ] ?? 0;
+		self::$prepared_data[ $field_id ] = $rating_value . '/' . $max_rating;
 	}
 
 	/**

@@ -51,5 +51,10 @@ interface IRessio_Cache
      * @return bool
      */
     public function setParams($params);
+
+    /**
+     * @return ?array<string,int>
+     */
+    public function clearExpired();
 }
 

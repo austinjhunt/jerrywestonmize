@@ -6,6 +6,7 @@
   var blockControls = wp.editor.BlockControls
   var inspectorControls = wp.editor.InspectorControls
   var data = wpAmeliaLabels.data
+  var isLite = !!parseInt(wpAmeliaLabels.isLite)
 
   var events = []
   var tags = []
@@ -122,7 +123,7 @@
           {value: 'events', label: wpAmeliaLabels.show_event},
           {value: 'tags', label: wpAmeliaLabels.show_tag}
         ],
-        type: [{value: 'list', label: wpAmeliaLabels.show_event_view_list}, {value: 'calendar', label: wpAmeliaLabels.show_event_view_calendar}]
+        type: isLite ? [] : [{value: 'list', label: wpAmeliaLabels.show_event_view_list}, {value: 'calendar', label: wpAmeliaLabels.show_event_view_calendar}]
       }
 
       function getOptions (data) {
@@ -184,7 +185,7 @@
             shortCode += ' trigger=' + attributes.trigger + ''
           }
 
-          if (attributes.type) {
+          if (attributes.type && !isLite) {
             shortCode += ' type=' + attributes.type + ''
           }
 

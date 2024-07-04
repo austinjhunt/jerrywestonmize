@@ -63,6 +63,7 @@ use AmeliaBooking\Infrastructure\Repository\Notification\NotificationsToEntities
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\Schedule\PeriodServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Schedule\SpecialDayPeriodServiceRepository;
+use AmeliaBooking\Infrastructure\Repository\Tax\TaxEntityRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -771,6 +772,9 @@ class BookableApplicationService
         /** @var ServiceRepository $serviceRepository */
         $serviceRepository = $this->container->get('domain.bookable.service.repository');
 
+        /** @var TaxEntityRepository $taxEntityRepository */
+        $taxEntityRepository = $this->container->get('domain.tax.entity.repository');
+
         /** @var CouponServiceRepository $couponServiceRepository */
         $couponServiceRepository = $this->container->get('domain.coupon.service.repository');
 
@@ -868,6 +872,7 @@ class BookableApplicationService
             $specialDayPeriodServiceRepository->deleteByEntityId($service->getId()->getValue(), 'serviceId') &&
             $periodServiceRepository->deleteByEntityId($service->getId()->getValue(), 'serviceId') &&
             $providerServiceRepository->deleteByEntityId($service->getId()->getValue(), 'serviceId') &&
+            $taxEntityRepository->deleteByEntityIdAndEntityType($service->getId()->getValue(), 'service') &&
             $couponServiceRepository->deleteByEntityId($service->getId()->getValue(), 'serviceId') &&
             $serviceRepository->deleteViewStats($service->getId()->getValue()) &&
             $packageServiceRepository->deleteByEntityId($service->getId()->getValue(), 'serviceId') &&
@@ -920,6 +925,9 @@ class BookableApplicationService
 
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
+
+        /** @var TaxEntityRepository $taxEntityRepository */
+        $taxEntityRepository = $this->container->get('domain.tax.entity.repository');
 
         /** @var CouponPackageRepository $couponPackageRepository */
         $couponPackageRepository = $this->container->get('domain.coupon.package.repository');
@@ -982,6 +990,7 @@ class BookableApplicationService
         return
             $galleryService->manageGalleryForEntityDelete($package->getGallery()) &&
             $packageServiceRepository->deleteByEntityId($package->getId()->getValue(), 'packageId') &&
+            $taxEntityRepository->deleteByEntityIdAndEntityType($package->getId()->getValue(), 'package') &&
             $couponPackageRepository->deleteByEntityId($package->getId()->getValue(), 'packageId') &&
             $packageRepository->delete($package->getId()->getValue());
     }

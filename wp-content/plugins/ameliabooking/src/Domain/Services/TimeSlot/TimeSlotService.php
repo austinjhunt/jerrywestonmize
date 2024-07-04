@@ -945,19 +945,23 @@ class TimeSlotService
 
     /**
      * @param Collection $appointments
+     * @param int $excludeAppointmentId
      *
      * @return array
      * @throws Exception
      */
-    public function getAppointmentCount($appointments)
+    public function getAppointmentCount($appointments, $excludeAppointmentId)
     {
         $appCount = [];
 
+        /** @var Appointment $appointment */
         foreach ($appointments->getItems() as $appointment) {
-            if (!empty($appCount[$appointment->getProviderId()->getValue()][$appointment->getBookingStart()->getValue()->format('Y-m-d')])) {
-                $appCount[$appointment->getProviderId()->getValue()][$appointment->getBookingStart()->getValue()->format('Y-m-d')]++;
-            } else {
-                $appCount[$appointment->getProviderId()->getValue()][$appointment->getBookingStart()->getValue()->format('Y-m-d')] = 1;
+            if (!$excludeAppointmentId || empty($appointment->getId()) || $appointment->getId()->getValue() !== $excludeAppointmentId) {
+                if (!empty($appCount[$appointment->getProviderId()->getValue()][$appointment->getBookingStart()->getValue()->format('Y-m-d')])) {
+                    $appCount[$appointment->getProviderId()->getValue()][$appointment->getBookingStart()->getValue()->format('Y-m-d')]++;
+                } else {
+                    $appCount[$appointment->getProviderId()->getValue()][$appointment->getBookingStart()->getValue()->format('Y-m-d')] = 1;
+                }
             }
         }
 
@@ -976,7 +980,7 @@ class TimeSlotService
      */
     public function getSlots($settings, $props, $slotsEntities, $appointments)
     {
-        $appointmentsCount = $this->getAppointmentCount($appointments);
+        $appointmentsCount = $this->getAppointmentCount($appointments, $props['excludeAppointmentId']);
 
         $resourcedLocationsIntervals = $slotsEntities->getResources()->length() ?
             $this->resourceService->manageResources(

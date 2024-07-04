@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.4.2
+ * @version    1.4.3
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       June 2024
+ * @date       July 2024
  */
 
 class PagespeedNinja_AdminAjax
@@ -220,6 +220,18 @@ class PagespeedNinja_AdminAjax
             return;
         }
 
+        // invalidate page cache (empty cache triggers /s clearing)
+        $pagecache_stamp = WP_CONTENT_DIR . '/uploads/psn-pagespeed-ninja/pagecache/tags/GLOBAL';
+        if (file_exists($pagecache_stamp)) {
+            $newStamp = time() - $ttl;
+            if (@filemtime($pagecache_stamp) < $newStamp) {
+                touch($pagecache_stamp, $newStamp);
+            }
+        } else {
+            touch($pagecache_stamp);
+        }
+
+        // @TODO rewrite using CacheCleaner class instead of Ressio_Plugin_FilecacheCleaner plugin
         try {
             $di = new Ressio_DI();
             $di->set('config', new stdClass());
@@ -235,20 +247,9 @@ class PagespeedNinja_AdminAjax
             $lock = $di->config->cachedir . '/filecachecleaner.stamp';
             @unlink($lock);
 
-            $plugin = new Ressio_Plugin_FilecacheCleaner($di, null);
+            Ressio_CacheCleaner::clean($di);
         } catch (ERessio_UnknownDiKey $e) {
             return;
-        }
-
-        // invalidate page cache (empty cache triggers /s clearing)
-        $pagecache_stamp = WP_CONTENT_DIR . '/uploads/psn-pagespeed-ninja/pagecache/tags/GLOBAL';
-        if (file_exists($pagecache_stamp)) {
-            $newStamp = time() - $ttl;
-            if (@filemtime($pagecache_stamp) < $newStamp) {
-                touch($pagecache_stamp, $newStamp);
-            }
-        } else {
-            touch($pagecache_stamp);
         }
     }
 

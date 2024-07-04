@@ -109,6 +109,8 @@ class GetProviderCommandHandler extends CommandHandler
             $successfulOutlookConnection = false;
         }
 
+        $providerArray['mandatoryServicesIds'] = $providerService->getMandatoryServicesIds($providerId);
+
         $providerArray = apply_filters('amelia_get_provider_filter', $providerArray);
 
         do_action('amelia_get_provider', $providerArray);

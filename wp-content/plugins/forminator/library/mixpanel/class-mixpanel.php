@@ -140,7 +140,6 @@ class Forminator_Mixpanel {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			'memory_limit'       => ini_get( 'memory_limit' ),
 			'max_execution_time' => ini_get( 'max_execution_time' ),
-			'os_version'         => function_exists( 'php_uname' ) ? php_uname( 's' ) : 'unknown',
 			'competitor_plugin'  => $this->get_competitors()
 		);
 

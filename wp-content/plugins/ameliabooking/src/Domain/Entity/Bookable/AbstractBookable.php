@@ -13,6 +13,7 @@ use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\PositiveInteger;
 use AmeliaBooking\Domain\ValueObjects\Picture;
+use AmeliaBooking\Domain\ValueObjects\String\BookableType;
 use AmeliaBooking\Domain\ValueObjects\String\Color;
 use AmeliaBooking\Domain\ValueObjects\String\DepositType;
 use AmeliaBooking\Domain\ValueObjects\String\Description;
@@ -23,7 +24,7 @@ use AmeliaBooking\Domain\ValueObjects\String\Name;
  *
  * @package AmeliaBooking\Domain\Entity\Bookable
  */
-class AbstractBookable
+abstract class AbstractBookable
 {
     /** @var Id */
     private $id;
@@ -291,6 +292,11 @@ class AbstractBookable
     {
         $this->fullPayment = $fullPayment;
     }
+
+    /**
+     * @return BookableType
+     */
+    abstract public function getType();
 
     /**
      * @return array

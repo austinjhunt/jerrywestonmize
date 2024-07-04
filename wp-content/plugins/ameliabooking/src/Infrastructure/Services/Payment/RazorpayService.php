@@ -51,11 +51,12 @@ class RazorpayService extends AbstractPaymentService implements PaymentServiceIn
 
     /**
      * @param array $data
+     * @param array $transfers
      *
      * @return mixed
      * @throws Exception
      */
-    public function execute($data)
+    public function execute($data, &$transfers)
     {
         $orderData = [
             'amount'     => $data['amount'],
@@ -139,7 +140,14 @@ class RazorpayService extends AbstractPaymentService implements PaymentServiceIn
         return ['error' => $refund->toArray()['status'] !== 'processed'];
     }
 
-    public function getTransactionAmount($id)
+    /**
+     * @param string     $id
+     * @param array|null $transfers
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getTransactionAmount($id, $transfers)
     {
         $payment = $this->getApi()->payment->fetch($id);
         return $payment ? intval($payment->amount/100) : null;

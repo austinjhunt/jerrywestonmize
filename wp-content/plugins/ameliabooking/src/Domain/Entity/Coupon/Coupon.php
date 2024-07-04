@@ -67,29 +67,6 @@ class Coupon
     private $expirationDate;
 
     /**
-     * Coupon constructor.
-     *
-     * @param CouponCode              $code
-     * @param DiscountPercentageValue $discount
-     * @param DiscountFixedValue      $deduction
-     * @param PositiveInteger         $limit
-     * @param Status                  $status
-     */
-    public function __construct(
-        CouponCode $code,
-        DiscountPercentageValue $discount,
-        DiscountFixedValue $deduction,
-        PositiveInteger $limit,
-        Status $status
-    ) {
-        $this->code = $code;
-        $this->discount = $discount;
-        $this->deduction = $deduction;
-        $this->limit = $limit;
-        $this->status = $status;
-    }
-
-    /**
      * @return Id
      */
     public function getId()
@@ -320,15 +297,15 @@ class Coupon
     {
         return [
             'id'                    => null !== $this->getId() ? $this->getId()->getValue() : null,
-            'code'                  => $this->getCode()->getValue(),
-            'discount'              => $this->getDiscount()->getValue(),
-            'deduction'             => $this->getDeduction()->getValue(),
-            'limit'                 => $this->getLimit()->getValue(),
+            'code'                  => $this->getCode() ? $this->getCode()->getValue() : null,
+            'discount'              => $this->getDiscount() ? $this->getDiscount()->getValue() : null,
+            'deduction'             => $this->getDeduction() ? $this->getDeduction()->getValue() : null,
+            'limit'                 => $this->getLimit() ? $this->getLimit()->getValue() : null,
             'customerLimit'         => $this->getCustomerLimit() ? $this->getCustomerLimit()->getValue() : 0,
             'used'                  => $this->getUsed() ? $this->getUsed()->getValue() : 0,
             'notificationInterval'  => $this->getNotificationInterval() ? $this->getNotificationInterval()->getValue() : 0,
             'notificationRecurring' => $this->getNotificationRecurring() ? $this->getNotificationRecurring()->getValue() : 0,
-            'status'                => $this->getStatus()->getValue(),
+            'status'                => $this->getStatus() ? $this->getStatus()->getValue() : null,
             'serviceList'           => $this->getServiceList() ? $this->getServiceList()->toArray() : [],
             'eventList'             => $this->getEventList() ? $this->getEventList()->toArray() : [],
             'packageList'           => $this->getPackageList() ? $this->getPackageList()->toArray() : [],

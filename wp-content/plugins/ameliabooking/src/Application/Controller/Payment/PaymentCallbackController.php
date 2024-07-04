@@ -34,7 +34,9 @@ class PaymentCallbackController extends Controller
         'PayerID',
         'paymentId',
         'fromPanel',
-        'session_id'
+        'session_id',
+        'method',
+        'accountId',
     ];
 
     /**

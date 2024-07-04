@@ -89,7 +89,15 @@ class RefundPaymentCommandHandler extends CommandHandler
                 'infrastructure.payment.' . $payment->getGateway()->getName()->getValue() . '.service'
             );
 
-            $response = $paymentService->refund(['id' => $payment->getTransactionId(), 'amount' => $amount]);
+            $response = $paymentService->refund(
+                [
+                    'id'        => $payment->getTransactionId(),
+                    'transfers' => $payment->getTransfers()
+                        ? json_decode($payment->getTransfers()->getValue(), true)
+                        : null,
+                    'amount'    => $amount,
+                ]
+            );
         }
 
         if (!empty($response['error'])) {

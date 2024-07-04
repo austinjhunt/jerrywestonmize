@@ -20,9 +20,11 @@ class Forminator_Template_Post extends Forminator_Template {
 		return array(
 			'id'          => 'post',
 			'name'        => esc_html__( 'Create Post', 'forminator' ),
-			'description' => esc_html__( 'A simple contact form for your users to contact you', 'forminator' ),
+			'description' => esc_html__( 'Designed for user-generated content, this form lets users submit posts, including fields for title, content, and attachments.', 'forminator' ),
 			'icon'        => 'plus',
-			'priortiy'    => 7,
+			'priority'    => 7,
+			'category'    => 'custom-form',
+			'pro'         => false,
 		);
 	}
 
@@ -132,6 +134,11 @@ class Forminator_Template_Post extends Forminator_Template {
 			'cform-multiselect-custom-font' => '',
 			'cform-multiselect-font-size'   => '16',
 			'cform-multiselect-font-weight' => 'normal',
+			// Typography - Multi Select tag.
+			'cform-multiselect-tag-font-family' => 'Roboto',
+			'cform-multiselect-tag-custom-font' => '',
+			'cform-multiselect-tag-font-size'   => '12',
+			'cform-multiselect-tag-font-weight' => 'medium',
 			// Typography - Dropdown.
 			'cform-dropdown-font-family'    => 'Roboto',
 			'cform-dropdown-custom-font'    => '',

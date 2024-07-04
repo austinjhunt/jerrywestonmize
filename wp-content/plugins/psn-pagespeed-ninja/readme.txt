@@ -1,8 +1,8 @@
 === PageSpeed Ninja - Cache, Minify, Defer CSS JavaScript, Critical CSS, Optimize Images, Convert WebP ===
 
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 Requires at least: 4.6
-Tested up to: 6.5.4
+Tested up to: 6.5.5
 Requires PHP: 5.6
 Contributors: pagespeed
 Tags: performance, convert webp, critical css, defer css javascript, optimize images, cache, pagespeed, optimization, minify css, minify javascript, core web vitals, lazy load
@@ -201,6 +201,11 @@ Yes, PageSpeed Ninja allows you to undo optimizations through the plugin's setti
 
 == Changelog ==
 
+= 1.4.3 Stable Release [04 July 2024]
+- Fixed issue with daily scheduler
+- Fixed issue with Redis cache cleaning [Pro]
+- Disabled directory index of cache directory in Apache
+
 = 1.4.2 Stable Release [11 June 2024]
 - Added support of JavaScript modules in "Preload key requests"
 - Fixed issue with CSS relocation in "Inline CSS for First-Time Visitors"
@@ -208,7 +213,7 @@ Yes, PageSpeed Ninja allows you to undo optimizations through the plugin's setti
 - Fixed work of lazy image loading
 - Fixed processing of query delimiters in Stream and Pharse parsers
 - Improved detection of width and height for SVG images
-- Adjusted "Ultra" and "Experimenntal" optimzation presets
+- Adjusted "Ultra" and "Experimental" optimization presets
 - Minor bugfixes
 
 = 1.4.1 Stable Release [07 June 2024]
@@ -229,7 +234,7 @@ Yes, PageSpeed Ninja allows you to undo optimizations through the plugin's setti
 - Improved work of Non-blocking JavaScript feature
 - Improved asynchronous loading of CSS with Critical CSS feature
 - Improved work of preload tags generation
-- Adjusted "Ultra" optimzation preset
+- Adjusted "Ultra" optimization preset
 - Changed initial setup wizard
 - Minor bugfixes/typos
 

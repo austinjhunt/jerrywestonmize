@@ -171,6 +171,16 @@ class BookingCanceledEventHandler
             if ($whatsAppNotificationService->checkRequiredFields()) {
                 $whatsAppNotificationService->sendAppointmentStatusNotifications($appointment, true, true);
             }
+        } else {
+            $emailNotificationService->sendAppointmentUpdatedNotifications($appointment, false);
+
+            if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
+                $smsNotificationService->sendAppointmentUpdatedNotifications($appointment, false);
+            }
+
+            if ($whatsAppNotificationService->checkRequiredFields()) {
+                $whatsAppNotificationService->sendAppointmentUpdatedNotifications($appointment, false);
+            }
         }
 
         $webHookService->process(self::BOOKING_CANCELED, $appointment, [$booking]);

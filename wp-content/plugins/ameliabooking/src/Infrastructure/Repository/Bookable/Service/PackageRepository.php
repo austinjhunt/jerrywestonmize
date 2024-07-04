@@ -466,6 +466,7 @@ class PackageRepository extends AbstractRepository
                 pu.lastName AS provider_lastName,
                 pu.email AS provider_email,
                 pu.translations AS provider_translations,
+                pu.stripeConnect AS provider_stripeConnect,
                                 
                 g.id AS gallery_id,
                 g.pictureFullPath AS gallery_picture_full,

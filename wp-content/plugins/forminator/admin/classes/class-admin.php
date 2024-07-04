@@ -126,6 +126,7 @@ class Forminator_Admin {
 		include_once forminator_plugin_dir() . 'admin/pages/settings-page.php';
 		include_once forminator_plugin_dir() . 'admin/pages/addons-page.php';
 		include_once forminator_plugin_dir() . 'admin/pages/reports-page.php';
+		include_once forminator_plugin_dir() . 'admin/pages/templates-page.php';
 
 		// Admin AJAX.
 		include_once forminator_plugin_dir() . 'admin/classes/class-admin-ajax.php';
@@ -228,6 +229,24 @@ class Forminator_Admin {
 	 */
 	public function init_settings_page() {
 		$this->pages['forminator-settings'] = new Forminator_Settings_Page( 'forminator-settings', 'settings', esc_html__( 'Global Settings', 'forminator' ), esc_html__( 'Settings', 'forminator' ), 'forminator' );
+	}
+
+    /**
+	 * Add Templates page
+	 *
+	 * @since 1.0
+	 */
+	public function add_templates_page() {
+		add_action( 'admin_menu', array( $this, 'init_templates_page' ) );
+	}
+
+	/**
+	 * Initialize templates page
+	 *
+	 * @since 1.0
+	 */
+	public function init_templates_page() {
+		$this->pages['forminator-templates'] = new Forminator_Templates_Page( 'forminator-templates', 'templates', wp_kses_post( 'Templates <span class="menu-new-tag">New</span>', 'forminator' ), wp_kses_post( 'Templates <span class="menu-new-tag">New</span>', 'forminator' ), 'forminator' );
 	}
 
 	/**

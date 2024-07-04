@@ -187,7 +187,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
                 $this->getRowData($params, $row, $appointment, $dateFormat, $timeFormat, $numberOfPersons);
 
-                $mergedRow = apply_filters('amelia_before_csv_export_appointments', array_merge($row, $rowCF), $appointment, $params['separate']);
+                $mergedRow = apply_filters('amelia_before_csv_export_appointments', array_merge($row, $rowCF), $appointment, $params['separate'], null);
 
                 $rows[] = $mergedRow;
             } else {
@@ -230,7 +230,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         }
                     }
 
-                    $row = apply_filters('amelia_before_csv_export_appointments', $row, $appointment, $params['separate']);
+                    $row = apply_filters('amelia_before_csv_export_appointments', $row, $appointment, $params['separate'], $booking);
 
                     $rows[] = $row;
                 }

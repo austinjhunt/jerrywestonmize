@@ -232,7 +232,7 @@ if ( $this->total_entries() > 0 ) :
 											class="sui-button sui-button-ghost sui-button-red wpmudev-open-modal"
 										<?php
 										if ( isset( $entries['activation_key'] ) ) {
-											$button_title      = esc_html( 'Delete Submission & User', 'forminator' );
+											$button_title      = esc_html__( 'Delete Submission & User', 'forminator' );
 											$is_activation_key = true;
 											?>
 											data-activation-key="<?php echo esc_attr( $entries['activation_key'] ); ?>"
@@ -241,7 +241,7 @@ if ( $this->total_entries() > 0 ) :
 											data-form-id="<?php echo esc_attr( $this->model->id ); ?>"
 											<?php
 										} else {
-											$button_title      = esc_html( 'Delete', 'forminator' );
+											$button_title      = esc_html__( 'Delete', 'forminator' );
 											$is_activation_key = false;
 											?>
 											data-modal="delete-module"

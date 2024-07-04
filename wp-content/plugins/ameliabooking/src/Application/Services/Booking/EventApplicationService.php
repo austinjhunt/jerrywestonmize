@@ -45,6 +45,7 @@ use AmeliaBooking\Infrastructure\Repository\Coupon\CouponEventRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldEventRepository;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationsToEntitiesRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
+use AmeliaBooking\Infrastructure\Repository\Tax\TaxEntityRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -1232,6 +1233,9 @@ class EventApplicationService
         /** @var EventProvidersRepository $eventProvidersRepository */
         $eventProvidersRepository = $this->container->get('domain.booking.event.provider.repository');
 
+        /** @var TaxEntityRepository $taxEntityRepository */
+        $taxEntityRepository = $this->container->get('domain.tax.entity.repository');
+
         /** @var CouponEventRepository $couponEventRepository */
         $couponEventRepository = $this->container->get('domain.coupon.event.repository');
 
@@ -1260,6 +1264,7 @@ class EventApplicationService
 
         return
             $eventProvidersRepository->deleteByEntityId($event->getId()->getValue(), 'eventId') &&
+            $taxEntityRepository->deleteByEntityIdAndEntityType($event->getId()->getValue(), 'event') &&
             $couponEventRepository->deleteByEntityId($event->getId()->getValue(), 'eventId') &&
             $customFieldEventRepository->deleteByEntityId($event->getId()->getValue(), 'eventId') &&
             $eventTagsRepository->deleteByEntityId($event->getId()->getValue(), 'eventId') &&

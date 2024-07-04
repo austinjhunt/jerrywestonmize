@@ -118,7 +118,7 @@ class Connection extends \AmeliaBooking\Infrastructure\Connection
 
     /**
      *
-     * @return mixed
+     * @return string|false
      */
     public function lastInsertId()
     {

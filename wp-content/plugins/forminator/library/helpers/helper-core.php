@@ -123,6 +123,20 @@ function forminator_validate_ajax( $action, $query_arg = false, $page_slug = '' 
 }
 
 /**
+ * Checks if the AJAX call is valid
+ *
+ * @param string $action Action name.
+ * @param string|bool $query_arg Query arg.
+ *
+ * @return void
+ */
+function forminator_validate_nonce_ajax( $action, $query_arg = false ) {
+	if ( ! check_ajax_referer( $action, $query_arg, false ) ) {
+		wp_send_json_error( esc_html__( 'Invalid request, you are not allowed to do that action.', 'forminator' ) );
+	}
+}
+
+/**
  * Enqueue admin fonts
  *
  * @since 1.0
@@ -1616,6 +1630,7 @@ function forminator_get_capabilities() {
 	return array(
 		'manage_forminator_modules',
 		'manage_forminator_submissions',
+		'manage_forminator_templates',
 		'manage_forminator_addons',
 		'manage_forminator_integrations',
 		'manage_forminator_reports',
@@ -1688,6 +1703,11 @@ function forminator_get_permission( $page_slug ) {
 
 			$cap = 'manage_forminator_submissions';
 			break;
+
+		case 'forminator-templates':
+			$cap = 'manage_forminator_templates';
+			break;
+
 		case 'forminator-addons':
 
 			$cap = 'manage_forminator_addons';

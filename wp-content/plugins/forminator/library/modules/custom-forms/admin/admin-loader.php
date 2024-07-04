@@ -28,7 +28,13 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		$this->page         = 'forminator-cform';
 		$this->page_edit    = 'forminator-cform-wizard';
 		$this->page_entries = 'forminator-cform-view';
-		$this->dir          = dirname( __FILE__ );
+		$this->dir          = __DIR__;
+
+		add_action( 'wp_ajax_forminator_get_cloud_templates', array( $this, 'get_cloud_templates' ) );
+		add_action( 'wp_ajax_forminator_save_template', array( $this, 'save_template' ) );
+		add_action( 'wp_ajax_forminator_delete_template', array( $this, 'delete_template' ) );
+		add_action( 'wp_ajax_forminator_rename_template', array( $this, 'rename_template' ) );
+		add_action( 'wp_ajax_forminator_duplicate_template', array( $this, 'duplicate_template' ) );
 	}
 
 	/**
@@ -80,7 +86,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			$form_name   = isset( $model->name ) ? $model->name : '';
 			$form_status = isset( $model->status ) ? $model->status : 'draft';
 
-			$notifications       = apply_filters( 'forminator_form_notifications', $notifications, $model, $data, $this );
+			$notifications = apply_filters( 'forminator_form_notifications', $notifications, $model, $data, $this );
 
 			$pdf_array = self::get_pdf_data( $form_id );
 			$pdf_array = apply_filters( 'forminator_form_pdfs', $pdf_array, $model, $data, $this );
@@ -110,10 +116,10 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		}
 
 		$data['modules']['custom_form'] = array(
-			'templates'     => $this->module->get_templates(),
-			'new_form_url'  => menu_page_url( $this->page_edit, false ),
-			'form_list_url' => menu_page_url( $this->page, false ),
-			'preview_nonce' => wp_create_nonce( 'forminator_popup_preview_form' ),
+			'new_form_url'    => menu_page_url( $this->page_edit, false ),
+			'form_list_url'   => menu_page_url( $this->page, false ),
+			'preview_nonce'   => wp_create_nonce( 'forminator_popup_preview_form' ),
+			'templates_nonce' => wp_create_nonce( 'forminator_get_preset_templates' ),
 		);
 
 		$presets_page = admin_url( 'admin.php?page=forminator-settings&section=appearance-presets' );
@@ -189,18 +195,17 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	/**
 	 * Return template
 	 *
+	 * @param string $slug Template slug.
 	 * @since 1.0
 	 * @return Forminator_Template|false
 	 */
-	private function get_template() {
-		$id = Forminator_Core::sanitize_text_field( 'template', 'blank' );
-
+	private function get_template( string $slug ) {
 		if ( empty( $this->module->templates ) ) {
 			return;
 		}
 
 		foreach ( $this->module->templates as $template ) {
-			if ( $template->options['id'] === $id ) {
+			if ( $template->options['id'] === $slug ) {
 				return $template;
 			}
 		}
@@ -406,16 +411,69 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			return;
 		}
 
-		// Load settings from template.
-		$template = $this->get_template();
+		$slug = Forminator_Core::sanitize_text_field( 'template', 'blank' );
+		$name = Forminator_Core::sanitize_text_field( 'name' );
 
-		$name   = Forminator_Core::sanitize_text_field( 'name' );
+		$module_id = $this->create_module_from_template( $slug, $name );
+		if ( is_wp_error( $module_id ) ) {
+			return;
+		}
+		$wizard_url = admin_url( 'admin.php?page=forminator-cform-wizard&id=' . $module_id );
+
+		wp_safe_redirect( $wizard_url );
+	}
+
+	/**
+	 * Create form from template
+	 *
+	 * @param string $template_id Template ID or slug.
+	 * @param string $name Template name.
+	 *
+	 * @return int|WP_Error
+	 */
+	public function create_module_from_template( string $template_id, string $name = '' ) {
+		if ( is_numeric( $template_id ) ) {
+			$template_id = intval( $template_id );
+			$template    = Forminator_Template_API::get_template( $template_id );
+			if ( empty( $template['config'] ) ) {
+				// return WP_Error.
+				return new WP_Error( 'no_template', esc_html__( 'Template is not found.', 'forminator' ) );
+			}
+			$change_recipients = apply_filters( 'forminator_change_template_recipients', true, $template );
+
+			try {
+				$model = self::import_json( $template['config'], $name, 'form', $change_recipients, true );
+			} catch ( Exception $e ) {
+				return new WP_Error( 'create_module_fail', $e->getMessage() );
+			}
+			$id = $model->id;
+		} else {
+			$id = $this->create_module_from_free_template( $template_id, $name );
+		}
+
+		return $id;
+	}
+
+	/**
+	 * Create form from free template
+	 *
+	 * @param string $slug Template slug.
+	 * @param string $name Template name.
+	 *
+	 * @return int
+	 */
+	public function create_module_from_free_template( string $slug, string $name = '' ): int {
+		// Load settings from template.
+		$template = $this->get_template( $slug );
+
+		if ( empty( $name ) ) {
+			$name = $template->options['name'];
+		}
+
 		$status = Forminator_Form_Model::STATUS_DRAFT;
 		$id     = self::create( $name, $status, $template );
 
-		$wizard_url = admin_url( 'admin.php?page=forminator-cform-wizard&id=' . $id );
-
-		wp_safe_redirect( $wizard_url );
+		return $id;
 	}
 
 	/**
@@ -508,7 +566,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 				$status = $form_model->status;
 			}
 
-			//we need to empty fields cause we will send new data
+			// we need to empty fields cause we will send new data
 			$form_model->clear_fields();
 		}
 
@@ -621,8 +679,8 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	/**
 	 * Add draft retention settings to global retention options
 	 *
-	 * @param	string 	$form_id Module ID.
-	 * @param 	array 	$settings Form settings.
+	 * @param   string $form_id Module ID.
+	 * @param   array  $settings Form settings.
 	 */
 	public static function add_draft_retention_settings( $form_id, $settings ) {
 		if ( ! isset( $settings['use_save_and_continue'] ) || ! filter_var( $settings['use_save_and_continue'], FILTER_VALIDATE_BOOLEAN ) ) {
@@ -658,5 +716,148 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		}
 
 		return $pdf_data;
+	}
+
+	/**
+	 * Get cloud templates
+	 */
+	public function get_cloud_templates() {
+		// Validate nonce.
+		forminator_validate_nonce_ajax( 'forminator_load_cloud_templates' );
+
+		$page_number = filter_input( INPUT_POST, 'page_number', FILTER_VALIDATE_INT ) ?? 1;
+
+		$templates = array();
+		if ( FORMINATOR_PRO ) {
+			$templates = Forminator_Template_API::get_templates( false, $page_number );
+		}
+
+		wp_send_json_success( $templates );
+	}
+
+	/**
+	 * Save template
+	 */
+	public function save_template() {
+		// Validate nonce.
+		forminator_validate_nonce_ajax( 'forminator_save_cloud_templates' );
+		if ( ! forminator_is_user_allowed( 'forminator-templates' ) ) {
+			wp_send_json_error( esc_html__( 'You are not allowed to perform this action.', 'forminator' ) );
+		}
+
+		$form_id = filter_input( INPUT_POST, 'form_id', FILTER_VALIDATE_INT );
+		if ( ! $form_id ) {
+			wp_send_json_error( esc_html__( 'Form ID is required.', 'forminator' ) );
+		}
+
+		// Get form export.
+		$form_model = Forminator_Base_Form_Model::get_model( $form_id );
+		if ( ! $form_model ) {
+			wp_send_json_error( esc_html__( 'Form is not found.', 'forminator' ) );
+		}
+		$json_config = wp_json_encode( $form_model->to_exportable_data() );
+
+		$template_id = filter_input( INPUT_POST, 'template_id', FILTER_VALIDATE_INT );
+		if ( $template_id ) {
+			// Update template.
+			$result = Forminator_Template_API::update_template( $template_id, '', $json_config );
+		} else {
+			// Create template.
+			$template_name = filter_input( INPUT_POST, 'template_name', FILTER_DEFAULT );
+			if ( ! $template_name ) {
+				wp_send_json_error( esc_html__( 'Template name is required.', 'forminator' ) );
+			}
+
+			$result = Forminator_Template_API::create_template( $template_name, $json_config );
+		}
+
+		if ( ! $result ) {
+			wp_send_json_error( esc_html__( 'Something went wrong.', 'forminator' ) );
+		}
+
+		wp_send_json_success( $result );
+	}
+
+	/**
+	 * Delete template
+	 */
+	public function delete_template() {
+		$nonce = Forminator_Core::sanitize_text_field( 'forminatorNonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator-delete-cloud-template' ) ) {
+			wp_send_json_error( esc_html__( 'You are not allowed to perform this action.', 'forminator' ) );
+		}
+
+		$id  = Forminator_Core::sanitize_text_field( 'id' );
+		$res = Forminator_Template_API::delete_template( (int) $id );
+
+		if ( $res ) {
+			wp_send_json_success( esc_html__( 'Template deleted successfully.', 'forminator' ) );
+		} else {
+			wp_send_json_error( esc_html__( 'Failed to delete template.', 'forminator' ) );
+		}
+	}
+
+	/**
+	 * Rename template
+	 */
+	public function rename_template() {
+		$nonce = Forminator_Core::sanitize_text_field( 'nonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator-rename-cloud-template' ) ) {
+			wp_send_json_error( esc_html__( 'You are not allowed to perform this action.', 'forminator' ) );
+		}
+
+		$id   = Forminator_Core::sanitize_text_field( 'id' );
+		$name = Forminator_Core::sanitize_text_field( 'name' );
+
+		if ( empty( $id ) ) {
+			wp_send_json_error( esc_html__( 'Template ID is required.', 'forminator' ) );
+		}
+		if ( empty( $name ) ) {
+			wp_send_json_error( esc_html__( 'Template name is required.', 'forminator' ) );
+		}
+
+		$res = Forminator_Template_API::update_template( (int) $id, $name, '' );
+
+		if ( $res ) {
+			wp_send_json_success(
+				array(
+					'template' => $res,
+					'message'  => esc_html__( 'Template renamed successfully.', 'forminator' ),
+				)
+			);
+		} else {
+			wp_send_json_error( esc_html__( 'Failed to rename template.', 'forminator' ) );
+		}
+	}
+
+	/**
+	 * Duplicate template
+	 */
+	public function duplicate_template() {
+		$nonce = Forminator_Core::sanitize_text_field( 'nonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator-duplicate-cloud-template' ) ) {
+			wp_send_json_error( esc_html__( 'You are not allowed to perform this action.', 'forminator' ) );
+		}
+
+		$id = Forminator_Core::sanitize_text_field( 'id' );
+
+		$old_template = Forminator_Template_API::get_template( (int) $id );
+		if ( ! $old_template || empty( $old_template['template_id'] ) ) {
+			wp_send_json_error( esc_html__( 'Template not found.', 'forminator' ) );
+		}
+		/* translators: %s - template name */
+		$new_name = sprintf( esc_html__( 'Copy of %s', 'forminator' ), $old_template['name'] );
+		$template = Forminator_Template_API::create_template( $new_name, $old_template['config'] );
+
+		if ( $template ) {
+			wp_send_json_success(
+				array(
+					'message'  => esc_html__( 'Template duplicated successfully.', 'forminator' ),
+					'template' => $template,
+				)
+			);
+		} else {
+			wp_send_json_error( esc_html__( 'Failed to duplicate template.', 'forminator' ) );
+		}
 	}
 }

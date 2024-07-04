@@ -47,4 +47,12 @@ interface PlaceholderServiceInterface
      * @throws Exception
      */
     public function getPlaceholdersData($appointment, $bookingKey = null, $type = null, $customer = null, $allBookings = null);
+
+    /**
+     * @param array $bookingArray
+     * @param array $entity
+     *
+     * @return array
+     */
+    public function getAmountData(&$bookingArray, $entity);
 }

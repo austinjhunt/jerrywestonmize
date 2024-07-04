@@ -154,7 +154,6 @@ class ResourceEntitiesRepository extends AbstractRepository
             );
 
             return $statement->execute($params);
-
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to delete entities in ' . __CLASS__, $e->getCode(), $e);
         }

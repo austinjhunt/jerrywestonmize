@@ -143,8 +143,13 @@ class PaymentCallbackCommandHandler extends CommandHandler
 
                         case 'stripe':
                             $sessionId = $command->getField('session_id');
+
+                            $accountId = $command->getField('accountId');
+
+                            $method = $command->getField('method');
+
                             if ($sessionId) {
-                                $paymentIntentId = $paymentService->getPaymentIntent($sessionId);
+                                $paymentIntentId = $paymentService->getPaymentIntent($sessionId, $method, $accountId);
                                 if ($paymentIntentId) {
                                     $transactionId = $paymentIntentId;
                                 }
@@ -169,6 +174,14 @@ class PaymentCallbackCommandHandler extends CommandHandler
                             $paymentRepository->updateFieldById($paymentId, $status, 'status');
                             $paymentRepository->updateFieldById($paymentId, $transactionId, 'transactionId');
                             $paymentRepository->updateFieldById($paymentId, DateTimeService::getNowDateTimeObjectInUtc()->format('Y-m-d H:i:s'), 'dateTime');
+                        }
+
+                        if (!empty($method) && !empty($accountId)) {
+                            $paymentRepository->updateFieldById(
+                                $paymentId,
+                                json_encode(['method' => $method, 'accounts' => [$accountId => []]]),
+                                'transfers'
+                            );
                         }
 
                         if ($payment->getEntity()->getValue() === Entities::APPOINTMENT) {

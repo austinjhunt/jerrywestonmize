@@ -286,6 +286,7 @@ class SubscriberSubscribeController {
         $subscriber->getSubscriberTags()->add($subscriberTag);
         $this->subscriberTagRepository->persist($subscriberTag);
         $this->subscriberTagRepository->flush();
+        $this->wp->doAction('mailpoet_subscriber_tag_added', $subscriberTag);
       }
     }
   }

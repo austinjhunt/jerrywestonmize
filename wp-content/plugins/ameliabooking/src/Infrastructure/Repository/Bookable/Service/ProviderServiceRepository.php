@@ -374,4 +374,42 @@ class ProviderServiceRepository extends AbstractRepository
 
         return true;
     }
+
+    /**
+     * @param int    $providerId
+     *
+     * @return array
+     * @throws QueryExecutionException
+     */
+    public function getMandatoryServicesIdsForProvider($providerId)
+    {
+
+        try {
+            $statement = $this->connection->prepare(
+              "SELECT
+              ps.serviceId, ps.userId
+              FROM {$this->table} ps
+              GROUP BY ps.serviceId
+              HAVING COUNT(*) = 1"
+            );
+
+            $statement->execute();
+
+            $rows = $statement->fetchAll();
+
+
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to find data from ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        $items = [];
+
+        foreach ($rows as $row) {
+            if ($row['userId'] == $providerId) {
+                $items[] = $row['serviceId'];
+            }
+        }
+
+        return $items;
+    }
 }

@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.4.2
+ * @version    1.4.3
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       June 2024
+ * @date       July 2024
  */
 
 class PagespeedNinja
@@ -37,7 +37,7 @@ class PagespeedNinja
     {
         $this->plugin_slug = $plugin_slug;
         $this->plugin_name = $plugin_name;
-        $this->version = '1.4.2';
+        $this->version = '1.4.3';
         $this->plugin_dir_path = plugin_dir_path(__DIR__);
 
         self::$classmap = array(
@@ -281,7 +281,7 @@ class PagespeedNinja
             $di->config->change_group = null;
             $di->set('filesystem', Ressio_Filesystem_Native::class);
             $di->set('filelock', Ressio_FileLock_flock::class);
-            $plugin = new Ressio_Plugin_FilecacheCleaner($di, null);
+            Ressio_CacheCleaner::clean($di);
         }
     }
 

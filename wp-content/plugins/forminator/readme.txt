@@ -1,13 +1,13 @@
 === Forminator - Contact Form, Payment Form & Custom Form Builder ===
 Plugin Name: Forminator - Contact Form, Payment Form & Custom Form Builder
-Version: 1.31.0
+Version: 1.32.0
 Author: WPMU DEV
 Author URI: https://wpmudev.com/
 Contributors: WPMUDEV
 Tags: forms, contact form, wordpress form plugin, payment form, custom form, form builder, paypal form wordpress, form maker, quiz, quiz builder, order form, stripe payments, paypal payments, stripe form, paypal form
 Requires at least: 5.2
 Tested up to: 6.5
-Stable tag: 1.31
+Stable tag: 1.32.0
 Requires PHP: 7.4
 License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -222,6 +222,31 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 9. Allow simple drag and drop multi-file uploads for users.
 
 == Changelog ==
+
+= 1.32.0 ( 2024-07-02 ) =
+
+ - New Feature: Add Preset and Cloud Form Templates
+ - New Feature: Add a Rating field
+ - Enhancement: Ability to choose a worksheet to send data to in a Google Sheet
+ - Enhancement: Add a modern multi-select option to the Select field
+ - Enhancement: Update Phone Number validation library
+ - Enhancement: Compatibility with Custom Field Suite plugin
+ - Fix: Incorrect state in PayPal billing details
+ - Fix: Visibility conditional logic for the submit button based on radio doesn't work on paged forms
+ - Fix: Issues with Group duplication and dragging
+ - Fix: Files stay on the server deleting submission files.
+ - Fix: Default HTML upload field is visible in Post Data featured image along with styled field
+ - Fix: Connected integrations are missing on the Integrations page for quizzes without leads
+ - Fix: Delay when dragging and dropping Forminator fields
+ - Fix: Issue when creating Preset
+ - Fix: Issues with form submission when the Name field is set to Required with prefill enabled.
+ - Fix: Textarea field width is not aligned with the other fields when placed on the 2nd column
+ - Fix: Colon removed from URL when using the Hidden field for redirect
+ - Fix: Submission_id in the Hidden field doesn't work in MailChimp integration
+ - Fix: Forminator doesn't show the menu selected when using Windows High Contrast Mode
+ - Fix: Captcha will not show on preview after the first try on Forms
+ - Fix: JS error when dragging and dropping fields in Forminator
+ - Fix: Issues with translating certain strings
 
 = 1.31.0 ( 2024-06-03 ) =
 

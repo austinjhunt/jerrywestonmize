@@ -7,4 +7,13 @@
  */
 class Forminator_Trello_Quiz_Settings extends Forminator_Integration_Quiz_Settings {
 	use Forminator_Trello_Settings_Trait;
+
+	/**
+	 * Has lead
+	 *
+	 * @return bool
+	 */
+	public function has_lead() {
+		return true;
+	}
 }

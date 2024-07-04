@@ -9,9 +9,11 @@ namespace AmeliaBooking\Domain\Factory\Bookable\Service;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
+use AmeliaBooking\Domain\Factory\Coupon\CouponFactory;
 use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
@@ -92,6 +94,18 @@ class PackageCustomerFactory
 
         if (isset($data['couponId'])) {
             $packageCustomer->setCouponId(new Id($data['couponId']));
+        }
+
+        if (isset($data['coupon'])) {
+            $packageCustomer->setCoupon(CouponFactory::create($data['coupon']));
+        }
+
+        if (!empty($data['tax'])) {
+            if (is_string($data['tax'])) {
+                $packageCustomer->setTax(new Json($data['tax']));
+            } else if (json_encode($data['tax']) !== false) {
+                $packageCustomer->setTax(new Json(json_encode($data['tax'])));
+            }
         }
 
         return $packageCustomer;

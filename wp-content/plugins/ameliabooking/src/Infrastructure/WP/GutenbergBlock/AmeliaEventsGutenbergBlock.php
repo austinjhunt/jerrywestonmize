@@ -7,6 +7,7 @@
 namespace AmeliaBooking\Infrastructure\WP\GutenbergBlock;
 
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
+use AmeliaBooking\Infrastructure\Licence;
 
 /**
  * Class AmeliaEventsGutenbergBlock
@@ -32,7 +33,8 @@ class AmeliaEventsGutenbergBlock extends GutenbergBlock
             array_merge(
                 BackendStrings::getCommonStrings(),
                 BackendStrings::getWordPressStrings(),
-                self::getEntitiesData()
+                self::getEntitiesData(),
+                array('isLite' => !Licence\Licence::$premium)
             )
         );
 

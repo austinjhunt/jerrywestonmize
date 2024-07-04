@@ -719,6 +719,21 @@
             width: 100%;
           }
 
+          &__stripe {
+            .connected {
+              background-color: #DC4E41;
+              border-color: #DC4E41;
+
+              :hover {
+                background-color: #DC4E41;
+              }
+
+              :focus {
+                background-color: #C53829;
+              }
+            }
+          }
+
           .am-outlook-calendar-button {
             padding: 0;
             height: 40px;
@@ -2706,6 +2721,11 @@
       &:hover, &.selected:hover {
         background-color: darken(@color-bgr, 5%);
       }
+
+      &.disabled {
+        color: fade(@color-text-prime, 10);
+        cursor: not-allowed;
+      }
     }
 
     &.el-popper[x-placement^=top] {
@@ -2736,6 +2756,13 @@
 .el-picker-panel, .el-popover, .el-select-dropdown, .el-tooltip__popper, .el-notification {
   font-family: @font;
   max-width: 100%;
+
+  &__content {
+    p {
+      word-break: break-word;
+      text-align: left;
+    }
+  }
 }
 
 .am-service-deposit {

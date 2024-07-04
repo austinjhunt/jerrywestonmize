@@ -61,18 +61,6 @@ class GetTimeSlotsCommandHandler extends CommandHandler
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
 
-        $isFrontEndBooking = $command->getField('page') === 'booking' || $command->getField('page') === 'cabinet';
-
-        /** @var SlotsEntities $slotsEntities */
-        $slotsEntities = $applicationTimeSlotService->getSlotsEntities(
-            [
-                'isFrontEndBooking' => $isFrontEndBooking,
-                'providerIds'       => $command->getField('providerIds'),
-            ]
-        );
-
-        $settings = $applicationTimeSlotService->getSlotsSettings($isFrontEndBooking, $slotsEntities);
-
         $props = [
             'serviceId'            => $command->getField('serviceId'),
             'providerIds'          => $command->getField('providerIds'),
@@ -80,14 +68,32 @@ class GetTimeSlotsCommandHandler extends CommandHandler
             'extras'               => $command->getField('extras'),
             'excludeAppointmentId' => $command->getField('excludeAppointmentId'),
             'personsCount'         => $command->getField('group') ? $command->getField('persons') : null,
-            'isFrontEndBooking'    => $isFrontEndBooking,
+            'isFrontEndBooking'    => $command->getField('page') === 'booking' || $command->getField('page') === 'cabinet',
             'totalPersons'         => $command->getField('persons'),
+            'serviceDuration'      => $command->getField('serviceDuration'),
+            'monthsLoad'           => $command->getField('monthsLoad'),
+            'startDateTime'        => $command->getField('startDateTime'),
+            'endDateTime'          => $command->getField('endDateTime'),
+            'queryTimeZone'        => $command->getField('queryTimeZone'),
+            'timeZone'             => $command->getField('timeZone')
+
         ];
 
         $props = apply_filters('amelia_before_get_timeslots_filter', $props);
 
         do_action('amelia_before_get_timeslots', $command->getFields());
 
+        $isFrontEndBooking = $props['isFrontEndBooking'];
+
+        /** @var SlotsEntities $slotsEntities */
+        $slotsEntities = $applicationTimeSlotService->getSlotsEntities(
+            [
+                'isFrontEndBooking' => $isFrontEndBooking,
+                'providerIds'       => $props['providerIds'],
+            ]
+        );
+
+        $settings = $applicationTimeSlotService->getSlotsSettings($isFrontEndBooking, $slotsEntities);
 
         $lastBookedProviderId = null;
 
@@ -101,8 +107,8 @@ class GetTimeSlotsCommandHandler extends CommandHandler
         /** @var Service $service */
         $service = $filteredSlotEntities->getServices()->getItem($props['serviceId']);
 
-        if ($command->getField('serviceDuration')) {
-            $service->setDuration(new PositiveDuration($command->getField('serviceDuration')));
+        if ($props['serviceDuration']) {
+            $service->setDuration(new PositiveDuration($props['serviceDuration']));
         }
 
         $minimumBookingTimeInSeconds = $settingsDS
@@ -115,22 +121,22 @@ class GetTimeSlotsCommandHandler extends CommandHandler
             ->getGeneralSettings()
             ->getNumberOfDaysAvailableForBooking();
 
-        $monthsLoad = $command->getField('monthsLoad');
+        $monthsLoad = $props['monthsLoad'];
 
         $loadGeneratedPeriod = $monthsLoad &&
-            !$command->getField('endDateTime');
+            !$props['endDateTime'];
 
-        $timeZone = $command->getField('queryTimeZone') ?: DateTimeService::getTimeZone()->getName();
+        $timeZone = $props['queryTimeZone'] ?: DateTimeService::getTimeZone()->getName();
 
-        $queryStartDateTime = $command->getField('startDateTime') ?
+        $queryStartDateTime = $props['startDateTime'] ?
             DateTimeService::getDateTimeObjectInTimeZone(
-                $command->getField('startDateTime'),
+                $props['startDateTime'],
                 $timeZone
             )->setTimezone(DateTimeService::getTimeZone()) : null;
 
-        $queryEndDateTime = $command->getField('endDateTime') ?
+        $queryEndDateTime = $props['endDateTime'] ?
             DateTimeService::getDateTimeObjectInTimeZone(
-                $command->getField('endDateTime'),
+                $props['endDateTime'],
                 $timeZone
             )->setTimezone(DateTimeService::getTimeZone()) : null;
 
@@ -348,7 +354,7 @@ class GetTimeSlotsCommandHandler extends CommandHandler
         $converted = ['available' => [], 'occupied' => []];
 
         $isUtcResponse = ($settingsDS->getSetting('general', 'showClientTimeZone') && $isFrontEndBooking) ||
-            $command->getField('timeZone');
+            $props['timeZone'];
 
         if ($isUtcResponse) {
             foreach (['available', 'occupied'] as $type) {
@@ -356,10 +362,10 @@ class GetTimeSlotsCommandHandler extends CommandHandler
                     foreach ($freeSlots[$type][$slotDate] as $slotTime => $slotTimesProviders) {
                         $convertedSlotParts = explode(
                             ' ',
-                            $command->getField('timeZone') ?
+                            $props['timeZone'] ?
                                 DateTimeService::getCustomDateTimeObjectInTimeZone(
                                     $slotDate . ' ' . $slotTime,
-                                    $command->getField('timeZone')
+                                    $props['timeZone']
                                 )->format('Y-m-d H:i') :
                                 DateTimeService::getCustomDateTimeObjectInUtc(
                                     $slotDate . ' ' . $slotTime
@@ -396,9 +402,9 @@ class GetTimeSlotsCommandHandler extends CommandHandler
         ];
 
 
-        $resultData = apply_filters('amelia_get_timeslots_filter', $resultData, $command->getFields());
+        $resultData = apply_filters('amelia_get_timeslots_filter', $resultData, $props);
 
-        do_action('amelia_get_timeslots', $resultData, $command->getFields());
+        do_action('amelia_get_timeslots', $resultData, $props);
 
 
         $result->setResult(CommandResult::RESULT_SUCCESS);

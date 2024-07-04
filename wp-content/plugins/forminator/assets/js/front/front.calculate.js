@@ -213,9 +213,12 @@
 								//find element by select name
 								$element = this.$el.find('select[name="' + element_id + '"]');
 								if ($element.length === 0) {
-									//find element by direct id (for name field mostly)
-									//will work for all field with element_id-[somestring]
-									$element = $form.find('#' + element_id);
+									$element = this.$el.find('select[name="' + element_id + '[]"]');
+									if ($element.length === 0) {
+										//find element by direct id (for name field mostly)
+										//will work for all field with element_id-[somestring]
+										$element = $form.find('#' + element_id);
+									}
 								}
 							}
 						}
@@ -430,10 +433,12 @@
 			} else if (this.field_is_select($element)) {
 				checked = $element.find("option").filter(':selected');
 				if (checked.length) {
-					calculation = checked.data('calculation');
-					if (calculation !== undefined) {
-						value = Number(calculation);
-					}
+					checked.each( function () {
+						calculation = $( this ).data( 'calculation' );
+						if ( calculation !== undefined ) {
+							value += Number( calculation );
+						}
+					} );
 				}
 			} else if ( this.field_has_inputMask( $element ) ) {
 				value = parseFloat( $element.inputmask('unmaskedvalue').replace(',','.') );

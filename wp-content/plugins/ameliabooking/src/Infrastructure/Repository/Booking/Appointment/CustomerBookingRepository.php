@@ -43,6 +43,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             ':customerId'      => $data['customerId'],
             ':status'          => $data['status'],
             ':price'           => $data['price'],
+            ':tax'             => !empty($data['tax']) ? json_encode($data['tax']) : null,
             ':persons'         => $data['persons'],
             ':couponId'        => !empty($data['coupon']) ? $data['coupon']['id'] : null,
             ':token'           => $data['token'],
@@ -66,7 +67,8 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                 `appointmentId`,
                 `customerId`,
                 `status`, 
-                `price`, 
+                `price`,
+                `tax`,
                 `persons`,
                 `couponId`, 
                 `token`,
@@ -83,7 +85,8 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                 :appointmentId, 
                 :customerId, 
                 :status, 
-                :price, 
+                :price,
+                :tax, 
                 :persons,
                 :couponId,
                 :token,
@@ -175,6 +178,41 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table} SET
                 `price`   = :price
+                WHERE id = :id"
+            );
+
+            $res = $statement->execute($params);
+
+            if (!$res) {
+                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
+            }
+
+            return $res;
+        } catch (Exception $e) {
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * @param int             $id
+     * @param CustomerBooking $entity
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function updateTax($id, $entity)
+    {
+        $data = $entity->toArray();
+
+        $params = [
+            ':id'  => $id,
+            ':tax' => $data['tax'],
+        ];
+
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table} SET
+                `tax`   = :tax
                 WHERE id = :id"
             );
 

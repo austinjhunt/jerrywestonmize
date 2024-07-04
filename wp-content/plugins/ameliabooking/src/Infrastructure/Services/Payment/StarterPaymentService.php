@@ -17,11 +17,11 @@ class StarterPaymentService extends AbstractPaymentService implements PaymentSer
 {
     /**
      * @param array $data
+     * @param array $transfers
      *
-     * @return array
-     * @throws Exception
+     * @return mixed
      */
-    public function execute($data)
+    public function execute($data, &$transfers)
     {
         return [];
     }
@@ -58,19 +58,9 @@ class StarterPaymentService extends AbstractPaymentService implements PaymentSer
     }
 
     /**
-     * @param string $sessionId
-     *
-     * @return string|null
-     */
-    public function getPaymentIntent($sessionId)
-    {
-        return null;
-    }
-
-    /**
      * @return mixed|null
      */
-    public function getTransactionAmount($id)
+    public function getTransactionAmount($id, $transfers)
     {
         return null;
     }

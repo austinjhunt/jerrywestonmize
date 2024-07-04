@@ -61,7 +61,7 @@ class WooCommercePaymentCommandHandler extends CommandHandler
 
         $data = $command->getFields();
 
-        $data['isCart'] = !!$data['isCart'];
+        $data['isCart'] = !empty($data['isCart']) && !!$data['isCart'];
 
         $reservation = $reservationService->getNew(true, true, true);
 
@@ -155,6 +155,19 @@ class WooCommercePaymentCommandHandler extends CommandHandler
 
                     if (!empty($componentProps['state']['customerInfo']['translations'])) {
                         $componentProps['state']['customerInfo']['translations'] = null;
+                    }
+
+                    if (!empty($componentProps['state']['tickets']['tickets']) &&
+                        is_array($componentProps['state']['tickets']['tickets'])
+                    ) {
+                        foreach ($componentProps['state']['tickets']['tickets'] as $key => $ticket) {
+                            if (!empty($componentProps['state']['tickets']['tickets'][$key]['dateRanges'])) {
+                                $componentProps['state']['tickets']['tickets'][$key]['dateRanges'] = json_decode(
+                                    $componentProps['state']['tickets']['tickets'][$key]['dateRanges'],
+                                    true
+                                );
+                            }
+                        }
                     }
                 } else {
                     $componentProps['appointment']['bookings'][0]['customFields'] = $customFields;

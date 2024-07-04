@@ -162,13 +162,7 @@ class ZoomService extends AbstractZoomService
     {
         $zoomSettings = $this->settingsService->getCategorySettings('zoom');
 
-        $token = $zoomSettings['s2sEnabled'] ? (
-            $zoomSettings['accessToken'] ?: $this->getAccessToken(
-                $zoomSettings['accountId'],
-                $zoomSettings['clientId'],
-                $zoomSettings['clientSecret']
-            )
-        ) : $this->getJwtToken($zoomSettings['apiKey'], $zoomSettings['apiSecret']);
+        $token = $zoomSettings['accessToken'] ?: $this->getAccessToken($zoomSettings['accountId'], $zoomSettings['clientId'], $zoomSettings['clientSecret']);
 
         $resultArray = $this->request(
             $requestUrl,
@@ -178,8 +172,7 @@ class ZoomService extends AbstractZoomService
         );
 
         if (!empty($resultArray['code']) &&
-            ($resultArray['code'] === 401 || $resultArray['code'] === 4711) &&
-            $zoomSettings['s2sEnabled']
+            ($resultArray['code'] === 401 || $resultArray['code'] === 4711)
         ) {
             $resultArray = $this->request(
                 $requestUrl,

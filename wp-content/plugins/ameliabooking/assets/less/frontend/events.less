@@ -1720,6 +1720,11 @@
         background-color: fade(@color-accent, 10%);
         padding: @padding-small;
 
+        &-bordered {
+          border-top: 1px solid @color-dark-gray;
+          padding-top: 8px;
+        }
+
         .el-row {
           margin-top: @margin-small;
           margin-bottom: @margin-small;
@@ -1729,11 +1734,6 @@
 
         .am-confirmation-deposit {
           border-top: none;
-
-          &-price {
-            border-bottom: 1px solid @color-dark-gray;
-            padding-bottom: 8px;
-          }
 
           .am-confirmation-deposit-info {
             font-style: italic;

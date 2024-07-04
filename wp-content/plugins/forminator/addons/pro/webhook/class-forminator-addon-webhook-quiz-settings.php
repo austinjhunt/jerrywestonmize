@@ -9,6 +9,15 @@ class Forminator_Webhook_Quiz_Settings extends Forminator_Integration_Quiz_Setti
 	use Forminator_Webhook_Settings_Trait;
 
 	/**
+	 * Has lead
+	 *
+	 * @return bool
+	 */
+	public function has_lead() {
+		return true;
+	}
+
+	/**
 	 * Build sample data form current fields
 	 *
 	 * @since 1.6.2

@@ -82,6 +82,7 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
             ':required'     => $data['required'] ? 1 : 0,
             ':position'     => $data['position'],
             ':translations' => $data['translations'],
+            ':width'        => $data['width'],
         ];
 
         try {
@@ -89,9 +90,9 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                 "INSERT INTO
                 {$this->table}
                 (
-                `label`, `type`, `required`, `position`, `translations`
+                `label`, `type`, `required`, `position`, `translations`, `width`
                 ) VALUES (
-                :label, :type, :required, :position, :translations
+                :label, :type, :required, :position, :translations, :width
                 )"
             );
 
@@ -120,14 +121,15 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
         $data = $entity->toArray();
 
         $params = [
-            ':label'        => $data['label'],
-            ':required'     => $data['required'] ? 1 : 0,
-            ':position'     => $data['position'],
-            ':translations' => $data['translations'],
-            ':allServices'  => $data['allServices'] ? 1 : 0,
-            ':allEvents'    => $data['allEvents'] ? 1 : 0,
+            ':label'         => $data['label'],
+            ':required'      => $data['required'] ? 1 : 0,
+            ':position'      => $data['position'],
+            ':translations'  => $data['translations'],
+            ':allServices'   => $data['allServices'] ? 1 : 0,
+            ':allEvents'     => $data['allEvents'] ? 1 : 0,
             ':useAsLocation' => $data['useAsLocation'] ? 1 : 0,
-            ':id'           => $id,
+            ':width'         => $data['width'] ? : 50,
+            ':id'            => $id,
         ];
 
         try {
@@ -140,7 +142,8 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                 `translations` = :translations,
                 `allServices` = :allServices,
                 `allEvents` = :allEvents,
-                `useAsLocation` = :useAsLocation    
+                `useAsLocation` = :useAsLocation,
+                `width` = :width
                 WHERE
                 id = :id"
             );
@@ -187,6 +190,7 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                     cf.allServices AS cf_allServices,
                     cf.allEvents AS cf_allEvents,
                     cf.useAsLocation AS cf_useAsLocation,
+                    cf.width AS cf_width,
                     cfo.id AS cfo_id,
                     cfo.customFieldId AS cfo_custom_field_id,
                     cfo.label AS cfo_label,

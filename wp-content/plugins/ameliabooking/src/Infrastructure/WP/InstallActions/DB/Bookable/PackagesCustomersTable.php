@@ -28,6 +28,7 @@ class PackagesCustomersTable extends AbstractDatabaseTable
                   `packageId` INT(11) NOT NULL,
                   `customerId` INT(11) NOT NULL,
                   `price` DOUBLE NOT NULL,
+                  `tax` VARCHAR(255) DEFAULT NULL,
                   `start` DATETIME NULL,
                   `end` DATETIME NULL,
                   `purchased` DATETIME NOT NULL,

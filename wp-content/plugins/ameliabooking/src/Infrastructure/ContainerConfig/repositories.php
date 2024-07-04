@@ -91,6 +91,20 @@ $entries['domain.bookable.resourceEntities.repository'] = function (Container $c
     );
 };
 
+$entries['domain.tax.repository'] = function (Container $c) {
+    return new Repository\Tax\TaxRepository(
+        $c->getDatabaseConnection(),
+        DB\Tax\TaxesTable::getTableName()
+    );
+};
+
+$entries['domain.tax.entity.repository'] = function (Container $c) {
+    return new Repository\Tax\TaxEntityRepository(
+        $c->getDatabaseConnection(),
+        DB\Tax\TaxesToEntitiesTable::getTableName()
+    );
+};
+
 $entries['domain.coupon.repository'] = function (Container $c) {
     return new Repository\Coupon\CouponRepository(
         $c->getDatabaseConnection(),

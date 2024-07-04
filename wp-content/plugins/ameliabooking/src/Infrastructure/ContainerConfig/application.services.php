@@ -267,6 +267,17 @@ $entries['application.cache.service'] = function ($c) {
 };
 
 /**
+ * Tax service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Tax\AbstractTaxApplicationService
+ */
+$entries['application.tax.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getTaxService($c);
+};
+
+/**
  * Coupon service
  *
  * @param Container $c

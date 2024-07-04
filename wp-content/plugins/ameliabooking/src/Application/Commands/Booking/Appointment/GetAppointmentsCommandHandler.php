@@ -111,6 +111,10 @@ class GetAppointmentsCommandHandler extends CommandHandler
         $entitiesIds = !empty($params['search']) && !$isCabinetPackageRequest ?
             $appointmentAS->getAppointmentEntitiesIdsBySearchString($params['search']) : [];
 
+        if ($user && $user->getType() === Entities::CUSTOMER) {
+            $params['customerId'] = $user->getId()->getValue();
+        }
+
         $countParams = $params;
 
         $appointmentsIds = [];

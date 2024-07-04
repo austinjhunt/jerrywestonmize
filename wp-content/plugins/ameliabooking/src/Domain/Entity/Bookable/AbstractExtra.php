@@ -34,27 +34,6 @@ abstract class AbstractExtra
     protected $position;
 
     /**
-     * @param Name            $name
-     * @param Description     $description
-     * @param Price           $price
-     * @param PositiveInteger $maxQuantity
-     * @param PositiveInteger $position
-     */
-    public function __construct(
-        Name $name,
-        Description $description,
-        Price $price,
-        PositiveInteger $maxQuantity,
-        PositiveInteger $position
-    ) {
-        $this->name = $name;
-        $this->description = $description;
-        $this->price = $price;
-        $this->maxQuantity = $maxQuantity;
-        $this->position = $position;
-    }
-
-    /**
      * @return Id
      */
     public function getId()
@@ -157,11 +136,12 @@ abstract class AbstractExtra
     {
         return [
             'id'          => null !== $this->getId() ? $this->getId()->getValue() : null,
-            'name'        => $this->getName()->getValue(),
-            'description' => $this->getDescription()->getValue(),
-            'price'       => $this->getPrice()->getValue(),
-            'maxQuantity' => $this->getMaxQuantity()->getValue(),
-            'position'    => $this->getPosition()->getValue()
+            'name'        => $this->getName() ? $this->getName()->getValue() : null,
+            'description' => $this->getDescription() ? $this->getDescription()->getValue() : null,
+            'price'       => $this->getPrice() ? $this->getPrice()->getValue() : null,
+            'maxQuantity' => $this->getMaxQuantity() ? $this->getMaxQuantity()->getValue() : null,
+            'position'    => $this->getPosition() ? $this->getPosition()->getValue() : null,
+            'type'        => $this->getType() ? $this->getType()->getValue() : null,
         ];
     }
 }

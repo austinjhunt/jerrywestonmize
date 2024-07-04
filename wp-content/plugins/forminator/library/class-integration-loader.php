@@ -402,7 +402,7 @@ class Forminator_Integration_Loader {
 		}
 
 		if ( ! $this->addon_is_active( $slug ) ) {
-			$this->last_error_message = esc_html__( 'Integration is not activated before', 'forminator' );
+			$this->last_error_message = esc_html__( 'Integration was not activated before', 'forminator' );
 
 			return false;
 		}

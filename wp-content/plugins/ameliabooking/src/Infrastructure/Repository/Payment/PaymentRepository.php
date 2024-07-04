@@ -412,6 +412,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 p.transactionId AS transactionId,
                 NULL AS packageId,
                 cb.price AS bookedPrice,
+                NULL AS bookedTax,
                 a.providerId AS providerId,
                 cb.customerId AS customerId,
                 cb.persons AS persons,
@@ -463,6 +464,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 p.transactionId AS transactionId,
                 pc.packageId AS packageId,
                 pc.price AS bookedPrice,
+                pc.tax AS bookedTax,
                 NULL AS providerId,
                 pc.customerId AS customerId,
                 NULL AS persons,
@@ -513,6 +515,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 p.transactionId AS transactionId,
                 NULL AS packageId,
                 cb.price AS bookedPrice,
+                NULL AS bookedTax,
                 NULL AS providerId,
                 cb.customerId AS customerId,
                 cb.persons AS persons,
@@ -555,7 +558,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             $paymentQuery = "({$appointmentQuery1}) UNION ALL ({$appointmentQuery2})";
             $params = array_merge($params, $appointmentParams1, $appointmentParams2);
         } elseif (isset($criteria['events'])) {
-            $paymentQuery = "{$eventQuery}";
+            $paymentQuery = "({$eventQuery})";
             $params = array_merge($params, $eventParams);
         } else {
             $paymentQuery = "({$appointmentQuery1}) UNION ALL ({$appointmentQuery2}) UNION ALL ({$eventQuery})";
@@ -621,6 +624,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 'appointmentId' =>  (int)$row['appointmentId'] ? (int)$row['appointmentId'] : null,
                 'packageId' =>  (int)$row['packageId'] ? (int)$row['packageId'] : null,
                 'bookedPrice' =>  $row['bookedPrice'] ? $row['bookedPrice'] : null,
+                'bookedTax' =>  $row['bookedTax'] ? $row['bookedTax'] : null,
                 'bookableName' => $row['bookableName'],
                 'customerFirstName' => $customerInfo ? $customerInfo['firstName'] : $row['customerFirstName'],
                 'customerLastName' => $customerInfo ? $customerInfo['lastName'] : $row['customerLastName'],
@@ -785,18 +789,17 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
 
             $statement->execute($params);
 
-            $statementResult1 = $statement->fetch();
-            $statementResult2 = $statement->fetch();
-            $statementResult3 = $statement->fetch();
+            $statements = $statement->fetchAll();
 
-            $appointmentsCount1 = !empty($statementResult1['appointmentsCount1']) ?
-                $statementResult1['appointmentsCount1'] : 0;
+            $appointmentsCount1 = 0;
+            $appointmentsCount2 = 0;
+            $eventsCount        = 0;
 
-            $appointmentsCount2 = !empty($statementResult2['appointmentsCount2']) ?
-                $statementResult2['appointmentsCount2'] : 0;
-
-            $eventsCount = !empty($statementResult3['eventsCount']) ?
-                $statementResult3['eventsCount'] : 0;
+            foreach ($statements as $st) {
+                $appointmentsCount1 += !empty($st['appointmentsCount1']) ? $st['appointmentsCount1'] : 0;
+                $appointmentsCount2 += !empty($st['appointmentsCount2']) ? $st['appointmentsCount2'] : 0;
+                $eventsCount        += !empty($st['eventsCount']) ? $st['eventsCount'] : 0;
+            }
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
         }

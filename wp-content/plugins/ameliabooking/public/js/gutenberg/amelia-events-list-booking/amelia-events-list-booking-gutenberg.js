@@ -7,34 +7,26 @@
   var inspectorControls = wp.editor.InspectorControls
   var data = wpAmeliaLabels.data
 
-  var events = []
-  var tags = []
-
   var blockStyle = {
     color: 'red'
   }
 
-  if (data.events.length !== 0) {
-    for (let i = 0; i < data.events.length; i++) {
-      events.push({
-        value: data.events[i].id,
-        text: data.events[i].name + ' (id: ' + data.events[i].id + ') - ' + data.events[i].formattedPeriodStart
-      })
-    }
-  } else {
-    events = []
-  }
+  var entityNames = ['events', 'tags', 'locations']
+  var entities = {}
 
-  if (data.tags.length !== 0) {
-    for (let i = 0; i < data.tags.length; i++) {
-      tags.push({
-        value: data.tags[i].name,
-        text: data.tags[i].name
-      })
+  entityNames.forEach((entityName) => {
+    entities[entityName] = []
+    if (data[entityName].length !== 0) {
+      for (let i = 0; i < data[entityName].length; i++) {
+        entities[entityName].push({
+          value: data[entityName][i].id,
+          text: data[entityName][i].name + (entityName !== 'tags'
+            ? ' (id: ' + data[entityName][i].id + ')' + (data[entityName][i].formattedPeriodStart ? (' - ' + data[entityName][i].formattedPeriodStart) : '')
+            : '')
+        })
+      }
     }
-  } else {
-    tags = []
-  }
+  })
 
   // Registering the Block for events shortcode
   wp.blocks.registerBlockType('amelia/events-list-booking-gutenberg-block', {
@@ -93,6 +85,10 @@
         type: 'array',
         default: []
       },
+      location: {
+        type: 'array',
+        default: []
+      },
       eventOptions: {
         type: 'string',
         default: ''
@@ -109,6 +105,7 @@
       var options = {
         events: [{value: '', label: wpAmeliaLabels.show_all_events}],
         tags: [{value: '', label: wpAmeliaLabels.show_all_tags}],
+        locations: [{value: '', label: wpAmeliaLabels.show_all_locations}],
         eventOptions: [
           {value: 'events', label: wpAmeliaLabels.show_event},
           {value: 'tags', label: wpAmeliaLabels.show_tag}
@@ -144,21 +141,18 @@
         return options
       }
 
-      getOptions(events)
-        .forEach(function (element) {
-          options['events'].push(element)
-        })
-
-      getOptions(tags)
-        .forEach(function (element) {
-          options['tags'].push(element)
-        })
+      Object.keys(entities).forEach(entity => {
+        getOptions(entities[entity])
+          .forEach(function (element) {
+            options[entity].push(element)
+          })
+      })
 
       function getShortCode (props, attributes) {
         let shortCodeString = ''
         let shortCode = ''
 
-        if (events.length !== 0) {
+        if (entities.events.length !== 0) {
           if (attributes.event !== '' && attributes.event.length && attributes.event[0] !== '') {
             shortCodeString += ' event=' + attributes.event + ''
 
@@ -167,7 +161,7 @@
             }
           }
 
-          if (tags.length !== 0) {
+          if (entities.tags.length !== 0) {
             if (attributes.tag && attributes.tag.length && attributes.tag[0] !== '') {
               shortCodeString += ' tag="'
               attributes.tag.forEach((tag, index) => {
@@ -176,6 +170,12 @@
                 }
               })
               shortCodeString += '"'
+            }
+          }
+
+          if (entities.locations.length !== 0) {
+            if (attributes.location && attributes.location.length && attributes.location[0] !== '') {
+              shortCodeString += ' location=' + attributes.location + ''
             }
           }
 
@@ -203,7 +203,7 @@
         return shortCode
       }
 
-      if (events.length !== 0) {
+      if (entities.events.length !== 0) {
         inspectorElements.push(el(components.PanelRow,
           {},
           el('label', {htmlFor: 'amelia-js-parametars'}, wpAmeliaLabels.filter),
@@ -219,7 +219,9 @@
         inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
 
         if (attributes.parametars) {
-          if (tags.length) {
+          inspectorElements.push(el('div', {class: 'amelia-gutenberg-multi-select-note'}, wpAmeliaLabels.multiselect_note))
+
+          if (entities.tags.length) {
             inspectorElements.push(el(components.SelectControl, {
               id: 'amelia-js-select-tag',
               className: 'amelia-gutenberg-multi-select',
@@ -233,7 +235,7 @@
             }))
           }
 
-          if (events.length) {
+          if (entities.events.length) {
             inspectorElements.push(el(components.SelectControl, {
               id: 'amelia-js-select-event',
               className: 'amelia-gutenberg-multi-select',
@@ -259,6 +261,20 @@
                 }
               })
             ))
+          }
+
+          if (entities.locations.length) {
+            inspectorElements.push(el(components.SelectControl, {
+              id: 'amelia-js-select-location',
+              className: 'amelia-gutenberg-multi-select',
+              label: wpAmeliaLabels.select_location,
+              value: attributes.location,
+              options: options.locations,
+              multiple: true,
+              onChange: function (selectControl) {
+                return props.setAttributes({location: selectControl})
+              }
+            }))
           }
 
           inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))

@@ -37,6 +37,7 @@ class Forminator_Admin_L10n {
 	 * @return array
 	 */
 	public function admin_l10n() {
+		$current_user = wp_get_current_user();
 		$properties = array(
 			'popup'         => array(
 				'form_name_label'              => esc_html__( 'Name your form', 'forminator' ),
@@ -242,6 +243,12 @@ class Forminator_Admin_L10n {
 				'continue_button'           => esc_html__( 'Continue', 'forminator' ),
 				'result'                    => esc_html__( 'result', 'forminator' ),
 				'results'                   => esc_html__( 'results', 'forminator' ),
+				'preset_templates'          => esc_html__( 'Preset Templates', 'forminator' ),
+				'saved_templates'           => esc_html__( 'Cloud Templates', 'forminator' ),
+				'categories'                => esc_html__( 'Categories', 'forminator' ),
+				'preview'                   => esc_html__( 'Preview', 'forminator' ),
+				'useTemplate'               => esc_html__( 'Use Template', 'forminator' ),
+				'pro'                       => esc_html__( 'PRO', 'forminator' ),
 			),
 			'sidebar'       => array(
 				'label'         => esc_html__( 'Label', 'forminator' ),
@@ -431,6 +438,57 @@ class Forminator_Admin_L10n {
 			'exporter_logs' => forminator_get_export_logs( forminator_get_form_id_helper() ),
 			'geolocation'   => array(
 				'configure_title' => esc_html__( 'Configure Geolocation', 'forminator' ),
+			),
+			'templates'     => array(
+				'create_form'       => esc_html__( 'Create Form', 'forminator' ),
+				'open_actions'      => esc_html__( 'Open actions', 'forminator' ),
+				'alt_logo'          => esc_html__( 'WPMUDEV logo', 'forminator' ),
+				'login'             => esc_html__( 'Log In to Your WPMU DEV Account', 'forminator' ),
+				'login_plugin'      => esc_html__( 'Looks like your site is not connected to WPMU DEV. Log in to your WPMU DEV account to access cloud templates.', 'forminator' ),
+				'login_plugin2'     => esc_html__( 'Looks like your site is not connected to WPMU DEV. Log in to your WPMU DEV account to unlock the complete list of preset templates.', 'forminator' ),
+				'login_button'      => esc_html__( 'LOG IN TO WPMU DEV', 'forminator' ),
+				'login_dashboard'   => esc_url( network_admin_url( 'admin.php?page=wpmudev' ) ),
+				'renew_button'      => esc_html__( 'Renew Membership', 'forminator' ),
+				'expired'           => esc_html__( 'WPMU DEV Membership Expired', 'forminator' ),
+				'renew_membership'  => sprintf(
+					/* translators: %s - current user display name */
+					esc_html__( 'Hey %s, your WPMU DEV membership has expired. You need an active membership to use the preset templates. Renew your membership to get instant access to our pre-designed form templates.', 'forminator' ),
+					esc_html( $current_user->display_name )
+				),
+				'renew_membership2' => sprintf(
+					/* translators: %s - current user display name */
+					esc_html__( 'Hey %s, your WPMU DEV membership has expired. You need an active membership to access cloud templates. Renew your membership to get instant access to the cloud templates.', 'forminator' ),
+					esc_html( $current_user->display_name )
+				),
+				'install_title'     => esc_html__( 'Install WPMU DEV Dashboard Plugin', 'forminator' ),
+				'install_dashboard' => esc_html__( 'You don\'t have the WPMU DEV Dashboard plugin, which you\'ll need to access Pro preset templates. Install and log in to the dashboard to unlock the complete list of preset templates.', 'forminator' ),
+				'install_button'    => esc_html__( 'Install Plugin', 'forminator' ),
+				'upgrade_title'     => esc_html__( 'Save Forms as Templates', 'forminator' ),
+				'upgrade_desc'      => esc_html__( 'Save your forms as templates in the Hub cloud to easily reuse them on any sites you manage via the Hub. Customize once and reuse on different sites with one click.', 'forminator' ),
+				'upgrade_button'    => esc_html__( 'Upgrade to Save Template', 'forminator' ),
+				'no_templates'      => esc_html__( 'No templates available', 'forminator' ),
+				'no_templates_desc' => sprintf(
+					/* translators: %1$s - opening anchor tag, %2$s - closing anchor tag */
+					esc_html__( 'You have not saved any form templates yet. All your saved form templates will be displayed here. Click %1$shere%2$s to learn more on how to create form templates.', 'forminator' ),
+					'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#templates" target="_blank">',
+					'</a>'
+				),
+				'duplicate'         => esc_html__( 'Duplicate', 'forminator' ),
+				'rename'            => esc_html__( 'Rename', 'forminator' ),
+				'rename_template'   => esc_html__( 'Rename Template', 'forminator' ),
+				'rename_descr'      => esc_html__( 'Enter a new name for your template.', 'forminator' ),
+				'delete_template'   => esc_html__( 'Delete Template', 'forminator' ),
+				'delete_nonce'      => wp_create_nonce( 'forminator-delete-cloud-template' ),
+				'rename_nonce'      => wp_create_nonce( 'forminator-rename-cloud-template' ),
+				'duplicate_nonce'   => wp_create_nonce( 'forminator-duplicate-cloud-template' ),
+				'delete_confirm'    => esc_html__( 'Are you sure you want to permanently delete the selected template from your Hub cloud account?', 'forminator' ),
+				'empty_search'      => esc_html__( 'We couldn\'t find any template matching your search keyword. Please try again.', 'forminator' ),
+				'not_found'         => esc_html__( 'No result found', 'forminator' ),
+				'search'            => esc_html__( 'Search', 'forminator' ),
+				'no_results'        => esc_html__( 'No result for “{search_text}”', 'forminator' ),
+				'loading_templates' => esc_html__( 'Loading templates...', 'forminator' ),
+				'load_categories'   => esc_html__( 'Loading categories...', 'forminator' ),
+				'upgrade'           => esc_html__( 'Upgrade', 'forminator' ),
 			),
 		);
 

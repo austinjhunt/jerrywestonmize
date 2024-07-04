@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Domain\Factory\User;
 
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
 
 /**
@@ -18,13 +19,17 @@ class ProviderFactory extends UserFactory
      * @param array $providersServices
      *
      * @return Collection
-     * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function createCollection($providers, $services = [], $providersServices = [])
     {
         $providersCollection = new Collection();
 
         foreach ($providers as $providerKey => $providerArray) {
+            if (!empty($providerArray['stripeConnect']) && !is_array($providerArray['stripeConnect'])) {
+                $providerArray['stripeConnect'] = json_decode($providerArray['stripeConnect'], true);
+            }
+
             $providersCollection->addItem(
                 self::create($providerArray),
                 $providerKey
@@ -48,47 +53,5 @@ class ProviderFactory extends UserFactory
         }
 
         return $providersCollection;
-    }
-
-    /**
-     * @param array $rows
-     *
-     * @return array
-     */
-    public static function reformat($rows)
-    {
-        $data = [];
-
-        foreach ($rows as $row) {
-            $id = $row['provider_id'];
-
-            $googleCalendarId = $row['google_calendar_id'];
-
-            if ($id && empty($data[$id])) {
-                $data[$id] = [
-                    'id'           => $id,
-                    'type'         => $row['provider_type'],
-                    'firstName'    => $row['provider_firstName'],
-                    'lastName'     => $row['provider_lastName'],
-                    'email'        => $row['provider_email'],
-                    'note'         => $row['provider_note'],
-                    'description'  => $row['provider_description'],
-                    'phone'        => $row['provider_phone'],
-                    'gender'       => $row['provider_gender'],
-                    'translations' => $row['provider_translations'],
-                ];
-            }
-
-            if ($data[$id] && $googleCalendarId && empty($data[$id]['googleCalendar'])) {
-                $data[$id]['googleCalendar'] = [
-                    'id'         =>  $row['google_calendar_id'],
-                    'token'      =>  $row['google_calendar_token'],
-                    'calendarId' =>  isset($row['google_calendar_calendar_id']) ?
-                        $row['google_calendar_calendar_id'] : null
-                ];
-            }
-        }
-
-        return $data;
     }
 }

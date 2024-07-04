@@ -84,17 +84,19 @@ class AmeliaBookingShortcodeService
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/public.e0a97334.js',
+                AMELIA_URL . 'v3/public/assets/public.2360fe71.js',
                 [],
                 AMELIA_VERSION,
                 true
             );
         }
 
+        $ameliaLocale = apply_filters('amelia_modify_locale_filter', AMELIA_LOCALE) ?: AMELIA_LOCALE;
+
         wp_localize_script(
             $scriptId,
             'localeLanguage',
-            [AMELIA_LOCALE]
+            [$ameliaLocale]
         );
 
         wp_localize_script(

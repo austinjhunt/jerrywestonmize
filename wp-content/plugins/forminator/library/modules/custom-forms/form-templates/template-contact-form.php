@@ -19,10 +19,12 @@ class Forminator_Template_Contact_Form extends Forminator_Template {
 	public function defaults() {
 		return array(
 			'id'          => 'contact_form',
-			'name'        => esc_html__( 'Contact Us', 'forminator' ),
-			'description' => esc_html__( 'A simple contact form for your users to contact you', 'forminator' ),
+			'name'        => esc_html__( 'Contact Form', 'forminator' ),
+			'description' => esc_html__( 'Allows users to easily get in touch with queries or comments, typically including fields for name, email, subject, and message.', 'forminator' ),
 			'icon'        => 'clipboard-notes',
-			'priortiy'    => 2,
+			'priority'    => 2,
+			'category'    => 'customer-service',
+			'pro'         => false,
 		);
 	}
 
@@ -168,6 +170,11 @@ class Forminator_Template_Contact_Form extends Forminator_Template {
 			'cform-multiselect-custom-font' => '',
 			'cform-multiselect-font-size'   => '16',
 			'cform-multiselect-font-weight' => 'normal',
+			// Typography - Multi Select tag.
+			'cform-multiselect-tag-font-family' => 'Roboto',
+			'cform-multiselect-tag-custom-font' => '',
+			'cform-multiselect-tag-font-size'   => '12',
+			'cform-multiselect-tag-font-weight' => 'medium',
 			// Typography - Dropdown.
 			'cform-dropdown-font-family'    => 'Roboto',
 			'cform-dropdown-custom-font'    => '',

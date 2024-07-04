@@ -221,6 +221,10 @@ class EmailNotificationService extends AbstractNotificationService
                             'body'        => $this->getParsedBody($reParsedData['body']),
                             'bcc'         => $settingsAS->getBccEmails(),
                             'attachments' => !empty($icsFiles) ? $icsFiles : [],
+                            'data'        => [
+                                'reservation' => $appointmentArray,
+                                'bookingKey'  => $bookingKey,
+                            ],
                         ]
                     );
 

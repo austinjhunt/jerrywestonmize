@@ -8,6 +8,7 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Domain\Repository\Coupon\CouponRepositoryInterface;
+use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 
 /**
  * Class UpdateCouponStatusCommandHandler
@@ -32,10 +33,11 @@ class UpdateCouponStatusCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
      * @throws \Interop\Container\Exception\ContainerException
+     * @throws QueryExecutionException
      */
     public function handle(UpdateCouponStatusCommand $command)
     {
-        if (!$command->getPermissionService()->currentUserCanWrite(Entities::LOCATIONS)) {
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::COUPONS)) {
             throw new AccessDeniedException('You are not allowed to update coupon!');
         }
 

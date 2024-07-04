@@ -33,7 +33,8 @@ class CustomFieldFactory
             new Label($data['label']),
             new CustomFieldType($data['type']),
             new BooleanValueObject($data['required']),
-            new IntegerValue($data['position'])
+            new IntegerValue($data['position']),
+            new IntegerValue($data['width'])
         );
 
         if (isset($data['id'])) {
@@ -122,6 +123,7 @@ class CustomFieldFactory
             $customFields[$customFieldId]['allServices'] = $row['cf_allServices'];
             $customFields[$customFieldId]['allEvents'] = $row['cf_allEvents'];
             $customFields[$customFieldId]['useAsLocation'] = $row['cf_useAsLocation'];
+            $customFields[$customFieldId]['width'] = $row['cf_width'];
 
 
             if ($optionId) {

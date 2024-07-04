@@ -37,16 +37,30 @@ class CouponFactory
      */
     public static function create($data)
     {
-        $coupon = new Coupon(
-            new CouponCode($data['code']),
-            new DiscountPercentageValue($data['discount']),
-            new DiscountFixedValue($data['deduction']),
-            new PositiveInteger((int)$data['limit']),
-            new Status($data['status'])
-        );
+        $coupon = new Coupon();
 
         if (isset($data['id'])) {
             $coupon->setId(new Id($data['id']));
+        }
+
+        if (isset($data['code'])) {
+            $coupon->setCode(new CouponCode($data['code']));
+        }
+
+        if (isset($data['discount'])) {
+            $coupon->setDiscount(new DiscountPercentageValue($data['discount']));
+        }
+
+        if (isset($data['deduction'])) {
+            $coupon->setDeduction(new DiscountFixedValue($data['deduction']));
+        }
+
+        if (isset($data['limit'])) {
+            $coupon->setLimit(new PositiveInteger($data['limit']));
+        }
+
+        if (isset($data['status'])) {
+            $coupon->setStatus(new Status($data['status']));
         }
 
         $serviceList = new Collection();

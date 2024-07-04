@@ -73,8 +73,12 @@ class Forminator_Googlesheet_Poll_Hooks extends Forminator_Integration_Poll_Hook
 			 */
 			do_action( 'forminator_addon_poll_googlesheet_before_prepare_sheet_headers', $connection_settings, $poll_id, $submitted_data, $poll_entry_fields, $poll_settings_instance );
 
+			$worksheet_id = 0;
+			if ( ! empty( $connection_settings['sheet_type'] ) && 'existing' === $connection_settings['sheet_type'] && ! empty( $connection_settings['worksheet_id'] ) ) {
+				$worksheet_id = $connection_settings['worksheet_id'];
+			}
 			// prepare headers.
-			$header_fields = $this->get_sheet_headers( $connection_settings['file_id'] );
+			$header_fields = $this->get_sheet_headers( $connection_settings['file_id'], $worksheet_id );
 
 			/**
 			 * Filter Sheet headers fields that will be used to map the entry rows
@@ -156,7 +160,7 @@ class Forminator_Googlesheet_Poll_Hooks extends Forminator_Integration_Poll_Hook
 
 			// Prepare the request.
 			$append_request = new Forminator_Google_Service_Sheets_AppendCellsRequest();
-			$append_request->setSheetId( 0 );
+			$append_request->setSheetId( $worksheet_id );
 			$append_request->setRows( $row_data );
 			$append_request->setFields( 'userEnteredValue' );
 
@@ -228,8 +232,11 @@ class Forminator_Googlesheet_Poll_Hooks extends Forminator_Integration_Poll_Hook
 	 * @return array
 	 * @throws Forminator_Integration_Exception
 	 * @throws Exception
+	 *
+	 * @since 1.31
+	 * @param string $worksheet_id Worksheet/tab Id.
 	 */
-	public function get_sheet_headers( $file_id ) {
+	public function get_sheet_headers( $file_id, $worksheet_id = 0 ) {
 
 		$google_client = $this->addon->get_google_client();
 		$google_client->setAccessToken( $this->addon->get_client_access_token() );
@@ -237,21 +244,29 @@ class Forminator_Googlesheet_Poll_Hooks extends Forminator_Integration_Poll_Hook
 		$spreadsheet_service = new Forminator_Google_Service_Sheets( $google_client );
 		$spreadsheet         = $spreadsheet_service->spreadsheets->get( $file_id );
 		$sheets              = $spreadsheet->getSheets();
+		$sheet_key           = false;
+		if ( ! empty( $sheets ) ) {
+			foreach ( $sheets as $key => $sheet ) {
+				if ( strval( $sheet->getProperties()->getSheetId() ) === strval( $worksheet_id ) ) {
+					$sheet_key = $key;
+				}
+			}
+		}
 
-		if ( ! isset( $sheets[0] ) || ! isset( $sheets[0]->properties ) ) {
+		if ( false === $sheet_key || ! isset( $sheets[ $sheet_key ] ) || ! isset( $sheets[ $sheet_key ]->properties ) ) {
 			throw new Forminator_Integration_Exception( esc_html__( 'No sheet found', 'forminator' ) );
 		}
 
-		if ( ! isset( $sheets[0]->properties->title ) || empty( $sheets[0]->properties->title ) ) {
+		if ( ! isset( $sheets[ $sheet_key ]->properties->title ) || empty( $sheets[ $sheet_key ]->properties->title ) ) {
 			throw new Forminator_Integration_Exception( esc_html__( 'Sheet title not found', 'forminator' ) );
 		}
 
-		if ( ! isset( $sheets[0]->properties->gridProperties ) || ! isset( $sheets[0]->properties->gridProperties->columnCount ) ) {
+		if ( ! isset( $sheets[ $sheet_key ]->properties->gridProperties ) || ! isset( $sheets[ $sheet_key ]->properties->gridProperties->columnCount ) ) {
 			throw new Forminator_Integration_Exception( esc_html__( 'Failed to get column count of the sheet', 'forminator' ) );
 		}
 
-		$sheet_title        = $sheets[0]->properties->title;
-		$sheet_column_count = $sheets[0]->properties->gridProperties->columnCount;
+		$sheet_title        = $sheets[ $sheet_key ]->properties->title;
+		$sheet_column_count = $sheets[ $sheet_key ]->properties->gridProperties->columnCount;
 
 		$headers_range = $sheet_title . '!1:1';
 		$header_rows   = $spreadsheet_service->spreadsheets_values->get(
@@ -324,7 +339,7 @@ class Forminator_Googlesheet_Poll_Hooks extends Forminator_Integration_Poll_Hook
 		$new_column_needed   = $total_column_needed - $sheet_column_count;
 		if ( $new_column_needed > 0 ) {
 			$dimension_range = new Forminator_Google_Service_Sheets_DimensionRange();
-			$dimension_range->setSheetId( 0 );
+			$dimension_range->setSheetId( $worksheet_id );
 			$dimension_range->setDimension( 'COLUMNS' );
 			$dimension_range->setStartIndex( $sheet_column_count );
 			$dimension_range->setEndIndex( $total_column_needed );
@@ -352,7 +367,7 @@ class Forminator_Googlesheet_Poll_Hooks extends Forminator_Integration_Poll_Hook
 		$grid_properties->setFrozenRowCount( 1 );
 
 		$sheet_properties = new Forminator_Google_Service_Sheets_SheetProperties();
-		$sheet_properties->setSheetId( 0 );
+		$sheet_properties->setSheetId( $worksheet_id );
 		$sheet_properties->setGridProperties( $grid_properties );
 
 		$update_properties = new Forminator_Google_Service_Sheets_UpdateSheetPropertiesRequest();

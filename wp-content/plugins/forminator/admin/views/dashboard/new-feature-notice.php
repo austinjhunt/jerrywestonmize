@@ -15,7 +15,7 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 		aria-labelledby="forminator-new-feature__title"
 	>
 
-		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1300" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
+		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1320" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
 
 			<div class="sui-box-header sui-flatten sui-content-center">
 
@@ -33,14 +33,14 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 				</button>
 
 				<h3 class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: initial;">
-					<?php esc_html_e( 'New: Mailer Lite Integration', 'forminator' ); ?>
+					<?php esc_html_e( 'New: Preset Templates and Rating Field', 'forminator' ); ?>
 				</h3>
 
 				<p class="sui-description">
 					<?php
 					printf(
-						/* translators: 1. Admin name */
-						esc_html__( 'Hey %s, we’re excited to introduce our latest integration with MailerLite - an impressive digital marketing tool that can help grow your audience and drive more revenue. You can now seamlessly connect Forminator with MailerLite to effectively manage your email marketing campaigns and send newsletters to drive better engagements and conversions.', 'forminator' ),
+						/* translators: 1. Admin name 2. Open b tag, 3. Close b tag */
+						esc_html__( 'Hey %1$s, we\'re excited to introduce our latest additions to Forminator: %2$sPreset Templates (Pro)%3$s, %2$sRating Field%3$s, and %2$sEnhanced Multi-Select UI%3$s. These new additions will speed up your form creation process and enhance the functionality of your forms.', 'forminator' ),
 						esc_html( ucfirst( $user->display_name ) ),
 						'<b>',
 						'</b>'
@@ -48,12 +48,72 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 					?>
 				</p>
 
+				<div class="sui-modal-list">
+					<ul style="text-align: left;">
+
+						<li>
+							<h3 style="margin-bottom: 0;">
+								<span class="sui-icon-check sui-sm" aria-hidden="true"></span>
+								&nbsp;&nbsp;
+								<?php esc_html_e( 'Preset and Cloud Templates', 'forminator' ); ?>
+								<span class="sui-tag sui-tag-sm sui-tag-purple">Pro</span>
+							</h3>
+							<p class="sui-description" style="margin-left: 24px; margin-bottom: 30px;">
+								<?php
+								printf(
+									/* translators: 1. Open link tag, 2. Close link tag */
+									esc_html__( 'With our pre-designed templates, you can easily create forms for different purposes. You can also create custom form templates and save it to the cloud and reuse it on any site you manage via the Hub. %1$sLearn more%2$s', 'forminator' ),
+									'<a href="' . esc_url( 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#templates' ) . '" target="_blank">',
+									' <span class="sui-icon-open-new-window" aria-hidden="true"></span></a>'
+								);
+								?>
+							</p>
+						</li>
+
+						<li>
+							<h3 style="margin-bottom: 0;">
+								<span class="sui-icon-check sui-sm" aria-hidden="true"></span>
+								&nbsp;&nbsp;
+								<?php esc_html_e( 'Rating Field', 'forminator' ); ?>
+							</h3>
+							<p class="sui-description" style="margin-left: 24px; margin-bottom: 30px;">
+								<?php
+								printf(
+									/* translators: 1. Open link tag, 2. Close link tag */
+									esc_html__( 'With the new Rating field, you can now add star ratings, to your forms and allow users submit their feedback on your products, services, ideas etc. %1$sLearn more%2$s', 'forminator' ),
+									'<a href="' . esc_url( 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#rating-field' ) . '" target="_blank">',
+									' <span class="sui-icon-open-new-window" aria-hidden="true"></span></a>'
+								);
+								?>
+							</p>
+						</li>
+
+						<li>
+							<h3 style="margin-bottom: 0;">
+								<span class="sui-icon-check sui-sm" aria-hidden="true"></span>
+								&nbsp;&nbsp;
+								<?php esc_html_e( 'Enhanced UI for Multi-Select', 'forminator' ); ?></h3>
+							<p class="sui-description" style="margin-left: 24px;">
+								<?php
+								printf(
+									/* translators: 1. Open link tag, 2. Close link tag */
+									esc_html__( 'We’ve improved our Select field to support modern multi-selection styles and tags, creating a better experience for form users. %1$sCheck it out%2$s', 'forminator' ),
+									'<a href="' . esc_url( 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#multi-select' ) . '" target="_blank">',
+									' <span class="sui-icon-open-new-window" aria-hidden="true"></span></a>'
+								);
+								?>
+							</p>
+						</li>
+
+					</ul>
+				</div>
+
 			</div>
 
 			<div class="sui-box-footer sui-flatten sui-content-center">
 
 				<button class="sui-button forminator-dismiss-new-feature" data-modal-close>
-					<?php esc_html_e( 'Ok, got it!', 'forminator' ); ?>
+					<?php esc_html_e( 'Got it!', 'forminator' ); ?>
 				</button>
 
 			</div>

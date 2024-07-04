@@ -381,6 +381,8 @@ class AppointmentApplicationService
 
                 if ($oldAppointment->getServiceId()->getValue() !== $newAppointment->getServiceId()->getValue()) {
                     $bookingRepository->updatePrice($newBooking->getId()->getValue(), $newBooking);
+
+                    $bookingRepository->updateTax($newBooking->getId()->getValue(), $newBooking);
                 }
 
                 if ($oldAppointment->getBookings()->keyExists($newBooking->getId()->getValue())) {

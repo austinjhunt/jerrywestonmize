@@ -10,15 +10,21 @@ use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\CustomerBookingEventTicket;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
+use AmeliaBooking\Domain\Entity\Coupon\Coupon;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
+use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\CustomerBookingEventTicketRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventTicketRepository;
+use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
@@ -794,4 +800,64 @@ class EventPlaceholderService extends PlaceholderService
         ];
     }
 
+    /**
+     * @param array $bookingArray
+     * @param array $entity
+     *
+     * @return array
+     *
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     */
+    public function getAmountData(&$bookingArray, $entity)
+    {
+        /** @var ReservationServiceInterface $reservationService */
+        $reservationService = $this->container->get('application.reservation.service')->get(Entities::EVENT);
+
+        if (!empty($bookingArray['couponId']) && empty($bookingArray['coupon'])) {
+            /** @var CouponRepository $couponRepository */
+            $couponRepository = $this->container->get('domain.coupon.repository');
+
+            /** @var Coupon $coupon */
+            $coupon = $couponRepository->getById($bookingArray['couponId']);
+
+            $bookingArray['coupon'] = $coupon ? $coupon->toArray() : null;
+        }
+
+        $eventCustomPricing = [];
+
+        foreach ($entity['customTickets'] as $customTicket) {
+            $eventCustomPricing[$customTicket['id']] = [
+                'dateRanges' => '[]',
+                'price'      => !empty($customTicket['dateRangePrice'])
+                    ? $customTicket['dateRangePrice'] : $customTicket['price'],
+            ];
+        }
+
+        $bookable = EventFactory::create(
+            [
+                'price'           => $entity['price'],
+                'aggregatedPrice' => !!$bookingArray['aggregatedPrice'],
+                'customPricing'   => !empty($eventCustomPricing),
+                'customTickets'   => $eventCustomPricing,
+            ]
+        );
+
+        $booking = CustomerBookingFactory::create(
+            [
+                'persons'         => $bookingArray['persons'],
+                'aggregatedPrice' => !!$bookingArray['aggregatedPrice'],
+                'ticketsData'     => !empty($bookingArray['ticketsData']) ? $bookingArray['ticketsData'] : null,
+                'coupon'          => $bookingArray['coupon'],
+                'tax'             => $bookingArray['tax'],
+            ]
+        );
+
+        return [
+            'price'     => $reservationService->getPaymentAmount($booking, $bookable),
+            'discount'  => $reservationService->getPaymentAmount($booking, $bookable, 'discount'),
+            'deduction' => $reservationService->getPaymentAmount($booking, $bookable, 'deduction'),
+        ];
+    }
 }

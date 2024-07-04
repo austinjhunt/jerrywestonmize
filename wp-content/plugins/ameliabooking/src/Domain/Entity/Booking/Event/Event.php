@@ -12,12 +12,11 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
-use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\Recurring;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
-use AmeliaBooking\Domain\ValueObjects\String\BookingType;
+use AmeliaBooking\Domain\ValueObjects\String\BookableType;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\Json;
 
@@ -500,11 +499,11 @@ class Event extends AbstractBookable
 
 
     /**
-     * @return BookingType
+     * @return BookableType
      */
     public function getType()
     {
-        return new Bookingtype(Entities::EVENT);
+        return new BookableType(Entities::EVENT);
     }
 
     /**

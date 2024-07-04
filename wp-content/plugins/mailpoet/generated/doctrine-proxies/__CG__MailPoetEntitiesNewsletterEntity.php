@@ -721,6 +721,17 @@ class NewsletterEntity extends \MailPoet\Entities\NewsletterEntity implements \M
     /**
      * {@inheritDoc}
      */
+    public function isTransactional(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isTransactional', []);
+
+        return parent::isTransactional();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getId()
     {
         if ($this->__isInitialized__ === false) {

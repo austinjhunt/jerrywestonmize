@@ -1285,9 +1285,15 @@ class Forminator_Form_Entry_Model {
 				if ( is_array( $meta_value ) && isset( $meta_value['file'] ) ) {
 					$file_path = is_array( $meta_value['file']['file_path'] ) ? $meta_value['file']['file_path'] : array( $meta_value['file']['file_path'] );
 					if ( ! empty( $file_path ) ) {
-						foreach ( $file_path as $path ) {
+						foreach ( $file_path as $key => $path ) {
 							if ( ! empty( $path ) && file_exists( $path ) ) {
 								wp_delete_file( $path );
+								if ( isset( $meta_value['file']['file_url'][ $key ] ) ) {
+									$attachment_id = attachment_url_to_postid( $meta_value['file']['file_url'][ $key ] );
+									if ( $attachment_id ) {
+										wp_delete_attachment( $attachment_id );
+									}
+								}
 							}
 						}
 					}

@@ -6,6 +6,7 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
+use AmeliaBooking\Application\Services\Reservation\AbstractReservationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomerService;
 use AmeliaBooking\Domain\Entity\Booking\Reservation;
@@ -57,7 +58,7 @@ class MolliePaymentCommandHandler extends CommandHandler
 
         $type = $command->getField('type') ?: Entities::APPOINTMENT;
 
-        /** @var ReservationServiceInterface $reservationService */
+        /** @var AbstractReservationService $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get($type);
 
         /** @var BookingApplicationService $bookingAS */
@@ -131,6 +132,18 @@ class MolliePaymentCommandHandler extends CommandHandler
 
         $cache->setId(new Id($cacheId));
 
+        /** @var Reservation $reservation */
+        $reservation = $reservationService->getNew(true, true, true);
+
+        $result = $reservationService->processRequest(
+            $bookingAS->getAppointmentData($command->getFields()),
+            $reservation,
+            true
+        );
+
+        if ($result->getResult() === CommandResult::RESULT_ERROR) {
+            return $result;
+        }
 
         $additionalInformation = $paymentAS->getBookingInformationForPaymentSettings(
             $reservation,
@@ -139,34 +152,41 @@ class MolliePaymentCommandHandler extends CommandHandler
 
         $identifier = $cacheId . '_' . $token->getValue() . '_' . $type;
 
+        $transfers = [];
+
         $returnUrl = explode('#', $command->getField('returnUrl'));
-        $response = $paymentService->execute(
-            [
-                'returnUrl'   => $returnUrl[0] . (strpos($returnUrl[0], '?') ? '&' : '?') . 'ameliaCache=' . $identifier . (!empty($returnUrl[1]) ? '#' . $returnUrl[1] : ''),
-                'notifyUrl'   => (AMELIA_DEV ? str_replace('localhost', AMELIA_NGROK_URL, AMELIA_ACTION_URL) : AMELIA_ACTION_URL) . '/payment/mollie/notify&name=' . $identifier,
-                'amount'      => $paymentAmount,
-                'locale'      => str_replace('-', '_', $reservation->getLocale()->getValue()),
-                'description' => $additionalInformation['description'] ?:
-                    $reservation->getBookable()->getName()->getValue(),
-                'method'      => $settingsService->getSetting('payments', 'mollie')['method'],
-                'metaData'    => $additionalInformation['metaData'] ?: [],
-            ]
-        );
+        try {
+            $response = $paymentService->execute(
+                [
+                    'returnUrl'   => $returnUrl[0] . (strpos($returnUrl[0], '?') ? '&' : '?') . 'ameliaCache=' . $identifier . (!empty($returnUrl[1]) ? '#' . $returnUrl[1] : ''),
+                    'notifyUrl'   => (AMELIA_DEV ? str_replace('localhost', AMELIA_NGROK_URL, AMELIA_ACTION_URL) : AMELIA_ACTION_URL) . '/payment/mollie/notify&name=' . $identifier,
+                    'amount'      => $paymentAmount,
+                    'locale'      => str_replace('-', '_', $reservation->getLocale()->getValue()),
+                    'description' => $additionalInformation['description'] ?:
+                        $reservation->getBookable()->getName()->getValue(),
+                    'method'      => $settingsService->getSetting('payments', 'mollie')['method'],
+                    'metaData'    => $additionalInformation['metaData'] ?: [],
+                ],
+                $transfers
+            );
+        } catch (Exception $e) {
+            $reservationService->deleteReservation($reservation);
 
-        if ($response->isRedirect()) {
-            /** @var Reservation $reservation */
-            $reservation = $reservationService->getNew(true, true, true);
 
-            $result = $reservationService->processRequest(
-                $bookingAS->getAppointmentData($command->getFields()),
-                $reservation,
-                true
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage(FrontendStrings::getCommonStrings()['payment_error']);
+            $result->setData(
+                [
+                    'message' => $e->getMessage(),
+                    'paymentSuccessful' => false,
+                ]
             );
 
-            if ($result->getResult() === CommandResult::RESULT_ERROR) {
-                return $result;
-            }
+            return $result;
+        }
 
+
+        if ($response->isRedirect()) {
             /** @var Payment $payment */
             $payment = null;
 
@@ -219,6 +239,8 @@ class MolliePaymentCommandHandler extends CommandHandler
 
             return $result;
         }
+
+        $reservationService->deleteReservation($reservation);
 
         $result->setResult(CommandResult::RESULT_ERROR);
         $result->setMessage(FrontendStrings::getCommonStrings()['payment_error']);

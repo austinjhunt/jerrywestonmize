@@ -80,8 +80,6 @@ class FrontendStrings
             'deposit_payment_tooltip'            => __('Percentage deposit will be calculated on the total booking price<br>and fixed amount can be multiplied by the number of people or stay fixed on the total booking price.', 'wpamelia'),
             'deposit_info'                       => __('Remaining of total amount will be paid on site.', 'wpamelia'),
             'deposit_per_person'                 => __('Multiply deposit amount by the number of people in one booking', 'wpamelia'),
-            'fixed_amount'                       => __('Fixed amount', 'wpamelia'),
-            'percentage'                         => __('Percentage', 'wpamelia'),
             'custom_pricing_enabled'             => __('Custom Pricing', 'wpamelia'),
             'pricing_by_date_enabled'            => __('Pricing by Date range', 'wpamelia'),
             'pricing'                            => __('Pricing', 'wpamelia'),
@@ -100,6 +98,8 @@ class FrontendStrings
     {
         $labels = Licence\Licence::$premium ? [
             'add_coupon'                   => __('Add Coupon', 'wpamelia'),
+            'amount_fixed'                 => __('Fixed amount', 'wpamelia'),
+            'amount_percentage'            => __('Percentage', 'wpamelia'),
             'and'                          => __('and', 'wpamelia'),
             'no_package_services'          => __('It seems like there are no available or visible services assigned to the packages, at this moment.', 'wpamelia'),
             'all_slots_selected'           => __('All slots are selected', 'wpamelia'),
@@ -158,6 +158,8 @@ class FrontendStrings
             'packages'                     => __('Packages', 'wpamelia'),
             'paid'                         => __('Paid', 'wpamelia'),
             'partially_paid'               => __('Partially Paid', 'wpamelia'),
+            'paid_deposit'                 => __('Paid deposit', 'wpamelia'),
+            'paid_remaining_amount'        => __('Paid remaining amount', 'wpamelia'),
             'pay_pal'                      => __('PayPal', 'wpamelia'),
             'payment_error'                => __('Sorry, there was an error processing your payment. Please try again later.', 'wpamelia'),
             'payment_error_default'        => __('Payment error', 'wpamelia'),
@@ -458,7 +460,9 @@ class FrontendStrings
             'congrats_panel'               => __('Customer Panel', 'wpamelia'),
             'congrats_cart'                => __('Total Services Booked', 'wpamelia'),
 
-            'whatsapp_opt_in_text'         => __('By entering your phone number you agree to receive messages via WhatsApp', 'wpamelia')
+            'whatsapp_opt_in_text'         => __('By entering your phone number you agree to receive messages via WhatsApp', 'wpamelia'),
+            'total_tax_colon'              => __('VAT', 'wpamelia'),
+            'incl_tax'                     => __('Incl. VAT', 'wpamelia'),
         ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getBookingStrings());
@@ -821,6 +825,8 @@ class FrontendStrings
             'login_email_placeholder'                => __('Enter your email', 'wpamelia'),
             'login_password_placeholder'             => __('Enter your password', 'wpamelia'),
             'logout'                                 => __('Logout', 'wpamelia'),
+            'mandatory_service_remove_fail_all'      => __('You are the only provider on', 'wpamelia'),
+            'mandatory_service_remove_fail'          => __('You are the only provider for this service', 'wpamelia'),
             'maximum_capacity'                       => __('Max. Capacity', 'wpamelia'),
             'min1'                                   => __('1min', 'wpamelia'),
             'min10'                                  => __('10min', 'wpamelia'),
@@ -954,6 +960,12 @@ class FrontendStrings
             'special_days_reflect_services'          => __('Reflect On', 'wpamelia'),
             'spots'                                  => __('Spots', 'wpamelia'),
             'status'                                 => __('Status', 'wpamelia'),
+            'disconnect'                             => __('Disconnect', 'wpamelia'),
+            'stripe_connect'                         => __('Stripe Connect', 'wpamelia'),
+            'stripe_preview'                         => __('Dashboard', 'wpamelia'),
+            'stripe_onboard'                         => __('OnBoard', 'wpamelia'),
+            'stripe_account_standard'                => __('Standard Account', 'wpamelia'),
+            'stripe_account_express'                 => __('Express Account', 'wpamelia'),
             'success'                                => __('Success', 'wpamelia'),
             'time'                                   => __('Time', 'wpamelia'),
             'today'                                  => __('Today', 'wpamelia'),

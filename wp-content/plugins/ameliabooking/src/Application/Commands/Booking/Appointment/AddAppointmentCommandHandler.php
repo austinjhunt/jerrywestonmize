@@ -18,6 +18,7 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\PositiveDuration;
@@ -77,6 +78,8 @@ class AddAppointmentCommandHandler extends CommandHandler
         $settingsDS = $this->container->get('domain.settings.service');
         /** @var EntityApplicationService $entityService */
         $entityService = $this->container->get('application.entity.service');
+        /** @var ReservationServiceInterface $reservationService */
+        $reservationService = $this->container->get('application.reservation.service')->get(Entities::APPOINTMENT);
 
         if ($missingEntity = $entityService->getMissingEntityForAppointment($command->getFields())) {
             return $entityService->getMissingEntityResponse($missingEntity);
@@ -133,6 +136,7 @@ class AddAppointmentCommandHandler extends CommandHandler
 
         $appointmentAS->convertTime($appointmentData);
 
+        $reservationService->manageTaxes($appointmentData);
 
         /** @var Appointment $appointment */
         $appointment = $appointmentAS->build($appointmentData, $service);

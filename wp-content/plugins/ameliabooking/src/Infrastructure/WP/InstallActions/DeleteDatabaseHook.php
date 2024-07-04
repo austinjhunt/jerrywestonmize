@@ -46,6 +46,8 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Notification\Notifications
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Notification\NotificationsTableInsertRows;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Notification\NotificationsToEntitiesTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Payment\PaymentsTable;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Tax\TaxesTable;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Tax\TaxesToEntitiesTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\Provider\ProvidersGoogleCalendarTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\Provider\ProvidersLocationTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\Provider\ProvidersOutlookCalendarTable;
@@ -188,5 +190,9 @@ class DeleteDatabaseHook
         UsersTable::delete();
 
         CacheTable::delete();
+
+        TaxesToEntitiesTable::delete();
+
+        TaxesTable::delete();
     }
 }

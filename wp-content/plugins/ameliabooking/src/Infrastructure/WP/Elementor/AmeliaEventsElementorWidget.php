@@ -8,6 +8,7 @@ namespace Elementor;
 
 use AmeliaBooking\Infrastructure\WP\GutenbergBlock\GutenbergBlock;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
+use AmeliaBooking\Infrastructure\Licence;
 
 /**
  * Class AmeliaEventsElementorWidget
@@ -34,6 +35,8 @@ class AmeliaEventsElementorWidget extends Widget_Base
     }
     protected function register_controls() {
 
+        $isLite = !Licence\Licence::$premium;
+
         $this->start_controls_section(
             'amelia_events_section',
             [
@@ -47,18 +50,20 @@ class AmeliaEventsElementorWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'selected_type',
-            [
-                'label' => BackendStrings::getWordPressStrings()['show_event_view_type'],
-                'type' => Controls_Manager::SELECT,
-                'options' => [
-                    'list' => BackendStrings::getWordPressStrings()['show_event_view_list'],
-                    'calendar' => BackendStrings::getWordPressStrings()['show_event_view_calendar']
-                ],
-                'default' => 'list',
-            ]
-        );
+        if (!$isLite) {
+            $this->add_control(
+                'selected_type',
+                [
+                    'label' => BackendStrings::getWordPressStrings()['show_event_view_type'],
+                    'type' => Controls_Manager::SELECT,
+                    'options' => [
+                        'list' => BackendStrings::getWordPressStrings()['show_event_view_list'],
+                        'calendar' => BackendStrings::getWordPressStrings()['show_event_view_calendar']
+                    ],
+                    'default' => 'list',
+                ]
+            );
+        }
 
         $this->add_control(
             'preselect',

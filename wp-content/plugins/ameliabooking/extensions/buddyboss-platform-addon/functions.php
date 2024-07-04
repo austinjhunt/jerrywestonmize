@@ -966,7 +966,7 @@ function panel_content()
     if (in_array('wpamelia-provider', $user_roles) || in_array('administrator', $user_roles)) {
         echo do_shortcode('[ameliaemployeepanel]');
     } else if (in_array('wpamelia-customer', $user_roles)) {
-        echo do_shortcode('[ameliacustomerpanel]');
+        echo do_shortcode('[ameliacustomerpanel version=2]');
     }
 }
 

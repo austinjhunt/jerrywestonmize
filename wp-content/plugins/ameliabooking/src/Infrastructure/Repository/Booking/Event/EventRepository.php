@@ -498,6 +498,11 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
+        $limit = $this->getLimit(
+            !empty($criteria['page']) ? (int)$criteria['page'] : 0,
+            !empty($criteria['itemsPerPage']) ? (int)$criteria['itemsPerPage'] : 0
+        );
+
         try {
             $statement = $this->connection->prepare(
                 "SELECT
@@ -604,7 +609,8 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 {$paymentJoin}
                 {$tagJoin}
                 {$where}
-                ORDER BY ep.periodStart"
+                ORDER BY ep.periodStart
+                {$limit}"
             );
 
             $statement->execute($params);
@@ -922,7 +928,6 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 {$providerJoin}
                 {$customerJoin}
                 {$where}
-                GROUP BY e.id
                 ORDER BY ep.periodStart, e.id
                 {$limit}"
             );
@@ -989,6 +994,19 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
             $where[] = 'e.locationId = :locationId';
         }
+
+        if (!empty($criteria['locations'])) {
+            foreach ((array)$criteria['locations'] as $index => $value) {
+                $param = ':location' . $index;
+                $queryLocations[] = $param;
+                $params[$param] = $value;
+            }
+
+            $where3 = 'e.locationId IN (' . implode(', ', $queryLocations) . ')';
+
+            $where[] = '(' . $where3 . ')';
+        }
+
 
         $tagJoin = '';
 
@@ -2232,6 +2250,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             cb.customerId AS booking_customerId,
             cb.status AS booking_status,
             cb.price AS booking_price,
+            cb.tax AS booking_tax,
             cb.persons AS booking_persons,
             cb.couponId AS booking_couponId,
             cb.customFields AS booking_customFields,

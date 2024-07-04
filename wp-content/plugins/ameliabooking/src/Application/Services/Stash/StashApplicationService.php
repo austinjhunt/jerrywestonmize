@@ -3,16 +3,19 @@
 namespace AmeliaBooking\Application\Services\Stash;
 
 use AmeliaBooking\Application\Services\Location\AbstractLocationApplicationService;
+use AmeliaBooking\Application\Services\Tax\TaxApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Category;
+use AmeliaBooking\Domain\Entity\Bookable\Service\Extra;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageService;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use AmeliaBooking\Domain\Entity\Location\Location;
+use AmeliaBooking\Domain\Entity\Tax\Tax;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
@@ -94,6 +97,12 @@ class StashApplicationService
 
         /** @var Collection $events */
         $events = $eventRepository->getFiltered(['dates' => [DateTimeService::getNowDateTime()], 'show' => 1]);
+
+        /** @var TaxApplicationService $taxApplicationService */
+        $taxApplicationService = $this->container->get('application.tax.service');
+
+        /** @var Collection $taxes */
+        $taxes = $taxApplicationService->getAll();
 
         /** @var Collection $services */
         $services = $serviceRepository->getAllArrayIndexedById();
@@ -334,6 +343,50 @@ class StashApplicationService
             }
 
             $resultData['packages'][] = $packageData;
+        }
+
+        /** @var Tax $tax */
+        foreach ($taxes->getItems() as $tax) {
+            $taxData = [
+                'id'          => $tax->getId()->getValue(),
+                'name'        => $tax->getName()->getValue(),
+                'type'        => $tax->getType()->getValue(),
+                'amount'      => $tax->getAmount()->getValue(),
+                'serviceList' => [],
+                'extraList'   => [],
+                'packageList' => [],
+                'eventList'   => [],
+            ];
+
+            /** @var Service $service */
+            foreach ($tax->getServiceList()->getItems() as $service) {
+                $taxData['serviceList'][] = [
+                    'id' => $service->getId()->getValue(),
+                ];
+            }
+
+            /** @var Extra $extra */
+            foreach ($tax->getExtraList()->getItems() as $extra) {
+                $taxData['extraList'][] = [
+                    'id' => $extra->getId()->getValue(),
+                ];
+            }
+
+            /** @var Package $package */
+            foreach ($tax->getPackageList()->getItems() as $package) {
+                $taxData['packageList'][] = [
+                    'id' => $package->getId()->getValue(),
+                ];
+            }
+
+            /** @var Event $event */
+            foreach ($tax->getEventList()->getItems() as $event) {
+                $taxData['eventList'][] = [
+                    'id' => $event->getId()->getValue(),
+                ];
+            }
+
+            $resultData['taxes'][] = $taxData;
         }
 
         $settingsDomainService->setStashEntities($resultData);

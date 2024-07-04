@@ -16,10 +16,11 @@ class Forminator_Shortcode_Generator {
 	public function __construct() {
 		global $pagenow;
 
-		$is_hustle_wizard = $this->is_hustle_wizard();
+		$is_hustle_wizard        = $this->is_hustle_wizard();
+		$is_restricted_post_type = $this->is_restricted_post_type();
 
 		// If page different than Post or Page, abort.
-		if ( 'post.php' !== $pagenow && 'post-new.php' !== $pagenow && ! $is_hustle_wizard ) {
+		if ( ( 'post.php' !== $pagenow && 'post-new.php' !== $pagenow && ! $is_hustle_wizard ) || $is_restricted_post_type ) {
 			return;
 		}
 
@@ -50,6 +51,33 @@ class Forminator_Shortcode_Generator {
 
 		// Check if current page is hustle wizard page.
 		if ( $page && in_array( $page, $pages, true ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if current page is in restricted post type
+	 *
+	 * @since 1.32.0
+	 *
+	 * @return bool
+	 */
+	public function is_restricted_post_type() {
+		$post_type = Forminator_Core::sanitize_text_field( 'post_type' );
+		if ( ! $post_type ) {
+			$post_type = get_post_type( Forminator_Core::sanitize_text_field( 'post' ) );
+		}
+
+		// Restricted post types.
+		$post_types = array( 'cfs' );
+
+		// Filter to include more post types.
+		$post_types = apply_filters( 'forminator_exclude_shortcode_generator_post_types', $post_types );
+
+		// Check if current page is a restricted post type page.
+		if ( $post_type && in_array( $post_type, $post_types, true ) ) {
 			return true;
 		}
 

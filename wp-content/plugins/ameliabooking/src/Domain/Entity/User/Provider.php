@@ -5,6 +5,7 @@ namespace AmeliaBooking\Domain\Entity\User;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Google\GoogleCalendar;
 use AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar;
+use AmeliaBooking\Domain\Entity\Stripe\StripeConnect;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\Description;
 use AmeliaBooking\Domain\ValueObjects\String\Email;
@@ -50,6 +51,9 @@ class Provider extends AbstractUser
 
     /** @var Id */
     private $badgeId;
+
+    /** @var StripeConnect */
+    private $stripeConnect;
 
     /**
      * @param Name       $firstName
@@ -266,6 +270,22 @@ class Provider extends AbstractUser
         $this->badgeId = $badgeId;
     }
 
+    /**
+     * @return StripeConnect
+     */
+    public function getStripeConnect()
+    {
+        return $this->stripeConnect;
+    }
+
+    /**
+     * @param StripeConnect $stripeConnect
+     */
+    public function setStripeConnect($stripeConnect)
+    {
+        $this->stripeConnect = $stripeConnect;
+    }
+
 
     /**
      * Returns the Provider entity fields in an array form
@@ -286,6 +306,7 @@ class Provider extends AbstractUser
                 'timeZone'        => $this->getTimeZone() ? $this->getTimeZone()->getValue() : null,
                 'description'     => $this->getDescription() ? $this->getDescription()->getValue() : null,
                 'badgeId'         => $this->getBadgeId() ? $this->getBadgeId()->getValue() : null,
+                'stripeConnect'   => $this->getStripeConnect() ? $this->getStripeConnect()->toArray() : null,
             ]
         );
     }

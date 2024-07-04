@@ -177,7 +177,7 @@ class AppointmentFactory
                         'startUrl' => $zoomMeetingJson ? $zoomMeetingJson['startUrl'] : null,
                         'joinUrl'  => $zoomMeetingJson ? $zoomMeetingJson['joinUrl'] : null,
                     ],
-                    'lessonSpace'            => $row['appointment_lesson_space'],
+                    'lessonSpace'            => !empty($row['appointment_lesson_space']) ? $row['appointment_lesson_space'] : null,
                 ];
             }
 
@@ -208,12 +208,15 @@ class AppointmentFactory
                                 $row['package_customer_packageId'] : null,
                             'price'     => !empty($row['package_customer_price']) ?
                                 $row['package_customer_price'] : null,
-                            'couponId'     => !empty($row['package_customer_couponId']) ?
+                            'couponId'  => !empty($row['package_customer_couponId']) ?
                                 $row['package_customer_couponId'] : null,
+                            'tax'       => !empty($row['package_customer_tax']) ?
+                                $row['package_customer_tax'] : null,
                         ]
                     ] : null,
                     'duration'       => isset($row['booking_duration']) ? $row['booking_duration'] : null,
                     'created'        => !empty($row['booking_created']) ? DateTimeService::getCustomDateTimeFromUtc($row['booking_created']) : null,
+                    'tax'            => isset($row['booking_tax']) ? $row['booking_tax'] : null,
                 ];
             }
 
@@ -225,7 +228,8 @@ class AppointmentFactory
                         'extraId'           => $row['bookingExtra_extraId'],
                         'quantity'          => $row['bookingExtra_quantity'],
                         'price'             => $row['bookingExtra_price'],
-                        'aggregatedPrice'   => $row['bookingExtra_aggregatedPrice']
+                        'aggregatedPrice'   => $row['bookingExtra_aggregatedPrice'],
+                        'tax'               => isset($row['bookingExtra_tax']) ? $row['bookingExtra_tax'] : null,
                     ];
             }
 

@@ -675,6 +675,7 @@ abstract class Forminator_Field {
 		$html = '';
 		foreach ( $options as $option ) {
 			$selected = '';
+			$disabled = isset( $option['disabled'] ) && $option['disabled'] ? ' disabled' : '';
 
 			if ( isset( $option['value'] ) && is_array( $option['value'] ) ) {
 				$populated_optgroup_options = self::populate_options_for_select( $option['value'], $selected_value );
@@ -685,7 +686,7 @@ abstract class Forminator_Field {
 						|| ! empty( $option['selected'] ) ) {
 					$selected = 'selected="selected"';
 				}
-				$html .= sprintf( '<option value="%s" %s>%s</option>', esc_html( $option['value'] ), $selected, esc_html( $option['label'] ) );
+				$html .= sprintf( '<option value="%s" %s%s>%s</option>', esc_html( $option['value'] ), $selected, $disabled, esc_html( $option['label'] ) );
 			}
 		}
 
@@ -1084,6 +1085,9 @@ abstract class Forminator_Field {
 			}
 		} elseif ( stripos( $element_id, 'checkbox-' ) !== false || stripos( $element_id, 'radio-' ) !== false ) {
 			$is_condition_fulfilled = self::is_condition_fulfilled( $field_value, $condition );
+		} elseif ( stripos( $element_id, 'rating-' ) !== false ) {
+			$rating_value           = explode( '/', $field_value )[0] ?? 0;
+			$is_condition_fulfilled = self::is_condition_fulfilled( $rating_value, $condition );
 		} else {
 			$is_condition_fulfilled = self::is_condition_fulfilled( $field_value, $condition, $form_id );
 		}
@@ -1555,8 +1559,12 @@ abstract class Forminator_Field {
 			$element_autofill_settings = self::get_element_autofill_settings( $element_id, $autofill_settings );
 
 			if ( ! self::element_autofill_is_editable( $element_autofill_settings ) ) {
+				$current_data = $field_data;
 				// refill with autofill provider.
 				$field_data = $this->maybe_replace_to_autofill_value( $field_data, $element_autofill_settings );
+				if ( ! strlen( $field_data ) ) {
+					$field_data = $current_data;
+				}
 			}
 		}
 

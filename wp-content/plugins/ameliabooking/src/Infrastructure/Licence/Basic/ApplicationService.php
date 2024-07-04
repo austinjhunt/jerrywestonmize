@@ -15,6 +15,16 @@ class ApplicationService extends \AmeliaBooking\Infrastructure\Licence\Starter\A
     /**
      * @param Container $c
      *
+     * @return ApplicationServices\Tax\AbstractTaxApplicationService
+     */
+    public static function getTaxService($c)
+    {
+        return new ApplicationServices\Tax\TaxApplicationService($c);
+    }
+
+    /**
+     * @param Container $c
+     *
      * @return ApplicationServices\Deposit\AbstractDepositApplicationService
      */
     public static function getDepositService($c)

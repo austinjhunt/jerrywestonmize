@@ -18,6 +18,8 @@ class Entities
     const CART = 'cart';
     const CATEGORIES = 'categories';
     const CATEGORY = 'category';
+    const TAX = 'tax';
+    const TAXES = 'taxes';
     const COUPON = 'coupon';
     const COUPONS = 'coupons';
     const CUSTOM_FIELD = 'custom_field';

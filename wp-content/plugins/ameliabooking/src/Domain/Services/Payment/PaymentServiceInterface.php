@@ -15,10 +15,11 @@ interface PaymentServiceInterface
 {
     /**
      * @param array $data
+     * @param array $transfers
      *
      * @return mixed
      */
-    public function execute($data);
+    public function execute($data, &$transfers);
 
     /**
      * @param array $data
@@ -36,10 +37,12 @@ interface PaymentServiceInterface
 
     /**
      * @param string $id
+     * @param array|null $transfers
      *
      * @return mixed
+     * @throws \Exception
      */
-    public function getTransactionAmount($id);
+    public function getTransactionAmount($id, $transfers);
 
     /**
      * @param array $data

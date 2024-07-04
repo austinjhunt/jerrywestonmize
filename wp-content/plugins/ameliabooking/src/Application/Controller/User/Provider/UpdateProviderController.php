@@ -50,6 +50,7 @@ class UpdateProviderController extends Controller
         'translations',
         'timeZone',
         'badgeId',
+        'stripeConnect',
     ];
 
     /**

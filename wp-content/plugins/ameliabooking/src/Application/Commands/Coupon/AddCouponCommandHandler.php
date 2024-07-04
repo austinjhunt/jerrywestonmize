@@ -15,7 +15,6 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Coupon\CouponFactory;
-use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
@@ -70,11 +69,6 @@ class AddCouponCommandHandler extends CommandHandler
         /** @var PackageRepository $packageRepository */
         $packageRepository = $this->container->get('domain.bookable.package.repository');
 
-        /** @var Collection $services */
-        $services = $command->getFields()['services'] ? $serviceRepository->getByCriteria([
-            'services' => $command->getFields()['services']
-        ]) : new Collection();
-
         $couponArray = $command->getFields();
 
         $couponArray = apply_filters('amelia_before_coupon_added_filter', $couponArray);
@@ -84,28 +78,39 @@ class AddCouponCommandHandler extends CommandHandler
         /** @var Coupon $coupon */
         $coupon = CouponFactory::create($couponArray);
 
-        $coupon->setServiceList($services);
-
-        /** @var Collection $events */
-        $events = $command->getFields()['events'] ? $eventRepository->getFiltered([
-            'ids' => $command->getFields()['events']
-        ]) : new Collection();
-
-        $coupon->setEventList($events);
-
-        /** @var Collection $packages */
-        $packages = $command->getFields()['packages'] ? $packageRepository->getByCriteria([
-            'packages' => $command->getFields()['packages']
-        ]) : new Collection();
-
-        $coupon->setPackageList($packages);
-
-        if (!$coupon instanceof Coupon) {
+        if (!($coupon instanceof Coupon)) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Unable to create coupon.');
 
             return $result;
         }
+
+        /** @var Collection $services */
+        $services = $command->getFields()['services'] ? $serviceRepository->getByCriteria(
+            [
+                'services' => $command->getFields()['services']
+            ]
+        ) : new Collection();
+
+        $coupon->setServiceList($services);
+
+        /** @var Collection $events */
+        $events = $command->getFields()['events'] ? $eventRepository->getFiltered(
+            [
+                'ids' => $command->getFields()['events']
+            ]
+        ) : new Collection();
+
+        $coupon->setEventList($events);
+
+        /** @var Collection $packages */
+        $packages = $command->getFields()['packages'] ? $packageRepository->getByCriteria(
+            [
+                'packages' => $command->getFields()['packages']
+            ]
+        ) : new Collection();
+
+        $coupon->setPackageList($packages);
 
         /** @var CouponRepository $couponRepository */
         $couponRepository = $this->container->get('domain.coupon.repository');
@@ -115,23 +120,22 @@ class AddCouponCommandHandler extends CommandHandler
 
         $couponRepository->beginTransaction();
 
-        try {
-            if (!($couponId = $couponAS->add($coupon))) {
-                $couponRepository->rollback();
-                return $result;
-            }
-
-            $coupon->setId(new Id($couponId));
-        } catch (QueryExecutionException $e) {
+        if (!$couponAS->add($coupon)) {
             $couponRepository->rollback();
-            throw $e;
+
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Unable to create coupon.');
+
+            return $result;
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('New coupon successfully created.');
-        $result->setData([
-            Entities::COUPON => $coupon->toArray(),
-        ]);
+        $result->setData(
+            [
+                Entities::COUPON => $coupon->toArray(),
+            ]
+        );
 
         $couponRepository->commit();
 

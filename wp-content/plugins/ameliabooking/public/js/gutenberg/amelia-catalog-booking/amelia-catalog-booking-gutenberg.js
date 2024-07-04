@@ -386,21 +386,25 @@
 
           inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
 
-          inspectorElements.push(el(components.SelectControl, {
-            id: 'amelia-js-select-employee',
-            label: wpAmeliaLabels.select_employee,
-            value: attributes.employee,
-            options: options.employees,
-            multiple: true,
-            className: 'amelia-gutenberg-multi-select',
-            onChange: function (selectControl) {
-              return props.setAttributes({employee: selectControl})
-            }
-          }))
+          inspectorElements.push(el('div', {class: 'amelia-gutenberg-multi-select-note'}, wpAmeliaLabels.multiselect_note))
 
-          inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+          if (employees && employees.length > 1) {
+            inspectorElements.push(el(components.SelectControl, {
+              id: 'amelia-js-select-employee',
+              label: wpAmeliaLabels.select_employee,
+              value: attributes.employee,
+              options: options.employees,
+              multiple: true,
+              className: 'amelia-gutenberg-multi-select',
+              onChange: function (selectControl) {
+                return props.setAttributes({employee: selectControl})
+              }
+            }))
 
-          if (locations.length) {
+            inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+          }
+
+          if (locations && locations.length > 1) {
             inspectorElements.push(el(components.SelectControl, {
               id: 'amelia-js-select-location',
               label: wpAmeliaLabels.select_location,

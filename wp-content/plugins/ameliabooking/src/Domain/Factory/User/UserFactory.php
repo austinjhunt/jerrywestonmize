@@ -16,6 +16,7 @@ use AmeliaBooking\Domain\Factory\Schedule\SpecialDayFactory;
 use AmeliaBooking\Domain\Factory\Schedule\SpecialDayPeriodFactory;
 use AmeliaBooking\Domain\Factory\Schedule\SpecialDayPeriodLocationFactory;
 use AmeliaBooking\Domain\Factory\Schedule\SpecialDayPeriodServiceFactory;
+use AmeliaBooking\Domain\Factory\Stripe\StripeFactory;
 use AmeliaBooking\Domain\ValueObjects\DateTime\Birthday;
 use AmeliaBooking\Domain\ValueObjects\Gender;
 use AmeliaBooking\Domain\ValueObjects\Json;
@@ -194,6 +195,10 @@ class UserFactory
 
                 if (!empty($data['zoomUserId'])) {
                     $user->setZoomUserId(new Name($data['zoomUserId']));
+                }
+
+                if (!empty($data['stripeConnect'])) {
+                    $user->setStripeConnect(StripeFactory::create($data['stripeConnect']));
                 }
 
                 if (!empty($data['timeZone'])) {

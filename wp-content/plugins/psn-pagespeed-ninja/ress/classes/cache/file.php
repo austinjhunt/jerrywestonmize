@@ -180,4 +180,57 @@ class Ressio_Cache_File implements IRessio_Cache, IRessio_DIAware
 
         return true;
     }
+
+    /**
+     * @return ?array<string,int>
+     */
+    public function clearExpired()
+    {
+
+        $di = $this->di;
+        $fs = $di->filesystem;
+
+        $cachedir = $di->config->cachedir;
+        $ttl = $di->config->cachettl;
+        if ($ttl <= 0) {
+            $ttl = (int)ini_get('max_execution_time');
+        }
+
+        $now = time();
+
+        // wait for double ttl to clear cache (1 TTL for cache + 1 TTL for pagecache)
+        $aging_time = $now - 2 * $ttl;
+
+        $file_list = array();
+
+        $staticdir = $di->config->webrootpath . $di->config->staticdir;
+
+        // iterate cache directory
+        foreach (scandir($cachedir, SCANDIR_SORT_NONE) as $subdir) {
+            $subdir_path = "$cachedir/$subdir";
+            if ($subdir[0] === '.' || !is_dir($subdir_path)) {
+                continue;
+            }
+            $h = opendir($subdir_path);
+            $remove_dir = true;
+            while (($file = readdir($h)) !== false) {
+                $file_path = "$subdir_path/$file";
+                if ($file[0] === '.' || !is_file($file_path)) {
+                    continue;
+                }
+                if ($fs->getModificationTime($file_path) < $aging_time) {
+                    unlink($file_path);
+                    continue;
+                }
+                $remove_dir = false;
+                $file_list = array_replace($file_list, Ressio_CacheCleaner::collectRefs($file, file_get_contents($file_path), $staticdir));
+            }
+            closedir($h);
+            if ($remove_dir) {
+                @rmdir($subdir_path);
+            }
+        }
+
+        return $file_list;
+    }
 }

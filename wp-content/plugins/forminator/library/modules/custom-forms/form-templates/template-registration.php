@@ -20,9 +20,11 @@ class Forminator_Template_Registration extends Forminator_Template {
 		return array(
 			'id'          => 'registration',
 			'name'        => esc_html__( 'Registration', 'forminator' ),
-			'description' => esc_html__( 'A simple contact form for your users to contact you', 'forminator' ),
+			'description' => esc_html__( 'A general-purpose registration form suitable for events, services, or websites, including personal and contact details.', 'forminator' ),
 			'icon'        => 'profile-male',
-			'priortiy'    => 5,
+			'priority'    => 5,
+			'category'    => 'custom-form',
+			'pro'         => false,
 		);
 	}
 
@@ -155,6 +157,11 @@ class Forminator_Template_Registration extends Forminator_Template {
 			'cform-multiselect-custom-font'    => '',
 			'cform-multiselect-font-size'      => '16',
 			'cform-multiselect-font-weight'    => 'normal',
+			// Typography - Multi Select tag.
+			'cform-multiselect-tag-font-family'    => 'Roboto',
+			'cform-multiselect-tag-custom-font'    => '',
+			'cform-multiselect-tag-font-size'      => '12',
+			'cform-multiselect-tag-font-weight'    => 'medium',
 			// Typography - Dropdown.
 			'cform-dropdown-font-family'       => 'Roboto',
 			'cform-dropdown-custom-font'       => '',

@@ -106,8 +106,10 @@ class RazorpayPaymentCommandHandler extends CommandHandler
 
         do_action('amelia_before_razorpay_execute', $orderData, $reservation->getReservation()->toArray());
 
+        $transfers = [];
+
         try {
-            $razorpayOrder = $paymentService->execute($orderData);
+            $razorpayOrder = $paymentService->execute($orderData, $transfers);
         } catch (\Exception $e) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage(FrontendStrings::getCommonStrings()['payment_error']);

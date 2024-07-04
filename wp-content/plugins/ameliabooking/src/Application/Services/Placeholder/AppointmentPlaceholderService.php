@@ -10,13 +10,20 @@ use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Category;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Extra;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
+use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\Coupon\Coupon;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
+use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
+use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
@@ -25,6 +32,7 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\CategoryRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ExtraRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
+use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
@@ -854,6 +862,65 @@ class AppointmentPlaceholderService extends PlaceholderService
                 $type === 'email' ? '<p><br></p>' :  ($type === 'whatsapp' ? '; ' : PHP_EOL),
                 $groupAppointmentDetails
             ) : ''
+        ];
+    }
+
+    /**
+     * @param array $bookingArray
+     * @param array $entity
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     */
+    public function getAmountData(&$bookingArray, $entity)
+    {
+        /** @var ReservationServiceInterface $reservationService */
+        $reservationService = $this->container->get('application.reservation.service')->get(Entities::APPOINTMENT);
+
+        if (!empty($bookingArray['couponId']) && empty($bookingArray['coupon'])) {
+            /** @var CouponRepository $couponRepository */
+            $couponRepository = $this->container->get('domain.coupon.repository');
+
+            /** @var Coupon $coupon */
+            $coupon = $couponRepository->getById($bookingArray['couponId']);
+
+            $bookingArray['coupon'] = $coupon ? $coupon->toArray() : null;
+        }
+
+        $extras = [];
+
+        foreach ($bookingArray['extras'] as $extra) {
+            $extras[$extra['extraId']] = [
+                'price'           => $extra['price'],
+                'aggregatedPrice' => !!$extra['aggregatedPrice'],
+            ];
+        }
+
+        /** @var AbstractBookable $bookable */
+        $bookable = ServiceFactory::create(
+            [
+                'price'           => $bookingArray['price'],
+                'aggregatedPrice' => !!$bookingArray['aggregatedPrice'],
+                'extras'          => $extras,
+            ]
+        );
+
+        /** @var CustomerBooking $booking */
+        $booking = CustomerBookingFactory::create(
+            [
+                'persons' => $bookingArray['persons'],
+                'coupon'  => $bookingArray['coupon'],
+                'extras'  => $bookingArray['extras'],
+                'tax'     => $bookingArray['tax'],
+            ]
+        );
+
+        return [
+            'price'     => $reservationService->getPaymentAmount($booking, $bookable),
+            'discount'  => $reservationService->getPaymentAmount($booking, $bookable, 'discount'),
+            'deduction' => $reservationService->getPaymentAmount($booking, $bookable, 'deduction'),
         ];
     }
 }

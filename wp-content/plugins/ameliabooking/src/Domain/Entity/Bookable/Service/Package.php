@@ -13,7 +13,7 @@ use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\DiscountPercentageValue;
 use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\PositiveInteger;
-use AmeliaBooking\Domain\ValueObjects\String\BookingType;
+use AmeliaBooking\Domain\ValueObjects\String\BookableType;
 use AmeliaBooking\Domain\ValueObjects\String\Label;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
@@ -191,11 +191,11 @@ class Package extends AbstractBookable
     }
 
     /**
-     * @return BookingType
+     * @return BookableType
      */
     public function getType()
     {
-        return new Bookingtype(Entities::PACKAGE);
+        return new BookableType(Entities::PACKAGE);
     }
 
 

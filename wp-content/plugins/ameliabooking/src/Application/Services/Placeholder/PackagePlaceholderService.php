@@ -8,12 +8,16 @@ namespace AmeliaBooking\Application\Services\Placeholder;
 
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomerService;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Factory\Bookable\Service\PackageFactory;
 use AmeliaBooking\Domain\Factory\User\UserFactory;
+use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
@@ -82,6 +86,10 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
         /** @var HelperService $helperService */
         $helperService = $this->container->get('application.helper.service');
 
+        if (!empty($customer) && empty($package['customer'])) {
+            $package['customer'] = $customer->toArray();
+        }
+
         $locale = !empty($package['isForCustomer']) && !empty($package['customer']['translations']) ?
             $helperService->getLocaleFromTranslations(
                 $package['customer']['translations']
@@ -109,7 +117,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                 $package,
                 $type,
                 0,
-                $customer ?: UserFactory::create($package['customer'])
+                UserFactory::create($package['customer'])
             ),
             $this->getRecurringAppointmentsData($package, $bookingKey, $type, 'package', null),
             [
@@ -132,14 +140,6 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
     {
         /** @var HelperService $helperService */
         $helperService = $this->container->get('application.helper.service');
-
-        $price = $package['price'];
-
-        if (!$package['calculatedPrice'] && $package['discount']) {
-            $subtraction = $price / 100 * $package['discount'];
-
-            $price = (float)round($price - $subtraction, 2);
-        }
 
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
@@ -165,8 +165,19 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
 
         $deposit = null;
 
+        /** @var PackageCustomer $packageCustomer */
+        $packageCustomer = null;
+
         /** @var PackageCustomerService $packageCustomerService */
         foreach ($packageCustomerServices->getItems() as $packageCustomerService) {
+            /** @var PackageCustomerRepository $packageCustomerRepository */
+            $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
+
+            /** @var PackageCustomer $packageCustomer */
+            $packageCustomer = $packageCustomerRepository->getById(
+                $packageCustomerService->getPackageCustomer()->getId()->getValue()
+            );
+
             if ($packageCustomerService->getPackageCustomer()->getEnd()) {
                 if ($endDate === null) {
                     $endDate = $packageCustomerService->getPackageCustomer()->getEnd()->getValue();
@@ -176,6 +187,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                     $endDate = $packageCustomerService->getPackageCustomer()->getEnd()->getValue();
                 }
             }
+
             if ($packageCustomerService->getPackageCustomer()->getPayments()) {
                 $payments = $packageCustomerService->getPackageCustomer()->getPayments()->getItems();
                 /** @var Payment $payment */
@@ -204,18 +216,14 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                 /** @var CouponRepository $couponRepository */
                 $couponRepository = $this->container->get('domain.coupon.repository');
 
-                /** @var PackageCustomerRepository $packageCustomerRepository */
-                $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
-
-                /** @var PackageCustomer $packageCustomer */
-                $packageCustomer = $packageCustomerRepository->getById(
-                    $packageCustomerService->getPackageCustomer()->getId()->getValue()
-                );
-
                 $couponId = $packageCustomer->getCouponId()->getValue();
 
                 /** @var Coupon $coupon */
-                $coupon = $couponRepository->getById($couponId)->toArray();
+                $coupon = $couponRepository->getById($couponId);
+
+                $packageCustomer->setCoupon($coupon);
+
+                $coupon = $coupon->toArray();
             }
         }
 
@@ -224,14 +232,28 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
 
         $couponsUsed = [];
 
-        $deductionValue = 0;
+        /** @var ReservationServiceInterface $reservationService */
+        $reservationService = $this->container->get('application.reservation.service')->get(Entities::PACKAGE);
 
-        $discountValue = 0;
+        /** @var Package $bookable */
+        $bookable = PackageFactory::create(
+            [
+                'price'           => $package['price'],
+                'calculatedPrice' => $package['calculatedPrice'],
+                'discount'        => $package['discount'],
+            ]
+        );
+
+        $price = $reservationService->getPaymentAmount($packageCustomer, $bookable);
+
+        $discountValue = $reservationService->getPaymentAmount($packageCustomer, $bookable, 'discount');
+
+        $deductionValue = $reservationService->getPaymentAmount($packageCustomer, $bookable, 'deduction');
 
         $expirationDate = null;
 
         // get coupon for WC description
-        if ($coupon === null && !empty($package['bookings']) && $package['bookings'][0]['couponId']) {
+        if ($coupon === null && !empty($package['bookings']) && !empty($package['bookings'][0]['couponId'])) {
             /** @var CouponRepository $couponRepository */
             $couponRepository = $this->container->get('domain.coupon.repository');
 
@@ -239,20 +261,6 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
         }
 
         if ($coupon) {
-            if (!empty($coupon['deduction'])) {
-                $deductionValue = $coupon['deduction'];
-
-                $price -= $coupon['deduction'];
-            }
-
-            if (!empty($coupon['discount'])) {
-                $discountValue = $price -
-                    (1 - $coupon['discount'] / 100) * $price;
-
-                $price =
-                    (1 - $coupon['discount'] / 100) * $price;
-            }
-
             if (!empty($coupon['expirationDate'])) {
                 $expirationDate = $coupon['expirationDate'];
             }

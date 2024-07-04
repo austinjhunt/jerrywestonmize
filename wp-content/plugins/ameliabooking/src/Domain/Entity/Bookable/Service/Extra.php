@@ -3,10 +3,12 @@
 namespace AmeliaBooking\Domain\Entity\Bookable\Service;
 
 use AmeliaBooking\Domain\Entity\Bookable\AbstractExtra;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Duration;
+use AmeliaBooking\Domain\ValueObjects\String\BookableType;
 
 /**
  * Class Extra
@@ -90,6 +92,14 @@ class Extra extends AbstractExtra
     public function setTranslations(Json $translations)
     {
         $this->translations = $translations;
+    }
+
+    /**
+     * @return BookableType
+     */
+    public function getType()
+    {
+        return new BookableType(Entities::EXTRA);
     }
 
     /**

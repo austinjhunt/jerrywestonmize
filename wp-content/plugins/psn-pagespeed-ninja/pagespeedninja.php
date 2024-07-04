@@ -7,7 +7,7 @@
  * Plugin Name:       PageSpeed Ninja
  * Plugin URI:        https://pagespeed.ninja/download/
  * Description:       Unleash lightning fast page speed performance: image, CSS, JS optimization, lazy loading, compression, caching, convert to WebP, and more!
- * Version:           1.4.2
+ * Version:           1.4.3
  * Requires at least: 4.6
  * Requires PHP:      5.6
  * Author:            PageSpeed Ninja

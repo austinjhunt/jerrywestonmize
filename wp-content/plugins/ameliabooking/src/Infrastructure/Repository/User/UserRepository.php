@@ -55,6 +55,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             ':password'         => isset($data['password']) ? $data['password'] : null,
             ':usedTokens'       => isset($data['usedTokens']) ? $data['usedTokens'] : null,
             ':countryPhoneIso'  => isset($data['countryPhoneIso']) ? $data['countryPhoneIso'] : null,
+            ':stripeConnect'    => !empty($data['stripeConnect']) ? json_encode($data['stripeConnect']) : null,
         ];
 
         $additionalData = Licence\DataModifier::getUserRepositoryData($data);
@@ -80,6 +81,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 `pictureThumbPath`,
                 `countryPhoneIso`,
                 `usedTokens`,
+                `stripeConnect`,
                 `password`
                 ) VALUES (
                 {$additionalData['placeholders']}
@@ -98,6 +100,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 :pictureThumbPath,
                 :countryPhoneIso,
                 :usedTokens,
+                :stripeConnect,
                 :password
                 )"
             );
@@ -139,6 +142,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             ':pictureThumbPath' => $data['pictureThumbPath'],
             ':countryPhoneIso'  => isset($data['countryPhoneIso']) ? $data['countryPhoneIso'] : null,
             ':password'         => isset($data['password']) ? $data['password'] : null,
+            ':stripeConnect'    => !empty($data['stripeConnect']) ? json_encode($data['stripeConnect']) : null,
             ':id'               => $id,
         ];
 
@@ -163,6 +167,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 `countryPhoneIso` = :countryPhoneIso,
                 `pictureFullPath` = :pictureFullPath,
                 `pictureThumbPath` = :pictureThumbPath,
+                `stripeConnect` = :stripeConnect,
                 `password` = IFNULL(:password, `password`)
                 WHERE 
                 id = :id"

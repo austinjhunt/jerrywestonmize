@@ -60,13 +60,13 @@ class PaymentLinkCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage(
-            !empty(array_values($paymentLinks)[0]['link'])
-                ? 'Successfully created link' : array_values($paymentLinks)[1]
+            !empty($paymentLinks) && empty($paymentLinks['payment_link_error_message']) && !empty(array_values($paymentLinks)[0])
+                ? 'Successfully created link' : $paymentLinks['payment_link_error_message']
         );
         $result->setData(
             [
-                'paymentLink' => array_values($paymentLinks)[0],
-                'error'       => array_values($paymentLinks)[1]
+                'paymentLink' => !empty($paymentLinks['payment_link_error_message']) ? '' : array_values($paymentLinks)[0],
+                'error'       => !empty($paymentLinks['payment_link_error_message']) ? $paymentLinks['payment_link_error_message'] : ''
             ]
         );
 

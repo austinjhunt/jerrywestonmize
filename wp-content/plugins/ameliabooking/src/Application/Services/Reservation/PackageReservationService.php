@@ -8,6 +8,7 @@ use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationServic
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
 use AmeliaBooking\Application\Services\Deposit\AbstractDepositApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
+use AmeliaBooking\Application\Services\Tax\TaxApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\BookingsLimitReachedException;
 use AmeliaBooking\Domain\Common\Exceptions\BookingUnavailableException;
@@ -25,7 +26,9 @@ use AmeliaBooking\Domain\Entity\Booking\Reservation;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
+use AmeliaBooking\Domain\Entity\Tax\Tax;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -37,7 +40,6 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepo
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
-use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
@@ -180,10 +182,8 @@ class PackageReservationService extends AppointmentReservationService
         $packageCustomer = $packageApplicationService->addPackageCustomer(
             $package,
             $appointmentData['bookings'][0]['customer']['id'],
-            $appointmentData['utcOffset'],
-            $this->getPaymentAmount(null, $package),
-            $save,
-            $coupon ? $coupon->getId()->getValue() : null
+            $coupon,
+            $save
         );
 
         /** @var Collection $packageCustomerServices */
@@ -220,6 +220,7 @@ class PackageReservationService extends AppointmentReservationService
         $reservation->setBookable($package);
 
         $reservation->setPackageCustomerServices($packageCustomerServices);
+        $reservation->setPackageCustomer($packageCustomer);
 
         /** @var Collection $packageReservations */
         $packageReservations = new Collection();
@@ -282,10 +283,10 @@ class PackageReservationService extends AppointmentReservationService
                 if ($save) {
                     /** @var Reservation $packageReservation */
                     foreach ($packageReservations->getItems() as $packageReservation) {
-                        $this->deleteReservation($packageReservation);
+                        $this->deleteSingleReservation($packageReservation);
                     }
 
-                    $this->deleteReservation($reservation);
+                    $this->deleteSingleReservation($reservation);
 
                     $packageApplicationService->deletePackageCustomer($packageCustomerServices);
                 }
@@ -299,7 +300,7 @@ class PackageReservationService extends AppointmentReservationService
         $reservation->setPackageReservations($packageReservations);
         $reservation->setRecurring(new Collection());
 
-        $paymentAmount = $this->getPaymentAmount($reservation->getBooking(), $package, $coupon ? $coupon->toArray():$coupon);
+        $paymentAmount = $this->getPaymentAmount($packageCustomer, $package);
 
         $applyDeposit = $appointmentData['deposit'] && $appointmentData['payment']['gateway'] !== PaymentType::ON_SITE;
 
@@ -510,7 +511,7 @@ class PackageReservationService extends AppointmentReservationService
 
         return [
             'type'               => Entities::PACKAGE,
-            'utcOffset'          => $booking['utcOffset'],
+            'utcOffset'          => !empty($booking) ? $booking['utcOffset'] : null,
             'packageId'          => $package['id'],
             'name'               => $package['name'],
             'couponId'           => '',
@@ -539,7 +540,7 @@ class PackageReservationService extends AppointmentReservationService
             'timeZone'           => $customerInfo ? $customerInfo['timeZone'] : null,
             'recurring'          => [],
             'package'            => $packageAppointmentsData,
-            'deposit'            => $booking['price'] > $booking['payments'][0]['amount'],
+            'deposit'            => !empty($booking) ? $booking['price'] > $booking['payments'][0]['amount'] : null,
             'customer'           => array_merge(
                 [
                     'locale'             => $customerInfo ? $customerInfo['locale'] : null,
@@ -570,19 +571,10 @@ class PackageReservationService extends AppointmentReservationService
         /** @var Package $bookable */
         $bookable = $reservation->getBookable();
 
-        $coupon = null;
+        /** @var PackageCustomer $packageCustomer */
+        $packageCustomer = $reservation->getPackageCustomer();
 
-        $couponId = $reservation->getPackageCustomerServices()->getItems()[0]->getPackageCustomer()->getCouponId();
-
-        if ($couponId) {
-
-            /** @var CouponRepository $couponRepository */
-            $couponRepository = $this->container->get('domain.coupon.repository');
-
-            $coupon = $couponRepository->getById($couponId->getValue());
-        }
-
-        $paymentAmount = $this->getPaymentAmount($reservation->getBooking(), $bookable, $coupon ? $coupon->toArray() : null);
+        $paymentAmount = $this->getPaymentAmount($packageCustomer, $bookable);
 
         if ($reservation->getApplyDeposit()->getValue()) {
             $paymentAmount = $depositAS->calculateDepositAmount(
@@ -596,38 +588,99 @@ class PackageReservationService extends AppointmentReservationService
     }
 
     /**
-     * @param CustomerBooking $booking
-     * @param Package         $bookable
+     * @param Reservation $reservation
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    public function getProvidersPaymentAmount($reservation)
+    {
+        $amountData = [];
+
+        /** @var Package $bookable */
+        $bookable = $reservation->getBookable();
+
+        /** @var PackageCustomerService $packageCustomerService */
+        foreach ($reservation->getPackageCustomerServices()->getItems() as $packageCustomerService) {
+            /** @var Payment $payment */
+            $payment = $packageCustomerService->getPackageCustomer()->getPayments()->getItem(
+                $packageCustomerService->getPackageCustomer()->getPayments()->keys()[0]
+            );
+
+            /** @var PackageService $packageService */
+            foreach ($bookable->getBookable()->getItems() as $packageService) {
+                /** @var Provider $provider */
+                foreach ($packageService->getProviders()->getItems() as $provider) {
+                    if ($provider->getStripeConnect() &&
+                        $provider->getStripeConnect()->getId() &&
+                        $provider->getStripeConnect()->getId()->getValue()
+                    ) {
+                        $amountData[$provider->getId()->getValue()][0] = [
+                            'paymentId' => $payment->getId()->getValue(),
+                            'amount'    => $this->getReservationPaymentAmount($reservation),
+                        ];
+                    }
+                }
+            }
+        }
+
+        return sizeof($amountData) > 1 ? [] : $amountData;
+    }
+
+    /**
+     * @param PackageCustomer|null $booking
+     * @param Package              $bookable
+     * @param string|null          $reduction
      *
      * @return float
+     * @throws InvalidArgumentException
      */
-    public function getPaymentAmount($booking, $bookable, $coupon = null)
+    public function getPaymentAmount($booking, $bookable, $reduction = null)
     {
-        $price = $bookable->getPrice()->getValue();
+        /** @var TaxApplicationService $taxApplicationService */
+        $taxApplicationService = $this->container->get('application.tax.service');
 
-        $couponDiscount = 0;
+        /** @var Tax $packageTax */
+        $packageTax = $booking ? $this->getTax($booking->getTax()) : null;
+
+        $price = $bookable->getPrice()->getValue();
 
         if (!$bookable->getCalculatedPrice()->getValue() && $bookable->getDiscount()->getValue()) {
             $subtraction = $price / 100 * ($bookable->getDiscount()->getValue() ?: 0);
 
-            $totalPrice = $bookable->getPrice()->getValue() - $subtraction;
-
-            if ($coupon) {
-                $couponDiscount = $totalPrice / 100 *
-                    ($coupon['discount'] ?: 0) +
-                    ($coupon['deduction'] ?: 0);
-            }
-
-            return (float)round($totalPrice - $couponDiscount, 2);
+            $price = $bookable->getPrice()->getValue() - $subtraction;
         }
 
-        if ($coupon) {
-            $couponDiscount = $price / 100 *
-                ($coupon['discount'] ?: 0) +
-                ($coupon['deduction'] ?: 0);
+        if ($packageTax && !$packageTax->getExcluded()->getValue() && $booking && $booking->getCoupon()) {
+            $price = $taxApplicationService->getBasePrice($price, $packageTax);
         }
 
-        return (float)round($price - $couponDiscount, 2);
+        $subtraction = 0;
+
+        $reductionAmount = [
+            'deduction' => 0,
+            'discount'  => 0,
+        ];
+
+        if ($booking && $booking->getCoupon()) {
+            $reductionAmount['discount'] = $price / 100 * ($booking->getCoupon()->getDiscount()->getValue() ?: 0);
+
+            $reductionAmount['deduction'] = $booking->getCoupon()->getDeduction()->getValue();
+
+            $subtraction = $reductionAmount['discount'] + $reductionAmount['deduction'];
+
+            $price = max($price - $subtraction, 0);
+        }
+
+        if ($packageTax && ($packageTax->getExcluded()->getValue() || $subtraction)) {
+            $price += $this->getTaxAmount($packageTax, $price);
+        }
+
+        $price = (float)max(round($price, 2), 0);
+
+        return $reduction === null ?
+            apply_filters('amelia_modify_payment_amount', $price, $booking)
+            : $reductionAmount[$reduction];
     }
 
     /**
@@ -806,5 +859,33 @@ class PackageReservationService extends AppointmentReservationService
         );
 
         return $result;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return void
+     * @throws QueryExecutionException
+     */
+    public function manageTaxes(&$data)
+    {
+        /** @var TaxApplicationService $taxAS */
+        $taxAS = $this->container->get('application.tax.service');
+
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        $taxesSettings = $settingsService->getSetting(
+            'payments',
+            'taxes'
+        );
+
+        if ($taxesSettings['enabled']) {
+            $data['tax'] = $taxAS->getTaxData(
+                $data['packageId'],
+                Entities::PACKAGE,
+                $taxAS->getAll()
+            );
+        }
     }
 }

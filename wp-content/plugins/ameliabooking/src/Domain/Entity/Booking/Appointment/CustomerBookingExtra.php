@@ -7,6 +7,7 @@
 namespace AmeliaBooking\Domain\Entity\Booking\Appointment;
 
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\PositiveInteger;
@@ -36,6 +37,9 @@ class CustomerBookingExtra
     /** @var  BooleanValueObject */
     protected $aggregatedPrice;
 
+    /** @var Json */
+    protected $tax;
+
     /**
      * CustomerBookingExtra constructor.
      *
@@ -47,6 +51,7 @@ class CustomerBookingExtra
         PositiveInteger $quantity
     ) {
         $this->extraId = $extraId;
+
         $this->quantity = $quantity;
     }
 
@@ -147,6 +152,22 @@ class CustomerBookingExtra
     }
 
     /**
+     * @return Json
+     */
+    public function getTax()
+    {
+        return $this->tax;
+    }
+
+    /**
+     * @param Json $tax
+     */
+    public function setTax(Json $tax)
+    {
+        $this->tax = $tax;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
@@ -158,6 +179,9 @@ class CustomerBookingExtra
             'quantity'          => $this->getQuantity() ? $this->getQuantity()->getValue() : 1,
             'price'             => null !== $this->getPrice() ? $this->getPrice()->getValue() : null,
             'aggregatedPrice'   => $this->getAggregatedPrice() ? $this->getAggregatedPrice()->getValue() : null,
+            'tax'               => null !== $this->getTax()
+                ? json_decode($this->getTax()->getValue(), true)
+                : null,
         ];
     }
 }

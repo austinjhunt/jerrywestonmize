@@ -141,6 +141,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     cb.packageCustomerServiceId AS booking_packageCustomerServiceId,
                     cb.duration AS booking_duration,
                     cb.created AS booking_created,
+                    cb.tax AS booking_tax,
                     
                     cbe.id AS bookingExtra_id,
                     cbe.extraId AS bookingExtra_extraId,
@@ -148,6 +149,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     cbe.quantity AS bookingExtra_quantity,
                     cbe.price AS bookingExtra_price,
                     cbe.aggregatedPrice AS bookingExtra_aggregatedPrice,
+                    cbe.tax AS bookingExtra_tax,
                     
                     p.id AS payment_id,
                     p.packageCustomerId AS payment_packageCustomerId,
@@ -173,6 +175,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
 
                     pc.id AS package_customer_id,
                     pc.packageId AS package_customer_packageId,
+                    pc.tax AS package_customer_tax,
                     pc.price AS package_customer_price,
                     pc.couponId AS package_customer_couponId
                 FROM {$this->table} a
@@ -237,6 +240,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     cb.couponId AS booking_couponId,
                     cb.duration AS booking_duration,
                     cb.created AS booking_created,
+                    cb.tax AS booking_tax,
                     
                     cbe.id AS bookingExtra_id,
                     cbe.extraId AS bookingExtra_extraId,
@@ -244,6 +248,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     cbe.quantity AS bookingExtra_quantity,
                     cbe.price AS bookingExtra_price,
                     cbe.aggregatedPrice AS bookingExtra_aggregatedPrice,
+                    cbe.tax AS bookingExtra_tax,
                     
                     p.id AS payment_id,
                     p.packageCustomerId AS payment_packageCustomerId,
@@ -1130,6 +1135,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 cbe.customerBookingId AS bookingExtra_customerBookingId,
                 cbe.quantity AS bookingExtra_quantity,
                 cbe.price AS bookingExtra_price,
+                cbe.tax AS bookingExtra_tax,
                 cbe.aggregatedPrice AS bookingExtra_aggregatedPrice,
             ';
 
@@ -1192,6 +1198,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     cb.customerId AS booking_customerId,
                     cb.status AS booking_status,
                     cb.price AS booking_price,
+                    cb.tax AS booking_tax,
                     cb.persons AS booking_persons,
                     cb.customFields AS booking_customFields,
                     cb.info AS booking_info,

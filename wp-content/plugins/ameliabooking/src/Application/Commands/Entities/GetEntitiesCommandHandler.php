@@ -12,6 +12,7 @@ use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicatio
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Location\AbstractLocationApplicationService;
 use AmeliaBooking\Application\Services\Resource\AbstractResourceApplicationService;
+use AmeliaBooking\Application\Services\Tax\TaxApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -125,7 +126,7 @@ class GetEntitiesCommandHandler extends CommandHandler
             /** @var EventRepository $eventRepository */
             $eventRepository = $this->container->get('domain.booking.event.repository');
 
-            $dateFilter = ['dates' => [DateTimeService::getNowDateTime()]];
+            $dateFilter = ['dates' => [DateTimeService::getNowDateTime()], 'itemsPerPage' => 100, 'page' => 1];
 
             /** @var Collection $events */
             $events = $eventRepository->getFiltered($dateFilter);
@@ -292,6 +293,9 @@ class GetEntitiesCommandHandler extends CommandHandler
             if ($currentUser === null || $currentUser->getType() === AbstractUser::USER_ROLE_CUSTOMER) {
                 foreach ($resultData['employees'] as &$employee) {
                     unset(
+                        $employee['googleCalendar'],
+                        $employee['outlookCalendar'],
+                        $employee['stripeConnect'],
                         $employee['birthday'],
                         $employee['email'],
                         $employee['externalId'],
@@ -457,6 +461,17 @@ class GetEntitiesCommandHandler extends CommandHandler
             $resources = $resourceApplicationService->getAll([]);
 
             $resultData['resources'] = $resources->toArray();
+        }
+
+        /** Taxes */
+        if (in_array(Entities::TAXES, $params['types'], true)) {
+            /** @var TaxApplicationService $taxApplicationService */
+            $taxApplicationService = $this->container->get('application.tax.service');
+
+            /** @var Collection $taxes */
+            $taxes = $taxApplicationService->getAll();
+
+            $resultData['taxes'] = $taxes->toArray();
         }
 
         /** Lesson Spaces */

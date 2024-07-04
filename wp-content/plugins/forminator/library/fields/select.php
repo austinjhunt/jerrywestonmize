@@ -83,6 +83,7 @@ class Forminator_Select extends Forminator_Field {
 					'key'   => forminator_unique_key(),
 				),
 			),
+			'multiselect_style' => 'modern',
 		);
 	}
 
@@ -140,8 +141,10 @@ class Forminator_Select extends Forminator_Field {
 		$is_limit      = self::get_property( 'limit_status', $field, '' );
 		$placeholder   = esc_html( self::get_property( 'placeholder', $field, '' ) );
 		$calc_enabled  = self::get_property( 'calculations', $field, false, 'bool' );
+		$field_style   = self::get_property( 'multiselect_style', $field, 'standard' );
 
-		$hidden_behavior = self::get_property( 'hidden_behavior', $field );
+		$hidden_behavior      = self::get_property( 'hidden_behavior', $field );
+		$checkbox_in_dropdown = self::get_property( 'checkbox_in_dropdown', $field, 'hide' );
 
 		$html .= '<div class="forminator-field">';
 
@@ -156,7 +159,7 @@ class Forminator_Select extends Forminator_Field {
 			$hidden_calc_behavior = ' data-hidden-behavior="' . $hidden_behavior . '"';
 		}
 
-		if ( 'multiselect' === $field_type ) {
+		if ( 'multiselect' === $field_type && 'standard' === $field_style ) {
 			$post_value  = self::get_post_data( $name, self::FIELD_PROPERTY_VALUE_NOT_EXIST );
 			$field_name  = $name;
 			$name        = $name . '[]';
@@ -285,7 +288,7 @@ class Forminator_Select extends Forminator_Field {
 				$search = 'true';
 			}
 
-			if ( ! empty( $placeholder ) ) {
+			if ( ! empty( $placeholder ) && 'none' === $design  ) {
 				$options_markup = sprintf( '<option value="">%s</option>', $placeholder );
 			}
 
@@ -357,16 +360,35 @@ class Forminator_Select extends Forminator_Field {
 				);
 			}
 
+			$select_type        = '';
+			$has_checkbox       = 'false';
+			$allow_clear        = 'false';
+			$search_placeholder = $placeholder;
+
+			if ( 'multiselect' === $field_type && 'modern' === $field_style ) {
+				$select_type        = 'multiple';
+				$name               = $name . '[]';
+				$allow_clear        = 'true';
+				$search_placeholder = 'Search';
+
+				if ( 'show' === $checkbox_in_dropdown ) {
+					$has_checkbox = 'true';
+				}
+			}
 			$html .= sprintf(
-				'<select id="%s" class="%s" data-required="%s" name="%s" data-default-value="%s"%s data-placeholder="%s" data-search="%s" aria-labelledby="%s"%s>',
+				'<select %s id="%s" class="%s" data-required="%s" name="%s" data-default-value="%s"%s data-placeholder="%s" data-search="%s" data-search-placeholder="%s" data-checkbox="%s" data-allow-clear="%s" aria-labelledby="%s"%s>',
+				$select_type,
 				$id,
-				'forminator-select--field forminator-select2', // class.
+				'forminator-select--field forminator-select2 forminator-select2-multiple', // class.
 				$required,
 				$name,
 				$default,
 				$hidden_calc_behavior,
 				$placeholder,
 				$search,
+				$search_placeholder,
+				$has_checkbox,
+				$allow_clear,
 				esc_attr( $id . '-label' ),
 				( ! empty( $description ) ? ' aria-describedby="' . esc_attr( $id . '-description' ) . '"' : '' )
 			);

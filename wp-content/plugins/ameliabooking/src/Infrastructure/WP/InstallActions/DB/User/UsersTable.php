@@ -52,6 +52,7 @@ class UsersTable extends AbstractDatabaseTable
                   `password` varchar ({$password}) NULL,
                   `usedTokens` text NULL,
                   `zoomUserId` varchar({$name}) DEFAULT NULL,
+                  `stripeConnect` varchar({$name}) DEFAULT NULL,
                   `countryPhoneIso` varchar(2) DEFAULT NULL,
                   `translations` TEXT NULL DEFAULT NULL,
                   `timeZone` varchar({$name}) DEFAULT NULL,

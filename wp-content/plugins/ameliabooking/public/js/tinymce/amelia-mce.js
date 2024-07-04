@@ -53,8 +53,10 @@
           case ('stepbooking'):
 
             // Filter
-            filterItems = [
-              {
+            filterItems = []
+
+            if (categories.length > 1) {
+              filterItems.push({
                 type: 'listbox',
                 name: 'am_booking_category',
                 label: wpAmeliaLabels.select_category,
@@ -63,8 +65,11 @@
                   value: 0,
                   text: wpAmeliaLabels.show_all_categories
                 }].concat(categories),
-              },
-              {
+              })
+            }
+
+            if (services.length > 1) {
+              filterItems.push({
                 type: 'listbox',
                 name: 'am_booking_service',
                 label: wpAmeliaLabels.select_service,
@@ -73,8 +78,11 @@
                   value: 0,
                   text: wpAmeliaLabels.show_all_services
                 }].concat(services),
-              },
-              {
+              })
+            }
+
+            if (employees.length > 1) {
+              filterItems.push({
                 type: 'listbox',
                 name: 'am_booking_employee',
                 label: wpAmeliaLabels.select_employee,
@@ -83,10 +91,10 @@
                   value: 0,
                   text: wpAmeliaLabels.show_all_employees
                 }].concat(employees),
-              },
-            ]
+              })
+            }
 
-            if (locations.length) {
+            if (locations.length > 1) {
               filterItems.push({
                 type: 'listbox',
                 name: 'am_booking_location',
@@ -278,8 +286,10 @@
             }
 
             // Filter
-            filterItems = [
-              {
+            filterItems = []
+
+            if (employees.length > 1) {
+              filterItems.push({
                 type: 'listbox',
                 name: 'am_booking_employee',
                 label: wpAmeliaLabels.select_employee,
@@ -288,10 +298,10 @@
                   value: 0,
                   text: wpAmeliaLabels.show_all_employees
                 }].concat(employees),
-              },
-            ]
+              })
+            }
 
-            if (locations.length) {
+            if (locations.length > 1) {
               filterItems.push({
                 type: 'listbox',
                 name: 'am_booking_location',
@@ -371,6 +381,16 @@
               },
               {
                 type: 'listbox',
+                name: 'am_booking_location',
+                label: wpAmeliaLabels.select_location,
+                classes: 'am-booking-locations',
+                values: [{
+                  value: 0,
+                  text: wpAmeliaLabels.show_all_locations
+                }].concat(locations),
+              },
+              {
+                type: 'listbox',
                 name: 'am_booking_tag',
                 label: wpAmeliaLabels.select_tag,
                 classes: 'am-booking-tags',
@@ -420,7 +440,7 @@
               })
             }
 
-            if (view === 'events') {
+            if (view === 'events' && !parseInt(wpAmeliaLabels.isLite)) {
               viewBody.push({
                 type: 'listbox',
                 name: 'am_booking_event_view_type',
@@ -643,6 +663,10 @@
 
                 if (e.data.am_booking_tag) {
                   shortCodeString += ` tag="${e.data.am_booking_tag}"`
+                }
+
+                if (e.data.am_booking_location) {
+                  shortCodeString += ' location=' + e.data.am_booking_location
                 }
 
                 if (e.data.am_trigger) {

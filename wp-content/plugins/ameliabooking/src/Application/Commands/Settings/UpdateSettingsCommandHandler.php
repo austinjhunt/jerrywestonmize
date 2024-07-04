@@ -349,9 +349,6 @@ class UpdateSettingsCommandHandler extends CommandHandler
             isset($settingsFields['activation']['stash']) ? [
                 'stash' => $settingsFields['activation']['stash']
             ] : [],
-            isset($settingsFields['activation']['enablePolyfill']) ? [
-                'enablePolyfill' => $settingsFields['activation']['enablePolyfill']
-            ] : [],
             isset($settingsFields['activation']['showAmeliaPromoCustomizePopup']) ? [
                 'showAmeliaPromoCustomizePopup' => $settingsFields['activation']['showAmeliaPromoCustomizePopup']
             ] : [],
@@ -381,6 +378,9 @@ class UpdateSettingsCommandHandler extends CommandHandler
             ] : [],
             isset($settingsFields['activation']['premiumBannerVisibility']) ? [
                 'premiumBannerVisibility' => $settingsFields['activation']['premiumBannerVisibility']
+            ] : [],
+            isset($settingsFields['activation']['dismissibleBannerVisibility']) ? [
+                'dismissibleBannerVisibility' => $settingsFields['activation']['dismissibleBannerVisibility']
             ] : []
         );
 
@@ -426,7 +426,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
 
         $settings = $settingsService->getAllSettingsCategorized();
         $settings['general']['phoneDefaultCountryCode'] = $settings['general']['phoneDefaultCountryCode'] === 'auto' ?
-            $locationService->getCurrentLocationCountryIso() : $settings['general']['phoneDefaultCountryCode'];
+            $locationService->getCurrentLocationCountryIso($settings['general']['ipLocateApiKey']) : $settings['general']['phoneDefaultCountryCode'];
 
         do_action('amelia_after_settings_updated', $settingsFields);
 

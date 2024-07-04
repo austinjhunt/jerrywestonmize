@@ -135,6 +135,8 @@ class UpdateAppointmentCommandHandler extends CommandHandler
 
         $appointmentAS->convertTime($appointmentData);
 
+        $reservationService->manageTaxes($appointmentData);
+
         $removedBookingsData = $command->getField('removedBookings');
 
         // added check for API call when removedBookings not sent

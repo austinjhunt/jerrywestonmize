@@ -33,6 +33,7 @@ class EventsListBookingShortcodeService extends AmeliaBookingShortcodeService
                 'employee'      => null,
                 'tag'           => null,
                 'today'         => null,
+                'location'      => null,
             ],
             $params
         );

@@ -12,6 +12,7 @@ use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
@@ -113,6 +114,10 @@ class PaymentFactory
 
         if (!empty($data['transactionId'])) {
             $payment->setTransactionId($data['transactionId']);
+        }
+
+        if (!empty($data['transfers'])) {
+            $payment->setTransfers(new Json($data['transfers']));
         }
 
         return $payment;

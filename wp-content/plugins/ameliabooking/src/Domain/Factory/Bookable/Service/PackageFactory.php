@@ -254,6 +254,10 @@ class PackageFactory
                 $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['email'] = $row['provider_email'];
                 $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['status'] = !empty($row['provider_status']) ? $row['provider_status'] : Status::VISIBLE;
                 $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['type'] = Entities::PROVIDER;
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['stripeConnect'] =
+                    !empty($row['provider_stripeConnect'])
+                        ? json_decode($row['provider_stripeConnect'], true)
+                        : null;
             }
 
             if ($locationId) {

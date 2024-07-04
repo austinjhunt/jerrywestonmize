@@ -12,6 +12,8 @@ class DIVI_EventsList extends ET_Builder_Module
     private $events = array();
     private $tags   = array();
 
+    private $locations = array();
+
 
     protected $module_credits = array(
         'module_uri' => '',
@@ -36,6 +38,10 @@ class DIVI_EventsList extends ET_Builder_Module
 
         foreach ($data['tags'] as $tag) {
             $this->tags[$tag['name']] = $tag['name'] . ' (id: ' . $tag['id'] . ')';
+        }
+
+        foreach ($data['locations'] as $location) {
+            $this->locations[$location['id']] = $location['name'];
         }
     }
 
@@ -96,6 +102,17 @@ class DIVI_EventsList extends ET_Builder_Module
                     'off' => esc_html__(BackendStrings::getCommonStrings()['no'], 'divi-divi_amelia'),
                 ),
                 'toggle_slug'     => 'main_content',
+                'option_category' => 'basic_option',
+                'show_if'         => array(
+                    'booking_params' => 'on',
+                ),
+            ),
+            'locations' => array(
+                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_location'], 'divi-divi_amelia'),
+                'type'            => 'amelia_multi_select',
+                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_locations'],
+                'toggle_slug'     => 'main_content',
+                'options'         => $this->locations,
                 'option_category' => 'basic_option',
                 'show_if'         => array(
                     'booking_params' => 'on',
@@ -177,6 +194,10 @@ class DIVI_EventsList extends ET_Builder_Module
             $recurring = $this->props['recurring'];
             if ($recurring === 'on') {
                 $shortcode .= ' recurring=1';
+            }
+            $locations = $this->checkValues($this->props['locations']);
+            if ($locations && count($locations) > 0) {
+                $shortcode .= ' location=' . implode(',', $locations);
             }
         }
         $shortcode .= ']';

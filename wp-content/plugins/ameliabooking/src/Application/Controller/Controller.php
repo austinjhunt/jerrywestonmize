@@ -276,7 +276,7 @@ abstract class Controller
      */
     protected function filter(&$requestBody)
     {
-        if (empty(get_role('administrator')->capabilities['unfiltered_html']) && $requestBody) {
+        if (!current_user_can('unfiltered_html') && $requestBody) {
             $this->filterField($requestBody, 'description', 'description');
             $this->filterField($requestBody, 'label', 'name');
 

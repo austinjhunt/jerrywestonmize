@@ -57,6 +57,9 @@ class CustomField
     /** @var BooleanValueObject */
     private $useAsLocation;
 
+    /** @var IntegerValue */
+    private $width;
+
     /**
      * CustomField constructor.
      *
@@ -64,17 +67,20 @@ class CustomField
      * @param CustomFieldType    $type
      * @param BooleanValueObject $required
      * @param IntegerValue       $position
+     * @param IntegerValue       $width
      */
     public function __construct(
         Label $label,
         CustomFieldType $type,
         BooleanValueObject $required,
-        IntegerValue $position
+        IntegerValue $position,
+        IntegerValue $width
     ) {
         $this->label = $label;
         $this->type = $type;
         $this->required = $required;
         $this->position = $position;
+        $this->width = $width;
     }
 
     /**
@@ -269,6 +275,22 @@ class CustomField
         $this->useAsLocation = $useAsLocation;
     }
 
+    /**
+     * @return IntegerValue
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * @param IntegerValue $width
+     */
+    public function setWidth($width)
+    {
+        $this->position = $width;
+    }
+
 
     /**
      * @return array
@@ -287,7 +309,8 @@ class CustomField
             'translations' => $this->getTranslations() ? $this->getTranslations()->getValue() : null,
             'allServices'  => $this->getAllServices() ? $this->getAllServices()->getValue() : null,
             'allEvents'    => $this->getAllEvents() ? $this->getAllEvents()->getValue() : null,
-            'useAsLocation' => $this->getUseAsLocation() ? $this->getUseAsLocation()->getValue() : null
+            'useAsLocation' => $this->getUseAsLocation() ? $this->getUseAsLocation()->getValue() : null,
+            'width'         => $this->getWidth() ? $this->getWidth()->getValue() : 50
         ];
     }
 }

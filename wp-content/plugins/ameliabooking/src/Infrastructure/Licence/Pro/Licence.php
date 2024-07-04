@@ -46,6 +46,12 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Basic\Licence
                 // Payment
                 Commands\Payment\RefundPaymentCommand::class                       => new Commands\Payment\RefundPaymentCommandHandler($c),
                 Commands\Payment\GetTransactionAmountCommand::class                => new Commands\Payment\GetTransactionAmountCommandHandler($c),
+                // Stripe
+                Commands\Stripe\GetStripeAccountCommand::class                     => new Commands\Stripe\GetStripeAccountCommandHandler($c),
+                Commands\Stripe\GetStripeAccountsCommand::class                    => new Commands\Stripe\GetStripeAccountsCommandHandler($c),
+                Commands\Stripe\GetStripeAccountDashboardUrlCommand::class         => new Commands\Stripe\GetStripeAccountDashboardUrlCommandHandler($c),
+                Commands\Stripe\StripeOnboardRedirectCommand::class                => new Commands\Stripe\StripeOnboardRedirectCommandHandler($c),
+                Commands\Stripe\StripeAccountDisconnectCommand::class              => new Commands\Stripe\StripeAccountDisconnectCommandHandler($c),
             ]
         );
     }
@@ -63,6 +69,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Basic\Licence
         Routes\Bookable\Package::routes($app);
 
         Routes\Payment\Refund::routes($app);
+
+        Routes\Stripe\Stripe::routes($app);
 
         Routes\Notification\WhatsApp::routes($app);
     }

@@ -18,17 +18,47 @@ trait Forminator_Googlesheet_Settings_Trait {
 	 * @return array
 	 */
 	public function module_settings_wizards() {
+		$post_data = $this->get_post_data();
 		// numerical array steps.
-		return array(
+		$steps = array(
 			array(
 				'callback'     => array( $this, 'pick_name' ),
 				'is_completed' => array( $this, 'setup_name_is_completed' ),
 			),
 			array(
-				'callback'     => array( $this, 'setup_sheet' ),
+				'callback'     => array( $this, 'setup_spread_sheet' ),
+				'is_completed' => array( $this, 'setup_sheet_is_completed' ),
+			),
+			// @since 1.31 Google Sheets Addon
+			array(
+				'callback'     => array( $this, 'update_worksheet' ),
 				'is_completed' => array( $this, 'setup_sheet_is_completed' ),
 			),
 		);
+		// Remove the step 3 when customer choose new spreadsheet.
+		if ( empty( $post_data['change_form_type'] ) && ! empty( $post_data['sheet_type'] ) && 'new' === $post_data['sheet_type'] ) {
+			unset( $steps[2] );
+		}
+		return $steps;
+	}
+
+	/**
+	 * Get Post data.
+	 *
+	 * @since 1.31 Google Sheets Addon
+	 * @return array
+	 */
+	private function get_post_data() {
+		// Sanitize in Forminator_Core::sanitize_array.
+		// phpcs:ignore WordPress.Security
+		$post_data = isset( $_POST['data'] ) ? Forminator_Core::sanitize_array( $_POST['data'], 'data' ) : array();
+
+		if ( ! is_array( $post_data ) && is_string( $post_data ) ) {
+			$post_string = $post_data;
+			$post_data   = array();
+			wp_parse_str( $post_string, $post_data );
+		}
+		return $post_data;
 	}
 
 	/**
@@ -81,15 +111,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 			}
 		}
 
-		$buttons = array();
-		if ( $this->setup_name_is_completed( array( 'multi_id' => $multi_id ) ) ) {
-			$buttons['disconnect']['markup'] = Forminator_Integration::get_button_markup(
-				esc_html__( 'Deactivate', 'forminator' ),
-				'sui-button-ghost sui-tooltip sui-tooltip-top-center forminator-addon-form-disconnect',
-				esc_html__( 'Deactivate Google Sheets Integration from this module.', 'forminator' )
-			);
-		}
-
+		$buttons                   = $this->get_buttons( $multi_id );
 		$buttons['next']['markup'] = '<div class="sui-actions-right">' .
 			Forminator_Integration::get_button_markup( esc_html__( 'Next', 'forminator' ), 'forminator-addon-next' ) .
 			'</div>';
@@ -99,6 +121,274 @@ trait Forminator_Googlesheet_Settings_Trait {
 			'buttons'    => $buttons,
 			'redirect'   => false,
 			'has_errors' => $has_errors,
+		);
+	}
+
+	/**
+	 * Get buttons.
+	 *
+	 * @param string $multi_id Id.
+	 *
+	 * @since 1.31 Google Sheets Addon
+	 * @return array
+	 */
+	private function get_buttons( $multi_id ) {
+		$buttons = array();
+		if ( $this->setup_name_is_completed( array( 'multi_id' => $multi_id ) ) ) {
+			$buttons['disconnect']['markup'] = Forminator_Integration::get_button_markup(
+				esc_html__( 'Deactivate', 'forminator' ),
+				'sui-button-ghost sui-tooltip sui-tooltip-top-center forminator-addon-form-disconnect',
+				esc_html__( 'Deactivate Google Sheets Integration from this module.', 'forminator' )
+			);
+		}
+
+		return $buttons;
+	}
+
+	/**
+	 * Setup the spread sheet.
+	 *
+	 * @since 1.31 Google Sheets Addon
+	 * @param array $submitted_data Submitted data.
+	 * @return array
+	 */
+	public function setup_spread_sheet( $submitted_data ) {
+		$multi_id   = $submitted_data['multi_id'];
+		$sheet_type = $this->get_multi_id_settings( $multi_id, 'sheet_type', 'new' );
+		$file_id    = $this->get_multi_id_settings( $multi_id, 'file_id' );
+		if ( ! empty( $file_id ) ) {
+			$sheet_type = 'existing';
+		}
+		if ( ! empty( $submitted_data['sheet_type'] ) ) {
+			$sheet_type = $submitted_data['sheet_type'];
+		}
+		if ( ! empty( $submitted_data['change_form_type'] ) ) {
+			$sheet_type = 'new' === $submitted_data['sheet_type'] ? 'existing' : 'new';
+		}
+		if ( 'existing' === $sheet_type ) {
+			return $this->setup_existing_sheet( $submitted_data );
+		}
+		return $this->setup_sheet( $submitted_data );
+	}
+
+	/**
+	 * Setup an existing Spread sheet tab
+	 *
+	 * @since 1.31 Google Sheets Addon
+	 * @param array $submitted_data Submitted data.
+	 * @return array
+	 * @throws Forminator_Google_Exception Google Exception.
+	 */
+	public function update_worksheet( $submitted_data ) {
+		$template = forminator_addon_googlesheet_dir() . 'views/module-settings/setup-choose-worksheet.php';
+		if ( ! isset( $submitted_data['multi_id'] ) ) {
+			return $this->get_force_closed_wizard();
+		}
+		$multi_id = $submitted_data['multi_id'];
+		unset( $submitted_data['multi_id'] );
+		$file_id            = $this->get_multi_id_settings( $multi_id, 'file_id' );
+		$saved_worksheet_id = $this->get_multi_id_settings( $multi_id, 'worksheet_id' );
+		if ( '' === $saved_worksheet_id ) {
+			$folder_id = $this->get_multi_id_settings( $multi_id, 'folder_id', false );
+			if ( false !== $folder_id ) {
+				$saved_worksheet_id = 0;
+			}
+		}
+		$worksheet_id       = isset( $submitted_data['worksheet_id'] ) ? $submitted_data['worksheet_id'] : $saved_worksheet_id;
+		$template_params    = array(
+			'worksheet_id'  => $worksheet_id,
+			'file_id'       => $file_id,
+			'error_message' => '',
+			'multi_id'      => $multi_id,
+			'worksheets'    => array(),
+		);
+		$has_errors         = false;
+		$is_submit          = isset( $submitted_data['worksheet_id'] );
+		$notification 		= array();
+		$is_close     		= false;
+
+		try {
+			$input_exceptions = new Forminator_Integration_Settings_Exception();
+			$google_client    = $this->addon->get_google_client();
+			$google_client->setAccessToken( $this->addon->get_client_access_token() );
+			if ( ! empty( $file_id ) ) {
+				try {
+					$service      = new Forminator_Google_Service_Sheets( $google_client );
+					$spreadsheets = $service->spreadsheets->get( $file_id );
+					$sheets       = $spreadsheets->getSheets();
+					foreach ( $sheets as $sheet ) {
+						$template_params['worksheets'][ $sheet->getProperties()->getSheetId() ] = $sheet->getProperties()->getTitle();
+					}
+				} catch ( Forminator_Google_Exception $google_exception ) {
+					// catch 404.
+					if ( false !== stripos( $google_exception->getMessage(), 'Requested entity was not found' ) ) {
+						$input_exceptions->add_input_exception( esc_html__( 'Spreadsheet not found, please put Spreadsheet ID.', 'forminator' ), 'error_message' );
+					} else {
+						throw $google_exception;
+					}
+				}
+			}
+
+			if ( $input_exceptions->input_exceptions_is_available() ) {
+				throw $input_exceptions;
+			}
+		} catch ( Forminator_Integration_Settings_Exception $e ) {
+			$input_errors    = $e->get_input_exceptions();
+			$template_params = array_merge( $template_params, $input_errors );
+			$has_errors      = true;
+		} catch ( Forminator_Integration_Exception $e ) {
+			$template_params['error_message'] = $e->getMessage();
+			$has_errors                       = true;
+		} catch ( Forminator_Google_Exception $e ) {
+			$template_params['error_message'] = $e->getMessage();
+			$has_errors                       = true;
+		}
+
+		if ( $is_submit ) {
+			try {
+				$input_exceptions = new Forminator_Integration_Settings_Exception();
+				if ( '' === $worksheet_id ) {
+					$input_exceptions->add_input_exception( esc_html__( 'Please select a Worksheet', 'forminator' ), 'worksheet_id_error' );
+					throw $input_exceptions;
+				}
+				if ( ! in_array( strval( $worksheet_id ), array_map( 'strval', array_keys( $template_params['worksheets'] ) ), true ) ) {
+					$input_exceptions->add_input_exception( esc_html__( 'Invalid Worksheet', 'forminator' ), 'worksheet_id_error' );
+					throw $input_exceptions;
+				}
+				$this->save_multi_id_setting_values(
+					$multi_id,
+					array(
+						'worksheet_id' => $worksheet_id,
+					)
+				);
+				$notification = array(
+					'type' => 'success',
+					'text' => '<strong>' . $this->addon->get_title() . '</strong> ' . esc_html__( 'Successfully connected to your module', 'forminator' ),
+				);
+				$is_close     = true;
+			} catch ( Forminator_Integration_Settings_Exception $e ) {
+				$input_errors    = $e->get_input_exceptions();
+				$template_params = array_merge( $template_params, $input_errors );
+				$has_errors      = true;
+			}
+		}
+
+		$buttons                   = $this->get_buttons( $multi_id );
+		$buttons['next']['markup'] = '<div class="sui-actions-right">' .
+			Forminator_Integration::get_button_markup( esc_html__( 'Activate', 'forminator' ), 'forminator-addon-next' ) .
+			'</div>';
+
+		return array(
+			'html'         => Forminator_Integration::get_template( $template, $template_params ),
+			'buttons'      => $buttons,
+			'redirect'     => false,
+			'has_errors'   => $has_errors,
+			'has_back'     => true,
+			'notification' => $notification,
+			'is_close'     => $is_close,
+			'size'         => 'normal',
+		);
+	}
+
+	/**
+	 * Setup an existing Spread sheet
+	 *
+	 * @since 1.31 Google Sheets Addon
+	 * @param array $submitted_data Submitted data.
+	 * @return array
+	 * @throws Forminator_Google_Exception Google Exception.
+	 */
+	public function setup_existing_sheet( $submitted_data ) {
+		$template = forminator_addon_googlesheet_dir() . 'views/module-settings/setup-sheet-existing.php';
+
+		if ( ! isset( $submitted_data['multi_id'] ) ) {
+			return $this->get_force_closed_wizard();
+		}
+
+		$multi_id = $submitted_data['multi_id'];
+		unset( $submitted_data['multi_id'] );
+
+		$template_params = array(
+			'worksheet_id'  => $this->get_multi_id_settings( $multi_id, 'worksheet_id', 0 ),
+			'file_id'       => $this->get_multi_id_settings( $multi_id, 'file_id' ),
+			'error_message' => '',
+			'multi_id'      => $multi_id,
+		);
+
+		$is_submit    = ! empty( $submitted_data ) && empty( $submitted_data['change_form_type'] );
+		$has_errors   = false;
+		$notification = array();
+		$is_close     = false;
+		if ( $is_submit ) {
+			$file_id   = isset( $submitted_data['file_id'] ) ? $submitted_data['file_id'] : '';
+			$file_name = $this->get_multi_id_settings( $multi_id, 'file_name' );
+			try {
+				$input_exceptions = new Forminator_Integration_Settings_Exception();
+				if ( empty( $file_id ) ) {
+					$input_exceptions->add_input_exception( esc_html__( 'Please enter a valid spreadsheet ID', 'forminator' ), 'file_id_error' );
+					throw $input_exceptions;
+				}
+				$template_params['file_id'] = $file_id;
+				$google_client              = $this->addon->get_google_client();
+				$google_client->setAccessToken( $this->addon->get_client_access_token() );
+				if ( ! empty( $file_id ) ) {
+					try {
+						$service      = new Forminator_Google_Service_Sheets( $google_client );
+						$spreadsheets = $service->spreadsheets->get( $file_id );
+						$file_name    = $spreadsheets->getProperties()->getTitle();
+						$sheets       = $spreadsheets->getSheets();
+						foreach ( $sheets as $sheet ) {
+							$template_params['worksheets'][ $sheet->getProperties()->getSheetId() ] = $sheet->getProperties()->getTitle();
+						}
+					} catch ( Forminator_Google_Exception $google_exception ) {
+						// catch 404.
+						if ( false !== stripos( $google_exception->getMessage(), 'Requested entity was not found' ) ) {
+							$input_exceptions->add_input_exception( esc_html__( 'Spreadsheet not found, please enter a valid spreadsheet ID.', 'forminator' ), 'file_id_error' );
+						} else {
+							throw $google_exception;
+						}
+					}
+				}
+
+				if ( $input_exceptions->input_exceptions_is_available() ) {
+					throw $input_exceptions;
+				}
+
+				$this->save_multi_id_setting_values(
+					$multi_id,
+					array(
+						'file_name'  => $file_name,
+						'file_id'    => $file_id,
+						'sheet_type' => 'existing',
+					)
+				);
+			} catch ( Forminator_Integration_Settings_Exception $e ) {
+				$input_errors    = $e->get_input_exceptions();
+				$template_params = array_merge( $template_params, $input_errors );
+				$has_errors      = true;
+			} catch ( Forminator_Integration_Exception $e ) {
+				$template_params['error_message'] = $e->getMessage();
+				$has_errors                       = true;
+			} catch ( Forminator_Google_Exception $e ) {
+				$template_params['error_message'] = $e->getMessage();
+				$has_errors                       = true;
+			}
+		}
+
+		$buttons                   = $this->get_buttons( $multi_id );
+		$buttons['next']['markup'] = '<div class="sui-actions-right">' .
+			Forminator_Integration::get_button_markup( esc_html__( 'Continue', 'forminator' ), 'forminator-addon-next' ) .
+			'</div>';
+
+		return array(
+			'html'         => Forminator_Integration::get_template( $template, $template_params ),
+			'buttons'      => $buttons,
+			'redirect'     => false,
+			'has_errors'   => $has_errors,
+			'has_back'     => true,
+			'notification' => $notification,
+			'is_close'     => $is_close,
+			'size'         => 'normal',
 		);
 	}
 
@@ -129,7 +419,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 			'multi_id'       => $multi_id,
 		);
 
-		$is_submit    = ! empty( $submitted_data );
+		$is_submit    = ! empty( $submitted_data ) && empty( $submitted_data['change_form_type'] );
 		$has_errors   = false;
 		$notification = array();
 		$is_close     = false;
@@ -186,9 +476,11 @@ trait Forminator_Googlesheet_Settings_Trait {
 				$this->save_multi_id_setting_values(
 					$multi_id,
 					array(
-						'folder_id' => $folder_id,
-						'file_name' => $file_name,
-						'file_id'   => $new_sheet->getId(),
+						'folder_id'    => $folder_id,
+						'file_name'    => $file_name,
+						'file_id'      => $new_sheet->getId(),
+						'sheet_type'   => 'new',
+						'worksheet_id' => 0,
 					)
 				);
 
@@ -211,15 +503,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 			}
 		}
 
-		$buttons = array();
-		if ( $this->setup_name_is_completed( array( 'multi_id' => $multi_id ) ) ) {
-			$buttons['disconnect']['markup'] = Forminator_Integration::get_button_markup(
-				esc_html__( 'Deactivate', 'forminator' ),
-				'sui-button-ghost sui-tooltip sui-tooltip-top-center forminator-addon-form-disconnect',
-				esc_html__( 'Deactivate Google Sheets Integration from this module.', 'forminator' )
-			);
-		}
-
+		$buttons                   = $this->get_buttons( $multi_id );
 		$buttons['next']['markup'] = '<div class="sui-actions-right">' .
 			Forminator_Integration::get_button_markup( esc_html__( 'Create', 'forminator' ), 'forminator-addon-next' ) .
 			'</div>';

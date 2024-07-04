@@ -194,6 +194,7 @@ class PackageCustomerServiceRepository extends AbstractRepository
                     pc.id AS package_customer_id,
                     pc.packageId AS package_customer_packageId,
                     pc.customerId AS package_customer_customerId,
+                    pc.tax AS package_customer_tax,
                     pc.price AS package_customer_price,
                     pc.end AS package_customer_end,
                     pc.start AS package_customer_start,

@@ -7,31 +7,23 @@
 namespace AmeliaBooking\Domain\Entity\Bookable\Service;
 
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Entity\Booking\AbstractCustomerBooking;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
-use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
-use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
-use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 
 /**
  * Class PackageCustomer
  *
  * @package AmeliaBooking\Domain\Entity\Bookable\Service
  */
-class PackageCustomer
+class PackageCustomer extends AbstractCustomerBooking
 {
     /** @var Id */
     private $id;
 
     /** @var Id */
     private $packageId;
-
-    /** @var Id */
-    private $customerId;
-
-    /** @var Price */
-    private $price;
 
     /** @var DateTimeValue */
     private $end;
@@ -45,17 +37,8 @@ class PackageCustomer
     /** @var Collection */
     private $payments;
 
-    /** @var BookingStatus */
-    protected $status;
-
     /** @var WholeNumber */
     private $bookingsCount;
-
-    /** @var Id */
-    private $couponId;
-
-    /** @var Coupon */
-    protected $coupon;
 
     /**
      * @return Id
@@ -87,38 +70,6 @@ class PackageCustomer
     public function setPackageId(Id $packageId)
     {
         $this->packageId = $packageId;
-    }
-
-    /**
-     * @return Id
-     */
-    public function getCustomerId()
-    {
-        return $this->customerId;
-    }
-
-    /**
-     * @param Id $customerId
-     */
-    public function setCustomerId(Id $customerId)
-    {
-        $this->customerId = $customerId;
-    }
-
-    /**
-     * @return Price
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * @param Price $price
-     */
-    public function setPrice(Price $price)
-    {
-        $this->price = $price;
     }
 
     /**
@@ -186,22 +137,6 @@ class PackageCustomer
     }
 
     /**
-     * @return BookingStatus
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param BookingStatus $status
-     */
-    public function setStatus(BookingStatus $status)
-    {
-        $this->status = $status;
-    }
-
-    /**
      * @return WholeNumber
      */
     public function getBookingsCount()
@@ -218,58 +153,23 @@ class PackageCustomer
     }
 
     /**
-     * @return Id
-     */
-    public function getCouponId()
-    {
-        return $this->couponId;
-    }
-
-    /**
-     * @param Id $couponId
-     */
-    public function setCouponId(Id $couponId)
-    {
-        $this->couponId = $couponId;
-    }
-
-    /**
-     * @return Coupon
-     */
-    public function getCoupon()
-    {
-        return $this->coupon;
-    }
-
-    /**
-     * @param Coupon $coupon
-     */
-    public function setCoupon(Coupon $coupon)
-    {
-        $this->coupon = $coupon;
-    }
-
-    /**
      * @return array
      */
     public function toArray()
     {
         $dateTimeFormat = 'Y-m-d H:i:s';
 
-        return [
-            'id'            => $this->getId() ? $this->getId()->getValue() : null,
-            'packageId'     => $this->getPackageId() ? $this->getPackageId()->getValue() : null,
-            'customerId'    => $this->getCustomerId() ? $this->getCustomerId()->getValue() : null,
-            'price'         => $this->getPrice() ? $this->getPrice()->getValue() : null,
-            'payments'      => $this->getPayments() ? $this->getPayments()->toArray() : null,
-            'start'         => $this->getStart() ? $this->getStart()->getValue()->format($dateTimeFormat) : null,
-            'end'           => $this->getEnd() ? $this->getEnd()->getValue()->format($dateTimeFormat) : null,
-            'purchased'     => $this->getPurchased() ?
-                $this->getPurchased()->getValue()->format($dateTimeFormat) : null,
-            'status'        => $this->getStatus() ? $this->getStatus()->getValue() : null,
-            'bookingsCount' => $this->getBookingsCount() ? $this->getBookingsCount()->getValue() : null,
-            'couponId'      => $this->getCouponId() ? $this->getCouponId()->getValue() : null,
-            'coupon'        => $this->getCoupon() ? $this->getCoupon()->toArray() : null,
-        ];
+        return array_merge(
+            parent::toArray(),
+            [
+                'packageId'     => $this->getPackageId() ? $this->getPackageId()->getValue() : null,
+                'payments'      => $this->getPayments() ? $this->getPayments()->toArray() : null,
+                'start'         => $this->getStart() ? $this->getStart()->getValue()->format($dateTimeFormat) : null,
+                'end'           => $this->getEnd() ? $this->getEnd()->getValue()->format($dateTimeFormat) : null,
+                'purchased'     => $this->getPurchased() ?
+                    $this->getPurchased()->getValue()->format($dateTimeFormat) : null,
+                'bookingsCount' => $this->getBookingsCount() ? $this->getBookingsCount()->getValue() : null,
+            ]
+        );
     }
 }

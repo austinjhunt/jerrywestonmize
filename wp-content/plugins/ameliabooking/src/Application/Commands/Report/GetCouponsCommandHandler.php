@@ -148,14 +148,14 @@ class GetCouponsCommandHandler extends CommandHandler
                 $row[BackendStrings::getCommonStrings()['services']] =
                     $coupon['serviceList'] ? $coupon['serviceList'][0]['name'] .
                         (sizeof($coupon['serviceList']) > 1 ?
-                            BackendStrings::getFinanceStrings()['coupons_multiple_services_text'] : '') : '';
+                            ' & Other Services' : '') : '';
             }
 
             if (in_array('events', $fields, true)) {
                 $row[BackendStrings::getCommonStrings()['events']] =
                     $coupon['eventList'] ? $coupon['eventList'][0]['name'] .
                         (sizeof($coupon['eventList']) > 1 ?
-                            BackendStrings::getFinanceStrings()['coupons_multiple_events_text'] : '') : '';
+                            ' & Other Events' : '') : '';
             }
 
             if (in_array('limit', $fields, true)) {

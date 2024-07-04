@@ -28,16 +28,32 @@ class ExtraFactory
      */
     public static function create($data)
     {
-        $extra = new Extra(
-            new Name($data['name']),
-            new Description($data['description']),
-            new Price($data['price']),
-            new PositiveInteger($data['maxQuantity']),
-            new PositiveInteger($data['position'])
-        );
+        $extra = new Extra();
 
         if (isset($data['id'])) {
             $extra->setId(new Id($data['id']));
+        }
+
+        if (!empty($data['name'])) {
+            $extra->setName(new Name($data['name']));
+        }
+
+        if (!empty($data['description'])) {
+            $extra->setDescription(new Description($data['description']));
+        }
+
+        if (!empty($data['price'])) {
+            $extra->setPrice(new Price($data['price']));
+        } else {
+            $extra->setPrice(new Price(0));
+        }
+
+        if (!empty($data['maxQuantity'])) {
+            $extra->setMaxQuantity(new PositiveInteger($data['maxQuantity']));
+        }
+
+        if (!empty($data['position'])) {
+            $extra->setPosition(new PositiveInteger($data['position']));
         }
 
         if (!empty($data['duration'])) {

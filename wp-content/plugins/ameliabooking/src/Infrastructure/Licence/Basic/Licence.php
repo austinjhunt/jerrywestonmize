@@ -59,6 +59,13 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\PaymentGateway\RazorpayPaymentCommand::class              => new Commands\PaymentGateway\RazorpayPaymentCommandHandler($c),
                 Commands\Payment\PaymentCallbackCommand::class                     => new Commands\Payment\PaymentCallbackCommandHandler($c),
                 Commands\Payment\PaymentLinkCommand::class                         => new Commands\Payment\PaymentLinkCommandHandler($c),
+                // Tax
+                Commands\Tax\AddTaxCommand::class                                  => new Commands\Tax\AddTaxCommandHandler($c),
+                Commands\Tax\DeleteTaxCommand::class                               => new Commands\Tax\DeleteTaxCommandHandler($c),
+                Commands\Tax\GetTaxCommand::class                                  => new Commands\Tax\GetTaxCommandHandler($c),
+                Commands\Tax\GetTaxesCommand::class                                => new Commands\Tax\GetTaxesCommandHandler($c),
+                Commands\Tax\UpdateTaxCommand::class                               => new Commands\Tax\UpdateTaxCommandHandler($c),
+                Commands\Tax\UpdateTaxStatusCommand::class                         => new Commands\Tax\UpdateTaxStatusCommandHandler($c),
                 // Zoom
                 Commands\Zoom\GetUsersCommand::class                               => new Commands\Zoom\GetUsersCommandHandler($c),
             ]
@@ -84,6 +91,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
         Routes\Payment\PaymentLink::routes($app);
 
         Routes\CustomField\CustomField::routes($app);
+
+        Routes\Tax\Tax::routes($app);
 
         Routes\Zoom\Zoom::routes($app);
     }

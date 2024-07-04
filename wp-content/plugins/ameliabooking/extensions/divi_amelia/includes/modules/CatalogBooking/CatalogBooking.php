@@ -153,8 +153,11 @@ class DIVI_CatalogBooking extends ET_Builder_Module
                 'show_if'         => array(
                     'booking_params' => 'on',
                 ),
-            ),
-            'employees' => array(
+            )
+        );
+
+        if ($this->employees && sizeof($this->employees) > 1) {
+            $array['employees'] = array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_employee'], 'divi-divi_amelia'),
                 'type'            => 'amelia_multi_select',
                 'showAllText'     => BackendStrings::getWordPressStrings()['show_all_employees'],
@@ -164,8 +167,11 @@ class DIVI_CatalogBooking extends ET_Builder_Module
                 'show_if'         => array(
                     'booking_params' => 'on',
                 ),
-            ),
-            'locations' => array(
+            );
+        }
+
+        if ($this->locations && sizeof($this->locations) > 1) {
+            $array['locations'] = array(
                 'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_location'], 'divi-divi_amelia'),
                 'type'            => 'amelia_multi_select',
                 'showAllText'     => BackendStrings::getWordPressStrings()['show_all_locations'],
@@ -175,8 +181,8 @@ class DIVI_CatalogBooking extends ET_Builder_Module
                 'show_if'         => array(
                     'booking_params' => 'on',
                 ),
-            ),
-        );
+            );
+        }
 
         if ($this->showPackages) {
             $array['type'] = array(

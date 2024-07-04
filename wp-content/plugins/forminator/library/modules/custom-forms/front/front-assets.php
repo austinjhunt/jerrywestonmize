@@ -320,6 +320,7 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 		$has_address_country_select = $render_obj->has_field_type_with_setting_value( 'address', 'address_country', 'true' );
 		$has_select                 = $render_obj->has_field_type( 'select' );
 		$has_select_single          = $render_obj->has_field_type_with_setting_value( 'select', 'value_type', 'single' );
+		$has_select_modern          = $render_obj->has_field_type_with_setting_value( 'select', 'multiselect_style', 'modern' );
 		$has_date                   = $render_obj->has_field_type( 'date' );
 		$has_date_select            = $render_obj->has_field_type_with_setting_value( 'date', 'field_type', 'select' );
 		$has_timepicker             = $render_obj->has_field_type( 'time' );
@@ -330,7 +331,7 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 		$has_element =
 			( $has_name_multi_select && $has_name_prefix_select )
 			|| ( $has_address_select && $has_address_country_select )
-			|| ( $has_select && $has_select_single )
+			|| ( $has_select && ( $has_select_single || $has_select_modern ) )
 			|| ( $has_date && $has_date_select )
 			|| ( $has_timepicker && ( $has_time_input || $has_time_select ) )
 			|| $has_post_categories;
@@ -358,6 +359,7 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 		$has_address_country_select = $render_obj->has_field_type_with_setting_value( 'address', 'address_country', 'true' );
 		$has_select                 = $render_obj->has_field_type( 'select' );
 		$has_select_single          = $render_obj->has_field_type_with_setting_value( 'select', 'value_type', 'single' );
+		$has_select_modern          = $render_obj->has_field_type_with_setting_value( 'select', 'multiselect_style', 'modern' );
 		$has_date                   = $render_obj->has_field_type( 'date' );
 		$has_date_select            = $render_obj->has_field_type_with_setting_value( 'date', 'field_type', 'select' );
 		$has_timepicker             = $render_obj->has_field_type( 'time' );
@@ -368,7 +370,7 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 		$has_element =
 			( $has_name_multi_select && $has_name_prefix_select )
 			|| ( $has_address_select && $has_address_country_select )
-			|| ( $has_select && $has_select_single )
+			|| ( $has_select && ( $has_select_single || $has_select_modern ) )
 			|| ( $has_date && $has_date_select )
 			|| ( $has_timepicker && ( $has_time_input || $has_time_select ) )
 			|| $has_post_categories;

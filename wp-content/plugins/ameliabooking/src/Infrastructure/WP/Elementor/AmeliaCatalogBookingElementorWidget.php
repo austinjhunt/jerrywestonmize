@@ -59,6 +59,9 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             $options['show_package'] = BackendStrings::getWordPressStrings()['show_packages'];
         }
 
+        if ($controls_data['categories'] && sizeof($controls_data['locations']) > 1) {
+
+        }
         $this->add_control(
             'select_catalog',
             [
@@ -70,40 +73,30 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'select_category',
-            [
-                'label' => BackendStrings::getWordPressStrings()['select_category'],
-                'type' => Controls_Manager::SELECT2,
-                'multiple' => true,
-                'options' => $controls_data['categories'],
-                'condition' => ['select_catalog' => 'show_category'],
-                'default' => array_keys($controls_data['categories']) ? [array_keys($controls_data['categories'])[0]] : 0,
-            ]
-        );
-
-        $this->add_control(
-            'select_service',
-            [
-                'label' => BackendStrings::getWordPressStrings()['select_service'],
-                'type' => Controls_Manager::SELECT2,
-                'multiple' => true,
-                'options' => $controls_data['services'],
-                'condition' => ['select_catalog' => 'show_service'],
-                'default' => array_keys($controls_data['services']) ? [array_keys($controls_data['services'])[0]] : 0,
-            ]
-        );
+        if ($controls_data['services'] && sizeof($controls_data['services']) > 1) {
+            $this->add_control(
+                'select_category',
+                [
+                    'label' => BackendStrings::getWordPressStrings()['select_category'],
+                    'type' => Controls_Manager::SELECT2,
+                    'multiple' => true,
+                    'options' => $controls_data['categories'],
+                    'condition' => ['select_catalog' => 'show_category'],
+                    'default' => array_keys($controls_data['categories']) ? [array_keys($controls_data['categories'])[0]] : 0,
+                ]
+            );
+        }
 
         if ($controls_data['packages']) {
             $this->add_control(
-                'select_package',
+                'select_service',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['select_package'],
+                    'label' => BackendStrings::getWordPressStrings()['select_service'],
                     'type' => Controls_Manager::SELECT2,
                     'multiple' => true,
-                    'options' => $controls_data['packages'],
-                    'condition' => ['select_catalog' => 'show_package'],
-                    'default' => array_keys($controls_data['packages']) ? [array_keys($controls_data['packages'])[0]] : 0,
+                    'options' => $controls_data['services'],
+                    'condition' => ['select_catalog' => 'show_service'],
+                    'default' => array_keys($controls_data['services']) ? [array_keys($controls_data['services'])[0]] : 0,
                 ]
             );
         }
@@ -131,27 +124,31 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'select_employee',
-            [
-                'label' => BackendStrings::getWordPressStrings()['select_employee'],
-                'type' => Controls_Manager::SELECT2,
-                'multiple' => true,
-                'options' => $controls_data['employees'],
-                'condition' => ['preselect' => 'yes'],
-            ]
-        );
+        if ($controls_data['employees'] && sizeof($controls_data['employees']) > 1) {
+            $this->add_control(
+                'select_employee',
+                [
+                    'label' => BackendStrings::getWordPressStrings()['select_employee'],
+                    'type' => Controls_Manager::SELECT2,
+                    'multiple' => true,
+                    'options' => $controls_data['employees'],
+                    'condition' => ['preselect' => 'yes'],
+                ]
+            );
+        }
 
-        $this->add_control(
-            'select_location',
-            [
-                'label' => BackendStrings::getWordPressStrings()['select_location'],
-                'type' => Controls_Manager::SELECT2,
-                'multiple' => true,
-                'options' => $controls_data['locations'],
-                'condition' => ['preselect' => 'yes'],
-            ]
-        );
+        if ($controls_data['locations'] && sizeof($controls_data['locations']) > 1) {
+            $this->add_control(
+                'select_location',
+                [
+                    'label' => BackendStrings::getWordPressStrings()['select_location'],
+                    'type' => Controls_Manager::SELECT2,
+                    'multiple' => true,
+                    'options' => $controls_data['locations'],
+                    'condition' => ['preselect' => 'yes'],
+                ]
+            );
+        }
 
         if ($controls_data['show']) {
             $this->add_control(

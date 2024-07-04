@@ -11,10 +11,14 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomerService;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageService;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\Coupon\Coupon;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Factory\Bookable\Service\PackageCustomerFactory;
 use AmeliaBooking\Domain\Factory\Bookable\Service\PackageCustomerServiceFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
+use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
@@ -39,12 +43,12 @@ use Slim\Exception\ContainerValueNotFoundException;
 class PackageApplicationService extends AbstractPackageApplicationService
 {
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @param Package $package
-     * @param int     $customerId
-     * @param int     $utcOffset
-     * @param float   $price
-     * @param bool    $save
+     * @param Package     $package
+     * @param int         $customerId
+     * @param Coupon|null $coupon
+     * @param bool        $save
      *
      * @return PackageCustomer
      *
@@ -52,10 +56,13 @@ class PackageApplicationService extends AbstractPackageApplicationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function addPackageCustomer($package, $customerId, $utcOffset, $price, $save, $couponId)
+    public function addPackageCustomer($package, $customerId, $coupon, $save)
     {
         /** @var PackageCustomerRepository $packageCustomerRepository */
         $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
+
+        /** @var ReservationServiceInterface $reservationService */
+        $reservationService = $this->container->get('application.reservation.service')->get(Entities::PACKAGE);
 
         $endDateTime = null;
 
@@ -68,20 +75,27 @@ class PackageApplicationService extends AbstractPackageApplicationService
 
         $startDateTimeString = DateTimeService::getNowDateTimeInUtc();
 
+        $packageCustomerData = [
+            'customerId'    => $customerId,
+            'packageId'     => $package->getId()->getValue(),
+            'price'         => $reservationService->getPaymentAmount(null, $package),
+            'end'           => $endDateTime ? $endDateTime->format('Y-m-d H:i:s') : null,
+            'start'         => $startDateTimeString,
+            'purchased'     => $startDateTimeString,
+            'bookingsCount' => $package->getSharedCapacity() && $package->getSharedCapacity()->getValue() ?
+                $package->getQuantity()->getValue() : 0,
+            'couponId'      => $coupon ? $coupon->getId()->getValue() : null,
+            'coupon'        => $coupon ? $coupon->toArray() : null,
+        ];
+
+        $reservationService->manageTaxes($packageCustomerData);
+
         /** @var PackageCustomer $packageCustomer */
-        $packageCustomer = PackageCustomerFactory::create(
-            [
-                'customerId'    => $customerId,
-                'packageId'     => $package->getId()->getValue(),
-                'price'         => $price,
-                'end'           => $endDateTime ? $endDateTime->format('Y-m-d H:i:s') : null,
-                'start'         => $startDateTimeString,
-                'purchased'     => $startDateTimeString,
-                'bookingsCount' => $package->getSharedCapacity() && $package->getSharedCapacity()->getValue() ?
-                    $package->getQuantity()->getValue() : 0,
-                'couponId'      => $couponId,
-            ]
-        );
+        $packageCustomer = PackageCustomerFactory::create($packageCustomerData);
+
+        $price = $reservationService->getPaymentAmount(null, $package);
+
+        $packageCustomer->setPrice(new Price($price));
 
         if ($save) {
             $packageCustomerArray = $packageCustomer->toArray();
@@ -100,6 +114,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
         return $packageCustomer;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Package         $package
      * @param PackageCustomer $packageCustomer
@@ -962,6 +977,9 @@ class PackageApplicationService extends AbstractPackageApplicationService
                     'payments' => $packageCustomer->getPayments()->toArray(),
                     'coupon' => $coupon ?: null,
                     'price'      => $packageCustomer->getPrice()->getValue(),
+                    'tax'        => $packageCustomer->getTax()
+                        ? json_decode($packageCustomer->getTax()->getValue(), true)
+                        : null,
                 ];
             }
         }

@@ -8,6 +8,7 @@ namespace AmeliaBooking\Domain\Factory\Booking\Appointment;
 
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBookingExtra;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\PositiveInteger;
@@ -47,6 +48,14 @@ class CustomerBookingExtraFactory
 
         if (isset($data['aggregatedPrice'])) {
             $customerBookingExtra->setAggregatedPrice(new BooleanValueObject($data['aggregatedPrice']));
+        }
+
+        if (!empty($data['tax'])) {
+            if (is_string($data['tax'])) {
+                $customerBookingExtra->setTax(new Json($data['tax']));
+            } else if (json_encode($data['tax']) !== false) {
+                $customerBookingExtra->setTax(new Json(json_encode($data['tax'])));
+            }
         }
 
         return $customerBookingExtra;

@@ -19,6 +19,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Common\Exceptions\PackageBookingUnavailableException;
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
+use AmeliaBooking\Domain\Entity\Booking\AbstractCustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
@@ -152,8 +153,8 @@ interface ReservationServiceInterface
     public function finalize($result, $reservation, $bookingType, $isCart);
 
     /**
-     * @param CustomerBooking  $booking
-     * @param AbstractBookable $bookable
+     * @param AbstractCustomerBooking $booking
+     * @param AbstractBookable        $bookable
      *
      * @return float
      *

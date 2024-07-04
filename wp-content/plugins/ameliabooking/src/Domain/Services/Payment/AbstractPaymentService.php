@@ -49,4 +49,16 @@ class AbstractPaymentService
     {
         return null;
     }
+
+    /**
+     * @param string $sessionId
+     * @param string $method
+     * @param string $accountId
+     *
+     * @return string|null
+     */
+    public function getPaymentIntent($sessionId, $method, $accountId)
+    {
+        return null;
+    }
 }

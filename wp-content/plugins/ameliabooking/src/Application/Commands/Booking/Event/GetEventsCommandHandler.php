@@ -322,7 +322,7 @@ class GetEventsCommandHandler extends CommandHandler
         $result->setData(
             [
                 Entities::EVENTS       => $eventsArray,
-                'count'                => !$isCalendarPage ? (int)$eventRepository->getFilteredIdsCount($params) : null,
+                'count'                => !$isCalendarPage && empty($params['skipCount']) ? (int)$eventRepository->getFilteredIdsCount($params) : null,
                 'customersNoShowCount' => $customersNoShowCount
             ]
         );

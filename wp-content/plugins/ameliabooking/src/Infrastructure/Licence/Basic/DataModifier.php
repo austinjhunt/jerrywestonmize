@@ -36,6 +36,10 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
             $settings['payments']['cart'] = false;
         }
 
+        if ($settings && isset($settings['payments']['stripe']['connect'])) {
+            $settings['payments']['stripe']['connect']['enabled'] = false;
+        }
+
         if ($settings && isset($settings['notifications'])) {
             $settings['notifications']['whatsAppEnabled'] = false;
         }

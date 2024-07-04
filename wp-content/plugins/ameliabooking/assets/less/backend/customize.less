@@ -4143,6 +4143,16 @@
         display: flex;
         align-items: center;
         float: right;
+
+        @media only screen and (max-width: 580px) {
+          float: unset;
+          justify-content: space-between;
+        }
+
+        @media only screen and (max-width: 450px) {
+          flex-wrap: wrap;
+        }
+
         .am-custom-field-translate {
           display: inline-block;
           float: left;
@@ -4296,6 +4306,19 @@
           .done {
             display: block;
           }
+        }
+      }
+
+      .am-custom-field-width {
+        margin-right: 10px;
+
+        @media only screen and (max-width: 450px) {
+          width: 100%;
+          margin: 10px 0;
+        }
+
+        span.el-input__suffix * {
+          max-height: unset;
         }
       }
     }

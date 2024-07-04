@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce;
 
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Entities;
 
 /**
@@ -17,6 +18,9 @@ class Cache
         Entities::EVENT       => [],
         Entities::PACKAGE     => [],
     ];
+
+    /** @var Collection */
+    protected static $taxes = null;
 
     /**
      * Add entities to cache.
@@ -62,5 +66,23 @@ class Cache
     public static function getAll()
     {
         return self::$cache;
+    }
+
+    /**
+     * @param Collection $taxes
+     *
+     * @return void
+     */
+    public static function setTaxes($taxes)
+    {
+        self::$taxes = $taxes;
+    }
+
+    /**
+     * @return Collection
+     */
+    public static function getTaxes()
+    {
+        return self::$taxes;
     }
 }

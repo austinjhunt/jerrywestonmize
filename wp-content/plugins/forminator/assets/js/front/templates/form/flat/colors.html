@@ -533,6 +533,36 @@
 		}
 	<?php } ?>
 
+	<?php if ( forminator_array_value_exists( $properties, 'multiselect-tag-background-static' ) && !empty( $properties['multiselect-tag-background-static'] ) ) { ?>
+		#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2-selections > li {
+			background-color: <?php echo $properties['multiselect-tag-background-static'] ?>;
+		}
+	<?php } else { ?>
+		#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2-selections > li {
+			background-color: #888888;
+		}
+	<?php } ?>
+
+	<?php if ( forminator_array_value_exists( $properties, 'multiselect-tag-color-static' ) && !empty( $properties['multiselect-tag-color-static'] ) ) { ?>
+		#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2-selections > li {
+			color: <?php echo $properties['multiselect-tag-color-static'] ?>;
+		}
+	<?php } else { ?>
+		#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2-selections > li {
+			color: #FFFFFF;
+		}
+	<?php } ?>
+
+	<?php if ( forminator_array_value_exists( $properties, 'multiselect-tag-remove-color-static' ) && !empty( $properties['multiselect-tag-remove-color-static'] ) ) { ?>
+		#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2-selections > li > button {
+			color: <?php echo $properties['multiselect-tag-remove-color-static'] ?>;
+		}
+	<?php } else { ?>
+		#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2-selections > li > button {
+			color: #FFFFFF;
+		}
+	<?php } ?>
+
 	<?php if ( forminator_array_value_exists( $properties, 'calendar-background' ) && !empty( $properties['calendar-background'] ) ) { ?>
 		.forminator-calfor--forminator-module-<?php echo $properties['form_id'] ?>.forminator-calendar--<?php echo $theme; ?> .ui-datepicker-calendar,
 		.forminator-calfor--forminator-module-<?php echo $properties['form_id'] ?>.forminator-calendar--<?php echo $theme; ?> .ui-datepicker-header {

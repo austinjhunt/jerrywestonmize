@@ -22,27 +22,27 @@ use AmeliaBooking\Domain\Common\Exceptions\ForbiddenFileUploadException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Common\Exceptions\PackageBookingUnavailableException;
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
-use AmeliaBooking\Domain\Entity\Bookable\Service\Extra;
-use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomerService;
-use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
+use AmeliaBooking\Domain\Entity\Booking\AbstractCustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
-use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBookingExtra;
-use AmeliaBooking\Domain\Entity\Booking\Event\CustomerBookingEventTicket;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
-use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
 use AmeliaBooking\Domain\Entity\Booking\Reservation;
+use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
+use AmeliaBooking\Domain\Entity\Tax\Tax;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
+use AmeliaBooking\Domain\Factory\Tax\TaxFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
+use AmeliaBooking\Domain\ValueObjects\String\AmountType;
 use AmeliaBooking\Domain\ValueObjects\String\BookingType;
 use AmeliaBooking\Domain\ValueObjects\String\DepositType;
 use AmeliaBooking\Domain\ValueObjects\String\Label;
@@ -93,7 +93,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    protected function deleteReservation($reservation)
+    protected function deleteSingleReservation($reservation)
     {
         if ($reservation->getReservation()) {
             switch ($reservation->getReservation()->getType()->getValue()) {
@@ -121,6 +121,36 @@ abstract class AbstractReservationService implements ReservationServiceInterface
 
                     break;
             }
+        }
+    }
+
+    /**
+     * @param Reservation $reservation
+     *
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public function deleteReservation($reservation)
+    {
+        $this->deleteSingleReservation($reservation);
+
+        if ($reservation->getRecurring()) {
+            foreach ($reservation->getRecurring()->getItems() as $recurringReservation) {
+                $this->deleteSingleReservation($recurringReservation);
+            }
+        }
+
+        if ($reservation->getPackageReservations()) {
+            foreach ($reservation->getPackageReservations()->getItems() as $packageReservation) {
+                $this->deleteSingleReservation($packageReservation);
+            }
+        }
+
+        if ($reservation->getPackageCustomerServices()) {
+            /** @var AbstractPackageApplicationService $packageApplicationService */
+            $packageApplicationService = $this->container->get('application.bookable.package');
+
+            $packageApplicationService->deletePackageCustomer($reservation->getPackageCustomerServices());
         }
     }
 
@@ -194,31 +224,21 @@ abstract class AbstractReservationService implements ReservationServiceInterface
 
         $paymentTransactionId = null;
 
-        $paymentCompleted = empty($data['bookings'][0]['packageCustomerService']['id']) ?
-            $paymentAS->processPayment($result, $data['payment'], $reservation, new BookingType($type), $paymentTransactionId) : true;
+        $transfers = [];
+
+        $paymentCompleted = !empty($data['bookings'][0]['packageCustomerService']['id']) ||
+            $paymentAS->processPayment(
+                $result,
+                $data['payment'],
+                $reservation,
+                new BookingType($type),
+                $paymentTransactionId,
+                $transfers
+            );
 
         if (!$paymentCompleted || $result->getResult() === CommandResult::RESULT_ERROR) {
             if ($save) {
                 $this->deleteReservation($reservation);
-
-                if ($reservation->getRecurring()) {
-                    foreach ($reservation->getRecurring()->getItems() as $recurringReservation) {
-                        $this->deleteReservation($recurringReservation);
-                    }
-                }
-
-                if ($reservation->getPackageReservations()) {
-                    foreach ($reservation->getPackageReservations()->getItems() as $packageReservation) {
-                        $this->deleteReservation($packageReservation);
-                    }
-                }
-
-                if ($reservation->getPackageCustomerServices()) {
-                    /** @var AbstractPackageApplicationService $packageApplicationService */
-                    $packageApplicationService = $this->container->get('application.bookable.package');
-
-                    $packageApplicationService->deletePackageCustomer($reservation->getPackageCustomerServices());
-                }
             }
 
             if ($reservation->isNewUser()->getValue() && $reservation->getCustomer()) {
@@ -234,6 +254,10 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             !empty($result->getData()['payment']['id']) ? $result->getData()['payment']['id'] : null,
             $paymentTransactionId
         );
+
+        if (!empty($transfers)) {
+            $paymentAS->setPaymentsTransfers($transfers);
+        }
 
         return $result;
     }
@@ -589,72 +613,60 @@ abstract class AbstractReservationService implements ReservationServiceInterface
     }
 
     /**
-     * @param CustomerBooking       $booking
-     * @param Service|Event|Package $bookable
+     * @param Json $taxJson
      *
-     * @return float
-     *
+     * @return Tax
      * @throws InvalidArgumentException
      */
-    public function getPaymentAmount($booking, $bookable)
+    protected function getTax($taxJson)
     {
-        $price = (float)$bookable->getPrice()->getValue() *
-            ($this->isAggregatedPrice($bookable) ? $booking->getPersons()->getValue() : 1);
-
-
-        if ($booking->getTicketsBooking() &&
-            $booking->getTicketsBooking()->length() &&
-            $bookable->getCustomPricing() &&
-            $bookable->getCustomPricing()->getValue()
-        ) {
-            /** @var EventApplicationService $eventApplicationService */
-            $eventApplicationService = $this->container->get('application.booking.event.service');
-
-            $bookable->setCustomTickets(
-                $eventApplicationService->getTicketsPriceByDateRange($bookable->getCustomTickets())
-            );
-
-            $ticketSumPrice = 0;
-
-            /** @var CustomerBookingEventTicket $bookingToEventTicket */
-            foreach ($booking->getTicketsBooking()->getItems() as $bookingToEventTicket) {
-                /** @var EventTicket $ticket */
-                $ticket = $bookable->getCustomTickets()->getItem($bookingToEventTicket->getEventTicketId()->getValue());
-
-                $ticketPrice = $ticket->getDateRangePrice() ?
-                    $ticket->getDateRangePrice()->getValue() : $ticket->getPrice()->getValue();
-
-                $ticketSumPrice += $bookingToEventTicket->getPersons() ?
-                    ($booking->getAggregatedPrice()->getValue() ? $bookingToEventTicket->getPersons()->getValue() : 1)
-                    * $ticketPrice : 0;
-            }
-
-            $price = $ticketSumPrice;
-        }
-
-        /** @var CustomerBookingExtra $customerBookingExtra */
-        foreach ($booking->getExtras()->getItems() as $customerBookingExtra) {
-            /** @var Extra $extra */
-            $extra = $bookable->getExtras()->getItem($customerBookingExtra->getExtraId()->getValue());
-
-            $isExtraAggregatedPrice = $extra->getAggregatedPrice() === null ? $this->isAggregatedPrice($bookable) :
-                $extra->getAggregatedPrice()->getValue();
-
-            $price += (float)$extra->getPrice()->getValue() *
-                ($isExtraAggregatedPrice ? $booking->getPersons()->getValue() : 1) *
-                $customerBookingExtra->getQuantity()->getValue();
-        }
-
-        if ($booking->getCoupon()) {
-            $subtraction = $price / 100 *
-                ($booking->getCoupon()->getDiscount()->getValue() ?: 0) +
-                ($booking->getCoupon()->getDeduction()->getValue() ?: 0);
-
-            return max(round($price - $subtraction, 2), 0);
-        }
-
-        return apply_filters('amelia_modify_payment_amount', $price, $booking);
+        return $taxJson &&
+            ($taxData = json_decode($taxJson->getValue(), true)) &&
+            !empty($taxData[0])
+                ? TaxFactory::create($taxData[0])
+                : null;
     }
+
+    /**
+     * @param Tax   $tax
+     * @param float $amount
+     *
+     * @return float
+     */
+    protected function getTaxAmount($tax, $amount)
+    {
+        switch ($tax->getType()->getValue()) {
+            case (AmountType::PERCENTAGE):
+                return round($amount / 100 * $tax->getAmount()->getValue(), 2);
+
+            case (AmountType::FIXED):
+                return $tax->getAmount()->getValue();
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param Coupon $coupon
+     * @param float  $amount
+     *
+     * @return float
+     */
+    protected function getCouponDiscountAmount($coupon, $amount)
+    {
+        return $coupon && $coupon->getDiscount()
+            ? round($amount / 100 * $coupon->getDiscount()->getValue(), 2)
+            : 0;
+    }
+
+    /**
+     * @param AbstractCustomerBooking $booking
+     * @param AbstractBookable        $bookable
+     * @param string|null             $reduction
+     *
+     * @return float
+     */
+    abstract public function getPaymentAmount($booking, $bookable, $reduction = null);
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
@@ -1064,6 +1076,16 @@ abstract class AbstractReservationService implements ReservationServiceInterface
     }
 
     /**
+     * @param Reservation $reservation
+     *
+     * @return array
+     */
+    public function getProvidersPaymentAmount($reservation)
+    {
+        return [];
+    }
+
+    /**
      * @param AbstractBookable $bookable
      * @param bool             $applyDeposit
      *
@@ -1081,4 +1103,12 @@ abstract class AbstractReservationService implements ReservationServiceInterface
 
         return $applyDeposit ? $depositPaymentEnabled : $depositPaymentEnabled && !$fullPaymentEnabled;
     }
+
+    /**
+     * @param array $data
+     *
+     * @return void
+     * @throws QueryExecutionException
+     */
+    abstract public function manageTaxes(&$data);
 }

@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 
 use DateTimeInterface;
+use MailPoet\AutomaticEmails\WooCommerce\Events\AbandonedCart;
 use MailPoet\Doctrine\EntityTraits\AutoincrementedIdTrait;
 use MailPoet\Doctrine\EntityTraits\CreatedAtTrait;
 use MailPoet\Doctrine\EntityTraits\DeletedAtTrait;
@@ -610,5 +611,21 @@ class NewsletterEntity {
   public function getCampaignNameOrSubject(): string {
     $campaignName = $this->getCampaignName();
     return $campaignName ?: $this->getSubject();
+  }
+
+  public function isTransactional(): bool {
+
+    // Legacy Abandoned Cart emails are transactional
+    if (
+      $this->getType() === NewsletterEntity::TYPE_AUTOMATIC
+      && $this->getOptionValue(NewsletterOptionFieldEntity::NAME_EVENT) === AbandonedCart::SLUG
+    ) {
+      return true;
+    }
+
+    return in_array($this->getType(), [
+      NewsletterEntity::TYPE_AUTOMATION_TRANSACTIONAL,
+      NewsletterEntity::TYPE_WC_TRANSACTIONAL_EMAIL,
+    ]);
   }
 }

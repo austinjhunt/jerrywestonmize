@@ -77,11 +77,7 @@ class ZoomApplicationService extends AbstractZoomApplicationService
                 $zoomSettings['pendingAppointmentsMeetings']
             );
 
-        if ((
-            $zoomSettings['s2sEnabled'] ?
-                $zoomSettings['accountId'] && $zoomSettings['clientId'] && $zoomSettings['clientSecret'] :
-                $zoomSettings['apiKey'] && $zoomSettings['apiSecret']
-            ) &&
+        if ($zoomSettings['accountId'] && $zoomSettings['clientId'] && $zoomSettings['clientSecret'] &&
             $reservation->getProvider()->getZoomUserId() &&
             $zoomEnabled
         ) {
@@ -177,12 +173,7 @@ class ZoomApplicationService extends AbstractZoomApplicationService
         /** @var EventPeriodsRepository $eventPeriodsRepository */
         $eventPeriodsRepository = $this->container->get('domain.booking.event.period.repository');
 
-        if ($reservation->getZoomUserId() && (
-            $zoomSettings['s2sEnabled'] ?
-                $zoomSettings['accountId'] && $zoomSettings['clientId'] && $zoomSettings['clientSecret'] :
-                $zoomSettings['apiKey'] && $zoomSettings['apiSecret']
-            )
-        ) {
+        if ($reservation->getZoomUserId() && $zoomSettings['accountId'] && $zoomSettings['clientId'] && $zoomSettings['clientSecret']) {
             switch ($commandSlug) {
                 case EventEditedEventHandler::EVENT_ADDED:
                 case EventAddedEventHandler::EVENT_ADDED:

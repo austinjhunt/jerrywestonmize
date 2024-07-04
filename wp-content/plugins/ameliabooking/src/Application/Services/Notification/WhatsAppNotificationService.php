@@ -64,7 +64,7 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         $templates = [];
         do {
             $templates = $whatsAppService->getTemplates(null, !empty($templates['paging']['next']) ? $templates['paging']['next'] : null);
-            if (empty($templates['error'])) {
+            if (empty($templates['error']) && !empty($templates['data'])) {
                 $whatsAppTemplates     = array_merge($whatsAppTemplates, $templates['data']);
                 $whatsAppTemplatesLang = array_merge($whatsAppTemplatesLang, $this->addTemplates($templates));
             }

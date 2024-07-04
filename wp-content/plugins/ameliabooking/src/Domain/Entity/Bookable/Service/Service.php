@@ -7,13 +7,13 @@
 namespace AmeliaBooking\Domain\Entity\Bookable\Service;
 
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\Json;
-use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
+use AmeliaBooking\Domain\ValueObjects\String\BookableType;
 use AmeliaBooking\Domain\ValueObjects\String\Cycle;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Domain\ValueObjects\Priority;
@@ -449,6 +449,13 @@ class Service extends AbstractBookable
         $this->limitPerCustomer = $limitPerCustomer;
     }
 
+    /**
+     * @return BookableType
+     */
+    public function getType()
+    {
+        return new BookableType(Entities::SERVICE);
+    }
 
 
     /**

@@ -132,6 +132,7 @@ abstract class Forminator_Import_Mediator {
 			'gdprcheckbox',
 			'honeypot',
 			'captcha',
+			'rating',
 			'submit',
 		);
 

@@ -25,7 +25,8 @@
       'employee': '<?php echo esc_js($params['employee']); ?>',
       'eventId': '<?php echo esc_js($params['event']); ?>',
       'eventRecurring': <?php echo $params['recurring'] ? 1 : 0; ?>,
-      'eventTag': "<?php echo esc_js($params['tag']); ?>"
+      'eventTag': "<?php echo esc_js($params['tag']); ?>",
+      'locationId': "<?php echo esc_js($params['location']); ?>"
     }
   );
   var ameliaShortcodeDataTriggered = (typeof ameliaShortcodeDataTriggered === 'undefined') ? [] : ameliaShortcodeDataTriggered;

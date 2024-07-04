@@ -80,6 +80,17 @@
               width: calc(~'100% - 118px');
             }
           }
+
+          &.calc-width-mobile-tax {
+            @media @less-then-large {
+              margin-right: @margin-medium;
+              width: calc(~'100% - 60px');
+            }
+            @media @less-then-medium {
+              margin-right: @margin-medium;
+              width: calc(~'100% - 64px');
+            }
+          }
         }
       }
     }

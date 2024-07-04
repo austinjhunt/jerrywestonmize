@@ -89,6 +89,7 @@ class LiteFrontendStrings
             'canceled'                     => __('Canceled', 'wpamelia'),
             'capacity_colon'               => __('Capacity:', 'wpamelia'),
             'closed'                       => __('Closed', 'wpamelia'),
+            'content_mode_tooltip'         => __('Don\'t use Text mode option if you already have HTML code in the description, since once this option is enabled the existing HTML tags could be lost.', 'wpamelia'),
             'full'                         => __('Full', 'wpamelia'),
             'upcoming'                     => __('Upcoming', 'wpamelia'),
             'confirm'                      => __('Confirm', 'wpamelia'),

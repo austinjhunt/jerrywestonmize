@@ -65,6 +65,8 @@ class Forminator_Admin_AJAX {
 		// Handle search user email
 		add_action( 'wp_ajax_forminator_builder_search_emails', array( $this, 'search_emails' ) );
 
+		add_action( 'wp_ajax_forminator_create_module_from_template', array( $this, 'create_module_from_template' ) );
+
 		add_action( 'wp_ajax_forminator_load_privacy_settings_popup', array( $this, 'load_privacy_settings' ) );
 		add_action( 'wp_ajax_forminator_save_privacy_settings_popup', array( $this, 'save_privacy_settings' ) );
 
@@ -1339,149 +1341,81 @@ class Forminator_Admin_AJAX {
 		if ( ! Forminator::is_import_export_feature_enabled() ) {
 			wp_send_json_error( esc_html__( 'Import Export Feature disabled.', 'forminator' ) );
 		}
+		if ( empty( $_POST['importable'] ) ) {
+			wp_send_json_error( esc_html__( 'Import text can not be empty.', 'forminator' ) );
+		}
 		$current_action = current_action();
 		$slug           = str_replace( array( 'wp_ajax_forminator_save_import_', '_popup' ), '', $current_action );
-		// Validate nonce
+		// Validate nonce.
 		forminator_validate_ajax( 'forminator_save_import_' . $slug, false, 'forminator-settings' );
 
-		$importable = json_decode( html_entity_decode( wp_unslash( $_POST['importable'] ) ), true );
-
-		$import_data = Forminator_Core::sanitize_array( $importable );
-
 		// Modify recipients if replace all recipients checkbox has been checked.
-		$change_recipients = Forminator_Core::sanitize_text_field( 'change_recipients' );
-		if ( 'checked' === $change_recipients ) {
-			$import_data = $this->change_recipients( $import_data );
+		$change_recipients = 'checked' === Forminator_Core::sanitize_text_field( 'change_recipients' );
+
+		$json  = html_entity_decode( wp_unslash( $_POST['importable'] ) );
+		$model = $this->import_json( $json, $slug, $change_recipients );
+
+		$return_url = admin_url( 'admin.php?page=forminator-' . forminator_get_prefix( $slug, 'c' ) );
+
+		wp_send_json_success(
+			array(
+				'id'  => $model->id,
+				'url' => $return_url,
+			)
+		);
+	}
+
+	/**
+	 * Create module from template
+	 */
+	public function create_module_from_template() {
+		// Validate nonce.
+		forminator_validate_ajax( 'forminator_create_form_from_template', false, 'forminator-cform' );
+		forminator_validate_ajax( 'forminator_create_form_from_template', false, 'forminator-templates' );
+
+		$template_id = filter_input( INPUT_POST, 'id' );
+
+		if ( empty( $template_id ) ) {
+			wp_send_json_error( esc_html__( 'Template ID is missing.', 'forminator' ) );
 		}
 
-		// hook custom data here.
-		$import_data = apply_filters( 'forminator_' . $slug . '_import_data', $import_data );
-
+		$form_admin = new Forminator_Custom_Form_Admin();
 		try {
-			if ( empty( $_POST['importable'] ) ) {
-				throw new Exception( esc_html__( 'Import text can not be empty.', 'forminator' ) );
+			$id = $form_admin->create_module_from_template( $template_id );
+			if ( is_wp_error( $id ) ) {
+				throw new Exception( $id->get_error_message() );
 			}
-
-			if ( empty( $import_data ) || ! is_array( $import_data ) ) {
-				throw new Exception( esc_html__( 'Oops, looks like we found an issue. Import text can not include whitespace or special characters.', 'forminator' ) );
-			}
-
-			if ( ! isset( $import_data['type'] ) || $slug !== $import_data['type'] ) {
-				throw new Exception( esc_html__( 'Oops, wrong module type. You can only import a module of the same type that you\'re currently viewing.', 'forminator' ) );
-			}
-
-			$class = 'Forminator_' . forminator_get_prefix( $slug, '', true ) . '_Model';
-			$model = $class::create_from_import_data( $import_data );
-
-			if ( is_wp_error( $model ) ) {
-				throw new Exception( $model->get_error_message() );
-			}
-
-			if ( ! $model instanceof Forminator_Base_Form_Model ) {
-				throw new Exception( esc_html__( 'Failed to import module, please make sure import text is valid, and try again.', 'forminator' ) );
-			}
-
-			$return_url = admin_url( 'admin.php?page=forminator-' . forminator_get_prefix( $slug, 'c' ) );
-
-			/**
-			 * Fires after form import
-			 *
-			 * @since 1.27.0
-			 *
-			 * @param int $slug Module type.
-			 */
-
-			do_action( 'forminator_after_form_import', $slug );
-
-			wp_send_json_success(
-				array(
-					'id'  => $model->id,
-					'url' => $return_url,
-				)
-			);
-
 		} catch ( Exception $e ) {
 			wp_send_json_error( $e->getMessage() );
 		}
+
+		$return_url = admin_url( 'admin.php?page=forminator-cform-wizard&id=' . $id );
+
+		wp_send_json_success(
+			array(
+				'id'  => $id,
+				'url' => $return_url,
+			)
+		);
 	}
 
 	/**
-	 * Change the recipients
-     *
-	 * @since 1.18.0
+	 * Import Form
 	 *
-	 * @param mixed $data imported module data.
+	 * @param string $json JSON data to import.
+	 * @param string $slug Module type.
+	 * @param bool   $change_recipients Change recipients.
+	 * @param bool   $draft Draft status.
 	 *
-	 * @return array $data
+	 * @throws Exception When import failed.
 	 */
-	public function change_recipients( $data ) {
-		if ( ! empty( $data ) ) {
-			$current_user_email = wp_get_current_user()->user_email;
-
-			if ( 'poll' === $data['type'] ) {
-
-				if ( ! empty( $data['data']['settings']['admin-email-recipients'] ) ) {
-					$data['data']['settings']['admin-email-recipients'] = $this->apply_user_email( $data['data']['settings']['admin-email-recipients'], $current_user_email );
-				}
-				if ( ! empty( $data['data']['settings']['admin-email-cc-address'] ) ) {
-					$data['data']['settings']['admin-email-cc-address'] = $this->apply_user_email( $data['data']['settings']['admin-email-cc-address'], $current_user_email );
-				}
-				if ( ! empty( $data['data']['settings']['admin-email-bcc-address'] ) ) {
-					$data['data']['settings']['admin-email-bcc-address'] = $this->apply_user_email( $data['data']['settings']['admin-email-bcc-address'], $current_user_email );
-				}
-			} else {
-
-				if ( ! empty( $data['data']['notifications'] ) ) {
-
-					foreach ( $data['data']['notifications'] as $notif_key => $notif ) {
-						// Modify the recipients.
-						if ( ! empty( $notif['recipients'] ) ) {
-							$recipients = $this->apply_user_email( $notif['recipients'], $current_user_email );
-							$data['data']['notifications'][ $notif_key ]['recipients'] = $recipients;
-						}
-
-						// Modify the routing recipients.
-						if ( ! empty( $notif['routing'] ) ) {
-
-							foreach ( $notif['routing'] as $routing_key => $route ) {
-								if ( ! empty( $route['email'] ) ) {
-									$route_emails = $this->apply_user_email( $route['email'], $current_user_email );
-									$data['data']['notifications'][ $notif_key ]['routing'][ $routing_key ]['email'] = $route_emails;
-								}
-							}
-						}
-					}
-				}
-			}
+	public function import_json( string $json, string $slug, bool $change_recipients, bool $draft = false ) {
+		try {
+			$model = Forminator_Admin_Module::import_json( $json, '', $slug, $change_recipients, $draft );
+			return $model;
+		} catch ( Exception $e ) {
+			wp_send_json_error( $e->getMessage() );
 		}
-
-		return $data;
-	}
-
-	/**
-	 * Apply user emails
-     *
-	 * @since 1.18.0
-	 *
-	 * @param string $data - Email recipients
-	 * @param string $current_user_email
-	 *
-	 * @return array $recipients
-	 */
-	public function apply_user_email( $data, $current_user_email ) {
-		$recipients = ! is_array( $data ) ? explode( ',', $data ) : $data;
-
-		foreach ( $recipients as $key => $recipient ) {
-			$recipient = trim( $recipient );
-
-			// Will not change recipients that use field tags like {email-1}.
-			if ( false === strpos( $recipient, '{' ) ) {
-				$recipients[ $key ] = $current_user_email;
-			}
-		}
-		$recipients = array_unique( $recipients );
-
-		return ! is_array( $data ) ? implode( ',', $recipients ) : $recipients;
 	}
 
 	/**

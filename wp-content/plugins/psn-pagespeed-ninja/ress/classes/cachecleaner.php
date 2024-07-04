@@ -48,79 +48,15 @@ class Ressio_CacheCleaner
         $fs->touch($lock);
         $filelock->unlock($lock);
 
-        // wait for double ttl to clear cache
+        $file_list = $di->cache->clearExpired();
+        if ($file_list === null) {
+            return;
+        }
+
+        // wait for double ttl to clear cache (1 TTL for cache + 1 TTL for pagecache)
         $aging_time = $now - 2 * $ttl;
-        $file_list = array();
 
         $staticdir = $di->config->webrootpath . $di->config->staticdir;
-
-        // iterate cache directory
-        foreach (scandir($cachedir, SCANDIR_SORT_NONE) as $subdir) {
-            $subdir_path = "$cachedir/$subdir";
-            if ($subdir[0] === '.' || !is_dir($subdir_path)) {
-                continue;
-            }
-            $h = opendir($subdir_path);
-            $remove_dir = true;
-            while (($file = readdir($h)) !== false) {
-                $file_path = "$subdir_path/$file";
-                if ($file[0] === '.' || !is_file($file_path)) {
-                    continue;
-                }
-                if ($fs->getModificationTime($file_path) < $aging_time) {
-                    unlink($file_path);
-                    continue;
-                }
-                $remove_dir = false;
-                $group = explode('_', $file, 2)[1];
-                switch ($group) {
-                    case 'js':
-                        foreach (@json_decode(file_get_contents($file_path)) as $node) {
-                            if (isset($node->attributes->src)) {
-                                if (preg_match('#[/?]([0-9a-f]+\.js)$#', $node->attributes->src, $matches)) {
-                                    $file_ref = $matches[1];
-                                    $file_list[$file_ref] = 1;
-                                }
-                            }
-                        }
-                        break;
-                    case 'css':
-                        foreach (@json_decode(file_get_contents($file_path)) as $node) {
-                            if (isset($node->attributes->href)) {
-                                if (preg_match('#[/?]([0-9a-f]+\.css)$#', $node->attributes->href, $matches)) {
-                                    $file_ref = $matches[1];
-                                    $file_list[$file_ref] = 1;
-                                }
-                            }
-                        }
-                        break;
-                    case 'htmljs':
-                        if (preg_match_all('#src="[^">]+[/?]([0-9a-f]+\.js)#', file_get_contents($file_path), $matches)) {
-                            foreach ($matches[1] as $file_ref) {
-                                $file_list[$file_ref] = 1;
-                            }
-                        }
-                        break;
-                    case 'htmlcss':
-                        if (preg_match_all('#href="[^">]+[/?]([0-9a-f]+\.css)#', file_get_contents($file_path), $matches)) {
-                            foreach ($matches[1] as $file_ref) {
-                                $file_list[$file_ref] = 1;
-                            }
-                        }
-                        break;
-                    case 'file':
-                        $data = @json_decode(file_get_contents($file_path));
-                        if (isset($data->filename) && strncmp($data->filename, $staticdir, strlen($staticdir)) === 0) {
-                            $file_ref = substr($data->filename, strlen($staticdir) + 1);
-                            $file_list[$file_ref] = 1;
-                        }
-                }
-            }
-            closedir($h);
-            if ($remove_dir) {
-                @rmdir($subdir_path);
-            }
-        }
 
         if (is_dir($staticdir)) {
             $iterator = new AppendIterator();
@@ -136,7 +72,7 @@ class Ressio_CacheCleaner
                     continue;
                 }
                 $file_name = $file->getFilename();
-                $file_path = $file->getRealPath();
+                $file_path = $file->getPathname();
                 if (
                     $file_name[0] === '.' ||
                     $fs->getModificationTime($file_path) >= $aging_time ||
@@ -144,12 +80,68 @@ class Ressio_CacheCleaner
                 ) {
                     continue;
                 }
-                $src_file = str_replace(array('.br', '.gz'), '', substr($file->getPathname(), strlen($staticdir) + 1));
+                $src_file = str_replace(array('.br', '.gz'), '', substr($file_path, strlen($staticdir) + 1));
                 if (isset($file_list[$src_file])) {
                     continue;
                 }
                 unlink($file_path);
             }
         }
+    }
+
+    /**
+     * @param string $id
+     * @param string $value
+     * @param string $staticdir
+     * @return array<string,int>
+     */
+    public static function collectRefs($id, $value, $staticdir)
+    {
+        $file_list = array();
+        $group = explode('_', $id, 2)[1];
+        switch ($group) {
+            case 'js':
+                foreach (@json_decode($value) as $node) {
+                    if (isset($node->attributes->src)) {
+                        if (preg_match('#[/?]([0-9a-f]+\.js)$#', $node->attributes->src, $matches)) {
+                            $file_ref = $matches[1];
+                            $file_list[$file_ref] = 1;
+                        }
+                    }
+                }
+                break;
+            case 'css':
+                foreach (@json_decode($value) as $node) {
+                    if (isset($node->attributes->href)) {
+                        if (preg_match('#[/?]([0-9a-f]+\.css)$#', $node->attributes->href, $matches)) {
+                            $file_ref = $matches[1];
+                            $file_list[$file_ref] = 1;
+                        }
+                    }
+                }
+                break;
+            case 'htmljs':
+                if (preg_match_all('#src="[^">]+[/?]([0-9a-f]+\.js)#', $value, $matches)) {
+                    foreach ($matches[1] as $file_ref) {
+                        $file_list[$file_ref] = 1;
+                    }
+                }
+                break;
+            case 'htmlcss':
+                if (preg_match_all('#href="[^">]+[/?]([0-9a-f]+\.css)#', $value, $matches)) {
+                    foreach ($matches[1] as $file_ref) {
+                        $file_list[$file_ref] = 1;
+                    }
+                }
+                break;
+            case 'file':
+                $data = @json_decode($value);
+                if (isset($data->filename) && strncmp($data->filename, $staticdir, strlen($staticdir)) === 0) {
+                    $file_ref = substr($data->filename, strlen($staticdir) + 1);
+                    $file_list[$file_ref] = 1;
+                }
+        }
+
+        return $file_list;
     }
 }

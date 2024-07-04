@@ -532,6 +532,11 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 					$mapper['sub_metas'][] = $field_mapper;
 				}
 			}
+		} elseif ( 'rating' === $field_type ) {
+			$mapper['max_rating'] = $field->__get( 'max_rating' );
+			$mapper['suffix']     = $field->__get( 'suffix' );
+			$mapper['icon']       = $field->__get( 'icon' );
+			$mapper['size']       = $field->__get( 'size' );
 		}
 
 		return $mapper;
@@ -800,6 +805,12 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 					$detail_args['separator'] = $mapper['separator'];
 					$detail_args['point']     = $mapper['point'];
 					$detail_args['precision'] = $mapper['precision'];
+				}
+				if ( 'rating' === $mapper['type'] ) {
+					$detail_args['size']       = $mapper['size'];
+					$detail_args['icon']       = $mapper['icon'];
+					$detail_args['suffix']     = $mapper['suffix'];
+					$detail_args['max_rating'] = $mapper['max_rating'];
 				}
 
 				$detail_items[] = $detail_args;

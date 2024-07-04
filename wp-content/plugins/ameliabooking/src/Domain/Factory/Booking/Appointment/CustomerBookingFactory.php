@@ -42,14 +42,22 @@ class CustomerBookingFactory
      */
     public static function create($data)
     {
-        $customerBooking = new CustomerBooking(
-            new Id($data['customerId']),
-            new BookingStatus($data['status']),
-            new IntegerValue($data['persons'])
-        );
+        $customerBooking = new CustomerBooking();
 
         if (isset($data['id'])) {
             $customerBooking->setId(new Id($data['id']));
+        }
+
+        if (isset($data['customerId'])) {
+            $customerBooking->setCustomerId(new Id($data['customerId']));
+        }
+
+        if (isset($data['status'])) {
+            $customerBooking->setStatus(new BookingStatus($data['status']));
+        }
+
+        if (isset($data['persons'])) {
+            $customerBooking->setPersons(new IntegerValue($data['persons']));
         }
 
         if (isset($data['price'])) {
@@ -162,6 +170,14 @@ class CustomerBookingFactory
             $customerBooking->setCreated(new DateTimeValue(DateTimeService::getCustomDateTimeObject($data['created'])));
         }
 
+        if (!empty($data['tax'])) {
+            if (is_string($data['tax'])) {
+                $customerBooking->setTax(new Json($data['tax']));
+            } else if (json_encode($data['tax']) !== false) {
+                $customerBooking->setTax(new Json(json_encode($data['tax'])));
+            }
+        }
+
         return $customerBooking;
     }
 
@@ -200,6 +216,7 @@ class CustomerBookingFactory
                     'aggregatedPrice' => $row['booking_aggregatedPrice'],
                     'duration'        => !empty($row['booking_duration']) ? $row['booking_duration'] : null,
                     'token'           => isset($row['booking_token']) ? $row['booking_token'] : null,
+                    'tax'             => isset($row['booking_tax']) ? $row['booking_tax'] : null,
                 ];
             }
 

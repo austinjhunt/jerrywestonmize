@@ -90,6 +90,10 @@ class UpdateProviderCommandHandler extends CommandHandler
 
         $providerData = $command->getFields();
 
+        if (!isset($providerData['stripeConnect'])) {
+            $providerData['stripeConnect'] = null;
+        }
+
         /** @var EntityApplicationService $entityService */
         $entityService = $this->container->get('application.entity.service');
 

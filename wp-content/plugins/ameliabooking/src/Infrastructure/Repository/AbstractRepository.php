@@ -69,6 +69,46 @@ class AbstractRepository
     }
 
     /**
+     * @param array $ids
+     *
+     * @return Collection
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function getByIds($ids)
+    {
+        $params = [];
+
+        foreach ($ids as $index => $id) {
+            $params[':id' . $index] = $id;
+        }
+
+        $where = " WHERE id IN (" . implode(', ', array_keys($params)) . ')';
+
+        try {
+            $statement = $this->connection->prepare($this->selectQuery() . $where);
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        $entities = new Collection();
+
+        foreach ($rows as $row) {
+            $entities->addItem(
+                call_user_func([static::FACTORY, 'create'], $row),
+                $row['id']
+            );
+        }
+
+        return $entities;
+    }
+
+    /**
      * @return Collection
      * @throws InvalidArgumentException
      * @throws QueryExecutionException

@@ -22,7 +22,9 @@ class Forminator_Template_Blank extends Forminator_Template {
 			'name'        => esc_html__( 'Blank', 'forminator' ),
 			'description' => esc_html__( 'A simple contact form for your users to contact you', 'forminator' ),
 			'icon'        => 'clipboard-notes',
-			'priortiy'    => 1,
+			'priority'    => 1,
+			'category'    => '',
+			'pro'         => false,
 		);
 	}
 
@@ -100,6 +102,11 @@ class Forminator_Template_Blank extends Forminator_Template {
 			'cform-multiselect-custom-font' => '',
 			'cform-multiselect-font-size'   => '16',
 			'cform-multiselect-font-weight' => 'normal',
+			// Typography - Multi Select tag.
+			'cform-multiselect-tag-font-family' => 'Roboto',
+			'cform-multiselect-tag-custom-font' => '',
+			'cform-multiselect-tag-font-size'   => '12',
+			'cform-multiselect-tag-font-weight' => 'medium',
 			// Typography - Dropdown.
 			'cform-dropdown-font-family'    => 'Roboto',
 			'cform-dropdown-custom-font'    => '',

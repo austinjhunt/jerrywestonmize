@@ -80,6 +80,19 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
             ]
         );
 
+
+        $this->add_control(
+            'select_location',
+            [
+                'label' => BackendStrings::getWordPressStrings()['select_location'],
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
+                'options' => self::amelia_elementor_get_locations(),
+                'condition' => ['preselect' => 'yes'],
+                'placeholder' => BackendStrings::getWordPressStrings()['show_all_locations']
+            ]
+        );
+
         $this->add_control(
             'show_recurring',
             [
@@ -148,6 +161,9 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
 
             $show_recurring = $settings['show_recurring'] ? ' recurring=1' : '';
 
+            $selected_location = empty($settings['select_location']) ? '' : ' location=' . (is_array($settings['select_location']) ?
+                    implode(',', $settings['select_location']) : $settings['select_location']);
+
             $selected_tag = '';
             if (!empty($settings['select_tag'])) {
                 $selected_tag .= ' tag="';
@@ -161,7 +177,7 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
                 $selected_tag .= '"';
             }
 
-            echo '[ameliaeventslistbooking' . $trigger . $trigger_type . $in_dialog . $selected_event . $selected_tag . $show_recurring . ']';
+            echo '[ameliaeventslistbooking' . $trigger . $trigger_type . $in_dialog . $selected_event . $selected_location . $selected_tag . $show_recurring . ']';
         } else {
             echo '[ameliaeventslistbooking]';
         }
@@ -181,6 +197,21 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
         }
 
         return $returnEvents;
+    }
+
+    public static function amelia_elementor_get_locations()
+    {
+        $locations = GutenbergBlock::getEntitiesData()['data']['locations'];
+
+        $returnLocations = [];
+
+        $returnLocations['0'] = BackendStrings::getWordPressStrings()['show_all_locations'];
+
+        foreach ($locations as $location) {
+            $returnLocations[$location['id']] = $location['name'];
+        }
+
+        return $returnLocations;
     }
 
     public static function amelia_elementor_get_tags()

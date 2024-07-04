@@ -655,7 +655,8 @@
 				select2     = form.find( '.forminator-select2' ),
 				multiselect = form.find( '.forminator-multiselect' ),
 				stripe		= form.find( '.forminator-stripe-element' ),
-				slider		= form.find( '.forminator-slider' )
+				slider		= form.find( '.forminator-slider' ),
+				rating      = form.find( '.forminator-rating' )
 				;
 
 			var isDefault  = ( form.attr( 'data-design' ) === 'default' ),
@@ -686,6 +687,10 @@
 
 			if ( multiselect.length ) {
 				FUI.multiSelectStates( multiselect );
+			}
+
+			if ( rating.length && 'function' === typeof FUI.rating ) {
+				FUI.rating( rating );
 			}
 
 			if ( form.hasClass( 'forminator-design--material' ) ) {

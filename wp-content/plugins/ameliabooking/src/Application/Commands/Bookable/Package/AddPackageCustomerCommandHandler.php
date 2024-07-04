@@ -89,9 +89,7 @@ class AddPackageCustomerCommandHandler extends CommandHandler
         $packageRepository = $this->container->get('domain.bookable.package.repository');
 
         /** @var ReservationServiceInterface $reservationService */
-        $reservationService = $this->container->get('application.reservation.service')->get(
-            Entities::PACKAGE
-        );
+        $reservationService = $this->container->get('application.reservation.service')->get(Entities::PACKAGE);
 
 
         /** @var Package $package */
@@ -103,9 +101,7 @@ class AddPackageCustomerCommandHandler extends CommandHandler
             $package,
             $command->getField('customerId'),
             null,
-            $reservationService->getPaymentAmount(null, $package),
-            true,
-            null
+            true
         );
 
         $rules = $command->getField('rules');

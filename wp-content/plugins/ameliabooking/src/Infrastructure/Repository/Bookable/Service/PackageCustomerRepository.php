@@ -32,6 +32,7 @@ class PackageCustomerRepository extends AbstractRepository
             ':packageId'        => $data['packageId'],
             ':customerId'       => $data['customerId'],
             ':price'            => $data['price'],
+            ':tax'              => !empty($data['tax']) ? json_encode($data['tax']) : null,
             ':start'            => $data['start'],
             ':end'              => $data['end'],
             ':purchased'        => $data['purchased'],
@@ -42,9 +43,9 @@ class PackageCustomerRepository extends AbstractRepository
         try {
             $statement = $this->connection->prepare(
                 "INSERT INTO {$this->table}
-                (`packageId`, `customerId`, `price`, `start`, `end`, `purchased`, `status`, `bookingsCount`, `couponId`)
+                (`packageId`, `customerId`, `price`, `tax`, `start`, `end`, `purchased`, `status`, `bookingsCount`, `couponId`)
                 VALUES
-                (:packageId, :customerId, :price, :start, :end, :purchased, 'approved', :bookingsCount, :couponId)"
+                (:packageId, :customerId, :price, :tax, :start, :end, :purchased, 'approved', :bookingsCount, :couponId)"
             );
 
             $res = $statement->execute($params);

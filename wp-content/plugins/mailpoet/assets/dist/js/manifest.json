@@ -18,11 +18,15 @@
   "runtime.js": "runtime.js",
   "commons.js": "commons.js",
   "skins/ui/oxide/skin.css": "skins/ui/oxide/skin.css",
+  "skins/ui/oxide/skin.js": "skins/ui/oxide/skin.js",
   "skins/ui/oxide/skin.min.css": "skins/ui/oxide/skin.min.css",
   "skins/ui/oxide/content.css": "skins/ui/oxide/content.css",
   "skins/ui/oxide/content.inline.css": "skins/ui/oxide/content.inline.css",
+  "skins/ui/oxide/content.js": "skins/ui/oxide/content.js",
+  "skins/ui/oxide/content.inline.js": "skins/ui/oxide/content.inline.js",
   "skins/ui/oxide/content.min.css": "skins/ui/oxide/content.min.css",
   "skins/ui/oxide/content.inline.min.css": "skins/ui/oxide/content.inline.min.css",
   "skins/ui/oxide/skin.shadowdom.css": "skins/ui/oxide/skin.shadowdom.css",
+  "skins/ui/oxide/skin.shadowdom.js": "skins/ui/oxide/skin.shadowdom.js",
   "skins/ui/oxide/skin.shadowdom.min.css": "skins/ui/oxide/skin.shadowdom.min.css"
 }

@@ -371,13 +371,15 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 
 			// Check whether provider is reCaptcha or hCaptcha
 			if ( $this->is_recaptcha() ) {
-				$src         = 'https://www.google.com/recaptcha/api.js?hl=' . $language . '&onload=forminator_render_captcha&render=explicit';
-				$script_tag  = 'forminator-google-recaptcha';
-				$script_load = 'grecaptcha';
+				$method_onload = 'forminator_render_captcha';
+				$src           = 'https://www.google.com/recaptcha/api.js?hl=' . $language . '&onload=' . $method_onload . '&render=explicit';
+				$script_tag    = 'forminator-google-recaptcha';
+				$script_load   = 'grecaptcha';
 			} else {
-				$src         = 'https://js.hcaptcha.com/1/api.js?hl=' . $language . '&onload=forminator_render_hcaptcha&render=explicit&recaptchacompat=off';
-				$script_tag  = 'forminator-hcaptcha';
-				$script_load = 'hcaptcha';
+				$method_onload = 'forminator_render_hcaptcha';
+				$src           = 'https://js.hcaptcha.com/1/api.js?hl=' . $language . '&onload=' . $method_onload . '&render=explicit&recaptchacompat=off';
+				$script_tag    = 'forminator-hcaptcha';
+				$script_load   = 'hcaptcha';
 			}
 
 			if ( ! $is_ajax_load ) {
@@ -395,6 +397,13 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 					'on'   => 'window',
 					'load' => $script_load,
 				);
+				if ( $is_preview ) {
+					$this->script .= '<script type="text/javascript">
+					if ( window["' . $script_load . '"]) {
+							' . $method_onload . '();
+					}
+					</script>';
+				}
 			}
 		}
 

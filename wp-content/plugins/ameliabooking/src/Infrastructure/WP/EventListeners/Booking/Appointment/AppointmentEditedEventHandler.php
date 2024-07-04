@@ -245,6 +245,24 @@ class AppointmentEditedEventHandler
             }
         }
 
+        /** @var IcsApplicationService $icsService */
+        $icsService = $container->get('application.ics.service');
+
+        // check bookings with changed status for ICS files
+        if ($bookings) {
+            foreach ($bookings as $index => $booking) {
+                if ($booking['status'] === BookingStatus::APPROVED || $booking['status'] === BookingStatus::PENDING) {
+                    $bookings[$index]['icsFiles'] = $icsService->getIcsData(
+                        Entities::APPOINTMENT,
+                        $booking['id'],
+                        [],
+                        true
+                    );
+                    $appointment['bookings'][$index]['icsFiles'] = $bookings[$index]['icsFiles'];
+                }
+            }
+        }
+
         if ($appointmentStatusChanged === true) {
             $emailNotificationService->sendAppointmentStatusNotifications($appointment, true, true);
 
@@ -256,9 +274,6 @@ class AppointmentEditedEventHandler
                 $whatsAppNotificationService->sendAppointmentStatusNotifications($appointment, true, true);
             }
         }
-
-        /** @var IcsApplicationService $icsService */
-        $icsService = $container->get('application.ics.service');
 
         $appointment['initialAppointmentDateTime'] = $commandResult->getData()['initialAppointmentDateTime'];
 
@@ -285,21 +300,6 @@ class AppointmentEditedEventHandler
                 $whatsAppNotificationService->sendAppointmentRescheduleNotifications($appointment);
             }
         }
-
-        // check bookings with changed status for ICS files
-        if ($bookings) {
-            foreach ($bookings as $index => $booking) {
-                if ($booking['status'] === BookingStatus::APPROVED || $booking['status'] === BookingStatus::PENDING) {
-                    $bookings[$index]['icsFiles'] = $icsService->getIcsData(
-                        Entities::APPOINTMENT,
-                        $booking['id'],
-                        [],
-                        true
-                    );
-                }
-            }
-        }
-
 
         if (!$appointmentRescheduled || !empty($appointment['employee_changed'])) {
             $emailNotificationService->sendAppointmentEditedNotifications(

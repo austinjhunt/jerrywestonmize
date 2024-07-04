@@ -33,6 +33,7 @@ class CustomerBookingExtraRepository extends AbstractRepository implements Custo
             ':extraId'           => $data['extraId'],
             ':quantity'          => $data['quantity'],
             ':price'             => $data['price'],
+            ':tax'               => !empty($data['tax']) ? json_encode($data['tax']) : null,
             ':aggregatedPrice'   => $data['aggregatedPrice'] ? 1 : 0,
         ];
 
@@ -44,18 +45,21 @@ class CustomerBookingExtraRepository extends AbstractRepository implements Custo
                 `extraId`,
                 `quantity`,
                 `aggregatedPrice`,
-                `price`
+                `price`,
+                `tax`
                 )
                 VALUES (
                 :customerBookingId, 
                 :extraId, 
                 :quantity,
                 :aggregatedPrice,
-                :price
+                :price,
+                :tax
                 )"
             );
 
             $res = $statement->execute($params);
+
             if (!$res) {
                 throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
             }
