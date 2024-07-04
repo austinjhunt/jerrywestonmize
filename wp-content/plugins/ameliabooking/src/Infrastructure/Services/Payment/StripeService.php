@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -47,7 +48,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
         if ($data['paymentMethodId']) {
             $paymentMethodId = $data['paymentMethodId'];
 
-            if ($stripeConnectSettings['enabled'] &&
+            if (
+                $stripeConnectSettings['enabled'] &&
                 $stripeConnectSettings['amount'] &&
                 sizeof($transfers['accounts']) === 1 &&
                 $stripeConnectSettings['method'] === 'direct'
@@ -77,7 +79,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 $stripeData['return_url'] = $stripeSettings['returnUrl'];
             }
 
-            if ($stripeConnectSettings['enabled'] &&
+            if (
+                $stripeConnectSettings['enabled'] &&
                 $stripeConnectSettings['amount'] &&
                 $stripeConnectSettings['method'] === 'transfer' &&
                 sizeof($transfers['accounts']) > 0
@@ -89,7 +92,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
             $additionalStripeData = [];
 
-            if ($stripeConnectSettings['enabled'] &&
+            if (
+                $stripeConnectSettings['enabled'] &&
                 $stripeConnectSettings['amount'] &&
                 sizeof($transfers['accounts']) === 1 &&
                 $stripeConnectSettings['method'] === 'direct'
@@ -114,10 +118,18 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             if ($data['metaData']) {
                 $stripeData['metadata'] = $data['metaData'];
             }
+            // BEGIN MODS
 
+            if ($data['metaData']['Customer Email']) {
+                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
+            }
+            // also added a fallback description since that was appearing as null on the Stripe side
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
+            } else {
+                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
+            // END MODS
 
             $stripeData = apply_filters(
                 'amelia_before_stripe_payment',
@@ -127,7 +139,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             $intent = PaymentIntent::create($stripeData, $additionalStripeData);
 
 
-            if ($stripeConnectSettings['enabled'] &&
+            if (
+                $stripeConnectSettings['enabled'] &&
                 $stripeConnectSettings['amount'] &&
                 $stripeConnectSettings['method'] === 'transfer'
             ) {
@@ -222,7 +235,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                         'url' => $data['returnUrl'] . '&session_id={CHECKOUT_SESSION_ID}'
                     ]
                 ],
-//                'invoice_creation' => ['enabled' => true],
+                //                'invoice_creation' => ['enabled' => true],
             ];
 
             if (!empty($data['metaData'])) {
@@ -355,7 +368,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 ['stripe_account' => array_keys($transfers['accounts'])[0]] : []
         );
 
-        return $response->getLastResponse()->code === 200 ? $response->toArray()['amount']/100 : null;
+        return $response->getLastResponse()->code === 200 ? $response->toArray()['amount'] / 100 : null;
     }
 
     /**
