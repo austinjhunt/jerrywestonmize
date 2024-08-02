@@ -124,7 +124,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      */
     public static function handleCallback()
     {
-        if (isset($_REQUEST['code'], $_REQUEST['state']) && !isset($_REQUEST['scope']) && !isset($_REQUEST['type'])) {
+        if (isset($_REQUEST['code'], $_REQUEST['state']) && !isset($_REQUEST['scope']) && !isset($_REQUEST['type']) && !isset($_REQUEST['response_type'])) {
             wp_redirect(
                 add_query_arg(
                     urlencode_deep(

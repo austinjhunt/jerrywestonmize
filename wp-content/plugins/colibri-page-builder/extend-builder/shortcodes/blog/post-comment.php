@@ -35,7 +35,8 @@ function colibri_post_comments( $attrs = array() ) {
 	if ( comments_open( get_the_ID() ) ) {
 		comments_template();
 	} else {
-		return sprintf( '<p class="comments-disabled">%s</p>', $atts['disabled'] );
+		$comments_disabled = esc_html($atts['disabled']);
+		return sprintf( '<p class="comments-disabled">%s</p>',$comments_disabled );
 	}
 	$content = ob_get_clean();
 

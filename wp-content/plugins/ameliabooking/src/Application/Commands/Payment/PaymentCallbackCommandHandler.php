@@ -6,21 +6,31 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
+use AmeliaBooking\Domain\Entity\Cache\Cache;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Payment\PaymentGateway;
 use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
+use AmeliaBooking\Domain\Factory\Stripe\StripeFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
+use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
+use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
+use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAddedEventHandler;
 use Interop\Container\Exception\ContainerException;
+use Square\Models\Order;
+use Square\Models\UpdateOrderRequest;
+use Square\Models\UpdatePaymentRequest;
 
 /**
  * Class PaymentCallbackCommandHandler
@@ -149,9 +159,32 @@ class PaymentCallbackCommandHandler extends CommandHandler
                             $method = $command->getField('method');
 
                             if ($sessionId) {
-                                $paymentIntentId = $paymentService->getPaymentIntent($sessionId, $method, $accountId);
-                                if ($paymentIntentId) {
-                                    $transactionId = $paymentIntentId;
+                                $paymentData = $paymentService->getPaymentIntent($sessionId, $method, $accountId);
+                                if (!empty($paymentData['payment_intent'])) {
+                                    $transactionId = $paymentData['payment_intent'];
+                                }
+                                if (!empty($paymentData['customer']) && $reservation->getData() && !empty($reservation->getData()['customer']['id'])) {
+                                    /** @var CustomerRepository $customerRepository */
+                                    $customerRepository = $this->container->get('domain.users.customers.repository');
+
+                                    $stripeConnect = StripeFactory::create(['id' => $paymentData['customer']]);
+                                    if (empty($reservation->getData()['customer']['stripeConnect'])) {
+                                        $customerRepository->updateFieldById($reservation->getData()['customer']['id'], json_encode($stripeConnect->toArray()), 'stripeConnect');
+                                    }
+                                }
+                            }
+                            break;
+
+                        case 'square':
+                            /** @var SquareService $paymentService */
+                            $paymentService = $this->container->get('infrastructure.payment.square.service');
+
+                            if ($command->getField('squareOrderId')) {
+                                $response = $paymentService->getOrderResponse($command->getField('squareOrderId'));
+                                $order    = $response->isSuccess() ? $response->getResult()->getOrder() : null;
+                                if ($order && $order->getTenders() && sizeof($order->getTenders()) > 0) {
+                                    $transactionId = $order->getTenders()[0]->getPaymentId();
+                                    $response      = $paymentService->completePayment($transactionId);
                                 }
                             }
                             break;
@@ -160,7 +193,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
                     if ($status === 'paid') {
                         $amount = $command->getField('chargedAmount');
 
-                        if ($payment->getStatus()->getValue() !== PaymentStatus::PENDING) {
+                        if ($payment->getStatus()->getValue() !== PaymentStatus::PENDING && $gateway !== PaymentType::SQUARE) {
                             $payment->setStatus(new PaymentStatus(PaymentStatus::PAID));
                             $payment->setGateway(new PaymentGateway(new Name($gateway)));
                             if ($transactionId) {
@@ -189,7 +222,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
                                 $appointmentAS->updateBookingStatus($paymentId);
 
                                 BookingAddedEventHandler::handle(
-                                    $reservationService->getReservationByPayment($payment, true),
+                                    $reservation,
                                     $this->container
                                 );
                             }

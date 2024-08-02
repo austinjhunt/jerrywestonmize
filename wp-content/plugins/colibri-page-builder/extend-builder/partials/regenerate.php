@@ -66,7 +66,7 @@ class Regenerate
 				<div class="colibri-display-table">
 
 					<div class="colibri-display-table-cell">
-						<img src="<?php echo \ColibriWP\PageBuilder\PageBuilder::instance()->rootURL(); ?>/assets/logo.jpg">
+						<img src="<?php echo \ColibriWP\PageBuilder\PageBuilder::instance()->rootURL(); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>/assets/logo.jpg">
 					</div>
 					<div class="colibri-display-table-cell">
 						<h2><?php echo esc_html($theme_name); ?> design has been successfully imported!</h2>

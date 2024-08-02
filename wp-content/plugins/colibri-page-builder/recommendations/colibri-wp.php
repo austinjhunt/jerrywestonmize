@@ -97,9 +97,9 @@ if (!function_exists('ExtendBuilder\admin_notice_colibriwp_theme_required')) {
             <script>
                 jQuery(function($) {
                     $(document).on('click', '.colibri-wp-recommendation .notice-dismiss', function() {
-                        $.post("<?php echo admin_url("/admin-ajax.php"); ?>", {
+                        $.post("<?php echo admin_url("/admin-ajax.php");//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>", {
                             action: 'colibri_wp_recommendation_hide_notice',
-                            _wpnonce: '<?php echo wp_create_nonce('colibri_wp_recommendation_hide_notice_nonce');?>'
+                            _wpnonce: '<?php echo wp_create_nonce('colibri_wp_recommendation_hide_notice_nonce'); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>'
                         })
                     });
                 });

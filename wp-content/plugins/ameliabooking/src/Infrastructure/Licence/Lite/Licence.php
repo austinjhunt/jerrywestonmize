@@ -92,6 +92,13 @@ class Licence
             Commands\Payment\GetPaymentsCommand::class                         => new Commands\Payment\GetPaymentsCommandHandler($c),
             Commands\Payment\UpdatePaymentCommand::class                       => new Commands\Payment\UpdatePaymentCommandHandler($c),
             Commands\Payment\CalculatePaymentAmountCommand::class              => new Commands\Payment\CalculatePaymentAmountCommandHandler($c),
+            Commands\Square\SquarePaymentCommand::class                        => new Commands\Square\SquarePaymentCommandHandler($c),
+            Commands\Square\SquarePaymentNotifyCommand::class                  => new Commands\Square\SquarePaymentNotifyCommandHandler($c),
+            //Square
+            Commands\Square\DisconnectFromSquareAccountCommand::class          => new Commands\Square\DisconnectFromSquareAccountCommandHandler($c),
+            Commands\Square\FetchAccessTokenSquareCommand::class               => new Commands\Square\FetchAccessTokenSquareCommandHandler($c),
+            Commands\Square\GetSquareAuthURLCommand::class                     => new Commands\Square\GetSquareAuthURLCommandHandler($c),
+            Commands\Square\SquareRefundWebhookCommand::class                  => new Commands\Square\SquareRefundWebhookCommandHandler($c),
             // Settings
             Commands\Settings\GetSettingsCommand::class                        => new Commands\Settings\GetSettingsCommandHandler($c),
             Commands\Settings\UpdateSettingsCommand::class                     => new Commands\Settings\UpdateSettingsCommandHandler($c),
@@ -137,6 +144,8 @@ class Licence
         Routes\Notification\Notification::routes($app);
 
         Routes\Payment\Payment::routes($app);
+
+        Routes\Square\Square::routes($app);
 
         Routes\Import\Import::routes($app);
 

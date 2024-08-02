@@ -4,6 +4,7 @@ namespace ExtendBuilder;
 
 add_shortcode( 'colibri_page_title', function ( $atts ) {
 	ob_start();
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo colibri_page_title_html( $atts, colibri_titles() );
 	$content = ob_get_clean();
 
@@ -39,7 +40,7 @@ function get_title( $titles ) {
 	if ( is_404() ) {
 		$final_title = $titles['errorPage'];
 	} elseif ( is_search() ) {
-		$title       = sprintf( __( '%s', 'colibri' ), get_search_query() );
+		$title       = sprintf( __( '%s', 'colibri-page-builder' ), get_search_query() );
 		$final_title = $title ? str_replace( "{TITLE}", $title, $titles['normalResultsPage'] ) : "";
 	} elseif ( is_home() ) {
 		if ( is_front_page() ) {

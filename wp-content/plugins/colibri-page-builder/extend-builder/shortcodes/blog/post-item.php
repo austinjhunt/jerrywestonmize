@@ -10,7 +10,7 @@ add_shortcode( 'colibri_post_categories',
 add_shortcode( 'colibri_post_tags', '\ExtendBuilder\colibri_post_tags' );
 
 add_shortcode( 'colibri_post_class', function () {
-	return join( " ", get_post_class() );
+	return esc_attr(join( " ", get_post_class() ));
 } );
 
 add_shortcode( 'colibri_post_id', function () {
@@ -40,11 +40,11 @@ add_shortcode( 'colibri_post_thumbnail', function ( $attrs = array() ) {
 	return ob_get_clean();
 } );
 add_shortcode( 'colibri_post_link', function () {
-	return get_the_permalink();
+	return esc_url(get_the_permalink());
 } );
 
 add_shortcode( 'colibri_post_thumbnail_url', function () {
-	return get_the_post_thumbnail_url( null, 'post-thumbnail' );
+	return esc_url(get_the_post_thumbnail_url( null, 'post-thumbnail' ));
 } );
 
 
@@ -54,11 +54,11 @@ add_shortcode( 'colibri_post_meta_date_url', function () {
 		get_post_time( 'm', false, $id, true ),
 		get_post_time( 'j', false, $id, true ) );
 
-	return $link;
+	return esc_url($link);
 } );
 
 add_shortcode( 'colibri_post_meta_author_url', function () {
-	return get_author_posts_url( get_the_author_meta( 'ID' ) );
+	return esc_url(get_author_posts_url( get_the_author_meta( 'ID' ) ));
 } );
 
 add_shortcode( 'colibri_post_meta_time_url', function () {
@@ -68,15 +68,15 @@ add_shortcode( 'colibri_post_meta_time_url', function () {
 } );
 
 add_shortcode( 'colibri_post_meta_comments_url', function () {
-	return get_comments_link();
+	return esc_url(get_comments_link());
 } );
 
 add_shortcode( 'colibri_post_meta_comments_content', function () {
-	return get_comments_number();
+	return esc_html(get_comments_number());
 } );
 
 add_shortcode( 'colibri_post_meta_author_content', function () {
-	return get_the_author_meta( 'display_name', get_the_author_meta( 'ID' ) );
+	return esc_html(get_the_author_meta( 'display_name', get_the_author_meta( 'ID' ) ));
 } );
 
 add_shortcode( 'colibri_post_meta_time_content', function () {
@@ -123,7 +123,7 @@ function colibri_post_categories( $attrs = array() ) {
 			);
 		}
 	} else {
-		$html .= sprintf( '<span class="d-inline-block colibri-post-category">%s</span>', 'No Category' );
+		$html .= sprintf( '<span class="d-inline-block colibri-post-category">%s</span>', __('No Category', 'colibri-page-builder') );
 	}
 
 	return $html;
@@ -144,13 +144,13 @@ function colibri_post_tags( $attrs = array() ) {
 	if ( $tags ) {
 		foreach ( $tags as $tag ) {
 			$tag_link       = get_tag_link( $tag->term_id );
-			$sanitized_name = preg_replace( '/[^[a-z|A-Z|0-9|\-|_\s]]*/i', "", $tag->name );
+			$sanitized_name = esc_html($tag->name);
 
 			$html .= "<a class=\"d-inline-block colibri-post-tag\" href=\"{$tag_link}\" title=\"{$sanitized_name} Tag\">";
 			$html .= "{$sanitized_name}</a>";
 		}
 	} else {
-		$html .= sprintf( '<span class="d-inline-block colibri-post-tag">%s</span>', 'No Tag' );
+		$html .= sprintf( '<span class="d-inline-block colibri-post-tag">%s</span>', __('No Tag', 'colibri-page-builder') );
 	}
 
 	return $html;
@@ -252,7 +252,7 @@ function colibri_post_excerpt( $attrs = array() ) {
 
 	}
 
-	return '<div class="colibri-post-excerpt">' . get_the_excerpt() . '</div>';
+	return '<div class="colibri-post-excerpt">' . wp_kses_post(get_the_excerpt()) . '</div>';
 
 }
 

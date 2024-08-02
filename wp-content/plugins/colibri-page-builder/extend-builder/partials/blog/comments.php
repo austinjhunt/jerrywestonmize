@@ -10,9 +10,9 @@ $colibri_post_comments_atts = \ExtendBuilder\colibri_cache_get( 'post_comments_a
     <h4 class="comments-title">
     	<span class="comments-number">
             <?php comments_number(
-	            $colibri_post_comments_atts['none'],
-	            $colibri_post_comments_atts['one'],
-	            str_replace( '{COMMENTS-COUNT}', '%', $colibri_post_comments_atts['multiple'] )
+                esc_html($colibri_post_comments_atts['none']),
+                esc_html($colibri_post_comments_atts['one']),
+	            str_replace( '{COMMENTS-COUNT}', '%', esc_html($colibri_post_comments_atts['multiple']) )
             ); ?>
     	</span>
     </h4>
@@ -20,7 +20,7 @@ $colibri_post_comments_atts = \ExtendBuilder\colibri_cache_get( 'post_comments_a
     <ol class="comment-list">
 		<?php
 		wp_list_comments( array(
-			'avatar_size' => $colibri_post_comments_atts['avatar_size'],
+			'avatar_size' => esc_html($colibri_post_comments_atts['avatar_size']),
 			'format'      => 'html5'
 		) );
 		?>
@@ -46,7 +46,7 @@ $colibri_post_comments_atts = \ExtendBuilder\colibri_cache_get( 'post_comments_a
 	<?php
 	if ( ! comments_open() && get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ):
 		?>
-        <p class="no-comments"><?php _e( 'Comments are closed.', 'colibri-wp' ); ?></p>
+        <p class="no-comments"><?php _e( 'Comments are closed.', 'colibri-wp' );// phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction?></p>
 	<?php
 	endif;
 	?>

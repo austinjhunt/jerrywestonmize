@@ -16,7 +16,9 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
+use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
@@ -164,6 +166,17 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
         $appointmentRepo->beginTransaction();
 
         do_action('amelia_before_appointment_status_updated', $appointment->toArray(), $requestedStatus);
+
+        $appointment->setBookingEnd(
+            new DateTimeValue(
+                DateTimeService::getCustomDateTimeObjectInUtc(
+                    $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s')
+                )->modify('+' . $appointmentAS->getAppointmentLengthTime($appointment, $service) . ' second')
+            )
+        );
+
+        $appointmentRepo->updateFieldById($appointmentId, $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'), 'bookingEnd');
+
 
         if ($packageCustomerId) {
             /** @var CustomerBooking $booking */

@@ -24,20 +24,20 @@ function colibri_gallery_placeholder($atts, $defaultNumberOfPictures, $galleryIm
                     $prefix   = ($atts['masonry'] == 1) ? 'masonry-' : '';
                     $imgURL   = PageBuilder::instance()->rootURL() . "/extend-builder/assets/images/{$prefix}{$imgIndex}.jpg";
                     ?>
-                    <a <?php echo($atts['link'] === 'none' ? 'class="pointer-event-none"' : "") ?> <?php echo($atts['lb'] == '1' ? "data-fancybox='{$atts_id}-group'" : "") ?>
+                    <a <?php echo($atts['link'] === 'none' ? 'class="pointer-event-none"' : "") // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> <?php echo($atts['lb'] == '1' ? "data-fancybox='{$atts_id}-group'" : "") // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                             href="<?php echo esc_url($imgURL); ?>">
                         <img src="<?php echo esc_url( $imgURL); ?>" class="<?php echo esc_attr( $atts['id']); ?>-image" alt="">
 
                         <!-- Used for overlay option -->
                         <?php if ($galleryImageOverlayClass)  : ?>
-                            <div class=<?= "{$galleryImageOverlayClass} " ?>></div>
+                            <div class=<?= "{$galleryImageOverlayClass} " // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>></div>
                         <?php endif; ?>
 
                     </a>
                 </dt>
                 <div class=" gallery-caption__wrapper">
                     <dd class="wp-caption-text gallery-caption" style="display: none">
-                        Image <?php echo ($img + 1); ?> description
+                        Image <?php echo ($img + 1); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> description
                     </dd>
                 </div>
             </dl>
@@ -154,19 +154,19 @@ function colibri_gallery_shortcode($atts)
             foreach($atts['columns-per-media'] as $key => $value) {
                  $nr_columns_per_media = $value;
             if($columns_media_sizes[$key] !== null) {
-                echo strip_tags($columns_media_sizes[$key]);
+                echo wp_kses_post($columns_media_sizes[$key]) ;
             }
         ?>
-        #<?php echo strip_tags($atts['id']); ?>
+        #<?php echo wp_kses_post($atts['id']); ?>
         dl {
             float: left;
-            width: <?php echo (100 / $nr_columns_per_media) ?>% !important;
-            max-width: <?php echo (100 / $nr_columns_per_media) ?>% !important;
-            min-width: <?php echo (100 / $nr_columns_per_media) ?>% !important;
+            width: <?php echo (100 / $nr_columns_per_media) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>% !important;
+            max-width: <?php echo (100 / $nr_columns_per_media) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>% !important;
+            min-width: <?php echo (100 / $nr_columns_per_media) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>% !important;
         }
 
-        #<?php echo strip_tags($atts['id']); ?>
-        dl:nth-of-type(<?php echo strip_tags($nr_columns_per_media); ?>n +1 ) {
+        #<?php echo wp_kses_post($atts['id']); ?>
+        dl:nth-of-type(<?php echo wp_kses_post($nr_columns_per_media); ?>n +1 ) {
             clear: both;
         }
 
@@ -180,13 +180,13 @@ function colibri_gallery_shortcode($atts)
            }
        ?>
 
-        #<?php echo strip_tags($atts['id']); ?>
+        #<?php echo wp_kses_post($atts['id']); ?>
         .gallery-item {
             position: relative;
         }
 
         <?php if($useOverlay) : ?>
-            #<?php echo strip_tags($atts['id']); ?>
+            #<?php echo wp_kses_post($atts['id']); ?>
             .gallery-item .gallery-element-image-overlay {
                 position: absolute;
                 top: 0;
@@ -195,7 +195,7 @@ function colibri_gallery_shortcode($atts)
                 right: 0;
                 pointer-events: none;
                 z-index: 2;
-                <?php if($overlayColorExist) echo sprintf(' background-color: %s;',$atts['overlay'] ) ?>
+                <?php if($overlayColorExist) echo sprintf(' background-color: %s;',wp_kses_post($atts['overlay']) )// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             }
         <?php endif; ?>
 

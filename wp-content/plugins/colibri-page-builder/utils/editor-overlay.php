@@ -67,12 +67,12 @@ global $post;
     window.cp_open_page_in_default_editor = function (event,page) {
         event.preventDefault();
         event.stopPropagation();
-        var response = confirm("<?php _e('This post was previously edited in Customizer. You can continue in the Default Editor, but you may lose data and formatting.', 'mesmerize-companion') ?>");
+        var response = confirm("<?php _e('This post was previously edited in Customizer. You can continue in the Default Editor, but you may lose data and formatting.', 'colibri-page-builder') //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?>");
         if (response) {
             var data = {
                 action: 'cp_open_in_default_editor',
                 page: page,
-                _wpnonce: '<?php echo wp_create_nonce('cp_open_in_default_editor_nonce');?>'
+                _wpnonce: '<?php echo wp_create_nonce('cp_open_in_default_editor_nonce'); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>'
             };
 
             jQuery.post(ajaxurl, data).done(function (response) {
@@ -92,11 +92,11 @@ global $post;
         <div>
             <button onclick="cp_open_page_in_customizer(<?php echo esc_attr($post->ID); ?>)" class="button button-hero button-primary">
                 <i class="dashicons dashicons-edit"></i>
-				<?php _e('Edit in Colibri', 'mesmerize-companion') ?>
+				<?php _e('Edit in Colibri', 'colibri-page-builder') //phpcs:ignore  WordPress.Security.EscapeOutput.UnsafePrintingFunction ?>
             </button>
         </div>
         <div style="padding-top: 1em;">
-            <button onclick="cp_open_page_in_default_editor(event,'<?php echo esc_attr($post->ID); ?>')" class="button button-link"><?php _e('Edit In Default Editor', 'mesmerize-companion') ?></button>
+            <button onclick="cp_open_page_in_default_editor(event,'<?php echo esc_attr($post->ID); ?>')" class="button button-link"><?php _e('Edit In Default Editor', 'colibri-page-builder') //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?></button>
         </div>
     </div>
 </div>

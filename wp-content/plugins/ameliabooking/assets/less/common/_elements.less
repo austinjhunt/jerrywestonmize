@@ -606,6 +606,28 @@
         }
       }
 
+      .am-appointment-payment {
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 25px;
+        }
+
+        &-mollie, &-razorpay, &-square {
+          img {
+            width: 70px;
+          }
+        }
+
+        &-oliver {
+          img {
+            width: 15px;
+            height: 15px;
+          }
+        }
+      }
+
       .el-row {
         &.has-divider {
           border-bottom: 1px solid @color-divider-gray;

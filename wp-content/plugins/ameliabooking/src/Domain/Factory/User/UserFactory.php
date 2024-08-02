@@ -197,10 +197,6 @@ class UserFactory
                     $user->setZoomUserId(new Name($data['zoomUserId']));
                 }
 
-                if (!empty($data['stripeConnect'])) {
-                    $user->setStripeConnect(StripeFactory::create($data['stripeConnect']));
-                }
-
                 if (!empty($data['timeZone'])) {
                     $user->setTimeZone(new Name($data['timeZone']));
                 }
@@ -249,6 +245,14 @@ class UserFactory
         if (!empty($data['countryPhoneIso'])) {
             $user->setCountryPhoneIso(new Name($data['countryPhoneIso']));
         }
+
+        if (!empty($data['stripeConnect'])) {
+            if (!is_array($data['stripeConnect'])) {
+                $data['stripeConnect'] = json_decode($data['stripeConnect'], true);
+            }
+            $user->setStripeConnect(StripeFactory::create($data['stripeConnect']));
+        }
+
 
         if (!empty($data['birthday'])) {
             if (is_string($data['birthday'])) {

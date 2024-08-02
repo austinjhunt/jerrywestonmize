@@ -302,7 +302,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 							// GDPR not checked, add error.
 							throw new Forminator_Integration_Exception(
 								esc_html__(
-									'Forminator Integration Mailchimp was not sending subscriber to mailchimp as GDPR field is not checked on input',
+									'Forminator Mailchimp integration did not send subscriber to Mailchimp as GDPR field was not checked on input',
 									'forminator'
 								)
 							);

@@ -81,7 +81,7 @@ class GetTimeSlotsCommandHandler extends CommandHandler
 
         $props = apply_filters('amelia_before_get_timeslots_filter', $props);
 
-        do_action('amelia_before_get_timeslots', $command->getFields());
+        do_action('amelia_before_get_timeslots', $props);
 
         $isFrontEndBooking = $props['isFrontEndBooking'];
 
@@ -93,7 +93,7 @@ class GetTimeSlotsCommandHandler extends CommandHandler
             ]
         );
 
-        $settings = $applicationTimeSlotService->getSlotsSettings($isFrontEndBooking, $slotsEntities);
+        $settings = $applicationTimeSlotService->getSlotsSettings($isFrontEndBooking, $slotsEntities, $props);
 
         $lastBookedProviderId = null;
 

@@ -5,8 +5,10 @@ namespace MailPoet\Automation\Engine\Builder;
 if (!defined('ABSPATH')) exit;
 
 
+use ActionScheduler_Store;
 use MailPoet\Automation\Engine\Control\ActionScheduler;
 use MailPoet\Automation\Engine\Data\Automation;
+use MailPoet\Automation\Engine\Data\AutomationRun;
 use MailPoet\Automation\Engine\Data\Step;
 use MailPoet\Automation\Engine\Exceptions;
 use MailPoet\Automation\Engine\Exceptions\UnexpectedValueException;
@@ -164,11 +166,13 @@ class UpdateAutomationController {
     $runIds = [];
     $runs = $this->automationRunStorage->getAutomationRunsForAutomation($automation);
     foreach ($runs as $run) {
+      if ($run->getStatus() === AutomationRun::STATUS_RUNNING) {
+        $this->automationRunStorage->updateStatus($run->getId(), AutomationRun::STATUS_CANCELLED);
+      }
       $runIds[$run->getId()] = $run;
     }
 
-    $actions = $this->actionScheduler->getScheduledActions(['hook' => Hooks::AUTOMATION_STEP, 'status' => \ActionScheduler_Store::STATUS_PENDING]);
-
+    $actions = $this->actionScheduler->getScheduledActions(['hook' => Hooks::AUTOMATION_STEP, 'status' => ActionScheduler_Store::STATUS_PENDING]);
     foreach ($actions as $action) {
       $args = $action->get_args();
       $automationArgs = reset($args);

@@ -21,6 +21,8 @@ final class PaymentType
 
     const RAZORPAY = 'razorpay';
 
+    const SQUARE = 'square';
+
     /**
      * @var string
      */

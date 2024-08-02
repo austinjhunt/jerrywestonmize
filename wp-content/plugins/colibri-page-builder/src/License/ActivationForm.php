@@ -154,7 +154,7 @@ class ActivationForm {
                     wp.ajax.send('colibriwp-page-builder-activate', {
                         data: {
                             key: key,
-                            '_wpnonce': '<?php echo wp_create_nonce('colibriwp-page-builder-activate-nonce');?>'
+                            '_wpnonce': '<?php echo wp_create_nonce('colibriwp-page-builder-activate-nonce'); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>'
                         }
                     }).done(function (response) {
                         hideSpinner();
@@ -239,7 +239,7 @@ class ActivationForm {
                     wp.ajax.send('colibriwp-page-builder-activate', {
                         data: {
                             key: key,
-                            '_wpnonce': '<?php echo wp_create_nonce('colibriwp-page-builder-activate-nonce');?>'
+                            '_wpnonce': '<?php echo wp_create_nonce('colibriwp-page-builder-activate-nonce'); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>'
                         }
                     }).done(function (response) {
                         hideSpinner();
@@ -247,7 +247,7 @@ class ActivationForm {
                         $('.spinner-holder.plugin-installer-spinner .message').text('Installing Colibri Page Builder PRO...');
                         $('.spinner-holder.plugin-installer-spinner').show();
                         wp.ajax.post('colibriwp-page-builder-maybe-install-pro', {
-                            _wpnonce: '<?php echo wp_create_nonce( 'colibriwp-page-builder-maybe-install-pro-nonce' );?>'
+                            _wpnonce: '<?php echo wp_create_nonce( 'colibriwp-page-builder-maybe-install-pro-nonce' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>'
                         }).done(function () {
                             $('.spinner-holder.plugin-installer-spinner .message').text('Colibri Page Builder PRO sucessfully installed');
                             $('.spinner-holder.plugin-installer-spinner .spinner').remove();

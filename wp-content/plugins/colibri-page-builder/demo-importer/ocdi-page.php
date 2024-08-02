@@ -55,7 +55,7 @@ do_action( 'pt-ocdi/plugin_page_header' );
 
     <div class="ocdi  wrap  about-wrap">
         <link type="text/css" rel='stylesheet'
-              href="<?php echo PageBuilder::instance()->assetsRootURL() ?>/ocdi/main.css"/>
+              href="<?php echo PageBuilder::instance()->assetsRootURL() //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>/ocdi/main.css"/>
         <?php
 
         // Display warrning if PHP safe mode is enabled, since we wont be able to change the max_execution_time.

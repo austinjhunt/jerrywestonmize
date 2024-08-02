@@ -1945,7 +1945,9 @@ class Forminator_Admin_AJAX {
 			$template_vars['test_secret'] = $test_secret;
 			$template_vars['live_key']    = $live_key;
 			$template_vars['live_secret'] = $live_secret;
-
+			if ( ( ! empty( $test_secret ) && 'sk_' === substr( $test_secret, 0, 3 ) ) || ( ! empty( $live_secret ) && 'sk_' === substr( $live_secret, 0, 3 ) ) ) {
+				$template_vars['has_deprecated_secret_key'] = true;
+			}
 			if ( ! empty( $is_connect_request ) ) {
 				if ( empty( $test_key ) ) {
 					throw new Forminator_Gateway_Exception(
@@ -2011,10 +2013,18 @@ class Forminator_Admin_AJAX {
 				$template_vars['live_secret_error'] = esc_html__( 'Please input live secret key', 'forminator' );
 			}
 			if ( Forminator_Gateway_Stripe::INVALID_TEST_SECRET_EXCEPTION === $e->getCode() ) {
-				$template_vars['test_secret_error'] = esc_html__( 'You\'ve entered an invalid test secret key', 'forminator' );
+				if ( ! empty( $test_secret ) && 'sk_' === substr( $test_secret, 0, 3 ) ) {
+					$template_vars['test_secret_error'] = esc_html__( 'You\'ve entered an invalid test secret key', 'forminator' );
+				} else {
+					$template_vars['test_secret_error'] = esc_html__( 'You\'ve entered an invalid test restricted key', 'forminator' );
+				}
 			}
 			if ( Forminator_Gateway_Stripe::INVALID_LIVE_SECRET_EXCEPTION === $e->getCode() ) {
-				$template_vars['live_secret_error'] = esc_html__( 'You\'ve entered an invalid live secret key', 'forminator' );
+				if ( ! empty( $live_secret ) && 'sk_' === substr( $live_secret, 0, 3 ) ) {
+					$template_vars['live_secret_error'] = esc_html__( 'You\'ve entered an invalid live secret key', 'forminator' );
+				} else {
+					$template_vars['live_secret_error'] = esc_html__( 'You\'ve entered an invalid live restricted key', 'forminator' );
+				}
 			}
 			if ( Forminator_Gateway_Stripe::INVALID_TEST_KEY_EXCEPTION === $e->getCode() ) {
 				$template_vars['test_key_error'] = esc_html__( 'You\'ve entered an invalid test publishable key', 'forminator' );
@@ -2183,6 +2193,7 @@ class Forminator_Admin_AJAX {
 		$allowed_options = array(
 			'forminator_skip_pro_notice',
 			'forminator_cf7_notice_dismissed',
+			'forminator_stripe_rak_notice_dismissed',
 			'forminator_stripe_notice_dismissed',
 			'forminator_rating_success',
 			'forminator_rating_dismissed',

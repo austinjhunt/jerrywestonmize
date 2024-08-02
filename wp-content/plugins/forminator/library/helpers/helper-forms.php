@@ -549,7 +549,7 @@ function forminator_list_pagination( $total, $type = 'listings' ) {
 		$disable_last  = false;
 		$disable_prev  = false;
 		$disable_next  = false;
-		$mid_size      = 1;
+		$mid_size      = 2;
 		$end_size      = 1;
 		$show_skip     = false;
 

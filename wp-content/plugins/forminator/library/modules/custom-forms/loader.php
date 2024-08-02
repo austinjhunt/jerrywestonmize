@@ -223,18 +223,109 @@ class Forminator_Custom_Forms extends Forminator_Module {
 	public function get_templates() {
 		// Cache preset templates.
 		$all_templates = get_transient( 'forminator_preset_templates' );
-		if ( $all_templates ) {
-			return $all_templates;
-		}
-		$pro_templates  = Forminator_Template_API::get_templates( true );
-		$free_templates = $this->get_free_templates();
-		$all_templates  = array_merge( $free_templates, $pro_templates );
-		$all_templates  = self::prepare_templates_data( $all_templates );
+		if ( ! $all_templates ) {
+			$pro_templates  = Forminator_Template_API::get_templates( true );
+			$free_templates = $this->get_free_templates();
+			$all_templates  = array_merge( $free_templates, $pro_templates );
+			$all_templates  = self::prepare_templates_data( $all_templates );
 
-		if ( $pro_templates ) {
-			set_transient( 'forminator_preset_templates', $all_templates, DAY_IN_SECONDS );
+			if ( $pro_templates ) {
+				set_transient( 'forminator_preset_templates', $all_templates, DAY_IN_SECONDS );
+			}
 		}
+		$all_templates = self::make_templates_info_translatable( $all_templates );
+
 		return $all_templates;
+	}
+
+	/**
+	 * Make templates info translatable
+	 *
+	 * @param array $templates - templates.
+	 *
+	 * @return array
+	 */
+	public static function make_templates_info_translatable( $templates ) {
+		foreach ( $templates as $key => $template ) {
+			$templates[ $key ]['name']        = self::translate_template_name( $template['name'] );
+			$templates[ $key ]['description'] = self::translate_template_description( $template['description'] );
+		}
+
+		return $templates;
+	}
+
+	/**
+	 * Translate template name
+	 *
+	 * @param string $name - template name.
+	 *
+	 * @return string
+	 */
+	public static function translate_template_name( $name ) {
+		$array = array(
+			'Appointment Booking'              => __( 'Appointment Booking', 'forminator' ),
+			'Conference Registration Form'     => __( 'Conference Registration Form', 'forminator' ),
+			'Course Enrollment Form'           => __( 'Course Enrollment Form', 'forminator' ),
+			'Course Evaluation Form'           => __( 'Course Evaluation Form', 'forminator' ),
+			'Customer Complaint Form'          => __( 'Customer Complaint Form', 'forminator' ),
+			'Customer Feedback Form'           => __( 'Customer Feedback Form', 'forminator' ),
+			'Donation Form'                    => __( 'Donation Form', 'forminator' ),
+			'Event Feedback Form'              => __( 'Event Feedback Form', 'forminator' ),
+			'Event Registration Template'      => __( 'Event Registration Template', 'forminator' ),
+			'Fitness Class Registration'       => __( 'Fitness Class Registration', 'forminator' ),
+			'Home Service Request Form'        => __( 'Home Service Request Form', 'forminator' ),
+			'Job Application Form'             => __( 'Job Application Form', 'forminator' ),
+			'Medical History Form'             => __( 'Medical History Form', 'forminator' ),
+			'Order for Small Businesses'       => __( 'Order for Small Businesses', 'forminator' ),
+			'Real Estate Inquiry Form'         => __( 'Real Estate Inquiry Form', 'forminator' ),
+			'Restaurant Reservation Form'      => __( 'Restaurant Reservation Form', 'forminator' ),
+			'Return Merchandise Authorization' => __( 'Return Merchandise Authorization', 'forminator' ),
+			'RSVP Form'                        => __( 'RSVP Form', 'forminator' ),
+			'Travel Booking Form'              => __( 'Travel Booking Form', 'forminator' ),
+			'Volunteer Sign-up Form'           => __( 'Volunteer Sign-up Form', 'forminator' ),
+		);
+		if ( isset( $array[ $name ] ) ) {
+			return $array[ $name ];
+		}
+
+		return $name;
+	}
+
+	/**
+	 * Translate template description
+	 *
+	 * @param string $description - template description.
+	 *
+	 * @return string
+	 */
+	public static function translate_template_description( $description ) {
+		$array = array(
+			'Allows clients to book appointments, with options for selecting services, dates, times, and personal information.' => __( 'Allows clients to book appointments, with options for selecting services, dates, times, and personal information.', 'forminator' ),
+			'For registering attendees at conferences, including personal details, session choices, and payment options.' => __( 'For registering attendees at conferences, including personal details, session choices, and payment options.', 'forminator' ),
+			'For enrolling in educational courses, including fields for course selection, personal details, and payment information.' => __( 'For enrolling in educational courses, including fields for course selection, personal details, and payment information.', 'forminator' ),
+			'Designed for students to evaluate courses or training, with questions on content, instruction, and overall experience.' => __( 'Designed for students to evaluate courses or training, with questions on content, instruction, and overall experience.', 'forminator' ),
+			'Allows customers to lodge complaints, with fields for issue description, desired resolution, and contact details.' => __( 'Allows customers to lodge complaints, with fields for issue description, desired resolution, and contact details.', 'forminator' ),
+			'For gathering customer opinions on products or services, including rating scales and open-ended questions.' => __( 'For gathering customer opinions on products or services, including rating scales and open-ended questions.', 'forminator' ),
+			'For charitable contributions, including options for donation amounts, donor information, and payment methods.' => __( 'For charitable contributions, including options for donation amounts, donor information, and payment methods.', 'forminator' ),
+			'Allows attendees to provide feedback post-event, with questions on experience, organization, and suggestions.' => __( 'Allows attendees to provide feedback post-event, with questions on experience, organization, and suggestions.', 'forminator' ),
+			'For event sign-ups, including sections for personal information, event preferences, and payment details.' => __( 'For event sign-ups, including sections for personal information, event preferences, and payment details.', 'forminator' ),
+			'For signing up for fitness classes, including options for class types, schedules, and participant information.' => __( 'For signing up for fitness classes, including options for class types, schedules, and participant information.', 'forminator' ),
+			'A form for requesting home services like cleaning or repairs, with fields for service type, dates, and client information.' => __( 'A form for requesting home services like cleaning or repairs, with fields for service type, dates, and client information.', 'forminator' ),
+			'For job applicants, including sections for personal information, qualifications, experience, and references.' => __( 'For job applicants, including sections for personal information, qualifications, experience, and references.', 'forminator' ),
+			'Collects a patient\'s medical history, with sections for conditions, medications, allergies, and family history.' => __( 'Collects a patient\'s medical history, with sections for conditions, medications, allergies, and family history.', 'forminator' ),
+			'Tailored for small business orders, featuring fields for product selection, quantities, and customer information.' => __( 'Tailored for small business orders, featuring fields for product selection, quantities, and customer information.', 'forminator' ),
+			'For potential buyers or renters to inquire about properties, including preferences, budget, and contact details.' => __( 'For potential buyers or renters to inquire about properties, including preferences, budget, and contact details.', 'forminator' ),
+			'Lets customers book a table, with options for date, time, number of guests, and special requests.' => __( 'Lets customers book a table, with options for date, time, number of guests, and special requests.', 'forminator' ),
+			'For processing returns, including fields for product information, reason for return, and customer details.' => __( 'For processing returns, including fields for product information, reason for return, and customer details.', 'forminator' ),
+			'For confirming attendance at events, including options for guest names, contact information, and any dietary restrictions.' => __( 'For confirming attendance at events, including options for guest names, contact information, and any dietary restrictions.', 'forminator' ),
+			'Allows users to book travel arrangements, with fields for destinations, dates, preferences, and traveler information.' => __( 'Allows users to book travel arrangements, with fields for destinations, dates, preferences, and traveler information.', 'forminator' ),
+			'Designed for recruiting volunteers, including fields for personal details, availability, and areas of interest.' => __( 'Designed for recruiting volunteers, including fields for personal details, availability, and areas of interest.', 'forminator' ),
+		);
+		if ( isset( $array[ $description ] ) ) {
+			return $array[ $description ];
+		}
+
+		return $description;
 	}
 
 	/**
@@ -305,16 +396,22 @@ class Forminator_Custom_Forms extends Forminator_Module {
 			$categories     = $this->add_free_templates_category( $hub_categories );
 
 			// Sort categories by templates count.
-			usort( $categories, function ( $a, $b ) {
-				return $b['templates_count'] <=> $a['templates_count'];
-			} );
+			usort(
+				$categories,
+				function ( $a, $b ) {
+					return $b['templates_count'] <=> $a['templates_count'];
+				}
+			);
 
-			array_unshift( $categories, array(
+			array_unshift(
+				$categories,
+				array(
 					'slug'            => 'all',
 					'name'            => esc_html__( 'All', 'forminator' ),
 					'templates_count' => array_sum( wp_list_pluck( $categories, 'templates_count' ) ) + 1,
 					// Plus Blank template.
-				) );
+				)
+			);
 
 			if ( $hub_categories ) {
 				set_transient( 'forminator_templates_categories', $categories, WEEK_IN_SECONDS );

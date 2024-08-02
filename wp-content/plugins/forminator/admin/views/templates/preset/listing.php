@@ -51,7 +51,7 @@
 							target="_blank"
 							href="<?php echo esc_url( network_admin_url( 'admin.php?page=wpmudev' ) ); ?>"
 						>
-							<?php esc_html_e( 'Login to use template', 'forminator' ); ?>
+							<?php esc_html_e( 'Log in to use template', 'forminator' ); ?>
 						</a>
 					<?php } else if ( $pro && 'expired' === forminator_get_wpmudev_membership() ) { ?>
 						<a

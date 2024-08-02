@@ -313,6 +313,7 @@
 				}
 			} else if ( this.field_is_rating( $element ) ) {
 				value = (typeof value === 'string' && value.split("/")[0]) || 0;
+				return value;
 			}
 			if (!value) return "";
 
@@ -720,6 +721,10 @@
 					}
 				case "is_not":
 					if (!isArrayValue) {
+						if ( this.is_numeric( value1 ) && this.is_numeric( value2 ) ) {
+							return Number( value1 ) !== Number( value2 );
+						}
+
 						return value1 !== value2;
 					} else {
 						return $.inArray(value2, value1) === -1;
@@ -735,6 +740,8 @@
 					return this.is_numeric(value1) && this.is_numeric(value2) ? value1 < value2 : false;
 				case "contains":
 					return this.contains(value1, value2);
+				case "does_not_contain":
+					return !this.contains(value1, value2);
 				case "starts":
 					return value1.startsWith(value2);
 				case "ends":

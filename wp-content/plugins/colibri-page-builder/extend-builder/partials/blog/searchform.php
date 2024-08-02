@@ -2,11 +2,11 @@
     <div class="h-row no-gutters">
         <div class="h-col">
             <label class="d-block">
-                <span class="screen-reader-text"><?php _ex( 'Search for:', 'label', 'colibri-page-builder' ); ?></span>
+                <span class="screen-reader-text"><?php _ex( 'Search for:', 'label', 'colibri-page-builder' );// phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?></span>
                 <input type="search"
                        class="search-field w-100"
                        placeholder="<?php esc_attr_e( 'Search &hellip;', 'colibri-page-builder' ); ?>"
-                       value="<?php echo get_search_query(); ?>" name="s"/>
+                       value="<?php echo esc_html(get_search_query()); ?>" name="s"/>
             </label>
         </div>
         <div class="h-col h-col-auto">

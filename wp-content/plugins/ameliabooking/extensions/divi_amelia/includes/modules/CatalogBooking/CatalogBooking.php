@@ -156,33 +156,30 @@ class DIVI_CatalogBooking extends ET_Builder_Module
             )
         );
 
-        if ($this->employees && sizeof($this->employees) > 1) {
-            $array['employees'] = array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_employee'], 'divi-divi_amelia'),
-                'type'            => 'amelia_multi_select',
-                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_employees'],
-                'options'         => $this->employees,
-                'toggle_slug'     => 'main_content',
-                'option_category' => 'basic_option',
-                'show_if'         => array(
-                    'booking_params' => 'on',
-                ),
-            );
-        }
+        $array['employees'] = array(
+            'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_employee'], 'divi-divi_amelia'),
+            'type'            => 'amelia_multi_select',
+            'showAllText'     => BackendStrings::getWordPressStrings()['show_all_employees'],
+            'options'         => $this->employees,
+            'toggle_slug'     => 'main_content',
+            'option_category' => 'basic_option',
+            'show_if'         => array(
+                'booking_params' => 'on',
+            ),
+        );
 
-        if ($this->locations && sizeof($this->locations) > 1) {
-            $array['locations'] = array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_location'], 'divi-divi_amelia'),
-                'type'            => 'amelia_multi_select',
-                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_locations'],
-                'options'         => $this->locations,
-                'toggle_slug'     => 'main_content',
-                'option_category' => 'basic_option',
-                'show_if'         => array(
-                    'booking_params' => 'on',
-                ),
-            );
-        }
+        $array['locations'] = array(
+            'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_location'], 'divi-divi_amelia'),
+            'type'            => 'amelia_multi_select',
+            'showAllText'     => BackendStrings::getWordPressStrings()['show_all_locations'],
+            'options'         => $this->locations,
+            'toggle_slug'     => 'main_content',
+            'option_category' => 'basic_option',
+            'show_if'         => array(
+                'booking_params' => 'on',
+            ),
+        );
+
 
         if ($this->showPackages) {
             $array['type'] = array(
@@ -280,8 +277,8 @@ class DIVI_CatalogBooking extends ET_Builder_Module
             }
         }
         if ($preselect === 'on') {
-            $employee = $this->checkValues($this->props['employees']);
-            $location = $this->checkValues($this->props['locations']);
+            $employee = !empty($this->props['employees']) ? $this->checkValues($this->props['employees']) : null;
+            $location = !empty($this->props['locations']) ? $this->checkValues($this->props['locations']) : null;
 
             if ($employee && count($employee) > 0) {
                 $shortcode .= ' employee=' . implode(',', $employee);

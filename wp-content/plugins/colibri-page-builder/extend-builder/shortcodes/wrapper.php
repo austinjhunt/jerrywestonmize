@@ -74,11 +74,12 @@ function colibri_wrapper( $attrs, $content = null ) {
 	do_action( "colibri_wrapper_before_$name" );
 
 	$content = urldecode( $content );
-	echo do_shortcode( $content );
+	echo do_shortcode( wp_kses_post($content) );
 
 	do_action( "colibri_wrapper_after_$name" );
 
 	$content = ob_get_contents();
 	ob_end_clean();
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	return $content;
 }

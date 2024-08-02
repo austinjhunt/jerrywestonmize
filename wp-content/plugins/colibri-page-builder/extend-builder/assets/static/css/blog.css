@@ -783,7 +783,7 @@ div[role='tabpanel'][data-v-3bd5418a] {
 }
 
 
-.list-item[data-v-15ee8c52] {
+.list-item[data-v-c0963ece] {
   height: 40px;
   margin-right: 0px;
   margin-bottom: 10px;
@@ -791,7 +791,7 @@ div[role='tabpanel'][data-v-3bd5418a] {
   border-radius: 5px;
   cursor: pointer;
 }
-.container-drag[data-v-15ee8c52] {
+.container-drag[data-v-c0963ece] {
   background-color: #f4f5f7;
   border-right: solid 1px #dcdfe6;
   cursor: move;
@@ -809,34 +809,34 @@ div[role='tabpanel'][data-v-3bd5418a] {
   display: -ms-flexbox;
   display: flex;
 }
-.container-drag .colibri-icon-default[data-v-15ee8c52] {
+.container-drag .colibri-icon-default[data-v-c0963ece] {
     font-size: 16px;
     color: #b9c8dd;
 }
-.container-icons[data-v-15ee8c52] {
+.container-icons[data-v-c0963ece] {
   margin-left: auto;
   fill: #bbc6d9;
   margin-right: 10px;
 }
-.list-item.selected-button[data-v-15ee8c52] {
+.list-item.selected-button[data-v-c0963ece] {
   background: #e6f1fc;
 }
-.list-item.selected-button .container-drag[data-v-15ee8c52] {
+.list-item.selected-button .container-drag[data-v-c0963ece] {
     background: #008ec2;
 }
-.list-item.selected-button .colibri-icon-default[data-v-15ee8c52] {
+.list-item.selected-button .colibri-icon-default[data-v-c0963ece] {
     color: white;
 }
-.list-item.selected-button .list-item-text[data-v-15ee8c52] {
+.list-item.selected-button .list-item-text[data-v-c0963ece] {
     color: #008ec2;
     font-weight: 500;
 }
-.icon-slot[data-v-15ee8c52] {
+.icon-slot[data-v-c0963ece] {
   width: 14px;
   height: 14px;
   margin-left: 5px;
 }
-.list-item-text[data-v-15ee8c52] {
+.list-item-text[data-v-c0963ece] {
   font-size: 14px;
   height: 40px;
   line-height: 40px;
@@ -844,22 +844,23 @@ div[role='tabpanel'][data-v-3bd5418a] {
   margin-left: 12px;
   font-weight: 500;
 }
-.container-icon-remove[data-v-15ee8c52] {
+.container-icon-remove[data-v-c0963ece] {
   margin-left: 10px;
 }
-.container-icon-duplicate:hover .icon-duplicate[data-v-15ee8c52] {
+.container-icon-duplicate:hover .icon-duplicate[data-v-c0963ece] {
   fill: #008ec2;
 }
-.container-icon-remove:hover .icon-remove[data-v-15ee8c52] {
+.container-icon-remove:hover .icon-remove[data-v-c0963ece] {
   fill: #ab2222;
 }
 
 /*.list-item.selected-button .list-item-text {*/
 /*color: #1989fa;*/
 /*}*/
-.list-item.selected-button .icon-slot[data-v-15ee8c52] {
+.list-item.selected-button .icon-slot[data-v-c0963ece] {
   fill: #1989fa;
 }
+
 
 
 

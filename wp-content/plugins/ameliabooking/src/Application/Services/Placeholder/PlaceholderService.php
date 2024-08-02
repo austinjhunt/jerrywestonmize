@@ -36,6 +36,7 @@ use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use AmeliaBooking\Domain\ValueObjects\String\CustomFieldType;
+use AmeliaBooking\Infrastructure\WP\Translations\LiteBackendStrings;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use DateTime;
@@ -221,6 +222,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             'payment_link_paypal' => '',
             'payment_link_razorpay' => '',
             'payment_link_mollie' => '',
+            'payment_link_square' => ''
         ];
 
         // If notification is for provider: Appointment price will be sum of all bookings prices
@@ -330,6 +332,9 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     break;
                 case 'wc':
                     $paymentType = BackendStrings::getSettingsStrings()['wc_name'];
+                    break;
+                case 'square':
+                    $paymentType = LiteBackendStrings::getSettingsStrings()['square'];
                     break;
                 default:
                     $paymentType = BackendStrings::getSettingsStrings()[$payment['gateway']];

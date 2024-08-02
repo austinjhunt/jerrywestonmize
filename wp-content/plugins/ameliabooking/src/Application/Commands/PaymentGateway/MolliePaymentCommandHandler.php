@@ -187,47 +187,7 @@ class MolliePaymentCommandHandler extends CommandHandler
 
 
         if ($response->isRedirect()) {
-            /** @var Payment $payment */
-            $payment = null;
-
-            switch ($reservation->getReservation()->getType()->getValue()) {
-                case (Entities::APPOINTMENT):
-                case (Entities::EVENT):
-                    /** @var Payment $payment */
-                    $payment = $reservation->getBooking()->getPayments()->getItem(0);
-
-                    break;
-
-                case (Entities::PACKAGE):
-                    /** @var PackageCustomerService $packageCustomerService */
-                    foreach ($reservation->getPackageCustomerServices()->getItems() as $packageCustomerService) {
-                        /** @var Payment $payment */
-                        $payment = $packageCustomerService->getPackageCustomer()->getPayments()->getItem($packageCustomerService->getPackageCustomer()->getPayments()->keys()[0]);
-
-                        break;
-                    }
-
-                    break;
-            }
-
-            $cache->setPaymentId(new Id($payment->getId()->getValue()));
-
-            $cache->setData(
-                new Json(
-                    json_encode(
-                        [
-                            'status'   => null,
-                            'request'  => $command->getField('componentProps'),
-                            'response' => $result->getData(),
-                        ]
-                    )
-                )
-            );
-
-            $cacheRepository->update(
-                $cache->getId()->getValue(),
-                $cache
-            );
+            $result = $paymentAS->updateCache($result, $command->getFields(), $cache, $reservation);
 
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Proceed to Mollie Payment Page');

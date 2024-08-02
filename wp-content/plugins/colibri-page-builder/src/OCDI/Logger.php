@@ -34,6 +34,7 @@ class Logger extends WPImporterLoggerCLI {
             return;
         }
 
+        //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         printf(
             '[%s] %s' . PHP_EOL,
             strtoupper( $level ),

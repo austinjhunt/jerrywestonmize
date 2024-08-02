@@ -74,7 +74,7 @@ class CheckForm {
                 wp.ajax
                     .send('colibriwp-page-builder-check-license', {
                         data: {
-                            _wpnonce: '<?php echo wp_create_nonce( 'colibriwp-page-builder-check-license-nonce' );?>'
+                            _wpnonce: '<?php echo wp_create_nonce( 'colibriwp-page-builder-check-license-nonce' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>'
                         }
                     })
                     .fail(function (response) {

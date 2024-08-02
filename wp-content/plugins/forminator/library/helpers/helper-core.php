@@ -1167,6 +1167,25 @@ function forminator_is_show_branding() {
 }
 
 /**
+ * Check if whitelabel enable.
+ *
+ * @return bool
+ */
+function forminator_can_whitelabel() {
+	if (
+		! class_exists( '\WPMUDEV_Dashboard' ) ||
+		! isset( \WPMUDEV_Dashboard::$whitelabel ) ||
+		( method_exists( \WPMUDEV_Dashboard::$whitelabel, 'can_whitelabel' ) &&
+		  ! \WPMUDEV_Dashboard::$whitelabel->can_whitelabel()
+		)
+	) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
  * Get Dashboard settings
  *
  * @since 1.6.3

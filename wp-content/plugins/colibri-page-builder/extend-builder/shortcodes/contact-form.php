@@ -32,7 +32,7 @@ function colibri_contact_form_shortcode( $atts ) {
 	);
 
 	$atts['shortcode'] = colibri_shortcode_decode( $atts['shortcode'] );
-	$shortcode         = $atts['shortcode'];
+	$shortcode         = wp_kses_post($atts['shortcode']);
 	if ( shortcode_render_can_apply_forminator_filters( $shortcode ) ) {
 		if ( is_customize_preview() && colibri_forminator_is_auth_form( $shortcode ) ) {
 			return colibri_forminator_get_auth_placeholder();

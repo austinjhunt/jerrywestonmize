@@ -3,7 +3,7 @@
 Plugin Name: Amelia
 Plugin URI: https://wpamelia.com/
 Description: Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!
-Version: 7.6.2
+Version: 7.7.1
 Author: TMS
 Author URI: https://tmsproducts.io/
 Text Domain: wpamelia
@@ -15,6 +15,7 @@ namespace AmeliaBooking;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Routes\Routes;
+use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use AmeliaBooking\Infrastructure\WP\ButtonService\ButtonService;
 use AmeliaBooking\Infrastructure\WP\config\Menu;
 use AmeliaBooking\Infrastructure\WP\Elementor\ElementorBlock;
@@ -104,7 +105,7 @@ if (!defined('AMELIA_LOGIN_URL')) {
 
 // Const for Amelia version
 if (!defined('AMELIA_VERSION')) {
-    define('AMELIA_VERSION', '7.6.2');
+    define('AMELIA_VERSION', '7.7.1');
 }
 
 // Const for site URL
@@ -133,12 +134,20 @@ if (!defined('AMELIA_STORE_API_URL')) {
     define('AMELIA_STORE_API_URL', 'https://store.tms-plugins.com/api/');
 }
 
+if (!defined('AMELIA_MIDDLEWARE_IS_SANDBOX')) {
+    define('AMELIA_MIDDLEWARE_IS_SANDBOX', false);
+}
+
+if (!defined('AMELIA_MIDDLEWARE_API_URL')) {
+    define('AMELIA_MIDDLEWARE_API_URL', 'https://middleware.wpamelia.com/');
+}
+
 if (!defined('AMELIA_DEV')) {
     define('AMELIA_DEV', false);
 }
 
 if (!defined('AMELIA_NGROK_URL')) {
-    define('AMELIA_NGROK_URL', '75f3942d8b2f.ngrok.app');
+    define('AMELIA_NGROK_URL', '97619f3954de.ngrok.app');
 }
 
 require_once AMELIA_PATH . '/vendor/autoload.php';
@@ -180,6 +189,14 @@ class Plugin
         }
     }
 
+    static function square_weekly_token_refresh( $schedules ) {
+        $schedules['weekly'] = array(
+            'interval' => 604800,
+            'display' => __('Add weekly cron to refresh square access token every 7 days')
+        );
+        return $schedules;
+    }
+
     /**
      * Initialize the plugin
      */
@@ -214,6 +231,23 @@ class Plugin
 
                 add_filter('woocommerce_after_order_itemmeta', [WooCommerceService::class, 'orderItemMeta'], 10, 3);
             }
+        }
+
+        if (!empty($settingsService->getCategorySettings('payments')['square']['enabled']) &&
+            !empty($settingsService->getCategorySettings('payments')['square']['accessToken'])) {
+            add_filter( 'cron_schedules', [self::class, 'square_weekly_token_refresh'] );
+
+            if ( ! wp_next_scheduled( 'amelia_square_access_token_refresh' ) ) {
+                wp_schedule_event( time(), 'weekly', 'amelia_square_access_token_refresh' );
+            }
+
+            /** @var Container $container */
+            $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+
+            /** @var SquareService $squareService */
+            $squareService = $container->get('infrastructure.payment.square.service');
+
+            add_action( 'amelia_square_access_token_refresh', [$squareService, 'refreshAccessToken'] );
         }
 
         $ameliaRole = UserRoles::getUserAmeliaRole(wp_get_current_user());

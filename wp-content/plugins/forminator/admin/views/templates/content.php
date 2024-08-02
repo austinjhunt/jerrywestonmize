@@ -24,25 +24,29 @@ if ( FORMINATOR_PRO ) {
 		>
 			<?php esc_html_e( 'Preset Templates', 'forminator' ); ?>
 		</button>
-		<button
-			type="button"
-			role="tab"
-			id="cloud-templates"
-			class="sui-tab-item"
-			aria-controls="cloud-templates-content"
-			aria-selected="false"
-			tabindex="-1"
-		>
-			<?php esc_html_e( 'Cloud Templates', 'forminator' ); ?>
-			<?php if ( ! FORMINATOR_PRO ) : ?>
-				<span class="sui-tag sui-tag-pro"><?php esc_html_e( 'Pro', 'forminator' ); ?></span>
-			<?php endif; ?>
-		</button>
+		<?php if ( is_wpmu_dev_admin() || ! forminator_can_whitelabel() ) { ?>
+            <button
+                type="button"
+                role="tab"
+                id="cloud-templates"
+                class="sui-tab-item"
+                aria-controls="cloud-templates-content"
+                aria-selected="false"
+                tabindex="-1"
+            >
+                <?php esc_html_e( 'Cloud Templates', 'forminator' ); ?>
+                <?php if ( ! FORMINATOR_PRO ) : ?>
+                    <span class="sui-tag sui-tag-pro"><?php esc_html_e( 'Pro', 'forminator' ); ?></span>
+                <?php endif; ?>
+            </button>
+        <?php } ?>
 	</div>
 
 	<div class="sui-tabs-content">
 		<?php echo forminator_template( 'templates/preset/content' );
-		echo forminator_template( 'templates/cloud/content' ); ?>
+		if ( is_wpmu_dev_admin() || ! forminator_can_whitelabel() ) {
+			echo forminator_template( 'templates/cloud/content' );
+		} ?>
 	</div>
 	<?php echo forminator_template( 'templates/preset/popup' ); ?>
 </div>

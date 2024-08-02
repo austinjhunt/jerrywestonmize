@@ -752,6 +752,16 @@ class Forminator_Export {
 			// meta_key based.
 			$meta_value = $entry->get_meta( $slug, '' );
 			if ( ! isset( $mapper['sub_metas'] ) ) {
+				if ( 'rating' === $mapper['type'] ) {
+					$meta_value = preg_replace_callback( '/(\d+)\/(\d+)/', function ( $matches ) {
+						return sprintf(
+						/* Translators: 1. Rating value, 2. Maximum rating */
+							esc_html__( ' %1$d out of %2$d', 'forminator' ),
+							$matches[1],
+							$matches[2]
+						);
+					}, $meta_value );
+				}
 				$temp_data[ $mapper['type'] ][] = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value );
 			} else {
 

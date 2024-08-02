@@ -504,19 +504,22 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		if ( $this->has_formatting() ) {
 			$base_url                                      = forminator_plugin_url() . 'assets/js/library/';
 			$this->scripts['forminator-inputmask']         = array(
-				'src'  => add_query_arg( 'ver', FORMINATOR_VERSION, $base_url . 'inputmask.min.js' ),
-				'on'   => 'window',
-				'load' => 'inputmask',
+				'src'   => add_query_arg( 'ver', FORMINATOR_VERSION, $base_url . 'inputmask.min.js' ),
+				'on'    => 'window',
+				'load'  => 'inputmask',
+				'async' => false,
 			);
 			$this->scripts['forminator-jquery-inputmask']  = array(
-				'src'  => add_query_arg( 'ver', FORMINATOR_VERSION, $base_url . 'jquery.inputmask.min.js' ),
-				'on'   => 'window',
-				'load' => 'jquery-inputmask',
+				'src'   => add_query_arg( 'ver', FORMINATOR_VERSION, $base_url . 'jquery.inputmask.min.js' ),
+				'on'    => 'window',
+				'load'  => 'jquery-inputmask',
+				'async' => false,
 			);
 			$this->scripts['forminator-inputmask-binding'] = array(
-				'src'  => add_query_arg( 'ver', FORMINATOR_VERSION, $base_url . 'inputmask.binding.js' ),
-				'on'   => 'window',
-				'load' => 'inputmask-binding',
+				'src'   => add_query_arg( 'ver', FORMINATOR_VERSION, $base_url . 'inputmask.binding.js' ),
+				'on'    => 'window',
+				'load'  => 'inputmask-binding',
+				'async' => false,
 			);
 		}
 

@@ -24,6 +24,7 @@ class Forminator_Admin {
 		// Init admin pages.
 		add_action( 'admin_menu', array( $this, 'add_dashboard_page' ) );
 		if ( current_user_can( 'manage_options' ) ) {
+			add_action( 'admin_notices', array( $this, 'show_stripe_restricted_api_key_notice' ) );
 			add_action( 'admin_notices', array( $this, 'show_stripe_updated_notice' ) );
 			add_action( 'admin_notices', array( $this, 'show_rating_notice' ) );
 			add_action( 'admin_notices', array( $this, 'show_pro_available_notice' ) );
@@ -643,6 +644,71 @@ class Forminator_Admin {
                 });
             });
         </script>
+		<?php
+	}
+
+	/**
+	 * Show the Stripe Restricted API Key notice.
+	 *
+	 * @since 1.33
+	 */
+	public function show_stripe_restricted_api_key_notice() {
+		$notice_dismissed = get_option( 'forminator_stripe_rak_notice_dismissed', false );
+
+		if ( $notice_dismissed ) {
+			return;
+		}
+
+		$config      = get_option( 'forminator_stripe_configuration', array() );
+		$test_secret = isset( $config['test_secret'] ) ? $config['test_secret'] : '';
+		$live_secret = isset( $config['live_secret'] ) ? $config['live_secret'] : '';
+		if ( empty( $test_secret ) && empty( $live_secret ) ) {
+			return;
+		}
+
+		if ( ( ! empty( $test_secret ) && 'rk_' === substr( $test_secret, 0, 3 ) ) && ( ! empty( $live_secret ) && 'rk_' === substr( $live_secret, 0, 3 ) ) ) {
+			return;
+		}
+		?>
+
+		<div class="forminator-notice notice notice-warning is-dismissible" data-prop="forminator_stripe_rak_notice_dismissed"
+			data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
+			<p style="color: #72777C; line-height: 22px;">
+				<?php
+				printf(
+					/* Translators: 1. Opening <b> tag, 2. closing <b> tag, 3. Opening <a> tag with link to Stripe Restricted API Key, 4. closing <a> tag. */
+					esc_html__( '%1$sStripe API Notice:%2$s You are using the deprecated Stripe Secret key. To avoid unexpected issues in your form, we recommend using the new Stripe %3$sRestricted API Key%4$s instead.', 'forminator' ),
+					'<b>',
+					'</b>',
+					'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#connect-to-stripe" target="_blank">',
+					'</a>'
+				);
+				?>
+			</p>
+			<button type="button" class="notice-dismiss forminator-stripe-rak-notice-dismiss">
+				<span class="screen-reader-text"></span>
+			</button>
+		</div>
+
+		<script type="text/javascript">
+			jQuery('.forminator-notice .forminator-stripe-rak-notice-dismiss').on('click', function (e) {
+				e.preventDefault();
+
+				var $notice = jQuery(e.currentTarget).closest('.forminator-notice');
+				var ajaxUrl = '<?php echo esc_url( forminator_ajax_url() ); ?>';
+
+				jQuery.post(
+					ajaxUrl,
+					{
+						action: 'forminator_dismiss_notification',
+						prop: $notice.data('prop'),
+						_ajax_nonce: $notice.data('nonce')
+					}
+				).always(function () {
+					$notice.hide();
+				});
+			});
+		</script>
 		<?php
 	}
 

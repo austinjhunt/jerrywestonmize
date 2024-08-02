@@ -376,7 +376,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
             $payments = $packageCustomerService->getPackageCustomer()->getPayments();
 
             if ($payments && $payments->length() > 0 &&
-                $payments->getItem($payments->keys()[0])->getGateway()->getName()->getValue() === PaymentType::MOLLIE &&
+                in_array($payments->getItem($payments->keys()[0])->getGateway()->getName()->getValue(), [PaymentType::MOLLIE, PaymentType::SQUARE]) &&
                 $payments->getItem($payments->keys()[0])->getStatus()->getValue() === PaymentStatus::PENDING
             ) {
                 $packageCustomerServices->deleteItem($key);
@@ -591,7 +591,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
             $payments = $packageCustomerService->getPackageCustomer()->getPayments();
 
             if ($payments && $payments->length() > 0 &&
-                $payments->getItem($payments->keys()[0])->getGateway()->getName()->getValue() === PaymentType::MOLLIE &&
+                in_array($payments->getItem($payments->keys()[0])->getGateway()->getName()->getValue(), [PaymentType::MOLLIE, PaymentType::SQUARE]) &&
                 $payments->getItem($payments->keys()[0])->getStatus()->getValue() === PaymentStatus::PENDING
             ) {
                 $packageCustomerServices->deleteItem($key);

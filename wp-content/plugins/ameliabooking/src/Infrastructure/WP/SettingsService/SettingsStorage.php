@@ -262,6 +262,7 @@ class SettingsStorage implements SettingsStorageInterface
                     'livePublishableKey' => $this->getSetting('payments', 'stripe')['livePublishableKey'],
                     'testPublishableKey' => $this->getSetting('payments', 'stripe')['testPublishableKey'],
                     'connect'            => $this->getSetting('payments', 'stripe')['connect'],
+                    'address'            => $this->getSetting('payments', 'stripe')['address'],
                 ],
                 'wc'                         => [
                     'enabled'      => $this->getSetting('payments', 'wc')['enabled'],
@@ -272,6 +273,12 @@ class SettingsStorage implements SettingsStorageInterface
                 'mollie'                     => [
                     'enabled'   => $this->getSetting('payments', 'mollie')['enabled'],
                     'cancelBooking'   => $this->getSetting('payments', 'mollie')['cancelBooking'],
+                ],
+                'square'                     => [
+                    'enabled'        => $this->getSetting('payments', 'square')['enabled'],
+                    'testMode'       => $this->getSetting('payments', 'square')['testMode'],
+                    'accessTokenSet' => !empty($this->getSetting('payments', 'square')['accessToken']) && !empty($this->getSetting('payments', 'square')['accessToken']['access_token']),
+                    'locationId'     => $this->getSetting('payments', 'square')['locationId']
                 ],
                 'razorpay'                     => [
                     'enabled'   => $this->getSetting('payments', 'razorpay')['enabled'],

@@ -347,11 +347,12 @@ class TimeSlotService
      *
      * @param bool          $isFrontEndBooking
      * @param SlotsEntities $slotsEntities
+     * @param array         $customSettings
      *
      * @return array
      * @throws ContainerException
      */
-    public function getSlotsSettings($isFrontEndBooking, $slotsEntities)
+    public function getSlotsSettings($isFrontEndBooking, $slotsEntities, $customSettings = [])
     {
         /** @var SettingsService $settingsDomainService */
         $settingsDomainService = $this->container->get('domain.settings.service');
@@ -363,22 +364,23 @@ class TimeSlotService
         $settingsApplicationService = $this->container->get('application.settings.service');
 
         return [
-            'allowAdminBookAtAnyTime'    => !$isFrontEndBooking &&
-                $userApplicationService->isAdminAndAllowedToBookAtAnyTime(),
+            'allowAdminBookAtAnyTime'    => isset($customSettings['allowAdminBookAtAnyTime']) ? filter_var($customSettings['allowAdminBookAtAnyTime'], FILTER_VALIDATE_BOOLEAN) :
+                (!$isFrontEndBooking &&
+                $userApplicationService->isAdminAndAllowedToBookAtAnyTime()),
             'isGloballyBusySlot'         =>
                 $settingsDomainService->getSetting('appointments', 'isGloballyBusySlot') &&
                 !$slotsEntities->getResources()->length(),
-            'allowBookingIfPending'      =>
+            'allowBookingIfPending'      => isset($customSettings['allowBookingIfPending']) ? filter_var($customSettings['allowBookingIfPending'], FILTER_VALIDATE_BOOLEAN) :
                 $settingsDomainService->getSetting('appointments', 'allowBookingIfPending'),
-            'allowBookingIfNotMin'       =>
+            'allowBookingIfNotMin'       => isset($customSettings['allowBookingIfNotMin']) ? filter_var($customSettings['allowBookingIfNotMin'], FILTER_VALIDATE_BOOLEAN) :
                 $settingsDomainService->getSetting('appointments', 'allowBookingIfNotMin'),
             'openedBookingAfterMin'      =>
                 $settingsDomainService->getSetting('appointments', 'openedBookingAfterMin'),
-            'timeSlotLength'             =>
+            'timeSlotLength'             => isset($customSettings['timeSlotLength']) ? (int)$customSettings['timeSlotLength'] :
                 $settingsDomainService->getSetting('general', 'timeSlotLength'),
-            'serviceDurationAsSlot'      =>
+            'serviceDurationAsSlot'      => isset($customSettings['serviceDurationAsSlot']) ? filter_var($customSettings['serviceDurationAsSlot'], FILTER_VALIDATE_BOOLEAN) :
                 $settingsDomainService->getSetting('general', 'serviceDurationAsSlot'),
-            'bufferTimeInSlot'           =>
+            'bufferTimeInSlot'           => isset($customSettings['bufferTimeInSlot']) ? filter_var($customSettings['bufferTimeInSlot'], FILTER_VALIDATE_BOOLEAN) :
                 $settingsDomainService->getSetting('general', 'bufferTimeInSlot'),
             'globalDaysOff'              => $settingsApplicationService->getGlobalDaysOff(),
             'adminServiceDurationAsSlot' => !$isFrontEndBooking &&

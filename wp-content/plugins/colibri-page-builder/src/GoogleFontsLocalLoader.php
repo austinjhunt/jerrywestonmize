@@ -80,6 +80,7 @@ class GoogleFontsLocalLoader {
 //			$css = "/* {$this->google_css_url}?family={$query} */\n\n{$css}";
 //		}
 
+        //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		die( $css );
 
 	}
@@ -363,12 +364,14 @@ class GoogleFontsLocalLoader {
 		$valid_nonce = $this->verifySecurityKey( $security_key, "{$this->font_file_action}_{$font_file}" );
 
 		if ( ! $valid_nonce ) {
+            //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			wp_die( __( 'Frobidden', 'colibri' ), 403 );
 		}
 
 		$content = $this->resolveFontFileContent( $font_file );
 
 		if ( is_wp_error( $content ) ) {
+            //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			wp_die( $content, 404 );
 		}
 
@@ -379,6 +382,7 @@ class GoogleFontsLocalLoader {
 		header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', $this_year + YEAR_IN_SECONDS ) . ' GMT' );
 		header( 'Etag: ' . md5( base64_encode( $content ) ) );
 
+        //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		die( $content );
 	}
 
@@ -411,19 +415,19 @@ class GoogleFontsLocalLoader {
 			return NONCE_KEY;
 		}
 
-		if ( define( 'SECURE_AUTH_KEY' ) ) {
+		if ( defined( 'SECURE_AUTH_KEY' ) ) {
 			return SECURE_AUTH_KEY;
 		}
 
-		if ( define( 'AUTH_KEY' ) ) {
+		if ( defined( 'AUTH_KEY' ) ) {
 			return AUTH_KEY;
 		}
 
-		if ( define( 'SECURE_AUTH_SALT' ) ) {
+		if ( defined( 'SECURE_AUTH_SALT' ) ) {
 			return SECURE_AUTH_SALT;
 		}
 
-		if ( define( 'AUTH_SALT' ) ) {
+		if ( defined( 'AUTH_SALT' ) ) {
 			return AUTH_SALT;
 		}
 

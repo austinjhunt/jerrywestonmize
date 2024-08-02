@@ -161,6 +161,7 @@ class FrontendStrings
             'paid_deposit'                 => __('Paid deposit', 'wpamelia'),
             'paid_remaining_amount'        => __('Paid remaining amount', 'wpamelia'),
             'pay_pal'                      => __('PayPal', 'wpamelia'),
+            'payment_address_error'        => __('Please fill in your address.', 'wpamelia'),
             'payment_error'                => __('Sorry, there was an error processing your payment. Please try again later.', 'wpamelia'),
             'payment_error_default'        => __('Payment error', 'wpamelia'),
             'payment_link_error'           => __('Sorry, there was an error creating a payment link. Please try again later.', 'wpamelia'),
@@ -255,6 +256,7 @@ class FrontendStrings
         $labels = Licence\Licence::$premium ? [
             'add_extra'                    => __('Add extra', 'wpamelia'),
             'add_people'                   => __('Number of people that are coming with you.', 'wpamelia'),
+            'add_people_total'             => __('The total number of people for the booking.', 'wpamelia'),
             'any'                          => __('Any', 'wpamelia'),
             'any_employee'                 => __('Any Employee', 'wpamelia'),
             'book_appointment'             => __('Book Appointment', 'wpamelia'),
@@ -351,6 +353,7 @@ class FrontendStrings
             'bringing_anyone'              => __('Bringing Anyone With You', 'wpamelia'),
             'bringing_anyone_title'        => __('Bringing anyone with you?', 'wpamelia'),
             'bringing_people'              => __('Additional people', 'wpamelia'),
+            'bringing_people_total'        => __('Total people', 'wpamelia'),
             'bringing_yes'                 => __('Yes', 'wpamelia'),
             'bringing_no'                  => __('No', 'wpamelia'),
 
@@ -1020,6 +1023,12 @@ class FrontendStrings
             'package_deal_expire_in'                 => __('This package deal will expire in', 'wpamelia'),
             'appointments_deal_expire'               => __('book appointments before the deal expires!', 'wpamelia'),
             'pay_now_btn'                            => __('Pay now', 'wpamelia'),
+            'no_app_found'                           => __('No appointments found', 'wpamelia'),
+            'have_no_app'                            => __('You don\'t have any appointments', 'wpamelia'),
+            'no_pack_found'                          => __('No packages found', 'wpamelia'),
+            'have_no_pack'                           => __('You don\'t have any packages', 'wpamelia'),
+            'no_evt_found'                           => __('No events found', 'wpamelia'),
+            'have_no_evt'                            => __('You don\'t have any events', 'wpamelia'),
         ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getCabinetStrings());

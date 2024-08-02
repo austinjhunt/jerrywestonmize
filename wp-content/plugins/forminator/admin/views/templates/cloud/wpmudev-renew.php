@@ -2,7 +2,7 @@
 <div class="sui-box sui-message sui-message-lg">
     <img src="<?php echo esc_url( forminator_plugin_url() . 'assets/images/wpmudev-logo.png' ); ?>"
 		 srcset="<?php echo esc_url( forminator_plugin_url() . 'assets/images/wpmudev-logo.png' ); ?> 1x, <?php echo esc_url( forminator_plugin_url() . 'assets/images/wpmudev-logo@2x.png' ); ?> 2x"
-         alt="<?php esc_attr_e( 'WPMUDEFV Logo', 'forminator' ); ?>"
+         alt="<?php esc_attr_e( 'WPMU DEV Logo', 'forminator' ); ?>"
          class="sui-image sui-image-center fui-image">
     <div class="sui-message-content">
         <h2><?php esc_html_e( 'WPMU DEV Membership Expired', 'forminator' ); ?></h2>

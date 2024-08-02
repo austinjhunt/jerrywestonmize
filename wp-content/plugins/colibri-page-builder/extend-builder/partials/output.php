@@ -123,9 +123,12 @@ function colibri_output_dynamic_template( $template, $type ) {
 		$end_mark   = $wrap_end . "<!-- dynamic $type end -->";
 
        		do_action( "colibri_before_dynamic_content", $type );
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $start_mark;
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $html;
 		do_action( "colibri_after_dynamic_content", $type );
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $end_mark;
 
 		remove_filter( 'get_search_form', "ExtendBuilder\colibri_output_sidebar_search_form", 100 );
@@ -161,6 +164,7 @@ function colibri_print_featured_img_bg()
     <?php
     $style = ob_get_clean();
     if ($background_img) {
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $style;
     }
 }

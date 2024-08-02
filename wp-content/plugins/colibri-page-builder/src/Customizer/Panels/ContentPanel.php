@@ -63,8 +63,8 @@ class ContentPanel extends \ColibriWP\PageBuilder\Customizer\BasePanel {
             class="accordion-section control-section control-panel control-panel-{{ data.type }}">
             <h3 class="accordion-section-title no-chevron" tabindex="0">
                 {{ data.title }}
-                <!--<span title="<?php _e( 'Add Section', 'colibri-page-builder' ) ?>" class="add-section-plus section-icon"></span>-->
-                <!--<span title="<?php _e( 'Page Settings', 'colibri-page-builder' ) ?>" class="section-icon setting hidden"></span>-->
+                <!--<span title="<?php _e( 'Add Section', 'colibri-page-builder' ) //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?>" class="add-section-plus section-icon"></span>-->
+                <!--<span title="<?php _e( 'Page Settings', 'colibri-page-builder' ) //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?>" class="section-icon setting hidden"></span>-->
             </h3>
 
             <div class="sections-list-reorder">

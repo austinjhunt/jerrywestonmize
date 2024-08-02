@@ -294,7 +294,7 @@ class AppointmentFactory
                         'pictureFullPath' => !empty($row['location_pictureFullPath']) ? $row['location_pictureFullPath'] : null,
                         'pictureThumbPath' => !empty($row['location_pictureThumbPath']) ? $row['location_pictureThumbPath'] : null,
                         'pin' => !empty($row['location_pin']) ? $row['location_pin'] : null,
-                        'translations' => !empty($row['location_translations']) ? $row['location_translations'] : null,
+                        'translations' => !empty($row['location_translations']) ? $row['location_translations'] : null
                     ];
             }
 

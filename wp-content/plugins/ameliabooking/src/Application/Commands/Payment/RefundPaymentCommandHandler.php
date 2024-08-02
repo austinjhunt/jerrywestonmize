@@ -13,7 +13,10 @@ use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\Payment\PaymentGateway;
+use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
+use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
@@ -21,6 +24,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use Interop\Container\Exception\ContainerException;
+use AmeliaStripe\PaymentMethod;
 
 /**
  * Class RefundPaymentCommandHandler
@@ -73,7 +77,7 @@ class RefundPaymentCommandHandler extends CommandHandler
             return $result;
         }
 
-        $amount = $paymentAS->hasRelatedRefundablePayment($payment) ? $payment->getAmount()->getValue() : null;
+        $amount = $paymentAS->hasRelatedRefundablePayment($payment) || $payment->getGateway()->getName()->getValue() === PaymentType::SQUARE ? $payment->getAmount()->getValue() : null;
 
         do_action('amelia_before_payment_refunded', $payment->toArray(), $amount);
 

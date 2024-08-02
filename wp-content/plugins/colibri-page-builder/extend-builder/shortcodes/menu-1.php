@@ -67,7 +67,7 @@ add_shortcode( 'colibri_print_menu', function ( $attrs ) {
 	colibri_print_menu( $merged_attrs );
 	$content = ob_get_clean();
 
-	return $content;
+	return wp_kses_post($content);
 } );
 
 function colibri_theme_location_menu_is_empty( $theme_location ) {
@@ -117,14 +117,17 @@ function colibri_print_menu( $attrs, $walker = '' ) {
 
 	colibri_cache_set( 'colibri_nomenu_cb', $attrs );
 
-	wp_nav_menu( array(
-		'theme_location'  => $theme_location,
-		'menu_class'      => esc_attr( implode( " ", $drop_down_menu_classes ) ),
-		'container_class' => 'colibri-menu-container',
-		'fallback_cb'     => "\\ExtendBuilder\\colibri_nomenu_fallback",
-		'walker'          => $walker,
-		'depth'           => $attrs['depth'],
-	) );
+    $args = array(
+        'theme_location'  => $theme_location,
+        'menu_class'      => esc_attr( implode( " ", $drop_down_menu_classes ) ),
+        'container_class' => 'colibri-menu-container',
+        'fallback_cb'     => "\\ExtendBuilder\\colibri_nomenu_fallback",
+        'walker'          => $walker,
+    );
+    if($attrs['depth'] !== '0') {
+        $args['depth'] = $attrs['depth'];
+    }
+	wp_nav_menu( $args );
 
 
 //    if ($attrs['show_shopping_cart'] === '1') {

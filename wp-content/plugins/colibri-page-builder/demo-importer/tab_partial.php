@@ -3,8 +3,7 @@ $is_ocdi_installed = class_exists( "OCDI\OneClickDemoImport" ) || class_exists('
 ?>
 
 <div class="tab-cols colibri-admin-panel">
-    <h2 class="colibri-import-demo-sites"><?php _e( 'Import Demo sites with one click',
-			'colibri-page-builder' ); ?></h2>
+    <h2 class="colibri-import-demo-sites"><?php _e( 'Import Demo sites with one click', 'colibri-page-builder' ); //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?></h2>
 
 	<?php
 	if ( $is_ocdi_installed ) {

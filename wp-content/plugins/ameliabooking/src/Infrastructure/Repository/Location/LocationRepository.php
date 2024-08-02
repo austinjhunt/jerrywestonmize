@@ -87,7 +87,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
             ':pictureFullPath'  => $data['pictureFullPath'],
             ':pictureThumbPath' => $data['pictureThumbPath'],
             ':pin'              => $data['pin'],
-            ':translations'     => $data['translations'],
+            ':translations'     => $data['translations']
         ];
 
         try {
@@ -154,7 +154,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
             ':pictureFullPath'  => $data['pictureFullPath'],
             ':pictureThumbPath' => $data['pictureThumbPath'],
             ':pin'              => $data['pin'],
-            ':translations'         => $data['translations'],
+            ':translations'     => $data['translations'],
             ':id'               => $id
         ];
 
@@ -164,7 +164,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
                 SET `status` = :status, `name` = :name, `description` = :description, `address` = :address,
                 `phone` = :phone, `latitude` = :latitude, `longitude` = :longitude,
                 `pictureFullPath` = :pictureFullPath, `pictureThumbPath` = :pictureThumbPath,
-                `pin` = :pin, `translations` = :translations 
+                `pin` = :pin, `translations` = :translations
                 WHERE id = :id"
             );
 

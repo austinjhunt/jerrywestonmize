@@ -10,10 +10,12 @@ use MailPoet\AutomaticEmails\AutomaticEmails;
 use MailPoet\Config\Env;
 use MailPoet\Config\Menu;
 use MailPoet\Entities\NewsletterEntity;
+use MailPoet\Entities\SegmentEntity;
 use MailPoet\Listing\PageLimit;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\NewsletterTemplates\NewsletterTemplatesRepository;
 use MailPoet\Segments\SegmentsSimpleListRepository;
+use MailPoet\Segments\WooCommerce;
 use MailPoet\Services\AuthorizedSenderDomainController;
 use MailPoet\Services\Bridge;
 use MailPoet\Settings\SettingsController;
@@ -25,40 +27,31 @@ use MailPoet\WP\DateTime;
 use MailPoet\WP\Functions as WPFunctions;
 
 class Newsletters {
-  /** @var PageRenderer */
-  private $pageRenderer;
+  private PageRenderer $pageRenderer;
 
-  /** @var PageLimit */
-  private $listingPageLimit;
+  private PageLimit $listingPageLimit;
 
-  /** @var WPFunctions */
-  private $wp;
+  private WPFunctions $wp;
 
-  /** @var SettingsController */
-  private $settings;
+  private SettingsController $settings;
 
-  /** @var NewsletterTemplatesRepository */
-  private $newsletterTemplatesRepository;
+  private NewsletterTemplatesRepository $newsletterTemplatesRepository;
 
-  /** @var AutomaticEmails */
-  private $automaticEmails;
+  private AutomaticEmails $automaticEmails;
 
-  /** @var WPPostListLoader */
-  private $wpPostListLoader;
+  private WPPostListLoader $wpPostListLoader;
 
-  /** @var SegmentsSimpleListRepository */
-  private $segmentsListRepository;
+  private SegmentsSimpleListRepository $segmentsListRepository;
 
-  /** @var NewslettersRepository */
-  private $newslettersRepository;
+  private NewslettersRepository $newslettersRepository;
 
-  /** @var Bridge */
-  private $bridge;
+  private Bridge $bridge;
 
-  /** @var AuthorizedSenderDomainController */
-  private $senderDomainController;
+  private AuthorizedSenderDomainController $senderDomainController;
 
   private UserFlagsController $userFlagsController;
+
+  private WooCommerce $wooCommerceSegment;
 
   private CapabilitiesManager $capabilitiesManager;
 
@@ -75,6 +68,7 @@ class Newsletters {
     Bridge $bridge,
     AuthorizedSenderDomainController $senderDomainController,
     UserFlagsController $userFlagsController,
+    WooCommerce $wooCommerceSegment,
     CapabilitiesManager $capabilitiesManager
   ) {
     $this->pageRenderer = $pageRenderer;
@@ -89,6 +83,7 @@ class Newsletters {
     $this->bridge = $bridge;
     $this->senderDomainController = $senderDomainController;
     $this->userFlagsController = $userFlagsController;
+    $this->wooCommerceSegment = $wooCommerceSegment;
     $this->capabilitiesManager = $capabilitiesManager;
   }
 
@@ -98,7 +93,8 @@ class Newsletters {
     $data = [];
 
     $data['items_per_page'] = $this->listingPageLimit->getLimitPerPage('newsletters');
-    $segments = $this->segmentsListRepository->getListWithSubscribedSubscribersCounts();
+    $includedSegmentTypes = $this->wooCommerceSegment->shouldShowWooCommerceSegment() ? [] : SegmentEntity::NON_WOO_RELATED_TYPES;
+    $segments = $this->segmentsListRepository->getListWithSubscribedSubscribersCounts($includedSegmentTypes);
     $data['segments'] = $segments;
     $data['settings'] = $this->settings->getAll();
     $data['current_wp_user'] = $this->wp->wpGetCurrentUser()->to_array();

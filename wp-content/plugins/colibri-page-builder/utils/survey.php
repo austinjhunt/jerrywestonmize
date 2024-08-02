@@ -34,8 +34,8 @@ if (!function_exists('extendthemes_show_survey')) {
 					<div class="header">
 						<img src="https://colibriwp.com/assets/colibri-logo.svg" class="logo">
 						<div class="title">
-							<h1><?php _e('Quick feedback', 'colibri-page-builder'); ?></h1>
-							<p><?php _e('If you have a moment, can you please give us a feedback?', 'colibri-page-builder'); ?></p>
+							<h1><?php _e('Quick feedback', 'colibri-page-builder'); //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?></h1>
+							<p><?php _e('If you have a moment, can you please give us a feedback?', 'colibri-page-builder'); //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?></p>
 						</div>
 					</div>
 
@@ -48,8 +48,8 @@ if (!function_exists('extendthemes_show_survey')) {
 					</div>
 
 					<div class="footer">
-						<a href="#" class="skip-link" onclick="colibri_survey_close()"><?php _e('Skip', 'colibri-page-builder'); ?></a>
-						<button class="button button-primary" id="survey-submit-btn" onclick="colibri_survey_submit(this)"><?php _e('Submit', 'colibri-page-builder'); ?></button>
+						<a href="#" class="skip-link" onclick="colibri_survey_close()"><?php _e('Skip', 'colibri-page-builder'); //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?></a>
+						<button class="button button-primary" id="survey-submit-btn" onclick="colibri_survey_submit(this)"><?php _e('Submit', 'colibri-page-builder');//phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction  ?></button>
 					</div>
 				</div>
 			</div>

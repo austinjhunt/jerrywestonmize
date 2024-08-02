@@ -59,9 +59,8 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             $options['show_package'] = BackendStrings::getWordPressStrings()['show_packages'];
         }
 
-        if ($controls_data['categories'] && sizeof($controls_data['locations']) > 1) {
+        if ($controls_data['categories'] && sizeof($controls_data['locations']) > 1) {}
 
-        }
         $this->add_control(
             'select_catalog',
             [
@@ -73,21 +72,19 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             ]
         );
 
-        if ($controls_data['services'] && sizeof($controls_data['services']) > 1) {
-            $this->add_control(
-                'select_category',
-                [
-                    'label' => BackendStrings::getWordPressStrings()['select_category'],
-                    'type' => Controls_Manager::SELECT2,
-                    'multiple' => true,
-                    'options' => $controls_data['categories'],
-                    'condition' => ['select_catalog' => 'show_category'],
-                    'default' => array_keys($controls_data['categories']) ? [array_keys($controls_data['categories'])[0]] : 0,
-                ]
-            );
-        }
+        $this->add_control(
+            'select_category',
+            [
+                'label' => BackendStrings::getWordPressStrings()['select_category'],
+                'type' => Controls_Manager::SELECT2,
+                'multiple' => true,
+                'options' => $controls_data['categories'],
+                'condition' => ['select_catalog' => 'show_category'],
+                'default' => array_keys($controls_data['categories']) ? [array_keys($controls_data['categories'])[0]] : 0,
+            ]
+        );
 
-        if ($controls_data['packages']) {
+        if ($controls_data['services'] && sizeof($controls_data['services']) > 1) {
             $this->add_control(
                 'select_service',
                 [
@@ -97,6 +94,20 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
                     'options' => $controls_data['services'],
                     'condition' => ['select_catalog' => 'show_service'],
                     'default' => array_keys($controls_data['services']) ? [array_keys($controls_data['services'])[0]] : 0,
+                ]
+            );
+        }
+
+        if ($controls_data['packages']) {
+            $this->add_control(
+                'select_package',
+                [
+                    'label' => BackendStrings::getWordPressStrings()['select_package'],
+                    'type' => Controls_Manager::SELECT2,
+                    'multiple' => true,
+                    'options' => $controls_data['packages'],
+                    'condition' => ['select_catalog' => 'show_package'],
+                    'default' => array_keys($controls_data['packages']) ? [array_keys($controls_data['packages'])[0]] : 0,
                 ]
             );
         }

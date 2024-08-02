@@ -442,7 +442,7 @@ class Forminator_Admin_L10n {
 			'templates'     => array(
 				'create_form'       => esc_html__( 'Create Form', 'forminator' ),
 				'open_actions'      => esc_html__( 'Open actions', 'forminator' ),
-				'alt_logo'          => esc_html__( 'WPMUDEV logo', 'forminator' ),
+				'alt_logo'          => esc_html__( 'WPMU DEV Logo', 'forminator' ),
 				'login'             => esc_html__( 'Log In to Your WPMU DEV Account', 'forminator' ),
 				'login_plugin'      => esc_html__( 'Looks like your site is not connected to WPMU DEV. Log in to your WPMU DEV account to access cloud templates.', 'forminator' ),
 				'login_plugin2'     => esc_html__( 'Looks like your site is not connected to WPMU DEV. Log in to your WPMU DEV account to unlock the complete list of preset templates.', 'forminator' ),

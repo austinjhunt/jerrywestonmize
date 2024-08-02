@@ -28,6 +28,9 @@ class PaymentSettings
     /** @var PaymentMollieSettings */
     private $mollieSettings;
 
+    /** @var PaymentSquareSettings */
+    private $squareSettings;
+
     /** @var PaymentLinksSettings */
     private $paymentLinksSettings;
 
@@ -112,6 +115,23 @@ class PaymentSettings
     }
 
     /**
+     * @return PaymentSquareSettings
+     */
+    public function getSquareSettings()
+    {
+        return $this->squareSettings;
+    }
+
+    /**
+     * @param PaymentSquareSettings $squareSettings
+     */
+    public function setSquareSettings($squareSettings)
+    {
+        $this->squareSettings = $squareSettings;
+    }
+
+
+    /**
      * @return PaymentLinksSettings
      */
     public function getPaymentLinksSettings()
@@ -139,6 +159,7 @@ class PaymentSettings
             'stripe' => $this->getStripeSettings() ? $this->getStripeSettings()->toArray() : null,
             'wc'     => $this->getWooCommerceSettings() ? $this->getWooCommerceSettings()->toArray() : null,
             'mollie' => $this->getMollieSettings() ? $this->getMollieSettings()->toArray() : null,
+            'square' => $this->getSquareSettings() ? $this->getSquareSettings()->toArray() : null,
             'paymentLinks' => $this->getPaymentLinksSettings() ? $this->getPaymentLinksSettings()->toArray() : null,
         ];
     }

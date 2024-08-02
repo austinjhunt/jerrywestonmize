@@ -32,6 +32,12 @@ class GetTimeSlotsController extends Controller
         'monthsLoad',
         'queryTimeZone',
         'timeZone',
+        'allowAdminBookAtAnyTime',
+        'allowBookingIfPending',
+        'allowBookingIfNotMin',
+        'timeSlotLength',
+        'serviceDurationAsSlot',
+        'bufferTimeInSlot'
     ];
 
     /**
@@ -82,6 +88,14 @@ class GetTimeSlotsController extends Controller
         $command->setField('monthsLoad', (int)$request->getQueryParam('monthsLoad', 0));
         $command->setField('queryTimeZone', (string)$request->getQueryParam('queryTimeZone', ''));
         $command->setField('timeZone', (string)$request->getQueryParam('timeZone', ''));
+
+        $command->setField('allowAdminBookAtAnyTime', $request->getQueryParam('allowAdminBookAtAnyTime'));
+        $command->setField('allowBookingIfPending', $request->getQueryParam('allowBookingIfPending'));
+        $command->setField('allowBookingIfNotMin', $request->getQueryParam('allowBookingIfNotMin'));
+        $command->setField('timeSlotLength', $request->getQueryParam('timeSlotLength'));
+        $command->setField('serviceDurationAsSlot', $request->getQueryParam('serviceDurationAsSlot'));
+        $command->setField('bufferTimeInSlot', $request->getQueryParam('bufferTimeInSlot'));
+
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

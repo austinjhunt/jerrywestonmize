@@ -2,9 +2,9 @@
 
 Contributors:      google
 Requires at least: 5.2
-Tested up to:      6.5
+Tested up to:      6.6
 Requires PHP:      7.4
-Stable tag:        1.130.0
+Stable tag:        1.132.0
 License:           Apache License 2.0
 License URI:       https://www.apache.org/licenses/LICENSE-2.0
 Tags:              google, search-console, analytics, adsense, pagespeed-insights
@@ -109,31 +109,34 @@ Please create a new topic on our [WordPress.org support forum](https://wordpress
 
 == Changelog ==
 
-= 1.130.0 =
+= 1.132.0 =
 
 **Enhanced**
 
-* Added events tracking to the conversion tracking toggle. See [#8894](https://github.com/google/site-kit-wp/issues/8894).
-* Add support for Easy Digital Downloads "add to cart" event in Analytics enhanced tracking. See [#8801](https://github.com/google/site-kit-wp/issues/8801).
-* Add conversion events tracking for the Ninja Forms plugin. See [#8799](https://github.com/google/site-kit-wp/issues/8799).
-* Add foundation for new Reader Revenue Manager feature (PHP). See [#8785](https://github.com/google/site-kit-wp/issues/8785).
-* Add the Subscribe with Google PHP client library. See [#8783](https://github.com/google/site-kit-wp/issues/8783).
-* Ensure that Audiences are listed in the correct order, both in the Audience Tiles Widget and the Selection Panel. See [#8519](https://github.com/google/site-kit-wp/issues/8519).
-* Add support for pivot reports from Analytics to improve report request efficiency. See [#8484](https://github.com/google/site-kit-wp/issues/8484).
-* Update Analytics and AdSense modules to check the linked status as soon as one of these modules is connected. See [#8463](https://github.com/google/site-kit-wp/issues/8463).
-* Add a fallback mechanism to obtain user count for Site Kit audiences in the partial data state. See [#8160](https://github.com/google/site-kit-wp/issues/8160).
-* Show a notice in the Audience Selection Panel when it's opened with a single audience in the selection. See [#8159](https://github.com/google/site-kit-wp/issues/8159).
-* Add a CTA banner in the audiences widget area to reconnect Analytics if disconnected. See [#8156](https://github.com/google/site-kit-wp/issues/8156).
-* Show an Audience Tile in a zero-data state, and allow it to be temporarily hidden. See [#8143](https://github.com/google/site-kit-wp/issues/8143).
-* Update audiences widget area to show multiple notices in sequence. See [#8139](https://github.com/google/site-kit-wp/issues/8139).
-* Navigate to the OAuth flow as needed when setting up Audience Segmentation from the Setup CTA Banner. See [#8132](https://github.com/google/site-kit-wp/issues/8132).
-* Update the `url` parameter used in creating a new AdSense account not to contain subdomain information. See [#8124](https://github.com/google/site-kit-wp/issues/8124).
-* Update the Google Tag Mismatch notification to persist until a user dismisses it. See [#6819](https://github.com/google/site-kit-wp/issues/6819).
-* Add error boundary to widgets to prevent errors in an individual widget from crashing the entire dashboard. See [#6695](https://github.com/google/site-kit-wp/issues/6695).
+* Implement the dismiss functionality for the new notifications infrastructure. See [#8974](https://github.com/google/site-kit-wp/issues/8974).
+* Add Reader Revenue Manager data store functionality to get service URL. See [#8848](https://github.com/google/site-kit-wp/issues/8848).
+* Populate the feature list in the Reader Revenue Manager disconnection confirmation modal. See [#8845](https://github.com/google/site-kit-wp/issues/8845).
+* Include the Subscribe with Google external JavaScript file and configure it for the Reader Revenue Manager service. See [#8844](https://github.com/google/site-kit-wp/issues/8844).
+* Provide the Settings UI to allow a user to select a publication in the Reader Revenue Manager module. See [#8837](https://github.com/google/site-kit-wp/issues/8837).
+* Add infrastructure for synchronizing the onboarding state of a publication in the Reader Revenue Manager module. See [#8796](https://github.com/google/site-kit-wp/issues/8796).
+* Add Reader Revenue Manager data store functionality to find a matching publication. See [#8795](https://github.com/google/site-kit-wp/issues/8795).
+* Add Reader Revenue Manager data store functionality to list available publications. See [#8794](https://github.com/google/site-kit-wp/issues/8794).
+* Add Reader Revenue Manager module settings infrastructure. See [#8793](https://github.com/google/site-kit-wp/issues/8793).
+* Improve Authorize Application screen action button styling. See [#8584](https://github.com/google/site-kit-wp/issues/8584).
+* Allow users to install Consent Mode plugin from Site Kit Settings. See [#8521](https://github.com/google/site-kit-wp/issues/8521).
+* Update Consent Mode to prevent enqueuing duplicate consent commands on page load. See [#8387](https://github.com/google/site-kit-wp/issues/8387).
+* Update the Consent Mode Setup CTA banner not to be shown if the user toggles the consent mode via settings. See [#8386](https://github.com/google/site-kit-wp/issues/8386).
+* Extract inline consent mode JS to external script. See [#8384](https://github.com/google/site-kit-wp/issues/8384).
+* Update the layout of the graphic on the Consent Mode Setup CTA banner. See [#8376](https://github.com/google/site-kit-wp/issues/8376).
+* Improve the "Top recent trending pages" empty state when no posts have been recently published. See [#8315](https://github.com/google/site-kit-wp/issues/8315).
+* Update module infrastructure to add proper support for dashboard effects. See [#8211](https://github.com/google/site-kit-wp/issues/8211).
+* Provide the ability to set up the Audience Segmentation feature from the Settings screen. See [#8178](https://github.com/google/site-kit-wp/issues/8178).
+* Implement the Audience Segmentation "no audiences" banner. See [#8155](https://github.com/google/site-kit-wp/issues/8155).
+* Show a loading state with placeholders for the content while data is being retrieved for an Audience Tile. See [#8145](https://github.com/google/site-kit-wp/issues/8145).
 
 **Fixed**
 
-* Fix the problem with sticky header when the admin menu tooltip is shown. See [#8764](https://github.com/google/site-kit-wp/issues/8764).
-* Fix Analytics data inconsistency for Arabic language pages. See [#8184](https://github.com/google/site-kit-wp/issues/8184).
+* Fix measurement of successful setup completion events. See [#9039](https://github.com/google/site-kit-wp/issues/9039).
+* Ensure WP Forms events are only sent once when Popup Maker plugin is installed. See [#8944](https://github.com/google/site-kit-wp/issues/8944).
 
 [See changelog for all versions](https://raw.githubusercontent.com/google/site-kit-wp/main/changelog.txt).

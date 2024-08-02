@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the MailPoet plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MailPoet 4.54.0\n"
+"Project-Id-Version: MailPoet 4.58.0\n"
 "Report-Msgid-Bugs-To: http://support.mailpoet.com/\n"
 "Last-Translator: MailPoet i18n (https://www.transifex.com/organization/wysija)\n"
 "Language-Team: MailPoet i18n <https://www.transifex.com/organization/wysija>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-07-02T10:36:05+00:00\n"
+"POT-Creation-Date: 2024-07-30T10:01:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -536,7 +536,7 @@ msgid "Select the list that you want to add"
 msgstr ""
 
 #: views/form/editor.html:161
-#: views/help.html:67
+#: views/help.html:70
 #: views/newsletter/editor.html:1050
 #: views/newsletter/editor.html:1051
 #: views/segments/translations.html:80
@@ -1533,46 +1533,73 @@ msgid "Total scheduled tasks"
 msgstr ""
 
 #: views/help.html:61
-msgid "Total running tasks"
+msgid "Total cancelled tasks"
 msgstr ""
 
 #: views/help.html:62
-msgid "Total paused tasks"
+msgid "Total running tasks"
 msgstr ""
 
 #: views/help.html:63
-msgid "Scheduled tasks"
+msgid "Total paused tasks"
 msgstr ""
 
 #: views/help.html:64
-msgid "Running tasks"
+msgid "Scheduled sending tasks"
 msgstr ""
 
 #: views/help.html:65
-msgid "Completed tasks"
+msgid "Running sending tasks"
 msgstr ""
 
-#: views/help.html:69
-msgid "Scheduled At"
+#: views/help.html:66
+msgid "Completed sending tasks"
 msgstr ""
 
-#: views/help.html:70
-msgid "Updated At"
+#: views/help.html:67
+msgid "Cancelled sending tasks"
+msgstr ""
+
+#: views/help.html:68
+msgid "Paused sending tasks"
 msgstr ""
 
 #: views/help.html:71
-msgid "Nothing to show."
-msgstr ""
-
-#: views/help.html:73
-msgid "WP Cron / Action Scheduler Status"
+#: views/segments/translations.html:79
+#: views/subscribers/subscribers.html:72
+#: lib/Newsletter/Shortcodes/ShortcodesHelper.php:20
+#: lib/Newsletter/Shortcodes/ShortcodesHelper.php:135
+#: lib/Newsletter/Shortcodes/ShortcodesHelper.php:136
+#: assets/dist/js/admin.js:2
+#: assets/dist/js/automation_analytics.js:9
+msgid "Subscriber"
 msgstr ""
 
 #: views/help.html:74
-msgid "Version"
+msgid "Scheduled at"
 msgstr ""
 
 #: views/help.html:75
+msgid "Cancelled at"
+msgstr ""
+
+#: views/help.html:76
+msgid "Updated at"
+msgstr ""
+
+#: views/help.html:78
+msgid "Nothing to show."
+msgstr ""
+
+#: views/help.html:80
+msgid "WP Cron / Action Scheduler Status"
+msgstr ""
+
+#: views/help.html:81
+msgid "Version"
+msgstr ""
+
+#: views/help.html:82
 msgid "Storage type"
 msgstr ""
 
@@ -1656,32 +1683,42 @@ msgctxt "A label in a status table e.g. Error: missing data"
 msgid "Error"
 msgstr ""
 
-#: views/help.html:66
+#: views/help.html:69
 msgctxt "Table column heading for task type."
 msgid "Type"
 msgstr ""
 
-#: views/help.html:68
+#: views/help.html:72
+msgctxt "Used when multiple subscribers are selected for a task and we don't list them all."
+msgid "Multiple subscribers"
+msgstr ""
+
+#: views/help.html:73
 msgctxt "Table column heading for task priority (number)."
 msgid "Priority"
 msgstr ""
 
-#: views/help.html:72
+#: views/help.html:77
+msgctxt "Table column heading to perform an action."
+msgid "Action"
+msgstr ""
+
+#: views/help.html:79
 msgctxt "Text of a link to email preview page."
 msgid "Preview"
 msgstr ""
 
-#: views/help.html:76
+#: views/help.html:83
 msgctxt "Label for the next date and time of background job trigger run."
 msgid "Next trigger run"
 msgstr ""
 
-#: views/help.html:77
+#: views/help.html:84
 msgctxt "Label for the last date and time of background job trigger run."
 msgid "Last trigger run"
 msgstr ""
 
-#: views/help.html:78
+#: views/help.html:85
 msgctxt "Label for the last date and time of background job worker run."
 msgid "Last worker run"
 msgstr ""
@@ -2229,6 +2266,7 @@ msgid "[username], did you know that hundreds of WordPress users read the review
 msgstr ""
 
 #: views/layout.html:152
+#: assets/dist/js/admin.js:2
 msgid "Not now"
 msgstr ""
 
@@ -3044,7 +3082,7 @@ msgstr ""
 #: views/newsletter/templates/blocks/automatedLatestContentLayout/settings.hbs:76
 #: views/newsletter/templates/blocks/posts/settingsDisplayOptions.hbs:29
 #: views/newsletter/templates/blocks/products/settingsDisplayOptions.hbs:29
-#: views/newsletter/templates/components/sidebar/styles.hbs:61
+#: views/newsletter/templates/components/sidebar/styles.hbs:72
 msgid "Heading 1"
 msgstr ""
 
@@ -3053,7 +3091,7 @@ msgstr ""
 #: views/newsletter/templates/blocks/automatedLatestContentLayout/settings.hbs:82
 #: views/newsletter/templates/blocks/posts/settingsDisplayOptions.hbs:35
 #: views/newsletter/templates/blocks/products/settingsDisplayOptions.hbs:35
-#: views/newsletter/templates/components/sidebar/styles.hbs:85
+#: views/newsletter/templates/components/sidebar/styles.hbs:101
 msgid "Heading 2"
 msgstr ""
 
@@ -3062,7 +3100,7 @@ msgstr ""
 #: views/newsletter/templates/blocks/automatedLatestContentLayout/settings.hbs:88
 #: views/newsletter/templates/blocks/posts/settingsDisplayOptions.hbs:41
 #: views/newsletter/templates/blocks/products/settingsDisplayOptions.hbs:41
-#: views/newsletter/templates/components/sidebar/styles.hbs:109
+#: views/newsletter/templates/components/sidebar/styles.hbs:130
 msgid "Heading 3"
 msgstr ""
 
@@ -3461,7 +3499,7 @@ msgstr ""
 #: views/newsletter/templates/blocks/text/settings.hbs:1
 #: views/newsletter/templates/blocks/text/settings.hbs:2
 #: views/newsletter/templates/blocks/text/widget.hbs:4
-#: views/newsletter/templates/components/sidebar/styles.hbs:36
+#: views/newsletter/templates/components/sidebar/styles.hbs:19
 #: assets/dist/js/email-editor/email_editor.js:17
 msgid "Text"
 msgstr ""
@@ -3470,10 +3508,11 @@ msgstr ""
 #: views/newsletter/templates/blocks/coupon/settings.hbs:32
 #: views/newsletter/templates/blocks/footer/settings.hbs:7
 #: views/newsletter/templates/blocks/header/settings.hbs:8
-#: views/newsletter/templates/components/sidebar/styles.hbs:19
-#: views/newsletter/templates/components/sidebar/styles.hbs:44
-#: views/newsletter/templates/components/sidebar/styles.hbs:68
-#: views/newsletter/templates/components/sidebar/styles.hbs:92
+#: views/newsletter/templates/components/sidebar/styles.hbs:26
+#: views/newsletter/templates/components/sidebar/styles.hbs:55
+#: views/newsletter/templates/components/sidebar/styles.hbs:79
+#: views/newsletter/templates/components/sidebar/styles.hbs:108
+#: views/newsletter/templates/components/sidebar/styles.hbs:137
 msgid "Standard fonts"
 msgstr ""
 
@@ -3481,10 +3520,11 @@ msgstr ""
 #: views/newsletter/templates/blocks/coupon/settings.hbs:37
 #: views/newsletter/templates/blocks/footer/settings.hbs:12
 #: views/newsletter/templates/blocks/header/settings.hbs:13
-#: views/newsletter/templates/components/sidebar/styles.hbs:25
-#: views/newsletter/templates/components/sidebar/styles.hbs:50
-#: views/newsletter/templates/components/sidebar/styles.hbs:74
-#: views/newsletter/templates/components/sidebar/styles.hbs:98
+#: views/newsletter/templates/components/sidebar/styles.hbs:32
+#: views/newsletter/templates/components/sidebar/styles.hbs:61
+#: views/newsletter/templates/components/sidebar/styles.hbs:85
+#: views/newsletter/templates/components/sidebar/styles.hbs:114
+#: views/newsletter/templates/components/sidebar/styles.hbs:143
 msgid "Custom fonts"
 msgstr ""
 
@@ -3640,7 +3680,7 @@ msgstr ""
 
 #: views/newsletter/templates/blocks/footer/settings.hbs:29
 #: views/newsletter/templates/blocks/header/settings.hbs:30
-#: views/newsletter/templates/components/sidebar/styles.hbs:114
+#: views/newsletter/templates/components/sidebar/styles.hbs:160
 #: lib/Newsletter/Shortcodes/ShortcodesHelper.php:88
 #: assets/dist/js/email-editor/email_editor.js:17
 msgid "Links"
@@ -3648,13 +3688,13 @@ msgstr ""
 
 #: views/newsletter/templates/blocks/footer/settings.hbs:32
 #: views/newsletter/templates/blocks/header/settings.hbs:33
-#: views/newsletter/templates/components/sidebar/styles.hbs:114
+#: views/newsletter/templates/components/sidebar/styles.hbs:164
 msgid "Underline"
 msgstr ""
 
 #: views/newsletter/templates/blocks/footer/settings.hbs:70
 #: views/newsletter/templates/blocks/header/settings.hbs:70
-#: views/newsletter/templates/components/sidebar/styles.hbs:151
+#: views/newsletter/templates/components/sidebar/styles.hbs:202
 msgid "If an email client [link]does not support a custom web font[/link], a similar standard font will be used instead."
 msgstr ""
 
@@ -4077,19 +4117,27 @@ msgstr ""
 msgid "Branding color"
 msgstr ""
 
-#: views/newsletter/templates/components/sidebar/styles.hbs:119
+#: views/newsletter/templates/components/sidebar/styles.hbs:17
+msgid "Text font styles"
+msgstr ""
+
+#: views/newsletter/templates/components/sidebar/styles.hbs:49
+msgid "Heading font styles"
+msgstr ""
+
+#: views/newsletter/templates/components/sidebar/styles.hbs:169
 msgid "Text line height"
 msgstr ""
 
-#: views/newsletter/templates/components/sidebar/styles.hbs:129
+#: views/newsletter/templates/components/sidebar/styles.hbs:180
 msgid "Heading line height"
 msgstr ""
 
-#: views/newsletter/templates/components/sidebar/styles.hbs:143
+#: views/newsletter/templates/components/sidebar/styles.hbs:194
 msgid "Content background"
 msgstr ""
 
-#: views/newsletter/templates/components/sidebar/styles.hbs:148
+#: views/newsletter/templates/components/sidebar/styles.hbs:199
 msgid "Global background"
 msgstr ""
 
@@ -4416,16 +4464,6 @@ msgstr ""
 
 #: views/segments/translations.html:77
 msgid "Segment successfully added!"
-msgstr ""
-
-#: views/segments/translations.html:79
-#: views/subscribers/subscribers.html:72
-#: lib/Newsletter/Shortcodes/ShortcodesHelper.php:20
-#: lib/Newsletter/Shortcodes/ShortcodesHelper.php:135
-#: lib/Newsletter/Shortcodes/ShortcodesHelper.php:136
-#: assets/dist/js/admin.js:2
-#: assets/dist/js/automation_analytics.js:9
-msgid "Subscriber"
 msgstr ""
 
 #: views/segments/translations.html:81
@@ -6167,7 +6205,6 @@ msgstr ""
 
 #: views/subscribers/importExport/import.html:91
 #: assets/dist/js/admin.js:2
-#: assets/dist/js/automation_analytics.js:9
 #: assets/dist/js/commons.js:9
 msgid "View subscribers"
 msgstr ""
@@ -7085,7 +7122,7 @@ msgid "Create and send newsletters, post notifications and welcome emails from y
 msgstr ""
 
 #: lib/AdminPages/Pages/Automation.php:96
-#: lib/AdminPages/Pages/Newsletters.php:104
+#: lib/AdminPages/Pages/Newsletters.php:100
 msgid "In any WordPress role"
 msgstr ""
 
@@ -7297,6 +7334,15 @@ msgstr ""
 msgid "Duplicating form failed."
 msgstr ""
 
+#: lib/API/JSON/v1/Help.php:33
+#: lib/API/JSON/v1/Help.php:51
+msgid "Task not found."
+msgstr ""
+
+#: lib/API/JSON/v1/Help.php:65
+msgid "Invalid or missing parameter `id`."
+msgstr ""
+
 #. translators: %s is the error message.
 #. translators: %s contains the actual error message.
 #: lib/API/JSON/v1/Mailer.php:77
@@ -7364,7 +7410,7 @@ msgstr ""
 #: lib/API/JSON/v1/Segments.php:179
 #: lib/API/JSON/v1/Segments.php:243
 #: lib/API/JSON/v1/Segments.php:265
-#: lib/API/MP/v1/Subscribers.php:395
+#: lib/API/MP/v1/Subscribers.php:441
 msgid "This list does not exist."
 msgid_plural "These lists do not exist."
 msgstr[0] ""
@@ -7574,7 +7620,7 @@ msgstr ""
 #: lib/API/JSON/v1/Subscribers.php:218
 #: lib/API/JSON/v1/Subscribers.php:248
 #: lib/API/JSON/v1/SubscriberStats.php:45
-#: lib/API/MP/v1/Subscribers.php:381
+#: lib/API/MP/v1/Subscribers.php:427
 msgid "This subscriber does not exist."
 msgstr ""
 
@@ -7675,68 +7721,74 @@ msgstr ""
 
 #. translators: %s is an error message
 #: lib/API/MP/v1/Subscribers.php:152
+#: lib/API/MP/v1/Subscribers.php:206
 msgid "Failed to save subscriber custom fields: %s"
 msgstr ""
 
+#. translators: %s is an error message.
+#: lib/API/MP/v1/Subscribers.php:196
+msgid "Failed to update subscriber: %s"
+msgstr ""
+
 #. translators: %s is the error message
-#: lib/API/MP/v1/Subscribers.php:204
+#: lib/API/MP/v1/Subscribers.php:250
 msgid "Failed to save a status of a subscriber : %s"
 msgstr ""
 
-#: lib/API/MP/v1/Subscribers.php:250
+#: lib/API/MP/v1/Subscribers.php:296
 msgid "This subscriber is already unsubscribed."
 msgstr ""
 
 #. translators: %s is an error message
-#: lib/API/MP/v1/Subscribers.php:328
+#: lib/API/MP/v1/Subscribers.php:374
 msgid "Subscriber added, but welcome email failed to send: %s"
 msgstr ""
 
 #. translators: %s is the error message
-#: lib/API/MP/v1/Subscribers.php:343
+#: lib/API/MP/v1/Subscribers.php:389
 msgid "Subscriber added to lists, but confirmation email failed to send: %s"
 msgstr ""
 
-#: lib/API/MP/v1/Subscribers.php:354
+#: lib/API/MP/v1/Subscribers.php:400
 msgid "At least one segment ID is required."
 msgstr ""
 
-#: lib/API/MP/v1/Subscribers.php:364
+#: lib/API/MP/v1/Subscribers.php:410
 msgid "A subscriber is required."
 msgstr ""
 
 #. translators: %d is the ID of the segment
-#: lib/API/MP/v1/Subscribers.php:405
+#: lib/API/MP/v1/Subscribers.php:451
 msgid "Can't subscribe to a WordPress Users list with ID '%d'."
 msgstr ""
 
 #. translators: %d is the ID of the segment
-#: lib/API/MP/v1/Subscribers.php:408
+#: lib/API/MP/v1/Subscribers.php:454
 msgid "Can't unsubscribe from a WordPress Users list with ID '%d'."
 msgstr ""
 
 #. translators: %d is the ID of the segment
-#: lib/API/MP/v1/Subscribers.php:415
+#: lib/API/MP/v1/Subscribers.php:461
 msgid "Can't subscribe to a WooCommerce Customers list with ID '%d'."
 msgstr ""
 
 #. translators: %d is the ID of the segment
-#: lib/API/MP/v1/Subscribers.php:418
+#: lib/API/MP/v1/Subscribers.php:464
 msgid "Can't unsubscribe from a WooCommerce Customers list with ID '%d'."
 msgstr ""
 
 #. translators: %d is the ID of the segment
-#: lib/API/MP/v1/Subscribers.php:425
+#: lib/API/MP/v1/Subscribers.php:471
 msgid "Can't subscribe to a list with ID '%d'."
 msgstr ""
 
 #. translators: %d is the ID of the segment
-#: lib/API/MP/v1/Subscribers.php:428
+#: lib/API/MP/v1/Subscribers.php:474
 msgid "Can't unsubscribe from a list with ID '%d'."
 msgstr ""
 
 #. translators: %s is the count of lists
-#: lib/API/MP/v1/Subscribers.php:440
+#: lib/API/MP/v1/Subscribers.php:486
 msgid "List with ID '%s' does not exist."
 msgid_plural "Lists with IDs '%s' do not exist."
 msgstr[0] ""
@@ -7903,7 +7955,7 @@ msgid "Copy of %s"
 msgstr ""
 
 #. translators: %s is the status.
-#: lib/Automation/Engine/Builder/UpdateAutomationController.php:134
+#: lib/Automation/Engine/Builder/UpdateAutomationController.php:136
 msgid "Invalid status: %s"
 msgstr ""
 
@@ -7927,145 +7979,150 @@ msgstr ""
 msgid "Automation with ID '%d' not found."
 msgstr ""
 
-#. translators: %1$s is the ID of the automation, %2$s the version.
+#. translators: %d is the ID of the automation.
 #: lib/Automation/Engine/Exceptions.php:75
+msgid "Automation with ID '%d' not found in selected time span."
+msgstr ""
+
+#. translators: %1$s is the ID of the automation, %2$s the version.
+#: lib/Automation/Engine/Exceptions.php:82
 msgid "Automation with ID \"%1$s\" in version \"%2$s\" not found."
 msgstr ""
 
 #. translators: %1$s is the ID of the automation.
-#: lib/Automation/Engine/Exceptions.php:82
+#: lib/Automation/Engine/Exceptions.php:89
 msgid "Automation with ID \"%1$s\" is no longer active."
 msgstr ""
 
 #. translators: %d is the ID of the automation run.
-#: lib/Automation/Engine/Exceptions.php:89
+#: lib/Automation/Engine/Exceptions.php:96
 msgid "Automation run with ID '%d' not found."
 msgstr ""
 
 #. translators: %s is the key of the automation step.
-#: lib/Automation/Engine/Exceptions.php:96
+#: lib/Automation/Engine/Exceptions.php:103
 msgid "Automation step with key '%s' not found."
 msgstr ""
 
 #. translators: %1$s is the key, %2$d is the automation ID.
-#: lib/Automation/Engine/Exceptions.php:103
+#: lib/Automation/Engine/Exceptions.php:110
 msgid "Automation trigger with key \"%1$s\" not found in automation ID \"%2$d\"."
 msgstr ""
 
 #. translators: %1$d is the ID of the automation run, %2$s its current status.
-#: lib/Automation/Engine/Exceptions.php:110
+#: lib/Automation/Engine/Exceptions.php:117
 msgid "Automation run with ID \"%1$d\" is not running. Status: %2$s"
 msgstr ""
 
 #. translators: %s is the key of the subject not found.
-#: lib/Automation/Engine/Exceptions.php:117
+#: lib/Automation/Engine/Exceptions.php:124
 msgid "Subject with key '%s' not found."
 msgstr ""
 
 #. translators: %s is the class name of the subject not found.
-#: lib/Automation/Engine/Exceptions.php:124
+#: lib/Automation/Engine/Exceptions.php:131
 msgid "Subject of class '%s' not found."
 msgstr ""
 
 #. translators: %1$s is the name of the key, %2$s the arguments.
-#: lib/Automation/Engine/Exceptions.php:131
+#: lib/Automation/Engine/Exceptions.php:138
 msgid "Subject with key \"%1$s\" and args \"%2$s\" failed to load."
 msgstr ""
 
-#: lib/Automation/Engine/Exceptions.php:139
+#: lib/Automation/Engine/Exceptions.php:146
 msgid "Subject data for subject with key '%1$s' not found for automation run with ID '%2$d'."
 msgstr ""
 
-#: lib/Automation/Engine/Exceptions.php:148
+#: lib/Automation/Engine/Exceptions.php:155
 msgid "Multiple subjects with key '%1$s' found for automation run with ID '%2$d', only one expected."
 msgstr ""
 
-#: lib/Automation/Engine/Exceptions.php:157
+#: lib/Automation/Engine/Exceptions.php:164
 msgid "Payload of class '%1$s' not found for automation run with ID '%2$d'."
 msgstr ""
 
-#: lib/Automation/Engine/Exceptions.php:166
+#: lib/Automation/Engine/Exceptions.php:173
 msgid "Multiple payloads of class '%1$s' found for automation run with ID '%2$d'."
 msgstr ""
 
 #. translators: %s is the key of the field not found.
-#: lib/Automation/Engine/Exceptions.php:174
+#: lib/Automation/Engine/Exceptions.php:181
 msgid "Field with key '%s' not found."
 msgstr ""
 
 #. translators: %1$s is the key of the field, %2$s its arguments.
-#: lib/Automation/Engine/Exceptions.php:181
+#: lib/Automation/Engine/Exceptions.php:188
 msgid "Field with key \"%1$s\" and args \"%2$s\" failed to load."
 msgstr ""
 
 #. translators: %s is the type of the field for which a filter was not found.
-#: lib/Automation/Engine/Exceptions.php:188
+#: lib/Automation/Engine/Exceptions.php:195
 msgid "Filter for field of type '%s' not found."
 msgstr ""
 
 #. translators: %1$d is the ID of the automation step, %2$s is the ID of the next step.
-#: lib/Automation/Engine/Exceptions.php:195
+#: lib/Automation/Engine/Exceptions.php:202
 msgid "Automation step with ID '%1$s' doesn't have a next step with index '%2$d'."
 msgstr ""
 
 #. translators: %1$d is the ID of the automation step, %2$s is the ID of the next step.
-#: lib/Automation/Engine/Exceptions.php:202
+#: lib/Automation/Engine/Exceptions.php:209
 msgid "Automation step with ID '%s' did not schedule a specific next step, even though multiple next steps are possible."
 msgstr ""
 
-#: lib/Automation/Engine/Exceptions.php:208
+#: lib/Automation/Engine/Exceptions.php:215
 msgid "Automation structure modification not supported."
 msgstr ""
 
 #. translators: %s is a detailed information
-#: lib/Automation/Engine/Exceptions.php:215
+#: lib/Automation/Engine/Exceptions.php:222
 msgid "Invalid automation structure: %s"
 msgstr ""
 
-#: lib/Automation/Engine/Exceptions.php:225
+#: lib/Automation/Engine/Exceptions.php:232
 msgid "Modification of step '%1$s' of type '%2$s' with ID '%3$s' is not supported when the related plugin is not active."
 msgstr ""
 
 #. translators: %s is a detailed information
-#: lib/Automation/Engine/Exceptions.php:237
+#: lib/Automation/Engine/Exceptions.php:244
 msgid "Automation validation failed: %s"
 msgstr ""
 
-#: lib/Automation/Engine/Exceptions.php:247
+#: lib/Automation/Engine/Exceptions.php:254
 msgid "Step with ID '%1$s' is missing required subjects with keys: %2$s"
 msgstr ""
 
-#: lib/Automation/Engine/Exceptions.php:253
+#: lib/Automation/Engine/Exceptions.php:260
 msgid "This step can not be used with the selected trigger."
 msgstr ""
 
 #. translators: %d is the ID of the automation.
-#: lib/Automation/Engine/Exceptions.php:261
+#: lib/Automation/Engine/Exceptions.php:268
 msgid "Can't delete automation with ID '%d' because it was not trashed."
 msgstr ""
 
 #. translators: %d is the ID of the automation template.
-#: lib/Automation/Engine/Exceptions.php:268
+#: lib/Automation/Engine/Exceptions.php:275
 msgid "Automation template with ID '%d' not found."
 msgstr ""
 
 #. translators: %d is the ID of the automation.
-#: lib/Automation/Engine/Exceptions.php:278
+#: lib/Automation/Engine/Exceptions.php:285
 msgid "Can not update automation with ID '%d' because users are currently active."
 msgstr ""
 
 #. translators: %1$s is the ID of the automation step, %2$d is the automation run ID.
-#: lib/Automation/Engine/Exceptions.php:285
+#: lib/Automation/Engine/Exceptions.php:292
 msgid "Automation step with ID '%1$s' was not started in automation run with ID '%2$d'."
 msgstr ""
 
 #. translators: %1$s is the ID of the automation step, %2$s its current status, %3$d is the automation run ID.
-#: lib/Automation/Engine/Exceptions.php:292
+#: lib/Automation/Engine/Exceptions.php:299
 msgid "Automation step with ID '%1$s' is not running in automation run with ID '%2$d'. Status: '%3$s'"
 msgstr ""
 
 #. translators: %1$d is the automation run ID, %2$s is the ID of the automation step, %3$d is the run number.
-#: lib/Automation/Engine/Exceptions.php:299
+#: lib/Automation/Engine/Exceptions.php:306
 msgid "Automation run with ID '%1$d' already has a processed action for step with ID '%2$s' and run number '%3$d'."
 msgstr ""
 
@@ -8342,15 +8399,6 @@ msgstr ""
 #: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:152
 #: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:403
 msgid "Automation email with ID '%s' not found."
-msgstr ""
-
-#: lib/Automation/Integrations/MailPoet/Analytics/Endpoints/AutomationFlowEndpoint.php:52
-#: lib/Automation/Integrations/MailPoet/Analytics/Endpoints/OverviewEndpoint.php:33
-msgid "Automation not found"
-msgstr ""
-
-#: lib/Automation/Integrations/MailPoet/Analytics/Endpoints/AutomationFlowEndpoint.php:57
-msgid "The automation did not exist in the selected time span"
 msgstr ""
 
 #: lib/Automation/Integrations/MailPoet/Fields/NewsletterLinkFieldsFactory.php:14
@@ -11148,29 +11196,35 @@ msgstr ""
 msgid "New Email"
 msgstr ""
 
-#: lib/Newsletter/NewsletterValidator.php:60
+#: lib/Newsletter/NewsletterValidator.php:61
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/newsletter_editor.js:2
 msgid "All emails must include an \"Unsubscribe\" link. Add a footer widget to your email to continue."
 msgstr ""
 
-#: lib/Newsletter/NewsletterValidator.php:65
+#: lib/Newsletter/NewsletterValidator.php:73
+#: assets/dist/js/admin.js:2
+#: assets/dist/js/automation.js:1
+msgid "You need to select a list to send to."
+msgstr ""
+
+#: lib/Newsletter/NewsletterValidator.php:82
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/newsletter_editor.js:2
 msgid "Poet, please add prose to your masterpiece before you send it to your followers."
 msgstr ""
 
-#: lib/Newsletter/NewsletterValidator.php:84
+#: lib/Newsletter/NewsletterValidator.php:101
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/newsletter_editor.js:2
 msgid "A re-engagement email must include a link with [link:subscription_re_engage_url] shortcode."
 msgstr ""
 
-#: lib/Newsletter/NewsletterValidator.php:88
+#: lib/Newsletter/NewsletterValidator.php:105
 msgid "Re-engagement emails are disabled because open and click tracking is disabled in MailPoet → Settings → Advanced."
 msgstr ""
 
-#: lib/Newsletter/NewsletterValidator.php:101
+#: lib/Newsletter/NewsletterValidator.php:118
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/newsletter_editor.js:2
 msgctxt "(Please reuse the current translation used for the string “Automatic Latest Content”) This Error message is displayed when a user tries to send a “Post Notification” email without any “Automatic Latest Content” widget inside"
@@ -11189,6 +11243,14 @@ msgstr ""
 #. translators: %s is the type which was given.
 #: lib/Newsletter/Scheduler/AutomationEmailScheduler.php:40
 msgid "Email with type 'automation' or 'automation_transactional' expected, '%s' given."
+msgstr ""
+
+#: lib/Newsletter/Sending/ScheduledTasksRepository.php:359
+msgid "Only scheduled and running tasks can be cancelled"
+msgstr ""
+
+#: lib/Newsletter/Sending/ScheduledTasksRepository.php:369
+msgid "Only cancelled tasks can be rescheduled"
 msgstr ""
 
 #: lib/Newsletter/Sending/ScheduledTaskSubscribersListingRepository.php:58
@@ -12750,6 +12812,11 @@ msgid "Pause"
 msgstr ""
 
 #: assets/dist/js/admin.js:2
+#: assets/dist/js/commons.js:9
+msgid "Cancelled"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
 msgid "Nice job! Check back in %1$d hour(s) for more stats."
 msgstr ""
 
@@ -12803,11 +12870,6 @@ msgstr ""
 
 #: assets/dist/js/admin.js:2
 msgid "History"
-msgstr ""
-
-#: assets/dist/js/admin.js:2
-#: assets/dist/js/automation.js:1
-msgid "You need to select a list to send to."
 msgstr ""
 
 #: assets/dist/js/admin.js:2
@@ -13428,6 +13490,42 @@ msgid "Want to set your own conditions?"
 msgstr ""
 
 #: assets/dist/js/admin.js:2
+msgid "Cancel task"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Reschedule task"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Yes, cancel task"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Yes, reschedule task"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Are you sure you want to cancel the task with ID %1$s for the email \"%2$s\"? Once cancelled, the email will not be sent."
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "(no subject)"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "Are you sure you want to reschedule the task with ID %s for the email \"%2$s\"?"
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "The email will be sent immediately."
+msgstr ""
+
+#: assets/dist/js/admin.js:2
+msgid "The task will be scheduled for sending on %s."
+msgstr ""
+
+#: assets/dist/js/admin.js:2
 msgctxt "A label on a button"
 msgid "Continue"
 msgstr ""
@@ -13924,6 +14022,10 @@ msgid "Email sending could fail if the user didn’t consent to receive marketin
 msgstr ""
 
 #: assets/dist/js/automation_analytics.js:9
+msgid "View subscriber activity"
+msgstr ""
+
+#: assets/dist/js/automation_analytics.js:9
 msgid "waiting"
 msgstr ""
 
@@ -14014,7 +14116,44 @@ msgid "products"
 msgstr ""
 
 #: assets/dist/js/automation_analytics.js:9
+msgid "View activity"
+msgstr ""
+
+#: assets/dist/js/automation_analytics.js:9
+msgid "Subscriber activity"
+msgstr ""
+
+#: assets/dist/js/automation_analytics.js:9
 msgid "Automation step"
+msgstr ""
+
+#: assets/dist/js/automation_analytics.js:9
+msgid "Started on"
+msgstr ""
+
+#: assets/dist/js/automation_analytics.js:9
+msgid "Completed on"
+msgstr ""
+
+#: assets/dist/js/automation_analytics.js:9
+msgid "Automation stuck. Run <link>past due actions</link> manually."
+msgstr ""
+
+#: assets/dist/js/automation_analytics.js:9
+msgid "Automation in progress"
+msgstr ""
+
+#: assets/dist/js/automation_analytics.js:9
+msgid "Automation ended"
+msgstr ""
+
+#: assets/dist/js/automation_analytics.js:9
+#: assets/dist/js/commons.js:9
+msgid "Did you forget something?"
+msgstr ""
+
+#: assets/dist/js/automation_analytics.js:9
+msgid "Time left: %s"
 msgstr ""
 
 #: assets/dist/js/automation_analytics.js:9
@@ -14127,10 +14266,6 @@ msgstr ""
 
 #: assets/dist/js/commons.js:9
 msgid "In Progress"
-msgstr ""
-
-#: assets/dist/js/commons.js:9
-msgid "Cancelled"
 msgstr ""
 
 #: assets/dist/js/commons.js:9
@@ -15263,10 +15398,6 @@ msgid "Subscription"
 msgstr ""
 
 #: assets/dist/js/commons.js:9
-msgid "Did you forget something?"
-msgstr ""
-
-#: assets/dist/js/commons.js:9
 msgid "Holiday Sale!"
 msgstr ""
 
@@ -15379,7 +15510,7 @@ msgid "Once added, click the button below to authenticate your sender domain."
 msgstr ""
 
 #: assets/dist/js/commons.js:9
-msgid "MailPoet would verify your DNS records to ensure it matches. Do note that it may take up to 24 hours for DNS changes to propagate after you make the change."
+msgid "MailPoet will verify your DNS records to ensure it matches. Do note that it may take up to 24 hours for DNS changes to propagate after you make the change."
 msgstr ""
 
 #: assets/dist/js/commons.js:9

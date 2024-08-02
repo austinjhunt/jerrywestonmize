@@ -168,7 +168,6 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 array_merge(
                     $starterData['values'],
                     [
-                        ':settings'         => $data['settings'],
                         ':recurringCycle'   => $data['recurringCycle'],
                         ':recurringSub'     => $data['recurringSub'],
                         ':recurringPayment' => $data['recurringPayment'],
@@ -183,8 +182,7 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 ),
             'columns'                =>
                 $starterData['columns'] .
-                '`settings`,
-                `recurringCycle`,
+                '`recurringCycle`,
                 `recurringSub`,
                 `recurringPayment`,
                 `translations`,
@@ -196,8 +194,7 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 `limitPerCustomer`,',
             'placeholders'           =>
                 $starterData['placeholders'] .
-                ':settings,
-                :recurringCycle,
+                ':recurringCycle,
                 :recurringSub,
                 :recurringPayment,
                 :translations,
@@ -209,8 +206,7 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 :limitPerCustomer,',
             'columnsPlaceholders'    =>
                 $starterData['columnsPlaceholders'] .
-                '`settings`          = :settings,
-                `recurringCycle`    = :recurringCycle,
+                '`recurringCycle`    = :recurringCycle,
                 `recurringSub`      = :recurringSub,
                 `recurringPayment`  = :recurringPayment,
                 `translations`      = :translations,
@@ -239,8 +235,12 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
      */
     public static function getEventRepositoryData($data)
     {
+        $starterData = parent::getEventRepositoryData($data);
+
         return [
-            'values'       => [
+            'values'       =>  array_merge(
+                $starterData['values'],
+                [
                 ':recurringCycle'       => $data['recurring'] && $data['recurring']['cycle'] ?
                     $data['recurring']['cycle'] : null,
                 ':recurringOrder'       => $data['recurring'] && $data['recurring']['order'] ?
@@ -252,7 +252,6 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 ':recurringUntil'       => $data['recurring'] && $data['recurring']['until'] ?
                     DateTimeService::getCustomDateTimeInUtc($data['recurring']['until']) : null,
                 ':locationId'           => $data['locationId'],
-                ':settings'             => $data['settings'],
                 ':zoomUserId'           => $data['zoomUserId'],
                 ':organizerId'          => $data['organizerId'],
                 ':translations'         => $data['translations'],
@@ -261,7 +260,8 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 ':depositPerPerson'     => $data['depositPerPerson'] ? 1 : 0,
                 ':fullPayment'          => $data['fullPayment'] ? 1 : 0,
                 ':customPricing'        => $data['customPricing'] ? 1 : 0,
-            ],
+                ]
+            ),
             'addValues'              => [
                 ':recurringMonthly'     => $data['recurring'] && $data['recurring']['monthlyRepeat'] ?
                     $data['recurring']['monthlyRepeat'] : null,
@@ -271,6 +271,7 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                     $data['recurring']['monthlyOnDay'] : null,
             ],
             'columns'                =>
+                $starterData['columns'] .
                 '`recurringCycle`,
                 `recurringOrder`,
                 `recurringInterval`,
@@ -280,7 +281,6 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 `monthlyOnDay`,
                 `recurringUntil`,
                 `locationId`,
-                `settings`,
                 `zoomUserId`,
                 `organizerId`,
                 `translations`,
@@ -290,6 +290,7 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 `fullPayment`,
                 `customPricing`,',
             'placeholders'           =>
+                $starterData['placeholders'] .
                 ':recurringCycle,
                 :recurringOrder,
                 :recurringInterval,
@@ -299,7 +300,6 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 :monthlyOnDay,           
                 :recurringUntil,
                 :locationId,
-                :settings,
                 :zoomUserId,
                 :organizerId,
                 :translations,
@@ -309,13 +309,13 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 :fullPayment,
                 :customPricing,',
             'columnsPlaceholders'    =>
+                $starterData['columnsPlaceholders'] .
                 '`recurringCycle` = :recurringCycle,
                 `recurringOrder` = :recurringOrder,
                 `recurringInterval` = :recurringInterval,
                 `monthlyDate` = :monthlyDate,    
                 `recurringUntil` = :recurringUntil,
                 `locationId` = :locationId,
-                `settings` = :settings,
                 `zoomUserId` = :zoomUserId,
                 `organizerId` = :organizerId,
                 `translations` = :translations,

@@ -62,7 +62,7 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 								<?php
 								printf(
 									/* translators: 1. Open link tag, 2. Close link tag */
-									esc_html__( 'With our pre-designed templates, you can easily create forms for different purposes. You can also create custom form templates and save it to the cloud and reuse it on any site you manage via the Hub. %1$sLearn more%2$s', 'forminator' ),
+									esc_html__( 'With our pre-designed templates, you can easily create forms for different purposes. You can also create custom form templates, save them to the cloud and reuse them on any sites you manage via the Hub. %1$sLearn more%2$s', 'forminator' ),
 									'<a href="' . esc_url( 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#templates' ) . '" target="_blank">',
 									' <span class="sui-icon-open-new-window" aria-hidden="true"></span></a>'
 								);
@@ -80,7 +80,7 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 								<?php
 								printf(
 									/* translators: 1. Open link tag, 2. Close link tag */
-									esc_html__( 'With the new Rating field, you can now add star ratings, to your forms and allow users submit their feedback on your products, services, ideas etc. %1$sLearn more%2$s', 'forminator' ),
+									esc_html__( 'With the new Rating field, you can now add star ratings to your forms and allow users to submit their feedback on your products, services, ideas etc. %1$sLearn more%2$s', 'forminator' ),
 									'<a href="' . esc_url( 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#rating-field' ) . '" target="_blank">',
 									' <span class="sui-icon-open-new-window" aria-hidden="true"></span></a>'
 								);

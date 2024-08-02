@@ -11,6 +11,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
 use AmeliaBooking\Domain\Factory\Coupon\CouponFactory;
 use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
+use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Json;
@@ -47,6 +48,10 @@ class PackageCustomerFactory
 
         if (isset($data['customerId'])) {
             $packageCustomer->setCustomerId(new Id($data['customerId']));
+        }
+
+        if (isset($data['customer'])) {
+            $packageCustomer->setCustomer(UserFactory::create($data['customer']));
         }
 
         if (isset($data['price'])) {

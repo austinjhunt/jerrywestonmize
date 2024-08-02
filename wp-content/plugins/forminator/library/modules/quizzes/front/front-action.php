@@ -50,6 +50,8 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 			)
 		);
 
+		self::can_submit();
+
 		if ( empty( self::$prepared_data['current_url'] ) ) {
 			self::$prepared_data['current_url'] = forminator_get_current_url();
 		}
@@ -61,15 +63,6 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 			wp_send_json_error(
 				array(
 					'error' => apply_filters( 'forminator_submit_quiz_error_not_found', esc_html__( 'Form not found', 'forminator' ) ),
-				)
-			);
-		}
-
-		// disable submissions if not published.
-		if ( Forminator_Quiz_Model::STATUS_PUBLISH !== $this->model->status ) {
-			wp_send_json_error(
-				array(
-					'error' => esc_html__( 'Quiz submissions disabled.', 'forminator' ),
 				)
 			);
 		}
@@ -92,6 +85,20 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 			} else {
 				$this->_process_knowledge_submit_multiple_answers( $this->model, $is_preview );
 			}
+		}
+	}
+
+	/**
+	 * Check if submission is possible.
+	 */
+	private static function can_submit() {
+		$form_submit = self::$module_object->form_can_submit();
+		if ( ! $form_submit['can_submit'] ) {
+			wp_send_json_error(
+				array(
+					'error' => $form_submit['error'],
+				)
+			);
 		}
 	}
 

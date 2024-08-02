@@ -363,12 +363,10 @@ class Helpers {
 
         // Check if user has the WP capability to import data.
         if ( ! current_user_can( 'import' ) ) {
+            //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             wp_die(
-                sprintf(
-                    __( '%sYour user role isn\'t high enough. You don\'t have permission to import demo data.%s', 'colibri-page-builder'),
-                    '<div class="notice  notice-error"><p>',
-                    '</p></div>'
-                )
+                //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                sprintf(__( '%sYour user role isn\'t high enough. You don\'t have permission to import demo data.%s', 'colibri-page-builder'), '<div class="notice  notice-error"><p>', '</p></div>')
             );
         }
     }

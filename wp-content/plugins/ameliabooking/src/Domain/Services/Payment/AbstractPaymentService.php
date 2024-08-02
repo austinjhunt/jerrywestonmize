@@ -55,7 +55,7 @@ class AbstractPaymentService
      * @param string $method
      * @param string $accountId
      *
-     * @return string|null
+     * @return array|null
      */
     public function getPaymentIntent($sessionId, $method, $accountId)
     {

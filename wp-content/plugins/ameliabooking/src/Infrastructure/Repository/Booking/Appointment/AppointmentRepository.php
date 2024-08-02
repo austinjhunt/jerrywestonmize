@@ -826,11 +826,20 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
 
             if (!empty($criteria['dates'])) {
                 if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                    $where[] = "(DATE_FORMAT(a.bookingStart, '%Y-%m-%d %H:%i:%s') BETWEEN :bookingFrom AND :bookingTo)";
+                    $whereStart = "(DATE_FORMAT(a.bookingStart, '%Y-%m-%d %H:%i:%s') BETWEEN :bookingFrom AND :bookingTo)";
 
                     $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
 
                     $params[':bookingTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+
+                    $whereEnd = '';
+                    if (!empty($criteria['endsInDateRange'])) {
+                        $whereEnd = "OR (DATE_FORMAT(a.bookingEnd, '%Y-%m-%d %H:%i:%s') BETWEEN :bookingFrom2 AND :bookingTo2)";
+                        $params[':bookingFrom2'] = $params[':bookingFrom'];
+                        $params[':bookingTo2']   = $params[':bookingTo'];
+                    }
+
+                    $where[] = "({$whereStart} {$whereEnd})";
                 } elseif (isset($criteria['dates'][0])) {
                     $where[] = "(DATE_FORMAT(a.bookingStart, '%Y-%m-%d %H:%i:%s') >= :bookingFrom)";
 
@@ -1277,11 +1286,20 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
 
         if (!empty($criteria['dates'])) {
             if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                $where[] = "(DATE_FORMAT(a.bookingStart, '%Y-%m-%d %H:%i:%s') BETWEEN :bookingFrom AND :bookingTo)";
+                $whereStart = "(DATE_FORMAT(a.bookingStart, '%Y-%m-%d %H:%i:%s') BETWEEN :bookingFrom AND :bookingTo)";
 
                 $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
 
                 $params[':bookingTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+
+                $whereEnd = '';
+                if (!empty($criteria['endsInDateRange'])) {
+                    $whereEnd = "OR (DATE_FORMAT(a.bookingEnd, '%Y-%m-%d %H:%i:%s') BETWEEN :bookingFrom2 AND :bookingTo2)";
+                    $params[':bookingFrom2'] = $params[':bookingFrom'];
+                    $params[':bookingTo2']   = $params[':bookingTo'];
+                }
+
+                $where[] = "({$whereStart} {$whereEnd})";
             } elseif (isset($criteria['dates'][0])) {
                 $where[] = "(DATE_FORMAT(a.bookingStart, '%Y-%m-%d %H:%i:%s') >= :bookingFrom)";
 

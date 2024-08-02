@@ -85,6 +85,13 @@ class PackageCustomerServiceFactory
                     'packageCustomer' => [
                         'id'         => $row['package_customer_id'],
                         'customerId' => $row['package_customer_customerId'],
+                        'customer'   => [
+                            'id'        => $row['package_customer_customerId'],
+                            'firstName' => $row['customer_firstName'],
+                            'lastName'  => $row['customer_lastName'],
+                            'email'     => $row['customer_email'],
+                            'phone'     => $row['customer_phone'],
+                        ],
                         'packageId'  => $row['package_customer_packageId'],
                         'tax'        => $row['package_customer_tax'],
                         'price'      => $row['package_customer_price'],

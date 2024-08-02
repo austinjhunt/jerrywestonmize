@@ -503,6 +503,11 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             !empty($criteria['itemsPerPage']) ? (int)$criteria['itemsPerPage'] : 0
         );
 
+        $groupBy = '';
+        if (!empty($limit)) {
+            $groupBy = 'GROUP BY e.id';
+        }
+
         try {
             $statement = $this->connection->prepare(
                 "SELECT
@@ -609,6 +614,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 {$paymentJoin}
                 {$tagJoin}
                 {$where}
+                {$groupBy}
                 ORDER BY ep.periodStart
                 {$limit}"
             );
@@ -869,6 +875,11 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             $where[] = 'e.locationId = :locationId';
         }
 
+        $groupBy = '';
+        if (!empty($criteria['groupById'])) {
+            $groupBy = 'GROUP BY e.id';
+        }
+
 
         if (!empty($criteria['locations'])) {
             foreach ((array)$criteria['locations'] as $index => $value) {
@@ -928,6 +939,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 {$providerJoin}
                 {$customerJoin}
                 {$where}
+                {$groupBy}
                 ORDER BY ep.periodStart, e.id
                 {$limit}"
             );

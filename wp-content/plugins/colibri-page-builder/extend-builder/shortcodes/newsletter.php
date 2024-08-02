@@ -29,6 +29,7 @@ function colibri_mc4wp_filter($content)
 
     //if the shortcode is not used using the newsletter component don't modify it;
     if(!$attrs) {
+        //no need to escape because it's not a shortcode it's a filter from mailchimp. They need to escape the content
         return $content;
     }
     $email = "";

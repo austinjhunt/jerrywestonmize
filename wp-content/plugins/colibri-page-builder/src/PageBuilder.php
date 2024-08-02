@@ -1079,6 +1079,7 @@ class PageBuilder
 		global $post;
 
 		if ($this->canEditInCustomizer($post)) {
+            //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<a href="javascript:void();"  onclick="cp_open_page_in_customizer(' . $post->ID . ')"  class="button button-primary">' . __(
 				'Edit in Colibri',
 				'colibri-page-builder'
@@ -1162,21 +1163,15 @@ class PageBuilder
 				}
 			</style>
 			<div style="display: none;" id="open_page_in_customizer_set_name">
-				<h1 class="cp-open-in-custmizer"><?php _e(
-														'Set a name for the new page',
-														'colibri-page-builder'
-													); ?></h1>
+				<h1 class="cp-open-in-custmizer"><?php _e('Set a name for the new page', 'colibri-page-builder'); //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?></h1>
 				<input placeholder="<?php echo esc_attr($title_placeholder); ?>" class="" name="new-page-name-val" />
-				<button class="button button-primary" name="new-page-name-save"> <?php _e('Set Page Name', 'colibri-page-builder'); ?></button>
+				<button class="button button-primary" name="new-page-name-save"> <?php _e('Set Page Name', 'colibri-page-builder'); //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?></button>
 			</div>
 
 			<script type="text/html" id="colibri-page-builder-guttenberg">
 				<a href="javascript:void();" onclick="cp_open_page_in_customizer(<?php echo wp_json_encode($post->ID); ?>)" onauxclick="cp_open_page_in_customizer('<?php echo wp_json_encode($post->ID); ?>')" class="button edit-in-customizer-colibri button-primary button-hero" style="height:40px; line-height: 40px">
 					<img style="height: 25px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 0px;" src="<?php echo esc_attr($this->assetsRootURL() . "/colibri.png"); ?>">
-					<span style=" text-shadow: none; font-size: 14px;"><?php _e(
-																			'Edit in Colibri',
-																			'colibri-page-builder'
-																		); ?></span>
+					<span style=" text-shadow: none; font-size: 14px;"><?php _e('Edit in Colibri', 'colibri-page-builder'); //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?></span>
 				</a>
 			</script>
 
@@ -1227,7 +1222,7 @@ class PageBuilder
 						var data = {
 							action: 'cp_open_in_customizer',
 							page: page,
-                            _wpnonce: '<?php echo wp_create_nonce('cp_open_in_customizer_nonce');?>'
+                            _wpnonce: '<?php echo wp_create_nonce('cp_open_in_customizer_nonce'); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>'
 						};
 
 						if (pageName) {
@@ -1264,10 +1259,7 @@ class PageBuilder
 							return;
 						} else {
 
-							alert("<?php echo __(
-										'Page needs to be published before editing it in customizer',
-										'colibri-page-builder'
-									); ?>");
+							alert("<?php echo __('Page needs to be published before editing it in customizer', 'colibri-page-builder'); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>");
 							return;
 
 							var title = jQuery('[name="post_title"]').val();

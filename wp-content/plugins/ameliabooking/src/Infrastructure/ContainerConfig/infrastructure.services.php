@@ -78,6 +78,22 @@ $entries['infrastructure.payment.razorpay.service'] = function ($c) {
 };
 
 /**
+ * Square Payment Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface
+ */
+$entries['infrastructure.payment.square.service'] = function ($c) {
+    return new AmeliaBooking\Infrastructure\Services\Payment\SquareService(
+        $c->get('domain.settings.service'),
+        new AmeliaBooking\Infrastructure\Services\Payment\CurrencyService(
+            $c->get('domain.settings.service')
+        )
+    );
+};
+
+/**
  * Currency Service
  *
  * @param Container $c

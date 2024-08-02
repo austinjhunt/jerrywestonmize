@@ -7,6 +7,7 @@ add_shortcode('colibri_fake_loop', '\ExtendBuilder\colibri_fake_loop');
 
 function colibri_fake_loop($attrs, $content = null)
 {
+    $content =  wp_kses_post($content);
     ob_start();
     if (!have_posts()) {
         echo do_shortcode($content);
@@ -22,6 +23,7 @@ function colibri_fake_loop($attrs, $content = null)
     endwhile;
     $content = ob_get_contents();
     ob_end_clean();
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     return $content;
 }
 
@@ -76,19 +78,19 @@ add_shortcode('colibri_copyright', function ($attrs, $content) {
 });
 
 add_shortcode('colibri_site_title', function ($atts) {
-    return get_bloginfo('name');
+    return wp_kses_post(get_bloginfo('name'));
 });
 
 add_shortcode('colibri_home_url', function ($atts) {
-    return colibri_get_home_url();
+    return esc_url(colibri_get_home_url());
 });
 
 add_shortcode('colibri_uploads_url', function ($atts) {
-    return colibri_get_uploads_url();
+    return esc_url(colibri_get_uploads_url());
 });
 
 function colibri_get_home_url() {
-    return home_url('/');
+    return esc_url(home_url('/'));
 }
 
 function colibri_get_uploads_url() {

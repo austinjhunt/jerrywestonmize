@@ -145,7 +145,7 @@ class CustomerApplicationService extends UserApplicationService
      * @param array         $userData
      * @param CommandResult $result
      *
-     * @return AbstractUser
+     * @return Customer
      *
      * @throws InvalidArgumentException
      * @throws QueryExecutionException

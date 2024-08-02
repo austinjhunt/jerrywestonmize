@@ -44,6 +44,7 @@ use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
+use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -126,7 +127,7 @@ class GetEntitiesCommandHandler extends CommandHandler
             /** @var EventRepository $eventRepository */
             $eventRepository = $this->container->get('domain.booking.event.repository');
 
-            $dateFilter = ['dates' => [DateTimeService::getNowDateTime()], 'itemsPerPage' => 100, 'page' => 1];
+            $dateFilter = ['dates' => [DateTimeService::getNowDateTime()], 'itemsPerPage' => 10000, 'page' => 1];
 
             /** @var Collection $events */
             $events = $eventRepository->getFiltered($dateFilter);
@@ -350,7 +351,38 @@ class GetEntitiesCommandHandler extends CommandHandler
             /** @var Collection $customFields */
             $customFields = $customFieldAS->getAll();
 
-            $resultData['customFields'] = $customFields->toArray();
+            if (!empty($params['lite'])) {
+                $resultData['customFields'] = [];
+
+                /** @var CustomField $customField */
+                foreach ($customFields->getItems() as $customField) {
+                    $item = array_merge(
+                        $customField->toArray(),
+                        [
+                            'services' => [],
+                            'events'   => [],
+                        ]
+                    );
+
+                    /** @var Service $service */
+                    foreach ($customField->getServices()->getItems() as $service) {
+                        $item['services'][] = [
+                            'id' => $service->getId()->getValue()
+                        ];
+                    }
+
+                    /** @var Event $event */
+                    foreach ($customField->getEvents()->getItems() as $event) {
+                        $item['events'][] = [
+                            'id' => $event->getId()->getValue()
+                        ];
+                    }
+
+                    $resultData['customFields'][] = $item;
+                }
+            } else {
+                $resultData['customFields'] = $customFields->toArray();
+            }
         }
 
         /** Coupons */
@@ -407,7 +439,46 @@ class GetEntitiesCommandHandler extends CommandHandler
                 }
             }
 
-            $resultData['coupons'] = $coupons->toArray();
+            if (!empty($params['lite'])) {
+                $resultData['coupons'] = [];
+
+                /** @var Coupon $coupon */
+                foreach ($coupons->getItems() as $coupon) {
+                    $item = array_merge(
+                        $coupon->toArray(),
+                        [
+                            'serviceList' => [],
+                            'eventList'   => [],
+                            'packageList' => [],
+                        ]
+                    );
+
+                    /** @var Service $service */
+                    foreach ($coupon->getServiceList()->getItems() as $service) {
+                        $item['serviceList'][] = [
+                            'id' => $service->getId()->getValue()
+                        ];
+                    }
+
+                    /** @var Event $event */
+                    foreach ($coupon->getEventList()->getItems() as $event) {
+                        $item['eventList'][] = [
+                            'id' => $event->getId()->getValue()
+                        ];
+                    }
+
+                    /** @var Package $package */
+                    foreach ($coupon->getPackageList()->getItems() as $package) {
+                        $item['packageList'][] = [
+                            'id' => $package->getId()->getValue()
+                        ];
+                    }
+
+                    $resultData['coupons'][] = $item;
+                }
+            } else {
+                $resultData['coupons'] = $coupons->toArray();
+            }
         }
 
         /** Settings */
@@ -435,12 +506,25 @@ class GetEntitiesCommandHandler extends CommandHandler
 
             $daysOff = $settingsAS->getDaysOff();
 
+            $squareLocations = [];
+            if (!empty($settingsDS->getSetting('payments', 'square')['accessToken']['access_token'])
+                && in_array('squareLocations', $params['types'])) {
+                /** @var SquareService $squareService */
+                $squareService = $this->container->get('infrastructure.payment.square.service');
+
+                try {
+                    $squareLocations = $squareService->getLocations();
+                } catch (\Exception $e) {
+                }
+            }
+
             $resultData['settings'] = [
                 'general'   => [
                     'usedLanguages' => $settingsDS->getSetting('general', 'usedLanguages'),
                 ],
                 'languages' => $languagesSorted,
                 'daysOff'   => $daysOff,
+                'squareLocations' => $squareLocations
             ];
         }
 
@@ -486,7 +570,7 @@ class GetEntitiesCommandHandler extends CommandHandler
 
                 if (empty($lessonSpaceCompanyId)) {
                     $companyDetails       = $lessonSpaceService->getCompanyId($lessonSpaceApiKey);
-                    $lessonSpaceCompanyId = !empty($companyDetails) && $companyDetails['id'] ? $companyDetails['id'] : null;
+                    $lessonSpaceCompanyId = !empty($companyDetails) && !empty($companyDetails['id']) ? $companyDetails['id'] : null;
                 }
 
                 $resultData['spaces'] = $lessonSpaceService->getAllSpaces(

@@ -272,7 +272,12 @@ function forminator_get_max_upload() {
  */
 function forminator_list_users() {
 	$users_list = array();
-	$users      = get_users(
+	$page       = Forminator_Core::sanitize_text_field( 'page' );
+	if ( 'forminator-cform-wizard' !== $page ) {
+		return $users_list;
+	}
+
+	$users = get_users(
 		array(
 			'role__in' => array( 'administrator', 'editor', 'author' ),
 			'fields'   => array( 'ID', 'display_name' ),

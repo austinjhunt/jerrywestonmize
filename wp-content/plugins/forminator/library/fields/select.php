@@ -288,8 +288,21 @@ class Forminator_Select extends Forminator_Field {
 				$search = 'true';
 			}
 
-			if ( ! empty( $placeholder ) && 'none' === $design  ) {
-				$options_markup = sprintf( '<option value="">%s</option>', $placeholder );
+			if ( ! empty( $placeholder ) ) {
+				switch ( $field_type ) {
+					case 'multiselect':
+						if ( 'none' !== $design ) {
+							break;
+						}
+						$options_markup = sprintf( '<option value="" disabled>%s</option>', $placeholder );
+						break;
+
+					default:
+						$selected = ( 'none' === $design ) ? 'selected' : '';
+						$disabled = ( 'none' === $design ) ? 'disabled' : '';
+						$options_markup = sprintf( '<option value="" %s %s>%s</option>', $disabled, $selected, $placeholder );
+						break;
+				}
 			}
 
 			foreach ( $options as $key => $option ) {

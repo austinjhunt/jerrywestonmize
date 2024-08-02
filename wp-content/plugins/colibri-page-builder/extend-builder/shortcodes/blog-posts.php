@@ -44,6 +44,7 @@ function colibri_blog_posts_the_category() {
 		return;
 	}
 	foreach ( $categories as $category ) {
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		printf( $linkTemplate,
 			esc_url( get_category_link( $category->term_id ) ),
 			esc_html( $category->name )
@@ -141,9 +142,10 @@ function colibri_blog_posts_print_meta_data( $atts ) {
 			}
 		}
 		if ( $atts['spacer_metadata'] === 'true' ) {
-			echo '<div class="left d-block" >' . $left_div . '</div><div class="spacer d-flex" style="margin:auto"></div><div class="right d-block" >' . $right_div . '</div>';
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<div class="left d-block" >' . $left_div . '</div><div class="spacer d-flex" style="margin:auto"></div><div class="right d-block" >' . wp_kses_post($right_div) . '</div>';
 		} else {
-			echo '<div class="d-block" >' . $left_div . '</div>';
+			echo '<div class="d-block" >' . wp_kses_post($left_div) . '</div>';
 		}
 		?>
     </div>
@@ -228,7 +230,7 @@ function colibri_blog_posts_normal_item( $atts ) {
                     <div class="colibri_post_excerpt">
 						<?php
 						add_filter( 'the_content', 'wpautop' );
-						echo the_excerpt();
+						echo wp_kses_post(the_excerpt());
 						remove_filter( 'the_content', 'wpautop' );
 						?>
                     </div>
@@ -247,7 +249,7 @@ function colibri_blog_posts_normal_item( $atts ) {
                     <div class="colibri_post_title">
                         <a href="<?php the_permalink(); ?>">
                             <<?php echo tag_escape($atts['title_type']) ?>
-                            > <?php the_title(); ?>  </<?php echo tag_escape($atts['title_type']) ?>>
+                            > <?php wp_kses_post(the_title()); ?>  </<?php echo tag_escape($atts['title_type']) ?>>
                         </a>
                     </div>
 				<?php endif; ?>
@@ -344,7 +346,7 @@ function colibri_blog_posts_shortcode( $attrs ) {
 				wp_reset_postdata();
 			else:
 				?>
-                <div style="text-align: center; width: 100%">No posts found</div>
+                <div style="text-align: center; width: 100%"><?php echo __('No posts found', 'colbri-page-builder'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 			<?php
 			endif;
 			?>

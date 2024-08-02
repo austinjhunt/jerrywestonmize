@@ -73,6 +73,7 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Lite\DataModifi
         return [
             'values'              =>
                 [
+                    ':settings'         => $data['settings'],
                     ':minCapacity'      => $data['minCapacity'],
                     ':maxCapacity'      => $data['maxCapacity'],
                     ':timeBefore'       => $data['timeBefore'],
@@ -80,19 +81,45 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Lite\DataModifi
                     ':show'             => $data['show'] ? 1 : 0,
                 ],
             'columns'             =>
-                '`timeBefore`,
+                '`settings`,
+                `timeBefore`,
                 `timeAfter`,
                 `show`,',
             'placeholders'        =>
-                ':timeBefore,
+                ':settings,
+                :timeBefore,
                 :timeAfter,
                 :show,',
             'columnsPlaceholders' =>
-                '`minCapacity`       = :minCapacity,
+                '`settings`          = :settings,
+                `minCapacity`       = :minCapacity,
                 `maxCapacity`       = :maxCapacity,
                 `timeBefore`        = :timeBefore,
                 `timeAfter`         = :timeAfter,
                 `show`              = :show,',
+        ];
+    }
+
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    public static function getEventRepositoryData($data)
+    {
+        return [
+            'values'              =>
+                [
+                    ':settings'         => $data['settings']
+                ],
+            'addValues'           => [],
+            'columns'             =>
+                '`settings`,',
+            'placeholders'        =>
+                ':settings,',
+            'columnsPlaceholders' =>
+                '`settings`          = :settings,',
         ];
     }
 

@@ -170,7 +170,7 @@ class UserApplicationService
 
         if ($externalId && !$userRepository->findByExternalId($externalId)) {
             $user->setExternalId(new Id($externalId));
-            $userRepository->update($userId, $user);
+            $userRepository->updateFieldById($userId, $externalId, 'externalId');
         }
     }
 

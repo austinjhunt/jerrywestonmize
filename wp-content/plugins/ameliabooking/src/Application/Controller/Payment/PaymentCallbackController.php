@@ -37,6 +37,8 @@ class PaymentCallbackController extends Controller
         'session_id',
         'method',
         'accountId',
+        'orderId',
+        'squareOrderId'
     ];
 
     /**

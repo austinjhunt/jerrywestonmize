@@ -13,6 +13,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\PackagesCustomersTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Payment\PaymentsTable;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
 
 /**
  * Class PackageCustomerServiceRepository
@@ -188,6 +189,8 @@ class PackageCustomerServiceRepository extends AbstractRepository
 
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
+        $usersTable = UsersTable::getTableName();
+
         try {
             $statement = $this->connection->prepare(
                 "SELECT
@@ -219,9 +222,15 @@ class PackageCustomerServiceRepository extends AbstractRepository
                     p.transactionId AS payment_transactionId,
                     p.data AS payment_data,
                     p.wcOrderId AS payment_wcOrderId,
-                    p.wcOrderItemId AS payment_wcOrderItemId
+                    p.wcOrderItemId AS payment_wcOrderItemId,
+                    
+                    cu.firstName AS customer_firstName,
+                    cu.lastName AS customer_lastName,
+                    cu.email AS customer_email,
+                    cu.phone AS customer_phone
                 FROM {$this->table} pcs
                 INNER JOIN {$this->packagesCustomersTable} pc ON pcs.packageCustomerId = pc.id
+                INNER JOIN {$usersTable} cu ON cu.id = pc.customerId
                 LEFT JOIN {$this->paymentsTable} p ON p.packageCustomerId = pc.id
                 {$where}"
             );

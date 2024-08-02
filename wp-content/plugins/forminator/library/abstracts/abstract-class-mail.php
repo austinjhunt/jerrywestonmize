@@ -308,6 +308,8 @@ abstract class Forminator_Mail {
 	public function set_pdfs( $notification ) {
 		if ( ! empty( $notification['email-pdfs'] ) ) {
 			$this->pdfs = $notification['email-pdfs'];
+		} else {
+			$this->pdfs = array();
 		}
 	}
 

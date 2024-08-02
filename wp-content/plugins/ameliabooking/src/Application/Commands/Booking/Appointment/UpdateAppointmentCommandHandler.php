@@ -313,7 +313,14 @@ class UpdateAppointmentCommandHandler extends CommandHandler
 
         $appointmentRepo->commit();
 
-        do_action('amelia_after_appointment_updated', $appointment, $oldAppointment, $removedBookings, $service, $paymentData);
+        do_action(
+            'amelia_after_appointment_updated',
+            $appointment ? $appointment->toArray() : null,
+            $oldAppointment ? $oldAppointment->toArray() : null,
+            $removedBookings ? $removedBookings->toArray() : null,
+            $service ? $service->toArray() : null,
+            $paymentData
+        );
 
 
         $appointmentStatusChanged = $appointmentAS->isAppointmentStatusChanged($appointment, $oldAppointment);

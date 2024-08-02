@@ -68,6 +68,12 @@ class GetEventsCommandHandler extends CommandHandler
 
         $isFrontEnd = isset($params['page']) && empty($params['group']);
 
+        $groupById = isset($params['page']) || isset($params['group']);
+
+        if ($groupById) {
+            $params['groupById'] = true;
+        }
+
         $isCalendarPage = $isFrontEnd && (int)$params['page'] === 0;
 
         $isCabinetPage = $command->getPage() === 'cabinet';

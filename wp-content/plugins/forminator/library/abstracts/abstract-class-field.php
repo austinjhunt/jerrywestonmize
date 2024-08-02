@@ -1165,6 +1165,8 @@ abstract class Forminator_Field {
 				return $form_field_value < $condition_value;
 			case 'contains':
 				return ( stripos( $form_field_value, $condition_value ) === false ? false : true );
+			case 'does_not_contain':
+				return ! ( stripos( $form_field_value, $condition_value ) !== false );
 			case 'starts':
 				return ( stripos( $form_field_value, $condition_value ) === 0 ? true : false );
 			case 'ends':

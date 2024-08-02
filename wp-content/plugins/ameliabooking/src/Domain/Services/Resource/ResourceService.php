@@ -377,7 +377,7 @@ class ResourceService extends AbstractResourceService
                     'end'   =>
                         $this->intervalService->getSeconds(
                             $appointment->getBookingEnd()->getValue()->format('H:i:s')
-                        ),
+                        ) ?: 86400,
                     'count' => $resource->getCountAdditionalPeople() &&
                         $resource->getCountAdditionalPeople()->getValue() ? $count : 1,
                     'ids'   => [$appointment->getId()->getValue()],

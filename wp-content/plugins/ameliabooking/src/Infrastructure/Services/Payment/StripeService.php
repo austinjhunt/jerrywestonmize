@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -11,6 +10,8 @@ use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
+use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
+use AmeliaStripe\Customer;
 use AmeliaStripe\Exception\ApiErrorException;
 use AmeliaStripe\PaymentIntent;
 use AmeliaStripe\PaymentMethod;
@@ -45,11 +46,12 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
         $intent = null;
 
+        $customerId = null;
+
         if ($data['paymentMethodId']) {
             $paymentMethodId = $data['paymentMethodId'];
 
-            if (
-                $stripeConnectSettings['enabled'] &&
+            if ($stripeConnectSettings['enabled'] &&
                 $stripeConnectSettings['amount'] &&
                 sizeof($transfers['accounts']) === 1 &&
                 $stripeConnectSettings['method'] === 'direct'
@@ -79,8 +81,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 $stripeData['return_url'] = $stripeSettings['returnUrl'];
             }
 
-            if (
-                $stripeConnectSettings['enabled'] &&
+            if ($stripeConnectSettings['enabled'] &&
                 $stripeConnectSettings['amount'] &&
                 $stripeConnectSettings['method'] === 'transfer' &&
                 sizeof($transfers['accounts']) > 0
@@ -92,8 +93,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
             $additionalStripeData = [];
 
-            if (
-                $stripeConnectSettings['enabled'] &&
+            if ($stripeConnectSettings['enabled'] &&
                 $stripeConnectSettings['amount'] &&
                 sizeof($transfers['accounts']) === 1 &&
                 $stripeConnectSettings['method'] === 'direct'
@@ -118,18 +118,16 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             if ($data['metaData']) {
                 $stripeData['metadata'] = $data['metaData'];
             }
-            // BEGIN MODS
 
-            if ($data['metaData']['Customer Email']) {
-                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
-            }
-            // also added a fallback description since that was appearing as null on the Stripe side
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
-            } else {
-                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
-            // END MODS
+
+            $customerId = $this->createCustomer($data, $additionalStripeData);
+
+            if ($customerId) {
+                $stripeData = array_merge($stripeData, ['customer' => $customerId]);
+            }
 
             $stripeData = apply_filters(
                 'amelia_before_stripe_payment',
@@ -139,8 +137,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             $intent = PaymentIntent::create($stripeData, $additionalStripeData);
 
 
-            if (
-                $stripeConnectSettings['enabled'] &&
+            if ($stripeConnectSettings['enabled'] &&
                 $stripeConnectSettings['amount'] &&
                 $stripeConnectSettings['method'] === 'transfer'
             ) {
@@ -178,12 +175,14 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             return  [
                 'requiresAction'            => true,
                 'paymentIntentClientSecret' => $intent->client_secret,
-                'paymentIntentId'           => $intent->getLastResponse()->json['id']
+                'paymentIntentId'           => $intent->getLastResponse()->json['id'],
+                'customerId'                => $customerId
             ];
         } else if ($intent && ($intent->status === 'succeeded' || ($stripeSettings['manualCapture'] && $intent->status === 'requires_capture'))) {
             return  [
                 'paymentSuccessful' => true,
-                'paymentIntentId'   => $intent->getLastResponse()->json['id']
+                'paymentIntentId'   => $intent->getLastResponse()->json['id'],
+                'customerId'        => $customerId
             ];
         }
 
@@ -208,6 +207,12 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
         $additionalStripeData = [];
 
+        $fromPanel = !empty($data['fromPanel']);
+
+        $redirectUrl = $data['returnUrl'] . '&session_id={CHECKOUT_SESSION_ID}';
+
+        $customerId = null;
+
         if (!empty($data['transfer']) && $stripeSettings['connect']['method'] === 'direct') {
             $additionalStripeData = ['stripe_account' => $data['transfer']['accountId']];
         }
@@ -229,14 +234,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                         'quantity' => 1,
                     ],
                 ],
-                'after_completion' => [
-                    'type' => 'redirect',
-                    'redirect' => [
-                        'url' => $data['returnUrl'] . '&session_id={CHECKOUT_SESSION_ID}'
-                    ]
-                ],
-                //                'invoice_creation' => ['enabled' => true],
             ];
+
 
             if (!empty($data['metaData'])) {
                 $paymentLinkData['metadata'] = $data['metaData'];
@@ -245,26 +244,62 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             if (!empty($data['transfer'])) {
                 $method = '';
 
+                $transferData = [];
+
                 if ($stripeSettings['connect']['method'] === 'direct') {
-                    $paymentLinkData['application_fee_amount'] = $data['amount'] - $data['transfer']['amount'];
+                    $transferData['application_fee_amount'] = $data['amount'] - $data['transfer']['amount'];
 
                     $method = 'direct';
                 } elseif ($stripeSettings['connect']['method'] === 'transfer') {
-                    $paymentLinkData['transfer_data'] = ['destination' => $data['transfer']['accountId']];
+                    $transferData['transfer_data'] = ['destination' => $data['transfer']['accountId']];
 
-                    $paymentLinkData['transfer_data']['amount'] = $data['transfer']['amount'];
+                    $transferData['transfer_data']['amount'] = $data['transfer']['amount'];
 
                     $method = 'destination';
                 }
 
-                $paymentLinkData['after_completion']['redirect']['url'] .=
-                    '&accountId=' . $data['transfer']['accountId'] . '&method=' . $method;
+                if (!empty($transferData)) {
+                    if ($fromPanel) {
+                        $paymentLinkData['payment_intent_data'] = $transferData;
+                    } else {
+                        $paymentLinkData = array_merge($paymentLinkData, $transferData);
+                    }
+                }
+
+                $redirectUrl .= '&accountId=' . $data['transfer']['accountId'] . '&method=' . $method;
             }
 
-            $response = $stripe->paymentLinks->create($paymentLinkData, $additionalStripeData);
+            if (!empty($stripeSettings['address'])) {
+                $paymentLinkData['billing_address_collection'] = 'required';
+            }
+
+            if ($fromPanel) {
+                $paymentLinkData['success_url'] = $redirectUrl;
+
+                $customerId = $this->createCustomer($data, $additionalStripeData);
+
+                if ($customerId) {
+                    $paymentLinkData = array_merge($paymentLinkData, ['customer' => $customerId]);
+                }
+
+                $paymentLinkData['mode'] = 'payment';
+
+                $response = $stripe->checkout->sessions->create($paymentLinkData, $additionalStripeData);
+            } else {
+                $paymentLinkData['after_completion'] = [
+                    'type' => 'redirect',
+                    'redirect' => [
+                        'url' => $redirectUrl
+                    ]
+                ];
+
+                $paymentLinkData['customer_creation'] = 'always';
+
+                $response = $stripe->paymentLinks->create($paymentLinkData, $additionalStripeData);
+            }
 
             return $response && $response['url'] ?
-                ['link' => $response['url'], 'status' => 200] :
+                ['link' => $response['url'], 'status' => 200, 'customerId' => $customerId] :
                 ['message' => $response['message'], 'status' => $response['status']];
         }
 
@@ -325,7 +360,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
      * @param string $method
      * @param string $accountId
      *
-     * @return string
+     * @return array
      */
     public function getPaymentIntent($sessionId, $method, $accountId)
     {
@@ -343,7 +378,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
         $response =  $stripe->checkout->sessions->retrieve($sessionId, [], $additionalStripeData);
 
-        return $response->getLastResponse()->code === 200 ? $response['payment_intent'] : null;
+        return $response->getLastResponse()->code === 200 ? ['payment_intent' => $response['payment_intent'], 'customer' => $response['customer']] : null;
     }
 
     /**
@@ -368,7 +403,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 ['stripe_account' => array_keys($transfers['accounts'])[0]] : []
         );
 
-        return $response->getLastResponse()->code === 200 ? $response->toArray()['amount'] / 100 : null;
+        return $response->getLastResponse()->code === 200 ? $response->toArray()['amount']/100 : null;
     }
 
     /**
@@ -477,5 +512,37 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
         $response = $stripe->accounts->createLoginLink($id, []);
 
         return $response->getLastResponse()->code === 200 ? $response->toArray()['url'] : null;
+    }
+
+    private function createCustomer($data, $additionalStripeData)
+    {
+        $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
+
+        Stripe::setApiKey(
+            $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey']
+        );
+
+        $customerId = $data['customerId'];
+        if (empty($customerId)) {
+            $customer = Customer::create([
+                'address' => !empty($data['address']) ? [
+                    'city' => $data['address']['address']['city'],
+                    'country' => $data['address']['address']['country'],
+                    'line1' => $data['address']['address']['line1'],
+                    'line2' => $data['address']['address']['line2'],
+                    'postal_code' => $data['address']['address']['postal_code'],
+                    'state' => $data['address']['address']['state'],
+                ] : null,
+                'email' => !empty($data['customerData']) ? $data['customerData']['email'] : '',
+                'name' => !empty($data['customerData']) ? $data['customerData']['name'] : (!empty($data['address']) ? $data['address']['name'] : ''),
+                'phone' => $data['customerData'] ? $data['customerData']['phone'] : ''
+            ], $additionalStripeData);
+
+            if ($customer) {
+                $customerId = $customer['id'];
+            }
+        }
+
+        return $customerId;
     }
 }

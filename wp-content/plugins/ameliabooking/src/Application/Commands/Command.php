@@ -20,6 +20,10 @@ use AmeliaBooking\Application\Commands\PaymentGateway\PayPalPaymentCallbackComma
 use AmeliaBooking\Application\Commands\PaymentGateway\PayPalPaymentCommand;
 use AmeliaBooking\Application\Commands\PaymentGateway\WooCommercePaymentCommand;
 use AmeliaBooking\Application\Commands\PaymentGateway\RazorpayPaymentCommand;
+use AmeliaBooking\Application\Commands\Square\DisconnectFromSquareAccountCommand;
+use AmeliaBooking\Application\Commands\Square\FetchAccessTokenSquareCommand;
+use AmeliaBooking\Application\Commands\Square\SquareRefundWebhookCommand;
+use AmeliaBooking\Application\Commands\Square\SquarePaymentCommand;
 use AmeliaBooking\Application\Commands\Stats\AddStatsCommand;
 use AmeliaBooking\Application\Commands\User\Customer\ReauthorizeCommand;
 use AmeliaBooking\Application\Commands\User\LoginCabinetCommand;
@@ -173,7 +177,7 @@ abstract class Command
     {
         $this->page = explode('-', $page)[0];
 
-        $this->cabinetType = explode('-', $page)[1];
+        $this->cabinetType = !empty(explode('-', $page)[1]) ? explode('-', $page)[1] : null;
     }
 
     /**
@@ -206,12 +210,16 @@ abstract class Command
             !($this instanceof PayPalPaymentCommand) &&
             !($this instanceof PayPalPaymentCallbackCommand) &&
             !($this instanceof RazorpayPaymentCommand) &&
+            !($this instanceof SquarePaymentCommand) &&
+            !($this instanceof SquareRefundWebhookCommand) &&
+            !($this instanceof DisconnectFromSquareAccountCommand) &&
             !($this instanceof WooCommercePaymentCommand) &&
             !($this instanceof PaymentCallbackCommand) &&
             !($this instanceof SuccessfulBookingCommand) &&
             !($this instanceof GetGoogleAuthURLCommand) &&
             !($this instanceof FetchAccessTokenWithAuthCodeOutlookCommand) &&
             !($this instanceof FetchAccessTokenWithAuthCodeCommand) &&
+            !($this instanceof FetchAccessTokenSquareCommand) &&
             !($this instanceof WhatsAppWebhookRegisterCommand) &&
             !($this instanceof WhatsAppWebhookCommand) &&
             !($this instanceof PaymentLinkCommand) &&

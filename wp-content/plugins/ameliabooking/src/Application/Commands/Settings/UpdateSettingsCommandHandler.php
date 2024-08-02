@@ -407,6 +407,10 @@ class UpdateSettingsCommandHandler extends CommandHandler
             }
         }
 
+        if ($command->getField('payments') && !empty($command->getFields('payments')['square'])) {
+            $settingsFields['payments']['square']['accessToken'] = $settingsService->getCategorySettings('payments')['square']['accessToken'];
+        }
+
         if (isset($settingsFields['apiKeys']) && isset($settingsFields['apiKeys']['apiKeys'])) {
             /** @var BasicApiService $apiService */
             $apiService = $this->getContainer()->get('domain.api.service');

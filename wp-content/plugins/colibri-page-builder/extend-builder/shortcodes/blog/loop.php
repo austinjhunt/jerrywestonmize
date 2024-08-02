@@ -3,7 +3,9 @@
 namespace ExtendBuilder;
 
 add_shortcode('colibri_item_template', function($attrs, $content = null) {
-	return do_shortcode($content);
+	$escaped_content = str_replace('<!---->', '', $content);
+    $escaped_content = wp_kses_post($escaped_content);
+    return do_shortcode($escaped_content);
 });
 
 add_shortcode('colibri_loop', '\ExtendBuilder\colibri_loop');
@@ -46,12 +48,15 @@ function colibri_loop($attrs, $content = null)
 
     $content = urldecode($content);
 
+
     if ($query) {
 
     if ($query->have_posts()):
         while ($query->have_posts()):
             $query->the_post();
-            echo do_shortcode( $content );
+            $escaped_content = str_replace('<!---->', '', $content);
+            $shortcode_content = do_shortcode( $escaped_content );
+            echo $shortcode_content;
         endwhile;
         wp_reset_postdata();
     else:

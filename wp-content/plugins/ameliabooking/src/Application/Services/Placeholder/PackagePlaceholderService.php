@@ -101,6 +101,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             'payment_link_paypal' => '',
             'payment_link_razorpay' => '',
             'payment_link_mollie' => '',
+            'payment_link_square' => '',
         ];
 
         if (!empty($package['paymentLinks'])) {

@@ -392,9 +392,17 @@
 			//get fields on current page
 			page.find("input, select, textarea")
 				.not(":submit, :reset, :image, :disabled")
-				.not(':hidden:not(.forminator-wp-editor-required, .forminator-input-file-required, input[name$="_data"])')
 				.not('[gramm="true"]')
 				.each(function (key, element) {
+					if (
+						$( element ).is(
+							':hidden:not(.forminator-wp-editor-required, .forminator-input-file-required, input[name$="_data"])'
+						) &&
+						! $( element ).closest( '.forminator-pagination' )
+							.length
+					) {
+						return;
+					}
 					valid = validator.element(element);
 
 					if (!valid) {

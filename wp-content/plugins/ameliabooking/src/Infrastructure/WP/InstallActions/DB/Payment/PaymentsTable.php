@@ -33,7 +33,7 @@ class PaymentsTable extends AbstractDatabaseTable
                    `amount` DOUBLE NOT NULL default 0,
                    `dateTime` datetime NULL,
                    `status` ENUM('paid', 'pending', 'partiallyPaid', 'refunded') NOT NULL,
-                   `gateway` ENUM('onSite', 'payPal', 'stripe', 'wc', 'mollie', 'razorpay') NOT NULL,
+                   `gateway` ENUM('onSite', 'payPal', 'stripe', 'wc', 'mollie', 'razorpay', 'square') NOT NULL,
                    `gatewayTitle` varchar(255) NULL,
                    `data` text NULL,
                    `packageCustomerId` int(11) NULL,

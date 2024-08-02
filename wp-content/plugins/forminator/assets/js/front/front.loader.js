@@ -253,6 +253,7 @@
 
 					var script = {};
 					script.src = scripts[script_id].src;
+					script.async = scripts[ script_id ].async ?? true;
                     // Check if a paypal script is already loaded.
                     if ( script.src !== paypal_src ) {
                         scripts_to_load.push(script);
@@ -282,7 +283,7 @@
 
 			script.type   = 'text/javascript';
 			script.src    = script_props.src;
-			script.async  = true;
+			script.async  = script_props.async;
 			script.defer  = true;
 			script.onload = function () {
 				self.script_on_load();

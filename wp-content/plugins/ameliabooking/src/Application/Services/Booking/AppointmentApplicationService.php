@@ -817,7 +817,7 @@ class AppointmentApplicationService
             ->getGeneralSettings()
             ->getDefaultAppointmentStatus();
 
-        if ($payment) {
+        if ($payment && $payment->getAmount()->getValue() > 0) {
             /** @var ReservationServiceInterface $reservationService */
             $reservationService = $this->container->get('application.reservation.service')->get(Entities::APPOINTMENT);
 

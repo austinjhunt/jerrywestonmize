@@ -1748,13 +1748,14 @@ class WooCommerceService
                 /** @var Service $bookable */
                 $bookable = ServiceFactory::create(
                     [
-                        'price'           => $price,
-                        'aggregatedPrice' => isset($bookableData['bookable']['aggregatedPrice'])
+                        'price'            => $price,
+                        'aggregatedPrice'  => isset($bookableData['bookable']['aggregatedPrice'])
                             ? $bookableData['bookable']['aggregatedPrice'] : 1,
-                        'deposit'         => $bookableData['bookable']['deposit'],
-                        'depositPayment'  => $bookableData['bookable']['depositPayment'],
-                        'extras'          => $bookableData['extras'],
-                        'customPricing'   => $bookableData['bookable']['customPricing'],
+                        'deposit'          => $bookableData['bookable']['deposit'],
+                        'depositPayment'   => $bookableData['bookable']['depositPayment'],
+                        'depositPerPerson' => $bookableData['bookable']['depositPerPerson'],
+                        'extras'           => $bookableData['extras'],
+                        'customPricing'    => $bookableData['bookable']['customPricing'],
                     ]
                 );
 
@@ -1809,12 +1810,13 @@ class WooCommerceService
                 /** @var Event $bookable */
                 $bookable = EventFactory::create(
                     [
-                        'price'           => $bookableData['bookable']['price'],
-                        'aggregatedPrice' => $bookableData['bookable']['aggregatedPrice'],
-                        'deposit'         => $bookableData['bookable']['deposit'],
-                        'depositPayment'  => $bookableData['bookable']['depositPayment'],
-                        'customPricing'   => !empty($eventCustomPricing),
-                        'customTickets'   => !empty($eventCustomPricing) ? $eventCustomPricing : null,
+                        'price'            => $bookableData['bookable']['price'],
+                        'aggregatedPrice'  => $bookableData['bookable']['aggregatedPrice'],
+                        'deposit'          => $bookableData['bookable']['deposit'],
+                        'depositPayment'   => $bookableData['bookable']['depositPayment'],
+                        'depositPerPerson' => $bookableData['bookable']['depositPerPerson'],
+                        'customPricing'    => !empty($eventCustomPricing),
+                        'customTickets'    => !empty($eventCustomPricing) ? $eventCustomPricing : null,
                     ]
                 );
 
@@ -1842,11 +1844,12 @@ class WooCommerceService
                 /** @var Package $bookable */
                 $bookable = PackageFactory::create(
                     [
-                        'price'           => $bookableData['bookable']['price'],
-                        'deposit'         => $bookableData['bookable']['deposit'],
-                        'depositPayment'  => $bookableData['bookable']['depositPayment'],
-                        'calculatedPrice' => $bookableData['bookable']['calculatedPrice'],
-                        'discount'        => $bookableData['bookable']['discount'],
+                        'price'            => $bookableData['bookable']['price'],
+                        'deposit'          => $bookableData['bookable']['deposit'],
+                        'depositPayment'   => $bookableData['bookable']['depositPayment'],
+                        'depositPerPerson' => $bookableData['bookable']['depositPerPerson'],
+                        'calculatedPrice'  => $bookableData['bookable']['calculatedPrice'],
+                        'discount'         => $bookableData['bookable']['discount'],
                     ]
                 );
 
@@ -2504,7 +2507,7 @@ class WooCommerceService
 
                 $cache->setId(new Id($cacheId));
 
-                $link .= (strpos($link, '?') ? '&' : '?') . 'amelia_cache_id=' . $cacheId;
+                $link .= (strpos($link, '?') ? '&' : '?') . 'amelia_cache_id=' . $cacheId . '_' . $cache->getName()->getValue();
             }
 
             return ['link' =>  $link, 'status' => 200];
@@ -2517,12 +2520,22 @@ class WooCommerceService
             return;
         }
 
-        $cacheId = $_GET['amelia_cache_id'];
+        $cacheId = explode('_', $_GET['amelia_cache_id']);
+
+        if (empty($cacheId[0])) {
+            return;
+        }
 
         /** @var CacheRepository $cacheRepository */
         $cacheRepository = self::$container->get('domain.cache.repository');
 
-        $appointmentData = $cacheRepository->getById($cacheId);
+
+        if (!empty($cacheId[1])) {
+            $appointmentData = $cacheRepository->getByIdAndName($cacheId[0], $cacheId[1]);
+        } else {
+            $appointmentData = $cacheRepository->getById($cacheId[0]);
+        }
+
         if ($appointmentData && $appointmentData->getData() && $appointmentData->getData()->getValue() && json_decode($appointmentData->getData()->getValue(), true)) {
             self::addToCart(json_decode($appointmentData->getData()->getValue(), true));
         }

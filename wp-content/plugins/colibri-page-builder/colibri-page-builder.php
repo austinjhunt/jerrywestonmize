@@ -6,12 +6,12 @@
  *
  * License: GPLv3 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
- * Version: 1.0.277
+ * Version: 1.0.286
  * Text Domain: colibri-page-builder
  */
 
 
-$colibri_page_builder_supported_themes = array('colibri-wp', 'colibri', 'teluro', 'one-page-express', 'brite', 'althea-wp', 'hugo-wp');
+$colibri_page_builder_supported_themes = array('colibri-wp', 'colibri', 'teluro', 'one-page-express', 'brite', 'althea-wp', 'hugo-wp', 'hillstar');
 
 if (!in_array(get_option('template'), $colibri_page_builder_supported_themes)) {
 	require_once 'utils/survey.php';
@@ -64,7 +64,7 @@ if (!defined("COLIBRI_PAGE_BUILDER_AUTOLOAD")) {
 }
 
 if (!defined("COLIBRI_PAGE_BUILDER_VERSION")) {
-	define("COLIBRI_PAGE_BUILDER_VERSION", "1.0.277");
+	define("COLIBRI_PAGE_BUILDER_VERSION", "1.0.286");
 }
 
 require_once 'support/wp-5.8.php';
@@ -80,7 +80,7 @@ if (!function_exists('colibriwp_check_builder_activation_source')) {
     function colibriwp_check_builder_activation_source()
     {
         $theme = get_template();
-        $option = "${theme}_start-source";
+        $option = "{$theme}_start-source";
         $start_source = get_option($option);
 
         if (!$start_source) {

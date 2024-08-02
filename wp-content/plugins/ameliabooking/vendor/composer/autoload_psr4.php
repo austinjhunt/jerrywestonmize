@@ -6,7 +6,9 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'apimatic\\jsonmapper\\' => array($vendorDir . '/apimatic/jsonmapper/src'),
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
+    'Unirest\\' => array($vendorDir . '/apimatic/unirest-php/src'),
     'Tests\\' => array($baseDir . '/tests'),
     'Symfony\\Polyfill\\Php72\\' => array($vendorDir . '/symfony/polyfill-php72'),
     'Symfony\\Polyfill\\Php70\\' => array($vendorDir . '/symfony/polyfill-php70'),
@@ -17,6 +19,7 @@ return array(
     'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
     'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
     'AmeliaStripe\\' => array($vendorDir . '/stripe/stripe-php/lib'),
+    'Square\\' => array($vendorDir . '/square/square/src'),
     'Slim\\' => array($vendorDir . '/slim/slim/Slim'),
     'Razorpay\\Tests\\' => array($vendorDir . '/razorpay/razorpay/tests'),
     'Razorpay\\Api\\' => array($vendorDir . '/razorpay/razorpay/src'),
@@ -33,7 +36,7 @@ return array(
     'League\\Event\\' => array($vendorDir . '/league/event/src'),
     'AmeliaHttp\\Promise\\' => array($vendorDir . '/php-http/promise/src'),
     'AmeliaHttp\\Message\\MultipartStream\\' => array($vendorDir . '/php-http/multipart-stream-builder/src'),
-    'AmeliaHttp\\Message\\' => array($vendorDir . '/php-http/message-factory/src', $vendorDir . '/php-http/message/src'),
+    'AmeliaHttp\\Message\\' => array($vendorDir . '/php-http/message/src', $vendorDir . '/php-http/message-factory/src'),
     'AmeliaHttp\\Discovery\\' => array($vendorDir . '/php-http/discovery/src'),
     'AmeliaHttp\\Client\\Curl\\' => array($vendorDir . '/php-http/curl-client/src'),
     'AmeliaHttp\\Client\\Common\\' => array($vendorDir . '/php-http/client-common/src'),
@@ -43,6 +46,8 @@ return array(
     'AmeliaGuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
     'AmeliaFirebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
+    'Core\\' => array($vendorDir . '/apimatic/core/src'),
+    'CoreInterfaces\\' => array($vendorDir . '/apimatic/core-interfaces/src'),
     'AmeliaClue\\StreamFilter\\' => array($vendorDir . '/clue/stream-filter/src'),
     'Box\\Spout\\' => array($vendorDir . '/box/spout/src/Spout'),
     'AmeliaStripe\\' => array($vendorDir . '/stripe/stripe-php/lib'),

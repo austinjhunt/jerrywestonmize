@@ -27,27 +27,18 @@ function colibri_html_embed_video( $url, $attributes ) {
 	];
 
 	$filtered_attrs = array_filter( $attrs, function ( $attr ) use ( $allowed_attrs ) {
-		[ $name ] = explode( "=", $attr );
-		if ( ! in_array( $name, $allowed_attrs ) ) {
+		$cleaned_attribute = trim($attr);
+        $cleaned_attribute = str_replace("\n", "", $cleaned_attribute);
+        if ( ! in_array( $cleaned_attribute, $allowed_attrs ) ) {
 			return false;
 		}
 
 		return true;
 	} );
 
-	$sanitized_attrs = array_map( function ( $attr ) {
-		if ( ! str_contains( $attr, "=" ) ) {
-			return preg_replace( '/[^[a-z]*/i', "", $attr );
-		}
 
-		[ $name, $value ] = explode( "=", $attr );
-		$sanitized_name  = preg_replace( '/[^[a-z]*/i', "", $name );
-		$sanitized_value = preg_replace( '/[^[a-z|A-Z|0-9]*/i', "", $value );
 
-		return implode( '=', array( $sanitized_name, $sanitized_value ) );
-	}, $filtered_attrs );
-
-	echo "<video class='h-video-main' " . esc_attr( implode( " ", $sanitized_attrs ) ) . " ><source src=" . esc_url( $url ) . " type='video/mp4' /></video>";
+	echo "<video class='h-video-main' " . esc_attr( implode( " ", $filtered_attrs ) ) . " ><source src=" . esc_url( $url ) . " type='video/mp4' /></video>";
 }
 
 

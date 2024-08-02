@@ -633,6 +633,17 @@ class NewsletterEntity extends \MailPoet\Entities\NewsletterEntity implements \M
     /**
      * {@inheritDoc}
      */
+    public function setGlobalStyle(string $category, string $style, $value): void
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setGlobalStyle', [$category, $style, $value]);
+
+        parent::setGlobalStyle($category, $style, $value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getProcessedAt(): ?\DateTimeInterface
     {
 

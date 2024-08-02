@@ -173,6 +173,7 @@ function colibri_placeholder_p($text, $echo = false)
 	}
 
 	if ($echo) {
+        //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $content;
 	} else {
 		return $content;
@@ -603,6 +604,7 @@ function colibri_duplicate_post_as_draft($post_id, $title = null)
 		}
 		return $new_post_id;
 	} else {
+        //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		wp_die('Error! Post creation failed, could not find original post: ' . $post_id);
 	}
 }

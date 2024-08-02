@@ -70,10 +70,10 @@ class ScheduledTaskEntity extends \MailPoet\Entities\ScheduledTaskEntity impleme
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'status', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'priority', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'scheduledAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'processedAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'meta', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'inProgress', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'rescheduleCount', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'subscribers', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'sendingQueue', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'updatedAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'deletedAt'];
+            return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'status', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'priority', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'scheduledAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'cancelledAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'processedAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'meta', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'inProgress', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'rescheduleCount', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'subscribers', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'sendingQueue', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'updatedAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'deletedAt'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'status', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'priority', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'scheduledAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'processedAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'meta', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'inProgress', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'rescheduleCount', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'subscribers', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'sendingQueue', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'updatedAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'deletedAt'];
+        return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'status', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'priority', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'scheduledAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'cancelledAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'processedAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'meta', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'inProgress', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'rescheduleCount', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'subscribers', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'sendingQueue', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'updatedAt', '' . "\0" . 'MailPoet\\Entities\\ScheduledTaskEntity' . "\0" . 'deletedAt'];
     }
 
     /**
@@ -266,6 +266,28 @@ class ScheduledTaskEntity extends \MailPoet\Entities\ScheduledTaskEntity impleme
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setScheduledAt', [$scheduledAt]);
 
         return parent::setScheduledAt($scheduledAt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCancelledAt()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCancelledAt', []);
+
+        return parent::getCancelledAt();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCancelledAt($cancelledAt)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCancelledAt', [$cancelledAt]);
+
+        return parent::setCancelledAt($cancelledAt);
     }
 
     /**

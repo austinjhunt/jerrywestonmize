@@ -72,6 +72,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         $isCabinetPage = $command->getPage() === 'cabinet';
 
+        $isCalendarPage = $command->getPage() === 'calendar';
+
         $isCabinetPackageRequest = $isCabinetPage && isset($params['activePackages']);
 
         $isDashboardPackageRequest = !$isCabinetPage && (isset($params['packageId']) || !empty($params['packageBookings']));
@@ -154,7 +156,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         'providers' => $isCabinetPage && $user->getType() === Entities::PROVIDER ?
                             [$user->getId()->getValue()] : [],
                     ],
-                    $params,
+                    array_merge($params, ['endsInDateRange' => $isCalendarPage]),
                     $entitiesIds,
                     ['skipBookings' => !$isCabinetPage && empty($params['customerId']) && empty($entitiesIds['customers'])]
                 ),
@@ -188,6 +190,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         'ids'           => $appointmentsIds,
                         'skipServices'  => isset($params['skipServices']) ? $params['skipServices'] : false,
                         'skipProviders' => isset($params['skipProviders']) ? $params['skipProviders'] : false,
+                        'endsInDateRange' => $isCalendarPage
                     ]
                 )
             );

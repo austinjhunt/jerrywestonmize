@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc190d16ed86eafa454e9d2643def4794
+class ComposerStaticInit3782b03fb889266d81d3b990fc5f04c6
 {
     public static $files = array (
         '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
@@ -25,9 +25,17 @@ class ComposerStaticInitc190d16ed86eafa454e9d2643def4794
     );
 
     public static $prefixLengthsPsr4 = array (
+        'a' => 
+        array (
+            'apimatic\\jsonmapper\\' => 20,
+        ),
         'W' => 
         array (
             'Webmozart\\Assert\\' => 17,
+        ),
+        'U' => 
+        array (
+            'Unirest\\' => 8,
         ),
         'T' => 
         array (
@@ -44,6 +52,7 @@ class ComposerStaticInitc190d16ed86eafa454e9d2643def4794
             'Symfony\\Component\\OptionsResolver\\' => 34,
             'Symfony\\Component\\HttpFoundation\\' => 33,
             'AmeliaStripe\\' => 7,
+            'Square\\' => 7,
             'Slim\\' => 5,
         ),
         'R' => 
@@ -97,6 +106,8 @@ class ComposerStaticInitc190d16ed86eafa454e9d2643def4794
         ),
         'C' => 
         array (
+            'Core\\' => 5,
+            'CoreInterfaces\\' => 15,
             'AmeliaClue\\StreamFilter\\' => 18,
         ),
         'B' => 
@@ -112,9 +123,17 @@ class ComposerStaticInitc190d16ed86eafa454e9d2643def4794
     );
 
     public static $prefixDirsPsr4 = array (
+        'apimatic\\jsonmapper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/apimatic/jsonmapper/src',
+        ),
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'Unirest\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/apimatic/unirest-php/src',
         ),
         'Tests\\' => 
         array (
@@ -155,6 +174,10 @@ class ComposerStaticInitc190d16ed86eafa454e9d2643def4794
         'AmeliaStripe\\' => 
         array (
             0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
+        ),
+        'Square\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/square/square/src',
         ),
         'Slim\\' => 
         array (
@@ -222,8 +245,8 @@ class ComposerStaticInitc190d16ed86eafa454e9d2643def4794
         ),
         'AmeliaHttp\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/php-http/message-factory/src',
-            1 => __DIR__ . '/..' . '/php-http/message/src',
+            0 => __DIR__ . '/..' . '/php-http/message/src',
+            1 => __DIR__ . '/..' . '/php-http/message-factory/src',
         ),
         'AmeliaHttp\\Discovery\\' => 
         array (
@@ -261,6 +284,14 @@ class ComposerStaticInitc190d16ed86eafa454e9d2643def4794
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
         ),
+        'Core\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/apimatic/core/src',
+        ),
+        'CoreInterfaces\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/apimatic/core-interfaces/src',
+        ),
         'AmeliaClue\\StreamFilter\\' => 
         array (
             0 => __DIR__ . '/..' . '/clue/stream-filter/src',
@@ -286,6 +317,10 @@ class ComposerStaticInitc190d16ed86eafa454e9d2643def4794
     public static $prefixesPsr0 = array (
         'R' => 
         array (
+            'Rs\\Json' => 
+            array (
+                0 => __DIR__ . '/..' . '/php-jsonpointer/php-jsonpointer/src',
+            ),
             'Requests' => 
             array (
                 0 => __DIR__ . '/..' . '/rmccue/requests/library',
@@ -373,10 +408,10 @@ class ComposerStaticInitc190d16ed86eafa454e9d2643def4794
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc190d16ed86eafa454e9d2643def4794::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc190d16ed86eafa454e9d2643def4794::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitc190d16ed86eafa454e9d2643def4794::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitc190d16ed86eafa454e9d2643def4794::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3782b03fb889266d81d3b990fc5f04c6::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3782b03fb889266d81d3b990fc5f04c6::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit3782b03fb889266d81d3b990fc5f04c6::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit3782b03fb889266d81d3b990fc5f04c6::$classMap;
 
         }, null, ClassLoader::class);
     }

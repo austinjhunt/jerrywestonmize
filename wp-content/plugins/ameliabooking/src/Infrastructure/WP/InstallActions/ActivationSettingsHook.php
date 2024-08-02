@@ -609,6 +609,7 @@ This message does not have an option for responding. If you need additional info
                 'liveSecretKey'      => '',
                 'testPublishableKey' => '',
                 'testSecretKey'      => '',
+                'address'            => false,
                 'description'        => [
                     'enabled'     => false,
                     'appointment' => '',
@@ -769,7 +770,27 @@ This message does not have an option for responding. If you need additional info
                     'event'         => null,
                     'cart'          => '',
                 ],
-            ]
+            ],
+            'square'                     => [
+                'enabled'            => false,
+                'locationId'         => '',
+                'accessToken'        => '',
+                'testMode'           => AMELIA_MIDDLEWARE_IS_SANDBOX,
+                'description'        => [
+                    'enabled'     => false,
+                    'appointment' => '',
+                    'package'     => '',
+                    'event'       => '',
+                    'cart'        => ''
+                ],
+                'metaData'           => [
+                    'enabled'     => false,
+                    'appointment' => null,
+                    'package'     => null,
+                    'event'       => null,
+                    'cart'        => null
+                ],
+            ],
         ];
     }
 
@@ -798,6 +819,7 @@ This message does not have an option for responding. If you need additional info
                 ['stripe', 'metaData', 'cart'],
                 ['stripe', 'manualCapture'],
                 ['stripe', 'returnUrl'],
+                ['stripe', 'address'],
                 ['payPal', 'description'],
                 ['payPal', 'description', 'package'],
                 ['payPal', 'description', 'cart'],
@@ -825,6 +847,12 @@ This message does not have an option for responding. If you need additional info
                 ['mollie', 'description', 'cart'],
                 ['mollie', 'metaData', 'cart'],
                 ['mollie', 'cancelBooking'],
+                ['square', 'enabled'],
+                ['square', 'description', 'cart'],
+                ['square', 'metaData', 'cart'],
+                ['square', 'locationId'],
+                ['square', 'accessToken'],
+                ['square', 'testMode'],
             ],
             $settings
         );
@@ -1588,6 +1616,7 @@ This message does not have an option for responding. If you need additional info
                 'groupEventPlaceholderSms'          => 'Name: %customer_full_name%',
             ],
             'employeeSelection'                => 'random',
+            'bringingAnyoneLogic'              => 'additional',
         ];
     }
 

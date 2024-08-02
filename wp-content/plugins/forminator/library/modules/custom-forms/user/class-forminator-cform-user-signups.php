@@ -17,6 +17,34 @@ class Forminator_CForm_User_Signups {
 	public $submitted_data;
 	public $user_data;
 
+	/**
+	 * Dynamic properties.
+	 *
+	 * @var array
+	 */
+	private $properties = array();
+
+	/**
+	 * Magic method to handle setting dynamic properties
+	 *
+	 * @param string $name Property name.
+	 * @param mixed  $value Property value.
+	 */
+	public function __set( $name, $value ) {
+		$this->properties[ $name ] = $value;
+	}
+
+	/**
+	 * Magic method to handle getting dynamic properties
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return mixed
+	 */
+	public function __get( $name ) {
+		return $this->properties[ $name ] ?? null;
+	}
+
 	public function __construct( $signup ) {
 		// This is for internal variables (i.e. activation key).
 		foreach ( $signup as $key => $value ) {

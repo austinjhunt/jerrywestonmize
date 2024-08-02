@@ -184,8 +184,7 @@ class Customizer {
                     </style>
                     <span class="loader"></span>
                     <p class="message-area">
-                      <span class="message-area-text-holder"><?php _e( 'Loading, please wait...',
-		                      'colibri-page-builder' ) ?></span></p>
+                      <span class="message-area-text-holder"><?php _e( 'Loading, please wait...', 'colibri-page-builder' ) //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?></span></p>
 
 					<?php $iframe_content = ob_get_clean(); ?>
                     <iframe style="width: 100%;" id="colibri-preloader-browser" allowfullscreen allowtransparency=""

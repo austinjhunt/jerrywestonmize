@@ -20,7 +20,7 @@ class Forminator_Template_Blank extends Forminator_Template {
 		return array(
 			'id'          => 'blank',
 			'name'        => esc_html__( 'Blank', 'forminator' ),
-			'description' => esc_html__( 'A simple contact form for your users to contact you', 'forminator' ),
+			'description' => esc_html__( 'Use this template to create a form with no default fields.', 'forminator' ),
 			'icon'        => 'clipboard-notes',
 			'priority'    => 1,
 			'category'    => '',

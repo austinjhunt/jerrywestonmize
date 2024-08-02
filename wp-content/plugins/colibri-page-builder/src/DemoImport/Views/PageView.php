@@ -123,7 +123,7 @@ class PageView {
 			?>
             <script>
                 window.ocdi_needs_instalation = true;
-                window.ocdi_current_state = "<?php echo PageBuilder::instance()->theme()->getPluginsManager()->getPluginState( 'one-click-demo-import' ); ?>";
+                window.ocdi_current_state = "<?php echo PageBuilder::instance()->theme()->getPluginsManager()->getPluginState( 'one-click-demo-import' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>";
             </script>
 			<?php
 		}

@@ -50,8 +50,8 @@ function lana_breadcrumb($atts)
     $breadcrumb_elements = array();
 
     $blog_element = array(
-        'href' =>get_permalink( $blog_page_id ),
-        'text' => get_the_title($blog_page_id)
+        'href' => esc_url(get_permalink( $blog_page_id )),
+        'text' =>  wp_kses_post(get_the_title($blog_page_id))
     );
     /**
      * Breadcrumb
@@ -59,7 +59,7 @@ function lana_breadcrumb($atts)
      */
     $breadcrumb_elements['home'] = array(
         'href' => home_url('/'),
-        'text' => convertStrSpaceToHtml(wp_kses_post($atts['home_label']))
+        'text' => wp_kses_post($atts['home_label'])
     );
 
     /**
@@ -73,8 +73,8 @@ function lana_breadcrumb($atts)
 
             foreach ($ancestors as $ancestor) {
                 $breadcrumb_elements['pages-' . $ancestor] = array(
-                    'href' => get_permalink($ancestor),
-                    'text' => get_the_title($ancestor)
+                    'href' => esc_url(get_permalink($ancestor)),
+                    'text' => wp_kses_post(get_the_title($ancestor))
                 );
             }
         }
@@ -90,7 +90,7 @@ function lana_breadcrumb($atts)
         }
         $breadcrumb_elements['active'] = array(
             'href' => '',
-            'text' => get_the_title()
+            'text' => wp_kses_post(get_the_title())
         );
     }
 
@@ -110,7 +110,7 @@ function lana_breadcrumb($atts)
     if ( isset( $wp_query ) &&  $wp_query->is_posts_page ) {
         $breadcrumb_elements['active'] = array(
             'href' => '',
-            'text' => get_the_title($blog_page_id)
+            'text' => wp_kses_post(get_the_title($blog_page_id))
         );
     }
     /**
@@ -119,7 +119,7 @@ function lana_breadcrumb($atts)
     if (is_tax()) {
         $breadcrumb_elements['active'] = array(
             'href' => '',
-            'text' => single_term_title('', false)
+            'text' => wp_kses_post(single_term_title('', false))
         );
     }
 
@@ -130,7 +130,7 @@ function lana_breadcrumb($atts)
         $breadcrumb_elements['blog'] = $blog_element;
         $breadcrumb_elements['active'] = array(
             'href' => '',
-            'text' => single_cat_title('', false)
+            'text' => wp_kses_post(single_cat_title('', false))
         );
     }
 
@@ -140,7 +140,7 @@ function lana_breadcrumb($atts)
     if (is_tag()) {
         $breadcrumb_elements['active'] = array(
             'href' => '',
-            'text' => single_tag_title('', false)
+            'text' => wp_kses_post(single_tag_title('', false))
         );
     }
 
@@ -151,7 +151,7 @@ function lana_breadcrumb($atts)
         $breadcrumb_elements['blog'] = $blog_element;
         $breadcrumb_elements['active'] = array(
             'href' => '',
-            'text' => get_the_archive_title()
+            'text' => wp_kses_post(get_the_archive_title())
         );
     }
 
@@ -161,7 +161,7 @@ function lana_breadcrumb($atts)
     if (is_post_type_archive()) {
         $breadcrumb_elements['active'] = array(
             'href' => '',
-            'text' => get_the_archive_title()
+            'text' => wp_kses_post(get_the_archive_title())
         );
     }
 
@@ -172,7 +172,7 @@ function lana_breadcrumb($atts)
     if (is_tax('post_format')) {
         $breadcrumb_elements['active'] = array(
             'href' => '',
-            'text' => get_the_archive_title()
+            'text' => wp_kses_post(get_the_archive_title())
         );
     }
 
@@ -182,7 +182,7 @@ function lana_breadcrumb($atts)
     if (is_author()) {
         $breadcrumb_elements['active'] = array(
             'href' => '',
-            'text' => get_the_author_meta('display_name')
+            'text' => wp_kses_post(get_the_author_meta('display_name'))
         );
     }
 
@@ -192,7 +192,7 @@ function lana_breadcrumb($atts)
     if (is_search()) {
         $breadcrumb_elements['active'] = array(
             'href' => '',
-            'text' => sprintf(__('Search Results for &#8220;%s&#8221;', 'lana-breadcrumb'), get_search_query())
+            'text' => sprintf(__('Search Results for &#8220;%s&#8221;', 'lana-breadcrumb'), wp_kses_post(get_search_query()))
         );
     }
 

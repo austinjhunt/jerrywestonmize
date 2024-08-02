@@ -97,7 +97,7 @@ function colibri_breadcrumb_element_shortcode( $atts ) {
 
                     $woocommerce_breadcrumb_wrap_before .= sprintf( '<li class="breadcrumb-item"><a href="%s">%s</a></li>',
                         esc_url( get_post_type_archive_link( 'product' ) ),
-                        $shop_page_name
+                        esc_html($shop_page_name)
                     );
                 }
             } else {
@@ -105,7 +105,7 @@ function colibri_breadcrumb_element_shortcode( $atts ) {
                     ?>
                     <ol class="breadcrumb colibri-breadcrumb">
                         <li class="breadcrumb-item"><a
-                                    href="<?php echo esc_url( home_url() ); ?>"><?php echo( $home_as_icon ? $home_icon : wp_kses_post($atts['home_label']) ); ?></a>
+                                    href="<?php echo esc_url( home_url() ); ?>"><?php echo( $home_as_icon ? $home_icon : wp_kses_post($atts['home_label']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
                         </li>
                     </ol>
                     <?php
@@ -115,13 +115,14 @@ function colibri_breadcrumb_element_shortcode( $atts ) {
 
             woocommerce_breadcrumb( array(
                 'delimiter'   => '',
-                'home'        => $home_as_icon ? false : $atts['home_label'],
+                'home'        => $home_as_icon ? false : convertStrSpaceToHtml(wp_kses_post($atts['home_label'])),
                 'wrap_before' => $woocommerce_breadcrumb_wrap_before,
                 'wrap_after'  => '</ol>',
                 'before'      => '<li class="breadcrumb-item">',
                 'after'       => '</li>',
             ) );
         } else {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo lana_breadcrumb( $lana_breadcrumb_options );
         }
 
@@ -144,9 +145,10 @@ function colibri_breadcrumb_element_shortcode( $atts ) {
     ?>
     <style type="text/css">
         /* breadcrumb separator symbol */
-        <?php echo strip_tags($breadcrumb_selector); ?>
+
+        <?php echo strip_tags($breadcrumb_selector); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>
         .colibri-breadcrumb > li + li:before {
-            content: "<?php echo strip_tags($breadcrumb_separator); ?>";
+            content: "<?php echo strip_tags($breadcrumb_separator); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>";
             white-space: pre;
         }
     </style>

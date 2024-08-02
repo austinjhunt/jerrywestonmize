@@ -94,61 +94,54 @@ class DIVI_StepBooking extends ET_Builder_Module
             )
         );
 
-        if ($this->categories && sizeof($this->categories) > 1) {
-            $array['categories'] = array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_category'], 'divi-divi_amelia'),
-                'type'            => 'amelia_multi_select',
-                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_categories'],
-                'options'         => $this->categories,
-                'toggle_slug'     => 'main_content',
-                'option_category' => 'basic_option',
-                'show_if'         => array(
-                    'booking_params' => 'on',
-                ),
-            );
-        }
+        $array['categories'] = array(
+            'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_category'], 'divi-divi_amelia'),
+            'type'            => 'amelia_multi_select',
+            'showAllText'     => BackendStrings::getWordPressStrings()['show_all_categories'],
+            'options'         => $this->categories,
+            'toggle_slug'     => 'main_content',
+            'option_category' => 'basic_option',
+            'show_if'         => array(
+                'booking_params' => 'on',
+            ),
+        );
 
-        if ($this->services && sizeof($this->services) > 1) {
-            $array['services'] = array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_service'], 'divi-divi_amelia'),
-                'type'            => 'amelia_multi_select',
-                'toggle_slug'     => 'main_content',
-                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_services'],
-                'options'         => $this->services,
-                'option_category' => 'basic_option',
-                'show_if'         => array(
-                    'booking_params' => 'on',
-                ),
-            );
-        }
+        $array['services'] = array(
+            'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_service'], 'divi-divi_amelia'),
+            'type'            => 'amelia_multi_select',
+            'toggle_slug'     => 'main_content',
+            'showAllText'     => BackendStrings::getWordPressStrings()['show_all_services'],
+            'options'         => $this->services,
+            'option_category' => 'basic_option',
+            'show_if'         => array(
+                'booking_params' => 'on',
+            ),
+        );
 
-        if ($this->employees && sizeof($this->employees) > 1) {
-            $array['employees'] = array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_employee'], 'divi-divi_amelia'),
-                'type'            => 'amelia_multi_select',
-                'options'         => $this->employees,
-                'toggle_slug'     => 'main_content',
-                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_employees'],
-                'option_category' => 'basic_option',
-                'show_if'         => array(
-                    'booking_params' => 'on',
-                ),
-            );
-        }
+        $array['employees'] = array(
+            'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_employee'], 'divi-divi_amelia'),
+            'type'            => 'amelia_multi_select',
+            'options'         => $this->employees,
+            'toggle_slug'     => 'main_content',
+            'showAllText'     => BackendStrings::getWordPressStrings()['show_all_employees'],
+            'option_category' => 'basic_option',
+            'show_if'         => array(
+                'booking_params' => 'on',
+            ),
+        );
 
-        if ($this->locations && sizeof($this->locations) > 1) {
-            $array['locations'] = array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_location'], 'divi-divi_amelia'),
-                'type'            => 'amelia_multi_select',
-                'options'         => $this->locations,
-                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_locations'],
-                'toggle_slug'     => 'main_content',
-                'option_category' => 'basic_option',
-                'show_if'         => array(
-                    'booking_params' => 'on',
-                ),
-            );
-        }
+        $array['locations'] = array(
+            'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_location'], 'divi-divi_amelia'),
+            'type'            => 'amelia_multi_select',
+            'options'         => $this->locations,
+            'showAllText'     => BackendStrings::getWordPressStrings()['show_all_locations'],
+            'toggle_slug'     => 'main_content',
+            'option_category' => 'basic_option',
+            'show_if'         => array(
+                'booking_params' => 'on',
+            ),
+        );
+
 
         if ($this->showPackages) {
             $array['packages'] = array(
@@ -243,11 +236,11 @@ class DIVI_StepBooking extends ET_Builder_Module
             $shortcode .= ' in_dialog=1';
         }
         if ($preselect === 'on') {
-            $category = $this->checkValues($this->props['categories']);
-            $service  = $this->checkValues($this->props['services']);
-            $employee = $this->checkValues($this->props['employees']);
-            $location = $this->checkValues($this->props['locations']);
-            $package  = $this->checkValues($this->props['packages']);
+            $category = !empty($this->props['categories']) ? $this->checkValues($this->props['categories']) : null;
+            $service  = !empty($this->props['services']) ? $this->checkValues($this->props['services']) : null;
+            $employee = !empty($this->props['employees']) ? $this->checkValues($this->props['employees']) : null;
+            $location = !empty($this->props['locations']) ? $this->checkValues($this->props['locations']) : null;
+            $package  = !empty($this->props['packages']) ? $this->checkValues($this->props['packages']) : null;
 
             if ($service && count($service) > 0) {
                 $shortcode .= ' service=' . implode(',', $service);

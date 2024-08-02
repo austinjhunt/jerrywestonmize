@@ -11276,6 +11276,9 @@ ul.ope-language-switcher.after-menu span {
       line-height: 1.5rem;
       cursor: pointer;
       color: inherit; }
+  .woocommerce-checkout.woocommerce-page .content .h-section .wc-block-components-radio-control .wc-block-components-radio-control__input:not(#extra-1) {
+    border-radius: 50%;
+    position: absolute; }
 
 .woocommerce-account.woocommerce-page .woocommerce-MyAccount-content {
   padding: 24px 40px;
@@ -30511,6 +30514,10 @@ ul.ope-language-switcher.after-menu span {
       line-height: 1.5rem;
       cursor: pointer;
       color: inherit;
+}
+.woocommerce-checkout.woocommerce-page .content .h-section .wc-block-components-radio-control .wc-block-components-radio-control__input:not(#extra-1) {
+    border-radius: 50%;
+    position: absolute;
 }
 .woocommerce-account.woocommerce-page .woocommerce-MyAccount-content {
   padding: 24px 40px;

@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Domain\Entity\User;
 
+use AmeliaBooking\Domain\Entity\Stripe\StripeConnect;
 use AmeliaBooking\Domain\ValueObjects\Gender;
 use AmeliaBooking\Domain\ValueObjects\String\Email;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
@@ -16,6 +17,10 @@ class Customer extends AbstractUser
 {
     /** @var Gender */
     private $gender;
+
+    /** @var StripeConnect */
+    private $stripeConnect;
+
 
     /**
      * @param Name        $firstName
@@ -61,6 +66,23 @@ class Customer extends AbstractUser
     }
 
     /**
+     * @return StripeConnect
+     */
+    public function getStripeConnect()
+    {
+        return $this->stripeConnect;
+    }
+
+    /**
+     * @param StripeConnect $stripeConnect
+     */
+    public function setStripeConnect($stripeConnect)
+    {
+        $this->stripeConnect = $stripeConnect;
+    }
+
+
+    /**
      * @return array
      */
     public function toArray()
@@ -68,8 +90,9 @@ class Customer extends AbstractUser
         return array_merge(
             parent::toArray(),
             [
-                'phone'        => $this->getPhone()->getValue(),
-                'gender'       => $this->getGender()->getValue(),
+                'phone'         => $this->getPhone()->getValue(),
+                'gender'        => $this->getGender()->getValue(),
+                'stripeConnect' => $this->getStripeConnect() ? $this->getStripeConnect()->toArray() : null,
             ]
         );
     }

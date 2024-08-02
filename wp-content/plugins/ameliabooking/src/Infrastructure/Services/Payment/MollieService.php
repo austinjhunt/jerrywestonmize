@@ -145,7 +145,8 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
     }
 
 
-    public function fetchPaymentLink($id) {
+    public function fetchPaymentLink($id)
+    {
         $apiKey = $this->settingsService->getCategorySettings('payments')['mollie']['testMode'] ?
             $this->settingsService->getCategorySettings('payments')['mollie']['testApiKey'] :
             $this->settingsService->getCategorySettings('payments')['mollie']['liveApiKey'];

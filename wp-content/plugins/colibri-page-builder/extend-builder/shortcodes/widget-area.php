@@ -77,7 +77,7 @@ function colibri_print_widget_area( $atts ) {
 		$atts
 	);
 
-	$id = "colibri-" . $atts['id'];
+	$id = "colibri-" . esc_html($atts['id']);
 
   	$id = \apply_filters('colibri_page_builder/widget_id', $id);
 

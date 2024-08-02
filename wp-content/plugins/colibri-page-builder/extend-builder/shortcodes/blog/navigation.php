@@ -36,8 +36,8 @@ function colibri_post_nav_button( $attrs = array() ) {
 	$atts = shortcode_atts(
 		array(
 			'type'      => 'next',
-			'next_post' => 'Next post:',
-			'prev_post' => 'Previous post:',
+			'next_post' => __('Next post:','colibri-page-builder'),
+			'prev_post' => __('Previous post:','colibri-page-builder'),
 		),
 		$attrs
 	);
@@ -71,9 +71,9 @@ function print_navigation_button( $type, $button_text ) {
 	// Only add markup if there's somewhere to navigate to.
 	if ( $navigation ) {
 		$navigation = _navigation_markup( $navigation, 'post-navigation',
-			$args['screen_reader_text'] );
+            wp_kses_post($args['screen_reader_text']) );
 	}
-
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo $navigation;
 }
 
@@ -87,7 +87,10 @@ function single_post_nav_button( $atts = array() ) {
         <nav class="navigation post-navigation" role="navigation">
             <div class="<?php echo esc_attr( $nav_class); ?>">
                 <a href="" rel="<?php echo esc_attr($nav_rel); ?>">
-                    <span class="meta-nav" aria-hidden="true"><?php echo $meta ?></span>
+                    <span class="meta-nav" aria-hidden="true"><?php
+                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                        echo $meta
+                        ?></span>
                     <span class="post-title" title="Test post">Test post</span>
                 </a>
             </div>
@@ -159,7 +162,7 @@ function button_pagination( $args, $atts )
       <div class="navigation" role="navigation">
         <h2 class="screen-reader-text"><?php echo esc_html($args['screen_reader_text']); ?></h2>
         <div class="nav-links">
-          <div class="<?php echo esc_attr($type) ?>-navigation"><?php echo $link; ?></div>
+          <div class="<?php echo esc_attr($type) ?>-navigation"><?php echo $link // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
         </div>
       </div>
         <?php

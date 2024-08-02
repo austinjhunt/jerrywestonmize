@@ -54,6 +54,7 @@ class Notification
         if (property_exists($this, $name)) {
             return $this->$name;
         } else {
+            //phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new \Exception("Property {$name} does not exists in class Notification", 1);
             
         }
@@ -81,7 +82,7 @@ class Notification
                             var data = {
                                 'action': 'cp_dismiss_notification',
                                 'notification': <?php echo wp_json_encode($self->name); ?>,
-                                _wpnonce: '<?php echo wp_create_nonce('cp_dismiss_notification_nonce');?>'
+                                _wpnonce: '<?php echo wp_create_nonce('cp_dismiss_notification_nonce'); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>'
                             };
                             jQuery.post(ajaxurl, data).done(function (response) {
 

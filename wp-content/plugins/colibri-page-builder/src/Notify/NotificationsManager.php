@@ -32,6 +32,7 @@ class NotificationsManager {
 
 			if ( $data instanceof \WP_Error ) {
 				if ( NotificationsManager::isDevMode() ) {
+                    //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					die( $data->get_error_message() );
 				}
 			} else {
@@ -151,10 +152,10 @@ class NotificationsManager {
 			?>
             <script>
                 jQuery.post(
-                    "<?php echo admin_url( "/admin-ajax.php" ); ?>",
+                    "<?php echo admin_url( "/admin-ajax.php" ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>",
                     {
                         action: "extendthemes_get_remote_data_notifications",
-                        _wpnonce: '<?php echo wp_create_nonce('extendthemes_get_remote_data_notifications_nonce');?>'
+                        _wpnonce: '<?php echo wp_create_nonce('extendthemes_get_remote_data_notifications_nonce'); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?>'
                     }
                 )
             </script>
