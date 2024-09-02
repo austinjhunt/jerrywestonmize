@@ -9,7 +9,7 @@ use MailPoet\Entities\DynamicSegmentFilterData;
 use MailPoet\Entities\DynamicSegmentFilterEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Util\Security;
-use MailPoetVendor\Doctrine\DBAL\Connection;
+use MailPoetVendor\Doctrine\DBAL\ArrayParameterType;
 use MailPoetVendor\Doctrine\DBAL\Query\QueryBuilder;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 
@@ -41,7 +41,7 @@ class WooCommerceMembership implements Filter {
         ->andWhere("posts.post_parent IN (:plans" . $parameterSuffix . ")")
         ->groupBy("$subscribersTable.id")
         ->having("COUNT($subscribersTable.id) = :count$parameterSuffix")
-        ->setParameter('plans' . $parameterSuffix, $planIds, Connection::PARAM_STR_ARRAY)
+        ->setParameter('plans' . $parameterSuffix, $planIds, ArrayParameterType::STRING)
         ->setParameter('count' . $parameterSuffix, count($planIds));
     }
 
@@ -56,7 +56,7 @@ class WooCommerceMembership implements Filter {
       $subQueryBuilder
         ->andWhere("posts.post_parent IN (:plans" . $parameterSuffix . ")");
       return $queryBuilder->where("{$subscribersTable}.id NOT IN ({$subQueryBuilder->getSQL()})")
-        ->setParameter('plans' . $parameterSuffix, $planIds, Connection::PARAM_STR_ARRAY);
+        ->setParameter('plans' . $parameterSuffix, $planIds, ArrayParameterType::STRING);
     }
 
     // ANY
@@ -64,7 +64,7 @@ class WooCommerceMembership implements Filter {
     $this->applyParentPostJoin($queryBuilder);
     return $queryBuilder
       ->andWhere("posts.post_parent IN (:plans" . $parameterSuffix . ")")
-      ->setParameter('plans' . $parameterSuffix, $planIds, Connection::PARAM_STR_ARRAY);
+      ->setParameter('plans' . $parameterSuffix, $planIds, ArrayParameterType::STRING);
   }
 
   private function applyPostJoin(QueryBuilder $queryBuilder): QueryBuilder {
@@ -84,7 +84,7 @@ class WooCommerceMembership implements Filter {
       'posts',
       $wpdb->posts,
       'parentposts',
-      'posts.post_parent = parentposts.id AND parentposts.post_type = "wc_membership_plan" AND parentposts.post_status = "publish"'
+      "posts.post_parent = parentposts.id AND parentposts.post_type = 'wc_membership_plan' AND parentposts.post_status = 'publish'"
     );
   }
 

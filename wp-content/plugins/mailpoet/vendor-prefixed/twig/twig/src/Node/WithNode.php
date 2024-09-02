@@ -3,7 +3,7 @@ namespace MailPoetVendor\Twig\Node;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class WithNode extends Node
 {
  public function __construct(Node $body, ?Node $variables, bool $only, int $lineno, ?string $tag = null)

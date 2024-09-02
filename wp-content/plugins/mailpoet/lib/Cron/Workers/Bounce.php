@@ -132,7 +132,7 @@ class Bounce extends SimpleWorker {
   }
 
   public function getNextRunDate() {
-    $date = Carbon::createFromTimestamp($this->wp->currentTime('timestamp'));
+    $date = Carbon::now()->millisecond(0);
     return $date->startOfDay()
       ->addDay()
       ->addHours(rand(0, 5))

@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
 use MailPoetVendor\Twig\Node\Expression\ConstantExpression;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class SetNode extends Node implements NodeCaptureInterface
 {
  public function __construct(bool $capture, Node $names, Node $values, int $lineno, ?string $tag = null)

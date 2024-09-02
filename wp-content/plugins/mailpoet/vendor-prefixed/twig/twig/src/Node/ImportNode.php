@@ -5,7 +5,7 @@ use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
 use MailPoetVendor\Twig\Node\Expression\AbstractExpression;
 use MailPoetVendor\Twig\Node\Expression\NameExpression;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class ImportNode extends Node
 {
  public function __construct(AbstractExpression $expr, AbstractExpression $var, int $lineno, ?string $tag = null, bool $global = \true)

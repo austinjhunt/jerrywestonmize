@@ -13,6 +13,7 @@ use MailPoet\Settings\TrackingConfig;
 use MailPoet\Subscribers\SubscribersRepository;
 use MailPoet\Util\License\Features\Subscribers as SubscribersFeature;
 use MailPoet\WP\Functions as WPFunctions;
+use MailPoetVendor\Doctrine\ORM\EntityManager;
 
 class PermanentNotices {
 
@@ -67,8 +68,12 @@ class PermanentNotices {
   /** @var SenderDomainAuthenticationNotices */
   private $senderDomainAuthenticationNotices;
 
+  /** @var DatabaseEngineNotice */
+  private $databaseEngineNotice;
+  
   public function __construct(
     WPFunctions $wp,
+    EntityManager $entityManager,
     TrackingConfig $trackingConfig,
     SubscribersRepository $subscribersRepository,
     SettingsController $settings,
@@ -93,6 +98,7 @@ class PermanentNotices {
     $this->pendingApprovalNotice = new PendingApprovalNotice($settings);
     $this->woocommerceVersionWarning = new WooCommerceVersionWarning($wp);
     $this->premiumFeaturesAvailableNotice = new PremiumFeaturesAvailableNotice($subscribersFeature, $serviceChecker, $wp);
+    $this->databaseEngineNotice = new DatabaseEngineNotice($wp, $entityManager);
     $this->senderDomainAuthenticationNotices = $senderDomainAuthenticationNotices;
   }
 
@@ -153,6 +159,9 @@ class PermanentNotices {
     $this->premiumFeaturesAvailableNotice->init(
       Menu::isOnMailPoetAdminPage($excludeSetupWizard)
     );
+    $this->databaseEngineNotice->init(
+      Menu::isOnMailPoetAdminPage($excludeSetupWizard)
+    );
     $excludeDomainAuthenticationNotices = [
       'mailpoet-settings',
       'mailpoet-newsletter-editor',
@@ -195,6 +204,9 @@ class PermanentNotices {
         break;
       case (WooCommerceVersionWarning::OPTION_NAME):
         $this->woocommerceVersionWarning->disable();
+        break;
+      case (DatabaseEngineNotice::OPTION_NAME):
+        $this->databaseEngineNotice->disable();
         break;
       case (PremiumFeaturesAvailableNotice::OPTION_NAME):
         $this->premiumFeaturesAvailableNotice->disable();

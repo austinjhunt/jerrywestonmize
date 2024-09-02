@@ -9,6 +9,7 @@ use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Entities\ScheduledTaskSubscriberEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoetVendor\Carbon\Carbon;
+use MailPoetVendor\Doctrine\DBAL\ParameterType;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 
 class SubscribersEmailCountsController {
@@ -125,8 +126,8 @@ class SubscribersEmailCountsController {
         'batchSize' => $batchSize,
       ],
       [
-        'startId' => \PDO::PARAM_INT,
-        'batchSize' => \PDO::PARAM_INT,
+        'startId' => ParameterType::INTEGER,
+        'batchSize' => ParameterType::INTEGER,
       ]
     );
 

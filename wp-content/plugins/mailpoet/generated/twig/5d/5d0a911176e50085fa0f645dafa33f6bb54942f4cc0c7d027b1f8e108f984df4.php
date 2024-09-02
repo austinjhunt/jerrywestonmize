@@ -81,9 +81,9 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         // line 40
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\Functions']->getWPTimeFormat(), "js"), "html", null, true);
         yield "\";
-  var mailpoet_server_timezone_in_minutes = ";
+  var mailpoet_date_offset = ";
         // line 41
-        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["server_timezone_in_minutes"] ?? null), "html", null, true);
+        yield json_encode(get_option("gmt_offset"));
         yield ";
   var mailpoet_version = \"";
         // line 42

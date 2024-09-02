@@ -10,7 +10,6 @@ use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Entities\SegmentEntity;
 use MailPoet\Segments\SegmentsRepository;
 use MailPoet\Subscribers\SubscribersCountsController;
-use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Carbon\Carbon;
 
 class SubscribersCountCacheRecalculation extends SimpleWorker {
@@ -31,10 +30,9 @@ class SubscribersCountCacheRecalculation extends SimpleWorker {
   public function __construct(
     TransientCache $transientCache,
     SegmentsRepository $segmentsRepository,
-    SubscribersCountsController $subscribersCountsController,
-    WPFunctions $wp
+    SubscribersCountsController $subscribersCountsController
   ) {
-    parent::__construct($wp);
+    parent::__construct();
     $this->transientCache = $transientCache;
     $this->segmentsRepository = $segmentsRepository;
     $this->subscribersCountsController = $subscribersCountsController;
@@ -82,7 +80,7 @@ class SubscribersCountCacheRecalculation extends SimpleWorker {
   }
 
   public function getNextRunDate() {
-    return Carbon::createFromTimestamp($this->wp->currentTime('timestamp'));
+    return Carbon::now()->millisecond(0);
   }
 
   public function shouldBeScheduled(): bool {

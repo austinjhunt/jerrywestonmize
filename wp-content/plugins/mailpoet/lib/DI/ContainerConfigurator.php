@@ -241,7 +241,6 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\Config\AssetsLoader::class)->setPublic(true);
     $container->autowire(\MailPoet\Config\Populator::class)->setPublic(true);
     $container->autowire(\MailPoet\Config\Changelog::class)->setPublic(true);
-    $container->autowire(\MailPoet\Config\DatabaseInitializer::class);
     $container->autowire(\MailPoet\Config\Hooks::class)->setPublic(true);
     $container->autowire(\MailPoet\Config\HooksWooCommerce::class)->setPublic(true);
     $container->autowire(\MailPoet\Config\Initializer::class)->setPublic(true);
@@ -620,6 +619,8 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\NewsletterTemplates\ThumbnailSaver::class)->setPublic(true);
     $container->autowire(\MailPoet\NewsletterTemplates\BrandStyles::class)->setPublic(true);
     // Util
+    $container->autowire(\MailPoet\Util\DataInconsistency\DataInconsistencyController::class)->setPublic(true);
+    $container->autowire(\MailPoet\Util\DataInconsistency\DataInconsistencyRepository::class)->setPublic(true);
     $container->autowire(\MailPoet\Util\Cookies::class)->setPublic(true);
     $container->autowire(\MailPoet\Util\DBCollationChecker::class);
     $container->autowire(\MailPoet\Util\FreeDomains::class);

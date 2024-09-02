@@ -5,7 +5,7 @@ use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
 use MailPoetVendor\Twig\Node\Expression\AbstractExpression;
 use MailPoetVendor\Twig\Node\Expression\ConstantExpression;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class DeprecatedNode extends Node
 {
  public function __construct(AbstractExpression $expr, int $lineno, ?string $tag = null)

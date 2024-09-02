@@ -63,15 +63,19 @@ class __TwigTemplate_176225ef6518abb3a235b9f1785c332f068c4c798b602f397b3f290225c
         yield "      var mailpoet_logs = ";
         yield json_encode(($context["logs"] ?? null));
         yield ";
+      var mailpoet_logs_default_from = '";
+        // line 13
+        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["logs_default_from"] ?? null), "js", null, true);
+        yield "';
     ";
-        // line 14
+        // line 15
         yield "  </script>
 </div>
 
 ";
-        // line 17
-        yield $this->extensions['MailPoet\Twig\I18n']->localize(["pageTitle" => $this->extensions['MailPoet\Twig\I18n']->translate("Logs"), "tableHeaderName" => $this->extensions['MailPoet\Twig\I18n']->translate("Name"), "tableHeaderMessage" => $this->extensions['MailPoet\Twig\I18n']->translate("Message"), "tableHeaderCreatedOn" => $this->extensions['MailPoet\Twig\I18n']->translate("Created On"), "searchLabel" => $this->extensions['MailPoet\Twig\I18n']->translate("Search"), "offsetLabel" => $this->extensions['MailPoet\Twig\I18n']->translate("Offset"), "limitLabel" => $this->extensions['MailPoet\Twig\I18n']->translate("Limit"), "from" => $this->extensions['MailPoet\Twig\I18n']->translateWithContext("From", "date from"), "to" => $this->extensions['MailPoet\Twig\I18n']->translateWithContext("To", "date to"), "filter" => $this->extensions['MailPoet\Twig\I18n']->translate("Filter")]);
-        // line 28
+        // line 18
+        yield $this->extensions['MailPoet\Twig\I18n']->localize(["pageTitle" => $this->extensions['MailPoet\Twig\I18n']->translate("Logs")]);
+        // line 20
         yield "
 
 ";
@@ -99,7 +103,7 @@ class __TwigTemplate_176225ef6518abb3a235b9f1785c332f068c4c798b602f397b3f290225c
      */
     public function getDebugInfo()
     {
-        return array (  72 => 28,  70 => 17,  65 => 14,  60 => 12,  51 => 4,  47 => 3,  36 => 1,);
+        return array (  76 => 20,  74 => 18,  69 => 15,  65 => 13,  60 => 12,  51 => 4,  47 => 3,  36 => 1,);
     }
 
     public function getSourceContext()

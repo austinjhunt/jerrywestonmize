@@ -10,7 +10,7 @@ use MailPoet\Entities\DynamicSegmentFilterEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Util\Security;
 use MailPoet\WP\Functions as WPFunctions;
-use MailPoetVendor\Doctrine\DBAL\Connection;
+use MailPoetVendor\Doctrine\DBAL\ArrayParameterType;
 use MailPoetVendor\Doctrine\DBAL\Query\QueryBuilder;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 use WP_Term;
@@ -70,7 +70,7 @@ class WooCommerceCategory implements Filter {
         $this->applyProductJoin($subQuery, $orderStatsAlias);
         $this->applyTermRelationshipsJoin($subQuery);
         $this->applyTermTaxonomyJoin($subQuery, $uniqueParamaterSuffix);
-        $subQuery->setParameter("category_$uniqueParamaterSuffix", $categoryIdWithChildrenIds, Connection::PARAM_STR_ARRAY);
+        $subQuery->setParameter("category_$uniqueParamaterSuffix", $categoryIdWithChildrenIds, ArrayParameterType::STRING);
         $alias = sprintf("subQuery%s", $subQueryCount);
         $queryBuilder->innerJoin(
           $subscribersTable,
@@ -93,7 +93,7 @@ class WooCommerceCategory implements Filter {
     }
 
     return $queryBuilder
-      ->setParameter("category_$parameterSuffix", $categoryIdswithChildrenIds, Connection::PARAM_STR_ARRAY);
+      ->setParameter("category_$parameterSuffix", $categoryIdswithChildrenIds, ArrayParameterType::STRING);
   }
 
   private function applyProductJoin(QueryBuilder $queryBuilder, string $orderStatsAlias): QueryBuilder {

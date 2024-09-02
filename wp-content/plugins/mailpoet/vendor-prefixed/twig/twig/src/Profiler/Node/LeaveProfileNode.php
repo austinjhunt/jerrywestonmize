@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
 use MailPoetVendor\Twig\Node\Node;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class LeaveProfileNode extends Node
 {
  public function __construct(string $varName)

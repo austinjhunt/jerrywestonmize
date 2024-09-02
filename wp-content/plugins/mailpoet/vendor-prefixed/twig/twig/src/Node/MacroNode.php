@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
 use MailPoetVendor\Twig\Error\SyntaxError;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class MacroNode extends Node
 {
  public const VARARGS_NAME = 'varargs';

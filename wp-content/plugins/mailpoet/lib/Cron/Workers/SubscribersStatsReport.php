@@ -9,7 +9,6 @@ use MailPoet\Config\ServicesChecker;
 use MailPoet\Cron\CronWorkerScheduler;
 use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Services\SubscribersCountReporter;
-use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Carbon\Carbon;
 
 class SubscribersStatsReport extends SimpleWorker {
@@ -27,10 +26,9 @@ class SubscribersStatsReport extends SimpleWorker {
   public function __construct(
     SubscribersCountReporter $subscribersCountReporter,
     ServicesChecker $servicesChecker,
-    CronWorkerScheduler $workerScheduler,
-    WPFunctions $wp
+    CronWorkerScheduler $workerScheduler
   ) {
-    parent::__construct($wp);
+    parent::__construct();
     $this->subscribersCountReporter = $subscribersCountReporter;
     $this->serviceChecker = $servicesChecker;
     $this->workerScheduler = $workerScheduler;
@@ -54,7 +52,7 @@ class SubscribersStatsReport extends SimpleWorker {
   }
 
   public function getNextRunDate() {
-    $date = Carbon::createFromTimestamp($this->wp->currentTime('timestamp'));
+    $date = Carbon::now()->millisecond(0);
     // Spread the check within 6 hours after midnight so that all plugins don't ping the service at the same time
     return $date->startOfDay()
       ->addDay()

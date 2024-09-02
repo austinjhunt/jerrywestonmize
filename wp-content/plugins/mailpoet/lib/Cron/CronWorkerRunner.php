@@ -8,7 +8,6 @@ if (!defined('ABSPATH')) exit;
 use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Logging\LoggerFactory;
 use MailPoet\Newsletter\Sending\ScheduledTasksRepository;
-use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Carbon\Carbon;
 
 class CronWorkerRunner {
@@ -25,9 +24,6 @@ class CronWorkerRunner {
   /** @var CronWorkerScheduler */
   private $cronWorkerScheduler;
 
-  /** @var WPFunctions */
-  private $wp;
-
   /** @var ScheduledTasksRepository */
   private $scheduledTasksRepository;
 
@@ -37,14 +33,12 @@ class CronWorkerRunner {
   public function __construct(
     CronHelper $cronHelper,
     CronWorkerScheduler $cronWorkerScheduler,
-    WPFunctions $wp,
     ScheduledTasksRepository $scheduledTasksRepository,
     LoggerFactory $loggerFactory
   ) {
     $this->timer = microtime(true);
     $this->cronHelper = $cronHelper;
     $this->cronWorkerScheduler = $cronWorkerScheduler;
-    $this->wp = $wp;
     $this->scheduledTasksRepository = $scheduledTasksRepository;
     $this->loggerFactory = $loggerFactory;
   }
@@ -148,7 +142,7 @@ class CronWorkerRunner {
   }
 
   private function rescheduleOutdated(ScheduledTaskEntity $task) {
-    $currentTime = Carbon::createFromTimestamp($this->wp->currentTime('timestamp'));
+    $currentTime = Carbon::now()->millisecond(0);
 
     if (empty($task->getUpdatedAt())) {
       // missing updatedAt, consider this task outdated (set year to 2000) and reschedule
@@ -189,7 +183,7 @@ class CronWorkerRunner {
   }
 
   private function complete(ScheduledTaskEntity $task) {
-    $task->setProcessedAt(Carbon::createFromTimestamp($this->wp->currentTime('timestamp')));
+    $task->setProcessedAt(Carbon::now()->millisecond(0));
     $task->setStatus(ScheduledTaskEntity::STATUS_COMPLETED);
     $this->scheduledTasksRepository->persist($task);
     $this->scheduledTasksRepository->flush();

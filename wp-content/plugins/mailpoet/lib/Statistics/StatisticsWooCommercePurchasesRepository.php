@@ -11,7 +11,7 @@ use MailPoet\Entities\SendingQueueEntity;
 use MailPoet\Entities\StatisticsClickEntity;
 use MailPoet\Entities\StatisticsWooCommercePurchaseEntity;
 use MailPoet\WooCommerce\Helper;
-use MailPoetVendor\Doctrine\DBAL\Connection;
+use MailPoetVendor\Doctrine\DBAL\ArrayParameterType;
 use MailPoetVendor\Doctrine\DBAL\ParameterType;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 
@@ -82,7 +82,7 @@ class StatisticsWooCommercePurchasesRepository extends Repository {
         COALESCE(n.parent_id, swp.newsletter_id) AS campaign_id,
         (
             CASE
-                WHEN n.type IS NULL THEN "unknown"
+                WHEN n.type IS NULL THEN \'unknown\'
                 WHEN n.type = :notification_history_type THEN :notification_type
                 ELSE n.type
             END
@@ -105,7 +105,7 @@ class StatisticsWooCommercePurchasesRepository extends Repository {
       'notification_history_type' => ParameterType::STRING,
       'notification_type' => ParameterType::STRING,
       'currency' => ParameterType::STRING,
-      'revenue_status' => Connection::PARAM_STR_ARRAY,
+      'revenue_status' => ArrayParameterType::STRING,
     ])->fetchAllAssociative();
 
     $data = array_map(function($row) {

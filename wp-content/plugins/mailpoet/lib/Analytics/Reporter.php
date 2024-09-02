@@ -54,9 +54,11 @@ use MailPoet\Settings\TrackingConfig;
 use MailPoet\Subscribers\ConfirmationEmailCustomizer;
 use MailPoet\Subscribers\NewSubscriberNotificationMailer;
 use MailPoet\Subscribers\SubscriberListingRepository;
+use MailPoet\Subscription\Captcha\CaptchaConstants;
 use MailPoet\Tags\TagRepository;
 use MailPoet\Util\License\Features\Subscribers as SubscribersFeature;
 use MailPoet\WooCommerce\Helper as WooCommerceHelper;
+use MailPoet\WooCommerce\Subscription;
 use MailPoet\WP\Functions as WPFunctions;
 use MailPoet\WPCOM\DotcomHelperFunctions;
 use MailPoetVendor\Carbon\Carbon;
@@ -188,6 +190,7 @@ class Reporter {
       'Number of lists' => isset($segments['default']) ? (int)$segments['default'] : 0,
       'Number of subscriber tags' => $this->tagRepository->countBy([]),
       'Stop sending to inactive subscribers' => $inactiveSubscribersStatus,
+      'CAPTCHA setting' => $this->settings->get(CaptchaConstants::TYPE_SETTING_NAME, '') ?: 'disabled',
       'Plugin > MailPoet Premium' => $this->wp->isPluginActive('mailpoet-premium/mailpoet-premium.php'),
       'Plugin > bounce add-on' => $this->wp->isPluginActive('mailpoet-bounce-handler/mailpoet-bounce-handler.php'),
       'Plugin > Bloom' => $this->wp->isPluginActive('bloom-for-publishers/bloom.php'),
@@ -276,7 +279,8 @@ class Reporter {
     if ($hasWc) {
       $result['WooCommerce version'] = $woocommerce->version;
       $result['Number of WooCommerce subscribers'] = isset($segments['woocommerce_users']) ? (int)$segments['woocommerce_users'] : 0;
-      $result['WooCommerce: opt-in on checkout is active'] = $this->settings->get('woocommerce.optin_on_checkout.enabled') ?: false;
+      $result['WooCommerce: opt-in on checkout is active'] = $this->settings->get(Subscription::OPTIN_ENABLED_SETTING_NAME) ?: false;
+      $result['WooCommerce: opt-in on checkout position'] = $this->settings->get(Subscription::OPTIN_POSITION_SETTING_NAME) ?: '';
       $result['WooCommerce: set old customers as subscribed'] = $this->settings->get('mailpoet_subscribe_old_woocommerce_customers.enabled') ?: false;
       $result['WooCommerce email customizer is active'] = $this->settings->get('woocommerce.use_mailpoet_editor') ?: false;
 

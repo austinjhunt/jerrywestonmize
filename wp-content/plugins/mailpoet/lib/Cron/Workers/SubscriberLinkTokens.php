@@ -9,8 +9,8 @@ use MailPoet\DI\ContainerWrapper;
 use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Subscribers\SubscribersRepository;
-use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Carbon\Carbon;
+use MailPoetVendor\Doctrine\DBAL\ParameterType;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 
 if (!defined('ABSPATH')) exit;
@@ -34,7 +34,7 @@ class SubscriberLinkTokens extends SimpleWorker {
       $connection->executeStatement(
         "UPDATE {$subscribersTable} SET link_token = SUBSTRING(MD5(CONCAT(:authKey, email)), 1, :tokenLength) WHERE link_token IS NULL LIMIT :limit",
         ['authKey' => $authKey, 'tokenLength' => SubscriberEntity::OBSOLETE_LINK_TOKEN_LENGTH, 'limit' => self::BATCH_SIZE],
-        ['authKey' => \PDO::PARAM_STR, 'tokenLength' => \PDO::PARAM_INT, 'limit' => \PDO::PARAM_INT]
+        ['authKey' => ParameterType::STRING, 'tokenLength' => ParameterType::INTEGER, 'limit' => ParameterType::INTEGER]
       );
 
       $this->schedule();
@@ -43,7 +43,6 @@ class SubscriberLinkTokens extends SimpleWorker {
   }
 
   public function getNextRunDate() {
-    $wp = new WPFunctions();
-    return Carbon::createFromTimestamp($wp->currentTime('timestamp'));
+    return Carbon::now()->millisecond(0);
   }
 }

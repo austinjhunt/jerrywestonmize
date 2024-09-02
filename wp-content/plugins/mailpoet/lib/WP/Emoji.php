@@ -5,6 +5,9 @@ namespace MailPoet\WP;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\DI\ContainerWrapper;
+use MailPoet\Form\FormsRepository;
+use MailPoet\Newsletter\Sending\SendingQueuesRepository;
 use MailPoet\WP\Functions as WPFunctions;
 
 class Emoji {
@@ -35,14 +38,16 @@ class Emoji {
   }
 
   public function sanitizeEmojisInFormBody(array $body): array {
+    $formsTableName = ContainerWrapper::getInstance()->get(FormsRepository::class)->getTableName();
     $bodyJson = json_encode($body, JSON_UNESCAPED_UNICODE);
-    $fixedJson = $this->encodeForUTF8Column(MP_FORMS_TABLE, 'body', $bodyJson);
+    $fixedJson = $this->encodeForUTF8Column($formsTableName, 'body', $bodyJson);
     return json_decode($fixedJson, true);
   }
 
   private function encodeRenderedBodyForUTF8Column($value) {
+    $sendingQueuesTableName = ContainerWrapper::getInstance()->get(SendingQueuesRepository::class)->getTableName();
     return $this->encodeForUTF8Column(
-      MP_SENDING_QUEUES_TABLE,
+      $sendingQueuesTableName,
       'newsletter_rendered_body',
       $value
     );

@@ -5,7 +5,7 @@ use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
 use MailPoetVendor\Twig\Node\Expression\AbstractExpression;
 use MailPoetVendor\Twig\Node\Expression\AssignNameExpression;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class ForNode extends Node
 {
  private $loop;

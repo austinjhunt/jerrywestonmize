@@ -6,7 +6,6 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\Settings\SettingsController;
-use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Carbon\Carbon;
 
 class Installation {
@@ -15,15 +14,10 @@ class Installation {
   /** @var SettingsController */
   private $settings;
 
-  /** @var WPFunctions */
-  private $wp;
-
   public function __construct(
-    SettingsController $settings,
-    WPFunctions $wp
+    SettingsController $settings
   ) {
     $this->settings = $settings;
-    $this->wp = $wp;
   }
 
   public function isNewInstallation() {
@@ -32,7 +26,7 @@ class Installation {
       return true;
     }
     $installedAt = Carbon::createFromTimestamp(strtotime($installedAt));
-    $currentTime = Carbon::createFromTimestamp($this->wp->currentTime('timestamp'));
+    $currentTime = Carbon::now()->millisecond(0);
     return $currentTime->diffInDays($installedAt) <= self::NEW_INSTALLATION_DAYS_LIMIT;
   }
 }

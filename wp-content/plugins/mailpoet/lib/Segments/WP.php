@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\Config\SubscriberChangesNotifier;
 use MailPoet\DI\ContainerWrapper;
+use MailPoet\Doctrine\WPDB\Connection;
 use MailPoet\Entities\SegmentEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Entities\SubscriberSegmentEntity;
@@ -162,7 +163,7 @@ class WP {
     // When WP Segment is disabled force trashed state and unconfirmed status for new WPUsers without active segment
     // or who are not WooCommerce customers at the same time since customers are added to the WooCommerce list
     if ($addingNewUserToDisabledWPSegment && !$otherActiveSegments && !$isWooCustomer) {
-      $data['deleted_at'] = Carbon::createFromTimestamp($this->wp->currentTime('timestamp'));
+      $data['deleted_at'] = Carbon::now()->millisecond(0);
       $data['status'] = SubscriberEntity::STATUS_UNCONFIRMED;
     }
 
@@ -249,6 +250,12 @@ class WP {
   }
 
   public function synchronizeUsers(): bool {
+    // Temporarily skip synchronization in WP Playground.
+    // Some of the queries are not yet supported by the SQLite integration.
+    if (Connection::isSQLite()) {
+      return true;
+    }
+
     // Save timestamp about changes and update before insert
     $this->subscriberChangesNotifier->subscribersBatchCreate();
     $this->subscriberChangesNotifier->subscribersBatchUpdate();
@@ -276,7 +283,7 @@ class WP {
       return $item['id'];
     },
     array_filter($updatedEmails, function($updatedEmail) {
-      return !$this->validator->validateEmail($updatedEmail['email']);
+      return !$this->validator->validateEmail($updatedEmail['email']) && $updatedEmail['id'] !== null;
     }));
     if (!$invalidWpUserIds) {
       return;

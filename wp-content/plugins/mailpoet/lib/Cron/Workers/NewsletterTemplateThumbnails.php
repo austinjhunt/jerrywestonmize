@@ -7,7 +7,6 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\NewsletterTemplates\ThumbnailSaver;
-use MailPoet\WP\Functions as WPFunctions;
 
 class NewsletterTemplateThumbnails extends SimpleWorker {
   const TASK_TYPE = 'newsletter_templates_thumbnails';
@@ -18,10 +17,9 @@ class NewsletterTemplateThumbnails extends SimpleWorker {
   private $thumbnailSaver;
 
   public function __construct(
-    ThumbnailSaver $thumbnailSaver,
-    WPFunctions $wp
+    ThumbnailSaver $thumbnailSaver
   ) {
-    parent::__construct($wp);
+    parent::__construct();
     $this->thumbnailSaver = $thumbnailSaver;
   }
 

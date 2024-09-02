@@ -3,7 +3,7 @@ namespace MailPoetVendor\Twig\Node;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class BlockNode extends Node
 {
  public function __construct(string $name, Node $body, int $lineno, ?string $tag = null)

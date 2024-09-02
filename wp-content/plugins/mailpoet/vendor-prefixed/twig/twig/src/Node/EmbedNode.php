@@ -5,7 +5,7 @@ use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
 use MailPoetVendor\Twig\Node\Expression\AbstractExpression;
 use MailPoetVendor\Twig\Node\Expression\ConstantExpression;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class EmbedNode extends IncludeNode
 {
  // we don't inject the module to avoid node visitors to traverse it twice (as it will be already visited in the main module)

@@ -2830,7 +2830,7 @@ function forminator_allowed_mime_types( $mimes = array(), $allow = true ) {
 	}
 	if ( ! $allow ) {
 		$filters = array( 'htm|html', 'js', 'jse', 'jar', 'php', 'php3', 'php4', 'php5', 'phtml', 'svg', 'swf', 'exe', 'html', 'htm', 'shtml', 'xhtml', 'xml', 'css', 'asp', 'aspx', 'jsp', 'sql', 'hta', 'dll', 'bat', 'com', 'sh', 'bash', 'py', 'pl', 'dfxp' );
-		foreach ( $mimes as $mime_key ) {
+		foreach ( array_keys( $mimes ) as $mime_key ) {
 			$key = strtolower( $mime_key );
 			if ( in_array( $key, $filters, true ) ) {
 				unset( $mimes[ $mime_key ] );

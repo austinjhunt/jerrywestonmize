@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
 use MailPoetVendor\Twig\Node\Expression\AbstractExpression;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class PrintNode extends Node implements NodeOutputInterface
 {
  public function __construct(AbstractExpression $expr, int $lineno, ?string $tag = null)

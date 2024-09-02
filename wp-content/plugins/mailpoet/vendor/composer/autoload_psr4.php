@@ -4,8 +4,9 @@ if (!defined('ABSPATH')) exit;
 $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 return array(
+ 'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
  'MailPoet\\' => array($baseDir . '/lib'),
  'MailPoetVendor\\' => array($baseDir . '/vendor-prefixed'),
  'MailPoetGenerated\\' => array($baseDir . '/generated'),
- 'Cron\\' => array($vendorDir . '/mtdowling/cron-expression/src/Cron'),
+ 'Cron\\' => array($vendorDir . '/dragonmantank/cron-expression/src/Cron'),
 );

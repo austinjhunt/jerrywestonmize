@@ -22,6 +22,7 @@ class Subscription {
   const OPTIN_ENABLED_SETTING_NAME = 'woocommerce.optin_on_checkout.enabled';
   const OPTIN_SEGMENTS_SETTING_NAME = 'woocommerce.optin_on_checkout.segments';
   const OPTIN_MESSAGE_SETTING_NAME = 'woocommerce.optin_on_checkout.message';
+  const OPTIN_POSITION_SETTING_NAME = 'woocommerce.optin_on_checkout.position';
 
   private $allowedHtml = [
     'input' => [
@@ -87,7 +88,6 @@ class Subscription {
   }
 
   public function extendWooCommerceCheckoutForm() {
-    $this->hideAutomateWooOptinCheckbox();
     $inputName = self::CHECKOUT_OPTIN_INPUT_NAME;
     $checked = false;
     if (!empty($_POST[self::CHECKOUT_OPTIN_INPUT_NAME])) {
@@ -214,7 +214,7 @@ class Subscription {
     }
   }
 
-  private function hideAutomateWooOptinCheckbox(): void {
+  public function hideAutomateWooOptinCheckbox(): void {
     if (!$this->wp->isPluginActive('automatewoo/automatewoo.php')) {
       return;
     }

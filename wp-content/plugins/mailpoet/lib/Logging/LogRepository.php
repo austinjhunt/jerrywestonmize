@@ -10,25 +10,13 @@ use MailPoet\Entities\LogEntity;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\InvalidStateException;
 use MailPoet\Util\Helpers;
-use MailPoet\WP\Functions;
 use MailPoetVendor\Carbon\Carbon;
-use MailPoetVendor\Doctrine\ORM\EntityManager;
+use MailPoetVendor\Doctrine\DBAL\ParameterType;
 
 /**
  * @extends Repository<LogEntity>
  */
 class LogRepository extends Repository {
-  /** @var Functions */
-  private $wp;
-
-  public function __construct(
-    EntityManager $entityManager,
-    Functions $wp
-  ) {
-    parent::__construct($entityManager);
-    $this->wp = $wp;
-  }
-
   public function saveLog(LogEntity $log): void {
     // Save log entity using DBAL to avoid calling "flush()" on the entity manager.
     // Calling "flush()" can have unintended side effects, such as saving unwanted
@@ -42,7 +30,7 @@ class LogRepository extends Repository {
         'raw_message' => $log->getRawMessage(),
         'context' => json_encode($log->getContext()),
         'created_at' => (
-          $log->getCreatedAt() ?? Carbon::createFromTimestamp($this->wp->currentTime('timestamp'))
+          $log->getCreatedAt() ?? Carbon::now()->millisecond(0)
         )->format('Y-m-d H:i:s'),
       ],
     );
@@ -118,8 +106,8 @@ class LogRepository extends Repository {
       'limit' => $limit,
       ],
       [
-      'date' => \PDO::PARAM_STR,
-      'limit' => \PDO::PARAM_INT,
+      'date' => ParameterType::STRING,
+      'limit' => ParameterType::INTEGER,
       ]
     );
   }

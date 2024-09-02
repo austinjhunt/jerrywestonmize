@@ -143,6 +143,14 @@ class Functions {
     return current_time($type, $gmt);
   }
 
+  public function currentDatetime() {
+    return current_datetime();
+  }
+
+  public function wpTimezoneString() {
+    return wp_timezone_string();
+  }
+
   public function currentUserCan($capability) {
     return current_user_can($capability);
   }

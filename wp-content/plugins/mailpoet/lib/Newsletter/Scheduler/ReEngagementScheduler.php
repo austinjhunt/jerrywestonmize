@@ -16,7 +16,6 @@ use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Entities\SubscriberSegmentEntity;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Newsletter\Sending\ScheduledTasksRepository;
-use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Carbon\Carbon;
 use MailPoetVendor\Doctrine\DBAL\ParameterType;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
@@ -32,19 +31,14 @@ class ReEngagementScheduler {
   /** @var EntityManager */
   private $entityManager;
 
-  /** @var WPFunctions */
-  private $wp;
-
   public function __construct(
     NewslettersRepository $newslettersRepository,
     ScheduledTasksRepository $scheduledTasksRepository,
-    EntityManager $entityManager,
-    WPFunctions $wp
+    EntityManager $entityManager
   ) {
     $this->newslettersRepository = $newslettersRepository;
     $this->scheduledTasksRepository = $scheduledTasksRepository;
     $this->entityManager = $entityManager;
-    $this->wp = $wp;
   }
 
   /**
@@ -98,7 +92,7 @@ class ReEngagementScheduler {
     // Scheduled task
     $scheduledTask = new ScheduledTaskEntity();
     $scheduledTask->setStatus(ScheduledTaskEntity::STATUS_SCHEDULED);
-    $scheduledTask->setScheduledAt(Carbon::createFromTimestamp($this->wp->currentTime('timestamp')));
+    $scheduledTask->setScheduledAt(Carbon::now()->millisecond(0));
     $scheduledTask->setType(SendingQueue::TASK_TYPE);
     $scheduledTask->setPriority(SendingQueueEntity::PRIORITY_MEDIUM);
     $this->scheduledTasksRepository->persist($scheduledTask);
@@ -124,7 +118,7 @@ class ReEngagementScheduler {
    */
   private function enqueueSubscribersForSegment(int $newsletterId, int $segmentId, ScheduledTaskEntity $scheduledTask, string $intervalUnit, int $intervalValue): int {
     // Parameters for scheduled task subscribers query
-    $thresholdDate = Carbon::createFromTimestamp($this->wp->currentTime('timestamp'));
+    $thresholdDate = Carbon::now()->millisecond(0);
     if ($intervalUnit === 'months') {
       $thresholdDate->subMonths($intervalValue);
     } else {
@@ -133,7 +127,7 @@ class ReEngagementScheduler {
     $thresholdDateSql = $thresholdDate->toDateTimeString();
     // When checking engagement, we ignore emails that subscribers received in the last 24 hours so that we leave them some time to engage.
     // This is prevention for sending re-engagement emails to subscribers who have received a single email very recently.
-    $upperThresholdDate = Carbon::createFromTimestamp($this->wp->currentTime('timestamp'));
+    $upperThresholdDate = Carbon::now()->millisecond(0);
     $upperThresholdDate->subDay();
     $upperThresholdDate = $upperThresholdDate->toDateTimeString();
     $taskId = $scheduledTask->getId();
@@ -142,7 +136,7 @@ class ReEngagementScheduler {
     $scheduledTaskSubscribersTable = $this->entityManager->getClassMetadata(ScheduledTaskSubscriberEntity::class)->getTableName();
     $subscriberSegmentTable = $this->entityManager->getClassMetadata(SubscriberSegmentEntity::class)->getTableName();
     $subscribersTable = $this->entityManager->getClassMetadata(SubscriberEntity::class)->getTableName();
-    $nowSql = Carbon::createFromTimestamp($this->wp->currentTime('timestamp'))->toDateTimeString();
+    $nowSql = Carbon::now()->millisecond(0)->toDateTimeString();
 
     $query = "INSERT IGNORE INTO $scheduledTaskSubscribersTable
       (subscriber_id, task_id,  processed, created_at)
@@ -164,13 +158,13 @@ class ReEngagementScheduler {
     ";
 
     $statement = $this->entityManager->getConnection()->prepare($query);
-    $statement->bindParam('now', $nowSql, ParameterType::STRING);
-    $statement->bindParam('taskId', $taskId, ParameterType::INTEGER);
-    $statement->bindParam('subscribed', $subscribedStatus, ParameterType::STRING);
-    $statement->bindParam('thresholdDate', $thresholdDateSql, ParameterType::STRING);
-    $statement->bindParam('upperThresholdDate', $upperThresholdDate, ParameterType::STRING);
-    $statement->bindParam('newsletterId', $newsletterId, ParameterType::INTEGER);
-    $statement->bindParam('segmentId', $segmentId, ParameterType::INTEGER);
+    $statement->bindValue('now', $nowSql, ParameterType::STRING);
+    $statement->bindValue('taskId', $taskId, ParameterType::INTEGER);
+    $statement->bindValue('subscribed', $subscribedStatus, ParameterType::STRING);
+    $statement->bindValue('thresholdDate', $thresholdDateSql, ParameterType::STRING);
+    $statement->bindValue('upperThresholdDate', $upperThresholdDate, ParameterType::STRING);
+    $statement->bindValue('newsletterId', $newsletterId, ParameterType::INTEGER);
+    $statement->bindValue('segmentId', $segmentId, ParameterType::INTEGER);
 
     $result = $statement->executeQuery();
     return $result->rowCount();

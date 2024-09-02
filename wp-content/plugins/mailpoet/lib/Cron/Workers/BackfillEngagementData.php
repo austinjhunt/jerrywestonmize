@@ -7,7 +7,6 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Subscribers\EngagementDataBackfiller;
-use MailPoet\WP\Functions as WPFunctions;
 
 class BackfillEngagementData extends SimpleWorker {
   const TASK_TYPE = 'backfill_engagement_data';
@@ -19,10 +18,9 @@ class BackfillEngagementData extends SimpleWorker {
   private $engagementDataBackfiller;
 
   public function __construct(
-    EngagementDataBackfiller $engagementDataBackfiller,
-    WPFunctions $wp
+    EngagementDataBackfiller $engagementDataBackfiller
   ) {
-    parent::__construct($wp);
+    parent::__construct();
     $this->engagementDataBackfiller = $engagementDataBackfiller;
   }
 

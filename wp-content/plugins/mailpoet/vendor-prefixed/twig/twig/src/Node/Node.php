@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
 use MailPoetVendor\Twig\Source;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class Node implements \Countable, \IteratorAggregate
 {
  protected $nodes;

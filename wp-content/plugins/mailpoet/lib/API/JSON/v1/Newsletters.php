@@ -229,7 +229,7 @@ class Newsletters extends APIEndpoint {
         $task = $queue->getTask();
         if (
           $task &&
-          $task->getScheduledAt() <= Carbon::createFromTimestamp($this->wp->currentTime('timestamp')) &&
+          $task->getScheduledAt() <= Carbon::now()->millisecond(0) &&
           $task->getStatus() === SendingQueueEntity::STATUS_SCHEDULED
         ) {
           $nextRunDate = $nextRunDate ? Carbon::createFromFormat('Y-m-d H:i:s', $nextRunDate) : null;
@@ -326,8 +326,9 @@ class Newsletters extends APIEndpoint {
       ]);
     }
 
+    $newslettersTableName = $this->newslettersRepository->getTableName();
     $newsletter->setBody(
-      json_decode($this->emoji->encodeForUTF8Column(MP_NEWSLETTERS_TABLE, 'body', $data['body']), true)
+      json_decode($this->emoji->encodeForUTF8Column($newslettersTableName, 'body', $data['body']), true)
     );
     $this->newslettersRepository->flush();
 

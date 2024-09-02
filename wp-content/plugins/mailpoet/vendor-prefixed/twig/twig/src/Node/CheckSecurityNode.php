@@ -3,7 +3,7 @@ namespace MailPoetVendor\Twig\Node;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class CheckSecurityNode extends Node
 {
  private $usedFilters;

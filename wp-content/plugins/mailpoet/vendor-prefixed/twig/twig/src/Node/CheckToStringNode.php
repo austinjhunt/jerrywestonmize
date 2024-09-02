@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Attribute\YieldReady;
 use MailPoetVendor\Twig\Compiler;
 use MailPoetVendor\Twig\Node\Expression\AbstractExpression;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 class CheckToStringNode extends AbstractExpression
 {
  public function __construct(AbstractExpression $expr)

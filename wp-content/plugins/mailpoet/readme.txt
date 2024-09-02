@@ -3,7 +3,7 @@ Contributors: mailpoet, woocommerce, automattic
 Tags: email marketing, post notification, woocommerce emails, email automation, newsletter
 Requires at least: 6.5
 Tested up to: 6.6
-Stable tag: 4.58.0
+Stable tag: 5.0.2
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -138,6 +138,7 @@ Please note:
 * Persian
 * Polish
 * Romanian
+* Ukrainian
 
 We welcome experienced translators to translate directly on [our Transifex project](https://www.transifex.com/wysija/mp3/). Please note that any translations submitted via the "Translating WordPress" website will not work.
 
@@ -229,11 +230,9 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 
 == Changelog ==
 
-= 4.58.0 - 2024-07-30 =
-* Added: Method to update a subscriber to our public API;
-* Improved: more styling options of WooCommerce transactional emails;
-* Changed: revert change from 4.56.0 that introduced new detection of shortcodes in post notifications;
-* Fixed: automation is marked as failed when if/else branch is empty;
-* Fixed: too narrow automation action selector on mobile devices.
+= 5.0.2 - 2024-08-26 =
+* Added: Ukrainian translations;
+* Improved: error messages in automations;
+* Changed: human and machine opens are merged by default, old behavior can be restored in settings.
 
 [See the changelog for all versions.](https://github.com/mailpoet/mailpoet/blob/trunk/mailpoet/CHANGELOG.md)

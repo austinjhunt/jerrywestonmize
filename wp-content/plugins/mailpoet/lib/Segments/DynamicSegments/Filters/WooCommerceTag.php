@@ -9,7 +9,7 @@ use MailPoet\Entities\DynamicSegmentFilterData;
 use MailPoet\Entities\DynamicSegmentFilterEntity;
 use MailPoet\Segments\DynamicSegments\Exceptions\InvalidFilterException;
 use MailPoet\WP\Functions as WPFunctions;
-use MailPoetVendor\Doctrine\DBAL\Connection;
+use MailPoetVendor\Doctrine\DBAL\ArrayParameterType;
 use MailPoetVendor\Doctrine\DBAL\Query\QueryBuilder;
 use WP_Term;
 
@@ -72,7 +72,7 @@ class WooCommerceTag implements Filter {
       AND
       term_taxonomy.term_id IN (:$tagIdsParam)"
     );
-    $queryBuilder->setParameter($tagIdsParam, $filterData->getArrayParam('tag_ids'), Connection::PARAM_STR_ARRAY);
+    $queryBuilder->setParameter($tagIdsParam, $filterData->getArrayParam('tag_ids'), ArrayParameterType::STRING);
   }
 
   private function applyProductJoin(QueryBuilder $queryBuilder, string $orderStatsAlias, string $productAlias = 'product'): string {

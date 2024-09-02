@@ -20,7 +20,6 @@ use MailPoet\Logging\LoggerFactory;
 use MailPoet\Util\Helpers;
 use MailPoetVendor\Carbon\Carbon;
 use MailPoetVendor\Doctrine\DBAL\ArrayParameterType;
-use MailPoetVendor\Doctrine\DBAL\Connection;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 use MailPoetVendor\Doctrine\ORM\Query\Expr\Join;
 
@@ -307,14 +306,14 @@ class NewslettersRepository extends Repository {
        JOIN $sendingQueueTable q ON t.`id` = q.`task_id`
        SET t.`deleted_at` = NOW()
        WHERE q.`newsletter_id` IN (:ids)
-    ", ['ids' => $ids], ['ids' => Connection::PARAM_INT_ARRAY]);
+    ", ['ids' => $ids], ['ids' => ArrayParameterType::INTEGER]);
 
     // Trash sending queues
     $this->entityManager->getConnection()->executeStatement("
        UPDATE $sendingQueueTable q
        SET q.`deleted_at` = NOW()
        WHERE q.`newsletter_id` IN (:ids)
-    ", ['ids' => $ids], ['ids' => Connection::PARAM_INT_ARRAY]);
+    ", ['ids' => $ids], ['ids' => ArrayParameterType::INTEGER]);
 
     // Trash CPT.
     $wpPostIds = $this->getWpPostIds($ids);
@@ -353,7 +352,7 @@ class NewslettersRepository extends Repository {
       'ids' => $ids,
       'pausedStatus' => ScheduledTaskEntity::STATUS_PAUSED,
     ], [
-      'ids' => Connection::PARAM_INT_ARRAY,
+      'ids' => ArrayParameterType::INTEGER,
     ]);
 
     // Restore sending queues
@@ -361,7 +360,7 @@ class NewslettersRepository extends Repository {
        UPDATE $sendingQueueTable q
        SET q.`deleted_at` = null
        WHERE q.`newsletter_id` IN (:ids)
-    ", ['ids' => $ids], ['ids' => Connection::PARAM_INT_ARRAY]);
+    ", ['ids' => $ids], ['ids' => ArrayParameterType::INTEGER]);
 
     // Untrash CPT.
     $wpPostIds = $this->getWpPostIds($ids);

@@ -17,11 +17,26 @@ use MailPoet\Subscription\Form;
 use MailPoet\Subscription\Manage;
 use MailPoet\Subscription\Registration;
 use MailPoet\WooCommerce\Integrations\AutomateWooHooks;
+use MailPoet\WooCommerce\Subscription;
 use MailPoet\WooCommerce\WooSystemInfoController;
 use MailPoet\WP\Functions as WPFunctions;
 use MailPoet\WPCOM\DotcomLicenseProvisioner;
 
 class Hooks {
+  const OPTIN_POSITION_AFTER_BILLING_INFO = 'after_billing_info';
+  const OPTIN_POSITION_AFTER_ORDER_NOTES = 'after_order_notes';
+  const OPTIN_POSITION_AFTER_TERMS_AND_CONDITIONS = 'after_terms_and_conditions';
+  const OPTIN_POSITION_BEFORE_PAYMENT_METHODS = 'before_payment_methods';
+  const OPTIN_POSITION_BEFORE_TERMS_AND_CONDITIONS = 'before_terms_and_conditions';
+  const DEFAULT_OPTIN_POSITION = self::OPTIN_POSITION_AFTER_BILLING_INFO;
+  const OPTIN_HOOKS = [
+    self::OPTIN_POSITION_AFTER_BILLING_INFO => 'woocommerce_after_checkout_billing_form',
+    self::OPTIN_POSITION_AFTER_ORDER_NOTES => 'woocommerce_after_order_notes',
+    self::OPTIN_POSITION_AFTER_TERMS_AND_CONDITIONS => 'woocommerce_checkout_after_terms_and_conditions',
+    self::OPTIN_POSITION_BEFORE_PAYMENT_METHODS => 'woocommerce_review_order_before_payment',
+    self::OPTIN_POSITION_BEFORE_TERMS_AND_CONDITIONS => 'woocommerce_checkout_before_terms_and_conditions',
+  ];
+
   /** @var Form */
   private $subscriptionForm;
 
@@ -265,12 +280,21 @@ class Hooks {
   }
 
   public function setupWooCommerceSubscriptionEvents() {
-    $woocommerce = $this->settings->get('woocommerce', []);
+    $optInEnabled = (bool)$this->settings->get(Subscription::OPTIN_ENABLED_SETTING_NAME, false);
     // WooCommerce: subscribe on checkout
-    if (!empty($woocommerce['optin_on_checkout']['enabled'])) {
+    if ($optInEnabled) {
+      $optInPosition = $this->settings->get(Subscription::OPTIN_POSITION_SETTING_NAME, self::DEFAULT_OPTIN_POSITION);
+      $optInHook = self::OPTIN_HOOKS[$optInPosition] ?? self::OPTIN_HOOKS[self::DEFAULT_OPTIN_POSITION];
       $this->wp->addAction(
-        'woocommerce_checkout_before_terms_and_conditions',
+        $optInHook,
         [$this->hooksWooCommerce, 'extendWooCommerceCheckoutForm']
+      );
+
+      $this->wp->addAction(
+        'woocommerce_checkout_after_terms_and_conditions',
+        [$this->hooksWooCommerce, 'hideAutomateWooOptinCheckbox'],
+        5,
+        0
       );
     }
 

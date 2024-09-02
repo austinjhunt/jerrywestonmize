@@ -6,7 +6,7 @@ use MailPoetVendor\Twig\Compiler;
 use MailPoetVendor\Twig\Node\Expression\AbstractExpression;
 use MailPoetVendor\Twig\Node\Expression\ConstantExpression;
 use MailPoetVendor\Twig\Source;
-#[\Twig\Attribute\YieldReady]
+#[YieldReady]
 final class ModuleNode extends Node
 {
  public function __construct(Node $body, ?AbstractExpression $parent, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)

@@ -5,13 +5,14 @@ namespace MailPoet\Migrations\App;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Doctrine\WPDB\Connection;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Entities\ScheduledTaskSubscriberEntity;
 use MailPoet\Entities\SendingQueueEntity;
 use MailPoet\Entities\StatisticsNewsletterEntity;
 use MailPoet\Migrator\AppMigration;
-use MailPoetVendor\Doctrine\DBAL\Connection;
+use MailPoetVendor\Doctrine\DBAL\ArrayParameterType;
 
 /**
  * We've had a set of bugs where campaign type newsletters (see NewsletterEntity::CAMPAIGN_TYPES),
@@ -103,6 +104,12 @@ class Migration_20240207_105912_App extends AppMigration {
     $scheduledTasksTable = $this->entityManager->getClassMetadata(ScheduledTaskEntity::class)->getTableName();
     $scheduledTaskSubscribersTable = $this->entityManager->getClassMetadata(ScheduledTaskSubscriberEntity::class)->getTableName();
     $sendingQueuesTable = $this->entityManager->getClassMetadata(SendingQueueEntity::class)->getTableName();
+
+    // Temporarily skip the query in WP Playground.
+    // UPDATE with JOIN is not yet supported by the SQLite integration.
+    if (Connection::isSQLite()) {
+      return;
+    }
     $this->entityManager->getConnection()->executeStatement(
       "
         UPDATE $newslettersTable n
@@ -122,7 +129,7 @@ class Migration_20240207_105912_App extends AppMigration {
         WHERE t.id IN (:ids)
       ",
       ['sent' => NewsletterEntity::STATUS_SENT, 'ids' => $ids],
-      ['ids' => Connection::PARAM_INT_ARRAY]
+      ['ids' => ArrayParameterType::INTEGER]
     );
   }
 
@@ -169,6 +176,12 @@ class Migration_20240207_105912_App extends AppMigration {
     $scheduledTasksTable = $this->entityManager->getClassMetadata(ScheduledTaskEntity::class)->getTableName();
     $scheduledTaskSubscribersTable = $this->entityManager->getClassMetadata(ScheduledTaskSubscriberEntity::class)->getTableName();
     $sendingQueuesTable = $this->entityManager->getClassMetadata(SendingQueueEntity::class)->getTableName();
+
+    // Temporarily skip the query in WP Playground.
+    // UPDATE with JOIN is not yet supported by the SQLite integration.
+    if (Connection::isSQLite()) {
+      return;
+    }
     $this->entityManager->getConnection()->executeStatement(
       "
         UPDATE $newslettersTable n
@@ -186,7 +199,7 @@ class Migration_20240207_105912_App extends AppMigration {
         WHERE q.newsletter_id IN (:ids)
       ",
       ['ids' => $ids],
-      ['ids' => Connection::PARAM_INT_ARRAY]
+      ['ids' => ArrayParameterType::INTEGER]
     );
   }
 }

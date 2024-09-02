@@ -11,7 +11,7 @@ use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Util\DBCollationChecker;
 use MailPoet\Util\Security;
 use MailPoet\WooCommerce\Helper as WooCommerceHelper;
-use MailPoetVendor\Doctrine\DBAL\Connection;
+use MailPoetVendor\Doctrine\DBAL\ArrayParameterType;
 use MailPoetVendor\Doctrine\DBAL\Query\QueryBuilder;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 
@@ -53,7 +53,7 @@ class WooCommerceSubscription implements Filter {
         ->andWhere("itemmeta.meta_value IN (:products" . $parameterSuffix . ")")
         ->groupBy("$subscribersTable.id")
         ->having("COUNT($subscribersTable.id) = :count$parameterSuffix")
-        ->setParameter('products' . $parameterSuffix, $productIds, Connection::PARAM_STR_ARRAY)
+        ->setParameter('products' . $parameterSuffix, $productIds, ArrayParameterType::STRING)
         ->setParameter('count' . $parameterSuffix, count($productIds));
     }
 
@@ -69,7 +69,7 @@ class WooCommerceSubscription implements Filter {
       $subQueryBuilder
         ->andWhere("itemmeta.meta_value IN (:products" . $parameterSuffix . ")");
       return $queryBuilder->where("{$subscribersTable}.id NOT IN ({$subQueryBuilder->getSQL()})")
-        ->setParameter('products' . $parameterSuffix, $productIds, Connection::PARAM_STR_ARRAY);
+        ->setParameter('products' . $parameterSuffix, $productIds, ArrayParameterType::STRING);
     }
 
     // ANY
@@ -78,7 +78,7 @@ class WooCommerceSubscription implements Filter {
     $this->applyOrderItemmetaJoin($queryBuilder);
     return $queryBuilder
       ->andWhere("itemmeta.meta_value IN (:products" . $parameterSuffix . ")")
-      ->setParameter('products' . $parameterSuffix, $productIds, Connection::PARAM_STR_ARRAY);
+      ->setParameter('products' . $parameterSuffix, $productIds, ArrayParameterType::STRING);
   }
 
   private function applyPostmetaAndPostJoin(QueryBuilder $queryBuilder): QueryBuilder {
@@ -96,7 +96,7 @@ class WooCommerceSubscription implements Filter {
         $subscribersTable,
         $wpdb->prefix . 'wc_orders',
         'wc_orders',
-        "{$subscribersTable}.email = wc_orders.billing_email $collation AND wc_orders.status IN(\"wc-active\", \"wc-pending-cancel\")"
+        "{$subscribersTable}.email = wc_orders.billing_email $collation AND wc_orders.status IN('wc-active', 'wc-pending-cancel')"
       );
     }
 
@@ -109,7 +109,7 @@ class WooCommerceSubscription implements Filter {
       'postmeta',
       $wpdb->posts,
       'posts',
-      'postmeta.post_id = posts.id AND posts.post_type = "shop_subscription" AND posts.post_status IN("wc-active", "wc-pending-cancel")'
+      "postmeta.post_id = posts.id AND posts.post_type = 'shop_subscription' AND posts.post_status IN('wc-active', 'wc-pending-cancel')"
     );
   }
 
@@ -120,7 +120,7 @@ class WooCommerceSubscription implements Filter {
         'wc_orders',
         $wpdb->prefix . 'woocommerce_order_items',
         'items',
-        'wc_orders.id = items.order_id AND order_item_type = "line_item"'
+        "wc_orders.id = items.order_id AND order_item_type = 'line_item'"
       );
     }
 
@@ -128,7 +128,7 @@ class WooCommerceSubscription implements Filter {
       'postmeta',
       $wpdb->prefix . 'woocommerce_order_items',
       'items',
-      'postmeta.post_id = items.order_id AND order_item_type = "line_item"'
+      "postmeta.post_id = items.order_id AND order_item_type = 'line_item'"
     );
   }
 

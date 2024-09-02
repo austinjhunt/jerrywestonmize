@@ -277,7 +277,7 @@
 				value = $element.val();
 			}
 
-			return value;
+			return this.sanitize_text_field( value );
 		},
 
 		field_has_inputMask: function ( $element ) {
@@ -348,6 +348,19 @@
 			}
 
 			return false;
+		},
+
+		/**
+		 * Sanitize the user input value.
+		 *
+		 * @param {value} value
+		 */
+		sanitize_text_field: function ( value ) {
+			if ( typeof value === 'string' ) {
+				const sanitizedValue = value.replace( /<\/?[^>]+(>|$)/g, '' );
+				return sanitizedValue.trim();
+			}
+			return value;
 		},
 	});
 

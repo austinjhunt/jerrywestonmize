@@ -13,6 +13,7 @@ use MailPoet\Entities\StatisticsWooCommercePurchaseEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Entities\UserAgentEntity;
 use MailPoet\Newsletter\Statistics\WooCommerceRevenue;
+use MailPoet\Settings\TrackingConfig;
 use MailPoet\WooCommerce\Helper as WCHelper;
 use MailPoetVendor\Carbon\Carbon;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
@@ -26,12 +27,17 @@ class SubscriberStatisticsRepository extends Repository {
   /** @var WCHelper */
   private $wcHelper;
 
+  /** @var TrackingConfig */
+  private $trackingConfig;
+
   public function __construct(
     EntityManager $entityManager,
-    WCHelper $wcHelper
+    WCHelper $wcHelper,
+    TrackingConfig $trackingConfig
   ) {
     parent::__construct($entityManager);
     $this->wcHelper = $wcHelper;
+    $this->trackingConfig = $trackingConfig;
   }
 
   protected function getEntityClassName() {
@@ -67,9 +73,13 @@ class SubscriberStatisticsRepository extends Repository {
   }
 
   public function getStatisticsOpenCount(SubscriberEntity $subscriber, ?Carbon $startTime = null): int {
-    return (int)$this->getStatisticsOpenCountQuery($subscriber, $startTime)
-      ->andWhere('(stats.userAgentType = :userAgentType)')
-      ->setParameter('userAgentType', UserAgentEntity::USER_AGENT_TYPE_HUMAN)
+    $queryBuilder = $this->getStatisticsOpenCountQuery($subscriber, $startTime);
+    if ($this->trackingConfig->areOpensSeparated()) {
+      $queryBuilder
+        ->andWhere('(stats.userAgentType = :userAgentType)')
+        ->setParameter('userAgentType', UserAgentEntity::USER_AGENT_TYPE_HUMAN);
+    }
+    return (int)$queryBuilder
       ->getQuery()
       ->getSingleScalarResult();
   }
