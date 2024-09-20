@@ -373,8 +373,15 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                     $eventStart = DateTimeService::getCustomDateTimeObject($event->getStart()->getDateTime());
                     $eventEnd   = DateTimeService::getCustomDateTimeObject($event->getEnd()->getDateTime());
 
+                     
+
                     $eventDateStart = DateTimeService::getCustomDateTimeObject($eventStart->format('Y-m-d') . ' ' . $startDate->format('H:i:s'));
                     $eventDateEnd   = DateTimeService::getCustomDateTimeObject($eventEnd->format('Y-m-d') . ' ' . $startDateEnd->format('H:i:s'));
+
+                    // log start and end 
+                    error_log('Event Start: ' . $eventDateStart->format('Y-m-d H:i:s'));
+                    error_log('Event End: ' . $eventDateEnd->format('Y-m-d H:i:s'));
+
 
                     if ($eventDateEnd <= $eventStart || $eventDateStart >= $eventEnd) {
                         continue;
@@ -529,6 +536,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     private function insertEvent($appointment, $provider, $period = null)
     {
+        error_log('insertEvent');
         $queryParams = ['sendNotifications' => $this->settings['sendEventInvitationEmail']];
 
         /** @var SettingsService $settingsService */
@@ -593,6 +601,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     private function updateEvent($appointment, $provider, $period = null, $providers = null, $providersRemove = null)
     {
+        error_log('updateEvent');
         $event = $this->createEvent($appointment, $provider, $period, $providers, $providersRemove);
 
         $entity = $period ?: $appointment;
@@ -600,6 +609,9 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
             $event = apply_filters('amelia_before_google_calendar_event_updated_filter', $event, $appointment->toArray(), $provider->toArray());
 
             do_action('amelia_before_google_calendar_event_updated', $event, $appointment->toArray(), $provider->toArray());
+
+            error_log('updating event start to value: ' . $event->getStart()->getDateTime());
+            error_log('updating event end to value: ' . $event->getEnd()->getDateTime());
 
             $this->service->events->update(
                 $provider->getGoogleCalendar()->getCalendarId()->getValue(),
@@ -684,6 +696,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     private function createEvent($appointment, $provider, $period = null, $providers = null, $providersRemove = null)
     {
+        error_log('createEvent');
         /** @var LocationRepository $locationRepository */
         $locationRepository = $this->container->get('domain.locations.repository');
 
@@ -715,24 +728,36 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
         $start = $period ? clone $period->getPeriodStart()->getValue() : clone $appointment->getBookingStart()->getValue();
 
         if ($period) {
+            error_log('$period is set');
             $time = (int)$period->getPeriodEnd()->getValue()->format('H')*60 + (int)$period->getPeriodEnd()->getValue()->format('i');
+            error_log('$time: ' . $time);
 
             $end = DateTimeService::getCustomDateTimeObject(
                 $start->format('Y-m-d')
             )->add(new \DateInterval('PT' . $time . 'M'));
+
+            error_log('$end (from $period): ' . $end->format('Y-m-d H:i:s'));
         } else {
             $end = clone $appointment->getBookingEnd()->getValue();
+            error_log('$end (from $appointment): ' . $end->format('Y-m-d H:i:s'));
         }
 
         if ($this->settings['includeBufferTimeGoogleCalendar'] === true && $type === Entities::APPOINTMENT) {
+            error_log('Buffer time is included for Google Calendar');
             $timeBefore = $appointment->getService()->getTimeBefore() ?
                 $appointment->getService()->getTimeBefore()->getValue() : 0;
 
             $timeAfter = $appointment->getService()->getTimeAfter() ?
                 $appointment->getService()->getTimeAfter()->getValue() : 0;
 
+            error_log('Time Before: ' . $timeBefore);
+            error_log('Time After: ' . $timeAfter);
+
             $start->modify('-' . $timeBefore . ' second');
             $end->modify('+' . $timeAfter . ' second');
+
+            error_log('Start with buffer: ' . $start->format('Y-m-d H:i:s'));
+            error_log('End with buffer: ' . $end->format('Y-m-d H:i:s'));
         }
 
         $eventData = [
@@ -764,6 +789,9 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                 $placeholderData
             )
         ];
+
+        error_log('$eventData[start]: ' . json_encode($eventData['start']));
+        error_log('$eventData[end]: ' . json_encode($eventData['end']));
 
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
