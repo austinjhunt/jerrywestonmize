@@ -202,7 +202,10 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      * @throws ContainerException
      */
     public function handleEvent($appointment, $commandSlug)
-    {
+    {   
+        error_log('handleEvent');
+        error_log('handleEvent:appointment start time: ' . $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s'));
+        error_log('handleEvent:appointment end time: ' . $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'));
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
 
@@ -217,8 +220,10 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                 case BookingAddedEventHandler::BOOKING_ADDED:
                     // Add new appointment or update existing one
                     if (!$appointment->getGoogleCalendarEventId()) {
+                        error_log('calling insertEvent; appointment has no Google Calendar Event ID');
                         $this->insertEvent($appointment, $provider);
                     } else {
+                        error_log('calling updateEvent; appointment has Google Calendar Event ID');
                         $this->updateEvent($appointment, $provider);
                     }
 
@@ -537,6 +542,8 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
     private function insertEvent($appointment, $provider, $period = null)
     {
         error_log('insertEvent');
+        error_log('insertEvent:appointment start time: ' . $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s'));
+        error_log('insertEvent:appointment end time: ' . $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'));
         $queryParams = ['sendNotifications' => $this->settings['sendEventInvitationEmail']];
 
         /** @var SettingsService $settingsService */
@@ -602,6 +609,8 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
     private function updateEvent($appointment, $provider, $period = null, $providers = null, $providersRemove = null)
     {
         error_log('updateEvent');
+        error_log('updateEvent:appointment start time: ' . $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s'));
+        error_log('updateEvent:appointment end time: ' . $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'));
         $event = $this->createEvent($appointment, $provider, $period, $providers, $providersRemove);
 
         $entity = $period ?: $appointment;
@@ -697,6 +706,8 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
     private function createEvent($appointment, $provider, $period = null, $providers = null, $providersRemove = null)
     {
         error_log('createEvent');
+        error_log('createEvent:appointment start time: ' . $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s'));
+        error_log('createEvent:appointment end time: ' . $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'));
         /** @var LocationRepository $locationRepository */
         $locationRepository = $this->container->get('domain.locations.repository');
 
@@ -738,6 +749,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
             error_log('$end (from $period): ' . $end->format('Y-m-d H:i:s'));
         } else {
+            error_log('$period is not set');
             $end = clone $appointment->getBookingEnd()->getValue();
             error_log('$end (from $appointment): ' . $end->format('Y-m-d H:i:s'));
         }
