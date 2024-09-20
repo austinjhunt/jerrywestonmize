@@ -38,6 +38,8 @@ class AppointmentFactory
      */
     public static function create($data)
     {
+        error_log('AppointmentFactory::create()::bookingStart: ' . $data['bookingStart']);
+        error_log('AppointmentFactory::create()::bookingEnd: ' . $data['bookingEnd']);
         $appointment = new Appointment(
             new DateTimeValue(DateTimeService::getCustomDateTimeObject($data['bookingStart'])),
             new DateTimeValue(DateTimeService::getCustomDateTimeObject($data['bookingEnd'])),

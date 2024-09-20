@@ -94,6 +94,8 @@ class Appointment extends AbstractBooking
         Id $serviceId,
         Id $providerId
     ) {
+        error_log('Appointment::__construct():: bookingStart: ' . $bookingStart->getValue()->format('Y-m-d H:i:s'));
+        error_log('Appointment::__construct():: bookingEnd: ' . $bookingEnd->getValue()->format('Y-m-d H:i:s'));
         parent::__construct($notifyParticipants);
 
         $this->bookingStart = $bookingStart;
