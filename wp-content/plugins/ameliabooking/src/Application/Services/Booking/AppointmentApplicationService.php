@@ -213,6 +213,13 @@ class AppointmentApplicationService
      */
     public function updateExistingAppointment($appointment, $existingAppointment, $service, $paymentData)
     {
+        error_log('AppointmentApplicationService::updateExistingAppointment()::existing appointment start: ' . $existingAppointment->getBookingStart()->getValue()->format('Y-m-d H:i:s'));
+        error_log('AppointmentApplicationService::updateExistingAppointment()::existing appointment end: ' . $existingAppointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'));
+
+        error_log('AppointmentApplicationService::updateExistingAppointment()::new appointment start: ' . $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s'));
+        error_log('AppointmentApplicationService::updateExistingAppointment()::new appointment end: ' . $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'));
+
+
         $appointment->setId($existingAppointment->getId());
 
         /** @var CustomerBooking $booking */
@@ -248,6 +255,9 @@ class AppointmentApplicationService
      */
     public function add($appointment, $service, $paymentData, $isBackendBooking)
     {
+        error_log('AppointmentApplicationService::add()::appointment start: ' . $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s'));
+        error_log('AppointmentApplicationService::add()::appointment end: ' . $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'));
+
         /** @var AppointmentRepository $appointmentRepository */
         $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
         /** @var CustomerBookingRepository $bookingRepository */
@@ -356,6 +366,12 @@ class AppointmentApplicationService
      */
     public function update($oldAppointment, $newAppointment, $removedBookings, $service, $paymentData)
     {
+        // log the start and end time of the old and new appointments
+        error_log('AppointmentApplicationService::update()::oldAppointment start: ' . $oldAppointment->getBookingStart()->getValue()->format('Y-m-d H:i:s'));
+        error_log('AppointmentApplicationService::update()::oldAppointment end: ' . $oldAppointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'));
+
+        error_log('AppointmentApplicationService::update()::newAppointment start: ' . $newAppointment->getBookingStart()->getValue()->format('Y-m-d H:i:s'));
+        error_log('AppointmentApplicationService::update()::newAppointment end: ' . $newAppointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'));
         /** @var AppointmentRepository $appointmentRepo */
         $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
         /** @var CustomerBookingRepository $bookingRepository */
@@ -590,6 +606,7 @@ class AppointmentApplicationService
      */
     public function getAppointmentLengthTime($appointment, $service)
     {
+        error_log('AppointmentApplicationService::getAppointmentLengthTime()');
         $requiredTime = 0;
 
         /** @var CustomerBooking $booking */
@@ -605,7 +622,8 @@ class AppointmentApplicationService
                 $requiredTime = $bookingDuration;
             }
         }
-
+        
+        error_log('AppointmentApplicationService::getAppointmentLengthTime()::requiredTime: ' . $requiredTime);
         return $requiredTime;
     }
 
@@ -620,6 +638,7 @@ class AppointmentApplicationService
      */
     public function getBookingLengthTime($booking, $service)
     {
+        error_log('AppointmentApplicationService::getBookingLengthTime()');
         $duration = $booking->getDuration() && $booking->getDuration()->getValue()
             ? $booking->getDuration()->getValue() : $service->getDuration()->getValue();
 
@@ -634,6 +653,8 @@ class AppointmentApplicationService
                 }
             }
         }
+
+        error_log('AppointmentApplicationService::getBookingLengthTime()::duration: ' . $duration);
 
         return $duration;
     }
@@ -1253,6 +1274,7 @@ class AppointmentApplicationService
      */
     public function updateBookingStatus($paymentId, $newStatus = BookingStatus::APPROVED)
     {
+        error_log('AppointmentApplicationService::updateBookingStatus():newStatus: ' . $newStatus);
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
 
