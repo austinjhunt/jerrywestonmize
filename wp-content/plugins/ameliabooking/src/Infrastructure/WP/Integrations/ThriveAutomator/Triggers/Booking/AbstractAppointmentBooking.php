@@ -74,6 +74,8 @@ abstract class AbstractAppointmentBooking extends Trigger
 
     public function process_params($params = [])
     {
+        error_log('AbstractAppointmentBooking::process_params');
+        
         $dataObjects = [];
 
         $appointmentData = !empty($params[0]) ? $params[0] : [];
@@ -86,6 +88,15 @@ abstract class AbstractAppointmentBooking extends Trigger
             $dataObjects[Email_Data::get_id()] = new $dataObjectClasses[Email_Data::get_id()](
                 $bookingData['customer']['email']
             );
+            // log start and end 
+            // service name 
+
+            error_log('AbstractAppointmentBooking:: $appointmentData[service][name]: ' . $appointmentData['service']['name']);
+            error_log('AbstractAppointmentBooking:: $appointmentData[bookingStart]: ' . $appointmentData['bookingStart']);
+            error_log('AbstractAppointmentBooking:: $appointmentData[bookingEnd]: ' . $appointmentData['bookingEnd']); 
+            error_log('AbstractAppointmentBooking:: $appointmentData[status]: ' . $appointmentData['status']);  
+            error_log('AbstractAppointmentBooking:: $bookingData[status]: ' . $bookingData['status']);
+            error_log('AbstractAppointmentBooking:: $bookingData[duration]: ' . $bookingData['duration']);
 
             $ameliaData = [
                 AppointmentId::get_id()       => $appointmentData['id'],
