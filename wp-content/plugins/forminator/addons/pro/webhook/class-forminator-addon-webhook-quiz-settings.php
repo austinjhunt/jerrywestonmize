@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Webhook Quiz Settings
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Webhook_Quiz_Settings
  * Handle how quiz settings displayed and saved
  *
@@ -51,7 +57,7 @@ class Forminator_Webhook_Quiz_Settings extends Forminator_Integration_Quiz_Setti
 				$answer['is_correct'] = wp_rand( 0, 1 ) ? true : false;
 
 				if ( $answer['is_correct'] ) {
-					$num_correct ++;
+					++$num_correct;
 				}
 			}
 

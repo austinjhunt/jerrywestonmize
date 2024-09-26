@@ -543,8 +543,9 @@ class BookingAddedEventHandler
                 array_merge(
                     $booking,
                     [
-                        'isRecurringBooking' => $recurringData && !$commandResult->getData()['packageId'],
-                        'isPackageBooking'   => !!$commandResult->getData()['packageId'],
+                        'isRecurringBooking'   => $recurringData && !$commandResult->getData()['packageId'],
+                        'isPackageBooking'     => !!$commandResult->getData()['packageId'],
+                        'isPackageAppointment' => !!$commandResult->getData()['isPackageAppointment'],
                     ]
                 )
             ]

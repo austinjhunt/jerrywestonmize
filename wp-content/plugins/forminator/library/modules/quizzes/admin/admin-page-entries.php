@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Quiz_View_Page class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -18,13 +24,15 @@ class Forminator_Quiz_View_Page extends Forminator_Admin_View_Page {
 	protected $lead_fields = array();
 
 	/**
+	 * Lead form
+	 *
 	 * @since 1.6.2
 	 * @var Forminator_Integration[]
 	 */
 	protected $lead_cform = null;
 
 	/**
-	 * Moduel type
+	 * Module type
 	 *
 	 * @var string
 	 */
@@ -42,7 +50,7 @@ class Forminator_Quiz_View_Page extends Forminator_Admin_View_Page {
 		if ( $form_id ) {
 			$this->form_id = $form_id;
 			parent::before_render();
-			$this->total_fields++;
+			++$this->total_fields;
 			$this->process_request();
 			$this->prepare_results();
 		}
@@ -58,6 +66,7 @@ class Forminator_Quiz_View_Page extends Forminator_Admin_View_Page {
 	 * Action delete_all
 	 */
 	public function delete_all_action() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput
 		$ids = isset( $_GET['ids'] ) ? Forminator_Core::sanitize_array( $_GET['ids'] ) : array();
 		if ( ! empty( $ids ) ) {
 			$entries = implode( ',', $ids );
@@ -121,6 +130,8 @@ class Forminator_Quiz_View_Page extends Forminator_Admin_View_Page {
 	}
 
 	/**
+	 * Get total entries
+	 *
 	 * @since 1.0
 	 * @return int
 	 */
@@ -155,7 +166,7 @@ class Forminator_Quiz_View_Page extends Forminator_Admin_View_Page {
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param Forminator_Form_Entry_Model $entry
+	 * @param Forminator_Form_Entry_Model $entry Form entry model.
 	 *
 	 * @return array
 	 */
@@ -164,6 +175,8 @@ class Forminator_Quiz_View_Page extends Forminator_Admin_View_Page {
 	}
 
 	/**
+	 * Entries iterator
+	 *
 	 * @return array
 	 */
 	public function entries_iterator() {
@@ -192,7 +205,6 @@ class Forminator_Quiz_View_Page extends Forminator_Admin_View_Page {
 		}
 
 		return $entries_data;
-
 	}
 
 	/**

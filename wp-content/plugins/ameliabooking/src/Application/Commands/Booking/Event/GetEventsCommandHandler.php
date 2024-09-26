@@ -105,6 +105,10 @@ class GetEventsCommandHandler extends CommandHandler
             }
         }
 
+        if ($isFrontEnd && !empty($params['providers'])) {
+            $params['providers'] = array_values($params['providers']);
+        }
+
         if (isset($params['dates'][0])) {
             $params['dates'][0] ? $params['dates'][0] .= ' 00:00:00' : null;
         }
@@ -185,6 +189,14 @@ class GetEventsCommandHandler extends CommandHandler
                                     $bookedTicket->getPersons()->getValue() : 0)
                             )
                         );
+
+                        $ticket->setWaiting(
+                            new IntegerValue(
+                                ($ticket->getWaiting() ? $ticket->getWaiting()->getValue() : 0) +
+                                ($booking->getStatus()->getValue() === BookingStatus::WAITING ?
+                                    $bookedTicket->getPersons()->getValue() : 0)
+                            )
+                        );
                     }
 
                     if ($noShowTagEnabled) {
@@ -218,7 +230,7 @@ class GetEventsCommandHandler extends CommandHandler
             }
 
             if (($isFrontEnd && $settingsDS->getSetting('general', 'showClientTimeZone')) ||
-                $isCabinetPage
+                $isCabinetPage || ($user && $user->getType() === AbstractUser::USER_ROLE_PROVIDER)
             ) {
                 $timeZone = 'UTC';
 
@@ -263,6 +275,18 @@ class GetEventsCommandHandler extends CommandHandler
                 }
             }
 
+            $peopleWaiting = false;
+            $eventSettings = $event->getSettings() ? json_decode($event->getSettings()->getValue(), true) : null;
+
+            if ($eventSettings && !empty($eventSettings['waitingList']) && $eventSettings['waitingList']['enabled']) {
+                foreach ($event->getBookings()->getItems() as $booking) {
+                    if ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
+                        $peopleWaiting = true;
+                        break;
+                    }
+                }
+            }
+
             $eventsInfo = [
                 'bookable'   => $reservationService->isBookable($event, null, $currentDateTime) && !$minimumReached,
                 'cancelable' => $currentDateTime <= $minimumCancelTime && ($event->getStatus()->getValue() === BookingStatus::APPROVED || $event->getStatus()->getValue() === BookingStatus::PENDING),
@@ -270,8 +294,9 @@ class GetEventsCommandHandler extends CommandHandler
                 'closed'     => $currentDateTime > $bookingCloses || $minimumReached,
                 'places'     => $event->getMaxCapacity()->getValue() - $persons,
                 'upcoming'   => $currentDateTime < $bookingOpens && $event->getStatus()->getValue() === BookingStatus::APPROVED,
-                'full'       => $event->getMaxCapacity()->getValue() <= $persons
-                                  && $currentDateTime < $event->getPeriods()->getItem(0)->getPeriodStart()->getValue()
+                'full'       => ($event->getMaxCapacity()->getValue() <= $persons
+                                  && $currentDateTime < $event->getPeriods()->getItem(0)->getPeriodStart()->getValue())
+                                  || ($peopleWaiting && !($currentDateTime > $bookingCloses || $minimumReached))
             ];
 
             if ($isFrontEnd) {

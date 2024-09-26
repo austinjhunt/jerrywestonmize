@@ -9,7 +9,6 @@ use MailPoet\Automation\Engine\Data\Automation;
 use MailPoet\Automation\Engine\Data\AutomationRun;
 use MailPoet\Automation\Engine\Data\Subject;
 use MailPoet\Automation\Engine\Exceptions;
-use wpdb;
 
 class AutomationRunStorage {
   /** @var string */
@@ -18,59 +17,60 @@ class AutomationRunStorage {
   /** @var string */
   private $subjectTable;
 
-  /** @var wpdb */
-  private $wpdb;
-
   public function __construct() {
     global $wpdb;
     $this->table = $wpdb->prefix . 'mailpoet_automation_runs';
     $this->subjectTable = $wpdb->prefix . 'mailpoet_automation_run_subjects';
-    $this->wpdb = $wpdb;
   }
 
   public function createAutomationRun(AutomationRun $automationRun): int {
+    global $wpdb;
     $automationTableData = $automationRun->toArray();
     $subjectTableData = $automationTableData['subjects'];
     unset($automationTableData['subjects']);
-    $result = $this->wpdb->insert($this->table, $automationTableData);
+    $result = $wpdb->insert($this->table, $automationTableData);
     if ($result === false) {
-      throw Exceptions::databaseError($this->wpdb->last_error);
+      $this->throwDatabaseError();
     }
-    $automationRunId = $this->wpdb->insert_id;
+    $automationRunId = $wpdb->insert_id; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
     if (!$subjectTableData) {
       //We allow for AutomationRuns with no subjects.
       return $automationRunId;
     }
 
-    $sql = 'insert into ' . esc_sql($this->subjectTable) . ' (`automation_run_id`, `key`, `args`, `hash`) values %s';
+
     $values = [];
     foreach ($subjectTableData as $entry) {
-      $values[] = (string)$this->wpdb->prepare("(%d,%s,%s,%s)", $automationRunId, $entry['key'], $entry['args'], $entry['hash']);
+      $values[] = $wpdb->prepare('(%d,%s,%s,%s)', $automationRunId, $entry['key'], $entry['args'], $entry['hash']);
     }
-    $sql = sprintf($sql, implode(',', $values));
-    $result = $this->wpdb->query($sql);
+
+    $result = $wpdb->query(
+      $wpdb->prepare('INSERT INTO %i (`automation_run_id`, `key`, `args`, `hash`) VALUES ', $this->subjectTable) . implode(',', $values)
+    );
     if ($result === false) {
-      throw Exceptions::databaseError($this->wpdb->last_error);
+      $this->throwDatabaseError();
     }
 
     return $automationRunId;
   }
 
   public function getAutomationRun(int $id): ?AutomationRun {
-    $table = esc_sql($this->table);
-    $subjectTable = esc_sql($this->subjectTable);
-    /** @var literal-string $sql */
-    $sql = "SELECT * FROM $table  WHERE id = %d";
-    $query = (string)$this->wpdb->prepare($sql, $id);
-    $data = $this->wpdb->get_row($query, ARRAY_A);
+    global $wpdb;
+
+    $data = $wpdb->get_row(
+      $wpdb->prepare('SELECT * FROM %i WHERE id = %d', $this->table, $id),
+      ARRAY_A
+    );
+
     if (!is_array($data) || !$data) {
       return null;
     }
-    /** @var literal-string $sql */
-    $sql = "SELECT * FROM $subjectTable WHERE automation_run_id = %d";
-    $query = (string)$this->wpdb->prepare($sql, $id);
-    $subjects = $this->wpdb->get_results($query, ARRAY_A);
+
+    $subjects = $wpdb->get_results(
+      $wpdb->prepare('SELECT * FROM %i WHERE automation_run_id = %d', $this->subjectTable, $id),
+      ARRAY_A
+    );
     $data['subjects'] = is_array($subjects) ? $subjects : [];
     return AutomationRun::fromArray((array)$data);
   }
@@ -80,34 +80,36 @@ class AutomationRunStorage {
    * @return AutomationRun[]
    */
   public function getAutomationRunsForAutomation(Automation $automation): array {
-    $table = esc_sql($this->table);
-    $subjectTable = esc_sql($this->subjectTable);
-    /** @var literal-string $sql */
-    $sql = "SELECT * FROM $table WHERE automation_id = %d order by id";
-    $query = (string)$this->wpdb->prepare($sql, $automation->getId());
-    $automationRuns = $this->wpdb->get_results($query, ARRAY_A);
+    global $wpdb;
+
+    $automationRuns = $wpdb->get_results(
+      $wpdb->prepare(
+        'SELECT * FROM %i WHERE automation_id = %d ORDER BY id',
+        $this->table,
+        $automation->getId()
+      ),
+      ARRAY_A
+    );
     if (!is_array($automationRuns) || !$automationRuns) {
       return [];
     }
 
     $automationRunIds = array_column($automationRuns, 'id');
-
-    /** @var literal-string $sql */
-    $sql = sprintf(
-      "SELECT * FROM $subjectTable WHERE automation_run_id in (%s) order by automation_run_id, id",
-      implode(
-        ',',
-        array_map(
-          function() {
-            return '%d';
-          },
-          $automationRunIds
+    $subjects = $wpdb->get_results(
+      $wpdb->prepare(
+        '
+          SELECT *
+          FROM %i
+          WHERE automation_run_id IN (' . implode(',', array_fill(0, count($automationRunIds), '%s')) . ')
+          ORDER BY automation_run_id, id
+        ',
+        array_merge(
+          [$this->subjectTable],
+          $automationRunIds,
         )
-      )
+      ),
+      ARRAY_A
     );
-
-    $query = (string)$this->wpdb->prepare($sql, ...$automationRunIds);
-    $subjects = $this->wpdb->get_results($query, ARRAY_A);
 
     return array_map(
       function($runData) use ($subjects): AutomationRun {
@@ -130,110 +132,132 @@ class AutomationRunStorage {
    * @return int
    */
   public function getCountByAutomationAndSubject(Automation $automation, Subject $subject): int {
-    $table = esc_sql($this->table);
-    $subjectTable = esc_sql($this->subjectTable);
-    /** @var literal-string $sql */
-    $sql = "SELECT count(DISTINCT runs.id) as count from $table as runs
-      JOIN $subjectTable as subjects on runs.id = subjects.automation_run_id
-      WHERE runs.automation_id = %d
-      AND subjects.hash = %s";
+    global $wpdb;
 
-    $result = $this->wpdb->get_col(
-      (string)$this->wpdb->prepare($sql, $automation->getId(), $subject->getHash())
+    $result = $wpdb->get_col(
+      $wpdb->prepare(
+        '
+          SELECT count(DISTINCT runs.id) AS count FROM %i AS runs
+          JOIN %i AS subjects ON runs.id = subjects.automation_run_id
+          WHERE runs.automation_id = %d
+          AND subjects.hash = %s
+        ',
+        $this->table,
+        $this->subjectTable,
+        $automation->getId(),
+        $subject->getHash()
+      )
     );
 
     return $result ? (int)current($result) : 0;
   }
 
   public function getCountForAutomation(Automation $automation, string ...$status): int {
-    $table = esc_sql($this->table);
+    global $wpdb;
 
     if (!count($status)) {
-      /** @var literal-string $sql */
-      $sql = "
-        SELECT COUNT(id) as count
-        FROM $table
-        WHERE automation_id = %d
-      ";
-      $query = (string)$this->wpdb->prepare($sql, $automation->getId());
-      $result = $this->wpdb->get_col($query);
+      $result = $wpdb->get_col(
+        $wpdb->prepare(
+          'SELECT COUNT(id) as count FROM %i WHERE automation_id = %d',
+          $this->table,
+          $automation->getId()
+        )
+      );
       return $result ? (int)current($result) : 0;
     }
 
-    $statusSql = (string)$this->wpdb->prepare(implode(',', array_fill(0, count($status), '%s')), ...$status);
-    /** @var literal-string $sql */
-    $sql = "
-      SELECT COUNT(id) as count
-      FROM $table
-      WHERE automation_id = %d
-      AND status IN ($statusSql)
-    ";
-    $query = (string)$this->wpdb->prepare($sql, $automation->getId());
-    $result = $this->wpdb->get_col($query);
+    $result = $wpdb->get_col(
+      // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- The number of replacements is dynamic.
+      $wpdb->prepare(
+        '
+          SELECT COUNT(id) as count
+          FROM %i
+          WHERE automation_id = %d
+          AND status IN (' . implode(',', array_fill(0, count($status), '%s')) . ')
+        ',
+        $this->table,
+        $automation->getId(),
+        ...$status
+      )
+    );
     return $result ? (int)current($result) : 0;
   }
 
   public function updateStatus(int $id, string $status): void {
-    $table = esc_sql($this->table);
-    /** @var literal-string $sql */
-    $sql = "
-      UPDATE $table
-      SET status = %s, updated_at = current_timestamp()
-      WHERE id = %d
-    ";
-    $query = (string)$this->wpdb->prepare($sql, $status, $id);
-    $result = $this->wpdb->query($query);
+    global $wpdb;
+    $result = $wpdb->query(
+      $wpdb->prepare(
+        '
+          UPDATE %i
+          SET status = %s, updated_at = current_timestamp()
+          WHERE id = %d
+        ',
+        $this->table,
+        $status,
+        $id
+      )
+    );
     if ($result === false) {
-      throw Exceptions::databaseError($this->wpdb->last_error);
+      $this->throwDatabaseError();
     }
   }
 
   public function updateNextStep(int $id, ?string $nextStepId): void {
-    $table = esc_sql($this->table);
-    /** @var literal-string $sql */
-    $sql = "
-      UPDATE $table
-      SET next_step_id = %s, updated_at = current_timestamp()
-      WHERE id = %d
-    ";
-    $query = (string)$this->wpdb->prepare($sql, $nextStepId, $id);
-    $result = $this->wpdb->query($query);
+    global $wpdb;
+    $result = $wpdb->query(
+      $wpdb->prepare(
+        '
+          UPDATE %i
+          SET next_step_id = %s, updated_at = current_timestamp()
+          WHERE id = %d
+        ',
+        $this->table,
+        $nextStepId,
+        $id
+      )
+    );
     if ($result === false) {
-      throw Exceptions::databaseError($this->wpdb->last_error);
+      $this->throwDatabaseError();
     }
   }
 
   public function getAutomationStepStatisticForTimeFrame(int $automationId, string $status, \DateTimeImmutable $after, \DateTimeImmutable $before, int $versionId = null): array {
-    $table = esc_sql($this->table);
-
-    $where = "automation_id = %d
-    AND `status` = %s
-    AND created_at BETWEEN %s AND %s";
-    if ($versionId) {
-      $where .= " AND version_id = %d";
-    }
-    /** @var literal-string $sql */
-    $sql = "
-      SELECT
-        COUNT(id) AS `count`,
-        next_step_id
-      FROM $table as log
-      WHERE $where
-      GROUP BY next_step_id
-    ";
-
-    $sql = $versionId ?
-      $this->wpdb->prepare($sql, $automationId, $status, $after->format('Y-m-d H:i:s'), $before->format('Y-m-d H:i:s'), $versionId) :
-      $this->wpdb->prepare($sql, $automationId, $status, $after->format('Y-m-d H:i:s'), $before->format('Y-m-d H:i:s'));
-    $sql = is_string($sql) ? $sql : '';
-    $result = $this->wpdb->get_results($sql, ARRAY_A);
+    global $wpdb;
+    $andWhere = $versionId ? 'AND version_id = %d' : '';
+    $result = $wpdb->get_results(
+      // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- The number of replacements is dynamic.
+      $wpdb->prepare(
+        '
+          SELECT COUNT(id) AS count, next_step_id
+          FROM %i AS log
+          WHERE automation_id = %d AND status = %s AND created_at BETWEEN %s AND %s
+          ' . $andWhere . /* phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The condition uses placeholders. */ '
+          GROUP BY next_step_id
+        ',
+        array_merge(
+          [
+            $this->table,
+            $automationId,
+            $status,
+            $after->format('Y-m-d H:i:s'),
+            $before->format('Y-m-d H:i:s'),
+          ],
+          $versionId ? [$versionId] : []
+        )
+      ),
+      ARRAY_A
+    );
     return is_array($result) ? $result : [];
   }
 
   public function truncate(): void {
-    $table = esc_sql($this->table);
-    $this->wpdb->query("TRUNCATE $table");
-    $table = esc_sql($this->subjectTable);
-    $this->wpdb->query("TRUNCATE $table");
+    global $wpdb;
+    $wpdb->query($wpdb->prepare('TRUNCATE %i', $this->table));
+    $wpdb->query($wpdb->prepare('TRUNCATE %i', $this->subjectTable));
+  }
+
+  private function throwDatabaseError(): void {
+    global $wpdb;
+    throw Exceptions::databaseError($wpdb->last_error); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
   }
 }

@@ -1,10 +1,14 @@
 <?php
+/**
+ * The Forminator Campaign Monitor Form Hooks.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Campaignmonitor_Form_Hooks
  *
  * @since 1.0 Campaignmonitor Integration
- *
  */
 class Forminator_Campaignmonitor_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
@@ -15,7 +19,7 @@ class Forminator_Campaignmonitor_Form_Hooks extends Forminator_Integration_Form_
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -39,12 +43,13 @@ class Forminator_Campaignmonitor_Form_Hooks extends Forminator_Integration_Form_
 	 * @since 1.0 Campaign Monitor Integration
 	 * @since 1.7 Add $form_entry_fields args
 	 *
-	 * @param       $connection_id
-	 * @param       $submitted_data
-	 * @param       $connection_settings
-	 * @param array $form_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $form_entry_fields Form entry fields.
 	 *
-	 * @return array `is_sent` true means its success send data to ampaign Monitor, false otherwise
+	 * @return array `is_sent` true means its success send data to ampaign Monitor, false otherwise.
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function get_status_on_add_subscriber( $connection_id, $submitted_data, $connection_settings, $form_entry_fields ) {
 		// initialize as null.
@@ -53,7 +58,7 @@ class Forminator_Campaignmonitor_Form_Hooks extends Forminator_Integration_Form_
 		$form_id                = $this->module_id;
 		$form_settings_instance = $this->settings_instance;
 
-		//check required fields
+		// check required fields.
 		try {
 			$api  = $this->addon->get_api();
 			$args = array();
@@ -68,9 +73,12 @@ class Forminator_Campaignmonitor_Form_Hooks extends Forminator_Integration_Form_
 
 			$email_element_id = $connection_settings['fields_map']['default_field_email'];
 			if ( ! isset( $submitted_data[ $email_element_id ] ) || empty( $submitted_data[ $email_element_id ] ) ) {
-				throw new Forminator_Integration_Exception( sprintf(
+				throw new Forminator_Integration_Exception(
+					sprintf(
 					/* translators: 1: Email field ID */
-						esc_html__( 'Email Address on element %1$s not found or not filled on submitted data.', 'forminator' ), $email_element_id )
+						esc_html__( 'Email Address on element %1$s not found or not filled on submitted data.', 'forminator' ),
+						$email_element_id
+					)
 				);
 			}
 			$email = $submitted_data[ $email_element_id ];
@@ -84,9 +92,12 @@ class Forminator_Campaignmonitor_Form_Hooks extends Forminator_Integration_Form_
 			if ( isset( $submitted_data[ $name_element_id ] ) ) {
 				$args['Name'] = $submitted_data[ $name_element_id ];
 			} else {
-				throw new Forminator_Integration_Exception( sprintf(
+				throw new Forminator_Integration_Exception(
+					sprintf(
 					/* translators: 1: Name field ID */
-						esc_html__( 'Name on element %1$s not found or not filled on submitted data.', 'forminator' ), $name_element_id )
+						esc_html__( 'Name on element %1$s not found or not filled on submitted data.', 'forminator' ),
+						$name_element_id
+					)
 				);
 			}
 
@@ -177,8 +188,8 @@ class Forminator_Campaignmonitor_Form_Hooks extends Forminator_Integration_Form_
 	 *
 	 * @since 1.0 Campaign Monitor Integration
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param  array                      $addon_meta_data
+	 * @param Forminator_Form_Entry_Model $entry_model Form Entry Model.
+	 * @param  array                       $addon_meta_data Addon meta data.
 	 *
 	 * @return bool
 	 */
@@ -260,7 +271,6 @@ class Forminator_Campaignmonitor_Form_Hooks extends Forminator_Integration_Form_
 			 * @param int                                            $form_id                current Form ID.
 			 * @param array                                          $addon_meta_data        integration meta data.
 			 * @param Forminator_Campaignmonitor_Form_Settings $form_settings_instance Campaign Monitor Integration Form Settings instance.
-			 *
 			 */
 			$subscribers_to_delete = apply_filters(
 				'forminator_addon_campaignmonitor_subscribers_to_delete',
@@ -299,6 +309,5 @@ class Forminator_Campaignmonitor_Form_Hooks extends Forminator_Integration_Form_
 
 			return false;
 		}
-
 	}
 }

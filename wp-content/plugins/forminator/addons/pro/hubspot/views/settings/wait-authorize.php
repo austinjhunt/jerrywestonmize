@@ -1,10 +1,21 @@
 <?php
+/**
+ * Template for Wait authorize.
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
 	'auth_url' => '',
 	'token'    => '',
 );
-/** @var array $template_vars */
+
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 } ?>
@@ -22,6 +33,7 @@ foreach ( $template_vars as $key => $val ) {
 
 <?php if ( ! empty( $vars['token'] ) ) : ?>
 	<?php
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
 	echo Forminator_Admin::get_green_notice(
 		/* translators: 1: Add-on name */
 		sprintf( esc_html__( 'Your %1$s account is already authorized.', 'forminator' ), 'HubSpot' )

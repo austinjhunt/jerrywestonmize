@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Trello API
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Trello_Wp_Api
  */
 class Forminator_Trello_Wp_Api {
@@ -54,13 +60,13 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param string $app_key
-	 * @param string $token
+	 * @param string $app_key App Key.
+	 * @param string $token Token.
 	 *
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function __construct( $app_key, $token ) {
-		//prerequisites
+		// prerequisites.
 		if ( ! $app_key ) {
 			throw new Forminator_Integration_Exception( esc_html__( 'Missing required APP Key', 'forminator' ) );
 		}
@@ -78,7 +84,7 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param $user_agent
+	 * @param string $user_agent User Agent.
 	 *
 	 * @return string
 	 */
@@ -102,12 +108,12 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param string $verb
-	 * @param        $path
-	 * @param array  $args
+	 * @param string $verb HTTP Request type.
+	 * @param string $path Request path.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function request( $verb, $path, $args = array() ) {
 		// Adding extra user agent for wp remote request.
@@ -190,14 +196,20 @@ class Forminator_Trello_Wp_Api {
 				}
 
 				if ( 404 === $status_code ) {
-					throw new Forminator_Integration_Exception( sprintf(
+					throw new Forminator_Integration_Exception(
+						sprintf(
 						/* translators: %s: Error message */
-						esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
+							esc_html__( 'Failed to process request : %s', 'forminator' ),
+							esc_html( $msg )
+						)
 					);
 				}
-				throw new Forminator_Integration_Exception( sprintf(
+				throw new Forminator_Integration_Exception(
+					sprintf(
 					/* translators: %s: Error message */
-					esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
+						esc_html__( 'Failed to process request : %s', 'forminator' ),
+						esc_html( $msg )
+					)
 				);
 			}
 		}
@@ -235,11 +247,10 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param string $path
-	 * @param array  $args
+	 * @param string $path Request path.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function post_( $path, $args = array() ) {
 		$default_args = array(
@@ -261,11 +272,10 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param string $path
-	 * @param array  $args
+	 * @param string $path Request path.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_( $path, $args = array() ) {
 		$default_args = array(
@@ -287,11 +297,10 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param string $path
-	 * @param array  $args
+	 * @param string $path Request path.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function put_( $path, $args = array() ) {
 		$default_args = array(
@@ -313,11 +322,10 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param string $path
-	 * @param array  $args
+	 * @param string $path Request path.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function delete_( $path, $args = array() ) {
 		$default_args = array(
@@ -339,10 +347,9 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param array $args
+	 * @param array $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_boards( $args = array() ) {
 		$default_args = array();
@@ -356,11 +363,10 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param string $board_id
-	 * @param array  $args
+	 * @param string $board_id Board Id.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_board_lists( $board_id, $args = array() ) {
 		$default_args = array();
@@ -374,11 +380,10 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param string $board_id
-	 * @param array  $args
+	 * @param string $board_id Board Id.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_board_members( $board_id, $args = array() ) {
 		$default_args = array();
@@ -392,10 +397,10 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param array $args
+	 * @param array $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function create_card( $args = array() ) {
 		$default_args = array(
@@ -416,16 +421,15 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.15.? Trello Integration
 	 *
-	 * @param       $card_id
-	 * @param array $args
+	 * @param string $card_id Card Id.
+	 * @param array  $upload Attachment.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function add_attachment( $card_id, $upload ) {
-		$arg			 = [];
-		$arg['name'] 	 = basename( parse_url( $upload, PHP_URL_PATH ) );
-		$arg['url']	 	 = $upload;
+		$arg         = array();
+		$arg['name'] = basename( wp_parse_url( $upload, PHP_URL_PATH ) );
+		$arg['url']  = $upload;
 
 		return $this->post_( 'cards/' . trim( $card_id ) . '/attachments', $arg );
 	}
@@ -435,11 +439,10 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param       $card_id
-	 * @param array $args
+	 * @param string $card_id Card Id.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function delete_card( $card_id, $args = array() ) {
 		$default_args = array();
@@ -453,11 +456,10 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param       $card_id
-	 * @param array $args
+	 * @param string $card_id Card Id.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function close_card( $card_id, $args = array() ) {
 		$default_args = array(
@@ -473,11 +475,10 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param       $card_id
-	 * @param array $args
+	 * @param string $card_id Card Id.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function update_card( $card_id, $args = array() ) {
 		$default_args = array();
@@ -491,11 +492,10 @@ class Forminator_Trello_Wp_Api {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param string $board_id
-	 * @param array  $args
+	 * @param string $board_id Board Id.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_board_labels( $board_id, $args = array() ) {
 		$default_args = array();

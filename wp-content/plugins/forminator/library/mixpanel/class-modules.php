@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Mixpanel_Modules class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Mixpanel Modules class
@@ -11,29 +16,31 @@ class Forminator_Mixpanel_Modules extends Events {
 	 * @since 1.27.0
 	 */
 	public static function init() {
-		// Publish tracking
+		// Publish tracking.
 		add_action( 'forminator_custom_form_action_update', array( __CLASS__, 'tracking_form_publish' ), 10, 5 );
 		add_action( 'forminator_poll_action_update', array( __CLASS__, 'tracking_poll_publish' ), 10, 4 );
 		add_action( 'forminator_quiz_action_update', array( __CLASS__, 'tracking_quiz_publish' ), 10, 6 );
 
-		// Delete tracking
+		// Delete tracking.
 		add_action( 'forminator_form_action_delete', array( __CLASS__, 'tracking_form_delete' ) );
 		add_action( 'forminator_poll_action_delete', array( __CLASS__, 'tracking_poll_delete' ) );
 		add_action( 'forminator_quiz_action_delete', array( __CLASS__, 'tracking_quiz_delete' ) );
+
+		// Template tracking.
+		add_action( 'forminator_after_template_save', array( __CLASS__, 'tracking_save_template' ), 10, 2 );
 	}
 
 	/**
 	 * Form publish
 	 *
-	 * @param int $id form id
-	 * @param string $title title
-	 * @param string $status form status
-	 * @param array $fields fields wrapper
-	 * @param array $settings settings
+	 * @param int    $id Form id.
+	 * @param string $title Title.
+	 * @param string $status Form status.
+	 * @param array  $fields Fields wrapper.
+	 * @param array  $settings Settings.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_form_publish( $id, $title, $status, $fields, $settings ) {
 		if ( ! self::is_tracking_active() ) {
@@ -54,14 +61,13 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Poll publish
 	 *
-	 * @param int $id poll id
-	 * @param string $status poll status
-	 * @param array $answers answer
-	 * @param array $settings settings
+	 * @param int    $id Poll id.
+	 * @param string $status Poll status.
+	 * @param array  $answers Answer.
+	 * @param array  $settings Settings.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_poll_publish( $id, $status, $answers, $settings ) {
 		if ( ! self::is_tracking_active() ) {
@@ -77,12 +83,12 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Track quiz publish
 	 *
-	 * @param int $id quiz id
-	 * @param string $type quiz type
-	 * @param string $status quiz status
-	 * @param array $questions questions
-	 * @param array $results result
-	 * @param array $settings settings
+	 * @param int    $id Quiz id.
+	 * @param string $type Quiz type.
+	 * @param string $status Quiz status.
+	 * @param array  $questions Questions.
+	 * @param array  $results Result.
+	 * @param array  $settings Settings.
 	 *
 	 * @return void
 	 * @since 1.27.0
@@ -106,11 +112,10 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Track delete form
 	 *
-	 * @param int $module_id
+	 * @param int $module_id Module Id.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_form_delete( $module_id ) {
 		self::delete_module( $module_id, 'form' );
@@ -120,11 +125,10 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Track delete poll
 	 *
-	 * @param int $module_id
+	 * @param int $module_id Module Id.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_poll_delete( $module_id ) {
 		self::delete_module( $module_id, 'poll' );
@@ -134,11 +138,10 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Track delete quiz
 	 *
-	 * @param int $module_id
+	 * @param int $module_id Module Id.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_quiz_delete( $module_id ) {
 		self::delete_module( $module_id, 'quiz' );
@@ -148,7 +151,7 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Track module update
 	 *
-	 * @param $update_type
+	 * @param string $update_type Update type.
 	 *
 	 * @return void
 	 */
@@ -158,13 +161,34 @@ class Forminator_Mixpanel_Modules extends Events {
 	}
 
 	/**
+	 * Tracking save cloud template
+	 *
+	 * @param int      $form_id Form ID.
+	 * @param int|null $template_id Template ID.
+	 *
+	 * @since 1.35.0
+	 */
+	public static function tracking_save_template( int $form_id, ?int $template_id = null ) {
+		if ( ! self::is_tracking_active() ) {
+			return;
+		}
+
+		self::track_event(
+			'for_form_save_to_cloud',
+			array(
+				'Save Type' => ! empty( $template_id ) ? 'Update Template' : 'New Template',
+			),
+		);
+	}
+
+	/**
 	 * Module properties
 	 *
-	 * @param int $module_id
-	 * @param string $module_slug
-	 * @param string $status
-	 * @param array $module_data
-	 * @param array $settings
+	 * @param int    $module_id Module Id.
+	 * @param string $module_slug Module slug.
+	 * @param string $status Status.
+	 * @param array  $module_data Module data.
+	 * @param array  $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -196,8 +220,8 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Get module addon
 	 *
-	 * @param int $module_id
-	 * @param string $module_slug
+	 * @param int    $module_id Module Id.
+	 * @param string $module_slug Module slug.
 	 *
 	 * @return string
 	 */
@@ -216,9 +240,9 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Form Properties
 	 *
-	 * @param int $module_id
-	 * @param array $fields
-	 * @param array $settings
+	 * @param int   $module_id Module Id.
+	 * @param array $fields Fields.
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -230,11 +254,27 @@ class Forminator_Mixpanel_Modules extends Events {
 		$property['Save and Continue']   = self::settings_value( $settings, 'use_save_and_continue', false );
 		$property['Email Notifications'] = self::settings_value( $settings, 'notification_count', 0 );
 
-		// Addon data
+		// Addon data.
 		$addon_data                            = self::addon_data( $module_id, $fields, $settings );
 		$property['PDF Addon']                 = $addon_data['pdf_addon'];
 		$property['Stripe Subscription Addon'] = $addon_data['stripe_addon'];
 		$property['Geolocation']               = $addon_data['geo_addon'];
+
+		// Template properties.
+		$template_name = self::settings_value( $settings, 'template_name' );
+		if ( ! empty( $template_name ) ) {
+			$property['Template Name'] = esc_html( $template_name );
+		}
+
+		$template_type = self::settings_value( $settings, 'template_type' );
+		if ( ! empty( $template_type ) ) {
+			$property['Template Type'] = ucfirst( $template_type ) . ' Template';
+		}
+
+		$trigger_from = self::settings_value( $settings, 'trigger_from' );
+		if ( ! empty( $trigger_from ) ) {
+			$property['Triggered From'] = 'template' === $trigger_from ? 'Template Page' : 'Form Builder';
+		}
 
 		return $property;
 	}
@@ -242,8 +282,8 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Poll Properties
 	 *
-	 * @param array $answer
-	 * @param array $settings
+	 * @param array $answer Answer.
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -260,8 +300,8 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Quiz Properties
 	 *
-	 * @param array $module_data
-	 * @param array $settings
+	 * @param array $module_data Module Data.
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -272,14 +312,13 @@ class Forminator_Mixpanel_Modules extends Events {
 		$property['Collect Leads']       = self::settings_value( $settings, 'hasLeads', false );
 		$property['Number of Questions'] = count( $module_data['questions'] );
 
-		// Quiz Pagination data
+		// Quiz Pagination data.
 		$pagination             = self::settings_value( $settings, 'pagination', '' );
 		$property['Pagination'] = 'true' === $pagination ? 'Paginated' : 'No Pagination';
 
-		// Quiz result data
+		// Quiz result data.
 		$quiz_result         = self::settings_value( $settings, 'results_behav', 'after' );
 		$property['Results'] = 'end' === $quiz_result ? 'On submission' : 'Real-time';
-
 
 		return $property;
 	}
@@ -287,7 +326,7 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Field List
 	 *
-	 * @param array $fields
+	 * @param array $fields Fields.
 	 *
 	 * @return string
 	 */
@@ -318,9 +357,9 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Addon data
 	 *
-	 * @param int $moduel_id
-	 * @param array $fields
-	 * @param array $settings
+	 * @param int   $moduel_id Module Id.
+	 * @param array $fields Fields.
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -328,10 +367,10 @@ class Forminator_Mixpanel_Modules extends Events {
 		$addon_data = array(
 			'stripe_addon' => false,
 			'pdf_addon'    => 0,
-			'geo_addon'    => ''
+			'geo_addon'    => '',
 		);
 
-		// Stripe data
+		// Stripe data.
 		if ( is_plugin_active( 'forminator-stripe/forminator-stripe.php' ) ) {
 			$stripe_data = self::fields_array( $fields, 'stripe' );
 			if ( ! empty( $stripe_data[0]['payments'] ) ) {
@@ -339,15 +378,15 @@ class Forminator_Mixpanel_Modules extends Events {
 			}
 		}
 
-		// PDF Data
+		// PDF Data.
 		if ( is_plugin_active( 'forminator-addons-pdf/forminator-addons-pdf.php' ) ) {
-			$pdf_array = ( new Forminator_Custom_Form_Admin )->get_pdf_data( $moduel_id );
+			$pdf_array = ( new Forminator_Custom_Form_Admin() )->get_pdf_data( $moduel_id );
 			if ( ! empty( $pdf_array ) ) {
 				$addon_data['pdf_addon'] = count( $pdf_array );
 			}
 		}
 
-		// Geolocation Data
+		// Geolocation Data.
 		if ( is_plugin_active( 'forminator-addons-geolocation/forminator-geolocation.php' ) ) {
 			$address_data     = self::fields_array( $fields, 'address' );
 			$current_location = self::settings_value( $settings, 'geolocation_field', false );
@@ -374,8 +413,8 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Field array
 	 *
-	 * @param array $fields
-	 * @param string $field_type
+	 * @param array  $fields Fields.
+	 * @param string $field_type Field type.
 	 *
 	 * @return array
 	 */
@@ -386,7 +425,7 @@ class Forminator_Mixpanel_Modules extends Events {
 				foreach ( $row['fields'] as $field ) {
 					if ( $field_type === $field['type'] ) {
 						$field_array[] = $field;
-					} else if ( 'all' === $field_type && empty( $row['parent_group'] ) ) {
+					} elseif ( 'all' === $field_type && empty( $row['parent_group'] ) ) {
 						if ( 'group' === $field['type'] ) {
 							$group_element              = $field['element_id'];
 							$group_fields               = self::get_grouped_fiels( $fields, $group_element );
@@ -396,7 +435,7 @@ class Forminator_Mixpanel_Modules extends Events {
 						} else {
 							$field_array[] = $field;
 						}
-					} else if ( 'group' === $field_type ) {
+					} elseif ( 'group' === $field_type ) {
 						$field_array[] = $field;
 					}
 				}
@@ -409,8 +448,8 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Module status
 	 *
-	 * @param $status
-	 * @param $settings
+	 * @param string $status Status.
+	 * @param array  $settings Settings.
 	 *
 	 * @return string|void
 	 */
@@ -430,8 +469,8 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Delete module
 	 *
-	 * @param $module_id
-	 * @param $module_type
+	 * @param int    $module_id Module Id.
+	 * @param string $module_type Module type.
 	 *
 	 * @return void
 	 */
@@ -451,7 +490,7 @@ class Forminator_Mixpanel_Modules extends Events {
 	/**
 	 * Get filtered wrappers by group. If group ID is empty - it returns ungrouped wrappers
 	 *
-	 * @param array $fields Fields wrapper
+	 * @param array  $fields Fields wrapper.
 	 * @param string $group_id Group ID.
 	 *
 	 * @return array

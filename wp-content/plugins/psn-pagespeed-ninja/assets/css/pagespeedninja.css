@@ -1,4 +1,4 @@
-/* PageSpeed Ninja 1.4.3 | pagespeed.ninja/license.html */
+/* PageSpeed Ninja 1.4.5 | pagespeed.ninja/license.html */
 #wpcontent,
 .auto-fold #wpcontent {
     background-color: #fff;
@@ -664,8 +664,8 @@
     font-size: 14px;
     line-height: 24px;
     font-weight: 300;
-    max-width: 348px;
-    max-width: min(100%, 348px);
+    width: 100%;
+    max-width: 345px;
 }
 
 .pagespeedninja .column-wide .content > .line > .field.fullline {
@@ -1026,4 +1026,8 @@
 
 .pagespeedninja .pagespeedninja_filter_wrapper {
     margin-top: 13px;
+}
+
+#do_clear_images {
+    margin-bottom: 4px;
 }

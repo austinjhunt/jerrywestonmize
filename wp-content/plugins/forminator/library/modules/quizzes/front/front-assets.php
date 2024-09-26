@@ -1,5 +1,11 @@
 <?php
 /**
+ * The Forminator_Assets_Enqueue_Quiz class.
+ *
+ * @package Forminator
+ */
+
+/**
  * Conditionally load assets class
  *
  * @since 1.12
@@ -42,10 +48,10 @@ class Forminator_Assets_Enqueue_Quiz extends Forminator_Assets_Enqueue {
 				FORMINATOR_VERSION
 			);
 
-			// Load the base styles of leads form
+			// Load the base styles of leads form.
 			$use_ajax_load = isset( $form_settings['use_ajax_load'] ) ? $form_settings['use_ajax_load'] : false;
 			if ( $use_ajax_load ) {
-				$lead_form  = new Forminator_Assets_Enqueue_Form( forminator_get_model_from_id( $form_settings['leadsId'] ), true );
+				$lead_form = new Forminator_Assets_Enqueue_Form( forminator_get_model_from_id( $form_settings['leadsId'] ), true );
 				$lead_form->load_base_styles();
 			}
 		}
@@ -60,5 +66,4 @@ class Forminator_Assets_Enqueue_Quiz extends Forminator_Assets_Enqueue {
 		// Load form base scripts.
 		$this->load_base_scripts();
 	}
-
 }

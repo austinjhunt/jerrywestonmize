@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Shortcode Generator
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -100,15 +106,16 @@ class Forminator_Shortcode_Generator {
 	}
 
 	/**
+	 * Enqueue JS
+	 *
 	 * @since 1.0
-	 * @param $content
+	 * @param string $content Content.
 	 *
 	 * @return mixed
 	 */
 	public function enqueue_js_scripts( $content ) {
 		$sui_version = FORMINATOR_SUI_VERSION;
 
-		// $sanitize_version = str_replace( '.', '-', FORMINATOR_SUI_VERSION );.
 		$sanitize_version = str_replace( '.', '-', $sui_version );
 		$sui_body_class   = "sui-$sanitize_version";
 
@@ -166,8 +173,10 @@ class Forminator_Shortcode_Generator {
 	}
 
 	/**
+	 * Enqueue preview scripts for Hustle.
+	 *
 	 * @since 1.0
-	 * @param $content
+	 * @param string $content Content.
 	 *
 	 * @return mixed
 	 */
@@ -181,7 +190,6 @@ class Forminator_Shortcode_Generator {
 		wp_enqueue_style( 'forminator-scgen-global', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-global.min.css', array(), FORMINATOR_VERSION );
 		wp_enqueue_style( 'forminator-scgen-icons', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-icons.min.css', array(), FORMINATOR_VERSION );
 		wp_enqueue_style( 'forminator-scgen-forms', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-forms.min.css', array(), FORMINATOR_VERSION );
-
 	}
 
 	/**
@@ -223,7 +231,7 @@ class Forminator_Shortcode_Generator {
 
 							<div class="sui-tabs sui-tabs-flushed">
 
-								<?php if ( isset( $_GET['page'] ) && 'hustle_popup' === $_GET['page'] ) : ?>
+								<?php if ( isset( $_GET['page'] ) && 'hustle_popup' === $_GET['page'] ) : /* phpcs:ignore WordPress.Security.NonceVerification.Recommended */ ?>
 
 									<div role="tablist" class="sui-tabs-menu">
 
@@ -277,7 +285,7 @@ class Forminator_Shortcode_Generator {
 
 												<label for="forminator-select-forms" class="sui-label"><?php esc_html_e( 'Choose an option', 'forminator' ); ?></label>
 
-												<?php echo $this->get_forms(); ?>
+												<?php echo $this->get_forms(); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 
 												<span class="sui-error-message" style="display: none;"><?php esc_html_e( 'Please, select an option before you proceed.', 'forminator' ); ?></span>
 
@@ -308,7 +316,7 @@ class Forminator_Shortcode_Generator {
 
 												<label for="forminator-select-forms" class="sui-label"><?php esc_html_e( 'Choose an option', 'forminator' ); ?></label>
 
-												<?php echo $this->get_polls(); ?>
+												<?php echo $this->get_polls(); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 
 												<span class="sui-error-message" style="display: none;"><?php esc_html_e( 'Please, select an option before you proceed.', 'forminator' ); ?></span>
 
@@ -339,7 +347,7 @@ class Forminator_Shortcode_Generator {
 
 												<label for="forminator-select-forms" class="sui-label"><?php esc_html_e( 'Choose an option', 'forminator' ); ?></label>
 
-												<?php echo $this->get_quizzes(); ?>
+												<?php echo $this->get_quizzes(); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 
 												<span class="sui-error-message" style="display: none;"><?php esc_html_e( 'Please, select an option before you proceed.', 'forminator' ); ?></span>
 
@@ -377,7 +385,7 @@ class Forminator_Shortcode_Generator {
 
 												<label for="forminator-select-forms" class="sui-label"><?php esc_html_e( 'Choose an option', 'forminator' ); ?></label>
 
-												<?php echo $this->get_forms(); ?>
+												<?php echo $this->get_forms(); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 
 												<span class="sui-error-message" style="display: none;"><?php esc_html_e( 'Please, select an option before you proceed.', 'forminator' ); ?></span>
 
@@ -401,7 +409,7 @@ class Forminator_Shortcode_Generator {
 
 												<label for="forminator-select-forms" class="sui-label"><?php esc_html_e( 'Choose an option', 'forminator' ); ?></label>
 
-												<?php echo $this->get_polls(); ?>
+												<?php echo $this->get_polls(); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 
 												<span class="sui-error-message" style="display: none;"><?php esc_html_e( 'Please, select an option before you proceed.', 'forminator' ); ?></span>
 
@@ -425,7 +433,7 @@ class Forminator_Shortcode_Generator {
 
 												<label for="forminator-select-forms" class="sui-label"><?php esc_html_e( 'Choose an option', 'forminator' ); ?></label>
 
-												<?php echo $this->get_quizzes(); ?>
+												<?php echo $this->get_quizzes(); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 
 												<span class="sui-error-message" style="display: none;"><?php esc_html_e( 'Please, select an option before you proceed.', 'forminator' ); ?></span>
 
@@ -477,23 +485,22 @@ class Forminator_Shortcode_Generator {
 
 			$html .= '<option></option>';
 
-			foreach ( $modules as $module ) {
-				$module = (array) $module;
+		foreach ( $modules as $module ) {
+			$module = (array) $module;
 
-				$title = forminator_get_form_name( $module['id'] );
+			$title = forminator_get_form_name( $module['id'] );
 
-				if ( mb_strlen( $title ) > 25 ) {
-					$title = mb_substr( $title, 0, 25 ) . '...';
-				}
-
-				$html .= '<option value="' . absint( $module['id'] ) . '">' . esc_html( $title ) . ' - ID: ' . absint( $module['id'] ) . '</option>';
-
+			if ( mb_strlen( $title ) > 25 ) {
+				$title = mb_substr( $title, 0, 25 ) . '...';
 			}
+
+			$html .= '<option value="' . absint( $module['id'] ) . '">' . esc_html( $title ) . ' - ID: ' . absint( $module['id'] ) . '</option>';
+
+		}
 
 		$html .= '</select>';
 
 		return $html;
-
 	}
 
 	/**
@@ -513,18 +520,18 @@ class Forminator_Shortcode_Generator {
 
 			$html .= '<option></option>';
 
-			foreach ( $modules as $module ) {
-				$module = (array) $module;
+		foreach ( $modules as $module ) {
+			$module = (array) $module;
 
-				$title = forminator_get_form_name( $module['id'] );
+			$title = forminator_get_form_name( $module['id'] );
 
-				if ( mb_strlen( $title ) > 25 ) {
-					$title = mb_substr( $title, 0, 25 ) . '...';
-				}
-
-				$html .= '<option value="' . absint( $module['id'] ) . '">' . esc_html( $title ) . ' - ID: ' . absint( $module['id'] ) . '</option>';
-
+			if ( mb_strlen( $title ) > 25 ) {
+				$title = mb_substr( $title, 0, 25 ) . '...';
 			}
+
+			$html .= '<option value="' . absint( $module['id'] ) . '">' . esc_html( $title ) . ' - ID: ' . absint( $module['id'] ) . '</option>';
+
+		}
 
 		$html .= '</select>';
 
@@ -548,22 +555,21 @@ class Forminator_Shortcode_Generator {
 
 			$html .= '<option value="">' . esc_html__( 'Select Quiz', 'forminator' ) . '</option>';
 
-			foreach ( $modules as $module ) {
-				$module = (array) $module;
+		foreach ( $modules as $module ) {
+			$module = (array) $module;
 
-				$title = forminator_get_form_name( $module['id'] );
+			$title = forminator_get_form_name( $module['id'] );
 
-				if ( mb_strlen( $title ) > 25 ) {
-					$title = mb_substr( $title, 0, 25 ) . '...';
-				}
-
-				$html .= '<option value="' . absint( $module['id'] ) . '">' . esc_html( $title ) . ' - ID: ' . absint( $module['id'] ) . '</option>';
-
+			if ( mb_strlen( $title ) > 25 ) {
+				$title = mb_substr( $title, 0, 25 ) . '...';
 			}
+
+			$html .= '<option value="' . absint( $module['id'] ) . '">' . esc_html( $title ) . ' - ID: ' . absint( $module['id'] ) . '</option>';
+
+		}
 
 		$html .= '</select>';
 
 		return $html;
-
 	}
 }

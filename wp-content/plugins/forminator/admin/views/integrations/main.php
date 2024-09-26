@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/integrations/main.php
+ *
+ * @package Forminator
+ */
+
 $integrations_page = admin_url( 'admin.php?page=forminator-integrations' );
 
 if ( empty( $module_id ) ) {
@@ -20,13 +26,16 @@ if ( empty( $addons['connected'] ) && empty( $addons['not_connected'] ) ) { ?>
 
 				<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
 
-                <p><?php printf(
+				<p>
+				<?php
+				printf(
 					/* Translators: 1. Opening <a> tag with integration page link, 2. closing <a> tag. */
-						esc_html__( 'You are not connected to any third party apps. You can connect to the available apps via their API on the %1$sIntegrations%2$s page and come back to activate them for collecting data of this module.', 'forminator' ),
-						'<a href="' . esc_url( $integrations_page ) . '">',
-						'</a>'
-                    ); ?>
-                </p>
+					esc_html__( 'You are not connected to any third party apps. You can connect to the available apps via their API on the %1$sIntegrations%2$s page and come back to activate them for collecting data of this module.', 'forminator' ),
+					'<a href="' . esc_url( $integrations_page ) . '">',
+					'</a>'
+				);
+				?>
+				</p>
 
 			</div>
 
@@ -104,13 +113,16 @@ if ( empty( $addons['connected'] ) && empty( $addons['not_connected'] ) ) { ?>
 
 						<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
 
-						<p><?php printf(
+						<p>
+						<?php
+						printf(
 							/* Translators: 1. Opening <a> tag with integration page link, 2. closing <a> tag. */
-                                esc_html__( 'Connect to more third party apps on the %1$sIntegrations%2$s page and activate them to collect the data of this module here.', 'forminator' ),
-                                '<a href="' . esc_url( $integrations_page ) . '">',
-                                '</a>'
-                            ); ?>
-                        </p>
+							esc_html__( 'Connect to more third party apps on the %1$sIntegrations%2$s page and activate them to collect the data of this module here.', 'forminator' ),
+							'<a href="' . esc_url( $integrations_page ) . '">',
+							'</a>'
+						);
+						?>
+						</p>
 
 					</div>
 
@@ -139,13 +151,16 @@ if ( empty( $addons['connected'] ) && empty( $addons['not_connected'] ) ) { ?>
 
 			</table>
 
-            <span class="sui-description">
-                <?php printf(
-                /* Translators: 1. Opening <a> tag with integration page link, 2. closing <a> tag. */
-	                esc_html__( 'You are connected to these apps via their API. Connect to more apps on the %1$sIntegrations%2$s page.', 'forminator' ),
-	                '<a href="' . esc_url( $integrations_page ) . '">',
-	                '</a>' ); ?>
-            </span>
+			<span class="sui-description">
+				<?php
+				printf(
+				/* Translators: 1. Opening <a> tag with integration page link, 2. closing <a> tag. */
+					esc_html__( 'You are connected to these apps via their API. Connect to more apps on the %1$sIntegrations%2$s page.', 'forminator' ),
+					'<a href="' . esc_url( $integrations_page ) . '">',
+					'</a>'
+				);
+				?>
+			</span>
 
 		<?php } ?>
 

@@ -1,6 +1,12 @@
 <?php
+/**
+ * The Forminator Aweber Oauth.
+ *
+ * @package Forminator
+ */
 
-require_once dirname( __FILE__ ) . '/class-forminator-addon-aweber-oauth.php';
+// Include forminator-addon-aweber-oauth.
+require_once __DIR__ . '/class-forminator-addon-aweber-oauth.php';
 
 /**
  * Class Forminator_Aweber_Wp_Api
@@ -10,18 +16,57 @@ class Forminator_Aweber_Wp_Api {
 	/**
 	 * Instances of aweber api
 	 *
-	 * @var array
+	 * @var Forminator_Aweber_Wp_Api|array
 	 */
 	private static $_instances = array();
 
+	/**
+	 * Access token URL
+	 *
+	 * @var string
+	 */
 	private static $_access_token_url = 'https://auth.aweber.com/1.0/oauth/access_token';
-	private static $_api_base_url     = 'https://api.aweber.com/1.0/';
 
+	/**
+	 * API base URL.
+	 *
+	 * @var string
+	 */
+	private static $_api_base_url = 'https://api.aweber.com/1.0/';
+
+	/**
+	 * OAUTH version
+	 *
+	 * @var string
+	 */
 	const OAUTH_VERSION = '1.0';
 
-	private $_application_key    = '';
+	/**
+	 * Application Key
+	 *
+	 * @var string
+	 */
+	private $_application_key = '';
+
+	/**
+	 * Application secret
+	 *
+	 * @var string
+	 */
 	private $_application_secret = '';
-	private $_oauth_token        = '';
+
+	/**
+	 * OAuth token
+	 *
+	 * @var string
+	 */
+	private $_oauth_token = '';
+
+	/**
+	 * OAuth token secret
+	 *
+	 * @var string
+	 */
 	private $_oauth_token_secret = '';
 
 	/**
@@ -53,16 +98,15 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param $_application_key
-	 * @param $_application_secret
+	 * @param string $_application_key Application key.
+	 * @param string $_application_secret Application secret.
+	 * @param string $_oauth_token OAuth token.
+	 * @param string $_oauth_token_secret OAuth token secret.
 	 *
-	 * @param $_oauth_token
-	 * @param $_oauth_token_secret
-	 *
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function __construct( $_application_key, $_application_secret, $_oauth_token, $_oauth_token_secret ) {
-		//prerequisites
+		// prerequisites.
 		if ( ! $_application_key || ! $_application_secret || ! $_oauth_token || ! $_oauth_token_secret ) {
 			throw new Forminator_Integration_Exception( esc_html__( 'Missing required API Credentials', 'forminator' ) );
 		}
@@ -78,14 +122,13 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param $_application_key
-	 * @param $_application_secret
-	 *
-	 * @param $_oauth_token
-	 * @param $_oauth_token_secret
+	 * @param string $_application_key Application key.
+	 * @param string $_application_secret Application secret.
+	 * @param string $_oauth_token OAuth token.
+	 * @param string $_oauth_token_secret OAuth token secret.
 	 *
 	 * @return Forminator_Aweber_Wp_Api|null
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public static function get_instance( $_application_key, $_application_secret, $_oauth_token, $_oauth_token_secret ) {
 		$args         = func_get_args();
@@ -103,7 +146,7 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param $user_agent
+	 * @param string $user_agent User Agent.
 	 *
 	 * @return string
 	 */
@@ -127,14 +170,13 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param string $verb
-	 * @param        $url
-	 * @param array  $args
-	 *
-	 * @param array  $headers
+	 * @param string $verb `GET` `POST` `PUT` `DELETE` `PATCH`.
+	 * @param string $url URL.
+	 * @param array  $args Arguments.
+	 * @param array  $headers Headers.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function request( $verb, $url, $args = array(), $headers = array() ) {
 		// Adding extra user agent for wp remote request.
@@ -192,7 +234,7 @@ class Forminator_Aweber_Wp_Api {
 			$url             .= ( '?' . http_build_query( $oauth_url_params ) );
 			$_args['body']    = wp_json_encode( $args );
 		} else {
-			# WARNING: If not being sent as json, non-primitive items in data must be json serialized in GET and POST.
+			// WARNING: If not being sent as json, non-primitive items in data must be json serialized in GET and POST.
 			foreach ( $args as $key => $value ) {
 				if ( is_array( $value ) ) {
 					$args[ $key ] = wp_json_encode( $value );
@@ -245,13 +287,21 @@ class Forminator_Aweber_Wp_Api {
 				}
 
 				if ( 404 === $status_code ) {
-					throw new Forminator_Integration_Exception( sprintf(
+					throw new Forminator_Integration_Exception(
+						sprintf(
 						/* translators: %s: Error message */
-						esc_html__( 'Failed to process request : %s', 'forminator' ), $msg ) );
+							esc_html__( 'Failed to process request : %s', 'forminator' ),
+							esc_html( $msg )
+						)
+					);
 				}
-				throw new Forminator_Integration_Exception( sprintf(
+				throw new Forminator_Integration_Exception(
+					sprintf(
 					/* translators: %s: Error message */
-					esc_html__( 'Failed to process request : %s', 'forminator' ), $msg ) );
+						esc_html__( 'Failed to process request : %s', 'forminator' ),
+						esc_html( $msg )
+					)
+				);
 			}
 		}
 
@@ -264,7 +314,7 @@ class Forminator_Aweber_Wp_Api {
 			if ( empty( $res ) ) {
 				$res = wp_parse_args( $body, array() );
 
-				//json-ify to make same format as json response (which is object not array)
+				// json-ify to make same format as json response (which is object not array).
 				$res = wp_json_encode( $res );
 				$res = json_decode( $res );
 			}
@@ -323,9 +373,9 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param $method
-	 * @param $url
-	 * @param $data
+	 * @param string $method HTTP methods.
+	 * @param string $url URL.
+	 * @param array  $data Data.
 	 *
 	 * @return mixed
 	 */
@@ -356,7 +406,7 @@ class Forminator_Aweber_Wp_Api {
 	}
 
 	/**
-	 * prepare Request
+	 * Prepare Request
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
@@ -392,12 +442,12 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param       $oauth_verifier
-	 * @param array $args
+	 * @param string $oauth_verifier Verifier.
+	 * @param array  $args Arguments.
 	 *
 	 * @return object contains oauth_token and oauth_token_secret
 	 *
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function get_access_token( $oauth_verifier, $args = array() ) {
 		$default_args = array(
@@ -424,10 +474,10 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param array $args
+	 * @param array $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function get_accounts( $args = array() ) {
 		$default_args = array();
@@ -441,11 +491,11 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param       $account_id
-	 * @param array $args
+	 * @param string $account_id Account Id.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function get_account_lists( $account_id, $args = array() ) {
 		$default_args = array();
@@ -459,12 +509,12 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param       $account_id
-	 * @param       $list_id
-	 * @param array $args
+	 * @param string $account_id Account Id.
+	 * @param string $list_id List Id.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function get_account_list_custom_fields( $account_id, $list_id, $args = array() ) {
 		$default_args = array();
@@ -487,12 +537,12 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param       $account_id
-	 * @param       $list_id
-	 * @param array $args
+	 * @param string $account_id Account Id.
+	 * @param string $list_id List Id.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function add_account_list_subscriber( $account_id, $list_id, $args = array() ) {
 		$default_args = array(
@@ -522,13 +572,13 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param       $account_id
-	 * @param       $list_id
-	 * @param       $subscriber_id
-	 * @param array $args
+	 * @param string $account_id Account Id.
+	 * @param string $list_id List Id.
+	 * @param string $subscriber_id Subscriber Id.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function update_account_list_subscriber( $account_id, $list_id, $subscriber_id, $args = array() ) {
 		$default_args = array(
@@ -576,12 +626,12 @@ class Forminator_Aweber_Wp_Api {
 	 *
 	 * @since 1.0 Aweber Integration
 	 *
-	 * @param       $account_id
-	 * @param       $list_id
-	 * @param array $args
+	 * @param string $account_id Account Id.
+	 * @param string $list_id List Id.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function find_account_list_subscriber( $account_id, $list_id, $args = array() ) {
 		$default_args = array(
@@ -625,7 +675,7 @@ class Forminator_Aweber_Wp_Api {
 	/**
 	 * Get API URL
 	 *
-	 * @param $path
+	 * @param string $path App Path.
 	 *
 	 * @return string
 	 */
@@ -699,5 +749,4 @@ class Forminator_Aweber_Wp_Api {
 	public function get_last_url_request() {
 		return $this->_last_url_request;
 	}
-
 }

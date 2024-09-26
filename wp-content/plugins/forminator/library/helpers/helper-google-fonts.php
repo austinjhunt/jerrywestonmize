@@ -1,4 +1,10 @@
 <?php
+/**
+ * Google font helper functions.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -22,13 +28,14 @@ function forminator_get_all_fonts() {
  * @since 1.0
  * @return mixed
  */
-
 function forminator_load_from_google() {
 	return array();
 }
 
 /**
  * Return font families
+ *
+ * @param bool $is_object Is object.
  *
  * @since 1.0
  * @return mixed

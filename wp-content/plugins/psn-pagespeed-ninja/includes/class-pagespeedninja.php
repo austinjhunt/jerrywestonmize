@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.4.3
+ * @version    1.4.5
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       July 2024
+ * @date       September 2024
  */
 
 class PagespeedNinja
@@ -37,7 +37,7 @@ class PagespeedNinja
     {
         $this->plugin_slug = $plugin_slug;
         $this->plugin_name = $plugin_name;
-        $this->version = '1.4.3';
+        $this->version = '1.4.5';
         $this->plugin_dir_path = plugin_dir_path(__DIR__);
 
         self::$classmap = array(
@@ -456,6 +456,7 @@ END
         add_action('wp_ajax_pagespeedninja_get_cache_size', array($plugin_admin_ajax, 'get_cache_size'));
 
         add_action('wp_ajax_pagespeedninja_clear_images', array($plugin_admin_ajax, 'clear_images'));
+        add_action('wp_ajax_pagespeedninja_clear_image_errors', array($plugin_admin_ajax, 'clear_image_errors'));
         add_action('wp_ajax_pagespeedninja_clear_loaded', array($plugin_admin_ajax, 'clear_loaded'));
         add_action('wp_ajax_pagespeedninja_clear_cache_expired', array($plugin_admin_ajax, 'clear_cache_expired'));
         add_action('wp_ajax_pagespeedninja_clear_cache_all', array($plugin_admin_ajax, 'clear_cache_all'));
@@ -481,6 +482,6 @@ END
         add_action('template_redirect', array($plugin_public, 'template_redirect'), -150);
 
         add_filter('wp_cache_meta', array($plugin_public, 'wp_cache_meta'));
-        add_action('wp_footer', array($plugin_public, 'wp_footer'), 100);
+        add_action('wp_footer', array($plugin_public, 'wp_footer'), 1000000);
     }
 }

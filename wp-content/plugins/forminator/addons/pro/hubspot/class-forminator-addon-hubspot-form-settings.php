@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Hubspot form settings
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Hubspot_Form_Settings
  * Handle how form settings displayed and saved
  *

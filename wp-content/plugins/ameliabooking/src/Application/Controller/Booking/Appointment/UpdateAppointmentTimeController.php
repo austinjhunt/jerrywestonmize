@@ -22,6 +22,7 @@ class UpdateAppointmentTimeController extends Controller
      */
     public $allowedFields = [
         'bookingStart',
+        'timeZone',
         'utcOffset'
     ];
 

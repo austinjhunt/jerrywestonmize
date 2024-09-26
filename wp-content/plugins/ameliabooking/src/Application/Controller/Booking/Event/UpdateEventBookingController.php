@@ -57,6 +57,6 @@ class UpdateEventBookingController extends Controller
      */
     protected function emitSuccessEvent(DomainEventBus $eventBus, CommandResult $result)
     {
-        $eventBus->emit('BookingEdited', $result);
+        $eventBus->emit('EventBookingEdited', $result);
     }
 }

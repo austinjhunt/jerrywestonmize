@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Html class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,36 +17,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Html extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'html';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'html';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 17;
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-code';
@@ -73,7 +93,7 @@ class Forminator_Html extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -89,7 +109,7 @@ class Forminator_Html extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
 	 *
 	 * @return mixed

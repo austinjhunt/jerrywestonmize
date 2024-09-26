@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template for setup client
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
 	'token'               => '',
@@ -9,7 +15,11 @@ $vars = array(
 	'client_id_error'     => '',
 	'redirect_url'        => '',
 );
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -33,7 +43,10 @@ foreach ( $template_vars as $key => $val ) {
 		<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Set up Slack to be used by Forminator for communicating with Slack server.', 'forminator' ); ?></p>
 
 		<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-			<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+			<?php
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+				echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+			?>
 		<?php endif; ?>
 
 	<?php endif ?>

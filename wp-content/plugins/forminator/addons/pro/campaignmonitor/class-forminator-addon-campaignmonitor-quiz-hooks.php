@@ -1,10 +1,14 @@
 <?php
+/**
+ * The Forminator Campaign Monitor Quiz Hooks.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Campaignmonitor_Quiz_Hooks
  *
  * @since 1.0 Campaignmonitor Integration
- *
  */
 class Forminator_Campaignmonitor_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
@@ -15,7 +19,7 @@ class Forminator_Campaignmonitor_Quiz_Hooks extends Forminator_Integration_Quiz_
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -39,11 +43,13 @@ class Forminator_Campaignmonitor_Quiz_Hooks extends Forminator_Integration_Quiz_
 	 * @since 1.0 Campaign Monitor Integration
 	 * @since 1.7 Add $form_entry_fields args
 	 *
-	 * @param       $connection_id
-	 * @param       $submitted_data
-	 * @param       $connection_settings
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $current_entry_fields Form entry fields.
 	 *
-	 * @return array `is_sent` true means its success send data to ampaign Monitor, false otherwise
+	 * @return array `is_sent` true means its success send data to ampaign Monitor, false otherwise.
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function get_status_on_add_subscriber( $connection_id, $submitted_data, $connection_settings, $current_entry_fields ) {
 		$quiz_submitted_data = get_quiz_submitted_data( $this->module, $submitted_data, $current_entry_fields );
@@ -57,7 +63,7 @@ class Forminator_Campaignmonitor_Quiz_Hooks extends Forminator_Integration_Quiz_
 		$quiz_id                = $this->module_id;
 		$quiz_settings_instance = $this->settings_instance;
 
-		//check required fields
+		// check required fields.
 		try {
 			$api  = $this->addon->get_api();
 			$args = array();
@@ -72,9 +78,12 @@ class Forminator_Campaignmonitor_Quiz_Hooks extends Forminator_Integration_Quiz_
 
 			$email_element_id = $connection_settings['fields_map']['default_field_email'];
 			if ( ! isset( $submitted_data[ $email_element_id ] ) || empty( $submitted_data[ $email_element_id ] ) ) {
-				throw new Forminator_Integration_Exception( sprintf(
+				throw new Forminator_Integration_Exception(
+					sprintf(
 					/* translators: 1: Email field ID */
-						esc_html__( 'Email Address on element %1$s not found or not filled on submitted data.', 'forminator' ), $email_element_id )
+						esc_html__( 'Email Address on element %1$s not found or not filled on submitted data.', 'forminator' ),
+						$email_element_id
+					)
 				);
 			}
 			$email = $submitted_data[ $email_element_id ];
@@ -85,9 +94,12 @@ class Forminator_Campaignmonitor_Quiz_Hooks extends Forminator_Integration_Quiz_
 
 			$name_element_id = $connection_settings['fields_map']['default_field_name'];
 			if ( ! isset( $submitted_data[ $name_element_id ] ) || empty( $submitted_data[ $name_element_id ] ) ) {
-				throw new Forminator_Integration_Exception( sprintf(
+				throw new Forminator_Integration_Exception(
+					sprintf(
 					/* translators: 1: Name field ID */
-						esc_html__( 'Name on element %1$s not found or not filled on submitted data.', 'forminator' ), $name_element_id )
+						esc_html__( 'Name on element %1$s not found or not filled on submitted data.', 'forminator' ),
+						$name_element_id
+					)
 				);
 			}
 
@@ -194,8 +206,8 @@ class Forminator_Campaignmonitor_Quiz_Hooks extends Forminator_Integration_Quiz_
 	 *
 	 * @since 1.0 Campaign Monitor Integration
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param  array                      $addon_meta_data
+	 * @param Forminator_Form_Entry_Model $entry_model Form entry model.
+	 * @param  array                       $addon_meta_data Addon meta data.
 	 *
 	 * @return bool
 	 */
@@ -256,8 +268,8 @@ class Forminator_Campaignmonitor_Quiz_Hooks extends Forminator_Integration_Quiz_
 						$addon_meta_datum_value = $addon_meta_datum['value'];
 						if ( isset( $addon_meta_datum_value['is_sent'] ) && $addon_meta_datum_value['is_sent'] ) {
 							if ( isset( $addon_meta_datum_value['list_id'] ) && ! empty( $addon_meta_datum_value['list_id'] )
-							     && isset( $addon_meta_datum_value['subscriber_email'] )
-							     && ! empty( $addon_meta_datum_value['subscriber_email'] ) ) {
+								&& isset( $addon_meta_datum_value['subscriber_email'] )
+								&& ! empty( $addon_meta_datum_value['subscriber_email'] ) ) {
 								$subscribers_to_delete[] = array(
 									'list_id' => $addon_meta_datum_value['list_id'],
 									'email'   => $addon_meta_datum_value['subscriber_email'],
@@ -277,7 +289,6 @@ class Forminator_Campaignmonitor_Quiz_Hooks extends Forminator_Integration_Quiz_
 			 * @param int                                            $quiz_id                current Quiz ID.
 			 * @param array                                          $addon_meta_data        integration meta data.
 			 * @param Forminator_Campaignmonitor_Quiz_Settings $quiz_settings_instance Campaign Monitor Integration Quiz Settings instance.
-			 *
 			 */
 			$subscribers_to_delete = apply_filters(
 				'forminator_addon_campaignmonitor_subscribers_to_delete',
@@ -316,6 +327,5 @@ class Forminator_Campaignmonitor_Quiz_Hooks extends Forminator_Integration_Quiz_
 
 			return false;
 		}
-
 	}
 }

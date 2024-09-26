@@ -37,6 +37,7 @@ class __TwigTemplate_79810918dede10b67349ebd5005561b67aec3910cc375e8ac5a9175e7ad
     protected function doDisplay(array $context, array $blocks = [])
     {
         $macros = $this->macros;
+        // line 1
         yield "<div class=\"mailpoet_history_wrapper\">
   <a id=\"mailpoet-history-arrow-undo\" class=\"mailpoet_history_arrow\">
     <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"miter\" fill=\"none\">
@@ -51,6 +52,10 @@ class __TwigTemplate_79810918dede10b67349ebd5005561b67aec3910cc375e8ac5a9175e7ad
       <polyline points=\"16 15 19 18 22 15\"/>
     </svg>
   </a>
+  <input type=\"button\" id=\"mailpoet-history-reset-template\" class=\"button-link mailpoet_reset_template mailpoet_hidden\" value=\"";
+        // line 15
+        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Reset template"), "html_attr");
+        yield "\" />
 </div>
 ";
         return; yield '';
@@ -67,9 +72,17 @@ class __TwigTemplate_79810918dede10b67349ebd5005561b67aec3910cc375e8ac5a9175e7ad
     /**
      * @codeCoverageIgnore
      */
+    public function isTraitable()
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugInfo()
     {
-        return array ();
+        return array (  54 => 15,  38 => 1,);
     }
 
     public function getSourceContext()

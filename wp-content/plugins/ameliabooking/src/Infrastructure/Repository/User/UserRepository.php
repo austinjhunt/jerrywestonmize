@@ -119,14 +119,18 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
 
     /**
      * @param int          $id
-     * @param AbstractUser $entity
+     * @param AbstractUser|array $entity
      *
      * @return bool
      * @throws QueryExecutionException
      */
     public function update($id, $entity)
     {
-        $data = $entity->toArray();
+        if (!is_array($entity)) {
+            $data = $entity->toArray();
+        } else {
+            $data = $entity;
+        }
 
         $params = [
             ':externalId'       => $data['externalId'] ?: null,

@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_CForm_New_Page class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -29,7 +35,7 @@ class Forminator_CForm_New_Page extends Forminator_Admin_Page {
 	 * Add page screen hooks
 	 *
 	 * @since 1.0
-	 * @param $hook
+	 * @param string $hook Hook.
 	 */
 	public function enqueue_scripts( $hook ) {
 		// Load admin scripts.

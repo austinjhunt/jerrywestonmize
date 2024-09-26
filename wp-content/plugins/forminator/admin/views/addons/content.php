@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/addons/content.php
+ *
+ * @package Forminator
+ */
+
 global $current_user;
 $projects = $this->get_addons_by_action();
 $img_path = forminator_plugin_url() . 'assets/images/';
@@ -44,7 +50,7 @@ $img_path = forminator_plugin_url() . 'assets/images/';
 
 			<?php
 			if ( empty( $projects['all'] ) ) {
-				Forminator_Admin_Addons_page::get_instance()->render_template(
+				Forminator_Admin_Addons_Page::get_instance()->render_template(
 					'admin/views/addons/content-empty',
 					array(
 						'title'       => esc_html__( 'No Add-Ons', 'forminator' ),
@@ -59,9 +65,9 @@ $img_path = forminator_plugin_url() . 'assets/images/';
 					<?php
 					foreach ( $projects['all'] as $idx => $addons ) {
 						if ( ! empty( $addons ) ) {
-							$idx ++;
+							++$idx;
 
-							Forminator_Admin_Addons_page::get_instance()->addons_render( 'addons-list', $addons->pid, $addons );
+							Forminator_Admin_Addons_Page::get_instance()->addons_render( 'addons-list', $addons->pid, $addons );
 
 							// Close current row and open a new one.
 							if ( 0 === $idx % 2 ) :
@@ -85,8 +91,8 @@ $img_path = forminator_plugin_url() . 'assets/images/';
 if ( FORMINATOR_PRO && ! empty( $projects['all'] ) ) {
 	foreach ( $projects['all'] as $slug => $addons ) {
 		if ( ! empty( $addons ) ) {
-			Forminator_Admin_Addons_page::get_instance()->addons_render( 'addons-activate-popup', $addons->pid, $addons ); // Need to remove this from the process
-			Forminator_Admin_Addons_page::get_instance()->addons_render( 'addon-details', $addons->pid, $addons );
+			Forminator_Admin_Addons_Page::get_instance()->addons_render( 'addons-activate-popup', $addons->pid, $addons ); // Need to remove this from the process.
+			Forminator_Admin_Addons_Page::get_instance()->addons_render( 'addon-details', $addons->pid, $addons );
 		}
 	}
 }

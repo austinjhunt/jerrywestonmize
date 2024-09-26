@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Fields
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -84,11 +90,10 @@ class Forminator_Fields {
 
 		if ( $required_files_exists ) {
 			foreach ( $required_files as $required_file ) {
-				/** @noinspection PhpIncludeInspection */
+				/* @noinspection PhpIncludeInspection */
 				include_once $required_file;
 			}
 		}
-
 	}
 
 	/**
@@ -97,9 +102,7 @@ class Forminator_Fields {
 	 * @since 1.0.5
 	 */
 	public function maybe_load_external_autofill_providers() {
-		/**
-		 * see samples/forminator-simple-autofill-plugin for example how to use it
-		 */
+		// See samples/forminator-simple-autofill-plugin for example how to use it.
 		do_action( 'forminator_register_autofill_provider' );
 	}
 
@@ -117,7 +120,7 @@ class Forminator_Fields {
 
 		// Create new schedule using AS.
 		if ( false === as_has_scheduled_action( 'forminator_daily_cron' ) ) {
-			//	Set to run after 25 hours so it will be more than 24 hours compared to file upload time
+			// Set to run after 25 hours so it will be more than 24 hours compared to file upload time.
 			as_schedule_single_action( strtotime( '+25 hours' ), 'forminator_daily_cron', array(), 'forminator', true );
 		}
 	}
@@ -138,17 +141,18 @@ class Forminator_Fields {
 	 */
 	public function schedule_delete_temp_files() {
 		$temp_path = forminator_upload_root_temp() . '/';
-
-		if ( $handle = @opendir( $temp_path ) ) {
+		$handle    = @opendir( $temp_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		if ( $handle ) {
 			// Check if the dir exist before opening it.
 			if ( is_dir( $temp_path ) ) {
-				if ( $handle = opendir( $temp_path ) ) {
-					while ( false !== ( $file = readdir( $handle ) ) ) {
+				$handle = opendir( $temp_path );
+				if ( $handle ) {
+					while ( false !== ( $file = readdir( $handle ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition -- false positive
 						if ( ! empty( $file ) && ! in_array( $file, array( '.', '..' ), true ) ) {
 							$temp_file = $temp_path . $file;
 							$file_time = filemtime( $temp_file );
 							if ( file_exists( $temp_file ) && ( time() - $file_time ) >= 60 * 60 * 12 ) {
-								unlink( $temp_file );
+								wp_delete_file( $temp_file );
 							}
 						}
 					}
@@ -158,7 +162,7 @@ class Forminator_Fields {
 		}
 	}
 
-	/*
+	/**
 	 * Upgrade actions
 	 */
 	public function upgrade_actions() {
@@ -181,7 +185,20 @@ class Forminator_Fields {
 			return null;
 		}
 
-		rmdir( $temp_path );
+		// Ensure the WP_Filesystem is initialized.
+		if ( ! function_exists( 'wp_filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		WP_Filesystem();
+
+		// Global $wp_filesystem should be available now.
+		global $wp_filesystem;
+
+		// remove `css` folder.
+		if ( $wp_filesystem->is_dir( $temp_path ) ) {
+			$wp_filesystem->rmdir( $temp_path );
+		}
 	}
 
 	/**

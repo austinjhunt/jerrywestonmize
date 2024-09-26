@@ -1,10 +1,14 @@
 <?php
+/**
+ * Forminator Hubspot Quiz hooks
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Hubspot_Quiz_Hooks
  *
  * @since 1.0 HubSpot Integration
- *
  */
 class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
@@ -15,7 +19,7 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -36,14 +40,14 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	/**
 	 * Get status on send message to HubSpot
 	 *
-	 * @param $connection_id
-	 * @param $submitted_data
-	 * @param $connection_settings
-	 * @param $current_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $current_entry_fields Form entry fields.
 	 *
 	 * @return array `is_sent` true means its success send data to HubSpot, false otherwise
-	 *@since 1.0 HubSpot Integration
-	 *
+	 * @since 1.0 HubSpot Integration
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function get_status_on_contact_sync( $connection_id, $submitted_data, $connection_settings, $current_entry_fields ) {
 		$quiz_submitted_data = get_quiz_submitted_data( $this->module, $submitted_data, $current_entry_fields );
@@ -66,23 +70,26 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 		$connection_name  = isset( $connection_settings['name'] ) ? $connection_settings['name'] : '';
 		$connection_name .= $name_suffix;
 
-		//check required fields
+		// check required fields.
 		try {
 			$api  = $this->addon->get_api();
 			$args = array();
 
 			$list_id = $connection_settings['list_id'];
 
-			$deafult_fields = $connection_settings['fields_map'];
+			$deafult_fields    = $connection_settings['fields_map'];
 			$custom_fields_map = array_filter( $connection_settings['custom_fields_map'] );
 
 			$fields_map = array_merge( $deafult_fields, $custom_fields_map );
 
 			$email_element_id = $connection_settings['fields_map']['email'];
 			if ( ! isset( $submitted_data[ $email_element_id ] ) || empty( $submitted_data[ $email_element_id ] ) ) {
-				throw new Forminator_Integration_Exception( sprintf(
-				/* translators: 1: Email field ID */
-					esc_html__( 'Email on element %1$s not found or not filled on submitted data.', 'forminator' ), $email_element_id )
+				throw new Forminator_Integration_Exception(
+					sprintf(
+					/* translators: 1: Email field ID */
+						esc_html__( 'Email on element %1$s not found or not filled on submitted data.', 'forminator' ),
+						$email_element_id
+					)
 				);
 			}
 			$email         = $submitted_data[ $email_element_id ];
@@ -96,10 +103,10 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 				'lastname',
 				'jobtitle',
 			);
-			$extra_field = array();
+			$extra_field   = array();
 			if ( ! empty( $custom_fields_map ) ) {
-				foreach( $custom_fields_map as $custom => $custom_field ) {
-					if( ! empty( $custom ) ) {
+				foreach ( $custom_fields_map as $custom => $custom_field ) {
+					if ( ! empty( $custom ) ) {
 						$extra_field[] = $custom;
 					}
 				}
@@ -154,17 +161,17 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
 			$contact_id = $api->add_update_contact( $args );
 			// Add contact to contact list.
-			$toObjectId = null;
+			$to_object_id = null;
 			if ( ! empty( $list_id ) && ! empty( $contact_id ) && ! is_object( $contact_id ) && (int) $contact_id > 0 ) {
-				$toObjectId = $contact_id;
+				$to_object_id = $contact_id;
 				$api->add_to_contact_list( $contact_id, $args['email'], $list_id );
 			}
 
 			$create_ticket = isset( $connection_settings['create_ticket'] ) ? $connection_settings['create_ticket'] : '';
-			if( empty( $connection_settings['name'] ) ) {
+			if ( empty( $connection_settings['name'] ) ) {
 				$connection_settings['name'] = 'HubSpot';
 			}
-			$fromObjectId  = null;
+			$from_object_id = null;
 			if ( '1' === $create_ticket ) {
 				$ticket['pipeline_id']        = $connection_settings['pipeline_id'];
 				$ticket['status_id']          = $connection_settings['status_id'];
@@ -178,10 +185,10 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
 				$object_id = $api->create_ticket( $ticket );
 
-				if ( ! is_null( $toObjectId ) && ! is_object( $object_id ) && (int) $object_id > 0 ) {
-					$fromObjectId              = $object_id;
-					$associate['fromObjectId'] = $fromObjectId;
-					$associate['toObjectId']   = $toObjectId;
+				if ( ! is_null( $to_object_id ) && ! is_object( $object_id ) && (int) $object_id > 0 ) {
+					$from_object_id            = $object_id;
+					$associate['fromObjectId'] = $from_object_id;
+					$associate['toObjectId']   = $to_object_id;
 					$api->ticket_associate_contact( $associate );
 				}
 			}
@@ -195,8 +202,8 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 				'data_sent'       => $api->get_last_data_sent(),
 				'data_received'   => $api->get_last_data_received(),
 				'url_request'     => $api->get_last_url_request(),
-				'contact_id'      => $toObjectId,
-				'ticket_id'       => $fromObjectId,
+				'contact_id'      => $to_object_id,
+				'ticket_id'       => $from_object_id,
 			);
 
 		} catch ( Forminator_Integration_Exception $e ) {
@@ -223,10 +230,11 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 *
 	 * @since 1.0 HubSpot Integration
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param  array $addon_meta_data
+	 * @param Forminator_Form_Entry_Model $entry_model Form Entry Model.
+	 * @param  array                       $addon_meta_data Addon meta data.
 	 *
 	 * @return bool
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function on_before_delete_entry( Forminator_Form_Entry_Model $entry_model, $addon_meta_data ) {
 		// attach hook first.
@@ -346,6 +354,5 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
 			return false;
 		}
-
 	}
 }

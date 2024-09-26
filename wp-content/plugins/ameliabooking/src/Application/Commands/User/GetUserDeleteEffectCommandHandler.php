@@ -71,7 +71,7 @@ class GetUserDeleteEffectCommandHandler extends CommandHandler
             $message = "Could not delete user.
                 This user has {$appointmentsCount['futureAppointments']} {$appointmentString} in the future.";
         } elseif ($appointmentsCount['packageAppointments']) {
-            $message = "This service is available for booking in purchased package.
+            $message = "This user has bookings in purchased package.
                 Are you sure you want to delete this user?";
         } elseif ($appointmentsCount['pastAppointments'] > 0) {
             $appointmentString = $appointmentsCount['pastAppointments'] === 1 ? 'appointment' : 'appointments';

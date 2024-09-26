@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Mixpanel_Settings class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Mixpanel Settings Events class
@@ -16,6 +21,7 @@ class Forminator_Mixpanel_Settings extends Events {
 		add_action( 'forminator_after_reset_settings', array( __CLASS__, 'tracking_settings_reset' ) );
 		add_action( 'forminator_after_uninstall', array( __CLASS__, 'tracking_plugin_uninstall' ), 10, 2 );
 		add_action( 'deactivated_plugin', array( __CLASS__, 'tracking_deactivate' ) );
+		add_action( 'forminator_before_stripe_connected', array( __CLASS__, 'tracking_stripe_rak_use' ), 10, 4 );
 	}
 
 	/**
@@ -23,11 +29,10 @@ class Forminator_Mixpanel_Settings extends Events {
 	 *
 	 * We need to opt out after settings reset.
 	 *
-	 * @param bool $active usage tracking active or not
+	 * @param bool $active usage tracking active or not.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_settings_reset( $active ) {
 		if ( $active ) {
@@ -40,9 +45,10 @@ class Forminator_Mixpanel_Settings extends Events {
 	 *
 	 * We need to opt out after plugin deactivate.
 	 *
+	 * @param mixed $plugin Plugin name.
+	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_deactivate( $plugin ) {
 		if ( ! self::is_tracking_active() ) {
@@ -74,7 +80,7 @@ class Forminator_Mixpanel_Settings extends Events {
 	 *
 	 * We need to opt out after plugin uninstall if not keep settings.
 	 *
-	 * @param bool $active usage tracking active or not
+	 * @param bool $active usage tracking active or not.
 	 * @param bool $keep_settings Determine whether to save current settings for next time, or reset them.
 	 *
 	 * @return void
@@ -91,7 +97,7 @@ class Forminator_Mixpanel_Settings extends Events {
 	/**
 	 * Handle settings update.
 	 *
-	 * @param bool $old_value usage tracking active or not
+	 * @param bool $old_value usage tracking active or not.
 	 *
 	 * @return void
 	 *
@@ -113,11 +119,10 @@ class Forminator_Mixpanel_Settings extends Events {
 	 * Track data tracking opt in and opt out.
 	 *
 	 * @param bool   $active Toggle value.
-	 * @param string $method method
+	 * @param string $method method.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	private static function track_opt_toggle( $active, $method = '' ) {
 		$properties = array();
@@ -125,5 +130,34 @@ class Forminator_Mixpanel_Settings extends Events {
 			$properties = array( 'Method' => $method );
 		}
 		self::tracker()->track( $active ? 'Opt In' : 'Opt Out', $properties );
+	}
+
+	/**
+	 * Track stripe RAK use.
+	 *
+	 * @param string $test_key Test API key.
+	 * @param string $test_secret Test Secret/Restricted Key.
+	 * @param string $live_key Live API key.
+	 * @param string $live_secret Live Secret/Restricted Key.
+	 *
+	 * @return void
+	 */
+	public static function tracking_stripe_rak_use( string $test_key, string $test_secret, string $live_key, string $live_secret ) {
+		$config = get_option( 'forminator_stripe_configuration', array() );
+		if ( empty( $config ) ) {
+			return;
+		}
+
+		if ( ( ! empty( $test_secret ) && 'sk_' === substr( $test_secret, 0, 3 ) ) && ( ! empty( $live_secret ) && 'sk_' === substr( $live_secret, 0, 3 ) ) ) {
+			return;
+		}
+
+		$config_test_secret = $config['test_secret'] ?? '';
+		$config_live_secret = $config['live_secret'] ?? '';
+		if ( ( ! empty( $config_test_secret ) && 'rk_' === substr( $config_test_secret, 0, 3 ) ) && ( ! empty( $config_live_secret ) && 'rk_' === substr( $config_live_secret, 0, 3 ) ) ) {
+			return;
+		}
+
+		self::track_event( 'for_stripe_rak_use', array() );
 	}
 }

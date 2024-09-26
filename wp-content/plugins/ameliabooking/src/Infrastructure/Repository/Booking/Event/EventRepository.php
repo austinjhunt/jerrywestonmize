@@ -647,9 +647,15 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
         if (!empty($criteria['dates'])) {
             if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom AND :eventTo)";
+                $whereStart = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom AND :eventTo)";
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-                $params[':eventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+                $params[':eventTo']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+
+                $whereEnd = "(DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s') BETWEEN :bookingFrom2 AND :bookingTo2)";
+                $params[':bookingFrom2'] = $params[':eventFrom'];
+                $params[':bookingTo2']   = $params[':eventTo'];
+
+                $where[] = "({$whereStart} OR {$whereEnd})";
             } elseif (isset($criteria['dates'][0])) {
                 $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') >= :eventFrom)";
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
@@ -788,16 +794,17 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
         if (!empty($criteria['dates'])) {
             if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                $where[] = "((DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom1 AND :eventTo1) OR (DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom2 AND :eventTo2))";
-                $params[':eventFrom1'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-                $params[':eventTo1'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+                $where[] = "((DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom1 AND :eventTo1)
+                OR (DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom2 AND :eventTo2)
+                OR (:eventFrom3 BETWEEN DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s'))
+                OR (:eventTo3  BETWEEN DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s')))";
 
-                $params[':eventFrom2'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-                $params[':eventTo2'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+                $params[':eventFrom1'] = $params[':eventFrom2'] = $params[':eventFrom3'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
+                $params[':eventTo1']   = $params[':eventTo2']   = $params[':eventTo3']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             } elseif (isset($criteria['dates'][0])) {
                 $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') >= :eventFrom OR (DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s') >= :eventTo))";
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-                $params[':eventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
+                $params[':eventTo']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             } elseif (isset($criteria['dates'][1])) {
                 $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') <= :eventTo)";
                 $params[':eventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
@@ -985,9 +992,13 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
         if (!empty($criteria['dates'])) {
             if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom AND :eventTo)";
-                $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-                $params[':eventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+                $where[] = "((DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom1 AND :eventTo1)
+                OR (DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom2 AND :eventTo2)
+                OR (:eventFrom3 BETWEEN DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s'))
+                OR (:eventTo3  BETWEEN DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s')))";
+
+                $params[':eventFrom1'] = $params[':eventFrom2'] = $params[':eventFrom3'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
+                $params[':eventTo1']   = $params[':eventTo2']   = $params[':eventTo3']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             } elseif (isset($criteria['dates'][0])) {
                 $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') >= :eventFrom OR (DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s') >= :eventTo))";
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
@@ -1275,6 +1286,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     t.enabled AS ticket_enabled,
                     t.price AS ticket_price,
                     t.spots AS ticket_spots,
+                    t.waitingListSpots AS ticket_waiting_list_spots,
                     t.dateRanges AS ticket_dateRanges,
                     t.translations AS ticket_translations
 
@@ -1617,6 +1629,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     t.enabled AS ticket_enabled,
                     t.price AS ticket_price,
                     t.spots AS ticket_spots,
+                    t.waitingListSpots AS ticket_waiting_list_spots,
                     t.dateRanges AS ticket_dateRanges,
                     t.translations AS ticket_translations,
 
@@ -1691,6 +1704,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 eti.enabled AS ticket_enabled,
                 eti.price AS ticket_price,
                 eti.spots AS ticket_spots,
+                eti.waitingListSpots AS ticket_waiting_list_spots,
                 eti.dateRanges AS ticket_dateRanges,
                 eti.translations AS ticket_translations,
             ';
@@ -2004,6 +2018,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 eti.enabled AS ticket_enabled,
                 eti.price AS ticket_price,
                 eti.spots AS ticket_spots,
+                eti.waitingListSpots AS ticket_waiting_list_spots,
                 eti.dateRanges AS ticket_dateRanges,
                 eti.translations AS ticket_translations,
             ';

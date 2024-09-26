@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/settings/content.php
+ *
+ * @package Forminator
+ */
+
 $section = Forminator_Core::sanitize_text_field( 'section', 'dashboard' );
 
 /**

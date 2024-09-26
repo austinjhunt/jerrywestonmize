@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Addon Mailjet Form Hooks.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Mailjet_Form_Hooks

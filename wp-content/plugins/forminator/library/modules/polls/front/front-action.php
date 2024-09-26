@@ -1,4 +1,11 @@
 <?php
+/**
+ * The Forminator_Poll_Front_Action class.
+ *
+ * @package Forminator
+ */
+
+// Block direct access.
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -29,7 +36,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 	 *
 	 * @since 1.0
 	 *
-	 * @param bool $preview
+	 * @param bool $preview Preview.
 	 *
 	 * @return bool|array
 	 */
@@ -68,6 +75,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 	 * Check if submission is possible.
 	 *
 	 * @param bool $freeze Optional. Should it prevent parallel requests. False by default.
+	 * @throws Exception When there is an error.
 	 */
 	private static function can_submit( $freeze = false ) {
 		// disable submissions if not published.
@@ -78,7 +86,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 		// Check poll opening status.
 		$status_info = self::$module_object->opening_status();
 		if ( 'open' !== $status_info['status'] ) {
-			throw new Exception( $status_info['msg'] );
+			throw new Exception( esc_html( $status_info['msg'] ) );
 		}
 
 		$user_can_vote = self::$module_object->current_user_can_vote( $freeze );
@@ -95,7 +103,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 		$user_can_vote = apply_filters( 'forminator_poll_handle_form_user_can_vote', $user_can_vote, self::$module_id );
 
 		if ( ! $user_can_vote ) {
-			self::$response_attrs['notice']  = 'notice';
+			self::$response_attrs['notice'] = 'notice';
 			throw new Exception( esc_html__( 'You have already submitted a vote to this poll', 'forminator' ) );
 		}
 	}
@@ -104,7 +112,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 	 * Get field data
 	 *
 	 * @return string
-	 * @throws Exception
+	 * @throws Exception When there is an error.
 	 */
 	private static function get_field_data() {
 		$field_data = isset( self::$prepared_data[ self::$module_id ] ) ? self::$prepared_data[ self::$module_id ] : false;
@@ -204,14 +212,10 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 		}
 		$forminator_mail_sender = new Forminator_Poll_Front_Mail();
 		$forminator_mail_sender->process_mail( self::$module_object, $entry );
-
 	}
 
 	/**
 	 * Get submission response
-	 *
-	 * @param object $entry Form entry object.
-	 * @return type
 	 */
 	private static function get_response() {
 		self::$response_attrs['notice'] = 'success';
@@ -252,25 +256,25 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 			$is_ajax_enabled = filter_var( $setting['enable-ajax'], FILTER_VALIDATE_BOOLEAN );
 		}
 
-		// Results behav
+		// Results behav.
 		$response['results_behav'] = (string) $setting['results-behav'];
 
-		// Votes count
+		// Votes count.
 		$response['votes_count'] = isset( $setting['show-votes-count'] ) ? filter_var( $setting['show-votes-count'], FILTER_VALIDATE_BOOLEAN ) : false;
 
-		// Chart basic colors
+		// Chart basic colors.
 		$response['grids_color']   = ! empty( $setting['grid_lines'] ) ? $setting['grid_lines'] : '#E5E5E5';
 		$response['labels_color']  = ! empty( $setting['grid_labels'] ) ? $setting['grid_labels'] : '#777771';
 		$response['onchart_label'] = ! empty( $setting['onbar_votes'] ) ? $setting['onbar_votes'] : '#333333';
 
-		// Tooltips
+		// Tooltips.
 		$response['tooltips_bg']    = ! empty( $setting['tooltips_background'] ) ? $setting['tooltips_background'] : '#333333';
 		$response['tooltips_color'] = ! empty( $setting['tooltips_text'] ) ? $setting['tooltips_text'] : '#FFFFFF';
 
-		// On chart label text
+		// On chart label text.
 		$response['votes_text'] = (string) esc_html__( 'vote(s)', 'forminator' );
 
-		// View results link
+		// View results link.
 		$response['results_link'] = sprintf(
 			'<a href="%s" class="forminator-link">%s</a>',
 			esc_url( $url ),
@@ -278,14 +282,14 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 		);
 
 		if ( $is_ajax_enabled ) {
-			// ajax enabled send result data to front end
+			// ajax enabled send result data to front end.
 			$response['chart_data'] = self::get_chart_data( $poll );
 
 			if ( isset( $setting['enable-votes-limit'] ) && 'true' === $setting['enable-votes-limit'] ) {
 				$response['back_button'] = '<button type="button" class="forminator-button forminator-button-back">' . esc_html__( 'Back To Poll', 'forminator' ) . '</button>';
 			}
 		} else {
-			// its not ajax enabled, send url result to front end
+			// its not ajax enabled, send url result to front end.
 			$response['url'] = $url;
 		}
 
@@ -295,7 +299,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 	/**
 	 * Get Chart data of Poll
 	 *
-	 * @param Forminator_Poll_Model $poll
+	 * @param Forminator_Poll_Model $poll Poll model.
 	 *
 	 * @return array
 	 */
@@ -316,10 +320,10 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 
 			foreach ( $fields as $field ) {
 
-				// Label
+				// Label.
 				$label = addslashes( $field->title );
 
-				// Votes
+				// Votes.
 				$slug    = isset( $field->slug ) ? $field->slug : sanitize_title( $label );
 				$entries = 0;
 
@@ -347,11 +351,13 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 		}
 
 		return $chart_datas;
-
 	}
 
 	/**
 	 * Response message
+	 *
+	 * @param int $form_id Form Id.
+	 * @param int $render_id Render Id.
 	 *
 	 * @since 1.0
 	 */
@@ -363,11 +369,11 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 			return;
 		}
 
-        // Only show to related form
+		// Only show to related form.
 		if ( ! empty( $response ) && is_array( $response ) && (int) $form_id === (int) $post_form_id ) {
 			$label_class = $response['success'] ? 'forminator-success' : 'forminator-error';
-			if ( isset( $response['notice'] ) && $response['notice'] === 'error'
-				|| isset( $response['success'] ) && $response['success'] ) {
+			if ( ( isset( $response['notice'] ) && 'error' === $response['notice'] )
+				|| ( isset( $response['success'] ) && $response['success'] ) ) {
 				?>
 				<div role="alert" aria-live="polite" class="forminator-response-message forminator-show <?php echo esc_attr( $label_class ); ?>">
 					<p class="forminator-label--<?php echo esc_attr( $label_class ); ?>">
@@ -386,6 +392,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 	 * @since 1.6.1
 	 *
 	 * @return bool true on success|string error message from addon otherwise
+	 * @throws Exception When there is an error.
 	 */
 	private static function attach_addons_on_poll_submit() {
 		$submitted_data = static::get_submitted_data();
@@ -403,7 +410,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 				forminator_addon_maybe_log( $connected_addon->get_slug(), 'failed to attach_addons_on_poll_submit', $e->getMessage() );
 			}
 			if ( true !== $addon_return ) {
-				throw new Exception( $poll_hooks->get_submit_error_message() );
+				throw new Exception( esc_html( $poll_hooks->get_submit_error_message() ) );
 			}
 		}
 
@@ -413,7 +420,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 	/**
 	 * Set Browser Cookie when poll submit
 	 *
-	 * @param $form_id
+	 * @param int $form_id Form Id.
 	 */
 	public static function set_vote_browser_cookie( $form_id ) {
 		$poll        = Forminator_Base_Form_Model::get_model( $form_id );
@@ -449,7 +456,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 			}
 		}
 		$current_date = date_i18n( 'Y-m-d H:i:s' );
-		$secure       = ( 'https' === parse_url( wp_login_url(), PHP_URL_SCHEME ) );
+		$secure       = ( 'https' === wp_parse_url( wp_login_url(), PHP_URL_SCHEME ) );
 		setcookie( $cookie_name, $current_date, $expire, COOKIEPATH, COOKIE_DOMAIN, $secure, true );
 	}
 }

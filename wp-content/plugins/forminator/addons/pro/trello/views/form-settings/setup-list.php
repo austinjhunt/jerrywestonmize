@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template for setup list
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
 	'error_message'    => '',
@@ -10,7 +16,11 @@ $vars = array(
 	'step_description' => '',
 );
 
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -31,7 +41,10 @@ $vars['step_description'] = sprintf(
 	<p id="forminator-integration-popup__description" class="sui-description"><?php echo wp_kses_post( $vars['step_description'] ); ?></p>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>

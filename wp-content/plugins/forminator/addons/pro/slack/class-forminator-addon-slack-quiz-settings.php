@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Addon Slack Quiz Settings.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Slack_Quiz_Settings
  * Handle how quiz settings displayed and saved
  *

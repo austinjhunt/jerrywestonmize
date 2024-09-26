@@ -1,5 +1,10 @@
 <?php
-// Defaults.
+/**
+ * The Setup API.
+ *
+ * @package Forminator
+ */
+
 $vars = array(
 	'identifier'    => '',
 	'error_message' => '',
@@ -9,7 +14,10 @@ $vars = array(
 	'api_key_error' => '',
 );
 
-/** @var array $template_vars */
+/**
+ * Template variable
+ *
+ * @var array $template_vars */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 } ?>
@@ -18,7 +26,7 @@ foreach ( $template_vars as $key => $val ) {
 
 	<h3 id="forminator-integration-popup__title" class="sui-box-title sui-lg" style="overflow: initial; white-space: normal; text-overflow: initial;">
 	<?php
-	/* translators: 1: Add-on name */
+		/* translators: 1: Add-on name */
 		printf( esc_html__( 'Configure %1$s API', 'forminator' ), 'ActiveCampaign' );
 	?>
 	</h3>
@@ -26,7 +34,10 @@ foreach ( $template_vars as $key => $val ) {
 	<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Set Up ActiveCampaign API Access.', 'forminator' ); ?></p>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>

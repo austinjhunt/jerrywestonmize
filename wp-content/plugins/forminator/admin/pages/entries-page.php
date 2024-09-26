@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Entries Page
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -125,6 +131,9 @@ class Forminator_Entries_Page extends Forminator_Admin_Page {
 	/**
 	 *  Render Form switcher / select based on current form_type
 	 *
+	 * @param string $form_type Form type.
+	 * @param int    $form_id Form Id.
+	 *
 	 * @since 1.0.5
 	 */
 	public static function render_form_switcher( $form_type = 'forminator_forms', $form_id = 0 ) {
@@ -136,16 +145,16 @@ class Forminator_Entries_Page extends Forminator_Admin_Page {
 
 		$empty_option = esc_html__( 'Choose Form', 'forminator' );
 		$method       = 'get_forms';
-		$model       = 'Forminator_Form_Model';
+		$model        = 'Forminator_Form_Model';
 
-		if ( $form_type === Forminator_Poll_Model::model()->get_post_type() ) {
+		if ( Forminator_Poll_Model::model()->get_post_type() === $form_type ) {
 			$empty_option = esc_html__( 'Choose Poll', 'forminator' );
 			$method       = 'get_polls';
-			$model       = 'Forminator_Poll_Model';
-		} elseif ( $form_type === Forminator_Quiz_Model::model()->get_post_type() ) {
+			$model        = 'Forminator_Poll_Model';
+		} elseif ( Forminator_Quiz_Model::model()->get_post_type() === $form_type ) {
 			$empty_option = esc_html__( 'Choose Quiz', 'forminator' );
 			$method       = 'get_quizzes';
-			$model       = 'Forminator_Quiz_Model';
+			$model        = 'Forminator_Quiz_Model';
 		}
 
 		echo '<select name="form_id" data-allow-search="1" data-minimum-results-for-search="0" class="' . esc_attr( $classes ) . '" data-search="true" data-search="true" data-placeholder="' . esc_attr( $empty_option ) . '">';
@@ -155,7 +164,10 @@ class Forminator_Entries_Page extends Forminator_Admin_Page {
 		$forms = apply_filters( 'forminator_entries_get_forms', $forms, $form_type );
 
 		foreach ( $forms as $form ) {
-			/**@var Forminator_Base_Form_Model $form */
+			/**
+			 * Forminator_Base_Form_Model
+			 *
+			 * @var Forminator_Base_Form_Model $form */
 			$title = ! empty( $form->settings['formName'] ) ? $form->settings['formName'] : $form->raw->post_title;
 			echo '<option value="' . esc_attr( $form->id ) . '" ' . selected( $form->id, $form_id, false ) . '>' . esc_html( $title ) . '</option>';
 		}
@@ -255,7 +267,6 @@ class Forminator_Entries_Page extends Forminator_Admin_Page {
 		wp_add_inline_script( 'forminator-entries-datepicker-range', $daterangepicker_ranges );
 
 		add_filter( 'forminator_l10n', array( $this, 'add_l10n' ) );
-
 	}
 
 	/**
@@ -263,7 +274,7 @@ class Forminator_Entries_Page extends Forminator_Admin_Page {
 	 *
 	 * Allow to modify `daterangepicker` locale
 	 *
-	 * @param $l10n
+	 * @param array $l10n locale.
 	 *
 	 * @return mixed
 	 */
@@ -291,7 +302,7 @@ class Forminator_Entries_Page extends Forminator_Admin_Page {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $hook
+	 * @param string $hook Hook name.
 	 */
 	public function enqueue_scripts( $hook ) {
 		parent::enqueue_scripts( $hook );

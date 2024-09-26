@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/common/popup/import.php
+ *
+ * @package Forminator
+ */
+
 $slug  = $args['slug'];
 $nonce = wp_create_nonce( 'forminator_save_import_' . $slug );
 ?>
@@ -18,10 +24,16 @@ $nonce = wp_create_nonce( 'forminator_save_import_' . $slug );
 
 		<textarea class="sui-form-control" rows="10" name="importable"></textarea>
 
-		<span class="sui-description"><?php /* translators: %s: Module slug */
-            printf( esc_html__( 'Paste exported %s above.', 'forminator' ),
-                esc_html__( $slug, 'forminator' ) ); ?>
-        </span>
+		<span class="sui-description">
+		<?php
+
+			printf(
+				/* translators: %s: Module slug */
+				esc_html__( 'Paste exported %s above.', 'forminator' ),
+				esc_html__( $slug, 'forminator' ) // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+			);
+			?>
+		</span>
 
 	</div>
 

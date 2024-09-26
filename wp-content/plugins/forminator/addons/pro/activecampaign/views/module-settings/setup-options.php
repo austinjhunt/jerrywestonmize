@@ -1,5 +1,10 @@
 <?php
-// defaults.
+/**
+ * Template pick name.
+ *
+ * @package Forminator
+ */
+
 $vars = array(
 	'error_message'            => '',
 	'multi_id'                 => '',
@@ -14,7 +19,10 @@ $vars = array(
 	'tags_fields'              => array(),
 	'tags_selected_fields'     => array(),
 );
-/** @var array $template_vars */
+/**
+ * Template variable
+ *
+ * @var array $template_vars */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -27,7 +35,10 @@ foreach ( $template_vars as $key => $val ) {
 	<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Configure additional options for ActiveCampaign integration.', 'forminator' ); ?></p>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>
@@ -53,7 +64,7 @@ foreach ( $template_vars as $key => $val ) {
 
 				<option value="<?php echo esc_attr( $forminator_field['element_id'] ); ?>"
 					selected="selected">
-					<?php echo esc_html( strip_tags( $forminator_field['field_label'] ) ); ?>
+					<?php echo esc_html( wp_strip_all_tags( $forminator_field['field_label'] ) ); ?>
 				</option>
 
 			<?php endforeach; ?>
@@ -61,7 +72,7 @@ foreach ( $template_vars as $key => $val ) {
 			<?php foreach ( $vars['tags_fields'] as $forminator_field ) : ?>
 
 				<option value="{<?php echo esc_attr( $forminator_field['element_id'] ); ?>}">
-					<?php echo esc_html( strip_tags( $forminator_field['field_label'] ) . ' | ' . $forminator_field['element_id'] ); ?>
+					<?php echo esc_html( wp_strip_all_tags( $forminator_field['field_label'] ) . ' | ' . $forminator_field['element_id'] ); ?>
 				</option>
 
 			<?php endforeach; ?>

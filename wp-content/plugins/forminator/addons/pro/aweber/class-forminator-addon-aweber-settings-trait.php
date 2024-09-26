@@ -46,6 +46,7 @@ trait Forminator_Aweber_Settings_Trait {
 	 * @since 1.0 AWeber Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function pick_name( $submitted_data ) {
 		$template = forminator_addon_aweber_dir() . 'views/module-settings/pick-name.php';
@@ -117,6 +118,7 @@ trait Forminator_Aweber_Settings_Trait {
 	 * @since 1.0 AWeber Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function setup_list( $submitted_data ) {
 		$template = forminator_addon_aweber_dir() . 'views/module-settings/setup-list.php';
@@ -230,6 +232,7 @@ trait Forminator_Aweber_Settings_Trait {
 	 * @since 1.0 AWeber Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function map_fields( $submitted_data ) {
 		$template = forminator_addon_aweber_dir() . 'views/module-settings/map-fields.php';
@@ -306,9 +309,12 @@ trait Forminator_Aweber_Settings_Trait {
 					if ( ! empty( $fields_map[ $key ] ) ) {
 						$element_id = $fields_map[ $key ];
 						if ( ! in_array( $element_id, $forminator_field_element_ids, true ) ) {
-							$input_exceptions->add_input_exception( sprintf(
-							/* translators: %s: Field title */
-								esc_html__( 'Please assign valid field for %s', 'forminator' ), esc_html( $title ) ),
+							$input_exceptions->add_input_exception(
+								sprintf(
+								/* translators: %s: Field title */
+									esc_html__( 'Please assign valid field for %s', 'forminator' ),
+									esc_html( $title )
+								),
 								$key . '_error'
 							);
 							continue;

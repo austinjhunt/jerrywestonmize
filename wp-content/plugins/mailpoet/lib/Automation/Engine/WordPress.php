@@ -12,14 +12,8 @@ use WP_Locale;
 use WP_Post;
 use WP_Term;
 use WP_User;
-use wpdb;
 
 class WordPress {
-  public function getWpdb(): wpdb {
-    global $wpdb;
-    return $wpdb;
-  }
-
   public function addAction(string $hookName, callable $callback, int $priority = 10, int $acceptedArgs = 1): bool {
     return add_action($hookName, $callback, $priority, $acceptedArgs);
   }
@@ -103,11 +97,10 @@ class WordPress {
 
   /**
    * @param array|string $args
-   * @param array|string $deprecated
    * @return WP_Term[]|int[]|string[]|string|WP_Error
    */
-  public function getTerms($args = [], $deprecated = '') {
-    return get_terms($args, $deprecated);
+  public function getTerms($args = []) {
+    return get_terms($args);
   }
 
   /**

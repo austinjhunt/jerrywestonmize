@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Webhook Poll Settings
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Webhook_Poll_Settings
  * Handle how poll settings displayed and saved
  *

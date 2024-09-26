@@ -1,8 +1,17 @@
 <?php
+/**
+ * The Forminator_Custom_Forms class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
 
+/**
+ * Class Forminator_Custom_Forms
+ */
 class Forminator_Custom_Forms extends Forminator_Module {
 
 	/**
@@ -199,8 +208,8 @@ class Forminator_Custom_Forms extends Forminator_Module {
 	 * Order templates by priorty
 	 *
 	 * @since 1.0
-	 * @param $a
-	 * @param $b
+	 * @param object $b Template.
+	 * @param object $a Template.
 	 *
 	 * @return int
 	 */
@@ -501,7 +510,7 @@ class Forminator_Custom_Forms extends Forminator_Module {
 	/**
 	 * Get Template count
 	 *
-	 * @param $category
+	 * @param string $category Category.
 	 *
 	 * @return int
 	 */
@@ -510,7 +519,7 @@ class Forminator_Custom_Forms extends Forminator_Module {
 		$templates     = array_filter(
 			$all_templates,
 			function ( $item ) use ( $category ) {
-				return 'all' === $category || isset( $item['category'] ) && $item['category'] === $category;
+				return 'all' === $category || ( isset( $item['category'] ) && $item['category'] === $category );
 			}
 		);
 

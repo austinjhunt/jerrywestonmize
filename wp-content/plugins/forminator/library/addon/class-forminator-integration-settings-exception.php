@@ -26,8 +26,8 @@ class Forminator_Integration_Settings_Exception extends Forminator_Integration_E
 	 * Useful if input_id is needed for later.
 	 * If no input_id needed, use @see Forminator_Integration_Exception
 	 *
-	 * @param string $message
-	 * @param string $input_id
+	 * @param string $message Message.
+	 * @param string $input_id Input Id.
 	 */
 	public function __construct( $message = '', $input_id = '' ) {
 		parent::__construct( $message, 0 );
@@ -39,8 +39,8 @@ class Forminator_Integration_Settings_Exception extends Forminator_Integration_E
 	/**
 	 * Set exception message for an input
 	 *
-	 * @param $message
-	 * @param $input_id
+	 * @param string $message Message.
+	 * @param string $input_id Input Id.
 	 */
 	public function add_input_exception( $message, $input_id ) {
 		$this->input_exceptions[ $input_id ] = $message;
@@ -49,9 +49,9 @@ class Forminator_Integration_Settings_Exception extends Forminator_Integration_E
 	/**
 	 * Set exception message for an address input
 	 *
-	 * @param $message
-	 * @param $input_id
-	 * @param $sub_input
+	 * @param string $message Message.
+	 * @param string $input_id Input Id.
+	 * @param string $sub_input Input.
 	 */
 	public function add_sub_input_exception( $message, $input_id, $sub_input ) {
 		$this->input_exceptions[ $input_id ][ $sub_input ] = $message;

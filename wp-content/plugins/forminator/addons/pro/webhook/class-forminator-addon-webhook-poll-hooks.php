@@ -1,10 +1,14 @@
 <?php
+/**
+ * Forminator Webhook Poll Hooks
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Webhook_Poll_Hooks
  *
  * @since 1.6.1
- *
  */
 class Forminator_Webhook_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 
@@ -15,7 +19,7 @@ class Forminator_Webhook_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -35,12 +39,13 @@ class Forminator_Webhook_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $connection_id
-	 * @param $submitted_data
-	 * @param $connection_settings
-	 * @param $current_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $current_entry_fields Form entry fields.
 	 *
 	 * @return array `is_sent` true means its success send data towebhook, false otherwise
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function get_status_on_send_data( $connection_id, $submitted_data, $connection_settings, $current_entry_fields ) {
 		$poll_settings = $this->settings_instance->get_poll_settings();
@@ -50,7 +55,7 @@ class Forminator_Webhook_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 		$poll_id                = $this->module_id;
 		$poll_settings_instance = $this->settings_instance;
 
-		//check required fields
+		// check required fields.
 		try {
 			if ( ! isset( $connection_settings['webhook_url'] ) ) {
 				throw new Forminator_Integration_Exception( esc_html__( 'Webhook URL is not properly set up', 'forminator' ) );
@@ -102,7 +107,7 @@ class Forminator_Webhook_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 					$entries = $map_entries[ $answer_data ];
 				}
 
-				$entries ++;
+				++$entries;
 				$map_entries[ $answer_data ] = $entries;
 
 			}
@@ -177,5 +182,4 @@ class Forminator_Webhook_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 			);
 		}
 	}
-
 }

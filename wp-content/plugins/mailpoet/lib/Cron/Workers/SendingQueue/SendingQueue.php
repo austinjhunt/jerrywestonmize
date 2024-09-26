@@ -419,7 +419,7 @@ class SendingQueue {
           [
             'unsubscribe_url' => $unsubscribeUrls[0],
             'meta' => $metas[0],
-            'one_click_unsubscribe' => $oneClickUnsubscribeUrls,
+            'one_click_unsubscribe' => $oneClickUnsubscribeUrls[0],
           ]
         );
         $preparedNewsletters = [];

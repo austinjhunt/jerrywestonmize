@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\Config\Env;
+use MailPoet\Doctrine\WPDB\Connection;
 use MailPoet\Util\Helpers;
 use MailPoet\WP\Functions as WPFunctions;
 use MailPoet\WP\Notice;
@@ -30,7 +31,7 @@ class DatabaseEngineNotice {
   }
 
   public function init($shouldDisplay): ?Notice {
-    if (!$shouldDisplay || $this->wp->getTransient(self::OPTION_NAME)) {
+    if (!$shouldDisplay || Connection::isSQLite() || $this->wp->getTransient(self::OPTION_NAME)) {
       return null;
     }
 
@@ -97,7 +98,7 @@ class DatabaseEngineNotice {
     sort($tablesWithIncorrectEngine);
 
     $tables = array_map(
-      fn($table) => "“${table}”",
+      fn($table) => "“{$table}”",
       array_slice($tablesWithIncorrectEngine, 0, self::MAX_TABLES_TO_DISPLAY)
     );
 

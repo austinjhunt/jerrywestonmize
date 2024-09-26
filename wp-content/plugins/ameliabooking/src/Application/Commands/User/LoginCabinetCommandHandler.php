@@ -43,6 +43,10 @@ class LoginCabinetCommandHandler extends CommandHandler
         /** @var Provider $user */
         $user = $this->container->get('logged.in.user');
 
+        /** @var UserService $userService */
+        $userService = $this->container->get('users.service');
+
+
         /** @var string $cabinetType */
         $cabinetType = $command->getField('cabinetType');
 
@@ -94,22 +98,21 @@ class LoginCabinetCommandHandler extends CommandHandler
         /** @var Provider|Customer $user */
         $user = $userRepository->getByEmail($command->getField('email'), true, false);
 
+        /** @var Provider|Customer $ameliaUserFromWpLogin */
+        $ameliaUserFromWpLogin = $userService->getAuthenticatedUser($command->getField('email'), $command->getField('password'));
+
+        if ($ameliaUserFromWpLogin) {
+            $userService->loginWordPressUser($command->getField('email'), $command->getField('password'));
+        }
+
         // If user is retrieved by email and password is not set or it is not valid, check if it is WP login
         if (!($user instanceof AbstractUser) ||
             !$user->getPassword() ||
             !$user->getPassword()->checkValidity($command->getField('password'))
         ) {
-            /** @var UserService $userService */
-            $userService = $this->container->get('users.service');
-
-            /** @var Provider|Customer $user */
-            $user = $userService->getAuthenticatedUser($command->getField('email'), $command->getField('password'));
-
-            if ($user) {
-                $userService->loginWordPressUser($command->getField('email'), $command->getField('password'));
-
+            if ($ameliaUserFromWpLogin) {
                 return $userAS->getAuthenticatedUserResponse(
-                    $user,
+                    $ameliaUserFromWpLogin,
                     true,
                     false,
                     LoginType::WP_CREDENTIALS,

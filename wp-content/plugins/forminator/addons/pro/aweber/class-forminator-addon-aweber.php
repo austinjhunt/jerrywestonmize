@@ -1,6 +1,12 @@
 <?php
+/**
+ * The Forminator Aweber Integration.
+ *
+ * @package Forminator
+ */
 
-require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-aweber-wp-api.php';
+// Include forminator-addon-aweber-wp-api.
+require_once __DIR__ . '/lib/class-forminator-addon-aweber-wp-api.php';
 
 /**
  * Class Forminator_Aweber
@@ -11,17 +17,59 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-aweber-wp-api.ph
 final class Forminator_Aweber extends Forminator_Integration {
 
 	/**
-	 * @var self|null
+	 * Forminator_Aweber Instance
+	 *
+	 * @var Forminator_Aweber|null
 	 */
 	protected static $instance = null;
 
-	protected $_slug                   = 'aweber';
-	protected $_version                = FORMINATOR_ADDON_AWEBER_VERSION;
-	protected $_min_forminator_version = '1.1';
-	protected $_short_title            = 'AWeber';
-	protected $_title                  = 'AWeber';
-	protected $_position               = 7;
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
+	protected $_slug = 'aweber';
 
+	/**
+	 * Addon Version
+	 *
+	 * @var string
+	 */
+	protected $_version = FORMINATOR_ADDON_AWEBER_VERSION;
+
+	/**
+	 * Forminator Version
+	 *
+	 * @var string
+	 */
+	protected $_min_forminator_version = '1.1';
+
+	/**
+	 * Short title
+	 *
+	 * @var string
+	 */
+	protected $_short_title = 'AWeber';
+
+	/**
+	 * Title
+	 *
+	 * @var string
+	 */
+	protected $_title = 'AWeber';
+
+	/**
+	 * Position
+	 *
+	 * @var int
+	 */
+	protected $_position = 7;
+
+	/**
+	 * App Id
+	 *
+	 * @var string
+	 */
 	private $_app_id = 'd806984a';
 
 	/**
@@ -38,7 +86,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	 */
 	public function __construct() {
 		// late init to allow translation.
-		$this->_description                = esc_html__( 'Get awesome by your form.', 'forminator' );
+		$this->_description = esc_html__( 'Get awesome by your form.', 'forminator' );
 
 		$this->is_multi_global = true;
 
@@ -116,7 +164,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	 * @return array
 	 */
 	public function wait_authorize_access() {
-		$template         = forminator_addon_aweber_dir() . 'views/settings/wait-authorize.php';
+		$template = forminator_addon_aweber_dir() . 'views/settings/wait-authorize.php';
 
 		$is_poll = true;
 
@@ -126,8 +174,8 @@ final class Forminator_Aweber extends Forminator_Integration {
 		);
 
 		if ( $this->_account_id ) {
-			$is_poll  = false;
-			$html     = $this->success_authorize();
+			$is_poll = false;
+			$html    = $this->success_authorize();
 		} else {
 			$html = self::get_template( $template, $template_params );
 		}
@@ -181,9 +229,10 @@ final class Forminator_Aweber extends Forminator_Integration {
 	 *
 	 * @since 1.0 AWeber Integration
 	 *
-	 * @param $query_args
+	 * @param array $query_args Query arguments.
 	 *
 	 * @return string
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function authorize_page_callback( $query_args ) {
 		$template        = forminator_addon_aweber_dir() . 'views/sections/authorize.php';
@@ -199,8 +248,8 @@ final class Forminator_Aweber extends Forminator_Integration {
 				$identifier  = ! empty( $query_args['identifier'] ) ? $query_args['identifier'] : '';
 				$split_codes = explode( '|', $authorization_code );
 
-				//https://labs.aweber.com/docs/authentication#distributed-app
-				//the authorization code is an application key, application secret, request token, token secret, and oauth_verifier, delimited by pipes (|).
+				// https://labs.aweber.com/docs/authentication#distributed-app
+				// the authorization code is an application key, application secret, request token, token secret, and oauth_verifier, delimited by pipes (|).
 				if ( ! is_array( $split_codes ) || 5 !== count( $split_codes ) ) {
 					new Forminator_Integration_Exception( esc_html__( 'Invalid Authorization Code', 'forminator' ) );
 				}
@@ -249,7 +298,7 @@ final class Forminator_Aweber extends Forminator_Integration {
 	 *
 	 * @since 1.1 AWeber Integration
 	 *
-	 * @param string $return_url
+	 * @param string $return_url Return URL.
 	 *
 	 * @return string
 	 */
@@ -314,10 +363,10 @@ final class Forminator_Aweber extends Forminator_Integration {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array|null $api_credentials
+	 * @param array|null $api_credentials API credentials.
 	 *
 	 * @return Forminator_Aweber_Wp_Api
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exceptions.
 	 */
 	public function get_api( $api_credentials = null ) {
 		if ( is_null( $api_credentials ) ) {
@@ -346,16 +395,16 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Validate Access Token
 	 *
-	 * @param $application_key
-	 * @param $application_secret
-	 * @param $request_token
-	 * @param $token_secret
-	 * @param $oauth_verifier
+	 * @param string $application_key Application Key.
+	 * @param string $application_secret Application Secret.
+	 * @param string $request_token Request Token.
+	 * @param string $token_secret Secret Token.
+	 * @param string $oauth_verifier Verifier.
 	 *
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exceptions.
 	 */
 	public function validate_access_token( $application_key, $application_secret, $request_token, $token_secret, $oauth_verifier ) {
-		//get access_token
+		// get access_token.
 		$api           = $this->get_api(
 			array(
 				'application_key'    => $application_key,
@@ -379,8 +428,9 @@ final class Forminator_Aweber extends Forminator_Integration {
 	/**
 	 * Get validated account_id
 	 *
+	 * @param Forminator_Aweber_Wp_Api $api API.
 	 * @return integer
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function get_validated_account_id( $api ) {
 		$accounts = $api->get_accounts();
@@ -401,8 +451,8 @@ final class Forminator_Aweber extends Forminator_Integration {
 		 *
 		 * @since 1.3
 		 *
-		 * @param integer                        $account_id
-		 * @param object                         $accounts
+		 * @param integer $account_id Account Id.
+		 * @param object $accounts Accounts.
 		 * @param Forminator_Aweber_Wp_Api $api
 		 */
 		$account_id = apply_filters( 'forminator_addon_aweber_validated_account_id', $account_id, $accounts, $api );
@@ -411,9 +461,9 @@ final class Forminator_Aweber extends Forminator_Integration {
 	}
 
 	/**
-	 * set account_id on class if exist on settings
+	 * Set account_id on class if exist on settings
 	 *
-	 * @param $values
+	 * @param array $values Setting values.
 	 *
 	 * @return mixed
 	 */
@@ -426,9 +476,9 @@ final class Forminator_Aweber extends Forminator_Integration {
 	}
 
 	/**
-	 * set account_id on class if exist on settings
+	 * Set account_id on class if exist on settings
 	 *
-	 * @param $values
+	 * @param array $values Setting values.
 	 *
 	 * @return mixed
 	 */

@@ -1,6 +1,12 @@
 <?php
+/**
+ * Forminator Addon Trello
+ *
+ * @package Forminator
+ */
 
-require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-trello-wp-api.php';
+// Include addon-trello-wp-api.
+require_once __DIR__ . '/lib/class-forminator-addon-trello-wp-api.php';
 
 /**
  * Class Forminator_Trello
@@ -11,21 +17,62 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-trello-wp-api.ph
 final class Forminator_Trello extends Forminator_Integration {
 
 	/**
+	 * Forminator_Trello Instance
+	 *
 	 * @var self|null
 	 */
 	protected static $instance = null;
 
-	protected $_slug                   = 'trello';
-	protected $_version                = FORMINATOR_ADDON_TRELLO_VERSION;
-	protected $_min_forminator_version = '1.1';
-	protected $_short_title            = 'Trello';
-	protected $_title                  = 'Trello';
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
+	protected $_slug = 'trello';
 
+	/**
+	 * Trello version
+	 *
+	 * @var string
+	 */
+	protected $_version = FORMINATOR_ADDON_TRELLO_VERSION;
+
+	/**
+	 * Forminator minimum version
+	 *
+	 * @var string
+	 */
+	protected $_min_forminator_version = '1.1';
+
+	/**
+	 * Short title
+	 *
+	 * @var string
+	 */
+	protected $_short_title = 'Trello';
+
+	/**
+	 * Title
+	 *
+	 * @var string
+	 */
+	protected $_title = 'Trello';
+
+	/**
+	 * Position
+	 *
+	 * @var int
+	 */
 	protected $_position = 5;
 
 	const CARD_DELETE_MODE_DELETE = 'delete';
 	const CARD_DELETE_MODE_CLOSED = 'closed';
 
+	/**
+	 * Card delete modes
+	 *
+	 * @var array
+	 */
 	private static $card_delete_modes
 		= array(
 			self::CARD_DELETE_MODE_DELETE,
@@ -67,7 +114,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	 */
 	public function __construct() {
 		// late init to allow translation.
-		$this->_description                = esc_html__( 'Get awesome by your form.', 'forminator' );
+		$this->_description = esc_html__( 'Get awesome by your form.', 'forminator' );
 
 		$this->is_multi_global = true;
 
@@ -110,7 +157,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Get Delete mode for card
 	 *
-	 * acceptable values : 'delete', 'closed'
+	 * Acceptable values : 'delete', 'closed'
 	 * default is 'delete'
 	 *
 	 * @see   Forminator_Trello::is_enable_delete_card()
@@ -206,7 +253,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Setup API key
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return array
 	 */
@@ -220,12 +267,12 @@ final class Forminator_Trello extends Forminator_Integration {
 				'markup' => self::get_button_markup( esc_html__( 'Disconnect', 'forminator' ), 'sui-button-ghost forminator-addon-disconnect' ),
 			);
 			$buttons['next']['markup'] = '<div class="sui-actions-right">' .
-			                             self::get_button_markup( esc_html__( 'RE-AUTHORIZE', 'forminator' ), 'forminator-addon-next' ) .
-			                             '</div>';
+										self::get_button_markup( esc_html__( 'RE-AUTHORIZE', 'forminator' ), 'forminator-addon-next' ) .
+										'</div>';
 		} else {
 			$buttons['next']['markup'] = '<div class="sui-actions-right">' .
-			                             self::get_button_markup( esc_html__( 'Next', 'forminator' ), 'forminator-addon-next' ) .
-			                             '</div>';
+										self::get_button_markup( esc_html__( 'Next', 'forminator' ), 'forminator-addon-next' ) .
+										'</div>';
 		}
 
 		$template_params = array(
@@ -260,12 +307,12 @@ final class Forminator_Trello extends Forminator_Integration {
 
 			if ( empty( $api_key ) ) {
 				$template_params['api_key_error'] = esc_html__( 'Please input valid API Key', 'forminator' );
-				$has_errors                         = true;
+				$has_errors                       = true;
 			}
 
 			if ( ! $has_errors ) {
 				// validate api.
-				$this->_app_key = $api_key;
+				$this->_app_key   = $api_key;
 				$this->identifier = $identifier;
 			}
 		}
@@ -282,7 +329,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Setup API key is complete
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return bool
 	 */
@@ -407,9 +454,10 @@ final class Forminator_Trello extends Forminator_Integration {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param $query_args
+	 * @param array $query_args Arguments.
 	 *
 	 * @return string
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function authorize_page_callback( $query_args ) {
 		$template        = forminator_addon_trello_dir() . 'views/sections/authorize.php';
@@ -424,8 +472,8 @@ final class Forminator_Trello extends Forminator_Integration {
 				if ( ! empty( $query_args['global_id'] ) ) {
 					$this->multi_global_id = $query_args['global_id'];
 				}
-				$token      = $query_args['token'];
-				$api_key    = $query_args['api_key'];
+				$token     = $query_args['token'];
+				$api_key   = $query_args['api_key'];
 				$validated = $this->validate_token( $token, $api_key );
 				if ( true !== $validated ) {
 					throw new Forminator_Integration_Exception( $validated );
@@ -458,7 +506,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	 *
 	 * @since 1.1 Trello Integration
 	 *
-	 * @param string $return_url
+	 * @param string $return_url Return URL.
 	 *
 	 * @return string
 	 */
@@ -497,13 +545,15 @@ final class Forminator_Trello extends Forminator_Integration {
 	/**
 	 * Validate token with trello API
 	 *
-	 * using `members/me`
+	 * Using `members/me`
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param $token
+	 * @param string $token Token.
+	 * @param string $api_key API key.
 	 *
 	 * @return bool|string
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function validate_token( $token, $api_key ) {
 		try {
@@ -533,10 +583,12 @@ final class Forminator_Trello extends Forminator_Integration {
 	}
 
 	/**
-	 * @param null $token
+	 * Get API
+	 *
+	 * @param string|null $token Token.
+	 * @param string|null $api_key API Key.
 	 *
 	 * @return Forminator_Trello_Wp_Api
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_api( $token = null, $api_key = null ) {
 		if ( is_null( $token ) ) {
@@ -557,7 +609,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param $values
+	 * @param array $values Settings to save.
 	 *
 	 * @return mixed
 	 */

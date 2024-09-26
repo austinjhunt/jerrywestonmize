@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * The Forminator_Integration_Form_Settings class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Integration_Form_Settings
@@ -45,6 +49,11 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 	 */
 	protected $force_form_disconnected_reason = '';
 
+	/**
+	 * Module slug
+	 *
+	 * @var string
+	 */
 	protected static $module_slug = 'form';
 
 	/**
@@ -52,18 +61,18 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 	 *
 	 * @since 1.1
 	 *
-	 * @param Forminator_Integration $addon
-	 * @param                           $form_id
+	 * @param Forminator_Integration $addon Class Forminator_Integration.
+	 * @param int                    $form_id Form Id.
 	 *
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception When there is an addon error.
 	 */
 	public function __construct( Forminator_Integration $addon, $form_id ) {
-		$this->addon   = $addon;
+		$this->addon     = $addon;
 		$this->module_id = $form_id;
-		$custom_form   = Forminator_Base_Form_Model::get_model( $this->module_id );
+		$custom_form     = Forminator_Base_Form_Model::get_model( $this->module_id );
 		if ( ! $custom_form ) {
 			/* translators: Form ID */
-			throw new Forminator_Integration_Exception( sprintf( esc_html__( 'Form with id %d could not be found', 'forminator' ), $this->module_id ) );
+			throw new Forminator_Integration_Exception( sprintf( esc_html__( 'Form with id %d could not be found', 'forminator' ), esc_html( $this->module_id ) ) );
 		}
 		$this->form_fields   = forminator_addon_format_form_fields( $custom_form );
 		$this->form_settings = forminator_addon_format_form_settings( $custom_form );
@@ -77,7 +86,7 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 	 *
 	 * @since   1.1
 	 *
-	 * @param $values
+	 * @param array $values Settings.
 	 *
 	 * @return mixed
 	 */
@@ -92,7 +101,7 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 	 * called when rendering tab on form settings
 	 * @since   1.1
 	 *
-	 * @param $values
+	 * @param array $values Settings.
 	 *
 	 * @return mixed
 	 */
@@ -132,7 +141,7 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 	 *
 	 * @since 1.1
 	 *
-	 * @param $reason
+	 * @param string $reason Reason for disconnect.
 	 */
 	final public function force_form_disconnect( $reason ) {
 		$this->is_force_form_disconnected     = true;
@@ -141,7 +150,6 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 		$this->addon_settings = array();
 
 		$this->save_module_settings_values();
-
 	}
 
 	/**
@@ -277,11 +285,12 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 	/**
 	 * Executed when form settings imported
 	 *
-	 * default is save imported data to post_meta, override when needed
+	 * Default is save imported data to post_meta, override when needed
 	 *
 	 * @since 1.4
 	 *
-	 * @param $import_data
+	 * @param mixed $import_data Import data.
+	 * @throws Forminator_Integration_Exception When there is an integration error.
 	 */
 	public function import_data( $import_data ) {
 		$addon_slug = $this->addon->get_slug();
@@ -323,7 +332,6 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 			forminator_addon_maybe_log( $e->getMessage() );
 			// do nothing.
 		}
-
 	}
 
 	/**
@@ -345,5 +353,4 @@ abstract class Forminator_Integration_Form_Settings extends Forminator_Integrati
 
 		return $address;
 	}
-
 }

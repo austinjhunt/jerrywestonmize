@@ -26,8 +26,10 @@ class DIVI_Events extends ET_Builder_Module
         $this->name = esc_html__(BackendStrings::getWordPressStrings()['events_divi'], 'divi-divi_amelia');
 
         $isLite = !Licence\Licence::$premium;
+
+        $this->type['list']     = BackendStrings::getWordPressStrings()['show_event_view_list'];
+
         if (!$isLite) {
-            $this->type['list']     = BackendStrings::getWordPressStrings()['show_event_view_list'];
             $this->type['calendar'] = BackendStrings::getWordPressStrings()['show_event_view_calendar'];
         }
 

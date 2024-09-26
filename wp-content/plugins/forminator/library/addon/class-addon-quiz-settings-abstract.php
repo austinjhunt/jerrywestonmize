@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * The Forminator_Addon_Quiz_Settings_Abstract class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Addon_Quiz_Settings_Abstract
@@ -105,6 +109,11 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	 */
 	protected $form_settings;
 
+	/**
+	 * Module slug
+	 *
+	 * @var string
+	 */
 	protected static $module_slug = 'quiz';
 
 	/**
@@ -112,10 +121,10 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param Forminator_Addon_Abstract $addon
-	 * @param                           $quiz_id
+	 * @param Forminator_Addon_Abstract $addon Class Forminator_Addon_Abstract.
+	 * @param int                       $quiz_id Quiz Id.
 	 *
-	 * @throws Forminator_Addon_Exception
+	 * @throws Forminator_Addon_Exception When there is an addon error.
 	 */
 	public function __construct( Forminator_Addon_Abstract $addon, $quiz_id ) {
 		$this->addon   = $addon;
@@ -123,7 +132,7 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 		$this->quiz    = Forminator_Base_Form_Model::get_model( $this->quiz_id );
 		if ( ! $this->quiz ) {
 			/* translators: Quiz ID */
-			throw new Forminator_Addon_Exception( sprintf( esc_html__( 'Quiz with id %d could not be found', 'forminator' ), $this->quiz_id ) );
+			throw new Forminator_Addon_Exception( sprintf( esc_html__( 'Quiz with id %d could not be found', 'forminator' ), esc_html( $this->quiz_id ) ) );
 		}
 		$this->quiz_settings = forminator_addon_format_quiz_settings( $this->quiz );
 		if ( isset( $this->quiz_settings['hasLeads'] ) && $this->quiz_settings['hasLeads'] ) {
@@ -156,7 +165,7 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	 *
 	 * @since   1.6.2
 	 *
-	 * @param $values
+	 * @param array $values Settings.
 	 *
 	 * @return mixed
 	 */
@@ -205,7 +214,7 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	 * @see   before_save_quiz_settings_values
 	 * @since 1.6.2
 	 *
-	 * @param $values
+	 * @param array $values Settings.
 	 */
 	final public function save_quiz_settings_values( $values ) {
 		$addon_slug = $this->addon->get_slug();
@@ -230,7 +239,7 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	 * called when rendering tab on quiz settings
 	 * @since   1.6.2
 	 *
-	 * @param $values
+	 * @param array $values Settings.
 	 *
 	 * @return mixed
 	 */
@@ -270,7 +279,7 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $reason
+	 * @param string $reason Reason for disconnect.
 	 */
 	final public function force_quiz_disconnect( $reason ) {
 		$this->is_force_quiz_disconnected     = true;
@@ -279,7 +288,6 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 		$this->addon_quiz_settings = array();
 
 		$this->save_quiz_settings_values( $this->addon_quiz_settings );
-
 	}
 
 	/**
@@ -402,7 +410,7 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param array $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 */
 	public function disconnect_quiz( $submitted_data ) {
 		$this->save_quiz_settings_values( array() );
@@ -431,7 +439,7 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $message
+	 * @param string $message Message.
 	 *
 	 * @return array
 	 */
@@ -455,9 +463,9 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param      $multi_id
-	 * @param      $settings
-	 * @param bool     $replace
+	 * @param int   $multi_id Multi Id.
+	 * @param array $settings Settings.
+	 * @param bool  $replace Replace.
 	 */
 	public function save_multi_id_quiz_setting_values( $multi_id, $settings, $replace = false ) {
 		$this->addon_quiz_settings = $this->get_quiz_settings_values();
@@ -484,7 +492,7 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $multi_id
+	 * @param int $multi_id Multi Id.
 	 *
 	 * @return bool
 	 */
@@ -499,13 +507,13 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param        $multi_id
-	 * @param        $key
-	 * @param mixed    $default
+	 * @param string $multi_id Multi id.
+	 * @param string $key Key.
+	 * @param mixed  $default_value Default value.
 	 *
 	 * @return mixed|string
 	 */
-	public function get_multi_id_quiz_settings_value( $multi_id, $key, $default = '' ) {
+	public function get_multi_id_quiz_settings_value( $multi_id, $key, $default_value = '' ) {
 		$this->addon_quiz_settings = $this->get_quiz_settings_values();
 		if ( isset( $this->addon_quiz_settings[ $multi_id ] ) ) {
 			$multi_settings = $this->addon_quiz_settings[ $multi_id ];
@@ -513,10 +521,10 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 				return $multi_settings[ $key ];
 			}
 
-			return $default;
+			return $default_value;
 		}
 
-		return $default;
+		return $default_value;
 	}
 
 	/**
@@ -590,11 +598,12 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 	/**
 	 * Executed when quiz settings imported
 	 *
-	 * default is save imported data to post_meta, override when needed
+	 * Default is save imported data to post_meta, override when needed
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $import_data
+	 * @param array $import_data Import data.
+	 * @throws Forminator_Addon_Exception When there is an addon error.
 	 */
 	public function import_data( $import_data ) {
 		$addon_slug = $this->addon->get_slug();
@@ -635,7 +644,6 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 			forminator_addon_maybe_log( $e->getMessage() );
 			// do nothing.
 		}
-
 	}
 
 	/**
@@ -672,7 +680,7 @@ abstract class Forminator_Addon_Quiz_Settings_Abstract extends Forminator_Addon_
 		}
 
 		$quiz_fields = array_map(
-			function( $quiz_question ) {
+			function ( $quiz_question ) {
 				return array(
 					'element_id'  => $quiz_question['slug'],
 					'field_label' => $quiz_question['title'],

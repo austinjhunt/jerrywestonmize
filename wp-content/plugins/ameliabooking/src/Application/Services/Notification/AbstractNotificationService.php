@@ -497,7 +497,7 @@ abstract class AbstractNotificationService
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
-        $defaultStatus = $appointmentArray['status'];
+        $defaultStatus = BookingStatus::WAITING !== $bookingArray['status'] ? $appointmentArray['status'] : $bookingArray['status'];
 
         if ($appointmentArray['type'] !== Entities::EVENT && $defaultStatus === BookingStatus::APPROVED) {
 
@@ -536,7 +536,7 @@ abstract class AbstractNotificationService
 
         // Notify provider
         $providerNotifications = $this->getByNameAndType(
-            "provider_{$appointmentArray['type']}_{$appointmentArray['status']}",
+            "provider_{$appointmentArray['type']}_{$defaultStatus}",
             $this->type
         );
 
@@ -584,6 +584,45 @@ abstract class AbstractNotificationService
                         continue;
                     }
                     // Notify customer
+                    $bookingKey = array_search(
+                        $bookingArray['id'],
+                        array_column($appointmentArray['bookings'], 'id'),
+                        true
+                    );
+
+                    $this->sendNotification(
+                        $appointmentArray,
+                        $customerNotification,
+                        true,
+                        $bookingKey
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * Notify the provider when he changes his booking status.
+     *
+     * @param $appointmentArray
+     * @param $bookingArray
+     *
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function sendProviderBookingNotification($appointmentArray, $bookingArray)
+    {
+        // Notify provider
+        if ($appointmentArray['notifyParticipants'] && $bookingArray['status'] !== BookingStatus::REJECTED) {
+            $providerNotifications = $this->getByNameAndType("provider_{$appointmentArray['type']}_{$bookingArray['status']}", $this->type);
+
+            $sendDefault = $this->sendDefault($providerNotifications, $appointmentArray);
+            foreach ($providerNotifications->getItems() as $customerNotification) {
+                if ($customerNotification->getStatus()->getValue() === NotificationStatus::ENABLED) {
+                    if (!$this->checkCustom($customerNotification, $appointmentArray, $sendDefault)) {
+                        continue;
+                    }
+                    // Notify provider
                     $bookingKey = array_search(
                         $bookingArray['id'],
                         array_column($appointmentArray['bookings'], 'id'),

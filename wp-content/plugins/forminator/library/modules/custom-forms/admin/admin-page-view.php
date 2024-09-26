@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_CForm_Page class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -43,11 +49,12 @@ class Forminator_CForm_Page extends Forminator_Admin_Module_Edit_Page {
 	 *
 	 * @since 1.14.10
 	 *
-	 * @param $id
-	 * @param $title
-	 * @param $views
-	 * @param $date
-	 * @param $status
+	 * @param int    $id Id.
+	 * @param string $title Title.
+	 * @param mixed  $views Views.
+	 * @param string $date Date.
+	 * @param string $status Status.
+	 * @param mixed  $model Model.
 	 *
 	 * @return array
 	 */
@@ -68,7 +75,7 @@ class Forminator_CForm_Page extends Forminator_Admin_Module_Edit_Page {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $hook
+	 * @param string $hook Hook.
 	 */
 	public function enqueue_scripts( $hook ) {
 		parent::enqueue_scripts( $hook );

@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Email class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,41 +17,57 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Email extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'email';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 2;
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'email';
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Is input
+	 *
 	 * @var bool
 	 */
 	public $is_input = true;
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-mail';
@@ -79,7 +101,7 @@ class Forminator_Email extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -100,8 +122,9 @@ class Forminator_Email extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
+	 * @param array                  $draft_value Draft value.
 	 *
 	 * @return mixed
 	 */
@@ -244,8 +267,8 @@ class Forminator_Email extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array        $field
-	 * @param array|string $data
+	 * @param array        $field Field.
+	 * @param array|string $data Data.
 	 *
 	 * @return bool
 	 */
@@ -282,7 +305,7 @@ class Forminator_Email extends Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization

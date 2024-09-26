@@ -1,4 +1,11 @@
-<?php $current_user = wp_get_current_user(); ?>
+<?php
+/**
+ * Template admin/views/templates/banner/wpmudev-expired.php
+ *
+ * @package Forminator
+ */
+
+$current_login_user = wp_get_current_user(); ?>
 <div class="sui-box forminator-banner">
 	<div class="sui-box forminator-banner-content">
 		<div>
@@ -14,7 +21,7 @@
 				printf(
 					/* translators: %s - current user display name */
 					esc_html__( 'Hey %s, your WPMU DEV membership has expired. You need an active membership to use the preset templates. Renew your membership to get instant access to our pre-designed form templates.', 'forminator' ),
-					esc_html( $current_user->display_name )
+					esc_html( $current_login_user->display_name )
 				);
 				?>
 			</p>

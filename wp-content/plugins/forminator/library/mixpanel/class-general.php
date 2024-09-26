@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Mixpanel_General class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Mixpanel General Events class
@@ -20,11 +25,10 @@ class Forminator_Mixpanel_General extends Events {
 	/**
 	 * Tracking Import
 	 *
-	 * @param string $slug
+	 * @param string $slug Slug.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_import( $slug ) {
 		self::event_form_import_export( $slug, 'import' );
@@ -33,11 +37,10 @@ class Forminator_Mixpanel_General extends Events {
 	/**
 	 * Tracking Export
 	 *
-	 * @param string $slug
+	 * @param string $slug Slug.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_export( $slug ) {
 		self::event_form_import_export( $slug, 'export' );
@@ -46,12 +49,11 @@ class Forminator_Mixpanel_General extends Events {
 	/**
 	 * Tracking Schedule Export
 	 *
-	 * @param int $form_id
-	 * @param string $form_type
+	 * @param int    $form_id Form id.
+	 * @param string $form_type Form type.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_manual_export( $form_id, $form_type ) {
 		if ( ! self::is_tracking_active() ) {
@@ -64,13 +66,12 @@ class Forminator_Mixpanel_General extends Events {
 	/**
 	 * Tracking Schedule Export
 	 *
-	 * @param int $form_id
-	 * @param string $form_type
-	 * @param array $data
+	 * @param int    $form_id Form Id.
+	 * @param string $form_type Form type.
+	 * @param array  $data Data.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_schedule_export( $form_id, $form_type, $data ) {
 		if ( ! self::is_tracking_active() ) {
@@ -89,8 +90,8 @@ class Forminator_Mixpanel_General extends Events {
 	/**
 	 * Event Import/Export
 	 *
-	 * @param string $slug
-	 * @param string $type
+	 * @param string $slug Slug.
+	 * @param string $type Type.
 	 *
 	 * @return void
 	 */
@@ -103,7 +104,7 @@ class Forminator_Mixpanel_General extends Events {
 			'form_import_export',
 			array(
 				'form type' => esc_html( $slug ),
-				'exim type' => esc_html( $type )
+				'exim type' => esc_html( $type ),
 			)
 		);
 	}
@@ -111,8 +112,8 @@ class Forminator_Mixpanel_General extends Events {
 	/**
 	 * Event Submission export
 	 *
-	 * @param string $form_type
-	 * @param string $action
+	 * @param string $form_type Form type.
+	 * @param string $action Action.
 	 *
 	 * @return void
 	 */
@@ -124,7 +125,7 @@ class Forminator_Mixpanel_General extends Events {
 			'for_submission_exported',
 			array(
 				'form type'   => esc_html( $form_type ),
-				'export type' => esc_html( $action )
+				'export type' => esc_html( $action ),
 			)
 		);
 	}

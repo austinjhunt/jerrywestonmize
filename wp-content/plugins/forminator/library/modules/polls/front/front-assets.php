@@ -1,5 +1,11 @@
 <?php
 /**
+ * The Forminator_Assets_Enqueue_Poll class.
+ *
+ * @package Forminator
+ */
+
+/**
  * Conditionally load assets class
  *
  * @since 1.11

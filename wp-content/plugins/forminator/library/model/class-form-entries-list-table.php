@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Entries_List_Table class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -35,7 +41,7 @@ class Forminator_Entries_List_Table extends WP_List_Table {
 	 * Forminator_Entries_List_Table constructor.
 	 *
 	 * @since 1.0
-	 * @param array $args
+	 * @param array $args Arguments.
 	 */
 	public function __construct( $args = array() ) {
 		if ( isset( $args['model'] ) ) {
@@ -144,7 +150,9 @@ class Forminator_Entries_List_Table extends WP_List_Table {
 	public function print_column_headers( $with_id = true ) {
 		list( $columns, $hidden, $sortable, $primary ) = $this->get_column_info();
 
-		$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+		$http_hosts  = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		$current_url = set_url_scheme( 'http://' . $http_hosts . $request_uri );
 		$current_url = remove_query_arg( 'paged', $current_url );
 
 		$current_orderby = Forminator_Core::sanitize_text_field( 'orderby' );
@@ -160,7 +168,7 @@ class Forminator_Entries_List_Table extends WP_List_Table {
 			static $cb_counter = 1;
 			$columns['cb']     = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . esc_html__( 'Select All', 'forminator' ) . '</label>'
 				. '<div class="wpmudev-checkbox"><input id="cb-select-all-' . $cb_counter . '" type="checkbox" /><label for="cb-select-all-' . $cb_counter . '" class="wpdui-icon wpdui-icon-check"></label></div>';
-			$cb_counter++;
+			++$cb_counter;
 		}
 
 		foreach ( $columns as $column_key => $column_display_name ) {
@@ -240,7 +248,7 @@ class Forminator_Entries_List_Table extends WP_List_Table {
 	 * @since 1.0
 	 * @access public
 	 *
-	 * @param Forminator_Form_Entry_Model $item
+	 * @param Forminator_Form_Entry_Model $item Form entry model.
 	 */
 	public function column_cb( $item ) {
 		?>
@@ -257,7 +265,7 @@ class Forminator_Entries_List_Table extends WP_List_Table {
 	 * @since 1.0
 	 * @access public
 	 *
-	 * @param Forminator_Form_Entry_Model $item
+	 * @param Forminator_Form_Entry_Model $item Form entry model.
 	 */
 	public function column_date( $item ) {
 		?>
@@ -288,37 +296,31 @@ class Forminator_Entries_List_Table extends WP_List_Table {
 							$file_name = "<a href='" . $value['file_url'] . "' target='_blank' rel='noreferrer' title='" . esc_html__( 'View File', 'forminator' ) . "'>$file_name</a> ,";
 							$output   .= $file_name;
 						}
-					} else {
-						if ( ! is_int( $key ) ) {
-							if ( 'postdata' === $key ) {
-								$url     = get_edit_post_link( $value );
-								$name    = get_the_title( $value );
-								$output .= "<a href='" . $url . "' target='_blank' rel='noreferrer' title='" . esc_html__( 'Edit Post', 'forminator' ) . "'>$name</a> ,";
-							} else {
-								if ( is_string( $key ) ) {
-									if ( 'product-id' === $key || 'product-quantity' === $key ) {
-										if ( 0 === $product_cost ) {
-											$product_cost = $value;
-										} else {
-											$product_cost = $product_cost * $value;
-										}
-										$is_product = true;
-									} else {
-										$output .= "$value $key , ";
-									}
+					} elseif ( ! is_int( $key ) ) {
+						if ( 'postdata' === $key ) {
+							$url     = get_edit_post_link( $value );
+							$name    = get_the_title( $value );
+							$output .= "<a href='" . $url . "' target='_blank' rel='noreferrer' title='" . esc_html__( 'Edit Post', 'forminator' ) . "'>$name</a> ,";
+						} elseif ( is_string( $key ) ) {
+							if ( 'product-id' === $key || 'product-quantity' === $key ) {
+								if ( 0 === $product_cost ) {
+									$product_cost = $value;
+								} else {
+									$product_cost = $product_cost * $value;
 								}
+								$is_product = true;
+							} else {
+								$output .= "$value $key , ";
 							}
 						}
 					}
 				}
 				if ( $is_product ) {
 					$output = sprintf( /* translators: %s: Product cost */ esc_html__( 'Total %d', 'forminator' ), $product_cost );
-				} else {
-					if ( ! empty( $output ) ) {
+				} elseif ( ! empty( $output ) ) {
 						$output = substr( trim( $output ), 0, -1 );
-					} else {
-						$output = implode( ',', $data );
-					}
+				} else {
+					$output = implode( ',', $data );
 				}
 
 				return $output;

@@ -31,6 +31,7 @@
             {value: 'stepbooking', text: 'Step Booking', classes: 'am-booking-shortcode'},
             {value: 'catalogbooking', text: 'Catalog Booking', classes: 'am-booking-shortcode'},
             {value: 'eventslistbooking', text: 'Events List Booking', classes: 'am-booking-shortcode'},
+            {value: 'eventscalendarbooking', text: 'Events Calendar Booking', classes: 'am-booking-shortcode'},
             {value: 'customer_panel', text: 'Customer Panel', classes: 'am-booking-shortcode'},
             {value: 'employee_panel', text: 'Employee Panel', classes: 'am-booking-shortcode'},
             {value: 'booking', text: 'Booking', classes: 'am-booking-shortcode am-outdated-booking-shortcode'},
@@ -361,6 +362,7 @@
 
           case ('events'):
           case ('eventslistbooking'):
+          case ('eventscalendarbooking'):
             // Filter
             filterItems = [
               {
@@ -420,7 +422,7 @@
               visible: false,
             })
 
-            if (view === 'eventslistbooking') {
+            if (view === 'eventslistbooking' || view === 'eventscalendarbooking') {
               viewBody.push({
                 type: 'listbox',
                 label: wpAmeliaLabels.trigger_type,
@@ -649,6 +651,7 @@
 
               case ('events'):
               case ('eventslistbooking'):
+              case ('eventscalendarbooking'):
                 if (e.data.am_booking_event) {
                   shortCodeString += ' event=' + e.data.am_booking_event
 
@@ -673,16 +676,18 @@
                   shortCodeString += ' trigger=' + e.data.am_trigger
                 }
 
-                if (e.data.am_trigger && view === 'eventslistbooking' && e.data.am_trigger_type) {
+                if (e.data.am_trigger && (view === 'eventslistbooking' || view === 'eventscalendarbooking') && e.data.am_trigger_type) {
                   shortCodeString += ' trigger_type=' + e.data.am_trigger_type
                 }
 
-                if (e.data.am_trigger && view === 'eventslistbooking' && e.data.am_in_dialog) {
+                if (e.data.am_trigger && (view === 'eventslistbooking' || view === 'eventscalendarbooking') && e.data.am_in_dialog) {
                   shortCodeString += ' in_dialog=1'
                 }
 
                 if (view === 'eventslistbooking') {
                   editor.insertContent('[ameliaeventslistbooking' + shortCodeString + ']')
+                } else if (view === 'eventscalendarbooking') {
+                  editor.insertContent('[ameliaeventscalendarbooking' + shortCodeString + ']')
                 } else {
                   editor.insertContent('[ameliaevents' + shortCodeString + ']')
                 }

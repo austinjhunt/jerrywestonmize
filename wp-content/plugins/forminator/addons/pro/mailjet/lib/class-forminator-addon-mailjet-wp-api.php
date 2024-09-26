@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Addon Mailjet API.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Mailjet_Wp_Api
  * Wrapper @see wp_remote_request() to be used to do request to mailjet server
  */
@@ -57,16 +63,18 @@ class Forminator_Mailjet_Wp_Api {
 	/**
 	 * Forminator_Mailjet_Wp_Api constructor.
 	 *
-	 * @param $api_key
+	 * @param string $api_key API Key.
+	 * @param string $secret_key API Secret Key.
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function __construct( $api_key, $secret_key ) {
 		if ( ! $api_key ) {
-			throw new Forminator_Integration_Exception( __( 'Missing required API Key', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Missing required API Key', 'forminator' ) );
 		}
 
 		$this->api_key = $api_key;
 		if ( ! $secret_key ) {
-			throw new Forminator_Integration_Exception( __( 'Missing required Secret Key', 'forminator' ) );
+			throw new Forminator_Integration_Exception( esc_html__( 'Missing required Secret Key', 'forminator' ) );
 		}
 
 		$this->secret_key = $secret_key;
@@ -75,7 +83,8 @@ class Forminator_Mailjet_Wp_Api {
 	/**
 	 * Get singleton
 	 *
-	 * @param null $api_key
+	 * @param string $api_key API Key.
+	 * @param string $secret_key API Secret Key.
 	 *
 	 * @return Forminator_Mailjet_Wp_Api|null
 	 */
@@ -90,11 +99,12 @@ class Forminator_Mailjet_Wp_Api {
 	/**
 	 * HTTP Request
 	 *
-	 * @param string $verb
-	 * @param        $path
-	 * @param array  $args
+	 * @param string $verb HTTP Request type.
+	 * @param string $path Request path.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function request( $verb, $path, $args = array() ) {
 		$url = $this->get_endpoint() . $path;
@@ -126,7 +136,7 @@ class Forminator_Mailjet_Wp_Api {
 
 		if ( is_wp_error( $res ) || ! $res ) {
 			forminator_addon_maybe_log( __METHOD__, $res );
-			throw new Forminator_Integration_Exception( $default_error );
+			throw new Forminator_Integration_Exception( esc_html( $default_error ) );
 		}
 
 		$body = wp_remote_retrieve_body( $res );
@@ -134,7 +144,7 @@ class Forminator_Mailjet_Wp_Api {
 		// Got no response from API.
 		if ( empty( $body ) ) {
 			forminator_addon_maybe_log( __METHOD__, $res );
-			throw new Forminator_Integration_Exception( $default_error );
+			throw new Forminator_Integration_Exception( esc_html( $default_error ) );
 		}
 
 		$response = null;
@@ -147,20 +157,26 @@ class Forminator_Mailjet_Wp_Api {
 				if ( $response_code >= 400 ) {
 					forminator_addon_maybe_log( __METHOD__, $response );
 					$msg = '';
-					if ( isset( $response->ErrorMessage ) ) {
+					if ( isset( $response->ErrorMessage ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 						// if exist, error detail is given by mailjet here.
-						$msg = $response->ErrorMessage;
+						$msg = $response->ErrorMessage; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 					}
 					$this->last_data_received = $response;
 					if ( 404 === $response_code ) {
-						throw new Forminator_Integration_Exception( sprintf(
-						/* translators: %s: Error message */
-							esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
+						throw new Forminator_Integration_Exception(
+							sprintf(
+							/* translators: %s: Error message */
+								esc_html__( 'Failed to process request : %s', 'forminator' ),
+								esc_html( $msg )
+							)
 						);
 					}
-					throw new Forminator_Integration_Exception( sprintf(
+					throw new Forminator_Integration_Exception(
+						sprintf(
 						/* translators: %s: Error message */
-						esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
+							esc_html__( 'Failed to process request : %s', 'forminator' ),
+							esc_html( $msg )
+						)
 					);
 				}
 			}
@@ -169,9 +185,12 @@ class Forminator_Mailjet_Wp_Api {
 			if ( is_null( $response ) ) {
 				$this->last_data_received = $body;
 				forminator_addon_maybe_log( __METHOD__, $res );
-				throw new Forminator_Integration_Exception( sprintf(
+				throw new Forminator_Integration_Exception(
+					sprintf(
 					/* translators: %s: Error message */
-					esc_html__( 'Failed to process request : %s', 'forminator' ), json_last_error_msg() )
+						esc_html__( 'Failed to process request : %s', 'forminator' ),
+						esc_html( json_last_error_msg() )
+					)
 				);
 			}
 		}
@@ -210,7 +229,7 @@ class Forminator_Mailjet_Wp_Api {
 			$arr       = (array) $arr;
 		}
 		$new_arr = array_map(
-			function( $item ) {
+			function ( $item ) {
 				if ( is_array( $item ) || is_object( $item ) ) {
 					$item = self::array_change_key_case_recursive( $item );
 				}
@@ -408,5 +427,4 @@ class Forminator_Mailjet_Wp_Api {
 	public function get_endpoint() {
 		return $this->endpoint;
 	}
-
 }

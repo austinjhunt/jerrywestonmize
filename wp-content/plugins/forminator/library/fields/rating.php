@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Rating class.
+ *
+ * @package Forminator
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
@@ -13,31 +18,43 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Rating extends Forminator_Field {
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'rating';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'rating';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 28;
 
 	/**
+	 * Options
+	 *
 	 * @var string
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-star';
@@ -71,11 +88,10 @@ class Forminator_Rating extends Forminator_Field {
 	/**
 	 * Autofill Setting
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 * @since 1.32.0
-	 *
 	 */
 	public function autofill_settings( $settings = array() ): array {
 		return array();
@@ -91,7 +107,7 @@ class Forminator_Rating extends Forminator_Field {
 	 * @return string
 	 * @since 1.32
 	 */
-	public function markup( $field, $views_obj, $draft_value = array()  ): string {
+	public function markup( $field, $views_obj, $draft_value = array() ): string {
 		$this->field = $field;
 		$name        = self::get_property( 'element_id', $field );
 		$id          = self::get_field_id( $name );
@@ -100,7 +116,7 @@ class Forminator_Rating extends Forminator_Field {
 		$description = self::get_property( 'description', $field );
 		$icon        = self::get_property( 'icon', $field, 'star' );
 		$size        = self::get_property( 'size', $field, 'md' );
-		$maxRating   = self::get_property( 'max_rating', $field, 5 );
+		$max_rating  = self::get_property( 'max_rating', $field, 5 );
 		$suffix      = self::get_property( 'suffix', $field, true );
 
 		$value = 0;
@@ -130,11 +146,13 @@ class Forminator_Rating extends Forminator_Field {
 				'disabled' => true,
 			),
 		);
-		for ( $rating = 1; $rating <= max( 0, min( $maxRating, 50 ) ); $rating ++ ) {
+
+		$maximum_rating = max( 0, min( $max_rating, 50 ) );
+		for ( $rating = 1; $rating <= $maximum_rating; $rating++ ) {
 			$options[] = array(
 				'value'    => $rating,
 				'label'    => $rating,
-				'disabled' => false
+				'disabled' => false,
 			);
 		}
 
@@ -170,7 +188,6 @@ class Forminator_Rating extends Forminator_Field {
 		$rules .= '},' . "\n";
 
 		return apply_filters( 'forminator_field_rating_validation_rules', $rules, $this->get_id( $field ), $field );
-
 	}
 
 	/**
@@ -200,7 +217,7 @@ class Forminator_Rating extends Forminator_Field {
 	/**
 	 * Field back-end validation
 	 *
-	 * @param array $field Field settings.
+	 * @param array        $field Field settings.
 	 * @param array|string $data Data to validate.
 	 *
 	 * @return bool
@@ -231,7 +248,7 @@ class Forminator_Rating extends Forminator_Field {
 	/**
 	 * Sanitize field value
 	 *
-	 * @param array $field Field settings.
+	 * @param array        $field Field settings.
 	 * @param array|string $data Data to sanitize.
 	 *
 	 * @return string

@@ -26,6 +26,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
@@ -147,7 +148,7 @@ class UserApplicationService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public function setWpUserIdForNewUser($userId, $user)
+    public function setWpUserIdForNewUser($userId, $user, $password = null)
     {
         do_action('amelia_set_wp_user_for_new_customer', $user ? $user->toArray() : null);
 
@@ -164,6 +165,10 @@ class UserApplicationService
             $user->getLastName() ? $user->getLastName()->getValue() : '',
             'wpamelia-' . $user->getType()
         );
+
+        if ($password) {
+            wp_set_password($password, $externalId);
+        }
 
         /** @var UserRepository $userRepository */
         $userRepository = $this->container->get('domain.users.repository');
@@ -284,6 +289,9 @@ class UserApplicationService
         /** @var AbstractOutlookCalendarService $outlookCalendarService */
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
 
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
 
         // If cabinet is for provider, return provider with services and schedule
         if ($cabinetType === AbstractUser::USER_ROLE_PROVIDER) {
@@ -294,6 +302,17 @@ class UserApplicationService
 
             $providerService->modifyPeriodsWithSingleLocationAfterFetch($user->getWeekDayList());
             $providerService->modifyPeriodsWithSingleLocationAfterFetch($user->getSpecialDayList());
+
+            /** @var Provider $provider */
+            $provider = $providerRepository->getById($user->getId()->getValue());
+
+            if ($provider->getGoogleCalendar()) {
+                $user->setGoogleCalendar($provider->getGoogleCalendar());
+            }
+
+            if ($provider->getOutlookCalendar()) {
+                $user->setOutlookCalendar($provider->getOutlookCalendar());
+            }
 
             $user->setPassword($password);
         }
@@ -536,9 +555,14 @@ class UserApplicationService
      */
     public function isCustomerBooking($booking, $user, $bookingToken)
     {
-        $isValidToken = $bookingToken !== null && $bookingToken === $booking->getToken()->getValue();
+        $isValidToken = $booking && $bookingToken !== null && $bookingToken === $booking->getToken()->getValue();
 
-        $isValidUser = $user && $user->getId() && $user->getId()->getValue() === $booking->getCustomerId()->getValue();
+        $isValidUser = $user &&
+            $booking &&
+            $user->getId() &&
+            $booking->getCustomerId() &&
+            $booking->getCustomerId()->getValue() &&
+            $user->getId()->getValue() === $booking->getCustomerId()->getValue();
 
         if (!($isValidToken || $isValidUser)) {
             return false;

@@ -291,7 +291,10 @@ class GetEntitiesCommandHandler extends CommandHandler
                     null : $currentUser
             );
 
-            if ($currentUser === null || $currentUser->getType() === AbstractUser::USER_ROLE_CUSTOMER) {
+            if ($currentUser === null ||
+                $currentUser->getType() === AbstractUser::USER_ROLE_CUSTOMER ||
+                !$command->getPermissionService()->currentUserCanRead(Entities::EMPLOYEES)
+            ) {
                 foreach ($resultData['employees'] as &$employee) {
                     unset(
                         $employee['googleCalendar'],

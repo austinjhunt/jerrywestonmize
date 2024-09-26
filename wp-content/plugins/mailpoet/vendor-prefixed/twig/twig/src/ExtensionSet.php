@@ -5,6 +5,7 @@ use MailPoetVendor\Twig\Error\RuntimeError;
 use MailPoetVendor\Twig\Extension\ExtensionInterface;
 use MailPoetVendor\Twig\Extension\GlobalsInterface;
 use MailPoetVendor\Twig\Extension\StagingExtension;
+use MailPoetVendor\Twig\Node\Expression\AbstractExpression;
 use MailPoetVendor\Twig\Node\Expression\Binary\AbstractBinary;
 use MailPoetVendor\Twig\Node\Expression\Unary\AbstractUnary;
 use MailPoetVendor\Twig\NodeVisitor\NodeVisitorInterface;

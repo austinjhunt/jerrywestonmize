@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Google sheet
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Googlesheet
@@ -9,19 +14,55 @@
 final class Forminator_Googlesheet extends Forminator_Integration {
 
 	/**
-	 * @var self|null
+	 * Forminator_Googlesheet instance
+	 *
+	 * @var Forminator_Googlesheet|null
 	 */
 	protected static $instance = null;
 
-	protected $_slug                   = 'googlesheet';
-	protected $_version                = FORMINATOR_ADDON_GOOGLESHEET_VERSION;
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
+	protected $_slug = 'googlesheet';
+
+	/**
+	 * Google sheet version
+	 *
+	 * @var string
+	 */
+	protected $_version = FORMINATOR_ADDON_GOOGLESHEET_VERSION;
+
+	/**
+	 * Min Forminator version
+	 *
+	 * @var string
+	 */
 	protected $_min_forminator_version = '1.1';
-	protected $_short_title            = 'Google Sheets';
-	protected $_title                  = 'Google Sheets';
+
+	/**
+	 * Short title
+	 *
+	 * @var string
+	 */
+	protected $_short_title = 'Google Sheets';
+
+	/**
+	 * Title
+	 *
+	 * @var string
+	 */
+	protected $_title = 'Google Sheets';
 
 	const MIME_TYPE_GOOGLE_DRIVE_FOLDER = 'application/vnd.google-apps.folder';
 	const MIME_TYPE_GOOGLE_SPREADSHEET  = 'application/vnd.google-apps.spreadsheet';
 
+	/**
+	 * Position
+	 *
+	 * @var int
+	 */
 	protected $_position = 3;
 
 	/**
@@ -31,7 +72,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 */
 	public function __construct() {
 		// late init to allow translation.
-		$this->_description                = esc_html__( 'Get awesome by your form.', 'forminator' );
+		$this->_description = esc_html__( 'Get awesome by your form.', 'forminator' );
 
 		$this->is_multi_global = true;
 
@@ -44,6 +85,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 * @since 1.0 Google Sheets Integration
 	 *
 	 * @return bool
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function is_connected() {
 		try {
@@ -54,7 +96,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 
 			$is_connected   = false;
 			$setting_values = $this->get_all_settings_values();
-			$tokens         = array_column( $setting_values,'token' );
+			$tokens         = array_column( $setting_values, 'token' );
 			// if user completed api setup.
 			if ( ! empty( $tokens ) ) {
 				$is_connected = true;
@@ -123,7 +165,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 *
 	 * @since 1.0 Google Sheets Integration
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return array
 	 */
@@ -201,7 +243,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 				// validate api.
 				try {
 					if ( $this->get_client_id() !== $client_id || $this->get_client_secret() !== $client_secret ) {
-						// reset connection!
+						// reset connection.
 						$settings_values = array();
 					}
 					$settings_values['client_id']     = $client_id;
@@ -229,7 +271,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	/**
 	 * Setup client id is complete
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return bool
 	 */
@@ -249,7 +291,6 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 *
 	 * @since 1.0 Google Sheets Integration
 	 * @return array
-	 * @throws Exception
 	 */
 	public function authorize_access() {
 
@@ -275,6 +316,11 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 		);
 	}
 
+	/**
+	 * Authorize access is completed.
+	 *
+	 * @return bool
+	 */
 	public function authorize_access_is_completed() {
 		return true;
 	}
@@ -284,10 +330,9 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 *
 	 * @since 1.0 Google Sheets Integration
 	 * @return array
-	 * @throws Exception
 	 */
 	public function wait_authorize_access() {
-		$template         = forminator_addon_googlesheet_dir() . 'views/settings/wait-authorize.php';
+		$template = forminator_addon_googlesheet_dir() . 'views/settings/wait-authorize.php';
 
 		$is_poll = true;
 		$token   = $this->get_client_access_token();
@@ -328,7 +373,6 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 * Get Auth Url
 	 *
 	 * @return string
-	 * @throws Exception
 	 */
 	public function get_auth_url() {
 		$google_client = $this->get_google_client();
@@ -417,9 +461,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 *
 	 * @since 1.0 Google Sheets Integration
 	 *
-	 * @param $access_token
-	 *
-	 * @return string
+	 * @param string $access_token Access token.
 	 */
 	public function update_client_access_token( $access_token ) {
 		$settings_values           = $this->get_settings_values();
@@ -446,9 +488,10 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 *
 	 * @since 1.0 Google Sheets Integration
 	 *
-	 * @param $query_args
+	 * @param array $query_args Arguments.
 	 *
 	 * @return string
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function authorize_page_callback( $query_args ) {
 		if ( isset( $query_args['global_id'] ) ) {
@@ -495,7 +538,6 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 *
 	 * @since 1.0 Google Sheets Integration
 	 * @return Forminator_Google_Client
-	 * @throws Exception
 	 */
 	public function get_google_client() {
 		spl_autoload_register( 'forminator_addon_googlesheet_google_api_client_autoload' );
@@ -535,14 +577,12 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	}
 
 
-	/** @noinspection PhpUndefinedClassInspection */
 	/**
 	 * Revoke token on Google before deactivate
 	 *
 	 * @since 1.0 Google Sheets Integration
 	 * @return bool
-	 * @throws Forminator_Google_Auth_Exception
-	 * @throws Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function deactivate() {
 		try {
@@ -551,10 +591,6 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 			if ( $access_token ) {
 				$google_client->setAccessToken( $access_token );
 				$revoked = $google_client->revokeToken();
-
-				// if ( ! $revoked ) {
-				// 	throw new Forminator_Integration_Exception( esc_html__( 'Failed to revoke access token', 'forminator' ) );
-				// }
 			}
 		} catch ( Forminator_Integration_Exception $e ) {
 			$this->_deactivation_error_message = $e->getMessage();
@@ -584,5 +620,4 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	public function is_allow_multi_on_quiz() {
 		return true;
 	}
-
 }

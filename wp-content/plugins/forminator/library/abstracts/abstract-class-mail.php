@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator Mail.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,6 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0
  */
 abstract class Forminator_Mail {
+	/**
+	 * Message variables
+	 *
+	 * @var array
+	 */
 	protected $message_vars;
 
 	/**
@@ -179,10 +190,10 @@ abstract class Forminator_Mail {
 	 * @since 1.0.3
 	 * @since 1.6.2 add $custom_form model, and entry
 	 *
-	 * @param array                       $notification
-	 * @param Forminator_Base_Form_Model  $module
-	 * @param Forminator_Form_Entry_Model $entry
-	 * @param                             $lead_model
+	 * @param array                       $notification Notification.
+	 * @param Forminator_Base_Form_Model  $module Base Form Model.
+	 * @param Forminator_Form_Entry_Model $entry Entry Form Model.
+	 * @param array                       $lead_model Lead Model.
 	 *
 	 * @return array
 	 */
@@ -217,10 +228,8 @@ abstract class Forminator_Mail {
 							}
 						}
 					}
-				} else {
-					if ( is_email( $recipient ) ) {
+				} elseif ( is_email( $recipient ) ) {
 						$email[] = $recipient;
-					}
 				}
 			}
 		}
@@ -247,7 +256,7 @@ abstract class Forminator_Mail {
 	 *
 	 * @since 1.0.3
 	 *
-	 * @param array $recipients
+	 * @param array $recipients Recipients.
 	 */
 	public function set_recipients( $recipients ) {
 		$this->recipients = array();
@@ -303,7 +312,7 @@ abstract class Forminator_Mail {
 	 *
 	 * @since 2.0
 	 *
-	 * @param array $pdfs - Selected PDFs in form notifications.
+	 * @param array $notification - Selected PDFs in form notifications.
 	 */
 	public function set_pdfs( $notification ) {
 		if ( ! empty( $notification['email-pdfs'] ) ) {
@@ -320,6 +329,8 @@ abstract class Forminator_Mail {
 	 * @since 1.0
 	 *
 	 * @param array $attachment - the mail attachment.
+	 * @param mixed $custom_form Custom form.
+	 * @param mixed $entry - Entry.
 	 */
 	public function set_attachment( $attachment, $custom_form = null, $entry = null ) {
 		$this->attachment = apply_filters( 'forminator_custom_form_mail_attachment', $attachment, $custom_form, $entry, $this->pdfs );
@@ -431,8 +442,8 @@ abstract class Forminator_Mail {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $form_field_value
-	 * @param $condition
+	 * @param mixed $form_field_value Form field value.
+	 * @param array $condition Condition.
 	 *
 	 * @return bool
 	 */
@@ -445,9 +456,9 @@ abstract class Forminator_Mail {
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param string $slug         question slug.
-	 * @param  int    $answer_index answer index.
-	 * @param  int    $quiz_model
+	 * @param string $slug         Question slug.
+	 * @param int    $answer_index Answer index.
+	 * @param int    $quiz_model Quiz model.
 	 *
 	 * @return bool
 	 */
@@ -475,7 +486,7 @@ abstract class Forminator_Mail {
 	 *
 	 * @since   1.15.3
 	 *
-	 * @param   array $form_data  submitted data.
+	 * @param   array $form_data Submitted data.
 	 *
 	 * @return  string
 	 */

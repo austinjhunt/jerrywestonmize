@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Addon_Settings_Abstract class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Addon_Settings_Abstract
@@ -106,25 +111,25 @@ abstract class Forminator_Addon_Settings_Abstract {
 	 * Replace '-' to '_' in keys because some integrations don't support dashes like tray.io and workato.
 	 * don't do it for zapier for backward compatibility
 	 *
-	 * @param array  $array Original array.
+	 * @param array  $array_values Original array.
 	 * @param string $endpoint Endpoint URL.
 	 */
-	public static function replace_dashes_in_keys( $array, $endpoint ) {
+	public static function replace_dashes_in_keys( $array_values, $endpoint ) {
 		if ( strpos( $endpoint, 'zapier' ) ) {
-			return $array;
+			return $array_values;
 		}
 
-		foreach ( $array as $key => $value ) {
+		foreach ( $array_values as $key => $value ) {
 			if ( is_array( $value ) ) {
 				// Replace it recursively.
 				$value = self::replace_dashes_in_keys( $value, $endpoint );
 			}
-			unset( $array[ $key ] );
-			$new_key           = str_replace( '-', '_', $key );
-			$array[ $new_key ] = $value;
+			unset( $array_values[ $key ] );
+			$new_key                  = str_replace( '-', '_', $key );
+			$array_values[ $new_key ] = $value;
 		}
 
-		return $array;
+		return $array_values;
 	}
 
 	/**

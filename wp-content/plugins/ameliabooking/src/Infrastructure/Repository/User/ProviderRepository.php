@@ -182,6 +182,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.zoomUserId AS user_zoom_user_id,
                     u.stripeConnect AS user_stripeConnect,
                     u.translations AS user_translations,
+                    u.timeZone AS user_timeZone,
                     u.badgeId AS badge_id,
                     gd.id AS google_calendar_id,
                     gd.token AS google_calendar_token,
@@ -423,6 +424,26 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             }
         }
 
+        $calendarJoin = '';
+
+        $calendarFields = '';
+
+        if (!empty($criteria['fetchCalendars'])) {
+            $calendarJoin = "
+                LEFT JOIN {$this->providersGoogleCalendarTable} gd ON gd.userId = u.id
+                LEFT JOIN {$this->providersOutlookCalendarTable} od ON od.userId = u.id
+            ";
+
+            $calendarFields = '
+                gd.id AS google_calendar_id,
+                gd.token AS google_calendar_token,
+                gd.calendarId AS google_calendar_calendar_id,
+                od.id AS outlook_calendar_id,
+                od.token AS outlook_calendar_token,
+                od.calendarId AS outlook_calendar_calendar_id,
+            ';
+        }
+
         if ($queryProviders) {
             $where[] = 'u.id IN (' . implode(', ', $queryProviders) . ')';
         }
@@ -455,12 +476,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     pst.customPricing AS service_customPricing,
                     pst.minCapacity AS service_minCapacity,
                     pst.maxCapacity AS service_maxCapacity,
-                    gd.id AS google_calendar_id,
-                    gd.token AS google_calendar_token,
-                    gd.calendarId AS google_calendar_calendar_id,
-                    od.id AS outlook_calendar_id,
-                    od.token AS outlook_calendar_token,
-                    od.calendarId AS outlook_calendar_calendar_id,
+                    {$calendarFields}
                     dot.id AS dayOff_id,
                     dot.name AS dayOff_name,
                     dot.startDate AS dayOff_startDate,
@@ -469,8 +485,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 FROM {$this->table} u
                 LEFT JOIN {$this->providerServicesTable} pst ON pst.userId = u.id
                 LEFT JOIN {$this->providerLocationTable} plt ON plt.userId = u.id
-                LEFT JOIN {$this->providersGoogleCalendarTable} gd ON gd.userId = u.id
-                LEFT JOIN {$this->providersOutlookCalendarTable} od ON od.userId = u.id
+                {$calendarJoin}
                 LEFT JOIN {$this->providerDayOffTable} dot ON dot.userId = u.id
                 {$where}
                 ORDER BY CONCAT(u.firstName, ' ', u.lastName), u.id"

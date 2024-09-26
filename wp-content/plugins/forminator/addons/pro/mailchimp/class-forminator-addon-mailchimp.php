@@ -1,7 +1,13 @@
 <?php
-/** @noinspection HtmlUnknownTarget */
+/**
+ * Forminator Addon Mailchimp.
+ *
+ * @package Forminator
+ */
 
-require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-mailchimp-wp-api.php';
+// @noinspection HtmlUnknownTarget.
+
+require_once __DIR__ . '/lib/class-forminator-addon-mailchimp-wp-api.php';
 
 /**
  * Class Forminator_Mailchimp
@@ -21,30 +27,40 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	protected static $instance = null;
 
 	/**
+	 * Slug
+	 *
 	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	protected $_slug = 'mailchimp';
 
 	/**
+	 * Mailchimp version
+	 *
 	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	protected $_version = FORMINATOR_ADDON_MAILCHIMP_VERSION;
 
 	/**
+	 * Forminator min version
+	 *
 	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	protected $_min_forminator_version = '1.1';
 
 	/**
+	 * Short title
+	 *
 	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
 	protected $_short_title = 'Mailchimp';
 
 	/**
+	 * Title
+	 *
 	 * @since 1.0 Mailchimp Integration
 	 * @var string
 	 */
@@ -59,6 +75,11 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 */
 	private $_connected_account = array();
 
+	/**
+	 * Position
+	 *
+	 * @var int
+	 */
 	protected $_position = 2;
 
 	/**
@@ -70,7 +91,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 */
 	public function __construct() {
 		// late init to allow translation.
-		$this->_description                = esc_html__( 'Make form data as Mailchimp List', 'forminator' );
+		$this->_description = esc_html__( 'Make form data as Mailchimp List', 'forminator' );
 
 		if ( wp_doing_ajax() ) {
 			add_action( 'wp_ajax_forminator_mailchimp_get_group_interests', array( $this, 'ajax_group_interests' ) );
@@ -86,7 +107,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param array $values
+	 * @param array $values Settings.
 	 *
 	 * @return array
 	 */
@@ -120,9 +141,10 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param $api_key
+	 * @param string $api_key API Key.
 	 *
 	 * @return bool
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	protected function validate_api_key( $api_key ) {
 		if ( empty( $api_key ) ) {
@@ -160,10 +182,9 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param null $api_key
+	 * @param string|null $api_key API Key.
 	 *
 	 * @return Forminator_Mailchimp_Wp_Api|null
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_api( $api_key = null ) {
 		if ( is_null( $api_key ) ) {
@@ -180,7 +201,6 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 * @return string|null
 	 */
 	private function get_api_key() {
-		/** @var array $setting_values */
 		$setting_values = $this->get_settings_values();
 		if ( isset( $setting_values['api_key'] ) ) {
 			return $setting_values['api_key'];
@@ -221,14 +241,17 @@ class Forminator_Mailchimp extends Forminator_Integration {
 		}
 
 		return $help;
-
 	}
 
+	/**
+	 * Settings description
+	 *
+	 * @return string
+	 */
 	public function settings_description() {
 
 		$description = '';
 
-		/** @var array $setting_values */
 		$setting_values = $this->get_settings_values();
 
 		if (
@@ -245,14 +268,17 @@ class Forminator_Mailchimp extends Forminator_Integration {
 		}
 
 		return $description;
-
 	}
 
+	/**
+	 * Account info
+	 *
+	 * @return string
+	 */
 	public function settings_account() {
 
 		$myaccount = '';
 
-		/** @var array $setting_values */
 		$setting_values = $this->get_settings_values();
 
 		if (
@@ -277,7 +303,6 @@ class Forminator_Mailchimp extends Forminator_Integration {
 		}
 
 		return $myaccount;
-
 	}
 
 	/**
@@ -333,8 +358,8 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param     $submitted_data
-	 * @param int $form_id
+	 * @param array $submitted_data Submitted data.
+	 * @param int   $form_id Form Id.
 	 *
 	 * @return array
 	 */
@@ -427,32 +452,32 @@ class Forminator_Mailchimp extends Forminator_Integration {
 			);
 		}
 
-		$html  = '<div class="forminator-integration-popup__header">';
+		$html = '<div class="forminator-integration-popup__header">';
 			/* translators: ... */
 			$html .= '<h3 id="dialogTitle2" class="sui-box-title sui-lg" style="overflow: initial; text-overflow: none; white-space: normal;">' . /* translators: 1: Add-on name */ sprintf( esc_html__( 'Configure %1$s', 'forminator' ), 'Mailchimp' ) . '</h3>';
 			$html .= $this->settings_help();
 			$html .= $error_message;
-		$html .= '</div>';
-		$html .= '<form>';
-			// FIELD: API Key
-			$html .= '<div class="sui-form-field ' . ( ! empty( $api_key_error_message ) ? 'sui-form-field-error' : '' ) . '">';
+		$html     .= '</div>';
+		$html     .= '<form>';
+			// FIELD: API Key.
+			$html     .= '<div class="sui-form-field ' . ( ! empty( $api_key_error_message ) ? 'sui-form-field-error' : '' ) . '">';
 				$html .= '<label class="sui-label">' . esc_html__( 'API Key', 'forminator' ) . '</label>';
 				$html .= '<div class="sui-control-with-icon">';
 					/* translators: ... */
 					$html .= '<input name="api_key" value="' . esc_attr( $api_key ) . '" placeholder="' . /* translators: 1: Add-on name */ sprintf( esc_html__( 'Enter %1$s API Key', 'forminator' ), 'Mailchimp' ) . '" class="sui-form-control" />';
 					$html .= '<i class="sui-icon-key" aria-hidden="true"></i>';
-				$html .= '</div>';
-				$html .= ( ! empty( $api_key_error_message ) ? '<span class="sui-error-message">' . esc_html( $api_key_error_message ) . '</span>' : '' );
-				$html .= $this->settings_description();
-			$html .= '</div>';
-			// FIELD: Identifier
-			$html .= '<div class="sui-form-field">';
+				$html     .= '</div>';
+				$html     .= ( ! empty( $api_key_error_message ) ? '<span class="sui-error-message">' . esc_html( $api_key_error_message ) . '</span>' : '' );
+				$html     .= $this->settings_description();
+			$html         .= '</div>';
+			// FIELD: Identifier.
+			$html     .= '<div class="sui-form-field">';
 				$html .= '<label class="sui-label">' . esc_html__( 'Identifier', 'forminator' ) . '</label>';
 				$html .= '<input name="identifier" value="' . esc_attr( $identifier ) . '" placeholder="' . esc_attr__( 'E.g., Business Account', 'forminator' ) . '" class="sui-form-control" />';
 				$html .= '<span class="sui-description">' . esc_html__( 'Helps distinguish between integrations if connecting to the same third-party app with multiple accounts.', 'forminator' ) . '</span>';
-			$html .= '</div>';
-		$html .= '</form>';
-		$html .= $this->settings_account();
+			$html     .= '</div>';
+		$html         .= '</form>';
+		$html         .= $this->settings_account();
 
 		return array(
 			'html'       => $html,
@@ -467,15 +492,16 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 */
 	public function ajax_group_interests() {
 		forminator_validate_ajax( 'forminator_mailchimp_interests', false, 'forminator-integrations' );
-		$html      = '';
+		$html = '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput -- The nonce is verified before and sanitized in Forminator_Core::sanitize_array.
 		$post_data = isset( $_POST['data'] ) ? Forminator_Core::sanitize_array( $_POST['data'], 'data' ) : array();
 		$data      = array();
 		wp_parse_str( $post_data, $data );
-		$module_id = $data['module_id'] ?? '';
+		$module_id   = $data['module_id'] ?? '';
 		$module_type = $data['module_type'] ?? '';
 		if ( $module_id ) {
 			$module_settings_instance = $this->get_addon_settings( $module_id, $module_type );
-			$html                   = $module_settings_instance->get_group_interests( $data );
+			$html                     = $module_settings_instance->get_group_interests( $data );
 		}
 
 		wp_send_json_success( $html );

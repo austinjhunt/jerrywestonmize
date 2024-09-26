@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Admin Import CF7
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -36,6 +42,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	/**
 	 * Get label text from CF7 form HTML
 	 *
+	 * @param string $name Name.
+	 * @param string $form Form.
+	 *
 	 * @since 1.11
 	 * @return string field label
 	 */
@@ -64,8 +73,8 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	/**
 	 * Insert form data
 	 *
-	 * @param $id
-	 * @param $post_data
+	 * @param int   $id Form Id.
+	 * @param array $post_data Post Data.
 	 *
 	 * @return array|object
 	 */
@@ -189,7 +198,7 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 							'label'   => esc_html( $label ),
 							'value'   => isset( $after_pipes[ $key ] ) ? esc_html( $after_pipes[ $key ] ) : esc_html( $field->values[ $key ] ),
 							'limit'   => '',
-							'default' => in_array( $key + 1, $checked ),
+							'default' => in_array( $key + 1, $checked ), // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- Possible for 1 or '1'
 						);
 					}
 					$options = array_merge( $blank_options, $options );
@@ -475,8 +484,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $field
-	 * @param $options
+	 * @param array $field Field.
+	 * @param array $options Options.
+	 * @param array $messages Messages.
 	 *
 	 * @return mixed
 	 */
@@ -502,8 +512,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $field
-	 * @param $options
+	 * @param array $field Field.
+	 * @param array $options Options.
+	 * @param array $messages Messages.
 	 *
 	 * @return mixed
 	 */
@@ -520,9 +531,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $field
-	 * @param $options
-	 * @param $messages
+	 * @param array $field Field.
+	 * @param array $options Options.
+	 * @param array $messages Messages.
 	 *
 	 * @return mixed
 	 */
@@ -554,9 +565,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $field
-	 * @param $options
-	 * @param $messages
+	 * @param array $field Field.
+	 * @param array $options Options.
+	 * @param array $messages Messages.
 	 *
 	 * @return mixed
 	 */
@@ -597,9 +608,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $field
-	 * @param $options
-	 * @param $messages
+	 * @param array $field Field.
+	 * @param array $options Options.
+	 * @param array $messages Messages.
 	 *
 	 * @return mixed
 	 */
@@ -621,9 +632,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $field
-	 * @param $options
-	 * @param $messages
+	 * @param array $field Field.
+	 * @param array $options Options.
+	 * @param array $messages Messages.
 	 *
 	 * @return mixed
 	 */
@@ -638,7 +649,7 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 					$exploded = explode( ':', $length );
 
 					if ( isset( $exploded[1] ) ) {
-						$options['min_year'] = date( 'Y', strtotime( $exploded[1] ) );
+						$options['min_year'] = gmdate( 'Y', strtotime( $exploded[1] ) );
 					}
 				}
 			}
@@ -648,7 +659,7 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 					$exploded = explode( ':', $length );
 
 					if ( isset( $exploded[1] ) ) {
-						$options['max_year'] = date( 'Y', strtotime( $exploded[1] ) );
+						$options['max_year'] = gmdate( 'Y', strtotime( $exploded[1] ) );
 					}
 				}
 			}
@@ -671,9 +682,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $field
-	 * @param $options
-	 * @param $messages
+	 * @param array $field Field.
+	 * @param array $options Options.
+	 * @param array $messages Messages.
 	 *
 	 * @return mixed
 	 */
@@ -694,9 +705,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $field
-	 * @param $options
-	 * @param $messages
+	 * @param array $field Field.
+	 * @param array $options Options.
+	 * @param array $messages Messages.
 	 *
 	 * @return mixed
 	 */
@@ -717,9 +728,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $field
-	 * @param $options
-	 * @param $messages
+	 * @param array $field Field.
+	 * @param array $options Options.
+	 * @param array $messages Messages.
 	 *
 	 * @return mixed
 	 */
@@ -736,9 +747,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $field
-	 * @param $options
-	 * @param $messages
+	 * @param array $field Field.
+	 * @param array $options Options.
+	 * @param array $messages Messages.
 	 *
 	 * @return mixed
 	 */
@@ -759,9 +770,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $field
-	 * @param $options
-	 * @param $messages
+	 * @param array $field Field.
+	 * @param array $options Options.
+	 * @param array $messages Messages.
 	 *
 	 * @return mixed
 	 */
@@ -809,7 +820,7 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $limit
+	 * @param int $limit Limit.
 	 *
 	 * @return float|string
 	 */
@@ -834,7 +845,7 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $file
+	 * @param string $file File type.
 	 *
 	 * @return string
 	 */
@@ -880,10 +891,10 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	/**
 	 * Import flamingo
 	 *
-	 * @param $id
-	 * @param $entry
-	 * @param $import
-	 * @param $meta
+	 * @param int                         $id Post Id.
+	 * @param Forminator_Form_Entry_Model $entry Form entry model.
+	 * @param array                       $import Import.
+	 * @param array                       $meta Meta.
 	 */
 	public function import_flamingo( $id, Forminator_Form_Entry_Model $entry, $import, $meta ) {
 		$field_data_array = array();
@@ -938,10 +949,10 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	/**
 	 * Import cfdb7
 	 *
-	 * @param $id
-	 * @param $entry
-	 * @param $import
-	 * @param $meta
+	 * @param int                         $id Form Id.
+	 * @param Forminator_Form_Entry_Model $entry Form entry model.
+	 * @param array                       $import Import.
+	 * @param array                       $meta Meta.
 	 */
 	public function import_cfdb7( $id, Forminator_Form_Entry_Model $entry, $import, $meta ) {
 		global $wpdb;
@@ -950,8 +961,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 		if ( ! empty( $import ) && 'success' === $import['type'] ) {
 			$entry->form_id = $import['id'];
 			$table_name     = $wpdb->prefix . 'db7_forms';
-			$sql            = "SELECT `form_value`,`form_date` FROM {$table_name} WHERE `form_post_id` = %d";
-			$form_data      = $wpdb->get_results( $wpdb->prepare( $sql, $id ) );
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$form_data = $wpdb->get_results( $wpdb->prepare( 'SELECT `form_value`,`form_date` FROM ' . esc_sql( $table_name ) . ' WHERE `form_post_id` = %d', $id ) );
 			if ( ! empty( $form_data ) ) {
 				foreach ( $form_data as $form_value ) {
 					$data_value = maybe_unserialize( $form_value->form_value );
@@ -989,10 +1001,10 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	/**
 	 * Import submission
 	 *
-	 * @param $id
-	 * @param Forminator_Form_Entry_Model $entry
-	 * @param $import
-	 * @param $meta
+	 * @param int                         $id Form Id.
+	 * @param Forminator_Form_Entry_Model $entry Form entry model.
+	 * @param array                       $import Import.
+	 * @param array                       $meta Meta.
 	 */
 	public function import_submissions( $id, Forminator_Form_Entry_Model $entry, $import, $meta ) {
 		$field_data_array = array();
@@ -1003,8 +1015,8 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 				array(
 					'posts_per_page' => - 1,
 					'post_type'      => 'wpcf7s',
-					'meta_key'       => 'form_id',
-					'meta_value'     => (int) $id,
+					'meta_key'       => 'form_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+					'meta_value'     => (int) $id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 				)
 			);
 
@@ -1050,7 +1062,7 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	/**
 	 * Field data
 	 *
-	 * @param $form_fields
+	 * @param array $form_fields Form fields.
 	 *
 	 * @return array
 	 */
@@ -1078,7 +1090,7 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	/**
 	 * Import global settings
 	 *
-	 * @param $setting
+	 * @param array $setting Global settings.
 	 */
 	public function import_global_settings( $setting ) {
 		if ( ! empty( $setting ) ) {
@@ -1099,10 +1111,10 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	/**
 	 * Import Advanced CF7
 	 *
-	 * @param $id
-	 * @param Forminator_Form_Entry_Model $entry
-	 * @param $import
-	 * @param $meta
+	 * @param int                         $id Form Id.
+	 * @param Forminator_Form_Entry_Model $entry Form entry model.
+	 * @param array                       $import Import.
+	 * @param array                       $meta Meta.
 	 */
 	public function import_advanced_cf7( $id, Forminator_Form_Entry_Model $entry, $import, $meta ) {
 		global $wpdb;
@@ -1119,8 +1131,9 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 								)
 							temp_table)
 							ORDER BY %s";
-			$data                = $wpdb->get_results( $wpdb->prepare( $query, $id, $id, $cf7d_entry_order_by, $cf7d_entry_order_by ) );
-			$submissions_data    = vsz_cf7_sortdata( $data );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+			$data             = $wpdb->get_results( $wpdb->prepare( $query, $id, $id, $cf7d_entry_order_by, $cf7d_entry_order_by ) );
+			$submissions_data = vsz_cf7_sortdata( $data );
 			if ( ! empty( $submissions_data ) ) {
 				foreach ( $submissions_data as $submissions ) {
 					$data_date = date_i18n( 'Y-m-d H:i:s', strtotime( $submissions['submit_time'] ) );
@@ -1139,7 +1152,7 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 										);
 									}
 									if ( strpos( $value, 'checkbox' ) !== false ||
-										 strpos( $value, 'select' ) !== false ) {
+										strpos( $value, 'select' ) !== false ) {
 										$data_value = explode( '<br />', nl2br( $submissions[ $key ] ) );
 										$data_value = array_map( 'trim', $data_value );
 									}
@@ -1161,10 +1174,10 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	/**
 	 * Import Condition
 	 *
-	 * @param $wpcf7cf_entries
-	 * @param $form_html
-	 * @param $field
-	 * @param $field_data
+	 * @param array  $wpcf7cf_entries Form entries.
+	 * @param string $form_html Form HTML.
+	 * @param array  $field Field.
+	 * @param array  $field_data Field data.
 	 *
 	 * @return array
 	 */

@@ -1,10 +1,16 @@
 <?php
+/**
+ * Template admin/views/addons/addons-list.php
+ *
+ * @package Forminator
+ */
+
 if ( empty( $addons ) || empty( $addons->pid ) ) {
 	return;
 }
 
 // PID.
-$addons_slug = Forminator_Admin_Addons_page::get_addon_slug( $addons->pid );
+$addons_slug = Forminator_Admin_Addons_Page::get_addon_slug( $addons->pid );
 
 $is_network_active = $addons->is_network_admin && is_plugin_active_for_network( $addons->filename );
 
@@ -40,8 +46,7 @@ if ( FORMINATOR_PRO ) {
 				'addons' => $addons->pid,
 			),
 		);
-	} else {
-		if ( ! is_plugin_active( $addons->filename ) ) {
+	} elseif ( ! is_plugin_active( $addons->filename ) ) {
 			$actions['activate']    = array(
 				'name'    => ( $is_network_active && is_super_admin() ? esc_html__( 'Network Activate', 'forminator' ) : esc_html__( 'Activate', 'forminator' ) ),
 				'icon'    => 'sui-icon-power-on-off',
@@ -64,42 +69,41 @@ if ( FORMINATOR_PRO ) {
 					'addons' => $addons->pid,
 				),
 			);
-		} else {
-			if ( 'pdf' !== $addons_slug ) {
-				$actions['configure'] = array(
-					'name'     => esc_html__( 'Configure', 'forminator' ),
-					'icon'     => 'sui-icon-wrench-tool',
-					'class'    => 'addons-configure',
-					'nonce'    => wp_create_nonce( 'forminator_' . $addons_slug . '_settings_modal' ),
-					'loading'  => '',
-					'image'    => forminator_plugin_url() . 'assets/images/' . $addons_slug . '-logo.png',
-					'image_x2' => forminator_plugin_url() . 'assets/images/' . $addons_slug . '-logo@2x.png',
-					'title'    => /* translators: %s: Add-on slug */ sprintf( esc_html__( 'Connect %s Account', 'forminator' ), ucfirst( $addons_slug ) ),
-					'data'     => array(
-						'action' => $addons_slug . '-connect-modal',
-						'addons' => $addons->pid,
-					),
-				);
-			}
-
-			$main_actions['deactivate'] = array(
-				'name'    => ( $is_network_active && is_super_admin() ? esc_html__( 'Network Deactivate', 'forminator' ) : esc_html__( 'Deactivate', 'forminator' ) ),
-				'icon'    => 'sui-icon-power-on-off',
-				'class'   => 'sui-button-ghost wpmudev-open-modal',
-				'loading' => esc_html__( 'Deactivating', 'forminator' ),
-				'nonce'   => wp_create_nonce( 'forminator_popup_addons_actions' ),
-				'data'    => array(
-					'action' => 'addons-deactivate',
+	} else {
+		if ( 'pdf' !== $addons_slug ) {
+			$actions['configure'] = array(
+				'name'     => esc_html__( 'Configure', 'forminator' ),
+				'icon'     => 'sui-icon-wrench-tool',
+				'class'    => 'addons-configure',
+				'nonce'    => wp_create_nonce( 'forminator_' . $addons_slug . '_settings_modal' ),
+				'loading'  => '',
+				'image'    => forminator_plugin_url() . 'assets/images/' . $addons_slug . '-logo.png',
+				'image_x2' => forminator_plugin_url() . 'assets/images/' . $addons_slug . '-logo@2x.png',
+				'title'    => /* translators: %s: Add-on slug */ sprintf( esc_html__( 'Connect %s Account', 'forminator' ), ucfirst( $addons_slug ) ),
+				'data'     => array(
+					'action' => $addons_slug . '-connect-modal',
 					'addons' => $addons->pid,
 				),
 			);
 		}
+
+		$main_actions['deactivate'] = array(
+			'name'    => ( $is_network_active && is_super_admin() ? esc_html__( 'Network Deactivate', 'forminator' ) : esc_html__( 'Deactivate', 'forminator' ) ),
+			'icon'    => 'sui-icon-power-on-off',
+			'class'   => 'sui-button-ghost wpmudev-open-modal',
+			'loading' => esc_html__( 'Deactivating', 'forminator' ),
+			'nonce'   => wp_create_nonce( 'forminator_popup_addons_actions' ),
+			'data'    => array(
+				'action' => 'addons-deactivate',
+				'addons' => $addons->pid,
+			),
+		);
 	}
 } ?>
 
 <div class="sui-col-md-6 addons-<?php echo esc_attr( $addons->pid ); ?>">
 
-    <div id="forminator-addon-<?php echo esc_attr( $addons->pid ); ?>__card" class="sui-box forminator-addon-card">
+	<div id="forminator-addon-<?php echo esc_attr( $addons->pid ); ?>__card" class="sui-box forminator-addon-card">
 
 		<div class="forminator-addon-card--body">
 
@@ -109,30 +113,30 @@ if ( FORMINATOR_PRO ) {
 				</div>
 			<?php endif; ?>
 
-		    <div class="forminator-addon-card--body-right">
+			<div class="forminator-addon-card--body-right">
 
 				<div class="forminator-addon-card--title">
 
-				    <h3><?php echo esc_html( $addons->name ); ?></h3>
+					<h3><?php echo esc_html( $addons->name ); ?></h3>
 
-				    <div class="forminator-addon-card--tags">
+					<div class="forminator-addon-card--tags">
 
 						<?php if ( ! empty( $tags['label'] ) ) { ?>
 							<span class="<?php echo esc_attr( $tags['class'] ); ?>"><?php echo esc_html( $tags['label'] ); ?></span>
 						<?php } ?>
 
 						<?php if ( FORMINATOR_PRO && $addons->is_installed && $addons->has_update ) { ?>
-						    <?php /* translators: Plugin latest version */ ?>
-						    <span class="sui-tag sui-tag-yellow sui-tag-sm"><?php printf( esc_html__( 'v%s update available', 'forminator' ), esc_html( $addons->version_latest ) ); ?></span>
+							<?php /* translators: Plugin latest version */ ?>
+							<span class="sui-tag sui-tag-yellow sui-tag-sm"><?php printf( esc_html__( 'v%s update available', 'forminator' ), esc_html( $addons->version_latest ) ); ?></span>
 						<?php } ?>
 
-				    </div>
+					</div>
 
 				</div>
 
 				<p class="sui-description"><?php echo esc_html( $addons->info ); ?></p>
 
-		    </div>
+			</div>
 
 		</div>
 
@@ -155,38 +159,38 @@ if ( FORMINATOR_PRO ) {
 				</div>
 			<?php } ?>
 
-		    <div class="forminator-addon-card--footer-right">
+			<div class="forminator-addon-card--footer-right">
 
 				<?php if ( FORMINATOR_PRO ) { ?>
 
-				    <?php if ( $addons->is_installed ) { ?>
+					<?php if ( $addons->is_installed ) { ?>
 
 						<?php
 						// BUTTON: Blue.
 						if ( $addons->has_update ) {
-						    Forminator_Admin_Addons_page::get_instance()->render_template(
+							Forminator_Admin_Addons_Page::get_instance()->render_template(
 								'admin/views/addons/action-button',
 								array(
-								    'compound' => true,
-								    'label'    => esc_html__( 'Update', 'forminator' ),
-								    'icon'     => 'update',
-								    'color'    => 'blue',
-								    'class'    => 'addons-actions',
-								    'attrs'    => array(
+									'compound' => true,
+									'label'    => esc_html__( 'Update', 'forminator' ),
+									'icon'     => 'update',
+									'color'    => 'blue',
+									'class'    => 'addons-actions',
+									'attrs'    => array(
 										'data-action'  => 'addons-update',
 										'data-addon'   => esc_attr( $addons->pid ),
 										'data-nonce'   => esc_attr( wp_create_nonce( 'forminator_popup_addons_actions' ) ),
 										'data-version' => /* translators: %s: Latest version. */ sprintf( esc_html__( 'Version %s', 'forminator' ), esc_html( $addons->version_latest ) ),
-								    ),
+									),
 								)
-						    );
+							);
 						}
 
 						if ( is_plugin_active( $addons->filename ) ) {
 
-						    // BUTTON: Configure.
+							// BUTTON: Configure.
 							if ( 'pdf' !== $addons_slug ) {
-								Forminator_Admin_Addons_page::get_instance()->render_template(
+								Forminator_Admin_Addons_Page::get_instance()->render_template(
 									'admin/views/addons/action-button',
 									array(
 										'compound' => true,
@@ -195,10 +199,10 @@ if ( FORMINATOR_PRO ) {
 										'id'       => 'addons-configure__' . $addons_slug,
 										'class'    => 'addons-configure',
 										'attrs'    => array(
-											'data-action'      => esc_attr( $addons_slug . '-connect-modal' ),
-											'data-slug'        => esc_attr( $addons_slug ),
-											'data-addon'       => esc_attr( $addons->pid ),
-											'data-nonce'       => esc_attr( wp_create_nonce( 'forminator_' . $addons_slug . '_settings_modal' ) ),
+											'data-action' => esc_attr( $addons_slug . '-connect-modal' ),
+											'data-slug'   => esc_attr( $addons_slug ),
+											'data-addon'  => esc_attr( $addons->pid ),
+											'data-nonce'  => esc_attr( wp_create_nonce( 'forminator_' . $addons_slug . '_settings_modal' ) ),
 											'data-modal-nonce' => esc_attr( wp_create_nonce( 'forminator_' . $addons_slug . '_settings_modal' ) ),
 											'data-modal-image' => esc_url( forminator_plugin_url() . 'assets/images/' . $addons_slug . '-logo.png' ),
 											'data-modal-image-x2' => esc_url( forminator_plugin_url() . 'assets/images/' . $addons_slug . '-logo@2x.png' ),
@@ -208,17 +212,17 @@ if ( FORMINATOR_PRO ) {
 								);
 							}
 
-						    // BUTTON: Deactivate.
-						    Forminator_Admin_Addons_page::get_instance()->render_template(
+							// BUTTON: Deactivate.
+							Forminator_Admin_Addons_Page::get_instance()->render_template(
 								'admin/views/addons/action-button',
 								array(
-								    'compound' => true,
-								    'label'    => ( $is_network_active && is_super_admin() ? esc_html__( 'Network Active', 'forminator' ) : esc_html__( 'Deactivate', 'forminator' ) ),
-								    'icon'     => 'power-on-off',
-								    'ghost'    => true,
-								    'class'    => 'wpmudev-open-modal',
-								    'disabled' => ( $is_network_active && is_super_admin() ),
-								    'attrs'    => array(
+									'compound' => true,
+									'label'    => ( $is_network_active && is_super_admin() ? esc_html__( 'Network Active', 'forminator' ) : esc_html__( 'Deactivate', 'forminator' ) ),
+									'icon'     => 'power-on-off',
+									'ghost'    => true,
+									'class'    => 'wpmudev-open-modal',
+									'disabled' => ( $is_network_active && is_super_admin() ),
+									'attrs'    => array(
 										'data-action'      => 'addons-deactivate',
 										'data-addon'       => esc_attr( $addons->pid ),
 										'data-nonce'       => esc_attr( wp_create_nonce( 'forminator_popup_addons_actions' ) ),
@@ -227,52 +231,52 @@ if ( FORMINATOR_PRO ) {
 										'data-modal-content' => /* translators: %s: Add-on name */ sprintf( esc_html__( 'You are trying to deactivate %s which is being used by the following forms. This can break the functionality of the forms. Are you sure you want to proceed?', 'forminator' ), '<strong>' . esc_html( $addons->name ) . '</strong>' ),
 										'data-addon-slug'  => esc_attr( $addons_slug ),
 										'data-is_network'  => $is_network_active,
-								    ),
+									),
 								)
-						    );
+							);
 						} else {
 
-						    // BUTTON: Activate.
-						    Forminator_Admin_Addons_page::get_instance()->render_template(
+							// BUTTON: Activate.
+							Forminator_Admin_Addons_Page::get_instance()->render_template(
 								'admin/views/addons/action-button',
 								array(
-								    'compound' => true,
-								    'label'    => ( $is_network_active && is_super_admin() ? esc_html__( 'Network Activate', 'forminator' ) : esc_html__( 'Activate', 'forminator' ) ),
-								    'icon'     => 'power-on-off',
-								    'color'    => 'blue',
-								    'class'    => 'addons-actions',
-								    'attrs'    => array(
+									'compound' => true,
+									'label'    => ( $is_network_active && is_super_admin() ? esc_html__( 'Network Activate', 'forminator' ) : esc_html__( 'Activate', 'forminator' ) ),
+									'icon'     => 'power-on-off',
+									'color'    => 'blue',
+									'class'    => 'addons-actions',
+									'attrs'    => array(
 										'data-action' => 'addons-activate',
 										'data-addon'  => esc_attr( $addons->pid ),
 										'data-nonce'  => esc_attr( wp_create_nonce( 'forminator_popup_addons_actions' ) ),
-								    ),
+									),
 								)
-						    );
+							);
 
-						    // BUTTON: Delete.
-						    Forminator_Admin_Addons_page::get_instance()->render_template(
+							// BUTTON: Delete.
+							Forminator_Admin_Addons_Page::get_instance()->render_template(
 								'admin/views/addons/action-button',
 								array(
-								    'compound' => true,
-								    'label'    => esc_html__( 'Delete', 'forminator' ),
-								    'icon'     => 'trash',
-								    'ghost'    => true,
-								    'class'    => 'addons-actions',
-								    'attrs'    => array(
+									'compound' => true,
+									'label'    => esc_html__( 'Delete', 'forminator' ),
+									'icon'     => 'trash',
+									'ghost'    => true,
+									'class'    => 'addons-actions',
+									'attrs'    => array(
 										'data-action' => 'addons-delete',
 										'data-addon'  => esc_attr( $addons->pid ),
 										'data-nonce'  => esc_attr( wp_create_nonce( 'forminator_popup_addons_actions' ) ),
-								    ),
+									),
 								)
-						    );
+							);
 						}
 						?>
 						<?php
 					} else {
 
-						Forminator_Admin_Addons_page::get_instance()->render_template(
-						    'admin/views/addons/action-button',
-						    array(
+						Forminator_Admin_Addons_Page::get_instance()->render_template(
+							'admin/views/addons/action-button',
+							array(
 								'label' => esc_html__( 'Install', 'forminator' ),
 								'icon'  => 'download',
 								'color' => 'blue',
@@ -282,10 +286,10 @@ if ( FORMINATOR_PRO ) {
 									'data-addon'  => esc_attr( $addons->pid ),
 									'data-nonce'  => esc_attr( wp_create_nonce( 'forminator_popup_addons_actions' ) ),
 								),
-						    )
+							)
 						);
 
-				    }
+					}
 					?>
 				<?php } else { ?>
 					<a
@@ -301,6 +305,6 @@ if ( FORMINATOR_PRO ) {
 
 		</div>
 
-    </div>
+	</div>
 
 </div>

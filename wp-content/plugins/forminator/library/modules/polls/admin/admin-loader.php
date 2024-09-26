@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Poll_Admin class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -12,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Poll_Admin extends Forminator_Admin_Module {
 
 	/**
-	 * module objects
+	 * Module objects
 	 *
 	 * @var array
 	 */
@@ -28,7 +34,7 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 		$this->page         = 'forminator-poll';
 		$this->page_edit    = 'forminator-poll-wizard';
 		$this->page_entries = 'forminator-poll-view';
-		$this->dir          = dirname( __FILE__ );
+		$this->dir          = __DIR__;
 	}
 
 	/**
@@ -46,7 +52,7 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 	 * Pass module defaults to JS
 	 *
 	 * @since 1.0
-	 * @param $data
+	 * @param array $data Data.
 	 *
 	 * @return mixed
 	 */
@@ -115,7 +121,7 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 	 * Localize modules
 	 *
 	 * @since 1.0
-	 * @param $data
+	 * @param array $data Data.
 	 *
 	 * @return mixed
 	 */
@@ -169,7 +175,6 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 			'question_color'                 => esc_html__( 'Question color', 'forminator' ),
 			'poll_answer'                    => esc_html__( 'Poll answer', 'forminator' ),
 			'custom_answer'                  => esc_html__( 'Custom answer', 'forminator' ),
-			'poll_button'                    => esc_html__( 'Poll button', 'forminator' ),
 			'poll_link'                      => esc_html__( 'Poll link', 'forminator' ),
 
 			// Appearance » Customize Radio and Checkbox Image Size.
@@ -223,7 +228,8 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.14
 	 *
-	 * @param $name
+	 * @param string $name Form name.
+	 * @param array  $settings Settings.
 	 *
 	 * @return array[]
 	 */
@@ -255,8 +261,6 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 	 * Create quiz module
 	 *
 	 * @since 1.14
-	 *
-	 * @return no return
 	 */
 	public function create_module() {
 		if ( ! $this->is_admin_wizard() || self::is_edit() ) {

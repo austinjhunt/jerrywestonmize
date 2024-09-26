@@ -1,6 +1,12 @@
 <?php
+/**
+ * The Activecampaign.
+ *
+ * @package    Forminator
+ */
 
-require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-activecampaign-wp-api.php';
+// Include class-forminator-addon-activecampaign-wp-api.
+require_once __DIR__ . '/lib/class-forminator-addon-activecampaign-wp-api.php';
 
 /**
  * Class Forminator_Activecampaign
@@ -11,22 +17,66 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-activecampaign-w
 final class Forminator_Activecampaign extends Forminator_Integration {
 
 	/**
-	 * @var self|null
+	 * Forminator Activecampaign
+	 *
+	 * @var Forminator_Activecampaign |null
 	 */
 	protected static $instance = null;
 
-	protected $_slug                   = 'activecampaign';
-	protected $_version                = FORMINATOR_ADDON_ACTIVECAMPAIGN_VERSION;
-	protected $_min_forminator_version = '1.1';
-	protected $_short_title            = 'ActiveCampaign';
-	protected $_title                  = 'ActiveCampaign';
-	protected $_position               = 8;
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
+	protected $_slug = 'activecampaign';
 
 	/**
+	 * Version
+	 *
+	 * @var string
+	 */
+	protected $_version = FORMINATOR_ADDON_ACTIVECAMPAIGN_VERSION;
+
+	/**
+	 * Forminator version
+	 *
+	 * @var string
+	 */
+	protected $_min_forminator_version = '1.1';
+
+	/**
+	 * Short title
+	 *
+	 * @var string
+	 */
+	protected $_short_title = 'ActiveCampaign';
+
+	/**
+	 * Title
+	 *
+	 * @var string
+	 */
+	protected $_title = 'ActiveCampaign';
+
+	/**
+	 * Position
+	 *
+	 * @var integer
+	 */
+	protected $_position = 8;
+
+	/**
+	 * API
+	 *
 	 * @var Forminator_Activecampaign_Wp_Api|null
 	 */
 	private static $api = null;
 
+	/**
+	 * Connected account
+	 *
+	 * @var mixed
+	 */
 	public $connected_account = null;
 
 	/**
@@ -36,7 +86,7 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	 */
 	public function __construct() {
 		// late init to allow translation.
-		$this->_description                = esc_html__( 'Get awesome by your form.', 'forminator' );
+		$this->_description = esc_html__( 'Get awesome by your form.', 'forminator' );
 
 		$this->is_multi_global = true;
 	}
@@ -108,16 +158,17 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	 *
 	 * @since 1.0 Active Campaign Integration
 	 *
-	 * @param     $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
-	 * @param int $form_id
+	 * @param int   $form_id Form Id.
 	 *
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function setup_api( $submitted_data, $form_id = 0 ) {
-		$settings_values  = $this->get_settings_values();
-		$template         = forminator_addon_activecampaign_dir() . 'views/settings/setup-api.php';
-		$template_params  = array(
+		$settings_values = $this->get_settings_values();
+		$template        = forminator_addon_activecampaign_dir() . 'views/settings/setup-api.php';
+		$template_params = array(
 			'identifier'    => '',
 			'error_message' => '',
 			'api_url'       => '',
@@ -125,10 +176,10 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 			'api_key'       => '',
 			'api_key_error' => '',
 		);
-		$has_errors       = false;
-		$show_success     = false;
-		$buttons          = array();
-		$is_submit        = ! empty( $submitted_data );
+		$has_errors      = false;
+		$show_success    = false;
+		$buttons         = array();
+		$is_submit       = ! empty( $submitted_data );
 
 		foreach ( $template_params as $key => $value ) {
 			if ( isset( $submitted_data[ $key ] ) ) {
@@ -139,8 +190,8 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 		}
 
 		if ( $is_submit ) {
-			$api_url = isset( $submitted_data['api_url'] ) ? trim( $submitted_data['api_url'] ) : '';
-			$api_key = isset( $submitted_data['api_key'] ) ? $submitted_data['api_key'] : '';
+			$api_url    = isset( $submitted_data['api_url'] ) ? trim( $submitted_data['api_url'] ) : '';
+			$api_key    = isset( $submitted_data['api_key'] ) ? $submitted_data['api_key'] : '';
 			$identifier = isset( $submitted_data['identifier'] ) ? $submitted_data['identifier'] : '';
 
 			try {
@@ -171,8 +222,8 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 					}
 
 					$settings_values = array(
-						'api_url' => $api_url,
-						'api_key' => $api_key,
+						'api_url'    => $api_url,
+						'api_key'    => $api_key,
 						'identifier' => $identifier,
 					);
 					$this->save_settings_values( $settings_values );
@@ -220,6 +271,11 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 		);
 	}
 
+	/**
+	 * Authorized
+	 *
+	 * @return bool
+	 */
 	public function is_authorized() {
 		$setting_values = $this->get_settings_values();
 
@@ -232,10 +288,10 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	 *
 	 * @since 1.0 Active Campaign
 	 *
-	 * @param string $api_url
+	 * @param string $api_url API URL.
 	 *
 	 * @return string
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function validate_api_url( $api_url ) {
 		if ( empty( $api_url ) ) {
@@ -255,10 +311,10 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	 *
 	 * @since 1.0 Active Campaign
 	 *
-	 * @param string $api_key
+	 * @param string $api_key API Key.
 	 *
 	 * @return string
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function validate_api_key( $api_key ) {
 		if ( empty( $api_key ) ) {
@@ -273,10 +329,10 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	 *
 	 * @since 1.0 Active Campaign Integration
 	 *
-	 * @param $api_url
-	 * @param $api_key
+	 * @param string $api_url API URL.
+	 * @param string $api_key API key.
 	 *
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function validate_api( $api_url, $api_key ) {
 		$api             = $this->get_api( $api_url, $api_key );
@@ -294,11 +350,11 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	 *
 	 * @since 1.0 Active Campaign Integration
 	 *
-	 * @param null $api_url
-	 * @param null $api_key
+	 * @param string $api_url API URL.
+	 * @param string $api_key API key.
 	 *
 	 * @return Forminator_Activecampaign_Wp_Api
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function get_api( $api_url = null, $api_key = null ) {
 		if ( is_null( $api_key ) || is_null( $api_url ) ) {
@@ -318,6 +374,12 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 		return $api;
 	}
 
+	/**
+	 * Before saving the settings.
+	 *
+	 * @param mixed $values Settings values.
+	 * @return mixed
+	 */
 	public function before_save_settings_values( $values ) {
 		if ( ! empty( $this->connected_account ) ) {
 			$values['connected_account'] = $this->connected_account;

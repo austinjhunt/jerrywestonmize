@@ -1,6 +1,12 @@
 <?php
+/**
+ * Template admin/views/dashboard/widgets/widget-quiz.php
+ *
+ * @package Forminator
+ */
+
 $module_slug        = 'quiz';
-$title              = esc_html__( 'Quizzes', 'forminator' );
+$module_title       = esc_html__( 'Quizzes', 'forminator' );
 $description        = esc_html__( 'Create fun or challenging quizzes for your visitors to take and share on social media.', 'forminator' );
 $icon               = 'sui-icon-academy';
 $preview_title      = esc_html__( 'Preview Quiz', 'forminator' );

@@ -1,5 +1,11 @@
 <?php
 /**
+ * The Forminator Campaign Monitor Form Settings.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Campaignmonitor_Form_Settings
  * Handle how form settings displayed and saved
  *

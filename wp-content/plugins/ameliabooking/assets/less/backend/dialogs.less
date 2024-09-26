@@ -523,6 +523,75 @@
           margin-bottom: @margin-big;
         }
       }
+
+      .am-waiting-list-notice-box {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px 8px 8px;
+        background: #F4F7FE;
+        border: 1px solid #A8BEFA;
+        box-shadow: 0px 2px 3px rgba(26, 44, 55, 0.1);
+        border-radius: 6px;
+
+        &-img {
+          width: 24px;
+          height: 24px;
+          margin-right: 6px;
+        }
+
+        &-left {
+          display: flex;
+          align-items: start;
+          flex-direction: row;
+        }
+
+        &-text {
+          max-width: 250px;
+          color: #1A2C37;
+          &-title {
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 24px;
+          }
+
+          &-subtitle {
+            font-weight: 400;
+            font-size: 13px;
+            line-height: 20px;
+          }
+        }
+
+        &-right {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        &-btn {
+          padding: 6px 16px;
+          box-shadow: 0px 1px 3px rgba(4, 8, 11, 0.08);
+          border-radius: 7px;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          text-align: center;
+          color: #ffffff;
+          background-color: #1A84EE;
+          border-color: #1A84EE;
+        }
+      }
+
+      .am-waiting-list-limit-per-ticket-box {
+        display: flex;
+        align-items: center;
+        width: 100%;
+
+        .el-input {
+          margin-bottom: 0;
+        }
+      }
     }
 
     .am-add-element {
@@ -1463,7 +1532,8 @@
       border-bottom: 1px solid @color-divider-gray;
       padding: 0;
       &:first-child {
-        border-top: 1px solid @color-divider-gray;
+        margin-top: 9px;
+        //border-top: 1px solid @color-divider-gray;
       }
       &.is-active, &:hover {
         background: @color-highlight;

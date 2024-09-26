@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/settings/dashboard/content.php
+ *
+ * @package Forminator
+ */
+
 $module_type        = $args['module_type'];
 $dashboard_settings = forminator_get_dashboard_settings( $module_type, array() );
 $num_recent         = isset( $dashboard_settings['num_recent'] ) ? $dashboard_settings['num_recent'] : 5;

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Addon Mailerlite API.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Mailerlite_Wp_Api
@@ -51,7 +56,7 @@ class Forminator_Mailerlite_Wp_Api {
 	/**
 	 * Forminator_Mailerlite_Wp_Api constructor.
 	 *
-	 * @param $api_key
+	 * @param string $api_key API Key.
 	 */
 	private function __construct( $api_key ) {
 		$this->api_key = $api_key;
@@ -75,11 +80,12 @@ class Forminator_Mailerlite_Wp_Api {
 	/**
 	 * HTTP Request
 	 *
-	 * @param string $verb
-	 * @param        $path
-	 * @param array  $args
+	 * @param string $verb Request type.
+	 * @param string $path Request path.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function request( $verb, $path, $args = array() ) {
 		$url   = $this->get_endpoint() . $path;
@@ -88,7 +94,7 @@ class Forminator_Mailerlite_Wp_Api {
 				'Authorization' => 'Bearer ' . $this->api_key,
 				'Content-Type'  => 'application/json',
 				'Accept'        => 'application/json',
-				'User-Agent'   	=> 'ForminatorMailerLite/1.0',
+				'User-Agent'    => 'ForminatorMailerLite/1.0',
 			),
 		);
 
@@ -101,13 +107,13 @@ class Forminator_Mailerlite_Wp_Api {
 
 		$this->last_data_sent   = $args;
 		$this->last_url_request = $url;
-		$res = wp_remote_request( $url, $_args );
+		$res                    = wp_remote_request( $url, $_args );
 
 		$default_error = esc_html__( 'Failed to process the request. Please ensure the API key is correct and the server has an active internet connection.', 'forminator' );
 
 		if ( is_wp_error( $res ) || ! $res ) {
 			forminator_addon_maybe_log( __METHOD__, $res );
-			throw new Forminator_Integration_Exception( $default_error );
+			throw new Forminator_Integration_Exception( esc_html( $default_error ) );
 		}
 
 		$body = wp_remote_retrieve_body( $res );
@@ -115,7 +121,7 @@ class Forminator_Mailerlite_Wp_Api {
 		// Got no response from API.
 		if ( empty( $body ) ) {
 			forminator_addon_maybe_log( __METHOD__, $res );
-			throw new Forminator_Integration_Exception( $default_error );
+			throw new Forminator_Integration_Exception( esc_html( $default_error ) );
 		}
 
 		$response = null;
@@ -124,7 +130,7 @@ class Forminator_Mailerlite_Wp_Api {
 			$response_code = wp_remote_retrieve_response_code( $res );
 
 			// check response status from API.
-			if ( isset( $response_code ) &&  $response_code >= 400 ) {
+			if ( isset( $response_code ) && $response_code >= 400 ) {
 				forminator_addon_maybe_log( __METHOD__, $response );
 				$msg = '';
 				if ( isset( $response->message ) ) {
@@ -132,9 +138,12 @@ class Forminator_Mailerlite_Wp_Api {
 					$msg = $response->message;
 				}
 				$this->last_data_received = $response;
-				throw new Forminator_Integration_Exception( sprintf(
+				throw new Forminator_Integration_Exception(
+					sprintf(
 					/* translators: %s: Error message */
-					esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
+						esc_html__( 'Failed to process request : %s', 'forminator' ),
+						esc_html( $msg )
+					)
 				);
 			}
 
@@ -142,9 +151,12 @@ class Forminator_Mailerlite_Wp_Api {
 			if ( is_null( $response ) ) {
 				$this->last_data_received = $body;
 				forminator_addon_maybe_log( __METHOD__, $res );
-				throw new Forminator_Integration_Exception( sprintf(
+				throw new Forminator_Integration_Exception(
+					sprintf(
 					/* translators: %s: Error message */
-					esc_html__( 'Failed to process request : %s', 'forminator' ), json_last_error_msg() )
+						esc_html__( 'Failed to process request : %s', 'forminator' ),
+						esc_html( json_last_error_msg() )
+					)
 				);
 			}
 		}
@@ -209,7 +221,7 @@ class Forminator_Mailerlite_Wp_Api {
 		}
 
 		$args     = array(
-			'sort'  => 'name',
+			'sort' => 'name',
 		);
 		$response = $this->get_lists( $args );
 
@@ -249,7 +261,6 @@ class Forminator_Mailerlite_Wp_Api {
 	 *
 	 * @param string $list_id List ID.
 	 * @param string $email Email.
-	 * @param string $name Contact name.
 	 * @param array  $args Additional arguments.
 	 *
 	 * @return array|mixed|object
@@ -311,5 +322,4 @@ class Forminator_Mailerlite_Wp_Api {
 	public function get_endpoint() {
 		return $this->endpoint;
 	}
-
 }

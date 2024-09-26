@@ -1,17 +1,26 @@
 <?php
 /**
+ * Template admin/views/common/entries/filter.php
+ *
+ * @package Forminator
+ */
+
+/**
  * JS reference : assets/js/admin/layout.js
  */
 
-/** @var $this Forminator_CForm_View_Page */
+/**
+ * Forminator_CForm_View_Page
+ *
+ * @var $this Forminator_CForm_View_Page */
 $is_filter_enabled = $this->is_filter_box_enabled();
 $count             = $this->filtered_total_entries();
 $date_range        = '';
 $date_format       = 'Y-m-d';
 $date_created      = isset( $this->filters['date_created'] ) ? $this->filters['date_created'] : '';
 if ( is_array( $date_created ) && isset( $date_created[0] ) && isset( $date_created[1] ) ) {
-	$date_created[0] = date( $date_format, strtotime( $date_created[0] ) );
-	$date_created[1] = date( $date_format, strtotime( $date_created[1] ) );
+	$date_created[0] = gmdate( $date_format, strtotime( $date_created[0] ) );
+	$date_created[1] = gmdate( $date_format, strtotime( $date_created[1] ) );
 	$date_range      = implode( ' - ', $date_created );
 }
 $search_filter = isset( $this->filters['search'] ) ? $this->filters['search'] : '';
@@ -128,7 +137,6 @@ $is_show_fields     = ! method_exists( $this, 'has_leads' ) || (bool) $this->has
 
 			<label for="forminator-forms-filter--sort-by" class="sui-label"><?php esc_html_e( 'Sort by', 'forminator' ); ?></label>
 			<select id="forminator-forms-filter--sort-by" name="order_by">
-				<!--				<option value="">--><?php // esc_html_e( 'ID', 'forminator' ); ?><!--</option>-->
 				<option value="entries.date_created" <?php selected( 'entries.date_created', $order_by ); ?> ><?php esc_html_e( 'Submissions Date', 'forminator' ); ?></option>
 			</select>
 
@@ -263,20 +271,6 @@ $is_show_fields     = ! method_exists( $this, 'has_leads' ) || (bool) $this->has
 
 		</div>
 	<?php } ?>
-
-	<?php /* if ( $is_registration ) { ?>
-		</div>
-		<div class="sui-col-md-6">
-			<label for="forminator-forms-filter--user-status" class="sui-label"><?php esc_html_e( 'User Status', 'forminator' ); ?></label>
-			<select id="forminator-forms-filter--user-status" name="user_status">
-				<option value="" <?php selected( ! $user_status_filter ); ?>><?php esc_html_e( 'All', 'forminator' ); ?></option>
-				<option value="approved" <?php selected( 'approved', $user_status_filter ); ?>><?php esc_html_e( 'Approved', 'forminator' ); ?></option>
-				<option value="pending" <?php selected( 'pending', $user_status_filter ); ?>><?php esc_html_e( 'Pending Approval', 'forminator' ); ?></option>
-			</select>
-		</div>
-
-	</div>
-	<?php } */ ?>
 
 	<div class="sui-filter-footer">
 

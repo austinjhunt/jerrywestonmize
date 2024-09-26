@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Google sheet Poll Settings
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Googlesheet_Poll_Settings
  * Handle how poll settings displayed and saved
  *

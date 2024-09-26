@@ -420,7 +420,8 @@ class TimeSlotService
         $providers = $providerRepository->getWithSchedule(
             array_merge(
                 [
-                    'providers' => $props['providerIds'],
+                    'providers'      => $props['providerIds'],
+                    'fetchCalendars' => true,
                 ],
                 $props['isFrontEndBooking'] ? ['providerStatus' => Status::VISIBLE] : []
             )

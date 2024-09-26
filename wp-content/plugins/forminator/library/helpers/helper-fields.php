@@ -1,4 +1,10 @@
 <?php
+/**
+ * Fields helper functions.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -6,10 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Return custom form
  *
+ * @param int  $id Id.
+ * @param bool $is_preview Is preview?.
+ * @param bool $hidden Is hidden?.
+ *
  * @since 1.0
  * @return mixed
  */
-function forminator_form( $id, $is_preview = false, $hidden = true ) {
+function forminator_form( $id, $is_preview = false, $hidden = true ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$view = new Forminator_CForm_Front();
 
 	return $view->render_shortcode(
@@ -23,10 +33,14 @@ function forminator_form( $id, $is_preview = false, $hidden = true ) {
 /**
  * Return custom form
  *
+ * @param int  $id Id.
+ * @param bool $is_preview Is preview?.
+ * @param bool $hidden Is hidden?.
+ *
  * @since 1.0
  * @return mixed
  */
-function forminator_poll( $id, $is_preview = false, $hidden = true ) {
+function forminator_poll( $id, $is_preview = false, $hidden = true ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$view = new Forminator_Poll_Front();
 
 	return $view->render_shortcode(
@@ -40,10 +54,14 @@ function forminator_poll( $id, $is_preview = false, $hidden = true ) {
 /**
  * Return custom form
  *
+ * @param int  $id Id.
+ * @param bool $is_preview Is preview?.
+ * @param bool $hidden Is hidden?.
+ *
  * @since 1.0
  * @return mixed
  */
-function forminator_quiz( $id, $is_preview = false, $hidden = true ) {
+function forminator_quiz( $id, $is_preview = false, $hidden = true ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$view = new Forminator_QForm_Front();
 
 	return $view->render_shortcode(
@@ -56,6 +74,11 @@ function forminator_quiz( $id, $is_preview = false, $hidden = true ) {
 
 /**
  * Return module
+ *
+ * @param int    $id Id.
+ * @param string $type Form type.
+ * @param bool   $ajax Is Ajax?.
+ * @param mixed  $data Data.
  *
  * @since 1.0
  * @return mixed
@@ -82,6 +105,8 @@ function forminator_preview( $id, $type, $ajax = false, $data = false ) {
 /**
  * Return stripslashed string or array
  *
+ * @param string $val Content to strip slashes.
+ *
  * @since 1.0
  * @return mixed
  */
@@ -96,7 +121,8 @@ function forminator_stripslashes_deep( $val ) {
  *
  * @since 1.0.2
  *
- * @param $field
+ * @param mixed       $field Field.
+ * @param null|string $key Key.
  *
  * @return array|string
  */
@@ -117,7 +143,7 @@ function forminator_sanitize_field( &$field, $key = null ) {
  * Forminator sanitation for module settings before saving.
  * Used for sanitizing form integration settings description field.
  *
- * @param $fields
+ * @param array $fields Fields.
  *
  * @return mixed
  */
@@ -135,17 +161,15 @@ function forminator_sanitize_array_field( $fields ) {
 	foreach ( $fields as $key => &$value ) {
 		if ( is_array( $value ) ) {
 			$value = forminator_sanitize_array_field( $value );
-		} else {
-			if ( in_array( $key, $allow_html, true ) ) {
+		} elseif ( in_array( $key, $allow_html, true ) ) {
 				$value = wp_kses_post( $value );
-			} elseif ( 'card_description' === $key
-					   || 'gdpr_text' === $key
-					   || 'message' === $key
+		} elseif ( 'card_description' === $key
+						|| 'gdpr_text' === $key
+						|| 'message' === $key
 			) {
-				$value = sanitize_textarea_field( $value );
-			} else {
-				$value = sanitize_text_field( $value );
-			}
+			$value = sanitize_textarea_field( $value );
+		} else {
+			$value = sanitize_text_field( $value );
 		}
 	}
 
@@ -155,7 +179,7 @@ function forminator_sanitize_array_field( $fields ) {
 /**
  * Forminator decode HTML entity
  *
- * @param $fields
+ * @param array $fields Fields.
  *
  * @return mixed
  */
@@ -174,7 +198,7 @@ function forminator_decode_html_entity( $fields ) {
 /**
  * Sanitize text area
  *
- * @param $field
+ * @param string $field Field value.
  *
  * @return string
  */
@@ -224,16 +248,16 @@ function forminator_get_existing_cfields() {
  *
  * @since 1.0
  *
- * @param      $array
- * @param bool $replace_value
+ * @param array $array_values Field values.
+ * @param bool  $replace_value Replace value.
  *
  * @return array
  */
-function forminator_to_field_array( $array, $replace_value = false ) {
+function forminator_to_field_array( $array_values, $replace_value = false ) {
 	$field_array = array();
 
-	if ( ! empty( $array ) ) {
-		foreach ( $array as $key => $value ) {
+	if ( ! empty( $array_values ) ) {
+		foreach ( $array_values as $key => $value ) {
 			// Use value instead of key.
 			if ( $replace_value ) {
 				$field_array[] = array(
@@ -327,7 +351,7 @@ function forminator_post_type_list() {
  *
  * @since 1.7
  *
- * @param $type
+ * @param string $type Type.
  *
  * @return array
  */
@@ -367,28 +391,28 @@ function forminator_post_categories( $type = '' ) {
  * @since 1.0
  * @since 1.5 add `user_id`
  *
- * @param bool $add_query	@since 1.15.6
+ * @param bool $add_query Add query.   @since 1.15.6.
  *
  * @return mixed
  */
 function forminator_get_vars( $add_query = false ) {
 	$vars_list = array(
-		'user_ip'      	  => esc_html__( 'User IP Address', 'forminator' ),
-		'date_mdy'     	  => esc_html__( 'Date (mm/dd/yyyy)', 'forminator' ),
-		'date_dmy'     	  => esc_html__( 'Date (dd/mm/yyyy)', 'forminator' ),
+		'user_ip'         => esc_html__( 'User IP Address', 'forminator' ),
+		'date_mdy'        => esc_html__( 'Date (mm/dd/yyyy)', 'forminator' ),
+		'date_dmy'        => esc_html__( 'Date (dd/mm/yyyy)', 'forminator' ),
 		'submission_id'   => esc_html__( 'Submission ID', 'forminator' ),
 		'submission_time' => esc_html__( 'Submission Time (hh:mm:ss am/pm, timezone)', 'forminator' ),
-		'embed_id'     	  => esc_html__( 'Embed Post/Page ID', 'forminator' ),
-		'embed_title'  	  => esc_html__( 'Embed Post/Page Title', 'forminator' ),
-		'embed_url'    	  => esc_html__( 'Embed URL', 'forminator' ),
-		'login_url'    	  => esc_html__( 'Login URL', 'forminator' ),
-		'user_agent'   	  => esc_html__( 'HTTP User Agent', 'forminator' ),
-		'refer_url'    	  => esc_html__( 'HTTP Refer URL', 'forminator' ),
-		'user_id'      	  => esc_html__( 'User ID', 'forminator' ),
-		'user_name'    	  => esc_html__( 'User Display Name', 'forminator' ),
-		'user_email'   	  => esc_html__( 'User Email', 'forminator' ),
-		'user_login'   	  => esc_html__( 'User Login', 'forminator' ),
-		'custom_value' 	  => esc_html__( 'Custom Value', 'forminator' ),
+		'embed_id'        => esc_html__( 'Embed Post/Page ID', 'forminator' ),
+		'embed_title'     => esc_html__( 'Embed Post/Page Title', 'forminator' ),
+		'embed_url'       => esc_html__( 'Embed URL', 'forminator' ),
+		'login_url'       => esc_html__( 'Login URL', 'forminator' ),
+		'user_agent'      => esc_html__( 'HTTP User Agent', 'forminator' ),
+		'refer_url'       => esc_html__( 'HTTP Refer URL', 'forminator' ),
+		'user_id'         => esc_html__( 'User ID', 'forminator' ),
+		'user_name'       => esc_html__( 'User Display Name', 'forminator' ),
+		'user_email'      => esc_html__( 'User Email', 'forminator' ),
+		'user_login'      => esc_html__( 'User Login', 'forminator' ),
+		'custom_value'    => esc_html__( 'Custom Value', 'forminator' ),
 	);
 
 	if ( $add_query ) {
@@ -489,28 +513,34 @@ function forminator_get_name_prefixes() {
  *
  * @since 1.0
  *
- * @param $string
+ * @param string $field_id Field id.
  *
  * @return mixed
  */
-function forminator_clear_field_id( $string ) {
-	$string = str_replace( '{', '', $string );
-	$string = str_replace( '}', '', $string );
+function forminator_clear_field_id( $field_id ) {
+	$field_id = str_replace( '{', '', $field_id );
+	$field_id = str_replace( '}', '', $field_id );
 
-	return $string;
+	return $field_id;
 }
 
 /**
  * Return filtered editor content with form data
  *
  * @since 1.0
- * @param bool $get_labels Optional. Set true for getting labels instead of values for select, radio and checkbox.
+ * @param string                           $content Content.
+ * @param Forminator_Form_Model|null       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model|null $entry Forminator_Form_Entry_Model.
+ * @param bool                             $get_labels Optional. Set true for getting labels instead of values for select, radio and checkbox.
+ * @param bool                             $urlencode Encode URL.
+ * @param mixed                            $user_meta User meta.
+ * @param bool                             $is_pdf Is PDF.
  * @return mixed
  */
 function forminator_replace_form_data( $content, Forminator_Form_Model $custom_form = null, Forminator_Form_Entry_Model $entry = null, $get_labels = false, $urlencode = false, $user_meta = false, $is_pdf = false ) {
 	if ( is_null( $content ) ) {
-        $content = '';
-    }
+		$content = '';
+	}
 
 	$data             = Forminator_CForm_Front_Action::$prepared_data;
 	$matches          = array();
@@ -564,34 +594,32 @@ function forminator_replace_form_data( $content, Forminator_Form_Model $custom_f
 					( false !== stripos( $element_id, '-hours' ) || false !== stripos( $element_id, '-minutes' ) )
 				) {
 					$value = str_pad( $data[ $element_id ], 2, '0', STR_PAD_LEFT );
-				} else if ( strpos( $element_id, 'calculation' ) !== false ) {
+				} elseif ( strpos( $element_id, 'calculation' ) !== false ) {
 					$calc_field = $custom_form->get_field( $element_id, true );
-					$value = Forminator_Field::forminator_number_formatting( $calc_field, $data[ $element_id ] );
+					$value      = Forminator_Field::forminator_number_formatting( $calc_field, $data[ $element_id ] );
 				} else {
 					$value = $data[ $element_id ];
 				}
-			} else {
+			} elseif ( false !== stripos( $element_id, 'date' ) ) {
 				// element with suffixes, etc.
 				// use submitted `data` since its possible to disable DB storage,.
 				// causing Forminator_Form_Entry_Model = nothing.
 				// and cant be used as reference.
 
 				// DATE.
-				if ( false !== stripos( $element_id, 'date' ) ) {
-					$day_element_id    = $element_id . '-day';
-					$month_element_id  = $element_id . '-month';
-					$year_element_id   = $element_id . '-year';
-					$format_element_id = $element_id . '-format';
+				$day_element_id    = $element_id . '-day';
+				$month_element_id  = $element_id . '-month';
+				$year_element_id   = $element_id . '-year';
+				$format_element_id = $element_id . '-format';
 
-					if ( isset( $data[ $day_element_id ] ) && isset( $data[ $month_element_id ] ) && isset( $data[ $year_element_id ] ) ) {
-						$meta_value = array(
-							'day'    => $data[ $day_element_id ],
-							'month'  => $data[ $month_element_id ],
-							'year'   => $data[ $year_element_id ],
-							'format' => $data[ $format_element_id ],
-						);
-						$value      = Forminator_Form_Entry_Model::meta_value_to_string( 'date', $meta_value, true );
-					}
+				if ( isset( $data[ $day_element_id ] ) && isset( $data[ $month_element_id ] ) && isset( $data[ $year_element_id ] ) ) {
+					$meta_value = array(
+						'day'    => $data[ $day_element_id ],
+						'month'  => $data[ $month_element_id ],
+						'year'   => $data[ $year_element_id ],
+						'format' => $data[ $format_element_id ],
+					);
+					$value      = Forminator_Form_Entry_Model::meta_value_to_string( 'date', $meta_value, true );
 				}
 			}
 
@@ -615,17 +643,17 @@ function forminator_replace_form_data( $content, Forminator_Form_Model $custom_f
  *
  * @since 1.23.0
  *
- * @param Forminator_Form_Model     $custom_form
- * @param string					$element_id
- * @param array                     $data
- * @param bool                      $quiz_mail
- * @param bool                      $is_pdf
+ * @param Forminator_Form_Model $custom_form Forminator_Form_Model.
+ * @param string                $element_id Element Id.
+ * @param array                 $data Data.
+ * @param bool                  $quiz_mail Quiz mail.
+ * @param bool                  $is_pdf Is PDF.
  *
  * @return mixed
  */
 function forminator_replace_field_data( $custom_form, $element_id, $data, $quiz_mail = false, $is_pdf = false ) {
 	$field_value = isset( $data[ $element_id ] ) ? $data[ $element_id ] : null;
-	$value		 = '';
+	$value       = '';
 	if ( ! is_null( $field_value ) ) {
 		$form_fields   = $custom_form ? $custom_form->get_fields() : array();
 		$fields_slugs  = wp_list_pluck( $form_fields, 'slug' );
@@ -636,15 +664,15 @@ function forminator_replace_field_data( $custom_form, $element_id, $data, $quiz_
 				: array();
 		if ( $quiz_mail ) {
 			if ( false !== strpos( $field_value, ',' ) ) {
-				$field_value = array_map( 'trim', explode( ',',  $field_value ) );
+				$field_value = array_map( 'trim', explode( ',', $field_value ) );
 			}
 
-			$selected_values 	= is_array( $field_value ) ? $field_value : array( $field_value );
+			$selected_values = is_array( $field_value ) ? $field_value : array( $field_value );
 
 			if ( is_array( $field_value ) ) {
-				$value = array_keys( array_intersect( $field_options , array_map( 'stripslashes', $selected_values ) ) );
+				$value = array_keys( array_intersect( $field_options, array_map( 'stripslashes', $selected_values ) ) );
 			} else {
-				$value = implode( ', ', array_keys( array_intersect( $field_options , array_map( 'stripslashes', $selected_values ) ) ) );
+				$value = implode( ', ', array_keys( array_intersect( $field_options, array_map( 'stripslashes', $selected_values ) ) ) );
 			}
 		} elseif ( $is_pdf ) {
 			// Since PDFs use entry meta which is already from the database, it has been processed already.
@@ -667,10 +695,10 @@ function forminator_replace_field_data( $custom_form, $element_id, $data, $quiz_
  *
  * @since 1.0.3
  *
- * @param string                      $content
- * @param Forminator_Form_Model       $custom_form
- * @param Forminator_Form_Entry_Model $entry
- * @param array                       $excluded
+ * @param string                      $content Content.
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
+ * @param array                       $excluded Excluded.
  *
  * @return mixed
  */
@@ -706,8 +734,8 @@ function forminator_replace_custom_form_data( $content, Forminator_Form_Model $c
  *
  * @since 1.0.3
  *
- * @param Forminator_Form_Model       $custom_form
- * @param Forminator_Form_Entry_Model $entry
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  * @param boolean                     $exclude_empty [Optional] Exclude empty form entry.
  *
  * @return string
@@ -724,12 +752,14 @@ function forminator_get_formatted_form_entry( Forminator_Form_Model $custom_form
 /**
  * Prepare Html Formatted of form entry for email notification
  *
- * @param Forminator_Form_Model       $custom_form
- * @param Forminator_Form_Entry_Model $entry
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  * @param boolean                     $exclude_empty Exclude empty form entry.
  * @param array                       $form_fields Form fields.
- * @param string                      $repeater_suffix
- * @param boolean                     $show_label
+ * @param string                      $repeater_suffix Repeater suffix.
+ * @param boolean                     $show_label Show label.
+ * @param string                      $list_tag List tag.
+ * @param boolean                     $is_pdf Is PDF.
  *
  * @return string
  */
@@ -767,11 +797,11 @@ function forminator_prepare_formatted_form_entry(
 	$html = '<br/><' . $list_tag . '>';
 
 	foreach ( $form_fields as $form_field ) {
-		$field_array    = $form_field->to_formatted_array();
-		$field_type     = $field_array['type'];
-		$field_id       = Forminator_Field::get_property( 'element_id', $field_array ) . $repeater_suffix;
+		$field_array = $form_field->to_formatted_array();
+		$field_type  = $field_array['type'];
+		$field_id    = Forminator_Field::get_property( 'element_id', $field_array ) . $repeater_suffix;
 
-		if ( in_array( $field_id, Forminator_CForm_Front_Action::$hidden_fields, true ) || $form_field->parent_group && ! $rendering_group ) {
+		if ( in_array( $field_id, Forminator_CForm_Front_Action::$hidden_fields, true ) || ( $form_field->parent_group && ! $rendering_group ) ) {
 			continue;
 		}
 
@@ -781,8 +811,8 @@ function forminator_prepare_formatted_form_entry(
 			$html .= '<h4><b>' . (string) $value . '</b></h4>';
 			$html .= '<' . $list_tag . '>';
 		} elseif ( 'html' === $field_type ) {
-			$label   = $form_field->__get( 'field_label' );
-			$value   = $form_field->__get( 'variations' );
+			$label = $form_field->__get( 'field_label' );
+			$value = $form_field->__get( 'variations' );
 			if ( $repeater_suffix ) {
 				$group_fields  = $custom_form->get_grouped_fields( $form_field->parent_group );
 				$original_keys = wp_list_pluck( $group_fields, 'slug' );
@@ -829,7 +859,7 @@ function forminator_prepare_formatted_form_entry(
 				$value = forminator_replace_form_data( '{' . $slug . '}', $custom_form, $entry, true, false, false, $is_pdf );
 			} else {
 				$separator = ! $show_label ? ' ' : '<br>';
-				$value = render_entry( $entry, $slug, $field_array, '', $exclude_empty, false, $separator, $show_label );
+				$value     = render_entry( $entry, $slug, $field_array, '', $exclude_empty, false, $separator, $show_label );
 			}
 			/**
 			 * Filter value of a field that is not saved in DB
@@ -859,8 +889,8 @@ function forminator_prepare_formatted_form_entry(
  *
  * @since 1.0.3
  *
- * @param Forminator_Form_Model       $custom_form
- * @param Forminator_Form_Entry_Model $entry
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  *
  * @return string
  */
@@ -874,9 +904,9 @@ function forminator_get_formatted_form_non_empty_entry( Forminator_Form_Model $c
  * @since 1.0.5
  * @since 1.24  Added $user_meta
  *
- * @param                               $element_id
- * @param Forminator_Form_Model       $custom_form
- * @param Forminator_Form_Entry_Model $entry
+ * @param string                      $element_id Element Id.
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  * @param bool                        $user_meta Check if usage is for user meta.
  *
  * @return string
@@ -888,7 +918,10 @@ function forminator_get_field_from_form_entry( $element_id, Forminator_Form_Mode
 	}
 
 	foreach ( $form_fields as $form_field ) {
-		/** @var  Forminator_Form_Field_Model $form_field */
+		/**
+		 * Forminator_Form_Field_Model
+		 *
+		 * @var  Forminator_Form_Field_Model $form_field */
 		if ( $form_field->slug !== $element_id ) {
 			continue;
 		}
@@ -913,12 +946,12 @@ function forminator_get_field_from_form_entry( $element_id, Forminator_Form_Mode
  *
  * @since 1.0.3
  *
- * @param Forminator_Form_Model       $custom_form
- * @param Forminator_Form_Entry_Model $entry
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  *
  * @return string
  */
-function forminator_get_formatted_form_name( Forminator_Form_Model $custom_form, Forminator_Form_Entry_Model $entry ) {
+function forminator_get_formatted_form_name( Forminator_Form_Model $custom_form, Forminator_Form_Entry_Model $entry ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	return esc_html( forminator_get_form_name( $custom_form->id ) );
 }
 
@@ -927,8 +960,8 @@ function forminator_get_formatted_form_name( Forminator_Form_Model $custom_form,
  *
  * @since 1.1
  *
- * @param Forminator_Form_Model       $custom_form
- * @param Forminator_Form_Entry_Model $entry
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  *
  * @return string
  */
@@ -941,33 +974,33 @@ function forminator_get_submission_id( Forminator_Form_Model $custom_form, $entr
  *
  * @since ?
  *
- * @param string $embed_url
+ * @param string $embed_url Embed URL.
  * @return string
  */
 function forminator_get_referer_url( $embed_url = '' ) {
 	$referer_url = '';
-	if ( isset( $_REQUEST['extra']['referer_url'] ) ) {
-		$referer_url = sanitize_text_field( $_REQUEST['extra']['referer_url'] );
-	} elseif ( isset( $_REQUEST['referer_url'] ) ) {
-		$referer_url = sanitize_text_field( $_REQUEST['referer_url'] );
+	if ( isset( $_REQUEST['extra']['referer_url'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$referer_url = sanitize_text_field( wp_unslash( $_REQUEST['extra']['referer_url'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	} elseif ( isset( $_REQUEST['referer_url'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$referer_url = sanitize_text_field( wp_unslash( $_REQUEST['referer_url'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	} elseif ( isset( $_SERVER['HTTP_REFERER'] ) ) {
-		$referer_url = sanitize_text_field( $_SERVER['HTTP_REFERER'] );
+		$referer_url = sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) );
 	}
 
-	if ( $referer_url === '' ) {
+	if ( '' === $referer_url ) {
 		$referer_url = $embed_url;
 	}
 
 	return $referer_url;
 }
 
-/*
+/**
  * Get Submission URL
  *
  * @since 1.11
  *
- * @param Forminator_Form_Model $custom_form
- * @param Forminator_Form_Entry_Model  $entry
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  *
  * @return string
  */
@@ -980,8 +1013,8 @@ function forminator_get_submission_url( Forminator_Form_Model $custom_form, Form
  *
  * @since 1.11
  *
- * @param Forminator_Form_Model       $custom_form
- * @param Forminator_Form_Entry_Model $entry
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  *
  * @return string
  */
@@ -1008,12 +1041,12 @@ function forminator_get_account_approval_link( Forminator_Form_Model $custom_for
  *
  * @since 1.11
  *
- * @param Forminator_Form_Model       $custom_form
- * @param Forminator_Form_Entry_Model $entry
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  *
  * @return string
  */
-function forminator_get_formatted_username( Forminator_Form_Model $custom_form, Forminator_Form_Entry_Model $entry ) {
+function forminator_get_formatted_username( Forminator_Form_Model $custom_form, Forminator_Form_Entry_Model $entry ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$username = '';
 	if ( isset( $custom_form->settings['registration-username-field'] ) && ! empty( $custom_form->settings['registration-username-field'] ) ) {
 		$username = $custom_form->settings['registration-username-field'];
@@ -1068,8 +1101,9 @@ function forminator_get_login_url( $embed_url ) {
  * @since 1.0
  * @since 1.0.6 add `{form_id}` handle
  *
- * @param $content
- * @param $id
+ * @param string $content Content to replace the variables.
+ * @param int    $id Id.
+ * @param mixed  $entry Entry.
  *
  * @return string
  */
@@ -1100,7 +1134,7 @@ function forminator_replace_variables( $content, $id = false, $entry = null ) {
 			// Handle Date (dd/mm/yyyy) variable.
 			'{date_dmy}'           => date_i18n( 'd/m/Y', forminator_local_timestamp(), true ),
 			// Submission ID.
-			'{submission_id}'	   => forminator_get_submission_id( new Forminator_Form_Model(), $entry ),
+			'{submission_id}'      => forminator_get_submission_id( new Forminator_Form_Model(), $entry ),
 			// Submission time.
 			'{submission_time}'    => date_i18n( 'g:i:s a, T', forminator_local_timestamp(), true ),
 			// Handle Embed Post/Page ID variable.
@@ -1111,7 +1145,7 @@ function forminator_replace_variables( $content, $id = false, $entry = null ) {
 			'{embed_url}'          => $embed_url,
 			// Handle HTTP User Agent variable.
 			// some browser not sending HTTP_USER_AGENT or some servers probably stripped this value.
-			'{user_agent}'         => isset( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( $_SERVER['HTTP_USER_AGENT'] ) : '',
+			'{user_agent}'         => isset( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) ) : '',
 			// Handle site url variable.
 			'{site_url}'           => site_url(),
 			// Handle login url variable.
@@ -1160,10 +1194,10 @@ function forminator_replace_variables( $content, $id = false, $entry = null ) {
  * @param string $column_name - the column name.
  *
  * @param null   $field       @since 1.0.5, optional Forminator_Form_Field_Model.
- * @param string $type
- * @param bool   $remove_empty
+ * @param string $type Type.
+ * @param bool   $remove_empty Remove empty.
  * @param bool   $att_id_only  If output needs attachment ID only. E.g. when upload field is used with ACF file type.
- * @param string $separator    Separator for some entries. Line break by default. (Added for PDF addon)
+ * @param string $separator    Separator for some entries. Line break by default. (Added for PDF addon).
  * @param bool   $show_label   @since 1.25, added for PDF generation.
  * @return string
  */
@@ -1217,246 +1251,240 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 								$output   .= $index < $files_count - 1 ? $separator : '';
 							}
 						}
-					} else {
-						if ( ! is_int( $key ) ) {
-							if ( 'postdata' === $key ) {
-								// possible empty when postdata not required.
-								if ( ! empty( $value ) ) {
+					} elseif ( ! is_int( $key ) ) {
+						if ( 'postdata' === $key ) {
+							// possible empty when postdata not required.
+							if ( ! empty( $value ) ) {
 
-                                    $post_id = $data['postdata'];
-                                    $url = get_edit_post_link( $post_id, 'link' );
+								$post_id = $data['postdata'];
+								$url     = get_edit_post_link( $post_id, 'link' );
 
-                                    // Title
-                                    $title = get_the_title( $post_id );
-                                    $title = ! empty( $title ) ? $title : esc_html__( '(no title)', 'forminator' );
+								// Title.
+								$title = get_the_title( $post_id );
+								$title = ! empty( $title ) ? $title : esc_html__( '(no title)', 'forminator' );
 
-                                    $output .= '<ul>';
+								$output .= '<ul>';
 
-                                        $output .= '<li>';
-                                        $output .= '<b>' . esc_html__( 'Title', 'forminator' ) . ':</b> ';
-                                        $output .= '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" title="' . esc_attr__( 'Edit Post', 'forminator' ) . '">'
-                                                        . $title .
-                                                    '</a>';
-                                        $output .= '</li>';
+									$output .= '<li>';
+									$output .= '<b>' . esc_html__( 'Title', 'forminator' ) . ':</b> ';
+									$output .= '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" title="' . esc_attr__( 'Edit Post', 'forminator' ) . '">'
+													. $title .
+												'</a>';
+									$output .= '</li>';
 
-                                        // Content
-                                        if ( ! empty( $data['value']['post-content'] ) ) {
-                                            $post_content  = $data['value']['post-content'];
-                                            $output .= '<li>';
-                                            $output .= '<b>' . esc_html__( 'Content', 'forminator' ) . ':</b>' . $separator;
-                                            $output .= wp_kses( $post_content, 'post' );
-                                            $output .= '</li>';
-                                        }
-
-                                        // Excerpt
-                                        if ( ! empty( $data['value']['post-excerpt'] ) ) {
-                                            $post_excerpt = $data['value']['post-excerpt'];
-                                            $output .= '<li>';
-                                            $output .= '<b>' . esc_html__( 'Excerpt', 'forminator' ) . ':</b>' . $separator;
-                                            $output .= wp_strip_all_tags( $post_excerpt );
-                                            $output .= '</li>';
-                                        }
-
-                                        // Category
-                                        if ( ! empty( $data['value']['category'] ) ) {
-											$categories = $data['value']['category'];
-											$post_category = array();
-											if ( is_array( $categories ) ) {
-												foreach ( $categories as $category_id ) {
-													$post_category[] = get_the_category_by_ID( $category_id );
-												}
-											} else {
-												$post_category[] = get_the_category_by_ID( $categories );
-											}
-											// In case of deleted categories.
-											if ( ! empty( $post_category ) ) {
-												$category_count = count( $post_category );
-												$label          = ( 1 === $category_count ) ?
-													esc_html__( 'Category', 'forminator' ) :
-													esc_html__( 'Categories', 'forminator' );
-
-												$output .= '<li>';
-												$output .= '<b>' . $label . ':</b> ';
-												$output .= implode( ',', $post_category );
-												$output .= '</li>';
-											}
-                                        }
-
-                                        // Tags
-                                        if ( ! empty( $data['value']['post_tag'] ) ) {
-                                            $post_tag_id = $data['value']['post_tag'];
-                                            $term_args = array(
-                                                'taxonomy'          => 'post_tag',
-                                                'term_taxonomy_id'  => $post_tag_id,
-                                                'hide_empty'        => false,
-                                                'fields'            => 'names',
-                                            );
-                                            $term_query = new WP_Term_Query( $term_args );
-
-                                            // In case of deleted tags.
-                                            if ( ! empty( $term_query->terms ) ) {
-												$term_count = count( $term_query->terms );
-												$label      = ( 1 === $term_count ) ?
-													esc_html__( 'Tag', 'forminator' ) :
-													esc_html__( 'Tags', 'forminator' );
-
-                                                $output .= '<li>';
-                                                $output .= '<b>' . $label . ':</b> ';
-                                                $output .= implode( ',', $term_query->terms );
-                                                $output .= '</li>';
-                                            }
-                                        }
-
-                                        // Featured Image
-                                        if ( ! empty( $data['value']['post-image'] ) && ! empty( $data['value']['post-image']['attachment_id'] ) ) {
-                                            $post_image_id = $data['value']['post-image']['attachment_id'];
-                                            $output .= '<li>';
-                                            $output .= '<b>' . esc_html__( 'Featured image', 'forminator' ) . ':</b>' . $separator;
-                                            $output .= wp_get_attachment_image( $post_image_id, array( 100, 100 ) );
-                                            $output .= '</li>';
-                                        }
-
-                                        // Custom fields
-                                        if ( ! empty( $data['value']['post-custom'] ) ) {
-                                            $post_custom   = $data['value']['post-custom'];
-                                            $output .= '<li>';
-                                                $output .= '<b>' . esc_html__( 'Custom fields', 'forminator' ) . ':</b>' . $separator;
-                                                $output .= '<ul class="' . esc_attr( 'bulleted' ) . '">';
-                                                    foreach ( $post_custom as $field ) {
-                                                        if ( ! empty( $field['value'] ) ) {
-                                                            $output .= '<li>';
-                                                            $output .= esc_html( $field['key'] ) . ': ';
-                                                            $output .= esc_html( $field['value'] );
-                                                            $output .= '</li>';
-                                                        }
-                                                    }
-                                                $output .= '</ul>';
-                                            $output .= '</li>';
-                                        }
-
-										$tax_keys = forminator_list_custom_taxonomies( $data['value'] );
-
-										if ( ! empty( $tax_keys ) ) {
-											foreach ( $tax_keys as $tax_key => $tax_name ) {
-												if ( ! empty( $data['value'][$tax_name] ) ) {
-													$the_taxonomies = '';
-													$single_label	= '';
-													$plural_label	= '';
-													$taxonomies     = array();
-													$post_taxonomy = $data['value'][$tax_name];
-													if ( is_array( $post_taxonomy ) ) {
-														foreach ( $post_taxonomy as $taxonomy ) {
-															if ( ! is_wp_error( get_the_category_by_ID( $taxonomy ) ) ) {
-																$taxonomies[] = get_the_category_by_ID( $taxonomy );
-															}
-														}
-
-														if ( ! empty( $taxonomies ) ) {
-															$the_taxonomies = implode( ', ', $taxonomies );
-														}
-													} else {
-														$the_taxonomies = get_the_category_by_ID( $post_taxonomy );
-														if ( is_wp_error( $the_taxonomies ) ) {
-															$the_taxonomies = '';
-														}
-													}
-
-													$tax_obj = get_taxonomy( $tax_name );
-													if ( ! empty( $tax_obj ) ) {
-														$single_label   = ! empty( $tax_obj->labels->singular_name ) ? $tax_obj->labels->singular_name : $tax_obj->labels->name;
-														$plural_label	= $tax_obj->labels->name;
-													}
-
-													if ( ! empty( $the_taxonomies ) ) {
-														$output .= '<li>';
-														if ( is_array( $post_taxonomy ) ) {
-															$output .= '<b>' . esc_html__( $plural_label, 'forminator' ) . ':</b> ';
-														} else {
-															$output .= '<b>' . esc_html__( $single_label, 'forminator' ) . ':</b> ';
-														}
-
-														$output .= $the_taxonomies;
-														$output .= '</li>';
-													}
-												}
-											}
-										}
-
-                                    $output .= '</ul>';
-
-								} else {
-                                    $output = ' ';
+									// Content.
+								if ( ! empty( $data['value']['post-content'] ) ) {
+									$post_content = $data['value']['post-content'];
+									$output      .= '<li>';
+									$output      .= '<b>' . esc_html__( 'Content', 'forminator' ) . ':</b>' . $separator;
+									$output      .= wp_kses( $post_content, 'post' );
+									$output      .= '</li>';
 								}
-							} else {
-								if ( is_string( $key ) ) {
-									if ( 'product-id' === $key || 'product-quantity' === $key ) {
-										if ( 0 === $product_cost ) {
-											$product_cost = $value;
-										} else {
-											$product_cost = $product_cost * $value;
+
+									// Excerpt.
+								if ( ! empty( $data['value']['post-excerpt'] ) ) {
+									$post_excerpt = $data['value']['post-excerpt'];
+									$output      .= '<li>';
+									$output      .= '<b>' . esc_html__( 'Excerpt', 'forminator' ) . ':</b>' . $separator;
+									$output      .= wp_strip_all_tags( $post_excerpt );
+									$output      .= '</li>';
+								}
+
+									// Category.
+								if ( ! empty( $data['value']['category'] ) ) {
+									$categories    = $data['value']['category'];
+									$post_category = array();
+									if ( is_array( $categories ) ) {
+										foreach ( $categories as $category_id ) {
+											$post_category[] = get_the_category_by_ID( $category_id );
 										}
-										$is_product = true;
 									} else {
+										$post_category[] = get_the_category_by_ID( $categories );
+									}
+									// In case of deleted categories.
+									if ( ! empty( $post_category ) ) {
+										$category_count = count( $post_category );
+										$label          = ( 1 === $category_count ) ?
+											esc_html__( 'Category', 'forminator' ) :
+											esc_html__( 'Categories', 'forminator' );
 
-										$key_slug = $key;
+										$output .= '<li>';
+										$output .= '<b>' . $label . ':</b> ';
+										$output .= implode( ',', $post_category );
+										$output .= '</li>';
+									}
+								}
 
-										if ( in_array( $key, Forminator_Form_Entry_Model::field_suffix(), true ) ) {
-											$key = Forminator_Form_Entry_Model::translate_suffix( $key );
-										} else {
-											$key = strtolower( $key );
-											$key = ucfirst( str_replace( array( '-', '_' ), ' ', $key ) );
-										}
+									// Tags.
+								if ( ! empty( $data['value']['post_tag'] ) ) {
+									$post_tag_id = $data['value']['post_tag'];
+									$term_args   = array(
+										'taxonomy'         => 'post_tag',
+										'term_taxonomy_id' => $post_tag_id,
+										'hide_empty'       => false,
+										'fields'           => 'names',
+									);
+									$term_query  = new WP_Term_Query( $term_args );
 
-										// Name labels
-										if ( 'prefix' === $key_slug && ! empty( $field[ 'prefix_label' ] ) ) {
-											$key = $field[ 'prefix_label' ];
-										}
-										if ( 'first-name' === $key_slug && ! empty( $field[ 'fname_label' ] ) ) {
-											$key = $field[ 'fname_label' ];
-										}
-										if ( 'middle-name' === $key_slug && ! empty( $field[ 'mname_label' ] ) ) {
-											$key = $field[ 'mname_label' ];
-										}
-										if ( 'last-name' === $key_slug && ! empty( $field[ 'lname_label' ] ) ) {
-											$key = $field[ 'lname_label' ];
-										}
+									// In case of deleted tags.
+									if ( ! empty( $term_query->terms ) ) {
+										$term_count = count( $term_query->terms );
+										$label      = ( 1 === $term_count ) ?
+											esc_html__( 'Tag', 'forminator' ) :
+											esc_html__( 'Tags', 'forminator' );
 
-										// Address labels
-										if ( 'street_address' === $key_slug && ! empty( $field[ 'street_address_label' ] ) ) {
-											$key = $field[ 'street_address_label' ];
-										}
-										if ( 'address_line' === $key_slug && ! empty( $field[ 'address_line_label' ] ) ) {
-											$key = $field[ 'address_line_label' ];
-										}
-										if ( 'city' === $key_slug && ! empty( $field[ 'address_city_label' ] ) ) {
-											$key = $field[ 'address_city_label' ];
-										}
-										if ( 'state' === $key_slug && ! empty( $field[ 'address_state_label' ] ) ) {
-											$key = $field[ 'address_state_label' ];
-										}
-										if ( 'zip' === $key_slug && ! empty( $field[ 'address_zip_label' ] ) ) {
-											$key = $field[ 'address_zip_label' ];
-										}
-										if ( 'country' === $key_slug ) {
+										$output .= '<li>';
+										$output .= '<b>' . $label . ':</b> ';
+										$output .= implode( ',', $term_query->terms );
+										$output .= '</li>';
+									}
+								}
 
-											if ( ! empty( $field[ 'address_country_label' ] ) ) {
-												$key = $field[ 'address_country_label' ];
-											}
-											if ( isset( $countries[ $value ] ) ) {
-												$value = $countries[ $value ];
-											}
-										}
+									// Featured Image.
+								if ( ! empty( $data['value']['post-image'] ) && ! empty( $data['value']['post-image']['attachment_id'] ) ) {
+									$post_image_id = $data['value']['post-image']['attachment_id'];
+									$output       .= '<li>';
+									$output       .= '<b>' . esc_html__( 'Featured image', 'forminator' ) . ':</b>' . $separator;
+									$output       .= wp_get_attachment_image( $post_image_id, array( 100, 100 ) );
+									$output       .= '</li>';
+								}
 
-										if ( $remove_empty && empty( $value ) ) {
-											$output .= '';
-										} else {
-											if ( $show_label ) {
-												$output .= sprintf( '<strong>%1$s : </strong> %2$s', esc_html( $key ), esc_html( $value ) ) . $separator;
+									// Custom fields.
+								if ( ! empty( $data['value']['post-custom'] ) ) {
+									$post_custom = $data['value']['post-custom'];
+									$output     .= '<li>';
+										$output .= '<b>' . esc_html__( 'Custom fields', 'forminator' ) . ':</b>' . $separator;
+										$output .= '<ul class="' . esc_attr( 'bulleted' ) . '">';
+									foreach ( $post_custom as $field ) {
+										if ( ! empty( $field['value'] ) ) {
+												$output .= '<li>';
+												$output .= esc_html( $field['key'] ) . ': ';
+												$output .= esc_html( $field['value'] );
+												$output .= '</li>';
+										}
+									}
+										$output .= '</ul>';
+										$output .= '</li>';
+								}
+
+									$tax_keys = forminator_list_custom_taxonomies( $data['value'] );
+
+								if ( ! empty( $tax_keys ) ) {
+									foreach ( $tax_keys as $tax_key => $tax_name ) {
+										if ( ! empty( $data['value'][ $tax_name ] ) ) {
+											$the_taxonomies = '';
+											$single_label   = '';
+											$plural_label   = '';
+											$taxonomies     = array();
+											$post_taxonomy  = $data['value'][ $tax_name ];
+											if ( is_array( $post_taxonomy ) ) {
+												foreach ( $post_taxonomy as $taxonomy ) {
+													if ( ! is_wp_error( get_the_category_by_ID( $taxonomy ) ) ) {
+														$taxonomies[] = get_the_category_by_ID( $taxonomy );
+													}
+												}
+
+												if ( ! empty( $taxonomies ) ) {
+													$the_taxonomies = implode( ', ', $taxonomies );
+												}
 											} else {
-												$output .= esc_html( $value ) . $separator;
+												$the_taxonomies = get_the_category_by_ID( $post_taxonomy );
+												if ( is_wp_error( $the_taxonomies ) ) {
+													$the_taxonomies = '';
+												}
+											}
+
+											$tax_obj = get_taxonomy( $tax_name );
+											if ( ! empty( $tax_obj ) ) {
+												$single_label = ! empty( $tax_obj->labels->singular_name ) ? $tax_obj->labels->singular_name : $tax_obj->labels->name;
+												$plural_label = $tax_obj->labels->name;
+											}
+
+											if ( ! empty( $the_taxonomies ) ) {
+												$output .= '<li>';
+												if ( is_array( $post_taxonomy ) ) {
+													$output .= '<b>' . esc_html__( $plural_label, 'forminator' ) . ':</b> '; // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+												} else {
+													$output .= '<b>' . esc_html__( $single_label, 'forminator' ) . ':</b> '; // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+												}
+
+												$output .= $the_taxonomies;
+												$output .= '</li>';
 											}
 										}
 									}
+								}
+
+								$output .= '</ul>';
+
+							} else {
+								$output = ' ';
+							}
+						} elseif ( is_string( $key ) ) {
+							if ( 'product-id' === $key || 'product-quantity' === $key ) {
+								if ( 0 === $product_cost ) {
+									$product_cost = $value;
+								} else {
+									$product_cost = $product_cost * $value;
+								}
+								$is_product = true;
+							} else {
+
+								$key_slug = $key;
+
+								if ( in_array( $key, Forminator_Form_Entry_Model::field_suffix(), true ) ) {
+									$key = Forminator_Form_Entry_Model::translate_suffix( $key );
+								} else {
+									$key = strtolower( $key );
+									$key = ucfirst( str_replace( array( '-', '_' ), ' ', $key ) );
+								}
+
+								// Name labels.
+								if ( 'prefix' === $key_slug && ! empty( $field['prefix_label'] ) ) {
+									$key = $field['prefix_label'];
+								}
+								if ( 'first-name' === $key_slug && ! empty( $field['fname_label'] ) ) {
+									$key = $field['fname_label'];
+								}
+								if ( 'middle-name' === $key_slug && ! empty( $field['mname_label'] ) ) {
+									$key = $field['mname_label'];
+								}
+								if ( 'last-name' === $key_slug && ! empty( $field['lname_label'] ) ) {
+									$key = $field['lname_label'];
+								}
+
+								// Address labels.
+								if ( 'street_address' === $key_slug && ! empty( $field['street_address_label'] ) ) {
+									$key = $field['street_address_label'];
+								}
+								if ( 'address_line' === $key_slug && ! empty( $field['address_line_label'] ) ) {
+									$key = $field['address_line_label'];
+								}
+								if ( 'city' === $key_slug && ! empty( $field['address_city_label'] ) ) {
+									$key = $field['address_city_label'];
+								}
+								if ( 'state' === $key_slug && ! empty( $field['address_state_label'] ) ) {
+									$key = $field['address_state_label'];
+								}
+								if ( 'zip' === $key_slug && ! empty( $field['address_zip_label'] ) ) {
+									$key = $field['address_zip_label'];
+								}
+								if ( 'country' === $key_slug ) {
+
+									if ( ! empty( $field['address_country_label'] ) ) {
+										$key = $field['address_country_label'];
+									}
+									if ( isset( $countries[ $value ] ) ) {
+										$value = $countries[ $value ];
+									}
+								}
+
+								if ( $remove_empty && empty( $value ) ) {
+									$output .= '';
+								} elseif ( $show_label ) {
+										$output .= sprintf( '<strong>%1$s : </strong> %2$s', esc_html( $key ), esc_html( $value ) ) . $separator;
+								} else {
+									$output .= esc_html( $value ) . $separator;
 								}
 							}
 						}
@@ -1466,9 +1494,8 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 			if ( $is_product ) {
 				/* Translators: 1. Opening <strong> tag, 2. closing <strong> tag 3. currency symbol with cost */
 				$output = sprintf( esc_html__( '%1$sTotal%2$s %3$s', 'forminator' ), '<strong>', '</strong>', $currency_symbol . '' . $product_cost );
-			} else {
-				if ( ! empty( $output ) ) {
-					if (
+			} elseif ( ! empty( $output ) ) {
+				if (
 						isset( $column_name ) &&
 						(
 							false !== strpos( $column_name, 'name' ) ||
@@ -1479,29 +1506,29 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 							false !== strpos( $column_name, 'signature' )
 						)
 					) {
-						$output = trim( $output );
+					$output = trim( $output );
 
-					} elseif ( false !== strpos( $column_name, 'date' ) && 'select' === $field['field_type'] ) {
-						$meta_value = array(
-							'day'    => $data['day'],
-							'month'  => $data['month'],
-							'year'   => $data['year'],
-							'format' => $data['format'],
-						);
+				} elseif ( false !== strpos( $column_name, 'date' ) && 'select' === $field['field_type'] ) {
+					$meta_value = array(
+						'day'    => $data['day'],
+						'month'  => $data['month'],
+						'year'   => $data['year'],
+						'format' => $data['format'],
+					);
 
-						$output	= Forminator_Form_Entry_Model::meta_value_to_string( 'date', $meta_value, true ) . $separator;
-						$output .= sprintf( esc_html__( 'Format%s %s %s', 'forminator' ), ':', $data['format'], $separator );
+					$output = Forminator_Form_Entry_Model::meta_value_to_string( 'date', $meta_value, true ) . $separator;
+					/* translators: 1. Colon symbol, 2. Date format, 3. Separator. */
+					$output .= sprintf( esc_html__( 'Format%1$s %2$s %3$s', 'forminator' ), ':', $data['format'], $separator );
 
-					} elseif ( false !== strpos( $column_name, 'time' ) ) {
-						$output	= Forminator_Form_Entry_Model::meta_value_to_string( 'time', $data, true ) . $separator;
+				} elseif ( false !== strpos( $column_name, 'time' ) ) {
+					$output = Forminator_Form_Entry_Model::meta_value_to_string( 'time', $data, true ) . $separator;
 
-					} else {
-						$output = substr( trim( $output ), 0, - 1 );
+				} else {
+					$output = substr( trim( $output ), 0, - 1 );
 
-					}
-				} elseif ( is_array( $data ) ) {
-					$output = implode( ', ', $data );
 				}
+			} elseif ( is_array( $data ) ) {
+				$output = implode( ', ', $data );
 			}
 
 			return $output;
@@ -1522,6 +1549,7 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
  *
  * @param string $element_id Field slug.
  * @param array  $fields Fields.
+ * @param int    $form_id Form id.
  * @return boolean
  */
 function forminator_old_field( $element_id, $fields, $form_id ) {
@@ -1623,7 +1651,7 @@ function forminator_get_countries_list() {
 			'CG' => esc_html__( 'Congo, Republic of the', 'forminator' ),
 			'CK' => esc_html__( 'Cook Islands', 'forminator' ),
 			'CR' => esc_html__( 'Costa Rica', 'forminator' ),
-			'CI' => html_entity_decode( esc_html__( 'Côte d\'Ivoire', 'forminator'  ), ENT_QUOTES ),
+			'CI' => html_entity_decode( esc_html__( 'Côte d\'Ivoire', 'forminator' ), ENT_QUOTES ),
 			'HR' => esc_html__( 'Croatia', 'forminator' ),
 			'CU' => esc_html__( 'Cuba', 'forminator' ),
 			'CW' => esc_html__( 'Curaçao', 'forminator' ),
@@ -1829,8 +1857,8 @@ function forminator_get_countries_list() {
  *
  * @since 1.6
  *
- * @param     $sort_attr
- * @param int       $sort_flag
+ * @param string $sort_attr Attribute.
+ * @param int    $sort_flag Sort flag.
  *
  * @return array
  */
@@ -1849,7 +1877,7 @@ function forminator_get_fields_sorted( $sort_attr, $sort_flag = SORT_ASC ) {
 				if ( isset( $fields[ $field_key ] ) ) {
 					if ( is_int( $field_key ) ) {
 						$field_key = (int) max( array_keys( $fields ) );
-						$field_key ++;// increase where there is dupe.
+						++$field_key;// increase where there is dupe.
 					}
 				}
 				$fields[ $field_key ] = $field;
@@ -1873,7 +1901,7 @@ function forminator_get_fields_sorted( $sort_attr, $sort_flag = SORT_ASC ) {
 /**
  * Retrieves the list of common file extensions and their types.
  *
- * extending @see get_allowed_mime_types without filter
+ * Extending @see get_allowed_mime_types without filter
  *
  * @since 1.6
  */
@@ -2028,10 +2056,10 @@ function forminator_get_ext_types() {
  *
  * @since 1.6.1
  *
- * @param string                      $content
- * @param Forminator_Poll_Model       $poll
+ * @param string                      $content Content.
+ * @param Forminator_Poll_Model       $poll Forminator_Poll_Model.
  * @param array                       $data - submitted `_POST` data.
- * @param Forminator_Form_Entry_Model $entry
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  *
  * @return mixed
  */
@@ -2117,9 +2145,9 @@ function forminator_get_poll_vars() {
  *
  * @since 1.6.2
  *
- * @param string                      $content
- * @param Forminator_Quiz_Model       $quiz
- * @param Forminator_Form_Entry_Model $entry
+ * @param string                      $content Content.
+ * @param Forminator_Quiz_Model       $quiz Forminator_Quiz_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  *
  * @return mixed
  */
@@ -2179,7 +2207,7 @@ function forminator_replace_quiz_form_data( $content, Forminator_Quiz_Model $qui
 			foreach ( $answers as $question_id => $answer_id ) {
 				// In multi-answer, $question_id looks like this "question-2051-7608-3".
 				$question_id = preg_replace( '/(-\d+$)/', '', $question_id );
-				if ( ! in_array( $question_id, $question_ids ) ) {
+				if ( ! in_array( $question_id, $question_ids ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 					$answer                         = $quiz->getAnswer( $question_id, $answer_id );
 					$answer_text                    = isset( $answer['title'] ) ? $answer['title'] : '';
 					$question_ids[ $question_id ][] = $answer_text;
@@ -2217,10 +2245,10 @@ function forminator_replace_quiz_form_data( $content, Forminator_Quiz_Model $qui
 					$is_correct = isset( $answer['isCorrect'] ) ? $answer['isCorrect'] : false;
 					$is_correct = filter_var( $is_correct, FILTER_VALIDATE_BOOLEAN );
 					if ( $is_correct ) {
-						$correct_answer_count ++;
+						++$correct_answer_count;
 					}
 
-					$total_answer ++;
+					++$total_answer;
 				}
 
 				$result_content  = PHP_EOL . '<ul>' . PHP_EOL;
@@ -2301,9 +2329,9 @@ function forminator_get_quiz_vars() {
 /**
  * Replace Stripe data
  *
- * @param $content
- * @param $custom_form
- * @param $entry
+ * @param string                      $content Content.
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  *
  * @return mixed
  */
@@ -2330,9 +2358,9 @@ function forminator_replace_form_payment_data( $content, Forminator_Form_Model $
 /**
  * Payment data
  *
- * @param $content
- * @param $custom_form
- * @param $entry
+ * @param string                      $content Content.
+ * @param Forminator_Form_Model       $custom_form Forminator_Form_Model.
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
  *
  * @return array|mixed
  */
@@ -2346,7 +2374,7 @@ function forminator_payment_data( $content, $custom_form, $entry ) {
 		foreach ( $form_fields as $field ) {
 			$field_type = $field->__get( 'type' );
 			if ( in_array( $field_type, array( 'stripe', 'paypal' ), true ) && ! empty( $entry->meta_data[ $field->slug ] ) ) {
-				$payment_meta = $entry->meta_data[ $field->slug ]['value'];
+				$payment_meta                   = $entry->meta_data[ $field->slug ]['value'];
 				$payment_meta['payment_method'] = $field_type;
 			}
 		}
@@ -2358,7 +2386,7 @@ function forminator_payment_data( $content, $custom_form, $entry ) {
 /**
  * Get Default date format
  *
- * @param $format
+ * @param string $format Date format.
  *
  * @return string
  */
@@ -2411,9 +2439,9 @@ function datepicker_default_format( $format ) {
  * @return string
  */
 function forminator_reformat_date( $date_value, $date_format, $new_format ) {
-	$date = new Forminator_Date();
+	$date        = new Forminator_Date();
 	$date_format = $date->normalize_date_format( $date_format );
-	$date = date_create_from_format( $date_format, $date_value );
+	$date        = date_create_from_format( $date_format, $date_value );
 
 	return date_format( $date, $new_format );
 }
@@ -2423,16 +2451,19 @@ function forminator_reformat_date( $date_value, $date_format, $new_format ) {
  *
  * @since 1.14
  *
- * @param Forminator_Form_Entry_Model $entry
- * @param                             $mapper
- * @param string                      $sub_meta_key
- * @param bool                        $allow_html
- * @param int                         $truncate
+ * @param Forminator_Form_Entry_Model $entry Forminator_Form_Entry_Model.
+ * @param array                       $mapper Mapper.
+ * @param string                      $sub_meta_key Meta key.
+ * @param bool                        $allow_html Allow HTML.
+ * @param int                         $truncate Truncate.
  *
  * @return string
  */
 function forminator_get_entry_field_value( $entry, $mapper, $sub_meta_key = '', $allow_html = false, $truncate = PHP_INT_MAX ) {
-	/** @var Forminator_Form_Entry_Model $entry */
+	/**
+	 * Forminator_Form_Entry_Model
+	 *
+	 * @var Forminator_Form_Entry_Model $entry */
 	if ( isset( $mapper['property'] ) ) {
 		if ( property_exists( $entry, $mapper['property'] ) ) {
 			$property = $mapper['property'];
@@ -2450,18 +2481,14 @@ function forminator_get_entry_field_value( $entry, $mapper, $sub_meta_key = '', 
 		// meta_key based.
 		if ( ! isset( $mapper['sub_metas'] ) ) {
 			$value = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value, $allow_html, $truncate );
-		} else {
-			if ( empty( $sub_meta_key ) ) {
+		} elseif ( empty( $sub_meta_key ) ) {
 				$value = '';
-			} else {
-				if ( isset( $meta_value[ $sub_meta_key ] ) && ! empty( $meta_value[ $sub_meta_key ] ) ) {
-					$value      = $meta_value[ $sub_meta_key ];
-					$field_type = $mapper['type'] . '.' . $sub_meta_key;
-					$value      = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $value, $allow_html, $truncate );
-				} else {
-					$value = '';
-				}
-			}
+		} elseif ( isset( $meta_value[ $sub_meta_key ] ) && ! empty( $meta_value[ $sub_meta_key ] ) ) {
+				$value      = $meta_value[ $sub_meta_key ];
+				$field_type = $mapper['type'] . '.' . $sub_meta_key;
+				$value      = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $value, $allow_html, $truncate );
+		} else {
+			$value = '';
 		}
 	}
 
@@ -2496,7 +2523,7 @@ function forminator_upload_root_temp() {
 /**
  * Forminator Upload root
  *
- * @param $base
+ * @param string $base Base type.
  *
  * @return string|null
  */
@@ -2519,6 +2546,9 @@ function forminator_upload_root( $base = 'path' ) {
 
 /**
  * Forminator custom root
+ *
+ * @param array  $dir Directory.
+ * @param string $base Base.
  *
  * @return string
  */
@@ -2547,9 +2577,9 @@ function forminator_custom_upload_root( $dir, $base ) {
 /**
  * Forminator get upload path
  *
- * @param $form_id
- * @param $dir
- * @param $base
+ * @param int    $form_id Form Id.
+ * @param string $dir Directory.
+ * @param string $base Base.
  *
  * @return string
  */
@@ -2575,8 +2605,8 @@ function forminator_get_upload_path( $form_id, $dir = '', $base = 'path' ) {
 /**
  * Forminator get upload url
  *
- * @param $form_id
- * @param $dir
+ * @param int    $form_id Form Id.
+ * @param string $dir Directory.
  *
  * @return string
  */
@@ -2596,9 +2626,9 @@ function forminator_get_upload_url( $form_id, $dir = '' ) {
 /**
  * Replace lead form data
  *
- * @param $content
- * @param $quiz_settings
- * @param Forminator_Form_Entry_Model|null $entry
+ * @param string                           $content Content.
+ * @param array                            $quiz_settings Quiz settings.
+ * @param Forminator_Form_Entry_Model|null $entry Forminator_Form_Entry_Model.
  *
  * @return string
  */
@@ -2617,9 +2647,9 @@ function forminator_replace_lead_form_data( $content, $quiz_settings, Forminator
 }
 
 /**
- * lead form data
+ * Lead form data
  *
- * @param Forminator_Form_Entry_Model $entry
+ * @param Forminator_Form_Entry_Model $entry Entry Model.
  *
  * @return array
  */
@@ -2633,9 +2663,9 @@ function forminator_lead_entry_data( $entry ) {
 }
 
 /**
- * lead form submitted data
+ * Lead form submitted data
  *
- * @param $lead_entry
+ * @param mixed $lead_entry Lead entry.
  *
  * @return array
  */
@@ -2667,7 +2697,7 @@ function forminator_lead_submitted_data( $lead_entry ) {
 /**
  * Check how many instances of a field type exists in a given post ID
  *
- * @param $field_type
+ * @param string $field_type Field type.
  *
  * @return int
  */
@@ -2699,7 +2729,7 @@ function forminator_count_field_type_in_page( $field_type ) {
 
 		foreach ( $form_fields as $field ) {
 			if ( false !== strpos( $field->slug, $field_type ) ) {
-				$field_count++;
+				++$field_count;
 			}
 		}
 	}
@@ -2712,17 +2742,17 @@ function forminator_count_field_type_in_page( $field_type ) {
  *
  * @since 1.15.15
  *
- * @param $value
+ * @param array $value Value array.
  *
  * @return array
  */
-function forminator_trim_array ( $value ) {
+function forminator_trim_array( $value ) {
 
-	foreach( $value as $key => $val ) {
+	foreach ( $value as $key => $val ) {
 		if ( is_array( $val ) ) {
-			$value[$key] = forminator_trim_array( $val );
+			$value[ $key ] = forminator_trim_array( $val );
 		} else {
-			$value[$key] = strtolower( wp_unslash( trim( $val ) ) );
+			$value[ $key ] = strtolower( wp_unslash( trim( $val ) ) );
 		}
 	}
 
@@ -2748,7 +2778,7 @@ function forminator_get_cloned_field_keys( $entry, $original_keys ) {
 	$repeater_suffixes = array_diff(
 		$all_suffixes,
 		array_map(
-			function( $s ) {
+			function ( $s ) {
 				return '-' . $s;
 			},
 			$entry::field_suffix()
@@ -2763,8 +2793,8 @@ function forminator_get_cloned_field_keys( $entry, $original_keys ) {
  *
  * @since 1.17.0
  *
- * @param string	$text
- * @param int		$truncate	PHP_INT_MAX
+ * @param string $text Text for truncate.
+ * @param int    $truncate   PHP_INT_MAX.
  */
 function forminator_truncate_text( $text, $truncate = PHP_INT_MAX ) {
 	if ( strlen( $text ) > $truncate ) {
@@ -2779,8 +2809,8 @@ function forminator_truncate_text( $text, $truncate = PHP_INT_MAX ) {
  *
  * @since 1.20.0
  *
- * @param {string} $search_string  Search query.
- * @param {array}  $exclude        Array of user IDs to exclude from search.
+ * @param string $search_string  Search query.
+ * @param array  $exclude        Array of user IDs to exclude from search.
  *
  * @return array
  */
@@ -2819,8 +2849,8 @@ function forminator_get_users_by_query( $search_string, $exclude ) {
 /**
  * Forminator Get allow mime type
  *
- * @param $mimes
- * @param $allow
+ * @param array $mimes Mimes.
+ * @param bool  $allow Allow.
  *
  * @return array
  */
@@ -2845,27 +2875,28 @@ function forminator_allowed_mime_types( $mimes = array(), $allow = true ) {
  * List custom taxonomies
  *
  * @since 1.23.0
- * @param array $meta_value
+ * @param array $meta_value Meta value.
  * @return array
  */
- function forminator_list_custom_taxonomies( $meta_value ) {
+function forminator_list_custom_taxonomies( $meta_value ) {
 	$default_keys = array(
-		"post-title",
-		"post-content",
-		"post-excerpt",
-		"category",
-		"post_tag",
-		"post-custom",
-		"post-image",
+		'post-title',
+		'post-content',
+		'post-excerpt',
+		'category',
+		'post_tag',
+		'post-custom',
+		'post-image',
 	);
-	$tax_keys = array_diff( array_keys( $meta_value ), $default_keys );
+	$tax_keys     = array_diff( array_keys( $meta_value ), $default_keys );
 	return $tax_keys;
 }
 
 /**
  * Emulate prepared_data
  *
- * @param object $entry Entry data.
+ * @param Forminator_Base_Form_Model $custom_form_model Base form model.
+ * @param object                     $entry Entry data.
  * @return array
  */
 function recreate_prepared_data( Forminator_Base_Form_Model $custom_form_model, $entry ) {
@@ -2880,8 +2911,8 @@ function recreate_prepared_data( Forminator_Base_Form_Model $custom_form_model, 
 				$prepared_data[ $key . '-' . $subkey ] = $subvalue;
 			}
 		} elseif ( 0 === strpos( $key, 'select-' )
-		           || 0 === strpos( $key, 'radio-' )
-		           || 0 === strpos( $key, 'checkbox-' ) ) {
+					|| 0 === strpos( $key, 'radio-' )
+					|| 0 === strpos( $key, 'checkbox-' ) ) {
 			foreach ( $fields as $field ) {
 				if ( empty( $field->raw['element_id'] ) || $key !== $field->raw['element_id'] ) {
 					continue;
@@ -2915,7 +2946,7 @@ function recreate_prepared_data( Forminator_Base_Form_Model $custom_form_model, 
  * Return state code
  *
  * @since 1.32.0
- * @param {string} $state Search state.
+ * @param string $state Search state.
  * @return string
  */
 function forminator_get_state_code( $state ) {
@@ -3315,8 +3346,8 @@ function forminator_get_state_code( $state ) {
 /**
  * Render Rating field
  *
- * @param $rating_value
- * @param $rating_items
+ * @param mixed $rating_value Rating value.
+ * @param array $rating_items Rating items.
  *
  * @return string
  */
@@ -3325,9 +3356,9 @@ function forminator_render_rating_field( $rating_value, $rating_items ) {
 	$max_rating   = ! empty( $rating_items['max_rating'] ) ? $rating_items['max_rating'] : 0;
 	$output       = '<div class="forminator-rating-field forminator-rating-size--' . esc_attr( $rating_items['size'] ) . '">';
 	$output      .= '<div class="forminator-rating-items">';
-	for ( $rating = 1; $rating <= $max_rating; $rating ++ ) {
+	for ( $rating = 1; $rating <= $max_rating; $rating++ ) {
 		$class_name = 'forminator-icon-' . $rating_items['icon'] . ( $rating <= $rating_value ? ' forminator-rating-active' : '' );
-		$output     .= '<span class="' . esc_attr( $class_name ) . '" aria-hidden="true"></span>';
+		$output    .= '<span class="' . esc_attr( $class_name ) . '" aria-hidden="true"></span>';
 	}
 	$output .= '</div>';
 	if ( $rating_items['suffix'] ) {
@@ -3337,5 +3368,3 @@ function forminator_render_rating_field( $rating_value, $rating_items ) {
 
 	return $output;
 }
-
-

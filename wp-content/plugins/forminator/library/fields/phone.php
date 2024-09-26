@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Phone class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,46 +17,64 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Phone extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'phone';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 3;
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'phone';
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Is input
+	 *
 	 * @var bool
 	 */
 	public $is_input = true;
 
 	/**
+	 * Has counter
+	 *
 	 * @var bool
 	 */
 	public $has_counter = true;
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-phone';
@@ -91,7 +115,7 @@ class Forminator_Phone extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -121,7 +145,7 @@ class Forminator_Phone extends Forminator_Field {
 				'label'       => '(###) ###-####',
 				'mask'        => '(999) 999-9999',
 				/**
-				 * match jquery-validation phoneUS validation
+				 * Match jquery-validation phoneUS validation
 				 * https://github.com/jquery-validation/jquery-validation/blob/1.17.0/src/additional/phoneUS.js#L20
 				 */
 				'regex'       => '/^(\d|\s|\(|\)|\-|\.|\+){5,20}$/',
@@ -131,7 +155,7 @@ class Forminator_Phone extends Forminator_Field {
 				'label'       => esc_html__( 'International', 'forminator' ),
 				'mask'        => '(123) 456-789',
 				/**
-				 * allowed `+`, but only on first character
+				 * Allowed `+`, but only on first character
 				 * allowed `{`, `)`, `_space_`, `-` and `digits`
 				 * allowed 10-20 in total characters
 				 */
@@ -148,8 +172,9 @@ class Forminator_Phone extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
+	 * @param array                  $draft_value Draft value.
 	 *
 	 * @return mixed
 	 */
@@ -356,7 +381,7 @@ class Forminator_Phone extends Forminator_Field {
 		if ( 'none' !== $format_check ) {
 			if ( 'standard' === $format_check ) {
 				$validation_message = apply_filters(
-					'forminator_field_phone_phoneUS_validation_message',
+					'forminator_field_phone_phoneUS_validation_message', // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 					( ! empty( $validation_message ) ? $validation_message : esc_html__( 'Please input a valid phone number.', 'forminator' ) ),
 					$field,
 					$format_check,
@@ -397,7 +422,6 @@ class Forminator_Phone extends Forminator_Field {
 		$messages .= '},' . "\n";
 
 		return $messages;
-
 	}
 
 	/**
@@ -405,8 +429,8 @@ class Forminator_Phone extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array        $field
-	 * @param array|string $data
+	 * @param array        $field Field.
+	 * @param array|string $data Data.
 	 *
 	 * @return bool
 	 */
@@ -502,7 +526,7 @@ class Forminator_Phone extends Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization

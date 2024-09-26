@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Admin Data
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Admin_Data
@@ -7,9 +12,12 @@
  */
 class Forminator_Admin_Data {
 
+	/**
+	 * Forminator Instance
+	 *
+	 * @var Forminator|null
+	 */
 	public $core = null;
-
-	public static $pages = null;
 
 	/**
 	 * Current Nonce
@@ -65,20 +73,20 @@ class Forminator_Admin_Data {
 	/**
 	 * Return published pages
 	 *
-	 * @return mixed
-	 * @since 1.8
+	 * @return array
 	 */
 	public static function get_pages() {
-		if ( ! is_null( self::$pages ) ) {
-			return self::$pages;
+		$cached_pages = wp_cache_get( 'forminator_cached_pages', 'forminator-cache' );
+		if ( false !== $cached_pages ) {
+			return $cached_pages;
 		}
-
 		global $wpdb;
+		$sql   = "SELECT ID, post_title FROM {$wpdb->posts} WHERE post_type = 'page' AND post_status = 'publish' ORDER BY post_title ASC";
+		$pages = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// Cache the result.
+		wp_cache_set( 'forminator_cached_pages', $pages, 'forminator-cache' );
 
-		$sql         = "SELECT ID, post_title FROM {$wpdb->posts} WHERE post_type = 'page' AND post_status = 'publish' ORDER BY post_title ASC";
-		self::$pages = $wpdb->get_results( $sql );
-
-		return self::$pages;
+		return $pages;
 	}
 
 	/**
@@ -90,7 +98,7 @@ class Forminator_Admin_Data {
 	public function admin_js_defaults() {
 		// Generate addon nonce.
 		Forminator_Integration_Admin_Ajax::get_instance()->generate_nonce();
-		$id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
+		$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 		$user = wp_get_current_user();
 
 		$dashboard = class_exists( 'WPMUDEV_Dashboard' );
@@ -186,14 +194,15 @@ class Forminator_Admin_Data {
 			'userPermissions'                => $user->get_role_caps(),
 			'manage_forminator_templates'    => forminator_is_user_allowed( 'forminator-templates' ),
 			'canWhitelabel'                  => forminator_can_whitelabel(),
-			'isWPMUDEVAdmin'                 => is_wpmu_dev_admin()
+			'isWPMUDEVAdmin'                 => is_wpmu_dev_admin(),
+			'globalTracking'                 => forminator_global_tracking(),
 		);
 	}
 
 	/**
 	 * Get form by field
 	 *
-	 * @param $type
+	 * @param string $type Field type.
 	 *
 	 * @return array
 	 */
@@ -220,6 +229,8 @@ class Forminator_Admin_Data {
 	/**
 	 * Print forms select
 	 *
+	 * @param string $method Method time.
+	 *
 	 * @return array
 	 * @since 1.0
 	 */
@@ -239,11 +250,11 @@ class Forminator_Admin_Data {
 		}
 
 		return $modules;
-
 	}
 
 	/**
 	 * Check MPDF extensions.
+	 *
 	 * @since 1.25
 	 *
 	 * @return bool

@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Google sheet Form Settings
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Googlesheet_Form_Settings
  * Handle how form settings displayed and saved
  *

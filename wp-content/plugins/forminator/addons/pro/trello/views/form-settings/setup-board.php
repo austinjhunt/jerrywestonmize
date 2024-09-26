@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template for setup board
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
 	'error_message'  => '',
@@ -7,7 +13,11 @@ $vars = array(
 	'multi_id'       => '',
 	'boards'         => array(),
 );
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -22,7 +32,10 @@ foreach ( $template_vars as $key => $val ) {
 	<p id="forminator-integration-popup" class="sui-description"><?php esc_html_e( 'Your account is now authorized, choose which board you want Trello cards to be added to.', 'forminator' ); ?></p>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>

@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Addon Mailerlite form settings.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Mailerlite_Form_Settings
  * Form Settings Mailerlite Process
  */

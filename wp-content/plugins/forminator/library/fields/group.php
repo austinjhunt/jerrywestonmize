@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Group class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -129,12 +135,12 @@ class Forminator_Group extends Forminator_Field {
 
 			if ( 1 < $i ) {
 				$wrappers = array_map(
-					function( $wrapper ) use ( $i ) {
+					function ( $wrapper ) use ( $i ) {
 						if ( empty( $wrapper['fields'] ) ) {
 							return $wrapper;
 						}
 						$wrapper['fields'] = array_map(
-							function( $field ) use ( $i ) {
+							function ( $field ) use ( $i ) {
 								$field['group_suffix'] = '-' . $i;
 								return $field;
 							},
@@ -207,7 +213,7 @@ class Forminator_Group extends Forminator_Field {
 
 		if ( 'icon' === $options['action_element_type'] ) {
 			// Icons.
-			$html .= '<button class="forminator-repeater-action-icon forminator-repeater-add"><span class="forminator-icon-add" aria-hidden="true"></span><span class="sui-screen-reader-text">'. esc_html( $options['add_text'] ) .'</span></button>';
+			$html .= '<button class="forminator-repeater-action-icon forminator-repeater-add"><span class="forminator-icon-add" aria-hidden="true"></span><span class="sui-screen-reader-text">' . esc_html( $options['add_text'] ) . '</span></button>';
 			$html .= '<button class="forminator-repeater-action-icon forminator-repeater-remove"><span class="forminator-icon-remove" aria-hidden="true"></span><span class="sui-screen-reader-text">' . esc_html( $options['remove_text'] ) . '</span></button>';
 		} elseif ( 'link' === $options['action_element_type'] ) {
 			// Links.

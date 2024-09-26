@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\Config\AccessControl;
+use MailPoet\Util\Headers;
 use MailPoet\Util\Helpers;
 use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Psr\Container\ContainerInterface;
@@ -45,6 +46,11 @@ class Router {
 
   public function init() {
     if (!$this->apiRequest) return;
+
+    // The public MailPoet router is using GET requests,
+    // but we don't expect any caching of the responses.
+    Headers::setNoCacheHeaders();
+
     $endpointClass = __NAMESPACE__ . "\\Endpoints\\" . ucfirst($this->endpoint);
 
     if (!$this->endpoint || !class_exists($endpointClass)) {

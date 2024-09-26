@@ -1,4 +1,4 @@
-/* PageSpeed Ninja 1.4.3 | pagespeed.ninja/license.html */
+/* PageSpeed Ninja 1.4.5 | pagespeed.ninja/license.html */
 (function () {
     'use strict';
 
@@ -81,6 +81,13 @@
             jQuery.post(ajaxurl, {action: 'pagespeedninja_clear_images', _ajax_nonce: pagespeedninja_nonce}, function () {
                 $el.removeAttr('disabled');
                 updateCachesize('image');
+            });
+        });
+        jQuery('#do_clear_image_errors').on('click', function () {
+            var $el = jQuery(this);
+            $el.attr('disabled', 'disabled');
+            jQuery.post(ajaxurl, {action: 'pagespeedninja_clear_image_errors', _ajax_nonce: pagespeedninja_nonce}, function () {
+                $el.removeAttr('disabled');
             });
         });
         jQuery('#do_clear_loaded').on('click', function () {

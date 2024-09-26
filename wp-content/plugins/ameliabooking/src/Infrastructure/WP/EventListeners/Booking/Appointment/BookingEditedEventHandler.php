@@ -113,13 +113,16 @@ class BookingEditedEventHandler
                 }
             }
             $emailNotificationService->sendCustomerBookingNotification($appointment, $booking);
+            $emailNotificationService->sendProviderBookingNotification($appointment, $booking);
 
             if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
                 $smsNotificationService->sendCustomerBookingNotification($appointment, $booking);
+                $smsNotificationService->sendProviderBookingNotification($appointment, $booking);
             }
 
             if ($whatsAppNotificationService->checkRequiredFields()) {
                 $whatsAppNotificationService->sendCustomerBookingNotification($appointment, $booking);
+                $whatsAppNotificationService->sendProviderBookingNotification($appointment, $booking);
             }
 
             $webHookService->process(self::BOOKING_STATUS_UPDATED, $appointment, [$booking]);

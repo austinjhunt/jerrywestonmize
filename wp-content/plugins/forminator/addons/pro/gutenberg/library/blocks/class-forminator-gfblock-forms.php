@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator GFBlock Forms.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_GFBlock_Forms
@@ -8,6 +13,8 @@
 class Forminator_GFBlock_Forms extends Forminator_GFBlock_Abstract {
 
 	/**
+	 * Forminator_GFBlock_Forms Instance
+	 *
 	 * @var self|null
 	 */
 	private static $_instance = null;
@@ -178,6 +185,11 @@ class Forminator_GFBlock_Forms extends Forminator_GFBlock_Abstract {
 		return $form_list;
 	}
 
+	/**
+	 * Localize
+	 *
+	 * @return string[]
+	 */
 	public function localize() {
 		return array(
 			'choose_form'      => esc_html__( 'Choose Form', 'forminator' ),

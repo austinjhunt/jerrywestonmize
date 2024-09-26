@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.4.3
+ * @version    1.4.5
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       July 2024
+ * @date       September 2024
  */
 
 class PagespeedNinja_View
@@ -417,7 +417,9 @@ class PagespeedNinja_View
                     '<span id="psn_cachesize_image_files" class="loading"></span>');
                 ?>
                 <div class="field"><?php echo $html; ?><br>
-                    <input type="button" id="do_clear_images" value="<?php esc_attr_e('Remove optimized images'); ?>"/></div>
+                    <input type="button" id="do_clear_images" value="<?php esc_attr_e('Remove Optimized Images'); ?>"/>
+                    <input type="button" id="do_clear_image_errors" value="<?php esc_attr_e('Clear Image Errors Cache'); ?>"/>
+                </div>
                 <?php
                 break;
             case 'do_clear_loaded':
@@ -427,7 +429,8 @@ class PagespeedNinja_View
                     '<span id="psn_cachesize_loaded_files" class="loading"></span>');
                 ?>
                 <div class="field"><?php echo $html; ?><br>
-                    <input type="button" id="do_clear_loaded" value="<?php esc_attr_e('Remove files'); ?>"/></div>
+                    <input type="button" id="do_clear_loaded" value="<?php esc_attr_e('Remove Files'); ?>"/>
+                </div>
                 <?php
                 break;
             case 'do_view_static':

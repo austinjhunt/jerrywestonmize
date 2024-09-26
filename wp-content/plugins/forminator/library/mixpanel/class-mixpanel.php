@@ -1,8 +1,13 @@
 <?php
 /**
- * Mixpanel main class.
+ * The Forminator_Mixpanel class.
+ *
+ * @package Forminator
  */
 
+/**
+ * Mixpanel main class.
+ */
 class Forminator_Mixpanel {
 
 	/**
@@ -26,6 +31,11 @@ class Forminator_Mixpanel {
 	 */
 	private static $instance = null;
 
+	/**
+	 * General
+	 *
+	 * @var mixed
+	 */
 	public $general = null;
 
 	/**
@@ -42,13 +52,13 @@ class Forminator_Mixpanel {
 	}
 
 	/**
-	 * construct
+	 * Construct
 	 */
 	public function __construct() {
 		if ( is_null( $this->mixpanel ) ) {
-			$extra_options  = [
-				'consumer'  => 'socket',
-			];
+			$extra_options  = array(
+				'consumer' => 'socket',
+			);
 			$this->mixpanel = new WPMUDEV_Analytics( 'forminator', 'Forminator', 55, self::TOKEN, $extra_options );
 
 			// Configure mixpanel.
@@ -92,7 +102,6 @@ class Forminator_Mixpanel {
 	 *
 	 * @return Mixpanel
 	 * @since 1.27.0
-	 *
 	 */
 	public function tracker() {
 		return $this->mixpanel;
@@ -103,7 +112,6 @@ class Forminator_Mixpanel {
 	 *
 	 * @return string
 	 * @since 1.27.0
-	 *
 	 */
 	private function identity() {
 		$url = str_replace( array( 'http://', 'https://', 'www.' ), '', home_url() );
@@ -118,7 +126,6 @@ class Forminator_Mixpanel {
 	 *
 	 * @return array
 	 * @since 1.27.0
-	 *
 	 */
 	private function super_properties() {
 		global $wpdb, $wp_version;
@@ -126,8 +133,7 @@ class Forminator_Mixpanel {
 		$properties = array(
 			'active_theme'       => get_stylesheet(),
 			'locale'             => get_locale(),
-			'mysql_version'      => $wpdb->get_var( 'SELECT VERSION()' ),
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			'mysql_version'      => $wpdb->get_var( 'SELECT VERSION()' ), // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			'php_version'        => phpversion(),
 			'plugin'             => 'Forminator',
 			'plugin_type'        => FORMINATOR_PRO ? 'Pro' : 'Free',
@@ -136,11 +142,11 @@ class Forminator_Mixpanel {
 			'device'             => $this->get_device(),
 			'wp_type'            => is_multisite() ? 'multisite' : 'single',
 			'wp_version'         => $wp_version,
-			'user_agent'         => isset( $_SERVER['HTTP_USER_AGENT'] ) ? wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : '',
+			'user_agent'         => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			'memory_limit'       => ini_get( 'memory_limit' ),
 			'max_execution_time' => ini_get( 'max_execution_time' ),
-			'competitor_plugin'  => $this->get_competitors()
+			'competitor_plugin'  => $this->get_competitors(),
 		);
 
 		/**
@@ -149,9 +155,8 @@ class Forminator_Mixpanel {
 		 * @param array $properties Properties.
 		 *
 		 * @since 1.27.0
-		 *
 		 */
-		return apply_filters( 'Forminator_mixpanel_super_properties', $properties );
+		return apply_filters( 'Forminator_mixpanel_super_properties', $properties ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 	}
 
 	/**
@@ -161,7 +166,6 @@ class Forminator_Mixpanel {
 	 *
 	 * @return string
 	 * @since 1.27.0
-	 *
 	 */
 	private function get_server_type() {
 		if ( empty( $_SERVER['SERVER_SOFTWARE'] ) ) {
@@ -188,6 +192,8 @@ class Forminator_Mixpanel {
 	}
 
 	/**
+	 * Is Tablet
+	 *
 	 * @return bool|string
 	 */
 	private function is_tablet() {
@@ -197,10 +203,12 @@ class Forminator_Mixpanel {
 
 		$tablet_pattern = '/(tablet|ipad|playbook|kindle|silk)/i';
 
-		return preg_match( $tablet_pattern, $_SERVER['HTTP_USER_AGENT'] );
+		return preg_match( $tablet_pattern, sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) );
 	}
 
 	/**
+	 * Is mobile
+	 *
 	 * @return bool|string
 	 */
 	private function is_mobile() {
@@ -210,7 +218,7 @@ class Forminator_Mixpanel {
 
 		$mobile_patten = '/Mobile|iP(hone|od|ad)|Android|BlackBerry|tablet|IEMobile|Kindle|NetFront|Silk|(hpw|web)OS|Fennec|Minimo|Opera M(obi|ini)|Blazer|Dolfin|Dolphin|Skyfire|Zune|playbook/i';
 
-		return preg_match( $mobile_patten, $_SERVER['HTTP_USER_AGENT'] );
+		return preg_match( $mobile_patten, sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) );
 	}
 
 	/**
@@ -235,7 +243,6 @@ class Forminator_Mixpanel {
 	 *
 	 * @return string
 	 * @since 1.27.0
-	 *
 	 */
 	private function get_competitors() {
 		$competitors = array();
@@ -266,7 +273,7 @@ class Forminator_Mixpanel {
 	/**
 	 * Module updates
 	 *
-	 * @param string $update_type
+	 * @param string $update_type Update type.
 	 *
 	 * @return array
 	 */
@@ -295,12 +302,11 @@ class Forminator_Mixpanel {
 	/**
 	 * Check if array of strings has a string.
 	 *
-	 * @param array $haystack Array of strings.
+	 * @param array  $haystack Array of strings.
 	 * @param string $needle Value to search.
 	 *
 	 * @return bool
 	 * @since 1.27.0
-	 *
 	 */
 	private function array_has_needle( $haystack, $needle ) {
 		foreach ( $haystack as $item ) {

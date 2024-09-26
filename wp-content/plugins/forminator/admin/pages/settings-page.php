@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Settings Page
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -16,12 +22,29 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 	 * @var array
 	 */
 	private $addons_data = array();
-	public $addons_list  = array();
 
+	/**
+	 * Addon list
+	 *
+	 * @var array
+	 */
+	public $addons_list = array();
+
+	/**
+	 * Init
+	 *
+	 * @return void
+	 */
 	public function init() {
 		$this->process_request();
 	}
 
+	/**
+	 * Enqueue scripts
+	 *
+	 * @param string $hook Hook name.
+	 * @return void
+	 */
 	public function enqueue_scripts( $hook ) {
 		parent::enqueue_scripts( $hook );
 		wp_localize_script( 'forminator-admin', 'forminator_addons_data', $this->addons_data );
@@ -238,6 +261,11 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 		return $select;
 	}
 
+	/**
+	 * Before render
+	 *
+	 * @return void
+	 */
 	public function before_render() {
 		if ( Forminator::is_addons_feature_enabled() ) {
 			$this->prepare_addons();
@@ -247,6 +275,11 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 		add_filter( 'forminator_data', array( $this, 'add_permissions_js_data' ) );
 	}
 
+	/**
+	 * Prepare addons
+	 *
+	 * @return void
+	 */
 	private function prepare_addons() {
 		// cleanup activated addons.
 		Forminator_Integration_Loader::get_instance()->cleanup_activated_addons();
@@ -263,15 +296,21 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 		$this->addons_list = forminator_get_registered_addons_list();
 	}
 
+	/**
+	 * Add js data
+	 *
+	 * @param mixed $data Data to add.
+	 *
+	 * @return mixed
+	 */
 	public function add_permissions_js_data( $data ) {
 		if ( ! current_user_can( forminator_get_admin_cap() ) ) {
 			return $data;
 		}
 
 		$permissions = get_option( 'forminator_permissions', array() );
-		// $permissions = json_decode( wp_unslash( $permissions ), true );
 
-		$data['mainSettings'] = array(
+		$data['mainSettings']     = array(
 			'permissions' => $permissions,
 			'modal'       => array(),
 		);
@@ -280,6 +319,11 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 		return $data;
 	}
 
+	/**
+	 * Process request
+	 *
+	 * @return void
+	 */
 	public function process_request() {
 		$nonce = Forminator_Core::sanitize_text_field( 'forminatorNonce' );
 		if ( ! $nonce ) {

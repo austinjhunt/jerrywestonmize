@@ -58,7 +58,7 @@ class Forminator_Slider extends Forminator_Field {
 	 *
 	 * @return array
 	 */
-	public function defaults() : array {
+	public function defaults(): array {
 		return array(
 			'calculations' => 'true',
 			'slider_type'  => 'single',
@@ -109,7 +109,7 @@ class Forminator_Slider extends Forminator_Field {
 	 * @param array  $field Field settings.
 	 * @return string
 	 */
-	private static function add_slider_value( string $slider, array $field ) : string {
+	private static function add_slider_value( string $slider, array $field ): string {
 		$name        = self::get_property( 'element_id', $field );
 		$value_block = self::get_value_block( $field );
 		$width       = self::get_property( 'slider_width', $field, 'full' );
@@ -128,7 +128,7 @@ class Forminator_Slider extends Forminator_Field {
 	 *
 	 * @param array $field Field settings.
 	 */
-	private static function get_value_template( array $field ) : string {
+	private static function get_value_template( array $field ): string {
 		$prefix         = self::get_property( 'prefix', $field );
 		$suffix         = self::get_property( 'suffix', $field );
 		$value_template = $prefix . '{slider-value}' . $suffix;
@@ -149,7 +149,7 @@ class Forminator_Slider extends Forminator_Field {
 	 * @param array $field Field settings.
 	 * @return string
 	 */
-	private static function get_value_block( array $field ) : string {
+	private static function get_value_block( array $field ): string {
 		$value_template = self::get_value_template( $field );
 		$position       = self::get_property( 'value_position', $field );
 		$position       = 'top' !== $position ? 'bottom' : 'top';
@@ -188,7 +188,7 @@ class Forminator_Slider extends Forminator_Field {
 	 * @param array $field Field settings.
 	 * @return string
 	 */
-	private static function get_limit_block( array $field ) : string {
+	private static function get_limit_block( array $field ): string {
 		$min  = self::get_min_limit( $field );
 		$max  = self::get_max_limit( $field );
 		$show = self::get_property( 'slider_limits', $field );
@@ -212,7 +212,7 @@ class Forminator_Slider extends Forminator_Field {
 	 * @param array|null $draft_value Draft value(s).
 	 * @return string
 	 */
-	private static function create_slider( array $field, $draft_value ) : string {
+	private static function create_slider( array $field, $draft_value ): string {
 		$name     = self::get_property( 'element_id', $field );
 		$required = self::get_property( 'required', $field );
 		$min      = self::get_min_limit( $field );
@@ -274,7 +274,7 @@ class Forminator_Slider extends Forminator_Field {
 	 * @param array $field Field settings.
 	 * @return bool
 	 */
-	private static function is_range_slider( array $field ) : bool {
+	private static function is_range_slider( array $field ): bool {
 		$slider_type = self::get_property( 'slider_type', $field );
 		return 'range' === $slider_type;
 	}
@@ -285,7 +285,7 @@ class Forminator_Slider extends Forminator_Field {
 	 * @param array $field Field settings.
 	 * @return int
 	 */
-	private static function get_max_limit( array $field ) : int {
+	private static function get_max_limit( array $field ): int {
 		$slider_max = self::get_property( 'slider_max', $field );
 		if ( ! is_numeric( $slider_max ) ) {
 			$slider_max = 10;
@@ -299,7 +299,7 @@ class Forminator_Slider extends Forminator_Field {
 	 * @param array $field Field settings.
 	 * @return int
 	 */
-	private static function get_min_limit( array $field ) : int {
+	private static function get_min_limit( array $field ): int {
 		return self::get_property( 'slider_min', $field, 1, 'num' );
 	}
 
@@ -326,9 +326,9 @@ class Forminator_Slider extends Forminator_Field {
 		if ( ! $is_empty ) {
 			$max = self::get_max_limit( $field );
 			$min = self::get_min_limit( $field );
-			if ( self::is_range_slider( $field ) && (
+			if ( self::is_range_slider( $field ) && ( (
 					$min > $data['min'] || $max < $data['min'] || $min > $data['max'] || $max < $data['max'] || $data['min'] > $data['max']
-				) || ! is_array( $data ) && ( $min > $data || $max < $data ) ) {
+				) || ( ! is_array( $data ) && ( ( $min > $data ) || ( $max < $data ) ) ) ) ) {
 				$validation_message = /* translators: 1: Minimum value, 2: Maximum value */ sprintf( esc_html__( 'The slider should be less than %1$d and greater than %2$d.', 'forminator' ), $min, $max );
 
 				$this->validation_message[ $sub_id ] = sprintf(
@@ -398,5 +398,4 @@ class Forminator_Slider extends Forminator_Field {
 		 */
 		return apply_filters( 'forminator_field_slider_calculable_value', $calculable_value, $submitted_field_data, $field_settings );
 	}
-
 }

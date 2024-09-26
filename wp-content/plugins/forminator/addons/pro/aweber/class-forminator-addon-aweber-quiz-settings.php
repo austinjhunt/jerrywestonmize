@@ -1,5 +1,11 @@
 <?php
 /**
+ * The Forminator Aweber Quiz Settings.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Aweber_Quiz_Settings
  * Handle how quiz settings displayed and saved
  *

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Export Result
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -13,41 +19,58 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Export_Result {
 
 	/**
+	 * Export data.
+	 *
 	 * @var array
 	 */
 	public $data = array();
 
 	/**
+	 * Entries count
+	 *
 	 * @var int
 	 */
 	public $entries_count = 0;
 
 	/**
+	 * New entries count
+	 *
 	 * @var int
 	 */
 	public $new_entries_count = 0;
 
 	/**
+	 * Form Model Instance
+	 *
 	 * @var Forminator_Base_Form_Model | null
 	 */
 	public $model = null;
 
 	/**
+	 * Latest entry Id
+	 *
 	 * @var int
 	 */
 	public $latest_entry_id = 0;
 
 	/**
+	 * File path
+	 *
 	 * @var string
 	 */
 	public $file_path = '';
 
 	/**
+	 * Form type
+	 *
 	 * @var string
 	 */
 	public $form_type = '';
 
 
+	/**
+	 * Forminator_Export_Result Constructor
+	 */
 	public function __construct() {
 	}
 
@@ -70,8 +93,8 @@ class Forminator_Export_Result {
 		if ( ! empty( $data_range ) ) {
 			$date_ranges = explode( ' - ', $data_range );
 			if ( is_array( $date_ranges ) && isset( $date_ranges[0] ) && isset( $date_ranges[1] ) ) {
-				$date_ranges[0] = date( 'Y-m-d', strtotime( $date_ranges[0] ) );
-				$date_ranges[1] = date( 'Y-m-d', strtotime( $date_ranges[1] ) );
+				$date_ranges[0] = gmdate( 'Y-m-d', strtotime( $date_ranges[0] ) );
+				$date_ranges[1] = gmdate( 'Y-m-d', strtotime( $date_ranges[1] ) );
 
 				forminator_maybe_log( __METHOD__, $date_ranges );
 				$filters['date_created'] = array( $date_ranges[0], $date_ranges[1] );

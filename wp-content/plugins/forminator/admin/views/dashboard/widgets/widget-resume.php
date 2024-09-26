@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/dashboard/widgets/widget-resume.php
+ *
+ * @package Forminator
+ */
+
 $total_modules           = forminator_total_forms();
 $count_active            = forminator_total_forms( 'publish' );
 $forms_total_submissions = Forminator_Form_Entry_Model::count_all_entries_by_type( 'custom-forms' );

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/common/entries/content-none.php
+ *
+ * @package Forminator
+ */
+
 	$none_title = esc_html__( 'Submissions', 'forminator' );
 	$none_text  = esc_html__( 'You haven’t received any form, poll or quiz submissions yet. When you do, you’ll be able to view all the data here.', 'forminator' );
 	$form_id    = filter_input( INPUT_GET, 'form_id', FILTER_VALIDATE_INT );

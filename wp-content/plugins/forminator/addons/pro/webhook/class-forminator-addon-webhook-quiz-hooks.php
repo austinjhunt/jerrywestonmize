@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Webhook Quiz Hooks
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Webhook_Quiz_Hooks
@@ -14,7 +19,7 @@ class Forminator_Webhook_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -34,12 +39,13 @@ class Forminator_Webhook_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $connection_id
-	 * @param $submitted_data
-	 * @param $connection_settings
-	 * @param $current_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $current_entry_fields Form entry fields.
 	 *
 	 * @return array `is_sent` true means its success send data towebhook, false otherwise
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function get_status_on_send_data( $connection_id, $submitted_data, $connection_settings, $current_entry_fields ) {
 		$quiz_settings = $this->settings_instance->get_quiz_settings();
@@ -135,8 +141,8 @@ class Forminator_Webhook_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param array $quiz_entry_fields
-	 * @param array $submitted_data
+	 * @param array $quiz_entry_fields Quiz entry fields.
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return array
 	 */
@@ -173,9 +179,9 @@ class Forminator_Webhook_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 								'is_correct' => $is_correct,
 							);
 							if ( $is_correct ) {
-								$correct_answers ++;
+								++$correct_answers;
 							}
-							$total_answers ++;
+							++$total_answers;
 						}
 					} elseif ( 'nowrong' === $this->module->quiz_type ) {
 						if ( isset( $quiz_entry['value'][0] )
@@ -237,5 +243,4 @@ class Forminator_Webhook_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
 		return $sample;
 	}
-
 }

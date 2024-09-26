@@ -1,3 +1,11 @@
+<?php
+/**
+ * Template admin/views/templates/banner/wpmudev-install.php
+ *
+ * @package Forminator
+ */
+
+?>
 <div class="sui-box forminator-banner">
 	<div class="sui-box forminator-banner-content">
 		<div>

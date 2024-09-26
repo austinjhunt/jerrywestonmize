@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/quiz/entries/content-leads.php
+ *
+ * @package Forminator
+ */
+
 $form_type    = $this->get_form_type();
 $url_entry_id = filter_input( INPUT_GET, 'entry_id', FILTER_VALIDATE_INT );
 $url_entry_id = $url_entry_id ? $url_entry_id : 0;
@@ -165,20 +171,22 @@ foreach ( $this->entries_iterator() as $entries ) {
 								if ( ! empty( $meta ) ) {
 									foreach ( $meta as $answer ) {
 										if ( isset( $answer['isCorrect'] ) && $answer['isCorrect'] ) {
-											$right ++;
+											++$right;
 										}
 									}
 								}
 								?>
 
-                                <p class="sui-description">
-									<?php printf(
+								<p class="sui-description">
+									<?php
+									printf(
 									/* translators: 1: Correct answer, 2: Total */
 										esc_html__( 'You got %1$s/%2$s correct answers.', 'forminator' ),
-										$right,
-										$total
-									); ?>
-                                </p>
+										esc_html( $right ),
+										esc_html( $total )
+									);
+									?>
+								</p>
 
 								<table class="fui-entries-table">
 
@@ -271,11 +279,14 @@ foreach ( $this->entries_iterator() as $entries ) {
 											<tr>
 
 												<td colspan="2">
-													<?php printf( '<strong>%1$s<strong> %2$s',
+													<?php
+													printf(
+														'<strong>%1$s<strong> %2$s',
 														esc_html__( 'Quiz Result:', 'forminator' ),
-														$meta['result']['title']
-													); ?>
-                                                </td>
+														esc_html( $meta['result']['title'] )
+													);
+													?>
+												</td>
 
 											</tr>
 

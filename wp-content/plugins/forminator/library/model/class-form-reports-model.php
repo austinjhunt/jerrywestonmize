@@ -1,4 +1,11 @@
 <?php
+/**
+ * The Forminator_Form_Reports_Model class.
+ *
+ * Author: Hoang Ngo
+ *
+ * @package Forminator
+ */
 
 /**
  * Form Reports
@@ -46,14 +53,14 @@ class Forminator_Form_Reports_Model {
 	/**
 	 * Save reports to database
 	 *
-	 * @param $report
-	 * @param $status
+	 * @param mixed  $report Report.
+	 * @param string $status Status.
 	 *
 	 * @return int
 	 */
 	public function report_save( $report, $status ) {
 		global $wpdb;
-
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert(
 			$this->table_name,
 			array(
@@ -70,21 +77,21 @@ class Forminator_Form_Reports_Model {
 	/**
 	 * Update report
 	 *
-	 * @param $report_id
-	 * @param $report
-	 * @param $status
+	 * @param int    $report_id Report Id.
+	 * @param mixed  $report Report.
+	 * @param string $status Status.
 	 *
 	 * @return bool|int|mysqli_result|resource|null
 	 */
 	public function report_update( $report_id, $report, $status ) {
 		global $wpdb;
-
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return $wpdb->update(
 			$this->get_table_name(),
 			array(
-				'report_value'  => maybe_serialize( $report ),
-				'status'        => $status,
-				'date_updated'  => date_i18n( 'Y-m-d H:i:s' ),
+				'report_value' => maybe_serialize( $report ),
+				'status'       => $status,
+				'date_updated' => date_i18n( 'Y-m-d H:i:s' ),
 			),
 			array(
 				'report_id' => $report_id,
@@ -95,17 +102,17 @@ class Forminator_Form_Reports_Model {
 	/**
 	 * Update report data
 	 *
-	 * @param $report_id
+	 * @param int $report_id Report Id.
 	 *
 	 * @return bool|int|mysqli_result|resource|null
 	 */
 	public function report_update_date( $report_id ) {
 		global $wpdb;
-
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return $wpdb->update(
 			$this->get_table_name(),
 			array(
-				'date_updated'  => date_i18n( 'Y-m-d H:i:s' ),
+				'date_updated' => date_i18n( 'Y-m-d H:i:s' ),
 			),
 			array(
 				'report_id' => $report_id,
@@ -116,13 +123,13 @@ class Forminator_Form_Reports_Model {
 	/**
 	 * Delete Report
 	 *
-	 * @param $report_id
+	 * @param int $report_id Report Id.
 	 *
 	 * @return bool|int|mysqli_result|resource|null
 	 */
 	public function report_delete( $report_id ) {
 		global $wpdb;
-
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$result = $wpdb->delete(
 			$this->get_table_name(),
 			array(
@@ -137,7 +144,6 @@ class Forminator_Form_Reports_Model {
 			 * @param string $report_id Report ID.
 			 *
 			 * @since 1.27.0
-			 *
 			 */
 			do_action( 'forminator_after_notification_delete', $report_id );
 		}
@@ -148,13 +154,14 @@ class Forminator_Form_Reports_Model {
 	/**
 	 * Load all report data
 	 *
-	 * @since 1.20.0
+	 * @param int $id Id.
 	 *
+	 * @since 1.20.0
 	 */
 	public function fetch_all_report( $id = 0 ) {
 		global $wpdb;
-		$sql     = "SELECT * FROM {$this->get_table_name()}";
-		$results = $wpdb->get_results( $sql );
+		$table_name = $this->get_table_name();
+		$results    = $wpdb->get_results( 'SELECT * FROM ' . esc_sql( $table_name ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		return $results;
 	}
@@ -162,14 +169,15 @@ class Forminator_Form_Reports_Model {
 	/**
 	 * Load reports data by id
 	 *
-	 * @param $id
+	 * @param int $id Id.
 	 *
 	 * @return array|object|stdClass[]|null
 	 */
 	public function fetch_report_by_id( $id ) {
 		global $wpdb;
-		$sql     = "SELECT report_id, report_value, status FROM {$this->get_table_name()} WHERE report_id = %d";
-		$results = $wpdb->get_row( $wpdb->prepare( $sql, $id ) );
+		$table_name = $this->get_table_name();
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$results = $wpdb->get_row( $wpdb->prepare( 'SELECT report_id, report_value, status FROM ' . esc_sql( $table_name ) . ' WHERE report_id = %d', $id ) );
 
 		return $results;
 	}
@@ -177,14 +185,14 @@ class Forminator_Form_Reports_Model {
 	/**
 	 * Update report status
 	 *
-	 * @param $report_id
-	 * @param $status
+	 * @param int    $report_id Report Id.
+	 * @param string $status Status.
 	 *
 	 * @return bool|int|mysqli_result|resource|null
 	 */
 	public function report_update_status( $report_id, $status ) {
 		global $wpdb;
-
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$result = $wpdb->update(
 			$this->get_table_name(),
 			array(
@@ -203,7 +211,6 @@ class Forminator_Form_Reports_Model {
 			 * @param string $status Report status.
 			 *
 			 * @since 1.27.0
-			 *
 			 */
 			do_action( 'forminator_after_notification_status_update', $report_id, $status );
 		}
@@ -216,7 +223,6 @@ class Forminator_Form_Reports_Model {
 	 *
 	 * @return string
 	 * @since 1.20.0
-	 *
 	 */
 	public function get_table_name() {
 		return Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_REPORTS );
@@ -233,7 +239,7 @@ class Forminator_Form_Reports_Model {
 			$current_user = get_userdata( 1 );
 		}
 
-		$get_default  = get_option( 'forminator_default_report_entry', false );
+		$get_default = get_option( 'forminator_default_report_entry', false );
 		if ( ! $get_default ) {
 			$reports = array(
 				'exclude'       => ! empty( $current_user->ID ) ? array( $current_user->ID ) : array( 1 ),
@@ -255,7 +261,7 @@ class Forminator_Form_Reports_Model {
 						'email'  => $current_user->user_email,
 						'role'   => empty( $current_user->roles ) ? null : ucfirst( $current_user->roles[0] ),
 						'avatar' => get_avatar_url( $current_user->user_email ),
-					)
+					),
 				),
 			);
 

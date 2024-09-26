@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/settings/payments/stripe.php
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
 	'error_message'     => '',
@@ -11,24 +17,30 @@ $vars = array(
 	'live_secret'       => '',
 	'live_secret_error' => '',
 );
-/** @var array $template_vars */
+/**
+ * Template variables
+ *
+ * @var array $template_vars */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
 ?>
 
 <p class="sui-description" style="margin-top: 0; text-align: center;">
-    <?php printf(
+	<?php
+	printf(
 		/* Translators: 1. Opening <a> tag with link Stripe Forminator App, 2. closing <a> tag, 3. Opening <a> tag with link Stripe API key. */
 		esc_html__( 'Enter your Stripe API keys below to connect your account. Install the %1$sStripe Forminator App%2$s to get your Stripe API keys. See instructions on how to get your Stripe API keys %3$shere%2$s.', 'forminator' ),
 		'<a href="https://marketplace.stripe.com/apps/forminator-stripe-app" target="_blank">',
 		'</a>',
 		'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#connect-to-stripe" target="_blank">'
-    ); ?>
+	);
+	?>
 </p>
 
 <?php
 if ( ! empty( $vars['error_message'] ) ) {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
 	echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
 }
 if ( ! empty( $template_vars['has_deprecated_secret_key'] ) ) {

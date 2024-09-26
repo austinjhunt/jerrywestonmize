@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Addon Slack Form Settings.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Slack_Form_Settings
  * Handle how form settings displayed and saved
  *

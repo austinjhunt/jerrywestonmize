@@ -169,13 +169,13 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
 
         $appointment->setBookingEnd(
             new DateTimeValue(
-                DateTimeService::getCustomDateTimeObjectInUtc(
+                DateTimeService::getCustomDateTimeObject(
                     $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s')
                 )->modify('+' . $appointmentAS->getAppointmentLengthTime($appointment, $service) . ' second')
             )
         );
 
-        $appointmentRepo->updateFieldById($appointmentId, $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'), 'bookingEnd');
+        $appointmentRepo->updateFieldById($appointmentId, DateTimeService::getCustomDateTimeObjectInUtc($appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'))->format('Y-m-d H:i:s'), 'bookingEnd');
 
 
         if ($packageCustomerId) {

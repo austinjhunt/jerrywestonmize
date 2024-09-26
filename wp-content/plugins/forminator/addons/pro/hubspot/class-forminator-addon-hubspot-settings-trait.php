@@ -35,7 +35,7 @@ trait Forminator_Hubspot_Settings_Trait {
 	 *
 	 * @param array $submitted_data Submitted data.
 	 * @return array
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function map_fields( $submitted_data ) {
 		$template = forminator_addon_hubspot_dir() . 'views/settings/create-contact.php';
@@ -70,14 +70,14 @@ trait Forminator_Hubspot_Settings_Trait {
 		);
 
 		try {
-			$api           = $this->addon->get_api();
-			$lists_request = $api->get_contact_list();
+			$api            = $this->addon->get_api();
+			$lists_request  = $api->get_contact_list();
 			$lists_property = $api->get_properties();
 
 			if ( ! empty( $lists_request->lists ) ) {
 				foreach ( $lists_request->lists as $key => $data ) {
-					if ( isset( $data->listId ) && isset( $data->name ) ) {
-						$lists[ $data->listId ] = $data->name;
+					if ( isset( $data->listId ) && isset( $data->name ) ) { //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$lists[ $data->listId ] = $data->name; //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 					}
 				}
 			}
@@ -93,16 +93,16 @@ trait Forminator_Hubspot_Settings_Trait {
 			$has_errors                       = true;
 		}
 
-		$template_params['lists'] = $lists;
+		$template_params['lists']      = $lists;
 		$template_params['properties'] = $property;
-		$is_submit                = ! empty( $submitted_data );
-		$has_errors               = false;
+		$is_submit                     = ! empty( $submitted_data );
+		$has_errors                    = false;
 		if ( $is_submit ) {
-			$custom_property               = $submitted_data['custom_property'] ?? array();
-			$custom_field                  = $submitted_data['custom_field'] ?? array();
-			$custom_field_map              = array_combine( $custom_property, $custom_field );
-			$fields_map                    = $submitted_data['fields_map'] ?? array();
-			$template_params['fields_map'] = $fields_map;
+			$custom_property                      = $submitted_data['custom_property'] ?? array();
+			$custom_field                         = $submitted_data['custom_field'] ?? array();
+			$custom_field_map                     = array_combine( $custom_property, $custom_field );
+			$fields_map                           = $submitted_data['fields_map'] ?? array();
+			$template_params['fields_map']        = $fields_map;
 			$template_params['custom_fields_map'] = $custom_field_map;
 
 			try {
@@ -114,9 +114,12 @@ trait Forminator_Hubspot_Settings_Trait {
 					if ( ! empty( $fields_map[ $key ] ) ) {
 						$element_id = $fields_map[ $key ];
 						if ( ! in_array( $element_id, $forminator_field_element_ids, true ) ) {
-							$input_exceptions->add_input_exception( sprintf(
-							/* translators: %s: Field title */
-								esc_html__( 'Please assign valid field for %s', 'forminator' ), esc_html( $title ) ),
+							$input_exceptions->add_input_exception(
+								sprintf(
+								/* translators: %s: Field title */
+									esc_html__( 'Please assign valid field for %s', 'forminator' ),
+									esc_html( $title )
+								),
 								$key . '_error'
 							);
 							continue;
@@ -205,7 +208,7 @@ trait Forminator_Hubspot_Settings_Trait {
 	 *
 	 * @param array $submitted_data Submitted data.
 	 * @return array
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function create_ticket( $submitted_data ) {
 		$template = forminator_addon_hubspot_dir() . 'views/create-ticket.php';
@@ -223,7 +226,7 @@ trait Forminator_Hubspot_Settings_Trait {
 		if ( 'quiz' === static::$module_slug ) {
 			$fields = array_merge(
 				array(
-					'{quiz_name}' => __('Quiz Name', 'forminator'),
+					'{quiz_name}' => __( 'Quiz Name', 'forminator' ),
 				),
 				$fields
 			);
@@ -251,10 +254,10 @@ trait Forminator_Hubspot_Settings_Trait {
 			$template_params['token'] = $settings['token'];
 		}
 
-		$buttonID = 'ticket-activate';
+		$button_id = 'ticket-activate';
 		if ( ! empty( $settings['re-authorize'] ) ) {
 			$template_params['re-authorize'] = $settings['re-authorize'];
-			$buttonID                        = 'ticket-activated';
+			$button_id                       = 'ticket-activated';
 		}
 
 		if ( ( isset( $submitted_data['create_ticket'] ) && '1' === $submitted_data['create_ticket'] ) && empty( $settings['re-authorize'] ) ) {
@@ -276,24 +279,24 @@ trait Forminator_Hubspot_Settings_Trait {
 			$api              = $this->addon->get_api();
 			$pipeline_request = $api->get_pipeline();
 			if ( ! empty( $submitted_data['pipeline_id'] ) ) {
-				$pipelineId = $submitted_data['pipeline_id'];
+				$pipeline_id = $submitted_data['pipeline_id'];
 			} else {
-				$pipelineId = $this->get_multi_id_settings( $multi_id, 'pipeline_id', 0 );
+				$pipeline_id = $this->get_multi_id_settings( $multi_id, 'pipeline_id', 0 );
 			}
 			if ( ! empty( $pipeline_request->results ) ) {
 				$default_status = reset( $pipeline_request->results );
 				foreach ( $pipeline_request->results as $key => $data ) {
-					if ( isset( $data->pipelineId ) ) {
-						$pipeline[ $data->pipelineId ] = $data->label;
-						if ( $pipelineId === $data->pipelineId ) {
+					if ( isset( $data->pipelineId ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$pipeline[ $data->pipelineId ] = $data->label; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						if ( $pipeline_id === $data->pipelineId ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 							$pipeline_status = $data->stages;
 						} else {
 							$pipeline_status = $default_status->stages;
 						}
 						if ( ! empty( $pipeline_status ) ) {
 							foreach ( $pipeline_status as $s => $stat ) {
-								if ( isset( $stat->stageId ) ) {
-									$status[ $stat->stageId ] = $stat->label;
+								if ( isset( $stat->stageId ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+									$status[ $stat->stageId ] = $stat->label; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 								}
 							}
 						}
@@ -363,7 +366,7 @@ trait Forminator_Hubspot_Settings_Trait {
 							'ticket_name'        => $ticket_name,
 							'ticket_description' => $ticket_description,
 							'create_ticket'      => $create_ticket,
-							'supported_file'     => $supported_file
+							'supported_file'     => $supported_file,
 						)
 					);
 					$notification = array(
@@ -372,7 +375,6 @@ trait Forminator_Hubspot_Settings_Trait {
 					);
 					$is_close     = true;
 				}
-
 			} catch ( Forminator_Integration_Settings_Exception $e ) {
 				$template_params = array_merge( $template_params, $e->get_input_exceptions() );
 				$has_errors      = true;
@@ -392,10 +394,10 @@ trait Forminator_Hubspot_Settings_Trait {
 			$buttons['next']['markup']       = '<div class="sui-actions-right">' .
 				Forminator_Integration::get_button_markup( esc_html__( 'Update', 'forminator' ), 'forminator-addon-next sui-button-blue' ) .
 				'</div>';
-		} else if ( ( isset( $submitted_data['create_ticket'] ) && '1' === $submitted_data['create_ticket'] ) && empty( $settings['re-authorize'] ) ) {
+		} elseif ( ( isset( $submitted_data['create_ticket'] ) && '1' === $submitted_data['create_ticket'] ) && empty( $settings['re-authorize'] ) ) {
 			$buttons = array();
 		} else {
-			$buttons['next']['markup'] = '<div class="sui-actions-right" id="' . $buttonID . '">' .
+			$buttons['next']['markup'] = '<div class="sui-actions-right" id="' . $button_id . '">' .
 				Forminator_Integration::get_button_markup( esc_html__( 'Activate', 'forminator' ), 'forminator-addon-next sui-button-blue' ) .
 				'</div>';
 		}

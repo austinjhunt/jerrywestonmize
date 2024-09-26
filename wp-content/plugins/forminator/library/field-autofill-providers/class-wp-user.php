@@ -1,21 +1,53 @@
 <?php
+/**
+ * The Forminator_WP_User_Autofill_Provider class.
+ *
+ * @package Forminator
+ */
 
+/**
+ * Class Forminator_WP_User_Autofill_Provider
+ */
 class Forminator_WP_User_Autofill_Provider extends Forminator_Autofill_Provider_Abstract {
-	protected $_slug       = 'wp_user';
-	protected $_name       = 'WordPress User';
+
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
+	protected $_slug = 'wp_user';
+
+	/**
+	 * Name
+	 *
+	 * @var string
+	 */
+	protected $_name = 'WordPress User';
+
+	/**
+	 * Short name
+	 *
+	 * @var string
+	 */
 	protected $_short_name = 'WP User';
 
 	/**
+	 * WP User
+	 *
 	 * @var WP_User
 	 */
 	private $wp_user;
 
 	/**
+	 * Forminator_WP_User_Autofill_Provider Instance
+	 *
 	 * @var self|null
 	 */
 	private static $_instance = null;
 
 	/**
+	 * Get instance
+	 *
 	 * @return Forminator_Autofill_Provider_Interface|Forminator_WP_User_Autofill_Provider|null
 	 */
 	public static function get_instance() {
@@ -194,6 +226,8 @@ class Forminator_WP_User_Autofill_Provider extends Forminator_Autofill_Provider_
 	}
 
 	/**
+	 * Get nice name
+	 *
 	 * @return string
 	 */
 	public function get_value_nicename() {
@@ -210,6 +244,8 @@ class Forminator_WP_User_Autofill_Provider extends Forminator_Autofill_Provider_
 	}
 
 	/**
+	 * Get display name
+	 *
 	 * @return string
 	 */
 	public function get_value_display_name() {

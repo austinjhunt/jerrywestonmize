@@ -1,3 +1,11 @@
+<?php
+/**
+ * Template admin/views/common/entries/active_filters_row.php
+ *
+ * @package Forminator
+ */
+
+?>
 <div class="sui-box-body fui-box-actions-filters">
 
 	<label class="sui-label"><?php esc_html_e( 'Active Filters', 'forminator' ); ?></label>
@@ -103,7 +111,7 @@
 				printf(
 				/* translators: %s: Entry status */
 					esc_html__( 'Entry status: %s', 'forminator' ),
-					$entry_status
+					esc_html( $entry_status )
 				);
 				?>
 				<button class="sui-active-filter-remove" type="submit" name="entry_status" value="">

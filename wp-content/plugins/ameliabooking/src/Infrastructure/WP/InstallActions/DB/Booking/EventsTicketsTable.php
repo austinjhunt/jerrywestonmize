@@ -34,6 +34,7 @@ class EventsTicketsTable extends AbstractDatabaseTable
                    `price` double DEFAULT 0,
                    `dateRanges` TEXT NULL DEFAULT NULL,
                    `spots` int(11) NOT NULL,
+                   `waitingListSpots` int(11) NOT NULL,
                    `translations` TEXT NULL DEFAULT NULL,
                     PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/common/entries/prompt.php
+ *
+ * @package Forminator
+ */
+
 if ( ! FORMINATOR_PRO ) {
 	$submission               = $args['submissions'];
 	$form_id                  = $this->form_id;
@@ -9,7 +15,7 @@ if ( ! FORMINATOR_PRO ) {
 	$min_submissions          = isset( $args['min_submissions'] ) ? $args['min_submissions'] : 10;
 	if ( ! $notice_dismissed && ! $notice_success ) {
 		if ( ( $min_submissions < $submission && 100 >= $submission && ! $submission_later )
-			 || ( 100 < $submission && ! $submission_later_dismiss ) ) { ?>
+			|| ( 100 < $submission && ! $submission_later_dismiss ) ) { ?>
 			<div
 				role="alert"
 				class="sui-notice sui-notice-purple sui-active forminator-rating-notice fui-notice-rate<?php echo forminator_is_show_branding() ? '' : ' fui-unbranded'; ?>"

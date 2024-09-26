@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator API
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -13,17 +19,23 @@ class Forminator_API {
 
 	const MAX_CUSTOM_FORM_FIELDS_PER_WRAPPER = 4;
 
+	/**
+	 * Initialize
+	 *
+	 * @param bool $admin_files Admin files?.
+	 * @return void
+	 */
 	public static function initialize( $admin_files = false ) {
 		// If models are not initialized, init the plugin.
 		if ( ! class_exists( 'Forminator_Form_Model' ) ) {
-			/** @noinspection PhpUnusedLocalVariableInspection */
+			/* @noinspection PhpUnusedLocalVariableInspection */
 			$forminator = forminator();
 		}
 		if ( $admin_files ) {
-			include_once dirname( dirname( __FILE__ ) ) . '/admin/abstracts/class-admin-module.php';
-			include_once dirname( __FILE__ ) . '/modules/custom-forms/admin/admin-loader.php';
-			include_once dirname( __FILE__ ) . '/modules/polls/admin/admin-loader.php';
-			include_once dirname( __FILE__ ) . '/modules/quizzes/admin/admin-loader.php';
+			include_once dirname( __DIR__ ) . '/admin/abstracts/class-admin-module.php';
+			include_once __DIR__ . '/modules/custom-forms/admin/admin-loader.php';
+			include_once __DIR__ . '/modules/polls/admin/admin-loader.php';
+			include_once __DIR__ . '/modules/quizzes/admin/admin-loader.php';
 		}
 	}
 
@@ -35,10 +47,11 @@ class Forminator_API {
 	 * @since      1.6 add status arguments
 	 * @access     public
 	 *
-	 * @param null|array $form_ids
-	 * @param int        $page
-	 * @param int        $per_page
+	 * @param null|array $form_ids Form Id.
+	 * @param int        $page Page number.
+	 * @param int        $per_page Limit per page.
 	 * @param string     $status (draft,publish,any).
+	 * @param null|int   $pdf_parent_id PDF parent Id.
 	 *
 	 * @return Forminator_Form_Model[]|WP_Error
 	 */
@@ -66,8 +79,8 @@ class Forminator_API {
 
 			foreach ( $form_ids as $form_id ) {
 				$model = self::get_module( $form_id );
-				if ( ! $model instanceof WP_Error
-						&& ( is_array( $status ) && in_array( $model->status, $status, true ) || $status === $model->status ) ) {
+				if ( ! ( $model instanceof WP_Error )
+						&& ( ( is_array( $status ) && in_array( $model->status, $status, true ) ) || $status === $model->status ) ) {
 					$temp[] = $model;
 				}
 			}
@@ -123,8 +136,6 @@ class Forminator_API {
 	 * @access public
 	 *
 	 * @param int $form_id ID of the form.
-	 *
-	 * @return bool|WP_Error True when successfully deleted | WP Error
 	 */
 	public static function delete_form( $form_id ) {
 		self::delete_module( $form_id );
@@ -151,9 +162,7 @@ class Forminator_API {
 	 * @since        1.2
 	 * @access       public
 	 *
-	 * @param  array|... $form_ids array of Form IDs.
-	 *
-	 * @return bool|WP_Error True when successfully deleted | WP Error
+	 * @param  array $form_ids Array of Form IDs.
 	 */
 	public static function delete_forms( $form_ids ) {
 		self::delete_modules( $form_ids );
@@ -165,9 +174,7 @@ class Forminator_API {
 	 * @since        1.14.11
 	 * @access       public
 	 *
-	 * @param  array|... $module_ids array of Module IDs.
-	 *
-	 * @return bool|WP_Error True when successfully deleted | WP Error
+	 * @param  array $module_ids Array of Module IDs.
 	 */
 	public static function delete_modules( $module_ids ) {
 		if ( ! is_array( $module_ids ) ) {
@@ -271,7 +278,7 @@ class Forminator_API {
 	 * @since  1.5.0
 	 * @access public
 	 *
-	 * @param  number
+	 * @param int $id Form Id.
 	 *
 	 * @return array|WP_Error
 	 */
@@ -305,8 +312,8 @@ class Forminator_API {
 	 * @since  1.5.0
 	 * @access public
 	 *
-	 * @param $form_id int.
-	 * @param $id      int.
+	 * @param int $form_id Form Id.
+	 * @param int $id Wrapper Id.
 	 *
 	 * @return array|WP_Error
 	 */
@@ -343,11 +350,11 @@ class Forminator_API {
 	 *
 	 * @since 1.5
 	 *
-	 * @param int    $form_id
-	 * @param string $id
-	 * @param string $new_position negative value or  greater than size of wrappers will move it to the end.
+	 * @param int    $form_id Form Id.
+	 * @param string $id Wrapper Id.
+	 * @param string $new_position negative value or greater than size of wrappers will move it to the end.
 	 *                             if value passed is not `int` it will type cast-ed into `int`.
-	 *                             Start from zero (0)
+	 *                             Start from zero (0).
 	 *
 	 * @return array|WP_Error
 	 */
@@ -417,7 +424,6 @@ class Forminator_API {
 		}
 
 		return self::get_form_wrapper( $form_id, $id );
-
 	}
 
 	/**
@@ -426,8 +432,8 @@ class Forminator_API {
 	 * @since  1.5.0
 	 * @access public
 	 *
-	 * @param $form_id int.
-	 * @param $id      int.
+	 * @param int    $form_id Form Id.
+	 * @param string $id Wrapper Id.
 	 *
 	 * @return bool|WP_Error
 	 */
@@ -473,7 +479,7 @@ class Forminator_API {
 	 * @since  1.5.0
 	 * @access public
 	 *
-	 * @param  number
+	 * @param int $id Form Id.
 	 *
 	 * @return array|WP_Error
 	 */
@@ -507,8 +513,8 @@ class Forminator_API {
 	 * @since  1.5.0
 	 * @access public
 	 *
-	 * @param  int
-	 * @param  string
+	 * @param int    $id Form Id.
+	 * @param string $type Field type.
 	 *
 	 * @return array|WP_Error
 	 */
@@ -542,8 +548,8 @@ class Forminator_API {
 	 * @since  1.5.0
 	 * @access public
 	 *
-	 * @param int    $form_id
-	 * @param string $id
+	 * @param int    $form_id Form id.
+	 * @param string $id Wrapper Id.
 	 * @param bool   $to_array whether to return as array or Forminator_Form_Field_Model.
 	 *
 	 * @return array|Forminator_Form_Field_Model|WP_Error
@@ -660,11 +666,11 @@ class Forminator_API {
 	 * @access public
 	 *
 	 * @param int         $form_id Form ID.
-	 * @param string      $type
+	 * @param string      $type Field Type.
 	 * @param array       $data    Array with field settings.
 	 * @param string|null $wrapper if omitted it will create new wrapper,.
 	 *                             if specified it will check its existence on form,
-	 *                             when its non existence, it will create new wrapper automatically
+	 *                             when its non existence, it will create new wrapper automatically.
 	 *
 	 * @return string|WP_Error id of new field, or WP_Error on failure
 	 */
@@ -755,8 +761,8 @@ class Forminator_API {
 	 * @since  1.5
 	 * @access public
 	 *
-	 * @param int             $form_id
-	 * @param string          $id
+	 * @param int             $form_id Form Id.
+	 * @param string          $id Wrapper Id.
 	 * @param null            $new_position   negative value or  greater than size MAX_CUSTOM_FORM_FIELDS_PER_WRAPPER will move it to the end.
 	 *                                        if value passed is not `int` it will type cast-ed into `int`.
 	 *                                        Start from Zero (0).
@@ -765,7 +771,7 @@ class Forminator_API {
 	 *                                        If its specified, this function will check its existences on form.
 	 *                                        When wrapper exist, it will move field to $position inside that $new_wrapper_id,
 	 *                                        When wrapper not exist, it will return WP_Error
-	 *                                        Negative value will make a new wrapper at bottom, and move field into this newly created wrapper
+	 *                                        Negative value will make a new wrapper at bottom, and move field into this newly created wrapper.
 	 *
 	 * @return array|WP_Error moved field on success, or WP_Error on failure
 	 */
@@ -865,7 +871,7 @@ class Forminator_API {
 			unset( $old_wrapper['fields'][ $old_position ] );
 			$old_wrapper_fields = $old_wrapper['fields'];
 
-			// move!!
+			// move!
 			array_splice( $old_wrapper_fields, $new_position, 0, array( $field ) );
 			$old_wrapper['fields'] = $old_wrapper_fields;
 
@@ -930,8 +936,8 @@ class Forminator_API {
 	 * @since  1.5.0
 	 * @access public
 	 *
-	 * @param $form_id   int.
-	 * @param $field_ids array.
+	 * @param int   $form_id Form Id.
+	 * @param array $field_ids Field Ids.
 	 *
 	 * @return bool|WP_Error
 	 */
@@ -956,8 +962,8 @@ class Forminator_API {
 	 * @since  1.5.0
 	 * @access public
 	 *
-	 * @param $form_id int.
-	 * @param $id      int.
+	 * @param int $form_id Form Id.
+	 * @param int $id Field Id.
 	 *
 	 * @return string|WP_Error
 	 */
@@ -1074,10 +1080,10 @@ class Forminator_API {
 	 * @since            1.5.4 add pagination arguments
 	 * @access           public
 	 *
-	 * @param array|null| $poll_ids
-	 * @param int         $page
-	 * @param int         $per_page
-	 * @param string      $status (draft,publish,any).
+	 * @param array|null $poll_ids Poll Ids.
+	 * @param int        $page Page number.
+	 * @param int        $per_page Limit per page.
+	 * @param string     $status (draft,publish,any).
 	 *
 	 * @return Forminator_Poll_Model[]|WP_Error
 	 */
@@ -1131,8 +1137,6 @@ class Forminator_API {
 	 * @access public
 	 *
 	 * @param int $poll_id ID of the poll.
-	 *
-	 * @return bool|WP_Error True when successfully deleted | WP Error
 	 */
 	public static function delete_poll( $poll_id ) {
 		self::delete_module( $poll_id );
@@ -1145,8 +1149,6 @@ class Forminator_API {
 	 * @access public
 	 *
 	 * @param int $poll_ids Array with IDs.
-	 *
-	 * @return bool|WP_Error True when successfully deleted | WP Error
 	 */
 	public static function delete_polls( $poll_ids ) {
 		self::delete_modules( $poll_ids );
@@ -1230,10 +1232,10 @@ class Forminator_API {
 	 * @since      1.6.2 add $status on args
 	 * @access     public
 	 *
-	 * @param array|null $quiz_ids
-	 * @param int        $page
-	 * @param int        $per_page
-	 * @param string     $status
+	 * @param array|null $quiz_ids Quiz Ids.
+	 * @param int        $page Page number.
+	 * @param int        $per_page Limit per page.
+	 * @param string     $status Status.
 	 *
 	 * @return Forminator_Quiz_Model[]|WP_Error
 	 */
@@ -1287,8 +1289,6 @@ class Forminator_API {
 	 * @access public
 	 *
 	 * @param int $quiz_id ID of the quiz.
-	 *
-	 * @return bool|WP_Error True when successfully deleted | WP Error
 	 */
 	public static function delete_quiz( $quiz_id ) {
 		self::delete_module( $quiz_id );
@@ -1301,8 +1301,6 @@ class Forminator_API {
 	 * @access public
 	 *
 	 * @param array $quiz_ids Array with IDs.
-	 *
-	 * @return bool|WP_Error True when successfully deleted | WP Error
 	 */
 	public static function delete_quizzes( $quiz_ids ) {
 		self::delete_modules( $quiz_ids );
@@ -1434,8 +1432,8 @@ class Forminator_API {
 	 *
 	 * @since 1.2
 	 *
-	 * @param $form_id
-	 * @param $entry_id
+	 * @param int $form_id Form Id.
+	 * @param int $entry_id Entry Id.
 	 *
 	 * @return Forminator_Form_Entry_Model|WP_Error
 	 */
@@ -1463,8 +1461,8 @@ class Forminator_API {
 	 *
 	 * @since 1.2
 	 *
-	 * @param $form_id
-	 * @param $entry_id
+	 * @param int $form_id Form Id.
+	 * @param int $entry_id Entry Id.
 	 *
 	 * @return bool|WP_Error
 	 */
@@ -1495,8 +1493,8 @@ class Forminator_API {
 	 *
 	 * @since 1.2
 	 *
-	 * @param $form_id
-	 * @param $entries_ids
+	 * @param int   $form_id Form Id.
+	 * @param mixed $entries_ids Entry Ids.
 	 *
 	 * @return bool|WP_Error
 	 */
@@ -1532,7 +1530,7 @@ class Forminator_API {
 	 *
 	 * @since 1.2
 	 *
-	 * @param $form_id
+	 * @param int $form_id Form Id.
 	 *
 	 * @return int|WP_Error
 	 */
@@ -1583,8 +1581,8 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.2
 	 *
-	 * @param int $form_id
-	 * @param int $entry_id
+	 * @param int $form_id Form Id.
+	 * @param int $entry_id Entry Id.
 	 *
 	 * @return bool|WP_Error
 	 */
@@ -1613,7 +1611,7 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.2
 	 *
-	 * @param  $form_id
+	 * @param int $form_id Form Id.
 	 *
 	 * @return int|WP_Error
 	 */
@@ -1656,8 +1654,8 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.2
 	 *
-	 * @param int $poll_id
-	 * @param int $entry_id
+	 * @param int $poll_id Poll Id.
+	 * @param int $entry_id Entry Id.
 	 *
 	 * @return bool|WP_Error
 	 */
@@ -1671,7 +1669,7 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.2
 	 *
-	 * @param int          $poll_id
+	 * @param int          $poll_id Poll Id.
 	 * @param array|string $entry_ids entry IDs in an array, or string separated with `,`(comma).
 	 *
 	 * @return bool|WP_Error
@@ -1686,7 +1684,7 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.2
 	 *
-	 * @param int $poll_id
+	 * @param int $poll_id Poll Id.
 	 *
 	 * @return int|WP_Error
 	 */
@@ -1729,8 +1727,8 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.2
 	 *
-	 * @param int $quiz_id
-	 * @param int $entry_id
+	 * @param int $quiz_id Quiz Id.
+	 * @param int $entry_id Entry Id.
 	 *
 	 * @return bool|WP_Error
 	 */
@@ -1744,8 +1742,8 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.2
 	 *
-	 * @param int   $quiz_id
-	 * @param array $entry_ids
+	 * @param int   $quiz_id Quiz id.
+	 * @param array $entry_ids Entry Ids.
 	 *
 	 * @return bool|WP_Error
 	 */
@@ -1759,7 +1757,7 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.2
 	 *
-	 * @param int $quiz_id
+	 * @param int $quiz_id Quiz id.
 	 *
 	 * @return int|WP_Error
 	 */
@@ -1773,7 +1771,7 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int   $form_id
+	 * @param int   $form_id Form id.
 	 * @param array $entry_meta ['name' => 'META_NAME', 'value' => 'META_VALUE'].
 	 *
 	 * @return int|WP_Error
@@ -1794,7 +1792,7 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int   $form_id
+	 * @param int   $form_id Form Id.
 	 * @param array $entry_metas nested array entry meta.
 	 *
 	 * @see    Forminator_API::add_form_entry()
@@ -1817,8 +1815,8 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int   $form_id
-	 * @param int   $entry_id
+	 * @param int   $form_id Form id.
+	 * @param int   $entry_id Entry Id.
 	 * @param array $entry_meta ['name' => 'META_NAME', 'value' => 'META_VALUE'].
 	 *
 	 * @return bool|WP_Error
@@ -1839,7 +1837,7 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int   $poll_id
+	 * @param int   $poll_id Poll Id.
 	 * @param array $entry_meta ['name' => 'META_NAME', 'value' => 'META_VALUE'].
 	 *
 	 * @return int|WP_Error
@@ -1860,7 +1858,7 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int   $poll_id
+	 * @param int   $poll_id Poll Id.
 	 * @param array $entry_metas nested array entry meta.
 	 *
 	 * @see    Forminator_API::add_form_entry()
@@ -1883,8 +1881,8 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int   $poll_id
-	 * @param int   $entry_id
+	 * @param int   $poll_id Poll Id.
+	 * @param int   $entry_id Entry id.
 	 * @param array $entry_meta ['name' => 'META_NAME', 'value' => 'META_VALUE'].
 	 *
 	 * @return bool|WP_Error
@@ -1905,7 +1903,7 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int   $quiz_id
+	 * @param int   $quiz_id Quiz Id.
 	 * @param array $entry_meta ['name' => 'META_NAME', 'value' => 'META_VALUE'].
 	 *
 	 * @return int|WP_Error
@@ -1926,7 +1924,7 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int   $quiz_id
+	 * @param int   $quiz_id Quiz Id.
 	 * @param array $entry_metas nested array entry meta.
 	 *
 	 * @see    Forminator_API::add_form_entry()
@@ -1949,8 +1947,8 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int   $quiz_id
-	 * @param int   $entry_id
+	 * @param int   $quiz_id Quiz Id.
+	 * @param int   $entry_id Entry Id.
 	 * @param array $entry_meta ['name' => 'META_NAME', 'value' => 'META_VALUE'].
 	 *
 	 * @return bool|WP_Error
@@ -1973,9 +1971,9 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int    $module_id
+	 * @param int    $module_id Module Id.
 	 * @param string $entry_type available : `custom-forms`, `poll`, `quizzes`.
-	 * @param array  $entry_meta
+	 * @param array  $entry_meta Entry meta data.
 	 *
 	 * @return int|WP_Error
 	 */
@@ -2017,9 +2015,9 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int    $module_id
-	 * @param string $entry_type
-	 * @param array  $entry_metas nested entry_meta.
+	 * @param int    $module_id Module Id.
+	 * @param string $entry_type Entry type.
+	 * @param array  $entry_metas Nested entry meta.
 	 *
 	 * @see    Forminator_API::add_entry()
 	 *
@@ -2050,9 +2048,9 @@ class Forminator_API {
 	 * @access public
 	 * @since  1.5
 	 *
-	 * @param int   $module_id
-	 * @param int   $entry_id
-	 * @param array $entry_meta
+	 * @param int   $module_id Module Id.
+	 * @param int   $entry_id Entry Id.
+	 * @param array $entry_meta Entry Meta.
 	 *
 	 * @return bool|Forminator_Form_Entry_Model|WP_Error
 	 */

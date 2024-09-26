@@ -98,6 +98,8 @@ class RejectBookingRemotelyCommandHandler extends CommandHandler
 
         $status = BookingStatus::REJECTED;
 
+        do_action('amelia_before_booking_rejected_link', $booking ? $booking->toArray() : null);
+
         try {
             $bookingData = $reservationService->updateStatus($booking, $status);
 
@@ -121,6 +123,8 @@ class RejectBookingRemotelyCommandHandler extends CommandHandler
 
         if ($notificationSettings['rejectSuccessUrl'] && $result->getResult() === CommandResult::RESULT_SUCCESS) {
             $result->setUrl($notificationSettings['rejectSuccessUrl']);
+
+            do_action('amelia_after_booking_rejected_link', $booking ? $booking->toArray() : null);
         } elseif ($notificationSettings['rejectErrorUrl'] && $result->getResult() === CommandResult::RESULT_ERROR) {
             $result->setUrl($notificationSettings['rejectErrorUrl']);
         } else {

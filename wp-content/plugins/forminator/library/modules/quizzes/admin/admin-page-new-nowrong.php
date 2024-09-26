@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Quiz_New_NoWrong class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -29,7 +35,7 @@ class Forminator_Quiz_New_NoWrong extends Forminator_Admin_Page {
 	 * Add page screen hooks
 	 *
 	 * @since 1.6.2
-	 * @param $hook
+	 * @param string $hook Hook.
 	 */
 	public function enqueue_scripts( $hook ) {
 		// Load admin scripts.
@@ -46,12 +52,12 @@ class Forminator_Quiz_New_NoWrong extends Forminator_Admin_Page {
 			true
 		);
 
-		// Remove default WordPress jQuery touch punch
-		wp_deregister_script('jquery-touch-punch');
-		// Register new modified jQuery touch punch script
-		wp_register_script('jquery-touch-punch', forminator_plugin_url() . 'assets/js/library/jquery.ui.touch-punch.min.js', array( 'jquery-ui-core', 'jquery-ui-mouse' ), FORMINATOR_VERSION, true);
-		// Enqueue the script
-		wp_enqueue_script('jquery-touch-punch');
+		// Remove default WordPress jQuery touch punch.
+		wp_deregister_script( 'jquery-touch-punch' );
+		// Register new modified jQuery touch punch script.
+		wp_register_script( 'jquery-touch-punch', forminator_plugin_url() . 'assets/js/library/jquery.ui.touch-punch.min.js', array( 'jquery-ui-core', 'jquery-ui-mouse' ), FORMINATOR_VERSION, true );
+		// Enqueue the script.
+		wp_enqueue_script( 'jquery-touch-punch' );
 		forminator_common_admin_enqueue_scripts( true );
 	}
 }

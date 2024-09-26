@@ -1,5 +1,13 @@
+<?php
+/**
+ * Template admin/views/templates/cloud/listings.php
+ *
+ * @package Forminator
+ */
+
+?>
 <div class="sui-box-header">
-    <h2 class="sui-box-title"><?php esc_html_e( 'Cloud Templates', 'forminator' ); ?></h2>
+	<h2 class="sui-box-title"><?php esc_html_e( 'Cloud Templates', 'forminator' ); ?></h2>
 </div>
 <div class="sui-box-body">
 	<div class="sui-box-settings-row sui-flushed">
@@ -87,9 +95,9 @@
 
 <div class="sui-box sui-message sui-message-lg" id="forminator-no-cloud-result" style="display: none;">
 	<img src="<?php echo esc_url( forminator_plugin_url() . 'assets/images/forminator-no-result.png' ); ?>"
-		 srcset="<?php echo esc_url( forminator_plugin_url() . 'assets/images/forminator-no-result.png' ); ?> 1x, <?php echo esc_url( forminator_plugin_url() . 'assets/images/forminator-no-result@2x.png' ); ?> 2x"
-		 alt="<?php esc_attr_e( 'Forminator no result', 'forminator' ); ?>"
-		 class="sui-image sui-image-center fui-image">
+		srcset="<?php echo esc_url( forminator_plugin_url() . 'assets/images/forminator-no-result.png' ); ?> 1x, <?php echo esc_url( forminator_plugin_url() . 'assets/images/forminator-no-result@2x.png' ); ?> 2x"
+		alt="<?php esc_attr_e( 'Forminator no result', 'forminator' ); ?>"
+		class="sui-image sui-image-center fui-image">
 	<div class="sui-message-content">
 		<h3 data-title="<?php esc_attr_e( 'No result for “{search_text}”', 'forminator' ); ?>"></h3>
 		<p>

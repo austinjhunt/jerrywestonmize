@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Integration_Settings class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Integration_Settings
@@ -129,26 +134,26 @@ abstract class Forminator_Integration_Settings {
 	/**
 	 * Replace '-' to '_' in keys because some integrations don't support dashes like tray.io and workato.
 	 *
-	 * @param array  $array Original array.
+	 * @param array  $array_value Original array.
 	 * @param string $endpoint Endpoint URL.
 	 */
-	public static function replace_dashes_in_keys( $array, $endpoint ) {
+	public static function replace_dashes_in_keys( $array_value, $endpoint ) {
 		// don't do it for zapier for backward compatibility.
 		if ( strpos( $endpoint, 'zapier' ) ) {
-			return $array;
+			return $array_value;
 		}
 
-		foreach ( $array as $key => $value ) {
+		foreach ( $array_value as $key => $value ) {
 			if ( is_array( $value ) ) {
 				// Replace it recursively.
 				$value = self::replace_dashes_in_keys( $value, $endpoint );
 			}
-			unset( $array[ $key ] );
-			$new_key           = str_replace( '-', '_', $key );
-			$array[ $new_key ] = $value;
+			unset( $array_value[ $key ] );
+			$new_key                 = str_replace( '-', '_', $key );
+			$array_value[ $new_key ] = $value;
 		}
 
-		return $array;
+		return $array_value;
 	}
 
 	/**
@@ -276,8 +281,7 @@ abstract class Forminator_Integration_Settings {
 	 * @param array $post_data POST data.
 	 *
 	 * @return array current addon form settings
-	 * @throws Forminator_Integration_Exception
-	 * @throws Forminator_Integration_Settings_Exception
+	 * @throws Forminator_Integration_Exception When there is an integration error.
 	 */
 	public function step_map_fields_validate( $addon_fields_list, $post_data ) {
 		$form_fields                  = $this->get_fields_for_type();
@@ -467,7 +471,7 @@ abstract class Forminator_Integration_Settings {
 	 *
 	 * @return bool
 	 */
-	public function is_multi_id_completed( string $multi_id ) : bool {
+	public function is_multi_id_completed( string $multi_id ): bool {
 		$data  = array( 'multi_id' => $multi_id );
 		$steps = wp_list_pluck( $this->module_settings_wizards(), 'is_completed' );
 
@@ -560,7 +564,7 @@ abstract class Forminator_Integration_Settings {
 	 *
 	 * @return array
 	 */
-	public function get_multi_ids() : array {
+	public function get_multi_ids(): array {
 		$multi_ids       = array();
 		$settings_values = $this->get_settings_values();
 		foreach ( $settings_values as $key => $value ) {
@@ -586,13 +590,13 @@ abstract class Forminator_Integration_Settings {
 	 *
 	 * @since 1.2
 	 *
-	 * @param        $multi_id
-	 * @param        $key
-	 * @param mixed  $default
+	 * @param int    $multi_id Multi Id.
+	 * @param string $key key.
+	 * @param mixed  $default_value Default value.
 	 *
 	 * @return mixed|string
 	 */
-	public function get_multi_id_settings( $multi_id, $key, $default = '' ) {
+	public function get_multi_id_settings( $multi_id, $key, $default_value = '' ) {
 		$this->addon_settings = $this->get_settings_values();
 		if ( isset( $this->addon_settings[ $multi_id ] ) ) {
 			$multi_settings = $this->addon_settings[ $multi_id ];
@@ -600,12 +604,19 @@ abstract class Forminator_Integration_Settings {
 				return $multi_settings[ $key ];
 			}
 
-			return $default;
+			return $default_value;
 		}
 
-		return $default;
+		return $default_value;
 	}
 
+	/**
+	 * Properties exist
+	 *
+	 * @param mixed $submitted_data Submitted data.
+	 * @param mixed $properties Properties.
+	 * @return bool
+	 */
 	protected function if_properties_exist( $submitted_data, $properties ) {
 		$multi_id = $submitted_data['multi_id'] ?? '';
 
@@ -655,9 +666,9 @@ abstract class Forminator_Integration_Settings {
 	 *
 	 * @since 1.2
 	 *
-	 * @param      $multi_id
-	 * @param      $settings
-	 * @param bool     $replace
+	 * @param int   $multi_id Multi id.
+	 * @param array $settings Settings.
+	 * @param bool  $replace Replace.
 	 */
 	public function save_multi_id_setting_values( $multi_id, $settings, $replace = false ) {
 		$this->addon_settings = $this->get_settings_values();
@@ -794,7 +805,7 @@ abstract class Forminator_Integration_Settings {
 	 *
 	 * @return array
 	 */
-	protected function get_prepared_lists():array {
+	protected function get_prepared_lists(): array {
 		try {
 			$lists = $this->addon->get_api()->get_all_lists();
 			$lists = wp_list_pluck( $lists, 'name', 'id' );

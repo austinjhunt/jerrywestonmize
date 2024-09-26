@@ -1,5 +1,11 @@
 <?php
 /**
+ * The Forminator_Assets_Enqueue_Form class.
+ *
+ * @package Forminator
+ */
+
+/**
  * Conditionally load assets class
  *
  * @since 1.11
@@ -32,6 +38,8 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 	/**
 	 * Enqueue form scripts
 	 *
+	 * @param mixed $render_obj Render Object.
+	 *
 	 * @since 1.11
 	 */
 	public function enqueue_scripts( $render_obj ) {
@@ -58,8 +66,8 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 
 		// FIELD: calculation picker.
 		if ( $render_obj->has_field_type( 'calculation' )
-			 || $render_obj->has_field_type( 'currency' )
-			 || $render_obj->has_field_type( 'number' ) ) {
+			|| $render_obj->has_field_type( 'currency' )
+			|| $render_obj->has_field_type( 'number' ) ) {
 			$this->load_number_scripts();
 		}
 	}
@@ -106,6 +114,7 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 	}
 
 	/**
+	 * Load full styles
 	 *
 	 * @param object $render_obj Forminator_CForm_Front object.
 	 */
@@ -306,6 +315,8 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 	/**
 	 * Load styles and scripts for fields with select element.
 	 *
+	 * @param mixed $render_obj Render object.
+	 *
 	 * @since 1.14.10
 	 */
 	public function load_select_styles( $render_obj ) {
@@ -347,6 +358,11 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 		}
 	}
 
+	/**
+	 * Load select scripts.
+	 *
+	 * @param mixed $render_obj Render object.
+	 */
 	public function load_select_scripts( $render_obj ) {
 		$form_design = $this->get_module_design();
 		if ( 'none' === $form_design ) {

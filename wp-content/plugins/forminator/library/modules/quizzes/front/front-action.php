@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Quiz_Front_Action class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -40,7 +46,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 	 * @since 1.1 refactor $_POST to get_post_data to be able pre-processed
 	 * @since 1.6.2 add $is_preview as arg
 	 *
-	 * @param bool $is_preview
+	 * @param bool $is_preview Is preview.
 	 */
 	public function submit_quizzes( $is_preview = false ) {
 		$this->init_properties(
@@ -56,7 +62,10 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 			self::$prepared_data['current_url'] = forminator_get_current_url();
 		}
 
-		/** @var  Forminator_Quiz_Model $model */
+		/**
+		 * Forminator_Quiz_Model
+		 *
+		 * @var  Forminator_Quiz_Model $model */
 		$this->model = Forminator_Base_Form_Model::get_model( self::$module_id );
 
 		if ( ! is_object( $this->model ) ) {
@@ -76,15 +85,12 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 		do_action( 'forminator_before_submit_quizzes', $this->model, $is_preview );
 
 		if ( 'nowrong' === $this->model->quiz_type ) {
-			$this->_process_nowrong_submit( $this->model, $is_preview );
+			$this->process_nowrong_submit( $this->model, $is_preview );
+		} elseif ( ! isset( $this->model->settings['results_behav'] ) || 'end' !== $this->model->settings['results_behav'] ) { // Real time results - 1 answer only.
+			$this->process_knowledge_submit( $this->model, $is_preview );
+			// On submission results - multiple answers.
 		} else {
-			// Real time results - 1 answer only.
-			if ( ! isset( $this->model->settings['results_behav'] ) || 'end' !== $this->model->settings['results_behav'] ) {
-				$this->_process_knowledge_submit( $this->model, $is_preview );
-				// On submission results - multiple answers.
-			} else {
-				$this->_process_knowledge_submit_multiple_answers( $this->model, $is_preview );
-			}
+			$this->process_knowledge_submit_multiple_answers( $this->model, $is_preview );
 		}
 	}
 
@@ -108,17 +114,17 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 	 * @since 1.0
 	 * @since 1.6.2 add $is_preview as arg
 	 *
-	 * @param Forminator_Quiz_Model $model
-	 * @param bool                  $is_preview
+	 * @param Forminator_Quiz_Model $model Quiz model.
+	 * @param bool                  $is_preview Is preview.
 	 */
-	private function _process_nowrong_submit( $model, $is_preview = false ) {
-		//counting the result
+	private function process_nowrong_submit( $model, $is_preview = false ) {
+		// counting the result.
 		$results     = array();
 		$result_data = array();
 
 		if ( isset( self::$prepared_data['answers'] ) ) {
 			foreach ( self::$prepared_data['answers'] as $id => $answer ) {
-				// collecting the results from answer
+				// collecting the results from answer.
 				$results[]                = $model->getResultFromAnswer( $id, $answer );
 				$question                 = $model->getQuestion( $id );
 				$a                        = $model->getAnswer( $id, $answer );
@@ -130,7 +136,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 		}
 
 		/**
-		 * collecting the results from answer with count as values
+		 * Collecting the results from answer with count as values
 		 * {
 		 *      'result-id-1' => `COUNT`,
 		 *      'result-id-2' => `COUNT`,
@@ -150,7 +156,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 			);
 		}
 
-		$entry = $this->_save_entry(
+		$entry = $this->save_form_entry(
 			$model,
 			// why on earth it saved like this.
 			array(
@@ -168,11 +174,11 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 		$result->set_entry( $entry_id );
 		$result->set_postdata();
 
-		// Email
+		// Email.
 		$forminator_mail_sender = new Forminator_Quiz_Front_Mail();
 		$forminator_mail_sender->process_mail( $model, $entries, $final_res );
 
-		// dont push history on preview
+		// dont push history on preview.
 		$result_url = ! $is_preview ? $result->build_permalink() : '';
 
 		// replace tags if any.
@@ -187,7 +193,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 
 		wp_send_json_success(
 			array(
-				'result'     => $this->_render_nowrong_result( $model, $final_res, $entry ),
+				'result'     => $this->render_nowrong_result( $model, $final_res, $entry ),
 				'result_url' => $result_url,
 				'type'       => 'nowrong',
 			)
@@ -258,13 +264,13 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 	 *
 	 * @since 1.0
 	 *
-	 * @param Forminator_Quiz_Model       $model
-	 * @param    array                       $result
-	 * @param    Forminator_Form_Entry_Model $entry
+	 * @param Forminator_Quiz_Model       $model Quiz model.
+	 * @param array                       $result Result.
+	 * @param Forminator_Form_Entry_Model $entry Form entry model.
 	 *
 	 * @return string
 	 */
-	private function _render_nowrong_result( $model, $result, Forminator_Form_Entry_Model $entry ) {
+	private function render_nowrong_result( $model, $result, Forminator_Form_Entry_Model $entry ) {
 		ob_start();
 
 		$theme = isset( $model->settings['forminator-quiz-theme'] ) ? $model->settings['forminator-quiz-theme'] : '';
@@ -420,10 +426,10 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 	 * @since 1.0
 	 * @since 1.6.2 add $is_preview on arg
 	 *
-	 * @param      $model
-	 * @param bool  $is_preview
+	 * @param object $model Quiz model.
+	 * @param bool   $is_preview Is preview.
 	 */
-	private function _process_knowledge_submit( $model, $is_preview = false ) {
+	private function process_knowledge_submit( $model, $is_preview = false ) {
 		$answers = isset( self::$prepared_data['answers'] ) ? self::$prepared_data['answers'] : null;
 		if ( ! is_array( $answers ) || 0 === count( $answers ) ) {
 			wp_send_json_error(
@@ -434,7 +440,10 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 		}
 		$results   = array();
 		$is_finish = true;
-		/** @var Forminator_Quiz_Model $model */
+		/**
+		 * Forminator_Quiz_Model
+		 *
+		 * @var Forminator_Quiz_Model $model */
 		if ( count( $model->questions ) !== count( $answers ) ) {
 			if ( 'end' === $model->settings['results_behav'] ) {
 				// need to check if all the questions are answered.
@@ -490,7 +499,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 				$meta['answer']    = $user_answer['title'];
 				$meta['isCorrect'] = true;
 
-				$right_counter ++;
+				++$right_counter;
 
 			} else {
 				if ( isset( $user_answer['title'] ) ) {
@@ -534,7 +543,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 		$entry_id = 0;
 
 		if ( $is_finish ) {
-			$entry    = $this->_save_entry( $model, $result_data, $is_preview );
+			$entry    = $this->save_form_entry( $model, $result_data, $is_preview );
 			$entries  = new Forminator_Form_Entry_Model( $entry->entry_id );
 			$entry_id = $entry->entry_id;
 		}
@@ -546,23 +555,23 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 		self::$prepared_data['final_result'] = $right_counter;
 
 		if ( $is_finish && ! is_null( $entry ) ) {
-			// Email
+			// Email.
 			$forminator_mail_sender = new Forminator_Quiz_Front_Mail();
 			$forminator_mail_sender->process_mail( $model, $entries );
-			// replace quiz form data
+			// Replace quiz form data.
 			$final_text = forminator_replace_quiz_form_data( $final_text, $model, $entry );
 		}
 
-		// dont push history on preview
+		// Don't push history on preview.
 		$result_url = ! $is_preview ? $result->build_permalink() : '';
-		//store the
+		// Store.
 		wp_send_json_success(
 			array(
 				'result'     => $results,
 				'type'       => 'knowledge',
 				'entry'      => $entry_id,
 				'result_url' => $result_url,
-				'finalText'  => $is_finish ? $this->_render_knowledge_result(
+				'finalText'  => $is_finish ? $this->render_knowledge_result(
 					str_replace(
 						'%YourNum%',
 						$right_counter,
@@ -581,10 +590,10 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 	 *
 	 * @since 1.14.2
 	 *
-	 * @param      $model
-	 * @param bool  $is_preview
+	 * @param object $model Model.
+	 * @param bool   $is_preview Is preview.
 	 */
-	private function _process_knowledge_submit_multiple_answers( $model, $is_preview = false ) {
+	private function process_knowledge_submit_multiple_answers( $model, $is_preview = false ) {
 		$user_answers = isset( self::$prepared_data['answers'] ) ? self::$prepared_data['answers'] : null;
 		if ( ! is_array( $user_answers ) || 0 === count( $user_answers ) ) {
 			wp_send_json_error(
@@ -634,7 +643,6 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 				if ( $question_slug !== $question_id ) {
 					continue; }
 
-				// $correct_answers = $model->get_correct_answers_for_question( $question_id );.
 				$is_correct  = $model->is_correct_answer_for_question( $question_id, $pick );
 				$user_answer = $model->getAnswer( $question_id, $pick );
 
@@ -643,39 +651,22 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 				}
 
 				if ( $is_correct ) {
-
-					/*
-					if ( isset( $user_answer['title'] ) ) {
-						$correct_text = str_replace(
-							'%UserAnswer%',
-							$user_answer['title'],
-							$correct_text
-						);
-					}*/
-					if ( ! in_array( $id, $results[ $question_id ]['answers'] ) ) {
+					if ( ! in_array( $id, $results[ $question_id ]['answers'] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 						$results[ $question_id ]['answers'][ $index_counter ]['id'] = $id;
 						$meta['answers'][] = $user_answer['title'];
 					}
 
-					$right_counter ++;
+					++$right_counter;
 
 				} else {
-					/*
-					if ( isset( $user_answer['title'] ) ) {
-						$incorrect_text = str_replace(
-							'%UserAnswer%',
-							$user_answer['title'],
-							$incorrect_text
-						);
-					}*/
-					if ( ! in_array( $id, $results[ $question_id ]['answers'] ) ) {
+					if ( ! in_array( $id, $results[ $question_id ]['answers'] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 						$results[ $question_id ]['answers'][ $index_counter ]['id'] = $id;
 						$meta['answers'][] = $user_answer['title'];
 					}
 
-					$wrong_counter ++;
+					++$wrong_counter;
 				}
-				$index_counter ++;
+				++$index_counter;
 			}
 
 			// make sure correct answer exists before pluck it.
@@ -688,7 +679,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 
 			// If all answers to current questin.
 			if ( count( $correct_answers ) === $right_counter && 0 === $wrong_counter ) {
-				$total_counter ++;
+				++$total_counter;
 
 				// make sure correct answer exists before pluck it.
 				if ( ! empty( $correct_answers ) && is_array( $correct_answers ) ) {
@@ -737,7 +728,7 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 		$entry_id = 0;
 
 		if ( $is_finish ) {
-			$entry    = $this->_save_entry( $model, $result_data, $is_preview );
+			$entry    = $this->save_form_entry( $model, $result_data, $is_preview );
 			$entries  = new Forminator_Form_Entry_Model( $entry->entry_id );
 			$entry_id = $entry->entry_id;
 		}
@@ -749,23 +740,23 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 		self::$prepared_data['final_result'] = $total_counter;
 
 		if ( $is_finish && ! is_null( $entry ) ) {
-			// Email
+			// Email.
 			$forminator_mail_sender = new Forminator_Quiz_Front_Mail();
 			$forminator_mail_sender->process_mail( $model, $entries );
-			// replace quiz form data
+			// Replace quiz form data.
 			$final_text = forminator_replace_quiz_form_data( $final_text, $model, $entry );
 		}
 
-		// dont push history on preview
+		// Don't push history on preview.
 		$result_url = ! $is_preview ? $result->build_permalink() : '';
-		// store the
+		// Store.
 		wp_send_json_success(
 			array(
 				'result'     => $results,
 				'type'       => 'knowledge',
 				'entry'      => $entry_id,
 				'result_url' => $result_url,
-				'finalText'  => $is_finish ? $this->_render_knowledge_result(
+				'finalText'  => $is_finish ? $this->render_knowledge_result(
 					str_replace(
 						'%YourNum%',
 						$total_counter,
@@ -784,12 +775,14 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $text
-	 * @param $model
+	 * @param string $text Text.
+	 * @param object $model Model.
+	 * @param string $right_answers Right answers.
+	 * @param string $total_answers Total answers.
 	 *
 	 * @return string
 	 */
-	private function _render_knowledge_result( $text, $model, $right_answers, $total_answers ) {
+	private function render_knowledge_result( $text, $model, $right_answers, $total_answers ) {
 		ob_start();
 		?>
 
@@ -890,18 +883,20 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 	}
 
 	/**
+	 * Save entry
+	 *
 	 * @since 1.0
 	 * @since 1.2 return entry id on success, or false on fail
 	 * @since 1.6.2 change 1st arg from form_id to quiz model
 	 *        - Add $is_preview as func arg
 	 *
-	 * @param Forminator_Quiz_Model $quiz
-	 * @param                            $field_data
-	 * @param bool                  $is_preview
+	 * @param Forminator_Quiz_Model $quiz Quiz model.
+	 * @param mixed                 $field_data Field data.
+	 * @param bool                  $is_preview Is preview.
 	 *
 	 * @return Forminator_Form_Entry_Model
 	 */
-	private function _save_entry( $quiz, $field_data, $is_preview = false ) {
+	private function save_form_entry( $quiz, $field_data, $is_preview = false ) {
 		$quiz_id           = $quiz->id;
 		$entry             = new Forminator_Form_Entry_Model();
 		$entry->entry_type = self::$entry_type;
@@ -953,8 +948,18 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 		return $entry;
 	}
 
+	/**
+	 * Footer message
+	 *
+	 * @return void
+	 */
 	public function footer_message() {}
 
+	/**
+	 * Handle submit
+	 *
+	 * @return void
+	 */
 	public function handle_submit() {}
 
 	/**
@@ -963,14 +968,14 @@ class Forminator_Quiz_Front_Action extends Forminator_Front_Action {
 	 * @see   Forminator_Integration_Quiz_Hooks::on_module_submit()
 	 * @since 1.6.2
 	 *
-	 * @param                              $quiz_id
-	 * @param Forminator_Quiz_Model $quiz_model
+	 * @param int                   $quiz_id Quiz Id.
+	 * @param Forminator_Quiz_Model $quiz_model Quiz model.
 	 *
 	 * @return bool true on success|string error message from addon otherwise
 	 */
 	private function attach_addons_on_quiz_submit( $quiz_id, Forminator_Quiz_Model $quiz_model ) {
 		$submitted_data = static::get_submitted_data();
-		// find is_form_connected.
+		// Find is_form_connected.
 		$connected_addons = forminator_get_addons_instance_connected_with_module( $quiz_id, 'quiz' );
 
 		foreach ( $connected_addons as $connected_addon ) {

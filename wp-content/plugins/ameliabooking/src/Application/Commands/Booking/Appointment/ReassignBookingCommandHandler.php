@@ -21,18 +21,22 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Services\Booking\AppointmentDomainService;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
+use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -77,6 +81,8 @@ class ReassignBookingCommandHandler extends CommandHandler
         $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+        /** @var CustomerRepository $customerRepository */
+        $customerRepository = $this->container->get('domain.users.customers.repository');
         /** @var AppointmentApplicationService $appointmentAS */
         $appointmentAS = $this->container->get('application.booking.appointment.service');
         /** @var AppointmentDomainService $appointmentDS */
@@ -227,6 +233,59 @@ class ReassignBookingCommandHandler extends CommandHandler
             );
 
             return $result;
+        }
+
+        $setTimeZone = false;
+
+        if ($booking->getInfo() && $booking->getInfo()->getValue()) {
+            $info = json_decode($booking->getInfo()->getValue(), true);
+
+            if (empty($info['timeZone'])) {
+                $setTimeZone = true;
+            }
+        } else if (!$booking->getInfo() || $booking->getInfo()->getValue() === null) {
+            $setTimeZone = true;
+        }
+
+        if ($setTimeZone &&
+            (!$booking->getUtcOffset() || $booking->getInfo()->getValue() === null) &&
+            $userAS->isCustomer($user) &&
+            $command->getField('timeZone') &&
+            $command->getField('timeZone') !== 'UTC' &&
+            $command->getField('utcOffset') !== null &&
+            $settingsDS->getSetting('general', 'showClientTimeZone')
+        ) {
+            /** @var Customer $customer */
+            $customer = $customerRepository->getById($booking->getCustomerId()->getValue());
+
+            $booking->setInfo(
+                new Json(
+                    json_encode(
+                        [
+                            'firstName' => $customer->getFirstName()->getValue(),
+                            'lastName'  => $customer->getLastName()->getValue(),
+                            'phone'     => null,
+                            'locale'    => null,
+                            'timeZone'  => $command->getField('timeZone'),
+                            'urlParams' => null,
+                        ]
+                    )
+                )
+            );
+
+            $bookingRepository->updateFieldById(
+                $booking->getId()->getValue(),
+                $booking->getInfo()->getValue(),
+                'info'
+            );
+
+            $booking->setUtcOffset(new IntegerValue($command->getField('utcOffset')));
+
+            $bookingRepository->updateFieldById(
+                $booking->getId()->getValue(),
+                $booking->getUtcOffset()->getValue(),
+                'utcOffset'
+            );
         }
 
         /** @var Collection $existingAppointments */

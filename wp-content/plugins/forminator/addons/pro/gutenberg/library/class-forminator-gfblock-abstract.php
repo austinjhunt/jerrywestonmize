@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator GFBlock Abstract.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_GFBlock_Abstract
@@ -72,10 +77,10 @@ abstract class Forminator_GFBlock_Abstract {
 			'/preview/' . $this->get_slug(),
 			array(
 				array(
-					'methods'  				 => WP_REST_Server::READABLE,
-					'callback' 				 => array( $this, 'preview_block_markup' ),
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'preview_block_markup' ),
 					'permission_callback' => '__return_true',
-					'args'     => array(
+					'args'                => array(
 						'module_id' => array(
 							'description' => esc_html__( 'Module ID', 'forminator' ),
 							'type'        => 'integer',
@@ -91,7 +96,7 @@ abstract class Forminator_GFBlock_Abstract {
 	 * Print block preview markup
 	 *
 	 * @since 1.0 Gutenberg Integration
-	 * @param $data
+	 * @param mixed $data Data.
 	 */
 	public function preview_block_markup( $data ) {
 		// Get properties.

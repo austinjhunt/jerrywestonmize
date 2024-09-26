@@ -5,6 +5,7 @@ namespace MailPoet\Migrations\App;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Doctrine\WPDB\Connection;
 use MailPoet\Entities\StatisticsWooCommercePurchaseEntity;
 use MailPoet\Migrations\Db\Migration_20230824_054259_Db;
 use MailPoet\Migrator\AppMigration;
@@ -22,6 +23,12 @@ class Migration_20230825_093531_App extends AppMigration {
       return;
     }
 
+    // Temporarily skip the queries in WP Playground.
+    // The SQLite integration doesn't seem to support them yet.
+    if (Connection::isSQLite()) {
+      return;
+    }
+
     $wooCommerceHelper->isWooCommerceCustomOrdersTableEnabled() ?
       $this->populateStatusColumnUsingHpos() : $this->populateStatusColumnUsingPost();
   }
@@ -30,16 +37,25 @@ class Migration_20230825_093531_App extends AppMigration {
     global $wpdb;
 
     $revenueTable = esc_sql($this->getTableName());
-    $sql = "update " . $revenueTable . " as rev, " . $wpdb->prefix . "wc_orders as wc set rev.status=TRIM(Leading 'wc-' FROM wc.status) where wc.id = rev.order_id AND rev.status='" . self::DEFAULT_STATUS . "'";
-    $wpdb->query($sql);
+    $ordersTable = esc_sql($wpdb->prefix . 'wc_orders');
+    $wpdb->query($wpdb->prepare(
+      "UPDATE %i AS rev, %i AS wc SET rev.status=TRIM(Leading 'wc-' FROM wc.status) WHERE wc.id = rev.order_id AND rev.status= %s",
+      $revenueTable,
+      $ordersTable,
+      self::DEFAULT_STATUS
+    ));
   }
 
   private function populateStatusColumnUsingPost(): void {
     global $wpdb;
 
     $revenueTable = esc_sql($this->getTableName());
-    $sql = "update " . $revenueTable . " as rev, " . $wpdb->posts . " as wc set rev.status=TRIM(Leading 'wc-' FROM wc.post_status) where wc.id = rev.order_id AND rev.status='" . self::DEFAULT_STATUS . "'";
-    $wpdb->query($sql);
+    $wpdb->query($wpdb->prepare(
+      "UPDATE %i AS rev, %i AS wc SET rev.status=TRIM(Leading 'wc-' FROM wc.post_status) WHERE wc.id = rev.order_id AND rev.status= %s",
+      $revenueTable,
+      $wpdb->posts,
+      self::DEFAULT_STATUS
+    ));
   }
 
   private function getTableName(): string {
@@ -50,8 +66,6 @@ class Migration_20230825_093531_App extends AppMigration {
     global $wpdb;
 
     $revenueTable = $this->getTableName();
-    $query = $wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($revenueTable));
-
-    return $wpdb->get_var($query) === $revenueTable;
+    return $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($revenueTable))) === $revenueTable;
   }
 }

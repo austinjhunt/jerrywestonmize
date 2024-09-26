@@ -1,6 +1,12 @@
 <?php
+/**
+ * Template admin/views/dashboard/widgets/widget-cform.php
+ *
+ * @package Forminator
+ */
+
 $module_slug        = 'form';
-$title              = esc_html__( 'Forms', 'forminator' );
+$module_title       = esc_html__( 'Forms', 'forminator' );
 $description        = esc_html__( 'Create any type of form from one of our pre-made templates, or build your own from scratch.', 'forminator' );
 $icon               = 'sui-icon-clipboard-notes';
 $preview_title      = esc_html__( 'Preview Custom Form', 'forminator' );

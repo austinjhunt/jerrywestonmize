@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/addons/content-empty.php
+ *
+ * @package Forminator
+ */
+
 $can_browse  = isset( $browse ) && is_bool( $browse ) === true;
 $can_refresh = isset( $refresh ) && is_bool( $refresh ) === true;
 $url_check   = add_query_arg( 'action', 'check-updates' );
@@ -32,7 +38,7 @@ $url_check   = add_query_arg( 'action', 'check-updates' );
 					<?php
 					// BUTTON: Browse Add-Ons.
 					if ( $can_browse ) {
-						Forminator_Admin_Addons_page::get_instance()->render_template(
+						Forminator_Admin_Addons_Page::get_instance()->render_template(
 							'admin/views/addons/action-button',
 							array(
 								'label' => esc_html__( 'Browse Add-Ons', 'forminator' ),

@@ -30,7 +30,7 @@ class CustomerBookingsTable extends AbstractDatabaseTable
                     `id` INT(11) NOT NULL AUTO_INCREMENT,
                     `appointmentId` INT(11) NULL,
                     `customerId` INT(11) NOT NULL,
-                    `status` ENUM('approved', 'pending', 'canceled', 'rejected', 'no-show') NULL,
+                    `status` ENUM('approved', 'pending', 'canceled', 'rejected', 'no-show', 'waiting') NULL,
                     `price` DOUBLE NOT NULL,
                     `tax` VARCHAR(255) DEFAULT NULL,
                     `persons` INT(11) NOT NULL,

@@ -4,6 +4,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Twig\Environment;
 use MailPoetVendor\Twig\FileExtensionEscapingStrategy;
 use MailPoetVendor\Twig\Node\Expression\ConstantExpression;
+use MailPoetVendor\Twig\Node\Expression\Filter\RawFilter;
 use MailPoetVendor\Twig\Node\Node;
 use MailPoetVendor\Twig\NodeVisitor\EscaperNodeVisitor;
 use MailPoetVendor\Twig\Runtime\EscaperRuntime;
@@ -29,7 +30,7 @@ final class EscaperExtension extends AbstractExtension
  }
  public function getFilters() : array
  {
- return [new TwigFilter('escape', [EscaperRuntime::class, 'escape'], ['is_safe_callback' => [self::class, 'escapeFilterIsSafe']]), new TwigFilter('e', [EscaperRuntime::class, 'escape'], ['is_safe_callback' => [self::class, 'escapeFilterIsSafe']]), new TwigFilter('raw', [self::class, 'raw'], ['is_safe' => ['all']])];
+ return [new TwigFilter('escape', [EscaperRuntime::class, 'escape'], ['is_safe_callback' => [self::class, 'escapeFilterIsSafe']]), new TwigFilter('e', [EscaperRuntime::class, 'escape'], ['is_safe_callback' => [self::class, 'escapeFilterIsSafe']]), new TwigFilter('raw', null, ['is_safe' => ['all'], 'node_class' => RawFilter::class])];
  }
  public function setEnvironment(Environment $environment, bool $triggerDeprecation = \true) : void
  {
@@ -92,10 +93,6 @@ final class EscaperExtension extends AbstractExtension
  throw new \LogicException(\sprintf('You must call "setEnvironment()" before calling "%s()".', __METHOD__));
  }
  $this->escaper->addSafeClass($class, $strategies);
- }
- public static function raw($string)
- {
- return $string;
  }
  public static function escapeFilterIsSafe(Node $filterArgs)
  {

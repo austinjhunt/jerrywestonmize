@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Addon Mailjet Form Settings.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Mailjet_Form_Settings
  * Form Settings Mailjet Process
  */

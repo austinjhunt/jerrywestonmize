@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Trello form hooks
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Trello_Form_Hooks
@@ -14,7 +19,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$entry                = func_get_args()[2];
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
@@ -38,10 +43,10 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param string $connection_id
-	 * @param array  $submitted_data
-	 * @param array  $connection_settings
-	 * @param array  $form_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $form_entry_fields Form entry fields.
 	 * @param object $entry Entry instance.
 	 *
 	 * @return array `is_sent` true means its success send data to Trello, false otherwise
@@ -54,7 +59,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 		$form_settings_instance = $this->settings_instance;
 		$uploads                = $this->get_uploads( $form_entry_fields );
 
-		// check required fields
+		// check required fields.
 		try {
 			$api  = $this->addon->get_api();
 			$args = array();
@@ -138,7 +143,7 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				$due_date = forminator_addon_replace_custom_vars( $connection_settings['due_date'], $submitted_data, $this->module, $form_entry_fields, false, $entry );
 				if ( false !== strpos( $connection_settings['due_date'], '{' ) ) {
 					$date_field       = str_replace( array( '{', '}' ), '', $connection_settings['due_date'] );
-					$date_field_index = array_search( $date_field, array_column( $form_entry_fields, 'name' ) );
+					$date_field_index = array_search( $date_field, array_column( $form_entry_fields, 'name' ), true );
 					$date_format      = Forminator_Field::get_property( 'date_format', $form_entry_fields[ $date_field_index ]['field_array'] );
 					$due_date         = forminator_reformat_date( $due_date, $date_format, 'F j Y' );
 				}
@@ -306,9 +311,9 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param $type
-	 * @param $label
-	 * @param $value
+	 * @param string $type Field type.
+	 * @param string $label Field label.
+	 * @param string $value Field value.
 	 *
 	 * @return string
 	 */
@@ -341,8 +346,8 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param  array                       $addon_meta_data
+	 * @param Forminator_Form_Entry_Model $entry_model Form entry Model.
+	 * @param  array                       $addon_meta_data Addon meta data.
 	 *
 	 * @return bool
 	 */
@@ -418,9 +423,9 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 					if ( ! isset( $addon_meta_datum_received->id ) || empty( $addon_meta_datum_received->id ) ) {
 						continue;
 					}
-					/** data received reference
+					/** Data received reference
 					 *
-					 * data_received: {
+					 * Data_received: {
 					 *      "id": "XXXX",
 					 * }
 					 */
@@ -451,7 +456,6 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
 			return false;
 		}
-
 	}
 
 	/**
@@ -459,11 +463,9 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 *
 	 * @since 1.0 Trello Integration
 	 *
-	 * @param $card_id
-	 * @param $card_delete_mode
-	 * @param $addon_meta_datum
-	 *
-	 * @throws Forminator_Integration_Exception
+	 * @param string $card_id Card Id.
+	 * @param string $card_delete_mode Card delete mode.
+	 * @param array  $addon_meta_datum Addon meta data.
 	 */
 	public function delete_card( $card_id, $card_delete_mode, $addon_meta_datum ) {
 		$api                    = $this->addon->get_api();
@@ -529,6 +531,8 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
 	/**
 	 * Get uploads to be added as attachments
+	 *
+	 * @param array $fields Fields.
 	 */
 	private function get_uploads( $fields ) {
 		$uploads = array();
@@ -554,6 +558,9 @@ class Forminator_Trello_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
 	/**
 	 * Add attachments to created card
+	 *
+	 * @param mixed $api API.
+	 * @param array $uploads Uploads.
 	 */
 	private function add_attachments( $api, $uploads ) {
 		$card_id = $api->get_card_id();

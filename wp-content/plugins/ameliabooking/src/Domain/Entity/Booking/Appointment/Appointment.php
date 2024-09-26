@@ -76,6 +76,9 @@ class Appointment extends AbstractBooking
     protected $isRescheduled;
 
     /** @var  BooleanValueObject */
+    protected $isChangedStatus;
+
+    /** @var  BooleanValueObject */
     protected $isFull;
 
     /**
@@ -94,8 +97,6 @@ class Appointment extends AbstractBooking
         Id $serviceId,
         Id $providerId
     ) {
-        error_log('Appointment::__construct():: bookingStart: ' . $bookingStart->getValue()->format('Y-m-d H:i:s'));
-        error_log('Appointment::__construct():: bookingEnd: ' . $bookingEnd->getValue()->format('Y-m-d H:i:s'));
         parent::__construct($notifyParticipants);
 
         $this->bookingStart = $bookingStart;
@@ -360,6 +361,22 @@ class Appointment extends AbstractBooking
     /**
      * @return BooleanValueObject
      */
+    public function isChangedStatus()
+    {
+        return $this->isChangedStatus;
+    }
+
+    /**
+     * @param BooleanValueObject $isChangedStatus
+     */
+    public function setChangedStatus(BooleanValueObject $isChangedStatus)
+    {
+        $this->isChangedStatus = $isChangedStatus;
+    }
+
+    /**
+     * @return BooleanValueObject
+     */
     public function isFull()
     {
         return $this->isFull;
@@ -415,6 +432,7 @@ class Appointment extends AbstractBooking
                 'bookingEnd'             => $this->getBookingEnd()->getValue()->format('Y-m-d H:i:s'),
                 'type'                   => $this->getType()->getValue(),
                 'isRescheduled'          => $this->isRescheduled() ? $this->isRescheduled()->getValue() : null,
+                'isChangedStatus'        => $this->isChangedStatus() ? $this->isChangedStatus()->getValue() : null,
                 'isFull'                 => $this->isFull() ? $this->isFull()->getValue() : null,
                 'resources'              => $this->getResources()->toArray(),
             ]

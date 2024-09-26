@@ -24553,7 +24553,7 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   border-radius: 4px;
 }
 
-.sui-2-12-23 #forminator-templates .forminator-template-cards .forminator-card-image .sui-icon-page,
+.sui-2-12-23 #forminator-templates .forminator-template-cards .forminator-card-image .forminator-template-icon,
 .sui-2-12-23 #forminator-templates .forminator-template-cards .forminator-card-image img {
   position: absolute;
 }
@@ -24563,7 +24563,7 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   height: 100%;
 }
 
-.sui-2-12-23 #forminator-templates .forminator-template-cards .forminator-card-image .sui-icon-page {
+.sui-2-12-23 #forminator-templates .forminator-template-cards .forminator-card-image .forminator-template-icon {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -24641,6 +24641,11 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   max-height: 66px;
 }
 
+.sui-2-12-23 #forminator-templates .forminator-template-cards .forminator-card-details.forminator-card-for-blank .forminator-card-cta {
+  justify-content: space-around;
+  top: 50px;
+}
+
 .sui-2-12-23 #forminator-templates .forminator-template-cards .forminator-card {
   position: relative;
   background: #fff;
@@ -24653,6 +24658,10 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   opacity: 1;
   visibility: unset;
   pointer-events: all;
+}
+
+.sui-2-12-23 #forminator-templates .forminator-template-cards .forminator-card:hover .forminator-template-icon svg path {
+  fill: #17a8e3;
 }
 
 .sui-2-12-23 #forminator-templates .forminator-template-notice {
@@ -25562,7 +25571,7 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   overflow: hidden;
 }
 
-.sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-template-image .sui-icon-page {
+.sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-template-image .forminator-template-icon {
   display: flex;
   height: 100%;
   align-items: center;
@@ -25606,6 +25615,10 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
 
 .sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-preset-template .sui-box-selector:hover .forminator-card-cta {
   transform: translateY(-45px);
+}
+
+.sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-preset-template .sui-box-selector:hover .forminator-template-icon svg path {
+  fill: #17a8e3;
 }
 
 .sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-preset-template .sui-box-selector .forminator-card-cta {

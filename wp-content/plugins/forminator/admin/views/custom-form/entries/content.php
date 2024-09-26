@@ -1,9 +1,18 @@
 <?php
 /**
+ * Template admin/views/custom-form/entries/content.php
+ *
+ * @package Forminator
+ */
+
+/**
  * JS reference : assets/js/admin/layout.js
  */
 
-/** @var $this Forminator_CForm_View_Page */
+/**
+ * Forminator_CForm_View_Page
+ *
+ * @var $this Forminator_CForm_View_Page */
 $count             = $this->filtered_total_entries();
 $is_filter_enabled = $this->is_filter_box_enabled();
 
@@ -21,6 +30,7 @@ if ( $this->has_payments() && $count <= 100 ) {
 }
 
 if ( $this->error_message() ) {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
 	echo Forminator_Admin::get_red_notice( esc_html( $this->error_message() ) );
 }
 
@@ -286,13 +296,14 @@ if ( $this->total_entries() > 0 ) :
 												<?php esc_html_e( 'Resend Notification Email', 'forminator' ); ?>
 											</button>
 											<?php
-                                        }
+										}
 
-                                        if ( class_exists( 'Forminator_PDF_Generation' ) ) {
-	                                        echo Forminator_PDF_Generation::download_button( $this->form_id, $this->model->name, $entries['entry_id'] );
-                                        }
+										if ( class_exists( 'Forminator_PDF_Generation' ) ) {
+											// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+											echo Forminator_PDF_Generation::download_button( $this->form_id, $this->model->name, $entries['entry_id'] );
+										}
 
-                                        if ( ( isset( $entries['activation_method'] ) && 'email' === $entries['activation_method'] ) && isset( $entries['activation_key'] ) ) {
+										if ( ( isset( $entries['activation_method'] ) && 'email' === $entries['activation_method'] ) && isset( $entries['activation_key'] ) ) {
 											?>
 
 											<button

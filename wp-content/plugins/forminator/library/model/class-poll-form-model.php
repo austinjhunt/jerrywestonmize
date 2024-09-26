@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Poll_Model class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -15,6 +21,11 @@ class Forminator_Poll_Model extends Forminator_Base_Form_Model {
 	 */
 	public static $module_slug = 'poll';
 
+	/**
+	 * Post type
+	 *
+	 * @var string
+	 */
 	protected $post_type = 'forminator_polls';
 
 	/**
@@ -140,7 +151,7 @@ class Forminator_Poll_Model extends Forminator_Base_Form_Model {
 						$interval = 'year';
 						break;
 				}
-				$cookie_value  = date_i18n( 'Y-m-d H:i:s', strtotime( Forminator_Core::sanitize_text_field( $_COOKIE[ $poll_cookie ] ) ) );
+				$cookie_value  = date_i18n( 'Y-m-d H:i:s', strtotime( Forminator_Core::sanitize_text_field( $_COOKIE[ $poll_cookie ] ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 				$cookie_expire = $cookie_value . ' +' . $duration . ' ' . $interval;
 				if ( time() < strtotime( $cookie_expire ) ) {
 					return false;
@@ -220,8 +231,8 @@ class Forminator_Poll_Model extends Forminator_Base_Form_Model {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param      $id
-	 * @param bool $callback
+	 * @param int  $id Id.
+	 * @param bool $callback Callback.
 	 *
 	 * @return bool|Forminator_Poll_Model
 	 */
@@ -245,7 +256,7 @@ class Forminator_Poll_Model extends Forminator_Base_Form_Model {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param Forminator_Poll_Model $model
+	 * @param Forminator_Poll_Model $model Poll model.
 	 *
 	 * @return Forminator_Poll_Model
 	 */
@@ -274,7 +285,7 @@ class Forminator_Poll_Model extends Forminator_Base_Form_Model {
 			}
 			foreach ( $answers as $key => $answer ) {
 				if ( ! isset( $answer['element_id'] ) || ! $answer['element_id'] ) {
-					$max_element_id ++;
+					++$max_element_id;
 					$answers[ $key ]['element_id'] = 'answer-' . $max_element_id; // start from 1.
 					$answers[ $key ]['id']         = 'answer-' . $max_element_id; // start from 1.
 				}
@@ -301,7 +312,7 @@ class Forminator_Poll_Model extends Forminator_Base_Form_Model {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param Forminator_Poll_Model $model
+	 * @param Forminator_Poll_Model $model Poll model.
 	 *
 	 * @return Forminator_Poll_Model
 	 */
@@ -309,7 +320,6 @@ class Forminator_Poll_Model extends Forminator_Base_Form_Model {
 		$model->save();
 
 		return $model;
-
 	}
 
 	/**
@@ -317,25 +327,23 @@ class Forminator_Poll_Model extends Forminator_Base_Form_Model {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param  string      $pluck_key
-	 * @param  string|null $key
-	 * @param null        $default
+	 * @param  string      $pluck_key Pluck key.
+	 * @param  string|null $key Key.
+	 * @param null        $default_value Default value.
 	 *
 	 * @return array
 	 */
-	public function pluck_fields_array( $pluck_key, $key = null, $default = null ) {
+	public function pluck_fields_array( $pluck_key, $key = null, $default_value = null ) {
 		$fields_with_key = array();
 		$fields          = $this->get_fields_as_array();
 
 		foreach ( $fields as $field ) {
 			if ( '*' === $pluck_key ) {
 				$field_value = $field;
-			} else {
-				if ( isset( $field[ $pluck_key ] ) ) {
+			} elseif ( isset( $field[ $pluck_key ] ) ) {
 					$field_value = $field[ $pluck_key ];
-				} else {
-					$field_value = $default;
-				}
+			} else {
+				$field_value = $default_value;
 			}
 
 			if ( ! is_null( $key ) ) {
@@ -437,27 +445,23 @@ class Forminator_Poll_Model extends Forminator_Base_Form_Model {
 		}
 
 		$status = ( isset( $settings['opening_status'] ) ) ? $settings['opening_status'] : 'open';
-		if ( ! in_array( $status, array( 'open', 'pause', 'close' ) ) ) {
+		if ( ! in_array( $status, array( 'open', 'pause', 'close' ), true ) ) {
 			$status = 'open';
 		}
 
 		$info[ $this->id ]['status'] = $status;
 
 		switch ( $status ) {
-			case 'close': {
+			case 'close':
 				$info[ $this->id ]['msg'] = $close_msg;
-				return $info[ $this->id ];
 				break;
-			}
 
-			case 'pause': {
+			case 'pause':
 				$info[ $this->id ]['msg'] = $pause_msg;
-				return $info[ $this->id ];
 				break;
-			}
 
-			case 'open': {
-				$current_time = current_time( 'timestamp' );
+			case 'open':
+				$current_time = current_time( 'timestamp' ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- We are using the current timestamp based on the site's timezone.
 
 				// check open from and open until time.
 				$open_from = ( isset( $settings['opening_open_from'] ) ) ? trim( $settings['opening_open_from'] ) : 'now';
@@ -494,9 +498,7 @@ class Forminator_Poll_Model extends Forminator_Base_Form_Model {
 					}
 				}
 
-				return $info[ $this->id ];
 				break;
-			}
 
 			default:
 				break;

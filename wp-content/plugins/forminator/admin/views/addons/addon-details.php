@@ -1,4 +1,9 @@
 <?php
+/**
+ * Template admin/views/addons/addon-details.php
+ *
+ * @package Forminator
+ */
 
 if ( ! isset( $pid ) ) {
 	return;
@@ -6,7 +11,7 @@ if ( ! isset( $pid ) ) {
 
 $pid = intval( $pid );
 
-$res = Forminator_Admin_Addons_page::forminator_addon_by_pid( $pid );
+$res = Forminator_Admin_Addons_Page::forminator_addon_by_pid( $pid );
 
 // Skip invalid projects.
 if ( empty( $res->pid ) || empty( $res->name ) ) {
@@ -29,7 +34,7 @@ if ( is_array( $res->features ) && ! empty( $res->features ) ) {
 	$chunk_size   = ceil( count( $res->features ) / 2 );
 	$features     = array_chunk( $res->features, $chunk_size );
 }
-$addon_slug = Forminator_Admin_Addons_page::get_addon_slug( $pid );
+$addon_slug = Forminator_Admin_Addons_Page::get_addon_slug( $pid );
 ?>
 
 <div class="sui-modal sui-modal-lg">
@@ -92,7 +97,7 @@ $addon_slug = Forminator_Admin_Addons_page::get_addon_slug( $pid );
 
 						<?php
 						if ( FORMINATOR_PRO && $res->is_installed && $res->has_update ) {
-							Forminator_Admin_Addons_page::get_instance()->render_template(
+							Forminator_Admin_Addons_Page::get_instance()->render_template(
 								'admin/views/addons/action-button',
 								array(
 									'label' => esc_html__( 'Update', 'forminator' ),
@@ -211,18 +216,18 @@ $addon_slug = Forminator_Admin_Addons_page::get_addon_slug( $pid );
 										<div class="forminator-addon-changelog--header">
 
 											<?php
-											$title = '<h4>';
+											$addon_title = '<h4>';
 												/* translators: Log version */
-												$title .= '<span class="sui-tag sui-tag-sm sui-tag-purple">' . /* translators: %s: Current version */ sprintf( esc_html__( 'Version %s', 'forminator' ), esc_attr( $log['version'] ) ) . '</span>';
+												$addon_title .= '<span class="sui-tag sui-tag-sm sui-tag-purple">' . /* translators: %s: Current version */ sprintf( esc_html__( 'Version %s', 'forminator' ), esc_attr( $log['version'] ) ) . '</span>';
 											if ( $log['version'] === $res->version_latest ) {
-												$title .= '<span class="sui-tag sui-tag-sm">' . esc_html__( 'Current', 'forminator' ) . '</span>';
+												$addon_title .= '<span class="sui-tag sui-tag-sm">' . esc_html__( 'Current', 'forminator' ) . '</span>';
 											}
-											$title .= '</h4>';
+											$addon_title .= '</h4>';
 
-											echo wp_kses_post( $title );
+											echo wp_kses_post( $addon_title );
 											?>
 
-											<p><?php echo esc_html( date( 'F j, Y', $log['time'] ) ); ?></p>
+											<p><?php echo esc_html( gmdate( 'F j, Y', $log['time'] ) ); ?></p>
 
 										</div>
 

@@ -1,10 +1,14 @@
 <?php
+/**
+ * The Activecampaign Quiz Hooks.
+ *
+ * @package    Forminator
+ */
 
 /**
  * Class Forminator_Activecampaign_Quiz_Hooks
  *
  * @since 1.0 Activecampaign Integration
- *
  */
 class Forminator_Activecampaign_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
@@ -15,7 +19,7 @@ class Forminator_Activecampaign_Quiz_Hooks extends Forminator_Integration_Quiz_H
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -31,7 +35,6 @@ class Forminator_Activecampaign_Quiz_Hooks extends Forminator_Integration_Quiz_H
 		}
 
 		return $data;
-
 	}
 
 	/**
@@ -40,12 +43,14 @@ class Forminator_Activecampaign_Quiz_Hooks extends Forminator_Integration_Quiz_H
 	 * @since 1.0 Activecampaign Integration
 	 * @since 1.7 Add $form_entry_fields
 	 *
-	 * @param       $connection_id
-	 * @param       $submitted_data
-	 * @param       $connection_settings
-	 * @param array $form_entry_fields
+	 * @param string $connection_id ID of current connection.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $form_entry_fields Form Entry fields.
 	 *
-	 * @return array `is_sent` true means its success send data to ActiveCampaign, false otherwise
+	 * @return array `is_sent` true means its success send data to ActiveCampaign, false otherwise.
+	 *
+	 * @throws Forminator_Integration_Exception Exception.
 	 */
 	private function get_status_on_contact_sync( $connection_id, $submitted_data, $connection_settings, $form_entry_fields ) {
 		$quiz_submitted_data = get_quiz_submitted_data( $this->module, $submitted_data, $form_entry_fields );
@@ -59,7 +64,7 @@ class Forminator_Activecampaign_Quiz_Hooks extends Forminator_Integration_Quiz_H
 		$quiz_id                = $this->module_id;
 		$quiz_settings_instance = $this->settings_instance;
 
-		//check required fields
+		// check required fields.
 		try {
 			$ac_api = $this->addon->get_api();
 			$args   = array();
@@ -138,7 +143,7 @@ class Forminator_Activecampaign_Quiz_Hooks extends Forminator_Integration_Quiz_H
 				$tags = array();
 				foreach ( $connection_settings['tags'] as $tag ) {
 					if ( stripos( $tag, '{' ) === 0
-					     && stripos( $tag, '}' ) === ( strlen( $tag ) - 1 )
+						&& stripos( $tag, '}' ) === ( strlen( $tag ) - 1 )
 					) {
 						// translate to value.
 						$element_id = str_ireplace( '{', '', $tag );
@@ -236,8 +241,8 @@ class Forminator_Activecampaign_Quiz_Hooks extends Forminator_Integration_Quiz_H
 	 *
 	 * @since 1.0 ActiveCampaign Integration
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param  array                      $addon_meta_data
+	 * @param Forminator_Form_Entry_Model $entry_model Form entry model.
+	 * @param  array                       $addon_meta_data Addon meta data.
 	 *
 	 * @return bool
 	 */
@@ -294,8 +299,7 @@ class Forminator_Activecampaign_Quiz_Hooks extends Forminator_Integration_Quiz_H
 			if ( is_array( $addon_meta_data ) ) {
 				foreach ( $addon_meta_data as $addon_meta_datum ) {
 
-					/** data received reference
-					 *
+					/** Data received reference
 					 * data_received: {
 					 *      subscriber_id: 1,
 					 *      sendlast_should: 0,
@@ -329,7 +333,6 @@ class Forminator_Activecampaign_Quiz_Hooks extends Forminator_Integration_Quiz_H
 			 * @param int                                           $quiz_id                current Quiz ID.
 			 * @param array                                         $addon_meta_data        integration meta data.
 			 * @param Forminator_Activecampaign_Quiz_Settings $quiz_settings_instance Activecampaign Quiz Settings instance.
-			 *
 			 */
 			$subscriber_ids_to_delete = apply_filters(
 				'forminator_addon_activecampaign_subscriber_ids_to_delete',
@@ -369,6 +372,5 @@ class Forminator_Activecampaign_Quiz_Hooks extends Forminator_Integration_Quiz_H
 
 			return false;
 		}
-
 	}
 }

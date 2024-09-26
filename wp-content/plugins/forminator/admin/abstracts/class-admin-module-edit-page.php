@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Admin Module Edit Page
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -79,7 +85,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 				$model->id,
 				$form_name,
 				$form_view->count_views( $model->id ),
-				date( get_option( 'date_format' ), strtotime( $model->raw->post_date ) ),
+				gmdate( get_option( 'date_format' ), strtotime( $model->raw->post_date ) ),
 				$model->status,
 				$model
 			);
@@ -90,6 +96,8 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 
 	/**
 	 * Get modules for search
+	 *
+	 * @param null|string $search_keyword Search Keyword.
 	 *
 	 * @since 1.14.12
 	 * @return array
@@ -123,7 +131,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 							$model->id,
 							$model->settings['formName'],
 							$form_view->count_views( $model->id ),
-							date( get_option( 'date_format' ), strtotime( $model->raw->post_date ) ),
+							gmdate( get_option( 'date_format' ), strtotime( $model->raw->post_date ) ),
 							$model->status,
 							$model
 						);
@@ -140,10 +148,12 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	/**
 	 * Get slug for ajax search
 	 *
+	 * @param string|bool $slug Module slug.
+	 *
 	 * @since 1.14.12
 	 * @return array
 	 */
-	public static function get_slug_ajax( $class = false ) {
+	public static function get_slug_ajax( $slug = false ) {
 		$page = Forminator_Core::sanitize_text_field( 'page' );
 		if ( ! $page ) {
 			return '';
@@ -151,13 +161,13 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 
 		switch ( $page ) {
 			case 'forminator-poll':
-				$module_slug = $class ? 'Poll' : 'poll';
+				$module_slug = $slug ? 'Poll' : 'poll';
 				break;
 			case 'forminator-quiz':
-				$module_slug = $class ? 'Quiz' : 'quiz';
+				$module_slug = $slug ? 'Quiz' : 'quiz';
 				break;
 			default:
-				$module_slug = $class ? 'CForm' : 'form';
+				$module_slug = $slug ? 'CForm' : 'form';
 				break;
 		}
 
@@ -165,25 +175,21 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	}
 
 	/**
-	 * Return module array
-	 *
-	 * @since 1.14.12
-	 *
-	 * @param $id
-	 * @param $title
-	 * @param $views
-	 * @param $date
-	 * @param $status
-	 *
-	 * @return array
-	 */
-	// protected static function module_array( $id, $title, $views, $date, $status, $model ) {}.
-
-	/**
 	 * Show the modules
 	 *
+	 * @param array  $modules Modules.
+	 * @param string $module_slug Module slug.
+	 * @param string $preview_dialog Preview dialog.
+	 * @param string $preview_title Preview title.
+	 * @param string $export_dialog Export dialog.
+	 * @param string $post_type Post type.
+	 * @param string $soon Soon.
+	 * @param string $sql_month_start_date Start date.
+	 * @param string $wizard_page Wizard page.
+	 * @param string $search_keyword Search Keyword.
+	 *
 	 * @since 1.14.12
-	 * @return array
+	 * @return mixed
 	 */
 	public static function show_modules( $modules, $module_slug, $preview_dialog, $preview_title, $export_dialog, $post_type, $soon, $sql_month_start_date, $wizard_page, $search_keyword = null ) {
 
@@ -273,7 +279,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 								<li><a href="#"
 									class="wpmudev-open-modal"
 									data-modal="<?php echo esc_attr( $preview_dialog ); ?>"
-									data-modal-title="<?php printf( esc_attr__( '%1$s - %2$s', 'forminator' ), esc_html( $preview_title ), esc_attr( htmlspecialchars( forminator_get_form_name( $module['id'] ) ) ) ); ?>"
+									data-modal-title="<?php /* translators: 1. Review title, 2. Form name. */ printf( esc_attr__( '%1$s - %2$s', 'forminator' ), esc_html( $preview_title ), esc_attr( htmlspecialchars( forminator_get_form_name( $module['id'] ) ) ) ); ?>"
 									data-form-id="<?php echo esc_attr( $module['id'] ); ?>"
 									data-has-leads="<?php echo esc_attr( $has_leads ); ?>"
 									data-leads-id="<?php echo esc_attr( $leads_id ); ?>"
@@ -345,7 +351,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 										class="wpmudev-open-modal"
 										data-modal="delete-module"
 										data-modal-title="<?php esc_attr_e( 'Reset Tracking Data', 'forminator' ); ?>"
-										data-modal-content="<?php /* translators: %s: Module slug. */ printf( esc_attr__( 'This action will reset the views and conversions data for this %s. Are you sure you want to proceed?', 'forminator' ), esc_html__( $module_slug, 'forminator' ) ); ?>"
+										data-modal-content="<?php /* translators: %s is the Module slug. */ printf( esc_attr__( 'This action will reset the views and conversions data for this %s. Are you sure you want to proceed?', 'forminator' ), esc_html__( $module_slug, 'forminator' ) ); /* phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- I18n is required. */ ?>"
 										data-button-text="<?php esc_attr_e( 'Reset', 'forminator' ); ?>"
 										data-form-id="<?php echo esc_attr( $module['id'] ); ?>"
 										data-action="reset-views"
@@ -392,8 +398,8 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 									<button
 										class="sui-option-red wpmudev-open-modal"
 										data-modal="delete-module"
-										data-modal-title="<?php /* translators: %s: Module slug. */ printf( esc_attr__( 'Delete %s', 'forminator' ), forminator_get_prefix( $module_slug, '', true ) ); ?>"
-										data-modal-content="<?php /* translators: %s: Module slug. */ printf( esc_attr__( 'Are you sure you wish to permanently delete this %s?', 'forminator' ), $module_slug ); ?>"
+										data-modal-title="<?php /* translators: %s: Module slug. */ printf( esc_attr__( 'Delete %s', 'forminator' ), esc_html( forminator_get_prefix( $module_slug, '', true ) ) ); ?>"
+										data-modal-content="<?php /* translators: %s: Module slug. */ printf( esc_attr__( 'Are you sure you wish to permanently delete this %s?', 'forminator' ), esc_html( $module_slug ) ); ?>"
 										data-form-id="<?php echo esc_attr( $module['id'] ); ?>"
 										data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_' . $module_slug . '_request' ) ); ?>"
 									>
@@ -419,12 +425,12 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 							<strong><?php esc_html_e( 'Last Submission', 'forminator' ); ?></strong>
 							<span><?php echo esc_html( $module['last_entry_time'] ); ?></span>
 						</li>
-
-						<li data-col="small">
-							<strong><?php esc_html_e( 'Views', 'forminator' ); ?></strong>
-							<span><?php echo esc_html( $module['views'] ); ?></span>
-						</li>
-
+						<?php if ( forminator_global_tracking() ) { ?>
+							<li data-col="small">
+								<strong><?php esc_html_e( 'Views', 'forminator' ); ?></strong>
+								<span><?php echo esc_html( $module['views'] ); ?></span>
+							</li>
+						<?php } ?>
 						<li>
 							<?php if ( $has_leads ) : ?>
 								<strong class="forminator-leads-leads" style="display:none;"><?php esc_html_e( 'Leads Collected', 'forminator' ); ?></strong>
@@ -433,15 +439,15 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 							<strong class="forminator-leads-submissions"><?php esc_html_e( 'Submissions', 'forminator' ); ?></strong>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=forminator-entries&form_type=' . $post_type . '&form_id=' . $module['id'] ) ); ?>" class="forminator-leads-submissions"><?php echo esc_html( $module['entries'] ); ?></a>
 						</li>
-
-						<li>
-							<strong><?php esc_html_e( 'Conversion Rate', 'forminator' ); ?></strong>
-							<span class="forminator-submission-rate"><?php echo esc_html( self::getRate( $module ) ); ?>%</span>
-							<?php if ( $has_leads ) : ?>
-								<span class="forminator-leads-rate" style="display:none;"><?php echo esc_html( Forminator_Quiz_Page::getLeadsRate( $module ) ); ?>%</span>
-							<?php endif; ?>
-						</li>
-
+						<?php if ( forminator_global_tracking() ) { ?>
+							<li>
+								<strong><?php esc_html_e( 'Conversion Rate', 'forminator' ); ?></strong>
+								<span class="forminator-submission-rate"><?php echo esc_html( self::getRate( $module ) ); ?>%</span>
+								<?php if ( $has_leads ) : ?>
+									<span class="forminator-leads-rate" style="display:none;"><?php echo esc_html( Forminator_Quiz_Page::getLeadsRate( $module ) ); ?>%</span>
+								<?php endif; ?>
+							</li>
+						<?php } ?>
 						<?php if ( $has_leads ) : ?>
 							<li class="fui-conversion-select" data-col="selector">
 								<label class="fui-selector-label"><?php esc_html_e( 'View data for', 'forminator' ); ?></label>
@@ -451,15 +457,15 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 								</select>
 							</li>
 						<?php endif; ?>
-
-						<li>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=forminator-reports&form_type=' . $post_type . '&form_id=' . $module['id'] ) ); ?>"
-                               class="sui-button sui-button-ghost">
-								<i class="sui-icon-page" aria-hidden="true"></i>
-                                <?php esc_html_e( 'view full report', 'forminator' ); ?>
-							</a>
-						</li>
-
+						<?php if ( forminator_global_tracking() ) { ?>
+							<li>
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=forminator-reports&form_type=' . $post_type . '&form_id=' . $module['id'] ) ); ?>"
+										class="sui-button sui-button-ghost">
+									<i class="sui-icon-page" aria-hidden="true"></i>
+									<?php esc_html_e( 'view full report', 'forminator' ); ?>
+								</a>
+							</li>
+						<?php } ?>
 					</ul>
 
 					<div class="sui-chartjs <?php echo esc_attr( $opened_chart ); ?> forminator-stats-chart" data-chart-id="<?php echo esc_attr( $module['id'] ); ?>">
@@ -468,13 +474,13 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 						unset( $message );
 						if ( 0 === $module['entries'] ) {
 							/* translators: %s: Module slug */
-							$message = sprintf( esc_html__( 'Your %s doesn\'t have any submission yet. Try again in a moment.', 'forminator' ), esc_html__( $module_slug, 'forminator' ) );
+							$message = sprintf( esc_html__( 'Your %s doesn\'t have any submission yet. Try again in a moment.', 'forminator' ), esc_html__( $module_slug, 'forminator' ) ); /* phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- I18n is required. */
 						} elseif ( 'draft' === $module['status'] ) {
 							/* translators: %s: Module slug */
-							$message = sprintf( esc_html__( 'This %s is in draft state, so we\'ve paused collecting data until you publish it live.', 'forminator' ), esc_html__( $module_slug, 'forminator' ) );
+							$message = sprintf( esc_html__( 'This %s is in draft state, so we\'ve paused collecting data until you publish it live.', 'forminator' ), esc_html__( $module_slug, 'forminator' ) ); /* phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- I18n is required. */
 						} elseif ( 0 === $module_entries_from_last_month ) {
 							/* translators: %s: Module slug */
-							$message = sprintf( esc_html__( 'Your %s didn\'t collect submissions the past 30 days.', 'forminator' ), esc_html__( $module_slug, 'forminator' ) );
+							$message = sprintf( esc_html__( 'Your %s didn\'t collect submissions the past 30 days.', 'forminator' ), esc_html__( $module_slug, 'forminator' ) ); /* phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- I18n is required. */
 						}
 						?>
 						<?php if ( ! empty( $message ) ) { ?>
@@ -532,7 +538,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $module
+	 * @param array $module Module.
 	 *
 	 * @return float|int
 	 */
@@ -549,11 +555,14 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	/**
 	 * Pagination
 	 *
+	 * @param bool $is_search Is search.
+	 * @param int  $count Count.
+	 *
 	 * @since 1.0
 	 */
 	public function pagination( $is_search, $count ) {
 		echo '<span class="sui-pagination-results">'
-		     /* translators: %s: Pagination Count */
+			/* translators: %s: Pagination Count */
 			. esc_html( sprintf( _n( '%s result', '%s results', $count, 'forminator' ), $count ) )
 			. '</span>';
 
@@ -568,7 +577,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	 *
 	 * @since 1.0
 	 * @since 1.6 add $limit
-	 * @param int $limit
+	 * @param int $limit Limit.
 	 *
 	 * @return array
 	 */
@@ -616,7 +625,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	 *
 	 * @since 1.6
 	 *
-	 * @param $id
+	 * @param int $id Module Id.
 	 */
 	public function clone_module( $id ) {
 		// check if this id is valid and the record is exists.
@@ -655,7 +664,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			wp_cache_delete( $cache_prefix, $cache_prefix );
 			wp_cache_delete( $cache_prefix . '_publish', $cache_prefix . '_publish' );
 			wp_cache_delete( $cache_prefix . '_draft', $cache_prefix . '_draft' );
-			// Call do action after create duplicate module
+			// Call do action after create duplicate module.
 			Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $new_id, $model );
 
 		}
@@ -666,7 +675,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	 *
 	 * @since 1.6
 	 *
-	 * @param $id
+	 * @param int $id Module Id.
 	 */
 	public static function delete_module( $id ) {
 		// check if this id is valid and the record is exists.
@@ -725,17 +734,29 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 		$css_file = Forminator_Assets_Enqueue::get_css_upload( $id, 'dir' );
 		if ( file_exists( $css_file ) ) {
 			// delete CSS file.
-			unlink( $css_file );
+			wp_delete_file( $css_file );
 		}
 		$css_dir    = dirname( $css_file );
 		$index_file = $css_dir . DIRECTORY_SEPARATOR . 'index.php';
 		if ( file_exists( $index_file ) ) {
 			// Delete index.php file inside `css` folder.
-			unlink( $index_file );
+			wp_delete_file( $index_file );
 		}
 
+		// Ensure the WP_Filesystem is initialized.
+		if ( ! function_exists( 'wp_filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		WP_Filesystem();
+
+		// Global $wp_filesystem should be available now.
+		global $wp_filesystem;
+
 		// remove `css` folder.
-		rmdir( $css_dir );
+		if ( $wp_filesystem->is_dir( $css_dir ) ) {
+			$wp_filesystem->rmdir( $css_dir );
+		}
 
 		$module_dir = dirname( $css_dir );
 		$files      = array_diff( scandir( $module_dir ), array( '.', '..', 'index.php' ) );
@@ -745,10 +766,12 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			$index_file = $module_dir . DIRECTORY_SEPARATOR . 'index.php';
 			if ( file_exists( $index_file ) ) {
 				// Delete index.php file inside module folder.
-				unlink( $index_file );
+				wp_delete_file( $index_file );
 			}
 			// remove module folder.
-			rmdir( $module_dir );
+			if ( $wp_filesystem->is_dir( $module_dir ) ) {
+				$wp_filesystem->rmdir( $module_dir );
+			}
 		}
 	}
 
@@ -757,7 +780,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	 *
 	 * @since 1.6
 	 *
-	 * @param $id
+	 * @param int $id Module Id.
 	 */
 	public function delete_module_entries( $id ) {
 		// check if this id is valid and the record is exists.
@@ -772,7 +795,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	 *
 	 * @since 1.6
 	 *
-	 * @param $id
+	 * @param int $id Module Id.
 	 */
 	public function export_module( $id ) {
 
@@ -784,11 +807,11 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			$exportable = $model->to_exportable_data();
 		}
 		$encoded = wp_json_encode( $exportable );
-		$fp      = fopen( 'php://memory', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
-		fwrite( $fp, $encoded ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+		$fp      = fopen( 'php://memory', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+		fwrite( $fp, $encoded ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
 		fseek( $fp, 0 );
 
-		$filename = esc_html__( 'forminator', 'forminator' ) . '-' . sanitize_title( $model_name ) . '-' . static::$module_slug . '-export' . '.txt';
+		$filename = esc_html__( 'forminator', 'forminator' ) . '-' . sanitize_title( $model_name ) . '-' . static::$module_slug . '-export.txt';
 
 		header( 'Content-Description: File Transfer' );
 		header( 'Content-Type: text/plain' );
@@ -806,7 +829,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $hook
+	 * @param string $hook Hook name.
 	 */
 	public function enqueue_scripts( $hook ) {
 		parent::enqueue_scripts( $hook );
@@ -947,7 +970,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 						if ( $model instanceof Forminator_Base_Form_Model ) {
 							$model->status = $status;
 							$model->save();
-							// Call module update do action on status update
+							// Call module update do action on status update.
 							Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
 						}
 					}
@@ -963,7 +986,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 						if ( $model instanceof Forminator_Base_Form_Model ) {
 							$model->status = $status;
 							$model->save();
-							// Call module update do action on status update
+							// Call module update do action on status update.
 							Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
 						}
 					}
@@ -1020,12 +1043,12 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	/**
 	 * Process PDF actions
 	 *
-	 * @param string $action
+	 * @param string $action PDF action.
 	 *
 	 * @since 1.25
 	 */
 	public function process_pdf_actions( $action ) {
-		$page = Forminator_Core::sanitize_text_field( 'page' );
+		$page      = Forminator_Core::sanitize_text_field( 'page' );
 		$form_type = Forminator_Core::sanitize_text_field( 'form_type' );
 		if ( 'forminator-cform-wizard' !== $page && 'pdf-form' !== $form_type ) {
 			return;
@@ -1051,7 +1074,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 
 		if ( class_exists( 'Forminator_PDF_Form_Actions' ) ) {
 			$pdf_action = new Forminator_PDF_Form_Actions();
-			$pdf = Forminator_API::get_module( $pdf_id );
+			$pdf        = Forminator_API::get_module( $pdf_id );
 
 			if ( 'pdf-preview' === $action ) {
 				$pdf_action->process_pdf_download(
@@ -1070,8 +1093,8 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	 *
 	 * @since 1.6
 	 *
-	 * @param $id
-	 * @param $status
+	 * @param int    $id Module Id.
+	 * @param string $status Module status.
 	 */
 	public function update_module_status( $id, $status ) {
 		// only publish and draft status avail.
@@ -1080,7 +1103,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			if ( $model instanceof Forminator_Base_Form_Model ) {
 				$model->status = $status;
 				$model->save();
-				// Call module update do action on status update
+				// Call module update do action on status update.
 				Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
 			}
 		}

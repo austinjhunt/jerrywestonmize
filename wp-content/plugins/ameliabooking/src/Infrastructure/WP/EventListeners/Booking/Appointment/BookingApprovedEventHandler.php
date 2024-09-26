@@ -36,6 +36,10 @@ class BookingApprovedEventHandler
     /** @var string */
     const BOOKING_APPROVED = 'bookingApproved';
 
+    /** @var string */
+    const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
+
+
     /**
      * @param CommandResult $commandResult
      * @param Container     $container
@@ -142,6 +146,6 @@ class BookingApprovedEventHandler
             }
         }
 
-        $webHookService->process(self::BOOKING_APPROVED, $appointment, [$booking]);
+        $webHookService->process(self::BOOKING_STATUS_UPDATED, $appointment, [$booking]);
     }
 }

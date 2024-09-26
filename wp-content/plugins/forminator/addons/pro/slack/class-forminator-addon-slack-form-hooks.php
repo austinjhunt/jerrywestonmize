@@ -1,10 +1,14 @@
 <?php
+/**
+ * Forminator Addon Slack Form Hooks.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Slack_Form_Hooks
  *
  * @since 1.0 Slack Integration
- *
  */
 class Forminator_Slack_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
@@ -15,7 +19,7 @@ class Forminator_Slack_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -38,12 +42,13 @@ class Forminator_Slack_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param $connection_id
-	 * @param $submitted_data
-	 * @param $connection_settings
-	 * @param $form_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $form_entry_fields Form entry fields.
 	 *
 	 * @return array `is_sent` true means its success send data to Slack, false otherwise
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function get_status_on_send_message( $connection_id, $submitted_data, $connection_settings, $form_entry_fields ) {
 		// initialize as null.
@@ -53,7 +58,7 @@ class Forminator_Slack_Form_Hooks extends Forminator_Integration_Form_Hooks {
 		$form_settings_instance = $this->settings_instance;
 		$form_settings          = $this->settings_instance->get_form_settings();
 
-		//check required fields
+		// check required fields.
 		try {
 			$api  = $this->addon->get_api();
 			$args = array();
@@ -166,8 +171,8 @@ class Forminator_Slack_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param $submitted_data
-	 * @param $form_entry_fields
+	 * @param array $submitted_data Submitted data.
+	 * @param array $form_entry_fields Form entry fields.
 	 *
 	 * @return array
 	 */
@@ -253,8 +258,8 @@ class Forminator_Slack_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param  array                      $addon_meta_data
+	 * @param Forminator_Form_Entry_Model $entry_model Form Entry Model.
+	 * @param  array                       $addon_meta_data Addon Meta Data.
 	 *
 	 * @return bool
 	 */
@@ -338,7 +343,7 @@ class Forminator_Slack_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				}
 			}
 
-			//delete mode!
+			// delete mode!
 			return true;
 
 		} catch ( Forminator_Integration_Exception $e ) {
@@ -359,6 +364,5 @@ class Forminator_Slack_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
 			return false;
 		}
-
 	}
 }

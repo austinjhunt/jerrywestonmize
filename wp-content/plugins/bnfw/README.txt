@@ -3,9 +3,9 @@ Contributors: voltronik
 Donate link: https://betternotificationsforwp.com/donate/
 Tags: notification, email, alert, message, notify
 Requires at least: 4.8
-Tested up to: 6.5
-Requires PHP: 8.0
-Stable tag: "1.9.6"
+Tested up to: 6.6
+Requires PHP: 7.4
+Stable tag: "1.9.7"
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Update URI: https://wordpress.org/plugins/bnfw/
@@ -249,6 +249,9 @@ Please report security bugs found in the source code of the Better Notification 
 
 == Changelog ==
 
+= 1.9.7 - 16th September 2024 =
+* Resolved: Due to user feedback, I've downgraded the PHP requirements for the plugin to PHP 7.4.
+
 = 1.9.6 - 1st July 2024 =
 * Added: You can now use `[user_ip_address]` and `[email_user_ip_address]` in notifications that can use the User shortcodes.
 * Fixed: An issue with the [Global Override add-on](https://betternotificationsforwp.com/downloads/per-post-override/) where notifications couldn't be overridden when using the Classic Editor.
@@ -259,7 +262,6 @@ Please report security bugs found in the source code of the Better Notification 
 = 1.9.4 – 17th April 2024 =
 * This is a large release containing lots of bug fixes (both big and small), compatibility fixes, and updates with the most recent versions of WordPress. This includes:
 * PHP 8.0, 8.1, and 8.2 compatibility.
-* BNFW now requires at least PHP 8.0.
 * Various performance improvements.
 * Added: Some post notifications, such as Post Updated, can now be triggered via a Quick Action.
 * Fixed: Subject of Email Changed notification when triggered using WooCommerce.

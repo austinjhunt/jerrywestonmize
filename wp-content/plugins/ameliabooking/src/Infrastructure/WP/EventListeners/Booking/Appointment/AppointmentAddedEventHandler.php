@@ -93,7 +93,7 @@ class AppointmentAddedEventHandler
 
         $appointments->addItem($appointmentObject, $appointmentObject->getId()->getValue(), true);
 
-        $pastAppointment =  $appointmentObject->getBookingStart()->getValue() < DateTimeService::getNowDateTimeObject();
+        $pastAppointment = $appointmentObject->getBookingStart()->getValue() < DateTimeService::getNowDateTimeObject();
 
         if ($zoomService && !$pastAppointment) {
             $zoomService->handleAppointmentMeeting($appointmentObject, self::APPOINTMENT_ADDED);
@@ -143,7 +143,9 @@ class AppointmentAddedEventHandler
 
             $appointments->addItem($recurringReservationObject, $recurringReservationObject->getId()->getValue(), true);
 
-            if ($zoomService && !$pastAppointment) {
+            $pastRecurringAppointment = $recurringReservationObject->getBookingStart()->getValue() < DateTimeService::getNowDateTimeObject();
+
+            if ($zoomService && !$pastRecurringAppointment) {
                 $zoomService->handleAppointmentMeeting($recurringReservationObject, self::BOOKING_ADDED);
 
                 if ($recurringReservationObject->getZoomMeeting()) {
@@ -152,7 +154,7 @@ class AppointmentAddedEventHandler
                 }
             }
 
-            if ($lessonSpaceService && !$pastAppointment) {
+            if ($lessonSpaceService && !$pastRecurringAppointment) {
                 $lessonSpaceService->handle($recurringReservationObject, Entities::APPOINTMENT);
                 if ($recurringReservationObject->getLessonSpace()) {
                     $recurringData[$key][Entities::APPOINTMENT]['lessonSpace'] = $recurringReservationObject->getLessonSpace();
@@ -226,6 +228,45 @@ class AppointmentAddedEventHandler
 
             if ($whatsAppNotificationService->checkRequiredFields()) {
                 $whatsAppNotificationService->sendAppointmentStatusNotifications($appointment, false, true);
+            }
+        }
+
+        $firstAppointmentCustomersIds = array_column($appointment['bookings'], 'customerId');
+
+        foreach ($recurringData as $key => $recurringReservationData) {
+            /** @var Appointment $recurringReservationObject */
+            $recurringReservationObject = AppointmentFactory::create($recurringReservationData[Entities::APPOINTMENT]);
+
+            $pastRecurringAppointment =  $recurringReservationObject->getBookingStart()->getValue() < DateTimeService::getNowDateTimeObject();
+
+            if ($recurringReservationData[Entities::APPOINTMENT]['isChangedStatus'] === true && !$pastRecurringAppointment) {
+                foreach ($recurringReservationData[Entities::APPOINTMENT]['bookings'] as $bookingKey => $recurringReservationBooking) {
+                    if (in_array($recurringReservationBooking['customerId'], $firstAppointmentCustomersIds)) {
+                        $recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey]['skipNotification'] = true;
+                    }
+                }
+
+                $emailNotificationService->sendAppointmentStatusNotifications(
+                    $recurringData[$key][Entities::APPOINTMENT],
+                    true,
+                    true
+                );
+
+                if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
+                    $smsNotificationService->sendAppointmentStatusNotifications(
+                        $recurringData[$key][Entities::APPOINTMENT],
+                        true,
+                        true
+                    );
+                }
+
+                if ($whatsAppNotificationService->checkRequiredFields()) {
+                    $whatsAppNotificationService->sendAppointmentStatusNotifications(
+                        $recurringData[$key][Entities::APPOINTMENT],
+                        true,
+                        true
+                    );
+                }
             }
         }
 

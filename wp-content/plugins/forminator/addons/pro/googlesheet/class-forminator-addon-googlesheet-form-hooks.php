@@ -1,10 +1,14 @@
 <?php
+/**
+ * Forminator Google sheet form hooks
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Googlesheet_Form_Hooks
  *
  * @since 1.0 Google Sheets Integration
- *
  */
 class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
@@ -15,7 +19,7 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -38,12 +42,13 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 	 *
 	 * @since 1.0 Google Sheets Integration
 	 *
-	 * @param string $connection_id
-	 * @param array  $submitted_data
-	 * @param array  $connection_settings
-	 * @param array  $form_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $form_entry_fields Form entry fields.
 	 *
-	 * @return array `is_sent` true means its success send data to Google Sheets, false otherwise
+	 * @return array `is_sent` true means its success send data to Google Sheets, false otherwise.
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function get_status_on_create_row( $connection_id, $submitted_data, $connection_settings, $form_entry_fields ) {
 		// initialize as null.
@@ -231,10 +236,10 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 	/**
 	 * Prepare headers of spreadsheet
 	 *
-	 * @param $file_id
+	 * @param string $file_id File Id.
 	 *
 	 * @return array
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 *
 	 * @since 1.31
 	 * @param string $worksheet_id Worksheet/tab Id.
@@ -297,8 +302,8 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 					'range' => $key_range,
 					'value' => $value,
 				);
-				$column_number ++;
-				$columns_filled ++;
+				++$column_number;
+				++$columns_filled;
 			}
 		}
 
@@ -308,7 +313,7 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 			$element_id            = $form_field['element_id'];
 			$expected_header_value = $form_field['field_label'] . '|' . $element_id;
 			if ( ! in_array( $element_id, array_keys( $header_fields ), true ) ) {
-				//add
+				// add.
 				$new_range = $sheet_title . '!' . self::column_number_to_letter( $column_number ) . '1';
 
 				// update headers map.
@@ -318,12 +323,12 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 				);
 
 				// increment for next usage.
-				$column_number ++;
+				++$column_number;
 				$update_body = new Forminator_Google_Service_Sheets_ValueRange();
 				$update_body->setRange( $new_range );
 				$update_body->setValues( array( array( $expected_header_value ) ) );
 				$update_bodies[] = $update_body;
-				$new_column_count ++;
+				++$new_column_count;
 			} else {
 				$header_field = $header_fields[ $element_id ];
 				if ( $expected_header_value !== $header_field['value'] ) {
@@ -339,7 +344,7 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 			}
 		}
 
-		//calc column to be added
+		// calc column to be added.
 		$total_column_needed = $columns_filled + $new_column_count;
 		$new_column_needed   = $total_column_needed - $sheet_column_count;
 		if ( $new_column_needed > 0 ) {
@@ -392,19 +397,18 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 		}
 
 		return $header_fields;
-
 	}
 
 	/**
 	 * Convert column number to letter format for spreadsheet
 	 *
-	 * start from 1
+	 * Start from 1
 	 *
-	 * @param $int
+	 * @param int $column_number Column Number.
 	 *
 	 * @return string
 	 */
-	public static function column_number_to_letter( $int ) {
+	public static function column_number_to_letter( $column_number ) {
 		$chars = array(
 			'A',
 			'B',
@@ -439,20 +443,18 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 		 * 27 = AA
 		 */
 		$base               = 26;
-		$temp_number        = $int;
+		$temp_number        = $column_number;
 		$output_column_name = '';
 		while ( $temp_number > 0 ) {
 			$position = $temp_number % $base;
 			if ( 0 === $position ) {
 				$output_column_name = 'Z' . $output_column_name;
-			} else {
-				if ( $position > 0 ) {
+			} elseif ( $position > 0 ) {
 					$output_column_name = $chars[ $position - 1 ] . $output_column_name;
-				} else {
-					$output_column_name = $chars[0] . $output_column_name;
-				}
+			} else {
+				$output_column_name = $chars[0] . $output_column_name;
 			}
-			$temp_number --;
+			--$temp_number;
 			$temp_number = floor( $temp_number / $base );
 		}
 

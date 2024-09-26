@@ -157,7 +157,9 @@ class UpdateProviderCommandHandler extends CommandHandler
             $providerRepository->updateFieldById($command->getArg('id'), $newPassword->getValue(), 'password');
 
             if ($newUser->getExternalId() && $newUser->getExternalId()->getValue()) {
+                add_filter('amelia_user_profile_updated', '__return_true');
                 wp_set_password($command->getField('password'), $newUser->getExternalId()->getValue());
+                remove_filter('amelia_user_profile_updated', '__return_true');
             }
         }
 
@@ -173,7 +175,23 @@ class UpdateProviderCommandHandler extends CommandHandler
                 /** @var UserApplicationService $userAS */
                 $userAS = $this->getContainer()->get('application.user.service');
 
-                $userAS->setWpUserIdForNewUser($userId, $newUser);
+                $userAS->setWpUserIdForNewUser($userId, $newUser, $command->getField('password'));
+            } else if ($newUser->getExternalId() && $newUser->getExternalId()->getValue()) {
+                add_filter('amelia_user_profile_updated', '__return_true');
+                wp_update_user(
+                    [
+                        'ID' => $newUser->getExternalId()->getValue(),
+                        'first_name' => $newUser->getFirstName() ? $newUser->getFirstName()->getValue() : '',
+                        'last_name'  => $newUser->getLastName() ? $newUser->getLastName()->getValue() : '',
+                        'user_email' => $newUser->getEmail() ? $newUser->getEmail()->getValue() : ''
+                    ]
+                );
+
+                if ($uid = get_current_user_id()) {
+                    clean_user_cache($uid);
+                }
+
+                remove_filter('amelia_user_profile_updated', '__return_true');
             }
         } catch (QueryExecutionException $e) {
             $providerRepository->rollback();

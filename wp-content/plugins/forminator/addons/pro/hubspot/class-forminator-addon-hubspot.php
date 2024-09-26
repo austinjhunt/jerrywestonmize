@@ -1,6 +1,12 @@
 <?php
+/**
+ * Forminator Hubspot
+ *
+ * @package Forminator
+ */
 
-require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-hubspot-wp-api.php';
+// Include addon-hubspot-wp-api.
+require_once __DIR__ . '/lib/class-forminator-addon-hubspot-wp-api.php';
 
 /**
  * Class Forminator_Hubspot
@@ -11,24 +17,70 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-hubspot-wp-api.p
 final class Forminator_Hubspot extends Forminator_Integration {
 
 	/**
+	 * Forminator_Hubspot Instance
+	 *
 	 * @var self|null
 	 */
 	protected static $instance = null;
 
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
 	protected $_slug = 'hubspot';
+
+	/**
+	 * Hubspot version
+	 *
+	 * @var string
+	 */
 	protected $_version = FORMINATOR_ADDON_HUBSPOT_VERSION;
+
+	/**
+	 * Min Forminator version
+	 *
+	 * @var string
+	 */
 	protected $_min_forminator_version = '1.1';
+
+	/**
+	 * Short title
+	 *
+	 * @var string
+	 */
 	protected $_short_title = 'HubSpot';
+
+	/**
+	 * Title
+	 *
+	 * @var string
+	 */
 	protected $_title = 'HubSpot';
 
+	/**
+	 * Token
+	 *
+	 * @var string
+	 */
 	private $_token = '';
 
+	/**
+	 * Error message
+	 *
+	 * @var string
+	 */
 	private $_auth_error_message = '';
 
-	const TARGET_TYPE_PUBLIC_CHANNEL = 'public_channel';
+	const TARGET_TYPE_PUBLIC_CHANNEL  = 'public_channel';
 	const TARGET_TYPE_PRIVATE_CHANNEL = 'private_channel';
-	const TARGET_TYPE_DIRECT_MESSAGE = 'direct_message';
+	const TARGET_TYPE_DIRECT_MESSAGE  = 'direct_message';
 
+	/**
+	 * Position
+	 *
+	 * @var int
+	 */
 	protected $_position = 4;
 
 	/**
@@ -38,7 +90,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	 */
 	public function __construct() {
 		// late init to allow translation.
-		$this->_description                = esc_html__( 'Get awesome by your form.', 'forminator' );
+		$this->_description = esc_html__( 'Get awesome by your form.', 'forminator' );
 
 		$this->is_multi_global = true;
 
@@ -104,7 +156,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	 * Authorize Access wizard
 	 *
 	 * @return array
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function authorize_access() {
 
@@ -139,6 +191,11 @@ final class Forminator_Hubspot extends Forminator_Integration {
 		);
 	}
 
+	/**
+	 * Authorize access is completed
+	 *
+	 * @return bool
+	 */
 	public function authorize_access_is_completed() {
 		return true;
 	}
@@ -150,8 +207,8 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	 * @return array
 	 */
 	public function wait_authorize_access() {
-		$template         = forminator_addon_hubspot_dir() . 'views/settings/wait-authorize.php';
-		$template_error   = forminator_addon_hubspot_dir() . 'views/settings/error-authorize.php';
+		$template       = forminator_addon_hubspot_dir() . 'views/settings/wait-authorize.php';
+		$template_error = forminator_addon_hubspot_dir() . 'views/settings/error-authorize.php';
 
 		$is_poll = false;
 
@@ -222,7 +279,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 		 *
 		 * @since 1.2
 		 *
-		 * @param string $token
+		 * @param string $token Token.
 		 */
 		$token = apply_filters( 'forminator_addon_hubspot_client_access_token', $token );
 
@@ -325,9 +382,10 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	 *
 	 * @since 1.0 HubSpot Integration
 	 *
-	 * @param $query_args
+	 * @param array $query_args Query Arguments.
 	 *
 	 * @return string
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function authorize_page_callback( $query_args ) {
 		$settings        = $this->get_settings_values();
@@ -398,10 +456,10 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * Get API Instance
 	 *
-	 * @param null $access_token
+	 * @param string|null $access_token Access token.
 	 *
 	 * @return Forminator_Hubspot_Wp_Api|null
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function get_api( $access_token = null ) {
 		if ( is_null( $access_token ) ) {
@@ -417,7 +475,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	 *
 	 * @since 1.0 HubSpot Integration
 	 *
-	 * @param $values
+	 * @param array $values Setting values.
 	 *
 	 * @return mixed
 	 */
@@ -436,7 +494,7 @@ final class Forminator_Hubspot extends Forminator_Integration {
 	/**
 	 * Support Request Ajax
 	 *
-	 * @throws Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function hubspot_support_request() {
 		forminator_validate_ajax( 'forminator_hubspot_request', false, 'forminator-integrations' );
@@ -451,10 +509,10 @@ final class Forminator_Hubspot extends Forminator_Integration {
 			}
 			if ( ! empty( $pipeline_request->results ) ) {
 				foreach ( $pipeline_request->results as $key => $data ) {
-					if ( isset( $data->pipelineId ) && $pipeline === $data->pipelineId ) {
+					if ( isset( $data->pipelineId ) && $pipeline === $data->pipelineId ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 						foreach ( $data->stages as $stages => $stage ) {
-							if ( isset( $stage->stageId ) && isset( $stage->label ) ) {
-								$status[ $stage->stageId ] = $stage->label;
+							if ( isset( $stage->stageId ) && isset( $stage->label ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+								$status[ $stage->stageId ] = $stage->label; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 							}
 						}
 					}

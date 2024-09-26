@@ -97,7 +97,6 @@ trait Forminator_Mailjet_Settings_Trait {
 			'has_errors' => ! empty( $api_error ) || ! empty( $list_error ),
 			'size'       => 'small',
 		);
-
 	}
 
 	/**
@@ -175,9 +174,9 @@ trait Forminator_Mailjet_Settings_Trait {
 				'required' => true,
 			),
 			'name'  => (object) array(
-				'name'     => __( 'Name', 'forminator' ),
-				'id'       => 'name',
-				'type'     => 'str',
+				'name' => __( 'Name', 'forminator' ),
+				'id'   => 'name',
+				'type' => 'str',
 			),
 		);
 	}

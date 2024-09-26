@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_CForm_Front class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Front render class for custom forms
@@ -15,21 +20,29 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	protected static $module_slug = 'form';
 
 	/**
+	 * Forminator_PayPal_Express
+	 *
 	 * @var null|Forminator_PayPal_Express
 	 */
 	private static $paypal = null;
 
 	/**
+	 * Paypal forms
+	 *
 	 * @var array
 	 */
 	private static $paypal_forms = array();
 
 	/**
+	 * Inline rules
+	 *
 	 * @var string
 	 */
 	private $inline_rules = '';
 
 	/**
+	 * Inline messages
+	 *
 	 * @var string
 	 */
 	private $inline_messages = '';
@@ -147,12 +160,11 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param      $id
-	 * @param bool  $is_preview
-	 * @param bool  $data
+	 * @param int   $id Id.
+	 * @param bool  $is_preview Is preview.
+	 * @param bool  $data Data.
 	 * @param bool  $hide If true, display: none will be added on the form markup and later removed with JS.
-	 * @param array $quiz_model
-	 * @param array $is_ajax
+	 * @param array $quiz_model Quiz model.
 	 */
 	public function display( $id, $is_preview = false, $data = false, $hide = true, $quiz_model = null ) {
 		if ( $data && ! empty( $data ) ) {
@@ -185,8 +197,9 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		// preview force using ajax.
 
 		// hide login/registration form if a user is already logged in.
-		$hide_form = $hidden_form_message = false;
-		if ( isset( $this->model->settings['form-type'] ) && in_array( $this->model->settings['form-type'], array( 'login', 'registration' ) ) && is_user_logged_in() ) {
+		$hide_form           = false;
+		$hidden_form_message = false;
+		if ( isset( $this->model->settings['form-type'] ) && in_array( $this->model->settings['form-type'], array( 'login', 'registration' ), true ) && is_user_logged_in() ) {
 			// Option 'Is a form hide?'.
 			$hide_option = 'hide-' . $this->model->settings['form-type'] . '-form';
 			$hide_form   = ( isset( $this->model->settings[ $hide_option ] ) && '1' === $this->model->settings[ $hide_option ] ) ? true : false;
@@ -234,6 +247,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 
 	/**
 	 * Header message to handle error message
+	 *
+	 * @param string $maybe_error Error message.
 	 *
 	 * @since 1.0
 	 */
@@ -318,7 +333,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 		$wrapper .= '<input type="hidden" class="forminator-auth-method" name="auth_method" value="' . esc_attr( $slug ) . '" id="' . esc_attr( $input_id ) . '" disabled />';
 		$wrapper .= '<input type="hidden" class="forminator-auth-token" name="auth_token" id="' . esc_attr( $token_id ) . '" />';
-        $wrapper .= '<div class="forminator-wrap-nav">';
+		$wrapper .= '<div class="forminator-wrap-nav">';
 		$wrapper .= esc_html__( 'Having problems? Try another way to log in', 'forminator' );
 		$wrapper .= '<ul class="forminator-authentication-nav">';
 		foreach ( $providers as $slug => $provider ) {
@@ -329,10 +344,11 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		$wrapper .= '</ul>';
 		$wrapper .= '<img class="def-ajaxloader" src="' . esc_url( $defender_data['img_dir_url'] ) . 'spinner.svg"/>';
 		$wrapper .= '<strong class="notification"></strong>';
-        $wrapper .= '</div>';
+		$wrapper .= '</div>';
 		global $interim_login;
 		if ( ! $interim_login ) {
-			$link_back_to = sprintf( _x( '&larr; Back to %s', 'forminator' ), get_bloginfo( 'title', 'display' ) );
+			/* translators: 1. Blog title. */
+			$link_back_to = sprintf( _x( '&larr; Back to %s', 'back link', 'forminator' ), get_bloginfo( 'title', 'display' ) );
 			$wrapper     .= '<p class="forminator-authentication-backtolog"><a class="auth-back" href="#">' . esc_html( $link_back_to ) . '</a></p>';
 		}
 
@@ -341,7 +357,6 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		$wrapper .= '</div>';
 
 		return $wrapper;
-
 	}
 
 	/**
@@ -349,8 +364,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param      $is_preview
-	 * @param bool       $is_ajax_load
+	 * @param bool $is_preview Is preview.
+	 * @param bool $is_ajax_load Is ajax load.
 	 */
 	public function enqueue_form_scripts( $is_preview, $is_ajax_load = false ) {
 		$is_ajax_load = $is_preview || $is_ajax_load;
@@ -369,7 +384,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			$language         = Forminator_Field::get_property( 'language', $first_captcha, $global_language );
 			$language         = ! empty( $language ) ? $language : $global_language;
 
-			// Check whether provider is reCaptcha or hCaptcha
+			// Check whether provider is reCaptcha or hCaptcha.
 			if ( $this->is_recaptcha() ) {
 				$method_onload = 'forminator_render_captcha';
 				$src           = 'https://www.google.com/recaptcha/api.js?hl=' . $language . '&onload=' . $method_onload . '&render=explicit';
@@ -446,7 +461,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 					'on'   => '$',
 					'load' => 'intlTelInput',
 				);
-				$this->scripts['forminator-libphonenumber']    = array(
+				$this->scripts['forminator-libphonenumber']  = array(
 					'src'  => add_query_arg( 'ver', $script_version, $script_src_lib ),
 					'on'   => '$',
 					'load' => 'libphonenumber',
@@ -603,7 +618,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @param bool $is_ajax_load Is it loading via AJAX.
 	 **/
-	private function maybe_load_slider_styles( bool $is_ajax_load ) : void {
+	private function maybe_load_slider_styles( bool $is_ajax_load ): void {
 		if ( ! $this->has_field_type( 'slider' ) || 'none' !== $this->get_form_design() ) {
 			return;
 		}
@@ -624,7 +639,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	/**
 	 * PayPal Script url parameters
 	 *
-	 * @param $script
+	 * @param string $script Script URL.
 	 *
 	 * @return string
 	 */
@@ -785,7 +800,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $wrapper
+	 * @param array $wrapper Wrapper.
 	 *
 	 * @return mixed
 	 */
@@ -810,7 +825,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $wrapper
+	 * @param array $wrapper Wrapper.
 	 *
 	 * @return mixed
 	 */
@@ -843,6 +858,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 
 	/**
 	 * Return true if we have only hidden field in the row
+	 *
+	 * @param array $wrapper Wrapper.
 	 *
 	 * @since 1.7
 	 * @return bool
@@ -877,7 +894,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	public static function get_grouped_wrappers( $group_id = '' ) {
 		$wrappers = array_filter(
 			self::$all_wrappers,
-			function( $value ) use ( $group_id ) {
+			function ( $value ) use ( $group_id ) {
 				return ! $group_id ? empty( $value['parent_group'] ) : ! empty( $value['parent_group'] ) && $group_id === $value['parent_group'];
 			}
 		);
@@ -890,7 +907,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param bool $render
+	 * @param bool $render Render.
 	 *
 	 * @return string|void
 	 */
@@ -934,7 +951,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		if ( $render ) {
 			echo wp_kses_post( $html );
 		} else {
-			/** @noinspection PhpInconsistentReturnPointsInspection */
+			/* @noinspection PhpInconsistentReturnPointsInspection */
 			return apply_filters( 'forminator_render_fields_markup', $html, $wrappers );
 		}
 	}
@@ -1005,7 +1022,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $wrapper
+	 * @param array $wrapper Wrapper.
 	 *
 	 * @return bool
 	 */
@@ -1024,7 +1041,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $wrapper
+	 * @param array $wrapper Wrapper.
 	 *
 	 * @return bool
 	 */
@@ -1062,7 +1079,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	/**
 	 * Return pagination start markup
 	 *
-	 * @param $element
+	 * @param array $element Element.
 	 *
 	 * @since 1.0
 	 * @return string
@@ -1085,7 +1102,6 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		);
 
 		return apply_filters( 'forminator_pagination_start_markup', $html, $label, $element_id );
-
 	}
 
 
@@ -1149,7 +1165,6 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		$properties = apply_filters( 'forminator_pagination_properties', $properties, $form_id );
 
 		return $properties;
-
 	}
 
 	/**
@@ -1188,7 +1203,6 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		$properties = apply_filters( 'forminator_paypal_properties', $properties, $form_id );
 
 		return $properties;
-
 	}
 
 	/**
@@ -1288,8 +1302,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
-	 * @param $pagination
+	 * @param array  $field Field.
+	 * @param array  $pagination Pagination.
 	 * @param string $step Step number.
 	 *
 	 * @return string
@@ -1303,7 +1317,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 		$element_id = '';
 		if ( ! empty( $pagination ) ) {
-			for ( $i = $step; $i <= count( $pagination ); $i ++ ) {
+			$pagination_count = count( $pagination );
+			for ( $i = $step; $i <= $pagination_count; $i++ ) {
 				if ( isset( $pagination[ $i ]['element_id'] ) && ( $field['element_id'] !== $pagination[ $i ]['element_id'] ) ) {
 					$element_id = $pagination[ $i ]['element_id'];
 					break;
@@ -1328,8 +1343,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 * @since 1.0
 	 * @since 1.17.0 Add draft_value parameter
 	 *
-	 * @param $field
-	 * @param $draft_value
+	 * @param array $field Field.
 	 *
 	 * @return mixed
 	 */
@@ -1339,7 +1353,10 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		do_action( 'forminator_before_field_render', $field );
 
 		// Get field object.
-		/** @var Forminator_Field $field_object */
+		/**
+		 * Forminator_Field
+		 *
+		 * @var Forminator_Field $field_object */
 		$field_object = Forminator_Core::get_field_object( $this->get_field_type( $field ) );
 
 		// If bool, abort.
@@ -1373,8 +1390,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 * @since 1.0
 	 * @since 1.17.0 Add draft_value parameter
 	 *
-	 * @param $field
-	 * @param $draft_value
+	 * @param array $field Field.
 	 *
 	 * @return mixed
 	 */
@@ -1388,7 +1404,10 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		$draft_value = isset( $this->draft_data[ $field['element_id'] ] ) ? $this->draft_data[ $field['element_id'] ] : null;
 
 		// Get field object.
-		/** @var Forminator_Field $field_object */
+		/**
+		 * Forminator_Field
+		 *
+		 * @var Forminator_Field $field_object */
 		$field_object = Forminator_Core::get_field_object( $type );
 
 		// Print field markup.
@@ -1396,9 +1415,6 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 
 		$this->inline_rules    .= $field_object->get_validation_rules();
 		$this->inline_messages .= $field_object->get_validation_messages();
-
-		// Print field description.
-		// $html .= $this->get_description( $field );.
 
 		return apply_filters( 'forminator_field_markup', $html, $field, $this );
 	}
@@ -1408,7 +1424,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return string
 	 */
@@ -1429,7 +1445,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return string
 	 */
@@ -1446,7 +1462,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return mixed
 	 */
@@ -1463,7 +1479,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return mixed
 	 */
@@ -1480,7 +1496,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return mixed
 	 */
@@ -1497,17 +1513,20 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return mixed
 	 */
 	public function get_description( $field ) {
 		_deprecated_function( __METHOD__, '1.6' );
 		$type = $this->get_field_type( $field );
-		/** @var Forminator_Field $field_object */
+		/**
+		 * Forminator_Field
+		 *
+		 * @var Forminator_Field $field_object */
 		$field_object              = Forminator_Core::get_field_object( $type );
 		$has_phone_character_limit = ( ( isset( $field['phone_validation'] ) && $field['phone_validation'] )
-									   && ( isset( $field['validation'] )
+										&& ( isset( $field['validation'] )
 											&& 'character_limit' === $field['validation'] ) );
 
 		if ( ( isset( $field['description'] ) && ! empty( $field['description'] ) ) || isset( $field['text_limit'] ) || $has_phone_character_limit ) {
@@ -1523,7 +1542,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 				$html .= $description;
 			}
 
-			if ( ( isset( $field['text_limit'] ) || isset( $field['phone_limit'] ) ) && isset( $field['limit'] ) && $field_object->has_counter || $has_phone_character_limit ) {
+			if ( ( isset( $field['text_limit'] ) || isset( $field['phone_limit'] ) ) && isset( $field['limit'] ) && ( $field_object->has_counter || $has_phone_character_limit ) ) {
 				if ( ( isset( $field['text_limit'] ) && $field['text_limit'] ) || ( isset( $field['phone_limit'] ) && $field['phone_limit'] ) || $has_phone_character_limit ) {
 					$limit = isset( $field['limit'] ) ? $field['limit'] : '';
 					if ( empty( $limit ) && $has_phone_character_limit ) {
@@ -1547,7 +1566,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return mixed
 	 */
@@ -1566,7 +1585,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return mixed
 	 */
@@ -1591,7 +1610,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return mixed
 	 */
@@ -1729,7 +1748,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return bool
 	 */
@@ -1746,7 +1765,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return bool
 	 */
@@ -1763,7 +1782,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return string
 	 */
@@ -1783,7 +1802,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $id
+	 * @param array $id Id.
 	 *
 	 * @return mixed
 	 */
@@ -1819,13 +1838,13 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.13
 	 *
-	 * @param string $element_id
+	 * @param string $element_id Element Id.
 	 *
 	 * @return bool
 	 */
 	public function compare_element_id_with_precision_elements( $element_id ) {
 		return false !== strpos( $element_id, 'calculation-' )
-		       || false !== strpos( $element_id, 'currency-' );
+				|| false !== strpos( $element_id, 'currency-' );
 	}
 
 	/**
@@ -1833,8 +1852,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.13
 	 *
-	 * @param string $condition_value
-	 * @param array  $field
+	 * @param string $condition_value Condition value.
+	 * @param array  $field Field.
 	 *
 	 * @return string
 	 */
@@ -1947,7 +1966,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return bool
 	 */
@@ -1978,6 +1997,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	}
 
 	/**
+	 * Has paypal
+	 *
 	 * @since 1.0
 	 * @return bool
 	 */
@@ -1989,7 +2010,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		if ( ! empty( $fields ) ) {
 			foreach ( $fields as $field ) {
 				if ( 'paypal' === $field['type'] ) {
-					$selling ++;
+					++$selling;
 				}
 			}
 		}
@@ -2010,8 +2031,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		$form_settings = $this->get_form_settings();
 
 		if ( empty( $this->lead_model->id ) || empty( $this->lead_model->settings['pagination'] )
-				|| ! empty( $this->lead_model->settings )
-				&& 'end' === $this->get_form_placement( $this->lead_model->settings ) ) {
+				|| ( ! empty( $this->lead_model->settings )
+				&& 'end' === $this->get_form_placement( $this->lead_model->settings ) ) ) {
 			$button = $this->get_submit_button_text();
 		} else {
 			$class .= ' forminator-quiz-start';
@@ -2062,7 +2083,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $form_id
+	 * @param int $form_id Form Id.
 	 *
 	 * @return mixed
 	 */
@@ -2103,8 +2124,9 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param        $form_id
-	 * @param bool    $render
+	 * @param int  $form_id Form Id.
+	 * @param bool $render Render.
+	 * @param int  $render_id Render Id.
 	 *
 	 * @return mixed|void
 	 */
@@ -2172,7 +2194,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			$html = apply_filters( 'forminator_render_form_submit_markup', $html, $form_id, $post_id, $nonce );
 			echo wp_kses_post( $html );
 		} else {
-			/** @noinspection PhpInconsistentReturnPointsInspection */
+			/* @noinspection PhpInconsistentReturnPointsInspection */
 			return apply_filters( 'forminator_render_form_submit_markup', $html, $form_id, $post_id, $nonce );
 		}
 	}
@@ -2234,9 +2256,9 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	public function render_honeypot_field(
 		$html,
 		$form_id,
-		/** @noinspection PhpUnusedParameterInspection */
+		/* @noinspection PhpUnusedParameterInspection */
 		$post_id,
-		/** @noinspection PhpUnusedParameterInspection */
+		/* @noinspection PhpUnusedParameterInspection */
 		$nonce
 	) {
 		if ( (int) $form_id === (int) $this->model->id && $this->is_honeypot_enabled() ) {
@@ -2254,6 +2276,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @param string $prefix Default prefix.
 	 * @param array  $properties CSS properties.
+	 * @param string $slug Slug.
 	 * @return string
 	 */
 	protected static function get_css_prefix( $prefix, $properties, $slug ) {
@@ -2376,7 +2399,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			esc_html__( 'Dec', 'forminator' ),
 		);
 
-		return json_encode( $calendar );
+		return wp_json_encode( $calendar );
 	}
 
 	/**
@@ -2459,9 +2482,9 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 */
 	public function forminator_render_front_scripts() {
 		?>
-        <script type="text/javascript">
-            jQuery(function () {
-                window.Forminator_Cform_Paginations = window.Forminator_Cform_Paginations || [];
+		<script type="text/javascript">
+			jQuery(function () {
+				window.Forminator_Cform_Paginations = window.Forminator_Cform_Paginations || [];
 				<?php
 				if ( ! empty( $this->forms_properties ) ) {
 					foreach ( $this->forms_properties as $form_properties ) {
@@ -2469,13 +2492,13 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 						$pagination_config = $options['pagination_config'];
 						unset( $options['pagination_config'] );
 						?>
-                window.Forminator_Cform_Paginations[<?php echo esc_attr( $form_properties['id'] ); ?>] =
+				window.Forminator_Cform_Paginations[<?php echo esc_attr( $form_properties['id'] ); ?>] =
 						<?php echo wp_json_encode( $pagination_config ); ?>;
 
-                var runForminatorFront = function () {
-                    jQuery('#forminator-module-<?php echo esc_attr( $form_properties['id'] ); ?>[data-forminator-render="<?php echo esc_attr( $form_properties['render_id'] ); ?>"]')
-                        .forminatorFront(<?php echo wp_json_encode( $options ); ?>);
-                }
+				var runForminatorFront = function () {
+					jQuery('#forminator-module-<?php echo esc_attr( $form_properties['id'] ); ?>[data-forminator-render="<?php echo esc_attr( $form_properties['render_id'] ); ?>"]')
+						.forminatorFront(<?php echo wp_json_encode( $options ); ?>);
+				}
 
 				if (window.elementorFrontend) {
 					if (typeof elementorFrontend.hooks !== "undefined") {
@@ -2514,7 +2537,6 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			});
 		</script>
 		<?php
-
 	}
 
 	/**
@@ -2569,7 +2591,6 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		$output = ob_get_clean();
 
 		return $output;
-
 	}
 
 	/**
@@ -2691,7 +2712,6 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		$fonts = apply_filters( 'forminator_custom_form_google_fonts', $fonts, $form_id, $settings );
 
 		return $fonts;
-
 	}
 
 	/**
@@ -2699,9 +2719,9 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.2
 	 *
-	 * @param             $field_type
-	 * @param string|null $setting_name
-	 * @param string|null $setting_value
+	 * @param string      $field_type Field type.
+	 * @param string|null $setting_name Setting name.
+	 * @param string|null $setting_value Setting value.
 	 *
 	 * @return bool
 	 */
@@ -2730,11 +2750,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 						if ( $setting_value === $field_settings_value ) {
 							return true;
 						}
-					} else {
-						// for backward compatibility if select type doesn't set.
-						if ( 'select' === $field_type && 'value_type' === $setting_name && 'single' === $setting_value ) {
-							return true;
-						}
+					} elseif ( 'select' === $field_type && 'value_type' === $setting_name && 'single' === $setting_value ) { // for backward compatibility if select type doesn't set.
+						return true;
 					}
 				}
 			}
@@ -2768,7 +2785,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $form_properties
+	 * @param array $form_properties Form properties.
 	 *
 	 * @return array
 	 */
@@ -2855,7 +2872,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	/**
 	 * Return if form has submission loader enabled
 	 *
-	 * @param $properties
+	 * @param array $properties Properties.
 	 *
 	 * @since 1.7.1
 	 *
@@ -2872,7 +2889,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	/**
 	 * Return loader label
 	 *
-	 * @param $properties
+	 * @param array $properties Properties.
 	 *
 	 * @since 1.7.1
 	 *
@@ -2942,9 +2959,9 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param bool $hide
-	 * @param bool $is_preview
-	 * @param int  $render_id
+	 * @param bool $hide Hide.
+	 * @param bool $is_preview Is preview.
+	 * @param int  $render_id Render Id.
 	 *
 	 * @return false|string
 	 */
@@ -2954,8 +2971,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		// Hide registration or login form for logged-in users if enabled.
 		$hide_option = 'hide-' . $form_type . '-form';
 		if ( ! $is_preview
-		     && in_array( $form_type, array( 'login', 'registration' ), true ) && is_user_logged_in()
-		     && isset( $form_settings[ $hide_option ] ) && '1' === $form_settings[ $hide_option ] ) {
+			&& in_array( $form_type, array( 'login', 'registration' ), true ) && is_user_logged_in()
+			&& isset( $form_settings[ $hide_option ] ) && '1' === $form_settings[ $hide_option ] ) {
 
 			$hidden_message_option = 'hidden-' . $form_type . '-form-message';
 			$html                  = isset( $form_settings[ $hidden_message_option ] )
@@ -2975,14 +2992,14 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		} else {
 			$form_settings = $this->get_form_settings();
 			?>
-            <div class="forminator-custom-form">
+			<div class="forminator-custom-form">
 				<?php
 				if ( isset( $form_settings['expire_message'] ) && '' !== $form_settings['expire_message'] ) {
 					$message = $form_settings['expire_message'];
 					?>
-                    <label class="forminator-label--info"><span><?php echo esc_html( $message ); ?></span></label>
+					<label class="forminator-label--info"><span><?php echo esc_html( $message ); ?></span></label>
 				<?php } ?>
-            </div>
+			</div>
 			<?php
 		}
 
@@ -2993,6 +3010,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 
 	/**
 	 * Set module properties
+	 *
+	 * @param int|null $render_id Render Id.
 	 */
 	protected function set_forms_properties( $render_id = null ) {
 		$submit_field = $this->get_submit_field();
@@ -3003,10 +3022,10 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			}
 			$render_id = self::$render_ids[ $this->model->id ];
 		}
-        $submit_custom_data = '';
-        if ( isset( $submit_field['custom-class'] ) ) {
-	        $submit_custom_data = $submit_field['custom-class'];
-        }
+		$submit_custom_data = '';
+		if ( isset( $submit_field['custom-class'] ) ) {
+			$submit_custom_data = $submit_field['custom-class'];
+		}
 		$this->forms_properties[] = array(
 			'id'                  => $this->model->id,
 			'render_id'           => $render_id,
@@ -3096,6 +3115,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	/**
 	 * Check if form given field type
 	 *
+	 * @param string $type Field type.
+	 *
 	 * @since 1.14
 	 * @return bool
 	 */
@@ -3133,7 +3154,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.11
 	 *
-	 * @param string $hidden_form_message
+	 * @param string $hidden_form_message Message.
 	 *
 	 * @return string
 	 */
@@ -3153,7 +3174,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		if ( ! empty( $fields ) ) {
 			foreach ( $fields as $field ) {
 				if ( isset( $field['type'] ) && 'upload' === $field['type'] &&
-				     isset( $field['file-type'] ) && 'multiple' === $field['file-type']
+					isset( $field['file-type'] ) && 'multiple' === $field['file-type']
 				) {
 					return true;
 				}
@@ -3166,7 +3187,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	/**
 	 * Get lead skip text
 	 *
-	 * @param array $form_settings
+	 * @param array $form_settings Form settings.
 	 *
 	 * @return bool
 	 */
@@ -3229,6 +3250,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	/**
 	 * Get Save draft button
 	 *
+	 * @param array $form_settings Form settings.
+	 *
 	 * @return string
 	 */
 	public function get_save_draft_button( $form_settings ) {
@@ -3245,16 +3268,16 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 
 		$button = sprintf(
-            '<a href="#" class="forminator-save-draft-link disabled" title="%s" formnovalidate>%s</a>',
-            esc_attr__(
-                'Fill in form fields before saving it as a draft',
-                'forminator'
-            ),
-            esc_html__(
-                isset( $form_settings['sc_link_text'] ) && ! empty( $form_settings['sc_link_text'] ) ? esc_html( $form_settings['sc_link_text'] ) : 'Save as Draft',
-                'forminator'
-            )
-        );
+			'<a href="#" class="forminator-save-draft-link disabled" title="%s" formnovalidate>%s</a>',
+			esc_attr__(
+				'Fill in form fields before saving it as a draft',
+				'forminator'
+			),
+			esc_html__(
+				isset( $form_settings['sc_link_text'] ) && ! empty( $form_settings['sc_link_text'] ) ? esc_html( $form_settings['sc_link_text'] ) : 'Save as Draft', // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+				'forminator'
+			)
+		);
 
 		return $button;
 	}

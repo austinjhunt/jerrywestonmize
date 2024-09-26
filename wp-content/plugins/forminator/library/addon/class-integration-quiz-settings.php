@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * The Forminator_Integration_Quiz_Settings class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Integration_Quiz_Settings
@@ -63,6 +67,11 @@ abstract class Forminator_Integration_Quiz_Settings extends Forminator_Integrati
 	 */
 	protected $form_settings;
 
+	/**
+	 * Module slug
+	 *
+	 * @var string
+	 */
 	protected static $module_slug = 'quiz';
 
 	/**
@@ -70,18 +79,18 @@ abstract class Forminator_Integration_Quiz_Settings extends Forminator_Integrati
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param Forminator_Integration $addon
-	 * @param                           $quiz_id
+	 * @param Forminator_Integration $addon Class Forminator_Integration.
+	 * @param int                    $quiz_id Quiz Id.
 	 *
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception When there is an Integration error.
 	 */
 	public function __construct( Forminator_Integration $addon, $quiz_id ) {
-		$this->addon   = $addon;
+		$this->addon     = $addon;
 		$this->module_id = $quiz_id;
-		$this->quiz    = Forminator_Base_Form_Model::get_model( $this->module_id );
+		$this->quiz      = Forminator_Base_Form_Model::get_model( $this->module_id );
 		if ( ! $this->quiz ) {
 			/* translators: Quiz ID */
-			throw new Forminator_Integration_Exception( sprintf( esc_html__( 'Quiz with id %d could not be found', 'forminator' ), $this->module_id ) );
+			throw new Forminator_Integration_Exception( sprintf( esc_html__( 'Quiz with id %d could not be found', 'forminator' ), esc_html( $this->module_id ) ) );
 		}
 		$this->quiz_settings = forminator_addon_format_quiz_settings( $this->quiz );
 		if ( isset( $this->quiz_settings['hasLeads'] ) && $this->quiz_settings['hasLeads'] ) {
@@ -99,7 +108,7 @@ abstract class Forminator_Integration_Quiz_Settings extends Forminator_Integrati
 	 *
 	 * @since   1.6.2
 	 *
-	 * @param $values
+	 * @param mixed $values Settings.
 	 *
 	 * @return mixed
 	 */
@@ -114,7 +123,7 @@ abstract class Forminator_Integration_Quiz_Settings extends Forminator_Integrati
 	 * called when rendering tab on quiz settings
 	 * @since   1.6.2
 	 *
-	 * @param $values
+	 * @param mixed $values Settings.
 	 *
 	 * @return mixed
 	 */
@@ -154,7 +163,7 @@ abstract class Forminator_Integration_Quiz_Settings extends Forminator_Integrati
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $reason
+	 * @param string $reason Reason for disconnect.
 	 */
 	final public function force_quiz_disconnect( $reason ) {
 		$this->is_force_quiz_disconnected     = true;
@@ -163,7 +172,6 @@ abstract class Forminator_Integration_Quiz_Settings extends Forminator_Integrati
 		$this->addon_settings = array();
 
 		$this->save_module_settings_values();
-
 	}
 
 	/**
@@ -330,11 +338,12 @@ abstract class Forminator_Integration_Quiz_Settings extends Forminator_Integrati
 	/**
 	 * Executed when quiz settings imported
 	 *
-	 * default is save imported data to post_meta, override when needed
+	 * Default is save imported data to post_meta, override when needed
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $import_data
+	 * @param mixed $import_data Import data.
+	 * @throws Forminator_Integration_Exception When there is an Integration error.
 	 */
 	public function import_data( $import_data ) {
 		$addon_slug = $this->addon->get_slug();
@@ -375,7 +384,6 @@ abstract class Forminator_Integration_Quiz_Settings extends Forminator_Integrati
 			forminator_addon_maybe_log( $e->getMessage() );
 			// do nothing.
 		}
-
 	}
 
 	/**
@@ -412,7 +420,7 @@ abstract class Forminator_Integration_Quiz_Settings extends Forminator_Integrati
 		}
 
 		$quiz_fields = array_map(
-			function( $quiz_question ) {
+			function ( $quiz_question ) {
 				return array(
 					'element_id'  => $quiz_question['slug'],
 					'field_label' => $quiz_question['title'],

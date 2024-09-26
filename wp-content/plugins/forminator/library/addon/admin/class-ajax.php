@@ -1,5 +1,11 @@
 <?php
-/** @noinspection PhpIncludeInspection */
+/**
+ * The Forminator_Addon_Admin_Ajax class.
+ *
+ * @package Forminator
+ */
+
+/* @noinspection PhpIncludeInspection */
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -82,6 +88,8 @@ class Forminator_Addon_Admin_Ajax {
 	/**
 	 * Validate Ajax request
 	 *
+	 * @param string $page_slug Page slug.
+	 *
 	 * @since 1.1
 	 */
 	private function validate_ajax( $page_slug = '' ) {
@@ -132,7 +140,7 @@ class Forminator_Addon_Admin_Ajax {
 			array(
 				'notification' => array(
 					'type' => 'success',
-					'text' => '<strong>' . $addon->get_title() . '</strong> ' . esc_html__( 'has been disconnected successfully.' ),
+					'text' => '<strong>' . $addon->get_title() . '</strong> ' . esc_html__( 'has been disconnected successfully.', 'forminator' ),
 				),
 			)
 		);
@@ -180,7 +188,6 @@ class Forminator_Addon_Admin_Ajax {
 			'',
 			$wizard
 		);
-
 	}//end settings()
 
 	/**
@@ -241,7 +248,7 @@ class Forminator_Addon_Admin_Ajax {
 				array(
 					'notification' => array(
 						'type' => 'success',
-						'text' => '<strong>' . $addon_title . '</strong> ' . esc_html__( 'Successfully disconnected from this module' ),
+						'text' => '<strong>' . $addon_title . '</strong> ' . esc_html__( 'Successfully disconnected from this module', 'forminator' ),
 					),
 				)
 			);
@@ -253,12 +260,11 @@ class Forminator_Addon_Admin_Ajax {
 				array(
 					'notification' => array(
 						'type' => 'error',
-						'text' => '<strong>' . $addon->get_title() . '</strong> ' . esc_html__( 'Failed to disconnected from this module' ),
+						'text' => '<strong>' . $addon->get_title() . '</strong> ' . esc_html__( 'Failed to disconnected from this module', 'forminator' ),
 					),
 				)
 			);
 		}
-
 	}
 
 	/**
@@ -268,12 +274,12 @@ class Forminator_Addon_Admin_Ajax {
 	 */
 	public function get_addons() {
 		$this->validate_ajax( 'forminator-integrations' );
-		/** @noinspection PhpUnusedLocalVariableInspection */
+		/* @noinspection PhpUnusedLocalVariableInspection */
 		$addons = forminator_get_registered_addons_grouped_by_connected();
 
 		ob_start();
 
-		/** @noinspection PhpIncludeInspection */
+		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'admin/views/integrations/page-content.php';
 
 		$html = ob_get_clean();
@@ -282,7 +288,6 @@ class Forminator_Addon_Admin_Ajax {
 			'',
 			$html
 		);
-
 	}
 
 	/**
@@ -309,8 +314,8 @@ class Forminator_Addon_Admin_Ajax {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $message
-	 * @param array  $additional_data
+	 * @param string $message Message.
+	 * @param array  $additional_data Data.
 	 */
 	private function send_json_success( $message = '', $additional_data = array() ) {
 		wp_send_json_success(
@@ -327,9 +332,9 @@ class Forminator_Addon_Admin_Ajax {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $message
-	 * @param array  $errors
-	 * @param array  $additional_data
+	 * @param string $message Message.
+	 * @param array  $errors Errors.
+	 * @param array  $additional_data Data.
 	 */
 	private function send_json_errors( $message = '', $errors = array(), $additional_data = array() ) {
 		wp_send_json_error(
@@ -348,15 +353,15 @@ class Forminator_Addon_Admin_Ajax {
 	 *
 	 * @since 1.1
 	 *
-	 * @param array $required_fields
+	 * @param array $required_fields Required fields.
 	 *
 	 * @return mixed
 	 */
 	private function validate_and_sanitize_fields( $required_fields = array() ) {
-		$post_data = isset( $_POST['data'] )
-			? ( is_string( $_POST['data'] )
+		$post_data = isset( $_POST['data'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			? ( is_string( $_POST['data'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				? filter_input( INPUT_POST, 'data' )
-				: Forminator_Core::sanitize_array( $_POST['data'], 'data' ) )
+				: Forminator_Core::sanitize_array( $_POST['data'], 'data' ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput
 			: '';
 		if ( ! $post_data ) {
 			$post_data = filter_input( INPUT_GET, 'data' );
@@ -398,7 +403,7 @@ class Forminator_Addon_Admin_Ajax {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param $slug
+	 * @param string $slug Addon slug.
 	 *
 	 * @return Forminator_Addon_Abstract
 	 */
@@ -412,7 +417,7 @@ class Forminator_Addon_Admin_Ajax {
 				array(
 					'notification' => array(
 						'type' => 'error',
-						'text' => '<strong>' . $slug . '</strong> ' . esc_html__( 'Integration Not Found' ),
+						'text' => '<strong>' . $slug . '</strong> ' . esc_html__( 'Integration Not Found', 'forminator' ),
 					),
 				)
 			);
@@ -543,7 +548,5 @@ class Forminator_Addon_Admin_Ajax {
 			'',
 			$wizard
 		);
-
 	}//end module_settings()
-
 }

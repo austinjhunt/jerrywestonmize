@@ -5,6 +5,7 @@ namespace MailPoet\Migrations\App;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Doctrine\WPDB\Connection as WPDBConnection;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Entities\SendingQueueEntity;
@@ -24,6 +25,12 @@ class Migration_20231128_120355_App extends AppMigration {
 
     // If Woo is not active and the table doesn't exist, we can skip this migration
     if (!$wooCommerceHelper->isWooCommerceActive()) {
+      return;
+    }
+
+    // Temporarily skip the queries in WP Playground.
+    // UPDATE with JOIN is not yet supported by the SQLite integration.
+    if (WPDBConnection::isSQLite()) {
       return;
     }
 

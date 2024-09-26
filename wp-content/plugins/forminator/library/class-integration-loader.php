@@ -1,9 +1,15 @@
 <?php
+/**
+ * Forminator Integration Loader
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
 
-/** @noinspection PhpIncludeInspection */
+/* @noinspection PhpIncludeInspection */
 require_once forminator_plugin_dir() . 'library/addon/class-integration-exception.php';
 require_once forminator_plugin_dir() . 'library/addon/class-forminator-integration-settings-exception.php';
 require_once forminator_plugin_dir() . 'library/addon/class-addon-container.php';
@@ -28,7 +34,7 @@ require_once forminator_plugin_dir() . 'library/addon/admin/class-integration-ad
 class Forminator_Integration_Loader {
 
 	/**
-	 * wp option name of activated addons
+	 * WP option name of activated addons
 	 *
 	 * @since 1.1
 	 * @var string
@@ -36,6 +42,8 @@ class Forminator_Integration_Loader {
 	private static $_active_addons_option = 'forminator_activated_addons';
 
 	/**
+	 * Forminator_Integration_Loader instance
+	 *
 	 * @since 1.1
 	 * @var self
 	 */
@@ -212,7 +220,7 @@ class Forminator_Integration_Loader {
 			if ( $class_name instanceof Forminator_Integration ) {
 				$addon_class = $class_name;
 			} else {
-				if ( ! strpos( $class_name, '_') ) {
+				if ( ! strpos( $class_name, '_' ) ) {
 					// Integration slug is passed.
 					$class_slug = $class_name;
 					$class_name = 'Forminator_' . ucfirst( $class_name );
@@ -267,7 +275,6 @@ class Forminator_Integration_Loader {
 
 			return false;
 		}
-
 	}
 
 	/**
@@ -275,24 +282,23 @@ class Forminator_Integration_Loader {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $class_name
+	 * @param string $class_name Class Name.
 	 *
 	 * @return Forminator_Integration
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception When there is an addon error.
 	 */
 	private function validate_addon_class( $class_name ) {
 		if ( ! class_exists( $class_name ) ) {
-			throw new Forminator_Integration_Exception( 'Integration with ' . $class_name . ' does not exist' );
+			throw new Forminator_Integration_Exception( esc_html( 'Integration with ' . $class_name . ' does not exist' ) );
 		}
 
 		if ( ! is_callable( array( $class_name, 'get_instance' ) ) ) {
-			throw new Forminator_Integration_Exception( 'Integration with ' . $class_name . ' does not have get_instance method' );
+			throw new Forminator_Integration_Exception( esc_html( 'Integration with ' . $class_name . ' does not have get_instance method' ) );
 		}
 
 		$addon_class = call_user_func( array( $class_name, 'get_instance' ) );
 
 		return $addon_class;
-
 	}
 
 	/**
@@ -300,32 +306,35 @@ class Forminator_Integration_Loader {
 	 *
 	 * @since 1.1
 	 *
-	 * @param Forminator_Integration $instance
+	 * @param Forminator_Integration $instance Forminator_Integration.
 	 *
 	 * @return Forminator_Integration
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception When there is an addon error.
 	 */
 	private function validate_addon_instance( Forminator_Integration $instance ) {
-		/** @var Forminator_Integration $addon_class */
+		/**
+		 * Forminator_Integration
+		 *
+		 * @var Forminator_Integration $addon_class */
 		$addon_class = $instance;
 		$class_name  = get_class( $instance );
 
 		if ( ! $addon_class instanceof Forminator_Integration ) {
-			throw new Forminator_Integration_Exception( 'Integration with ' . $class_name . ' is not instanceof Forminator_Integration' );
+			throw new Forminator_Integration_Exception( esc_html( 'Integration with ' . $class_name . ' is not instanceof Forminator_Integration' ) );
 		}
 		$slug    = $addon_class->get_slug();
 		$version = $addon_class->get_version();
 
 		if ( empty( $slug ) ) {
-			throw new Forminator_Integration_Exception( 'Integration with ' . $class_name . ' does not have slug' );
+			throw new Forminator_Integration_Exception( esc_html( 'Integration with ' . $class_name . ' does not have slug' ) );
 		}
 
 		// FIFO.
 		if ( isset( $this->addons[ $slug ] ) ) {
-			throw new Forminator_Integration_Exception( 'Integration with slug ' . $slug . ' already exist' );
+			throw new Forminator_Integration_Exception( esc_html( 'Integration with slug ' . $slug . ' already exist' ) );
 		}
 		if ( empty( $version ) ) {
-			throw new Forminator_Integration_Exception( 'Integration with slug ' . $slug . ' does not have valid version' );
+			throw new Forminator_Integration_Exception( esc_html( 'Integration with slug ' . $slug . ' does not have valid version' ) );
 		}
 
 		// check version changed if active.
@@ -348,7 +357,7 @@ class Forminator_Integration_Loader {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $slug
+	 * @param string $slug Slug.
 	 *
 	 * @return object
 	 */
@@ -371,7 +380,7 @@ class Forminator_Integration_Loader {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $slug
+	 * @param string $slug Slug.
 	 *
 	 * @return bool
 	 */
@@ -389,7 +398,7 @@ class Forminator_Integration_Loader {
 	 *
 	 * @since 1.1
 	 *
-	 * @param $slug
+	 * @param string $slug Slug.
 	 *
 	 * @return bool
 	 */
@@ -440,7 +449,7 @@ class Forminator_Integration_Loader {
 	 *
 	 * @since 1.1
 	 *
-	 * @param $slug
+	 * @param string $slug Slug.
 	 */
 	private function add_activated_addons( $slug ) {
 		$addon                    = $this->get_addon( $slug );
@@ -456,7 +465,7 @@ class Forminator_Integration_Loader {
 	 *
 	 * @since 1.1
 	 *
-	 * @param $slug
+	 * @param string $slug Slug.
 	 */
 	public function force_remove_activated_addons( $slug ) {
 		$addon   = $this->get_addon( $slug );
@@ -494,7 +503,7 @@ class Forminator_Integration_Loader {
 				update_option( self::$_active_addons_option, $this->activated_addons );
 			}
 		}
-		// delete post meta.
+		// Delete post meta.
 		delete_post_meta_by_key( $setting_form_meta_name );
 
 		/**
@@ -514,7 +523,7 @@ class Forminator_Integration_Loader {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $slug
+	 * @param string $slug Slug.
 	 *
 	 * @return bool
 	 */
@@ -642,8 +651,11 @@ class Forminator_Integration_Loader {
 
 		// Rename module Zapier settings.
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- false positive
 		$wpdb->query( "UPDATE $wpdb->postmeta SET meta_key = 'forminator_addon_webhook_form_settings' WHERE meta_key = 'forminator_addon_zapier_form_settings'" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- false positive
 		$wpdb->query( "UPDATE $wpdb->postmeta SET meta_key = 'forminator_addon_webhook_poll_settings' WHERE meta_key = 'forminator_addon_zapier_poll_settings'" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- false positive
 		$wpdb->query( "UPDATE $wpdb->postmeta SET meta_key = 'forminator_addon_webhook_quiz_settings' WHERE meta_key = 'forminator_addon_zapier_quiz_settings'" );
 
 		$this->force_remove_activated_addons( 'zapier' );
@@ -679,5 +691,4 @@ class Forminator_Integration_Loader {
 	public function get_activated_addons() {
 		return $this->activated_addons;
 	}
-
 }

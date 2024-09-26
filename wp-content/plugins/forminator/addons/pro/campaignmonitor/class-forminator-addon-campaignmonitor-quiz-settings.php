@@ -1,5 +1,11 @@
 <?php
 /**
+ * The Forminator Campaign Monitor Quiz Settings.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Campaignmonitor_Quiz_Settings
  * Handle how quiz settings displayed and saved
  *

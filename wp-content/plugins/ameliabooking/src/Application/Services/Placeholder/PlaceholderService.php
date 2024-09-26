@@ -155,9 +155,11 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             'employee_note'       => 'Employee Note',
             'employee_description' => 'Employee Description',
             'employee_panel_url'  => 'https://your_site.com/employee-panel',
-            'location_address'        => $companySettings['address'],
+            'location_address'        => $companySettings['address'] ? $companySettings['address'] : 'Address 123',
             'location_phone'          => $companySettings['phone'],
             'location_name'           => 'Location Name',
+            'location_latitude'       => '40.748441',
+            'location_longitude'      => '-73.987853',
             'location_description'    => 'Location Description',
             ],
             $this->getEntityPlaceholdersDummyData($type)
@@ -234,7 +236,8 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     BookingStatus::PENDING  => 0,
                     BookingStatus::CANCELED => 0,
                     BookingStatus::REJECTED => 0,
-                    BookingStatus::NO_SHOW => 0,
+                    BookingStatus::NO_SHOW  => 0,
+                    BookingStatus::WAITING  => 0,
                 ]
             ];
 
@@ -407,8 +410,6 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
         /** @var string $paragraphEnd */
         $paragraphEnd = $type === 'email' ? '</p>' : ($type === 'whatsapp' ? '; ' : PHP_EOL);
 
-        $timezone = get_option('timezone_string');
-
         // If the data is for employee
         if ($bookingKey === null) {
             $customers = [];
@@ -512,7 +513,6 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                 ),
                 'customer_phone'      => substr($phones, 0, -2),
                 'customer_phone_local' =>  str_replace('+', '', substr($phones, 0, -2)),
-                'time_zone'           => $timezone,
                 'customer_note'       => implode(
                     ', ',
                     array_map(
@@ -539,21 +539,6 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             $phone = $customer->getPhone() ? $customer->getPhone()->getValue() : '';
         }
 
-        /** @var SettingsService $settingsService */
-        $settingsService = $this->container->get('domain.settings.service');
-
-        if ($settingsService->getSetting('general', 'showClientTimeZone')) {
-            switch ($appointment['type']) {
-                case (Entities::PACKAGE):
-                    if (!empty($appointment['isForCustomer'])) {
-                        $timezone = !empty($appointment['customer']['timeZone']) ? $appointment['customer']['timeZone'] : '';
-                    }
-                    break;
-                default:
-                    $timezone = ($info && property_exists($info, 'timeZone')) ? $info->timeZone : '';
-            }
-        }
-
         /** @var HelperService $helperService */
         $helperService = $this->container->get('application.helper.service');
 
@@ -564,7 +549,6 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             'customer_full_name'  => $info ? $info->firstName . ' ' . $info->lastName : $customer->getFullName(),
             'customer_phone'      => $phone,
             'customer_phone_local' => !empty($phone) ? str_replace('+', '', $phone) : '',
-            'time_zone'           => $timezone,
             'customer_note'       => $customer->getNote() ? $customer->getNote()->getValue() : '',
             'customer_panel_url'  => $helperService->getCustomerCabinetUrl(
                 $customer->getEmail()->getValue(),

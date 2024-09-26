@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Modules
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -72,8 +78,8 @@ class Forminator_Modules {
 	 * Load module
 	 *
 	 * @since 1.0
-	 * @param $data
-	 * @param $id
+	 * @param array $data Data.
+	 * @param int   $id Id.
 	 */
 	public function load_module( $data, $id ) {
 		$module_class = 'Forminator_' . $data['class'];

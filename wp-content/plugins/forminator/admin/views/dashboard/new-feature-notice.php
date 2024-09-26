@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/dashboard/new-feature-notice.php
+ *
+ * @package Forminator
+ */
+
 $user      = wp_get_current_user();
 $banner_1x = forminator_plugin_url() . 'assets/images/Feature_highlight.png';
 $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
@@ -125,25 +131,25 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 </div>
 
 <script type="text/javascript">
-  jQuery('#forminator-new-feature .forminator-dismiss-new-feature').on('click', function (e) {
-    e.preventDefault()
+	jQuery('#forminator-new-feature .forminator-dismiss-new-feature').on('click', function (e) {
+	e.preventDefault()
 
-    var $notice = jQuery(e.currentTarget).closest('.forminator-feature-modal'),
-      ajaxUrl = '<?php echo esc_url( forminator_ajax_url() ); ?>',
-      dataType = jQuery(this).data('type'),
-      ajaxData = {
-        action: 'forminator_dismiss_notification',
-        prop: $notice.data('prop'),
-        _ajax_nonce: $notice.data('nonce')
-      }
+	var $notice = jQuery(e.currentTarget).closest('.forminator-feature-modal'),
+		ajaxUrl = '<?php echo esc_url( forminator_ajax_url() ); ?>',
+		dataType = jQuery(this).data('type'),
+		ajaxData = {
+		action: 'forminator_dismiss_notification',
+		prop: $notice.data('prop'),
+		_ajax_nonce: $notice.data('nonce')
+		}
 
-    if ( 'save' === dataType ) {
-      ajaxData['usage_value'] = jQuery('#forminator-new-feature-toggle').is(':checked')
-    }
+	if ( 'save' === dataType ) {
+		ajaxData['usage_value'] = jQuery('#forminator-new-feature-toggle').is(':checked')
+	}
 
-    jQuery.post(ajaxUrl, ajaxData)
-      .always(function () {
-        $notice.hide()
-      })
-  })
+	jQuery.post(ajaxUrl, ajaxData)
+		.always(function () {
+		$notice.hide()
+		})
+	})
 </script>

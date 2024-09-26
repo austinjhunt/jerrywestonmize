@@ -1,5 +1,11 @@
 <?php
 /**
+ * Core helper functions.
+ *
+ * @package Forminator
+ */
+
+/**
  * Return needed cap for admin pages
  *
  * @since 1.0
@@ -12,7 +18,7 @@ function forminator_get_admin_cap() {
 		$cap = 'manage_network';
 	}
 
-	if ( current_user_can( 'manage_forminator' ) ) {
+	if ( current_user_can( 'manage_forminator' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- false positive
 		$cap = 'manage_forminator';
 	}
 
@@ -40,13 +46,13 @@ function forminator_is_user_allowed( $slug = '' ) {
  *
  * @since 1.0
  *
- * @param array  $array
+ * @param array  $array_values Array for check value exists.
  * @param string $key - the string key.
  *
  * @return bool
  */
-function forminator_array_value_exists( $array, $key ) {
-	return isset( $array[ $key ] ) && ( ! empty( $array[ $key ] ) || in_array( $array[ $key ], array( 0, '0' ), true ) );
+function forminator_array_value_exists( $array_values, $key ) {
+	return isset( $array_values[ $key ] ) && ( ! empty( $array_values[ $key ] ) || in_array( $array_values[ $key ], array( 0, '0' ), true ) );
 }
 
 /**
@@ -78,18 +84,18 @@ function forminator_echo_font_weight( $properties, $key ) {
  *
  * @since 1.0
  *
- * @param $object
+ * @param object $object_values Object for convert to array.
  *
  * @return array
  */
-function forminator_object_to_array( $object ) {
+function forminator_object_to_array( $object_values ) {
 	$array = array();
 
-	if ( empty( $object ) ) {
+	if ( empty( $object_values ) ) {
 		return $array;
 	}
 
-	foreach ( $object as $key => $value ) {
+	foreach ( $object_values as $key => $value ) {
 		$array[ $key ] = $value;
 	}
 
@@ -114,7 +120,9 @@ function forminator_ajax_url() {
  * @since 1.17 Added $query_arg
  * @since 1.28 Added $page_slug For determining capability to check.
  *
- * @param $action
+ * @param string $action Ajax action.
+ * @param mixed  $query_arg Query arguments.
+ * @param string $page_slug Page slug.
  */
 function forminator_validate_ajax( $action, $query_arg = false, $page_slug = '' ) {
 	if ( ! check_ajax_referer( $action, $query_arg, false ) || ! forminator_is_user_allowed( $page_slug ) ) {
@@ -125,7 +133,7 @@ function forminator_validate_ajax( $action, $query_arg = false, $page_slug = '' 
 /**
  * Checks if the AJAX call is valid
  *
- * @param string $action Action name.
+ * @param string      $action Action name.
  * @param string|bool $query_arg Query arg.
  *
  * @return void
@@ -220,7 +228,6 @@ function forminator_sui_scripts() {
 		$sui_body_class,
 		true
 	);
-
 }
 
 /**
@@ -304,7 +311,7 @@ function forminator_enqueue_color_picker_alpha() {
 /**
  * Enqueue front-end styles
  *
- * only use core here, if the style dynamically loaded, then load on model
+ * Only use core here, if the style dynamically loaded, then load on model
  *
  * @since 1.0
  */
@@ -321,7 +328,7 @@ function forminator_print_front_styles() {
 /**
  * Enqueue front-end script
  *
- * only use core here, if the style dynamically loaded, then load on model
+ * Only use core here, if the style dynamically loaded, then load on model
  *
  * @since 1.0
  */
@@ -479,12 +486,11 @@ function forminator_localize_data() {
  *
  * @since 1.0
  *
- * @param $path
- * @param $args
+ * @param string $path Path.
+ * @param array  $args Arguments.
  *
  * @return mixed
  */
-
 function forminator_template( $path, $args = array() ) {
 	$file    = forminator_plugin_dir() . "admin/views/$path.php";
 	$content = '';
@@ -514,7 +520,7 @@ function forminator_template( $path, $args = array() ) {
  *
  * @since 1.0
  *
- * @param $path
+ * @param string $path Path.
  *
  * @return bool
  */
@@ -695,6 +701,8 @@ function forminator_get_page_ids_helper() {
 /**
  * Return form type
  *
+ * @param mixed $common_name Common name.
+ *
  * @since 1.0
  * @return int|null|string
  */
@@ -751,10 +759,12 @@ function forminator_get_form_type_helper( $common_name = false ) {
 }
 
 /**
+ * Forminator get exporter info
+ *
  * @since 1.0
  *
- * @param $info
- * @param $key
+ * @param string $info Exporter Info.
+ * @param string $key Key.
  *
  * @return mixed
  */
@@ -784,9 +794,11 @@ function forminator_get_current_username() {
 }
 
 /**
+ * Delete export logs
+ *
  * @since 1.0
  *
- * @param $form_id
+ * @param int $form_id Form Id.
  *
  * @return bool
  */
@@ -807,9 +819,11 @@ function delete_export_logs( $form_id ) {
 }
 
 /**
+ * Forminator get export logs
+ *
  * @since 1.0
  *
- * @param $form_id
+ * @param int $form_id Form Id.
  *
  * @return array
  */
@@ -822,7 +836,7 @@ function forminator_get_export_logs( $form_id ) {
 	$row  = isset( $data[ $form_id ] ) ? $data[ $form_id ] : array();
 
 	foreach ( $row as &$item ) {
-		$item['time'] = date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $item['time'] );
+		$item['time'] = gmdate( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $item['time'] );
 	}
 
 	return $row;
@@ -836,7 +850,7 @@ function forminator_get_export_logs( $form_id ) {
  * @return mixed
  */
 function forminator_get_current_url() {
-	if ( ! empty( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], 'admin-ajax.php' ) ) {
+	if ( ! empty( $_SERVER['REQUEST_URI'] ) && false !== strpos( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'admin-ajax.php' ) ) {
 		$post_id = url_to_postid( wp_get_referer() );
 	} else {
 		$post_id = get_the_ID();
@@ -862,7 +876,7 @@ function forminator_is_page_builder_preview() {
 	global $wp;
 
 	// Check Pro theme by Themeco https://theme.co/.
-	if ( defined( 'X_TEMPLATE_PATH' ) && $wp->request === 'cornerstone-endpoint' ) {
+	if ( defined( 'X_TEMPLATE_PATH' ) && 'cornerstone-endpoint' === $wp->request ) {
 		$decision = true;
 		return $decision;
 	}
@@ -871,12 +885,13 @@ function forminator_is_page_builder_preview() {
 	// Note : following lines of codes are perfect to detect DIVI builder.
 	// But DIVI builder is not showing Forminator forms in preview mood.
 	// So commenting out these code for now.
+
 	/*
-	$et_pb_preview = Forminator_Core::sanitize_text_field( 'et_pb_preview' );
-	if( defined( 'ET_CORE_VERSION' ) && $et_pb_preview ) {
-		$decision = true;
-		return $decision;
-	}
+	// $et_pb_preview = Forminator_Core::sanitize_text_field( 'et_pb_preview' );
+	// if( defined( 'ET_CORE_VERSION' ) && $et_pb_preview ) {
+	//  $decision = true;
+	//  return $decision;
+	// }
 	*/
 
 	// Check Elementor plugin.
@@ -895,7 +910,7 @@ function forminator_is_page_builder_preview() {
  *
  * @since 1.0
  *
- * @param $day
+ * @param string $day Day.
  *
  * @return string
  */
@@ -917,7 +932,7 @@ function forminator_get_day_translated( $day ) {
  * Add log of forminator
  *
  * By default it will check `WP_DEBUG` and `FORMINATOR_DEBUG`
- * then will check `filters`
+ * Then will check `filters`
  *
  * @since 1.1
  * @since 1.3 add FORMINATOR_DEBUG as enabled flag
@@ -932,7 +947,7 @@ function forminator_maybe_log() {
 	/**
 	 * Filter log enable for forminator
 	 *
-	 * y default it will check `WP_DEBUG`, `FORMINATOR_DEBUG` must be true
+	 * By default it will check `WP_DEBUG`, `FORMINATOR_DEBUG` must be true
 	 *
 	 * @since 1.1
 	 *
@@ -954,46 +969,46 @@ function forminator_maybe_log() {
  *
  * @since 1.6
  *
- * @param $var
- * @param $type
+ * @param mixed  $variable Variable.
+ * @param string $type Variable type.
  *
  * @return mixed
  */
-function forminator_var_type_cast( $var, $type ) {
+function forminator_var_type_cast( $variable, $type ) {
 	switch ( $type ) {
 		case 'bool':
-			if ( ! is_bool( $var ) ) {
-				$var = filter_var( $var, FILTER_VALIDATE_BOOLEAN );
+			if ( ! is_bool( $variable ) ) {
+				$variable = filter_var( $variable, FILTER_VALIDATE_BOOLEAN );
 			}
 			break;
 		case 'str':
-			if ( ! is_string( $var ) ) {
-				if ( is_array( $var ) ) {
-					$var = implode( ', ', $var );
+			if ( ! is_string( $variable ) ) {
+				if ( is_array( $variable ) ) {
+					$variable = implode( ', ', $variable );
 				} else {
 					// juggling.
-					$var = (string) $var;
+					$variable = (string) $variable;
 				}
 			}
 			break;
 		case 'num':
-			if ( ! is_numeric( $var ) ) {
+			if ( ! is_numeric( $variable ) ) {
 				// juggling.
-				$var = (int) $var;
+				$variable = (int) $variable;
 			}
-			$var = $var + 0;
+			$variable = $variable + 0;
 			break;
 		case 'array':
-			if ( ! is_array( $var ) ) {
+			if ( ! is_array( $variable ) ) {
 				// juggling.
-				$var = (array) $var;
+				$variable = (array) $variable;
 			}
 			break;
 		default:
 			break;
 	}
 
-	return $var;
+	return $variable;
 }
 
 /**
@@ -1001,7 +1016,8 @@ function forminator_var_type_cast( $var, $type ) {
  *
  * @since 1.5.3
  *
- * @param int $poll_id
+ * @param int  $poll_id Poll Id.
+ * @param bool $accessibility_enabled Enable accessibility.
  *
  * @return array
  */
@@ -1009,8 +1025,8 @@ function forminator_get_poll_chart_colors( $poll_id = null, $accessibility_enabl
 
 	$chart_colors = $accessibility_enabled ?
 		array(
-			'rgba(137, 137, 137, 0.2)', // Monochrome Blue
-			'rgba(149, 149, 149, 0.2)', // Monochrome Red
+			'rgba(137, 137, 137, 0.2)', // Monochrome Blue.
+			'rgba(149, 149, 149, 0.2)', // Monochrome Red.
 			'rgba(207 ,207 , 207, 0.2)', // Monochrome Yellow.
 			'rgba(156, 156, 156, 0.2)', // Monochrome Green.
 			'rgba(177 ,177 , 177, 0.2)', // Monochrome Orange.
@@ -1176,7 +1192,7 @@ function forminator_can_whitelabel() {
 		! class_exists( '\WPMUDEV_Dashboard' ) ||
 		! isset( \WPMUDEV_Dashboard::$whitelabel ) ||
 		( method_exists( \WPMUDEV_Dashboard::$whitelabel, 'can_whitelabel' ) &&
-		  ! \WPMUDEV_Dashboard::$whitelabel->can_whitelabel()
+			! \WPMUDEV_Dashboard::$whitelabel->can_whitelabel()
 		)
 	) {
 		return false;
@@ -1190,20 +1206,20 @@ function forminator_can_whitelabel() {
  *
  * @since 1.6.3
  *
- * @param string|null $widget
- * @param mixed       $default
+ * @param string|null $widget Widget.
+ * @param mixed       $default_value Default value.
  *
  * @return array|mixed
  */
-function forminator_get_dashboard_settings( $widget = null, $default = array() ) {
+function forminator_get_dashboard_settings( $widget = null, $default_value = array() ) {
 	$settings           = array();
-	$dashboard_settings = get_option( 'forminator_dashboard_settings', $default );
+	$dashboard_settings = get_option( 'forminator_dashboard_settings', $default_value );
 
 	if ( ! is_null( $widget ) ) {
 		if ( isset( $dashboard_settings[ $widget ] ) ) {
 			$settings = $dashboard_settings[ $widget ];
 		} else {
-			$settings = $default;
+			$settings = $default_value;
 		}
 	}
 
@@ -1214,14 +1230,13 @@ function forminator_get_dashboard_settings( $widget = null, $default = array() )
 	 *
 	 * @param mixed $settings
 	 * @param string widget
-	 * @param mixed $default
+	 * @param mixed $default_value
 	 *
 	 * @return mixed
 	 */
-	$settings = apply_filters( 'forminator_dashboard_settings', $settings, $widget, $default );
+	$settings = apply_filters( 'forminator_dashboard_settings', $settings, $widget, $default_value );
 
 	return $settings;
-
 }
 
 /**
@@ -1246,63 +1261,66 @@ function forminator_reset_settings() {
 	forminator_delete_permissions();
 
 	/**
+	 * Forminator_delete_custom_options
+	 *
 	 * @see forminator_delete_custom_options()
 	 */
 
-	delete_option( "forminator_pagination_listings" );
-	delete_option( "forminator_pagination_entries" );
-	delete_option( "forminator_captcha_key" );
-	delete_option( "forminator_captcha_secret" );
-	delete_option( "forminator_v2_invisible_captcha_key" );
-	delete_option( "forminator_v2_invisible_captcha_secret" );
-	delete_option( "forminator_v3_captcha_key" );
-	delete_option( "forminator_v3_captcha_secret" );
-	delete_option( "forminator_captcha_language" );
-	delete_option( "forminator_captcha_theme" );
-	delete_option( "forminator_captcha_tab_saved" );
-	delete_option( "forminator_hcaptcha_key" );
-	delete_option( "forminator_hcaptcha_secret" );
-	// delete_option( "forminator_hcaptcha_noconflict" );
-	delete_option( "forminator_welcome_dismissed" );
-	delete_option( "forminator_version" );
-	delete_option( "forminator_retain_votes_interval_number" );
-	delete_option( "forminator_retain_votes_interval_unit" );
-	delete_option( "forminator_retain_submissions_interval_number" );
-	delete_option( "forminator_retain_submissions_interval_unit" );
-	delete_option( "forminator_enable_erasure_request_erase_form_submissions" );
-	delete_option( "forminator_form_privacy_settings" );
-	delete_option( "forminator_poll_privacy_settings" );
-	delete_option( "forminator_retain_ip_interval_number" );
-	delete_option( "forminator_retain_ip_interval_unit" );
+	delete_option( 'forminator_pagination_listings' );
+	delete_option( 'forminator_pagination_entries' );
+	delete_option( 'forminator_captcha_key' );
+	delete_option( 'forminator_captcha_secret' );
+	delete_option( 'forminator_v2_invisible_captcha_key' );
+	delete_option( 'forminator_v2_invisible_captcha_secret' );
+	delete_option( 'forminator_v3_captcha_key' );
+	delete_option( 'forminator_v3_captcha_secret' );
+	delete_option( 'forminator_captcha_language' );
+	delete_option( 'forminator_captcha_theme' );
+	delete_option( 'forminator_captcha_tab_saved' );
+	delete_option( 'forminator_hcaptcha_key' );
+	delete_option( 'forminator_hcaptcha_secret' );
+	delete_option( 'forminator_welcome_dismissed' );
+	delete_option( 'forminator_version' );
+	delete_option( 'forminator_retain_votes_interval_number' );
+	delete_option( 'forminator_retain_votes_interval_unit' );
+	delete_option( 'forminator_retain_submissions_interval_number' );
+	delete_option( 'forminator_retain_submissions_interval_unit' );
+	delete_option( 'forminator_enable_erasure_request_erase_form_submissions' );
+	delete_option( 'forminator_form_privacy_settings' );
+	delete_option( 'forminator_poll_privacy_settings' );
+	delete_option( 'forminator_retain_ip_interval_number' );
+	delete_option( 'forminator_retain_ip_interval_unit' );
 	delete_option( 'retain_geolocation_forever' );
 	delete_option( 'forminator_retain_geolocation_interval_number' );
 	delete_option( 'forminator_retain_geolocation_interval_unit' );
-	delete_option( "forminator_retain_poll_submissions_interval_number" );
-	delete_option( "forminator_retain_poll_submissions_interval_unit" );
-	delete_option( "forminator_posts_map" );
-	delete_option( "forminator_module_enable_load_ajax" );
-	delete_option( "forminator_module_use_donotcachepage" );
-	delete_option( "forminator_retain_quiz_submissions_interval_number" );
-	delete_option( "forminator_retain_quiz_submissions_interval_unit" );
-	delete_option( "forminator_dashboard_settings" );
-	delete_option( "forminator_sender_email_address" );
-	delete_option( "forminator_sender_name" );
-	delete_option( "forminator_enable_accessibility" );
-	delete_option( "forminator_entries_export_schedule" );
-	delete_option( "forminator_paypal_api_mode" );
-	delete_option( "forminator_paypal_secret" );
-	delete_option( "forminator_currency" );
-	delete_option( "forminator_exporter_log" );
-	delete_option( "forminator_uninstall_clear_data" );
-	delete_option( "forminator_custom_upload" );
-	delete_option( "forminator_custom_upload_root" );
-	delete_option( "forminator_stripe_configuration" );
-	delete_option( "forminator_paypal_configuration" );
+	delete_option( 'forminator_retain_poll_submissions_interval_number' );
+	delete_option( 'forminator_retain_poll_submissions_interval_unit' );
+	delete_option( 'forminator_posts_map' );
+	delete_option( 'forminator_module_enable_load_ajax' );
+	delete_option( 'forminator_module_use_donotcachepage' );
+	delete_option( 'forminator_retain_quiz_submissions_interval_number' );
+	delete_option( 'forminator_retain_quiz_submissions_interval_unit' );
+	delete_option( 'forminator_dashboard_settings' );
+	delete_option( 'forminator_sender_email_address' );
+	delete_option( 'forminator_sender_name' );
+	delete_option( 'forminator_enable_accessibility' );
+	delete_option( 'forminator_entries_export_schedule' );
+	delete_option( 'forminator_paypal_api_mode' );
+	delete_option( 'forminator_paypal_secret' );
+	delete_option( 'forminator_currency' );
+	delete_option( 'forminator_exporter_log' );
+	delete_option( 'forminator_uninstall_clear_data' );
+	delete_option( 'forminator_custom_upload' );
+	delete_option( 'forminator_custom_upload_root' );
+	delete_option( 'forminator_stripe_configuration' );
+	delete_option( 'forminator_paypal_configuration' );
 
 	$usage_tracking = get_option( 'forminator_usage_tracking', false );
-	delete_option( "forminator_usage_tracking" );
+	delete_option( 'forminator_usage_tracking' );
 
 	/**
+	 * Forminator_delete_addon_options
+	 *
 	 * @see forminator_delete_addon_options()
 	 */
 	delete_option( 'forminator_activated_addons' );
@@ -1313,6 +1331,8 @@ function forminator_reset_settings() {
 	}
 
 	/**
+	 * Forminator_delete_custom_posts
+	 *
 	 * @see forminator_delete_custom_posts()
 	 */
 	// Now we delete the custom posts.
@@ -1429,18 +1449,21 @@ function forminator_reset_plugin() {
 	forminator_reset_settings();
 
 	/**
+	 * Forminator_clear_module_views
+	 *
 	 * @see forminator_clear_module_views()
 	 */
 	$wpdb->query( "TRUNCATE {$wpdb->prefix}frmt_form_views" );
 
 	/**
+	 * Forminator_clear_module_submissions
+	 *
 	 * @see forminator_clear_module_submissions()
 	 */
-	$max_entry_id_query = "SELECT MAX(`entry_id`) FROM {$wpdb->prefix}frmt_form_entry";
-	$max_entry_id       = $wpdb->get_var( $max_entry_id_query );
+	$max_entry_id = $wpdb->get_var( "SELECT MAX(`entry_id`) FROM {$wpdb->prefix}frmt_form_entry" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	if ( $max_entry_id && is_numeric( $max_entry_id ) && $max_entry_id > 0 ) {
-		for ( $i = 1; $i <= $max_entry_id; $i ++ ) {
+		for ( $i = 1; $i <= $max_entry_id; $i++ ) {
 			wp_cache_delete( $i, 'Forminator_Form_Entry_Model' );
 		}
 	}
@@ -1466,12 +1489,11 @@ function forminator_reset_plugin() {
  *
  * @since 1.8
  *
- * @param $value
- * @param string $char
+ * @param string $value Values to add slashes.
+ * @param string $char Character.
  *
  * @return string
  */
-
 function forminator_addcslashes( $value, $char = '"\\/' ) {
 	$value = esc_html( $value );
 
@@ -1672,7 +1694,7 @@ function forminator_apply_capabilities( $subject, $permission ) {
 
 	$caps = forminator_get_capabilities();
 
-	foreach( $caps as $cap ) {
+	foreach ( $caps as $cap ) {
 		if ( $permission[ $cap ] ) {
 			$subject->add_cap( $cap, true );
 		} else {
@@ -1697,13 +1719,13 @@ function forminator_get_permission( $page_slug ) {
 		return $default_cap;
 	}
 
-	$permissions = get_option( 'forminator_permissions', [] );
+	$permissions = get_option( 'forminator_permissions', array() );
 	if ( empty( $permissions ) ) {
 		return $default_cap;
 	}
 
 	// Assign appropriate cap based on page_slug.
-	switch( $page_slug ) {
+	switch ( $page_slug ) {
 		case 'forminator':
 		case 'forminator-cform':
 		case 'forminator-cform-wizard':
@@ -1715,11 +1737,9 @@ function forminator_get_permission( $page_slug ) {
 		case 'forminator-nowrong-wizard':
 		case 'forminator-knowledge-wizard':
 		case 'forminator-quiz-view':
-
 			$cap = 'manage_forminator_modules';
 			break;
 		case 'forminator-entries':
-
 			$cap = 'manage_forminator_submissions';
 			break;
 
@@ -1728,34 +1748,29 @@ function forminator_get_permission( $page_slug ) {
 			break;
 
 		case 'forminator-addons':
-
 			$cap = 'manage_forminator_addons';
 			break;
 		case 'forminator-integrations':
-
 			$cap = 'manage_forminator_integrations';
 			break;
 		case 'forminator-reports':
-
 			$cap = 'manage_forminator_reports';
 			break;
 		case 'forminator-settings':
-
 			$cap = 'manage_forminator_settings';
 			break;
 		default:
-
 			$cap = $default_cap;
 			break;
 	}
 
 	// Get current user.
-	$user = wp_get_current_user();
+	$user         = wp_get_current_user();
 	$user_allowed = false;
 	$role_allowed = false;
 
 	// Check permissions for excluded users.
-	foreach( $permissions as $permission ) {
+	foreach ( $permissions as $permission ) {
 
 		// If role.
 		if ( 'role' === $permission['permission_type'] ) {
@@ -1769,7 +1784,7 @@ function forminator_get_permission( $page_slug ) {
 			}
 
 			// If current user is in excluded users, return the default admin cap.
-			if ( in_array( $user->ID, $permission['exclude_users'] ) ) {
+			if ( in_array( intval( $user->ID ), array_map( 'intval', $permission['exclude_users'] ), true ) ) {
 				$role_allowed = false;
 			} else {
 				$role_allowed = true;
@@ -1777,7 +1792,7 @@ function forminator_get_permission( $page_slug ) {
 		}
 
 		// If user.
-		if ( 'specific' === $permission['permission_type'] && in_array( $user->ID, $permission['specific_user'] ) ) {
+		if ( 'specific' === $permission['permission_type'] && in_array( intval( $user->ID ), array_map( 'intval', $permission['specific_user'] ), true ) ) {
 
 			if ( isset( $permission[ $cap ] ) && $permission[ $cap ] ) {
 				$user_allowed = true;
@@ -1821,19 +1836,19 @@ function forminator_delete_permissions() {
 				$user = get_user_by( 'email', $email );
 
 				if ( false !== $user ) {
-					foreach( $caps as $cap ) {
+					foreach ( $caps as $cap ) {
 						$user->remove_cap( $cap );
 					}
 				}
 			}
 
-		// If role.
+			// If role.
 		} else {
 			$role = get_role( $permission['user_role'] );
 
 			// Remove caps from the role.
 			if ( ! is_null( $role ) ) {
-				foreach( $caps as $cap ) {
+				foreach ( $caps as $cap ) {
 					$role->remove_cap( $cap );
 				}
 			}
@@ -1844,12 +1859,13 @@ function forminator_delete_permissions() {
 	delete_option( 'forminator_permissions' );
 }
 
-/*
+/**
  * Searches for $needle in the multidimensional array $haystack.
+ *
  * @url https://stackoverflow.com/a/28473219
  *
- * @param mixed $needle The item to search for
- * @param array $haystack The array to search
+ * @param mixed $needle The item to search for.
+ * @param array $haystack The array to search.
  *
  * @return array|bool The indices of $needle in $haystack across the
  *  various dimensions. FALSE if $needle was not found.
@@ -1858,10 +1874,13 @@ function forminator_recursive_array_search( $needle, $haystack ) {
 	foreach ( $haystack as $key => $value ) {
 		if ( ! is_array( $value ) && (string) $needle === (string) $value ) {
 			return array( $key );
-		} else if ( is_array( $value ) && $subkey = forminator_recursive_array_search( $needle, $value ) ) {
-			array_unshift( $subkey, $key );
-
-			return $subkey;
+		} elseif ( is_array( $value ) ) {
+			$subkey = forminator_recursive_array_search( $needle, $value );
+			if ( $subkey ) {
+				array_unshift( $subkey, $key );
+				return $subkey;
+			}
 		}
 	}
+	return null; // Return null if the needle is not found.
 }

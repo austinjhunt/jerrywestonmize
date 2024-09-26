@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/common/list/empty_content.php
+ *
+ * @package Forminator
+ */
+
 if ( isset( static::$module_slug ) ) {
 	$module_slug = static::$module_slug;
 } else {
@@ -75,7 +81,7 @@ $search_empty2x = forminator_plugin_url() . 'assets/images/forminator-no-result@
 				?>
 				</h2>
 
-			<p><?php /* translators: %s: Get module slug */ printf( esc_html__( 'We couldn\'t find any %s matching your search keyword. Perhaps try again?', 'forminator' ), forminator_get_prefix( $module_slug, '', false, true ) ); ?></p>
+			<p><?php /* translators: %s: Get module slug */ printf( esc_html__( 'We couldn\'t find any %s matching your search keyword. Perhaps try again?', 'forminator' ), esc_html( forminator_get_prefix( $module_slug, '', false, true ) ) ); ?></p>
 
 		<?php endif; ?>
 

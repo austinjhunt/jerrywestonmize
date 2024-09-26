@@ -45,6 +45,7 @@ use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingExtraRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
@@ -137,7 +138,8 @@ class EventReservationService extends AbstractReservationService
             $event->setCustomTickets($eventApplicationService->getTicketsPriceByDateRange($event->getCustomTickets()));
         }
 
-        $bookingArray =  array_merge($eventData['bookings'][0], ['status' => BookingStatus::APPROVED]);
+        $bookingArray =  array_merge($eventData['bookings'][0], empty($eventData['bookings'][0]['status']) ?
+            ['status' => BookingStatus::APPROVED] : ['status' => $eventData['bookings'][0]['status']]);
 
         $bookingArray = apply_filters('amelia_before_event_booking_saved_filter', $bookingArray, $event ? $event->toArray() : null);
 
@@ -149,11 +151,11 @@ class EventReservationService extends AbstractReservationService
             $booking->setPersons(new IntegerValue(0));
         }
 
-        $bookingStatus = BookingStatus::APPROVED;
+        $bookingStatus = empty($eventData['bookings'][0]['status']) ? BookingStatus::APPROVED : $eventData['bookings'][0]['status'];
 
         if (!empty($eventData['payment']['gateway'])) {
             $bookingStatus = in_array($eventData['payment']['gateway'], [PaymentType::MOLLIE, PaymentType::SQUARE]) ?
-                BookingStatus::PENDING : BookingStatus::APPROVED;
+                BookingStatus::PENDING : (empty($eventData['bookings'][0]['status']) ? BookingStatus::APPROVED : $eventData['bookings'][0]['status']);
 
             if (!empty($eventData['payment']['orderStatus'])) {
                 $bookingStatus = $this->getWcStatus(
@@ -771,7 +773,10 @@ class EventReservationService extends AbstractReservationService
 
             foreach ($availableTicketsSpots as $eventTicketId => $availablePersons) {
                 $hasTicketCapacity[$eventTicketId] = array_key_exists($eventTicketId, $reservedTicketsSpots) ?
-                    ($newBooking ? $reservedTicketsSpots[$eventTicketId] <= $availablePersons : $reservedTicketsSpots[$eventTicketId] < $availablePersons)  : true;
+                    ($newBooking ?
+                        $reservedTicketsSpots[$eventTicketId] <= $availablePersons :
+                        $reservedTicketsSpots[$eventTicketId] < $availablePersons
+                    ) : true;
             }
 
             $hasCapacity = false;
@@ -845,9 +850,58 @@ class EventReservationService extends AbstractReservationService
             $reservation->getBookingOpens()->getValue() :
             $reservation->getCreated()->getValue();
 
+        $hasWaitingList = false;
+        $eventSettings  = $reservation->getSettings() ? json_decode($reservation->getSettings()->getValue(), true) : null;
+
+        /** @var SettingsService $settingsDS */
+        $settingsDS          = $this->container->get('domain.settings.service');
+        $waitingListSettings = $settingsDS->getSetting('appointments', 'waitingListEvents');
+
+        if (
+            $waitingListSettings['enabled'] && $eventSettings && !empty($eventSettings['waitingList']) &&
+            $eventSettings['waitingList']['enabled']
+        ) {
+            $waitingCustomers = 0;
+
+            foreach ($reservation->getBookings()->getItems() as $booking) {
+                if ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
+                    if ($reservation->getCustomPricing()->getValue()) {
+                        foreach ($booking->getTicketsBooking()->getItems() as $item) {
+                            $waitingCustomers += $item->getPersons()->getValue();
+                        }
+                    } else {
+                        $waitingCustomers += $booking->getPersons()->getValue();
+                    }
+                }
+            }
+
+            if ($newBooking && $reservation->getCustomPricing() && $reservation->getCustomPricing()->getValue()) {
+                foreach ($newBooking->getTicketsBooking()->getItems() as $item) {
+                    if (!$reservation->getMaxCustomCapacity()) {
+                        $ticketData = $reservation->getCustomTickets()->getItem($item->getId()->getValue());
+
+                        $hasWaitingList = $ticketData->getWaitingListSpots() && $ticketData->getWaitingListSpots()->getValue() >=
+                            ($item->getPersons() ? $item->getPersons()->getValue() : 0
+                                + ($ticketData->getWaiting() ? $ticketData->getWaiting()->getValue() : 0));
+                    }
+                }
+
+                if ($reservation->getMaxCustomCapacity()) {
+                    $hasWaitingList = $eventSettings['waitingList']['maxCapacity'] > $waitingCustomers;
+                }
+
+            } else {
+                $hasWaitingList = $eventSettings['waitingList']['maxCapacity'] > $waitingCustomers;
+            }
+
+            $eventSettings['waitingList']['peopleWaiting'] = $waitingCustomers;
+
+            $reservation->setSettings(new Json(json_encode($eventSettings)));
+        }
+
         return $dateTime > $bookingOpens &&
             $dateTime < $bookingCloses &&
-            $hasCapacity &&
+            ($hasCapacity || $hasWaitingList) &&
             in_array($reservation->getStatus()->getValue(), [BookingStatus::APPROVED, BookingStatus::PENDING], true);
     }
 

@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * The Forminator_Integration_Poll_Settings class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Integration_Poll_Settings
@@ -55,6 +59,11 @@ abstract class Forminator_Integration_Poll_Settings extends Forminator_Integrati
 	 */
 	protected $poll = null;
 
+	/**
+	 * Module slug
+	 *
+	 * @var string
+	 */
 	protected static $module_slug = 'poll';
 
 	/**
@@ -62,18 +71,18 @@ abstract class Forminator_Integration_Poll_Settings extends Forminator_Integrati
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param Forminator_Integration $addon
-	 * @param                           $poll_id
+	 * @param Forminator_Integration $addon Class Forminator_Integration.
+	 * @param int                    $poll_id Poll Id.
 	 *
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception When there is an Integration error.
 	 */
 	public function __construct( Forminator_Integration $addon, $poll_id ) {
-		$this->addon   = $addon;
+		$this->addon     = $addon;
 		$this->module_id = $poll_id;
-		$this->poll    = Forminator_Base_Form_Model::get_model( $this->module_id );
+		$this->poll      = Forminator_Base_Form_Model::get_model( $this->module_id );
 		if ( ! $this->poll ) {
 			/* translators: %d: Poll ID */
-			throw new Forminator_Integration_Exception( sprintf( esc_html__( 'Poll with id %d could not be found', 'forminator' ), $this->module_id ) );
+			throw new Forminator_Integration_Exception( sprintf( esc_html__( 'Poll with id %d could not be found', 'forminator' ), esc_html( $this->module_id ) ) );
 		}
 		$this->poll_fields   = forminator_addon_format_poll_fields( $this->poll );
 		$this->poll_settings = forminator_addon_format_poll_settings( $this->poll );
@@ -87,7 +96,7 @@ abstract class Forminator_Integration_Poll_Settings extends Forminator_Integrati
 	 *
 	 * @since   1.6.1
 	 *
-	 * @param $values
+	 * @param array $values Settings.
 	 *
 	 * @return mixed
 	 */
@@ -102,7 +111,7 @@ abstract class Forminator_Integration_Poll_Settings extends Forminator_Integrati
 	 * called when rendering tab on poll settings
 	 * @since   1.6.1
 	 *
-	 * @param $values
+	 * @param array $values Settings.
 	 *
 	 * @return mixed
 	 */
@@ -142,7 +151,7 @@ abstract class Forminator_Integration_Poll_Settings extends Forminator_Integrati
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $reason
+	 * @param string $reason Reason for disconnect.
 	 */
 	final public function force_poll_disconnect( $reason ) {
 		$this->is_force_poll_disconnected     = true;
@@ -151,7 +160,6 @@ abstract class Forminator_Integration_Poll_Settings extends Forminator_Integrati
 		$this->addon_settings = array();
 
 		$this->save_module_settings_values();
-
 	}
 
 	/**
@@ -287,11 +295,12 @@ abstract class Forminator_Integration_Poll_Settings extends Forminator_Integrati
 	/**
 	 * Executed when poll settings imported
 	 *
-	 * default is save imported data to post_meta, override when needed
+	 * Default is save imported data to post_meta, override when needed
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $import_data
+	 * @param mixed $import_data Import data.
+	 * @throws Forminator_Integration_Exception When there is an Integration error.
 	 */
 	public function import_data( $import_data ) {
 		$addon_slug = $this->addon->get_slug();
@@ -332,6 +341,5 @@ abstract class Forminator_Integration_Poll_Settings extends Forminator_Integrati
 			forminator_addon_maybe_log( $e->getMessage() );
 			// do nothing.
 		}
-
 	}
 }

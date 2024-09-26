@@ -246,7 +246,7 @@ class UserFactory
             $user->setCountryPhoneIso(new Name($data['countryPhoneIso']));
         }
 
-        if (!empty($data['stripeConnect'])) {
+        if (($data['type'] === 'customer' || $data['type'] === 'provider') && !empty($data['stripeConnect'])) {
             if (!is_array($data['stripeConnect'])) {
                 $data['stripeConnect'] = json_decode($data['stripeConnect'], true);
             }

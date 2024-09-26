@@ -39,13 +39,18 @@ class DataInconsistencyRepository {
   }
 
   public function getOrphanedScheduledTasksSubscribersCount(): int {
-    $stTable = $this->entityManager->getClassMetadata(ScheduledTaskEntity::class)->getTableName();
+    $this->createOrphanedScheduledTaskSubscribersTemporaryTables();
+    $count = $this->getOrphanedScheduledTasksSubscribersCountFromTemporaryTables();
+    $this->dropOrphanedScheduledTaskSubscribersTemporaryTables();
+    return $count;
+  }
+
+  private function getOrphanedScheduledTasksSubscribersCountFromTemporaryTables(): int {
+    $connection = $this->entityManager->getConnection();
     $stsTable = $this->entityManager->getClassMetadata(ScheduledTaskSubscriberEntity::class)->getTableName();
     /** @var string $count */
-    $count = $this->entityManager->getConnection()->executeQuery("
-      SELECT count(*) FROM $stsTable sts
-      LEFT JOIN $stTable st ON st.`id` = sts.`task_id`
-      WHERE st.`id` IS NULL
+    $count = $connection->executeQuery("
+      SELECT COUNT(*) FROM $stsTable sts WHERE sts.task_id IN (SELECT task_id FROM orphaned_task_ids)
     ")->fetchOne();
     return intval($count);
   }
@@ -146,22 +151,26 @@ class DataInconsistencyRepository {
   }
 
   public function cleanupOrphanedScheduledTaskSubscribers(): int {
-    $stTable = $this->entityManager->getClassMetadata(ScheduledTaskEntity::class)->getTableName();
     $stsTable = $this->entityManager->getClassMetadata(ScheduledTaskSubscriberEntity::class)->getTableName();
     $deletedCount = 0;
+
+    $this->createOrphanedScheduledTaskSubscribersTemporaryTables();
     do {
       $deletedCount += (int)$this->entityManager->getConnection()->executeStatement(
-        "DELETE sts_top FROM $stsTable sts_top
-        JOIN (
-          SELECT sts.`task_id`, sts.`subscriber_id` FROM $stsTable sts
-          LEFT JOIN $stTable st ON st.`id` = sts.`task_id`
-          WHERE st.`id` IS NULL
-          LIMIT :limit
-        ) as to_delete ON sts_top.`task_id` = to_delete.`task_id` AND sts_top.`subscriber_id` = to_delete.`subscriber_id`",
+        "
+          DELETE sts_top FROM $stsTable sts_top
+          JOIN (
+            SELECT task_id, subscriber_id
+            FROM $stsTable
+            WHERE task_id IN (SELECT task_id FROM orphaned_task_ids)
+            LIMIT :limit
+          ) AS to_delete ON sts_top.task_id = to_delete.task_id AND sts_top.subscriber_id = to_delete.subscriber_id
+        ",
         ['limit' => self::DELETE_ROWS_LIMIT],
         ['limit' => ParameterType::INTEGER]
       );
-    } while ($this->getOrphanedScheduledTasksSubscribersCount() > 0);
+    } while ($this->getOrphanedScheduledTasksSubscribersCountFromTemporaryTables() > 0);
+    $this->dropOrphanedScheduledTaskSubscribersTemporaryTables();
     return $deletedCount;
   }
 
@@ -220,5 +229,28 @@ class DataInconsistencyRepository {
       ->andWhere('st.type = :type')
       ->setParameter('type', SendingQueue::TASK_TYPE)
       ->getQuery();
+  }
+
+  private function createOrphanedScheduledTaskSubscribersTemporaryTables(): void {
+    $connection = $this->entityManager->getConnection();
+    $stTable = $this->entityManager->getClassMetadata(ScheduledTaskEntity::class)->getTableName();
+    $stsTable = $this->entityManager->getClassMetadata(ScheduledTaskSubscriberEntity::class)->getTableName();
+
+    // 1. Get the DISTINCT task IDs so that the subsequent JOIN is more efficient.
+    $connection->executeStatement("
+      CREATE TEMPORARY TABLE IF NOT EXISTS task_ids
+      SELECT DISTINCT task_id FROM $stsTable
+    ");
+
+    // 2. Get the orphaned task IDs.
+    $connection->executeStatement("
+      CREATE TEMPORARY TABLE IF NOT EXISTS orphaned_task_ids
+      SELECT task_id FROM task_ids LEFT JOIN $stTable st ON st.id = task_ids.task_id WHERE st.id IS NULL
+    ");
+  }
+
+  private function dropOrphanedScheduledTaskSubscribersTemporaryTables(): void {
+    $this->entityManager->getConnection()->executeStatement("DROP TEMPORARY TABLE IF EXISTS task_ids");
+    $this->entityManager->getConnection()->executeStatement("DROP TEMPORARY TABLE IF EXISTS orphaned_task_ids");
   }
 }

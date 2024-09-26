@@ -67,6 +67,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 	 * @since 1.0 Google Sheets Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function pick_name( $submitted_data ) {
 		$template = forminator_addon_googlesheet_dir() . 'views/module-settings/pick-name.php';
@@ -194,18 +195,18 @@ trait Forminator_Googlesheet_Settings_Trait {
 				$saved_worksheet_id = 0;
 			}
 		}
-		$worksheet_id       = isset( $submitted_data['worksheet_id'] ) ? $submitted_data['worksheet_id'] : $saved_worksheet_id;
-		$template_params    = array(
+		$worksheet_id    = isset( $submitted_data['worksheet_id'] ) ? $submitted_data['worksheet_id'] : $saved_worksheet_id;
+		$template_params = array(
 			'worksheet_id'  => $worksheet_id,
 			'file_id'       => $file_id,
 			'error_message' => '',
 			'multi_id'      => $multi_id,
 			'worksheets'    => array(),
 		);
-		$has_errors         = false;
-		$is_submit          = isset( $submitted_data['worksheet_id'] );
-		$notification 		= array();
-		$is_close     		= false;
+		$has_errors      = false;
+		$is_submit       = isset( $submitted_data['worksheet_id'] );
+		$notification    = array();
+		$is_close        = false;
 
 		try {
 			$input_exceptions = new Forminator_Integration_Settings_Exception();
@@ -398,7 +399,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 	 * @since 1.0 Google Sheets Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
-	 * @throws Exception
+	 * @throws Forminator_Google_Exception Throws Google Exception.
 	 */
 	public function setup_sheet( $submitted_data ) {
 		$template = forminator_addon_googlesheet_dir() . 'views/module-settings/setup-sheet.php';
@@ -444,7 +445,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 					try {
 						$folder = $drive->files->get( $folder_id, array( 'supportsAllDrives' => true ) );
 						// its from API var.
-						// phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+						// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 						if ( Forminator_Googlesheet::MIME_TYPE_GOOGLE_DRIVE_FOLDER !== $folder->mimeType ) {
 							$input_exceptions->add_input_exception( esc_html__( 'This is not a folder, please use a valid Folder ID.', 'forminator' ), 'folder_id_error' );
 						}

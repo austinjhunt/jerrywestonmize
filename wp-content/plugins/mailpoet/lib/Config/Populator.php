@@ -19,6 +19,7 @@ use MailPoet\Cron\Workers\UnsubscribeTokens;
 use MailPoet\Doctrine\WPDB\Connection;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\NewsletterOptionFieldEntity;
+use MailPoet\Entities\NewsletterTemplateEntity;
 use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Entities\SegmentEntity;
 use MailPoet\Entities\StatisticsFormEntity;
@@ -37,14 +38,12 @@ use MailPoet\Subscribers\NewSubscriberNotificationMailer;
 use MailPoet\Subscribers\Source;
 use MailPoet\Subscription\Captcha\CaptchaConstants;
 use MailPoet\Subscription\Captcha\CaptchaRenderer;
-use MailPoet\Util\Helpers;
 use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Carbon\Carbon;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 
 class Populator {
   public $prefix;
-  public $models;
   public $templates;
   /** @var SettingsController */
   private $settings;
@@ -80,10 +79,6 @@ class Populator {
     $this->wpSegment = $wpSegment;
     $this->referralDetector = $referralDetector;
     $this->prefix = Env::$dbPrefix;
-    $this->models = [
-      'newsletter_option_fields',
-      'newsletter_templates',
-    ];
     $this->templates = [
       'WelcomeBlank1Column',
       'WelcomeBlank12Column',
@@ -171,7 +166,8 @@ class Populator {
     $localizer = new Localizer();
     $localizer->forceLoadWebsiteLocaleText();
 
-    array_map([$this, 'populate'], $this->models);
+    $this->populateNewsletterOptionFields();
+    $this->populateNewsletterTemplates();
 
     $this->createDefaultSegment();
     $this->createDefaultSettings();
@@ -223,11 +219,11 @@ class Populator {
   }
 
   private function createDefaultSettings() {
-    $settingsDbVersion = $this->settings->fetch('db_version');
+    $settingsDbVersion = $this->settings->get('db_version');
     $currentUser = $this->wp->wpGetCurrentUser();
 
     // set cron trigger option to default method
-    if (!$this->settings->fetch(CronTrigger::SETTING_NAME)) {
+    if (!$this->settings->get(CronTrigger::SETTING_NAME)) {
       $this->settings->set(CronTrigger::SETTING_NAME, [
         'method' => CronTrigger::DEFAULT_METHOD,
       ]);
@@ -244,7 +240,7 @@ class Populator {
       'name' => $senderName,
       'address' => $senderAddress ?: '',
     ];
-    $savedSender = $this->settings->fetch('sender', []);
+    $savedSender = $this->settings->get('sender', []);
 
     /**
      * Set default from name & address
@@ -256,20 +252,20 @@ class Populator {
     }
 
     // enable signup confirmation by default
-    if (!$this->settings->fetch('signup_confirmation')) {
+    if (!$this->settings->get('signup_confirmation')) {
       $this->settings->set('signup_confirmation', [
         'enabled' => true,
       ]);
     }
 
     // set installation date
-    if (!$this->settings->fetch('installed_at')) {
+    if (!$this->settings->get('installed_at')) {
       $this->settings->set('installed_at', date("Y-m-d H:i:s"));
     }
 
     // set captcha settings
-    $captcha = $this->settings->fetch('captcha');
-    $reCaptcha = $this->settings->fetch('re_captcha');
+    $captcha = $this->settings->get('captcha');
+    $reCaptcha = $this->settings->get('re_captcha');
     if (empty($captcha)) {
       $captchaType = CaptchaConstants::TYPE_DISABLED;
       if (!empty($reCaptcha['enabled'])) {
@@ -284,9 +280,9 @@ class Populator {
       ]);
     }
 
-    $subscriberEmailNotification = $this->settings->fetch(NewSubscriberNotificationMailer::SETTINGS_KEY);
+    $subscriberEmailNotification = $this->settings->get(NewSubscriberNotificationMailer::SETTINGS_KEY);
     if (empty($subscriberEmailNotification)) {
-      $sender = $this->settings->fetch('sender', []);
+      $sender = $this->settings->get('sender', []);
       $this->settings->set('subscriber_email_notification', [
         'enabled' => true,
         'automated' => true,
@@ -294,16 +290,16 @@ class Populator {
       ]);
     }
 
-    $statsNotifications = $this->settings->fetch(Worker::SETTINGS_KEY);
+    $statsNotifications = $this->settings->get(Worker::SETTINGS_KEY);
     if (empty($statsNotifications)) {
-      $sender = $this->settings->fetch('sender', []);
+      $sender = $this->settings->get('sender', []);
       $this->settings->set(Worker::SETTINGS_KEY, [
         'enabled' => true,
         'address' => isset($sender['address']) ? $sender['address'] : null,
       ]);
     }
 
-    $woocommerceOptinOnCheckout = $this->settings->fetch('woocommerce.optin_on_checkout');
+    $woocommerceOptinOnCheckout = $this->settings->get('woocommerce.optin_on_checkout');
     $legacyLabelText = _x('Yes, I would like to be added to your mailing list', "default email opt-in message displayed on checkout page for ecommerce websites", 'mailpoet');
     $currentLabelText = _x('I would like to receive exclusive emails with discounts and product information', "default email opt-in message displayed on checkout page for ecommerce websites", 'mailpoet');
     if (empty($woocommerceOptinOnCheckout)) {
@@ -320,7 +316,7 @@ class Populator {
   }
 
   private function createDefaultUsersFlags() {
-    $lastAnnouncementSeen = $this->settings->fetch('last_announcement_seen');
+    $lastAnnouncementSeen = $this->settings->get('last_announcement_seen');
     if (!empty($lastAnnouncementSeen)) {
       foreach ($lastAnnouncementSeen as $userId => $value) {
         $this->createOrUpdateUserFlag($userId, 'last_announcement_seen', $value);
@@ -384,7 +380,7 @@ class Populator {
     return $defaultSegment;
   }
 
-  protected function newsletterOptionFields() {
+  private function populateNewsletterOptionFields() {
     $optionFields = [
       [
         'name' => 'isScheduled',
@@ -512,129 +508,116 @@ class Populator {
       ],
     ];
 
-    return [
-      'rows' => $optionFields,
-      'identification_columns' => [
-        'name',
-        'newsletter_type',
-      ],
-    ];
+    // 1. Load all existing option fields from the database.
+    $tableName = $this->entityManager->getClassMetadata(NewsletterOptionFieldEntity::class)->getTableName();
+    $connection = $this->entityManager->getConnection();
+    $existingOptionFields = $connection->createQueryBuilder()
+      ->select('f.name, f.newsletter_type')
+      ->from($tableName, 'f')
+      ->executeQuery()
+      ->fetchAllAssociative();
+
+    // 2. Insert new option fields using a single query (good for first installs).
+    $inserts = array_udiff(
+      $optionFields,
+      $existingOptionFields,
+      fn($a, $b) => [$a['name'], $a['newsletter_type']] <=> [$b['name'], $b['newsletter_type']]
+    );
+    if ($inserts) {
+      $placeholders = implode(',', array_fill(0, count($inserts), '(?, ?)'));
+      $connection->executeStatement(
+        "INSERT INTO $tableName (name, newsletter_type) VALUES $placeholders",
+        array_merge(
+          ...array_map(
+            fn($of) => [$of['name'], $of['newsletter_type']],
+            $inserts
+          )
+        )
+      );
+    }
   }
 
-  protected function newsletterTemplates() {
+  private function populateNewsletterTemplates(): void {
+    // 1. Load templates from the file system.
     $templates = [];
     foreach ($this->templates as $template) {
       $template = self::TEMPLATES_NAMESPACE . $template;
       $template = new $template(Env::$assetsUrl);
       $templates[] = $template->get();
     }
-    return [
-      'rows' => $templates,
-      'identification_columns' => [
-        'name',
-      ],
-      'remove_duplicates' => true,
-    ];
-  }
 
-  protected function populate($model) {
-    $modelMethod = Helpers::underscoreToCamelCase($model);
-    $table = $this->prefix . $model;
-    $dataDescriptor = $this->$modelMethod();
-    $rows = $dataDescriptor['rows'];
-    $identificationColumns = array_fill_keys(
-      $dataDescriptor['identification_columns'],
-      ''
-    );
-    $removeDuplicates =
-      isset($dataDescriptor['remove_duplicates']) && $dataDescriptor['remove_duplicates'];
+    // 2. Load existing corresponding (readonly) templates from the database.
+    $tableName = $this->entityManager->getClassMetadata(NewsletterTemplateEntity::class)->getTableName();
+    $connection = $this->entityManager->getConnection();
+    $existingTemplates = $connection->createQueryBuilder()
+      ->select('t.name, t.categories, t.readonly, t.thumbnail, t.body')
+      ->from($tableName, 't')
+      ->where('t.readonly = 1')
+      ->executeQuery()
+      ->fetchAllAssociativeIndexed();
 
-    foreach ($rows as $row) {
-      $existenceComparisonFields = array_intersect_key(
-        $row,
-        $identificationColumns
-      );
+    // 3. Compare the existing and file system templates.
+    $inserts = [];
+    $updates = [];
+    foreach ($templates as $template) {
+      $existing = $existingTemplates[$template['name']] ?? null;
+      if (
+        $existing
+        && $existing['categories'] === $template['categories']
+        && $existing['body'] === $template['body']
+        && $existing['thumbnail'] === $template['thumbnail']
+      ) {
+        continue;
+      }
 
-      if (!$this->rowExists($table, $existenceComparisonFields)) {
-        $this->insertRow($table, $row);
+      if ($existing) {
+        $updates[] = $template;
       } else {
-        if ($removeDuplicates) {
-          $this->removeDuplicates($table, $row, $existenceComparisonFields);
-        }
-        $this->updateRow($table, $row, $existenceComparisonFields);
+        $inserts[] = $template;
       }
     }
-  }
 
-  private function rowExists(string $tableName, array $columns): bool {
-    global $wpdb;
-
-    $conditions = array_map(function($key, $value) {
-      return esc_sql($key) . "='" . esc_sql($value) . "'";
-    }, array_keys($columns), $columns);
-
-    $table = esc_sql($tableName);
-    // $conditions is escaped
-    // phpcs:ignore WordPressDotOrg.sniffs.DirectDB.UnescapedDBParameter
-    return $wpdb->get_var(
-      "SELECT COUNT(*) FROM $table WHERE " . implode(' AND ', $conditions)
-    ) > 0;
-  }
-
-  private function insertRow($table, $row) {
-    global $wpdb;
-
-    return $wpdb->insert(
-      $table,
-      $row
-    );
-  }
-
-  private function updateRow($table, $row, $where) {
-    global $wpdb;
-
-    return $wpdb->update(
-      $table,
-      $row,
-      $where
-    );
-  }
-
-  private function removeDuplicates($table, $row, $where) {
-    global $wpdb;
-
-    $conditions = ['1=1'];
-    $values = [];
-    foreach ($where as $field => $value) {
-      $conditions[] = "`t1`.`" . esc_sql($field) . "` = `t2`.`" . esc_sql($field) . "`";
-      $conditions[] = "`t1`.`" . esc_sql($field) . "` = %s";
-      $values[] = $value;
+    // 4. Update existing templates.
+    foreach ($updates as $template) {
+      $connection->update($tableName, $template, ['name' => $template['name']]);
     }
 
-    $conditions = implode(' AND ', $conditions);
-
-    $table = esc_sql($table);
-
-    // SQLite doesn't support JOIN in DELETE queries, we need to use a subquery.
-    if (Connection::isSQLite()) {
-      return $wpdb->query(
-        $wpdb->prepare(
-          "DELETE FROM $table WHERE id IN (
-            SELECT t1.id
-            FROM $table t1
-            JOIN $table t2 ON t1.id < t2.id AND $conditions
-          )",
-          $values
+    // 5. Insert new templates using a single query (good for first installs).
+    if ($inserts) {
+      $placeholders = implode(',', array_fill(0, count($inserts), '(?, ?, ?, ?, ?)'));
+      $connection->executeStatement(
+        "INSERT INTO $tableName (name, categories, readonly, thumbnail, body) VALUES $placeholders",
+        array_merge(
+          ...array_map(
+            fn($t) => [$t['name'], $t['categories'], $t['readonly'], $t['thumbnail'], $t['body']],
+            $inserts
+          )
         )
       );
     }
 
-    return $wpdb->query(
-      $wpdb->prepare(
-        "DELETE t1 FROM $table t1, $table t2 WHERE t1.id < t2.id AND $conditions",
-        $values
-      )
-    );
+    // 6. Remove duplicates.
+    // SQLite doesn't support JOIN in DELETE queries, we need to use a subquery.
+    // MySQL doesn't support DELETE with subqueries reading from the same table.
+    if (Connection::isSQLite()) {
+      $connection->executeStatement("
+        DELETE FROM $tableName WHERE id IN (
+          SELECT t1.id
+          FROM $tableName t1
+          JOIN $tableName t2 ON t1.id < t2.id AND t1.name = t2.name
+          WHERE t1.readonly = 1
+          AND t2.readonly = 1
+       )
+      ");
+    } else {
+      $connection->executeStatement("
+        DELETE t1
+        FROM $tableName t1, $tableName t2
+        WHERE t1.id < t2.id AND t1.name = t2.name
+        AND t1.readonly = 1
+        AND t2.readonly = 1
+      ");
+    }
   }
 
   private function createSourceForSubscribers() {

@@ -19,7 +19,7 @@ class WhatsAppService
     /** @var Container */
     private $container;
 
-    const URL = 'https://graph.facebook.com/v14.0/';
+    const URL = 'https://graph.facebook.com/v20.0/';
 
     /**
      * WhatsAppService constructor.

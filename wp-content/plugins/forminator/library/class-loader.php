@@ -1,11 +1,22 @@
 <?php
+/**
+ * Forminator Loader
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
 
+/**
+ * Class Forminator_Loader
+ */
 class Forminator_Loader {
 
 	/**
+	 * Files
+	 *
 	 * @var array
 	 */
 	public $files = array();
@@ -21,8 +32,8 @@ class Forminator_Loader {
 	 * @since 1.0
 	 * @since 1.7 add $requirements
 	 *
-	 * @param       $dir
-	 * @param array $requirements
+	 * @param string $dir Directory name.
+	 * @param array  $requirements Requirements.
 	 *
 	 * @return mixed
 	 */
@@ -60,7 +71,7 @@ class Forminator_Loader {
 	 * Check if PHP file
 	 *
 	 * @since 1.0
-	 * @param $file
+	 * @param string $file Filename.
 	 *
 	 * @return bool
 	 */
@@ -77,7 +88,7 @@ class Forminator_Loader {
 	 * Normalize class name
 	 *
 	 * @since 1.0
-	 * @param $name
+	 * @param string $name Name.
 	 *
 	 * @return mixed|string
 	 */
@@ -92,7 +103,7 @@ class Forminator_Loader {
 	 * Init class
 	 *
 	 * @since 1.0
-	 * @param $name
+	 * @param string $name Name.
 	 *
 	 * @return mixed
 	 */
@@ -111,7 +122,7 @@ class Forminator_Loader {
 	 *
 	 * @since 1.7
 	 *
-	 * @param array $requirement
+	 * @param array $requirement Requirement.
 	 *
 	 * @return bool
 	 */

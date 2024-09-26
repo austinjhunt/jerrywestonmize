@@ -27,11 +27,11 @@ use MailPoetVendor\Twig\RuntimeLoader\RuntimeLoaderInterface;
 use MailPoetVendor\Twig\TokenParser\TokenParserInterface;
 class Environment
 {
- public const VERSION = '3.10.3';
- public const VERSION_ID = 301003;
- public const MAJOR_VERSION = 3;
- public const MINOR_VERSION = 10;
- public const RELEASE_VERSION = 3;
+ public const VERSION = '3.11.1';
+ public const VERSION_ID = 301101;
+ public const MAJOR_VERSION = 4;
+ public const MINOR_VERSION = 11;
+ public const RELEASE_VERSION = 1;
  public const EXTRA_VERSION = '';
  private $charset;
  private $loader;
@@ -45,7 +45,6 @@ class Environment
  private $resolvedGlobals;
  private $loadedTemplates;
  private $strictVariables;
- private $templateClassPrefix = '__TwigTemplate_';
  private $originalCache;
  private $extensionSet;
  private $runtimeLoaders = [];
@@ -141,7 +140,7 @@ class Environment
  public function getTemplateClass(string $name, ?int $index = null) : string
  {
  $key = $this->getLoader()->getCacheKey($name) . $this->optionsHash;
- return $this->templateClassPrefix . \hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $key) . (null === $index ? '' : '___' . $index);
+ return '__TwigTemplate_' . \hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $key) . (null === $index ? '' : '___' . $index);
  }
  public function render($name, array $context = []) : string
  {

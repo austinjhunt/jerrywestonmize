@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Integration_Quiz_Hooks class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Integration_Quiz_Hooks
@@ -42,7 +47,7 @@ abstract class Forminator_Integration_Quiz_Hooks extends Forminator_Integration_
 	 * Forminator_Integration_Quiz_Hooks constructor.
 	 *
 	 * @param Forminator_Integration $addon Integration.
-	 * @param int                       $module_id Module ID.
+	 * @param int                    $module_id Module ID.
 	 *
 	 * @since 1.6.2
 	 * @throws Forminator_Integration_Exception When module ID is invalid.
@@ -64,7 +69,7 @@ abstract class Forminator_Integration_Quiz_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
+	 * @param Forminator_Form_Entry_Model $entry_model Form entry Model.
 	 */
 	public function after_entry_saved( Forminator_Form_Entry_Model $entry_model ) {
 		$addon_slug             = $this->addon->get_slug();
@@ -134,7 +139,7 @@ abstract class Forminator_Integration_Quiz_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.7
 	 *
-	 * @param $element_id
+	 * @param string $element_id Element Id.
 	 *
 	 * @return bool
 	 */
@@ -161,7 +166,7 @@ abstract class Forminator_Integration_Quiz_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.7
 	 *
-	 * @param $element_id
+	 * @param string $element_id Element Id.
 	 *
 	 * @return bool
 	 */
@@ -191,7 +196,7 @@ abstract class Forminator_Integration_Quiz_Hooks extends Forminator_Integration_
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function prepare_submitted_data( array $submitted_data, int $module_id, array $current_entry_fields ) : array {
+	protected function prepare_submitted_data( array $submitted_data, int $module_id, array $current_entry_fields ): array {
 		$quiz_submitted_data = get_quiz_submitted_data( $this->module, $submitted_data, $current_entry_fields );
 		$quiz_settings       = $this->settings_instance->get_quiz_settings();
 		$addons_fields       = $this->settings_instance->get_form_fields();
@@ -202,5 +207,4 @@ abstract class Forminator_Integration_Quiz_Hooks extends Forminator_Integration_
 
 		return $submitted_data;
 	}
-
 }

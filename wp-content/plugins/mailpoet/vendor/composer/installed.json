@@ -65,6 +65,31 @@
             "install-path": "../dragonmantank/cron-expression"
         },
         {
+            "name": "mailpoet/email-editor",
+            "version": "dev-email-editor/php-package",
+            "version_normalized": "dev-email-editor/php-package",
+            "dist": {
+                "type": "path",
+                "url": "../packages/php/email-editor",
+                "reference": "7cebd6603d0799976eef38c32948bb927568695e"
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "MailPoet\\EmailEditor\\": "src/"
+                }
+            },
+            "description": "Email editor based on WordPress Gutenberg package.",
+            "transport-options": {
+                "relative": true
+            },
+            "install-path": "../mailpoet/email-editor"
+        },
+        {
             "name": "mixpanel/mixpanel-php",
             "version": "2.11.0",
             "version_normalized": "2.11.0.0",

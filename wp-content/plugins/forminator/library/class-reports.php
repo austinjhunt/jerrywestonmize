@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Reports
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -22,7 +28,7 @@ class Forminator_Reports {
 	private static $instance = null;
 
 	/**
-	 * report instance
+	 * Report instance
 	 *
 	 * @var null
 	 */
@@ -70,7 +76,7 @@ class Forminator_Reports {
 	}
 
 	/**
-	 * process report.
+	 * Process report.
 	 *
 	 * @since 1.20.0
 	 */
@@ -90,7 +96,7 @@ class Forminator_Reports {
 
 			$report_schedule = $report_value['schedule'];
 			$last_sent       = strtotime( $report->date_updated );
-			$current_time    = current_time( 'timestamp' );
+			$current_time    = current_time( 'timestamp' ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- We are using the current timestamp based on the site's timezone.
 			// check the next sent.
 			$next_sent = null;
 			$frequency = ! empty( $report_schedule['frequency'] ) ? $report_schedule['frequency'] : 'daily';
@@ -121,8 +127,8 @@ class Forminator_Reports {
 	/**
 	 * Get monthly report
 	 *
-	 * @param $last_sent
-	 * @param $settings
+	 * @param string $last_sent Last sent date.
+	 * @param array  $settings Settings.
 	 *
 	 * @return false|string
 	 */
@@ -142,7 +148,7 @@ class Forminator_Reports {
 	/**
 	 * Send out an email report.
 	 *
-	 * @param $options
+	 * @param array $options Options.
 	 *
 	 * @since 1.20.0
 	 *
@@ -203,7 +209,7 @@ class Forminator_Reports {
 	/**
 	 * Email HTML
 	 *
-	 * @param $params
+	 * @param array $params Params.
 	 *
 	 * @return mixed|string
 	 */
@@ -212,9 +218,9 @@ class Forminator_Reports {
 	}
 
 	/**
-	 * email report data
+	 * Email report data
 	 *
-	 * @param $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -228,11 +234,11 @@ class Forminator_Reports {
 			$method     = 'get_' . $module;
 			$modules    = Forminator_API::$method( null, 1, 999, 'publish' );
 			$module_ids = array_map(
-                function ( $ar ) {
-                    return $ar->id;
-                },
-                $modules
-            );
+				function ( $ar ) {
+					return $ar->id;
+				},
+				$modules
+			);
 		}
 		if ( ! empty( $module_ids ) ) {
 			foreach ( $module_ids as $m => $module_id ) {
@@ -254,11 +260,11 @@ class Forminator_Reports {
 					$sum_value    = null;
 					if ( ! empty( $payment_data ) ) {
 						$payment_value = array_map(
-                            function ( $payment ) {
-                                return maybe_unserialize( $payment->meta_value );
-                            },
-                            $payment_data
-                        );
+							function ( $payment ) {
+								return maybe_unserialize( $payment->meta_value );
+							},
+							$payment_data
+						);
 
 						$sum_value = ! empty( $payment_value ) ? array_sum( array_column( $payment_value, 'amount' ) ) : 0;
 

@@ -42,7 +42,6 @@ class EventSubscribers
         $eventBus->addListener('BookingCanceled', $appointmentListener);
         $eventBus->addListener('BookingApproved', $appointmentListener);
         $eventBus->addListener('BookingRejected', $appointmentListener);
-        $eventBus->addListener('BookingEdited', $appointmentListener);
         $eventBus->addListener('BookingReassigned', $appointmentListener);
         $eventBus->addListener('PackageCustomerUpdated', $appointmentListener);
         $eventBus->addListener('PackageCustomerAdded', $appointmentListener);
@@ -53,5 +52,6 @@ class EventSubscribers
         $eventBus->addListener('EventStatusUpdated', $eventListener);
         $eventBus->addListener('EventEdited', $eventListener);
         $eventBus->addListener('EventAdded', $eventListener);
+        $eventBus->addListener('EventBookingEdited', $eventListener);
     }
 }

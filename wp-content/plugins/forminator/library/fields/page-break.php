@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Page_Break class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,41 +17,57 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Page_Break extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'page-break';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'page-break';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 18;
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Hide advanced
+	 *
 	 * @var string
 	 */
 	public $hide_advanced = 'true';
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon forminator-icon-pagination';
@@ -60,7 +82,6 @@ class Forminator_Page_Break extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Page Break', 'forminator' );
-
 	}
 
 	/**
@@ -84,7 +105,7 @@ class Forminator_Page_Break extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */

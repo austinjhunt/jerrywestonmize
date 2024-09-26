@@ -14,6 +14,7 @@ use MailPoetVendor\Twig\Node\NodeOutputInterface;
 use MailPoetVendor\Twig\Node\PrintNode;
 use MailPoetVendor\Twig\Node\TextNode;
 use MailPoetVendor\Twig\TokenParser\TokenParserInterface;
+use MailPoetVendor\Twig\Util\ReflectionCallable;
 class Parser
 {
  private $stack = [];
@@ -116,8 +117,9 @@ class Parser
  if (!($subparser = $this->env->getTokenParser($token->getValue()))) {
  if (null !== $test) {
  $e = new SyntaxError(\sprintf('Unexpected "%s" tag', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
- if (\is_array($test) && isset($test[0]) && $test[0] instanceof TokenParserInterface) {
- $e->appendMessage(\sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $test[0]->getTag(), $lineno));
+ $callable = (new ReflectionCallable($test))->getCallable();
+ if (\is_array($callable) && $callable[0] instanceof TokenParserInterface) {
+ $e->appendMessage(\sprintf(' (expecting closing tag for the "%s" tag defined near line %s).', $callable[0]->getTag(), $lineno));
  }
  } else {
  $e = new SyntaxError(\sprintf('Unknown "%s" tag.', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());

@@ -11,6 +11,11 @@
  */
 trait Forminator_Slack_Settings_Trait {
 
+	/**
+	 * Target array
+	 *
+	 * @var array
+	 */
 	public $target_types = array();
 
 	/**
@@ -18,10 +23,8 @@ trait Forminator_Slack_Settings_Trait {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param Forminator_Integration $addon
-	 * @param                           $form_id
-	 *
-	 * @throws Forminator_Integration_Exception
+	 * @param Forminator_Integration $addon Forminator Integration Addon.
+	 * @param int                    $form_id Form Id.
 	 */
 	public function __construct( Forminator_Integration $addon, $form_id ) {
 		parent::__construct( $addon, $form_id );
@@ -67,6 +70,7 @@ trait Forminator_Slack_Settings_Trait {
 	 * @since 1.0 Slack Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function pick_name( $submitted_data ) {
 		$template = forminator_addon_slack_dir() . 'views/module/pick-name.php';
@@ -137,6 +141,7 @@ trait Forminator_Slack_Settings_Trait {
 	 * @since 1.0 Slack Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function select_type( $submitted_data ) {
 		$template = forminator_addon_slack_dir() . 'views/module/select-type.php';
@@ -244,6 +249,7 @@ trait Forminator_Slack_Settings_Trait {
 	 * @since 1.0 Slack Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function select_target( $submitted_data ) {
 		$template = forminator_addon_slack_dir() . 'views/module/select-target.php';
@@ -356,7 +362,6 @@ trait Forminator_Slack_Settings_Trait {
 			'has_errors' => $has_errors,
 			'has_back'   => true,
 		);
-
 	}
 
 	/**
@@ -377,6 +382,7 @@ trait Forminator_Slack_Settings_Trait {
 	 * @since 1.0 Slack Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function setup_message( $submitted_data ) {
 		$template = forminator_addon_slack_dir() . 'views/' . static::$module_slug . '-settings/setup-message.php';
@@ -462,7 +468,6 @@ trait Forminator_Slack_Settings_Trait {
 			'is_close'     => $is_close,
 			'size'         => 'normal',
 		);
-
 	}
 
 	/**

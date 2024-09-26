@@ -146,6 +146,13 @@ class UpdateAppointmentTimeCommandHandler extends CommandHandler
 
         $bookingStart = $command->getField('bookingStart');
 
+        if ($command->getField('timeZone')) {
+            $bookingStart = DateTimeService::getDateTimeObjectInTimeZone(
+                $bookingStart,
+                $command->getField('timeZone')
+            )->setTimezone(DateTimeService::getTimeZone())->format('Y-m-d H:i:s');
+        }
+
         $bookingStartInUtc = DateTimeService::getCustomDateTimeObject(
             $bookingStart
         )->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i');

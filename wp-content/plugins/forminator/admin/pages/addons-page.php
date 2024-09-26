@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Addons Page
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Addons_Page extends Forminator_Admin_Page {
 
 	/**
-	 * fetch Add-ons data
+	 * Fetch Add-ons data
 	 *
 	 * @return array
 	 */
@@ -20,20 +26,20 @@ class Forminator_Addons_Page extends Forminator_Admin_Page {
 		if ( class_exists( 'WPMUDEV_Dashboard' ) ) {
 			$project_info = array(
 				array(
-					'pid' => Forminator_Admin_Addons_page::GEOLOCATION_PID, // Geolocation Add-on.
+					'pid' => Forminator_Admin_Addons_Page::GEOLOCATION_PID, // Geolocation Add-on.
 				),
-				// PDF Add-on
+				// PDF Add-on.
 				array(
 					'pid' => 4262971,
 				),
-				// Stripe Add-on
+				// Stripe Add-on.
 				array(
 					'pid' => 3953609,
 				),
 			);
 
 			foreach ( $project_info as $project ) {
-				$project_data[] = Forminator_Admin_Addons_page::get_project_info_from_wpmudev_dashboard( $project['pid'] );
+				$project_data[] = Forminator_Admin_Addons_Page::get_project_info_from_wpmudev_dashboard( $project['pid'] );
 			}
 		}
 
@@ -61,22 +67,12 @@ class Forminator_Addons_Page extends Forminator_Admin_Page {
 		}
 
 		if ( empty( $projects ) && ! FORMINATOR_PRO && ! class_exists( 'WPMUDEV_Dashboard' ) ) {
-			$projects = Forminator_Admin_Addons_page::forminator_get_static_addons();
+			$projects = Forminator_Admin_Addons_Page::forminator_get_static_addons();
 		}
 
 		$response['all']    = $projects;
 		$response['update'] = $update;
 
 		return $response;
-	}
-
-	/**
-	 * Addons page scripts
-	 *
-	 * @since 2.0.0
-	 * @param $hook
-	 */
-	public function enqueue_scripts( $hook ) {
-		parent::enqueue_scripts( $hook );
 	}
 }

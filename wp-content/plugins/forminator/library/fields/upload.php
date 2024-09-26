@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Upload class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,36 +17,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Upload extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'upload';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'upload';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 14;
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-download';
@@ -92,7 +112,7 @@ class Forminator_Upload extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -108,7 +128,7 @@ class Forminator_Upload extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
 	 *
 	 * @return mixed
@@ -214,8 +234,8 @@ class Forminator_Upload extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array        $field
-	 * @param array|string $data
+	 * @param array        $field Field.
+	 * @param array|string $data Data.
 	 */
 	public function validate( $field, $data ) {
 		if ( $this->is_required( $field ) ) {
@@ -305,10 +325,11 @@ class Forminator_Upload extends Forminator_Field {
 	 *
 	 * @since 1.6 copied from Forminator_Front_Action
 	 *
-	 * @param array field settings
-	 * @param array                $post_data submitted data.
-	 * @param string               $upload_type upload type.
-	 * @param array                $file_input
+	 * @param int    $form_id Form Id.
+	 * @param array  $field Settings.
+	 * @param array  $post_data Submitted data.
+	 * @param string $upload_type Upload type.
+	 * @param array  $file_input Input file.
 	 *
 	 * @return bool|array
 	 */
@@ -335,8 +356,8 @@ class Forminator_Upload extends Forminator_Field {
 			$filetypes           = self::get_property( 'filetypes', $field, array(), 'array' );
 			$additional          = str_replace( '.', '', self::get_property( 'additional-type', $field, '', 'string' ) );
 			$additional_filetype = array_map( 'trim', explode( ',', $additional ) );
-			$allFiletype         = array_merge( $filetypes, $additional_filetype );
-			foreach ( $allFiletype as $filetype ) {
+			$all_file_type       = array_merge( $filetypes, $additional_filetype );
+			foreach ( $all_file_type as $filetype ) {
 				// Mime type format = Key is the file extension with value as the mime type.
 				$mime_types[ $filetype ] = $filetype;
 			}
@@ -345,8 +366,8 @@ class Forminator_Upload extends Forminator_Field {
 		$file_object = array();
 		if ( ! empty( $file_input ) ) {
 			$file_object = $file_input;
-		} elseif ( isset( $_FILES[ $field_name ] ) ) {
-			$file_object = $_FILES[ $field_name ];
+		} elseif ( isset( $_FILES[ $field_name ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$file_object = $_FILES[ $field_name ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput
 		}
 		if ( ! empty( $file_object ) ) {
 			if ( isset( $file_object['name'] ) && ! empty( $file_object['name'] ) ) {
@@ -370,7 +391,7 @@ class Forminator_Upload extends Forminator_Field {
 				while ( file_exists( forminator_upload_root_temp() . '/' . $file_base_name . '.' . $ext ) ) {
 					$file_base_name = (string) $original_file_name . $i;
 					$file_name      = $file_base_name . '.' . $ext;
-					$i ++;
+					++$i;
 				}
 
 				if ( false === $valid['ext'] ) {
@@ -456,7 +477,7 @@ class Forminator_Upload extends Forminator_Field {
 					wp_mkdir_p( $file_path );
 				}
 
-				// Create Index file
+				// Create Index file.
 				self::forminator_upload_index_file( $form_id, $file_path );
 
 				if ( wp_is_writable( $file_path ) ) {
@@ -531,7 +552,7 @@ class Forminator_Upload extends Forminator_Field {
 	 * @param string $file_name The name of the file.
 	 * @return bool
 	 */
-	private static function check_mime_type( string $file, string $file_name ) : bool {
+	private static function check_mime_type( string $file, string $file_name ): bool {
 		$wp_filetype = wp_check_filetype_and_ext( $file, $file_name );
 
 		return ! empty( $wp_filetype['ext'] ) && ! empty( $wp_filetype['type'] );
@@ -542,6 +563,7 @@ class Forminator_Upload extends Forminator_Field {
 	 *
 	 * @since 1.6 copied from Forminator_Front_Action
 	 *
+	 * @param int   $form_id Form Id.
 	 * @param array $upload_data settings.
 	 * @param array $field_array field array.
 	 *
@@ -553,7 +575,7 @@ class Forminator_Upload extends Forminator_Field {
 		$use_library   = self::get_property( 'use_library', $field_array, false );
 		$file_type     = self::get_property( 'file-type', $field_array, 'single' );
 		if ( ! empty( $upload_data ) && ! empty( $upload_data['file'] ) ) {
-			if ( false !== array_search( false, array_column( $upload_data['file'], 'success' ) ) ) {
+			if ( false !== array_search( false, array_column( $upload_data['file'], 'success' ), true ) ) {
 				return array(
 					'success' => false,
 				);
@@ -566,7 +588,7 @@ class Forminator_Upload extends Forminator_Field {
 				wp_mkdir_p( $upload_path );
 			}
 
-			// Create Index file
+			// Create Index file.
 			self::forminator_upload_index_file( $form_id, $upload_path );
 
 			foreach ( $upload_data['file'] as $upload ) {
@@ -587,7 +609,7 @@ class Forminator_Upload extends Forminator_Field {
 					}
 
 					if ( file_exists( $temp_path ) ) {
-						if ( rename( $temp_path, $file_path ) ) {
+						if ( $this->move_file( $temp_path, $file_path ) ) {
 							if ( $use_library && 'multiple' === $file_type ) {
 								$upload_id = wp_insert_attachment(
 									array(
@@ -646,11 +668,36 @@ class Forminator_Upload extends Forminator_Field {
 	}
 
 	/**
+	 * Move/Rename the file
+	 *
+	 * @param string $source Source file path.
+	 * @param string $destination Destination file path.
+	 * @return bool
+	 */
+	private function move_file( $source, $destination ) {
+		if ( ! function_exists( 'wp_filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		global $wp_filesystem;
+		if ( ! WP_Filesystem() ) {
+			return false; // Could not initialize the filesystem.
+		}
+
+		if ( $wp_filesystem->move( $source, $destination ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Handle multiple file upload with submission
 	 *
 	 * @since 1.6 copied from Forminator_Front_Action
 	 *
-	 * @param array $field
+	 * @param int   $form_id Form Id.
+	 * @param array $field Field.
 	 * @param array $upload_data settings.
 	 * @param bool  $temporary - Upload to temp folder first before payments are verified.
 	 *
@@ -674,7 +721,7 @@ class Forminator_Upload extends Forminator_Field {
 					return $response;
 				}
 
-				$i++;
+				++$i;
 			}
 
 			if ( ! empty( $file_url_arr ) && ! empty( $file_path_arr ) ) {
@@ -701,8 +748,9 @@ class Forminator_Upload extends Forminator_Field {
 	 *
 	 * @since 1.19.0
 	 *
-	 * @param array $upload_data settings.
-	 * @param array $field_array field array.
+	 * @param int   $form_id Form Id.
+	 * @param array $upload_data Settings.
+	 * @param array $field_array Field array.
 	 *
 	 * @return bool|array
 	 */
@@ -712,7 +760,7 @@ class Forminator_Upload extends Forminator_Field {
 		$use_library = self::get_property( 'use_library', $field_array, false );
 		$file_type   = self::get_property( 'file-type', $field_array, 'single' );
 		if ( ! empty( $upload_data ) && ! empty( $upload_data['file'] ) ) {
-			if ( false !== array_search( false, array_column( $upload_data['file'], 'success' ) ) ) {
+			if ( false !== array_search( false, array_column( $upload_data['file'], 'success' ), true ) ) {
 				return array(
 					'success' => false,
 				);
@@ -778,6 +826,8 @@ class Forminator_Upload extends Forminator_Field {
 	 *
 	 * @param array  $upload - The upload data.
 	 * @param array  $upload_dir - Upload directory.
+	 * @param string $upload_path - Upload path.
+	 * @param string $upload_url - Upload URL.
 	 * @param bool   $use_library - Upload directory.
 	 * @param string $file_type - Single/Multiple.
 	 *
@@ -803,7 +853,7 @@ class Forminator_Upload extends Forminator_Field {
 		}
 
 		if ( file_exists( $temp_path ) ) {
-			if ( rename( $temp_path, $file_path ) ) {
+			if ( $this->move_file( $temp_path, $file_path ) ) {
 				if ( $use_library && 'multiple' === $file_type ) {
 					$upload_id = wp_insert_attachment(
 						array(
@@ -847,7 +897,7 @@ class Forminator_Upload extends Forminator_Field {
 	/**
 	 * File size
 	 *
-	 * @param $file_size
+	 * @param string $file_size File size.
 	 *
 	 * @return mixed
 	 */
@@ -869,7 +919,9 @@ class Forminator_Upload extends Forminator_Field {
 	}
 
 	/**
-	 * @param $files
+	 * Arrange files
+	 *
+	 * @param array $files Files.
 	 *
 	 * @return array
 	 */
@@ -887,7 +939,7 @@ class Forminator_Upload extends Forminator_Field {
 	/**
 	 * Byte to size
 	 *
-	 * @param $size
+	 * @param int $size Size.
 	 *
 	 * @return float|string
 	 */
@@ -914,7 +966,7 @@ class Forminator_Upload extends Forminator_Field {
 	/**
 	 * Get all Filetypes
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return array
 	 */
@@ -934,9 +986,9 @@ class Forminator_Upload extends Forminator_Field {
 		$file_types          = array_diff( array_merge( $default_all, $filetypes ), $default_all );
 		$additional          = str_replace( '.', '', self::get_property( 'additional-type', $field, '', 'string' ) );
 		$additional_filetype = array_map( 'trim', explode( ',', $additional ) );
-		$allFiletype         = array_merge( $file_types, $additional_filetype );
-		if ( ! empty( $allFiletype ) ) {
-			foreach ( $allFiletype as $filetype ) {
+		$all_filetype        = array_merge( $file_types, $additional_filetype );
+		if ( ! empty( $all_filetype ) ) {
+			foreach ( $all_filetype as $filetype ) {
 				$mime_types[ $filetype ] = $filetype;
 			}
 		}
@@ -947,7 +999,7 @@ class Forminator_Upload extends Forminator_Field {
 	/**
 	 * Get mime type, provide alternative if function is not available
 	 *
-	 * @param $file
+	 * @param string $file File.
 	 *
 	 * @return string
 	 */
@@ -965,12 +1017,25 @@ class Forminator_Upload extends Forminator_Field {
 	/**
 	 * Set permission
 	 *
-	 * @param $path
+	 * @param string $path Path.
 	 */
 	public function set_permissions( $path ) {
 		$permission = apply_filters( 'forminator_file_permission', 0755, $path );
 		if ( $permission ) {
-			@chmod( $path, $permission );
+			if ( ! function_exists( 'wp_filesystem' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+			}
+
+			global $wp_filesystem;
+			if ( ! WP_Filesystem() ) {
+				return false; // Could not initialize the filesystem.
+			}
+
+			if ( $wp_filesystem->chmod( $path, $permission ) ) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 }

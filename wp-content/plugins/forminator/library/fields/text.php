@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Text class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,46 +17,64 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Text extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'text';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'text';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 6;
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Is input
+	 *
 	 * @var bool
 	 */
 	public $is_input = true;
 
 	/**
+	 * Has counter
+	 *
 	 * @var bool
 	 */
 	public $has_counter = true;
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-style-type';
@@ -86,7 +110,7 @@ class Forminator_Text extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -107,8 +131,9 @@ class Forminator_Text extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
+	 * @param array                  $draft_value Draft value.
 	 *
 	 * @return mixed
 	 */
@@ -364,8 +389,8 @@ class Forminator_Text extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array        $field
-	 * @param array|string $data
+	 * @param array        $field Field.
+	 * @param array|string $data Data.
 	 */
 	public function validate( $field, $data ) {
 		$id = self::get_property( 'element_id', $field );
@@ -412,7 +437,7 @@ class Forminator_Text extends Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization

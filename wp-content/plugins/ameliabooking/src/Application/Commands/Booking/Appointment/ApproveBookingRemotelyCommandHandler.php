@@ -97,6 +97,8 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
 
         $status = BookingStatus::APPROVED;
 
+        do_action('amelia_before_booking_approved_link', $booking ? $booking->toArray() : null);
+
         $bookingData = $reservationService->updateStatus($booking, $status);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
@@ -114,6 +116,8 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
 
         if ($notificationSettings['approveSuccessUrl'] && $result->getResult() === CommandResult::RESULT_SUCCESS) {
             $result->setUrl($notificationSettings['approveSuccessUrl']);
+
+            do_action('amelia_after_booking_approved_link', $booking ? $booking->toArray() : null);
         } elseif ($notificationSettings['approveErrorUrl'] && $result->getResult() === CommandResult::RESULT_ERROR) {
             $result->setUrl($notificationSettings['approveErrorUrl']);
         } else {

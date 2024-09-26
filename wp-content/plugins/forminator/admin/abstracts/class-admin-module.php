@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Admin Module
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,26 +17,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 abstract class Forminator_Admin_Module {
 
 	/**
+	 * Pages
+	 *
 	 * @var array
 	 */
 	public $pages = array();
 
 	/**
+	 * Page
+	 *
 	 * @var string
 	 */
 	public $page = '';
 
 	/**
+	 * Edit page
+	 *
 	 * @var string
 	 */
 	public $page_edit = '';
 
 	/**
+	 * Page entries
+	 *
 	 * @var string
 	 */
 	public $page_entries = '';
 
 	/**
+	 * Directory
+	 *
 	 * @var string
 	 */
 	public $dir = '';
@@ -75,6 +91,11 @@ abstract class Forminator_Admin_Module {
 	 */
 	public function add_menu_pages() {}
 
+	/**
+	 * Create module
+	 *
+	 * @since 1.0
+	 */
 	public function create_module() {}
 
 	/**
@@ -112,7 +133,7 @@ abstract class Forminator_Admin_Module {
 	 * Inject module options to JS
 	 *
 	 * @since 1.0
-	 * @param $data
+	 * @param mixed $data Data.
 	 * @return mixed
 	 */
 	public function add_js_defaults( $data ) {
@@ -122,7 +143,7 @@ abstract class Forminator_Admin_Module {
 	/**
 	 * Inject l10n strings to JS
 	 *
-	 * @param $strings
+	 * @param mixed $strings Strings.
 	 * @since 1.0
 	 * @return mixed
 	 */
@@ -176,7 +197,7 @@ abstract class Forminator_Admin_Module {
 	 * @deprecated 1.1 No longer used because this function override prohibited WordPress global of $plugin_page
 	 * @since      1.0
 	 *
-	 * @param $file
+	 * @param mixed $file File.
 	 *
 	 * @return mixed
 	 */
@@ -229,8 +250,8 @@ abstract class Forminator_Admin_Module {
 	 *
 	 * @since 1.1
 	 *
-	 * @param $submenu_file
-	 * @param $parent_file
+	 * @param string $submenu_file Submenu file.
+	 * @param string $parent_file Parent file.
 	 *
 	 * @return string
 	 */
@@ -257,10 +278,11 @@ abstract class Forminator_Admin_Module {
 	 * @param string $slug Module type.
 	 * @param bool   $change_recipients Change recipients.
 	 * @param bool   $draft Draft status.
+	 * @param array  $extra_args extra arguments.
 	 *
 	 * @throws Exception When import failed.
 	 */
-	public static function import_json( string $json, string $name, string $slug, bool $change_recipients, bool $draft = false ) {
+	public static function import_json( string $json, string $name, string $slug, bool $change_recipients, bool $draft = false, array $extra_args = array() ) {
 		$import_data = Forminator_Core::sanitize_array( json_decode( $json, true ) );
 
 		if ( $change_recipients ) {
@@ -282,6 +304,11 @@ abstract class Forminator_Admin_Module {
 		if ( $draft ) {
 			$import_data['status'] = $class::STATUS_DRAFT;
 		}
+
+		if ( ! empty( $extra_args ) && isset( $import_data['data']['settings'] ) ) {
+			$import_data['data']['settings'] = array_merge( $import_data['data']['settings'], $extra_args );
+		}
+
 		$model = $class::create_from_import_data( $import_data, $name );
 
 		if ( is_wp_error( $model ) ) {
@@ -291,15 +318,6 @@ abstract class Forminator_Admin_Module {
 		if ( ! $model instanceof Forminator_Base_Form_Model ) {
 			throw new Exception( esc_html__( 'Failed to import module, please make sure import text is valid, and try again.', 'forminator' ) );
 		}
-
-		/**
-		 * Fires after form import
-		 *
-		 * @since 1.27.0
-		 *
-		 * @param string $slug Module type.
-		 */
-		do_action( 'forminator_after_form_import', $slug );
 
 		return $model;
 	}
@@ -360,10 +378,10 @@ abstract class Forminator_Admin_Module {
 	 *
 	 * @since 1.18.0
 	 *
-	 * @param string $data - Email recipients
-	 * @param string $current_user_email
+	 * @param string $data Email recipients.
+	 * @param string $current_user_email User email.
 	 *
-	 * @return array $recipients
+	 * @return array
 	 */
 	private static function apply_user_email( $data, $current_user_email ) {
 		$recipients = ! is_array( $data ) ? explode( ',', $data ) : $data;

@@ -1,5 +1,10 @@
 <?php
-// Defaults.
+/**
+ * Template Map fields
+ *
+ * @package Forminator
+ */
+
 $vars = array(
 	'error_message' => '',
 	'multi_id'      => '',
@@ -9,7 +14,11 @@ $vars = array(
 	'email_fields'  => array(),
 );
 
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 } ?>
@@ -21,7 +30,10 @@ foreach ( $template_vars as $key => $val ) {
 	<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Match up your form fields with your AWeber fields to make sure we\'re sending data to the right place.', 'forminator' ); ?></p>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>

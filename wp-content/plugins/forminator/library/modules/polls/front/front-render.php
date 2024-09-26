@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Poll_Front class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Front render class for custom forms
@@ -33,9 +38,9 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param      $id
-	 * @param bool $is_preview
-	 * @param bool $data
+	 * @param int  $id Id.
+	 * @param bool $is_preview Is preview.
+	 * @param bool $data Data.
 	 * @param bool $hide If true, display: none will be added on the form markup and later removed with JS.
 	 */
 	public function display( $id, $is_preview = false, $data = false, $hide = true ) {
@@ -118,6 +123,8 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	/**
 	 * Poll question
 	 *
+	 * @param object $model model.
+	 *
 	 * @since 1.0
 	 * @return string
 	 */
@@ -131,6 +138,8 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 
 	/**
 	 * Poll Description
+	 *
+	 * @param object $model model.
 	 *
 	 * @since 1.0
 	 * @return string
@@ -160,6 +169,8 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 
 	/**
 	 * Poll header
+	 *
+	 * @param string $maybe_error Error message.
 	 *
 	 * @since 1.0
 	 * @return string
@@ -264,7 +275,6 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 		}
 
 		return apply_filters( 'forminator_poll_header', $html, $this );
-
 	}
 
 	/**
@@ -288,6 +298,8 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 
 	/**
 	 * Button markup
+	 *
+	 * @param array $form_settings Form settings.
 	 *
 	 * @since 1.0
 	 * @return string
@@ -422,7 +434,7 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $wrapper
+	 * @param array $wrapper Wrapper.
 	 *
 	 * @return string
 	 */
@@ -440,7 +452,6 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 		}
 
 		return apply_filters( 'forminator_before_wrapper_markup', $html );
-
 	}
 
 	/**
@@ -448,7 +459,7 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $wrapper
+	 * @param array $wrapper Wrapper.
 	 *
 	 * @return mixed
 	 */
@@ -457,7 +468,6 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 		$html = '</div>';
 
 		return apply_filters( 'forminator_after_wrapper_markup', $html );
-
 	}
 
 	/**
@@ -465,7 +475,7 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param bool $render
+	 * @param bool $render Render.
 	 *
 	 * @return string
 	 */
@@ -555,7 +565,6 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 				$this
 			);
 		}
-
 	}
 
 	/**
@@ -563,8 +572,8 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
-	 * @param $uniq_id
+	 * @param array  $field Field.
+	 * @param string $uniq_id Unique Id.
 	 *
 	 * @return mixed
 	 */
@@ -671,9 +680,9 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
-	 * @param $id
-	 * @param $name
+	 * @param array  $field Field.
+	 * @param int    $id Id.
+	 * @param string $name Name.
 	 *
 	 * @return mixed
 	 */
@@ -697,7 +706,6 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 		);
 
 		return apply_filters( 'forminator_field_radio_markup', $html, $id, $name, $required, $value );
-
 	}
 
 	/**
@@ -705,8 +713,9 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
-	 * @param $uniq_id
+	 * @param array  $field Field.
+	 * @param string $uniq_id Unique Id.
+	 * @param array  $form_settings Form settings.
 	 *
 	 * @return mixed
 	 */
@@ -780,7 +789,9 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	}
 
 	/**
-	 * Results chart design
+	 * Results chart
+	 *
+	 * @param array $settings Settings.
 	 *
 	 * @since 1.0
 	 * @return string
@@ -847,6 +858,9 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	/**
 	 * Render success
 	 *
+	 * @param bool  $render Render.
+	 * @param array $form_settings Settings.
+	 *
 	 * @since 1.0
 	 * @return string
 	 */
@@ -881,7 +895,7 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 
 				<div class="forminator-poll-body">
 
-					<canvas id="<?php echo esc_attr( $chart_container ); ?>" class="forminator-chart forminator-show" role="img" aria-hidden="true" style="<?php echo sprintf( 'height:%spx;', esc_attr( $adjusted_height ) ); ?>"></canvas>
+					<canvas id="<?php echo esc_attr( $chart_container ); ?>" class="forminator-chart forminator-show" role="img" aria-hidden="true" style="<?php printf( 'height:%spx;', esc_attr( $adjusted_height ) ); ?>"></canvas>
 
 				</div>
 
@@ -926,6 +940,11 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 		}
 	}
 
+	/**
+	 * Graph scripts
+	 *
+	 * @return void
+	 */
 	public function graph_scripts() {
 
 		foreach ( self::$graph_result_scripts as $graph_script ) {
@@ -952,7 +971,7 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	/**
 	 * Get Options for google chart
 	 *
-	 * @param $model
+	 * @param object $model Model.
 	 *
 	 * @return array
 	 */
@@ -1039,6 +1058,9 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 
 	/**
 	 * Success footer scripts
+	 *
+	 * @param object $model Model.
+	 * @param string $container_id Container Id.
 	 *
 	 * @since 1.0
 	 */
@@ -1163,6 +1185,7 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @param string $prefix Default prefix.
 	 * @param array  $properties CSS properties.
+	 * @param string $slug Slug.
 	 * @return string
 	 */
 	protected static function get_css_prefix( $prefix, $properties, $slug ) {
@@ -1177,8 +1200,8 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param bool $hide
-	 * @param bool $is_preview
+	 * @param bool $hide Hide.
+	 * @param bool $is_preview Is preview.
 	 *
 	 * @return false|string
 	 */
@@ -1206,21 +1229,19 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 			$this->track_views = false;
 			$this->render( $this->model->id, $hide, $is_preview );
 			$rendered = true;
+		} elseif ( $saved && $is_same_form && $is_same_render && $this->show_results() ) {
+				$this->track_views = false;
+				$this->render_success();
+		} elseif ( $results && $is_same_form && $is_same_render && $this->show_link() ) {
+			$this->track_views = false;
+			$this->render_success();
+		} elseif ( ( ! $this->is_admin || $is_preview ) && ( ! $this->model->current_user_can_vote() && ( $this->show_results() || $this->show_link() ) ) ) {
+			$this->track_views = false;
+			$this->render_success();
 		} else {
-			if ( $saved && $is_same_form && $is_same_render && $this->show_results() ) {
-				$this->track_views = false;
-				$this->render_success();
-			} elseif ( $results && $is_same_form && $is_same_render && $this->show_link() ) {
-				$this->track_views = false;
-				$this->render_success();
-			} elseif ( ( ! $this->is_admin || $is_preview ) && ( ! $this->model->current_user_can_vote() && ( $this->show_results() || $this->show_link() ) ) ) {
-				$this->track_views = false;
-				$this->render_success();
-			} else {
-				$this->render( $this->model->id, $hide, $is_preview );
+			$this->render( $this->model->id, $hide, $is_preview );
 
-				$rendered = true;
-			}
+			$rendered = true;
 		}
 
 		$this->set_forms_properties( $rendered );
@@ -1275,8 +1296,8 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	/**
 	 * Enqueue poll scripts
 	 *
-	 * @param      $is_preview
-	 * @param bool       $is_ajax_load
+	 * @param bool $is_preview Is preview.
+	 * @param bool $is_ajax_load Is ajax load.
 	 */
 	public function enqueue_form_scripts( $is_preview, $is_ajax_load = false ) {
 		ob_start();
@@ -1289,7 +1310,7 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $form_properties
+	 * @param array $form_properties Form properties.
 	 *
 	 * @return array
 	 */

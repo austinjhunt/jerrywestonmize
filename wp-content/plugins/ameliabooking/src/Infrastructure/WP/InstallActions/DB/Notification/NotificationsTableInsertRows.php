@@ -137,6 +137,24 @@ class NotificationsTableInsertRows extends AbstractDatabaseTable
             $rows = array_merge($rows, [NotificationsStrings::getProviderCartSmsNotification()]);
         }
 
+        $customerWaitingList = !(int)$wpdb->get_row(
+            "SELECT COUNT(*) AS count FROM {$table} WHERE name = 'customer_event_waiting'"
+        )->count;
+
+        if ($customerWaitingList) {
+            $rows = array_merge($rows, [NotificationsStrings::getCustomerWaitingListEmailNotification()]);
+            $rows = array_merge($rows, [NotificationsStrings::getCustomerWaitingListSmsNotification()]);
+        }
+
+        $providerWaitingList = !(int)$wpdb->get_row(
+            "SELECT COUNT(*) AS count FROM {$table} WHERE name = 'provider_event_waiting'"
+        )->count;
+
+        if ($providerWaitingList) {
+            $rows = array_merge($rows, [NotificationsStrings::getProviderWaitingListEmailNotification()]);
+            $rows = array_merge($rows, [NotificationsStrings::getProviderWaitingListSmsNotification()]);
+        }
+
         $addWhatsApp = !(int)$wpdb->get_row("SELECT COUNT(*) AS count FROM {$table} WHERE type = 'whatsapp'")->count;
 
         if ($addWhatsApp) {
@@ -149,6 +167,14 @@ class NotificationsTableInsertRows extends AbstractDatabaseTable
 
         if ($whatsAppCart) {
             $rows = array_merge($rows, NotificationsStrings::getWhatsAppCartNotifications());
+        }
+
+        $whatsAppWaitingList = !(int)$wpdb->get_row(
+            "SELECT COUNT(*) AS count FROM {$table} WHERE name = 'provider_event_waiting' AND type = 'whatsapp'"
+        )->count;
+
+        if ($whatsAppWaitingList) {
+            $rows = array_merge($rows, NotificationsStrings::getWhatsAppWaitingListNotifications());
         }
 
         $appointmentUpdated = !(int)$wpdb->get_row("SELECT COUNT(*) AS count FROM {$table} WHERE name LIKE '%appointment_updated'")->count;

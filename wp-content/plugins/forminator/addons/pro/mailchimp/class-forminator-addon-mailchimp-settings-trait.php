@@ -95,8 +95,10 @@ trait Forminator_Mailchimp_Settings_Trait {
 	 * Choose Mail wizard
 	 *
 	 * @since 1.0 Mailchimp Integration
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
+	 * @throws Forminator_Integration_Settings_Exception Throws Integration Settings Exception.
 	 */
 	public function choose_mail_list( $submitted_data ) {
 		$default_data = array(
@@ -120,10 +122,10 @@ trait Forminator_Mailchimp_Settings_Trait {
 		$html_field_mail_list  = '';
 
 		try {
-			$api        = $this->addon->get_api();
+			$api = $this->addon->get_api();
 
 			// Check API key first if valid.
-			$check_api  = $api->ping();
+			$check_api = $api->ping();
 			if ( 'Forminator_Integration_Exception' === get_class( $check_api ) ) {
 				$api_error = true;
 				throw new Forminator_Integration_Exception( $check_api->getMessage() );
@@ -303,6 +305,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 			return true;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput -- The nonce is verified before the method call and sanitized in Forminator_Core::sanitize_array.
 		$post_data = isset( $_POST['data'] ) ? Forminator_Core::sanitize_array( $_POST['data'], 'data' ) : array();
 
 		if ( ! is_array( $post_data ) && is_string( $post_data ) ) {
@@ -429,7 +432,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 				$this->addon_settings['group_type'] = $this->groups_data[ $group_id ]['type'];
 			}
 			$this->addon_settings['group_interest'] = isset( $submitted_data['group_interest'] ) ? $submitted_data['group_interest'] : '';
-			$interests                                   = $this->get_interests();
+			$interests                              = $this->get_interests();
 
 			$this->addon_settings['interest_options'] = $interests;
 
@@ -726,7 +729,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 		try {
 			// get merge fields.
 			$mailchimp_fields_list_request = $this->addon->get_api()->get_list_merge_fields( $this->addon_settings['mail_list_id'], array() );
-			$mailchimp_fields_list     = array();
+			$mailchimp_fields_list         = array();
 			if ( ! empty( $mailchimp_fields_list_request->merge_fields ) && is_array( $mailchimp_fields_list_request->merge_fields ) ) {
 				$mailchimp_fields_list = $mailchimp_fields_list_request->merge_fields;
 			}
@@ -760,12 +763,10 @@ trait Forminator_Mailchimp_Settings_Trait {
 							$current_data['fields_map'][ $key ][ $a ] = $this->addon_settings['fields_map'][ $key ][ $a ];
 						}
 					}
-				} else {
-					if ( isset( $submitted_data['fields_map'][ $key ] ) ) {
+				} elseif ( isset( $submitted_data['fields_map'][ $key ] ) ) {
 						$current_data['fields_map'][ $key ] = $submitted_data['fields_map'][ $key ];
-					} elseif ( isset( $this->addon_settings['fields_map'][ $key ] ) ) {
-						$current_data['fields_map'][ $key ] = $this->addon_settings['fields_map'][ $key ];
-					}
+				} elseif ( isset( $this->addon_settings['fields_map'][ $key ] ) ) {
+					$current_data['fields_map'][ $key ] = $this->addon_settings['fields_map'][ $key ];
 				}
 			}
 
@@ -855,8 +856,8 @@ trait Forminator_Mailchimp_Settings_Trait {
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param $mailchimp_fields_list
-	 * @param $current_data
+	 * @param array $mailchimp_fields_list Field list.
+	 * @param array $current_data Current data.
 	 */
 	protected function get_input_map_fields( $mailchimp_fields_list, $current_data ) {
 		$select_options = wp_list_pluck( $this->get_fields_for_type(), 'field_label', 'element_id' );
@@ -881,7 +882,7 @@ trait Forminator_Mailchimp_Settings_Trait {
 								<?php foreach ( $email_fields as $email_field ) { ?>
 									<option value="<?php echo esc_attr( $email_field['element_id'] ); ?>"
 										<?php selected( $current_data['fields_map']['EMAIL'], $email_field['element_id'] ); ?>>
-										<?php echo esc_html( strip_tags( $email_field['field_label'] ) . ' | ' . $email_field['element_id'] ); ?>
+										<?php echo esc_html( wp_strip_all_tags( $email_field['field_label'] ) . ' | ' . $email_field['element_id'] ); ?>
 									</option>
 								<?php } ?>
 							<?php } ?>
@@ -950,8 +951,8 @@ trait Forminator_Mailchimp_Settings_Trait {
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param $mail_lists
-	 * @param $submitted_data
+	 * @param array $mail_lists Mail lists.
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return string
 	 */
@@ -1071,12 +1072,11 @@ trait Forminator_Mailchimp_Settings_Trait {
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param $mailchimp_fields_list
-	 * @param $post_data
+	 * @param array $mailchimp_fields_list Mailchimp fields list.
+	 * @param array $post_data Post data.
 	 *
 	 * @return array current integration form settings
-	 * @throws Forminator_Integration_Exception
-	 * @throws Forminator_Integration_Settings_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function step_map_fields_validate( $mailchimp_fields_list, $post_data ) {
 		$form_fields                  = $this->get_fields_for_type();
@@ -1224,7 +1224,6 @@ trait Forminator_Mailchimp_Settings_Trait {
 		 */
 
 		return true;
-
 	}
 
 	/**

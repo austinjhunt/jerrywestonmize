@@ -173,8 +173,8 @@ class Ressio_Plugin_Lazyload extends Ressio_Plugin
                 $node->removeAttribute('src');
                 $node->setAttribute('data-src', $src);
                 $node->setAttribute('data-youtube', $id);
-                $this->di->dispatcher->triggerEvent('PreconnectDomain', $src);
-                $this->di->dispatcher->triggerEvent('PreconnectDomain', 'https://i.ytimg.com/');
+                $this->di->dispatcher->triggerEvent('PreconnectDomain', array($src));
+                $this->di->dispatcher->triggerEvent('PreconnectDomain', array('https://i.ytimg.com/'));
                 return;
             }
         }
@@ -439,7 +439,7 @@ class Ressio_Plugin_Lazyload extends Ressio_Plugin
                         }
                         $this->config->img->jpegquality = $jpegquality;
 
-                        if ($dest_imagepath !== false && is_file($dest_imagepath)) {
+                        if ($dest_imagepath !== false && is_file($dest_imagepath) && !is_link($dest_imagepath)) {
                             if ($this->params->lqip_embed) {
                                 $data = file_get_contents($dest_imagepath);
                                 if ($data !== false && $data !== '') {
@@ -475,7 +475,7 @@ class Ressio_Plugin_Lazyload extends Ressio_Plugin
                                 $dest_imagepath = $this->di->imgOptimizer->rescale($src_imagepath, 'gif', $width, $height, $dest_imagepath);
                             }
                         }
-                        if ($dest_imagepath !== false && is_file($dest_imagepath)) {
+                        if ($dest_imagepath !== false && is_file($dest_imagepath) && !is_link($dest_imagepath)) {
                             $data = file_get_contents($dest_imagepath);
                             if ($data !== false && $data !== '') {
                                 return 'data:image/gif;base64,' . base64_encode($data);

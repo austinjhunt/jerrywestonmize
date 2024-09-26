@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Integration_Form_Hooks class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Integration
@@ -124,7 +129,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.1
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
+	 * @param Forminator_Form_Entry_Model $entry_model Form entry model.
 	 */
 	public function after_entry_saved( Forminator_Form_Entry_Model $entry_model ) {
 		$addon_slug             = $this->addon->get_slug();
@@ -194,8 +199,8 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.7
 	 *
-	 * @param $element_id
-	 * @param $form_entry_fields
+	 * @param string $element_id Element Id.
+	 * @param array  $form_entry_fields Form entry fields.
 	 *
 	 * @return array
 	 */
@@ -229,7 +234,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.7
 	 *
-	 * @param $element_id
+	 * @param string $element_id Element Id.
 	 *
 	 * @return bool
 	 */
@@ -256,7 +261,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.7
 	 *
-	 * @param $form_entry_fields
+	 * @param array $form_entry_fields Form entry fields.
 	 *
 	 * @return array
 	 */
@@ -292,7 +297,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.7
 	 *
-	 * @param $element_id
+	 * @param string $element_id Element Id.
 	 *
 	 * @return bool
 	 */
@@ -319,7 +324,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.15.12
 	 *
-	 * @param $element_id
+	 * @param string $element_id Element Id.
 	 *
 	 * @return bool
 	 */
@@ -371,7 +376,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.7
 	 *
-	 * @param $form_entry_fields
+	 * @param array $form_entry_fields Form entry fields.
 	 *
 	 * @return array
 	 */
@@ -407,7 +412,7 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.15.7
 	 *
-	 * @param $element_id
+	 * @param string $element_id Element Id.
 	 *
 	 * @return bool
 	 */
@@ -434,7 +439,8 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.15.7
 	 *
-	 * @param $element_id
+	 * @param string $element_id Element Id.
+	 * @param array  $element Element.
 	 *
 	 * @return bool
 	 */
@@ -451,7 +457,6 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 			} else {
 				$element_value = implode( ',', $element );
 			}
-
 		} else {
 			$element_value = trim( $element );
 		}
@@ -476,13 +481,14 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.15.12
 	 *
-	 * @param $element_id
-	 * @param $value
+	 * @param string $element_id Element Id.
+	 * @param mixed  $value Field value.
+	 * @param int    $form_id Form Id.
 	 *
 	 * @return bool
 	 */
 	public static function get_date_in_ms( $element_id, $value, $form_id ) {
-		$field 			   = Forminator_API::get_form_field( $form_id, $element_id );
+		$field             = Forminator_API::get_form_field( $form_id, $element_id );
 		$normalized_format = new Forminator_Date();
 		$normalized_format = $normalized_format->normalize_date_format( $field['date_format'] );
 		$date              = date_create_from_format( $normalized_format, $value );
@@ -496,8 +502,8 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	 * Prepare field value for passing to addon
 	 *
 	 * @param string $element_id Field slug.
-	 * @param type $form_entry_fields Form entry fields.
-	 * @param array $submitted_data Submitted data.
+	 * @param mixed  $form_entry_fields Form entry fields.
+	 * @param array  $submitted_data Submitted data.
 	 * @return string
 	 */
 	public static function prepare_field_value_for_addon( $element_id, $form_entry_fields, $submitted_data ) {
@@ -524,5 +530,4 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 
 		return $element_value;
 	}
-
 }

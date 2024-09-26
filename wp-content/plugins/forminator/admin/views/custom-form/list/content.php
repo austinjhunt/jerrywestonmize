@@ -1,5 +1,14 @@
 <?php
-/** @var Forminator_CForm_Page $this */
+/**
+ * Template admin/views/custom-form/list/content.php
+ *
+ * @package Forminator
+ */
+
+/**
+ * Forminator_CForm_Page
+ *
+ * @var Forminator_CForm_Page $this */
 
 // Search keyword.
 $search_keyword      = Forminator_Core::sanitize_text_field( 'module-search' );
@@ -13,7 +22,7 @@ $modules = $this->getModules();
 $count = ! $is_search ? $this->countModules() : count( $modules );
 
 // Start date for retrieving the information of the last 30 days in sql format.
-$sql_month_start_date = date( 'Y-m-d H:i:s', strtotime( '-30 days midnight' ) );
+$sql_month_start_date = gmdate( 'Y-m-d H:i:s', strtotime( '-30 days midnight' ) );
 
 $entry_type    = 'custom-forms';
 $wizard_page   = 'forminator-cform-wizard';

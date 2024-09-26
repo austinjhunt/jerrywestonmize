@@ -19,50 +19,27 @@ use MailPoet\Subscribers\SubscribersRepository;
 use MailPoet\WooCommerce\Helper as WooCommerceHelper;
 use MailPoet\WooCommerce\TransactionalEmailHooks;
 use MailPoet\WooCommerce\TransactionalEmails;
+use MailPoet\WooCommerce\TransactionalEmails\Template as WooTransactionalEmailTemplate;
 use MailPoet\WP\AutocompletePostListLoader as WPPostListLoader;
 use MailPoet\WP\Functions as WPFunctions;
 
 class NewsletterEditor {
   private const DATE_FORMAT = 'Y-m-d H:i:s';
 
-  /** @var PageRenderer */
-  private $pageRenderer;
-
-  /** @var SettingsController */
-  private $settings;
-
-  /** @var UserFlagsController */
-  private $userFlags;
-
-  /** @var WooCommerceHelper */
-  private $woocommerceHelper;
-
-  /** @var WPFunctions */
-  private $wp;
-
-  /** @var TransactionalEmails */
-  private $wcTransactionalEmails;
-
-  /** @var ShortcodesHelper */
-  private $shortcodesHelper;
-
-  /** @var SubscribersRepository */
-  private $subscribersRepository;
-
-  /** @var TransactionalEmailHooks */
-  private $wooEmailHooks;
-
-  /** @var WPPostListLoader */
-  private $wpPostListLoader;
-
-  /** @var CustomFonts  */
-  private $customFonts;
-
-  /*** @var AssetsController */
-  private $assetsController;
-
-  /** @var BrandStyles */
-  private $brandStyles;
+  private PageRenderer $pageRenderer;
+  private SettingsController $settings;
+  private UserFlagsController $userFlags;
+  private WooCommerceHelper $woocommerceHelper;
+  private WPFunctions $wp;
+  private TransactionalEmails $wcTransactionalEmails;
+  private ShortcodesHelper $shortcodesHelper;
+  private SubscribersRepository $subscribersRepository;
+  private TransactionalEmailHooks $wooEmailHooks;
+  private WPPostListLoader $wpPostListLoader;
+  private CustomFonts $customFonts;
+  private AssetsController $assetsController;
+  private BrandStyles $brandStyles;
+  private WooTransactionalEmailTemplate $template;
 
   public function __construct(
     PageRenderer $pageRenderer,
@@ -77,6 +54,7 @@ class NewsletterEditor {
     WPPostListLoader $wpPostListLoader,
     CustomFonts $customFonts,
     AssetsController $assetsController,
+    WooTransactionalEmailTemplate $template,
     BrandStyles $brandStyles
   ) {
     $this->pageRenderer = $pageRenderer;
@@ -91,6 +69,7 @@ class NewsletterEditor {
     $this->wpPostListLoader = $wpPostListLoader;
     $this->customFonts = $customFonts;
     $this->assetsController = $assetsController;
+    $this->template = $template;
     $this->brandStyles = $brandStyles;
   }
 
@@ -116,12 +95,15 @@ class NewsletterEditor {
     $subscriber = $this->subscribersRepository->getCurrentWPUser();
     $subscriberData = $subscriber ? $this->formatSubscriber($subscriber) : [];
     $woocommerceData = [];
+    $originalTemplateBody = null;
     if ($this->woocommerceHelper->isWooCommerceActive()) {
+      $wcEmailSettings = $this->wcTransactionalEmails->getWCEmailSettings();
+
       // Activate hooks for Woo emails styles so that we always load styles set in Woo email customizer
       if ($newsletterId === (int)$this->settings->get(TransactionalEmails::SETTING_EMAIL_ID)) {
         $this->wooEmailHooks->overrideStylesForWooEmails();
+        $originalTemplateBody = $this->template->create($wcEmailSettings);
       }
-      $wcEmailSettings = $this->wcTransactionalEmails->getWCEmailSettings();
       $discountTypes = $this->woocommerceHelper->wcGetCouponTypes();
       $discountType = (string)current(array_keys($discountTypes));
       $amountMax = strpos($discountType, 'percent') !== false ? 100 : null;
@@ -158,6 +140,7 @@ class NewsletterEditor {
       'is_wc_transactional_email' => $newsletterId === $woocommerceTemplateId,
       'is_confirmation_email_template' => $newsletterId === $confirmationEmailTemplateId,
       'is_confirmation_email_customizer_enabled' => (bool)$this->settings->get('signup_confirmation.use_mailpoet_editor', false),
+      'original_template_body' => $originalTemplateBody,
       'product_categories' => $this->wpPostListLoader->getWooCommerceCategories(),
       'products' => $this->wpPostListLoader->getProducts(),
       'brand_styles' => [

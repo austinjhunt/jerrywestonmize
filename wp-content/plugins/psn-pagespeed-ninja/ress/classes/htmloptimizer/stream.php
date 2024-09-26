@@ -372,7 +372,7 @@ class Ressio_HtmlOptimizer_Stream extends Ressio_HtmlOptimizer_Base
 
                     $hasSrc = isset($attributes['src']);
                     $hasSrcset = isset($attributes['srcset']);
-                    $src_orig = $node->getAttribute('src');
+                    $src_orig = $hasSrc ? $node->getAttribute('src') : null;
 
                     if ($hasSrc && $config->img->minify) {
                         $attributes['src'] = $this->imgSrcOptimize($src_orig);
@@ -1087,8 +1087,18 @@ class Ressio_HtmlOptimizer_Stream extends Ressio_HtmlOptimizer_Base
             while ($injectOffset < $count) {
                 if (isset($this->dom[$injectOffset])) {
                     $node = $this->dom[$injectOffset];
-                    if (is_string($node) && !preg_match('/^<(?:meta|title)/i', $node)) {
-                        break;
+                    if (is_string($node) && trim($node) !== '') {
+                        if (strncasecmp($node, '<title', 6) === 0) {
+                            $injectOffset++;
+                            while ($injectOffset < $count && (!isset($this->dom[$injectOffset]) || !preg_match('#^</(?:title|head|html)\b#i', $this->dom[$injectOffset]))) {
+                                $injectOffset++;
+                            }
+                            $injectOffset++;
+                            break;
+                        }
+                        if (!preg_match('/^<(?:meta|!--)/i', $node)) {
+                            break;
+                        }
                     }
                 }
                 $injectOffset++;

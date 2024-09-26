@@ -1,13 +1,20 @@
 <?php
+/**
+ * Forminator GFBlock Quizzes.
+ *
+ * @package Forminator
+ */
 
 /**
- * Class Forminator_GFBlock_Forms
+ * Class Forminator_GFBlock_Quizzes
  *
  * @since 1.0 Gutenber Integration
  */
 class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 
 	/**
+	 * Forminator_GFBlock_Quizzes Instance
+	 *
 	 * @var self|null
 	 */
 	private static $_instance = null;
@@ -108,7 +115,7 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 	 * Print block preview markup
 	 *
 	 * @since 1.0 Gutenberg Integration
-	 * @param WP_REST_Request $data
+	 * @param WP_REST_Request $data Request data.
 	 */
 	public function preview_block_markup( $data ) {
 		// Get properties.
@@ -169,6 +176,11 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 		return $form_list;
 	}
 
+	/**
+	 * Localize
+	 *
+	 * @return string[]
+	 */
 	public function localize() {
 		return array(
 			'choose_quiz'      => esc_html__( 'Choose Quiz', 'forminator' ),

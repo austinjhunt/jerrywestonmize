@@ -80,8 +80,10 @@
 				});
 			}
 
-			this.replaceAll();
-			this.attachEvents();
+			setTimeout(function () {
+				self.replaceAll();
+				self.attachEvents();
+			}, 100);
 		},
 
 		getFormId: function () {

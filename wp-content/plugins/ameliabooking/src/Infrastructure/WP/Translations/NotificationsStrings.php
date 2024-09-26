@@ -1217,6 +1217,108 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
     }
 
     /**
+     * default customer's waiting list notification
+     *
+     * @return array
+     */
+    public static function getCustomerWaitingListEmailNotification()
+    {
+        return [
+            'name'       => 'customer_event_waiting',
+            'entity'     => 'event',
+            'type'       => 'email',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'customer',
+            'subject'    => '%event_name% Waiting List joined',
+            'content'    =>
+                'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully joined the Waiting List for the
+                 <strong>%event_name%</strong> event at
+                 <strong>%event_location%</strong> on
+                 <strong>%event_start_date_time%</strong>.<br><br>
+                 Thank you for choosing our company,<br><strong>%company_name%</strong>'
+        ];
+    }
+
+    /**
+     * default customer's waiting list notification
+     *
+     * @return array
+     */
+    public static function getProviderWaitingListEmailNotification()
+    {
+        return [
+            'name'       => 'provider_event_waiting',
+            'entity'     => 'event',
+            'type'       => 'email',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'provider',
+            'subject'    => '%event_name% Waiting List joined',
+            'content'    =>
+                'Hi <strong>%employee_full_name%</strong>,<br><br>A new attendee has been added to the waiting list for
+                 <strong>%event_name%</strong> Event at
+                 <strong>%event_location%</strong> on
+                 <strong>%event_start_date_time%</strong>.<br><br>
+                 Thank you,<br><strong>%company_name%</strong>'
+        ];
+    }
+
+    /**
+     * default customer's waiting list notification
+     *
+     * @return array
+     */
+    public static function getCustomerWaitingListSmsNotification()
+    {
+        return [
+            'name'       => 'customer_event_waiting',
+            'entity'     => 'event',
+            'type'       => 'sms',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'customer',
+            'subject'    => '%event_name% Waiting List joined',
+            'content'    =>
+                'Dear %customer_full_name%,
+                
+You have successfully joined the Waiting List for the %event_name% event at %event_location% on %event_start_date_time%.
+
+Thank you for choosing our company,
+%company_name%'
+        ];
+    }
+
+    /**
+     * default customer's waiting list notification
+     *
+     * @return array
+     */
+    public static function getProviderWaitingListSmsNotification()
+    {
+        return [
+            'name'       => 'provider_event_waiting',
+            'entity'     => 'event',
+            'type'       => 'sms',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'provider',
+            'subject'    => '%event_name% Waiting List joined',
+            'content'    =>
+                'Hi %employee_full_name%,
+                
+A new attendee has been added to the waiting list for %event_name% Event at %event_location% on %event_start_date_time%.
+
+Thank you,
+%company_name%'
+        ];
+    }
+
+    /**
      * default provider's package canceled notification
      *
      * @return array
@@ -1453,6 +1555,35 @@ Thank you for choosing our company,
             $newRows[] = [
                 'name'       => $to . '_cart',
                 'entity'     => 'appointment',
+                'type'       => 'whatsapp',
+                'time'       => 'NULL',
+                'timeBefore' => 'NULL',
+                'timeAfter'  => 'NULL',
+                'sendTo'     => $to,
+                'subject'    => '',
+                'content'    => ''
+            ];
+        }
+
+        return $newRows;
+    }
+
+    /**
+     * Array of default whatsapp notifications
+     *
+     * @return array
+     */
+    public static function getWhatsAppWaitingListNotifications()
+    {
+        // needs to be changed for basic and lite
+        $sendTo = ['customer', 'provider'];
+
+        $newRows = [];
+
+        foreach ($sendTo as $to) {
+            $newRows[] = [
+                'name'       => $to . '_event_waiting',
+                'entity'     => 'event',
                 'type'       => 'whatsapp',
                 'time'       => 'NULL',
                 'timeBefore' => 'NULL',

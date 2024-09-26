@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/custom-form/popup/import-cf7.php
+ *
+ * @package Forminator
+ */
+
 $is_addons = false;
 $nonce     = wp_create_nonce( 'forminator_save_import_form_cf7' );
 $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
@@ -36,58 +42,70 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 						<p class="sui-description" style="margin-bottom: 10px; color: #333; font-weight: bold;"><?php esc_html_e( 'Unsupported form fields and settings', 'forminator' ); ?></p>
 
 						<ol class="fui-dismiss-list">
-                            <li>
-								<?php printf(
+							<li>
+								<?php
+								printf(
 								/* Translators: 1. Opening <strong> tag, 2. closing <strong> tag. */
 									esc_html__( "%1\$s1. Quiz field:%2\$s Forminator doesn't have a built-in quiz field, however, you can enable CAPTCHA and Honeypot protection on your imported forms.", 'forminator' ),
 									'<strong>',
 									'</strong>'
-								); ?>
-                            </li>
-                            <li>
-								<?php printf(
+								);
+								?>
+							</li>
+							<li>
+								<?php
+								printf(
 								/* Translators: 1. Opening <strong> tag, 2. closing <strong> tag. 3. Opening <a> tag with link to the wpmudev webhook, 2. closing <a> tag. */
 									esc_html__( "%1\$s2. ConstantContact:%2\$s Forminator doesn't integrate directly with ConstantContact. However, you can use %3\$sWebhook integration%4\$s to send your leads to ConstantContact.", 'forminator' ),
 									'<strong>',
 									'</strong>',
 									'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#webhook" target="_blank">',
 									'</a>'
-								); ?>
-                            </li>
-                            <li>
-								<?php printf(
+								);
+								?>
+							</li>
+							<li>
+								<?php
+								printf(
 								/* Translators: 1. Opening <strong> tag, 2. closing <strong> tag. */
 									esc_html__( "%1\$s3. reCAPTCHA v3 integration:%2\$s At this stage, Forminator can't import your existing reCAPTCHA integration. You can set this up manually on your imported forms once they are transferred.", 'forminator' ),
 									'<strong>',
 									'</strong>'
-								); ?>
-                            </li>
-                            <li>
-								<?php printf(
+								);
+								?>
+							</li>
+							<li>
+								<?php
+								printf(
 								/* Translators: 1. Opening <strong> tag, 2. closing <strong> tag. */
 									esc_html__( "%1\$s4. Additional settings:%2\$s Forminator doesn't support CF7’s additional form settings.", 'forminator' ),
 									'<strong>',
 									'</strong>'
-								); ?>
-                            </li>
-                            <li>
-								<?php printf(
+								);
+								?>
+							</li>
+							<li>
+								<?php
+								printf(
 								/* Translators: 1. Opening <strong> tag, 2. closing <strong> tag. */
 									esc_html__( '%1$s5. Custom field IDs:%2$s Forminator creates a unique ID for each field, and the conditional logic relies on them. However, you can provide a custom CSS class for each field.', 'forminator' ),
 									'<strong>',
 									'</strong>'
-								); ?>
-                            </li>
-                        </ol>
+								);
+								?>
+							</li>
+						</ol>
 
 						<button role="button" class="fui-dismiss-button forminator-dismiss-unsupported">
 							<i class="sui-icon-close sui-sm" aria-hidden="true"></i>
-							<?php printf(
+							<?php
+							printf(
 							/* Translators: 1. Opening <span> tag, 2. closing <span> tag. */
 								esc_html__( 'Dismiss%1$s this notice%2$s', 'forminator' ),
 								'<span class="sui-screen-reader-text">',
 								'</span>'
-							); ?>
+							);
+							?>
 						</button>
 
 					</div>
@@ -135,7 +153,7 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 										if ( ! empty( $forms ) ) :
 
 											foreach ( $forms as $key => $value ) {
-												echo sprintf(
+												printf(
 													'<option value="%f">%s</option>',
 													absint( $value->ID ),
 													esc_html( $value->post_title )
@@ -165,14 +183,16 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 
 					<h4 class="sui-settings-label sui-dark"><?php esc_html_e( 'Add-ons', 'forminator' ); ?></h4>
 
-                    <p class="sui-description" style="margin-bottom: 20px;">
-						<?php printf(
+					<p class="sui-description" style="margin-bottom: 20px;">
+						<?php
+						printf(
 						/* Translators: 1. Opening <strong> tag, 2. closing <strong> tag. */
 							esc_html__( "Choose the Contact Form 7 add-ons you wish to import form data and settings from. %1\$sNote:%2\$s The importer only supports the most widely used add-ons. For less common add-ons, you'll need to manually configure the equivalent functionality in those imported forms.", 'forminator' ),
 							'<strong>',
 							'</strong>'
-						); ?>
-                    </p>
+						);
+						?>
+					</p>
 
 					<?php
 					if ( is_plugin_active( 'flamingo/flamingo.php' ) ) :
@@ -455,7 +475,7 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 
 				</div>
 
-				<span class="sui-progress-state"><?php esc_html_e( 'Importing submissions from Flamingo', 'forminator' );  ?></span>
+				<span class="sui-progress-state"><?php esc_html_e( 'Importing submissions from Flamingo', 'forminator' ); ?></span>
 
 			</div>
 
@@ -516,14 +536,16 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 
 	<div class="sui-box-body wpmudev-popup-form">
 		<?php $support_url = FORMINATOR_PRO ? 'https://wpmudev.com/hub2/support/' : 'https://wordpress.org/support/plugin/forminator'; ?>
-        <p>
-			<?php printf(
+		<p>
+			<?php
+			printf(
 			/* Translators: 1. Opening <a> tag with link to the support url, 2. closing <a> tag. */
 				esc_html__( 'We have encountered an error while importing your forms from Contact Form 7 and selected add-ons. Unable to solve this? Contact our %1$ssupport%2$s team for further help.', 'forminator' ),
 				'<a href="' . esc_url( $support_url ) . '" target="_blank">',
 				'</a>'
-			); ?>
-        </p>
+			);
+			?>
+		</p>
 
 		<div class="sui-notice sui-notice-error">
 			<p><?php esc_html_e( 'We couldn\'t find any compatible data to import.', 'forminator' ); ?></p>

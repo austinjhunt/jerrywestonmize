@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator Front Action.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -103,6 +109,9 @@ abstract class Forminator_Front_Action {
 		'upload_in_customfield' => array(),
 	);
 
+	/**
+	 * Forminator_Front_Action constructor
+	 */
 	public function __construct() {
 		// Save entries.
 		if ( ! empty( static::$entry_type ) ) {
@@ -127,6 +136,8 @@ abstract class Forminator_Front_Action {
 	/**
 	 * Returns last
 	 *
+	 * @param int $form_id Form Id.
+	 *
 	 * @since 1.1
 	 */
 	public function get_last_entry( $form_id ) {
@@ -138,7 +149,6 @@ abstract class Forminator_Front_Action {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -164,6 +174,8 @@ abstract class Forminator_Front_Action {
 
 	/**
 	 * Init properties
+	 *
+	 * @param array $nonce_args Nonce arguments.
 	 */
 	protected function init_properties( $nonce_args = array() ) {
 		$prepared_data       = $this->get_post_data( $nonce_args );
@@ -186,21 +198,19 @@ abstract class Forminator_Front_Action {
 
 			self::$previous_draft_id = isset( self::$prepared_data['previous_draft_id'] ) ? self::$prepared_data['previous_draft_id'] : null;
 			self::$is_draft          = isset( self::$prepared_data['save_draft'] ) ? filter_var( self::$prepared_data['save_draft'], FILTER_VALIDATE_BOOLEAN ) : false;
-			// Check if save and continue is enabled
+			// Check if save and continue is enabled.
 			self::$is_draft = self::$is_draft &&
-									   isset( self::$module_settings['use_save_and_continue'] ) &&
-									   filter_var( self::$module_settings['use_save_and_continue'], FILTER_VALIDATE_BOOLEAN )
-									   ? true
-									   : false;
-		} else {
-			if ( wp_doing_ajax() ) {
+										isset( self::$module_settings['use_save_and_continue'] ) &&
+										filter_var( self::$module_settings['use_save_and_continue'], FILTER_VALIDATE_BOOLEAN )
+										? true
+										: false;
+		} elseif ( wp_doing_ajax() ) {
 				wp_send_json_error(
 					array(
 						'message' => esc_html__( 'Error: Your module ID doesn\'t exist!', 'forminator' ),
 						'errors'  => array(),
 					)
 				);
-			}
 		}
 	}
 
@@ -221,10 +231,10 @@ abstract class Forminator_Front_Action {
 				$new_suffixes[ $suffix ] = $index + 2;
 				$new_value[ $suffix ]    = $index + 2;
 				// prepare FILES.
-				$relevant_file_keys = preg_grep( '/-' . $suffix . '$/', array_keys( $_FILES ) );
+				$relevant_file_keys = preg_grep( '/-' . $suffix . '$/', array_keys( $_FILES ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				foreach ( $relevant_file_keys as $file_key ) {
 					$new_key            = str_replace( $suffix, $index + 2, $file_key );
-					$_FILES[ $new_key ] = $_FILES[ $file_key ];
+					$_FILES[ $new_key ] = $_FILES[ $file_key ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput
 					unset( $_FILES[ $file_key ] );
 				}
 
@@ -232,7 +242,7 @@ abstract class Forminator_Front_Action {
 					$multi_file_keys = preg_grep( '/-' . $suffix . '$/', array_keys( $prepared_data['forminator-multifile-hidden'] ) );
 					if ( ! empty( $multi_file_keys ) ) {
 						foreach ( $multi_file_keys as $mfile_key ) {
-							$new_mkey                                                  = str_replace( $suffix, $index + 2, $mfile_key );
+							$new_mkey = str_replace( $suffix, $index + 2, $mfile_key );
 							$prepared_data['forminator-multifile-hidden'][ $new_mkey ] = $prepared_data['forminator-multifile-hidden'][ $mfile_key ];
 							unset( $prepared_data['forminator-multifile-hidden'][ $mfile_key ] );
 						}
@@ -324,7 +334,7 @@ abstract class Forminator_Front_Action {
 			if ( $response['success'] ) {
 				if ( isset( $response['url'] ) && ( ! isset( $response['newtab'] ) || 'sametab' === $response['newtab'] ) ) {
 					$url = apply_filters( 'forminator_' . static::$module_slug . '_submit_url', $response['url'], self::$module_id );
-					wp_redirect( $url );
+					wp_safe_redirect( $url );
 					exit;
 				} else {
 					add_action( 'forminator_' . static::$module_slug . '_post_message', array( $this, 'form_response_message' ), 10, 2 );
@@ -378,8 +388,8 @@ abstract class Forminator_Front_Action {
 	 * @since 1.0
 	 *
 	 * @param string|null $original_action - the HTTP action.
-	 * @param string      $request_method
-	 * @param string      $nonce_field
+	 * @param string      $request_method HTTP request method.
+	 * @param string      $nonce_field Nonce field.
 	 *
 	 * @return bool
 	 */
@@ -432,7 +442,7 @@ abstract class Forminator_Front_Action {
 					break;
 			}
 		}
-		// make sure its invalidated if all other above failed.
+		// Make sure its invalidated if all other above failed.
 		return false;
 	}
 
@@ -501,6 +511,9 @@ abstract class Forminator_Front_Action {
 
 	/**
 	 * Show draft link and maybe the send-draft-link form
+	 *
+	 * @param int   $form_id Form Id.
+	 * @param array $response Response.
 	 *
 	 * @since 1.17.0
 	 */
@@ -664,7 +677,8 @@ abstract class Forminator_Front_Action {
 	 *
 	 * @since 1.1
 	 *
-	 * @param array $current_entry_fields
+	 * @param array $current_entry_fields Entry fields.
+	 * @param array $entry Entry.
 	 *
 	 * @return array added fields to entry
 	 */
@@ -735,7 +749,7 @@ abstract class Forminator_Front_Action {
 		foreach ( $all_conditions as $condition ) {
 			$is_condition_fulfilled = Forminator_Field::is_condition_matched( $condition );
 			if ( $is_condition_fulfilled ) {
-				$condition_fulfilled ++;
+				++$condition_fulfilled;
 			}
 		}
 
@@ -753,7 +767,7 @@ abstract class Forminator_Front_Action {
 	 *
 	 * @since 1.1
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
+	 * @param Forminator_Form_Entry_Model $entry_model Form entry model.
 	 */
 	protected static function attach_addons_after_entry_saved( Forminator_Form_Entry_Model $entry_model ) {
 		if ( self::$is_draft || self::$is_spam ) {
@@ -797,9 +811,9 @@ abstract class Forminator_Front_Action {
 	 * @return bool|array
 	 */
 	public function handle_file_upload( $field_name ) {
-		if ( isset( $_FILES[ $field_name ] ) ) {
-			if ( isset( $_FILES[ $field_name ]['name'] ) && ! empty( $_FILES[ $field_name ]['name'] ) ) {
-				$file_name = sanitize_file_name( $_FILES[ $field_name ]['name'] );
+		if ( isset( $_FILES[ $field_name ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( isset( $_FILES[ $field_name ]['name'] ) && ! empty( $_FILES[ $field_name ]['name'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$file_name = sanitize_file_name( $_FILES[ $field_name ]['name'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				$valid     = wp_check_filetype( $file_name );
 
 				if ( false === $valid['ext'] ) {
@@ -819,9 +833,12 @@ abstract class Forminator_Front_Action {
 
 				require_once ABSPATH . 'wp-admin/includes/file.php';
 				WP_Filesystem();
-				/** @var WP_Filesystem_Base $wp_filesystem */
+				/**
+				 * WP_Filesystem_Base
+				 *
+				 * @var WP_Filesystem_Base $wp_filesystem */
 				global $wp_filesystem;
-				if ( ! is_uploaded_file( $_FILES[ $field_name ]['tmp_name'] ) ) {
+				if ( ! is_uploaded_file( $_FILES[ $field_name ]['tmp_name'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput
 					return array(
 						'success' => false,
 						'message' => esc_html__( 'Error saving form. Failed to read uploaded file.', 'forminator' ),
@@ -832,7 +849,7 @@ abstract class Forminator_Front_Action {
 				$unique_file_name = wp_unique_filename( $upload_dir['path'], $file_name );
 				$filename         = basename( $unique_file_name ); // Create base file name.
 
-				if ( 0 === $_FILES[ $field_name ]['size'] || $_FILES[ $field_name ]['size'] > wp_max_upload_size() ) {
+				if ( 0 === $_FILES[ $field_name ]['size'] || $_FILES[ $field_name ]['size'] > wp_max_upload_size() ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput
 
 					$max_size = wp_max_upload_size();
 					$max_size = round( $max_size / 1000000 ) . ' MB';
@@ -843,7 +860,7 @@ abstract class Forminator_Front_Action {
 					);
 				}
 
-				if ( UPLOAD_ERR_OK !== $_FILES[ $field_name ]['error'] ) {
+				if ( UPLOAD_ERR_OK !== $_FILES[ $field_name ]['error'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput
 					return array(
 						'success' => false,
 						'message' => esc_html__( 'Error saving form. Upload error. ', 'forminator' ),
@@ -864,7 +881,7 @@ abstract class Forminator_Front_Action {
 
 				// use move_uploaded_file instead of $wp_filesystem->put_contents.
 				// increase performance, and avoid permission issues.
-				if ( false !== move_uploaded_file( $_FILES[ $field_name ]['tmp_name'], $file_path ) ) {
+				if ( false !== move_uploaded_file( $_FILES[ $field_name ]['tmp_name'], $file_path ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput
 					return array(
 						'success'   => true,
 						'file_url'  => $file_url,
@@ -891,13 +908,13 @@ abstract class Forminator_Front_Action {
 	 *                                  nonce validation options, its numeric array
 	 *                                  0 => 'action' string of action name to be validated,
 	 *                                  2 => 'nonce_field' string of field name on $_POST contains nonce value
-	 *                                  }
+	 *                                  }.
 	 *
 	 * @param array $sanitize_callbacks {
 	 *                                  custom sanitize options, its assoc array
 	 *                                  'field_name_1' => 'function_to_call_1' function will called with `call_user_func_array`,
 	 *                                  'field_name_2' => 'function_to_call_2',
-	 *                                  }
+	 *                                  }.
 	 *
 	 * @return array
 	 */
@@ -919,7 +936,7 @@ abstract class Forminator_Front_Action {
 			}
 		}
 
-		$post_data = Forminator_Core::sanitize_array( $_POST );
+		$post_data = Forminator_Core::sanitize_array( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified in validate_ajax().
 
 		// do some sanitize.
 		foreach ( $sanitize_callbacks as $field => $sanitize_func ) {
@@ -940,7 +957,7 @@ abstract class Forminator_Front_Action {
 	 *
 	 * @since 1.18.0
 	 *
-	 * @param array $post_data
+	 * @param array $post_data Post data.
 	 *
 	 * @return $post_data
 	 */
@@ -966,8 +983,8 @@ abstract class Forminator_Front_Action {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param Forminator_Integration $addon
-	 * @param                           $additional_fields
+	 * @param Forminator_Integration $addon Addon.
+	 * @param mixed                  $additional_fields Additional fields.
 	 *
 	 * @return array
 	 */
@@ -1070,6 +1087,8 @@ abstract class Forminator_Front_Action {
 	/**
 	 * Prepare success array.
 	 *
+	 * @param string $message Message.
+	 *
 	 * @return array
 	 */
 	protected static function return_success( $message = null ) {
@@ -1095,6 +1114,7 @@ abstract class Forminator_Front_Action {
 	 * Check if it's spam submission or not
 	 *
 	 * @return boolean
+	 * @throws Exception When fails.
 	 */
 	protected static function is_spam() {
 		/**
@@ -1114,7 +1134,7 @@ abstract class Forminator_Front_Action {
 		if ( $is_spam ) {
 			$fail_message = self::get_akismet_fail_message();
 			if ( false !== $fail_message ) {
-				throw new Exception( $fail_message );
+				throw new Exception( esc_html( $fail_message ) );
 			} else {
 				return true;
 			}
@@ -1159,11 +1179,8 @@ abstract class Forminator_Front_Action {
 
 	/**
 	 * Get nonce to avoid Static cache
-	 *
-	 * @return string
 	 */
 	public function get_nonce() {
 		wp_send_json_success( wp_create_nonce( 'forminator_submit_form' ) );
 	}
-
 }

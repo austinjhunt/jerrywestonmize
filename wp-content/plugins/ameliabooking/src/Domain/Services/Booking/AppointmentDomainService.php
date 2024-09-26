@@ -33,6 +33,7 @@ class AppointmentDomainService
         $canceledBookings = 0;
         $rejectedBookings = 0;
         $noShowBookings   = 0;
+        $waitingBookings  = 0;
 
         foreach ((array)$appointment->getBookings()->keys() as $customerBookingKey) {
             /** @var CustomerBooking $booking */
@@ -51,6 +52,9 @@ class AppointmentDomainService
                 case BookingStatus::NO_SHOW:
                     $noShowBookings += $booking->getPersons()->getValue();
                     break;
+                case BookingStatus::WAITING:
+                    $waitingBookings += $booking->getPersons()->getValue();
+                    break;
                 default:
                     $approvedBookings += $booking->getPersons()->getValue();
                     break;
@@ -62,7 +66,8 @@ class AppointmentDomainService
             'pendingBookings'  => $pendingBookings,
             'canceledBookings' => $canceledBookings,
             'rejectedBookings' => $rejectedBookings,
-            'noShowBookings' => $noShowBookings
+            'noShowBookings'   => $noShowBookings,
+            'waitingBookings'  => $waitingBookings
         ];
     }
 
@@ -82,6 +87,10 @@ class AppointmentDomainService
 
         if ($bookingsCount['noShowBookings'] === $totalBookings) {
             return BookingStatus::NO_SHOW;
+        }
+
+        if ($bookingsCount['waitingBookings'] === $totalBookings) {
+            return BookingStatus::WAITING;
         }
 
         if ($bookingsCount['rejectedBookings'] === $totalBookings) {

@@ -1,9 +1,9 @@
 === Forminator Forms – Contact Form, Payment Form & Custom Form Builder ===
 Contributors: WPMUDEV
-Tags: forms, contact form, wordpress form plugin, payment form, custom form, form builder, paypal form wordpress, form maker, quiz, quiz builder, order form, stripe payments, paypal payments, stripe form, paypal form
+Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
 Tested up to: 6.6
-Stable tag: 1.34.1
+Stable tag: 1.35.1
 Requires PHP: 7.4
 License: GPL v2
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -225,6 +225,24 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 9. Allow simple drag and drop multi-file uploads for users.
 
 == Changelog ==
+
+= 1.35.1 ( 2024-09-17 ) =
+
+- Enhancement: Stripe API and PayPal secret key encryption
+- Fix: Security improvements
+
+= 1.35.0 ( 2024-09-02 ) =
+
+- Enhancement: Code improvements
+- Fix: Installatron on cPanel reverts Forminator Pro to Free
+- Fix: Issues with submitting PDF files and storing submissions in the database
+- Fix: Unpublished quiz does not display an error on submission
+- Fix: Submission fails when the Consent field is translated
+- Fix: Duplicated image when Custom Field is enabled
+- Fix: PayPal payment form issues with reCaptcha
+- Fix: Stripe field does not show if is hidden by CSS
+- Fix: Checkbox Links are not crawlable
+- Fix: If Required field validation is not checked first, the PayPal button does not work
 
 = 1.34.1 ( 2024-08-14 ) =
 

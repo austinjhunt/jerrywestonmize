@@ -1,11 +1,11 @@
 === PageSpeed Ninja - Cache, Minify, Defer CSS JavaScript, Critical CSS, Optimize Images, Convert WebP ===
 
-Stable tag: 1.4.3
+Stable tag: 1.4.5
 Requires at least: 4.6
-Tested up to: 6.5.5
+Tested up to: 6.6.2
 Requires PHP: 5.6
 Contributors: pagespeed
-Tags: performance, convert webp, critical css, defer css javascript, optimize images, cache, pagespeed, optimization, minify css, minify javascript, core web vitals, lazy load
+Tags: performance, convert webp, defer css javascript, minify css, minify javascript, critical css, optimize images, cache, pagespeed, optimization, core web vitals, lazy load
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -16,14 +16,14 @@ Boost page speed: cache, compress, optimize images to WebP, minify CSS/JS, defer
 
 **PageSpeed Ninja** is the ultimate performance plugin, specially designed to tackle slow loading times on your website on both desktop and mobile platforms. This plugin effortlessly addresses Google PageSpeed Insights issues and significantly improves Core Web Vitals.
 
-This tool offers a range of features designed to optimize your website's speed:
+This tool offers a range of features designed to optimize your website's performance:
 
 - **Compression:** Implement Gzip and Brotli compression for faster load times.
 - **Resolve Render-Blocking Issues:** Address render-blocking CSS and JavaScript issues to streamline loading.
 - **Enhancing Critical Rendering Path:** Automatically generate critical CSS for above-the-fold content to improve the critical rendering path.
 - **Minification:** Reduce load size by minifying HTML, JavaScript, and CSS files.
 - **Resource Bundling:** Combine and inline JavaScript and CSS to reduce server requests.
-- **Deferred Loading:** Prioritize content rendering by deferring CSS and JavaScript loading.
+- **Defer Loading:** Prioritize content rendering by choosing to defer CSS and JavaScript loading.
 - **Optimize Images:** Improve loading speed with optimized image formats.
 - **Efficient Image Formats:** Convert to WebP format for faster performance.
 - **Lazy Load:** Optimize initial load with image lazy loading and optional low-quality placeholders.
@@ -200,6 +200,15 @@ Yes, PageSpeed Ninja allows you to undo optimizations through the plugin's setti
 
 
 == Changelog ==
+
+= 1.4.5 Stable Release [26 September 2024]
+- Fixed prioritization of meta and title tags in "simple" HTML parser
+
+= 1.4.4 Stable Release [10 September 2024]
+- Added "Clear Image Errors Cache" button
+- Fixed directory size calculation
+- Fixed issue with LQIP generation
+- Fixed possible warning in YouTube lazy loading [Pro]
 
 = 1.4.3 Stable Release [04 July 2024]
 - Fixed issue with daily scheduler

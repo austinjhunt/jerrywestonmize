@@ -1,14 +1,20 @@
 <?php
+/**
+ * Forminator Admin Addon Page
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
 
 /**
- * Class Forminator_Admin_Addons_page
+ * Class Forminator_Admin_Addons_Page
  *
  * @since 1.15
  */
-class Forminator_Admin_Addons_page {
+class Forminator_Admin_Addons_Page {
 
 	/**
 	 * Plugin instance
@@ -27,7 +33,7 @@ class Forminator_Admin_Addons_page {
 	/**
 	 * Return the plugin instance
 	 *
-	 * @return Forminator_Admin_Addons_page|null
+	 * @return Forminator_Admin_Addons_Page|null
 	 */
 	public static function get_instance() {
 		if ( is_null( self::$instance ) ) {
@@ -40,7 +46,7 @@ class Forminator_Admin_Addons_page {
 	/**
 	 * Addons action ajax
 	 *
-	 * @param $action
+	 * @param string $action Ajax action.
 	 */
 	public function addons_action_ajax( $action ) {
 		$pid        = intval( Forminator_Core::sanitize_text_field( 'pid' ) );
@@ -189,9 +195,9 @@ class Forminator_Admin_Addons_page {
 	/**
 	 * Render addons content
 	 *
-	 * @param $name
-	 * @param $pid
-	 * @param $addons
+	 * @param string $name Name.
+	 * @param string $pid The Project ID.
+	 * @param array  $addons Addons.
 	 */
 	public function addons_render( $name, $pid, $addons = array() ) {
 
@@ -242,7 +248,7 @@ class Forminator_Admin_Addons_page {
 	/**
 	 * Get addon
 	 *
-	 * @param $pid
+	 * @param string $pid The Project ID.
 	 *
 	 * @return array|false|object
 	 */
@@ -258,8 +264,8 @@ class Forminator_Admin_Addons_page {
 	/**
 	 * Get addon value
 	 *
-	 * @param $pid
-	 * @param $key
+	 * @param string $pid The Project ID.
+	 * @param string $key Key.
 	 *
 	 * @return string
 	 */
@@ -276,7 +282,7 @@ class Forminator_Admin_Addons_page {
 	/**
 	 * Get addon slug based on PID.
 	 *
-	 * @param $pid
+	 * @param string $pid The Project ID.
 	 *
 	 * @return string
 	 */
@@ -302,7 +308,7 @@ class Forminator_Admin_Addons_page {
 	/**
 	 * Get addons html
 	 *
-	 * @param $pid
+	 * @param string $pid The Project ID.
 	 *
 	 * @return string
 	 */
@@ -321,15 +327,15 @@ class Forminator_Admin_Addons_page {
 	 *
 	 * @param string     $file Path to the view file.
 	 * @param array      $params Array whose keys will be variable names when within the view file.
-	 * @param bool|false $return Whether to echo or return the contents.
+	 * @param bool|false $return_value Whether to echo or return the contents.
 	 * @return string
 	 */
-	public function render_template( $file, $params = array(), $return = false ) {
+	public function render_template( $file, $params = array(), $return_value = false ) {
 
 		// Assign $file to a variable which is unlikely to be used by users of the method.
 		extract( $params, EXTR_OVERWRITE ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
-		if ( $return ) {
+		if ( $return_value ) {
 			ob_start();
 		}
 
@@ -340,7 +346,7 @@ class Forminator_Admin_Addons_page {
 			include $file_path;
 		}
 
-		if ( $return ) {
+		if ( $return_value ) {
 			return ob_get_clean();
 		}
 
@@ -354,7 +360,7 @@ class Forminator_Admin_Addons_page {
 	/**
 	 * Get addon by id
 	 *
-	 * @param $pid
+	 * @param string $pid The Project ID.
 	 *
 	 * @return false|object|stdClass
 	 */
@@ -428,7 +434,7 @@ class Forminator_Admin_Addons_page {
 	 * @return stdClass[]
 	 */
 	public static function forminator_get_static_addons() {
-		// Stripe Addon
+		// Stripe Addon.
 		$stripe_addon                    = new stdClass();
 		$stripe_addon->pid               = 3953609;
 		$stripe_addon->name              = esc_html__( 'Forminator Stripe Subscriptions Add-on', 'forminator' );
@@ -454,9 +460,9 @@ class Forminator_Admin_Addons_page {
 				'log'     => '<p>- First public release</p>',
 			),
 		);
-		$stripe_addon->pro_url = 'https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_stripe-addon';
+		$stripe_addon->pro_url           = 'https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_stripe-addon';
 
-		// PDF Addon
+		// PDF Addon.
 		$pdf_addon                    = new stdClass();
 		$pdf_addon->pid               = 4262971;
 		$pdf_addon->name              = esc_html__( 'PDF Generator Add-on', 'forminator' );
@@ -483,7 +489,7 @@ class Forminator_Admin_Addons_page {
 				'log'     => '<p>- First public release</p>',
 			),
 		);
-		$pdf_addon->pro_url = 'https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_pdf-addon';
+		$pdf_addon->pro_url           = 'https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_pdf-addon';
 
 		// Geolocation Addon.
 		$geo_addon                    = new stdClass();

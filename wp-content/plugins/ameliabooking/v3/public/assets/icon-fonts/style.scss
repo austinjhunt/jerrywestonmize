@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?7qpq29');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?7qpq29#iefix') format('embedded-opentype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?7qpq29') format('truetype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?7qpq29') format('woff'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?7qpq29##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?p5l5pl');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?p5l5pl#iefix') format('embedded-opentype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?p5l5pl') format('truetype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?p5l5pl') format('woff'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?p5l5pl##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -27,6 +27,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.am-icon-circle-empty {
+  &:before {
+    content: $am-icon-circle-empty;
+  }
+}
 .am-icon-password {
   &:before {
     content: $am-icon-password;

@@ -1,10 +1,14 @@
 <?php
+/**
+ * Forminator Trello poll hooks
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Trello_Poll_Hooks
  *
  * @since 1.6.1
- *
  */
 class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 
@@ -15,7 +19,7 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$entry                = func_get_args()[2];
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
@@ -39,10 +43,11 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param string $connection_id
-	 * @param array  $submitted_data
-	 * @param array  $connection_settings
-	 * @param array  $current_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $current_entry_fields Form entry fields.
+	 * @param object $entry Entry instance.
 	 *
 	 * @return array `is_sent` true means its success send data to Trello, false otherwise
 	 */
@@ -53,7 +58,7 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 		$poll_id                = $this->module_id;
 		$poll_settings_instance = $this->settings_instance;
 
-		//check required fields
+		// check required fields.
 		try {
 			$api  = $this->addon->get_api();
 			$args = array();
@@ -68,7 +73,6 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 				$card_name = $connection_settings['card_name'];
 				// disable all_fields here.
 				$card_name = forminator_replace_variables( $card_name, $poll_id, $entry );
-				// {poll_name_replace}.
 				$card_name = str_ireplace( '{poll_name}', forminator_get_name_from_model( $this->module ), $card_name );
 				$card_name = str_ireplace( '{poll_answer}', $this->poll_answer_to_plain_text( $submitted_data ), $card_name );
 				$card_name = str_ireplace( '{poll_result}', $this->poll_result_to_plain_text( $submitted_data ), $card_name );
@@ -141,8 +145,8 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 			}
 
 			if ( isset( $connection_settings['due_date'] ) && ! empty( $connection_settings['due_date'] ) ) {
-				$due_date            = $connection_settings['due_date'];
-				$args['due']         = $due_date;
+				$due_date    = $connection_settings['due_date'];
+				$args['due'] = $due_date;
 			}
 
 			if ( isset( $connection_settings['position'] ) ) {
@@ -254,7 +258,7 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param array $submitted_data
+	 * @param array $submitted_data Submitted Data.
 	 *
 	 * @return string
 	 */
@@ -297,7 +301,7 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param array $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return string
 	 */
@@ -315,7 +319,7 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 				$entries = $map_entries[ $answer_data ];
 			}
 
-			$entries ++;
+			++$entries;
 			$map_entries[ $answer_data ] = $entries;
 
 		}
@@ -360,7 +364,7 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param array $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return string
 	 */
@@ -402,7 +406,7 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param array $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return string
 	 */
@@ -420,7 +424,7 @@ class Forminator_Trello_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 				$entries = $map_entries[ $answer_data ];
 			}
 
-			$entries ++;
+			++$entries;
 			$map_entries[ $answer_data ] = $entries;
 
 		}

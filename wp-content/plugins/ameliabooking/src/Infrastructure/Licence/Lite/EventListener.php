@@ -91,7 +91,7 @@ class EventListener
         $eventListener = new EventEventsListener($container);
 
         $eventBus->addListener('EventStatusUpdated', $eventListener);
-        $eventBus->addListener('BookingEdited', $eventListener);
+        $eventBus->addListener('EventBookingEdited', $eventListener);
 
         return $eventListener;
     }
@@ -156,7 +156,7 @@ class EventListener
             case 'EventStatusUpdated':
                 EventStatusUpdatedEventHandler::handle($param, $container);
                 break;
-            case 'BookingEdited':
+            case 'EventBookingEdited':
                 BookingEditedEventHandler::handle($param, $container);
                 break;
         }

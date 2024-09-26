@@ -41,6 +41,12 @@ class EventTicket
     /** @var IntegerValue */
     private $spots;
 
+    /** @var IntegerValue */
+    private $waiting;
+
+    /** @var IntegerValue */
+    private $waitingListSpots;
+
     /** @var Json */
     protected $dateRanges;
 
@@ -80,6 +86,22 @@ class EventTicket
     public function setSpots($spots)
     {
         $this->spots = $spots;
+    }
+
+    /**
+     * @return IntegerValue
+     */
+    public function getWaitingListSpots()
+    {
+        return $this->waitingListSpots;
+    }
+
+    /**
+     * @param IntegerValue $waitingListSpots
+     */
+    public function setWaitingListSpots($waitingListSpots)
+    {
+        $this->waitingListSpots = $waitingListSpots;
     }
 
     /**
@@ -195,6 +217,22 @@ class EventTicket
     }
 
     /**
+     * @return IntegerValue
+     */
+    public function getWaiting()
+    {
+        return $this->waiting;
+    }
+
+    /**
+     * @param IntegerValue $waiting
+     */
+    public function setWaiting($waiting)
+    {
+        $this->waiting = $waiting;
+    }
+
+    /**
      * @return Json
      */
     public function getTranslations()
@@ -217,16 +255,18 @@ class EventTicket
     public function toArray()
     {
         return [
-            'id'             => $this->getId() ? $this->getId()->getValue() : null,
-            'eventId'        => $this->getEventId() ? $this->getEventId()->getValue() : null,
-            'name'           => $this->getName() ? $this->getName()->getValue() : null,
-            'enabled'        => $this->getEnabled() ? $this->getEnabled()->getValue() : null,
-            'price'          => $this->getPrice() ? $this->getPrice()->getValue() : null,
-            'dateRangePrice' => $this->getDateRangePrice() ? $this->getDateRangePrice()->getValue() : null,
-            'spots'          => $this->getSpots() ? $this->getSpots()->getValue() : null,
-            'dateRanges'     => $this->getDateRanges() ? $this->getDateRanges()->getValue() : null,
-            'sold'           => $this->getSold() ? $this->getSold()->getValue() : 0,
-            'translations'   => $this->getTranslations() ? $this->getTranslations()->getValue() : null,
+            'id'               => $this->getId() ? $this->getId()->getValue() : null,
+            'eventId'          => $this->getEventId() ? $this->getEventId()->getValue() : null,
+            'name'             => $this->getName() ? $this->getName()->getValue() : null,
+            'enabled'          => $this->getEnabled() ? $this->getEnabled()->getValue() : null,
+            'price'            => $this->getPrice() ? $this->getPrice()->getValue() : null,
+            'dateRangePrice'   => $this->getDateRangePrice() ? $this->getDateRangePrice()->getValue() : null,
+            'spots'            => $this->getSpots() ? $this->getSpots()->getValue() : null,
+            'waitingListSpots' => $this->getWaitingListSpots() ? $this->getWaitingListSpots()->getValue() : null,
+            'dateRanges'       => $this->getDateRanges() ? $this->getDateRanges()->getValue() : null,
+            'sold'             => $this->getSold() ? $this->getSold()->getValue() : 0,
+            'waiting'          => $this->getWaiting() ? $this->getWaiting()->getValue() : 0,
+            'translations'     => $this->getTranslations() ? $this->getTranslations()->getValue() : null,
         ];
     }
 }

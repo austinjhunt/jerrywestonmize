@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Upgrade
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -42,7 +48,7 @@ class Forminator_Upgrade {
 
 			add_action(
 				'forminator_loaded',
-				function() use ( $old_version ) {
+				function () use ( $old_version ) {
 					/**
 					 * Triggered when Forminator version is updated
 					 *
@@ -58,6 +64,11 @@ class Forminator_Upgrade {
 		self::cleanup_views_ip_address();
 	}
 
+	/**
+	 * Flush rewrite
+	 *
+	 * @return void
+	 */
 	public static function flush_rewrite() {
 		// Flush rewrite rules.
 		flush_rewrite_rules();

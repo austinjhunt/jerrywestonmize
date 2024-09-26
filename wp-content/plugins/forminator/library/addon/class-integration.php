@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * The Forminator_Integration class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Integration
@@ -13,6 +17,8 @@
  */
 abstract class Forminator_Integration implements Forminator_Integration_Interface {
 	/**
+	 * Multi Id
+	 *
 	 * @var mixed
 	 */
 	public $multi_id;
@@ -175,6 +181,11 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 */
 	public $multi_global_id;
 
+	/**
+	 * Global Id for new integrations
+	 *
+	 * @var string
+	 */
 	public $global_id_for_new_integrations;
 
 	/**
@@ -422,7 +433,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @return string
 	 */
-	public function assets_path() : string {
+	public function assets_path(): string {
 		return $this->addon_path() . 'assets/';
 	}
 	/**
@@ -430,7 +441,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @return string
 	 */
-	public function addon_path() : string {
+	public function addon_path(): string {
 		return trailingslashit( forminator_plugin_url() . 'addons/pro/' . $this->get_slug() );
 	}
 
@@ -451,7 +462,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * @return string
 	 */
 	public function get_promotion() {
-		return __( $this->_promotion, 'forminator' );
+		return __( $this->_promotion, 'forminator' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
 	}
 
 	/**
@@ -594,7 +605,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * @since  1.1
 	 * @since  1.2 generate new multi_id to allow reference on wizard
 	 *
-	 * @param $form_id
+	 * @param int $form_id Form Id.
 	 *
 	 * @return array
 	 */
@@ -726,8 +737,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since   1.1
 	 *
-	 * @param $old_version
-	 * @param $new_version
+	 * @param string $old_version Old version.
+	 * @param string $new_version New version.
 	 *
 	 * @return bool
 	 */
@@ -866,10 +877,10 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.1
 	 *
-	 * @param     $submitted_data
-	 * @param int            $form_id
-	 * @param int            $current_step
-	 * @param int            $step
+	 * @param array $submitted_data Submitted data.
+	 * @param int   $form_id Form Id.
+	 * @param int   $current_step Current step.
+	 * @param int   $step Step.
 	 *
 	 * @return array|mixed
 	 */
@@ -903,7 +914,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 					$prev_step_is_completed = call_user_func( $steps[ $prev_step ]['is_completed'], $submitted_data );
 				}
 				if ( ! $prev_step_is_completed ) {
-					$step --;
+					--$step;
 
 					return $this->get_settings_wizard( $submitted_data, $form_id, $current_step, $step );
 				}
@@ -927,7 +938,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	/**
 	 * Get steps.
 	 *
-	 * @param int $form_id Form id.
+	 * @param int    $form_id Form id.
+	 * @param string $module_type Module type.
 	 * @return array
 	 */
 	final public function get_steps( $form_id, $module_type = 'form' ) {
@@ -956,10 +968,10 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.1
 	 *
-	 * @param     $submitted_data
-	 * @param int            $form_id
-	 * @param int            $current_step
-	 * @param int            $step
+	 * @param array $submitted_data Submitted data.
+	 * @param int   $form_id Form Id.
+	 * @param int   $current_step Current step.
+	 * @param int   $step Step.
 	 *
 	 * @return array|mixed
 	 */
@@ -992,7 +1004,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 					$prev_step_is_completed = call_user_func( $steps[ $prev_step ]['is_completed'], $submitted_data );
 				}
 				if ( ! $prev_step_is_completed ) {
-					$step --;
+					--$step;
 
 					return $this->get_form_settings_wizard( $submitted_data, $form_id, $current_step, $step );
 				}
@@ -1058,7 +1070,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.1
 	 *
-	 * @param $form_id
+	 * @param int $form_id Form Id.
 	 *
 	 * @return array
 	 */
@@ -1075,13 +1087,13 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * Filter form settings step that will be used for building wizard
 		 *
 		 * More detail : @param array $form_settings_steps
+		 *
 		 * @param int                                     $form_id current form id.
 		 * @param Forminator_Integration_Form_Settings $addon   Integration instance.
 		 * @param Forminator_Integration_Form_Settings|null Form settings of addon if available, or null otherwise
 		 *@see Forminator_Integration_Form_Settings::module_settings_wizards()
 		 *
 		 * @since 1.1
-		 *
 		 */
 		$form_settings_steps = apply_filters( 'forminator_addon_' . $addon_slug . '_form_settings_steps', $form_settings_steps, $form_id, $addon, $form_settings_instance );
 
@@ -1093,7 +1105,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.1
 	 *
-	 * @param $form_id
+	 * @param int $form_id Form Id.
 	 *
 	 * @return array
 	 */
@@ -1126,10 +1138,10 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * @since 1.1
 	 * @since 1.2 Refactor setup default values, rename `hasBack` to `has_back`
 	 *
-	 * @param     $steps
-	 * @param     $submitted_data
-	 * @param     $module_id
-	 * @param int            $step
+	 * @param array $steps Steps.
+	 * @param array $submitted_data Submitted data.
+	 * @param int   $module_id Module id.
+	 * @param int   $step Step.
 	 *
 	 * @return array|mixed
 	 */
@@ -1193,7 +1205,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since   1.1
 	 *
-	 * @param $notice
+	 * @param string $notice Message.
 	 *
 	 * @return array
 	 */
@@ -1231,7 +1243,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since   1.1
 	 *
-	 * @param $values
+	 * @param array $values Settings.
 	 *
 	 * @return mixed
 	 */
@@ -1291,10 +1303,11 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 			global $wpdb;
 			foreach ( $types as $type ) {
 				$meta_key = 'forminator_addon_' . $this->get_slug() . '_' . $type . '_settings';
-				$results  = $wpdb->get_results( $wpdb->prepare( "SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key = %s", $meta_key ), ARRAY_A );
-				$results  = wp_list_pluck( $results, 'meta_value', 'post_id' );
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$results = $wpdb->get_results( $wpdb->prepare( "SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key = %s", $meta_key ), ARRAY_A );
+				$results = wp_list_pluck( $results, 'meta_value', 'post_id' );
 				foreach ( $results as $id => $value ) {
-					update_post_meta( $id, $meta_key . '_' . $this->multi_global_id, unserialize( $value ) );
+					update_post_meta( $id, $meta_key . '_' . $this->multi_global_id, maybe_unserialize( $value ) );
 					delete_post_meta( $id, $meta_key );
 				}
 			}
@@ -1319,7 +1332,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since   1.1
 	 *
-	 * @param $values
+	 * @param array $values Settings.
 	 *
 	 * @return mixed
 	 */
@@ -1335,7 +1348,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since   1.1
 	 *
-	 * @param $values
+	 * @param array $values Settings.
 	 */
 	final public function save_settings_values( $values ) {
 		$addon_slug = $this->get_slug();
@@ -1457,15 +1470,14 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * Override this function if you need to apply some conditional logic on it
 	 * By Default this function will check
 	 *
-	 * @param $form_id
+	 * @param int $form_id Form Id.
 	 *
 	 * @return bool
-	 *@since   1.1
+	 * @since   1.1
 	 *
 	 * @see     Forminator_Integration::settings_wizards()
 	 * @see     Forminator_Integration_Form_Settings::module_settings_wizards()
 	 * as valid multi array
-	 *
 	 */
 	public function is_form_settings_available( $form_id ) {
 		$steps = $this->get_steps( $form_id );
@@ -1506,7 +1518,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @return bool
 	 */
-	 public function is_authorized() { return false; }
+	public function is_authorized() {
+		return false; }
 
 	/**
 	 * Flag for check if and addon connected to a form(form settings such as list id completed)
@@ -1518,6 +1531,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * @param string $module_slug Module type.
 	 * @param bool   $check_lead Check is lead connected or not.
 	 * @return boolean
+	 * @throws Forminator_Integration_Exception When there is an Interaction error.
 	 */
 	public function is_module_connected( $module_id, $module_slug = 'form', $check_lead = false ) {
 		try {
@@ -1578,7 +1592,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		$const = 'FORMINATOR_ADDON_' . strtoupper( $slug ) . '_SHOW_FULL_LOG';
 		$glob  = 'FORMINATOR_ADDON_SHOW_FULL_LOG';
 
-		$show_full_log = defined( $const ) && constant( $const ) || defined( $glob ) && constant( $glob );
+		$show_full_log = ( defined( $const ) && constant( $const ) ) || ( defined( $glob ) && constant( $glob ) );
 
 		/**
 		 * Filter Flag show full log on entries
@@ -1594,6 +1608,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * Get ClassName of addon Module Settings
 	 *
 	 * @see   Forminator_Integration_Settings
+	 *
+	 * @param string $module_type Module type.
 	 *
 	 * @since 1.1
 	 * @return null|string
@@ -1626,6 +1642,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * @param string $module_type Moodule type.
 	 *
 	 * @return Forminator_Integration_Form_Settings | null
+	 * @throws Forminator_Integration_Exception When there is an Integration error.
 	 */
 	final public function get_addon_settings( $module_id, $module_type ) {
 		$class_name = $this->get_settings_class_name( $module_type );
@@ -1651,8 +1668,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.1
 	 *
-	 * @param $values
-	 * @param $form_id
+	 * @param string $values Settings.
+	 * @param int    $form_id Form Id.
 	 *
 	 * @return mixed
 	 */
@@ -1672,8 +1689,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.1
 	 *
-	 * @param $values
-	 * @param $form_id
+	 * @param string $values Settings.
+	 * @param int    $form_id Form Id.
 	 *
 	 * @return mixed
 	 */
@@ -1693,17 +1710,17 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * Get Hooks object of Integrations
 	 *
 	 * @param int $module_id Module ID.
+	 * @param int $module_type Module type.
 	 *
 	 * @return Forminator_Integration_Hooks|null
-	 *@since 1.1
-	 *
+	 * @since 1.1
 	 */
 	final public function get_addon_hooks( $module_id, $module_type ) {
 		if ( ! isset( $this->addon_hooks_instances[ $module_id ] ) || ! $this->addon_hooks_instances[ $module_id ] instanceof Forminator_Integration_Hooks ) {
 			$addon_slug = $this->get_slug();
 			$classname  = 'Forminator_' . ucfirst( $addon_slug ) . '_' . ucfirst( $module_type ) . '_Hooks';
 
-			if ( ! class_exists( $classname) ) {
+			if ( ! class_exists( $classname ) ) {
 				return null;
 			}
 
@@ -1743,8 +1760,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * 'is_close' : true if wizard should be closed
 	 * ]
 	 *
-	 * @param $submitted_data
-	 * @param $form_id
+	 * @param array $submitted_data Submitted data.
+	 * @param int   $form_id Form Id.
 	 *
 	 * @since   1.1
 	 * @return array
@@ -1755,7 +1772,6 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 			'html'       => '<p>Hello im from first step settings</p>',
 			'has_errors' => false,
 		);
-
 	}
 
 	/**
@@ -1784,9 +1800,9 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.1
 	 *
-	 * @param        $label
-	 * @param string $classes
-	 * @param string $tooltip
+	 * @param string $label Text label.
+	 * @param string $classes Class names.
+	 * @param string $tooltip Content for Tooltip.
 	 *
 	 * @return string
 	 */
@@ -1827,10 +1843,11 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.13
 	 *
-	 * @param        $url
-	 * @param        $label
-	 * @param string $classes
-	 * @param string $tooltip
+	 * @param string $url URL.
+	 * @param string $label Text for label.
+	 * @param string $target Target attribute.
+	 * @param string $classes Class names.
+	 * @param string $tooltip Content for tooltip.
 	 *
 	 * @return string
 	 */
@@ -1873,16 +1890,16 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.2
 	 *
-	 * @param $template
-	 * @param $params
+	 * @param string $template Template path.
+	 * @param array  $params Template variables.
 	 *
 	 * @return string
 	 */
 	public static function get_template( $template, $params ) {
-		/** @noinspection PhpUnusedLocalVariableInspection */
+		/* @noinspection PhpUnusedLocalVariableInspection */
 		$template_vars = $params;
 		ob_start();
-		/** @noinspection PhpIncludeInspection */
+		/* @noinspection PhpIncludeInspection */
 		include $template;
 		$html = ob_get_clean();
 
@@ -1911,18 +1928,17 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 */
 	public function register_integration_sections() {
 		// callback must be public method on this class.
-		return array(// array('section_name', 'callback').
-		);
+		return array();
 	}
 
 	/**
 	 * Get Callback of section on integration page
 	 *
-	 * when section not provided, it will return all callbacks
+	 * When section not provided, it will return all callbacks
 	 *
 	 * @since 1.2
 	 *
-	 * @param string $section
+	 * @param string $section Section.
 	 *
 	 * @return array|null
 	 */
@@ -1950,7 +1966,6 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		$callback = apply_filters( 'forminator_addon_' . $addon_slug . '_integration_section_callback', $callback, $section, $integration_sections );
 
 		return $callback;
-
 	}
 
 	/**
@@ -1958,7 +1973,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.2
 	 *
-	 * @param $form_id
+	 * @param int $form_id Form id.
 	 *
 	 * @return array
 	 */
@@ -1990,8 +2005,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $values
-	 * @param $poll_id
+	 * @param array $values Settings.
+	 * @param int   $poll_id Poll Id.
 	 *
 	 * @return mixed
 	 */
@@ -2011,8 +2026,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $values
-	 * @param $poll_id
+	 * @param array $values Settings.
+	 * @param int   $poll_id Poll Id.
 	 *
 	 * @return mixed
 	 */
@@ -2035,10 +2050,10 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param     $submitted_data
-	 * @param int            $poll_id
-	 * @param int            $current_step
-	 * @param int            $step
+	 * @param array $submitted_data Submitted data.
+	 * @param int   $poll_id Poll Id.
+	 * @param int   $current_step Current step.
+	 * @param int   $step Step.
 	 *
 	 * @return array|mixed
 	 */
@@ -2080,7 +2095,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 					$prev_step_is_completed = call_user_func( $steps[ $prev_step ]['is_completed'], $submitted_data );
 				}
 				if ( ! $prev_step_is_completed ) {
-					$step --;
+					--$step;
 
 					return $this->get_poll_settings_wizard( $submitted_data, $poll_id, $current_step, $step );
 				}
@@ -2143,7 +2158,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $poll_id
+	 * @param int $poll_id Poll Id.
 	 *
 	 * @return array
 	 */
@@ -2160,13 +2175,13 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * Filter form settings step that will be used for building wizard
 		 *
 		 * More detail : @param array $poll_settings_steps
+		 *
 		 * @param int                                          $poll_id                current form id.
 		 * @param Forminator_Integration                    $addon                  Integration instance.
 		 * @param Forminator_Integration_Poll_Settings|null $poll_settings_instance Form settings of addon if available, or null otherwise.
 		 *@see Forminator_Integration_Poll_Settings::module_settings_wizards()
 		 *
 		 * @since 1.6.1
-		 *
 		 */
 		$poll_settings_steps = apply_filters( 'forminator_addon_' . $addon_slug . '_poll_settings_steps', $poll_settings_steps, $poll_id, $addon, $poll_settings_instance );
 
@@ -2178,7 +2193,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $poll_id
+	 * @param int $poll_id Poll Id.
 	 *
 	 * @return array
 	 */
@@ -2221,7 +2236,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * @since  1.1
 	 * @since  1.2 generate new multi_id to allow reference on wizard
 	 *
-	 * @param $poll_id
+	 * @param int $poll_id Poll Id.
 	 *
 	 * @return array
 	 */
@@ -2263,15 +2278,14 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * Override this function if you need to apply some conditional logic on it
 	 * By Default this function will check
 	 *
-	 * @param $poll_id
+	 * @param int $poll_id Poll Id.
 	 *
 	 * @return bool
-	 *@since   1.6.1
+	 * @since   1.6.1
 	 *
 	 * @see     Forminator_Integration::settings_wizards()
 	 * @see     Forminator_Integration_Poll_Settings::module_settings_wizards()
 	 * as valid multi array
-	 *
 	 */
 	public function is_poll_settings_available( $poll_id ) {
 		$steps      = array();
@@ -2294,7 +2308,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $poll_id
+	 * @param int $poll_id Poll Id.
 	 *
 	 * @return array
 	 */
@@ -2326,8 +2340,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $values
-	 * @param $quiz_id
+	 * @param array $values Settings.
+	 * @param int   $quiz_id Quiz Id.
 	 *
 	 * @return mixed
 	 */
@@ -2347,8 +2361,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $values
-	 * @param $quiz_id
+	 * @param array $values Settings.
+	 * @param int   $quiz_id Quiz Id.
 	 *
 	 * @return mixed
 	 */
@@ -2371,10 +2385,10 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param     $submitted_data
-	 * @param int            $quiz_id
-	 * @param int            $current_step
-	 * @param int            $step
+	 * @param array $submitted_data Submitted data.
+	 * @param int   $quiz_id Quiz Id.
+	 * @param int   $current_step Current step.
+	 * @param int   $step Step.
 	 *
 	 * @return array|mixed
 	 */
@@ -2408,7 +2422,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 					$prev_step_is_completed = call_user_func( $steps[ $prev_step ]['is_completed'], $submitted_data );
 				}
 				if ( ! $prev_step_is_completed ) {
-					$step --;
+					--$step;
 
 					return $this->get_quiz_settings_wizard( $submitted_data, $quiz_id, $current_step, $step );
 				}
@@ -2474,7 +2488,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $quiz_id
+	 * @param int $quiz_id Quiz Id.
 	 *
 	 * @return array
 	 */
@@ -2491,13 +2505,13 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		 * Filter form settings step that will be used for building wizard
 		 *
 		 * More detail : @param array $quiz_settings_steps
+		 *
 		 * @param int                                          $quiz_id                current quiz id.
 		 * @param Forminator_Integration                    $addon                  Integration instance.
 		 * @param Forminator_Integration_Quiz_Settings|null $quiz_settings_instance Quiz settings of addon if available, or null otherwise.
 		 *@see Forminator_Integration_Quiz_Settings::module_settings_wizards()
 		 *
 		 * @since 1.6.2
-		 *
 		 */
 		$quiz_settings_steps = apply_filters( 'forminator_addon_' . $addon_slug . '_quiz_settings_steps', $quiz_settings_steps, $quiz_id, $addon, $quiz_settings_instance );
 
@@ -2509,7 +2523,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $quiz_id
+	 * @param int $quiz_id Quiz Id.
 	 *
 	 * @return array
 	 */
@@ -2551,7 +2565,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since  1.6.2
 	 *
-	 * @param $quiz_id
+	 * @param int $quiz_id Quiz Id.
 	 *
 	 * @return array
 	 */
@@ -2593,15 +2607,14 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 * Override this function if you need to apply some conditional logic on it
 	 * By Default this function will check
 	 *
-	 * @param $quiz_id
+	 * @param int $quiz_id Quiz Id.
 	 *
 	 * @return bool
-	 *@since   1.6.2
+	 * @since   1.6.2
 	 *
 	 * @see     Forminator_Integration::settings_wizards()
 	 * @see     Forminator_Integration_Quiz_Settings::module_settings_wizards()
 	 * as valid multi array
-	 *
 	 */
 	public function is_quiz_settings_available( $quiz_id ) {
 		$steps      = array();
@@ -2624,7 +2637,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $quiz_id
+	 * @param int $quiz_id Quiz Id.
 	 *
 	 * @return array
 	 */
@@ -2674,7 +2687,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 			<h3 id="forminator-integration-popup__title" class="sui-box-title sui-lg" style="overflow: initial; white-space: normal; text-overflow: initial;">
 				<?php
 				/* translators: 1: Add-on name */
-				printf( esc_html__( '%1$s Connected', 'forminator' ), $this->get_title() );
+				printf( esc_html__( '%1$s Connected', 'forminator' ), esc_html( $this->get_title() ) );
 				?>
 			</h3>
 		</div>
@@ -2682,9 +2695,11 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		<p id="forminator-integration-popup__description" class="sui-description" style="text-align: center;">
 			<?php
 				printf(
+					/* translators: 1: Title */
 					esc_html__( 'Awesome! You are connected to %1$s. You can now go to your forms and activate %1$s integration to collect data.', 'forminator' ),
-					$this->get_title()
-			); ?>
+					esc_html( $this->get_title() )
+				);
+			?>
 		</p>
 
 		<div class="forminator-integration-popup__footer-temp">

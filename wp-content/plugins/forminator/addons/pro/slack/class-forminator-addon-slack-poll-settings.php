@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Addon Slack Poll Settings.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Slack_Poll_Settings
  * Handle how poll settings displayed and saved
  *

@@ -293,6 +293,17 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             'description'
         ) ?: $package['description'];
 
+        $timeZone = '';
+
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        if ($settingsService->getSetting('general', 'showClientTimeZone') &&
+            !empty($package['isForCustomer'])
+        ) {
+            $timeZone = !empty($package['customer']['timeZone']) ? $package['customer']['timeZone'] : '';
+        }
+
         return [
             'reservation_name'        => $packageName,
             'package_name'            => $packageName,
@@ -305,6 +316,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             'package_deposit_payment' => $deposit !== null ? $helperService->getFormattedPrice($deposit) : '',
             'payment_type'            => $paymentType,
             'coupon_used'             => $couponsUsed ? implode($break, $couponsUsed) : '',
+            'time_zone'               => $timeZone,
         ];
     }
 

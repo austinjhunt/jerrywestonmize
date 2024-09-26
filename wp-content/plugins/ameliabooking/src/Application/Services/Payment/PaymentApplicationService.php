@@ -294,7 +294,7 @@ class PaymentApplicationService
 
                 $stripeSettings = $settingsService->getSetting('payments', 'stripe');
 
-                if ($stripeSettings['connect']['enabled'] && $stripeSettings['connect']['amount']) {
+                if ($stripeSettings['connect']['enabled']) {
                     $transfers['method'] = $stripeSettings['connect']['method'];
 
                     $transfers['accounts'] = [];
@@ -311,8 +311,7 @@ class PaymentApplicationService
 
                         $stripeConnectAmount =
                             $provider->getStripeConnect() &&
-                            $provider->getStripeConnect()->getAmount() &&
-                            $provider->getStripeConnect()->getAmount()->getValue()
+                            $provider->getStripeConnect()->getAmount()
                             ? $provider->getStripeConnect()->getAmount()->getValue()
                             : $stripeSettings['connect']['amount'];
 
@@ -334,12 +333,14 @@ class PaymentApplicationService
                 $customerRepository = $this->container->get('domain.users.customers.repository');
 
                 $stripeCustomerId = null;
+
                 $customer = null;
+
                 if ($reservation->getCustomer() && $reservation->getCustomer()->getId()) {
                     /** @var Customer $customer */
                     $customer = $customerRepository->getById($reservation->getCustomer()->getId()->getValue());
 
-                    if ($customer) {
+                    if ($customer && $customer->getType() === AbstractUser::USER_ROLE_CUSTOMER) {
                         $stripeCustomerId = $customer->getStripeConnect() && $customer->getStripeConnect()->getId()
                             ? $customer->getStripeConnect()->getId()->getValue() : null;
                     }
@@ -1517,7 +1518,7 @@ class PaymentApplicationService
                             'status'   => null,
                             'request'  => $appointmentData['componentProps'],
                             'response' => $result->getData(),
-                            'squareOrderId' => $squareData['orderId']
+                            'squareOrderId' => $squareData ? $squareData['orderId'] : null
                         ]
                     )
                 )

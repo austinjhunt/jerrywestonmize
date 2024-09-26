@@ -58,6 +58,10 @@ class EventTicketFactory
             $eventTicket->setSpots(new IntegerValue($data['spots']));
         }
 
+        if (isset($data['waitingListSpots'])) {
+            $eventTicket->setWaitingListSpots(new IntegerValue($data['waitingListSpots']));
+        }
+
         if (isset($data['dateRanges'])) {
             $eventTicket->setDateRanges(new Json($data['dateRanges']));
         }

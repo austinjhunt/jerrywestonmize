@@ -1,11 +1,21 @@
 <?php
+/**
+ * Template for setup worksheet.
+ *
+ * @package Forminator
+ */
+
 // Defaults.
 $vars = array(
 	'auth_url' => '',
 	'token'    => '',
 );
 
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 } ?>

@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\Mailer\Methods\ErrorMappers\SMTPMapper;
 use MailPoet\RuntimeException;
+use MailPoet\Util\Url;
 use MailPoet\WP\Functions as WPFunctions;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -39,6 +40,7 @@ class SMTP extends PHPMailerMethod {
     $replyTo,
     $returnPath,
     SMTPMapper $errorMapper,
+    Url $urlUtils,
     $login = null,
     $password = null
   ) {
@@ -49,7 +51,7 @@ class SMTP extends PHPMailerMethod {
     $this->login = $login;
     $this->password = $password;
     $this->encryption = $encryption;
-    parent::__construct($sender, $replyTo, $returnPath, $errorMapper);
+    parent::__construct($sender, $replyTo, $returnPath, $errorMapper, $urlUtils);
   }
 
   public function buildMailer(): PHPMailer {

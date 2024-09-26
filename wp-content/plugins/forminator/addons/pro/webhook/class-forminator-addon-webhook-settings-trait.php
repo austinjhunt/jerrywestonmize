@@ -30,11 +30,10 @@ trait Forminator_Webhook_Settings_Trait {
 	 * Sending test sample to webhook URL
 	 * Data sent will be used on webhook to map fields on their zap action
 	 *
-	 * @param array                               $submitted_data Submitted data.
-	 * @param Forminator_Integration_Settings_Exception $current_input_exception
+	 * @param array                                     $submitted_data Submitted data.
+	 * @param Forminator_Integration_Settings_Exception $current_input_exception Integration settings exception.
 	 *
-	 * @throws Forminator_Integration_Settings_Exception
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Settings_Exception Throws Integration Settings Exception.
 	 */
 	private function validate_and_send_sample( $submitted_data, Forminator_Integration_Settings_Exception $current_input_exception ) {
 		$module_id = $this->module_id;
@@ -133,6 +132,7 @@ trait Forminator_Webhook_Settings_Trait {
 	 *
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Settings_Exception Throws Integration Settings Exception.
 	 */
 	public function setup_webhook_url( $submitted_data ) {
 		$template = forminator_addon_webhook_dir() . 'views/module/setup-webhook.php';
@@ -222,7 +222,6 @@ trait Forminator_Webhook_Settings_Trait {
 			'is_close'     => $is_close,
 			'notification' => $notification,
 		);
-
 	}
 
 	/**

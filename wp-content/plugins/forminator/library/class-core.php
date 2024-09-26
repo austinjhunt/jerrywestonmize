@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Core
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Core {
 
 	/**
+	 * Forminator_Admin Instance
+	 *
 	 * @var Forminator_Admin
 	 */
 	public $admin;
@@ -118,15 +126,17 @@ class Forminator_Core {
 			if ( Forminator::is_addons_feature_enabled() ) {
 				$this->admin->add_integrations_page();
 			}
-			$this->admin->add_reports_page();
+			if ( forminator_global_tracking() ) {
+				$this->admin->add_reports_page();
+			}
 			$this->admin->add_settings_page();
 
 			if ( ! FORMINATOR_PRO ) {
 				$this->admin->add_upgrade_page();
 			}
 
-			// Call Mixpanel class
-            new Forminator_Mixpanel();
+			// Call Mixpanel class.
+			new Forminator_Mixpanel();
 		}
 
 		// Protection management.
@@ -135,7 +145,9 @@ class Forminator_Core {
 		// Export management.
 		Forminator_Export::get_instance();
 
-		Forminator_Reports::get_instance();
+		if ( forminator_global_tracking() ) {
+			Forminator_Reports::get_instance();
+		}
 
 		// Post meta box.
 		add_action( 'init', array( &$this, 'post_field_meta_box' ) );
@@ -183,14 +195,14 @@ class Forminator_Core {
 	/**
 	 * Get field type based on $element_id
 	 *
-	 * @param $element_id Field slug.
+	 * @param string $element_id Field slug.
 	 * @return array
 	 */
 	public static function get_field_type( $element_id ) {
 		$field_type = '';
 		$parts      = explode( '-', $element_id );
 		// all avail fields on library.
-		$field_types = Forminator_Core::get_field_types();
+		$field_types = self::get_field_types();
 
 		if ( in_array( $parts[0], $field_types, true ) ) {
 			$field_type = $parts[0];
@@ -274,6 +286,7 @@ class Forminator_Core {
 		include_once forminator_plugin_dir() . 'library/model/class-form-entry-model.php';
 
 		// Helpers.
+		include_once forminator_plugin_dir() . 'library/helpers/encryption.php';
 		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'library/helpers/helper-core.php';
 		/* @noinspection PhpIncludeInspection */
@@ -381,6 +394,11 @@ class Forminator_Core {
 		}
 	}
 
+	/**
+	 * Localize pointers
+	 *
+	 * @return void
+	 */
 	public function localize_pointers() {
 		?>
 		<script type="text/javascript">
@@ -391,6 +409,8 @@ class Forminator_Core {
 
 	/**
 	 * Render Meta box
+	 *
+	 * @param WP_Post $post Post.
 	 *
 	 * @since 1.0
 	 */
@@ -426,10 +446,10 @@ class Forminator_Core {
 	 * @return mixed
 	 */
 	public static function sanitize_text_field( $key, $default_value = '' ) {
-		if ( ! empty( $_POST[ $key ] ) ) {
-			$value = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
-		} elseif ( ! empty( $_GET[ $key ] ) ) {
-			$value = sanitize_text_field( wp_unslash( $_GET[ $key ] ) );
+		if ( ! empty( $_POST[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$value = sanitize_text_field( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		} elseif ( ! empty( $_GET[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$value = sanitize_text_field( wp_unslash( $_GET[ $key ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		} else {
 			$value = $default_value;
 		}
@@ -441,17 +461,17 @@ class Forminator_Core {
 	}
 
 	/**
-     * Recursively sanitize data
-     *
+	 * Recursively sanitize data
+	 *
 	 * @param array  $data Data.
 	 * @param string $current_key Current key.
 	 *
 	 * @return array|string
 	 */
 	public static function sanitize_array( $data, $current_key = '' ) {
-		$data = wp_unslash( $data );
+		$data         = wp_unslash( $data );
 		$skipped_keys = array( 'preview_data' );
-		// TODO: Should skip fields that has its own sanitize function
+		// TODO: Should skip fields that has its own sanitize function.
 		if (
 			in_array( $current_key, $skipped_keys, true ) ||
 			0 === strpos( $current_key, 'url-' ) ||
@@ -491,7 +511,7 @@ class Forminator_Core {
 			'footer_value',
 			'payee_info',
 			'payer_info',
-			'payment_note'
+			'payment_note',
 		);
 		if (
 			in_array( $current_key, $allow_html, true ) ||
@@ -564,6 +584,8 @@ class Forminator_Core {
 	/**
 	 * Delete Action Scheduler actions and logs of Forminator.
 	 *
+	 * @param null|string $db_prefix DB Prefix.
+	 *
 	 * @return void
 	 */
 	public static function action_scheduler_cleanup( $db_prefix = null ) {
@@ -582,25 +604,26 @@ class Forminator_Core {
 		$table_logs    = $db_prefix . 'actionscheduler_logs';
 		$table_groups  = $db_prefix . 'actionscheduler_groups';
 		$slug          = 'forminator';
-		$group_id      = (int) $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$table_groups} WHERE slug = %s", $slug ) );
+		$group_id      = (int) $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$table_groups} WHERE slug = %s", $slug ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$and           = '';
 
 		// If not uninstall, do not delete pending tasks.
 		if ( ! $is_uninstall ) {
 			$and = "AND ( as_actions.status = 'complete' || as_actions.status = 'failed' || as_actions.status = 'canceled' )";
 		}
-
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
 		$query = $wpdb->prepare(
 			"SELECT action_id
 			FROM {$table_actions} as_actions
 			WHERE as_actions.group_id = %s
-			" . $and . "
-			LIMIT 100",
+			" . $and . '
+			LIMIT 100',
 			$group_id
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
 
 		// Delete all AS forminator actions and logs.
-		while ( $action_ids = $wpdb->get_col( $query ) ) {
+		while ( $action_ids = $wpdb->get_col( $query ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			if ( empty( $action_ids ) ) {
 				break;
 			}
@@ -614,15 +637,18 @@ class Forminator_Core {
 				)
 			);
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query(
+				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 				$wpdb->prepare(
 					"DELETE as_actions, as_logs
 					 FROM {$table_actions} as_actions
 					 LEFT JOIN {$table_logs} as_logs
 						ON as_actions.action_id = as_logs.action_id
 					 WHERE as_actions.action_id IN ( {$where_in} )",
-					 $action_ids
+					$action_ids
 				)
+				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 			);
 		}
 	}

@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Stripe class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,52 +17,72 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Stripe extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'stripe';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'stripe';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 23;
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon forminator-icon-stripe';
 
 	/**
+	 * Is connected
+	 *
 	 * @var bool
 	 */
 	public $is_connected = false;
 
 	/**
+	 * Mode
+	 *
 	 * @var string
 	 */
 	public $mode = 'test';
 
 	/**
+	 * Payment plan
+	 *
 	 * @var array
 	 */
 	public $payment_plan = array();
@@ -77,7 +103,6 @@ class Forminator_Stripe extends Forminator_Field {
 		} catch ( Forminator_Gateway_Exception $e ) {
 			$this->is_connected = false;
 		}
-
 	}
 
 	/**
@@ -136,7 +161,7 @@ class Forminator_Stripe extends Forminator_Field {
 	/**
 	 * Field front-end markup
 	 *
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
 	 *
 	 * @return mixed
@@ -200,9 +225,9 @@ class Forminator_Stripe extends Forminator_Field {
 			$settings['form-style'] = 'default';
 		}
 
-		if( ! empty( $settings['form-font-family'] ) ) {
+		if ( ! empty( $settings['form-font-family'] ) ) {
 			$field_font_family = $this->get_form_setting( 'cform-input-font-family', $settings, 'inherit' );
-			if( $field_font_family == 'custom' ) {
+			if ( 'custom' === $field_font_family ) {
 				$data_font_family = $this->get_form_setting( 'cform-input-custom-family', $settings, 'inherit' );
 			} else {
 				$data_font_family = $field_font_family;
@@ -240,7 +265,6 @@ class Forminator_Stripe extends Forminator_Field {
 			'data-font-color-focus' => $this->get_form_setting( 'input-color', $settings, '#000000' ),
 			'data-font-color-error' => $this->get_form_setting( 'input-color', $settings, '#000000' ),
 			'data-font-size'        => $this->get_form_setting( 'cform-input-font-size', $settings, '16' ) . 'px',
-			// 'data-line-height'      => '1.3em',.
 			'data-font-family'      => $data_font_family,
 			'data-font-weight'      => $this->get_form_setting( 'cform-input-font-weight', $settings, '400' ),
 			'data-icon-color'       => $this->get_form_setting( 'input-icon', $settings, '#777771' ),
@@ -256,7 +280,6 @@ class Forminator_Stripe extends Forminator_Field {
 		$attributes = self::implode_attr( $attr );
 
 		$html = '<div class="forminator-field">';
-
 
 		$html .= self::get_field_label( $label, $id . '-field', true );
 
@@ -294,8 +317,8 @@ class Forminator_Stripe extends Forminator_Field {
 	 *
 	 * @since 1.7.3
 	 *
-	 * @param $amount
-	 * @param $field
+	 * @param int|float $amount Amount.
+	 * @param array     $field Field.
 	 *
 	 * @return mixed
 	 */
@@ -333,10 +356,10 @@ class Forminator_Stripe extends Forminator_Field {
 
 		// Default options.
 		$options = array(
-			'amount'              => $this->calculate_amount( $amount, $currency ),
-			'currency'            => $currency,
-			'capture_method'      => 'manual',
-			'confirm'             => false,
+			'amount'                    => $this->calculate_amount( $amount, $currency ),
+			'currency'                  => $currency,
+			'capture_method'            => 'manual',
+			'confirm'                   => false,
 			'automatic_payment_methods' => array(
 				'enabled'         => true,
 				'allow_redirects' => 'never',
@@ -378,8 +401,8 @@ class Forminator_Stripe extends Forminator_Field {
 	 *
 	 * @since 1.11
 	 *
-	 * @param $amount
-	 * @param $currency
+	 * @param int|float $amount Amount.
+	 * @param string    $currency Currency.
 	 *
 	 * @return float|int
 	 */
@@ -387,7 +410,7 @@ class Forminator_Stripe extends Forminator_Field {
 		$zero_decimal_currencies = $this->get_zero_decimal_currencies();
 
 		// Check if currency is zero decimal, then return original amount.
-		if ( in_array( $currency, $zero_decimal_currencies ) ) {
+		if ( in_array( $currency, $zero_decimal_currencies, true ) ) {
 			return $amount;
 		}
 
@@ -436,8 +459,9 @@ class Forminator_Stripe extends Forminator_Field {
 	 *
 	 * @since 1.7.3
 	 *
-	 * @param $submitted_data
-	 * @param $field
+	 * @param array $submitted_data Submitted data.
+	 * @param array $field Field.
+	 * @throws Exception When there is an error.
 	 */
 	public function update_paymentIntent( $submitted_data, $field ) {
 		$mode     = self::get_property( 'mode', $field, 'test' );
@@ -579,9 +603,9 @@ class Forminator_Stripe extends Forminator_Field {
 	 *
 	 * @since 1.9
 	 *
-	 * @param $id
-	 * @param $settings
-	 * @param $fallback
+	 * @param int   $id Id.
+	 * @param array $settings Settings.
+	 * @param mixed $fallback Fallback method.
 	 *
 	 * @return mixed
 	 */
@@ -598,8 +622,8 @@ class Forminator_Stripe extends Forminator_Field {
 	/**
 	 * Field back-end validation
 	 *
-	 * @param array        $field
-	 * @param array|string $data
+	 * @param array        $field Field.
+	 * @param array|string $data Data.
 	 */
 	public function validate( $field, $data ) {
 		$id = self::get_property( 'element_id', $field );
@@ -608,7 +632,7 @@ class Forminator_Stripe extends Forminator_Field {
 	/**
 	 * Sanitize data
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization
@@ -622,8 +646,11 @@ class Forminator_Stripe extends Forminator_Field {
 	}
 
 	/**
+	 * Is available
+	 *
 	 * @since 1.7
 	 * @inheritdoc
+	 * @param array $field Field.
 	 */
 	public function is_available( $field ) {
 		$mode = self::get_property( 'mode', $field, 'test' );
@@ -647,7 +674,7 @@ class Forminator_Stripe extends Forminator_Field {
 	 *
 	 * @since 1.7
 	 *
-	 * @param bool $live
+	 * @param bool $live Live?.
 	 *
 	 * @return bool|string
 	 */
@@ -670,7 +697,7 @@ class Forminator_Stripe extends Forminator_Field {
 	 *
 	 * @since 1.7
 	 *
-	 * @param bool $live
+	 * @param bool $live Live?.
 	 *
 	 * @return bool|string
 	 */
@@ -679,10 +706,10 @@ class Forminator_Stripe extends Forminator_Field {
 			$stripe = new Forminator_Gateway_Stripe();
 
 			if ( $live ) {
-				return $stripe->get_live_secret();
+				return $stripe->get_live_secret( true );
 			}
 
-			return $stripe->get_test_secret();
+			return $stripe->get_test_secret( true );
 		} catch ( Forminator_Gateway_Exception $e ) {
 			return false;
 		}
@@ -705,9 +732,12 @@ class Forminator_Stripe extends Forminator_Field {
 	}
 
 	/**
-	 * @param array $field
+	 * Process to entry data
+	 *
+	 * @param array $field Field.
 	 *
 	 * @return array
+	 * @throws Exception When there is an error.
 	 */
 	public function process_to_entry_data( $field ) {
 
@@ -763,10 +793,10 @@ class Forminator_Stripe extends Forminator_Field {
 		 *
 		 * @since 1.7
 		 *
-		 * @param array                        $entry_data
-		 * @param array                        $field            field properties.
-		 * @param Forminator_Form_Model $module_object
-		 * @param array                        $submitted_data
+		 * @param array                        $entry_data Entry data.
+		 * @param array                        $field Field properties.
+		 * @param Forminator_Form_Model $module_object Forminator_Form_Model.
+		 * @param array                        $submitted_data Submitted data.
 		 * @param array                        $field_data_array current entry meta.
 		 *
 		 * @return array
@@ -779,8 +809,8 @@ class Forminator_Stripe extends Forminator_Field {
 	/**
 	 * Make linkify transaction_id
 	 *
-	 * @param $transaction_id
-	 * @param $meta_value
+	 * @param string $transaction_id Transaction Id.
+	 * @param array  $meta_value Meta value.
 	 *
 	 * @return string
 	 */
@@ -810,9 +840,10 @@ class Forminator_Stripe extends Forminator_Field {
 	/**
 	 * Retrieve PaymentIntent object
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return mixed object|string
+	 * @throws Exception When there is an error.
 	 */
 	public function get_paymentIntent( $field ) {
 		$mode     = self::get_property( 'mode', $field, 'test' );
@@ -846,10 +877,11 @@ class Forminator_Stripe extends Forminator_Field {
 	 *
 	 * @since 1.15
 	 *
-	 * @param $field
-	 * @param $submitted_data
+	 * @param array $field Field.
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return mixed object|string
+	 * @throws Exception When there is an error.
 	 */
 	public function get_paymentMethod( $field, $submitted_data ) {
 		$mode     = self::get_property( 'mode', $field, 'test' );
@@ -879,8 +911,9 @@ class Forminator_Stripe extends Forminator_Field {
 	}
 
 	/**
+	 * Confirm paymentIntent
 	 *
-	 * @param $intent
+	 * @param mixed $intent Payment Intent.
 	 *
 	 * @since 1.14.9
 	 *
@@ -897,7 +930,7 @@ class Forminator_Stripe extends Forminator_Field {
 	/**
 	 * Get the exception error and return WP_Error
 	 *
-	 * @param $e
+	 * @param mixed $e Exception.
 	 *
 	 * @since 1.14.9
 	 *
@@ -965,7 +998,7 @@ class Forminator_Stripe extends Forminator_Field {
 	 *
 	 * @since 1.7
 	 *
-	 * @param array $field
+	 * @param array $field Field.
 	 *
 	 * @return double
 	 */
@@ -1037,7 +1070,7 @@ class Forminator_Stripe extends Forminator_Field {
 	/**
 	 * Get Payment plan
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return array
 	 */
@@ -1078,7 +1111,7 @@ class Forminator_Stripe extends Forminator_Field {
 	/**
 	 * Payment method
 	 *
-	 * @param $method
+	 * @param string $method Payment method.
 	 *
 	 * @return string|void
 	 */

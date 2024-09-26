@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Number class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,46 +17,64 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Number extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'number';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'number';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 8;
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Is input
+	 *
 	 * @var bool
 	 */
 	public $is_input = true;
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-element-number';
 
 	/**
+	 * Is calculable
+	 *
 	 * @var bool
 	 */
 	public $is_calculable = true;
@@ -90,7 +114,7 @@ class Forminator_Number extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -111,8 +135,9 @@ class Forminator_Number extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
+	 * @param array                  $draft_value Draft value.
 	 *
 	 * @return mixed
 	 */
@@ -308,8 +333,8 @@ class Forminator_Number extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array        $field
-	 * @param array|string $data
+	 * @param array        $field Field.
+	 * @param array|string $data Data.
 	 */
 	public function validate( $field, $data ) {
 		$id             = self::get_property( 'element_id', $field );
@@ -338,8 +363,7 @@ class Forminator_Number extends Forminator_Field {
 					$this
 				);
 			}
-		} else {
-			if ( ! empty( $data ) ) {
+		} elseif ( ! empty( $data ) ) {
 				$separators = $this->forminator_separators( $separator, $field );
 				$point      = ! empty( $precision ) ? $separators['point'] : '';
 				$data       = str_replace( array( $separators['separator'], $point ), array( '', '.' ), $data );
@@ -347,37 +371,36 @@ class Forminator_Number extends Forminator_Field {
 				$min        = floatval( $min );
 				$max        = floatval( $max );
 				// Note : do not compare max or min if that settings field is blank string ( not zero ).
-				if ( $min_len !== 0 && $data < $min ) {
-					$min_validation_message          = self::get_property( 'limit_min_message', $field );
-					$min_validation_message          = $custom_message && $min_validation_message ? $min_validation_message : /* translators: 1: Minimum value, 2: Maximum value */ sprintf( esc_html__( 'The number should be less than %1$d and greater than %2$d.', 'forminator' ), $min, $max );
-					$this->validation_message[ $id ] = sprintf(
-						apply_filters(
-							'forminator_field_number_max_min_validation_message',
-							/* translators: ... */
-							$min_validation_message,
-							$id,
-							$field,
-							$data
-						),
-						$max,
-						$min
-					);
-				} elseif ( $max_len !== 0 && $data > $max ) {
-					$max_validation_message          = self::get_property( 'limit_max_message', $field );
-					$max_validation_message          = $custom_message && $max_validation_message ? $max_validation_message : /* translators: 1: Minimum value, 2: Maximum value */ sprintf( esc_html__( 'The number should be less than %1$d and greater than %2$d.', 'forminator' ), $min, $max );
-					$this->validation_message[ $id ] = sprintf(
-						apply_filters(
-							'forminator_field_number_max_min_validation_message',
-							/* translators: ... */
-							$max_validation_message,
-							$id,
-							$field,
-							$data
-						),
-						$max,
-						$min
-					);
-				}
+			if ( 0 !== $min_len && $data < $min ) {
+				$min_validation_message          = self::get_property( 'limit_min_message', $field );
+				$min_validation_message          = $custom_message && $min_validation_message ? $min_validation_message : /* translators: 1: Minimum value, 2: Maximum value */ sprintf( esc_html__( 'The number should be less than %1$d and greater than %2$d.', 'forminator' ), $min, $max );
+				$this->validation_message[ $id ] = sprintf(
+					apply_filters(
+						'forminator_field_number_max_min_validation_message',
+						/* translators: ... */
+						$min_validation_message,
+						$id,
+						$field,
+						$data
+					),
+					$max,
+					$min
+				);
+			} elseif ( 0 !== $max_len && $data > $max ) {
+				$max_validation_message          = self::get_property( 'limit_max_message', $field );
+				$max_validation_message          = $custom_message && $max_validation_message ? $max_validation_message : /* translators: 1: Minimum value, 2: Maximum value */ sprintf( esc_html__( 'The number should be less than %1$d and greater than %2$d.', 'forminator' ), $min, $max );
+				$this->validation_message[ $id ] = sprintf(
+					apply_filters(
+						'forminator_field_number_max_min_validation_message',
+						/* translators: ... */
+						$max_validation_message,
+						$id,
+						$field,
+						$data
+					),
+					$max,
+					$min
+				);
 			}
 		}
 	}
@@ -387,7 +410,7 @@ class Forminator_Number extends Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization
@@ -405,8 +428,8 @@ class Forminator_Number extends Forminator_Field {
 	 *
 	 * @since 1.7
 	 *
-	 * @param array|mixed $submitted_field
-	 * @param array       $field_settings
+	 * @param array|mixed $submitted_field Submitted field.
+	 * @param array       $field_settings Field settings.
 	 *
 	 * @return float
 	 */
@@ -420,8 +443,12 @@ class Forminator_Number extends Forminator_Field {
 	}
 
 	/**
+	 * Get calculable value
+	 *
 	 * @since 1.7
 	 * @inheritdoc
+	 * @param array $submitted_field_data Submitted field data.
+	 * @param array $field_settings Field settings.
 	 */
 	public static function get_calculable_value( $submitted_field_data, $field_settings ) {
 		$formatting_value = self::forminator_replace_number( $field_settings, $submitted_field_data );

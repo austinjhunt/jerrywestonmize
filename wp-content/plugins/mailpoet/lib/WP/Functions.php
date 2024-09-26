@@ -307,8 +307,8 @@ class Functions {
     return get_role($role);
   }
 
-  public function getSiteOption($option, $default = false, $deprecated = true) {
-    return get_site_option($option, $default, $deprecated);
+  public function getSiteOption($option, $default = false) {
+    return get_site_option($option, $default);
   }
 
   public function getSiteUrl($blogId = null, $path = '', $scheme = null) {
@@ -321,10 +321,9 @@ class Functions {
 
   /**
    * @param string|array $args
-   * @param string|array $deprecated
    */
-  public function getTerms($args = [], $deprecated = '') {
-    return get_terms($args, $deprecated);
+  public function getTerms($args = []) {
+    return get_terms($args);
   }
 
   /**
@@ -590,6 +589,10 @@ class Functions {
     return wp_get_theme($stylesheet, $themeRoot);
   }
 
+  public function wpGetThemeSupport($feature = null, $args = null) {
+    return get_theme_support($feature, $args);
+  }
+
   public function wpInsertPost(array $postarr, $wpError = false) {
     return wp_insert_post($postarr, $wpError);
   }
@@ -764,7 +767,7 @@ class Functions {
     require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
     require_once ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php';
     require_once ABSPATH . 'wp-admin/includes/class-wp-ajax-upgrader-skin.php';
-    // nosemgrep: tools.wpscan-semgrep-rules.audit.php.wp.security.arbitrary-plugin-install
+    // nosemgrep: audit.php.wp.security.arbitrary-plugin-install
     $upgrader = new Plugin_Upgrader(new WP_Ajax_Upgrader_Skin());
     return $upgrader->install($package, $args);
   }
@@ -990,5 +993,13 @@ class Functions {
 
   public function wpIsMaintenanceMode(): bool {
     return wp_is_maintenance_mode();
+  }
+
+  public function headersSent(): bool {
+    return headers_sent();
+  }
+
+  public function nocacheHeaders(): void {
+    nocache_headers();
   }
 }

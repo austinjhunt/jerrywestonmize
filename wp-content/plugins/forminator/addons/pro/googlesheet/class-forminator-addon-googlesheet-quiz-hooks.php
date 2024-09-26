@@ -1,20 +1,24 @@
 <?php
+/**
+ * Forminator Google sheet Quiz Hooks
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Googlesheet_Quiz_Hooks
  *
  * @since 1.6.2
- *
  */
 class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
 	/**
 	 * Google sheet column titles
 	 */
-	const GSHEET_DATE_COLUMN_NAME = 'Date';
+	const GSHEET_DATE_COLUMN_NAME     = 'Date';
 	const GSHEET_QUESTION_COLUMN_NAME = 'Question';
-	const GSHEET_ANSWER_COLUMN_NAME = 'Answer';
-	const GSHEET_RESULT_COLUMN_NAME = 'Result';
+	const GSHEET_ANSWER_COLUMN_NAME   = 'Answer';
+	const GSHEET_RESULT_COLUMN_NAME   = 'Result';
 
 	/**
 	 * Return custom entry fields
@@ -23,7 +27,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -46,12 +50,13 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param string $connection_id
-	 * @param array $submitted_data
-	 * @param array $connection_settings
-	 * @param array $quiz_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $quiz_entry_fields Quiz entry fields.
 	 *
-	 * @return array `is_sent` true means its success send data to Google Sheets, false otherwise
+	 * @return array `is_sent` true means its success send data to Google Sheets, false otherwise.
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function get_status_on_create_row( $connection_id, $submitted_data, $connection_settings, $quiz_entry_fields ) {
 		// initialize as null.
@@ -142,9 +147,9 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 							}
 						} elseif ( 'nowrong' === $this->module->quiz_type ) {
 							if ( isset( $quiz_entry['value'][0] )
-							     && is_array( $quiz_entry['value'][0] )
-							     && isset( $quiz_entry['value'][0]['value'] )
-							     && is_array( $quiz_entry['value'][0]['value'] ) ) {
+								&& is_array( $quiz_entry['value'][0] )
+								&& isset( $quiz_entry['value'][0]['value'] )
+								&& is_array( $quiz_entry['value'][0]['value'] ) ) {
 
 								$quiz_entry = $quiz_entry['value'][0]['value'];
 
@@ -219,7 +224,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 						$cell_data->setUserEnteredValue( $value );
 						$values[] = $cell_data;
 					} elseif ( isset( $lead_column_name[1] ) && array_key_exists( $lead_column_name[1], $form_entry_fields ) ) {
-						$field_type = '';
+						$field_type       = '';
 						$form_column_name = $lead_column_name[1];
 
 						foreach ( $field_types as $type ) {
@@ -331,12 +336,11 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $file_id
-	 * @param $quiz_settings
+	 * @param string $file_id File Id.
+	 * @param array  $quiz_settings Quiz settings.
 	 *
 	 * @return array
-	 * @throws Forminator_Integration_Exception
-	 * @throws Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 *
 	 * @since 1.31
 	 * @param string $worksheet_id Worksheet/tab Id.
@@ -394,8 +398,8 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 					'range' => $key_range,
 					'value' => $value,
 				);
-				$column_number ++;
-				$columns_filled ++;
+				++$column_number;
+				++$columns_filled;
 			}
 		}
 
@@ -404,7 +408,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 			self::GSHEET_DATE_COLUMN_NAME,
 			self::GSHEET_QUESTION_COLUMN_NAME,
 			self::GSHEET_ANSWER_COLUMN_NAME,
-			self::GSHEET_RESULT_COLUMN_NAME
+			self::GSHEET_RESULT_COLUMN_NAME,
 		);
 
 		if ( isset( $quiz_settings['hasLeads'] ) && $quiz_settings['hasLeads'] ) {
@@ -425,7 +429,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 		foreach ( $required_header_columns as $required_header_column ) {
 			$expected_header_value = $required_header_column;
 			if ( ! in_array( $required_header_column, array_keys( $header_fields ), true ) ) {
-				//add
+				// add.
 				$new_range = $sheet_title . '!' . Forminator_Googlesheet_Form_Hooks::column_number_to_letter( $column_number ) . '1';
 
 				// update headers map.
@@ -435,12 +439,12 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 				);
 
 				// increment for next usage.
-				$column_number ++;
+				++$column_number;
 				$update_body = new Forminator_Google_Service_Sheets_ValueRange();
 				$update_body->setRange( $new_range );
 				$update_body->setValues( array( array( $expected_header_value ) ) );
 				$update_bodies[] = $update_body;
-				$new_column_count ++;
+				++$new_column_count;
 			} else {
 				$header_field = $header_fields[ $required_header_column ];
 				if ( $expected_header_value !== $header_field['value'] ) {
@@ -456,7 +460,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 			}
 		}
 
-		//calc column to be added
+		// calc column to be added.
 		$total_column_needed = $columns_filled + $new_column_count;
 		$new_column_needed   = $total_column_needed - $sheet_column_count;
 		if ( $new_column_needed > 0 ) {
@@ -509,7 +513,5 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 		}
 
 		return $header_fields;
-
 	}
-
 }

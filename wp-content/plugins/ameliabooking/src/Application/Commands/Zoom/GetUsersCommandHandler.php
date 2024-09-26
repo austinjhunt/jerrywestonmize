@@ -39,10 +39,9 @@ class GetUsersCommandHandler extends CommandHandler
         /** @var boolean $isCabinetPage */
         $isCabinetPage = $command->getPage() === 'cabinet';
 
+        /** @var AbstractUser $user */
+        $user = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
         if (!$command->getPermissionService()->currentUserCanRead(Entities::EMPLOYEES)) {
-            /** @var AbstractUser $user */
-            $user = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
-
             if (!$isCabinetPage || ($user === null || $user->getType() !== AbstractUser::USER_ROLE_PROVIDER)) {
                 throw new AccessDeniedException('You are not allowed to read users.');
             }
@@ -81,9 +80,9 @@ class GetUsersCommandHandler extends CommandHandler
             return $result;
         }
 
-        $zoomResult = apply_filters('amelia_get_zoom_users_filter', $zoomResult);
+        $zoomResult = apply_filters('amelia_get_zoom_users_filter', $zoomResult, $user ? $user->toArray() : null);
 
-        do_action('amelia_get_zoom_users', $zoomResult);
+        do_action('amelia_get_zoom_users', $zoomResult, $user ? $user->toArray() : null);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved users');

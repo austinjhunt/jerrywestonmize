@@ -1,4 +1,11 @@
-<?php $url = forminator_plugin_url(); ?>
+<?php
+/**
+ * Template admin/views/integrations/content.php
+ *
+ * @package Forminator
+ */
+
+$url = forminator_plugin_url(); ?>
 
 <div class="sui-row-with-sidenav forminator-integrations-wrapper">
 

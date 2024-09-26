@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\Config\Env;
+use MailPoet\Util\Headers;
 use MailPoetVendor\Gregwar\Captcha\CaptchaBuilder;
 
 class CaptchaRenderer {
@@ -37,7 +38,7 @@ class CaptchaRenderer {
       $files[] = $file;
     }
 
-    $this->setNoCacheHeaders();
+    Headers::setNoCacheHeaders();
     header('Content-Type: audio/mpeg');
     foreach ($files as $file) {
       readfile($file);
@@ -66,19 +67,13 @@ class CaptchaRenderer {
       ->setMaxBehindLines(0)
       ->build($width, $height, $font);
 
-    $this->setNoCacheHeaders();
+    Headers::setNoCacheHeaders();
     header('Content-Type: image/jpeg');
     $builder->output();
   }
 
   public function refreshPhrase(string $sessionId): string {
     return $this->phrase->createPhrase($sessionId);
-  }
-
-  public function setNoCacheHeaders(): void {
-    header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1+
-    header('Pragma: no-cache'); // HTTP 1.0
-    header('Expires: 0'); // proxies
   }
 
   private function getPhrase(string $sessionId): string {

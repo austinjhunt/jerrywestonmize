@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Integration_Poll_Hooks class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Integration_Poll_Hooks
@@ -30,7 +35,7 @@ abstract class Forminator_Integration_Poll_Hooks extends Forminator_Integration_
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
+	 * @param Forminator_Form_Entry_Model $entry_model Form entry model.
 	 */
 	public function after_entry_saved( Forminator_Form_Entry_Model $entry_model ) {
 		$addon_slug             = $this->addon->get_slug();

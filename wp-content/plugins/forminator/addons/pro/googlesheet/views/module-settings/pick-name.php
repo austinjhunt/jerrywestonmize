@@ -1,5 +1,10 @@
 <?php
-// defaults.
+/**
+ * Template for pick name
+ *
+ * @package Forminator
+ */
+
 $vars = array(
 	'error_message' => '',
 	'name'          => '',
@@ -7,7 +12,11 @@ $vars = array(
 	'multi_id'      => '',
 	'file_id'       => '',
 );
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -41,7 +50,7 @@ foreach ( $template_vars as $key => $val ) {
 						<?php
 						printf(
 						/* Translators: 1. Opening <a> tag with link spreadsheet link, 2. closing <a> tag. */
-							esc_html__( 'You can open your current Spreadsheet %shere%s.', 'forminator' ),
+							esc_html__( 'You can open your current Spreadsheet %1$shere%2$s.', 'forminator' ),
 							'<a target="_blank" href="https://docs.google.com/spreadsheets/d/' . esc_attr( $vars['file_id'] ) . '">',
 							'</a>'
 						);
@@ -56,7 +65,10 @@ foreach ( $template_vars as $key => $val ) {
 	<?php endif; ?>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>

@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Textarea class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,46 +17,64 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Textarea extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'textarea';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'textarea';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 7;
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Is input
+	 *
 	 * @var bool
 	 */
 	public $is_input = true;
 
 	/**
+	 * Has counter
+	 *
 	 * @var bool
 	 */
 	public $has_counter = true;
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-blog';
@@ -86,7 +110,7 @@ class Forminator_Textarea extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -107,8 +131,9 @@ class Forminator_Textarea extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
+	 * @param array                  $draft_value Draft value.
 	 *
 	 * @return mixed
 	 */
@@ -178,10 +203,10 @@ class Forminator_Textarea extends Forminator_Field {
 
 		$html .= '<div class="forminator-field">';
 		if ( true === $editor_type && ! $use_ajax_load ) {
-			$html .= self::create_wp_editor( $textarea, $label, '', $required, $default_height, $limit );
+			$html   .= self::create_wp_editor( $textarea, $label, '', $required, $default_height, $limit );
 			$desc_id = 'forminator-wp-editor-' . $id . '-description';
 		} else {
-			$html .= self::create_textarea( $textarea, $label, '', $required, $design );
+			$html   .= self::create_textarea( $textarea, $label, '', $required, $design );
 			$desc_id = $id . '-description';
 			if ( true === $editor_type && $use_ajax_load ) {
 				$args   = self::get_tinymce_args( $id );
@@ -212,7 +237,6 @@ class Forminator_Textarea extends Forminator_Field {
 		$html .= '</div>';
 
 		return apply_filters( 'forminator_field_text_markup', $html, $field );
-
 	}
 
 	/**
@@ -309,11 +333,11 @@ class Forminator_Textarea extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array        $field
-	 * @param array|string $data
+	 * @param array        $field Field.
+	 * @param array|string $data Data.
 	 */
 	public function validate( $field, $data ) {
-		$id = self::get_property( 'element_id', $field );
+		$id   = self::get_property( 'element_id', $field );
 		$data = html_entity_decode( $data );
 
 		if ( ! isset( $field['limit'] ) ) {
@@ -332,7 +356,7 @@ class Forminator_Textarea extends Forminator_Field {
 			}
 		}
 		if ( $this->has_limit( $field ) ) {
-			if ( ( isset( $field['limit_type'] ) && 'characters' === trim( $field['limit_type'] ) ) && ( mb_strlen( strip_tags( $data ) ) > $field['limit'] ) ) {
+			if ( ( isset( $field['limit_type'] ) && 'characters' === trim( $field['limit_type'] ) ) && ( mb_strlen( wp_strip_all_tags( $data ) ) > $field['limit'] ) ) {
 				$this->validation_message[ $id ] = apply_filters(
 					'forminator_text_field_characters_validation_message',
 					esc_html__( 'You exceeded the allowed amount of characters. Please check again.', 'forminator' ),
@@ -360,7 +384,7 @@ class Forminator_Textarea extends Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization

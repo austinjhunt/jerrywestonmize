@@ -3,10 +3,10 @@
  * PageSpeed Ninja
  * https://pagespeed.ninja/
  *
- * @version    1.4.3
+ * @version    1.4.5
  * @license    GNU/GPL v2 - http://www.gnu.org/licenses/gpl-2.0.html
  * @copyright  (C) 2016-2024 PageSpeed Ninja Team
- * @date       July 2024
+ * @date       September 2024
  */
 
 class PagespeedNinja_AdminAjax
@@ -114,7 +114,9 @@ class PagespeedNinja_AdminAjax
                 if ($entry !== '.' && $entry !== '..') {
                     $path = $dir . DIRECTORY_SEPARATOR . $entry;
                     if (is_file($path)) {
-                        $size += filesize($path);
+                        if (!is_link($path)) {
+                            $size += filesize($path);
+                        }
                         $files++;
                     } elseif ($recursive && is_dir($path)) {
                         $this->getDirectorySize($path, $size, $files);
@@ -151,6 +153,31 @@ class PagespeedNinja_AdminAjax
     }
 
     /**
+     * @param string $dir
+     * @param bool $recursive
+     * @return void
+     */
+    protected function clearDirectoryLinks($dir, $recursive = true)
+    {
+        if (!is_dir($dir)) {
+            return;
+        }
+
+        $entries = scandir($dir, SCANDIR_SORT_NONE);
+        foreach ($entries as $entry) {
+            if ($entry !== '.' && $entry !== '..' && $entry !== '.htaccess') {
+                $path = $dir . DIRECTORY_SEPARATOR . $entry;
+                if (is_file($path) && is_link($path)) {
+                    unlink($path);
+                } elseif ($recursive && is_dir($path)) {
+                    $this->clearDirectoryLinks($path);
+                    @rmdir($path);
+                }
+            }
+        }
+    }
+
+    /**
      * @return string[]
      */
     protected function getStaticDirs()
@@ -178,6 +205,21 @@ class PagespeedNinja_AdminAjax
             $this->clearDirectory($dir . '/img');
             $this->clearDirectory($dir . '/img-r');
             $this->clearDirectory($dir . '/img-lqip');
+        }
+        wp_die();
+        exit;
+    }
+
+    /** @return void */
+    public function clear_image_errors()
+    {
+        check_ajax_referer('psn-ajax-token');
+
+        foreach ($this->getStaticDirs() as $staticdir) {
+            $dir = rtrim(ABSPATH, '/') . $staticdir;
+            $this->clearDirectoryLinks($dir . '/img');
+            $this->clearDirectoryLinks($dir . '/img-r');
+            $this->clearDirectoryLinks($dir . '/img-lqip');
         }
         wp_die();
         exit;

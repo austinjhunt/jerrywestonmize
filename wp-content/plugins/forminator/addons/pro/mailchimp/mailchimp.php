@@ -6,6 +6,8 @@
  * Description: Integrate Forminator Custom Forms with Mailchimp email list easily
  * Author: WPMU DEV
  * Author URI: http://wpmudev.com
+ *
+ * @package Forminator
  */
 
 define( 'FORMINATOR_ADDON_MAILCHIMP_VERSION', '1.0' );

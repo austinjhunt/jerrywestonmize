@@ -14,6 +14,7 @@ use Elementor\AmeliaCatalogElementorWidget;
 use Elementor\AmeliaEmployeePanelElementorWidget;
 use Elementor\AmeliaEventsElementorWidget;
 use Elementor\AmeliaEventsListBookingElementorWidget;
+use Elementor\AmeliaEventsCalendarBookingElementorWidget;
 use Elementor\AmeliaSearchElementorWidget;
 use Elementor\Plugin;
 
@@ -53,6 +54,7 @@ class ElementorBlock
         require_once(AMELIA_PATH . '/src/Infrastructure/WP/Elementor/AmeliaCatalogElementorWidget.php');
         require_once(AMELIA_PATH . '/src/Infrastructure/WP/Elementor/AmeliaEventsElementorWidget.php');
         require_once(AMELIA_PATH . '/src/Infrastructure/WP/Elementor/AmeliaEventsListBookingElementorWidget.php');
+        require_once(AMELIA_PATH . '/src/Infrastructure/WP/Elementor/AmeliaEventsCalendarBookingElementorWidget.php');
         require_once(AMELIA_PATH . '/src/Infrastructure/WP/Elementor/AmeliaCustomerPanelElementorWidget.php');
         require_once(AMELIA_PATH . '/src/Infrastructure/WP/Elementor/AmeliaEmployeePanelElementorWidget.php');
     }
@@ -67,6 +69,7 @@ class ElementorBlock
         Plugin::instance()->widgets_manager->register(new AmeliaCatalogElementorWidget());
         Plugin::instance()->widgets_manager->register(new AmeliaEventsElementorWidget());
         Plugin::instance()->widgets_manager->register(new AmeliaEventsListBookingElementorWidget());
+        Plugin::instance()->widgets_manager->register(new AmeliaEventsCalendarBookingElementorWidget());
         Plugin::instance()->widgets_manager->register(new AmeliaCustomerPanelElementorWidget());
         Plugin::instance()->widgets_manager->register(new AmeliaEmployeePanelElementorWidget());
     }

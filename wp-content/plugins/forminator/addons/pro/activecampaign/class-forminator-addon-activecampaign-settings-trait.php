@@ -1,5 +1,11 @@
 <?php
 /**
+ * The Activecampaign Settings Trait.
+ *
+ * @package    Forminator
+ */
+
+/**
  * Trait for common methods for Activecampaign settings classes
  *
  * @since 1.30
@@ -12,6 +18,8 @@
 trait Forminator_Activecampaign_Settings_Trait {
 
 	/**
+	 * Custom Fields.
+	 *
 	 * @var Forminator_Activecampaign_CustomField
 	 * @since 1.7 Activecampaign Custom Fields
 	 */
@@ -51,9 +59,10 @@ trait Forminator_Activecampaign_Settings_Trait {
 	 *
 	 * @since 1.0 Activecampaign Integration
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return array
+	 * @throws Forminator_Integration_Exception Integration Exception.
 	 */
 	public function pick_name( $submitted_data ) {
 		$template = forminator_addon_activecampaign_dir() . 'views/module-settings/pick-name.php';
@@ -123,9 +132,10 @@ trait Forminator_Activecampaign_Settings_Trait {
 	 *
 	 * @since 1.0 Activecampaign Integration
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return array
+	 * @throws Forminator_Integration_Exception Integration Exception.
 	 */
 	public function select_list( $submitted_data ) {
 		$template = forminator_addon_activecampaign_dir() . 'views/module-settings/select-list.php';
@@ -224,9 +234,10 @@ trait Forminator_Activecampaign_Settings_Trait {
 	 *
 	 * @since 1.0 Activecampaign Integration
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return array
+	 * @throws Forminator_Integration_Exception Integration Exception.
 	 */
 	public function map_fields( $submitted_data ) {
 		$template = forminator_addon_activecampaign_dir() . 'views/module-settings/map-fields.php';
@@ -313,9 +324,12 @@ trait Forminator_Activecampaign_Settings_Trait {
 					if ( ! empty( $fields_map[ $key ] ) ) {
 						$element_id = $fields_map[ $key ];
 						if ( ! in_array( $element_id, $forminator_field_element_ids, true ) ) {
-							$input_exceptions->add_input_exception( sprintf(
-							/* translators: %s: Field title */
-								esc_html__( 'Please assign valid field for %s', 'forminator' ), esc_html( $title ) ),
+							$input_exceptions->add_input_exception(
+								sprintf(
+								/* translators: %s: Field title */
+									esc_html__( 'Please assign valid field for %s', 'forminator' ),
+									esc_html( $title )
+								),
 								$key . '_error'
 							);
 							continue;
@@ -366,7 +380,7 @@ trait Forminator_Activecampaign_Settings_Trait {
 	 *
 	 * @since 1.0 Activecampaign Integration
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return bool
 	 */
@@ -401,9 +415,10 @@ trait Forminator_Activecampaign_Settings_Trait {
 	 *
 	 * @since 1.0 Activecampaign Integration
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return array
+	 * @throws Forminator_Integration_Exception Integration Exception.
 	 */
 	public function setup_options( $submitted_data ) {
 		$template = forminator_addon_activecampaign_dir() . 'views/module-settings/setup-options.php';
@@ -562,7 +577,7 @@ trait Forminator_Activecampaign_Settings_Trait {
 	 *
 	 * @since 1.0 Activecampaign Integration
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return bool
 	 */

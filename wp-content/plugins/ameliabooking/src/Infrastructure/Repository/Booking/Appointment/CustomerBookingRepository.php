@@ -206,7 +206,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
 
         $params = [
             ':id'  => $id,
-            ':tax' => $data['tax'],
+            ':tax' => !empty($data['tax']) ? (is_array($data['tax']) ? json_encode($data['tax']) : $data['tax']) : null,
         ];
 
         try {

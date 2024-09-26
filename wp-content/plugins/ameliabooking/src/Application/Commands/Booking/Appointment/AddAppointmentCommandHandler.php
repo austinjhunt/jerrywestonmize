@@ -9,24 +9,23 @@ use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
-use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
+use AmeliaBooking\Domain\Common\Exceptions\BookingUnavailableException;
+use AmeliaBooking\Domain\Common\Exceptions\CustomerBookedException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
-use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
-use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\PositiveDuration;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
+use AmeliaBooking\Domain\ValueObjects\String\Description;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
-use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -138,54 +137,61 @@ class AddAppointmentCommandHandler extends CommandHandler
 
         $reservationService->manageTaxes($appointmentData);
 
-        /** @var Appointment $appointment */
-        $appointment = $appointmentAS->build($appointmentData, $service);
+        $appointmentRepo->beginTransaction();
+
+        $ignoredData = [];
 
         /** @var Appointment $existingAppointment */
-        $existingAppointment = $appointmentAS->getFreeAlreadyBookedAppointment($appointmentData);
+        $existingAppointment = $appointmentAS->getAlreadyBookedAppointment($appointmentData, []);
 
-        /** @var CustomerBooking $booking */
-        foreach ($appointment->getBookings()->getItems() as $booking) {
-            if (!$appointmentAS->processPackageAppointmentBooking(
-                $booking,
-                new Collection(),
-                $appointment->getServiceId()->getValue(),
-                $paymentData
-            )) {
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setMessage(FrontendStrings::getCommonStrings()['package_booking_unavailable']);
-                $result->setData(
-                    [
-                        'packageBookingUnavailable' => true
-                    ]
+        /** @var Appointment $appointment */
+        $appointment = $appointmentAS->build(
+            $existingAppointment ? $existingAppointment->toArray() : $appointmentData,
+            $service
+        );
+
+        if ($existingAppointment && $appointmentData['internalNotes']) {
+            if ($existingAppointment->getInternalNotes() &&
+                $existingAppointment->getInternalNotes()->getValue()
+            ) {
+                $appointment->setInternalNotes(
+                    new Description(
+                        $existingAppointment->getInternalNotes()->getValue() .
+                        PHP_EOL .
+                        PHP_EOL .
+                        $appointmentData['internalNotes']
+                    )
                 );
-
-                return $result;
+            } else {
+                $appointment->setInternalNotes(
+                    new Description(
+                        $appointmentData['internalNotes']
+                    )
+                );
             }
         }
 
-        $appointmentRepo->beginTransaction();
-
-        /** @var CustomerBooking $booking */
-        foreach ($appointment->getBookings()->getItems() as $booking) {
-            $booking->setChangedStatus(new BooleanValueObject(true));
-        }
-
-        $appointmentsDateTimes = $command->getField('recurring') ? DateTimeService::getSortedDateTimeStrings(
-            array_merge(
-                [$appointmentData['bookingStart']],
-                array_column($command->getField('recurring'), 'bookingStart')
-            )
-        ) : [$appointmentData['bookingStart']];
-
-        if (!$appointmentAS->canBeBooked(
-            $appointment,
-            false,
-            DateTimeService::getCustomDateTimeObject($appointmentsDateTimes[0]),
-            DateTimeService::getCustomDateTimeObject($appointmentsDateTimes[sizeof($appointmentsDateTimes) - 1])
-        )) {
+        try {
+            $appointmentAS->addOrEditAppointment(
+                $appointment,
+                $existingAppointment,
+                $service,
+                $appointmentData['bookings'],
+                $paymentData
+            );
+        } catch (CustomerBookedException $e) {
             $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage(FrontendStrings::getCommonStrings()['package_booking_unavailable']);
+            $result->setMessage($e->getMessage());
+            $result->setData(
+                [
+                    'customerAlreadyBooked' => true
+                ]
+            );
+
+            return $result;
+        } catch (BookingUnavailableException $e) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage($e->getMessage());
             $result->setData(
                 [
                     'timeSlotUnavailable' => true
@@ -195,16 +201,21 @@ class AddAppointmentCommandHandler extends CommandHandler
             return $result;
         }
 
-        if ($existingAppointment === null) {
-            $appointmentAS->add($appointment, $service, $paymentData, true);
-        } else {
-            $appointmentAS->updateExistingAppointment(
-                $appointment,
-                $existingAppointment,
-                $service,
-                $paymentData
-            );
+        if ($existingAppointment !== null) {
+            $existingAppointmentId = $existingAppointment->getId()->getValue();
+            
+            $ignoredData[$existingAppointmentId] = [
+                'status'      => $existingAppointment->getStatus()->getValue(),
+                'bookingsIds' => [],
+            ];
+
+            /** @var CustomerBooking $booking */
+            foreach ($existingAppointment->getBookings()->getItems() as $booking) {
+                $ignoredData[$existingAppointmentId]['bookingsIds'][$booking->getId()->getValue()] = true;
+            }
         }
+
+        $error = false;
 
         $recurringAppointments = [];
 
@@ -229,51 +240,110 @@ class AddAppointmentCommandHandler extends CommandHandler
 
             $appointmentAS->convertTime($recurringAppointmentData);
 
-            /** @var Appointment $recurringAppointment */
-            $recurringAppointment = $appointmentAS->build($recurringAppointmentData, $service);
-
             /** @var Appointment $existingRecurringAppointment */
-            $existingRecurringAppointment = $appointmentAS->getFreeAlreadyBookedAppointment($recurringAppointmentData);
+            $existingRecurringAppointment = $appointmentAS->getAlreadyBookedAppointment($recurringAppointmentData, []);
 
-            /** @var CustomerBooking $booking */
-            foreach ($recurringAppointment->getBookings()->getItems() as $booking) {
-                $booking->setChangedStatus(new BooleanValueObject(true));
-            }
+            /** @var Appointment $recurringAppointment */
+            $recurringAppointment = $appointmentAS->build(
+                $existingRecurringAppointment ? $existingRecurringAppointment->toArray() : $recurringAppointmentData,
+                $service
+            );
 
-            if (!$appointmentAS->canBeBooked(
-                $recurringAppointment,
-                false,
-                DateTimeService::getCustomDateTimeObject($appointmentsDateTimes[0]),
-                DateTimeService::getCustomDateTimeObject($appointmentsDateTimes[sizeof($appointmentsDateTimes) - 1])
-            )) {
-                $appointmentAS->delete($appointment);
-
-                foreach ($recurringAppointments as $savedRecurringAppointment) {
-                    $appointmentAS->delete(
-                        $appointmentAS->build($savedRecurringAppointment[Entities::APPOINTMENT], $service)
+            if ($existingRecurringAppointment && $recurringAppointmentData['internalNotes']) {
+                if ($existingRecurringAppointment->getInternalNotes() &&
+                    $existingRecurringAppointment->getInternalNotes()->getValue()
+                ) {
+                    $recurringAppointment->setInternalNotes(
+                        new Description(
+                            $existingRecurringAppointment->getInternalNotes()->getValue() .
+                            PHP_EOL .
+                            PHP_EOL .
+                            $recurringAppointmentData['internalNotes']
+                        )
+                    );
+                } else {
+                    $recurringAppointment->setInternalNotes(
+                        new Description(
+                            $recurringAppointmentData['internalNotes']
+                        )
                     );
                 }
+            }
 
+            try {
+                $appointmentAS->addOrEditAppointment(
+                    $recurringAppointment,
+                    $existingRecurringAppointment,
+                    $service,
+                    $recurringAppointmentData['bookings'],
+                    $paymentData
+                );
+            } catch (CustomerBookedException $e) {
                 $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setMessage(FrontendStrings::getCommonStrings()['time_slot_unavailable']);
+                $result->setMessage($e->getMessage());
+                $result->setData(
+                    [
+                        'customerAlreadyBooked' => true
+                    ]
+                );
+
+                $error = true;
+            } catch (BookingUnavailableException $e) {
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage($e->getMessage());
                 $result->setData(
                     [
                         'timeSlotUnavailable' => true
                     ]
                 );
 
+                $error = true;
+            }
+
+            if ($error) {
+                $appointmentAS->delete($appointment, $ignoredData);
+
+                if ($appointment->getId() &&
+                    $appointment->getId()->getValue() &&
+                    !empty($ignoredData[$appointment->getId()->getValue()])
+                ) {
+                    $appointmentRepo->updateFieldById(
+                        $appointment->getId()->getValue(),
+                        $ignoredData[$appointment->getId()->getValue()]['status'],
+                        'status'
+                    );
+                }
+
+                foreach ($recurringAppointments as $savedRecurringAppointment) {
+                    $appointmentAS->delete(
+                        $appointmentAS->build($savedRecurringAppointment[Entities::APPOINTMENT], $service),
+                        $ignoredData
+                    );
+
+                    if (!empty($ignoredData[$savedRecurringAppointment[Entities::APPOINTMENT]['id']])) {
+                        $appointmentRepo->updateFieldById(
+                            $savedRecurringAppointment[Entities::APPOINTMENT]['id'],
+                            $ignoredData[$savedRecurringAppointment[Entities::APPOINTMENT]['id']]['status'],
+                            'status'
+                        );
+                    }
+                }
+
                 return $result;
             }
 
-            if ($existingRecurringAppointment === null) {
-                $appointmentAS->add($recurringAppointment, $service, $paymentData, true);
-            } else {
-                $appointmentAS->updateExistingAppointment(
-                    $recurringAppointment,
-                    $existingRecurringAppointment,
-                    $service,
-                    $paymentData
-                );
+            if ($existingRecurringAppointment !== null) {
+                $existingAppointmentId = $existingRecurringAppointment->getId()->getValue();
+                
+                $ignoredData[$existingAppointmentId] = [
+                    'status'      => $existingRecurringAppointment->getStatus()->getValue(),
+                    'bookingsIds' => [],
+                ];
+
+                /** @var CustomerBooking $booking */
+                foreach ($existingRecurringAppointment->getBookings()->getItems() as $booking) {
+                    $ignoredData[$existingAppointmentId]['bookingsIds'][$booking->getId()->getValue()] = true;
+                }
             }
 
             $recurringAppointments[] = [

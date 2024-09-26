@@ -67,7 +67,7 @@ add_shortcode( 'colibri_print_menu', function ( $attrs ) {
 	colibri_print_menu( $merged_attrs );
 	$content = ob_get_clean();
 
-	return wp_kses_post($content);
+	return $content;
 } );
 
 function colibri_theme_location_menu_is_empty( $theme_location ) {
@@ -124,9 +124,13 @@ function colibri_print_menu( $attrs, $walker = '' ) {
         'fallback_cb'     => "\\ExtendBuilder\\colibri_nomenu_fallback",
         'walker'          => $walker,
     );
+
+	
+
     if($attrs['depth'] !== '0') {
-        $args['depth'] = $attrs['depth'];
+		 $args['depth'] = $attrs['depth'];
     }
+
 	wp_nav_menu( $args );
 
 
@@ -169,13 +173,19 @@ function colibri_nomenu_fallback() {
 
 	add_filter( 'the_title', "ExtendBuilder\colibri_menu_add_first_level_menu_icons", 10, 2 );
 
-	$menu = wp_page_menu( array(
+	$menu_args = array(
 		"menu_class" => 'colibri-menu-container',
 		'before'     => '<ul class="' . esc_attr( implode( " ", $drop_down_menu_classes ) ) . '">',
 		'after'      => apply_filters( 'colibri_nomenu_after', '' ) . "</ul>",
-		'walker'     => $walker,
-		'depth'      => $attrs['depth'],
-	) );
+		'walker'     => $walker
+	);
+
+	if($attrs['depth'] !== '0') {
+		$menu_args['depth'] = $attrs['depth'];
+   	}
+
+
+	$menu = wp_page_menu($menu_args);
 
 	remove_filter( 'the_title', "ExtendBuilder\colibri_menu_add_first_level_menu_icons" );
 

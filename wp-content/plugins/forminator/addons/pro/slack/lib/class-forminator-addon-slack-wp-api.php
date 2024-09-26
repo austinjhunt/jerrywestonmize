@@ -1,11 +1,22 @@
 <?php
 /**
+ * Forminator Slack API
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Slack_Wp_Api
  */
 class Forminator_Slack_Wp_Api {
 
 	const AUTHORIZE_URL = 'https://slack.com/oauth/authorize';
 
+	/**
+	 * OAuth scopes
+	 *
+	 * @var array
+	 */
 	public static $oauth_scopes
 		= array(
 			'channels:read',
@@ -54,6 +65,11 @@ class Forminator_Slack_Wp_Api {
 	 */
 	private $_last_url_request = '';
 
+	/**
+	 * Token
+	 *
+	 * @var array
+	 */
 	private $_token = '';
 
 	/**
@@ -61,12 +77,12 @@ class Forminator_Slack_Wp_Api {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param $_token
+	 * @param string $_token Token.
 	 *
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function __construct( $_token ) {
-		//prerequisites
+		// prerequisites.
 		if ( ! $_token ) {
 			throw new Forminator_Integration_Exception( esc_html__( 'Missing required Token', 'forminator' ) );
 		}
@@ -79,10 +95,9 @@ class Forminator_Slack_Wp_Api {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param $_token
+	 * @param string $_token Token.
 	 *
 	 * @return Forminator_Slack_Wp_Api|null
-	 * @throws Forminator_Integration_Exception
 	 */
 	public static function get_instance( $_token ) {
 		if ( ! isset( self::$_instances[ md5( $_token ) ] ) ) {
@@ -97,7 +112,7 @@ class Forminator_Slack_Wp_Api {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param $user_agent
+	 * @param string $user_agent User agent.
 	 *
 	 * @return string
 	 */
@@ -121,12 +136,12 @@ class Forminator_Slack_Wp_Api {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param string $verb
-	 * @param        $path
-	 * @param array  $args
+	 * @param string $verb HTTP Request type.
+	 * @param string $path Path.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function request( $verb, $path, $args = array() ) {
 		// Adding extra user agent for wp remote request.
@@ -214,14 +229,20 @@ class Forminator_Slack_Wp_Api {
 				}
 
 				if ( 404 === $status_code ) {
-					throw new Forminator_Integration_Exception( sprintf(
+					throw new Forminator_Integration_Exception(
+						sprintf(
 						/* translators: %s: Error message */
-						esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
+							esc_html__( 'Failed to process request : %s', 'forminator' ),
+							esc_html( $msg )
+						)
 					);
 				}
-				throw new Forminator_Integration_Exception( sprintf(
-				/* translators: %s: Error message */
-					esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
+				throw new Forminator_Integration_Exception(
+					sprintf(
+					/* translators: %s: Error message */
+						esc_html__( 'Failed to process request : %s', 'forminator' ),
+						esc_html( $msg )
+					)
 				);
 			}
 		}
@@ -236,9 +257,12 @@ class Forminator_Slack_Wp_Api {
 				if ( isset( $res->error ) ) {
 					$msg = $res->error;
 				}
-				throw new Forminator_Integration_Exception( sprintf(
+				throw new Forminator_Integration_Exception(
+					sprintf(
 					/* translators: %s: Error message */
-					esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $msg ) )
+						esc_html__( 'Failed to process request : %s', 'forminator' ),
+						esc_html( $msg )
+					)
 				);
 			}
 		}
@@ -261,12 +285,13 @@ class Forminator_Slack_Wp_Api {
 	}
 
 	/**
-	 * @param       $code
-	 * @param       $redirect_uri
-	 * @param array $args
+	 * Get access token
+	 *
+	 * @param string $code Request code.
+	 * @param string $redirect_uri Redirect URI.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_access_token( $code, $redirect_uri, $args = array() ) {
 		$default_args = array(
@@ -288,10 +313,9 @@ class Forminator_Slack_Wp_Api {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param array $args
+	 * @param array $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_users_list( $args = array() ) {
 		$default_args = array(
@@ -312,10 +336,9 @@ class Forminator_Slack_Wp_Api {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param array $args
+	 * @param array $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_channels_list( $args = array() ) {
 		$default_args = array(
@@ -338,17 +361,16 @@ class Forminator_Slack_Wp_Api {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param array $args
+	 * @param array $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_groups_list( $args = array() ) {
 		$default_args = array(
 			'exclude_archived' => true,
 			'exclude_members'  => true,
 			'limit'            => 100,
-			'types'            => 'private_channel'
+			'types'            => 'private_channel',
 		);
 
 		$args = array_merge( $default_args, $args );
@@ -365,12 +387,11 @@ class Forminator_Slack_Wp_Api {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param       $channel
-	 * @param       $text
-	 * @param array $args
+	 * @param string $channel Post Channel.
+	 * @param string $text Text.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function chat_post_message( $channel, $text, $args = array() ) {
 		$default_args = array(
@@ -392,12 +413,11 @@ class Forminator_Slack_Wp_Api {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param       $channel
-	 * @param       $chat_ts
-	 * @param array $args
+	 * @param string $channel Channel.
+	 * @param string $chat_ts Chat ts.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function chat_delete( $channel, $chat_ts, $args = array() ) {
 		$default_args = array(

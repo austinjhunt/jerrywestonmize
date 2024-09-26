@@ -1,10 +1,14 @@
 <?php
+/**
+ * Forminator Trello poll hooks
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Trello_Quiz_Hooks
  *
  * @since 1.6.2
- *
  */
 class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
@@ -15,7 +19,7 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -38,10 +42,11 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param string $connection_id
-	 * @param array  $submitted_data
-	 * @param array  $connection_settings
-	 * @param array  $current_entry_fields
+	 * @param string      $connection_id Connection Id.
+	 * @param array       $submitted_data Submitted data.
+	 * @param array       $connection_settings Connection settings.
+	 * @param array       $current_entry_fields Form entry fields.
+	 * @param null|object $entry Entry instance.
 	 *
 	 * @return array `is_sent` true means its success send data to Trello, false otherwise
 	 */
@@ -52,10 +57,10 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 		$quiz_id                = $this->module_id;
 		$quiz_settings_instance = $this->settings_instance;
 
-		//check required fields
+		// check required fields.
 		try {
-			$api  = $this->addon->get_api();
-			$args = array();
+			$api     = $this->addon->get_api();
+			$args    = array();
 			$entries = null;
 
 			$quiz_settings = $this->settings_instance->get_quiz_settings();
@@ -72,7 +77,6 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 				$card_name = $connection_settings['card_name'];
 				// disable all_fields here.
 				$card_name = forminator_replace_variables( $card_name, $quiz_id, $entry );
-				// {quizname_replace}.
 				$card_name = str_ireplace( '{quiz_name}', forminator_get_name_from_model( $this->module ), $card_name );
 
 				if ( isset( $quiz_settings['hasLeads'] ) && $quiz_settings['hasLeads'] ) {
@@ -229,7 +233,7 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	/**
 	 * Special Replacer `{quiz_answer}` to markdown with Trello Flavour
 	 *
-	 * @param array $quiz_entry_fields
+	 * @param array $quiz_entry_fields Quiz entry fields.
 	 *
 	 * @return string
 	 */
@@ -249,14 +253,14 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 							$markdown .= '###' . $question . "\n";
 							$markdown .= $answer . "\n";
 							$markdown .= esc_html__( 'Correct : ', 'forminator' )
-							             . '**' . ( $is_correct ? esc_html__( 'Yes', 'forminator' ) : esc_html__( 'No', 'forminator' ) ) . '**'
-							             . "\n";
+										. '**' . ( $is_correct ? esc_html__( 'Yes', 'forminator' ) : esc_html__( 'No', 'forminator' ) ) . '**'
+										. "\n";
 						}
 					} elseif ( 'nowrong' === $this->module->quiz_type ) {
 						if ( isset( $quiz_entry['value'][0] )
-						     && is_array( $quiz_entry['value'][0] )
-						     && isset( $quiz_entry['value'][0]['value'] )
-						     && is_array( $quiz_entry['value'][0]['value'] ) ) {
+							&& is_array( $quiz_entry['value'][0] )
+							&& isset( $quiz_entry['value'][0]['value'] )
+							&& is_array( $quiz_entry['value'][0]['value'] ) ) {
 
 							$quiz_entry = $quiz_entry['value'][0]['value'];
 
@@ -297,7 +301,7 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param array $quiz_entry_fields
+	 * @param array $quiz_entry_fields Quiz entry fields.
 	 *
 	 * @return string
 	 */
@@ -314,31 +318,31 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 						foreach ( $quiz_entry['value'] as $data ) {
 							$is_correct = isset( $data['isCorrect'] ) ? $data['isCorrect'] : false;
 							if ( $is_correct ) {
-								$total_correct ++;
+								++$total_correct;
 							}
-							$total_answers ++;
+							++$total_answers;
 						}
 
 						$markdown .= '##' . esc_html__( 'Quiz Result', 'forminator' ) . "\n";
 						$markdown .= esc_html__( 'Correct Answers : ', 'forminator' )
-						             . '**' . $total_correct . '**'
-						             . "\n";
+									. '**' . $total_correct . '**'
+									. "\n";
 						$markdown .= esc_html__( 'Total Answers : ', 'forminator' )
-						             . '**' . $total_answers . '**'
-						             . "\n";
+									. '**' . $total_answers . '**'
+									. "\n";
 
 					} elseif ( 'nowrong' === $this->module->quiz_type ) {
 						if ( isset( $quiz_entry['value'][0] )
-						     && is_array( $quiz_entry['value'][0] )
-						     && isset( $quiz_entry['value'][0]['value'] )
-						     && is_array( $quiz_entry['value'][0]['value'] ) ) {
+							&& is_array( $quiz_entry['value'][0] )
+							&& isset( $quiz_entry['value'][0]['value'] )
+							&& is_array( $quiz_entry['value'][0]['value'] ) ) {
 
 							$quiz_entry     = $quiz_entry['value'][0]['value'];
 							$nowrong_result = ( isset( $quiz_entry['result'] ) && isset( $quiz_entry['result']['title'] ) ) ? $quiz_entry['result']['title'] : '';
 
 							$markdown .= '##' . esc_html__( 'Quiz Result', 'forminator' ) . "\n";
 							$markdown .= '**' . $nowrong_result . '**'
-							             . "\n";
+										. "\n";
 
 						}
 					}
@@ -362,5 +366,4 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
 		return $markdown;
 	}
-
 }

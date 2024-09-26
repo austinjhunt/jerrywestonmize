@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * The Addon Default Holder.
+ *
+ * @package    Forminator
+ */
 
 /**
  * Class Forminator_Integration_Default_Holder
@@ -9,21 +13,61 @@
  */
 class Forminator_Integration_Default_Holder extends Forminator_Integration {
 
+	/**
+	 * Forminator_Integration_Default_Holder instance
+	 *
+	 * @var Forminator_Integration_Default_Holder
+	 */
 	protected static $instance = null;
 
-	protected $_slug                   = '';
-	protected $_version                = '1.0';
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
+	protected $_slug = '';
+
+	/**
+	 * Version
+	 *
+	 * @var string
+	 */
+	protected $_version = '1.0';
+
+	/**
+	 * Min Forminator Version
+	 *
+	 * @var integer
+	 */
 	protected $_min_forminator_version = PHP_INT_MAX; // make it un-activable.
-	protected $_short_title            = '';
-	protected $_title                  = '';
-	protected $_url                    = '';
+
+	/**
+	 * Short title
+	 *
+	 * @var string
+	 */
+	protected $_short_title = '';
+
+	/**
+	 * Title
+	 *
+	 * @var string
+	 */
+	protected $_title = '';
+
+	/**
+	 * URL
+	 *
+	 * @var string
+	 */
+	protected $_url = '';
 
 	/**
 	 * Dynamically set fields form array
 	 *
 	 * @since 1.1
 	 *
-	 * @param $properties
+	 * @param array $properties Properties.
 	 *
 	 * @return $this
 	 */

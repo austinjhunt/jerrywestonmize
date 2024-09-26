@@ -1,9 +1,13 @@
 <?php
 /**
+ * Forminator Webhook form settings
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Webhook_Form_Settings
  * Handle how form settings displayed and saved
- *
- *
  */
 class Forminator_Webhook_Form_Settings extends Forminator_Integration_Form_Settings {
 	use Forminator_Webhook_Settings_Trait;
@@ -11,9 +15,7 @@ class Forminator_Webhook_Form_Settings extends Forminator_Integration_Form_Setti
 	/**
 	 * Setup webhook url
 	 *
-	 *
-	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return array
 	 */
@@ -144,13 +146,10 @@ class Forminator_Webhook_Form_Settings extends Forminator_Integration_Form_Setti
 			'has_errors'   => ( ! empty( $error_message ) || ! empty( $input_error_messages ) ),
 			'notification' => $notification,
 		);
-
 	}
 
 	/**
 	 * Build seample data form current fields
-	 *
-	 *
 	 *
 	 * @return array
 	 */

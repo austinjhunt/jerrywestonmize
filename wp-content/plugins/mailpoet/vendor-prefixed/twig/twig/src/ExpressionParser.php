@@ -267,12 +267,12 @@ class ExpressionParser
  9,
  '['
  )) {
- $node = $this->parseArrayExpression();
+ $node = $this->parseSequenceExpression();
  } elseif ($token->test(
  9,
  '{'
  )) {
- $node = $this->parseHashExpression();
+ $node = $this->parseMappingExpression();
  } elseif ($token->test(
  8,
  '='
@@ -316,11 +316,16 @@ class ExpressionParser
  }
  public function parseArrayExpression()
  {
+ trigger_deprecation('twig/twig', '3.11', 'Calling "%s()" is deprecated, use "parseSequenceExpression()" instead.', __METHOD__);
+ return $this->parseSequenceExpression();
+ }
+ public function parseSequenceExpression()
+ {
  $stream = $this->parser->getStream();
  $stream->expect(
  9,
  '[',
- 'An array element was expected'
+ 'A sequence element was expected'
  );
  $node = new ArrayExpression([], $stream->getCurrent()->getLine());
  $first = \true;
@@ -332,7 +337,7 @@ class ExpressionParser
  $stream->expect(
  9,
  ',',
- 'An array element must be followed by a comma'
+ 'A sequence element must be followed by a comma'
  );
  // trailing ,?
  if ($stream->test(
@@ -357,17 +362,22 @@ class ExpressionParser
  $stream->expect(
  9,
  ']',
- 'An opened array is not properly closed'
+ 'An opened sequence is not properly closed'
  );
  return $node;
  }
  public function parseHashExpression()
  {
+ trigger_deprecation('twig/twig', '3.11', 'Calling "%s()" is deprecated, use "parseMappingExpression()" instead.', __METHOD__);
+ return $this->parseMappingExpression();
+ }
+ public function parseMappingExpression()
+ {
  $stream = $this->parser->getStream();
  $stream->expect(
  9,
  '{',
- 'A hash element was expected'
+ 'A mapping element was expected'
  );
  $node = new ArrayExpression([], $stream->getCurrent()->getLine());
  $first = \true;
@@ -379,7 +389,7 @@ class ExpressionParser
  $stream->expect(
  9,
  ',',
- 'A hash value must be followed by a comma'
+ 'A mapping value must be followed by a comma'
  );
  // trailing ,?
  if ($stream->test(
@@ -399,7 +409,7 @@ class ExpressionParser
  $node->addElement($value);
  continue;
  }
- // a hash key can be:
+ // a mapping key can be:
  //
  // * a number -- 12
  // * a string -- 'a'
@@ -428,12 +438,12 @@ class ExpressionParser
  $key = $this->parseExpression();
  } else {
  $current = $stream->getCurrent();
- throw new SyntaxError(\sprintf('A hash key must be a quoted string, a number, a name, or an expression enclosed in parentheses (unexpected token "%s" of value "%s".', Token::typeToEnglish($current->getType()), $current->getValue()), $current->getLine(), $stream->getSourceContext());
+ throw new SyntaxError(\sprintf('A mapping key must be a quoted string, a number, a name, or an expression enclosed in parentheses (unexpected token "%s" of value "%s".', Token::typeToEnglish($current->getType()), $current->getValue()), $current->getLine(), $stream->getSourceContext());
  }
  $stream->expect(
  9,
  ':',
- 'A hash key must be followed by a colon (:)'
+ 'A mapping key must be followed by a colon (:)'
  );
  $value = $this->parseExpression();
  $node->addElement($value, $key);
@@ -441,7 +451,7 @@ class ExpressionParser
  $stream->expect(
  9,
  '}',
- 'An opened hash is not properly closed'
+ 'An opened mapping is not properly closed'
  );
  return $node;
  }
@@ -656,7 +666,7 @@ class ExpressionParser
  if ($definition) {
  $value = $this->parsePrimaryExpression();
  if (!$this->checkConstantExpression($value)) {
- throw new SyntaxError('A default value for an argument must be a constant (a boolean, a string, a number, or an array).', $token->getLine(), $stream->getSourceContext());
+ throw new SyntaxError('A default value for an argument must be a constant (a boolean, a string, a number, a sequence, or a mapping).', $token->getLine(), $stream->getSourceContext());
  }
  } else {
  $value = $this->parseExpression(0, $allowArrow);
@@ -781,15 +791,12 @@ class ExpressionParser
  if ($test->isDeprecated()) {
  $stream = $this->parser->getStream();
  $message = \sprintf('Twig Test "%s" is deprecated', $test->getName());
- if ($test->getDeprecatedVersion()) {
- $message .= \sprintf(' since version %s', $test->getDeprecatedVersion());
- }
  if ($test->getAlternative()) {
  $message .= \sprintf('. Use "%s" instead', $test->getAlternative());
  }
  $src = $stream->getSourceContext();
  $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $stream->getCurrent()->getLine());
- @\trigger_error($message, \E_USER_DEPRECATED);
+ trigger_deprecation($test->getDeprecatingPackage(), $test->getDeprecatedVersion(), $message);
  }
  return $test->getNodeClass();
  }
@@ -802,15 +809,12 @@ class ExpressionParser
  }
  if ($function->isDeprecated()) {
  $message = \sprintf('Twig Function "%s" is deprecated', $function->getName());
- if ($function->getDeprecatedVersion()) {
- $message .= \sprintf(' since version %s', $function->getDeprecatedVersion());
- }
  if ($function->getAlternative()) {
  $message .= \sprintf('. Use "%s" instead', $function->getAlternative());
  }
  $src = $this->parser->getStream()->getSourceContext();
  $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
- @\trigger_error($message, \E_USER_DEPRECATED);
+ trigger_deprecation($function->getDeprecatingPackage(), $function->getDeprecatedVersion(), $message);
  }
  return $function->getNodeClass();
  }
@@ -823,15 +827,12 @@ class ExpressionParser
  }
  if ($filter->isDeprecated()) {
  $message = \sprintf('Twig Filter "%s" is deprecated', $filter->getName());
- if ($filter->getDeprecatedVersion()) {
- $message .= \sprintf(' since version %s', $filter->getDeprecatedVersion());
- }
  if ($filter->getAlternative()) {
  $message .= \sprintf('. Use "%s" instead', $filter->getAlternative());
  }
  $src = $this->parser->getStream()->getSourceContext();
  $message .= \sprintf(' in %s at line %d.', $src->getPath() ?: $src->getName(), $line);
- @\trigger_error($message, \E_USER_DEPRECATED);
+ trigger_deprecation($filter->getDeprecatingPackage(), $filter->getDeprecatedVersion(), $message);
  }
  return $filter->getNodeClass();
  }

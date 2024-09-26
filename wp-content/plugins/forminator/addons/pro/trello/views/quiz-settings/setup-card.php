@@ -1,26 +1,36 @@
 <?php
+/**
+ * Template for setup card
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
-	'card_name'			  => '',
-	'card_name_error'		=> '',
-	'card_description'	   => '',
+	'card_name'              => '',
+	'card_name_error'        => '',
+	'card_description'       => '',
 	'card_description_error' => '',
-	'position'			   => '',
-	'position_error'		 => '',
-	'positions'			  => array(),
-	'label_ids'			  => array(),
-	'label_ids_error'		=> '',
-	'labels'				 => array(),
-	'member_ids'			 => array(),
-	'member_ids_error'	   => '',
-	'members'				=> array(),
-	'name_fields'			=> array(),
-	'desc_fields'			=> array(),
-	'error_message'		  => '',
-	'list_name'			  => '',
-	'lead_fields'			=> array(),
+	'position'               => '',
+	'position_error'         => '',
+	'positions'              => array(),
+	'label_ids'              => array(),
+	'label_ids_error'        => '',
+	'labels'                 => array(),
+	'member_ids'             => array(),
+	'member_ids_error'       => '',
+	'members'                => array(),
+	'name_fields'            => array(),
+	'desc_fields'            => array(),
+	'error_message'          => '',
+	'list_name'              => '',
+	'lead_fields'            => array(),
 );
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -35,7 +45,10 @@ foreach ( $template_vars as $key => $val ) {
 	<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Set up how you want your cards to be created in Trello.', 'forminator' ); ?></p>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>
@@ -60,11 +73,15 @@ foreach ( $template_vars as $key => $val ) {
 				<?php foreach ( $vars['name_fields'] as $key => $field ) : ?>
 					<option value="{<?php echo esc_attr( $key ); ?>}" data-content="{<?php echo esc_attr( $key ); ?>}"><?php echo esc_html( $field ); ?></option>
 				<?php endforeach; ?>
-				<?php if ( ! empty( $vars['lead_fields'] ) ) :
-					foreach ( $vars['lead_fields'] as $field ) : ?>
-						<option value="{<?php echo esc_attr( $field['element_id'] ); ?>}" data-content="{<?php echo esc_attr( $field['element_id'] ); ?>}"><?php echo esc_html( strip_tags( $field['field_label'] ) ); ?></option>
-					<?php endforeach;
-				endif; ?>
+				<?php
+				if ( ! empty( $vars['lead_fields'] ) ) :
+					foreach ( $vars['lead_fields'] as $field ) :
+						?>
+						<option value="{<?php echo esc_attr( $field['element_id'] ); ?>}" data-content="{<?php echo esc_attr( $field['element_id'] ); ?>}"><?php echo esc_html( wp_strip_all_tags( $field['field_label'] ) ); ?></option>
+						<?php
+					endforeach;
+				endif;
+				?>
 			</select>
 
 		</div>
@@ -87,11 +104,15 @@ foreach ( $template_vars as $key => $val ) {
 				<?php foreach ( $vars['desc_fields'] as $key => $field ) : ?>
 					<option value="{<?php echo esc_attr( $key ); ?>}" data-content="{<?php echo esc_attr( $key ); ?>}"><?php echo esc_html( $field ); ?></option>
 				<?php endforeach; ?>
-				<?php if ( ! empty( $vars['lead_fields'] ) ) :
-					foreach ( $vars['lead_fields'] as $field ) : ?>
-						<option value="{<?php echo esc_attr( $field['element_id'] ); ?>}" data-content="{<?php echo esc_attr( $field['element_id'] ); ?>}"><?php echo esc_html( strip_tags( $field['field_label'] ) ); ?></option>
-					<?php endforeach;
-				endif; ?>
+				<?php
+				if ( ! empty( $vars['lead_fields'] ) ) :
+					foreach ( $vars['lead_fields'] as $field ) :
+						?>
+						<option value="{<?php echo esc_attr( $field['element_id'] ); ?>}" data-content="{<?php echo esc_attr( $field['element_id'] ); ?>}"><?php echo esc_html( wp_strip_all_tags( $field['field_label'] ) ); ?></option>
+						<?php
+					endforeach;
+				endif;
+				?>
 			</select>
 
 		</div>
@@ -104,7 +125,7 @@ foreach ( $template_vars as $key => $val ) {
 			<?php
 			printf(
 			/* Translators: 1. Opening <a> tag with link to the Trello article , 2. closing <a> tag. */
-				esc_html__( 'Markdown supported for card description. Find complete guide %shere%s', 'forminator' ),
+				esc_html__( 'Markdown supported for card description. Find complete guide %1$shere%2$s', 'forminator' ),
 				'<a href="https://help.trello.com/article/821-using-markdown-in-trello" target="_blank">',
 				'</a>'
 			);
@@ -125,7 +146,7 @@ foreach ( $template_vars as $key => $val ) {
 					id="due_date"
 					class="sui-form-control"
 					name="due_date"
-                    autocomplete="off"
+					autocomplete="off"
 					placeholder="<?php esc_attr_e( 'Select a due date', 'forminator' ); ?>"
 					value="<?php echo esc_attr( $vars['due_date'] ); ?>"
 				/>

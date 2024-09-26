@@ -1,7 +1,13 @@
 <?php
-/** @noinspection HtmlUnknownTarget */
+/**
+ * Forminator Addon Mailjet.
+ *
+ * @package Forminator
+ */
 
-require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-mailjet-wp-api.php';
+// @noinspection HtmlUnknownTarget.
+
+require_once __DIR__ . '/lib/class-forminator-addon-mailjet-wp-api.php';
 
 /**
  * Class Forminator_Mailjet
@@ -17,26 +23,36 @@ class Forminator_Mailjet extends Forminator_Integration {
 	protected static $instance = null;
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	protected $_slug = 'mailjet';
 
 	/**
+	 * Mailjet version
+	 *
 	 * @var string
 	 */
 	protected $_version = FORMINATOR_ADDON_MAILJET_VERSION;
 
 	/**
+	 * Forminator minimum version
+	 *
 	 * @var string
 	 */
 	protected $_min_forminator_version = '1.28';
 
 	/**
+	 * Short title
+	 *
 	 * @var string
 	 */
 	protected $_short_title = 'Mailjet';
 
 	/**
+	 * Title
+	 *
 	 * @var string
 	 */
 	protected $_title = 'Mailjet';
@@ -49,6 +65,11 @@ class Forminator_Mailjet extends Forminator_Integration {
 	 */
 	private $_connected_account = array();
 
+	/**
+	 * Position
+	 *
+	 * @var int
+	 */
 	protected $_position = 3;
 
 	/**
@@ -60,7 +81,6 @@ class Forminator_Mailjet extends Forminator_Integration {
 		// late init to allow translation.
 		$this->_description    = esc_html__( 'Get awesome by your form.', 'forminator' );
 		$this->is_multi_global = true;
-
 	}
 
 	/**
@@ -101,6 +121,7 @@ class Forminator_Mailjet extends Forminator_Integration {
 	 * @param string $secret_key Secret key.
 	 *
 	 * @return bool
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	protected function validate_api_keys( $api_key, $secret_key ) {
 		try {
@@ -124,7 +145,8 @@ class Forminator_Mailjet extends Forminator_Integration {
 	/**
 	 * Get API Instance
 	 *
-	 * @param null $api_key
+	 * @param string|null $api_key API Key.
+	 * @param string|null $secret_key API secret Key.
 	 *
 	 * @return Forminator_Mailjet_Wp_Api|null
 	 */
@@ -192,7 +214,6 @@ class Forminator_Mailjet extends Forminator_Integration {
 		}
 
 		return $help;
-
 	}
 
 	/**
@@ -242,7 +263,6 @@ class Forminator_Mailjet extends Forminator_Integration {
 		}
 
 		return $myaccount;
-
 	}
 
 	/**
@@ -262,8 +282,8 @@ class Forminator_Mailjet extends Forminator_Integration {
 	/**
 	 * Wizard of configure_api_key
 	 *
-	 * @param     $submitted_data
-	 * @param int $form_id
+	 * @param array $submitted_data Submitted data.
+	 * @param int   $form_id Form Id.
 	 *
 	 * @return array
 	 */

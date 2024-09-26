@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template for setup connect
+ *
+ * @package Forminator
+ */
+
 // Defaults.
 $vars = array(
 	'error_message' => '',
@@ -7,7 +13,11 @@ $vars = array(
 
 $activate_description = esc_html__( 'Activate Webhook to start using it with your forms, quizzes, and polls.', 'forminator' );
 
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 } ?>
@@ -37,6 +47,7 @@ foreach ( $template_vars as $key => $val ) {
 
 <?php if ( ! empty( $vars['is_connected'] ) ) : ?>
 	<?php
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
 	echo Forminator_Admin::get_green_notice(
 		esc_html__(
 			'Webhook is already active.',
@@ -47,7 +58,10 @@ foreach ( $template_vars as $key => $val ) {
 <?php endif; ?>
 
 <?php if ( ! empty( $vars['error_message'] ) ) : ?>
-	<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+	<?php
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+		echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+	?>
 <?php endif; ?>
 
 <form>

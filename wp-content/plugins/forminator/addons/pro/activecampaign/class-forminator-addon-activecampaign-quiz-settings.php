@@ -1,5 +1,11 @@
 <?php
 /**
+ * The Activecampaign Quiz Settings.
+ *
+ * @package    Forminator
+ */
+
+/**
  * Class Forminator_Activecampaign_Quiz_Settings
  * Handle how quiz settings displayed and saved
  *

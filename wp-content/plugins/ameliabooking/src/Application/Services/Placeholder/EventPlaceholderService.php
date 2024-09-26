@@ -232,6 +232,7 @@ class EventPlaceholderService extends PlaceholderService
         $locationAddress     = '';
         $locationDescription = '';
         $locationPhone       = '';
+        $location            = null;
 
         if ($event['locationId']) {
             /** @var LocationRepository $locationRepository */
@@ -643,6 +644,21 @@ class EventPlaceholderService extends PlaceholderService
             $attendeeCode = $sendAttendeeCode;
         }
 
+        $timeZone = get_option('timezone_string');
+
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        if ($bookingKey !== null &&
+            $settingsService->getSetting('general', 'showClientTimeZone')
+        ) {
+            $info = !empty(!empty($event['bookings'][$bookingKey]['info']))
+                ? json_decode($event['bookings'][$bookingKey]['info'], true)
+                : null;
+
+            $timeZone = !empty($info['timeZone']) ? $info['timeZone'] : '';
+        }
+
         return array_merge(
             [
             'attendee_code'            => is_array($attendeeCode) ?  implode(', ', $attendeeCode) : substr($attendeeCode, 0, 5),
@@ -657,11 +673,14 @@ class EventPlaceholderService extends PlaceholderService
             'reservation_description'  => $eventDescription,
             'event_location'           => $locationName,
             'location_name'            => $locationName,
+            'location_latitude'        => $location && $location->getCoordinates() ? $location->getCoordinates()->getLatitude() : null,
+            'location_longitude'       => $location && $location->getCoordinates() ? $location->getCoordinates()->getLongitude() : null,
             'location_address'         => $locationAddress,
             'location_description'     => $locationDescription,
             'location_phone'           => $locationPhone,
             'event_period_date'        => $ulStartTag . implode('', $eventDateList) . $ulEndTag,
             'event_period_date_time'   => $ulStartTag . implode('', $eventDateTimeList) . $ulEndTag,
+            'time_zone'                => $timeZone,
             'lesson_space_url_date'       => count($eventLessonSpaceDateList) === 0 ?
                 '' : $ulStartTag . implode('', $eventLessonSpaceDateList) . $ulEndTag,
             'lesson_space_url_date_time'  => count($eventLessonSpaceDateTimeList) === 0 ?

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Hubspot form hooks
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Hubspot_Form_Hooks
@@ -14,7 +19,7 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -37,12 +42,13 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 *
 	 * @since 1.0 HubSpot Integration
 	 *
-	 * @param $connection_id
-	 * @param $submitted_data
-	 * @param $connection_settings
-	 * @param $form_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $form_entry_fields Form entry fields.
 	 *
-	 * @return array `is_sent` true means its success send data to HubSpot, false otherwise
+	 * @return array `is_sent` true means its success send data to HubSpot, false otherwise.
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function get_status_on_contact_sync( $connection_id, $submitted_data, $connection_settings, $form_entry_fields ) {
 		// initialize as null.
@@ -55,7 +61,7 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 		if ( empty( $connection_settings['name'] ) ) {
 			$connection_settings['name'] = esc_html__( 'HubSpot', 'forminator' );
 		}
-		// check required fields
+		// check required fields.
 		try {
 			$api  = $this->addon->get_api();
 			$args = array();
@@ -69,9 +75,12 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
 			$email_element_id = $connection_settings['fields_map']['email'];
 			if ( ! isset( $submitted_data[ $email_element_id ] ) || empty( $submitted_data[ $email_element_id ] ) ) {
-				throw new Forminator_Integration_Exception( sprintf(
-				/* translators: 1: Email field ID */
-					esc_html__( 'Email on element %1$s not found or not filled on submitted data.', 'forminator' ), $email_element_id )
+				throw new Forminator_Integration_Exception(
+					sprintf(
+					/* translators: 1: Email field ID */
+						esc_html__( 'Email on element %1$s not found or not filled on submitted data.', 'forminator' ),
+						$email_element_id
+					)
 				);
 			}
 			$email         = $submitted_data[ $email_element_id ];
@@ -147,17 +156,17 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 			);
 			$contact_id = $api->add_update_contact( $args );
 			// Add contact to contact list.
-			$toObjectId = null;
+			$to_object_id = null;
 			if ( ! empty( $contact_id ) && ! is_object( $contact_id ) && (int) $contact_id > 0 ) {
-				$toObjectId = $contact_id;
+				$to_object_id = $contact_id;
 
 				if ( ! empty( $list_id ) ) {
 					$api->add_to_contact_list( $contact_id, $args['email'], $list_id );
 				}
 			}
 
-			$create_ticket = isset( $connection_settings['create_ticket'] ) ? $connection_settings['create_ticket'] : '';
-			$fromObjectId  = null;
+			$create_ticket  = isset( $connection_settings['create_ticket'] ) ? $connection_settings['create_ticket'] : '';
+			$from_object_id = null;
 			if ( '1' === $create_ticket ) {
 				$ticket['pipeline_id']        = $connection_settings['pipeline_id'];
 				$ticket['status_id']          = $connection_settings['status_id'];
@@ -169,10 +178,10 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
 				$object_id = $api->create_ticket( $ticket );
 
-				if ( ! is_null( $toObjectId ) && ! is_object( $object_id ) && (int) $object_id > 0 ) {
-					$fromObjectId              = $object_id;
-					$associate['fromObjectId'] = $fromObjectId;
-					$associate['toObjectId']   = $toObjectId;
+				if ( ! is_null( $to_object_id ) && ! is_object( $object_id ) && (int) $object_id > 0 ) {
+					$from_object_id            = $object_id;
+					$associate['fromObjectId'] = $from_object_id;
+					$associate['toObjectId']   = $to_object_id;
 					$api->ticket_associate_contact( $associate );
 				}
 			}
@@ -191,8 +200,8 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				'data_sent'       => $api->get_last_data_sent(),
 				'data_received'   => $api->get_last_data_received(),
 				'url_request'     => $api->get_last_url_request(),
-				'contact_id'      => $toObjectId,
-				'ticket_id'       => $fromObjectId,
+				'contact_id'      => $to_object_id,
+				'ticket_id'       => $from_object_id,
 			);
 
 		} catch ( Forminator_Integration_Exception $e ) {
@@ -219,8 +228,8 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 *
 	 * @since 1.0 HubSpot Integration
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param  array                       $addon_meta_data
+	 * @param Forminator_Form_Entry_Model $entry_model Form Entry Model.
+	 * @param  array                       $addon_meta_data Addon meta data.
 	 *
 	 * @return bool
 	 */
@@ -342,6 +351,5 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 
 			return false;
 		}
-
 	}
 }

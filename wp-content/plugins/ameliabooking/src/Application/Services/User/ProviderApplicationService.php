@@ -318,7 +318,7 @@ class ProviderApplicationService
             $userId = $this->add($user);
 
             if ($fields['externalId'] === 0) {
-                $userAS->setWpUserIdForNewUser($userId, $user);
+                $userAS->setWpUserIdForNewUser($userId, $user, $fields['password']);
             }
 
             if (!empty($fields['password'])) {
@@ -1229,14 +1229,15 @@ class ProviderApplicationService
     /**
      * get provider by ID
      *
-     * @param int $providerId
+     * @param int  $providerId
+     * @param bool $fetchCalendars
      *
      * @return Provider
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function getProviderWithServicesAndSchedule($providerId)
+    public function getProviderWithServicesAndSchedule($providerId, $fetchCalendars = false)
     {
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
@@ -1251,7 +1252,12 @@ class ProviderApplicationService
         $services = $serviceRepository->getAllArrayIndexedById();
 
         /** @var Collection $providers */
-        $providers = $providerRepository->getWithSchedule(['providers' => [$providerId]]);
+        $providers = $providerRepository->getWithSchedule(
+            [
+                'providers'      => [$providerId],
+                'fetchCalendars' => $fetchCalendars,
+            ]
+        );
 
         /** @var Provider $provider */
         $provider = $providers->getItem($providerId);

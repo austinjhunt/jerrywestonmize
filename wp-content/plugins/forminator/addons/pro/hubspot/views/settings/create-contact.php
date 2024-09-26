@@ -1,5 +1,11 @@
 <?php
-// defaults
+/**
+ * Template for Create contact.
+ *
+ * @package Forminator
+ */
+
+// defaults.
 $vars = array(
 	'error_message' => '',
 	'name'          => '',
@@ -9,10 +15,14 @@ $vars = array(
 	'form_fields'   => array(),
 	'email_fields'  => array(),
 	'lists'         => array(),
-	'properties'    => array()
+	'properties'    => array(),
 );
-/** @var array $template_vars */
 
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -31,7 +41,10 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 	</p>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>
@@ -52,20 +65,26 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 			aria-labelledby="hubspot-list-id-label"
 			aria-describedby="hubspot-list-id-desc hubspot-list-id-error"
 			data-placeholder="<?php echo ( empty( $vars['lists'] ) ) ? esc_html_e( 'No static lists found on your HubSpot account', 'forminator' ) : esc_html_e( 'Select a list', 'forminator' ); ?>"
-			<?php if ( empty( $vars['lists'] ) ) { echo 'disabled'; } ?>
+			<?php
+			if ( empty( $vars['lists'] ) ) {
+				echo 'disabled'; }
+			?>
 		>
 
 			<option></option>
 
 			<?php
 			// Select a list.
-			if ( ! empty( $vars['lists'] ) ) { ?>
+			if ( ! empty( $vars['lists'] ) ) {
+				?>
 
 				<?php
-				foreach ( $vars['lists'] as $list_id => $list_name ) : ?>
+				foreach ( $vars['lists'] as $list_id => $list_name ) :
+					?>
 					<option value="<?php echo esc_attr( $list_id ); ?>" <?php selected( $vars['list_id'], $list_id ); ?>><?php echo esc_html( $list_name ); ?></option>
-				<?php
-				endforeach; ?>
+					<?php
+				endforeach;
+				?>
 
 			<?php } ?>
 
@@ -103,7 +122,8 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 			<?php
 			if ( ! empty( $vars['fields'] ) ) :
 
-				foreach ( $vars['fields'] as $key => $field_title ) : ?>
+				foreach ( $vars['fields'] as $key => $field_title ) :
+					?>
 
 					<tr>
 
@@ -134,36 +154,44 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 									<option value=""><?php esc_html_e( 'None', 'forminator' ); ?></option>
 									<?php
 									if ( ! empty( $forminator_fields ) ) :
-										foreach ( $forminator_fields as $forminator_field ) : ?>
+										foreach ( $forminator_fields as $forminator_field ) :
+											?>
 											<option value="<?php echo esc_attr( $forminator_field['element_id'] ); ?>"
 												<?php selected( $current_selected, $forminator_field['element_id'] ); ?>>
-												<?php echo esc_html( strip_tags( $forminator_field['field_label'] ) . ' | ' . $forminator_field['element_id'] ); ?>
+												<?php echo esc_html( wp_strip_all_tags( $forminator_field['field_label'] ) . ' | ' . $forminator_field['element_id'] ); ?>
 											</option>
-										<?php endforeach;
+											<?php
+										endforeach;
 									endif;
 									?>
 								</select>
 								<?php if ( ! empty( $current_error ) ) : ?>
 									<span class="sui-error-message"
-										  style="margin-top: 5px; margin-bottom: 5px;"><?php echo esc_html( $current_error ); ?></span>
+											style="margin-top: 5px; margin-bottom: 5px;"><?php echo esc_html( $current_error ); ?></span>
 								<?php endif; ?>
 							</div>
 						</td>
 					</tr>
-				<?php endforeach;
+					<?php
+				endforeach;
 			endif;
 			if ( ! empty( $custom_field_map ) ) {
-				foreach ( $custom_field_map as $custom=> $custom_field ) { ?>
+				foreach ( $custom_field_map as $custom => $custom_field ) {
+					?>
 					<tr class="custom-field" id="custom-field">
 						<td>
 							<div class="sui-form-field">
 								<select name=custom_property[]" data-search="true" class="sui-select sui-select-sm">
 									<option value=""><?php esc_html_e( 'None', 'forminator' ); ?></option>
-									<?php if ( ! empty( $vars['properties'] ) ) {
-										foreach ( $vars['properties'] as $p => $prop ) { ?>
+									<?php
+									if ( ! empty( $vars['properties'] ) ) {
+										foreach ( $vars['properties'] as $p => $prop ) {
+											?>
 											<option value="<?php echo esc_html( $p ); ?>" <?php selected( $custom, $p ); ?>><?php echo esc_html( $prop ); ?></option>
-										<?php }
-									} ?>
+											<?php
+										}
+									}
+									?>
 								</select>
 							</div>
 						</td>
@@ -175,11 +203,13 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 										<option value=""><?php esc_html_e( 'None', 'forminator' ); ?></option>
 										<?php
 										if ( ! empty( $forminator_fields ) ) :
-											foreach ( $forminator_fields as $forminator_field ) : ?>
+											foreach ( $forminator_fields as $forminator_field ) :
+												?>
 												<option value="<?php echo esc_attr( $forminator_field['element_id'] ); ?>" <?php selected( $custom_field, $forminator_field['element_id'] ); ?>>
-													<?php echo esc_html( strip_tags( $forminator_field['field_label'] ) . ' | ' . $forminator_field['element_id'] ); ?>
+													<?php echo esc_html( wp_strip_all_tags( $forminator_field['field_label'] ) . ' | ' . $forminator_field['element_id'] ); ?>
 												</option>
-											<?php endforeach;
+												<?php
+											endforeach;
 										endif;
 										?>
 									</select>
@@ -192,18 +222,24 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 							</div>
 						</td>
 					</tr>
-				<?php  }
-			} else { ?>
+					<?php
+				}
+			} else {
+				?>
 				<tr class="custom-field" id="custom-field" style="display: none;">
 					<td>
 						<div class="sui-form-field">
 							<select name="custom_property[]" class="sui-select sui-select-sm" data-search="true">
 								<option value=""><?php esc_html_e( 'None', 'forminator' ); ?></option>
-								<?php if ( ! empty( $vars['properties'] ) ) {
-									foreach ( $vars['properties'] as $p => $prop ) { ?>
+								<?php
+								if ( ! empty( $vars['properties'] ) ) {
+									foreach ( $vars['properties'] as $p => $prop ) {
+										?>
 										<option value="<?php echo esc_html( $p ); ?>"><?php echo esc_html( $prop ); ?></option>
-									<?php }
-								} ?>
+										<?php
+									}
+								}
+								?>
 							</select>
 						</div>
 					</td>
@@ -216,11 +252,13 @@ $custom_field_map = isset( $vars['custom_fields_map'] ) ? array_filter( $vars['c
 									<option value=""><?php esc_html_e( 'None', 'forminator' ); ?></option>
 									<?php
 									if ( ! empty( $forminator_fields ) ) :
-										foreach ( $forminator_fields as $forminator_field ) : ?>
+										foreach ( $forminator_fields as $forminator_field ) :
+											?>
 											<option value="<?php echo esc_attr( $forminator_field['element_id'] ); ?>">
-												<?php echo esc_html( strip_tags( $forminator_field['field_label'] ) . ' | ' . $forminator_field['element_id'] ); ?>
+												<?php echo esc_html( wp_strip_all_tags( $forminator_field['field_label'] ) . ' | ' . $forminator_field['element_id'] ); ?>
 											</option>
-										<?php endforeach;
+											<?php
+										endforeach;
 									endif;
 									?>
 								</select>

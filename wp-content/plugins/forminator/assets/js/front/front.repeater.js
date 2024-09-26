@@ -140,6 +140,42 @@
 
 		let newBlock = baseBlock.clone();
 
+		if (form.find('input[name="previous_draft_id"]').length > 0) {
+            newBlock.find('.forminator-input').attr('value', '');
+            newBlock.find('.forminator-textarea').empty();
+            newBlock.find('input[type="radio"], input[type="checkbox"]').each(function () {
+                $(this).attr('checked', false);
+            });
+
+            if (newBlock.find('.forminator-select2').length > 0) {
+                newBlock.find('.forminator-select2').each(function (index, value) {
+                    $(value).find('option:selected').attr('selected', false);
+                    $(value).find('option:first').attr('selected', 'selected');
+                });
+            }
+
+            if (newBlock.find('.forminator-rating').length > 0) {
+                newBlock.find('.forminator-rating').each(function (index, value) {
+                    $(value).find('option:selected').attr('selected', false);
+                    $(value).find('option:first').attr('selected', 'selected');
+                });
+            }
+
+            newBlock.find('.forminator-slider').each(function () {
+                let $element = $(this),
+                    $slide = $element.find('.forminator-slide'),
+                    $minRange = parseInt($slide.data('min')) || 0,
+                    $maxRange = parseInt($slide.data('max')) || 100;
+
+                if ('1' === $slide.attr('data-is-range')) {
+                    $slide.attr('data-value-max', $maxRange);
+                    $slide.attr('data-value', $minRange);
+                } else {
+                    $slide.attr('data-value', $minRange);
+                }
+            });
+        }
+
 		newBlock.find( '.select2-container, .forminator-error-message' ).remove();
 
 		// Cloning Rich-Text editors.

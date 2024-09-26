@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Quizzes class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -37,7 +43,7 @@ class Forminator_Quizzes extends Forminator_Module {
 		if ( ! class_exists( 'Forminator_General_Data_Protection' ) ) {
 			include_once forminator_plugin_dir() . 'library/abstracts/abstract-class-general-data-protection.php';
 		}
-		include_once dirname( __FILE__ ) . '/protection/general-data-protection.php';
+		include_once __DIR__ . '/protection/general-data-protection.php';
 		if ( class_exists( 'Forminator_Quiz_General_Data_Protection' ) ) {
 			new Forminator_Quiz_General_Data_Protection();
 		}
@@ -50,7 +56,7 @@ class Forminator_Quizzes extends Forminator_Module {
 	 */
 	public function load_admin() {
 		if ( is_admin() ) {
-			include_once dirname( __FILE__ ) . '/admin/admin-loader.php';
+			include_once __DIR__ . '/admin/admin-loader.php';
 
 			new Forminator_Quiz_Admin();
 		}
@@ -62,11 +68,11 @@ class Forminator_Quizzes extends Forminator_Module {
 	 * @since 1.0
 	 */
 	public function load_front() {
-		include_once dirname( __FILE__ ) . '/front/front-assets.php';
-		include_once dirname( __FILE__ ) . '/front/front-result.php';
-		include_once dirname( __FILE__ ) . '/front/front-render.php';
-		include_once dirname( __FILE__ ) . '/front/front-action.php';
-		include_once dirname( __FILE__ ) . '/front/front-mail.php';
+		include_once __DIR__ . '/front/front-assets.php';
+		include_once __DIR__ . '/front/front-result.php';
+		include_once __DIR__ . '/front/front-render.php';
+		include_once __DIR__ . '/front/front-action.php';
+		include_once __DIR__ . '/front/front-mail.php';
 		new Forminator_QForm_Front();
 		new Forminator_Quiz_Front_Action();
 		new Forminator_QForm_Result();

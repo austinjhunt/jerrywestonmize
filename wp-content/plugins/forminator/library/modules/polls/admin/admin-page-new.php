@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Poll_New_Page class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -30,7 +36,7 @@ class Forminator_Poll_New_Page extends Forminator_Admin_Page {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $hook
+	 * @param string $hook Hook.
 	 */
 	public function enqueue_scripts( $hook ) {
 		// Load admin scripts.

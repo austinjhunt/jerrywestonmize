@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Google sheet Client logger
+ *
+ * @package Forminator
+ */
 
 /**
  * In case you are wondering
@@ -6,7 +11,7 @@
  * Google/Logger/Abstract.php does include autoloder itself
  */
 if ( ! class_exists( 'Forminator_Google_Logger_Abstract' ) ) {
-	require_once dirname( __FILE__ ) . '/external/Google/Logger/Abstract.php';
+	require_once __DIR__ . '/external/Google/Logger/Abstract.php';
 }
 
 

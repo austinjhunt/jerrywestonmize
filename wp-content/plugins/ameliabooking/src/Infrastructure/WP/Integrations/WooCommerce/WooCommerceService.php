@@ -1315,9 +1315,9 @@ class WooCommerceService
                     (array_key_exists('type', $customField) && $customField['type'] !== 'file')
                 ) {
                     if (isset($customField['value']) && is_array($customField['value'])) {
-                        $customFieldsInfo[] = '' . $customField['label'] . ': ' . implode(', ', $customField['value']);
+                        $customFieldsInfo[] = '<b>' . $customField['label'] . ':</b> ' . implode(', ', $customField['value']);
                     } elseif (isset($customField['value'])) {
-                        $customFieldsInfo[] = '' . $customField['label'] . ': ' . $customField['value'];
+                        $customFieldsInfo[] = '<b>' . $customField['label'] . ':</b> ' . $customField['value'];
                     }
                 }
             }
@@ -2522,19 +2522,14 @@ class WooCommerceService
 
         $cacheId = explode('_', $_GET['amelia_cache_id']);
 
-        if (empty($cacheId[0])) {
+        if (empty($cacheId[0]) || empty($cacheId[1])) {
             return;
         }
 
         /** @var CacheRepository $cacheRepository */
         $cacheRepository = self::$container->get('domain.cache.repository');
 
-
-        if (!empty($cacheId[1])) {
-            $appointmentData = $cacheRepository->getByIdAndName($cacheId[0], $cacheId[1]);
-        } else {
-            $appointmentData = $cacheRepository->getById($cacheId[0]);
-        }
+        $appointmentData = $cacheRepository->getByIdAndName($cacheId[0], $cacheId[1]);
 
         if ($appointmentData && $appointmentData->getData() && $appointmentData->getData()->getValue() && json_decode($appointmentData->getData()->getValue(), true)) {
             self::addToCart(json_decode($appointmentData->getData()->getValue(), true));

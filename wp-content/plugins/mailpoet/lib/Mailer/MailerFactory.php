@@ -63,7 +63,8 @@ class MailerFactory {
           $replyTo,
           $returnPath,
           new AmazonSESMapper(),
-          $this->wp
+          $this->wp,
+          ContainerWrapper::getInstance()->get(Url::class)
         );
         break;
       case Mailer::METHOD_MAILPOET:
@@ -82,7 +83,8 @@ class MailerFactory {
           $mailerConfig['api_key'],
           $sender,
           $replyTo,
-          new SendGridMapper()
+          new SendGridMapper(),
+          ContainerWrapper::getInstance()->get(Url::class)
         );
         break;
       case Mailer::METHOD_PHPMAIL:
@@ -90,7 +92,8 @@ class MailerFactory {
           $sender,
           $replyTo,
           $returnPath,
-          new PHPMailMapper()
+          new PHPMailMapper(),
+          ContainerWrapper::getInstance()->get(Url::class)
         );
         break;
       case Mailer::METHOD_SMTP:
@@ -103,6 +106,7 @@ class MailerFactory {
           $replyTo,
           $returnPath,
           new SMTPMapper(),
+          ContainerWrapper::getInstance()->get(Url::class),
           $mailerConfig['login'],
           $mailerConfig['password']
         );

@@ -45,6 +45,7 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 	 * @since 1.0 Campaign Monitor Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function pick_name( $submitted_data ) {
 		$template = forminator_addon_campaignmonitor_dir() . 'views/module-settings/pick-name.php';
@@ -116,6 +117,7 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 	 * @since 1.0 Campaign Monitor Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function setup_list( $submitted_data ) {
 		$template = forminator_addon_campaignmonitor_dir() . 'views/module-settings/setup-list.php';
@@ -146,8 +148,8 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 			$lists_request = $api->get_client_lists( $this->addon->get_client_id() );
 
 			foreach ( $lists_request as $key => $data ) {
-				if ( isset( $data->ListID ) && isset( $data->Name ) ) { //phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
-					$lists[ $data->ListID ] = $data->Name; //phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+				if ( isset( $data->ListID ) && isset( $data->Name ) ) { //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					$lists[ $data->ListID ] = $data->Name; //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				}
 			}
 
@@ -221,6 +223,7 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 	 * @since 1.0 Campaignmonitor Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function map_fields( $submitted_data ) {
 		$template = forminator_addon_campaignmonitor_dir() . 'views/module-settings/map-fields.php';
@@ -233,8 +236,8 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 		unset( $submitted_data['multi_id'] );
 
 		// find type of email.
-		$email_fields  = $this->get_fields_for_type( 'email' );
-		$module_fields = wp_list_pluck( $this->get_fields_for_type(), 'field_label', 'element_id' );
+		$email_fields                 = $this->get_fields_for_type( 'email' );
+		$module_fields                = wp_list_pluck( $this->get_fields_for_type(), 'field_label', 'element_id' );
 		$forminator_field_element_ids = array_keys( $module_fields );
 
 		$template_params = array(
@@ -266,14 +269,14 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 			}
 
 			foreach ( $list_custom_fields as $field ) {
-				$field_key = $field->Key; //phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+				$field_key = $field->Key; //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				if ( stripos( $field_key, '[' ) === 0 ) {
 					$field_key = substr( $field_key, 1 );
 				}
 				if ( strripos( $field_key, ']' ) === ( strlen( $field_key ) - 1 ) ) {
 					$field_key = substr( $field_key, 0, strlen( $field_key ) - 1 );
 				}
-				$fields[ $field_key ] = $field->FieldName; //phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+				$fields[ $field_key ] = $field->FieldName; //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			}
 
 			$template_params['fields'] = $fields;
@@ -305,9 +308,12 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 					if ( ! empty( $fields_map[ $key ] ) ) {
 						$element_id = $fields_map[ $key ];
 						if ( ! in_array( $element_id, $forminator_field_element_ids, true ) ) {
-							$input_exceptions->add_input_exception( sprintf(
-							/* translators: %s: Field Title */
-								esc_html__( 'Please assign valid field for %s', 'forminator' ), esc_html( $title ) ),
+							$input_exceptions->add_input_exception(
+								sprintf(
+								/* translators: %s: Field Title */
+									esc_html__( 'Please assign valid field for %s', 'forminator' ),
+									esc_html( $title )
+								),
 								$key . '_error'
 							);
 							continue;
@@ -395,6 +401,7 @@ trait Forminator_Campaignmonitor_Settings_Trait {
 	 * @since 1.0 Campaign Monitor Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function setup_options( $submitted_data ) {
 		$template = forminator_addon_campaignmonitor_dir() . 'views/module-settings/setup-options.php';

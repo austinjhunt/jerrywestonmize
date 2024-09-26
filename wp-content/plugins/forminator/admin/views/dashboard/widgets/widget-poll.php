@@ -1,6 +1,12 @@
 <?php
+/**
+ * Template admin/views/dashboard/widgets/widget-poll.php
+ *
+ * @package Forminator
+ */
+
 $module_slug        = 'poll';
-$title              = esc_html__( 'Polls', 'forminator' );
+$module_title       = esc_html__( 'Polls', 'forminator' );
 $description        = esc_html__( 'Create interactive polls to collect users\' opinions, with lots of dynamic options and settings.', 'forminator' );
 $icon               = 'sui-icon-graph-bar';
 $preview_title      = esc_html__( 'Preview Poll', 'forminator' );

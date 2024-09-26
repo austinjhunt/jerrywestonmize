@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Integration_Hooks class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Integration_Hooks
@@ -62,7 +67,7 @@ abstract class Forminator_Integration_Hooks {
 	 * Forminator_Integration_Hooks constructor.
 	 *
 	 * @param Forminator_Integration $addon Integration.
-	 * @param int                       $module_id Module ID.
+	 * @param int                    $module_id Module ID.
 	 *
 	 * @since 1.1
 	 * @throws Forminator_Integration_Exception When module ID is invalid.
@@ -73,7 +78,7 @@ abstract class Forminator_Integration_Hooks {
 		$this->module    = Forminator_Base_Form_Model::get_model( $this->module_id );
 		if ( ! $this->module ) {
 			/* translators: 1. Module type 2. Module ID */
-			throw new Forminator_Integration_Exception( sprintf( esc_html__( '%1$s with id %1$d could not be found', 'forminator' ), ucfirst( static::$slug ), $this->module_id ) );
+			throw new Forminator_Integration_Exception( sprintf( esc_html__( '%1$s with id %1$d could not be found', 'forminator' ), esc_html( ucfirst( static::$slug ) ), esc_html( $this->module_id ) ) );
 		}
 
 		/* translators: Module type */
@@ -103,6 +108,7 @@ abstract class Forminator_Integration_Hooks {
 	 * @param array $current_entry_fields default entry fields that will be saved,
 	 *                                    its here for reference, this function doesnt need to return it
 	 *                                    only return new entry fields.
+	 * @param array $entry Entry.
 	 *
 	 * @return array
 	 */
@@ -190,8 +196,9 @@ abstract class Forminator_Integration_Hooks {
 	 * @param array $submitted_data Submitted data.
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
+	 * @throws Forminator_Integration_Exception When there is an Integration error.
 	 */
-	protected function custom_entry_fields( array $submitted_data, array $current_entry_fields ) : array {
+	protected function custom_entry_fields( array $submitted_data, array $current_entry_fields ): array {
 		$module_id            = $this->module_id;
 		$settings_instance    = $this->settings_instance;
 		$submitted_data       = $this->prepare_submitted_data( $submitted_data, $module_id, $current_entry_fields );
@@ -355,7 +362,7 @@ abstract class Forminator_Integration_Hooks {
 	 * @param array $addon_setting_values Integration settings.
 	 * @return array
 	 */
-	protected function get_special_addon_args( $submitted_data, $addon_setting_values ) {
+	protected function get_special_addon_args( $submitted_data, $addon_setting_values ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- Used in extended class
 		return array();
 	}
 
@@ -365,7 +372,7 @@ abstract class Forminator_Integration_Hooks {
 	 *
 	 * @return array
 	 */
-	public function on_export_render_title_row() : array {
+	public function on_export_render_title_row(): array {
 
 		$export_headers = array(
 			/* translators: Integration name */
@@ -399,7 +406,7 @@ abstract class Forminator_Integration_Hooks {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $addon_meta_datas
+	 * @param array $addon_meta_datas Addon meta.
 	 *
 	 * @return array
 	 */
@@ -413,7 +420,6 @@ abstract class Forminator_Integration_Hooks {
 		}
 
 		return $additional_entry_item;
-
 	}
 
 	/**
@@ -422,8 +428,8 @@ abstract class Forminator_Integration_Hooks {
 	 *
 	 * @since 1.0
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param                             $addon_meta_data
+	 * @param Forminator_Form_Entry_Model $entry_model Form entry model.
+	 * @param array                       $addon_meta_data Addon meta data.
 	 *
 	 * @return array
 	 */
@@ -444,7 +450,6 @@ abstract class Forminator_Integration_Hooks {
 		 * @param int                                $module_id Current Module ID.
 		 * @param Forminator_Integration_Settings $settings_instance Integration Settings instance.
 		 *@since 1.1
-		 *
 		 */
 		$addon_meta_data = apply_filters(
 			'forminator_addon_' . static::$slug . '_' . $addon_slug . '_metadata',
@@ -573,8 +578,8 @@ abstract class Forminator_Integration_Hooks {
 	 *
 	 * @since 1.0
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param                             $addon_meta_data
+	 * @param Forminator_Form_Entry_Model $entry_model Form entry model.
+	 * @param array                       $addon_meta_data Addon meta.
 	 *
 	 * @return array
 	 */
@@ -614,14 +619,14 @@ abstract class Forminator_Integration_Hooks {
 	 *
 	 * @param array  $addon_meta_data All meta data.
 	 * @param string $key Meta key.
-	 * @param mixed  $default Default returning value.
+	 * @param mixed  $default_value Default returning value.
 	 *
 	 * @return string
 	 */
-	protected function get_from_addon_meta_data( $addon_meta_data, $key, $default = '' ) {
+	protected function get_from_addon_meta_data( $addon_meta_data, $key, $default_value = '' ) {
 		$addon_meta_datas = $addon_meta_data;
 		if ( ! isset( $addon_meta_data[0] ) || ! is_array( $addon_meta_data[0] ) ) {
-			return $default;
+			return $default_value;
 		}
 
 		$addon_meta_data = $addon_meta_data[0];
@@ -635,18 +640,18 @@ abstract class Forminator_Integration_Hooks {
 					$addon_meta_data['name'] = 'status';
 
 					// add it on an array for next recursive process.
-					$meta_data[] = $this->get_from_addon_meta_data( array( $addon_meta_data ), $key, $default );
+					$meta_data[] = $this->get_from_addon_meta_data( array( $addon_meta_data ), $key, $default_value );
 				}
 
 				return implode( ', ', $meta_data );
 			}
 
-			return $default;
+			return $default_value;
 
 		}
 
 		if ( ! isset( $addon_meta_data['value'] ) || ! is_array( $addon_meta_data['value'] ) ) {
-			return $default;
+			return $default_value;
 		}
 		$status = $addon_meta_data['value'];
 		if ( isset( $status[ $key ] ) ) {
@@ -660,7 +665,7 @@ abstract class Forminator_Integration_Hooks {
 			return $connection_name . $status[ $key ];
 		}
 
-		return $default;
+		return $default_value;
 	}
 
 	/**
@@ -714,7 +719,7 @@ abstract class Forminator_Integration_Hooks {
 	 *
 	 * @since 1.1
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return bool
 	 */
@@ -786,7 +791,7 @@ abstract class Forminator_Integration_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function prepare_submitted_data( array $submitted_data, int $module_id, array $current_entry_fields ) : array {
+	protected function prepare_submitted_data( array $submitted_data, int $module_id, array $current_entry_fields ): array {
 		$submitted_data = $this->reformat_submitted_data( $submitted_data, $module_id, $current_entry_fields );
 
 		return $submitted_data;
@@ -800,7 +805,7 @@ abstract class Forminator_Integration_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function reformat_submitted_data( array $submitted_data, int $module_id, array $current_entry_fields ) : array {
+	protected function reformat_submitted_data( array $submitted_data, int $module_id, array $current_entry_fields ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- May be used in extended class.
 		foreach ( $submitted_data as $field => $value ) {
 			// Also Check the date field doesn't include the '-year', '-month' or '-day'.
 			if (

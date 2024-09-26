@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Poll_Page class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -22,12 +28,12 @@ class Forminator_Poll_Page extends Forminator_Admin_Module_Edit_Page {
 	 *
 	 * @since 1.14.10
 	 *
-	 * @param $id
-	 * @param $title
-	 * @param $views
-	 * @param $date
-	 * @param $status
-	 * @param name
+	 * @param int    $id Id.
+	 * @param string $title Title.
+	 * @param array  $views Views.
+	 * @param string $date Date.
+	 * @param string $status Status.
+	 * @param mixed  $model Model.
 	 *
 	 * @return array
 	 */

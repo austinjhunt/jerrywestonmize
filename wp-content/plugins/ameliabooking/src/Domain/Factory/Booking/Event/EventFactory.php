@@ -480,14 +480,15 @@ class EventFactory
 
             if ($ticketId && !isset($events[$eventId]['customTickets'][$ticketId])) {
                 $events[$eventId]['customTickets'][$ticketId] = [
-                    'id'             => $ticketId,
-                    'eventId'        => $eventId,
-                    'name'           => $row['ticket_name'],
-                    'enabled'        => $row['ticket_enabled'],
-                    'spots'          => $row['ticket_spots'],
-                    'price'          => $row['ticket_price'],
-                    'dateRanges'     => $row['ticket_dateRanges'],
-                    'translations'   => $row['ticket_translations'],
+                    'id'               => $ticketId,
+                    'eventId'          => $eventId,
+                    'name'             => $row['ticket_name'],
+                    'enabled'          => $row['ticket_enabled'],
+                    'spots'            => $row['ticket_spots'],
+                    'waitingListSpots' => !empty($row['ticket_waiting_list_spots']) ? $row['ticket_waiting_list_spots'] : null,
+                    'price'            => $row['ticket_price'],
+                    'dateRanges'       => $row['ticket_dateRanges'],
+                    'translations'     => $row['ticket_translations'],
                 ];
             }
 

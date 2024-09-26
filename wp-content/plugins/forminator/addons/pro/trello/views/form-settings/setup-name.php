@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template for setup name
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
 	'error_message' => '',
@@ -6,7 +12,11 @@ $vars = array(
 	'name_error'    => '',
 	'multi_id'      => '',
 );
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -19,7 +29,10 @@ foreach ( $template_vars as $key => $val ) {
 	<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Set up a friendly name for this integration, so you can easily identify it.', 'forminator' ); ?></p>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>

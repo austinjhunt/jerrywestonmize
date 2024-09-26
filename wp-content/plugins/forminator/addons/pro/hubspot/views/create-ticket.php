@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template for create ticket.
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
 	'error_message' => '',
@@ -13,8 +19,12 @@ $vars = array(
 	'token'         => '',
 	're-authorize'  => '',
 );
-/** @var array $template_vars */
 
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -31,7 +41,10 @@ foreach ( $template_vars as $key => $val ) {
 	</p>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>
@@ -107,11 +120,11 @@ foreach ( $template_vars as $key => $val ) {
 					if ( ! empty( $vars['pipeline'] ) ) :
 
 						foreach ( $vars['pipeline'] as $pipeline_id => $pipeline_name ) :
-						?>
+							?>
 
 							<option value="<?php echo esc_attr( $pipeline_id ); ?>" <?php selected( $vars['pipeline_id'], $pipeline_id ); ?>><?php echo esc_html( $pipeline_name ); ?></option>
 
-						<?php
+							<?php
 						endforeach;
 
 					endif;
@@ -123,7 +136,8 @@ foreach ( $template_vars as $key => $val ) {
 					<?php
 					if ( ! empty( $vars['pipeline_error'] ) ) :
 						echo esc_html( $vars['pipeline_error'] );
-					endif; ?>
+					endif;
+					?>
 				</span>
 
 			</div>
@@ -148,15 +162,14 @@ foreach ( $template_vars as $key => $val ) {
 						foreach ( $vars['status'] as $stages => $stage ) {
 
 							if ( isset( $stages ) && isset( $stage ) ) :
-							?>
+								?>
 
 								<option value="<?php echo esc_attr( $stages ); ?>" <?php selected( $vars['status_id'], $stages ); ?>><?php echo esc_html( $stage ); ?></option>
 
-							<?php
+								<?php
 							endif;
 
 						}
-
 					}
 					?>
 
@@ -195,7 +208,7 @@ foreach ( $template_vars as $key => $val ) {
 
 					<select id="select-ticket-name" class="sui-variables select-field">
 						<?php foreach ( $vars['fields'] as $key => $field_title ) { ?>
-						<option value="{<?php echo esc_attr( $key ); ?>}" data-content="{<?php echo esc_attr( $key ); ?>}"><?php echo esc_html( strip_tags( $field_title ) . ' | ' . $key ); ?></option>
+						<option value="{<?php echo esc_attr( $key ); ?>}" data-content="{<?php echo esc_attr( $key ); ?>}"><?php echo esc_html( wp_strip_all_tags( $field_title ) . ' | ' . $key ); ?></option>
 						<?php } ?>
 					</select>
 
@@ -231,7 +244,7 @@ foreach ( $template_vars as $key => $val ) {
 
 					<select id="select-ticket-description" class="sui-variables select-field">
 						<?php foreach ( $vars['fields'] as $key => $field_title ) { ?>
-							<option value="{<?php echo esc_attr( $key ); ?>}" data-content="{<?php echo esc_attr( $key ); ?>}"><?php echo esc_html( strip_tags( $field_title ) . ' | ' . $key ); ?></option>
+							<option value="{<?php echo esc_attr( $key ); ?>}" data-content="{<?php echo esc_attr( $key ); ?>}"><?php echo esc_html( wp_strip_all_tags( $field_title ) . ' | ' . $key ); ?></option>
 						<?php } ?>
 					</select>
 
@@ -260,11 +273,11 @@ foreach ( $template_vars as $key => $val ) {
 					if ( ! empty( $vars['file_fields'] ) ) :
 
 						foreach ( $vars['file_fields'] as $file => $file_field ) :
-						?>
+							?>
 
-							<option value="<?php echo esc_attr( $file_field['element_id'] ); ?>" <?php selected( $file_selected, $file_field['element_id'] ); ?>><?php echo esc_html( strip_tags( $file_field['field_label'] ) . ' | ' . $file_field['element_id'] ); ?></option>
+							<option value="<?php echo esc_attr( $file_field['element_id'] ); ?>" <?php selected( $file_selected, $file_field['element_id'] ); ?>><?php echo esc_html( wp_strip_all_tags( $file_field['field_label'] ) . ' | ' . $file_field['element_id'] ); ?></option>
 
-						<?php
+							<?php
 						endforeach;
 
 					endif;
@@ -319,7 +332,7 @@ foreach ( $template_vars as $key => $val ) {
 					type: "POST",
 					data: {
 						action: "forminator_hubspot_support_request",
-						_ajax_nonce: '<?php echo wp_create_nonce( 'forminator_hubspot_request' ); ?>',
+						_ajax_nonce: '<?php echo esc_html( wp_create_nonce( 'forminator_hubspot_request' ) ); ?>',
 						value: value
 					},
 					success: function (response) {

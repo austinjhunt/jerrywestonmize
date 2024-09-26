@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Hubspot Quiz Settings
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Hubspot_Quiz_Settings
  * Handle how quiz settings displayed and saved
  *

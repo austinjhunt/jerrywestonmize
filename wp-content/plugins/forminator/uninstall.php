@@ -4,6 +4,7 @@
  * Called when plugin is deleted
  *
  * @since 1.0.2
+ * @package Forminator
  */
 
 // if uninstall.php is not called by WordPress, die.
@@ -21,45 +22,33 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
  */
 function forminator_drop_custom_tables( $db_prefix = 'wp_' ) {
 	global $wpdb;
-
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
 	$wpdb->query( "DROP TABLE IF EXISTS {$db_prefix}frmt_form_entry" );
 	$wpdb->query( "DROP TABLE IF EXISTS {$db_prefix}frmt_form_entry_meta" );
 	$wpdb->query( "DROP TABLE IF EXISTS {$db_prefix}frmt_form_views" );
+	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
 }
 
 /**
  * Clear custom posts
  *
  * @since 1.0.2
- * @since 1.14.10 Added $db_prefix parameter
- *
- * @param string $db_prefix - database prefix.
  */
-function forminator_delete_custom_posts( $db_prefix = 'wp_' ) {
-	global $wpdb;
-
-	//Now we delete the custom posts
-	$forms_sql        = "SELECT GROUP_CONCAT(`ID`) FROM {$db_prefix}posts WHERE `post_type` = %s";
-	$delete_forms_sql = "DELETE FROM {$db_prefix}posts WHERE `post_type` = %s";
-
-	$form_types       = array(
-		'forminator_forms',
-		'forminator_polls',
-		'forminator_quizzes',
+function forminator_delete_custom_posts() {
+	$args     = array(
+		'fields'         => 'ids',
+		'post_type'      => array(
+			'forminator_forms',
+			'forminator_polls',
+			'forminator_quizzes',
+		),
+		'post_status'    => 'any',
+		'posts_per_page' => - 1,
 	);
-	foreach ( $form_types as $type ) {
-		$ids = $wpdb->get_var( $wpdb->prepare( $forms_sql, $type ) ); // WPCS: unprepared SQL ok. false positive
-		if ( $ids ) {
+	$post_ids = get_posts( $args );
 
-			$array_ids = explode( ',', $ids );
-			foreach ( $array_ids as $array_id ) {
-				wp_cache_delete( $array_id, 'forminator_total_entries' );
-			}
-
-			$delete_form_meta_sql = "DELETE FROM {$db_prefix}postmeta WHERE `post_id` in($ids)";
-			$wpdb->query( $delete_form_meta_sql ); // WPCS: unprepared SQL ok. false positive. no need to prepared since all param are not user defined
-		}
-		$wpdb->query( $wpdb->prepare( $delete_forms_sql, $type ) ); // WPCS: unprepared SQL ok. false positive
+	foreach ( $post_ids as $post_id ) {
+		wp_delete_post( $post_id, true );
 	}
 }
 
@@ -76,9 +65,10 @@ function forminator_delete_custom_posts( $db_prefix = 'wp_' ) {
 function forminator_delete_custom_options( $db_prefix = 'wp_' ) {
 	global $wpdb;
 
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 	$forminator_options = $wpdb->get_results( "SELECT option_name FROM {$db_prefix}options WHERE option_name LIKE 'forminator_%'" );
 
-	foreach( $forminator_options as $option ) {
+	foreach ( $forminator_options as $option ) {
 		delete_option( $option->option_name );
 	}
 }
@@ -93,19 +83,19 @@ function forminator_delete_custom_options( $db_prefix = 'wp_' ) {
 function forminator_clear_module_submissions( $db_prefix = 'wp_' ) {
 	global $wpdb;
 
-	$max_entry_id_query = "SELECT MAX(`entry_id`) FROM {$db_prefix}frmt_form_entry";
-	$max_entry_id       = $wpdb->get_var( $max_entry_id_query );
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+	$max_entry_id = $wpdb->get_var( 'SELECT MAX(`entry_id`) FROM ' . esc_sql( $db_prefix ) . 'frmt_form_entry' );
 
 	if ( $max_entry_id && is_numeric( $max_entry_id ) && $max_entry_id > 0 ) {
-		for ( $i = 1; $i <= $max_entry_id; $i ++ ) {
+		for ( $i = 1; $i <= $max_entry_id; $i++ ) {
 			wp_cache_delete( $i, 'Forminator_Form_Entry_Model' );
 		}
 	}
 
 	wp_cache_delete( 'all_form_types', 'forminator_total_entries' );
-	wp_cache_delete( 'custom-forms' . '_form_type', 'forminator_total_entries' );
-	wp_cache_delete( 'poll' . '_form_type', 'forminator_total_entries' );
-	wp_cache_delete( 'quizzes' . '_form_type', 'forminator_total_entries' );
+	wp_cache_delete( 'custom-forms_form_type', 'forminator_total_entries' );
+	wp_cache_delete( 'poll_form_type', 'forminator_total_entries' );
+	wp_cache_delete( 'quizzes_form_type', 'forminator_total_entries' );
 }
 
 /**
@@ -136,7 +126,7 @@ if ( $clear_data ) {
 
 		forminator_delete_permissions();
 		forminator_delete_custom_options( $db_prefix );
-		forminator_delete_custom_posts( $db_prefix );
+		forminator_delete_custom_posts();
 		forminator_clear_module_submissions( $db_prefix );
 		forminator_remove_upload_files();
 		forminator_drop_custom_tables( $db_prefix );
@@ -146,20 +136,20 @@ if ( $clear_data ) {
 		$sites = get_sites();
 
 		foreach ( $sites as $site ) {
-			$blog_id = $site->blog_id;
-			$db_prefix = $wpdb->get_blog_prefix( $blog_id );
+			$blog_id_for_switch = $site->blog_id;
+			$db_prefix          = $wpdb->get_blog_prefix( $blog_id_for_switch );
 
-			forminator_delete_custom_posts( $db_prefix );
+			forminator_delete_custom_posts();
 
 			// Switch to blog before deleting options.
-			switch_to_blog( $blog_id );
+			switch_to_blog( $blog_id_for_switch );
 			forminator_delete_permissions();
 			forminator_delete_custom_options( $db_prefix );
 			restore_current_blog();
 
 			forminator_clear_module_submissions( $db_prefix );
 
-			switch_to_blog( $blog_id );
+			switch_to_blog( $blog_id_for_switch );
 			forminator_remove_upload_files();
 			restore_current_blog();
 
@@ -169,7 +159,7 @@ if ( $clear_data ) {
 	}
 }
 
-include_once plugin_dir_path( __FILE__ ) . 'constants.php';
+require_once plugin_dir_path( __FILE__ ) . 'constants.php';
 if ( file_exists( plugin_dir_path( __FILE__ ) . 'library/lib/analytics/autoload.php' ) ) {
 	include_once plugin_dir_path( __FILE__ ) . 'library/lib/analytics/autoload.php';
 	include_once plugin_dir_path( __FILE__ ) . 'library/mixpanel/class-mixpanel.php';

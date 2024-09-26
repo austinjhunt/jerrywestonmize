@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Hidden class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,41 +17,57 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Hidden extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'hidden';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'hidden';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 19;
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Hide advanced
+	 *
 	 * @var string
 	 */
 	public $hide_advanced = 'true';
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-eye-hide';
@@ -79,7 +101,7 @@ class Forminator_Hidden extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -94,16 +116,16 @@ class Forminator_Hidden extends Forminator_Field {
 	 * Field front-end markup
 	 *
 	 * @since 1.0
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
 	 *
 	 * @return mixed
 	 */
 	public function markup( $field, $views_obj ) {
 
-		$id          = self::get_property( 'element_id', $field );
-		$name        = $id;
-		$value       = esc_html( $this->get_value( $field ) );
+		$id    = self::get_property( 'element_id', $field );
+		$name  = $id;
+		$value = esc_html( $this->get_value( $field ) );
 
 		return sprintf( '<input type="hidden" id="%s" name="%s" value="%s" />', $id . '_' . Forminator_CForm_Front::$uid, $name, $value );
 	}
@@ -113,7 +135,7 @@ class Forminator_Hidden extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 * @since 1.5 add user_id value getter
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return mixed|string
 	 */
@@ -145,10 +167,10 @@ class Forminator_Hidden extends Forminator_Field {
 				$value = forminator_get_login_url( $embed_url );
 				break;
 			case 'user_agent':
-				$value = esc_html( $_SERVER['HTTP_USER_AGENT'] );
+				$value = isset( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) ) : '';
 				break;
 			case 'refer_url':
-				$value = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url( $_SERVER['HTTP_REFERER'] ) : $embed_url;
+				$value = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : $embed_url;
 				break;
 			case 'submission_id':
 				$value = 'submission_id';
@@ -183,7 +205,7 @@ class Forminator_Hidden extends Forminator_Field {
 	 *
 	 * @since 1.10
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 * @return mixed|string
 	 */
 	public function replace_prefill( $field ) {
@@ -225,7 +247,7 @@ class Forminator_Hidden extends Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization
@@ -233,7 +255,7 @@ class Forminator_Hidden extends Forminator_Field {
 	public function sanitize( $field, $data ) {
 		$original_data = $data;
 		// Sanitize.
-		if ( in_array( $field['default_value'], array( 'refer_url', 'embed_url' ) ) ) {
+		if ( in_array( $field['default_value'], array( 'refer_url', 'embed_url' ), true ) ) {
 			$data = urldecode_deep( $data );
 		}
 		$data = forminator_sanitize_field( $data );

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Reports Page
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -30,7 +36,6 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 	 *
 	 * @return mixed
 	 * @since 1.18.0
-	 *
 	 */
 	public function get_form_types() {
 		$form_types = $this->modules_form_type();
@@ -40,6 +45,9 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 
 	/**
 	 * Render Form switcher / select based on current form_type
+	 *
+	 * @param string $form_type Form type.
+	 * @param int    $form_id Form Id.
 	 *
 	 * @since 1.18.0
 	 */
@@ -53,11 +61,11 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 		$method       = 'get_forms';
 		$model        = 'Forminator_Form_Model';
 
-		if ( $form_type === Forminator_Poll_Model::model()->get_post_type() ) {
+		if ( Forminator_Poll_Model::model()->get_post_type() === $form_type ) {
 			$empty_option = esc_html__( 'Choose a Poll', 'forminator' );
 			$method       = 'get_polls';
 			$model        = 'Forminator_Poll_Model';
-		} elseif ( $form_type === Forminator_Quiz_Model::model()->get_post_type() ) {
+		} elseif ( Forminator_Quiz_Model::model()->get_post_type() === $form_type ) {
 			$empty_option = esc_html__( 'Choose a Quiz', 'forminator' );
 			$method       = 'get_quizzes';
 			$model        = 'Forminator_Quiz_Model';
@@ -70,7 +78,10 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 		$forms = apply_filters( 'forminator_reports_get_forms', $forms, $form_type );
 
 		foreach ( $forms as $form ) {
-			/**@var Forminator_Base_Form_Model $form */
+			/**
+			 * Forminator_Base_Form_Model
+			 *
+			 * @var Forminator_Base_Form_Model $form */
 			$title = ! empty( $form->settings['formName'] ) ? $form->settings['formName'] : $form->raw->post_title;
 			echo '<option value="' . esc_attr( $form->id ) . '" ' . selected( $form->id, $form_id, false ) . '>' . esc_html( $title ) . '</option>';
 		}
@@ -144,12 +155,11 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 	 */
 	public function enqueue_reports_scripts() {
 
-		 $this->forminator_daterange_script();
+		$this->forminator_daterange_script();
 
-		 $this->forminator_report_chart_script();
+		$this->forminator_report_chart_script();
 
 		add_filter( 'forminator_l10n', array( $this, 'add_l10n' ) );
-
 	}
 
 	/**
@@ -166,7 +176,7 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 
 		$daterangepicker_ranges
 			= sprintf(
-			"
+				"
 			var forminator_reports_datepicker_ranges = {
 				'%s': [moment(), moment()],
 		        '%s': [moment().subtract(6,'days'), moment()],
@@ -174,12 +184,12 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 		        '%s': [moment().subtract(29,'days'), moment()],
 		        '%s': [moment().startOf('year'), moment().endOf('year')],
 			};",
-			esc_html__( 'Today', 'forminator' ),
-			esc_html__( 'Last 7 Days', 'forminator' ),
-			esc_html__( 'This Month', 'forminator' ),
-			esc_html__( 'Last 30 Days', 'forminator' ),
-			esc_html__( 'This Year', 'forminator' )
-		);
+				esc_html__( 'Today', 'forminator' ),
+				esc_html__( 'Last 7 Days', 'forminator' ),
+				esc_html__( 'This Month', 'forminator' ),
+				esc_html__( 'Last 30 Days', 'forminator' ),
+				esc_html__( 'This Year', 'forminator' )
+			);
 
 		/**
 		 * Filter ranges to be used on reports date range
@@ -187,7 +197,6 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 		 * @param string $daterangepicker_ranges
 		 *
 		 * @since 1.18.0
-		 *
 		 */
 		$daterangepicker_ranges = apply_filters( 'forminator_reports_datepicker_ranges', $daterangepicker_ranges );
 
@@ -198,23 +207,23 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 	 * Chart script
 	 */
 	public function forminator_report_chart_script() {
-		$form_id = $this->get_current_form_id();
+		$form_id    = $this->get_current_form_id();
 		$chart_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_chart_data( $form_id );
 
 		$chart_vars
 			= sprintf(
-			"
+				"
 			var chart_label = '%s',
 				chart_form_id = %d,
                 monthDays = ['%s'],
                 submissions = [%s],
                 canvas_spacing = %s;",
-			esc_html__( 'Submissions', 'forminator' ),
-			$form_id,
-			wp_kses_post( implode( "', '", $chart_data['monthDays'] ) ),
-			esc_html( implode( ', ', $chart_data['submissions'] ) ),
-			$chart_data['canvas_spacing']
-		);
+				esc_html__( 'Submissions', 'forminator' ),
+				$form_id,
+				wp_kses_post( implode( "', '", $chart_data['monthDays'] ) ),
+				esc_html( implode( ', ', $chart_data['submissions'] ) ),
+				$chart_data['canvas_spacing']
+			);
 
 		/**
 		 * Filter chart vars to be used on reports
@@ -222,14 +231,12 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 		 * @param string $chart_vars
 		 *
 		 * @since 1.18.0
-		 *
 		 */
 		$chart_vars = apply_filters( 'forminator_reports_chart', $chart_vars );
 
 		wp_add_inline_script( 'forminator-chartjs', $chart_vars );
 
 		return $chart_vars;
-
 	}
 
 	/**
@@ -237,7 +244,7 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 	 *
 	 * Allow to modify `daterangepicker` locale
 	 *
-	 * @param $l10n
+	 * @param array $l10n locale.
 	 *
 	 * @return mixed
 	 */
@@ -253,7 +260,6 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 		 * @param array $daterangepicker_lang
 		 *
 		 * @since 1.18.0
-		 *
 		 */
 		$daterangepicker_lang    = apply_filters( 'forminator_l10n_daterangepicker', $daterangepicker_lang );
 		$l10n['daterangepicker'] = $daterangepicker_lang;
@@ -264,8 +270,7 @@ class Forminator_Reports_Page extends Forminator_Admin_Page {
 	/**
 	 * Override scripts to be loaded
 	 *
-	 * @param $hook
-	 *
+	 * @param string $hook Hook name.
 	 */
 	public function enqueue_scripts( $hook ) {
 		parent::enqueue_scripts( $hook );

@@ -1,3 +1,11 @@
+<?php
+/**
+ * Template admin/views/templates/preset/popup.php
+ *
+ * @package Forminator
+ */
+
+?>
 <div class="sui-modal sui-modal-xl">
 	<div
 		role="dialog"
@@ -18,9 +26,9 @@
 			</div>
 			<div class="sui-box-body sui-content-center forminator-preview-image">
 				<img src=""
-				     alt="<?php esc_html_e( 'Preview template', 'forminator' ); ?>"
-				     class="sui-image"
-				     aria-hidden="true"
+					alt="<?php esc_html_e( 'Preview template', 'forminator' ); ?>"
+					class="sui-image"
+					aria-hidden="true"
 				/>
 			</div>
 			<div class="sui-box-footer">

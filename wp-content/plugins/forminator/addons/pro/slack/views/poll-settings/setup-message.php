@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template for setup message
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
 	'message'       => '',
@@ -7,7 +13,11 @@ $vars = array(
 	'multi_id'      => '',
 	'tags'          => array(),
 );
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -22,7 +32,10 @@ foreach ( $template_vars as $key => $val ) {
 	<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Configure message to be sent.', 'forminator' ); ?></p>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>
@@ -57,7 +70,7 @@ foreach ( $template_vars as $key => $val ) {
 			<?php
 			printf(
 			/* Translators: 1. Opening <a> tag with link to the article link, 2. closing <a> tag. */
-				esc_html__( 'You can format your message using Slack Flavored Markdown, find more information %shere%s.', 'forminator' ),
+				esc_html__( 'You can format your message using Slack Flavored Markdown, find more information %1$shere%2$s.', 'forminator' ),
 				'<a href="https://get.slack.help/hc/en-us/articles/202288908-how-can-i-add-formatting-to-my-messages" target="_blank">',
 				'</a>'
 			);
@@ -67,7 +80,7 @@ foreach ( $template_vars as $key => $val ) {
 			<?php
 			printf(
 			/* Translators: 1. Opening <a> tag with link to the message attach link, 2. closing <a> tag. */
-				esc_html__( 'By default sent message will include Poll Answer and Poll Results as attachment using Forminator Format to ease you up, more information about attachment can be found %shere%s.', 'forminator' ),
+				esc_html__( 'By default sent message will include Poll Answer and Poll Results as attachment using Forminator Format to ease you up, more information about attachment can be found %1$shere%2$s.', 'forminator' ),
 				'<a href="https://api.slack.com/docs/message-attachments" target="_blank">',
 				'</a>'
 			);

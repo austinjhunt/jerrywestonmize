@@ -1,38 +1,82 @@
 <?php
+/**
+ * Forminator Addon Webhook
+ *
+ * @package Forminator
+ */
 
-require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-webhook-wp-api.php';
+// Include addon-webhook-wp-api.
+require_once __DIR__ . '/lib/class-forminator-addon-webhook-wp-api.php';
 
 /**
  * Class Forminator_Webhook
  * Webhook Integration Main Class
- *
- *
  */
 final class Forminator_Webhook extends Forminator_Integration {
 
 	/**
+	 * Forminator_Webhook Instance
+	 *
 	 * @var self|null
 	 */
 	protected static $instance = null;
 
-	protected $_slug                   = 'webhook';
-	protected $_version                = FORMINATOR_ADDON_WEBHOOK_VERSION;
-	protected $_min_forminator_version = '1.1';
-	protected $_short_title            = 'Webhook';
-	protected $_title                  = 'Webhook';
-	protected $_documentation          = 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#webhook';
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
+	protected $_slug = 'webhook';
 
-	protected $_position      = 0;
+	/**
+	 * Webhook version
+	 *
+	 * @var string
+	 */
+	protected $_version = FORMINATOR_ADDON_WEBHOOK_VERSION;
+
+	/**
+	 * Forminator minimum version
+	 *
+	 * @var string
+	 */
+	protected $_min_forminator_version = '1.1';
+
+	/**
+	 * Short title
+	 *
+	 * @var string
+	 */
+	protected $_short_title = 'Webhook';
+
+	/**
+	 * Title
+	 *
+	 * @var string
+	 */
+	protected $_title = 'Webhook';
+
+	/**
+	 * Documentation URL
+	 *
+	 * @var string
+	 */
+	protected $_documentation = 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#webhook';
+
+	/**
+	 * Position
+	 *
+	 * @var int
+	 */
+	protected $_position = 0;
 
 	/**
 	 * Forminator_Webhook constructor.
-	 *
-	 *
 	 */
 	public function __construct() {
 		// late init to allow translation.
 		$this->_description = esc_html__( 'Get awesome by your form.', 'forminator' );
-		$this->_promotion = sprintf(
+		$this->_promotion   = sprintf(
 		/* translators: 1: Zapier link 2. Closing a tag 3. Integrately link 4. Tray.io link 5. Make.com link 6. Workato link 7. Additional text */
 			esc_html__( 'Connect Forminator with automation tools through webhook. You can use this to send submissions to automation apps like %1$sZapier%2$s, %3$sIntegrately%2$s, %4$sTray.io%2$s, %5$sMake%2$s, %6$sWorkato%2$s, and other automation tools that support webhooks.', 'forminator' ),
 			'<a href="https://zapier.com/" target="_blank">',
@@ -46,7 +90,6 @@ final class Forminator_Webhook extends Forminator_Integration {
 
 	/**
 	 * Setting apier Integration
-	 *
 	 *
 	 * @return array
 	 */
@@ -62,12 +105,11 @@ final class Forminator_Webhook extends Forminator_Integration {
 	/**
 	 * Activate Webhook
 	 *
-	 *
-	 *
-	 * @param     $submitted_data
-	 * @param int $form_id
+	 * @param array $submitted_data Submitted data.
+	 * @param int   $form_id Form Id.
 	 *
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function setup_connect( $submitted_data, $form_id = 0 ) {
 		$settings_values = $this->get_settings_values();
@@ -150,12 +192,9 @@ final class Forminator_Webhook extends Forminator_Integration {
 	/**
 	 * Get Webhook API
 	 *
-	 *
-	 *
-	 * @param string $endpoint
+	 * @param string $endpoint Endpoint.
 	 *
 	 * @return Forminator_Webhook_Wp_Api|null
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_api( $endpoint ) {
 		return Forminator_Webhook_Wp_Api::get_instance( $endpoint );
@@ -163,7 +202,6 @@ final class Forminator_Webhook extends Forminator_Integration {
 
 	/**
 	 * Allow multiple connection on one form
-	 *
 	 *
 	 * @return bool
 	 */

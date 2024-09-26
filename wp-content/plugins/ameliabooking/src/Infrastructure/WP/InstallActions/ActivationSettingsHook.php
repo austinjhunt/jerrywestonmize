@@ -1610,13 +1610,17 @@ This message does not have an option for responding. If you need additional info
                 'recurringPlaceholdersCustomerSms' => null,
                 'packagePlaceholdersCustomer'      => null,
                 'packagePlaceholdersCustomerSms'   => null,
-                'groupAppointmentPlaceholder'       => 'Name: %customer_full_name%',
-                'groupEventPlaceholder'             => 'Name: %customer_full_name%',
-                'groupAppointmentPlaceholderSms'    => 'Name: %customer_full_name%',
-                'groupEventPlaceholderSms'          => 'Name: %customer_full_name%',
+                'groupAppointmentPlaceholder'      => 'Name: %customer_full_name%',
+                'groupEventPlaceholder'            => 'Name: %customer_full_name%',
+                'groupAppointmentPlaceholderSms'   => 'Name: %customer_full_name%',
+                'groupEventPlaceholderSms'         => 'Name: %customer_full_name%',
             ],
-            'employeeSelection'                => 'random',
-            'bringingAnyoneLogic'              => 'additional',
+            'waitingListEvents'                 => [
+                'enabled'                          => false,
+                'addingMethod'                     => 'Manually'
+            ],
+            'employeeSelection'                    => 'random',
+            'bringingAnyoneLogic'                  => 'additional',
         ];
     }
 

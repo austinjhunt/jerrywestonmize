@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Custom class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,26 +17,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Custom extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'custom';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'custom';
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	// public $category = 'posts';.
@@ -48,7 +64,9 @@ class Forminator_Custom extends Forminator_Field {
 	}
 
 	/**
-	 * @param array $settings
+	 * Load settings
+	 *
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -176,7 +194,7 @@ class Forminator_Custom extends Forminator_Field {
 	 * Field front-end markup
 	 *
 	 * @since 1.0
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
 	 *
 	 * @return mixed
@@ -248,8 +266,8 @@ class Forminator_Custom extends Forminator_Field {
 	 * Field back-end validation
 	 *
 	 * @since 1.0
-	 * @param array        $field
-	 * @param array|string $data
+	 * @param array        $field Field.
+	 * @param array|string $data Data.
 	 */
 	public function validate( $field, $data ) {
 		if ( $this->is_required( $field ) ) {
@@ -267,7 +285,7 @@ class Forminator_Custom extends Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization

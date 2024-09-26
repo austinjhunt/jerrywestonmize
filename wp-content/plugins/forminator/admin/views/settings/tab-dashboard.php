@@ -1,3 +1,11 @@
+<?php
+/**
+ * Template admin/views/settings/tab-dashboard.php
+ *
+ * @package Forminator
+ */
+
+?>
 <div class="sui-box-settings-row">
 
 	<div class="sui-box-settings-col-1">

@@ -202,6 +202,12 @@ class AppointmentPlaceholderService extends PlaceholderService
         if ($bookingKey !== null && $appointment['bookings'][$bookingKey]['utcOffset'] !== null
             && $settingsService->getSetting('general', 'showClientTimeZone')
         ) {
+            $info = !empty($appointment['bookings'][$bookingKey]['info'])
+                ? json_decode($appointment['bookings'][$bookingKey]['info'], true)
+                : null;
+
+            $timeZone = !empty($info['timeZone']) ? $info['timeZone'] : '';
+
             $bookingStart = DateTimeService::getClientUtcCustomDateTimeObject(
                 DateTimeService::getCustomDateTimeInUtc($appointment['bookingStart']),
                 $appointment['bookings'][$bookingKey]['utcOffset']
@@ -221,19 +227,20 @@ class AppointmentPlaceholderService extends PlaceholderService
                 DateTimeService::getCustomDateTimeInUtc($appointment['initialAppointmentDateTime']['bookingEnd']),
                 $appointment['bookings'][$bookingKey]['utcOffset']
             ) : '';
-
         } else if ($bookingKey === null && !empty($appointment['provider']['timeZone'])) {
+            $timeZone = $appointment['provider']['timeZone'];
+
             $bookingStart = DateTimeService::getDateTimeObjectInTimeZone(
                 DateTimeService::getCustomDateTimeObject(
                     $appointment['bookingStart']
-                )->setTimezone(new \DateTimeZone($appointment['provider']['timeZone']))->format('Y-m-d H:i:s'),
+                )->setTimezone(new \DateTimeZone($timeZone))->format('Y-m-d H:i:s'),
                 'UTC'
             );
 
             $bookingEnd = DateTimeService::getDateTimeObjectInTimeZone(
                 DateTimeService::getCustomDateTimeObject(
                     $appointment['bookingEnd']
-                )->setTimezone(new \DateTimeZone($appointment['provider']['timeZone']))->format('Y-m-d H:i:s'),
+                )->setTimezone(new \DateTimeZone($timeZone))->format('Y-m-d H:i:s'),
                 'UTC'
             );
 
@@ -241,7 +248,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                 DateTimeService::getDateTimeObjectInTimeZone(
                     DateTimeService::getCustomDateTimeObject(
                         $appointment['initialAppointmentDateTime']['bookingStart']
-                    )->setTimezone(new \DateTimeZone($appointment['provider']['timeZone']))->format('Y-m-d H:i:s'),
+                    )->setTimezone(new \DateTimeZone($timeZone))->format('Y-m-d H:i:s'),
                     'UTC'
                 ) : '';
 
@@ -249,16 +256,20 @@ class AppointmentPlaceholderService extends PlaceholderService
                 DateTimeService::getDateTimeObjectInTimeZone(
                     DateTimeService::getCustomDateTimeObject(
                         $appointment['initialAppointmentDateTime']['bookingEnd']
-                    )->setTimezone(new \DateTimeZone($appointment['provider']['timeZone']))->format('Y-m-d H:i:s'),
+                    )->setTimezone(new \DateTimeZone($timeZone))->format('Y-m-d H:i:s'),
                     'UTC'
                 ) : '';
-
         } else {
+            $timeZone = get_option('timezone_string');
+
             $bookingStart = DateTime::createFromFormat('Y-m-d H:i:s', $appointment['bookingStart']);
-            $bookingEnd   = DateTime::createFromFormat('Y-m-d H:i:s', $appointment['bookingEnd']);
+
+            $bookingEnd = DateTime::createFromFormat('Y-m-d H:i:s', $appointment['bookingEnd']);
+
             $oldBookingStart = !empty($appointment['initialAppointmentDateTime']) ?
                 DateTime::createFromFormat('Y-m-d H:i:s', $appointment['initialAppointmentDateTime']['bookingStart']) : '';
-            $oldBookingEnd   = !empty($appointment['initialAppointmentDateTime']) ?
+
+            $oldBookingEnd = !empty($appointment['initialAppointmentDateTime']) ?
                 DateTime::createFromFormat('Y-m-d H:i:s', $appointment['initialAppointmentDateTime']['bookingEnd']) : '';
         }
 
@@ -304,6 +315,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                 '<a href="' . $zoomJoinUrl . '">' . BackendStrings::getCommonStrings()['zoom_click_to_join'] . '</a>'
                 : $zoomJoinUrl,
             'google_meet_url'        => $googleMeetUrl,
+            'time_zone'              => $timeZone,
         ];
     }
 
@@ -620,7 +632,9 @@ class AppointmentPlaceholderService extends PlaceholderService
                 $settingsService->getSetting('company', 'phone') : $location->getPhone()->getValue(),
             'location_id'          => $locationId,
             'location_name'        => $locationName,
-            'location_description' => $locationDescription
+            'location_description' => $locationDescription,
+            'location_latitude'    => $location && $location->getCoordinates() ? $location->getCoordinates()->getLatitude() : null,
+            'location_longitude'   => $location && $location->getCoordinates() ? $location->getCoordinates()->getLongitude() : null,
         ];
     }
 
@@ -673,9 +687,13 @@ class AppointmentPlaceholderService extends PlaceholderService
                         if ($recurringBooking['id'] === $recurringData['booking']['id']) {
                             $recurringBookingKey = $key;
                         }
-                    } else {
-                        $recurringBookingKey = $bookingKey;
+                    } else if ($recurringBooking['customerId'] === $appointment['bookings'][$bookingKey]['customerId']) {
+                        $recurringBookingKey = $key;
                     }
+                }
+
+                if ($recurringBookingKey === null) {
+                    return [];
                 }
             } elseif ($bookingKeyForEmployee !== null) {
                 foreach ($recurringData['appointment']['bookings'] as $key => $recurringBooking) {
@@ -721,7 +739,7 @@ class AppointmentPlaceholderService extends PlaceholderService
 
             $recurringPlaceholders = array_merge(
                 $recurringPlaceholders,
-                $this->getCustomFieldsData($recurringData['appointment'], $type, $bookingKey)
+                $this->getCustomFieldsData($recurringData['appointment'], $type, $recurringBookingKey)
             );
 
             $recurringPlaceholders = array_merge(
@@ -734,8 +752,6 @@ class AppointmentPlaceholderService extends PlaceholderService
                     $recurringPlaceholders['deposit']
                 )
             );
-
-            $recurringPlaceholders['time_zone'] = get_option('timezone_string');
 
             unset($recurringPlaceholders['icsFiles']);
 

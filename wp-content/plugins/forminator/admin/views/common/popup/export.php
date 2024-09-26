@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/common/popup/export.php
+ *
+ * @package Forminator
+ */
+
 $form_id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 $slug    = $args['slug'];
 $_page   = 'forminator-' . forminator_get_prefix( $slug, 'c' );

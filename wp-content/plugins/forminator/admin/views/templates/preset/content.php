@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/templates/preset/content.php
+ *
+ * @package Forminator
+ */
+
 $section              = Forminator_Core::sanitize_text_field( 'section', 'all' );
 $custom_form_instance = Forminator_Custom_Forms::get_instance();
 $templates            = $custom_form_instance->get_templates();
@@ -17,13 +23,6 @@ $templates_categories = $custom_form_instance->get_templates_categories();
 			<div class="forminator-category-name">
 				<?php esc_html_e( 'Categories', 'forminator' ); ?>
 			</div>
-			<!-- Loading categories -->
-<!--			<div class="forminator-loading-state">-->
-<!--				<span class="sui-icon-loader sui-loading"></span>-->
-<!--				<span aria-live="polite">-->
-<!--					--><?php //esc_html_e( 'Loading categories...', 'forminator' ); ?>
-<!--				</span>-->
-<!--			</div>-->
 			<ul class="sui-vertical-tabs sui-sidenav-hide-md">
 				<?php foreach ( $templates_categories as $category ) { ?>
 					<li class="sui-vertical-tab <?php echo $category['slug'] === $section ? 'current' : ''; ?>">
@@ -82,14 +81,16 @@ $templates_categories = $custom_form_instance->get_templates_categories();
 					<div class="forminator-template-cards">
 						<div class="sui-box-selectors sui-box-selectors-col-3">
 							<ul>
-								<?php foreach ( $templates as $template ) {
+								<?php
+								foreach ( $templates as $template ) {
 									if ( 'all' === $category['slug'] || $template['category'] === $category['slug'] ) {
-										Forminator_Admin_Addons_page::get_instance()->render_template(
+										Forminator_Admin_Addons_Page::get_instance()->render_template(
 											'admin/views/templates/preset/listing',
 											$template
 										);
 									}
-								} ?>
+								}
+								?>
 							</ul>
 							<div class="forminator-template-notice">
 								<h2><?php esc_html_e( 'Looking for more templates?', 'forminator' ); ?></h2>
@@ -126,9 +127,9 @@ $templates_categories = $custom_form_instance->get_templates_categories();
 		<?php } ?>
 		<div class="sui-box sui-message sui-message-lg" id="forminator-no-search-result" style="display: none;">
 			<img src="<?php echo esc_url( forminator_plugin_url() . 'assets/images/forminator-no-result.png' ); ?>"
-				 srcset="<?php echo esc_url( forminator_plugin_url() . 'assets/images/forminator-no-result.png' ); ?> 1x, <?php echo esc_url( forminator_plugin_url() . 'assets/images/forminator-no-result@2x.png' ); ?> 2x"
-				 alt="<?php esc_attr_e( 'Forminator no result', 'forminator' ); ?>"
-				 class="sui-image sui-image-center fui-image">
+				srcset="<?php echo esc_url( forminator_plugin_url() . 'assets/images/forminator-no-result.png' ); ?> 1x, <?php echo esc_url( forminator_plugin_url() . 'assets/images/forminator-no-result@2x.png' ); ?> 2x"
+				alt="<?php esc_attr_e( 'Forminator no result', 'forminator' ); ?>"
+				class="sui-image sui-image-center fui-image">
 			<div class="sui-message-content">
 				<h3 data-title="<?php esc_attr_e( 'No result for “{search_text}”', 'forminator' ); ?>"></h3>
 				<p>

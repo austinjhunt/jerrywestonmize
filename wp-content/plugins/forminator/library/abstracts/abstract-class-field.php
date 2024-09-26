@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator Field.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -19,75 +25,99 @@ if ( ! defined( 'ABSPATH' ) ) {
 abstract class Forminator_Field {
 
 	/**
+	 * The field
+	 *
 	 * @var array
 	 */
 	public $field = array();
 
 	/**
+	 * The Form settings
+	 *
 	 * @var array
 	 */
 	public $form_settings = array();
 
 	/**
+	 * The name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * The slug
+	 *
 	 * @var string
 	 */
 	public $slug = '';
 
 	/**
+	 * The category
+	 *
 	 * @var string
 	 */
 	public $category = '';
 
-    /**
-     * Type
-     *
-     * @var string
-     */
-    public $type = '';
-
-    /**
-     * Options
-     *
-     * @var array
-     */
-    public $options = array();
+	/**
+	 * Type
+	 *
+	 * @var string
+	 */
+	public $type = '';
 
 	/**
+	 * Options
+	 *
+	 * @var array
+	 */
+	public $options = array();
+
+	/**
+	 * The settings
+	 *
 	 * @var array
 	 */
 	public $settings = array();
 
 	/**
+	 * The autofill settings
+	 *
 	 * @var array
 	 */
 	public $autofill_settings = array();
 
 	/**
+	 * The defaults
+	 *
 	 * @var array
 	 */
 	public $defaults = array();
 
 	/**
+	 * The hide advanced
+	 *
 	 * @var bool
 	 */
 	public $hide_advanced = false;
 
 	/**
+	 * The position
+	 *
 	 * @var int
 	 */
 	public $position = 99;
 
 	/**
+	 * Is inout
+	 *
 	 * @var bool
 	 */
 	public $is_input = false;
 
 	/**
+	 * Has counter
+	 *
 	 * @var bool
 	 */
 	public $has_counter = false;
@@ -124,24 +154,31 @@ abstract class Forminator_Field {
 	const FIELD_PROPERTY_VALUE_NOT_EXIST = 'FORMINATOR_PROPERTY_VALUE_NOT_EXIST';
 
 	/**
+	 * The icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-element-radio';
 
 	/**
+	 * Is calculable
+	 *
 	 * @var bool
 	 */
 	public $is_calculable = false;
 
 	const FIELD_NOT_CALCULABLE = 'FIELD_NOT_CALCULABLE';
 
+	/**
+	 * The Constructor
+	 */
 	public function __construct() {
 
 		add_action( 'admin_init', array( &$this, 'admin_init_field' ) );
 	}
 
 	/**
-	 * admin init field
+	 * Admin init field
 	 *
 	 * @since 1.7
 	 */
@@ -152,7 +189,6 @@ abstract class Forminator_Field {
 		$this->defaults          = apply_filters( "forminator_field_{$this->slug}_defaults", $this->defaults() );
 		$this->position          = apply_filters( "forminator_field_{$this->slug}_position", $this->position );
 		$this->is_calculable     = apply_filters( "forminator_field_{$this->slug}_is_calculable", $this->is_calculable );
-
 	}
 
 	/**
@@ -176,6 +212,8 @@ abstract class Forminator_Field {
 	}
 
 	/**
+	 * Get Category
+	 *
 	 * @return string
 	 */
 	public function get_category() {
@@ -196,7 +234,7 @@ abstract class Forminator_Field {
 	 * Create decimals pattern from decimals number
 	 *
 	 * @since 1.7
-	 * @param integer $decimals
+	 * @param integer $decimals Decimals.
 	 * @return mixed
 	 */
 	protected static function create_step_string( $decimals = 2 ) {
@@ -219,14 +257,13 @@ abstract class Forminator_Field {
 	 * @since 1.0
 	 * @since 1.6 add $data_type, to cast it
 	 *
-	 * @param string $property
-	 * @param array  $field
-	 * @param string $fallback
+	 * @param string $property Property.
+	 * @param array  $field Field.
+	 * @param string $fallback Fallback.
 	 * @param string $data_type data type to return.
 	 *
 	 * @return mixed
 	 */
-
 	public static function get_property( $property, $field, $fallback = '', $data_type = null ) {
 
 		$property_value = $fallback;
@@ -263,15 +300,17 @@ abstract class Forminator_Field {
 	}
 
 	/**
+	 * Markup
+	 *
 	 * @since 1.0
 	 *
-	 * @param       $field
+	 * @param mixed                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
 	 *
 	 * @return mixed
 	 */
-	public function markup(
-		/** @noinspection PhpUnusedParameterInspection */
+	public function markup( // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		// @noinspection PhpUnusedParameterInspection.
 		$field,
 		$views_obj
 	) {
@@ -279,6 +318,8 @@ abstract class Forminator_Field {
 	}
 
 	/**
+	 * Defaults
+	 *
 	 * @since 1.0
 	 * @return array
 	 */
@@ -291,7 +332,8 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param string
+	 * @param string $description Description.
+	 * @param string $get_id Id.
 	 *
 	 * @return string
 	 */
@@ -350,13 +392,13 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array  $attr
+	 * @param array  $attr Attribute.
 	 *
-	 * @param string $label
-	 * @param string $description
-	 * @param bool   $required
-	 * @param string $design
-	 * @param array  $wrapper_input
+	 * @param string $label Label.
+	 * @param string $description Description.
+	 * @param bool   $required Required.
+	 * @param string $design Design.
+	 * @param array  $wrapper_input Wrapper Input.
 	 *
 	 * @return mixed
 	 */
@@ -415,16 +457,15 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array  $attr
-	 *
-	 * @param string $label
-	 * @param string $description
-	 * @param bool   $required
-	 * @param string $design
+	 * @param array  $attr Field Attribute.
+	 * @param string $label Field Label.
+	 * @param string $description Field Description.
+	 * @param bool   $required Required.
+	 * @param string $design Design.
 	 *
 	 * @return mixed
 	 */
-	public static function create_textarea( $attr = array(), $label = '', $description = '', $required = false, $design = '' ) {
+	public static function create_textarea( $attr = array(), $label = '', $description = '', $required = false, $design = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
 		$html    = '';
 		$content = isset( $attr['content'] ) ? $attr['content'] : '';
@@ -457,11 +498,12 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array  $attr
-	 *
-	 * @param string $label
-	 * @param string $description
-	 * @param bool   $required
+	 * @param array   $attr Field Attribute.
+	 * @param string  $label Field Label.
+	 * @param string  $description Field Description.
+	 * @param bool    $required Required.
+	 * @param string  $default_height Height.
+	 * @param integer $limit Limit.
 	 *
 	 * @return mixed
 	 */
@@ -499,9 +541,6 @@ abstract class Forminator_Field {
 				'media_buttons' => false,
 				'editor_class'  => $wp_editor_class,
 				'editor_height' => $default_height,
-				// 'tinymce'     => array(
-				// 'content_css' => '/forminator-{theme}-editor.min.css'
-				// ),
 			)
 		);
 
@@ -519,7 +558,7 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $editor_markup
+	 * @param string $editor_markup Editor markup.
 	 *
 	 * @return mixed
 	 */
@@ -568,13 +607,12 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array  $attr
-	 * @param string $label
-	 * @param array  $options
-	 * @param string $value
-	 *
-	 * @param string $description
-	 * @param bool   $required
+	 * @param array  $attr Field attribute.
+	 * @param string $label Field label.
+	 * @param array  $options Field option.
+	 * @param string $value Field value.
+	 * @param string $description Field description.
+	 * @param bool   $required Required.
 	 *
 	 * @return mixed
 	 */
@@ -624,11 +662,10 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array  $attr
-	 * @param array  $options
-	 * @param string $value
-	 *
-	 * @param string $description
+	 * @param array  $attr Field Attribute.
+	 * @param array  $options Field Options.
+	 * @param string $value Field Value.
+	 * @param string $description Field Description.
 	 *
 	 * @return mixed
 	 */
@@ -636,7 +673,7 @@ abstract class Forminator_Field {
 
 		_deprecated_function( 'create_simple_select', '1.6.1', 'create_select' );
 
-		$html   = '';
+		$html = '';
 
 		$get_id = uniqid( 'forminator-select-' );
 
@@ -666,8 +703,8 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param        $options
-	 * @param string  $selected_value
+	 * @param array  $options Options.
+	 * @param string $selected_value Selected value.
 	 *
 	 * @return string
 	 */
@@ -681,8 +718,8 @@ abstract class Forminator_Field {
 				$populated_optgroup_options = self::populate_options_for_select( $option['value'], $selected_value );
 				$html                      .= sprintf( '<optgroup label="%s">%s</optgroup>', esc_attr( $option['label'] ), $populated_optgroup_options );
 			} else {
-				if ( '' === $selected_value && '' === $option['value']
-						|| '' !== $selected_value && $option['value'] == $selected_value
+				if ( ( '' === $selected_value && '' === $option['value'] )
+						|| ( '' !== $selected_value && $option['value'] == $selected_value ) // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- loose comparison ok : possible compare '01' and '1'.
 						|| ! empty( $option['selected'] ) ) {
 					$selected = 'selected="selected"';
 				}
@@ -698,15 +735,14 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param string      $id
-	 * @param string      $name
-	 * @param        $description
-	 * @param bool        $required
-	 *
-	 * @param        $design
-	 * @param        $file_type
-	 * @param        $form_id
-	 * @param        $upload_attr
+	 * @param string  $id Field Id.
+	 * @param string  $name Field name.
+	 * @param string  $description Field description.
+	 * @param bool    $required Field required.
+	 * @param string  $design Design.
+	 * @param string  $file_type File type.
+	 * @param integer $form_id Form Id.
+	 * @param array   $upload_attr Upload attributes.
 	 *
 	 * @return string $html
 	 */
@@ -747,56 +783,54 @@ abstract class Forminator_Field {
 
 			$html .= sprintf( '<button class="forminator-upload--remove" style="display: none;">%s</button>', esc_html__( 'Remove', 'forminator' ) );
 
-		} else {
-
-			if ( 'multiple' === $file_type ) {
+		} elseif ( 'multiple' === $file_type ) {
 
 				$html .= '<div class="forminator-multi-upload-message" aria-hidden="true">';
 
 					$html .= '<span class="forminator-icon-upload" aria-hidden="true"></span>';
 
-					$html     .= '<p>';
-						$html .= sprintf( esc_html__( 'Drag and Drop (or) %1$sChoose Files%2$s', 'forminator' ), '<a class="forminator-upload-file--' . $id . '" href="javascript:void(0)">', '</a>' );
+					$html .= '<p>';
+						// translators: %1$s - Opening anchor tag, %2$s - Closing anchor tag.
+						$html .= sprintf( esc_html__( 'Drag and Drop (or) %1$sChoose Files%2$s', 'forminator' ), '<a class="forminator-upload-file--' . $id . '" href="#" onclick="return false;">', '</a>' );
 					$html     .= '</p>';
 
 				$html .= '</div>';
 
+		} else {
+
+			$html .= sprintf( '<button id="%s" class="forminator-button forminator-button-upload" data-id="%s">', $button_id, $id );
+
+			if ( 'material' === $design ) {
+
+				$html .= sprintf(
+					'<span>%s</span>',
+					esc_html__( 'Choose File', 'forminator' )
+				);
+
+				$html .= '<span aria-hidden="true"></span>';
+
 			} else {
-
-				$html .= sprintf( '<button id="%s" class="forminator-button forminator-button-upload" data-id="%s">', $button_id, $id );
-
-				if ( 'material' === $design ) {
-
-					$html .= sprintf(
-						'<span>%s</span>',
-						esc_html__( 'Choose File', 'forminator' )
-					);
-
-					$html .= '<span aria-hidden="true"></span>';
-
-				} else {
-					$html .= esc_html__( 'Choose File', 'forminator' );
-				}
-
-					$html .= '</button>';
-
-					$html .= sprintf(
-						'<span data-empty-text="%s">%s</span>',
-						esc_html__( 'No file chosen', 'forminator' ),
-						esc_html__( 'No file chosen', 'forminator' )
-					);
-
-				$html .= '<button class="forminator-button-delete" style="display: none;">';
-
-					$html .= '<i class="forminator-icon-close" aria-hidden="true"></i>';
-
-					$html .= sprintf(
-						'<span class="forminator-screen-reader-only">%s</span>',
-						esc_html__( 'Delete uploaded file', 'forminator' )
-					);
+				$html .= esc_html__( 'Choose File', 'forminator' );
+			}
 
 				$html .= '</button>';
-			}
+
+				$html .= sprintf(
+					'<span data-empty-text="%s">%s</span>',
+					esc_html__( 'No file chosen', 'forminator' ),
+					esc_html__( 'No file chosen', 'forminator' )
+				);
+
+			$html .= '<button class="forminator-button-delete" style="display: none;">';
+
+				$html .= '<i class="forminator-icon-close" aria-hidden="true"></i>';
+
+				$html .= sprintf(
+					'<span class="forminator-screen-reader-only">%s</span>',
+					esc_html__( 'Delete uploaded file', 'forminator' )
+				);
+
+			$html .= '</button>';
 		}
 
 		$html .= '</div>';
@@ -807,7 +841,6 @@ abstract class Forminator_Field {
 		}
 
 		return apply_filters( 'forminator_field_create_file_upload', $html, $id, $name, $required );
-
 	}
 
 	/**
@@ -815,7 +848,7 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array $args
+	 * @param array $args Attributes.
 	 *
 	 * @return string
 	 */
@@ -834,7 +867,7 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be validated.
 	 */
 	public function validate( $field, $data ) {
@@ -852,8 +885,9 @@ abstract class Forminator_Field {
 		if ( $this->is_available( $field_array ) ) {
 
 			/**
-			 * @since 1.0.5
 			 * Mayble re autofill, when autofill not editable, it should return autofill value
+			 *
+			 * @since 1.0.5
 			 */
 			$field_data = $this->maybe_autofill( $field_array, $field_data, Forminator_CForm_Front_Action::$module_settings );
 			$this->validate( $field_array, $field_data );
@@ -885,7 +919,7 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return bool
 	 */
@@ -902,7 +936,7 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return bool
 	 */
@@ -938,7 +972,7 @@ abstract class Forminator_Field {
 		foreach ( $conditions as $condition ) {
 			$element_id = $condition['element_id'];
 			// Increase conditions count.
-			$conditions_count ++;
+			++$conditions_count;
 
 			if ( in_array( $element_id, Forminator_CForm_Front_Action::$hidden_fields, true ) ) {
 				$current_is_hidden      = true;
@@ -950,7 +984,7 @@ abstract class Forminator_Field {
 			}
 
 			if ( $is_condition_fulfilled ) {
-				$condition_fulfilled ++;
+				++$condition_fulfilled;
 			} elseif ( 'all' === $condition_rule ) {
 				// if condition rule is ALL and at least one condition isn't matched - we don't need to check others.
 				break;
@@ -962,7 +996,7 @@ abstract class Forminator_Field {
 				$parent_hidden = self::is_hidden( $parent_field, array(), $group_suffix );
 
 				if ( $parent_hidden ) {
-					$condition_fulfilled--;
+					--$condition_fulfilled;
 					if ( 'all' === $condition_rule ) {
 						break;
 					}
@@ -1050,7 +1084,7 @@ abstract class Forminator_Field {
 			}
 		}
 
-		// If date field is dropdown type
+		// If date field is dropdown type.
 		if (
 			stripos( $element_id, 'date-' ) !== false &&
 			isset( $form_data[ $element_id . '-month' ] ) &&
@@ -1100,9 +1134,9 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $form_field_value
-	 * @param $condition
-	 * @param $form_id null
+	 * @param mixed        $form_field_value Form field.
+	 * @param array        $condition Condition.
+	 * @param null|integer $form_id Form ID.
 	 *
 	 * @return bool
 	 */
@@ -1116,12 +1150,12 @@ abstract class Forminator_Field {
 		$form_field_value = wp_unslash( $form_field_value );
 		$condition_value  = trim( $condition['value'] );
 
-		// Remove lines below coz strtolower is already applied using forminator_trim_array
+		// Remove lines below coz strtolower is already applied using forminator_trim_array.
 		// if ( is_array( $form_field_value ) ) {
 		// $form_field_value = array_map( 'strtolower', $form_field_value );
 		// } else if ( is_string( $form_field_value ) ) {
 		// $form_field_value = strtolower( $form_field_value );
-		// }
+		// }.
 
 		if ( is_string( $condition_value ) ) {
 			$condition_value = strtolower( $condition_value );
@@ -1130,7 +1164,7 @@ abstract class Forminator_Field {
 		switch ( $condition['rule'] ) {
 			case 'is':
 				if ( is_array( $form_field_value ) ) {
-					// possible input is "1" to be compared with 1
+					// possible input is "1" to be compared with 1.
 					return in_array( $condition_value, $form_field_value ); //phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 				}
 				if ( is_numeric( $condition_value ) ) {
@@ -1140,7 +1174,7 @@ abstract class Forminator_Field {
 				return ( $form_field_value === $condition_value );
 			case 'is_not':
 				if ( is_array( $form_field_value ) ) {
-					// possible input is "1" to be compared with 1
+					// possible input is "1" to be compared with 1.
 					return ! in_array( $condition_value, $form_field_value ); //phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 				}
 
@@ -1268,10 +1302,10 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.14
 	 *
-	 * @param $form_field_value
-	 * @param $element_id
-	 * @param $form_id
-	 * @param $format
+	 * @param mixed   $form_field_value Form field value.
+	 * @param string  $element_id Element Id.
+	 * @param integer $form_id Form ID.
+	 * @param string  $format Format.
 	 *
 	 * @return string|bool
 	 */
@@ -1322,7 +1356,7 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return string
 	 */
@@ -1356,19 +1390,25 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization
 	 */
 	public function sanitize(
-		/** @noinspection PhpUnusedParameterInspection */
+		// @noinspection PhpUnusedParameterInspection.
 		$field,
 		$data
 	) {
 		return $data;
 	}
 
+	/**
+	 * Sanitize value
+	 *
+	 * @param mixed $value Value.
+	 * @return string
+	 */
 	public function sanitize_value( $value ) {
 		return htmlspecialchars( $value, ENT_COMPAT );
 	}
@@ -1382,12 +1422,12 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0.3
 	 *
-	 * @param $field
+	 * @param array $field Field.
 	 *
 	 * @return bool
 	 */
 	public function is_available(
-		/** @noinspection PhpUnusedParameterInspection */
+		// @noinspection PhpUnusedParameterInspection.
 		$field
 	) {
 		return true;
@@ -1398,7 +1438,7 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0.3
 	 *
-	 * @param $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return string|bool
 	 */
@@ -1415,13 +1455,15 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $id
-	 * @param mixed  $fallback
+	 * @param string $id Field Id.
+	 * @param mixed  $fallback Fallback.
 	 *
 	 * @return mixed value of $_POST[$id] or $fallback when unavailable
 	 */
 	public static function get_post_data( $id, $fallback = '' ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- The nonce is verified before the method call.
 		if ( isset( $_POST[ $id ] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput -- The nonce is verified before the method call and sanitized in Forminator_Core::sanitize_array.
 			$post_data = Forminator_Core::sanitize_array( $_POST[ $id ], $id );
 		}
 		if ( ! empty( $post_data ) ) {
@@ -1436,12 +1478,12 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.6.3
 	 *
-	 * @param string $data
-	 * @param mixed  $fallback
+	 * @param string $data Post data.
+	 * @param mixed  $fallback Fallback.
 	 *
 	 * @return mixed value of $_POST[$id] or $fallback when unavailable
 	 */
-	public static function get_post_data_sanitize( $data, $fallback ) {
+	public static function get_post_data_sanitize( $data, $fallback ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		if ( is_array( $data ) ) {
 			$escaped = array();
 
@@ -1460,7 +1502,7 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -1473,19 +1515,19 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
 	public static function get_autofill_setting( $settings ) {
 
-		// Autofill not enabled
+		// Autofill not enabled.
 		if ( ! self::is_autofill_enabled( $settings ) ) {
 			return array();
 		}
 
 		if ( ! empty( $settings['fields-autofill'] ) ) {
-			// build to array key
+			// build to array key.
 			$fields_autofill      = $settings['fields-autofill'];
 			$fields_autofill_pair = array();
 			if ( ! is_array( $fields_autofill ) ) {
@@ -1510,7 +1552,7 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return bool
 	 */
@@ -1524,9 +1566,9 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param $field_array
-	 * @param $field_data
-	 * @param $settings
+	 * @param array $field_array Field array.
+	 * @param mixed $field_data Field data.
+	 * @param array $settings Settings.
 	 *
 	 * @return array|mixed|string
 	 */
@@ -1584,7 +1626,7 @@ abstract class Forminator_Field {
 	 *   'readonly' => 'readonly'
 	 * }
 	 *
-	 * @param       $element_id
+	 * @param string $element_id Element Id.
 	 *
 	 * @return array
 	 */
@@ -1623,8 +1665,8 @@ abstract class Forminator_Field {
 	 * Get element autofill value if all requirement(s) fulfilled
 	 * - Autofill Provider activated
 	 *
-	 * @param $element_value
-	 * @param $element_autofill_settings
+	 * @param mixed $element_value Element value.
+	 * @param array $element_autofill_settings Element settings.
 	 *
 	 * @return mixed|string
 	 */
@@ -1649,8 +1691,8 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param $element_id
-	 * @param $autofill_settings
+	 * @param string $element_id Element id.
+	 * @param array  $autofill_settings Settings.
 	 *
 	 * @return array
 	 */
@@ -1667,7 +1709,7 @@ abstract class Forminator_Field {
 	/**
 	 * Check if an element is editable when autofill enabled
 	 *
-	 * @param $element_autofill_settings
+	 * @param array $element_autofill_settings Settings.
 	 *
 	 * @return bool
 	 */
@@ -1682,11 +1724,11 @@ abstract class Forminator_Field {
 	/**
 	 * Get required message for multiple name field
 	 *
-	 * @param $id
-	 * @param $field
-	 * @param $property
-	 * @param $slug
-	 * @param $fallback
+	 * @param string $id Field Id.
+	 * @param array  $field Field.
+	 * @param string $property Property.
+	 * @param string $slug Slug.
+	 * @param mixed  $fallback Fallback.
 	 *
 	 * @return string
 	 */
@@ -1709,8 +1751,8 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.7
 	 *
-	 * @param array|mixed $submitted_field_data
-	 * @param array       $field_settings
+	 * @param array|mixed $submitted_field_data Field data.
+	 * @param array       $field_settings Settings.
 	 *
 	 * @return float|string
 	 */
@@ -1741,7 +1783,7 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.7
 	 *
-	 * @param $field_settings
+	 * @param array $field_settings Settings.
 	 *
 	 * @return int
 	 */
@@ -1769,7 +1811,8 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.10
 	 *
-	 * @param $field
+	 * @param array          $field Field.
+	 * @param boolean|string $prefix Prefix.
 	 * @return bool
 	 */
 	public function has_prefill( $field, $prefix = false ) {
@@ -1791,21 +1834,25 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.10
 	 *
-	 * @param $field
-	 * @param $default
+	 * @param array       $field Field.
+	 * @param mixed       $default_value Default value.
+	 * @param bool|string $prefix Prefix.
 	 * @return mixed
 	 */
-	public function get_prefill( $field, $default, $prefix = false ) {
+	public function get_prefill( $field, $default_value, $prefix = false ) {
 		if ( $prefix ) {
 			$prefix = $prefix . '_';
 		}
 
 		$prefill = self::get_property( $prefix . 'prefill', $field, false );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce is verified before the method call.
 		if ( isset( $_REQUEST[ $prefill ] ) ) {
 			if ( 'textarea' === $field['type'] ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce is verified before the method call.
 				$return = rawurldecode( wp_kses_post( wp_unslash( $_REQUEST[ $prefill ] ) ) );
 			} else {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- The nonce is verified before the method call.
 				$return = rawurldecode( esc_html( wp_unslash( $_REQUEST[ $prefill ] ) ) );
 			}
 
@@ -1814,7 +1861,7 @@ abstract class Forminator_Field {
 			}
 		}
 
-		return $default;
+		return $default_value;
 	}
 
 	/**
@@ -1822,16 +1869,16 @@ abstract class Forminator_Field {
 	 *
 	 * @since 1.10
 	 *
-	 * @param $field
-	 * @param $attributes
-	 * @param $prefix
-	 * @param bool       $default
+	 * @param array  $field Field.
+	 * @param array  $attributes Attributes.
+	 * @param string $prefix Prefix.
+	 * @param bool   $default_value Default value.
 	 * @return mixed
 	 */
-	public function replace_from_prefill( $field, $attributes, $prefix, $default = false ) {
+	public function replace_from_prefill( $field, $attributes, $prefix, $default_value = false ) {
 		if ( $this->has_prefill( $field, $prefix ) ) {
 			// We have pre-fill parameter, use its value or $value.
-			$value = $this->get_prefill( $field, $default, $prefix );
+			$value = $this->get_prefill( $field, $default_value, $prefix );
 
 			$attributes['value'] = esc_html( $value );
 		}
@@ -1878,7 +1925,7 @@ abstract class Forminator_Field {
 				paste_webkit_styles : 'font-weight font-style color',
 				preview_styles      : 'font-family font-size font-weight font-style text-decoration text-transform',
 				tabfocus_elements   : ':prev,:next',
-                plugins    : 'charmap,hr,media,paste,tabfocus,textcolor,fullscreen,wptextpattern,lists,wordpress,wpeditimage,wpgallery,link,wplink,wpdialogs,wpview'," // phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
+                plugins    : 'charmap,hr,media,paste,tabfocus,textcolor,fullscreen,wptextpattern,lists,wordpress,wpeditimage,wpgallery,link,wplink,wpdialogs,wpview'," // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText -- false positive.
 				. "
 				resize     : 'vertical',
 				menubar    : false,
@@ -1911,8 +1958,8 @@ abstract class Forminator_Field {
 	/**
 	 * Number separators
 	 *
-	 * @param $separator
-	 * @param $field
+	 * @param string $separator Separator.
+	 * @param string $field Field.
 	 *
 	 * @return array
 	 */
@@ -1953,8 +2000,8 @@ abstract class Forminator_Field {
 	/**
 	 * Number formatting
 	 *
-	 * @param $field
-	 * @param $number
+	 * @param string $field Field.
+	 * @param string $number Number.
 	 *
 	 * @return string
 	 */
@@ -1980,8 +2027,8 @@ abstract class Forminator_Field {
 	/**
 	 * Replace number formatting
 	 *
-	 * @param $field
-	 * @param $number
+	 * @param array  $field Field.
+	 * @param string $number Number.
 	 *
 	 * @return string
 	 */
@@ -2012,7 +2059,7 @@ abstract class Forminator_Field {
 	/**
 	 * Create index file
 	 *
-	 * @param $dir
+	 * @param string $dir Directory.
 	 *
 	 * @return void
 	 */
@@ -2021,18 +2068,26 @@ abstract class Forminator_Field {
 		if ( ! is_dir( $dir ) || ! wp_is_writable( $dir ) || is_link( $dir ) ) {
 			return;
 		}
-		if ( ! ( $dp = opendir( $dir ) ) ) {
+		$dp = opendir( $dir );
+		if ( ! $dp ) {
 			return;
 		}
-		// creates an empty index.php file
-		$index_file_path = $dir . '/index.php';
-		if ( $f = fopen( $index_file_path, 'w' ) ) {
-			fclose( $f );
+
+		if ( ! function_exists( 'wp_filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
-		// restores error handler
+
+		global $wp_filesystem;
+		if ( WP_Filesystem() ) {
+			$index_file_path = $dir . '/index.php';
+			// creates an empty index.php file.
+			$wp_filesystem->put_contents( $index_file_path, '', FS_CHMOD_FILE );
+		}
+
+		// restores error handler.
 		restore_error_handler();
-		while ( ( false !== $file = readdir( $dp ) ) ) {
-			if ( is_dir( "$dir/$file" ) && $file != '.' && $file != '..' ) {
+		while ( ( false !== $file = readdir( $dp ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition -- false positive
+			if ( is_dir( "$dir/$file" ) && '.' !== $file && '..' !== $file ) {
 				self::add_index_file( "$dir/$file" );
 			}
 		}
@@ -2042,8 +2097,8 @@ abstract class Forminator_Field {
 	/**
 	 * Add index file
 	 *
-	 * @param $form_id
-	 * @param $path
+	 * @param string|integer $form_id Form Id.
+	 * @param string         $path Path.
 	 *
 	 * @return void
 	 */
@@ -2067,8 +2122,6 @@ abstract class Forminator_Field {
 
 	/**
 	 * Add htaccess file
-	 *
-	 * @return void
 	 */
 	public static function add_htaccess_file() {
 		global $wp_locale_switcher;
@@ -2090,7 +2143,7 @@ abstract class Forminator_Field {
 
 		$htaccess_file = $upload_root . '.htaccess';
 		if ( file_exists( $htaccess_file ) ) {
-			@unlink( $htaccess_file );
+			wp_delete_file( $htaccess_file );
 		}
 		$rules = '# Disable parsing of PHP for some server configurations.
 <Files *>
@@ -2123,8 +2176,8 @@ abstract class Forminator_Field {
 	/**
 	 * Update metadata for uploaded file.
 	 *
-	 * @param $attachment_id
-	 * @param $file
+	 * @param int    $attachment_id Attachment Id.
+	 * @param string $file File.
 	 *
 	 * @return void
 	 */

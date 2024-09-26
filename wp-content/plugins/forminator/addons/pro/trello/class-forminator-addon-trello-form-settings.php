@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Trello form settings
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Trello_Form_Settings
  * Handle how form settings displayed and saved
  *

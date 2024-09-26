@@ -1,10 +1,14 @@
 <?php
+/**
+ * Forminator Addon Slack Poll Hooks.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Slack_Poll_Hooks
  *
  * @since 1.6.1
- *
  */
 class Forminator_Slack_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 
@@ -15,7 +19,7 @@ class Forminator_Slack_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -38,12 +42,13 @@ class Forminator_Slack_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $connection_id
-	 * @param $submitted_data
-	 * @param $connection_settings
-	 * @param $poll_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $poll_entry_fields Poll entry fields.
 	 *
 	 * @return array `is_sent` true means its success send data to Slack, false otherwise
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function get_status_on_send_message( $connection_id, $submitted_data, $connection_settings, $poll_entry_fields ) {
 		// initialize as null.
@@ -53,7 +58,7 @@ class Forminator_Slack_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 		$poll_settings_instance = $this->settings_instance;
 		$poll_settings          = $this->settings_instance->get_poll_settings();
 
-		//check required fields
+		// check required fields.
 		try {
 			$api  = $this->addon->get_api();
 			$args = array();
@@ -68,7 +73,6 @@ class Forminator_Slack_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 			$text_message = $connection_settings['message'];
 			$text_message = forminator_replace_variables( $text_message );
 
-			// {poll_name_replace}.
 			$text_message = str_ireplace( '{poll_name}', forminator_get_name_from_model( $this->module ), $text_message );
 
 			$attachments = $this->get_poll_data_as_attachments( $submitted_data, $poll_entry_fields );
@@ -169,8 +173,8 @@ class Forminator_Slack_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 	 *
 	 * @since 1.6.1
 	 *
-	 * @param $submitted_data
-	 * @param $poll_entry_fields
+	 * @param array $submitted_data Submitted data.
+	 * @param array $poll_entry_fields Poll entry fields.
 	 *
 	 * @return array
 	 */
@@ -224,7 +228,7 @@ class Forminator_Slack_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 				$entries = $map_entries[ $answer_data ];
 			}
 
-			$entries ++;
+			++$entries;
 			$map_entries[ $answer_data ] = $entries;
 
 		}
@@ -255,5 +259,4 @@ class Forminator_Slack_Poll_Hooks extends Forminator_Integration_Poll_Hooks {
 
 		return $attachments;
 	}
-
 }

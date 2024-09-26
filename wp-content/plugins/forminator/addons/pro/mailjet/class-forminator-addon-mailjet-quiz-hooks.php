@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Addon Mailjet Quiz Hooks.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Mailjet_Quiz_Hooks

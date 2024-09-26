@@ -1,5 +1,14 @@
 <?php
-/** @var Forminator_Poll_Page $this */
+/**
+ * Template admin/views/poll/entries/content.php
+ *
+ * @package Forminator
+ */
+
+/**
+ * Forminator_Poll_Page
+ *
+ *  @var Forminator_Poll_Page $this */
 
 // Search keyword.
 $search_keyword      = Forminator_Core::sanitize_text_field( 'module-search' );
@@ -13,7 +22,7 @@ $modules = $this->getModules();
 $count = ! $is_search ? $this->countModules() : count( $modules );
 
 // Start date for retrieving the information of the last 30 days in sql format.
-$sql_month_start_date = date( 'Y-m-d H:i:s', strtotime( '-30 days midnight' ) );
+$sql_month_start_date = gmdate( 'Y-m-d H:i:s', strtotime( '-30 days midnight' ) );
 
 $entry_type    = 'poll';
 $wizard_page   = 'forminator-poll-wizard';
@@ -33,4 +42,3 @@ $chart_args = array(
 	'start_date' => $sql_month_start_date,
 );
 $this->template( 'common/list/chart_script', $chart_args );
-

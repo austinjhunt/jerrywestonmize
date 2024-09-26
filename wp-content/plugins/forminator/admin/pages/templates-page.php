@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Templates Page
+ *
+ * @package Forminator
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
@@ -18,6 +23,12 @@ class Forminator_Templates_Page extends Forminator_Admin_Page {
 	 */
 	public function init() {}
 
+	/**
+	 * Enqueue scripts
+	 *
+	 * @param string $hook Hook name.
+	 * @return void
+	 */
 	public function enqueue_scripts( $hook ) {
 		parent::enqueue_scripts( $hook );
 
@@ -50,18 +61,28 @@ class Forminator_Templates_Page extends Forminator_Admin_Page {
 		return $data;
 	}
 
+	/**
+	 * Before render
+	 *
+	 * @return void
+	 */
 	public function before_render() {
 		// Add js data for Permissions.
 		add_filter( 'forminator_data', array( $this, 'add_permissions_js_data' ) );
 	}
 
+	/**
+	 * Add js data
+	 *
+	 * @param mixed $data Data to add.
+	 * @return mixed
+	 */
 	public function add_permissions_js_data( $data ) {
 		if ( ! current_user_can( forminator_get_admin_cap() ) ) {
 			return $data;
 		}
 
 		$permissions = get_option( 'forminator_permissions', array() );
-		// $permissions = json_decode( wp_unslash( $permissions ), true );
 
 		$data['mainSettings']     = array(
 			'permissions' => $permissions,

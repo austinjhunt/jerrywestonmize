@@ -1,3 +1,11 @@
+<?php
+/**
+ * Template admin/views/settings/data/retention.php
+ *
+ * @package Forminator
+ */
+
+?>
 <?php $option_slug = $args['option_slug']; ?>
 <?php $forever = '' !== $args['forever']; ?>
 

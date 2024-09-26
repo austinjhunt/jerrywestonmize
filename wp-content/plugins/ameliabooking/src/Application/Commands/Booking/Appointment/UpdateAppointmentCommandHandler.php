@@ -22,6 +22,7 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -148,6 +149,14 @@ class UpdateAppointmentCommandHandler extends CommandHandler
 
         /** @var Appointment $appointment */
         $appointment = $appointmentAS->build($appointmentData, $service);
+
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        /** @var Provider $provider */
+        $provider = $providerRepository->getById($appointmentData['providerId']);
+
+        $appointment->setProvider($provider);
 
         /** @var Appointment $oldAppointment */
         $oldAppointment      = $appointmentRepo->getById($appointment->getId()->getValue());

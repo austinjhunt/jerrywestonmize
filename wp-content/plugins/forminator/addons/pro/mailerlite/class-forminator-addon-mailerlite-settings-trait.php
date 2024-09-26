@@ -97,7 +97,6 @@ trait Forminator_Mailerlite_Settings_Trait {
 			'has_errors' => ! empty( $api_error ) || ! empty( $list_error ),
 			'size'       => 'small',
 		);
-
 	}
 
 	/**

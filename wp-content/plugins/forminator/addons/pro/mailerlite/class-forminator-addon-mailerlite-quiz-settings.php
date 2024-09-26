@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Addon Mailerlite quiz settings.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Mailerlite_Quiz_Settings
  * Quiz Settings Mailerlite Process
  */

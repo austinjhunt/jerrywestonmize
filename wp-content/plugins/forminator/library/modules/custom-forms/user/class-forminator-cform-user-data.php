@@ -1,4 +1,11 @@
 <?php
+/**
+ * The Forminator_CForm_User_Data class.
+ *
+ * @package Forminator
+ */
+
+// Block direct access.
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -10,6 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Forminator_CForm_User_Data {
 
+	/**
+	 * Forminator_CForm_User_Data constructor
+	 */
 	public function __construct() {
 		if ( is_admin() ) {
 			// Handle user popups.
@@ -32,9 +42,9 @@ class Forminator_CForm_User_Data {
 	}
 
 	/**
-	 * Approve user
+	 * Approve
 	 *
-	 * @return string JSON
+	 * @throws Exception When there is an error.
 	 */
 	public function approve_user() {
 		forminator_validate_ajax( 'forminatorFormEntries', false, 'forminator-entries' );
@@ -62,7 +72,7 @@ class Forminator_CForm_User_Data {
 	/**
 	 * Delete unconfirmed user
 	 *
-	 * @return string JSON
+	 * @throws Exception When there is an error.
 	 */
 	public function delete_unconfirmed_user() {
 		forminator_validate_ajax( 'forminatorFormEntries', false, 'forminator-entries' );
@@ -102,8 +112,8 @@ class Forminator_CForm_User_Data {
 	/**
 	 * Change submission entries.
 	 *
-	 * @param array                       $iterator
-	 * @param Forminator_Form_Entry_Model $entry
+	 * @param array                       $iterator Iterator.
+	 * @param Forminator_Form_Entry_Model $entry Form entry model.
 	 *
 	 * @return array
 	 */
@@ -127,11 +137,6 @@ class Forminator_CForm_User_Data {
 
 	/**
 	 * Resend activation link of entry
-	 *
-	 * @param array                       $iterator
-	 * @param Forminator_Form_Entry_Model $entry
-	 *
-	 * @return array
 	 */
 	public function resend_activation_link() {
 		forminator_validate_ajax( 'forminatorResendActivation', false, 'forminator-entries' );
@@ -147,17 +152,17 @@ class Forminator_CForm_User_Data {
 				home_url( '/' )
 			);
 
-			$signup    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->base_prefix}signups WHERE activation_key = %s", $key ) );
+			$signup    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->base_prefix}signups WHERE activation_key = %s", $key ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$username  = $signup->user_login;
 			$recipient = $signup->user_email;
 
-			$urlparts = parse_url( home_url() );
+			$urlparts = wp_parse_url( home_url() );
 			$domain   = $urlparts['host'];
 			$headers  = array(
 				'Content-Type: text/html; charset=UTF-8',
 				'From: ' . html_entity_decode( get_bloginfo( 'name' ), ENT_QUOTES ) . ' <admin@' . $domain . '>',
 			);
-
+			/* translators: 1. User name. */
 			$subject  = sprintf( esc_html__( 'Activation link for %s', 'forminator' ), $username );
 			$message  = '<p>' . esc_html__( 'To activate your user account, please click the following link:', 'forminator' ) . '</p>';
 			$message .= '<p>' . esc_url_raw( $url ) . '</p>';
@@ -227,13 +232,13 @@ class Forminator_CForm_User_Data {
 			if ( ! is_wp_error( $userdata ) ) {
 				// For Email-activation.
 				if ( isset( $userdata['redirect_page'] ) ) {
-					wp_redirect( get_permalink( $userdata['redirect_page'] ) );
+					wp_safe_redirect( get_permalink( $userdata['redirect_page'] ) );
 				} elseif (
 					current_user_can( 'manage_options' ) &&
 					isset( $userdata['form_id'] ) && ! empty( $userdata['form_id'] ) &&
 					isset( $userdata['entry_id'] ) && ! empty( $userdata['entry_id'] )
 				) {
-					wp_redirect( admin_url( 'admin.php?page=forminator-entries&form_type=forminator_forms&form_id=' . $userdata['form_id'] . '&entry_id=' . $userdata['entry_id'] ) );
+					wp_safe_redirect( admin_url( 'admin.php?page=forminator-entries&form_type=forminator_forms&form_id=' . $userdata['form_id'] . '&entry_id=' . $userdata['entry_id'] ) );
 				}
 				exit();
 
@@ -246,7 +251,7 @@ class Forminator_CForm_User_Data {
 	/**
 	 * Delete user signup.
 	 *
-	 * @param int $user_id
+	 * @param int $user_id User Id.
 	 */
 	public function delete_signup_user( $user_id ) {
 		$user = new WP_User( $user_id );
@@ -258,7 +263,7 @@ class Forminator_CForm_User_Data {
 	/**
 	 * Delete user signup bt activation.
 	 *
-	 * @param $activation_key
+	 * @param string $activation_key Activation key.
 	 *
 	 * @return bool|Forminator_CForm_User_Signups|int|mysqli_result|resource|WP_Error|null
 	 */

@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_CForm_Front_User_Registration class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -10,9 +16,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Forminator_CForm_Front_User_Registration extends Forminator_User {
 
+	/**
+	 * User data
+	 *
+	 * @var array
+	 */
 	private $user_data = array();
+
+	/**
+	 * Mail sender
+	 *
+	 * @var string
+	 */
 	private $mail_sender;
 
+	/**
+	 * Forminator_CForm_Front_User_Registration constructor
+	 */
 	public function __construct() {
 		parent::__construct();
 
@@ -30,10 +50,10 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Change submitted data
 	 *
-	 * @param string $value
-	 * @param array  $custom_form
-	 * @param string $column_name
-	 * @param array  $data
+	 * @param string $value Field value.
+	 * @param array  $custom_form Custom form.
+	 * @param string $column_name Column name.
+	 * @param array  $data Data.
 	 *
 	 * @return string
 	 */
@@ -52,7 +72,7 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Check activation method
 	 *
-	 * @param string $method
+	 * @param string $method Method.
 	 *
 	 * @return bool
 	 */
@@ -63,9 +83,9 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Show submit_errors
 	 *
-	 * @param string $submit_errors
-	 * @param int    $form_id
-	 * @param array  $field_data_array
+	 * @param string $submit_errors Error message.
+	 * @param int    $form_id Form Id.
+	 * @param array  $field_data_array Field data.
 	 *
 	 * @return bool|string
 	 */
@@ -116,9 +136,7 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Change submitted data
 	 *
-	 * @param string $new_value
-	 *
-	 * @return array
+	 * @param string $new_value New value.
 	 */
 	public function change_submitted_data( $new_value ) {
 		foreach ( Forminator_CForm_Front_Action::$prepared_data as $field_key => $field_value ) {
@@ -131,9 +149,9 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Handle activation user
 	 *
-	 * @param array $user_data
-	 * @param array $custom_form
-	 * @param Forminator_Form_Entry_Model $entry
+	 * @param array                       $user_data User data.
+	 * @param array                       $custom_form Custom form.
+	 * @param Forminator_Form_Entry_Model $entry Form entry model.
 	 *
 	 * @return bool|void
 	 */
@@ -152,10 +170,10 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 		$this->change_submitted_data( $encrypted_password );
 
 		$meta = array(
-			'form_id'        => $entry->form_id,
-			'entry_id'       => $entry->entry_id,
+			'form_id'       => $entry->form_id,
+			'entry_id'      => $entry->entry_id,
 			'prepared_data' => Forminator_CForm_Front_Action::$prepared_data,
-			'user_data'      => $prepare_user_data,
+			'user_data'     => $prepare_user_data,
 		);
 
 		// Change default text of notifications for other activation methods: 'email' && 'manual'.
@@ -168,10 +186,11 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 		}
 
 		$option_create_site = forminator_get_property( $settings, 'site-registration' );
+		$site_data          = is_multisite() ? $this->get_site_data( $settings, 0, $user_data ) : array();
 		if ( is_multisite()
 			&& isset( $option_create_site )
 			&& 'enable' === $option_create_site
-			&& $site_data = $this->get_site_data( $settings, 0, $user_data )
+			&& $site_data
 		) {
 			if ( ! has_action( 'after_signup_site', 'wpmu_signup_blog_notification' ) ) {
 				add_action( 'after_signup_site', 'wpmu_signup_blog_notification', 10, 7 );
@@ -187,8 +206,7 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 
 			wpmu_signup_user( $user_data['user_login'], $user_data['user_email'], $meta );
 		}
-		$sql            = $wpdb->prepare( "SELECT activation_key FROM {$wpdb->base_prefix}signups WHERE user_login = %s ORDER BY registered DESC LIMIT 1", $user_data['user_login'] );
-		$activation_key = $wpdb->get_var( $sql );
+		$activation_key = $wpdb->get_var( $wpdb->prepare( "SELECT activation_key FROM {$wpdb->base_prefix}signups WHERE user_login = %s ORDER BY registered DESC LIMIT 1", $user_data['user_login'] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		// used for filtering on activation listing UI.
 		Forminator_CForm_User_Signups::add_signup_meta( $entry, 'activation_method', $settings['activation-method'] );
@@ -205,10 +223,10 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Create user
 	 *
-	 * @param array                       $new_user_data
-	 * @param array                       $custom_form
-	 * @param Forminator_Form_Entry_Model $entry
-	 * @param bool                        $is_user_signon
+	 * @param array                       $new_user_data New user data.
+	 * @param array                       $custom_form Custom form.
+	 * @param Forminator_Form_Entry_Model $entry Form entry model.
+	 * @param bool                        $is_user_signon Is user sign-on.
 	 *
 	 * @return int|string|void|WP_Error
 	 */
@@ -254,7 +272,7 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	 * Check a pending activation for the specified user_login or user_email.
 	 *
 	 * @param string $key user_login or user_email.
-	 * @param string $value
+	 * @param string $value Value.
 	 *
 	 * @return bool
 	 */
@@ -270,12 +288,12 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 				$value = preg_replace( '/\s+/', '', sanitize_user( $value, true ) );
 			}
 
-			$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_name} WHERE active=0 AND {$key}=%s", $value ) );
+			$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_name} WHERE active=0 AND " . esc_sql( $key ) . '=%s', $value ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			if ( ! is_null( $result ) ) {
 				$diff = time() - mysql2date( 'U', $result->registered );
 				// If registered more than two days ago, cancel registration and delete this signup.
 				if ( $diff > 2 * DAY_IN_SECONDS ) {
-					return (bool) $wpdb->delete( $table_name, array( $key => $value ) );
+					return (bool) $wpdb->delete( $table_name, array( $key => $value ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				} else {
 					return true;
 				}
@@ -288,9 +306,9 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Validate registration mapping data
 	 *
-	 * @param $custom_form
-	 * @param $field_data_array
-	 * @param bool             $is_approve
+	 * @param object $custom_form Custom form.
+	 * @param array  $field_data_array Field data.
+	 * @param bool   $is_approve Is approve.
 	 *
 	 * @return array
 	 */
@@ -396,8 +414,8 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Process validation
 	 *
-	 * @param Forminator_Form_Model $custom_form
-	 * @param array                 $field_data_array
+	 * @param Forminator_Form_Model $custom_form Custom form.
+	 * @param array                 $field_data_array Field data.
 	 *
 	 * @return array|mixed
 	 */
@@ -415,8 +433,8 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Process registration
 	 *
-	 * @param Forminator_Form_Model       $custom_form
-	 * @param Forminator_Form_Entry_Model $entry
+	 * @param Forminator_Form_Model       $custom_form Form model.
+	 * @param Forminator_Form_Entry_Model $entry Form Entry model.
 	 *
 	 * @return array|mixed
 	 */
@@ -446,7 +464,7 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Validation for email fields
 	 *
-	 * @param string $email
+	 * @param string $email Email.
 	 *
 	 * @return array
 	 */
@@ -492,7 +510,7 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Validation for username fields
 	 *
-	 * @param string $username
+	 * @param string $username User name.
 	 *
 	 * @return array
 	 */
@@ -535,6 +553,12 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 		return $data;
 	}
 
+	/**
+	 * Automatic login
+	 *
+	 * @param int $user_id User Id.
+	 * @return void
+	 */
 	private function automatic_login( $user_id ) {
 		wp_clear_auth_cookie();
 		wp_set_auth_cookie( $user_id );
@@ -544,9 +568,9 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Validation for multi site
 	 *
-	 * @param array                 $validate
-	 * @param Forminator_Form_Model $custom_form
-	 * @param bool                  $is_approve
+	 * @param array                 $validate Validate.
+	 * @param Forminator_Form_Model $custom_form Form model.
+	 * @param bool                  $is_approve Is approve.
 	 *
 	 * @return array
 	 */
@@ -600,10 +624,10 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Create site
 	 *
-	 * @param int                         $user_id
-	 * @param Forminator_Form_Model       $custom_form
-	 * @param Forminator_Form_Entry_Model $entry
-	 * @param string                      $password
+	 * @param int                         $user_id User Id.
+	 * @param Forminator_Form_Model       $custom_form Form model.
+	 * @param Forminator_Form_Entry_Model $entry Form entry model.
+	 * @param string                      $password Password.
 	 *
 	 * @return bool|int
 	 */
@@ -691,8 +715,8 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Get user data
 	 *
-	 * @param bool|int $user_id
-	 * @param array    $prepare_user_data
+	 * @param bool|int $user_id User Id.
+	 * @param array    $prepare_user_data Prepare user data.
 	 *
 	 * @return bool|array
 	 */
@@ -724,7 +748,7 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Replace site data
 	 *
-	 * @param array $setting
+	 * @param array $setting Settings.
 	 * @return array
 	 */
 	private function replace_site_data( $setting ) {
@@ -734,6 +758,7 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 		$address      = forminator_get_property( $setting, 'site-registration-name-field' );
 		if ( isset( $submitted_data[ $address ] ) && ! empty( $submitted_data[ $address ] ) ) {
 			$blog_address = strtolower( $submitted_data[ $address ] );
+
 			/*
 			 * If the username and sitename is from the same field,
 			 * cleanup the blog_address so that only errors for username will show up
@@ -757,9 +782,9 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Get site data
 	 *
-	 * @param array $setting
-	 * @param int   $user_id
-	 * @param array $prepare_user_data
+	 * @param array $setting Setting.
+	 * @param int   $user_id User Id.
+	 * @param array $prepare_user_data Prepare user data.
 	 *
 	 * @return array
 	 */
@@ -792,7 +817,7 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Get custom user meta
 	 *
-	 * @param array $setting
+	 * @param array $setting Setting.
 	 *
 	 * @return array
 	 */
@@ -816,10 +841,10 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Add user meta
 	 *
-	 * @param $user_id
-	 * @param $setting
-	 * @param $custom_form
-	 * @param $entry
+	 * @param int    $user_id User Id.
+	 * @param array  $setting Setting.
+	 * @param object $custom_form Custom form.
+	 * @param object $entry Entry.
 	 *
 	 * @return void
 	 */
@@ -847,8 +872,8 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Change notifications
 	 *
-	 * @param string $activation_method
-	 * @param array  $notifications
+	 * @param string $activation_method Activation method.
+	 * @param array  $notifications Notifications.
 	 *
 	 * @return array
 	 */
@@ -871,7 +896,7 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	 * @global wpdb         $wpdb      WordPress database object for queries.
 	 * @global PasswordHash $wp_hasher Portable PHP password hashing framework instance.
 	 *
-	 * @param WP_User $user
+	 * @param WP_User $user User object.
 	 *
 	 * @return string
 	 */
@@ -903,13 +928,6 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 
 		$switched_locale = switch_to_locale( get_locale() );
 
-		/* Removed in 1.15.1, if no problem occurs in few months, we can delete this in 1.15.3?
-		$message  = sprintf( esc_html__( 'New user registration on your site %s:', 'forminator' ), $blogname ) . "\r\n\r\n";
-		$message .= sprintf( esc_html__( 'Username: %s', 'forminator' ), $username ) . "\r\n\r\n";
-		$message .= sprintf( esc_html__( 'Email: %s', 'forminator' ), $user->user_email ) . "\r\n";
-
-		$result = @wp_mail( get_option( 'admin_email' ), sprintf( esc_html__( '[%s] New User Registration', 'forminator' ), $blogname ), $message ); */
-
 		if ( $switched_locale ) {
 			restore_previous_locale();
 		}
@@ -920,9 +938,13 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 
 		$switched_locale = switch_to_locale( get_user_locale( $user ) );
 
-		$message  = sprintf( esc_html__( 'Dear %s,', 'forminator' ), $username ) . "\r\n\r\n";
+		/* translators: 1. User name. */
+		$message = sprintf( esc_html__( 'Dear %s,', 'forminator' ), $username ) . "\r\n\r\n";
+		/* translators: 1. Blog name. */
 		$message .= sprintf( esc_html__( 'Your account on %s has been activated! Please find your login details below.', 'forminator' ), $blogname ) . "\r\n\r\n\r\n";
+		/* translators: 1. Login URL. */
 		$message .= sprintf( esc_html__( 'Login page: %s', 'forminator' ), wp_login_url() ) . "\r\n\r\n";
+		/* translators: 1. User name. */
 		$message .= sprintf( esc_html__( 'Username: %s', 'forminator' ), $username ) . "\r\n\r\n";
 
 		if ( empty( $plaintext_pass ) ) {
@@ -931,14 +953,15 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 			$message .= '<' . $this->get_set_password_url( $user ) . ">\r\n\r\n\r\n";
 
 		} else {
-
+			/* translators: 1. Password. */
 			$message .= sprintf( esc_html__( 'Password: %s', 'forminator' ), $plaintext_pass ) . "\r\n";
 			$message .= '(' . esc_html__( 'This password was generated automatically, and it is recommended that you set a new password once you log in to your account.', 'forminator' ) . ")\r\n\r\n\r\n";
 
 		}
-
+		/* translators: 1. Home URL. */
 		$message .= sprintf( esc_html__( 'This message was sent from %s', 'forminator' ), home_url() );
 
+		/* translators: 1. Blog name. */
 		$result = wp_mail( $user->user_email, sprintf( esc_html__( '[%s] Account Activated', 'forminator' ), $blogname ), $message );
 
 		if ( $switched_locale ) {
@@ -949,7 +972,7 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 	/**
 	 * Get conditional user role
 	 *
-	 * @param $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return string
 	 */

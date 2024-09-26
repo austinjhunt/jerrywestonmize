@@ -384,10 +384,10 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         /** @var WhatsAppService $whatsAppService */
         $whatsAppService = $this->container->get('application.whatsApp.service');
         /** @var SettingsService $settingsDS */
-        $settingsDS      = $this->container->get('domain.settings.service');
+        $settingsDS = $this->container->get('domain.settings.service');
 
         $defaultLanguage = $settingsDS->getSetting('notifications', 'whatsAppLanguage');
-        $sendInLanguage = $language ?: $defaultLanguage;
+        $sendInLanguage  = $language ?: $defaultLanguage;
 
         $templateLanguage = $this->getSimilarTemplateLanguages($template, $sendInLanguage);
 
@@ -468,19 +468,42 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
      */
     private function getPlaceholdersObject($content, $data, $isHeader = false)
     {
-        $isImageHeader = $isHeader && !empty($content) && $content[0] !== '%';
-        $parameters   = explode('%', $content);
-        $placeholders = [];
+        $isLocationHeader = false;
+        if (strpos($content, 'location:') !== false) {
+            $isLocationHeader = true;
+            $content          = str_replace('location:', '', $content);
+        }
+        $isImageHeader = !$isLocationHeader && $isHeader && !empty($content) && $content[0] !== '%';
+        $parameters    = explode('%', $content);
+        $parameters    = array_values(array_filter(
+            $parameters,
+            function ($parameter) {
+                return !empty($parameter) && !empty(trim($parameter));
+            }
+        ));
+        $placeholders  = [];
         foreach ($parameters as $parameter) {
             $parameter = trim($parameter);
             if (!empty($parameter)) {
                 if ($isImageHeader) {
-                    $placeholders[]   = [
+                    $placeholders[] = [
                         'type'  =>  'image',
                         'image' =>  [
                             'link' => $parameter
                         ]
                     ];
+                } else if ($isLocationHeader) {
+                    $placeholders[] = [
+                        'type'  =>  'location',
+                        'location' => [
+                            'name' => $data[$parameters[0]],
+                            'address' => $data[$parameters[1]],
+                            'latitude' => $data[$parameters[2]],
+                            'longitude' => $data[$parameters[3]],
+                        ]
+                    ];
+
+                    break;
                 } else {
                     $data[$parameter] = !empty($data[$parameter]) ? $data[$parameter] : ' ';
                     $placeholders[]   = [
@@ -613,18 +636,20 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         $templates = $whatsAppService->getTemplates($name);
 
         $templateLang = null;
-        foreach ($templates['data'] as $template) {
-            if ($template['language'] === $language) {
-                $templateLang = $template['language'];
-                break;
-            }
-        }
-        if ($templateLang === null) {
+        if (!empty($templates['data'])) {
             foreach ($templates['data'] as $template) {
-                $languageBase = explode('_', $language)[0];
-                if (in_array($languageBase, [$template['language'], explode('_', $template['language'])[0]])) {
+                if ($template['language'] === $language) {
                     $templateLang = $template['language'];
                     break;
+                }
+            }
+            if ($templateLang === null) {
+                foreach ($templates['data'] as $template) {
+                    $languageBase = explode('_', $language)[0];
+                    if (in_array($languageBase, [$template['language'], explode('_', $template['language'])[0]])) {
+                        $templateLang = $template['language'];
+                        break;
+                    }
                 }
             }
         }

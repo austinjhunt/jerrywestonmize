@@ -1,4 +1,9 @@
 <?php
+/**
+ * Addon Mailchimp quiz hook.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Mailchimp_Quiz_Hooks
@@ -24,8 +29,9 @@ class Forminator_Mailchimp_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks 
 	 * @param array $submitted_data Submitted data.
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$quiz_id                = $this->module_id;
 		$quiz_settings_instance = $this->settings_instance;
 		$gdpr                   = false;
@@ -130,32 +136,41 @@ class Forminator_Mailchimp_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks 
 				}
 			}
 
-			// check required fields fulfilled
+			// check required fields fulfilled.
 			foreach ( $mailchimp_required_fields as $mailchimp_required_field ) {
 				if ( 'address' === $mailchimp_required_field->type ) {
 					$address_fields = $this->settings_instance->mail_address_fields();
 					foreach ( $address_fields as $addr => $address ) {
 						if ( ! isset( $addon_setting_values['fields_map'][ $mailchimp_required_field->tag ][ $addr ] ) ) {
-							throw new Forminator_Integration_Exception( sprintf(
+							throw new Forminator_Integration_Exception(
+								sprintf(
 								/* translators: 1: Required field name */
-								esc_html__( 'Required Field %1$s not mapped yet to Forminator Form Field, Please check your Mailchimp Configuration on Form Settings', 'forminator' ), esc_html( $mailchimp_required_field->name ) )
+									esc_html__( 'Required Field %1$s not mapped yet to Forminator Form Field, Please check your Mailchimp Configuration on Form Settings', 'forminator' ),
+									esc_html( $mailchimp_required_field->name )
+								)
 							);
 						}
 
 						if ( ! isset( $submitted_data[ $addon_setting_values['fields_map'][ $mailchimp_required_field->tag ][ $addr ] ] )
-						     || empty( $submitted_data[ $addon_setting_values['fields_map'][ $mailchimp_required_field->tag ][ $addr ] ] ) ) {
-							throw new Forminator_Integration_Exception( sprintf(
+							|| empty( $submitted_data[ $addon_setting_values['fields_map'][ $mailchimp_required_field->tag ][ $addr ] ] ) ) {
+							throw new Forminator_Integration_Exception(
+								sprintf(
 								/* translators: 1: Required field name */
-								esc_html__( 'Required Field %1$s not filled by user', 'forminator' ), esc_html( $mailchimp_required_field->name ) )
+									esc_html__( 'Required Field %1$s not filled by user', 'forminator' ),
+									esc_html( $mailchimp_required_field->name )
+								)
 							);
 						}
 					}
 				} else {
 
 					if ( ! isset( $addon_setting_values['fields_map'][ $mailchimp_required_field->tag ] ) ) {
-						throw new Forminator_Integration_Exception( sprintf(
+						throw new Forminator_Integration_Exception(
+							sprintf(
 							/* translators: 1: Required field name */
-							esc_html__( 'Required Field %1$s not mapped yet to Forminator Form Field, Please check your Mailchimp Configuration on Form Settings', 'forminator' ), esc_html( $mailchimp_required_field->name ) )
+								esc_html__( 'Required Field %1$s not mapped yet to Forminator Form Field, Please check your Mailchimp Configuration on Form Settings', 'forminator' ),
+								esc_html( $mailchimp_required_field->name )
+							)
 						);
 					}
 
@@ -165,9 +180,12 @@ class Forminator_Mailchimp_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks 
 					$has_submit_data = isset( $submitted_data[ $element_id ] ) && ! empty( $submitted_data[ $element_id ] );
 
 					if ( ! $is_calculation && ! $is_stripe && ! $has_submit_data ) {
-						throw new Forminator_Integration_Exception( sprintf(
+						throw new Forminator_Integration_Exception(
+							sprintf(
 							/* translators: 1: Required field name */
-							esc_html__( 'Required Field %1$s not filled by user', 'forminator' ), esc_html( $mailchimp_required_field->name ) )
+								esc_html__( 'Required Field %1$s not filled by user', 'forminator' ),
+								esc_html( $mailchimp_required_field->name )
+							)
 						);
 					}
 				}
@@ -192,7 +210,7 @@ class Forminator_Mailchimp_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks 
 					}
 				}
 			} catch ( Forminator_Integration_Exception $e ) {
-				// Member not yet subscribed, keep going on, mark status based on double-opt-in option
+				// Member not yet subscribed, keep going on, mark status based on double-opt-in option.
 				if ( $is_double_opt_in_enabled ) {
 					$status = 'pending';
 				}
@@ -216,17 +234,15 @@ class Forminator_Mailchimp_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks 
 							}
 						}
 					}
-				} else {
-					if ( isset( $addon_setting_values['fields_map'][ $item->tag ] ) && ! empty( $addon_setting_values['fields_map'][ $item->tag ] ) ) {
+				} elseif ( isset( $addon_setting_values['fields_map'][ $item->tag ] ) && ! empty( $addon_setting_values['fields_map'][ $item->tag ] ) ) {
 						$element_id = $addon_setting_values['fields_map'][ $item->tag ];
-						if ( isset( $submitted_data[ $element_id ] ) && ( ! empty( $submitted_data[ $element_id ] ) || 0 === (int) $submitted_data[ $element_id ] ) ) {
-							$element_value = trim( $submitted_data[ $element_id ] );
-						}
+					if ( isset( $submitted_data[ $element_id ] ) && ( ! empty( $submitted_data[ $element_id ] ) || 0 === (int) $submitted_data[ $element_id ] ) ) {
+						$element_value = trim( $submitted_data[ $element_id ] );
+					}
 
-						if ( isset( $element_value ) ) {
-							$merge_fields[ $item->tag ] = $element_value;
-							unset( $element_value ); // unset for next loop.
-						}
+					if ( isset( $element_value ) ) {
+						$merge_fields[ $item->tag ] = $element_value;
+						unset( $element_value ); // unset for next loop.
 					}
 				}
 			}
@@ -402,7 +418,7 @@ class Forminator_Mailchimp_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks 
 	 * @return void
 	 */
 	public static function add_extra_entry_items( array &$sub_entries, array $addon_data ) {
-		Forminator_Mailchimp_Form_Hooks::add_extra_entry_items($sub_entries, $addon_data );
+		Forminator_Mailchimp_Form_Hooks::add_extra_entry_items( $sub_entries, $addon_data );
 	}
 
 	/**
@@ -410,8 +426,8 @@ class Forminator_Mailchimp_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks 
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param  array                       $addon_meta_data
+	 * @param Forminator_Form_Entry_Model $entry_model Form Entry Model.
+	 * @param  array                       $addon_meta_data Addon meta data.
 	 *
 	 * @return bool
 	 */
@@ -518,7 +534,6 @@ class Forminator_Mailchimp_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks 
 
 			return false;
 		}
-
 	}
 
 	/**
@@ -526,7 +541,7 @@ class Forminator_Mailchimp_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks 
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param array $addon_meta_data
+	 * @param array $addon_meta_data Addon meta data.
 	 *
 	 * @return array
 	 */
@@ -554,14 +569,14 @@ class Forminator_Mailchimp_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks 
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param $addon_meta_data
+	 * @param array $addon_meta_data Addon meta data.
 	 *
 	 * @return string
 	 */
 	public static function get_delete_member_url_from_addon_meta_data( $addon_meta_data ) {
 
 		// delete links available on data_received of mailchimp.
-		/** == Integration meta data reference ==*/
+		/** == Integration meta data reference ==
 		// [
 		// {.
 		// "name": "status",
@@ -595,7 +610,7 @@ class Forminator_Mailchimp_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks 
 		// }.
 		// }.
 		// ]
-		/** == Integration meta data reference ==*/
+		== Integration meta data reference == */
 
 		$delete_member_url = '';
 

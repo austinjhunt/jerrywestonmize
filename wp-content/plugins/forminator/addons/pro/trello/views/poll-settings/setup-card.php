@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template for setup card
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
 	'card_name'              => '',
@@ -19,7 +25,11 @@ $vars = array(
 	'error_message'          => '',
 	'list_name'              => '',
 );
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -32,7 +42,10 @@ foreach ( $template_vars as $key => $val ) {
 	<p id="forminator-integration-popup__description" class="sui-description"><?php esc_html_e( 'Set up how you want your cards to be created in Trello.', 'forminator' ); ?></p>
 
 	<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-		<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+		<?php
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+			echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+		?>
 	<?php endif; ?>
 
 </div>
@@ -95,7 +108,7 @@ foreach ( $template_vars as $key => $val ) {
 			<?php
 			printf(
 			/* Translators: 1. Opening <a> tag with link to the article help, 2. closing <a> tag. */
-				esc_html__( 'Markdown supported for card description. Find complete guide %shere%s.', 'forminator' ),
+				esc_html__( 'Markdown supported for card description. Find complete guide %1$shere%2$s.', 'forminator' ),
 				'<a href="https://help.trello.com/article/821-using-markdown-in-trello" target="_blank">',
 				'</a>'
 			);
@@ -113,11 +126,11 @@ foreach ( $template_vars as $key => $val ) {
 				<label class="sui-label" for="due_date"><?php esc_html_e( 'Due Date', 'forminator' ); ?></label>
 
 				<input id="due_date"
-					   class="sui-form-control"
-					   name="due_date"
-                       autocomplete="off"
-					   placeholder="<?php esc_attr_e( 'Select a due date', 'forminator' ); ?>"
-					   value="<?php echo esc_attr( $vars['due_date'] ); ?>">
+						class="sui-form-control"
+						name="due_date"
+						autocomplete="off"
+						placeholder="<?php esc_attr_e( 'Select a due date', 'forminator' ); ?>"
+						value="<?php echo esc_attr( $vars['due_date'] ); ?>">
 
 				<?php if ( ! empty( $vars['due_date_error'] ) ) : ?>
 					<span class="sui-error-message"><?php echo esc_html( $vars['due_date_error'] ); ?></span>

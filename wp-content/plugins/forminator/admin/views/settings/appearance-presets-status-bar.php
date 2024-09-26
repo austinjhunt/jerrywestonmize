@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/settings/appearance-presets-status-bar.php
+ *
+ * @package Forminator
+ */
+
 $mobile = 'forminator-for-mobile' === $args['class'];
 $label  = esc_html__( 'Preset', 'forminator' );
 ?>

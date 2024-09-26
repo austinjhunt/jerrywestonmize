@@ -1,10 +1,19 @@
 <?php
-// defaults.
+/**
+ * Template Authorize.
+ *
+ * @package Forminator
+ */
+
 $vars = array(
 	'error_message' => '',
 	'is_close'      => false,
 );
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
@@ -17,9 +26,13 @@ foreach ( $template_vars as $key => $val ) {
 		</div>
 		<div class="sui-box-body">
 			<?php if ( ! empty( $vars['error_message'] ) ) : ?>
-				<?php echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) ); ?>
+				<?php
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
+					echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
+				?>
 			<?php elseif ( $vars['is_close'] ) : ?>
 				<?php
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
 				echo Forminator_Admin::get_green_notice(
 					esc_html__(
 						'Successfully authorized AWeber, you can go back to integration settings.',

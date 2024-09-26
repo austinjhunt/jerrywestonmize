@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Addon Mailerlite quiz hooks.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Mailerlite_Quiz_Hooks

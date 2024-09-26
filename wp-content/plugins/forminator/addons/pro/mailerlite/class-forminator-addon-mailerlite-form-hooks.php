@@ -1,4 +1,9 @@
 <?php
+/**
+ * Forminator Addon Mailerlite form hooks.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Mailerlite_Form_Hooks

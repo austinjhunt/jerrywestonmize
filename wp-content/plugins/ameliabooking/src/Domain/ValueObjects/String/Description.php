@@ -15,7 +15,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  */
 final class Description
 {
-    const MAX_LENGTH = 10000;
+    const MAX_LENGTH = 65535;
     /**
      * @var string
      */

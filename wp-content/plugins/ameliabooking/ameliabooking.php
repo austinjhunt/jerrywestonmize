@@ -3,7 +3,7 @@
 Plugin Name: Amelia
 Plugin URI: https://wpamelia.com/
 Description: Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!
-Version: 7.7.1
+Version: 7.8
 Author: TMS
 Author URI: https://tmsproducts.io/
 Text Domain: wpamelia
@@ -28,6 +28,7 @@ use AmeliaBooking\Infrastructure\WP\GutenbergBlock\AmeliaCustomerCabinetGutenber
 use AmeliaBooking\Infrastructure\WP\GutenbergBlock\AmeliaEmployeeCabinetGutenbergBlock;
 use AmeliaBooking\Infrastructure\WP\GutenbergBlock\AmeliaEventsGutenbergBlock;
 use AmeliaBooking\Infrastructure\WP\GutenbergBlock\AmeliaEventsListBookingGutenbergBlock;
+use AmeliaBooking\Infrastructure\WP\GutenbergBlock\AmeliaEventsCalendarBookingGutenbergBlock;
 use AmeliaBooking\Infrastructure\WP\GutenbergBlock\AmeliaSearchGutenbergBlock;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
@@ -105,7 +106,7 @@ if (!defined('AMELIA_LOGIN_URL')) {
 
 // Const for Amelia version
 if (!defined('AMELIA_VERSION')) {
-    define('AMELIA_VERSION', '7.7.1');
+    define('AMELIA_VERSION', '7.8');
 }
 
 // Const for site URL
@@ -278,6 +279,7 @@ class Plugin
             AmeliaCatalogGutenbergBlock::init();
             AmeliaEventsGutenbergBlock::init();
             AmeliaEventsListBookingGutenbergBlock::init();
+            AmeliaEventsCalendarBookingGutenbergBlock::init();
             AmeliaCustomerCabinetGutenbergBlock::init();
             AmeliaEmployeeCabinetGutenbergBlock::init();
 
@@ -293,6 +295,7 @@ class Plugin
             add_shortcode('ameliacatalog', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\CatalogShortcodeService', 'shortcodeHandler'));
             add_shortcode('ameliaevents', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsShortcodeService', 'shortcodeHandler'));
             add_shortcode('ameliaeventslistbooking', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsListBookingShortcodeService', 'shortcodeHandler'));
+            add_shortcode('ameliaeventscalendarbooking', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsCalendarBookingShortcodeService', 'shortcodeHandler'));
             add_shortcode('ameliacustomerpanel', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\CabinetCustomerShortcodeService', 'shortcodeHandler'));
             add_shortcode('ameliaemployeepanel', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\CabinetEmployeeShortcodeService', 'shortcodeHandler'));
             add_shortcode('ameliastepbooking', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\StepBookingShortcodeService', 'shortcodeHandler'));
@@ -383,6 +386,7 @@ class Plugin
             has_shortcode(get_post(get_the_ID())->post_content, 'ameliaevents') ||
             has_shortcode(get_post(get_the_ID())->post_content, 'ameliacabinet') ||
             has_shortcode(get_post(get_the_ID())->post_content, 'ameliaeventslistbooking') ||
+            has_shortcode(get_post(get_the_ID())->post_content, 'ameliaeventscalendarbooking') ||
             has_shortcode(get_post(get_the_ID())->post_content, 'ameliastepbooking')
         ) {
             return array();
@@ -601,3 +605,6 @@ add_filter('submenu_file', function($submenu_file) {
 });
 
 add_action('thrive_automator_init', array('AmeliaBooking\Infrastructure\WP\Integrations\ThriveAutomator\ThriveAutomatorService', 'init'));
+
+add_action( 'wp_logout',  array('AmeliaBooking\Infrastructure\WP\UserService\UserService', 'logoutAmeliaUser'));
+add_action( 'profile_update',  array('AmeliaBooking\Infrastructure\WP\UserService\UserService', 'updateAmeliaUser'), 10, 3);

@@ -37,6 +37,10 @@
       .el-input__inner {
         height: 32px !important;
       }
+
+      .el-row {
+        display: flex;
+      }
     }
 
     .el-input--medium .el-input__inner {
@@ -615,6 +619,10 @@
             .am-status {
               display: flex;
               align-items: center;
+
+              &-provider {
+                flex-direction: column;
+              }
 
               @media @less-then-large {
                 display: inline-flex;

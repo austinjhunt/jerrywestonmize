@@ -19,7 +19,8 @@ class MethodCallExpression extends AbstractExpression
  }
  $compiler->raw('CoreExtension::callMacro($macros[')->repr($this->getNode('node')->getAttribute('name'))->raw('], ')->repr($this->getAttribute('method'))->raw(', [');
  $first = \true;
- foreach ($this->getNode('arguments')->getKeyValuePairs() as $pair) {
+ $args = $this->getNode('arguments');
+ foreach ($args->getKeyValuePairs() as $pair) {
  if (!$first) {
  $compiler->raw(', ');
  }

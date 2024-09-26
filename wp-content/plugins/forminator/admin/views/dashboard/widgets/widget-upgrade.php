@@ -1,3 +1,11 @@
+<?php
+/**
+ * Template admin/views/dashboard/widgets/widget-upgrade.php
+ *
+ * @package Forminator
+ */
+
+?>
 <div class="sui-box">
 
 	<div class="sui-box-header">

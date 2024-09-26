@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Forminator_Mixpanel_Notifications class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Mixpanel Notifications Events class
@@ -12,21 +17,25 @@ class Forminator_Mixpanel_Notifications extends Events {
 	 */
 	public static function init() {
 		add_action( 'forminator_after_notification_update', array( __CLASS__, 'tracking_update_notification' ) );
-		add_action( 'forminator_after_notification_status_update', array(
-			__CLASS__,
-			'tracking_update_status_notification'
-		), 10, 2 );
+		add_action(
+			'forminator_after_notification_status_update',
+			array(
+				__CLASS__,
+				'tracking_update_status_notification',
+			),
+			10,
+			2
+		);
 		add_action( 'forminator_after_notification_delete', array( __CLASS__, 'tracking_delete_notification' ) );
 	}
 
 	/**
 	 * Tracking update notification
 	 *
-	 * @param array $data
+	 * @param array $data Data.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_update_notification( $data ) {
 		self::event_update_notification( $data );
@@ -35,11 +44,10 @@ class Forminator_Mixpanel_Notifications extends Events {
 	/**
 	 * Tracking update status notification
 	 *
-	 * @param int $report_id
+	 * @param int $report_id Report Id.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_update_status_notification( $report_id ) {
 		$report_data = self::notifications_data( $report_id );
@@ -49,11 +57,10 @@ class Forminator_Mixpanel_Notifications extends Events {
 	/**
 	 * Tracking Delete notification
 	 *
-	 * @param int $report_id
+	 * @param int $report_id Report Id.
 	 *
 	 * @return void
 	 * @since 1.27.0
-	 *
 	 */
 	public static function tracking_delete_notification( $report_id ) {
 		self::event_delete_notification( $report_id );
@@ -62,7 +69,7 @@ class Forminator_Mixpanel_Notifications extends Events {
 	/**
 	 * Fetch notification data
 	 *
-	 * @param int $report_id
+	 * @param int $report_id Report Id.
 	 *
 	 * @return array
 	 */
@@ -85,7 +92,7 @@ class Forminator_Mixpanel_Notifications extends Events {
 	/**
 	 * Event Notification update
 	 *
-	 * @param array $data
+	 * @param array $data Data.
 	 *
 	 * @return void
 	 */
@@ -112,7 +119,7 @@ class Forminator_Mixpanel_Notifications extends Events {
 	/**
 	 * Event Delete notification
 	 *
-	 * @param int $report_id
+	 * @param int $report_id Report Id.
 	 *
 	 * @return void
 	 */

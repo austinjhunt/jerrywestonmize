@@ -1,3 +1,11 @@
+<?php
+/**
+ * Template admin/views/common/reports/basic-widget.php
+ *
+ * @package Forminator
+ */
+
+?>
 <div class="sui-box"<?php echo isset( $id ) ? ' id="' . esc_attr( $id ) . '"' : ''; ?>>
 	<div class="sui-box__message sui-box__message--loading">
 		<p><span class="sui-icon-loader sui-loading" aria-hidden="true"></span>

@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Quiz_Admin class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -15,18 +21,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 
 	/**
-	 * module objects
+	 * Module objects
 	 *
 	 * @var array
 	 */
 	public $module;
 
 	/**
+	 * Page nowrong edit
+	 *
 	 * @var string
 	 */
 	public $page_edit_nowrong;
 
 	/**
+	 * Page knowledge edit
+	 *
 	 * @var string
 	 */
 	public $page_edit_knowledge;
@@ -50,11 +60,11 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 	 * @since 1.0
 	 */
 	public function includes() {
-		include_once dirname( __FILE__ ) . '/admin-page-new-nowrong.php';
-		include_once dirname( __FILE__ ) . '/admin-page-new-knowledge.php';
-		include_once dirname( __FILE__ ) . '/admin-page-view.php';
-		include_once dirname( __FILE__ ) . '/admin-page-entries.php';
-		include_once dirname( __FILE__ ) . '/admin-renderer-entries.php';
+		include_once __DIR__ . '/admin-page-new-nowrong.php';
+		include_once __DIR__ . '/admin-page-new-knowledge.php';
+		include_once __DIR__ . '/admin-page-view.php';
+		include_once __DIR__ . '/admin-page-entries.php';
+		include_once __DIR__ . '/admin-renderer-entries.php';
 	}
 
 	/**
@@ -121,7 +131,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 	 * @deprecated 1.1 No longer used because this function override prohibited WordPress global of $plugin_page
 	 * @since      1.0
 	 *
-	 * @param $file
+	 * @param string $file File.
 	 *
 	 * @return mixed
 	 */
@@ -136,8 +146,8 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.1
 	 *
-	 * @param $submenu_file
-	 * @param $parent_file
+	 * @param string $submenu_file Sub menu file.
+	 * @param string $parent_file Parent file.
 	 *
 	 * @return string
 	 */
@@ -160,7 +170,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $data
+	 * @param array $data Date.
 	 *
 	 * @return mixed
 	 */
@@ -172,7 +182,10 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 		if ( $this->is_knowledge_wizard() || $this->is_nowrong_wizard() ) {
 			$id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 			if ( $id && is_null( $model ) ) {
-				/** @var  Forminator_Quiz_Model $model */
+				/**
+				 * Forminator_Quiz_Model
+				 *
+				 * @var  Forminator_Quiz_Model $model */
 				$model = Forminator_Base_Form_Model::get_model( $id );
 			}
 
@@ -313,6 +326,9 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 	/**
 	 * Knowledge quiz default data
 	 *
+	 * @param string $name Form name.
+	 * @param bool   $has_leads Has lead.
+	 *
 	 * @since 1.14
 	 *
 	 * @return array
@@ -431,6 +447,9 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.14
 	 *
+	 * @param string $name Form name.
+	 * @param bool   $has_leads Has lead.
+	 *
 	 * @return array
 	 */
 	public static function nowrong_default_data( $name, $has_leads ) {
@@ -534,7 +553,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $data
+	 * @param array $data Data.
 	 *
 	 * @return mixed
 	 */
@@ -652,7 +671,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 			'image'               => esc_html__( 'Featured image', 'forminator' ),
 			'image_details'       => esc_html__( 'Add some nice main image to your quiz.', 'forminator' ),
 			'description'         => esc_html__( 'Description', 'forminator' ),
-			'description_details' => esc_html__( 'Give more information related to your quiz. This content will be displayed on front.' ),
+			'description_details' => esc_html__( 'Give more information related to your quiz. This content will be displayed on front.', 'forminator' ),
 		);
 
 		$data['quiz_appearance'] = array(
@@ -696,11 +715,9 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 	 * Create quiz module
 	 *
 	 * @since 1.14
-	 *
-	 * @return no return
 	 */
 	public function create_module() {
-		if ( ! $this->is_knowledge_wizard() && ! $this->is_nowrong_wizard() || self::is_edit() ) {
+		if ( ( ! $this->is_knowledge_wizard() && ! $this->is_nowrong_wizard() ) || self::is_edit() ) {
 			return;
 		}
 
@@ -779,14 +796,16 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 
 		if ( $has_leads ) {
 			if ( 'knowledge' === $quiz_type ) {
-				$email_body = sprintf( '%1$s {name-1},<br/><br/>%2$s<br/><br/><b>{quiz_name}</b><br/>{quiz_answer}<br/><br/>%3$s<br/><br/>---<br/><br/>%4$s',
+				$email_body = sprintf(
+					'%1$s {name-1},<br/><br/>%2$s<br/><br/><b>{quiz_name}</b><br/>{quiz_answer}<br/><br/>%3$s<br/><br/>---<br/><br/>%4$s',
 					esc_html__( 'Hey', 'forminator' ),
 					esc_html__( 'Thanks for participating in {quiz_name} quiz.', 'forminator' ),
 					esc_html__( 'Want to retake the quiz? Follow this link {embed_url}', 'forminator' ),
 					esc_html__( 'This message was sent from {site_url}.', 'forminator' )
 				);
 			} else {
-				$email_body = sprintf( '%1$s {name-1},<br/><br/>%2$s<br/><br/>%3$s<br/>{quiz_answer}<br/><br/>%4$s<br/><br/>---<br/><br/>%5$s',
+				$email_body = sprintf(
+					'%1$s {name-1},<br/><br/>%2$s<br/><br/>%3$s<br/>{quiz_answer}<br/><br/>%4$s<br/><br/>---<br/><br/>%5$s',
 					esc_html__( 'Hey', 'forminator' ),
 					esc_html__( 'Thanks for participating in our {quiz_name} quiz.', 'forminator' ),
 					esc_html__( 'You scored {quiz_result} on this quiz and following are your answers:', 'forminator' ),
@@ -801,7 +820,8 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 					'email-recipients' => 'default',
 					'recipients'       => get_option( 'admin_email' ),
 					'email-subject'    => esc_html__( 'New Quiz Submission #{submission_id} for {quiz_name}', 'forminator' ),
-					'email-editor'     => sprintf( '%1$s <br/><br/>%2$s<br/>{all_fields}<br/><br/>---<br/><br/>%3$s <br/>{quiz_result} <br/>{quiz_answer}<br/><br/>%4$s',
+					'email-editor'     => sprintf(
+						'%1$s <br/><br/>%2$s<br/>{all_fields}<br/><br/>---<br/><br/>%3$s <br/>{quiz_result} <br/>{quiz_answer}<br/><br/>%4$s',
 						esc_html__( 'You have a new {quiz_type} quiz submission:', 'forminator' ),
 						esc_html__( 'Lead details:', 'forminator' ),
 						esc_html__( 'Quiz details:', 'forminator' ),
@@ -915,7 +935,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 					$notifications[ $count ]['email-editor'] = wp_kses_post( $template->notifications[ $count ]['email-editor'] );
 				}
 
-				$count++;
+				++$count;
 			}
 		}
 
@@ -954,7 +974,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.14
 	 *
-	 * @param $name
+	 * @param string $name Form name.
 	 *
 	 * @return mixed
 	 */
@@ -1003,7 +1023,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.1
 	 *
-	 * @param Forminator_Quiz_Model|null $quiz
+	 * @param Forminator_Quiz_Model|null $quiz Quiz model.
 	 *
 	 * @return mixed
 	 */
@@ -1016,7 +1036,8 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 					'email-recipients' => 'default',
 					'recipients'       => get_option( 'admin_email' ),
 					'email-subject'    => esc_html__( 'New Quiz Submission for {quiz_name}', 'forminator' ),
-					'email-editor'     => sprintf( '%1$s <br/><br/>{quiz_answer}<br/><br/>%2$s <br/>{quiz_result} <br/>---<br/> %3$s',
+					'email-editor'     => sprintf(
+						'%1$s <br/><br/>{quiz_answer}<br/><br/>%2$s <br/>{quiz_result} <br/>---<br/> %3$s',
 						esc_html__( 'You have a new quiz submission:', 'forminator' ),
 						esc_html__( 'Quiz results:', 'forminator' ),
 						esc_html__( 'This message was sent from {site_url}.', 'forminator' )

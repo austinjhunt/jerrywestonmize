@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/poll/entries/content.php
+ *
+ * @package Forminator
+ */
+
 $count = Forminator_Form_Entry_Model::count_entries( $this->form_id );
 
 $poll_question    = Forminator_Poll_Front::get_poll_question( $this->model );
@@ -9,6 +15,7 @@ $custom_votes = $this->map_custom_votes();
 
 <?php
 if ( $this->error_message() ) {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
 	echo Forminator_Admin::get_red_notice( esc_html( $this->error_message() ) );
 }
 ?>

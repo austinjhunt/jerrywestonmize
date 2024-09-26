@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/settings/payments/paypal.php
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
 	'error_message'        => '',
@@ -12,24 +18,29 @@ $vars = array(
 	'live_secret_error'    => '',
 
 );
-/** @var array $template_vars */
+/**
+ * Template variables
+ *
+ * @var array $template_vars */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 }
 ?>
 
 <span class="sui-description">
-    <?php
-    printf(
-    /* Translators: 1. Opening <a> tag with link to the PayPal account, 2. closing <a> tag. */
-	    esc_html__( 'Enter your PayPal REST API keys to connect your account. You can create a REST API app %1$shere%2$s to grab the credentials.', 'forminator' ),
-	    '<a href="https://developer.paypal.com/developer/applications/" target="_blank">',
-	    '</a>' );
-    ?>
+	<?php
+	printf(
+	/* Translators: 1. Opening <a> tag with link to the PayPal account, 2. closing <a> tag. */
+		esc_html__( 'Enter your PayPal REST API keys to connect your account. You can create a REST API app %1$shere%2$s to grab the credentials.', 'forminator' ),
+		'<a href="https://developer.paypal.com/developer/applications/" target="_blank">',
+		'</a>'
+	);
+	?>
 </span>
 
 <?php
 if ( ! empty( $vars['error_message'] ) ) {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
 	echo Forminator_Admin::get_red_notice( esc_html( $vars['error_message'] ) );
 }
 ?>

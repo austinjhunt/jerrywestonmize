@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Google sheet Quiz Settings
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Googlesheet_Quiz_Settings
  * Handle how quiz settings displayed and saved
  *

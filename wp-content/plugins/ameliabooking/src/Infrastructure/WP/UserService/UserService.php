@@ -5,11 +5,13 @@ namespace AmeliaBooking\Infrastructure\WP\UserService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Factory\User\UserFactory;
+use AmeliaBooking\Domain\ValueObjects\String\Password;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\UserRoles\UserRoles;
 use Slim\Container;
+use WP_Error;
 
 /**
  * Class UserService
@@ -169,7 +171,6 @@ class UserService
      * @param $username
      * @param $password
      *
-     * @return mixed
      */
     public function loginWordPressUser($username, $password)
     {
@@ -182,16 +183,82 @@ class UserService
             true
         );
 
-        wp_set_current_user($user->ID);
+        if (!($user instanceof WP_Error)) {
+            clean_user_cache($user->ID);
+            wp_clear_auth_cookie();
+            wp_set_current_user($user->ID);
+            wp_set_auth_cookie($user->ID);
+            update_user_caches($user);
+        }
     }
 
     /**
      * logout user
      *
-     * @return mixed
      */
     public function logoutWordPressUser()
     {
         wp_logout();
+    }
+
+
+    /**
+     * logout user
+     *
+     */
+    public static function logoutAmeliaUser()
+    {
+        if (!empty($_COOKIE['ameliaToken'])) {
+            setcookie('ameliaToken', '', time()-3600, '/');
+            setcookie('ameliaUserEmail', '', time()-3600, '/');
+        }
+    }
+
+    /**
+     * update Amelia user
+     *
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public static function updateAmeliaUser($userId, $oldUserData, $userData)
+    {
+        // prevent double update
+        if (apply_filters('amelia_user_profile_updated', false)) {
+            return;
+        }
+
+        /** @var Container $container */
+        $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $container->get('domain.users.repository');
+
+        $user = $userRepository->getByEntityId($userId, 'externalId');
+
+        if (!$user || $user->length() === 0) {
+            return;
+        }
+
+        $ameliaUserArray = $user->toArray()[0];
+
+        $wpUserArray = [];
+        if (isset($_POST['email'])) {
+            $wpUserArray['email'] = $_POST['email'];
+        }
+        if (isset($_POST['first_name'])) {
+            $wpUserArray['firstName'] = $_POST['first_name'];
+        }
+        if (isset($_POST['last_name'])) {
+            $wpUserArray['lastName'] = $_POST['last_name'];
+        }
+
+        $newUserArray = array_merge($ameliaUserArray, $wpUserArray);
+        $userRepository->update($ameliaUserArray['id'], $newUserArray);
+
+        if (!empty($_POST['pass1'])) {
+            $newPassword = new Password($_POST['pass1']);
+
+            $userRepository->updateFieldById($ameliaUserArray['id'], $newPassword->getValue(), 'password');
+        }
     }
 }

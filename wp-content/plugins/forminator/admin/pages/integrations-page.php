@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Integrations Page
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -18,14 +24,31 @@ class Forminator_Integrations_Page extends Forminator_Admin_Page {
 	public $addons_list = array();
 
 	/**
+	 * Connected addon list
+	 *
 	 * @var array
 	 */
 	public $addons_list_grouped_by_connected = array();
 
+	/**
+	 * Nonce
+	 *
+	 * @var string
+	 */
 	public $addon_nonce = '';
 
+	/**
+	 * Addon page
+	 *
+	 * @var array
+	 */
 	private $addon_page = array();
 
+	/**
+	 * Page action
+	 *
+	 * @var string
+	 */
 	public static $addon_nonce_page_action = 'forminator_addon_nonce_page';
 
 	/**
@@ -48,6 +71,12 @@ class Forminator_Integrations_Page extends Forminator_Admin_Page {
 		$this->validate_addon_page();
 	}
 
+	/**
+	 * Add js data
+	 *
+	 * @param mixed $data Addon data to add.
+	 * @return mixed
+	 */
 	public function add_addons_js_data( $data ) {
 		if ( Forminator::is_addons_feature_enabled() ) {
 			$data['addons']      = forminator_get_registered_addons_list();
@@ -69,7 +98,6 @@ class Forminator_Integrations_Page extends Forminator_Admin_Page {
 		} else {
 			parent::render_page_content();
 		}
-
 	}
 
 	/**

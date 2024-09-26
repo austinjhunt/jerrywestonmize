@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Addon Webhook API
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Webhook_Wp_Api
  */
 class Forminator_Webhook_Wp_Api {
@@ -22,14 +28,12 @@ class Forminator_Webhook_Wp_Api {
 	/**
 	 * Last data sent towebhook
 	 *
-	 *
 	 * @var array
 	 */
 	private $_last_data_sent = array();
 
 	/**
 	 * Last data received fromwebhook
-	 *
 	 *
 	 * @var array
 	 */
@@ -38,7 +42,6 @@ class Forminator_Webhook_Wp_Api {
 	/**
 	 * Last URL requested
 	 *
-	 *
 	 * @var string
 	 */
 	private $_last_url_request = '';
@@ -46,16 +49,14 @@ class Forminator_Webhook_Wp_Api {
 	/**
 	 * Forminator_Webhook_Wp_Api constructor.
 	 *
+	 * @param string $_endpoint Endpoint.
 	 *
-	 *
-	 * @param $_endpoint
-	 *
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function __construct( $_endpoint ) {
 		global $wpdb;
 		$wpdb->last_error;
-		//prerequisites
+		// prerequisites.
 		if ( ! $_endpoint ) {
 			throw new Forminator_Integration_Exception( esc_html__( 'Missing required Static Webhook URL', 'forminator' ) );
 		}
@@ -66,12 +67,9 @@ class Forminator_Webhook_Wp_Api {
 	/**
 	 * Get singleton
 	 *
-	 *
-	 *
-	 * @param string $_endpoint
+	 * @param string $_endpoint Endpoint.
 	 *
 	 * @return Forminator_Webhook_Wp_Api|null
-	 * @throws Forminator_Integration_Exception
 	 */
 	public static function get_instance( $_endpoint ) {
 		if ( ! isset( self::$_instances[ md5( $_endpoint ) ] ) ) {
@@ -84,9 +82,7 @@ class Forminator_Webhook_Wp_Api {
 	/**
 	 * Add custom user agent on request
 	 *
-	 *
-	 *
-	 * @param $user_agent
+	 * @param string $user_agent User Agent.
 	 *
 	 * @return string
 	 */
@@ -108,14 +104,12 @@ class Forminator_Webhook_Wp_Api {
 	/**
 	 * HTTP Request
 	 *
-	 *
-	 *
-	 * @param string $verb
-	 * @param        $path
-	 * @param array  $args
+	 * @param string $verb HTTP Request type.
+	 * @param string $path Request path.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function request( $verb, $path, $args = array() ) {
 		// Adding extra user agent for wp remote request.
@@ -257,13 +251,10 @@ class Forminator_Webhook_Wp_Api {
 	/**
 	 * Send data to static webhookwebhook URL
 	 *
-	 *
-	 *
-	 * @param $args
-	 * add `is_test` => true to add `X-Hook-Test: true`
+	 * @param array $args Arguments.
+	 * add `is_test` => true to add `X-Hook-Test: true`.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function post_( $args ) {
 
@@ -277,8 +268,6 @@ class Forminator_Webhook_Wp_Api {
 	/**
 	 * Get last data sent
 	 *
-	 *
-	 *
 	 * @return array
 	 */
 	public function get_last_data_sent() {
@@ -288,8 +277,6 @@ class Forminator_Webhook_Wp_Api {
 	/**
 	 * Get last data received
 	 *
-	 *
-	 *
 	 * @return array
 	 */
 	public function get_last_data_received() {
@@ -298,8 +285,6 @@ class Forminator_Webhook_Wp_Api {
 
 	/**
 	 * Get last data received
-	 *
-	 *
 	 *
 	 * @return string
 	 */

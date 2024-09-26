@@ -14,6 +14,7 @@ final class BookingStatus
     const PENDING  = 'pending';
     const REJECTED = 'rejected';
     const NO_SHOW  = 'no-show';
+    const WAITING  = 'waiting';
 
     /**
      * @var string

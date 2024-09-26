@@ -1,5 +1,13 @@
 <?php
+/**
+ * Forminator Template API
+ *
+ * @package Forminator
+ */
 
+/**
+ * Class Forminator_Template_API
+ */
 class Forminator_Template_API {
 	/**
 	 * API key
@@ -80,7 +88,7 @@ class Forminator_Template_API {
 		);
 		if ( $is_official ) {
 			$args['order_by'] = 'name';
-			$args['order'] = 'ASC';
+			$args['order']    = 'ASC';
 		}
 		if ( $category ) {
 			$args['category'] = $category;

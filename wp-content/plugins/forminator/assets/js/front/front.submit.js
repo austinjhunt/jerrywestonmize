@@ -740,7 +740,9 @@
 
 					if ( 0 !== $captcha_field.children().length ) {
 						var $captcha_response = window.grecaptcha.getResponse( captcha_widget );
-
+						if ( captcha_size === 'invisible' && 'forminator:preSubmit:paypal' === e.type ) {
+							return;
+						}
 						if ( captcha_size === 'invisible' ) {
 							if ( $captcha_response.length === 0 ) {
 								window.grecaptcha.execute( captcha_widget );
@@ -866,7 +868,8 @@
 					quizResult = self.$el.find( '.forminator-quiz--result' ),
 					loadLabel  = button.data( 'loading' ),
 					placement  = 'undefined' !== typeof self.settings.form_placement ? self.settings.form_placement : '',
-					skip_form  = 'undefined' !== typeof self.settings.skip_form ? self.settings.skip_form : ''
+					skip_form  = 'undefined' !== typeof self.settings.skip_form ? self.settings.skip_form : '',
+					$target_message = self.$el.find( '.forminator-response-message' )
 					;
 
 				e.preventDefault();
@@ -1030,6 +1033,9 @@
 
 						} else {
 							self.$el.find( 'button' ).removeAttr( 'disabled' );
+							$target_message.removeClass( 'forminator-hidden' );
+							$target_message.html( data.data.error );
+							self.focus_to_element( $target_message );
 
 							form.trigger( 'forminator:quiz:submit:failed', [ ajaxData, formData ] );
 						}

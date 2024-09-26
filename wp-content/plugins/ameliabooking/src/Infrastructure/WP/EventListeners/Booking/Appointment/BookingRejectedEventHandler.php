@@ -36,6 +36,10 @@ class BookingRejectedEventHandler
     /** @var string */
     const BOOKING_REJECTED = 'bookingRejected';
 
+    /** @var string */
+    const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
+
+
     /**
      * @param CommandResult $commandResult
      * @param Container     $container
@@ -142,6 +146,6 @@ class BookingRejectedEventHandler
             }
         }
 
-        $webHookService->process(self::BOOKING_REJECTED, $appointment, [$booking]);
+        $webHookService->process(self::BOOKING_STATUS_UPDATED, $appointment, [$booking]);
     }
 }

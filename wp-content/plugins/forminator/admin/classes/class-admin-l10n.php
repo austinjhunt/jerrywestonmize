@@ -1,4 +1,10 @@
 <?php
+/**
+ * Forminator Admin L10n
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -10,11 +16,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Forminator_Admin_L10n {
 
+	/**
+	 * Forminator
+	 *
+	 * @var null|Forminator
+	 */
 	public $forminator = null;
 
+	/**
+	 * Forminator_Admin_L10n constructor
+	 */
 	public function __construct() {
 	}
 
+	/**
+	 * Get l10n strings
+	 *
+	 * @return array
+	 */
 	public function get_l10n_strings() {
 		$l10n = $this->admin_l10n();
 
@@ -38,7 +57,7 @@ class Forminator_Admin_L10n {
 	 */
 	public function admin_l10n() {
 		$current_user = wp_get_current_user();
-		$properties = array(
+		$properties   = array(
 			'popup'         => array(
 				'form_name_label'              => esc_html__( 'Name your form', 'forminator' ),
 				'form_name_placeholder'        => esc_html__( 'E.g., Contact Form', 'forminator' ),
@@ -248,6 +267,7 @@ class Forminator_Admin_L10n {
 				'categories'                => esc_html__( 'Categories', 'forminator' ),
 				'preview'                   => esc_html__( 'Preview', 'forminator' ),
 				'useTemplate'               => esc_html__( 'Use Template', 'forminator' ),
+				'create_blank_form'         => esc_html__( 'Create Blank Form', 'forminator' ),
 				'pro'                       => esc_html__( 'PRO', 'forminator' ),
 			),
 			'sidebar'       => array(
@@ -312,7 +332,7 @@ class Forminator_Admin_L10n {
 				'form_based_data'       => esc_html__( 'Add form data', 'forminator' ),
 				'been_saved'            => esc_html__( 'has been saved.', 'forminator' ),
 				'been_published'        => esc_html__( 'has been published.', 'forminator' ),
-				'error_saving'          => esc_html__( 'Error! Form cannot be saved.' ),
+				'error_saving'          => esc_html__( 'Error! Form cannot be saved.', 'forminator' ),
 				'default_value'         => esc_html__( 'Default Value', 'forminator' ),
 				'admin_email'           => get_option( 'admin_email' ),
 				'delete_question'       => esc_html__( 'Delete this question', 'forminator' ),
@@ -505,15 +525,15 @@ class Forminator_Admin_L10n {
 	 * @return array
 	 */
 	private static function add_notice( $properties ) {
-		if ( isset( $_GET['forminator_notice'] ) ) {
+		if ( isset( $_GET['forminator_notice'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$notices = self::get_notices_list();
-			$key = ( string ) Forminator_Core::sanitize_text_field( 'forminator_notice' );
+			$key     = (string) Forminator_Core::sanitize_text_field( 'forminator_notice' );
 			if ( ! empty( $notices[ $key ] ) ) {
 				$properties['notices'][] = $notices[ $key ];
 			}
 		}
 
-		if ( isset( $_GET['forminator_text_notice'] ) ) {
+		if ( isset( $_GET['forminator_text_notice'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$properties['notices']['custom_notice'] = Forminator_Core::sanitize_text_field( 'forminator_text_notice' );
 		}
 
@@ -582,7 +602,6 @@ class Forminator_Admin_L10n {
 			esc_html__( 'November', 'forminator' ),
 			esc_html__( 'December', 'forminator' ),
 		);
-
 	}
 
 	/**
@@ -590,11 +609,10 @@ class Forminator_Admin_L10n {
 	 *
 	 * @return mixed
 	 * @since 1.20.0
-	 *
 	 */
 	private static function get_times() {
 		$data = array();
-		for ( $i = 0; $i < 24; $i ++ ) {
+		for ( $i = 0; $i < 24; $i++ ) {
 			foreach ( apply_filters( 'forminator_get_times_interval', array( '00' ) ) as $min ) {
 				$time_key   = $i . ':' . $min;
 				$time_value = date_format( date_create( $time_key ), 'h:i A' );
@@ -610,7 +628,6 @@ class Forminator_Admin_L10n {
 	 *
 	 * @return string
 	 * @since 3.1.1
-	 *
 	 */
 	private static function get_timezone_string() {
 		$current_offset = get_option( 'gmt_offset' );
@@ -643,7 +660,6 @@ class Forminator_Admin_L10n {
 	 *
 	 * @return mixed
 	 * @since 1.20.0
-	 *
 	 */
 	private static function get_months() {
 		$days_data = array();

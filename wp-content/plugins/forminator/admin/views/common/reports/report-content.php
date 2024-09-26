@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/common/reports/report-content.php
+ *
+ * @package Forminator
+ */
+
 if ( empty( $args['reports'] ) ) {
 	return;
 }
@@ -6,21 +12,21 @@ $reports     = $args['reports'];
 $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_array( $reports, $args['form_id'] );
 ?>
 <div class="sui-tab-content">
-    <?php
-    $chart_data = array(
+	<?php
+	$chart_data = array(
 		'form_id'         => $args['form_id'],
 		'last_entry_time' => $reports['last_entry_time'],
 		'start_date'      => $reports['start_date'],
 		'end_date'        => $reports['end_date'],
 		'reports'         => $report_data,
 	);
-    $this->template( 'common/reports/chart-content', $chart_data );
-    ?>
-    <div class="sui-row forminator-reports-box">
-        <div class="sui-col-md-6">
+	$this->template( 'common/reports/chart-content', $chart_data );
+	?>
+	<div class="sui-row forminator-reports-box">
+		<div class="sui-col-md-6">
 			<?php
-			// Views box
-			Forminator_Admin_Addons_page::get_instance()->render_template(
+			// Views box.
+			Forminator_Admin_Addons_Page::get_instance()->render_template(
 				'admin/views/common/reports/single-report',
 				array(
 					'title'       => esc_html__( 'Views', 'forminator' ),
@@ -31,8 +37,8 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 				)
 			);
 
-			// Conversion rate box
-			Forminator_Admin_Addons_page::get_instance()->render_template(
+			// Conversion rate box.
+			Forminator_Admin_Addons_Page::get_instance()->render_template(
 				'admin/views/common/reports/single-report',
 				array(
 					'title'       => esc_html__( 'Conversion Rate', 'forminator' ),
@@ -43,9 +49,9 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 				)
 			);
 
-			// Payment box
+			// Payment box.
 			if ( 'forminator_forms' === $args['form_type'] ) {
-				Forminator_Admin_Addons_page::get_instance()->render_template(
+				Forminator_Admin_Addons_Page::get_instance()->render_template(
 					'admin/views/common/reports/single-report',
 					array(
 						'title'            => esc_html__( 'Payments', 'forminator' ),
@@ -58,9 +64,9 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 					)
 				);
 			}
-			// Submission box
+			// Submission box.
 			if ( isset( $report_data['leads'] ) && ! empty( $report_data['leads'] ) ) {
-				Forminator_Admin_Addons_page::get_instance()->render_template(
+				Forminator_Admin_Addons_Page::get_instance()->render_template(
 					'admin/views/common/reports/single-report',
 					array(
 						'title'       => esc_html__( 'Leads', 'forminator' ),
@@ -71,12 +77,12 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 					)
 				);
 			}
-            ?>
-        </div>
-        <div class="sui-col-md-6">
+			?>
+		</div>
+		<div class="sui-col-md-6">
 			<?php
-			// Submission box
-			Forminator_Admin_Addons_page::get_instance()->render_template(
+			// Submission box.
+			Forminator_Admin_Addons_Page::get_instance()->render_template(
 				'admin/views/common/reports/single-report',
 				array(
 					'title'       => esc_html__( 'Submissions', 'forminator' ),
@@ -89,13 +95,13 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 				)
 			);
 
-			// Integration box
-			Forminator_Admin_Addons_page::get_instance()->render_template(
+			// Integration box.
+			Forminator_Admin_Addons_Page::get_instance()->render_template(
 				'admin/views/common/reports/integration-report',
 				array(
 					'form_id'      => $args['form_id'],
 					'integrations' => ! empty( $report_data['integration'] ) ? $report_data['integration'] : array(),
-                    'app_link'     => Forminator_Admin_Report_Page::get_instance()->get_app_link_module_id( $args['form_id'], $args['form_type'] ),
+					'app_link'     => Forminator_Admin_Report_Page::get_instance()->get_app_link_module_id( $args['form_id'], $args['form_type'] ),
 				)
 			);
 
@@ -118,12 +124,12 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 					$args
 				);
 
-				Forminator_Admin_Addons_page::get_instance()->render_template(
+				Forminator_Admin_Addons_Page::get_instance()->render_template(
 					'admin/views/common/reports/basic-widget',
 					$vars
 				);
 			}
 			?>
-        </div>
-    </div>
+		</div>
+	</div>
 </div>

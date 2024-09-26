@@ -1,6 +1,13 @@
 <?php
+/**
+ * The Addon autoload.
+ *
+ * @package Forminator
+ */
 
-require_once dirname( __FILE__ ) . '/class-addon-default-holder.php';
+defined( 'ABSPATH' ) || exit;
+
+require_once __DIR__ . '/class-addon-default-holder.php';
 
 /**
  * Class Forminator_Addon_Autoload
@@ -24,7 +31,7 @@ class Forminator_Addon_Autoload {
 	 *
 	 * @since 1.1
 	 *
-	 * @param array $pro_addons
+	 * @param array $pro_addons Pro addons.
 	 */
 	public function __construct( $pro_addons = array() ) {
 		$this->pro_addons = $pro_addons;
@@ -39,7 +46,7 @@ class Forminator_Addon_Autoload {
 	public function load() {
 		$pro_addons = $this->pro_addons;
 
-		$pro_addons_dir = dirname( __FILE__ ) . '/pro/';
+		$pro_addons_dir = __DIR__ . '/pro/';
 
 		/**
 		 * Filter path of Pro integrations directory located
@@ -70,7 +77,7 @@ class Forminator_Addon_Autoload {
 			if ( ! file_exists( $addon_initiator ) ) {
 				continue;
 			}
-			/** @noinspection PhpIncludeInspection */
+			// @noinspection PhpIncludeInspection.
 			include_once $addon_initiator;
 		}
 

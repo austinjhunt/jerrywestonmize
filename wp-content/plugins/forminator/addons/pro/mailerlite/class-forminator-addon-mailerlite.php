@@ -1,5 +1,11 @@
 <?php
 /**
+ * Forminator Addon Mailerlite.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Mailerlite
  * The class that defines mailerlite integration
  */
@@ -13,30 +19,45 @@ class Forminator_Mailerlite extends Forminator_Integration {
 	protected static $instance = null;
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	protected $_slug = 'mailerlite';
 
 	/**
+	 * Mailerlite version
+	 *
 	 * @var string
 	 */
 	protected $_version = FORMINATOR_ADDON_MAILERLITE_VERSION;
 
 	/**
+	 * Forminator minimum version
+	 *
 	 * @var string
 	 */
 	protected $_min_forminator_version = '1.30';
 
 	/**
+	 * Short title
+	 *
 	 * @var string
 	 */
 	protected $_short_title = 'MailerLite';
 
 	/**
+	 * Title
+	 *
 	 * @var string
 	 */
 	protected $_title = 'MailerLite';
 
+	/**
+	 * Position
+	 *
+	 * @var integer
+	 */
 	protected $_position = 4;
 
 	/**
@@ -85,7 +106,7 @@ class Forminator_Mailerlite extends Forminator_Integration {
 	/**
 	 * Get API Instance
 	 *
-	 * @param null $api_key
+	 * @param string|null $api_key API key.
 	 *
 	 * @return Forminator_Mailerlite_Wp_Api|null
 	 */
@@ -163,14 +184,14 @@ class Forminator_Mailerlite extends Forminator_Integration {
 	/**
 	 * Wizard of configure_api_key
 	 *
-	 * @param     $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return array
 	 */
 	public function configure_api_key( $submitted_data ) {
-		$setting_values        = $this->get_settings_values();
-		$identifier            = $setting_values['identifier'] ?? '';
-		$api_key               = $this->get_api_key();
+		$setting_values = $this->get_settings_values();
+		$identifier     = $setting_values['identifier'] ?? '';
+		$api_key        = $this->get_api_key();
 		// ON Submit.
 		if ( isset( $submitted_data['api_key'] ) ) {
 			$api_key    = $submitted_data['api_key'];
@@ -245,17 +266,6 @@ class Forminator_Mailerlite extends Forminator_Integration {
 				'markup' => self::get_button_markup( esc_html__( 'Connect', 'forminator' ), 'forminator-addon-connect' ),
 			);
 		}
-//		$template_params  = array(
-//			'identifier'    => $setting_values['identifier'] ?? '',
-//			'error_message' => $error_message,
-//			'api_url'       => '',
-//			'api_url_error' => '',
-//			'api_key'       => '',
-//			'api_key_error' => '',
-//		);
-//
-//		$template = $this->addon_path() . 'settings/setup-api.php';
-//		$html     = self::get_template( $template, $template_params );
 
 		$html = '<div class="forminator-integration-popup__header">';
 		/* translators: ... */
@@ -298,9 +308,10 @@ class Forminator_Mailerlite extends Forminator_Integration {
 	 * Flag for check if has lead form integration connected to a quiz
 	 * by default it will check if last step of form settings already completed by user
 	 *
-	 * @param $quiz_id
+	 * @param int $quiz_id Quiz Id.
 	 *
 	 * @return bool
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function is_quiz_lead_connected( $quiz_id ) {
 
@@ -330,11 +341,9 @@ class Forminator_Mailerlite extends Forminator_Integration {
 		 * @param bool                                          $is_quiz_connected
 		 * @param int                                           $quiz_id                Current Form ID.
 		 * @param Forminator_Mailerlite_Quiz_Settings|null $quiz_settings_instance Instance of form settings, or null when unavailable.
-		 *
 		 */
 		$is_quiz_connected = apply_filters( 'forminator_addon_mailerlite_is_quiz_lead_connected', $is_quiz_connected, $quiz_id, $quiz_settings_instance );
 
 		return $is_quiz_connected;
-
 	}
 }

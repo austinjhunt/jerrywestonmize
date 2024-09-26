@@ -1,4 +1,11 @@
 <?php
+/**
+ * Addon Mailchimp form hook.
+ *
+ * @package Forminator
+ */
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Forminator_Mailchimp_Form_Hooks
@@ -57,7 +64,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param $addon_setting_values
+	 * @param array $addon_setting_values Addon settings values.
 	 */
 	private function render_gdpr_field( $addon_setting_values ) {
 
@@ -103,7 +110,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 		}
 		$html .= '</div></div></div>';
 
-		echo wp_kses_post( $html );// phpcs:ignore Standard.Category.SniffName.ErrorCode
+		echo wp_kses_post( $html );
 	}
 
 	/**
@@ -111,16 +118,16 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param array      $form_settings
-	 * @param string     $key
-	 * @param            $default
-	 * @param string     $type
+	 * @param array  $form_settings Form settings.
+	 * @param string $key Key.
+	 * @param mixed  $default_value Default value.
+	 * @param string $type Data type.
 	 *
 	 * @return int|mixed
 	 */
-	private static function get_form_setting_value_as( $form_settings, $key, $default, $type = 'string' ) {
+	private static function get_form_setting_value_as( $form_settings, $key, $default_value, $type = 'string' ) {
 		if ( ! isset( $form_settings[ $key ] ) ) {
-			return self::convert_value_to( $default, $type );
+			return self::convert_value_to( $default_value, $type );
 		}
 
 		return self::convert_value_to( $form_settings[ $key ], $type );
@@ -131,8 +138,8 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param $value
-	 * @param $type
+	 * @param mixed  $value Value.
+	 * @param string $type Datatype.
 	 *
 	 * @return array|false|int|mixed|string
 	 */
@@ -172,7 +179,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted data.
 	 *
 	 * @return bool
 	 */
@@ -248,8 +255,9 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	 * @param array $submitted_data Submitted data.
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Integration Exception.
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$form_id                = $this->module_id;
 		$form_settings_instance = $this->settings_instance;
 		$gdpr                   = false;
@@ -341,31 +349,40 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 				}
 			}
 
-			//check required fields fulfilled
+			// check required fields fulfilled.
 			foreach ( $mailchimp_required_fields as $mailchimp_required_field ) {
 				if ( 'address' === $mailchimp_required_field->type ) {
 					$address_fields = $form_settings_instance->mail_address_fields();
 					foreach ( $address_fields as $addr => $address ) {
 						if ( ! isset( $addon_setting_values['fields_map'][ $mailchimp_required_field->tag ][ $addr ] ) ) {
-							throw new Forminator_Integration_Exception( sprintf(
+							throw new Forminator_Integration_Exception(
+								sprintf(
 								/* translators: 1: Required field name */
-								esc_html__( 'Required Field %1$s not mapped yet to Forminator Form Field, Please check your Mailchimp Configuration on Form Settings', 'forminator' ), esc_html( $mailchimp_required_field->name ) )
+									esc_html__( 'Required Field %1$s not mapped yet to Forminator Form Field, Please check your Mailchimp Configuration on Form Settings', 'forminator' ),
+									esc_html( $mailchimp_required_field->name )
+								)
 							);
 						}
 
 						if ( ! isset( $submitted_data[ $addon_setting_values['fields_map'][ $mailchimp_required_field->tag ][ $addr ] ] )
 							|| empty( $submitted_data[ $addon_setting_values['fields_map'][ $mailchimp_required_field->tag ][ $addr ] ] ) ) {
-							throw new Forminator_Integration_Exception( sprintf(
+							throw new Forminator_Integration_Exception(
+								sprintf(
 								/* translators: 1: Required field name */
-								esc_html__( 'Required Field %1$s not filled by user', 'forminator' ), esc_html( $mailchimp_required_field->name ) )
+									esc_html__( 'Required Field %1$s not filled by user', 'forminator' ),
+									esc_html( $mailchimp_required_field->name )
+								)
 							);
 						}
 					}
 				} else {
 					if ( ! isset( $addon_setting_values['fields_map'][ $mailchimp_required_field->tag ] ) ) {
-						throw new Forminator_Integration_Exception( sprintf(
+						throw new Forminator_Integration_Exception(
+							sprintf(
 							/* translators: 1: Required field name */
-							esc_html__( 'Required Field %1$s not mapped yet to Forminator Form Field, Please check your Mailchimp Configuration on Form Settings', 'forminator' ), esc_html( $mailchimp_required_field->name ) )
+								esc_html__( 'Required Field %1$s not mapped yet to Forminator Form Field, Please check your Mailchimp Configuration on Form Settings', 'forminator' ),
+								esc_html( $mailchimp_required_field->name )
+							)
 						);
 					}
 
@@ -375,9 +392,12 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 					$has_submit_data = isset( $submitted_data[ $element_id ] ) && ! empty( $submitted_data[ $element_id ] );
 
 					if ( ! $is_calculation && ! $is_stripe && ! $has_submit_data ) {
-						throw new Forminator_Integration_Exception( sprintf(
+						throw new Forminator_Integration_Exception(
+							sprintf(
 							/* translators: 1: Required field name */
-							esc_html__( 'Required Field %1$s not filled by user', 'forminator' ), esc_html( $mailchimp_required_field->name ) )
+								esc_html__( 'Required Field %1$s not filled by user', 'forminator' ),
+								esc_html( $mailchimp_required_field->name )
+							)
 						);
 					}
 				}
@@ -402,7 +422,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 					}
 				}
 			} catch ( Forminator_Integration_Exception $e ) {
-				//Member not yet subscribed, keep going on, mark status based on double-opt-in option
+				// Member not yet subscribed, keep going on, mark status based on double-opt-in option.
 				if ( $is_double_opt_in_enabled ) {
 					$status = 'pending';
 				}
@@ -426,20 +446,18 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 							}
 						}
 					}
-				} else {
-					if ( isset( $addon_setting_values['fields_map'][ $item->tag ] ) && ! empty( $addon_setting_values['fields_map'][ $item->tag ] ) ) {
+				} elseif ( isset( $addon_setting_values['fields_map'][ $item->tag ] ) && ! empty( $addon_setting_values['fields_map'][ $item->tag ] ) ) {
 						$element_id = $addon_setting_values['fields_map'][ $item->tag ];
-						if ( ! isset( $submitted_data[ $element_id ] ) ) {
-							continue;
-						}
+					if ( ! isset( $submitted_data[ $element_id ] ) ) {
+						continue;
+					}
 						$merge_fields[ $item->tag ] = $submitted_data[ $element_id ];
-						if ( in_array( $item->type, array( 'date', 'birthday' ), true ) ) {
-							$time = strtotime( $submitted_data[ $element_id ] );
-							if ( $time ) {
-								$format = 'birthday' === $item->type ? 'm/d' : 'm/d/Y';
+					if ( in_array( $item->type, array( 'date', 'birthday' ), true ) ) {
+						$time = strtotime( $submitted_data[ $element_id ] );
+						if ( $time ) {
+							$format = 'birthday' === $item->type ? 'm/d' : 'm/d/Y';
 
-								$merge_fields[ $item->tag ] = date( $format, $time ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-							}
+							$merge_fields[ $item->tag ] = gmdate( $format, $time );
 						}
 					}
 				}
@@ -631,8 +649,8 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param Forminator_Form_Entry_Model $entry_model
-	 * @param  array                      $addon_meta_data
+	 * @param Forminator_Form_Entry_Model $entry_model Form entry model.
+	 * @param  array                       $addon_meta_data Addon meta data.
 	 *
 	 * @return bool
 	 */
@@ -739,7 +757,6 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 
 			return false;
 		}
-
 	}
 
 	/**
@@ -747,7 +764,7 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param array $addon_meta_data
+	 * @param array $addon_meta_data Addon meta data.
 	 *
 	 * @return array
 	 */
@@ -775,48 +792,48 @@ class Forminator_Mailchimp_Form_Hooks extends Forminator_Integration_Form_Hooks 
 	 *
 	 * @since 1.0 Mailchimp Integration
 	 *
-	 * @param $addon_meta_data
+	 * @param array $addon_meta_data Addon meta data.
 	 *
 	 * @return string
 	 */
 	public static function get_delete_member_url_from_addon_meta_data( $addon_meta_data ) {
 
 		// delete links available on data_received of mailchimp.
-		/** == Integration meta data reference ==*/
-		//[
-		//  {.
-		//	  "name": "status",
-		//    "value": {.
-		//	  "is_sent": true,
-		//      "description": "Successfully added or updated member on Mailchimp list",.
-		//      "data_sent": {.
-		//          ...
-		//	  },
-		//      "data_received": {.
-		//		  "id": "XXXXXXX",
-		//        ...
-		//        "list_id": "XXXXXXX",.
-		//        "_links": [.
-		//          {.
-		//	          "rel": "upsert",
-		//            "href": "https:\/\/us9.api.mailchimp.com\/3.0\/lists\/XXXXXXX\/members\/XXXXXXX",.
-		//            "method": "PUT",.
-		//            "targetSchema": "https:\/\/us9.api.mailchimp.com\/schema\/3.0\/Definitions\/Lists\/Members\/Response.json",.
-		//            "schema": "https:\/\/us9.api.mailchimp.com\/schema\/3.0\/Definitions\/Lists\/Members\/PUT.json".
-		//          },.
-		//          {.
-		//	          "rel": "delete",
-		//            "href": "https:\/\/us9.api.mailchimp.com\/3.0\/lists\/XXXXXXX\/members\/XXXXXXX",.
-		//            "method": "DELETE".
-		//          },.
-		//          ...
-		//        ].
-		//      },.
-		//      "url_request": "https:\/\/us9.api.mailchimp.com\/3.0\/lists\/XXXX\/members\/XXXXXXX".
-		//    }.
-		//  }.
-		//]
-		/** == Integration meta data reference ==*/
+		/** == Integration meta data reference ==
+		// [
+		// {.
+		// "name": "status",
+		// "value": {.
+		// "is_sent": true,
+		// "description": "Successfully added or updated member on Mailchimp list",.
+		// "data_sent": {.
+		// ...
+		// },
+		// "data_received": {.
+		// "id": "XXXXXXX",
+		// ...
+		// "list_id": "XXXXXXX",.
+		// "_links": [.
+		// {.
+		// "rel": "upsert",
+		// "href": "https:\/\/us9.api.mailchimp.com\/3.0\/lists\/XXXXXXX\/members\/XXXXXXX",.
+		// "method": "PUT",.
+		// "targetSchema": "https:\/\/us9.api.mailchimp.com\/schema\/3.0\/Definitions\/Lists\/Members\/Response.json",.
+		// "schema": "https:\/\/us9.api.mailchimp.com\/schema\/3.0\/Definitions\/Lists\/Members\/PUT.json".
+		// },.
+		// {.
+		// "rel": "delete",
+		// "href": "https:\/\/us9.api.mailchimp.com\/3.0\/lists\/XXXXXXX\/members\/XXXXXXX",.
+		// "method": "DELETE".
+		// },.
+		// ...
+		// ].
+		// },.
+		// "url_request": "https:\/\/us9.api.mailchimp.com\/3.0\/lists\/XXXX\/members\/XXXXXXX".
+		// }.
+		// }.
+		// ]
+		== Integration meta data reference == */
 
 		$delete_member_url = '';
 

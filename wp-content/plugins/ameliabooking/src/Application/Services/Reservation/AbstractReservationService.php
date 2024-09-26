@@ -43,6 +43,7 @@ use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\AmountType;
+use AmeliaBooking\Domain\ValueObjects\String\BookableType;
 use AmeliaBooking\Domain\ValueObjects\String\BookingType;
 use AmeliaBooking\Domain\ValueObjects\String\DepositType;
 use AmeliaBooking\Domain\ValueObjects\String\Label;
@@ -348,7 +349,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
 
                 $appointmentData['bookings'][0]['customer']['id'] = $user->getId()->getValue();
 
-                if ($user->getStripeConnect() && $user->getStripeConnect()->getId()) {
+                if ($user->getType() === AbstractUser::USER_ROLE_CUSTOMER && $user->getStripeConnect() && $user->getStripeConnect()->getId()) {
                     $appointmentData['bookings'][0]['customer']['stripeConnect'] = $user->getStripeConnect()->toArray();
                 }
             }
@@ -500,6 +501,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     'utcTime'                  => [],
                     'appointmentStatusChanged' => false,
                     'packageId'                => $reservation->getBookable()->getId()->getValue(),
+                    'isPackageAppointment'     => true,
                     'package'                  => [],
                     'isCart'                   => $isCart,
                     'recurring'                => [],
@@ -569,6 +571,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     'recurring' => $recurringReservations,
                     'package'   => $packageReservations,
                     'packageId' => $packageReservations ? $reservation->getBookable()->getId()->getValue() : null,
+                    'isPackageAppointment' => ($reservation->getBooking() && $reservation->getBooking()->getPackageCustomerService() !== null) || $reservation->getReservation()->getType()->getValue() === BookableType::PACKAGE,
                     'customer'  => $reservation->getCustomer() ? array_merge(
                         $reservation->getCustomer()->toArray(),
                         [
@@ -824,7 +827,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         $packageId,
         $customerData,
         $paymentId,
-        $packageCustomerId
+        $packageCustomerId,
+        $isPackageAppointment
     ) {
         $result = new CommandResult();
 
@@ -846,6 +850,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     'isCart'                   => false,
                     'paymentId'                => $paymentId,
                     'packageCustomerId'        => $packageCustomerId,
+                    'isPackageAppointment'     => $isPackageAppointment
                 ]
             );
 
@@ -899,6 +904,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     'appointmentStatusChanged'          => $appointmentStatusChanged,
                     'paymentId'                         => $paymentId,
                     'packageCustomerId'                 => $packageCustomerId,
+                    'isPackageAppointment'              => $isPackageAppointment
                 ],
                 [
                     'customer'  => $customerData,
@@ -1002,7 +1008,9 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 $result->getData()['customer'],
                 !empty($result->getData()['paymentId']) ? $result->getData()['paymentId'] : null,
                 !empty($result->getData()['packageCustomerId']) ?
-                    $result->getData()['packageCustomerId'] : null
+                    $result->getData()['packageCustomerId'] : null,
+                !empty($result->getData()['isPackageAppointment']) ?
+                    $result->getData()['isPackageAppointment'] : null
             );
 
 

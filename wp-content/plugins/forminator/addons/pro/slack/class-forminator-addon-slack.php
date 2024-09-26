@@ -1,6 +1,12 @@
 <?php
+/**
+ * Forminator Slack
+ *
+ * @package Forminator
+ */
 
-require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-slack-wp-api.php';
+// Include addon-slack-wp-api.
+require_once __DIR__ . '/lib/class-forminator-addon-slack-wp-api.php';
 
 /**
  * Class Forminator_Slack
@@ -11,18 +17,59 @@ require_once dirname( __FILE__ ) . '/lib/class-forminator-addon-slack-wp-api.php
 final class Forminator_Slack extends Forminator_Integration {
 
 	/**
+	 * Forminator_Slack Instance
+	 *
 	 * @var self|null
 	 */
 	protected static $instance = null;
 
-	protected $_slug                   = 'slack';
-	protected $_version                = FORMINATOR_ADDON_SLACK_VERSION;
-	protected $_min_forminator_version = '1.1';
-	protected $_short_title            = 'Slack';
-	protected $_title                  = 'Slack';
+	/**
+	 * Slug
+	 *
+	 * @var string
+	 */
+	protected $_slug = 'slack';
 
+	/**
+	 * Slack version
+	 *
+	 * @var string
+	 */
+	protected $_version = FORMINATOR_ADDON_SLACK_VERSION;
+
+	/**
+	 * Forminator minimum version
+	 *
+	 * @var string
+	 */
+	protected $_min_forminator_version = '1.1';
+
+	/**
+	 * Short title
+	 *
+	 * @var string
+	 */
+	protected $_short_title = 'Slack';
+
+	/**
+	 * Title
+	 *
+	 * @var string
+	 */
+	protected $_title = 'Slack';
+
+	/**
+	 * Token
+	 *
+	 * @var string
+	 */
 	private $_token = '';
 
+	/**
+	 * Error message
+	 *
+	 * @var string
+	 */
 	private $_auth_error_message = '';
 
 	const TARGET_TYPE_PUBLIC_CHANNEL  = 'public_channel';
@@ -30,10 +77,17 @@ final class Forminator_Slack extends Forminator_Integration {
 	const TARGET_TYPE_DIRECT_MESSAGE  = 'direct_message';
 
 	/**
+	 * Slack API
+	 *
 	 * @var null|Forminator_Slack_Wp_Api
 	 */
 	private static $_api = null;
 
+	/**
+	 * Position
+	 *
+	 * @var int
+	 */
 	protected $_position = 4;
 
 	/**
@@ -43,7 +97,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	 */
 	public function __construct() {
 		// late init to allow translation.
-		$this->_description                = esc_html__( 'Get awesome by your form.', 'forminator' );
+		$this->_description = esc_html__( 'Get awesome by your form.', 'forminator' );
 
 		add_filter( 'forminator_addon_slack_api_request_headers', array( $this, 'default_filter_api_headers' ), 1, 4 );
 	}
@@ -120,7 +174,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted Data.
 	 *
 	 * @return array
 	 */
@@ -223,7 +277,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Setup client id is complete
 	 *
-	 * @param $submitted_data
+	 * @param array $submitted_data Submitted Data.
 	 *
 	 * @return bool
 	 */
@@ -268,6 +322,11 @@ final class Forminator_Slack extends Forminator_Integration {
 		);
 	}
 
+	/**
+	 * Authorize access is completed.
+	 *
+	 * @return bool
+	 */
 	public function authorize_access_is_completed() {
 		return true;
 	}
@@ -279,10 +338,10 @@ final class Forminator_Slack extends Forminator_Integration {
 	 * @return array
 	 */
 	public function wait_authorize_access() {
-		$template         = forminator_addon_slack_dir() . 'views/settings/wait-authorize.php';
-		$template_error   = forminator_addon_slack_dir() . 'views/settings/error-authorize.php';
-		$token            = $this->get_client_access_token();
-		$is_poll          = false;
+		$template       = forminator_addon_slack_dir() . 'views/settings/wait-authorize.php';
+		$template_error = forminator_addon_slack_dir() . 'views/settings/error-authorize.php';
+		$token          = $this->get_client_access_token();
+		$is_poll        = false;
 
 		$template_params = array(
 			'token'    => $token,
@@ -504,9 +563,10 @@ final class Forminator_Slack extends Forminator_Integration {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param $query_args
+	 * @param array $query_args Arguments.
 	 *
 	 * @return string
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function authorize_page_callback( $query_args ) {
 		$settings        = $this->get_settings_values();
@@ -565,10 +625,9 @@ final class Forminator_Slack extends Forminator_Integration {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param null|string $access_token
+	 * @param null|string $access_token Access token.
 	 *
 	 * @return Forminator_Slack_Wp_Api|null
-	 * @throws Forminator_Integration_Exception
 	 */
 	public function get_api( $access_token = null ) {
 		if ( is_null( self::$_api ) ) {
@@ -588,7 +647,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param $values
+	 * @param array $values Setting to save.
 	 *
 	 * @return mixed
 	 */
@@ -607,16 +666,16 @@ final class Forminator_Slack extends Forminator_Integration {
 	/**
 	 * Default filter for header
 	 *
-	 * its add / change Authorization header
+	 * Its add / change Authorization header
 	 * - on get access token it uses Basic realm of encoded client id and secret
 	 * - on web API request it uses Bearer realm of access token which default of @see Forminator_Slack_Wp_Api
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param $headers
-	 * @param $verb
-	 * @param $path
-	 * @param $args
+	 * @param array  $headers Headers.
+	 * @param string $verb HTTP request type.
+	 * @param string $path Request path.
+	 * @param array  $args Arguments.
 	 *
 	 * @return array
 	 */

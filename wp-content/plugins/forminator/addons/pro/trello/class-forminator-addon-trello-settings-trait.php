@@ -17,7 +17,7 @@ trait Forminator_Trello_Settings_Trait {
 	 * @since 1.0 Trello Integration
 	 * @return array
 	 */
-	public function module_settings_wizards() : array {
+	public function module_settings_wizards(): array {
 		return array(
 			array(
 				'callback'     => array( $this, 'setup_name' ),
@@ -45,6 +45,7 @@ trait Forminator_Trello_Settings_Trait {
 	 *
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function setup_name( $submitted_data ) {
 		$template = forminator_addon_trello_dir() . 'views/form-settings/setup-name.php';
@@ -116,6 +117,7 @@ trait Forminator_Trello_Settings_Trait {
 	 *
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function setup_board( $submitted_data ) {
 		$template = forminator_addon_trello_dir() . 'views/form-settings/setup-board.php';
@@ -230,6 +232,7 @@ trait Forminator_Trello_Settings_Trait {
 	 * @since 1.0 Trello Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function setup_list( $submitted_data ) {
 		$template = forminator_addon_trello_dir() . 'views/form-settings/setup-list.php';
@@ -241,7 +244,7 @@ trait Forminator_Trello_Settings_Trait {
 		$multi_id = $submitted_data['multi_id'];
 		unset( $submitted_data['multi_id'] );
 
-		//todo: validate this, step wizard back if needed
+		// todo: validate this, step wizard back if needed.
 		$board_name = $this->get_multi_id_settings( $multi_id, 'board_name' );
 		$board_id   = $this->get_multi_id_settings( $multi_id, 'board_id' );
 
@@ -346,6 +349,7 @@ trait Forminator_Trello_Settings_Trait {
 	 *
 	 * @param array $submitted_data Submitted data.
 	 * @return array
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function setup_card( $submitted_data ) {
 		$template = forminator_addon_trello_dir() . 'views/' . static::$module_slug . '-settings/setup-card.php';
@@ -443,10 +447,10 @@ trait Forminator_Trello_Settings_Trait {
 				if ( isset( $data->id ) && isset( $data->username ) ) {
 					$display_name = $data->username;
 					// its from API var.
-					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 					if ( ! empty( $data->fullName ) ) {
 						// its from API var.
-						// phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+						// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 						$display_name = $data->fullName;
 					}
 					$members[ $data->id ] = $display_name;

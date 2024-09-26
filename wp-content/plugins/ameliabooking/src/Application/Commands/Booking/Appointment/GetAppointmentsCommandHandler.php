@@ -331,7 +331,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
             $reschedulable = $currentDateTime <= $minimumRescheduleTime;
 
 
-            if ($isCabinetPage) {
+            if ($isCabinetPage || ($user && $user->getType() === Entities::PROVIDER)) {
                 $timeZone = 'UTC';
 
                 if (!empty($params['timeZone'])) {

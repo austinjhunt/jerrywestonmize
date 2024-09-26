@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -52,9 +51,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
         if ($data['paymentMethodId']) {
             $paymentMethodId = $data['paymentMethodId'];
 
-            if (
-                $stripeConnectSettings['enabled'] &&
-                $stripeConnectSettings['amount'] &&
+            if ($stripeConnectSettings['enabled'] &&
                 sizeof($transfers['accounts']) === 1 &&
                 $stripeConnectSettings['method'] === 'direct'
             ) {
@@ -83,22 +80,30 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 $stripeData['return_url'] = $stripeSettings['returnUrl'];
             }
 
-            if (
-                $stripeConnectSettings['enabled'] &&
-                $stripeConnectSettings['amount'] &&
+            if ($stripeConnectSettings['enabled'] &&
                 $stripeConnectSettings['method'] === 'transfer' &&
                 sizeof($transfers['accounts']) > 0
             ) {
-                $token = new Token();
+                $hasTransfer = false;
 
-                $stripeData['transfer_group'] = $token->getValue();
+                foreach ($transfers['accounts'] as $payments) {
+                    foreach ($payments as $payment) {
+                        if ($payment['amount'] && $payment['amount'] > 0) {
+                            $hasTransfer = true;
+                        }
+                    }
+                }
+
+                if ($hasTransfer) {
+                    $token = new Token();
+
+                    $stripeData['transfer_group'] = $token->getValue();
+                }
             }
 
             $additionalStripeData = [];
 
-            if (
-                $stripeConnectSettings['enabled'] &&
-                $stripeConnectSettings['amount'] &&
+            if ($stripeConnectSettings['enabled'] &&
                 sizeof($transfers['accounts']) === 1 &&
                 $stripeConnectSettings['method'] === 'direct'
             ) {
@@ -123,18 +128,9 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 $stripeData['metadata'] = $data['metaData'];
             }
 
-            // BEGIN MODS
-
-            if ($data['metaData']['Customer Email']) {
-                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
-            }
-            // also added a fallback description since that was appearing as null on the Stripe side
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
-            } else {
-                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
-            // END MODS
 
             $customerId = $this->createCustomer($data, $additionalStripeData);
 
@@ -150,13 +146,17 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             $intent = PaymentIntent::create($stripeData, $additionalStripeData);
 
 
-            if (
-                $stripeConnectSettings['enabled'] &&
-                $stripeConnectSettings['amount'] &&
+            if ($stripeConnectSettings['enabled'] &&
                 $stripeConnectSettings['method'] === 'transfer'
             ) {
                 foreach ($transfers['accounts'] as $accountId => $payments) {
                     foreach ($payments as $paymentId => $payment) {
+                        if (!$payment['amount']) {
+                            unset($transfers['accounts'][$accountId][$paymentId]);
+
+                            continue;
+                        }
+
                         try {
                             $transfer = Transfer::create(
                                 [
@@ -417,7 +417,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 ['stripe_account' => array_keys($transfers['accounts'])[0]] : []
         );
 
-        return $response->getLastResponse()->code === 200 ? $response->toArray()['amount'] / 100 : null;
+        return $response->getLastResponse()->code === 200 ? $response->toArray()['amount']/100 : null;
     }
 
     /**

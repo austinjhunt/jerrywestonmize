@@ -1,5 +1,11 @@
 <?php
 /**
+ * The Forminator_Assets_Enqueue class.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Assets_Enqueue
  *
  * @since 1.11
@@ -21,6 +27,9 @@ abstract class Forminator_Assets_Enqueue {
 
 	/**
 	 * Forminator_Render_Form constructor.
+	 *
+	 * @param mixed $model Model.
+	 * @param bool  $is_ajax_load Is ajax load.
 	 *
 	 * @since 1.11
 	 */
@@ -46,10 +55,11 @@ abstract class Forminator_Assets_Enqueue {
 	}
 
 	/**
+	 * Get CSS upload.
 	 *
-	 * @param int  $id
-	 * @param type $type
-	 * @param type $force
+	 * @param int    $id Id.
+	 * @param string $type Type.
+	 * @param bool   $force Force.
 	 * @return string
 	 */
 	public static function get_css_upload( $id, $type = 'url', $force = false ) {
@@ -60,7 +70,7 @@ abstract class Forminator_Assets_Enqueue {
 			wp_mkdir_p( $css_dir );
 		}
 
-		// Create Index file
+		// Create Index file.
 		Forminator_Field::forminator_upload_index_file( $id, $css_dir );
 
 		$fullname = $css_dir . '/' . $filename;

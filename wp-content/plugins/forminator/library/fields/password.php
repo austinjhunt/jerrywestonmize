@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Password class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,51 +17,71 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Password extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'password';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'password';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 6;
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Is input
+	 *
 	 * @var bool
 	 */
 	public $is_input = true;
 
 	/**
+	 * Has Counter
+	 *
 	 * @var bool
 	 */
 	public $has_counter = false;
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-key';
 
 	/**
+	 * Confirm prefix
+	 *
 	 * @var string
 	 * @since 1.11
 	 */
@@ -93,7 +119,7 @@ class Forminator_Password extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -114,7 +140,7 @@ class Forminator_Password extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
 	 *
 	 * @return mixed
@@ -271,7 +297,7 @@ class Forminator_Password extends Forminator_Field {
 	 *
 	 * @since 1.11
 	 *
-	 * @param string $password
+	 * @param string $password Password.
 	 *
 	 * @return bool
 	 */
@@ -328,8 +354,8 @@ class Forminator_Password extends Forminator_Field {
 		$module_selector       = '';
 
 		if ( ! empty( $module_id ) ) {
-			$module_selector = "#forminator-module-{$module_id}";
-			$render_id       = Forminator_Render_Form::get_render_id( $module_id );
+			$module_selector  = "#forminator-module-{$module_id}";
+			$render_id        = Forminator_Render_Form::get_render_id( $module_id );
 			$module_selector .= "[data-forminator-render='{$render_id}']";
 		}
 
@@ -454,7 +480,7 @@ class Forminator_Password extends Forminator_Field {
 				$field
 			);
 			$messages                    .= '"equalTo": "' . $not_match_error . '",' . "\n";
-			$messages .= '},';
+			$messages                    .= '},';
 		}
 
 		return $messages;
@@ -465,8 +491,8 @@ class Forminator_Password extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array        $field
-	 * @param array|string $data
+	 * @param array        $field Field.
+	 * @param array|string $data Data.
 	 */
 	public function validate( $field, $data ) {
 		$id                    = self::get_property( 'element_id', $field );
@@ -522,9 +548,10 @@ class Forminator_Password extends Forminator_Field {
 			}
 		}
 
-		if ( $is_confirm && ! empty( $data ) &&
-				Forminator_CForm_Front_Action::$prepared_data[ $id ] !== Forminator_CForm_Front_Action::$prepared_data[ 'confirm_' . $id ] ) {
-			$validation_message_not_match 		  = self::get_property( 'validation_message', $field, '' );
+		$password         = Forminator_CForm_Front_Action::$prepared_data[ $id ];
+		$confirm_password = Forminator_CForm_Front_Action::$prepared_data[ 'confirm_' . $id ];
+		if ( $is_confirm && ! empty( $data ) && $password !== $confirm_password ) {
+			$validation_message_not_match         = self::get_property( 'validation_message', $field, '' );
 			$validation_message_not_match_message = apply_filters(
 				'forminator_confirm_password_field_not_match_validation_message',
 				! empty( $validation_message_not_match ) ? $validation_message_not_match : esc_html__( 'Your passwords don\'t match.', 'forminator' ),
@@ -532,7 +559,7 @@ class Forminator_Password extends Forminator_Field {
 				$field
 			);
 
-			$this->validation_message[ $id ] = $validation_message_not_match_message;
+			$this->validation_message[ $id ]              = $validation_message_not_match_message;
 			$this->validation_message[ 'confirm_' . $id ] = $validation_message_not_match_message;
 		}
 	}
@@ -542,7 +569,7 @@ class Forminator_Password extends Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization

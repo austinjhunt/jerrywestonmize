@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Events class.
+ *
+ * @package Forminator
+ */
 
 /**
  * Abstract class for Mixpanel Events.
@@ -19,7 +24,6 @@ abstract class Events {
 	 * @return Mixpanel
 	 *
 	 * @since 1.27.0
-	 *
 	 */
 	protected static function tracker() {
 		return Forminator_Mixpanel::get_instance()->tracker();
@@ -30,7 +34,6 @@ abstract class Events {
 	 *
 	 * @return bool
 	 * @since 1.27.0
-	 *
 	 */
 	protected static function is_tracking_active() {
 		return self::get_value( 'forminator_usage_tracking', false );
@@ -39,8 +42,8 @@ abstract class Events {
 	/**
 	 * Tracking event
 	 *
-	 * @param string $event
-	 * @param array $properties .
+	 * @param string $event Event.
+	 * @param array  $properties Properties.
 	 *
 	 * @return void
 	 *
@@ -56,27 +59,25 @@ abstract class Events {
 	/**
 	 * Get a usage tracking value
 	 *
-	 * @param string $key
-	 * @param string $default
+	 * @param string $key Key for get value.
+	 * @param string $default_value Default value.
 	 *
 	 * @return false|mixed|null
 	 * @since 1.27.0
-	 *
 	 */
-	protected static function get_value( $key, $default = 'false' ) {
-		return get_option( $key, $default );
+	protected static function get_value( $key, $default_value = 'false' ) {
+		return get_option( $key, $default_value );
 	}
 
 	/**
 	 * Fetch Settings value
 	 *
-	 * @param array $settings
-	 * @param string $key
-	 * @param string $value
+	 * @param array  $settings Settings.
+	 * @param string $key Key name.
+	 * @param string $value Value.
 	 *
 	 * @return string|void
 	 * @since 1.27.0
-	 *
 	 */
 	protected static function settings_value( $settings, $key, $value = '' ) {
 		if ( empty( $settings ) ) {

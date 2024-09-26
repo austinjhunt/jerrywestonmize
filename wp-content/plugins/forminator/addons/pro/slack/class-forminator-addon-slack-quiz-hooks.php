@@ -1,10 +1,14 @@
 <?php
+/**
+ * Forminator Addon Slack Quiz Hooks.
+ *
+ * @package Forminator
+ */
 
 /**
  * Class Forminator_Slack_Quiz_Hooks
  *
  * @since 1.6.2
- *
  */
 class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
@@ -15,7 +19,7 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 * @param array $current_entry_fields Current entry fields.
 	 * @return array
 	 */
-	protected function custom_entry_fields( $submitted_data, $current_entry_fields ) : array {
+	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -38,12 +42,13 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $connection_id
-	 * @param $submitted_data
-	 * @param $connection_settings
-	 * @param $quiz_entry_fields
+	 * @param string $connection_id Connection Id.
+	 * @param array  $submitted_data Submitted data.
+	 * @param array  $connection_settings Connection settings.
+	 * @param array  $quiz_entry_fields Quiz entry fields.
 	 *
 	 * @return array `is_sent` true means its success send data to Slack, false otherwise
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	private function get_status_on_send_message( $connection_id, $submitted_data, $connection_settings, $quiz_entry_fields ) {
 		// initialize as null.
@@ -54,10 +59,10 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 		$quiz_settings          = $this->settings_instance->get_quiz_settings();
 		$addons_fields          = $this->settings_instance->get_form_fields();
 
-		//check required fields
+		// check required fields.
 		try {
-			$api  = $this->addon->get_api();
-			$args = array();
+			$api              = $this->addon->get_api();
+			$args             = array();
 			$lead_attachments = array();
 
 			if ( ! isset( $connection_settings['target_id'] ) ) {
@@ -70,7 +75,6 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 			$text_message = $connection_settings['message'];
 			$text_message = forminator_replace_variables( $text_message );
 
-			// {quiz_name_replace}.
 			$text_message = str_ireplace( '{quiz_name}', forminator_get_name_from_model( $this->module ), $text_message );
 
 			$quiz_attachments = $this->get_quiz_data_as_attachments( $submitted_data, $quiz_entry_fields );
@@ -179,8 +183,8 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 *
 	 * @since 1.6.2
 	 *
-	 * @param $submitted_data
-	 * @param $quiz_entry_fields
+	 * @param array $submitted_data Submitted data.
+	 * @param array $quiz_entry_fields Quiz entry fields.
 	 *
 	 * @return array
 	 */
@@ -216,15 +220,15 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 								'result'     => $is_correct ? esc_html__( 'Correct', 'forminator' ) : esc_html__( 'Incorrect', 'forminator' ),
 							);
 							if ( $is_correct ) {
-								$correct_answers ++;
+								++$correct_answers;
 							}
-							$total_answers ++;
+							++$total_answers;
 						}
 					} elseif ( 'nowrong' === $this->module->quiz_type ) {
 						if ( isset( $quiz_entry['value'][0] )
-						     && is_array( $quiz_entry['value'][0] )
-						     && isset( $quiz_entry['value'][0]['value'] )
-						     && is_array( $quiz_entry['value'][0]['value'] ) ) {
+							&& is_array( $quiz_entry['value'][0] )
+							&& isset( $quiz_entry['value'][0]['value'] )
+							&& is_array( $quiz_entry['value'][0]['value'] ) ) {
 
 							$quiz_entry = $quiz_entry['value'][0]['value'];
 
@@ -306,8 +310,8 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 *
 	 * @since 1.0 Slack Integration
 	 *
-	 * @param $submitted_data
-	 * @param $form_entry_fields
+	 * @param array $submitted_data Submitted data.
+	 * @param array $form_entry_fields Form entry fields.
 	 *
 	 * @return array
 	 */
@@ -388,5 +392,4 @@ class Forminator_Slack_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 
 		return $attachments;
 	}
-
 }

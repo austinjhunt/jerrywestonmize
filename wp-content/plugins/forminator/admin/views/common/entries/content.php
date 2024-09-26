@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template admin/views/common/entries/content.php
+ *
+ * @package Forminator
+ */
+
 $count = Forminator_Form_Entry_Model::count_all_entries();
 
 if ( $count > 0 ) {

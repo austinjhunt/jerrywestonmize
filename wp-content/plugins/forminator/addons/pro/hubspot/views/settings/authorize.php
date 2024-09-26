@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template for Authorize.
+ *
+ * @package Forminator
+ */
+
 // defaults.
 $vars = array(
 	'auth_url' => '',
@@ -6,7 +12,11 @@ $vars = array(
 	'user'     => '',
 );
 
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 } ?>
@@ -21,11 +31,13 @@ foreach ( $template_vars as $key => $val ) {
 	</h3>
 
 	<p id="forminator-integration-popup__description" class="sui-description">
-		<?php if ( ! empty( $vars['token'] ) ) :
+		<?php
+		if ( ! empty( $vars['token'] ) ) :
 			esc_html_e( 'You are already connected to the HubSpot. You can disconnect your HubSpot Integration (if you need to) using the button below.', 'forminator' );
 		else :
 			esc_html_e( "Authenticate your HubSpot account using the button below. Note that you'll be taken to the HubSpot website to grant access to Forminator and then redirected back.", 'forminator' );
-		endif; ?>
+		endif;
+		?>
 	</p>
 
 </div>
@@ -33,6 +45,7 @@ foreach ( $template_vars as $key => $val ) {
 <?php if ( ! empty( $vars['token'] ) ) : ?>
 
 	<?php
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
 	echo Forminator_Admin::get_green_notice(
 		sprintf(
 		/* Translators: 1. Opening <strong> tag, 2. User 3. closing <strong> tag. */

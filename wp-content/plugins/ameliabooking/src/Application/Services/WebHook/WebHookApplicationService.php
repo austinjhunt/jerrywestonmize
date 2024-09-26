@@ -63,6 +63,8 @@ class WebHookApplicationService extends AbstractWebHookApplicationService
                 $bookingEntityArray['isRecurringBooking'] = $booking['isRecurringBooking'];
 
                 $bookingEntityArray['isPackageBooking'] = $booking['isPackageBooking'];
+
+                $bookingEntityArray['isPackageAppointment'] = $booking['isPackageAppointment'];
             }
 
             $affectedBookingEntitiesArray[] = $bookingEntityArray;

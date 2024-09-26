@@ -1,19 +1,56 @@
 <?php
+/**
+ * The Forminator_Integration_Simple class.
+ *
+ * @package Forminator
+ */
 
+/**
+ * Class Forminator_Integration_Simple
+ */
 final class Forminator_Integration_Simple extends Forminator_Integration {
 
 	/**
-	 * Use this trait to mark this addon as PRO
+	 * Slug
+	 *
+	 * @var string
 	 */
-	protected $_slug                   = 'simple';
-	protected $_version                = FORMINATOR_ADDON_SIMPLE_VERSION;
-	protected $_min_forminator_version = '1.1';
-	protected $_short_title            = 'simple';
-	protected $_title                  = 'Simple';
+	protected $_slug = 'simple';
 
+	/**
+	 * Version
+	 *
+	 * @var string
+	 */
+	protected $_version = FORMINATOR_ADDON_SIMPLE_VERSION;
+
+	/**
+	 * Minimum Forminator version
+	 *
+	 * @var string
+	 */
+	protected $_min_forminator_version = '1.1';
+
+	/**
+	 * Short title
+	 *
+	 * @var string
+	 */
+	protected $_short_title = 'simple';
+
+	/**
+	 * Title
+	 *
+	 * @var string
+	 */
+	protected $_title = 'Simple';
+
+	/**
+	 * Forminator_Integration_Simple constructor
+	 */
 	public function __construct() {
 		// late init to allow translation.
-		$this->_description                = esc_html__( 'Make your form Simple-able', 'forminator' );
+		$this->_description = esc_html__( 'Make your form Simple-able', 'forminator' );
 	}
 
 	/**

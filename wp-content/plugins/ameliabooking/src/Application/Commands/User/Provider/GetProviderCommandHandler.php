@@ -71,7 +71,7 @@ class GetProviderCommandHandler extends CommandHandler
         $companyDayOff = $providerService->checkIfTodayIsCompanyDayOff($companyDaysOff);
 
         /** @var Provider $provider */
-        $provider = $providerService->getProviderWithServicesAndSchedule($providerId);
+        $provider = $providerService->getProviderWithServicesAndSchedule($providerId, true);
 
         $providerService->modifyPeriodsWithSingleLocationAfterFetch($provider->getWeekDayList());
         $providerService->modifyPeriodsWithSingleLocationAfterFetch($provider->getSpecialDayList());

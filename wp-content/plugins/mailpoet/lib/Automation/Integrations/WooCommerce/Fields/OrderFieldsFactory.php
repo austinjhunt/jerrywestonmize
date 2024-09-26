@@ -377,7 +377,7 @@ class OrderFieldsFactory {
   }
 
   private function getProductOptions(): array {
-    $wpdb = $this->wordPress->getWpdb();
+    global $wpdb;
     $products = $wpdb->get_results(
       "
         SELECT ID, post_title

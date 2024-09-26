@@ -220,4 +220,4 @@ class Ressio_Plugin_InlineJsCss extends Ressio_Plugin
         $scriptData = file_get_contents(__DIR__ . '/js/prefetch-delayed.min.js');
         $optimizer->appendScriptDeclaration($scriptData, array('defer' => true));
     }
-    }
+}

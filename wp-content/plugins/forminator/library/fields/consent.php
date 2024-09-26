@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Consent class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,36 +17,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Consent extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'consent';
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'consent';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 21;
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-gdpr';
@@ -50,7 +70,6 @@ class Forminator_Consent extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 */
-
 	public function __construct() {
 		parent::__construct();
 
@@ -88,7 +107,7 @@ class Forminator_Consent extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -104,7 +123,7 @@ class Forminator_Consent extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
 	 *
 	 * @return mixed
@@ -136,7 +155,7 @@ class Forminator_Consent extends Forminator_Field {
 						'<input type="checkbox" name="%1$s" id="%2$s" value="%3$s" aria-labelledby="%4$s"%5$s data-required="%6$s" aria-required="%7$s" />',
 						$name,
 						$id,
-						esc_html__( 'checked', 'forminator' ),
+						'checked',
 						$id . '-label',
 						( ! empty( $description ) ? ' aria-describedby="' . esc_attr( $id . '__description' ) . '"' : '' ),
 						$ariareq,
@@ -189,8 +208,8 @@ class Forminator_Consent extends Forminator_Field {
 			$field
 		);
 		$messages         = $is_required
-						   ? '"' . $this->get_id( $field ) . '": {"required":"' . forminator_addcslashes( $required_message ) . '"},' . "\n"
-						   : '';
+							? '"' . $this->get_id( $field ) . '": {"required":"' . forminator_addcslashes( $required_message ) . '"},' . "\n"
+							: '';
 
 		return $messages;
 	}
@@ -200,13 +219,13 @@ class Forminator_Consent extends Forminator_Field {
 	 *
 	 * @since 1.15.3
 	 *
-	 * @param array        $field
-	 * @param array|string $data
+	 * @param array        $field Field.
+	 * @param array|string $data Data.
 	 */
 	public function validate( $field, $data ) {
 		// value of consent checkbox is `string` *checked*.
 		$id = $this->get_id( $field );
-		if ( $this->is_required( $field ) && ( empty( $data ) || esc_html__( 'checked', 'forminator' ) !== $data ) ) {
+		if ( $this->is_required( $field ) && ( empty( $data ) || 'checked' !== $data ) ) {
 			$required_message                = self::get_property( 'required_message', $field, '' );
 			$this->validation_message[ $id ] = apply_filters(
 				'forminator_consent_field_required_validation_message',
@@ -222,7 +241,7 @@ class Forminator_Consent extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization

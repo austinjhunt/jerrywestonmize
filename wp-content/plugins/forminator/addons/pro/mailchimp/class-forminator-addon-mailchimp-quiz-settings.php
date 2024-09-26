@@ -1,5 +1,11 @@
 <?php
 /**
+ * Addon Mailchimp quiz settings.
+ *
+ * @package Forminator
+ */
+
+/**
  * Class Forminator_Mailchimp_Quiz_Settings
  * Form Settings Mailchimp Process
  *

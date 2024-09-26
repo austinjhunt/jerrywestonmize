@@ -23,7 +23,7 @@ class Ressio_Plugin_Preload extends Ressio_Plugin
     public $modulepreloads = array();
     /** @var boolean */
     private $remove_preloads;
-    /** @var string[]  */
+    /** @var string[] */
     private $font_ext_to_mime = array(
         'otf' => 'font/opentype',
         'ttf' => 'font/truetype',

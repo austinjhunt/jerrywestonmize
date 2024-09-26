@@ -1,5 +1,14 @@
 <?php
-/** @var Forminator_Quiz_Renderer $this */
+/**
+ * Template admin/views/quiz/entries/content.php
+ *
+ * @package Forminator
+ */
+
+/**
+ * Forminator_Quiz_Renderer
+ *
+ *  @var Forminator_Quiz_Renderer $this */
 $plugin_path       = forminator_plugin_url();
 $count             = $this->filtered_total_entries();
 $entries_per_page  = $this->get_per_page();
@@ -9,6 +18,7 @@ $submissions       = $this->get_total_entries();
 ?>
 <?php
 if ( $this->error_message() ) {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is already escaped.
 	echo Forminator_Admin::get_red_notice( esc_html( $this->error_message() ) );
 }
 ?>

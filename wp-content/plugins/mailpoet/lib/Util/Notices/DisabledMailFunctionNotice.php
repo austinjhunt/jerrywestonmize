@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\Cron\Workers\SendingQueue\Tasks\Shortcodes;
+use MailPoet\Doctrine\WPDB\Connection;
 use MailPoet\Mailer\Mailer;
 use MailPoet\Mailer\MailerFactory;
 use MailPoet\Settings\SettingsController;
@@ -47,7 +48,7 @@ class DisabledMailFunctionNotice {
   }
 
   public function init($shouldDisplay): ?string {
-    $shouldDisplay = $shouldDisplay && $this->shouldCheckMisconfiguredFunction() && $this->checkRequirements();
+    $shouldDisplay = $shouldDisplay && !Connection::isSQLite() && $this->shouldCheckMisconfiguredFunction() && $this->checkRequirements();
     if (!$shouldDisplay) {
       return null;
     }

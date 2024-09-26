@@ -29,13 +29,14 @@ class EventTicketRepository extends AbstractRepository implements EventRepositor
         $data = $entity->toArray();
 
         $params = [
-            ':eventId'        => $data['eventId'],
-            ':name'           => $data['name'],
-            ':enabled'        => $data['enabled'] ? 1 : 0,
-            ':price'          => $data['price'],
-            ':spots'          => $data['spots'],
-            ':dateRanges'     => $data['dateRanges'],
-            ':translations'   => $data['translations'],
+            ':eventId'          => $data['eventId'],
+            ':name'             => $data['name'],
+            ':enabled'          => $data['enabled'] ? 1 : 0,
+            ':price'            => $data['price'],
+            ':spots'            => $data['spots'],
+            ':waitingListSpots' => $data['waitingListSpots'],
+            ':dateRanges'       => $data['dateRanges'],
+            ':translations'     => $data['translations'],
         ];
 
         try {
@@ -47,6 +48,7 @@ class EventTicketRepository extends AbstractRepository implements EventRepositor
                 `enabled`,
                 `price`,
                 `spots`,
+                `waitingListSpots`,
                 `dateRanges`,
                 `translations`
                 )
@@ -56,6 +58,7 @@ class EventTicketRepository extends AbstractRepository implements EventRepositor
                 :enabled,
                 :price,
                 :spots,
+                :waitingListSpots,
                 :dateRanges,
                 :translations
                 )"
@@ -85,14 +88,15 @@ class EventTicketRepository extends AbstractRepository implements EventRepositor
         $data = $entity->toArray();
 
         $params = [
-            ':id'           => $id,
-            ':eventId'      => $data['eventId'],
-            ':name'         => $data['name'],
-            ':enabled'      => $data['enabled'] ? 1 : 0,
-            ':price'        => $data['price'],
-            ':spots'        => $data['spots'],
-            ':dateRanges'   => $data['dateRanges'],
-            ':translations' => $data['translations'],
+            ':id'               => $id,
+            ':eventId'          => $data['eventId'],
+            ':name'             => $data['name'],
+            ':enabled'          => $data['enabled'] ? 1 : 0,
+            ':price'            => $data['price'],
+            ':spots'            => $data['spots'],
+            ':waitingListSpots' => $data['waitingListSpots'],
+            ':dateRanges'       => $data['dateRanges'],
+            ':translations'     => $data['translations'],
         ];
 
         try {
@@ -104,6 +108,7 @@ class EventTicketRepository extends AbstractRepository implements EventRepositor
                 `enabled` = :enabled,
                 `price` = :price,
                 `spots` = :spots,
+                `waitingListSpots` = :waitingListSpots,
                 `dateRanges` = :dateRanges,
                 `translations` = :translations
                 WHERE id = :id"

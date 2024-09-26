@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Custom_Form_Admin class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -12,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 
 	/**
-	 * module objects
+	 * Module objects
 	 *
 	 * @var array
 	 */
@@ -53,7 +59,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $data
+	 * @param array $data Data.
 	 *
 	 * @return mixed
 	 */
@@ -143,7 +149,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $data
+	 * @param array $data Data.
 	 *
 	 * @return mixed
 	 */
@@ -218,7 +224,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.1
 	 *
-	 * @param Forminator_Form_Model|null $form
+	 * @param Forminator_Form_Model|null $form Form model.
 	 *
 	 * @return mixed
 	 */
@@ -231,12 +237,13 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 					'email-recipients' => 'default',
 					'recipients'       => get_option( 'admin_email' ),
 					'email-subject'    => esc_html__( 'New Form Entry #{submission_id} for {form_name}', 'forminator' ),
-					'email-editor'     => sprintf( '%1$s <br/> {all_fields} <br/>---<br/> %2$s',
+					'email-editor'     => sprintf(
+						'%1$s <br/> {all_fields} <br/>---<br/> %2$s',
 						esc_html__( 'You have a new website form submission:', 'forminator' ),
 						esc_html__( 'This message was sent from {site_url}.', 'forminator' )
 					),
 					'email-attachment' => 'true',
-					'type'			   => 'default',
+					'type'             => 'default',
 				),
 			);
 		}
@@ -249,8 +256,8 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.11
 	 *
-	 * @param Forminator_Form_Model|null $form
-	 * @param Forminator_Template|null   $template
+	 * @param Forminator_Form_Model|null $form Form model.
+	 * @param Forminator_Template|null   $template Template.
 	 *
 	 * @return mixed
 	 */
@@ -258,7 +265,8 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		if ( ! isset( $form ) || ! isset( $form->notifications ) ) {
 			$msg_footer = esc_html__( 'This message was sent from {site_url}', 'forminator' );
 			// For admin.
-			$message = sprintf( '%1$s <br/><br/> {all_fields} <br/><br/> %2$s<br/>',
+			$message  = sprintf(
+				'%1$s <br/><br/> {all_fields} <br/><br/> %2$s<br/>',
 				esc_html__( 'New user registration on your site {site_url}:', 'forminator' ),
 				esc_html__( 'Click {submission_url} to view the submission.', 'forminator' )
 			);
@@ -267,7 +275,8 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 
 			$message_method_email = $message;
 
-			$message_method_manual = sprintf( '%1$s <br/><br/> {all_fields} <br/><br/> %2$s',
+			$message_method_manual  = sprintf(
+				'%1$s <br/><br/> {all_fields} <br/><br/> %2$s',
 				esc_html__( 'New user registration on your site {site_url}:', 'forminator' ),
 				esc_html__( 'The account is still not activated and needs your approval. To activate this account, click the link below.', 'forminator' )
 			);
@@ -287,17 +296,19 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 				'email-editor-method-email'   => $message_method_email,
 				'email-subject-method-manual' => esc_html__( 'New User Registration on {site_url} needs approval.', 'forminator' ),
 				'email-editor-method-manual'  => $message_method_manual,
-				'type'  					  => 'registration',
+				'type'                        => 'registration',
 			);
 			if ( ! is_null( $template ) ) {
 				$email = self::get_registration_form_customer_email_slug( $template );
 			} else {
 				$email = self::get_registration_form_customer_email_slug( $form );
 			}
-			//For customer
-			$message  = sprintf( '%1$s <br/><br/> {all_fields} <br/><br/>',
+			// For customer.
+			$message = sprintf(
+				'%1$s <br/><br/> {all_fields} <br/><br/>',
 				esc_html__( 'Your new account on our {site_title} site is ready to go. Here are your details:', 'forminator' )
 			);
+			/* Translators: 1. Opening <a> tag with # href, 2. closing <a> tag. */
 			$message .= sprintf( esc_html__( 'Login to your new account %1$shere%2$s.', 'forminator' ), '<a href="' . wp_login_url() . '">', '</a>' );
 			$message .= '<br/><br/>---<br/>';
 			$message .= $msg_footer;
@@ -337,12 +348,12 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	 *
 	 * @since 1.11
 	 *
-	 * @param Forminator_Form_Model|Forminator_Template $form
-	 * @param string                                    $default
+	 * @param Forminator_Form_Model|Forminator_Template $form Form Model.
+	 * @param string                                    $default_value Default value.
 	 *
 	 * @return string
 	 */
-	public static function get_registration_form_customer_email_slug( $form, $default = '{email-1}' ) {
+	public static function get_registration_form_customer_email_slug( $form, $default_value = '{email-1}' ) {
 		if ( isset( $form->settings['registration-email-field'] ) && ! empty( $form->settings['registration-email-field'] ) ) {
 			$email = $form->settings['registration-email-field'];
 			if ( false === strpos( $email, '{' ) ) {
@@ -352,14 +363,14 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			return $email;
 		}
 
-		return $default;
+		return $default_value;
 	}
 
 	/**
 	 * Form default data
 	 *
-	 * @param $name
-	 * @param array $settings
+	 * @param string $name Form name.
+	 * @param array  $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -403,8 +414,6 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	 * Create quiz module
 	 *
 	 * @since 1.14
-	 *
-	 * @return no return
 	 */
 	public function create_module() {
 		if ( ! $this->is_admin_wizard() || self::is_edit() ) {
@@ -414,7 +423,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		$slug = Forminator_Core::sanitize_text_field( 'template', 'blank' );
 		$name = Forminator_Core::sanitize_text_field( 'name' );
 
-		$module_id = $this->create_module_from_template( $slug, $name );
+		$module_id = $this->create_module_from_template( $slug, $name, 'builder' );
 		if ( is_wp_error( $module_id ) ) {
 			return;
 		}
@@ -428,10 +437,11 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	 *
 	 * @param string $template_id Template ID or slug.
 	 * @param string $name Template name.
+	 * @param string $trigger_from Trigger from Template page or Form builder.
 	 *
 	 * @return int|WP_Error
 	 */
-	public function create_module_from_template( string $template_id, string $name = '' ) {
+	public function create_module_from_template( string $template_id, string $name = '', string $trigger_from = '' ) {
 		if ( is_numeric( $template_id ) ) {
 			$template_id = intval( $template_id );
 			$template    = Forminator_Template_API::get_template( $template_id );
@@ -441,14 +451,20 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			}
 			$change_recipients = apply_filters( 'forminator_change_template_recipients', true, $template );
 
+			$extra_args = array(
+				'trigger_from'  => $trigger_from,
+				'template_type' => $template['is_official'] ?? false ? 'preset' : 'cloud',
+				'template_name' => $template['name'] ?? '',
+			);
+
 			try {
-				$model = self::import_json( $template['config'], $name, 'form', $change_recipients, true );
+				$model = self::import_json( $template['config'], $name, 'form', $change_recipients, true, $extra_args );
 			} catch ( Exception $e ) {
 				return new WP_Error( 'create_module_fail', $e->getMessage() );
 			}
 			$id = $model->id;
 		} else {
-			$id = $this->create_module_from_free_template( $template_id, $name );
+			$id = $this->create_module_from_free_template( $template_id, $name, $trigger_from );
 		}
 
 		return $id;
@@ -459,15 +475,22 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	 *
 	 * @param string $slug Template slug.
 	 * @param string $name Template name.
+	 * @param string $trigger_from Trigger from Template page or Form builder.
 	 *
 	 * @return int
 	 */
-	public function create_module_from_free_template( string $slug, string $name = '' ): int {
+	public function create_module_from_free_template( string $slug, string $name = '', string $trigger_from = '' ): int {
 		// Load settings from template.
 		$template = $this->get_template( $slug );
 
 		if ( empty( $name ) ) {
 			$name = $template->options['name'];
+		}
+
+		if ( ! empty( $trigger_from ) && isset( $template->settings ) ) {
+			$template->settings['trigger_from']  = $trigger_from;
+			$template->settings['template_type'] = 'preset';
+			$template->settings['template_name'] = $template->options['name'] ?? '';
 		}
 
 		$status = Forminator_Form_Model::STATUS_DRAFT;
@@ -566,7 +589,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 				$status = $form_model->status;
 			}
 
-			// we need to empty fields cause we will send new data
+			// we need to empty fields cause we will send new data.
 			$form_model->clear_fields();
 		}
 
@@ -601,11 +624,11 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 					$notifications[ $count ]['email-editor-method-manual'] = wp_kses_post( $template->notifications[ $count ]['email-editor-method-manual'] );
 				}
 
-				$count++;
+				++$count;
 			}
 		}
 
-		// Handle quiz questions
+		// Handle quiz questions.
 		$form_model->notifications      = $notifications;
 		$settings['notification_count'] = ! empty( $notifications ) ? count( $notifications ) : 0;
 
@@ -624,7 +647,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			$form_model->status = $status;
 		}
 
-		// Save data
+		// Save data.
 		$id = $form_model->save();
 
 		try {
@@ -664,11 +687,11 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 
 		forminator_update_form_submissions_retention( $id, $retention_number, $retention_unit );
 
-		// Add function here for draft retentions
+		// Add function here for draft retentions.
 		self::add_draft_retention_settings( $id, $settings );
 
 		Forminator_Render_Form::regenerate_css_file( $id );
-		// Purge count forms cache
+		// Purge count forms cache.
 		wp_cache_delete( 'forminator_form_total_entries', 'forminator_form_total_entries' );
 		wp_cache_delete( 'forminator_form_total_entries_publish', 'forminator_form_total_entries_publish' );
 		wp_cache_delete( 'forminator_form_total_entries_draft', 'forminator_form_total_entries_draft' );
@@ -691,7 +714,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		$retention_unit   = null;
 		if ( ! empty( $settings['sc_draft_retention'] ) ) {
 			$retention_number = (int) $settings['sc_draft_retention'];
-			$retention_unit	  = 'days';
+			$retention_unit   = 'days';
 		}
 
 		forminator_update_form_submissions_retention( $form_id, $retention_number, $retention_unit, true );
@@ -700,7 +723,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	/**
 	 * Get PDF data
 	 *
-	 * @param $form_id
+	 * @param int $form_id Form Id.
 	 *
 	 * @return array
 	 */
@@ -774,6 +797,17 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		if ( ! $result ) {
 			wp_send_json_error( esc_html__( 'Something went wrong.', 'forminator' ) );
 		}
+
+		/**
+		 * Fires after template saved
+		 *
+		 * @since 1.35.0
+		 *
+		 * @param int $form_id      Form ID.
+		 * @param int $template_id  Template ID.
+		 * @param array $result     Result of saving template.
+		 */
+		do_action( 'forminator_after_template_save', $form_id, $template_id, $result );
 
 		wp_send_json_success( $result );
 	}

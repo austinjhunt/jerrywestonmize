@@ -1,13 +1,20 @@
 <?php
+/**
+ * Forminator GFBlock Polls.
+ *
+ * @package Forminator
+ */
 
 /**
- * Class Forminator_GFBlock_Forms
+ * Class Forminator_GFBlock_Polls
  *
  * @since 1.0 Gutenber Integration
  */
 class Forminator_GFBlock_Polls extends Forminator_GFBlock_Abstract {
 
 	/**
+	 * Forminator_GFBlock_Polls Instance
+	 *
 	 * @var self|null
 	 */
 	private static $_instance = null;
@@ -140,6 +147,11 @@ class Forminator_GFBlock_Polls extends Forminator_GFBlock_Abstract {
 		return $form_list;
 	}
 
+	/**
+	 * Localize
+	 *
+	 * @return string[]
+	 */
 	public function localize() {
 		return array(
 			'choose_poll'      => esc_html__( 'Choose Poll', 'forminator' ),

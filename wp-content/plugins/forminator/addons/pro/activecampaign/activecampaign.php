@@ -1,4 +1,9 @@
 <?php
+/**
+ * The Activecampaign.
+ *
+ * @package    Forminator
+ */
 
 /**
  * Integration Name: Activecampaign
@@ -11,7 +16,12 @@
 
 define( 'FORMINATOR_ADDON_ACTIVECAMPAIGN_VERSION', '1.0' );
 
+/**
+ * Forminator addon active campaign directory.
+ *
+ * @return string
+ */
 function forminator_addon_activecampaign_dir() {
-	return trailingslashit( dirname( __FILE__ ) );
+	return trailingslashit( __DIR__ );
 }
 Forminator_Integration_Loader::get_instance()->register( 'activecampaign' );

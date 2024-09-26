@@ -1,4 +1,10 @@
 <?php
+/**
+ * The Forminator_Address class.
+ *
+ * @package Forminator
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -11,36 +17,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Forminator_Address extends Forminator_Field {
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name = '';
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug = 'address';
 
 	/**
+	 * Position
+	 *
 	 * @var int
 	 */
 	public $position = 4;
 
 	/**
+	 * Type
+	 *
 	 * @var string
 	 */
 	public $type = 'address';
 
 	/**
+	 * Options
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
+	 * Category
+	 *
 	 * @var string
 	 */
 	public $category = 'standard';
 
 	/**
+	 * Icon
+	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-pin';
@@ -93,7 +113,7 @@ class Forminator_Address extends Forminator_Field {
 	 *
 	 * @since 1.0.5
 	 *
-	 * @param array $settings
+	 * @param array $settings Settings.
 	 *
 	 * @return array
 	 */
@@ -130,8 +150,9 @@ class Forminator_Address extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array                  $field Field.
 	 * @param Forminator_Render_Form $views_obj Forminator_Render_Form object.
+	 * @param string                 $draft_value Draft value.
 	 *
 	 * @return mixed
 	 */
@@ -163,8 +184,10 @@ class Forminator_Address extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
-	 * @param $slug
+	 * @param array  $field Field.
+	 * @param string $slug Field slug.
+	 * @param string $design Design.
+	 * @param string $draft_value Draft value.
 	 *
 	 * @return string
 	 */
@@ -233,7 +256,9 @@ class Forminator_Address extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array  $field Field.
+	 * @param string $design Design.
+	 * @param string $draft_value Draft value.
 	 *
 	 * @return string
 	 */
@@ -363,7 +388,9 @@ class Forminator_Address extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $field
+	 * @param array  $field Field.
+	 * @param string $design Design.
+	 * @param string $draft_value Draft value.
 	 *
 	 * @return string
 	 */
@@ -523,13 +550,12 @@ class Forminator_Address extends Forminator_Field {
 	 *
 	 * @since 1.7.3
 	 *
-	 * @param array  $attr
-	 * @param string $label
-	 * @param array  $options
-	 * @param string $value
-	 *
-	 * @param string $description
-	 * @param bool   $required
+	 * @param array  $attr Attributes.
+	 * @param string $label Text for label.
+	 * @param array  $options Options.
+	 * @param string $value Value.
+	 * @param string $description Description content.
+	 * @param bool   $required Is required.
 	 *
 	 * @return mixed
 	 */
@@ -746,8 +772,8 @@ class Forminator_Address extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array        $field
-	 * @param array|string $data
+	 * @param array        $field Field.
+	 * @param array|string $data Data.
 	 */
 	public function validate( $field, $data ) {
 		$id = self::get_property( 'element_id', $field );
@@ -838,7 +864,7 @@ class Forminator_Address extends Forminator_Field {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array        $field
+	 * @param array        $field Field.
 	 * @param array|string $data - the data to be sanitized.
 	 *
 	 * @return array|string $data - the data after sanitization

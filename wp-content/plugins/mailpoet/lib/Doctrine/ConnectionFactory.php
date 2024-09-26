@@ -16,12 +16,10 @@ use MailPoetVendor\Doctrine\DBAL\Configuration;
 use MailPoetVendor\Doctrine\DBAL\Driver;
 use MailPoetVendor\Doctrine\DBAL\Driver\Middleware;
 use MailPoetVendor\Doctrine\DBAL\DriverManager;
-use MailPoetVendor\Doctrine\DBAL\Platforms\MySQLPlatform;
 use MailPoetVendor\Doctrine\DBAL\Types\Type;
 
 class ConnectionFactory {
   const DRIVER_CLASS = WPDBDriver::class;
-  const PLATFORM_CLASS = MySQLPlatform::class;
 
   private $types = [
     BigIntType::NAME => BigIntType::class,
@@ -32,14 +30,13 @@ class ConnectionFactory {
   ];
 
   public function createConnection() {
-    $platformClass = self::PLATFORM_CLASS;
-    $connectionParams = [
-      'driverClass' => self::DRIVER_CLASS,
-      'platform' => new $platformClass,
-    ];
-
     $this->setupTypes();
-    return DriverManager::getConnection($connectionParams, $this->getConfiguration());
+    return DriverManager::getConnection(
+      [
+        'driverClass' => self::DRIVER_CLASS,
+      ],
+      $this->getConfiguration()
+    );
   }
 
   private function setupTypes() {

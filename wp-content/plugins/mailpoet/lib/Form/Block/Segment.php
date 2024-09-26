@@ -72,7 +72,7 @@ class Segment {
       $html .= '</label>';
     }
 
-    $html .= '<span class="mailpoet_error_' . $block['id'] . ($formId ? '_' . $formId : '') . '"></span>';
+    $html .= $this->rendererHelper->renderErrorsContainer($block, $formId);
 
     // End fieldset around checkboxes
     $html .= '</fieldset>';

@@ -1,5 +1,11 @@
 <?php
 /**
+ * Template admin/views/custom-form/entries/content-details.php
+ *
+ * @package Forminator
+ */
+
+/**
  * Content details of Submissions
  *
  * @param array   $detail_item Item details.
@@ -35,7 +41,7 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 								foreach ( $sub_entries as $sub_key => $sub_entry ) {
 
-									$sub_key++;
+									++$sub_key;
 
 									if ( $max_fields < $sub_key ) {
 
@@ -80,7 +86,7 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 								}
 								foreach ( $sub_entries as $sub_key => $sub_entry ) {
 
-									$sub_key++;
+									++$sub_key;
 
 									if ( $max_fields < $sub_key ) {
 
@@ -91,7 +97,7 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 										$sub_count = count( $sub_entries ) - $max_fields + 1;
 										echo '<td style="padding-top: 5px; padding-bottom: 5px;">';
 										echo '<span class="fui-accordion-open-text">' . sprintf(
-                                                /* translators: %s: field sub count */
+												/* translators: %s: field sub count */
 											esc_html__( '+ %s other fields', 'forminator' ),
 											esc_html( $sub_count )
 										) . '</span>';
@@ -99,19 +105,17 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 										echo '<i class="sui-icon-chevron-down"></i>';
 										echo '</span>';
 										echo '</td>';
-									} else {
-										if ( ! empty( $sub_entry['sub_entries'] ) ) {
+									} elseif ( ! empty( $sub_entry['sub_entries'] ) ) {
 											echo '<td style="padding-top: 5px; padding-bottom: 5px;">';
 											forminator_submissions_content_details( $sub_entry, true );
 											echo '</td>';
-										} else {
-											echo '<td style="padding-top: 5px; padding-bottom: 5px;">';
-											echo wp_kses_post( $sub_entry['value'] );
-											if ( 1 !== $sub_key && 2 < $end && 'group' === $detail_item['type'] ) {
-												echo '<span class="sui-accordion-open-indicator fui-mobile-only" aria-hidden="true"><i class="sui-icon-chevron-down"></i></span>';
-											}
-											echo '</td>';
+									} else {
+										echo '<td style="padding-top: 5px; padding-bottom: 5px;">';
+										echo wp_kses_post( $sub_entry['value'] );
+										if ( 1 !== $sub_key && 2 < $end && 'group' === $detail_item['type'] ) {
+											echo '<span class="sui-accordion-open-indicator fui-mobile-only" aria-hidden="true"><i class="sui-icon-chevron-down"></i></span>';
 										}
+										echo '</td>';
 									}
 								}
 								?>

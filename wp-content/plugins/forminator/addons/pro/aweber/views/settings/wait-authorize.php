@@ -1,11 +1,20 @@
 <?php
-// Defaults.
+/**
+ * Template Wait Authorize.
+ *
+ * @package Forminator
+ */
+
 $vars = array(
 	'account_id' => 0,
 	'auth_url'   => '',
 );
 
-/** @var array $template_vars */
+/**
+ * Template variables.
+ *
+ * @var array $template_vars
+ * */
 foreach ( $template_vars as $key => $val ) {
 	$vars[ $key ] = $val;
 } ?>
