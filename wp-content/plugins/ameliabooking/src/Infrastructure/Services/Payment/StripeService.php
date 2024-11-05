@@ -137,6 +137,20 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             if ($customerId) {
                 $stripeData = array_merge($stripeData, ['customer' => $customerId]);
             }
+            
+
+            //BEGIN MODS
+
+            if ($data['metaData']['Customer Email']) {
+                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
+            }
+            // also added a fallback description since that was appearing as null on the Stripe side
+            if ($data['description']) {
+                $stripeData['description'] = $data['description'];
+            } else {
+                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
+            }
+            // END MODS
 
             $stripeData = apply_filters(
                 'amelia_before_stripe_payment',
