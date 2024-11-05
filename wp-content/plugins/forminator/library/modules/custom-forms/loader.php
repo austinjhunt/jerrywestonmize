@@ -231,20 +231,40 @@ class Forminator_Custom_Forms extends Forminator_Module {
 	 */
 	public function get_templates() {
 		// Cache preset templates.
-		$all_templates = get_transient( 'forminator_preset_templates' );
-		if ( ! $all_templates ) {
-			$pro_templates  = Forminator_Template_API::get_templates( true );
-			$free_templates = $this->get_free_templates();
-			$all_templates  = array_merge( $free_templates, $pro_templates );
-			$all_templates  = self::prepare_templates_data( $all_templates );
-
+		$pro_templates = get_transient( 'forminator_get_preset_templates' );
+		if ( ! $pro_templates ) {
+			$pro_templates = Forminator_Template_API::get_templates( true );
 			if ( $pro_templates ) {
-				set_transient( 'forminator_preset_templates', $all_templates, DAY_IN_SECONDS );
+				set_transient( 'forminator_get_preset_templates', $pro_templates, DAY_IN_SECONDS );
 			}
 		}
+		$free_templates = $this->get_free_templates();
+		$all_templates  = array_merge( $free_templates, $pro_templates );
+		$all_templates  = self::prepare_templates_data( $all_templates );
+
 		$all_templates = self::make_templates_info_translatable( $all_templates );
 
 		return $all_templates;
+	}
+
+	/**
+	 * Filter accessible templates
+	 *
+	 * @param array $templates Templates.
+	 * @return array
+	 */
+	public function filter_accessible_templates( $templates ) {
+		if ( ! current_user_can( 'create_users' ) ) {
+			$templates = array_filter(
+				$templates,
+				function ( $item ) {
+					return 'registration' !== $item['id'];
+				}
+			);
+			// Reset array keys.
+			$templates = array_values( $templates );
+		}
+		return $templates;
 	}
 
 	/**
@@ -261,6 +281,31 @@ class Forminator_Custom_Forms extends Forminator_Module {
 		}
 
 		return $templates;
+	}
+
+	/**
+	 * Translate category name
+	 *
+	 * @param string $name - category name.
+	 * @return string
+	 */
+	public static function translate_category_name( $name ) {
+		$array = array(
+			'All'                 => __( 'All', 'forminator' ),
+			'Customer Service'    => __( 'Customer Service', 'forminator' ),
+			'Marketing'           => __( 'Marketing', 'forminator' ),
+			'Custom Form'         => __( 'Custom Form', 'forminator' ),
+			'Business Operation'  => __( 'Business Operation', 'forminator' ),
+			'Event Registration'  => __( 'Event Registration', 'forminator' ),
+			'NGO'                 => __( 'NGO', 'forminator' ),
+			'Education'           => __( 'Education', 'forminator' ),
+			'Health and Wellness' => __( 'Health and Wellness', 'forminator' ),
+		);
+		if ( isset( $array[ $name ] ) ) {
+			return $array[ $name ];
+		}
+
+		return $name;
 	}
 
 	/**
@@ -382,7 +427,7 @@ class Forminator_Custom_Forms extends Forminator_Module {
 	public function get_free_templates() {
 		$templates = array_column( $this->templates, 'options' );
 
-		return array_values(
+		$templates = array_values(
 			array_filter(
 				$templates,
 				function ( $item ) {
@@ -390,6 +435,7 @@ class Forminator_Custom_Forms extends Forminator_Module {
 				}
 			)
 		);
+		return $this->filter_accessible_templates( $templates );
 	}
 
 	/**
@@ -398,34 +444,35 @@ class Forminator_Custom_Forms extends Forminator_Module {
 	 * @return array
 	 */
 	public function get_templates_categories(): array {
+		$transient_key = 'forminator_get_templates_categories';
 		// cache result.
-		$categories = get_transient( 'forminator_templates_categories' );
-		if ( ! $categories ) {
+		$hub_categories = get_transient( $transient_key );
+		if ( ! $hub_categories ) {
 			$hub_categories = Forminator_Template_API::get_categories();
-			$categories     = $this->add_free_templates_category( $hub_categories );
-
-			// Sort categories by templates count.
-			usort(
-				$categories,
-				function ( $a, $b ) {
-					return $b['templates_count'] <=> $a['templates_count'];
-				}
-			);
-
-			array_unshift(
-				$categories,
-				array(
-					'slug'            => 'all',
-					'name'            => esc_html__( 'All', 'forminator' ),
-					'templates_count' => array_sum( wp_list_pluck( $categories, 'templates_count' ) ) + 1,
-					// Plus Blank template.
-				)
-			);
-
 			if ( $hub_categories ) {
-				set_transient( 'forminator_templates_categories', $categories, WEEK_IN_SECONDS );
+				set_transient( $transient_key, $hub_categories, WEEK_IN_SECONDS );
 			}
 		}
+
+		$categories = $this->add_free_templates_category( $hub_categories );
+
+		// Sort categories by templates count.
+		usort(
+			$categories,
+			function ( $a, $b ) {
+				return $b['templates_count'] <=> $a['templates_count'];
+			}
+		);
+
+		array_unshift(
+			$categories,
+			array(
+				'slug'            => 'all',
+				'name'            => 'All',
+				'templates_count' => array_sum( wp_list_pluck( $categories, 'templates_count' ) ) + 1,
+				// Plus Blank template.
+			)
+		);
 
 		// Remove empty categories.
 		$categories = array_filter(
@@ -433,6 +480,16 @@ class Forminator_Custom_Forms extends Forminator_Module {
 			function ( $category ) {
 				return $category['templates_count'] > 0;
 			}
+		);
+
+		// Translate categories.
+		$categories = array_map(
+			function ( $category ) {
+				$category['name'] = self::translate_category_name( $category['name'] );
+
+				return $category;
+			},
+			$categories
 		);
 
 		return $categories;

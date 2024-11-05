@@ -144,15 +144,16 @@ class CustomerApplicationService extends UserApplicationService
      *
      * @param array         $userData
      * @param CommandResult $result
+     * @param bool          $validateUserName
      *
      * @return Customer
      *
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public function getNewOrExistingCustomer($userData, $result)
+    public function getNewOrExistingCustomer($userData, $result, $validateUserName)
     {
-        /** @var AbstractUser $user */
+        /** @var AbstractUser $loggedInUser */
         $loggedInUser = $this->container->get('logged.in.user');
 
         if ($loggedInUser) {
@@ -165,6 +166,7 @@ class CustomerApplicationService extends UserApplicationService
             }
         }
 
+        /** @var Customer $user */
         $user = UserFactory::create($userData);
 
         /** @var UserRepository $userRepository */
@@ -185,6 +187,7 @@ class CustomerApplicationService extends UserApplicationService
             // If email already exists, check if First Name and Last Name from request are same with the First Name
             // and Last Name from $userWithSameMail. If these are not same return error message.
             if ($settingsService->getSetting('roles', 'inspectCustomerInfo') &&
+                $validateUserName &&
                 (strtolower(trim($userWithSameValue->getFirstName()->getValue())) !==
                     strtolower(trim($user->getFirstName()->getValue())) ||
                     strtolower(trim($userWithSameValue->getLastName()->getValue())) !==

@@ -230,7 +230,7 @@ class Forminator_Textarea extends Forminator_Field {
 			}
 
 			if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
-				$html .= sprintf( '<span data-limit="%s" data-type="%s">0 / %s</span>', $limit, $limit_type, $limit );
+				$html .= sprintf( '<span data-limit="%s" data-type="%s" data-editor="%s">0 / %s</span>', $limit, $limit_type, $editor_type, $limit );
 			}
 			$html .= '</span>';
 		}
@@ -356,6 +356,8 @@ class Forminator_Textarea extends Forminator_Field {
 			}
 		}
 		if ( $this->has_limit( $field ) ) {
+			// Remove newline character.
+			$data = str_replace( "\r", '', $data );
 			if ( ( isset( $field['limit_type'] ) && 'characters' === trim( $field['limit_type'] ) ) && ( mb_strlen( wp_strip_all_tags( $data ) ) > $field['limit'] ) ) {
 				$this->validation_message[ $id ] = apply_filters(
 					'forminator_text_field_characters_validation_message',
@@ -364,6 +366,9 @@ class Forminator_Textarea extends Forminator_Field {
 					$field
 				);
 			} elseif ( ( isset( $field['limit_type'] ) && 'words' === trim( $field['limit_type'] ) ) ) {
+				if ( ! empty( $data ) && ! empty( $field['editor-type'] ) && 'true' === $field['editor-type'] ) {
+					$data = wp_strip_all_tags( $data );
+				}
 				$words = preg_split( '/[\s]+/', $data );
 				if ( is_array( $words ) && count( $words ) > $field['limit'] ) {
 					$this->validation_message[ $id ] = apply_filters(

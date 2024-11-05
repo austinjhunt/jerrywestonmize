@@ -129,6 +129,7 @@ class LiteBackendStrings
             'payment_amount'            => __('Payment Amount', 'wpamelia'),
             'payment_method'            => __('Payment Method', 'wpamelia'),
             'payment_status'            => __('Payment Status', 'wpamelia'),
+            'payment_tooltip'           => __('If all payment methods are disabled on the service/event,<br/>the default payment method will be used.', 'wpamelia'),
             'pending'                   => __('Pending', 'wpamelia'),
             'phone'                     => __('Phone', 'wpamelia'),
             'rejected'                  => __('Rejected', 'wpamelia'),
@@ -904,6 +905,7 @@ class LiteBackendStrings
         return [
             'add_customer'                 => __('Add Customer', 'wpamelia'),
             'confirm_delete_customer'      => __('Are you sure you want to delete this customer?', 'wpamelia'),
+            'customer_activity'            => __('Customer Activity', 'wpamelia'),
             'customer_deleted'             => __('Customer has been deleted', 'wpamelia'),
             'customer_note'                => __('Note', 'wpamelia'),
             'customer_saved'               => __('Customer has been saved', 'wpamelia'),
@@ -915,6 +917,7 @@ class LiteBackendStrings
             'date_of_birth'                => __('Date of Birth', 'wpamelia'),
             'edit_customer'                => __('Edit Customer', 'wpamelia'),
             'email_placeholder'            => __('example@mail.com', 'wpamelia'),
+            'events_booked'                => __('Events Booked', 'wpamelia'),
             'export_tooltip_customers'     => __('You can use this option to export customers in CSV file.', 'wpamelia'),
             'gender'                       => __('Gender', 'wpamelia'),
             'import_rules_desc'            => __('<ul><li>No first row with column names</li><li><b>First</b> and <b>Last name</b> are two separate fields</li><li><b>Date of birth</b> in the same format as chosen in your WP settings (if date format with a comma is used the dates should be in quotes)</li><li><b>Phone</b> has a country code</li><li><b>Gender</b> in Male or Female form</li></ul>', 'wpamelia'),
@@ -932,6 +935,8 @@ class LiteBackendStrings
             'select_date_of_birth'         => __('Select Date of Birth', 'wpamelia'),
             'total_appointments'           => __('Total Appointments', 'wpamelia'),
             'upload_csv'                   => __('Upload Customers .csv file', 'wpamelia'),
+            'view_appointments'            => __('View Appointments', 'wpamelia'),
+            'view_events'                  => __('View Events', 'wpamelia'),
         ];
     }
 

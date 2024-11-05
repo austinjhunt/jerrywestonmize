@@ -34,6 +34,7 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Tax\Tax;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Factory\Tax\TaxFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
@@ -293,12 +294,14 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             ]
         ) : null;
 
-        // add customer language from booking info
-        $appointmentData['bookings'][0]['customer'] = array_merge(
-            $appointmentData['bookings'][0]['customer'],
-            empty($appointmentData['bookings'][0]['customer']['translations']) ?
-                ['translations' => json_encode(array('defaultLanguage' => isset($appointmentData['locale']) ? $appointmentData['locale'] : ''))] : []
-        );
+        if (!empty($appointmentData['bookings'][0]['customer'])) {
+            // add customer language from booking info
+            $appointmentData['bookings'][0]['customer'] = array_merge(
+                $appointmentData['bookings'][0]['customer'],
+                empty($appointmentData['bookings'][0]['customer']['translations']) ?
+                    ['translations' => json_encode(array('defaultLanguage' => isset($appointmentData['locale']) ? $appointmentData['locale'] : ''))] : []
+            );
+        }
 
         $newUserId = null;
 
@@ -323,7 +326,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             /** @var CustomerApplicationService $customerAS */
             $customerAS = $this->container->get('application.user.customer.service');
 
-            $user = $customerAS->getNewOrExistingCustomer($appointmentData['bookings'][0]['customer'], $result);
+            /** @var Customer $user */
+            $user = $customerAS->getNewOrExistingCustomer($appointmentData['bookings'][0]['customer'], $result, true);
 
             if ($user && $user->getTranslations()) {
                 $appointmentData['bookings'][0]['customer']['translations'] = $user->getTranslations()->getValue();

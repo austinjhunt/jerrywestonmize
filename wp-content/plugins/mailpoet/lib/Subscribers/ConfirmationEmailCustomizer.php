@@ -10,6 +10,7 @@ use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Newsletter\Renderer\Renderer as NewsletterRenderer;
 use MailPoet\Settings\SettingsController;
+use MailPoet\Util\Security;
 
 class ConfirmationEmailCustomizer {
   const SETTING_EMAIL_ID = 'signup_confirmation.transactional_email_id';
@@ -56,6 +57,7 @@ class ConfirmationEmailCustomizer {
     $newsletter->setType(NewsletterEntity::TYPE_CONFIRMATION_EMAIL_CUSTOMIZER);
     $newsletter->setSubject($this->settings->get('signup_confirmation.subject', 'Confirm your subscription to [site:title]'));
     $newsletter->setBody($emailTemplate);
+    $newsletter->setHash(Security::generateHash());
     $this->newslettersRepository->persist($newsletter);
     $this->newslettersRepository->flush();
     return $newsletter;

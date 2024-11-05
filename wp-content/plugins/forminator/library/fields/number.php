@@ -181,6 +181,10 @@ class Forminator_Number extends Forminator_Field {
 			$value = $this->get_prefill( $field, $value );
 		}
 
+		if ( 'comma_dot' === $separator && false !== strpos( $value, ',' ) ) {
+			$value = str_replace( ',', '', $value );
+		}
+
 		$point = ! empty( $precision ) ? $separators['point'] : '';
 
 		$number_attr = array(

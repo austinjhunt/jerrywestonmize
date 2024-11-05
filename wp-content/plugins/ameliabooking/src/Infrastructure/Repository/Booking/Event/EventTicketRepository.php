@@ -34,7 +34,7 @@ class EventTicketRepository extends AbstractRepository implements EventRepositor
             ':enabled'          => $data['enabled'] ? 1 : 0,
             ':price'            => $data['price'],
             ':spots'            => $data['spots'],
-            ':waitingListSpots' => $data['waitingListSpots'],
+            ':waitingListSpots' => $data['waitingListSpots'] ?: 0,
             ':dateRanges'       => $data['dateRanges'],
             ':translations'     => $data['translations'],
         ];
@@ -94,7 +94,7 @@ class EventTicketRepository extends AbstractRepository implements EventRepositor
             ':enabled'          => $data['enabled'] ? 1 : 0,
             ':price'            => $data['price'],
             ':spots'            => $data['spots'],
-            ':waitingListSpots' => $data['waitingListSpots'],
+            ':waitingListSpots' => $data['waitingListSpots'] ?: 0,
             ':dateRanges'       => $data['dateRanges'],
             ':translations'     => $data['translations'],
         ];

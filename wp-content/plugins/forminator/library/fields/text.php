@@ -411,6 +411,7 @@ class Forminator_Text extends Forminator_Field {
 		}
 
 		if ( $this->has_limit( $field ) ) {
+			$data = html_entity_decode( $data );
 			if ( ( isset( $field['limit_type'] ) && 'characters' === trim( $field['limit_type'] ) ) && ( mb_strlen( $data ) > $field['limit'] ) ) {
 				$this->validation_message[ $id ] = apply_filters(
 					'forminator_text_field_characters_validation_message',

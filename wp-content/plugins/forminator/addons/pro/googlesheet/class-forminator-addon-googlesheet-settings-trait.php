@@ -178,7 +178,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 	 * @since 1.31 Google Sheets Addon
 	 * @param array $submitted_data Submitted data.
 	 * @return array
-	 * @throws Forminator_Google_Exception Google Exception.
+	 * @throws ForminatorGoogleAddon\Google\Exception Google Exception.
 	 */
 	public function update_worksheet( $submitted_data ) {
 		$template = forminator_addon_googlesheet_dir() . 'views/module-settings/setup-choose-worksheet.php';
@@ -212,15 +212,16 @@ trait Forminator_Googlesheet_Settings_Trait {
 			$input_exceptions = new Forminator_Integration_Settings_Exception();
 			$google_client    = $this->addon->get_google_client();
 			$google_client->setAccessToken( $this->addon->get_client_access_token() );
+			$google_client = $this->addon->refresh_token_if_expired( $google_client );
 			if ( ! empty( $file_id ) ) {
 				try {
-					$service      = new Forminator_Google_Service_Sheets( $google_client );
+					$service      = new ForminatorGoogleAddon\Google\Service\Sheets( $google_client );
 					$spreadsheets = $service->spreadsheets->get( $file_id );
 					$sheets       = $spreadsheets->getSheets();
 					foreach ( $sheets as $sheet ) {
 						$template_params['worksheets'][ $sheet->getProperties()->getSheetId() ] = $sheet->getProperties()->getTitle();
 					}
-				} catch ( Forminator_Google_Exception $google_exception ) {
+				} catch ( ForminatorGoogleAddon\Google\Exception $google_exception ) {
 					// catch 404.
 					if ( false !== stripos( $google_exception->getMessage(), 'Requested entity was not found' ) ) {
 						$input_exceptions->add_input_exception( esc_html__( 'Spreadsheet not found, please put Spreadsheet ID.', 'forminator' ), 'error_message' );
@@ -240,7 +241,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 		} catch ( Forminator_Integration_Exception $e ) {
 			$template_params['error_message'] = $e->getMessage();
 			$has_errors                       = true;
-		} catch ( Forminator_Google_Exception $e ) {
+		} catch ( ForminatorGoogleAddon\Google\Exception $e ) {
 			$template_params['error_message'] = $e->getMessage();
 			$has_errors                       = true;
 		}
@@ -297,7 +298,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 	 * @since 1.31 Google Sheets Addon
 	 * @param array $submitted_data Submitted data.
 	 * @return array
-	 * @throws Forminator_Google_Exception Google Exception.
+	 * @throws ForminatorGoogleAddon\Google\Exception Google Exception.
 	 */
 	public function setup_existing_sheet( $submitted_data ) {
 		$template = forminator_addon_googlesheet_dir() . 'views/module-settings/setup-sheet-existing.php';
@@ -332,16 +333,17 @@ trait Forminator_Googlesheet_Settings_Trait {
 				$template_params['file_id'] = $file_id;
 				$google_client              = $this->addon->get_google_client();
 				$google_client->setAccessToken( $this->addon->get_client_access_token() );
+				$google_client = $this->addon->refresh_token_if_expired( $google_client );
 				if ( ! empty( $file_id ) ) {
 					try {
-						$service      = new Forminator_Google_Service_Sheets( $google_client );
+						$service      = new ForminatorGoogleAddon\Google\Service\Sheets( $google_client );
 						$spreadsheets = $service->spreadsheets->get( $file_id );
 						$file_name    = $spreadsheets->getProperties()->getTitle();
 						$sheets       = $spreadsheets->getSheets();
 						foreach ( $sheets as $sheet ) {
 							$template_params['worksheets'][ $sheet->getProperties()->getSheetId() ] = $sheet->getProperties()->getTitle();
 						}
-					} catch ( Forminator_Google_Exception $google_exception ) {
+					} catch ( ForminatorGoogleAddon\Google\Exception $google_exception ) {
 						// catch 404.
 						if ( false !== stripos( $google_exception->getMessage(), 'Requested entity was not found' ) ) {
 							$input_exceptions->add_input_exception( esc_html__( 'Spreadsheet not found, please enter a valid spreadsheet ID.', 'forminator' ), 'file_id_error' );
@@ -370,7 +372,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 			} catch ( Forminator_Integration_Exception $e ) {
 				$template_params['error_message'] = $e->getMessage();
 				$has_errors                       = true;
-			} catch ( Forminator_Google_Exception $e ) {
+			} catch ( ForminatorGoogleAddon\Google\Exception $e ) {
 				$template_params['error_message'] = $e->getMessage();
 				$has_errors                       = true;
 			}
@@ -399,7 +401,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 	 * @since 1.0 Google Sheets Integration
 	 * @param array $submitted_data Submitted data.
 	 * @return array
-	 * @throws Forminator_Google_Exception Throws Google Exception.
+	 * @throws ForminatorGoogleAddon\Google\Exception Throws Google Exception.
 	 */
 	public function setup_sheet( $submitted_data ) {
 		$template = forminator_addon_googlesheet_dir() . 'views/module-settings/setup-sheet.php';
@@ -439,9 +441,10 @@ trait Forminator_Googlesheet_Settings_Trait {
 
 				$google_client = $this->addon->get_google_client();
 				$google_client->setAccessToken( $this->addon->get_client_access_token() );
+				$google_client = $this->addon->refresh_token_if_expired( $google_client );
 
 				if ( ! empty( $folder_id ) ) {
-					$drive = new Forminator_Google_Service_Drive( $google_client );
+					$drive = new ForminatorGoogleAddon\Google\Service\Drive( $google_client );
 					try {
 						$folder = $drive->files->get( $folder_id, array( 'supportsAllDrives' => true ) );
 						// its from API var.
@@ -449,7 +452,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 						if ( Forminator_Googlesheet::MIME_TYPE_GOOGLE_DRIVE_FOLDER !== $folder->mimeType ) {
 							$input_exceptions->add_input_exception( esc_html__( 'This is not a folder, please use a valid Folder ID.', 'forminator' ), 'folder_id_error' );
 						}
-					} catch ( Forminator_Google_Exception $google_exception ) {
+					} catch ( ForminatorGoogleAddon\Google\Exception $google_exception ) {
 						// catch 404.
 						if ( false !== stripos( $google_exception->getMessage(), 'File not found' ) ) {
 							$input_exceptions->add_input_exception( esc_html__( 'Folder not found, please put Folder ID.', 'forminator' ), 'folder_id_error' );
@@ -463,7 +466,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 					throw $input_exceptions;
 				}
 
-				$file = new Forminator_Google_Service_Drive_DriveFile();
+				$file = new ForminatorGoogleAddon\Google\Service\Drive\DriveFile();
 				$file->setMimeType( Forminator_Googlesheet::MIME_TYPE_GOOGLE_SPREADSHEET );
 				$file->setName( $file_name );
 
@@ -471,7 +474,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 					$file->setParents( array( $folder_id ) );
 				}
 
-				$drive     = new Forminator_Google_Service_Drive( $google_client );
+				$drive     = new ForminatorGoogleAddon\Google\Service\Drive( $google_client );
 				$new_sheet = $drive->files->create( $file, array( 'supportsAllDrives' => true ) );
 
 				$this->save_multi_id_setting_values(
@@ -498,7 +501,7 @@ trait Forminator_Googlesheet_Settings_Trait {
 			} catch ( Forminator_Integration_Exception $e ) {
 				$template_params['error_message'] = $e->getMessage();
 				$has_errors                       = true;
-			} catch ( Forminator_Google_Exception $e ) {
+			} catch ( ForminatorGoogleAddon\Google\Exception $e ) {
 				$template_params['error_message'] = $e->getMessage();
 				$has_errors                       = true;
 			}

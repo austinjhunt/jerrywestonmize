@@ -36,6 +36,7 @@ class RendererTest extends \MailPoetTest {
  $themeControllerMock = $this->createMock(ThemeController::class);
  $themeControllerMock->method('getTheme')->willReturn($themeJsonMock);
  $themeControllerMock->method('getStyles')->willReturn($styles);
+ $themeControllerMock->method('getLayoutSettings')->willReturn(['contentSize' => '660px']);
  $this->renderer = $this->getServiceWithOverrides(Renderer::class, [
  'settingsController' => $settingsControllerMock,
  'themeController' => $themeControllerMock,
@@ -94,6 +95,9 @@ class RendererTest extends \MailPoetTest {
  verify($style)->stringContainsString('font-family: Test Font Family;');
  verify($style)->stringContainsString('padding-top: 3px;');
  verify($style)->stringContainsString('padding-bottom: 4px;');
+ verify($style)->stringContainsString('padding-left: 2px;');
+ verify($style)->stringContainsString('padding-right: 1px;');
+ verify($style)->stringContainsString('max-width: 660px;');
  }
  private function getStylesValueForTag(string $html, array $query): ?string {
  $html = new \WP_HTML_Tag_Processor($html);

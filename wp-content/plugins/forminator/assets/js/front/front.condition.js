@@ -777,10 +777,26 @@
 		},
 
 		date_is_grater: function( date1, date2 ) {
+			date1 = this.set_date_as_utc_time( date1 );
 			return forminatorDateUtil.compare( date1, date2 ) === 1;
 		},
 
+		set_date_as_utc_time( date ) {
+			if (
+				undefined !== date.month &&
+				undefined !== date.date &&
+				undefined !== date.year
+			) {
+				const utcDate = new Date(
+					`${ date.month + 1 }-${ date.date }-${ date.year } UTC`
+				);
+				date = utcDate.getTime();
+			}
+			return date;
+		},
+
 		date_is_smaller: function( date1, date2 ) {
+			date1 = this.set_date_as_utc_time( date1 );
 			return forminatorDateUtil.compare( date1, date2 ) === -1;
 		},
 

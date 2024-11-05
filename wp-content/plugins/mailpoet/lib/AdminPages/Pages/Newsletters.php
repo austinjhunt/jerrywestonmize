@@ -16,6 +16,7 @@ use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\NewsletterTemplates\NewsletterTemplatesRepository;
 use MailPoet\Segments\SegmentsSimpleListRepository;
 use MailPoet\Segments\WooCommerce;
+use MailPoet\Services\AuthorizedEmailsController;
 use MailPoet\Services\AuthorizedSenderDomainController;
 use MailPoet\Services\Bridge;
 use MailPoet\Settings\SettingsController;
@@ -49,6 +50,8 @@ class Newsletters {
 
   private AuthorizedSenderDomainController $senderDomainController;
 
+  private AuthorizedEmailsController $authorizedEmailsController;
+
   private UserFlagsController $userFlagsController;
 
   private WooCommerce $wooCommerceSegment;
@@ -67,6 +70,7 @@ class Newsletters {
     NewslettersRepository $newslettersRepository,
     Bridge $bridge,
     AuthorizedSenderDomainController $senderDomainController,
+    AuthorizedEmailsController $authorizedEmailsController,
     UserFlagsController $userFlagsController,
     WooCommerce $wooCommerceSegment,
     CapabilitiesManager $capabilitiesManager
@@ -82,6 +86,7 @@ class Newsletters {
     $this->newslettersRepository = $newslettersRepository;
     $this->bridge = $bridge;
     $this->senderDomainController = $senderDomainController;
+    $this->authorizedEmailsController = $authorizedEmailsController;
     $this->userFlagsController = $userFlagsController;
     $this->wooCommerceSegment = $wooCommerceSegment;
     $this->capabilitiesManager = $capabilitiesManager;
@@ -139,7 +144,7 @@ class Newsletters {
     $data['sender_restrictions'] = [];
 
     if ($this->bridge->isMailpoetSendingServiceEnabled()) {
-      $data['authorized_emails'] = $this->bridge->getAuthorizedEmailAddresses();
+      $data['authorized_emails'] = $this->authorizedEmailsController->getAuthorizedEmailAddresses();
       $data['verified_sender_domains'] = $this->senderDomainController->getFullyVerifiedSenderDomains(true);
       $data['partially_verified_sender_domains'] = $this->senderDomainController->getPartiallyVerifiedSenderDomains(true);
       $data['all_sender_domains'] = $this->senderDomainController->getAllSenderDomains();

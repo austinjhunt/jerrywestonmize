@@ -485,6 +485,22 @@ class AppointmentPlaceholderService extends PlaceholderService
         /** @var string $break */
         $break = $type === 'whatsapp' ? '; ' : PHP_EOL;
 
+        $lastBookingExtraIds = [];
+        if ($bookingKey === null) {
+            $lastBookingId = $this->getBookingKeyForEmployee($appointmentArray);
+
+            $lastBooking = array_filter(
+                $appointmentArray['bookings'],
+                function ($b) use ($lastBookingId) {
+                    return $b['id'] === $lastBookingId;
+                }
+            );
+
+            foreach (array_shift($lastBooking)['extras'] as $ex) {
+                $lastBookingExtraIds[$ex['extraId']] = $ex;
+            }
+        }
+
         $allExtraNames = "";
         $allExtraDetails = "";
         $allExtraSum = 0;
@@ -511,7 +527,16 @@ class AppointmentPlaceholderService extends PlaceholderService
             $multiplyByNumberOfPeople = ($extra->getAggregatedPrice() === null ? $service->getAggregatedPrice()->getValue()
                 : $extra->getAggregatedPrice()->getValue()) && $persons !== 1;
 
+            if (!empty($data["service_extra_{$extraId}_name"])) {
+                $allExtraNames .= $data["service_extra_{$extraId}_name"].', ';
+            }
+
             if (array_key_exists($extraId, $bookingExtras) && $bookingExtras[$extraId]['quantity'] !== 0) {
+                if ($bookingKey === null) {
+                    if (!array_key_exists($extraId, $lastBookingExtraIds)) {
+                        continue;
+                    }
+                }
                 $allExtraDetails .= ($type === 'email' ? '<p>' : '') . $extra->getName()->getValue() . ': (' .
                     $helperService->getFormattedPrice($extra->getPrice()->getValue()) . ' x ' .
                     $bookingExtras[$extraId]['quantity'] . ') ' .
@@ -520,10 +545,6 @@ class AppointmentPlaceholderService extends PlaceholderService
 
                 $allExtraSum += $extra->getPrice()->getValue() * $bookingExtras[$extraId]['quantity'] *
                     ($multiplyByNumberOfPeople ? $persons : 1);
-            }
-
-            if (!empty($data["service_extra_{$extraId}_name"])) {
-                $allExtraNames .= $data["service_extra_{$extraId}_name"].', ';
             }
         }
 

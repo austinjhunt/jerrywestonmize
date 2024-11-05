@@ -15,10 +15,13 @@ class Initializer {
  $blocksRegistry->addBlockRenderer('core/column', new Renderer\Blocks\Column());
  $blocksRegistry->addBlockRenderer('core/columns', new Renderer\Blocks\Columns());
  $blocksRegistry->addBlockRenderer('core/list', new Renderer\Blocks\ListBlock());
+ $blocksRegistry->addBlockRenderer('core/list-item', new Renderer\Blocks\ListItem());
  $blocksRegistry->addBlockRenderer('core/image', new Renderer\Blocks\Image());
  $blocksRegistry->addBlockRenderer('core/buttons', new Renderer\Blocks\Buttons(new FlexLayoutRenderer()));
  $blocksRegistry->addBlockRenderer('core/button', new Renderer\Blocks\Button());
  $blocksRegistry->addBlockRenderer('core/group', new Renderer\Blocks\Group());
+ // Render used for all other blocks
+ $blocksRegistry->addFallbackRenderer(new Renderer\Blocks\Fallback());
  }
  public function adjustThemeJson(\WP_Theme_JSON $editorThemeJson): \WP_Theme_JSON {
  $themeJson = (string)file_get_contents(dirname(__FILE__) . '/theme.json');

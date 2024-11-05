@@ -8,6 +8,7 @@ use AmeliaBooking\Application\Commands\Coupon\GetValidCouponCommand;
 use AmeliaBooking\Application\Commands\Google\FetchAccessTokenWithAuthCodeCommand;
 use AmeliaBooking\Application\Commands\Google\GetGoogleAuthURLCommand;
 use AmeliaBooking\Application\Commands\Notification\GetSMSNotificationsHistoryCommand;
+use AmeliaBooking\Application\Commands\Notification\UpdateSMSNotificationHistoryCommand;
 use AmeliaBooking\Application\Commands\Notification\WhatsAppWebhookCommand;
 use AmeliaBooking\Application\Commands\Notification\WhatsAppWebhookRegisterCommand;
 use AmeliaBooking\Application\Commands\Outlook\FetchAccessTokenWithAuthCodeOutlookCommand;
@@ -223,7 +224,8 @@ abstract class Command
             !($this instanceof WhatsAppWebhookRegisterCommand) &&
             !($this instanceof WhatsAppWebhookCommand) &&
             !($this instanceof PaymentLinkCommand) &&
-            !($this instanceof GetSMSNotificationsHistoryCommand)
+            !($this instanceof GetSMSNotificationsHistoryCommand) &&
+            !($this instanceof UpdateSMSNotificationHistoryCommand)
         ) {
             $queryParams = $request->getQueryParams();
 

@@ -164,7 +164,8 @@ abstract class Forminator_Front_Action {
 
 		if ( $this->is_force_validate_submissions_nonce() ) {
 			$forminator_nonce = Forminator_Core::sanitize_text_field( 'forminator_nonce' );
-			if ( ! $forminator_nonce || ! wp_verify_nonce( $forminator_nonce, 'forminator_submit_form' ) ) {
+			$form_id          = Forminator_Core::sanitize_text_field( 'form_id' );
+			if ( ! $forminator_nonce || ! wp_verify_nonce( $forminator_nonce, 'forminator_submit_form' . $form_id ) ) {
 				return;
 			}
 		}
@@ -455,7 +456,7 @@ abstract class Forminator_Front_Action {
 		$this->init_properties();
 		$draft = self::$is_draft ? '_draft' : '';
 
-		if ( ! $this->validate_ajax( 'forminator_submit_form', 'POST', 'forminator_nonce' ) ) {
+		if ( ! $this->validate_ajax( 'forminator_submit_form' . self::$module_id, 'POST', 'forminator_nonce' ) ) {
 			wp_send_json_error( esc_html__( 'Invalid nonce. Please refresh your browser.', 'forminator' ) );
 		}
 
@@ -614,7 +615,7 @@ abstract class Forminator_Front_Action {
 	public function save_entry_preview() {
 		$this->init_properties();
 
-		if ( ! $this->validate_ajax( 'forminator_submit_form', 'POST', 'forminator_nonce' ) ) {
+		if ( ! $this->validate_ajax( 'forminator_submit_form' . self::$module_id, 'POST', 'forminator_nonce' ) ) {
 			return;
 		}
 
@@ -1181,6 +1182,7 @@ abstract class Forminator_Front_Action {
 	 * Get nonce to avoid Static cache
 	 */
 	public function get_nonce() {
-		wp_send_json_success( wp_create_nonce( 'forminator_submit_form' ) );
+		$form_id = filter_input( INPUT_POST, 'form_id', FILTER_VALIDATE_INT );
+		wp_send_json_success( wp_create_nonce( 'forminator_submit_form' . $form_id ) );
 	}
 }

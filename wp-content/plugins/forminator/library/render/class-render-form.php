@@ -501,6 +501,7 @@ abstract class Forminator_Render_Form {
 							. 'type: "POST",'
 							. 'data: {'
 								. 'action: "forminator_get_nonce",'
+								. 'form_id: "' . (int) $form_id . '",'
 							. '},'
 							. 'success: function (response) {'
 								. "jQuery('#forminator-module-" . (int) $form_id . " #forminator_nonce').val( response.data );"
@@ -630,7 +631,7 @@ abstract class Forminator_Render_Form {
 	 * @return mixed|void
 	 */
 	public function get_submit( $form_id, $render = true ) {
-		$nonce     = $this->nonce_field( 'forminator_submit_form', 'forminator_nonce' );
+		$nonce     = $this->nonce_field( 'forminator_submit_form' . $form_id, 'forminator_nonce' );
 		$post_id   = $this->get_post_id();
 		$html      = $this->get_button_markup();
 		$form_type = $this->get_form_type();

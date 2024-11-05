@@ -6,6 +6,9 @@ use MailPoet\EmailEditor\Integrations\Core\Renderer\Blocks\AbstractBlockRenderer
 use MailPoet\EmailEditor\Integrations\Utils\DomDocumentHelper;
 use WP_Style_Engine;
 class Column extends AbstractBlockRenderer {
+ protected function addSpacer($content, $emailAttrs): string {
+ return $content;
+ }
  protected function renderContent(string $blockContent, array $parsedBlock, SettingsController $settingsController): string {
  $content = '';
  foreach ($parsedBlock['innerBlocks'] ?? [] as $block) {

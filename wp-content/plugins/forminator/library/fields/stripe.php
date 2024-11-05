@@ -225,9 +225,9 @@ class Forminator_Stripe extends Forminator_Field {
 			$settings['form-style'] = 'default';
 		}
 
-		if ( ! empty( $settings['form-font-family'] ) ) {
+		if( ! empty( $settings['form-font-family'] ) ) {
 			$field_font_family = $this->get_form_setting( 'cform-input-font-family', $settings, 'inherit' );
-			if ( 'custom' === $field_font_family ) {
+			if( $field_font_family == 'custom' ) {
 				$data_font_family = $this->get_form_setting( 'cform-input-custom-family', $settings, 'inherit' );
 			} else {
 				$data_font_family = $field_font_family;
@@ -265,6 +265,7 @@ class Forminator_Stripe extends Forminator_Field {
 			'data-font-color-focus' => $this->get_form_setting( 'input-color', $settings, '#000000' ),
 			'data-font-color-error' => $this->get_form_setting( 'input-color', $settings, '#000000' ),
 			'data-font-size'        => $this->get_form_setting( 'cform-input-font-size', $settings, '16' ) . 'px',
+			// 'data-line-height'      => '1.3em',
 			'data-font-family'      => $data_font_family,
 			'data-font-weight'      => $this->get_form_setting( 'cform-input-font-weight', $settings, '400' ),
 			'data-icon-color'       => $this->get_form_setting( 'input-icon', $settings, '#777771' ),

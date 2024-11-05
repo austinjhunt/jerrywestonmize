@@ -19,6 +19,8 @@ class UpdateSMSNotificationHistoryController extends Controller
     protected $allowedFields = [
         'status',
         'price',
+        'dateTime',
+        'logId'
     ];
 
     /**

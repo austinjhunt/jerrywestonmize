@@ -57,7 +57,7 @@ class NotificationsManager {
 		$dev_mode                       = NotificationsManager::isDevMode();
 		$base                           = NotificationsManager::$remote_data_url_base;
         $theme                          = get_template();
-        $option                         = "${theme}_start-source";
+        $option                         = "{$theme}_start-source";
         $start_source                   = get_option($option, "other");
         $builder_activation_time        = get_option('colibri_page_builder_activation_time', "0");
         $builder_pro_activation_time    = get_option('colibri_page_builder_pro_activation_time', "0");

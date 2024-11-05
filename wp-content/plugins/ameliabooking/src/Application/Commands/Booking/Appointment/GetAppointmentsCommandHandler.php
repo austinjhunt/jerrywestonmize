@@ -184,15 +184,11 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         if (!$isCabinetPackageRequest && $appointmentsIds) {
             $appointments = $appointmentRepository->getFiltered(
-                array_merge(
-                    $params,
-                    [
-                        'ids'           => $appointmentsIds,
-                        'skipServices'  => isset($params['skipServices']) ? $params['skipServices'] : false,
-                        'skipProviders' => isset($params['skipProviders']) ? $params['skipProviders'] : false,
-                        'endsInDateRange' => $isCalendarPage
-                    ]
-                )
+                [
+                    'ids'           => $appointmentsIds,
+                    'skipServices'  => isset($params['skipServices']) ? $params['skipServices'] : false,
+                    'skipProviders' => isset($params['skipProviders']) ? $params['skipProviders'] : false,
+                ]
             );
         } elseif ($isDashboardPackageRequest || ($user && $user->getId() && $isCabinetPackageRequest)) {
             $availablePackageBookings = $packageAS->getPackageAvailability(
@@ -398,20 +394,20 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         $periodsAppointmentsPendingCount = 0;
 
-        if (!$isCabinetPackageRequest && !$isCabinetPage) {
+        if (!$isCabinetPackageRequest && !$isCabinetPage && !$isCalendarPage) {
             if ((!$readOthers) &&
                 $user->getType() === Entities::PROVIDER
             ) {
                 $countParams['providerId'] = $user->getId()->getValue();
             }
             $periodsAppointmentsCount = $appointmentRepository->getPeriodAppointmentsCount(
-                array_merge($countParams, $entitiesIds, ['ids' => $appointmentsIds,])
+                array_merge($countParams, $entitiesIds)
             );
 
             $periodsAppointmentsApprovedCount = $appointmentRepository->getPeriodAppointmentsCount(
                 array_merge(
                     $countParams,
-                    ['status' => BookingStatus::APPROVED, 'ids' => $appointmentsIds],
+                    ['status' => BookingStatus::APPROVED],
                     $entitiesIds
                 )
             );
@@ -419,7 +415,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
             $periodsAppointmentsPendingCount = $appointmentRepository->getPeriodAppointmentsCount(
                 array_merge(
                     $countParams,
-                    ['status' => BookingStatus::PENDING, 'ids' => $appointmentsIds],
+                    ['status' => BookingStatus::PENDING],
                     $entitiesIds
                 )
             );

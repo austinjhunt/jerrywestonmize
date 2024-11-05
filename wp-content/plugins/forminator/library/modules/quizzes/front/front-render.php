@@ -773,7 +773,7 @@ class Forminator_QForm_Front extends Forminator_Render_Form {
 			$disabled = 'aria-disabled="true" disabled="disabled"';
 		}
 
-		$nonce   = $this->nonce_field( 'forminator_submit_form', 'forminator_nonce' );
+		$nonce   = $this->nonce_field( 'forminator_submit_form' . $form_id, 'forminator_nonce' );
 		$post_id = $this->get_post_id();
 
 		$submit_data  = $this->get_submit_data();
@@ -1191,7 +1191,9 @@ class Forminator_QForm_Front extends Forminator_Render_Form {
 	 */
 	public static function ajax_reload_module() {
 		$nonce = Forminator_Core::sanitize_text_field( 'nonce' );
-		if ( ! wp_verify_nonce( $nonce, 'forminator_submit_form' ) ) {
+
+		$module_id = Forminator_Core::sanitize_text_field( 'moduleId' );
+		if ( ! wp_verify_nonce( $nonce, 'forminator_submit_form' . $module_id ) ) {
 			wp_send_json_error( new WP_Error( 'invalid_code' ) );
 		}
 

@@ -1056,6 +1056,15 @@ class TimeSlotService
 
         /** @var Provider $provider */
         foreach ($providers->getItems() as $provider) {
+            if ($provider->getServiceList()->keyExists($service->getId()->getValue())) {
+                /** @var Service $providerService */
+                $providerService = $provider->getServiceList()->getItem($service->getId()->getValue());
+
+                if ($providerService && $props['personsCount'] > $providerService->getMaxCapacity()->getValue()) {
+                    continue;
+                }
+            }
+
             $providerContainer = new Collection();
 
             if ($provider->getTimeZone()) {

@@ -71,7 +71,7 @@ foreach ( $template_vars as $key => $val ) {
 			<?php
 				printf(
 				/* Translators: 1. Opening <a> tag with link to slack article link, 2. closing <a> tag. */
-					esc_html__( 'You can format your message using Slack Flavored Markdown, find more information %1$shere%2$s.', 'forminator' ),
+					esc_html__( 'You can format your message using Slack Flavored Markdown. Find more information %1$shere%2$s.', 'forminator' ),
 					'<a href="https://get.slack.help/hc/en-us/articles/202288908-how-can-i-add-formatting-to-my-messages" target="_blank">',
 					'</a>'
 				);
@@ -81,8 +81,14 @@ foreach ( $template_vars as $key => $val ) {
 		<span class="sui-description">
 			<?php
 			printf(
-			/* Translators: 1. Opening <a> tag with link to the message attach link, 2. closing <a> tag. */
-				esc_html__( 'By default sent message will include ALL FIELDS as attachment using Forminator Format to ease you up, more information about attachment can be found %1$shere%2$s.', 'forminator' ),
+				/* Translators: 1. All fields text. */
+				esc_html__( 'By default, the message sent will include %s as an attachment using Forminator formatting to make your job easier. ', 'forminator' ),
+				esc_html__( 'ALL FIELDS', 'forminator' )
+			);
+
+			printf(
+				/* Translators: 1. Opening <a> tag with link to the message attach link, 2. closing <a> tag. */
+				esc_html__( 'More information about attachments can be found %1$shere%2$s.', 'forminator' ),
 				'<a href="https://api.slack.com/docs/message-attachments" target="_blank">',
 				'</a>'
 			);

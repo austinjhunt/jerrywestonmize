@@ -71,7 +71,7 @@ class Text {
 
     $html .= 'name="data[' . $name . ']" ';
 
-    $html .= 'title="' . $this->rendererHelper->getFieldLabel($block) . '" ';
+    $html .= 'title="' . $this->wp->escAttr($this->rendererHelper->getFieldLabel($block)) . '" ';
 
     $html .= 'value="' . $this->rendererHelper->getFieldValue($block) . '" ';
 

@@ -29,8 +29,10 @@ class UpdateSMSNotificationHistoryCommandHandler extends CommandHandler
         $notificationsSMSHistoryRepo = $this->container->get('domain.notificationSMSHistory.repository');
 
         $updateData = [
-            'status' => $command->getField('status'),
-            'price'  => $command->getField('price')
+            'status'   => $command->getField('status'),
+            'price'    => $command->getField('price'),
+            'logId'    => $command->getField('logId'),
+            'dateTime' => $command->getField('dateTime')
         ];
 
         $updateData = apply_filters('amelia_before_sms_notification_history_updated_filter', $updateData, $command->getArg('id'));

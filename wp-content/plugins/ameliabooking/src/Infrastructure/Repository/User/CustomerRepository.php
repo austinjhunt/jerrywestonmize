@@ -83,6 +83,8 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
                 NULL as lastAppointment,
                 0 as totalAppointments,
                 0 as countPendingAppointments,
+                0 as countAppointmentBookings,
+                0 as countEventBookings,
             ';
 
             $statsJoins = '';
@@ -96,6 +98,8 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
                     MAX(app.bookingStart) as lastAppointment,
                     COUNT(cb.id) as totalAppointments,
                     SUM(case when cb.status = :bookingPendingStatus then 1 else 0 end) as countPendingAppointments,
+                    COUNT(DISTINCT CASE WHEN cb.appointmentId IS NOT NULL THEN cb.id ELSE NULL END) as countAppointmentBookings,
+                    COUNT(DISTINCT CASE WHEN cb.appointmentId IS NULL THEN cb.id ELSE NULL END) as countEventBookings,
                 ";
 
                 $statsJoins = "

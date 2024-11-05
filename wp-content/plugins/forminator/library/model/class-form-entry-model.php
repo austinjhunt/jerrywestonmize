@@ -14,6 +14,16 @@
 class Forminator_Form_Entry_Model {
 
 	/**
+	 * Cache group for entry model
+	 */
+	const FORM_ENTRY_CACHE_GROUP = 'Forminator_Form_Entry_Model';
+
+	/**
+	 * Cache group for total entries
+	 */
+	const FORM_COUNT_CACHE_GROUP = 'forminator_total_entries';
+
+	/**
 	 * Entry id
 	 *
 	 * @var int
@@ -155,7 +165,7 @@ class Forminator_Form_Entry_Model {
 	public function get( $entry_id ) {
 		global $wpdb;
 
-		$cache_key          = get_class( $this );
+		$cache_key          = self::FORM_ENTRY_CACHE_GROUP;
 		$entry_object_cache = wp_cache_get( $entry_id, $cache_key );
 
 		if ( $entry_object_cache ) {
@@ -217,8 +227,8 @@ class Forminator_Form_Entry_Model {
 
 		if ( ! $prevent_store ) {
 			// clear cache first.
-			$cache_key = get_class( $this );
-			wp_cache_delete( $this->entry_id, $cache_key );
+			wp_cache_delete( $this->entry_id, self::FORM_ENTRY_CACHE_GROUP );
+			wp_cache_delete( 'poll_entries_' . $this->form_id, self::FORM_ENTRY_CACHE_GROUP );
 		}
 		foreach ( $meta_array as $meta ) {
 			if ( ! isset( $meta['name'] ) || ! isset( $meta['value'] ) ) {
@@ -367,9 +377,9 @@ class Forminator_Form_Entry_Model {
 		if ( ! $result ) {
 			return false;
 		}
-		wp_cache_delete( $this->form_id, 'forminator_total_entries' );
-		wp_cache_delete( 'all_form_types', 'forminator_total_entries' );
-		wp_cache_delete( $this->entry_type . '_form_type', 'forminator_total_entries' );
+		self::delete_form_entry_cache( $this->form_id );
+		wp_cache_delete( 'all_form_types', self::FORM_COUNT_CACHE_GROUP );
+		wp_cache_delete( $this->entry_type . '_form_type', self::FORM_COUNT_CACHE_GROUP );
 		$this->entry_id = (int) $wpdb->insert_id;
 
 		return true;
@@ -493,33 +503,6 @@ class Forminator_Form_Entry_Model {
 	}
 
 	/**
-	 * List entries
-	 *
-	 * @param int $form_id - the form id.
-	 * @param int $per_page - results per page.
-	 * @param int $page - the current page. Defaults to 0.
-	 *
-	 * @return Forminator_Form_Entry_Model[]
-	 * @since 1.0
-	 */
-	public static function list_entries( $form_id, $per_page, $page = 0 ) {
-		global $wpdb;
-		$entries    = array();
-		$table_name = Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_ENTRY );
-		$sql        = "SELECT `entry_id` FROM {$table_name} WHERE `form_id` = %d AND `is_spam` = 0 ORDER BY `entry_id` DESC LIMIT %d, %d ";
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$results = $wpdb->get_results( $wpdb->prepare( $sql, $form_id, $page, $per_page ) );
-
-		if ( ! empty( $results ) ) {
-			foreach ( $results as $result ) {
-				$entries[] = new Forminator_Form_Entry_Model( $result->entry_id );
-			}
-		}
-
-		return $entries;
-	}
-
-	/**
 	 * Return if form has live payment entry
 	 *
 	 * @param int $form_id - the form id.
@@ -529,6 +512,12 @@ class Forminator_Form_Entry_Model {
 	 */
 	public static function has_live_payment( $form_id ) {
 		global $wpdb;
+
+		$cached_count = wp_cache_get( 'live_payment_count_' . $form_id, self::FORM_COUNT_CACHE_GROUP );
+
+		if ( false !== $cached_count ) {
+			return $cached_count;
+		}
 
 		$table_name       = Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_ENTRY_META );
 		$entry_table_name = Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_ENTRY );
@@ -544,6 +533,8 @@ class Forminator_Form_Entry_Model {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery  -- unprepared SQL ok. false positive.
 		$count = $wpdb->get_var( $wpdb->prepare( $sql, $form_id ) );
+
+		wp_cache_set( 'live_payment_count_' . $form_id, $count, self::FORM_COUNT_CACHE_GROUP );
 
 		return $count;
 	}
@@ -736,8 +727,7 @@ class Forminator_Form_Entry_Model {
 			global $wpdb;
 			$db = $wpdb;
 		}
-		$cache_key     = 'forminator_total_entries';
-		$entries_cache = wp_cache_get( $form_id, $cache_key );
+		$entries_cache = wp_cache_get( $form_id, self::FORM_COUNT_CACHE_GROUP );
 		$where         = '';
 
 		if ( $entries_cache ) {
@@ -756,7 +746,7 @@ class Forminator_Form_Entry_Model {
 			$sql        = "SELECT count(`entry_id`) FROM {$table_name} WHERE `form_id` = %d AND `is_spam` = 0 {$where}";
 			$entries    = $db->get_var( $db->prepare( $sql, $form_id ) );
 			if ( $entries ) {
-				wp_cache_set( $form_id, $entries, $cache_key );
+				wp_cache_set( $form_id, $entries, self::FORM_COUNT_CACHE_GROUP );
 
 				return $entries;
 			}
@@ -842,6 +832,11 @@ class Forminator_Form_Entry_Model {
 	 * @since   1.0.5
 	 */
 	public static function map_polls_entries( $form_id, $fields ) {
+		$cache_key      = 'poll_entries_' . $form_id;
+		$cached_entries = wp_cache_get( $cache_key, self::FORM_ENTRY_CACHE_GROUP );
+		if ( false !== $cached_entries ) {
+			return $cached_entries;
+		}
 		global $wpdb;
 		$map_entries      = array();
 		$table_name       = Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_ENTRY_META );
@@ -895,6 +890,8 @@ class Forminator_Form_Entry_Model {
 				$map_entries[ $result['element_id'] ] = $result['votes'];
 			}
 		}
+
+		wp_cache_set( $cache_key, $map_entries, self::FORM_ENTRY_CACHE_GROUP );
 
 		return $map_entries;
 	}
@@ -1072,6 +1069,12 @@ class Forminator_Form_Entry_Model {
 	 * @since 1.0
 	 */
 	public static function get_last_entry_by_ip_and_form( $form_id, $ip ) {
+		$cache_key    = 'last_entry_by_ip_' . $form_id . '_' . md5( $ip );
+		$cache_group  = self::FORM_ENTRY_CACHE_GROUP . '_' . $form_id;
+		$cached_entry = wp_cache_get( $cache_key, $cache_group );
+		if ( false !== $cached_entry ) {
+			return $cached_entry;
+		}
 		global $wpdb;
 		$table_name       = Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_ENTRY_META );
 		$entry_table_name = Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_ENTRY );
@@ -1080,6 +1083,8 @@ class Forminator_Form_Entry_Model {
 		$entry_id         = $wpdb->get_var( $wpdb->prepare( $sql, $form_id, '_forminator_user_ip', $ip ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		if ( $entry_id ) {
+			wp_cache_set( $cache_key, $entry_id, $cache_group );
+
 			return $entry_id;
 		}
 
@@ -1202,12 +1207,12 @@ class Forminator_Form_Entry_Model {
 		$sql = "DELETE FROM {$table_name} WHERE `entry_id` IN ($entries)";
 		$db->query( $sql );
 
-		wp_cache_delete( $form_id, 'forminator_total_entries' );
-		wp_cache_delete( 'all_form_types', 'forminator_total_entries' );
+		self::delete_form_entry_cache( $form_id );
+		wp_cache_delete( 'all_form_types', self::FORM_COUNT_CACHE_GROUP );
 
 		$model = forminator_get_model_from_id( $form_id );
 		if ( is_object( $model ) ) {
-			wp_cache_delete( $model->get_entry_type() . '_form_type', 'forminator_total_entries' );
+			wp_cache_delete( $model->get_entry_type() . '_form_type', self::FORM_COUNT_CACHE_GROUP );
 		}
 	}
 
@@ -1225,7 +1230,6 @@ class Forminator_Form_Entry_Model {
 
 		$table_name      = Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_ENTRY );
 		$table_meta_name = Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_ENTRY_META );
-		$cache_key       = 'Forminator_Form_Entry_Model';
 		$entry_model     = new Forminator_Form_Entry_Model( $entry_id );
 
 		$form_id  = (int) $entry_model->form_id;
@@ -1247,10 +1251,10 @@ class Forminator_Form_Entry_Model {
 
 		$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . esc_sql( $table_name ) . ' WHERE `entry_id` = %d', $entry_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
-		wp_cache_delete( $entry_id, $cache_key );
-		wp_cache_delete( $form_id, 'forminator_total_entries' );
-		wp_cache_delete( 'all_form_types', 'forminator_total_entries' );
-		wp_cache_delete( $entry_model->entry_type . '_form_type', 'forminator_total_entries' );
+		wp_cache_delete( $entry_id, self::FORM_ENTRY_CACHE_GROUP );
+		self::delete_form_entry_cache( $entry_id );
+		wp_cache_delete( 'all_form_types', self::FORM_COUNT_CACHE_GROUP );
+		wp_cache_delete( $entry_model->entry_type . '_form_type', self::FORM_COUNT_CACHE_GROUP );
 	}
 
 	/**
@@ -1971,8 +1975,7 @@ class Forminator_Form_Entry_Model {
 	 */
 	public static function count_all_entries() {
 		global $wpdb;
-		$cache_key     = 'forminator_total_entries';
-		$entries_cache = wp_cache_get( 'all_form_types', $cache_key );
+		$entries_cache = wp_cache_get( 'all_form_types', self::FORM_COUNT_CACHE_GROUP );
 
 		if ( $entries_cache ) {
 			return $entries_cache;
@@ -1981,7 +1984,7 @@ class Forminator_Form_Entry_Model {
 			$sql        = "SELECT count(`entry_id`) FROM {$table_name} WHERE `is_spam` = %d";
 			$entries    = $wpdb->get_var( $wpdb->prepare( $sql, 0 ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			if ( $entries ) {
-				wp_cache_set( 'all_form_types', $entries, $cache_key );
+				wp_cache_set( 'all_form_types', $entries, self::FORM_COUNT_CACHE_GROUP );
 
 				return $entries;
 			}
@@ -2010,8 +2013,7 @@ class Forminator_Form_Entry_Model {
 		}
 
 		global $wpdb;
-		$cache_key     = 'forminator_total_entries';
-		$entries_cache = wp_cache_get( $entry_type . '_form_type', $cache_key );
+		$entries_cache = wp_cache_get( $entry_type . '_form_type', self::FORM_COUNT_CACHE_GROUP );
 
 		if ( $entries_cache ) {
 
@@ -2021,7 +2023,7 @@ class Forminator_Form_Entry_Model {
 			$sql        = "SELECT count(`entry_id`) FROM {$table_name} WHERE `entry_type` = %s AND `is_spam` = %d";
 			$entries    = $wpdb->get_var( $wpdb->prepare( $sql, $entry_type, 0 ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			if ( $entries ) {
-				wp_cache_set( $entry_type . '_form_type', $entries, $cache_key );
+				wp_cache_set( $entry_type . '_form_type', $entries, self::FORM_COUNT_CACHE_GROUP );
 
 				return $entries;
 			}
@@ -2417,8 +2419,7 @@ class Forminator_Form_Entry_Model {
 				'meta_id' => $meta_id,
 			)
 		);
-		$cache_key = get_class( $this );
-		wp_cache_delete( $this->entry_id, $cache_key );
+		wp_cache_delete( $this->entry_id, self::FORM_ENTRY_CACHE_GROUP );
 		$this->get( $this->entry_id );
 	}
 
@@ -2851,5 +2852,25 @@ class Forminator_Form_Entry_Model {
 		$count = $wpdb->get_var( $wpdb->prepare( $sql, $form_id, $data_key ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery -- false positive
 
 		return $count;
+	}
+
+	/**
+	 * Delete form cache
+	 *
+	 * @param int $form_id Form ID.
+	 *
+	 * @return void
+	 */
+	public static function delete_form_entry_cache( int $form_id ): void {
+		// Delete cache for form count.
+		wp_cache_delete( $form_id, self::FORM_COUNT_CACHE_GROUP );
+
+		// Delete cache for payment count.
+		wp_cache_delete( 'live_payment_count_' . $form_id, self::FORM_COUNT_CACHE_GROUP );
+
+		if ( 'forminator_polls' === get_post_type( $form_id ) ) {
+			// Delete cache for polls entries.
+			wp_cache_delete( 'poll_entries_' . $form_id, self::FORM_ENTRY_CACHE_GROUP );
+		}
 	}
 }

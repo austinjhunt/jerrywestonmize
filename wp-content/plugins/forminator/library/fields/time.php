@@ -255,10 +255,10 @@ class Forminator_Time extends Forminator_Field {
 				if ( 'select' === $field_type ) {
 
 					$hours_data = array(
-						'name'       => $hour_id,
-						'id'         => self::get_field_id( $settings['form_id'] . '__field--' . $hour_id ),
-						'class'      => 'forminator-select2 time-hours ' . $has_limiter,
-						'data-field' => 'hours',
+						'name'             => $hour_id,
+						'id'               => self::get_field_id( $settings['form_id'] . '__field--' . $hour_id ),
+						'class'            => 'forminator-select2 time-hours ' . $has_limiter,
+						'data-field'       => 'hours',
 					);
 
 					if ( ! empty( $description ) ) {

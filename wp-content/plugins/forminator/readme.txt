@@ -3,10 +3,10 @@ Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
 Tested up to: 6.6
-Stable tag: 1.35.1
+Stable tag: 1.36.3
 Requires PHP: 7.4
-License: GPL v2
-License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+License: GPL v3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Best WordPress form builder plugin. Create contact forms, payment forms & order forms with 1000+ integrations.
 
@@ -225,6 +225,41 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 9. Allow simple drag and drop multi-file uploads for users.
 
 == Changelog ==
+
+
+= 1.36.3 ( 2024-10-25 ) =
+
+- Fix: Phone fields issue
+
+
+= 1.36.2 ( 2024-10-23 ) =
+
+- Fix: Remove development dependencies from the plugin
+
+
+= 1.36.1 ( 2024-10-21 ) =
+
+- Fix: Security improvements
+
+
+= 1.36.0 ( 2024-10-09 ) =
+
+- Enhancement: Update Google Sheets integration library.
+- Enhancement: Update phone number validation library.
+- Fix: Improve compatibility with the Paid Memberships Pro plugin.
+- Fix: Resolve issue where Forminator reCaptcha fails when both Defender 2FA and reCaptcha are enabled on login form.
+- Fix: Correct CSS syntax error causing LiteSpeed Cache plugin's UCSS to break.
+- Fix: Address field preview issue when using the Full Site Editor and the Gutenberg Forminator Form block.
+- Fix: Resolve signature field display issue in full-width mode.
+- Fix: Prevent blank page on poll submission when "Display Results" is enabled and rendering is done via AJAX.
+- Fix: Escape unescaped characters in participant email titles for quizzes with leads enabled.
+- Fix: Ensure special characters are correctly counted in textarea fields when a character limit is set.
+- Fix: Resolve issue where number fields with comma separators caused URL redirects to fail.
+- Fix: Address conflicts between field conditions when switching between options.
+- Fix: Correct template translation issues.
+- Fix: Ensure redirects work properly based on date conditions.
+- Fix: Resolve custom spacing issue in the "None" design style.
+- Fix: Apply security improvements.
 
 = 1.35.1 ( 2024-09-17 ) =
 

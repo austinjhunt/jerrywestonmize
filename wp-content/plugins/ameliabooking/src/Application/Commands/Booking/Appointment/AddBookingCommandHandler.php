@@ -142,7 +142,7 @@ class AddBookingCommandHandler extends CommandHandler
             /** @var AbstractUser $user */
             $user = $this->container->get('logged.in.user');
 
-            if ($user->getType() === AbstractUser::USER_ROLE_ADMIN) {
+            if ($user && $user->getType() === AbstractUser::USER_ROLE_ADMIN) {
                 $appointmentData['payment'] = null;
 
                 $appointmentData['isCabinetBooking'] = true;

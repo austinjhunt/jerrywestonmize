@@ -48,7 +48,7 @@ class BlockRendererHelper {
         __('Addresses in names are not permitted, please add your name instead.', 'mailpoet'),
       ];
       $rules['names'] = '[' . implode(',', array_map(function (string $errorMessage): string {
-        return htmlspecialchars((string)json_encode($errorMessage), ENT_QUOTES);
+        return $this->wp->escAttr('"' . $errorMessage . '"');
       }, $errorMessages)) . ']';
     }
 
@@ -60,7 +60,7 @@ class BlockRendererHelper {
       $rules['required-message'] = __('Please select a list.', 'mailpoet');
     }
 
-    if (!empty($block['params']['required'])) {
+    if (static::getFieldIsRequired($block)) {
       $rules['required'] = true;
       $rules['required-message'] = __('This field is required.', 'mailpoet');
     }
@@ -75,30 +75,29 @@ class BlockRendererHelper {
       }
     }
 
-    if (in_array($block['type'], ['radio', 'checkbox'])) {
-      $rules['group'] = 'custom_field_' . $blockId;
-      $rules['required-message'] = __('This field is required.', 'mailpoet');
-    }
-
-    if ($block['type'] === 'date') {
+    if (in_array($block['type'], ['radio', 'checkbox', 'date'])) {
       $rules['group'] = 'custom_field_' . $blockId;
     }
-
-    $validation = [];
 
     $rules = array_merge($rules, $extraRules);
 
-    if (!empty($rules)) {
-      $rules = array_unique($rules);
-      foreach ($rules as $rule => $value) {
-        if (is_bool($value)) {
-          $value = ($value) ? 'true' : 'false';
-        }
-        // We need to use single quotes because we need to pass array of strings as a parameter for custom validation
-        if ($rule === 'names') {
-          $validation[] = 'data-parsley-' . $rule . '=\'' . $value . '\'';
-        } else {
-          $validation[] = 'data-parsley-' . $rule . '="' . $value . '"';
+    if (empty($rules)) {
+      return '';
+    }
+
+    $validation = [];
+    $rules = array_unique($rules);
+    foreach ($rules as $rule => $value) {
+      if (is_bool($value)) {
+        $value = ($value) ? 'true' : 'false';
+      }
+      // We need to use single quotes because we need to pass array of strings as a parameter for custom validation
+      if ($rule === 'names') {
+        $validation[] = 'data-parsley-' . $rule . '=\'' . $this->wp->wpKsesPost($value) . '\''; // The value has been escaped above.
+      } else {
+        $validation[] = 'data-parsley-' . $this->wp->escAttr($rule) . '="' . $this->wp->escAttr($this->wp->wpKsesPost($value)) . '"';
+        if ($rule === 'required') {
+          $validation[] = 'required aria-required="true"';
         }
       }
     }
@@ -112,6 +111,15 @@ class BlockRendererHelper {
     if (
       isset($block['params']['hide_label'])
       && $block['params']['hide_label']
+    ) {
+      return $html;
+    }
+
+    // If the label is displayed within the field,
+    // we'll use aria-label instead of a label element
+    if (
+      isset($block['params']['label_within'])
+      && $block['params']['label_within']
     ) {
       return $html;
     }
@@ -131,23 +139,16 @@ class BlockRendererHelper {
     ) {
       $labelClass = 'class="mailpoet_' . $block['type'] . '_label" ';
 
-      if (
-        isset($block['params']['label_within'])
-        && $block['params']['label_within']
-      ) {
-        $labelClass = 'class="mailpoet-screen-reader-text" ';
-      }
-
       $html .= '<label '
         . $forId
         . $labelClass
         . $this->renderFontStyle($formSettings, $block['styles'] ?? [])
         . ($automationId ? " $automationId" : '')
         . '>';
-      $html .= htmlspecialchars($block['params']['label']);
+      $html .= static::getFieldLabel($block);
 
-      if (isset($block['params']['required']) && $block['params']['required']) {
-        $html .= ' <span class="mailpoet_required">*</span>';
+      if (static::getFieldIsRequired($block)) {
+        $html .= ' <span class="mailpoet_required" aria-hidden="true">*</span>';
       }
 
       $html .= '</label>';
@@ -175,10 +176,10 @@ class BlockRendererHelper {
         . $labelClass
         . $this->renderFontStyle($formSettings, $block['styles'] ?? [])
         . '>';
-      $html .= htmlspecialchars($block['params']['label']);
+      $html .= static::getFieldLabel($block);
 
-      if (isset($block['params']['required']) && $block['params']['required']) {
-        $html .= ' <span class="mailpoet_required">*</span>';
+      if (static::getFieldIsRequired($block)) {
+        $html .= ' <span class="mailpoet_required" aria-hidden="true">*</span>';
       }
 
       $html .= '</legend>';
@@ -205,24 +206,25 @@ class BlockRendererHelper {
       isset($block['params']['label_within'])
       && $block['params']['label_within']
     ) {
-      // display only label
-      $html .= ' placeholder="';
-      $html .= static::getFieldLabel($block);
-      // add an asterisk if it's a required field
-      if (isset($block['params']['required']) && $block['params']['required']) {
-        $html .= ' *';
+      $label = $this->wp->escAttr(static::getFieldLabel($block));
+      if (static::getFieldIsRequired($block)) {
+        $label .= ' *';
       }
-      $html .= '" ';
+      // Some screen readers don't read placeholders, so we need to add aria-label
+      // but to prevent reading it twice, they need to be the same (including *)
+      $html .= ' placeholder="' . $label . '"';
+      $html .= ' aria-label="' . $label . '" ';
     }
     return $html;
   }
 
   // return field name depending on block data
   public function getFieldName(array $block = []): string {
-    if ((int)$block['id'] > 0) {
-      return 'cf_' . $block['id'];
+    $blockId = $this->wp->escAttr($block['id']);
+    if ((int)$blockId > 0) {
+      return 'cf_' . $blockId;
     } elseif (isset($block['params']['obfuscate']) && !$block['params']['obfuscate']) {
-      return $block['id'];
+      return $blockId;
     } else {
       return $this->fieldNameObfuscator->obfuscate($block['id']);//obfuscate field name for spambots
     }

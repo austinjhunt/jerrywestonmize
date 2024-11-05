@@ -411,29 +411,31 @@
 		return url(value, element) || url('http://' + value, element);
 	});
 	$.validator.addMethod("forminatorPhoneNational", function ( value, element ) {
-		var phone = $( element );
-		if ( !phone.data('required') && value === '+' +phone.intlTelInput( 'getSelectedCountryData' ).dialCode ) {
+		var phone = intlTelInput.getInstance( element );
+		var elem  = $( element );
+		if ( !elem.data('required') && value === '+' +phone.getSelectedCountryData().dialCode ) {
 			return true;
 		}
 
 		if (
-			'undefined' !== typeof phone.data( 'country' ) &&
-			phone.data( 'country' ).toLowerCase() !== phone.intlTelInput( 'getSelectedCountryData' ).iso2
+			'undefined' !== typeof elem.data( 'country' ) &&
+			elem.data( 'country' ).toLowerCase() !== phone.getSelectedCountryData().iso2
 		) {
 			return false;
 		}
 
 		// Uses intlTelInput to check if the number is valid.
-		return this.optional( element ) || phone.intlTelInput( 'isValidNumber' );
+		return this.optional( element ) || phone.isValidNumber();
 	});
 	$.validator.addMethod("forminatorPhoneInternational", function (value, element) {
+		const iti = intlTelInput.getInstance( element );
 		// check whether phone field is international and optional
-		if ( !$(element).data('required') && value === '+' +$(element).intlTelInput( 'getSelectedCountryData' ).dialCode ) {
+		if ( !$(element).data('required') && value === '+' +iti.getSelectedCountryData().dialCode ) {
 			return true;
 		}
 
 		// Uses intlTelInput to check if the number is valid.
-		return this.optional(element) || $(element).intlTelInput('isValidNumber');
+		return this.optional(element) || iti.isValidNumber();
 	});
 	$.validator.addMethod("dateformat", function (value, element, param) {
 		// dateITA method from jQuery Validator additional. Date method is deprecated and doesn't work for all formats
@@ -472,12 +474,26 @@
 		}
 		return this.optional(element) || check;
 	});
+
+	function forminatorRetrieveEditorText( value, element ) {
+		// Retrieve the text if it is an editor.
+		if (
+			$( element ).hasClass( 'wp-editor-area' ) &&
+			$( element ).hasClass( 'forminator-textarea' )
+		) {
+			value = $( '<div/>' ).html( value ).text();
+		}
+		return value;
+	}
+
 	$.validator.addMethod("maxwords", function (value, element, param) {
+		value = forminatorRetrieveEditorText( value, element );
 		return this.optional(element) || value.trim().split(/\s+/).length <= param;
 	});
 	// override core jquertvalidation maxlength. Ignore tags.
 	$.validator.methods.maxlength = function ( value, element, length ) {
 		value = value.replace( /<[^>]*>/g, '' );
+		value = forminatorRetrieveEditorText( value, element );
 
 		if ( value.length > length ) {
 			return false;

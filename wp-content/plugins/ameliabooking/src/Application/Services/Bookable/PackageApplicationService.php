@@ -270,7 +270,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
                 /** @var CustomerBooking $customerBooking */
                 foreach ($appointment->getBookings()->getItems() as $customerBooking) {
                     if ($customerBooking->getPackageCustomerService() &&
-                        $customerBooking->getPackageCustomerService()->getId()
+                        $customerBooking->getPackageCustomerService()->getId() &&
+                        $packageCustomerServices->keyExists($customerBooking->getPackageCustomerService()->getId()->getValue())
                     ) {
                         $customerBooking->setPackageCustomerService(
                             $packageCustomerServices->getItem(

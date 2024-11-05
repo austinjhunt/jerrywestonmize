@@ -22,10 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
       function () {
         if (document.body.classList.contains('woocommerce-checkout')) {
           clearInterval(ameliaCustomerInterval);
-          setAmeliaFieldValue('#email', ameliaCustomer.email);
-          setAmeliaFieldValue('#billing-first_name', ameliaCustomer.firstName);
-          setAmeliaFieldValue('#billing-last_name', ameliaCustomer.lastName);
-          setAmeliaFieldValue('#billing-phone', ameliaCustomer.phone);
+
+          Object.keys(ameliaCustomer).forEach((key) => {
+            setAmeliaFieldValue('#' + key, ameliaCustomer[key]);
+          })
         }
       }, 500
     )

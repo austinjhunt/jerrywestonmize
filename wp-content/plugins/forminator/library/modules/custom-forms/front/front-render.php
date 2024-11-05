@@ -450,7 +450,6 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			$style_version = '4.0.3';
 
 			$script_src     = forminator_plugin_url() . 'assets/js/library/intlTelInput.min.js';
-			$script_src_lib = forminator_plugin_url() . 'assets/js/library/libphonenumber.min.js';
 			$script_version = FORMINATOR_VERSION;
 
 			if ( $is_ajax_load ) {
@@ -460,11 +459,6 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 					'src'  => add_query_arg( 'ver', $style_version, $script_src ),
 					'on'   => '$',
 					'load' => 'intlTelInput',
-				);
-				$this->scripts['forminator-libphonenumber']  = array(
-					'src'  => add_query_arg( 'ver', $script_version, $script_src_lib ),
-					'on'   => '$',
-					'load' => 'libphonenumber',
 				);
 			}
 		}
@@ -618,7 +612,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 *
 	 * @param bool $is_ajax_load Is it loading via AJAX.
 	 **/
-	private function maybe_load_slider_styles( bool $is_ajax_load ): void {
+	private function maybe_load_slider_styles( bool $is_ajax_load ) : void {
 		if ( ! $this->has_field_type( 'slider' ) || 'none' !== $this->get_form_design() ) {
 			return;
 		}
@@ -2132,7 +2126,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 */
 	public function get_submit( $form_id, $render = true, $render_id = 0 ) {
 		$html       = '';
-		$nonce      = $this->nonce_field( 'forminator_submit_form', 'forminator_nonce' );
+		$nonce      = $this->nonce_field( 'forminator_submit_form' . $form_id, 'forminator_nonce' );
 		$post_id    = $this->get_post_id();
 		$has_paypal = $this->has_paypal();
 		$form_type  = isset( $this->model->settings['form-type'] ) ? $this->model->settings['form-type'] : '';
@@ -2281,7 +2275,10 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 */
 	protected static function get_css_prefix( $prefix, $properties, $slug ) {
 		if ( 'none' !== $properties['form-style'] ) {
-			$prefix .= '.forminator-design--' . $properties['form-style'] . ' ';
+			$form_style     = $properties['form-style'] ?? 'default';
+			$form_sub_style = $properties['form-substyle'] ?? 'default';
+			$form_style     = 'default' === $form_style ? $form_sub_style : $form_style;
+			$prefix        .= '.forminator-design--' . $form_style . ' ';
 		}
 		return $prefix;
 	}

@@ -32,11 +32,8 @@ class Heading {
   }
 
   private function renderTag(array $block): string {
-    $tag = 'h2';
-    if (isset($block['params']['level'])) {
-      $tag = 'h' . $block['params']['level'];
-    }
-    return $tag;
+    $level = isset($block['params']['level']) ? (int)$block['params']['level'] : 2;
+    return ($level < 1 || $level > 6) ? 'h2' : 'h' . $level;
   }
 
   private function renderAttributes(array $block): array {
@@ -83,7 +80,7 @@ class Heading {
 
   private function renderAnchor(array $block): string {
     return 'id="'
-      . $block['params']['anchor']
+      . $this->wp->escAttr($block['params']['anchor'])
       . '"';
   }
 

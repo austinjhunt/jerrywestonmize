@@ -352,8 +352,6 @@ class Forminator_Core {
 				require_once ABSPATH . 'wp-admin/includes/template.php';
 			}
 			/* @noinspection PhpIncludeInspection */
-			include_once forminator_plugin_dir() . 'library/model/class-form-entries-list-table.php';
-			/* @noinspection PhpIncludeInspection */
 			include_once forminator_plugin_dir() . 'library/mixpanel/class-mixpanel.php';
 		}
 

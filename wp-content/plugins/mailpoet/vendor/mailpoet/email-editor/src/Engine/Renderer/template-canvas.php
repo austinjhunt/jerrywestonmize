@@ -15,7 +15,8 @@ if (!defined('ABSPATH')) exit;
  <!-- Forced Styles -->
 </head>
 <body>
- <div class="email_layout_wrapper">
+ <!--[if mso | IE]><table align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" width="<?php echo esc_attr($layout['contentSize']); ?>" style="width:<?php echo esc_attr($layout['contentSize']); ?>"><tr><td><![endif]-->
+ <div class="email_layout_wrapper" style="max-width: <?php echo esc_attr($layout['contentSize']); ?>">
  <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
  <tbody>
  <tr>
@@ -31,5 +32,6 @@ if (!defined('ABSPATH')) exit;
  </tbody>
  </table>
  </div>
+ <!--[if mso | IE]></td></tr></table><![endif]-->
 </body>
 </html>

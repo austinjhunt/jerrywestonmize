@@ -79,7 +79,7 @@ class SuccessfulBookingCommandHandler extends CommandHandler
             'customer' => $command->getField('customer'),
             'paymentId' => $command->getField('paymentId'),
             'packageCustomerId' => $command->getField('packageCustomerId'),
-            'isPackageAppointment' => $command->getFields()['isPackageAppointment']
+            'isPackageAppointment' => !empty($command->getFields()['isPackageAppointment'])
         ];
 
         $resultData = apply_filters('amelia_before_post_booking_actions_filter', $resultData);

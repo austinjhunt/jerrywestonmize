@@ -9008,6 +9008,20 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
   -webkit-transform: none !important;
           transform: none !important; }
 
+.customize-control[id*="customize-control-dummy_control"] {
+  display: none !important; }
+
+#accordion-section-general_site_typography .accordion-trigger,
+#accordion-section-general_site_multilanguage .accordion-trigger,
+#accordion-section-templates .accordion-trigger,
+#accordion-section-general_site_spacing .accordion-trigger,
+#accordion-section-general_site_effects .accordion-trigger,
+#accordion-section-colibri_wpmu_recommended_security .accordion-trigger,
+#accordion-section-colibri_wpmu_recommended_performance .accordion-trigger,
+#accordion-section-general_site_google_fonts .accordion-trigger,
+#accordion-section-general_site_colors .accordion-trigger {
+  pointer-events: none; }
+
 .h-row {
   -webkit-box-sizing: border-box;
           box-sizing: border-box; }

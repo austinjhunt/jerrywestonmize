@@ -5,7 +5,7 @@ namespace MailPoet\WooCommerce;
 if (!defined('ABSPATH')) exit;
 
 
-use Automattic\WooCommerce\Admin\API\Reports\Customers\Stats\Query;
+use Automattic\WooCommerce\Admin\API\Reports\Customers\Stats\DataStore;
 use MailPoet\DI\ContainerWrapper;
 use MailPoet\RuntimeException;
 use MailPoet\WP\Functions as WPFunctions;
@@ -25,7 +25,7 @@ class Helper {
   }
 
   public function getWooCommerceVersion() {
-    return $this->isWooCommerceActive() ? get_plugin_data(WP_PLUGIN_DIR . '/woocommerce/woocommerce.php')['Version'] : null;
+    return $this->isWooCommerceActive() ? get_plugin_data(WP_PLUGIN_DIR . '/woocommerce/woocommerce.php', false, false)['Version'] : null;
   }
 
   public function getPurchaseStates(): array {
@@ -151,14 +151,14 @@ class Helper {
   }
 
   public function getCustomersCount(): int {
-    if (!$this->isWooCommerceActive() || !class_exists(Query::class)) {
+    if (!$this->isWooCommerceActive() || !class_exists(DataStore::class)) {
       return 0;
     }
-    $query = new Query([
+
+    $dataStore = new DataStore();
+    $result = (array)$dataStore->get_data([
       'fields' => ['customers_count'],
     ]);
-    // Query::get_data declares it returns array but the underlying DataStore returns stdClass
-    $result = (array)$query->get_data();
     return isset($result['customers_count']) ? intval($result['customers_count']) : 0;
   }
 

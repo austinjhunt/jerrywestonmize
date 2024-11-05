@@ -190,8 +190,8 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 				foreach ( $header_fields as $column_name => $header_field ) {
 					$lead_column_name = explode( '|', $column_name );
 					if ( self::GSHEET_DATE_COLUMN_NAME === $column_name ) {
-						$value     = new Forminator_Google_Service_Sheets_ExtendedValue();
-						$cell_data = new Forminator_Google_Service_Sheets_CellData();
+						$value     = new ForminatorGoogleAddon\Google\Service\Sheets\ExtendedValue();
+						$cell_data = new ForminatorGoogleAddon\Google\Service\Sheets\CellData();
 
 						// only once.
 						$date_value = 0 === $i ? $date : '';
@@ -199,20 +199,20 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 						$cell_data->setUserEnteredValue( $value );
 						$values[] = $cell_data;
 					} elseif ( self::GSHEET_QUESTION_COLUMN_NAME === $column_name ) {
-						$value     = new Forminator_Google_Service_Sheets_ExtendedValue();
-						$cell_data = new Forminator_Google_Service_Sheets_CellData();
+						$value     = new ForminatorGoogleAddon\Google\Service\Sheets\ExtendedValue();
+						$cell_data = new ForminatorGoogleAddon\Google\Service\Sheets\CellData();
 						$value->setStringValue( $answer['question'] );
 						$cell_data->setUserEnteredValue( $value );
 						$values[] = $cell_data;
 					} elseif ( self::GSHEET_ANSWER_COLUMN_NAME === $column_name ) {
-						$value     = new Forminator_Google_Service_Sheets_ExtendedValue();
-						$cell_data = new Forminator_Google_Service_Sheets_CellData();
+						$value     = new ForminatorGoogleAddon\Google\Service\Sheets\ExtendedValue();
+						$cell_data = new ForminatorGoogleAddon\Google\Service\Sheets\CellData();
 						$value->setStringValue( $answer['answer'] );
 						$cell_data->setUserEnteredValue( $value );
 						$values[] = $cell_data;
 					} elseif ( self::GSHEET_RESULT_COLUMN_NAME === $column_name ) {
-						$value     = new Forminator_Google_Service_Sheets_ExtendedValue();
-						$cell_data = new Forminator_Google_Service_Sheets_CellData();
+						$value     = new ForminatorGoogleAddon\Google\Service\Sheets\ExtendedValue();
+						$cell_data = new ForminatorGoogleAddon\Google\Service\Sheets\CellData();
 
 						// only once for nowrong.
 						$result_value = $answer['result'];
@@ -242,16 +242,16 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 
 						forminator_addon_maybe_log( __METHOD__, $field_type, $meta_value );
 
-						$value       = new Forminator_Google_Service_Sheets_ExtendedValue();
-						$cell_data   = new Forminator_Google_Service_Sheets_CellData();
+						$value       = new ForminatorGoogleAddon\Google\Service\Sheets\ExtendedValue();
+						$cell_data   = new ForminatorGoogleAddon\Google\Service\Sheets\CellData();
 						$field_value = 0 === $i ? $meta_value : '';
 						$value->setStringValue( $field_value );
 						$cell_data->setUserEnteredValue( $value );
 						$values[] = $cell_data;
 					} else {
 						// unknown column, set empty.
-						$value     = new Forminator_Google_Service_Sheets_ExtendedValue();
-						$cell_data = new Forminator_Google_Service_Sheets_CellData();
+						$value     = new ForminatorGoogleAddon\Google\Service\Sheets\ExtendedValue();
+						$cell_data = new ForminatorGoogleAddon\Google\Service\Sheets\CellData();
 						$value->setStringValue( '' );
 						$cell_data->setUserEnteredValue( $value );
 						$values[] = $cell_data;
@@ -259,17 +259,17 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 				}
 
 				// Build the RowData.
-				$row_data = new Forminator_Google_Service_Sheets_RowData();
+				$row_data = new ForminatorGoogleAddon\Google\Service\Sheets\RowData();
 				$row_data->setValues( $values );
 
 				// Prepare the request.
-				$append_request = new Forminator_Google_Service_Sheets_AppendCellsRequest();
+				$append_request = new ForminatorGoogleAddon\Google\Service\Sheets\AppendCellsRequest();
 				$append_request->setSheetId( $worksheet_id );
 				$append_request->setRows( $row_data );
 				$append_request->setFields( 'userEnteredValue' );
 
 				// Set the request.
-				$request = new Forminator_Google_Service_Sheets_Request();
+				$request = new ForminatorGoogleAddon\Google\Service\Sheets\Request();
 				$request->setAppendCells( $append_request );
 
 				// Add the request to the requests array.
@@ -281,7 +281,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 			}
 
 			// Prepare the update.
-			$batch_update_request = new Forminator_Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
+			$batch_update_request = new ForminatorGoogleAddon\Google\Service\Sheets\BatchUpdateSpreadsheetRequest(
 				array(
 					'requests' => $requests,
 				)
@@ -289,7 +289,8 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 
 			$google_client = $this->addon->get_google_client();
 			$google_client->setAccessToken( $this->addon->get_client_access_token() );
-			$spreadsheet_service = new Forminator_Google_Service_Sheets( $google_client );
+			$google_client       = $this->addon->refresh_token_if_expired( $google_client );
+			$spreadsheet_service = new ForminatorGoogleAddon\Google\Service\Sheets( $google_client );
 			$spreadsheet_service->spreadsheets->batchUpdate( $connection_settings['file_id'], $batch_update_request );
 
 			if ( $google_client->getAccessToken() !== $this->addon->get_client_access_token() ) {
@@ -304,7 +305,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 				'description'     => esc_html__( 'Successfully send data to Google Sheets', 'forminator' ),
 			);
 
-		} catch ( Forminator_Google_Exception $e ) {
+		} catch ( ForminatorGoogleAddon\Google\Exception $e ) {
 			forminator_addon_maybe_log( __METHOD__, 'Failed to Send to Google Sheets' );
 
 			return array(
@@ -349,8 +350,9 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 
 		$google_client = $this->addon->get_google_client();
 		$google_client->setAccessToken( $this->addon->get_client_access_token() );
+		$google_client = $this->addon->refresh_token_if_expired( $google_client );
 
-		$spreadsheet_service = new Forminator_Google_Service_Sheets( $google_client );
+		$spreadsheet_service = new ForminatorGoogleAddon\Google\Service\Sheets( $google_client );
 		$spreadsheet         = $spreadsheet_service->spreadsheets->get( $file_id );
 		$sheets              = $spreadsheet->getSheets();
 		$sheet_key           = false;
@@ -440,7 +442,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 
 				// increment for next usage.
 				++$column_number;
-				$update_body = new Forminator_Google_Service_Sheets_ValueRange();
+				$update_body = new ForminatorGoogleAddon\Google\Service\Sheets\ValueRange();
 				$update_body->setRange( $new_range );
 				$update_body->setValues( array( array( $expected_header_value ) ) );
 				$update_bodies[] = $update_body;
@@ -452,7 +454,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 					$header_fields[ $required_header_column ]['value'] = $expected_header_value;
 
 					// update sheet.
-					$update_body = new Forminator_Google_Service_Sheets_ValueRange();
+					$update_body = new ForminatorGoogleAddon\Google\Service\Sheets\ValueRange();
 					$update_body->setRange( $header_field['range'] );
 					$update_body->setValues( array( array( $expected_header_value ) ) );
 					$update_bodies[] = $update_body;
@@ -464,46 +466,46 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 		$total_column_needed = $columns_filled + $new_column_count;
 		$new_column_needed   = $total_column_needed - $sheet_column_count;
 		if ( $new_column_needed > 0 ) {
-			$dimension_range = new Forminator_Google_Service_Sheets_DimensionRange();
+			$dimension_range = new ForminatorGoogleAddon\Google\Service\Sheets\DimensionRange();
 			$dimension_range->setSheetId( $worksheet_id );
 			$dimension_range->setDimension( 'COLUMNS' );
 			$dimension_range->setStartIndex( $sheet_column_count );
 			$dimension_range->setEndIndex( $total_column_needed );
 
-			$insert_dimension = new Forminator_Google_Service_Sheets_InsertDimensionRequest();
+			$insert_dimension = new ForminatorGoogleAddon\Google\Service\Sheets\InsertDimensionRequest();
 			$insert_dimension->setRange( $dimension_range );
 			$insert_dimension->setInheritFromBefore( true );
 
-			$request = new Forminator_Google_Service_Sheets_Request();
+			$request = new ForminatorGoogleAddon\Google\Service\Sheets\Request();
 			$request->setInsertDimension( $insert_dimension );
 
-			$request_body = new Forminator_Google_Service_Sheets_BatchUpdateSpreadsheetRequest();
+			$request_body = new ForminatorGoogleAddon\Google\Service\Sheets\BatchUpdateSpreadsheetRequest();
 			$request_body->setRequests( array( $request ) );
 
 			$spreadsheet_service->spreadsheets->batchUpdate( $file_id, $request_body );
 		}
 		if ( ! empty( $update_bodies ) ) {
-			$request_body = new Forminator_Google_Service_Sheets_BatchUpdateValuesRequest();
+			$request_body = new ForminatorGoogleAddon\Google\Service\Sheets\BatchUpdateValuesRequest();
 			$request_body->setData( $update_bodies );
 			$request_body->setValueInputOption( 'RAW' );
 			$spreadsheet_service->spreadsheets_values->batchUpdate( $file_id, $request_body );
 		}
 
-		$grid_properties = new Forminator_Google_Service_Sheets_GridProperties();
+		$grid_properties = new ForminatorGoogleAddon\Google\Service\Sheets\GridProperties();
 		$grid_properties->setFrozenRowCount( 1 );
 
-		$sheet_properties = new Forminator_Google_Service_Sheets_SheetProperties();
+		$sheet_properties = new ForminatorGoogleAddon\Google\Service\Sheets\SheetProperties();
 		$sheet_properties->setSheetId( $worksheet_id );
 		$sheet_properties->setGridProperties( $grid_properties );
 
-		$update_properties = new Forminator_Google_Service_Sheets_UpdateSheetPropertiesRequest();
+		$update_properties = new ForminatorGoogleAddon\Google\Service\Sheets\UpdateSheetPropertiesRequest();
 		$update_properties->setProperties( $sheet_properties );
 		$update_properties->setFields( 'gridProperties(frozenRowCount)' );
 
-		$request = new Forminator_Google_Service_Sheets_Request();
+		$request = new ForminatorGoogleAddon\Google\Service\Sheets\Request();
 		$request->setUpdateSheetProperties( $update_properties );
 
-		$request_body = new Forminator_Google_Service_Sheets_BatchUpdateSpreadsheetRequest();
+		$request_body = new ForminatorGoogleAddon\Google\Service\Sheets\BatchUpdateSpreadsheetRequest();
 		$request_body->setRequests( array( $request ) );
 
 		$spreadsheet_service->spreadsheets->batchUpdate( $file_id, $request_body );

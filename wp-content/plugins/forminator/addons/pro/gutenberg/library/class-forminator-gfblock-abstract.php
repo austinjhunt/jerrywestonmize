@@ -39,7 +39,7 @@ abstract class Forminator_GFBlock_Abstract {
 	 */
 	public function init() {
 		// Register block.
-		add_action( 'init', array( $this, 'register_block' ), 5 );
+		add_action( 'init', array( $this, 'register_block' ), 6 );
 
 		// Register preview REST API.
 		add_action( 'rest_api_init', array( $this, 'block_preview_api' ) );
@@ -58,12 +58,26 @@ abstract class Forminator_GFBlock_Abstract {
 	 * @since 1.0 Gutenberg Integration
 	 */
 	public function register_block() {
-		register_block_type(
-			'forminator/' . $this->get_slug(),
-			array(
-				'render_callback' => array( $this, 'render_block' ),
-			)
-		);
+		global $pagenow;
+		if ( is_admin() && 'site-editor.php' === $pagenow ) {
+			// Load block scripts.
+			$this->load_assets();
+
+			register_block_type(
+				'forminator/' . $this->get_slug(),
+				array(
+					'editor_style'    => array(
+						'forminator-ui-icons',
+						'forminator-ui-utilities',
+						'forminator-ui-grid-open',
+						'forminator-ui-grid-enclosed',
+						'forminator-ui',
+					),
+					'script'          => array( 'forminator-front-scripts' ),
+					'render_callback' => array( $this, 'render_block' ),
+				)
+			);
+		}
 	}
 
 	/**

@@ -246,7 +246,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 				'form_id'   => self::$module_id,
 				'render_id' => $post_data['render_id'],
 			),
-			$post_data['_wp_http_referer']
+			forminator_get_current_url()
 		);
 		$url = apply_filters( 'forminator_poll_submit_url', $url, self::$module_id );
 

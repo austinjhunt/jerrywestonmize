@@ -61,7 +61,7 @@ class GetValidCouponCommandHandler extends CommandHandler
 
         /** @var Customer $user */
         $user = ($userData['firstName'] && $userData['lastName']) ?
-            $customerAS->getNewOrExistingCustomer($command->getField('user'), $result) : null;
+            $customerAS->getNewOrExistingCustomer($command->getField('user'), $result, false) : null;
 
         if ($result->getResult() === CommandResult::RESULT_ERROR) {
             return $result;

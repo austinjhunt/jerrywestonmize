@@ -507,7 +507,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 		if ( isset( $query_args['code'] ) ) {
 			try {
 				$google_client = $this->get_google_client();
-				$google_client->authenticate( $query_args['code'] );
+				$google_client->fetchAccessTokenWithAuthCode( $query_args['code'] );
 				$token = $google_client->getAccessToken();
 				if ( empty( $token ) ) {
 					throw new Forminator_Integration_Exception( esc_html__( 'Failed to get token', 'forminator' ) );
@@ -534,38 +534,53 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	}
 
 	/**
+	 * Refresh expired token
+	 *
+	 * @param ForminatorGoogleAddon\Google\Client $google_client Google client.
+	 * @return ForminatorGoogleAddon\Google\Client
+	 */
+	public function refresh_token_if_expired( $google_client ) {
+		if ( $google_client->isAccessTokenExpired() ) {
+			$client_access_token = $this->get_client_access_token();
+			if ( ! empty( $client_access_token ) && is_string( $client_access_token ) ) {
+				// Backward compatible.
+				$client_access_token = json_decode( $client_access_token, true );
+			}
+			$google_client->fetchAccessTokenWithRefreshToken( $client_access_token['refresh_token'] );
+		}
+		return $google_client;
+	}
+
+	/**
 	 * Get Forminator_Google_Client Object
 	 *
 	 * @since 1.0 Google Sheets Integration
-	 * @return Forminator_Google_Client
+	 * @return ForminatorGoogleAddon\Google\Client
 	 */
 	public function get_google_client() {
-		spl_autoload_register( 'forminator_addon_googlesheet_google_api_client_autoload' );
 		$redirect_url  = forminator_addon_integration_section_admin_url( $this, 'authorize', false );
 		$client_id     = $this->get_client_id();
 		$client_secret = $this->get_client_secret();
 		$scopes        = array(
-			Forminator_Google_Service_Sheets::SPREADSHEETS,
-			Forminator_Google_Service_Sheets::DRIVE,
+			ForminatorGoogleAddon\Google\Service\Sheets::SPREADSHEETS,
+			ForminatorGoogleAddon\Google\Service\Sheets::DRIVE,
 		);
 
-		$config = new Forminator_Google_Config();
-		$config->setLoggerClass( 'Forminator_Wp_Googlesheet_Client_Logger' );
-		$google_client = new Forminator_Google_Client( $config );
+		$google_client = new ForminatorGoogleAddon\Google\Client();
 		$google_client->setApplicationName( esc_html__( 'Forminator Pro', 'forminator' ) );
 		$google_client->setClientId( $client_id );
 		$google_client->setClientSecret( $client_secret );
 		$google_client->setScopes( $scopes );
 		$google_client->setRedirectUri( $redirect_url );
 		$google_client->setAccessType( 'offline' );
-		$google_client->setApprovalPrompt( 'force' );
+		$google_client->setPrompt( 'consent' );
 
 		/**
 		 * Filter Google API Client used through out cycle
 		 *
 		 * @since 1.2
 		 *
-		 * @param Forminator_Google_Client $google_client
+		 * @param ForminatorGoogleAddon\Google\Client $google_client
 		 * @param string        $client_id
 		 * @param string        $client_secret
 		 * @param array         $scopes

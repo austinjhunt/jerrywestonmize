@@ -1327,7 +1327,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 $params[$param] = $value;
             }
 
-            $whereOr[] = 'a.serviceId IN (' . implode(', ', $queryServices) . ')';
+            $where[] = 'a.serviceId IN (' . implode(', ', $queryServices) . ')';
         }
 
         if (!empty($criteria['providers'])) {
@@ -1341,7 +1341,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 $params[$param] = $value;
             }
 
-            $whereOr[] = 'a.providerId IN (' . implode(', ', $queryProviders) . ')';
+            $where[] = 'a.providerId IN (' . implode(', ', $queryProviders) . ')';
         }
 
         $bookingsJoin = "INNER JOIN {$this->bookingsTable} cb ON cb.appointmentId = a.id";
@@ -1461,6 +1461,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
             }
         }
 
+        $whereOr = [];
         if (!empty($criteria['services'])) {
             $queryServices = [];
 
@@ -1500,7 +1501,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 $params[$param] = $value;
             }
 
-            $where[] = 'cb.customerId IN (' . implode(', ', $queryCustomers) . ')';
+            $whereOr[] = 'cb.customerId IN (' . implode(', ', $queryCustomers) . ')';
         }
 
         if (isset($criteria['customerId'])) {
@@ -1521,6 +1522,10 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
 
         $customerBookingJoin = !empty($criteria['customers']) || isset($criteria['customerId']) ?
             "INNER JOIN {$this->bookingsTable} cb ON cb.appointmentId = a.id" : '';
+
+        if (!empty($whereOr)) {
+            $where[] = '(' . implode(' OR ', $whereOr) . ')';
+        }
 
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 

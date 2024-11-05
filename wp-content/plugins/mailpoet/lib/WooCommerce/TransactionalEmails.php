@@ -28,7 +28,7 @@ class TransactionalEmails {
   private $woocommerceHelper;
 
   /** @var array */
-  private $emailHeadings;
+  private $emailHeadings = [];
 
   /** @var NewslettersRepository */
   private $newslettersRepository;
@@ -45,6 +45,9 @@ class TransactionalEmails {
     $this->template = $template;
     $this->woocommerceHelper = $woocommerceHelper;
     $this->newslettersRepository = $newslettersRepository;
+  }
+
+  public function setupEmailHeadings() {
     $this->emailHeadings = [
       'new_account' => [
         'option_name' => 'woocommerce_new_order_settings',
@@ -74,6 +77,10 @@ class TransactionalEmails {
   }
 
   public function getEmailHeadings() {
+    if (empty($this->emailHeadings)) {
+      $this->setupEmailHeadings();
+    }
+
     $values = [];
     foreach ($this->emailHeadings as $name => $heading) {
       $settings = $this->wp->getOption($heading['option_name']);

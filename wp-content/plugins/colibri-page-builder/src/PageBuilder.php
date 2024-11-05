@@ -305,6 +305,7 @@ class PageBuilder
 		add_filter('wp_editor_settings', array($this, 'wpEditorSettings'));
 		add_filter('the_editor', array($this, 'maintainablePageEditor'));
 		do_action('colibri_page_builder/ready', $this);
+        add_action('wp_head', array($this, 'addGlobalColorsCssVars'));
 
 		ThemeHooks::prefixed_add_filter('theme_plugins', function ($plugins) {
 
@@ -323,7 +324,6 @@ class PageBuilder
 
 		$this->addMaintainableMetaToRevision();
 
-
 		if (isset($_REQUEST['colibri_create_pages']) && colibri_user_can_customize()) {
 			if (!get_option('colibri_manual_create_pages', false)) {
 				$this->__createFrontPage();
@@ -331,6 +331,38 @@ class PageBuilder
 			}
 		}
 	}
+
+    public function addGlobalColorsCssVars() {
+        $colors_list = get_current_theme_data('colors', array (
+                '#03a9f4',
+            '#f79007',
+            '#00bf87',
+            '#6632ff',
+            '#FFFFFF',
+            '#000000',
+        ));
+        $color_variants_list = get_current_theme_data('colorVariants', [["#a6dcf4","#54c2f4","#03a9f4","#026e9f","#01334a"],["#f7d7ac","#f7b359","#f79007","#a25e05","#4d2d02"],["#7fbfac","#40bf9a","#00bf87","#006a4b","#00150f"],["#e5dcff","#a587ff","#6632ff","#4421aa","#221155"],["#ffffff","#cccccc","#999999","#666666","#333333"],["#cccccc","#999999","#666666","#333333","#000000"]]);
+        ob_start();
+        ?>
+            <style type="text/css">
+                body {
+                <?php
+                    foreach ($colors_list as $index => $color) {
+                        echo "--colibri-color-" . ($index + 1) . ": " . esc_attr($color). ';';
+                        if(!isset( $color_variants_list[$index])) {
+                            continue;
+                        }
+                        $variant_data = $color_variants_list[$index];
+                        foreach($variant_data as $variantIndex => $variantColor) {
+                           echo "--colibri-color-" . ($index + 1) . "--variant-". ($variantIndex+1).": " . esc_attr($variantColor). ';';
+                        }
+                    }
+                ?>
+                }
+                </style>
+        <?php
+        echo ob_get_clean();
+    }
 
 	public function checkNotifications()
 	{

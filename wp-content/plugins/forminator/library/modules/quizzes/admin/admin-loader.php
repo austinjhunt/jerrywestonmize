@@ -721,6 +721,11 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 			return;
 		}
 
+		$nonce = Forminator_Core::sanitize_text_field( 'create_nonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator_create_module' ) ) {
+			return;
+		}
+
 		// Get module name.
 		$name = Forminator_Core::sanitize_text_field( 'name' );
 
@@ -830,7 +835,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 				),
 				array(
 					'slug'             => 'notification-4567-8765',
-					'label'            => esc_html__( 'Participant\'s Notification', 'forminator' ),
+					'label'            => __( "Participant's Notification", 'forminator' ),
 					'email-recipients' => 'default',
 					'recipients'       => '{email-1}',
 					'email-subject'    => esc_html__( 'Your quiz result', 'forminator' ),

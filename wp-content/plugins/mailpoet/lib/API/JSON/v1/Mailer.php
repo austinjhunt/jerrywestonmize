@@ -13,16 +13,12 @@ use MailPoet\Mailer\MailerLog;
 use MailPoet\Mailer\MetaInfo;
 use MailPoet\Services\AuthorizedEmailsController;
 use MailPoet\Services\AuthorizedSenderDomainController;
-use MailPoet\Services\Bridge;
 use MailPoet\Settings\SettingsController;
 
 class Mailer extends APIEndpoint {
 
   /** @var AuthorizedEmailsController */
   private $authorizedEmailsController;
-
-  /** @var Bridge */
-  private $bridge;
 
   /** @var SettingsController */
   private $settings;
@@ -43,14 +39,12 @@ class Mailer extends APIEndpoint {
   public function __construct(
     AuthorizedEmailsController $authorizedEmailsController,
     SettingsController $settings,
-    Bridge $bridge,
     MailerFactory $mailerFactory,
     MetaInfo $mailerMetaInfo,
     AuthorizedSenderDomainController $senderDomainController
   ) {
     $this->authorizedEmailsController = $authorizedEmailsController;
     $this->settings = $settings;
-    $this->bridge = $bridge;
     $this->mailerFactory = $mailerFactory;
     $this->mailerMetaInfo = $mailerMetaInfo;
     $this->senderDomainController = $senderDomainController;
@@ -95,7 +89,7 @@ class Mailer extends APIEndpoint {
   }
 
   public function getAuthorizedEmailAddresses() {
-    $authorizedEmails = $this->bridge->getAuthorizedEmailAddresses();
+    $authorizedEmails = $this->authorizedEmailsController->getAuthorizedEmailAddresses();
     return $this->successResponse($authorizedEmails);
   }
 

@@ -231,6 +231,25 @@ function forminator_sui_scripts() {
 }
 
 /**
+ * Remove select2 script of PMPro on admin
+ *
+ * @since 1.36
+ */
+function forminator_remove_pmpro_scripts() {
+	if ( class_exists( 'PMPro_Field' ) ) {
+		$screen = get_current_screen();
+		if ( ! str_contains( $screen->id, 'pmpro' ) ) {
+			wp_deregister_script( 'pmpro_admin' );
+			wp_dequeue_script( 'pmpro_admin' );
+			wp_deregister_script( 'select2' );
+			wp_dequeue_script( 'select2' );
+			wp_deregister_style( 'select2' );
+			wp_dequeue_style( 'select2' );
+		}
+	}
+}
+
+/**
  * Enqueue common admin scripts
  *
  * @since 1.0
@@ -248,6 +267,9 @@ function forminator_common_admin_enqueue_scripts( $is_new_page = false ) {
 
 	// Load admin styles.
 	forminator_admin_enqueue_styles();
+
+	// Remove PMPro plugin scripts.
+	forminator_remove_pmpro_scripts();
 
 	// LOAD: Forminator UI – Select2.
 	wp_enqueue_script(
@@ -1347,7 +1369,7 @@ function forminator_reset_settings() {
 		$ids   = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( $ids ) {
 			foreach ( $ids as $id ) {
-				wp_cache_delete( $id, 'forminator_total_entries' );
+				Forminator_Form_Entry_Model::delete_form_entry_cache( $id );
 				wp_delete_post( $id );
 			}
 		}
@@ -1464,17 +1486,17 @@ function forminator_reset_plugin() {
 
 	if ( $max_entry_id && is_numeric( $max_entry_id ) && $max_entry_id > 0 ) {
 		for ( $i = 1; $i <= $max_entry_id; $i++ ) {
-			wp_cache_delete( $i, 'Forminator_Form_Entry_Model' );
+			wp_cache_delete( $i, Forminator_Form_Entry_Model::FORM_ENTRY_CACHE_GROUP );
 		}
 	}
 
 	$wpdb->query( "TRUNCATE {$wpdb->prefix}frmt_form_entry" );
 	$wpdb->query( "TRUNCATE {$wpdb->prefix}frmt_form_entry_meta" );
 
-	wp_cache_delete( 'all_form_types', 'forminator_total_entries' );
-	wp_cache_delete( 'custom-forms_form_type', 'forminator_total_entries' );
-	wp_cache_delete( 'poll_form_type', 'forminator_total_entries' );
-	wp_cache_delete( 'quizzes_form_type', 'forminator_total_entries' );
+	wp_cache_delete( 'all_form_types', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
+	wp_cache_delete( 'custom-forms_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
+	wp_cache_delete( 'poll_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
+	wp_cache_delete( 'quizzes_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
 
 	/**
 	 * Fires after Plugin reset
@@ -1883,4 +1905,43 @@ function forminator_recursive_array_search( $needle, $haystack ) {
 		}
 	}
 	return null; // Return null if the needle is not found.
+}
+
+/**
+ * Get Accessible user roles
+ *
+ * @return array
+ */
+function forminator_get_accessible_user_roles() {
+	// Get the current user object.
+	$current_user = wp_get_current_user();
+
+	// Check if user is logged in | Have access to create user.
+	if ( empty( $current_user ) || ! current_user_can( 'create_users' ) ) {
+		return array();
+	}
+
+	// Get roles.
+	$roles = get_editable_roles();
+
+	// Allow all roles if the user is a super admin or has the administrator role.
+	if ( ( is_multisite() && is_super_admin() ) || in_array( 'administrator', $current_user->roles, true ) ) {
+		return $roles;
+	}
+
+	// Allow all roles except `administrator` if the user has the `promote_users` capability.
+	if ( current_user_can( 'promote_users' ) ) {
+		if ( isset( $roles['administrator'] ) ) {
+			unset( $roles['administrator'] );
+		}
+	} else {
+		// Allow only the default role if the user does not have the `promote_users` capability.
+		$default_role = get_option( 'default_role', 'subscriber' );
+		if ( $roles[ $default_role ] ) {
+			$roles = array( $default_role => $roles[ $default_role ] );
+		} else {
+			$roles = array();
+		}
+	}
+	return $roles;
 }

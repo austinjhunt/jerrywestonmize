@@ -420,6 +420,11 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			return;
 		}
 
+		$nonce = Forminator_Core::sanitize_text_field( 'create_nonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator_create_module' ) ) {
+			return;
+		}
+
 		$slug = Forminator_Core::sanitize_text_field( 'template', 'blank' );
 		$name = Forminator_Core::sanitize_text_field( 'name' );
 
@@ -608,6 +613,14 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 
 		$settings = self::validate_settings( $template->settings );
 
+		// Validate User access and role in registration form.
+		if ( isset( $settings['form-type'] ) && 'registration' === $settings['form-type'] ) {
+			$validation_result = self::validate_registration_form_settings( $settings );
+			if ( is_wp_error( $validation_result ) ) {
+				return $validation_result;
+			}
+		}
+
 		$notifications = array();
 		if ( isset( $template->notifications ) ) {
 			$notifications = $template->notifications;
@@ -697,6 +710,31 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		wp_cache_delete( 'forminator_form_total_entries_draft', 'forminator_form_total_entries_draft' );
 
 		return $id;
+	}
+
+	/**
+	 * Validate registration form settings.
+	 *
+	 * @param array $settings Settings.
+	 * @return bool|WP_Error
+	 */
+	private static function validate_registration_form_settings( $settings ) {
+		if ( ! current_user_can( 'create_users' ) ) {
+			return new WP_Error( 'invalid_access', esc_html__( 'Invalid access', 'forminator' ) );
+		}
+		$roles = forminator_get_accessible_user_roles();
+		if ( isset( $settings['registration-user-role'] ) && 'fixed' === $settings['registration-user-role'] ) {
+			if ( isset( $settings['registration-role-field'] ) && ! isset( $roles[ $settings['registration-role-field'] ] ) ) {
+				return new WP_Error( 'invalid_user_role', esc_html__( 'Invalid user role', 'forminator' ) );
+			}
+		} elseif ( ! empty( $settings['user_role'] ) && is_array( $settings['user_role'] ) ) {
+			foreach ( $settings['user_role'] as $user_role ) {
+				if ( isset( $user_role['role'] ) && ! isset( $roles[ $user_role['role'] ] ) ) {
+					return new WP_Error( 'invalid_user_role', esc_html__( 'Invalid user role', 'forminator' ) );
+				}
+			}
+		}
+		return true;
 	}
 
 	/**

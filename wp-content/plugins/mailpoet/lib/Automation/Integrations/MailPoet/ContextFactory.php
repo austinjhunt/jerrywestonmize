@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\Config\ServicesChecker;
 use MailPoet\Segments\SegmentsRepository;
+use MailPoet\Services\AuthorizedEmailsController;
 use MailPoet\Services\AuthorizedSenderDomainController;
 use MailPoet\Services\Bridge;
 
@@ -23,16 +24,21 @@ class ContextFactory {
   /** @var AuthorizedSenderDomainController */
   private $authorizedSenderDomainController;
 
+  /** @var AuthorizedEmailsController */
+  private $authorizedEmailsController;
+
   public function __construct(
     SegmentsRepository $segmentsRepository,
     Bridge $bridge,
     ServicesChecker $servicesChecker,
-    AuthorizedSenderDomainController $authorizedSenderDomainController
+    AuthorizedSenderDomainController $authorizedSenderDomainController,
+    AuthorizedEmailsController $authorizedEmailsController
   ) {
     $this->segmentsRepository = $segmentsRepository;
     $this->servicesChecker = $servicesChecker;
     $this->bridge = $bridge;
     $this->authorizedSenderDomainController = $authorizedSenderDomainController;
+    $this->authorizedEmailsController = $authorizedEmailsController;
   }
 
   /** @return mixed[] */
@@ -51,7 +57,7 @@ class ContextFactory {
 
   private function getSenderDomainsConfig(): array {
     $senderDomainsConfig = $this->authorizedSenderDomainController->getContextDataForAutomations();
-    $senderDomainsConfig['authorizedEmails'] = $this->bridge->getAuthorizedEmailAddresses();
+    $senderDomainsConfig['authorizedEmails'] = $this->authorizedEmailsController->getAuthorizedEmailAddresses();
     return $senderDomainsConfig;
   }
 

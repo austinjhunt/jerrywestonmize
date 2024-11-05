@@ -267,6 +267,11 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 			return;
 		}
 
+		$nonce = Forminator_Core::sanitize_text_field( 'create_nonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator_create_module' ) ) {
+			return;
+		}
+
 		$name   = Forminator_Core::sanitize_text_field( 'name' );
 		$status = Forminator_Poll_Model::STATUS_DRAFT;
 

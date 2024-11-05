@@ -35,9 +35,13 @@ class FlexLayoutRenderer {
  return $outputHtml;
  }
  private function computeWidthsForFlexLayout(array $parsedBlock, SettingsController $settingsController, float $flexGap): array {
+ // When there is no parent width we can't compute widths so auto width will be used
+ if (!isset($parsedBlock['email_attrs']['width'])) {
+ return $parsedBlock['innerBlocks'] ?? [];
+ }
  $blocksCount = count($parsedBlock['innerBlocks']);
  $totalUsedWidth = 0; // Total width assuming items without set width would consume proportional width
- $parentWidth = $settingsController->parseNumberFromStringWithPixels($parsedBlock['email_attrs']['width'] ?? SettingsController::EMAIL_WIDTH);
+ $parentWidth = $settingsController->parseNumberFromStringWithPixels($parsedBlock['email_attrs']['width']);
  $innerBlocks = $parsedBlock['innerBlocks'] ?? [];
  foreach ($innerBlocks as $key => $block) {
  $blockWidthPercent = ($block['attrs']['width'] ?? 0) ? intval($block['attrs']['width']) : 0;

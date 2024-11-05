@@ -564,6 +564,7 @@
 						nationalMode: ('enabled' === is_national_phone) ? true : false,
 						initialCountry: 'undefined' !== typeof ( country ) ? country : 'us',
 						utilsScript: window.ForminatorFront.cform.intlTelInput_utils_script,
+						strictMode: true,
 					};
 
 					if ( 'undefined' !== typeof ( validation ) && 'standard' === validation ) {
@@ -574,10 +575,10 @@
 						args.autoHideDialCode = false;
 					}
 
-					var iti = $(this).intlTelInput(args);
+					var iti = window.intlTelInput(self, args);
 					if ( 'undefined' !== typeof ( validation )
 						&& 'international' === validation ) {
-						var dial_code = $(this).intlTelInput( 'getSelectedCountryData' ).dialCode,
+						var dial_code = iti.getSelectedCountryData().dialCode,
 							country_code = '+' + dial_code;
 						if ( country_code !== $(this).val() ) {
 							var phone_value = $(this).val().trim().replace( dial_code, '' ).replace( '+', '' );
@@ -589,34 +590,11 @@
 						// Reset country to default if changed and invalid previously.
 						$( this ).on( 'blur', function() {
 							if ( '' === $( self ).val() ) {
-								iti.intlTelInput( 'setCountry', country );
+								iti.setCountry( country );
 								form.validate().element( $( self ) );
 							}
 						});
 					}
-
-					// Use libphonenumber to format the telephone number.
-					$(this).on('input', function() {
-						var countryData = $( self ).intlTelInput( 'getSelectedCountryData' );
-						var regionCode = (countryData && countryData.iso2) ? countryData.iso2.toUpperCase() : '';
-
-						// return if no region code is present
-						if('' === regionCode) {
-							return
-						}
-
-						var phoneNumber = $(this).val();
-						var isValidLength = libphonenumber.validatePhoneNumberLength(phoneNumber, regionCode) !== 'TOO_LONG';
-
-						if(!isValidLength) {
-							// Prevent further typing when the number exceeds the maximum length
-							$(this).val(phoneNumber.slice(0, phoneNumber.length - 1));
-						} else {
-							var formatter = new libphonenumber.AsYouType(regionCode);
-							var formattedNumber = formatter.input(phoneNumber);
-							$(this).val(formattedNumber);
-						}
-					});
 
 					if ( ! is_material ) {
 						$(this).closest( '.forminator-field' ).find( 'div.iti' ).addClass( 'forminator-phone' );
@@ -967,16 +945,40 @@
 				$input.on('change keyup keydown', function (e) {
 					e.stopPropagation();
 					var $field = $(this).closest('.forminator-col'),
-					    $limit = $field.find('.forminator-description span'),
-							fieldVal = sanitize_text_field( $(this).val() )
+					    $limit = $field.find('.forminator-description span')
 					;
 
 					if ($limit.length) {
 						if ($limit.data('limit')) {
-							var field_value = fieldVal.replace( /<[^>]*>/g, '' );
 							if ($limit.data('type') !== "words") {
-								count = $( '<div>' + field_value + '</div>' ).text().length;
+								if ( $limit.data( 'editor' ) === 1 ) {
+									const content = $( this )
+											.val()
+											.replace( /<[^>]*>/g, '' ),
+										content_text = $( '<textarea/>' )
+											.html( content )
+											.text();
+									count = content_text.length;
+									const isCtrlPressed =
+											e.ctrlKey || e.metaKey; // Handle macOS Command key (metaKey).
+									const isSpecialKey =
+										[ 37, 38, 39, 40, 8, 46 ].indexOf(
+											e.keyCode
+										) !== -1;
+									// Allow to delete and backspace when limit is reached.
+									if (
+										count >= $limit.data( 'limit' ) &&
+										! isCtrlPressed &&
+										! isSpecialKey
+									) {
+										e.preventDefault();
+									}
+								} else {
+									count = $(this).val().length;
+								}
 							} else {
+								var fieldVal = sanitize_text_field( $(this).val() ),
+									field_value = fieldVal.replace( /<[^>]*>/g, '' );
 								count = field_value.trim().split(/\s+/).length;
 
 								// Prevent additional words from being added when limit is reached.
@@ -1603,6 +1605,13 @@
 			$field = $('#' + editor_id ).closest('.forminator-col')
 		;
 
+		// Event listener to handle switching between Visual and Text tabs
+		$( document ).on( 'click', '.wp-switch-editor', function () {
+			setTimeout( function () {
+				$field.find( '#' + editor_id ).trigger( 'change' );
+			}, 100 ); // Small timeout to ensure editor is ready when switching
+		} );
+
 		// trigger editor change to save value to textarea,
 		// default wp tinymce textarea update only triggered when submit
 		var count  = 0;
@@ -1629,6 +1638,40 @@
 				$field.find( '#' + editor_id ).valid();
 			}
 		});
+
+		// Prevent typing when maximum characters/words is reached.
+		editor.on( 'keydown', function ( e ) {
+			let editor_id = editor.id,
+				field = $( '#' + editor_id ).closest( '.forminator-col' ),
+				limit = field.find( '.forminator-description span' ),
+				content = editor.getContent().replace( /<[^>]*>/g, '' );
+			if ( limit.length ) {
+				if ( limit.data( 'limit' ) ) {
+					content = $( '<div/>' ).html( content ).text();
+					const maxLength = limit.data( 'limit' );
+					const isCtrlPressed = e.ctrlKey || e.metaKey; // Handle macOS Command key (metaKey).
+					const isSpecialKey =
+						[ 37, 38, 39, 40, 8, 46 ].indexOf( e.keyCode ) !== -1;
+					if ( limit.data( 'type' ) !== 'words' ) {
+						if (
+							content.length >= maxLength &&
+							! isCtrlPressed &&
+							! isSpecialKey &&
+							e.keyCode !== 13
+						) {
+							e.preventDefault(); // Prevent any further typing.
+						}
+					} else {
+						const numberOfWords = content
+							.trim()
+							.split( /\s+/ ).length;
+						if ( numberOfWords >= maxLength && e.which === 32 ) {
+							e.preventDefault(); // Prevent any further typing.
+						}
+					}
+				}
+			}
+		} );
 
 		// Make the visual editor and html editor the same height
 		if ( $( '#' + editor.id + '_ifr' ).is( ':visible' ) ) {
@@ -1716,7 +1759,7 @@
 	 */
 	function sanitize_text_field( string ) {
 		if ( typeof string === 'string') {
-			var str = String(string).replace(/[&\/\\#^+()$~%.'":*?<>{}!@]/g, '');
+			var str = String(string).replace(/<\/?[^>]+(>|$)/g, '');
 			return str.trim();
 		}
 

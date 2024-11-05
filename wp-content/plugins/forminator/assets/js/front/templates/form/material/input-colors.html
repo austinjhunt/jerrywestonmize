@@ -112,7 +112,7 @@
 		<?php } ?>
 	}
 
-	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input-with-icon:hover [class*="forminator-icon-"],
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input-with-icon:hover [class*="forminator-icon-"] {
 		<?php if ( forminator_array_value_exists( $properties, 'input-icon-hover' ) && !empty( $properties['input-icon-hover'] ) ) { ?>
 			color: <?php echo $properties['input-icon-hover']; ?>;
 		<?php } else { ?>
@@ -120,7 +120,7 @@
 		<?php } ?>
 	}
 
-	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-is_active .forminator-input-with-icon [class*="forminator-icon-"],
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-is_active .forminator-input-with-icon [class*="forminator-icon-"] {
 		<?php if ( forminator_array_value_exists( $properties, 'input-icon-focus' ) && !empty( $properties['input-icon-focus'] ) ) { ?>
 			color: <?php echo $properties['input-icon-focus']; ?>;
 		<?php } else { ?>
@@ -128,7 +128,7 @@
 		<?php } ?>
 	}
 
-	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-is_active .forminator-input-with-icon [class*="forminator-icon-"],
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-is_active .forminator-input-with-icon [class*="forminator-icon-"] {
 		<?php if ( forminator_array_value_exists( $properties, 'input-border-active' ) && !empty( $properties['input-border-active'] ) ) { ?>
 			border-color: <?php echo $properties['input-border-active'] ?>;
 		<?php } else { ?>

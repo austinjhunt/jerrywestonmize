@@ -150,7 +150,8 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		$body = trim( file_get_contents( 'php://input' ) );
 		$data = json_decode( $body, true );
 
-		if ( ! isset( $data['nonce'] ) || ! wp_verify_nonce( $data['nonce'], 'forminator_submit_form' ) ) {
+		$form_id = $data['form_id'] ?? '';
+		if ( ! isset( $data['nonce'] ) || ! wp_verify_nonce( $data['nonce'], 'forminator_submit_form' . $form_id ) ) {
 			wp_send_json_error( new WP_Error( 'invalid_code' ) );
 		}
 
@@ -306,6 +307,12 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			$captcha_user_response = '';
 
 			if ( isset( self::$prepared_data['g-recaptcha-response'] ) ) {
+				// Ignore CAPTCHA re-check (only for the v2 checkbox option) during two-factor authentication.
+				if ( isset( self::$module_settings['form-type'] ) && 'login' === self::$module_settings['form-type'] ) {
+					if ( ! empty( self::$prepared_data['auth_method'] ) && 'v2_checkbox' === self::$info['captcha_settings']['captcha_type'] ) {
+						return;
+					}
+				}
 				$captcha_user_response = self::$prepared_data['g-recaptcha-response'];
 			} elseif ( isset( self::$prepared_data['h-captcha-response'] ) ) {
 				$captcha_user_response = self::$prepared_data['h-captcha-response'];
@@ -1513,7 +1520,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	public function multiple_file_upload() {
 		$this->init_properties();
 
-		if ( ! isset( self::$prepared_data['nonce'] ) || ! wp_verify_nonce( self::$prepared_data['nonce'], 'forminator_submit_form' ) ) {
+		if ( ! isset( self::$prepared_data['nonce'] ) || ! wp_verify_nonce( self::$prepared_data['nonce'], 'forminator_submit_form' . self::$module_id ) ) {
 			wp_send_json_error( new WP_Error( 'invalid_code' ) );
 		}
 

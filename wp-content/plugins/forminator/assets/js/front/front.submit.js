@@ -76,12 +76,14 @@
 
 		removeCountryCode: function( form ) {
 			form.find('.forminator-field--phone').each(function() {
-				var phone_element = $(this);
-				if ( !phone_element.data('required') ) {
-					var dialCode = '+' + phone_element.intlTelInput( 'getSelectedCountryData' ).dialCode;
+				var phone_element = $(this),
+				    iti           = intlTelInput.getInstance(this);
+				if ( !phone_element.data('required') && iti ) {
+					var dialCode = '+' + iti.getSelectedCountryData().dialCode;
 					var currentInput = phone_element.val();
-					if (dialCode === currentInput)
+					if (dialCode === currentInput) {
 						phone_element.val('');
+					}
 				}
 			});
 		},
@@ -132,8 +134,21 @@
 				this.handle_submit_form_draft();
 			}
 
+			$( 'body' ).on(
+				'click',
+				'.forminator-authentication-box button[type="submit"]',
+				function ( e ) {
+					e.preventDefault();
+					const thisForm = $( this ).closest( 'form' );
+					thisForm.trigger(
+						'submit.frontSubmit',
+						'onSubmitAuthenticationBox'
+					);
+				}
+			);
+
 			$( 'body' ).off( 'forminator:preSubmit:paypal', this.settings.forminator_selector )
-					.on( 'forminator:preSubmit:paypal', this.settings.forminator_selector, function( e, $target_message ) { return self.processCaptcha( self, e, $target_message ); } );
+					.on( 'forminator:preSubmit:paypal', this.settings.forminator_selector, function( e, $target_message ) { return self.processCaptcha( self, e, $target_message, '' ); } );
 			$( 'body' ).off( 'submit.frontSubmit', this.settings.forminator_selector );
 			$( 'body' ).on( 'submit.frontSubmit', this.settings.forminator_selector, function ( e, submitter ) {
 
@@ -186,7 +201,7 @@
 				if ( self.$el.data( 'forminatorFrontPayment' ) && ! $saveDraft ) {
 					// Disable submit button right away to prevent multiple submissions
 					$this.find( '.forminator-button-submit' ).attr( 'disabled', true );
-					if ( false === self.processCaptcha( self, e, $target_message ) ) {
+					if ( false === self.processCaptcha( self, e, $target_message, submitter ) ) {
 						$this.find( '.forminator-button-submit' ).attr( 'disabled', false );
 						self.disable_form_submit( self, false );
 						return false;
@@ -208,7 +223,7 @@
 					}
 
 					if ( ! self.$el.data( 'forminatorFrontPayment' ) && ! $saveDraft ) {
-						if ( false === self.processCaptcha( self, e, $target_message ) ) {
+						if ( false === self.processCaptcha( self, e, $target_message, submitter ) ) {
 							self.disable_form_submit( self, false );
 							return false;
 						}
@@ -725,7 +740,7 @@
 			} );
 		},
 
-		processCaptcha: function( self, e, $target_message ) {
+		processCaptcha: function( self, e, $target_message, submitter ) {
 			var $captcha_field = self.$el.find('.forminator-g-recaptcha, .forminator-hcaptcha');
 
 			if ($captcha_field.length) {
@@ -737,6 +752,15 @@
 				// Recaptcha
 				if ( $captcha_field.hasClass( 'forminator-g-recaptcha' ) ) {
 					var captcha_widget  = $captcha_field.data( 'forminator-recapchta-widget' );
+
+					// Ignore CAPTCHA re-check (only for the v2 checkbox option) during two-factor authentication.
+					if (
+						( captcha_size === 'normal' ||
+							captcha_size === 'compact' ) &&
+						'onSubmitAuthenticationBox' === submitter
+					) {
+						return;
+					}
 
 					if ( 0 !== $captcha_field.children().length ) {
 						var $captcha_response = window.grecaptcha.getResponse( captcha_widget );
@@ -1061,6 +1085,7 @@
 				var ajaxData = {
 					action: 'forminator_reload_quiz',
 					pageId:	pageId,
+					moduleId: self.$el.find('input[name="form_id"]').val(),
 					nonce: self.$el.find('input[name="forminator_nonce"]').val()
 				};
 

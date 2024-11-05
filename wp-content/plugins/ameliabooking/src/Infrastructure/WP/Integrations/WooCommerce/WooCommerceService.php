@@ -1258,6 +1258,18 @@ class WooCommerceService
             $content = get_post(wc_get_page_id('checkout'))->post_content;
 
             if ($content && strpos($content, 'block') !== false) {
+                $checkoutData = apply_filters(
+                    'amelia_checkout_block_data',
+                    [
+                        'email'              => $wc_item['bookings'][0]['customer']['email'],
+                        'billing-first_name' => $wc_item['bookings'][0]['customer']['firstName'],
+                        'billing-last_name'  => $wc_item['bookings'][0]['customer']['lastName'],
+                        'billing-phone'      => $wc_item['bookings'][0]['customer']['phone'] ?: '',
+                    ],
+                    self::$container,
+                    $wc_item
+                );
+
                 wp_enqueue_script(
                     'amelia_wc_checkout_block',
                     AMELIA_URL . 'public/js/wc/checkout.js',
@@ -1269,7 +1281,7 @@ class WooCommerceService
                 wp_localize_script(
                     'amelia_wc_checkout_block',
                     'ameliaCustomer',
-                    $wc_item['bookings'][0]['customer']
+                    $checkoutData
                 );
             }
         }
@@ -1411,6 +1423,10 @@ class WooCommerceService
 
             $description = !empty($wcSettings['checkoutData'][$wc_item[self::AMELIA]['type']]) ?
                 trim($wcSettings['checkoutData'][$wc_item[self::AMELIA]['type']]) : '';
+
+            $description = str_replace('<!-- Content -->', '', $description);
+
+            $description = str_replace("\n", "", $description);
 
             if (!empty($wcSettings['checkoutData']['translations'][$wc_item[self::AMELIA]['type']])) {
                 $description = $helperService->getBookingTranslation(
@@ -2070,6 +2086,8 @@ class WooCommerceService
                 $labels = str_replace("\n\n<hr", '<hr', $labels);
                 $labels = str_replace("10px'>\n\n", "10px'>", $labels);
             }
+
+            $labels = str_replace("\n", '', $labels);
 
             $labels = str_replace('<p><br></p>', '<br>', $labels);
 
@@ -2969,6 +2987,7 @@ class WooCommerceService
             try {
                 if ((!$inspectRules || self::isValid($order->get_status(), $data) !== false) &&
                     !array_key_exists($key, self::$processedAmeliaItems) &&
+                    !empty($data) &&
                     !isset($data['processed'])
                 ) {
                     self::$processedAmeliaItems[$key] = true;

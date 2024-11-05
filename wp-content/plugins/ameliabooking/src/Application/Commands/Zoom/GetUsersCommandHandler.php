@@ -39,9 +39,11 @@ class GetUsersCommandHandler extends CommandHandler
         /** @var boolean $isCabinetPage */
         $isCabinetPage = $command->getPage() === 'cabinet';
 
-        /** @var AbstractUser $user */
-        $user = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
+        $user = null;
         if (!$command->getPermissionService()->currentUserCanRead(Entities::EMPLOYEES)) {
+            /** @var AbstractUser $user */
+            $user = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
+
             if (!$isCabinetPage || ($user === null || $user->getType() !== AbstractUser::USER_ROLE_PROVIDER)) {
                 throw new AccessDeniedException('You are not allowed to read users.');
             }

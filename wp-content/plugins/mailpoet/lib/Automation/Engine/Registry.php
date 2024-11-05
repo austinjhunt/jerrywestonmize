@@ -23,7 +23,7 @@ class Registry {
   private $templates;
 
   /** @var array<string, AutomationTemplateCategory> */
-  private $templateCategories;
+  private $templateCategories = [];
 
   /** @var array<string, Step> */
   private $steps = [];
@@ -58,7 +58,9 @@ class Registry {
   ) {
     $this->wordPress = $wordPress;
     $this->steps[$rootStep->getKey()] = $rootStep;
+  }
 
+  public function setupTemplateCategories(): void {
     $this->templateCategories = [
       'welcome' => new AutomationTemplateCategory('welcome', __('Welcome', 'mailpoet')),
       'abandoned-cart' => new AutomationTemplateCategory('abandoned-cart', __('Abandoned Cart', 'mailpoet')),
@@ -69,7 +71,9 @@ class Registry {
 
   public function addTemplate(AutomationTemplate $template): void {
     $category = $template->getCategory();
-    if (!isset($this->templateCategories[$category])) {
+    $templateCategories = $this->getTemplateCategories();
+
+    if (!isset($templateCategories[$category])) {
       throw InvalidStateException::create()->withMessage(
         sprintf("Category '%s' was not registered", $category)
       );
@@ -114,6 +118,9 @@ class Registry {
 
   /** @return array<string, AutomationTemplateCategory> */
   public function getTemplateCategories(): array {
+    if (empty($this->templateCategories)) {
+      $this->setupTemplateCategories();
+    }
     return $this->templateCategories;
   }
 

@@ -47,8 +47,11 @@ function forminator_delete_custom_posts() {
 	);
 	$post_ids = get_posts( $args );
 
+	include_once plugin_dir_path( __FILE__ ) . 'library/model/class-form-entry-model.php';
+
 	foreach ( $post_ids as $post_id ) {
 		wp_delete_post( $post_id, true );
+		Forminator_Form_Entry_Model::delete_form_entry_cache( $post_id );
 	}
 }
 
@@ -88,14 +91,14 @@ function forminator_clear_module_submissions( $db_prefix = 'wp_' ) {
 
 	if ( $max_entry_id && is_numeric( $max_entry_id ) && $max_entry_id > 0 ) {
 		for ( $i = 1; $i <= $max_entry_id; $i++ ) {
-			wp_cache_delete( $i, 'Forminator_Form_Entry_Model' );
+			wp_cache_delete( $i, Forminator_Form_Entry_Model::FORM_ENTRY_CACHE_GROUP );
 		}
 	}
 
-	wp_cache_delete( 'all_form_types', 'forminator_total_entries' );
-	wp_cache_delete( 'custom-forms_form_type', 'forminator_total_entries' );
-	wp_cache_delete( 'poll_form_type', 'forminator_total_entries' );
-	wp_cache_delete( 'quizzes_form_type', 'forminator_total_entries' );
+	wp_cache_delete( 'all_form_types', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
+	wp_cache_delete( 'custom-forms_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
+	wp_cache_delete( 'poll_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
+	wp_cache_delete( 'quizzes_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
 }
 
 /**

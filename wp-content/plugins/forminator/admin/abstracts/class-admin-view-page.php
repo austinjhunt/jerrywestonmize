@@ -289,22 +289,6 @@ abstract class Forminator_Admin_View_Page extends Forminator_Admin_Page {
 	}
 
 	/**
-	 * Get fields table
-	 *
-	 * @since 1.0
-	 * @return Forminator_Entries_List_Table
-	 * todo looks like it's Unused method (if so Forminator_Entries_List_Table is unused class)
-	 */
-	public function get_table() {
-		return new Forminator_Entries_List_Table(
-			array(
-				'model'          => $this->model,
-				'visible_fields' => $this->visible_fields,
-			)
-		);
-	}
-
-	/**
 	 * Pagination
 	 *
 	 * @since 1.0

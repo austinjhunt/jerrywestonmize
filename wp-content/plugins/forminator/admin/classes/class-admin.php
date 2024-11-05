@@ -258,7 +258,9 @@ class Forminator_Admin {
 	 * @since 1.0
 	 */
 	public function init_templates_page() {
-		$this->pages['forminator-templates'] = new Forminator_Templates_Page( 'forminator-templates', 'templates', wp_kses_post( 'Templates <span class="menu-new-tag">New</span>', 'forminator' ), wp_kses_post( 'Templates <span class="menu-new-tag">New</span>', 'forminator' ), 'forminator' );
+		$section_name = esc_html__( 'Templates', 'forminator' ) . ' <span class="menu-new-tag">' . esc_html__( 'New', 'forminator' ) . '</span>';
+
+		$this->pages['forminator-templates'] = new Forminator_Templates_Page( 'forminator-templates', 'templates', $section_name, $section_name, 'forminator' );
 	}
 
 	/**

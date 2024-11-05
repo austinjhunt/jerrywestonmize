@@ -64,7 +64,6 @@ class BackendStrings
             'open'                      => __('Open', 'wpamelia'),
             'package'                   => __('Package', 'wpamelia'),
             'package_price'             => __('Package Price', 'wpamelia'),
-            'payment_tooltip'           => __('If all payment methods are disabled on the service/event,<br/>the default payment method will be used.', 'wpamelia'),
             'payment_warning'           => __('You have disabled all available payment methods. This means that default payment method from general settings will be used.', 'wpamelia'),
             'payment_warning_settings'  => __('Some services/events have all payment methods disabled. This means that default payment method will be used for those services/events.', 'wpamelia'),
             'percentage'                => __('Percentage', 'wpamelia'),
@@ -603,6 +602,13 @@ Thank you,
             'show_email_codes'                       => __('</> Show Email Placeholders', 'wpamelia'),
             'show_sms_codes'                         => __('</> Show SMS Placeholders', 'wpamelia'),
             'sms_placeholders'                       => __('SMS Placeholders', 'wpamelia'),
+            'sms_warning'                            => __('Effective September 30th, SMS providers will implement charges for failed message deliveries. To help minimize the occurrence of failed messages, please adhere to the following guidelines: <br>
+                                                               <ol style="margin-left: 16px">
+                                                                <li>For countries where Alphanumeric Sender IDs are not permitted, the Alphanumeric Sender ID will be replaced with the phone number. A complete list of affected countries is available <a href="https://wpamelia.com/sms-notifications/">here</a>.</li>
+                                                                <li>Update the label of the “Phone Number” field through Amelia’s Customize menu to “Mobile phone number” to ensure users enter the correct format and to avoid failures caused by sending SMS to landline numbers.</li>
+                                                                <li>Use HTTPS links instead of HTTP, as HTTP links may be flagged as insecure, leading to potential delivery issues.</li>
+                                                               </ol>
+                                                               Amelia forwards messages to external SMS providers, who charge for all delivery attempts, successful or failed, so following the provided guidelines can help minimize costs.'),
             'test_whatsapp_error'                    => __('WhatsApp message has not been sent', 'wpamelia'),
             'test_whatsapp_success'                  => __('WhatsApp message has been sent', 'wpamelia'),
             'test_sms_error'                         => __('SMS has not been sent', 'wpamelia'),
