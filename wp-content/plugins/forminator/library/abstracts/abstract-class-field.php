@@ -57,7 +57,7 @@ abstract class Forminator_Field {
 	 *
 	 * @var string
 	 */
-	public $category = '';
+	public $category = 'standard';
 
 	/**
 	 * Type
@@ -431,7 +431,7 @@ abstract class Forminator_Field {
 		}
 
 		if ( isset( $wrapper_input[2] ) && ! empty( $wrapper_input[2] ) ) {
-			$html .= sprintf( '<label for="%s"><span class="forminator-icon-%s" aria-hidden="true"></span></label>', $get_id, $wrapper_input[2] );
+			$html .= sprintf( '<span class="forminator-icon-%s" aria-hidden="true"></span>', $wrapper_input[2] );
 		}
 
 		if ( isset( $wrapper_input[3] ) && ! empty( $wrapper_input[3] ) ) {
@@ -1067,13 +1067,12 @@ abstract class Forminator_Field {
 	public static function is_condition_matched( $condition ) {
 		$form_data = Forminator_CForm_Front_Action::$prepared_data;
 
-		$form_id = $form_data['form_id'];
-
 		// empty conditions.
-		if ( empty( $condition ) ) {
+		if ( empty( $condition ) || empty( $form_data['form_id'] ) ) {
 			return false;
 		}
 
+		$form_id     = $form_data['form_id'];
 		$element_id  = $condition['element_id'];
 		$field_value = isset( $form_data[ $element_id ] ) ? $form_data[ $element_id ] : '';
 

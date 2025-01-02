@@ -77,6 +77,7 @@ class LiteBackendStrings
             'google_calendar'           => __('Google Calendar', 'wpamelia'),
             'google_meet_join'          => __('Join With Google Meet', 'wpamelia'),
             'outlook_calendar'          => __('Outlook Calendar', 'wpamelia'),
+            'apple_calendar'            => __('Apple Calendar', 'wpamelia'),
             'h'                         => __('h', 'wpamelia'),
             'id'                        => __('ID', 'wpamelia'),
             'language'                  => __('Language', 'wpamelia'),
@@ -121,6 +122,7 @@ class LiteBackendStrings
             'of'                        => __('of', 'wpamelia'),
             'on_site'                   => __('On-site', 'wpamelia'),
             'opened'                    => __('Opened', 'wpamelia'),
+            'open'                      => __('Open', 'wpamelia'),
             'out_of'                    => __('out of', 'wpamelia'),
             'packages'                  => __('Packages', 'wpamelia'),
             'paid'                      => __('Paid', 'wpamelia'),
@@ -313,6 +315,9 @@ class LiteBackendStrings
             'outlook_client_secret'                  => __('Client Secret', 'wpamelia'),
             'google_redirect_uri'                    => __('Redirect URI', 'wpamelia'),
             'outlook_redirect_uri'                   => __('Redirect URI', 'wpamelia'),
+            'apple_client_id'                        => __('iCloud Email Address', 'wpamelia'),
+            'icloud_app_specific_password'           => __('iCloud App-specific Password', 'wpamelia'),
+            'apple_redirect_uri'                     => __('Redirect URI', 'wpamelia'),
             'zoom_api_key'                           => __('Client Key', 'wpamelia'),
             'zoom_api_secret'                        => __('Client Secret', 'wpamelia'),
             'zoom_jwt_warning'                       => __('The JWT app type is deprecated. We recommend that you create Server-to-Server OAuth', 'wpamelia'),
@@ -402,8 +407,10 @@ class LiteBackendStrings
             'redirect_url_after_appointment_tooltip' => __('Customer will be redirected to this URL once he schedules the appointment.', 'wpamelia'),
             'remove_google_busy_slots'               => __('Remove Google Calendar Busy Slots', 'wpamelia'),
             'remove_outlook_busy_slots'              => __('Remove Outlook Calendar Busy Slots', 'wpamelia'),
+            'remove_apple_busy_slots'                => __('Remove Apple Calendar Busy Slots', 'wpamelia'),
             'include_buffer_time_google'             => __('Include Buffer time in Google events', 'wpamelia'),
             'include_buffer_time_outlook'            => __('Include Buffer time in Outlook events', 'wpamelia'),
+            'include_buffer_time_apple'              => __('Include Buffer time in Apple events', 'wpamelia'),
             'reject_appointment_success_url'         => __('Redirect URL for Successfully Rejected Booking', 'wpamelia'),
             'reject_appointment_error_url'           => __('Redirect URL for Unsuccessfully Rejected Booking', 'wpamelia'),
             'require_cabinet_password'               => __('Require password for login', 'wpamelia'),
@@ -413,6 +420,8 @@ class LiteBackendStrings
             'roles_settings'                         => __('Roles Settings', 'wpamelia'),
             'roles_settings_description'             => __('Use these settings to define settings that will be applied for the specific Amelia roles', 'wpamelia'),
             'send_event_invitation_email'            => __('Send Event Invitation Email', 'wpamelia'),
+            'send_invoice_by_default'                => __('Send invoice to customer by default', 'wpamelia'),
+            'send_invoice_by_default_description'    => __('Enable this option to make sure that the invoice will be sent to the customer after booking.', 'wpamelia'),
             'send_ics_attachment_approved'           => __('Send ics file for Approved bookings', 'wpamelia'),
             'send_ics_attachment_pending'            => __('Send ics file for Pending bookings', 'wpamelia'),
             'send_ics_attachment_approved_tooltip'   => __('Enable this option if you want to send ics file in email after approved bookings.', 'wpamelia'),
@@ -514,6 +523,7 @@ class LiteBackendStrings
             'customer_event_waiting'                 => __('Event Waiting List', 'wpamelia'),
             'provider_other_notifications'           => __('Other', 'wpamelia'),
             'customer_cart'                          => __('Cart Purchase', 'wpamelia'),
+            'customer_invoice'                       => __('Booking Invoice', 'wpamelia'),
             'customer_package_canceled'              => __('Package Canceled', 'wpamelia'),
             'customer_package_purchased'             => __('Package Purchased', 'wpamelia'),
             'customize_sms'                          => __('Customize SMS', 'wpamelia'),
@@ -543,6 +553,7 @@ class LiteBackendStrings
             'ph_appointment_duration'                => __('Duration of the appointment', 'wpamelia'),
             'ph_appointment_end_time'                => __('End time of the appointment', 'wpamelia'),
             'ph_appointment_id'                      => __('Id of the appointment', 'wpamelia'),
+            'ph_payment_due_amount'                  => __('Payment due amount', 'wpamelia'),
             'ph_appointment_notes'                   => __('Appointment notes', 'wpamelia'),
             'ph_appointment_price'                   => __('Appointment price', 'wpamelia'),
             'ph_payment_type'                        => __('Payment type', 'wpamelia'),
@@ -596,6 +607,13 @@ class LiteBackendStrings
             'ph_service_price'                       => __('Service price', 'wpamelia'),
             'ph_time_zone'                           => __('Time Zone', 'wpamelia'),
             'phone_colon'                            => __('Phone:', 'wpamelia'),
+            'sms_warning'                            => __('Effective September 30th, SMS providers will implement charges for failed message deliveries. To help minimize the occurrence of failed messages, please adhere to the following guidelines: <br>
+                                                               <ol style="margin-left: 16px">
+                                                                <li>For countries where Alphanumeric Sender IDs are not permitted, the Alphanumeric Sender ID will be replaced with the phone number. A complete list of affected countries is available <a href="https://wpamelia.com/sms-notifications/">here</a>.</li>
+                                                                <li>Update the label of the “Phone Number” field through Amelia’s Customize menu to “Mobile phone number” to ensure users enter the correct format and to avoid failures caused by sending SMS to landline numbers.</li>
+                                                                <li>Use HTTPS links instead of HTTP, as HTTP links may be flagged as insecure, leading to potential delivery issues.</li>
+                                                               </ol>
+                                                               Amelia forwards messages to external SMS providers, who charge for all delivery attempts, successful or failed, so following the provided guidelines can help minimize costs.'),
             'provider_cart'                          => __('Cart Purchase', 'wpamelia'),
             'companyPlaceholders'                    => __('Company', 'wpamelia'),
             'customerPlaceholders'                   => __('Customer', 'wpamelia'),
@@ -752,6 +770,8 @@ class LiteBackendStrings
         return [
             'visibility_hide' => __('Hide', 'wpamelia'),
             'visibility_show' => __('Show', 'wpamelia'),
+            'block'           => __('Block', 'wpamelia'),
+            'unblock'         => __('Unblock', 'wpamelia'),
         ];
     }
 
@@ -830,6 +850,7 @@ class LiteBackendStrings
             'services_sorting_price_asc'         => __('Price Ascending', 'wpamelia'),
             'services_sorting_price_desc'        => __('Price Descending', 'wpamelia'),
             'service_show_on_site'               => __('Show service on site', 'wpamelia'),
+            'service_show_on_site_tooltip'       => __('If this option is disabled, service will be available for booking from back-end pages only.', 'wpamelia'),
             'service_recurring_cycle'            => __('Set recurring appointment', 'wpamelia'),
             'service_recurring_cycle_tooltip'    => __('If this option is disabled, your customers won\'t be able to book recurring appointments at the same time.', 'wpamelia'),
             'service_provider_remove_fail'       => __('Provider has appointments for this service', 'wpamelia'),
@@ -905,8 +926,12 @@ class LiteBackendStrings
         return [
             'add_customer'                 => __('Add Customer', 'wpamelia'),
             'confirm_delete_customer'      => __('Are you sure you want to delete this customer?', 'wpamelia'),
+            'confirm_block_customer'       => __('Are you sure you want to block this customer?', 'wpamelia'),
+            'confirm_unblock_customer'     => __('Are you sure you want to unblock this customer?', 'wpamelia'),
             'customer_activity'            => __('Customer Activity', 'wpamelia'),
             'customer_deleted'             => __('Customer has been deleted', 'wpamelia'),
+            'customer_blocked'             => __('Customer has been blocked', 'wpamelia'),
+            'customer_unblocked'           => __('Customer has been unblocked', 'wpamelia'),
             'customer_note'                => __('Note', 'wpamelia'),
             'customer_saved'               => __('Customer has been saved', 'wpamelia'),
             'customers'                    => __('Customers', 'wpamelia'),

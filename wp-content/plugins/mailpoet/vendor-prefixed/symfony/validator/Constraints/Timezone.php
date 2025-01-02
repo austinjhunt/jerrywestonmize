@@ -15,7 +15,7 @@ class Timezone extends Constraint
  public $intlCompatible = \false;
  public $message = 'This value is not a valid timezone.';
  protected static $errorNames = [self::TIMEZONE_IDENTIFIER_ERROR => 'TIMEZONE_IDENTIFIER_ERROR', self::TIMEZONE_IDENTIFIER_IN_ZONE_ERROR => 'TIMEZONE_IDENTIFIER_IN_ZONE_ERROR', self::TIMEZONE_IDENTIFIER_IN_COUNTRY_ERROR => 'TIMEZONE_IDENTIFIER_IN_COUNTRY_ERROR', self::TIMEZONE_IDENTIFIER_INTL_ERROR => 'TIMEZONE_IDENTIFIER_INTL_ERROR'];
- public function __construct($zone = null, string $message = null, string $countryCode = null, bool $intlCompatible = null, array $groups = null, $payload = null, array $options = [])
+ public function __construct($zone = null, ?string $message = null, ?string $countryCode = null, ?bool $intlCompatible = null, ?array $groups = null, $payload = null, array $options = [])
  {
  if (\is_array($zone)) {
  $options = \array_merge($zone, $options);

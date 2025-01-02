@@ -8,6 +8,7 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event;
 
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
+use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -23,10 +24,6 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
-use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
-use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
-use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
-use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 
 /**
  * Class EventEditedEventHandler
@@ -71,6 +68,8 @@ class EventEditedEventHandler
      */
     public static function handle($commandResult, $container)
     {
+        /** @var ApplicationIntegrationService $applicationIntegrationService */
+        $applicationIntegrationService = $container->get('application.integration.service');
         /** @var EmailNotificationService $emailNotificationService */
         $emailNotificationService = $container->get('application.emailNotification.service');
         /** @var SMSNotificationService $smsNotificationService */
@@ -81,14 +80,6 @@ class EventEditedEventHandler
         $settingsService = $container->get('domain.settings.service');
         /** @var AbstractWebHookApplicationService $webHookService */
         $webHookService = $container->get('application.webHook.service');
-        /** @var AbstractZoomApplicationService $zoomService */
-        $zoomService = $container->get('application.zoom.service');
-        /** @var AbstractLessonSpaceService $lessonSpaceService */
-        $lessonSpaceService = $container->get('infrastructure.lesson.space.service');
-        /** @var AbstractGoogleCalendarService $googleCalendarService */
-        $googleCalendarService = $container->get('infrastructure.google.calendar.service');
-        /** @var AbstractOutlookCalendarService $outlookCalendarService */
-        $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $container->get('application.payment.service');
 
@@ -110,55 +101,50 @@ class EventEditedEventHandler
         foreach ($deletedEvents->getItems() as $event) {
             $eventId = $event->getId()->getValue();
 
-            if ($zoomService &&
-                $clonedEvents->keyExists($eventId) &&
-                $clonedEvents->getItem($eventId)->getStatus()->getValue() === BookingStatus::APPROVED
-            ) {
-                $zoomService->handleEventMeeting($event, $event->getPeriods(), self::EVENT_DELETED);
-            }
+            $eventArray = $event->toArray();
 
-            if ($googleCalendarService) {
-                try {
-                    $googleCalendarService->handleEventPeriodsChange($event, self::EVENT_DELETED, $event->getPeriods());
-                } catch (\Exception $e) {
-                }
-            }
-
-            if ($outlookCalendarService) {
-                try {
-                    $outlookCalendarService->handleEventPeriod($event, self::EVENT_DELETED, $event->getPeriods());
-                } catch (\Exception $e) {
-                }
-            }
+            $applicationIntegrationService->handleEvent(
+                $event,
+                $event->getPeriods(),
+                $eventArray,
+                ApplicationIntegrationService::EVENT_DELETED,
+                [
+                    ApplicationIntegrationService::SKIP_ZOOM_MEETING =>
+                        !$clonedEvents->keyExists($eventId) ||
+                        $clonedEvents->getItem($eventId)->getStatus()->getValue() !== BookingStatus::APPROVED,
+                    ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                ]
+            );
         }
 
         /** @var Event $event */
         foreach ($addedEvents->getItems() as $event) {
-            if ($zoomService) {
-                $zoomService->handleEventMeeting($event, $event->getPeriods(), self::EVENT_ADDED);
-            }
-            if ($lessonSpaceService) {
-                $lessonSpaceService->handle($event, Entities::EVENT, $event->getPeriods());
-            }
-            if ($googleCalendarService) {
-                try {
-                    $googleCalendarService->handleEventPeriodsChange($event, self::EVENT_ADDED, $event->getPeriods());
-                } catch (\Exception $e) {
-                }
-            }
-            if ($outlookCalendarService) {
-                try {
-                    $outlookCalendarService->handleEventPeriod($event, self::EVENT_ADDED, $event->getPeriods());
-                } catch (\Exception $e) {
-                }
-            }
+            $eventArray = $event->toArray();
+
+            $applicationIntegrationService->handleEvent(
+                $event,
+                $event->getPeriods(),
+                $eventArray,
+                ApplicationIntegrationService::EVENT_ADDED
+            );
         }
 
         /** @var Event $event */
         foreach ($clonedEvents->getItems() as $event) {
-            if ($lessonSpaceService) {
-                $lessonSpaceService->handle($event, Entities::EVENT, $event->getPeriods());
-            }
+            $eventArray = $event->toArray();
+
+            $applicationIntegrationService->handleEvent(
+                $event,
+                $event->getPeriods(),
+                $eventArray,
+                '',
+                [
+                    ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  => true,
+                    ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR => true,
+                    ApplicationIntegrationService::SKIP_ZOOM_MEETING     => true,
+                    ApplicationIntegrationService::SKIP_APPLE_CALENDAR   => true,
+                ]
+            );
         }
 
         /** @var Event $event */
@@ -168,11 +154,22 @@ class EventEditedEventHandler
             /** @var Event $clonedEvent */
             $clonedEvent = $clonedEvents->keyExists($eventId) ? $clonedEvents->getItem($eventId) : null;
 
-            if ($lessonSpaceService) {
-                $lessonSpaceService->handle($event, Entities::EVENT, $event->getPeriods());
-            }
+            $eventArray = $event->toArray();
 
-            if ($zoomService && $clonedEvent && $clonedEvent->getStatus()->getValue() === BookingStatus::APPROVED) {
+            $applicationIntegrationService->handleEvent(
+                $event,
+                $event->getPeriods(),
+                $eventArray,
+                '',
+                [
+                    ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  => true,
+                    ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR => true,
+                    ApplicationIntegrationService::SKIP_ZOOM_MEETING     => true,
+                    ApplicationIntegrationService::SKIP_APPLE_CALENDAR   => true,
+                ]
+            );
+
+            if ($clonedEvent && $clonedEvent->getStatus()->getValue() === BookingStatus::APPROVED) {
                 /** @var Collection $rescheduledPeriods */
                 $rescheduledPeriods = new Collection();
 
@@ -206,52 +203,39 @@ class EventEditedEventHandler
                 }
 
                 if ($rescheduledPeriods->length()) {
-                    $zoomService->handleEventMeeting($event, $rescheduledPeriods, self::TIME_UPDATED);
-                    if ($googleCalendarService) {
-                        try {
-                            $googleCalendarService->handleEventPeriodsChange($event, self::TIME_UPDATED, $rescheduledPeriods);
-                        } catch (\Exception $e) {
-                        }
-                    }
-
-                    if ($outlookCalendarService) {
-                        try {
-                            $outlookCalendarService->handleEventPeriod($event, self::TIME_UPDATED, $rescheduledPeriods);
-                        } catch (\Exception $e) {
-                        }
-                    }
+                    $applicationIntegrationService->handleEvent(
+                        $event,
+                        $rescheduledPeriods,
+                        $eventArray,
+                        ApplicationIntegrationService::TIME_UPDATED,
+                        [
+                            ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                        ]
+                    );
                 }
 
                 if ($addedPeriods->length()) {
-                    $zoomService->handleEventMeeting($event, $addedPeriods, self::EVENT_PERIOD_ADDED);
-                    if ($googleCalendarService) {
-                        try {
-                            $googleCalendarService->handleEventPeriodsChange($event, self::EVENT_PERIOD_ADDED, $addedPeriods);
-                        } catch (\Exception $e) {
-                        }
-                    }
-                    if ($outlookCalendarService) {
-                        try {
-                            $outlookCalendarService->handleEventPeriod($event, self::EVENT_PERIOD_ADDED, $addedPeriods);
-                        } catch (\Exception $e) {
-                        }
-                    }
+                    $applicationIntegrationService->handleEvent(
+                        $event,
+                        $addedPeriods,
+                        $eventArray,
+                        ApplicationIntegrationService::EVENT_PERIOD_ADDED,
+                        [
+                            ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                        ]
+                    );
                 }
 
                 if ($deletedPeriods->length()) {
-                    $zoomService->handleEventMeeting($event, $deletedPeriods, self::EVENT_PERIOD_DELETED);
-                    if ($googleCalendarService) {
-                        try {
-                            $googleCalendarService->handleEventPeriodsChange($event, self::EVENT_PERIOD_DELETED, $deletedPeriods);
-                        } catch (\Exception $e) {
-                        }
-                    }
-                    if ($outlookCalendarService) {
-                        try {
-                            $outlookCalendarService->handleEventPeriod($event, self::EVENT_PERIOD_DELETED, $deletedPeriods);
-                        } catch (\Exception $e) {
-                        }
-                    }
+                    $applicationIntegrationService->handleEvent(
+                        $event,
+                        $deletedPeriods,
+                        $eventArray,
+                        ApplicationIntegrationService::EVENT_PERIOD_DELETED,
+                        [
+                            ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                        ]
+                    );
                 }
             }
         }
@@ -263,7 +247,23 @@ class EventEditedEventHandler
                 $command = $commandResult->getData()['zoomUsersLicenced'] ? self::ZOOM_LICENCED_USER_CHANGED : self::ZOOM_USER_CHANGED;
                 /** @var Event $event */
                 foreach ($clonedEvents->getItems() as $event) {
-                    $zoomService->handleEventMeeting($event, $event->getPeriods(), $command, $zoomUserChange);
+                    $eventArray = $event->toArray();
+
+                    $applicationIntegrationService->handleEvent(
+                        $event,
+                        $event->getPeriods(),
+                        $eventArray,
+                        $command,
+                        [
+                            ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  => true,
+                            ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR => true,
+                            ApplicationIntegrationService::SKIP_LESSON_SPACE     => true,
+                            ApplicationIntegrationService::SKIP_APPLE_CALENDAR   => true,
+                        ],
+                        [
+                            'zoomUserId' => $zoomUserChange,
+                        ]
+                    );
                 }
             }
         }
@@ -272,7 +272,20 @@ class EventEditedEventHandler
             if (!$rescheduledEvents->length()) {
                 /** @var Event $event */
                 foreach ($clonedEvents->getItems() as $event) {
-                    $zoomService->handleEventMeeting($event, $event->getPeriods(), EventStatusUpdatedEventHandler::EVENT_STATUS_UPDATED);
+                    $eventArray = $event->toArray();
+
+                    $applicationIntegrationService->handleEvent(
+                        $event,
+                        $event->getPeriods(),
+                        $eventArray,
+                        ApplicationIntegrationService::EVENT_STATUS_UPDATED,
+                        [
+                            ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  => true,
+                            ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR => true,
+                            ApplicationIntegrationService::SKIP_LESSON_SPACE     => true,
+                            ApplicationIntegrationService::SKIP_APPLE_CALENDAR   => true,
+                        ]
+                    );
                 }
             }
         }
@@ -285,12 +298,32 @@ class EventEditedEventHandler
         /** @var Event $event */
         foreach ($clonedEvents->getItems() as $event) {
             if ($organizerChange) {
-                $googleCalendarService->handleEventPeriodsChange($event, self::EVENT_PERIOD_DELETED, $event->getPeriods());
-                $outlookCalendarService->handleEventPeriod($event, self::EVENT_PERIOD_DELETED, $event->getPeriods());
+                $eventArray = $event->toArray();
+
+                $applicationIntegrationService->handleEvent(
+                    $event,
+                    $event->getPeriods(),
+                    $eventArray,
+                    ApplicationIntegrationService::EVENT_PERIOD_DELETED,
+                    [
+                        ApplicationIntegrationService::SKIP_ZOOM_MEETING => true,
+                        ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                    ]
+                );
+
                 if ($newOrganizer) {
                     $event->setOrganizerId(new Id($newOrganizer));
-                    $googleCalendarService->handleEventPeriodsChange($event, self::EVENT_PERIOD_ADDED, $event->getPeriods());
-                    $outlookCalendarService->handleEventPeriod($event, self::EVENT_PERIOD_ADDED, $event->getPeriods());
+
+                    $applicationIntegrationService->handleEvent(
+                        $event,
+                        $event->getPeriods(),
+                        $eventArray,
+                        ApplicationIntegrationService::EVENT_PERIOD_ADDED,
+                        [
+                            ApplicationIntegrationService::SKIP_ZOOM_MEETING => true,
+                            ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                        ]
+                    );
                 }
             }
             if ($newInfo) {
@@ -298,8 +331,20 @@ class EventEditedEventHandler
                 $event->setDescription($newInfo['description']);
             }
             if (($newProviders || $removeProviders || $newInfo) && (!$organizerChange || $newOrganizer)) {
-                $googleCalendarService->handleEventPeriodsChange($event, self::PROVIDER_CHANGED, $event->getPeriods(), $newProviders, $removeProviders);
-                $outlookCalendarService->handleEventPeriod($event, self::PROVIDER_CHANGED, $event->getPeriods(), $newProviders, $removeProviders);
+                $applicationIntegrationService->handleEvent(
+                    $event,
+                    $event->getPeriods(),
+                    $eventArray,
+                    ApplicationIntegrationService::PROVIDER_CHANGED,
+                    [
+                        ApplicationIntegrationService::SKIP_ZOOM_MEETING => true,
+                        ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                    ],
+                    [
+                        'providersNew'    => $newProviders,
+                        'providersRemove' => $removeProviders,
+                    ]
+                );
             }
         }
 

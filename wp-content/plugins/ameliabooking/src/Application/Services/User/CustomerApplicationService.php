@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Application\Services\User;
 
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -305,6 +306,9 @@ class CustomerApplicationService extends UserApplicationService
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
 
+        /** @var EventApplicationService $eventAS */
+        $eventAS = $this->container->get('application.booking.event.service');
+
         /** @var Collection $appointments */
         $appointments = $appointmentRepository->getFiltered(
             [
@@ -369,10 +373,14 @@ class CustomerApplicationService extends UserApplicationService
         }
 
         /** @var Collection $events */
-        $events = $eventRepository->getFiltered(
+        $events = $eventAS->getEventsByCriteria(
             [
-                'customerId' => $customer->getId()->getValue()
-            ]
+                'customerId' => $customer->getId()->getValue(),
+            ],
+            [
+                'fetchBookings' => true,
+            ],
+            0
         );
 
         /** @var Event $event */

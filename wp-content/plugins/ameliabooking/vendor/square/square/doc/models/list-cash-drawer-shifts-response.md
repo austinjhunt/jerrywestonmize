@@ -9,15 +9,15 @@
 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
-| `items` | [`?(CashDrawerShiftSummary[])`](../../doc/models/cash-drawer-shift-summary.md) | Optional | A collection of CashDrawerShiftSummary objects for shifts that match<br>the query. | getItems(): ?array | setItems(?array items): void |
 | `cursor` | `?string` | Optional | Opaque cursor for fetching the next page of results. Cursor is not<br>present in the last page of results. | getCursor(): ?string | setCursor(?string cursor): void |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Any errors that occurred during the request. | getErrors(): ?array | setErrors(?array errors): void |
+| `cashDrawerShifts` | [`?(CashDrawerShiftSummary[])`](../../doc/models/cash-drawer-shift-summary.md) | Optional | A collection of CashDrawerShiftSummary objects for shifts that match<br>the query. | getCashDrawerShifts(): ?array | setCashDrawerShifts(?array cashDrawerShifts): void |
 
 ## Example (as JSON)
 
 ```json
 {
-  "items": [
+  "cash_drawer_shifts": [
     {
       "closed_at": "2019-11-22T00:44:49.000Z",
       "closed_cash_money": {
@@ -37,6 +37,21 @@
         "currency": "USD"
       },
       "state": "CLOSED"
+    }
+  ],
+  "cursor": "cursor6",
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
     }
   ]
 }

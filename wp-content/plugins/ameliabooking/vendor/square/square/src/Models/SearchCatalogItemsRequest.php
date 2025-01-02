@@ -57,6 +57,11 @@ class SearchCatalogItemsRequest implements \JsonSerializable
     private $customAttributeFilters;
 
     /**
+     * @var string|null
+     */
+    private $archivedState;
+
+    /**
      * Returns Text Filter.
      * The text filter expression to return items or item variations containing specified text in
      * the `name`, `description`, or `abbreviation` attribute value of an item, or in
@@ -250,7 +255,7 @@ class SearchCatalogItemsRequest implements \JsonSerializable
      * Returns Custom Attribute Filters.
      * The customer-attribute filter to return items or item variations matching the specified
      * custom attribute expressions. A maximum number of 10 custom attribute expressions are supported in
-     * a single call to the [SearchCatalogItems]($e/Catalog/SearchCatalogItems) endpoint.
+     * a single call to the [SearchCatalogItems](api-endpoint:Catalog-SearchCatalogItems) endpoint.
      *
      * @return CustomAttributeFilter[]|null
      */
@@ -263,7 +268,7 @@ class SearchCatalogItemsRequest implements \JsonSerializable
      * Sets Custom Attribute Filters.
      * The customer-attribute filter to return items or item variations matching the specified
      * custom attribute expressions. A maximum number of 10 custom attribute expressions are supported in
-     * a single call to the [SearchCatalogItems]($e/Catalog/SearchCatalogItems) endpoint.
+     * a single call to the [SearchCatalogItems](api-endpoint:Catalog-SearchCatalogItems) endpoint.
      *
      * @maps custom_attribute_filters
      *
@@ -272,6 +277,30 @@ class SearchCatalogItemsRequest implements \JsonSerializable
     public function setCustomAttributeFilters(?array $customAttributeFilters): void
     {
         $this->customAttributeFilters = $customAttributeFilters;
+    }
+
+    /**
+     * Returns Archived State.
+     * Defines the values for the `archived_state` query expression
+     * used in [SearchCatalogItems]($e/Catalog/SearchCatalogItems)
+     * to return the archived, not archived or either type of catalog items.
+     */
+    public function getArchivedState(): ?string
+    {
+        return $this->archivedState;
+    }
+
+    /**
+     * Sets Archived State.
+     * Defines the values for the `archived_state` query expression
+     * used in [SearchCatalogItems]($e/Catalog/SearchCatalogItems)
+     * to return the archived, not archived or either type of catalog items.
+     *
+     * @maps archived_state
+     */
+    public function setArchivedState(?string $archivedState): void
+    {
+        $this->archivedState = $archivedState;
     }
 
     /**
@@ -312,6 +341,9 @@ class SearchCatalogItemsRequest implements \JsonSerializable
         }
         if (isset($this->customAttributeFilters)) {
             $json['custom_attribute_filters'] = $this->customAttributeFilters;
+        }
+        if (isset($this->archivedState)) {
+            $json['archived_state']           = $this->archivedState;
         }
         $json = array_filter($json, function ($val) {
             return $val !== null;

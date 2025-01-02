@@ -9,9 +9,16 @@ use Core\Request\Parameters\HeaderParam;
 use Core\Request\Parameters\QueryParam;
 use Core\Request\Parameters\TemplateParam;
 use CoreInterfaces\Core\Request\RequestMethod;
-use Square\Exceptions\ApiException;
 use Square\Http\ApiResponse;
 use Square\Models\AddGroupToCustomerResponse;
+use Square\Models\BulkCreateCustomersRequest;
+use Square\Models\BulkCreateCustomersResponse;
+use Square\Models\BulkDeleteCustomersRequest;
+use Square\Models\BulkDeleteCustomersResponse;
+use Square\Models\BulkRetrieveCustomersRequest;
+use Square\Models\BulkRetrieveCustomersResponse;
+use Square\Models\BulkUpdateCustomersRequest;
+use Square\Models\BulkUpdateCustomersResponse;
 use Square\Models\CreateCustomerCardRequest;
 use Square\Models\CreateCustomerCardResponse;
 use Square\Models\CreateCustomerRequest;
@@ -54,16 +61,19 @@ class CustomersApi extends BaseApi
      *        descending (`DESC`) order.
      *
      *        The default value is `ASC`.
+     * @param bool|null $count Indicates whether to return the total count of customers in the
+     *        `count` field of the response.
+     *
+     *        The default value is `false`.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function listCustomers(
         ?string $cursor = null,
         ?int $limit = null,
         ?string $sortField = null,
-        ?string $sortOrder = null
+        ?string $sortOrder = null,
+        ?bool $count = false
     ): ApiResponse {
         $_reqBuilder = $this->requestBuilder(RequestMethod::GET, '/v2/customers')
             ->auth('global')
@@ -71,7 +81,8 @@ class CustomersApi extends BaseApi
                 QueryParam::init('cursor', $cursor),
                 QueryParam::init('limit', $limit),
                 QueryParam::init('sort_field', $sortField),
-                QueryParam::init('sort_order', $sortOrder)
+                QueryParam::init('sort_order', $sortOrder),
+                QueryParam::init('count', $count)
             );
 
         $_resHandler = $this->responseHandler()->type(ListCustomersResponse::class)->returnApiResponse();
@@ -95,8 +106,6 @@ class CustomersApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function createCustomer(CreateCustomerRequest $body): ApiResponse
     {
@@ -105,6 +114,109 @@ class CustomersApi extends BaseApi
             ->parameters(HeaderParam::init('Content-Type', 'application/json'), BodyParam::init($body));
 
         $_resHandler = $this->responseHandler()->type(CreateCustomerResponse::class)->returnApiResponse();
+
+        return $this->execute($_reqBuilder, $_resHandler);
+    }
+
+    /**
+     * Creates multiple [customer profiles]($m/Customer) for a business.
+     *
+     * This endpoint takes a map of individual create requests and returns a map of responses.
+     *
+     * You must provide at least one of the following values in each create request:
+     *
+     * - `given_name`
+     * - `family_name`
+     * - `company_name`
+     * - `email_address`
+     * - `phone_number`
+     *
+     * @param BulkCreateCustomersRequest $body An object containing the fields to POST for the
+     *        request.
+     *
+     *        See the corresponding object definition for field details.
+     *
+     * @return ApiResponse Response from the API call
+     */
+    public function bulkCreateCustomers(BulkCreateCustomersRequest $body): ApiResponse
+    {
+        $_reqBuilder = $this->requestBuilder(RequestMethod::POST, '/v2/customers/bulk-create')
+            ->auth('global')
+            ->parameters(HeaderParam::init('Content-Type', 'application/json'), BodyParam::init($body));
+
+        $_resHandler = $this->responseHandler()->type(BulkCreateCustomersResponse::class)->returnApiResponse();
+
+        return $this->execute($_reqBuilder, $_resHandler);
+    }
+
+    /**
+     * Deletes multiple customer profiles.
+     *
+     * The endpoint takes a list of customer IDs and returns a map of responses.
+     *
+     * @param BulkDeleteCustomersRequest $body An object containing the fields to POST for the
+     *        request.
+     *
+     *        See the corresponding object definition for field details.
+     *
+     * @return ApiResponse Response from the API call
+     */
+    public function bulkDeleteCustomers(BulkDeleteCustomersRequest $body): ApiResponse
+    {
+        $_reqBuilder = $this->requestBuilder(RequestMethod::POST, '/v2/customers/bulk-delete')
+            ->auth('global')
+            ->parameters(HeaderParam::init('Content-Type', 'application/json'), BodyParam::init($body));
+
+        $_resHandler = $this->responseHandler()->type(BulkDeleteCustomersResponse::class)->returnApiResponse();
+
+        return $this->execute($_reqBuilder, $_resHandler);
+    }
+
+    /**
+     * Retrieves multiple customer profiles.
+     *
+     * This endpoint takes a list of customer IDs and returns a map of responses.
+     *
+     * @param BulkRetrieveCustomersRequest $body An object containing the fields to POST for the
+     *        request.
+     *
+     *        See the corresponding object definition for field details.
+     *
+     * @return ApiResponse Response from the API call
+     */
+    public function bulkRetrieveCustomers(BulkRetrieveCustomersRequest $body): ApiResponse
+    {
+        $_reqBuilder = $this->requestBuilder(RequestMethod::POST, '/v2/customers/bulk-retrieve')
+            ->auth('global')
+            ->parameters(HeaderParam::init('Content-Type', 'application/json'), BodyParam::init($body));
+
+        $_resHandler = $this->responseHandler()->type(BulkRetrieveCustomersResponse::class)->returnApiResponse();
+
+        return $this->execute($_reqBuilder, $_resHandler);
+    }
+
+    /**
+     * Updates multiple customer profiles.
+     *
+     * This endpoint takes a map of individual update requests and returns a map of responses.
+     *
+     * You cannot use this endpoint to change cards on file. To make changes, use the [Cards API]($e/Cards)
+     * or [Gift Cards API]($e/GiftCards).
+     *
+     * @param BulkUpdateCustomersRequest $body An object containing the fields to POST for the
+     *        request.
+     *
+     *        See the corresponding object definition for field details.
+     *
+     * @return ApiResponse Response from the API call
+     */
+    public function bulkUpdateCustomers(BulkUpdateCustomersRequest $body): ApiResponse
+    {
+        $_reqBuilder = $this->requestBuilder(RequestMethod::POST, '/v2/customers/bulk-update')
+            ->auth('global')
+            ->parameters(HeaderParam::init('Content-Type', 'application/json'), BodyParam::init($body));
+
+        $_resHandler = $this->responseHandler()->type(BulkUpdateCustomersResponse::class)->returnApiResponse();
 
         return $this->execute($_reqBuilder, $_resHandler);
     }
@@ -125,8 +237,6 @@ class CustomersApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function searchCustomers(SearchCustomersRequest $body): ApiResponse
     {
@@ -142,12 +252,6 @@ class CustomersApi extends BaseApi
     /**
      * Deletes a customer profile from a business. This operation also unlinks any associated cards on file.
      *
-     *
-     * As a best practice, include the `version` field in the request to enable [optimistic
-     * concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-
-     * concurrency) control.
-     * If included, the value must be set to the current version of the customer profile.
-     *
      * To delete a customer profile that was created by merging existing profiles, you must use the ID of
      * the newly created profile.
      *
@@ -159,8 +263,6 @@ class CustomersApi extends BaseApi
      *        com/docs/customers-api/use-the-api/keep-records#delete-customer-profile).
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function deleteCustomer(string $customerId, ?int $version = null): ApiResponse
     {
@@ -179,8 +281,6 @@ class CustomersApi extends BaseApi
      * @param string $customerId The ID of the customer to retrieve.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function retrieveCustomer(string $customerId): ApiResponse
     {
@@ -196,14 +296,7 @@ class CustomersApi extends BaseApi
     /**
      * Updates a customer profile. This endpoint supports sparse updates, so only new or changed fields are
      * required in the request.
-     * To add or update a field, specify the new value. To remove a field, specify `null` and include the
-     * `X-Clear-Null` header set to `true`
-     * (recommended) or specify an empty string (string fields only).
-     *
-     * As a best practice, include the `version` field in the request to enable [optimistic
-     * concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-
-     * concurrency) control.
-     * If included, the value must be set to the current version of the customer profile.
+     * To add or update a field, specify the new value. To remove a field, specify `null`.
      *
      * To update a customer profile that was created by merging existing profiles, you must use the ID of
      * the newly created profile.
@@ -216,8 +309,6 @@ class CustomersApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function updateCustomer(string $customerId, UpdateCustomerRequest $body): ApiResponse
     {
@@ -250,8 +341,6 @@ class CustomersApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function createCustomerCard(string $customerId, CreateCustomerCardRequest $body): ApiResponse
     {
@@ -279,8 +368,6 @@ class CustomersApi extends BaseApi
      * @param string $cardId The ID of the card on file to delete.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function deleteCustomerCard(string $customerId, string $cardId): ApiResponse
     {
@@ -305,8 +392,6 @@ class CustomersApi extends BaseApi
      * @param string $groupId The ID of the customer group to remove the customer from.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function removeGroupFromCustomer(string $customerId, string $groupId): ApiResponse
     {
@@ -335,8 +420,6 @@ class CustomersApi extends BaseApi
      * @param string $groupId The ID of the customer group to add the customer to.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function addGroupToCustomer(string $customerId, string $groupId): ApiResponse
     {

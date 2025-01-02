@@ -8,7 +8,6 @@ use Core\Request\Parameters\BodyParam;
 use Core\Request\Parameters\HeaderParam;
 use Core\Request\Parameters\TemplateParam;
 use CoreInterfaces\Core\Request\RequestMethod;
-use Square\Exceptions\ApiException;
 use Square\Http\ApiResponse;
 use Square\Models\CreateLocationRequest;
 use Square\Models\CreateLocationResponse;
@@ -22,11 +21,9 @@ class LocationsApi extends BaseApi
     /**
      * Provides details about all of the seller's [locations](https://developer.squareup.com/docs/locations-
      * api),
-     * including those with an inactive status.
+     * including those with an inactive status. Locations are listed alphabetically by `name`.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function listLocations(): ApiResponse
     {
@@ -50,8 +47,6 @@ class LocationsApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function createLocation(CreateLocationRequest $body): ApiResponse
     {
@@ -73,8 +68,6 @@ class LocationsApi extends BaseApi
      *        return the main location.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function retrieveLocation(string $locationId): ApiResponse
     {
@@ -95,8 +88,6 @@ class LocationsApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function updateLocation(string $locationId, UpdateLocationRequest $body): ApiResponse
     {

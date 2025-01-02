@@ -419,6 +419,10 @@ class Forminator_API {
 
 		$form_id = $form_model->save();
 
+		if ( is_wp_error( $form_id ) ) {
+			return $form_id;
+		}
+
 		if ( false === $form_id ) {
 			return new WP_Error( 'form_save_error', esc_html__( 'There was a problem moving form wrapper', 'forminator' ) );
 		}
@@ -654,7 +658,11 @@ class Forminator_API {
 		// Update field.
 		$field->import( $data );
 
-		$model->save();
+		$result = $model->save();
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
 
 		return $id;
 	}
@@ -747,7 +755,11 @@ class Forminator_API {
 		$model->update_fields_by_wrapper( $wrapper );
 
 		// Save the form.
-		$model->save();
+		$result = $model->save();
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
 
 		return $field_id;
 	}
@@ -982,6 +994,10 @@ class Forminator_API {
 		// Save the form.
 		$id = $model->save();
 
+		if ( is_wp_error( $id ) ) {
+			return $id;
+		}
+
 		if ( false === $id ) {
 			return new WP_Error( 'form_save_error', esc_html__( 'There was a problem saving the form', 'forminator' ) );
 		}
@@ -1026,6 +1042,10 @@ class Forminator_API {
 		// Save data.
 		$id = $model->save();
 
+		if ( is_wp_error( $id ) ) {
+			return $id;
+		}
+
 		return $id;
 	}
 
@@ -1069,6 +1089,10 @@ class Forminator_API {
 
 		// Save data.
 		$id = $model->save();
+
+		if ( is_wp_error( $id ) ) {
+			return $id;
+		}
 
 		return $id;
 	}
@@ -1412,16 +1436,32 @@ class Forminator_API {
 	 * @since 1.2
 	 *
 	 * @param int $form_id Form ID.
+	 * @param int $per_page Limit per page.
+	 * @param int $current_page Current page.
+	 *
+	 * @since 1.38 Added optional param per_page.
+	 * @since 1.38 Added optional param current_page.
 	 *
 	 * @return Forminator_Form_Entry_Model[]|WP_Error
 	 */
-	public static function get_entries( $form_id ) {
+	public static function get_entries( $form_id, $per_page = 0, $current_page = 1 ) {
 		// Initialize API.
 		self::initialize();
 
 		// Check if Form ID is set.
 		if ( empty( $form_id ) ) {
 			return new WP_Error( 'missing_form_id', esc_html__( 'Form ID is required!', 'forminator' ) );
+		}
+		if ( $per_page ) {
+			$offset = $current_page > 0 ? --$current_page : 0;
+			$args   = array(
+				'form_id'  => $form_id,
+				'is_spam'  => 0,
+				'per_page' => $per_page,
+				'offset'   => $offset,
+			);
+			$count  = 0;
+			return Forminator_Form_Entry_Model::query_entries( $args, $count );
 		}
 
 		return Forminator_Form_Entry_Model::get_entries( $form_id );

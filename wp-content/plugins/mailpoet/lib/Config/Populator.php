@@ -5,10 +5,11 @@ namespace MailPoet\Config;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Captcha\CaptchaConstants;
+use MailPoet\Captcha\CaptchaRenderer;
 use MailPoet\Cron\CronTrigger;
 use MailPoet\Cron\Workers\AuthorizedSendingEmailsCheck;
 use MailPoet\Cron\Workers\BackfillEngagementData;
-use MailPoet\Cron\Workers\Beamer;
 use MailPoet\Cron\Workers\InactiveSubscribers;
 use MailPoet\Cron\Workers\Mixpanel;
 use MailPoet\Cron\Workers\NewsletterTemplateThumbnails;
@@ -36,8 +37,6 @@ use MailPoet\Settings\SettingsController;
 use MailPoet\Settings\UserFlagsRepository;
 use MailPoet\Subscribers\NewSubscriberNotificationMailer;
 use MailPoet\Subscribers\Source;
-use MailPoet\Subscription\Captcha\CaptchaConstants;
-use MailPoet\Subscription\Captcha\CaptchaRenderer;
 use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Carbon\Carbon;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
@@ -51,7 +50,7 @@ class Populator {
   private $wp;
   /** @var CaptchaRenderer */
   private $captchaRenderer;
-  /** @var ReferralDetector  */
+  /** @var ReferralDetector */
   private $referralDetector;
   const TEMPLATES_NAMESPACE = '\MailPoet\Config\PopulatorData\Templates\\';
   /** @var WP */
@@ -176,7 +175,6 @@ class Populator {
     $this->createSourceForSubscribers();
     $this->scheduleInitialInactiveSubscribersCheck();
     $this->scheduleAuthorizedSendingEmailsCheck();
-    $this->scheduleBeamer();
 
     $this->scheduleUnsubscribeTokens();
     $this->scheduleSubscriberLinkTokens();
@@ -188,9 +186,9 @@ class Populator {
   }
 
   private function createMailPoetPage() {
-    $page = Pages::getDefaultMailPoetPage();
+    $page = Pages::getMailPoetPage(Pages::PAGE_SUBSCRIPTIONS);
     if ($page === null) {
-      $mailpoetPageId = Pages::createMailPoetPage();
+      $mailpoetPageId = Pages::createMailPoetPage(Pages::PAGE_SUBSCRIPTIONS);
     } else {
       $mailpoetPageId = (int)$page->ID;
     }
@@ -201,21 +199,26 @@ class Populator {
         'unsubscribe' => $mailpoetPageId,
         'manage' => $mailpoetPageId,
         'confirmation' => $mailpoetPageId,
-        'captcha' => $mailpoetPageId,
         'confirm_unsubscribe' => $mailpoetPageId,
       ]);
     } else {
       // For existing installations
-      $captchaPageSetting = (empty($subscription['captcha']) || $subscription['captcha'] !== $mailpoetPageId)
-        ? $mailpoetPageId : $subscription['captcha'];
       $confirmUnsubPageSetting = empty($subscription['confirm_unsubscribe'])
         ? $mailpoetPageId : $subscription['confirm_unsubscribe'];
 
       $this->settings->set('subscription.pages', array_merge($subscription, [
-        'captcha' => $captchaPageSetting,
         'confirm_unsubscribe' => $confirmUnsubPageSetting,
       ]));
     }
+
+    $captchaPage = Pages::getMailPoetPage(Pages::PAGE_CAPTCHA);
+    if ($captchaPage === null) {
+      $captchaPageId = Pages::createMailPoetPage(Pages::PAGE_CAPTCHA);
+    } else {
+      $captchaPageId = $captchaPage->ID;
+    }
+
+    $this->settings->set('subscription.pages.captcha', $captchaPageId);
   }
 
   private function createDefaultSettings() {
@@ -316,14 +319,6 @@ class Populator {
   }
 
   private function createDefaultUsersFlags() {
-    $lastAnnouncementSeen = $this->settings->get('last_announcement_seen');
-    if (!empty($lastAnnouncementSeen)) {
-      foreach ($lastAnnouncementSeen as $userId => $value) {
-        $this->createOrUpdateUserFlag($userId, 'last_announcement_seen', $value);
-      }
-      $this->settings->delete('last_announcement_seen');
-    }
-
     $prefix = 'user_seen_editor_tutorial';
     $prefixLength = strlen($prefix);
     foreach ($this->settings->getAll() as $name => $value) {
@@ -667,15 +662,6 @@ class Populator {
       AuthorizedSendingEmailsCheck::TASK_TYPE,
       Carbon::now()->millisecond(0)
     );
-  }
-
-  private function scheduleBeamer() {
-    if (!$this->settings->get('last_announcement_date')) {
-      $this->scheduleTask(
-        Beamer::TASK_TYPE,
-        Carbon::now()->millisecond(0)
-      );
-    }
   }
 
   private function scheduleUnsubscribeTokens() {

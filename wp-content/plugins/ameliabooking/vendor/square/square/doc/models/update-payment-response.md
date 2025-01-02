@@ -85,7 +85,27 @@ Defines the response returned by
     },
     "updated_at": "2021-10-13T20:26:44.364Z",
     "version_token": "rDrXnqiS7fJgexccgdpzmwqTiXui1aIKCp9EchZ7trE6o"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

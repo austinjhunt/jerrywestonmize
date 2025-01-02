@@ -78,23 +78,28 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 	 * @since 1.11
 	 */
 	public function load_base_styles() {
-		$form_design   = $this->get_module_design();
-		$form_settings = $this->get_settings();
+		$form_design     = $this->get_module_design();
+		$form_settings   = $this->get_settings();
+		$field_style_key = 'basic' === $form_design ? 'basic-fields-style' : 'fields-style';
 
 		parent::load_base_styles();
 
-		// Forminator UI - Grid.
-		if ( isset( $form_settings['fields-style'] ) && 'open' === $form_settings['fields-style'] ) {
+		if ( ! isset( $form_settings['basic-fields-style'] ) ) {
+			$form_settings['basic-fields-style'] = 'open';
+		}
 
-			wp_enqueue_style(
+		// Forminator UI - Grid.
+		if ( isset( $form_settings[ $field_style_key ] ) && 'open' === $form_settings[ $field_style_key ] ) {
+
+			Forminator_Assets_Enqueue::fui_enqueue_style(
 				'forminator-grid-default',
 				forminator_plugin_url() . 'assets/forminator-ui/css/src/grid/forminator-grid.open.min.css',
 				array(),
 				FORMINATOR_VERSION
 			);
-		} elseif ( isset( $form_settings['fields-style'] ) && 'enclosed' === $form_settings['fields-style'] ) {
+		} elseif ( isset( $form_settings[ $field_style_key ] ) && 'enclosed' === $form_settings[ $field_style_key ] ) {
 
-			wp_enqueue_style(
+			Forminator_Assets_Enqueue::fui_enqueue_style(
 				'forminator-grid-enclosed',
 				forminator_plugin_url() . 'assets/forminator-ui/css/src/grid/forminator-grid.enclosed.min.css',
 				array(),
@@ -103,10 +108,19 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 		}
 
 		// Forminator UI - Base stylesheet.
-		if ( 'none' !== $form_design ) {
-			wp_enqueue_style(
+		if ( 'none' !== $form_design && 'basic' !== $form_design ) {
+			Forminator_Assets_Enqueue::fui_enqueue_style(
 				'forminator-forms-' . $form_design . '-base',
 				forminator_plugin_url() . 'assets/forminator-ui/css/src/form/forminator-form-' . $form_design . '.base.min.css',
+				array(),
+				FORMINATOR_VERSION
+			);
+		}
+
+		if ( 'basic' === $form_design ) {
+			Forminator_Assets_Enqueue::fui_enqueue_style(
+				'forminator-forms-' . $form_design . '-base',
+				forminator_plugin_url() . 'assets/forminator-ui/css/forminator-base.min.css',
 				array(),
 				FORMINATOR_VERSION
 			);
@@ -146,18 +160,18 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 
 		$has_currency = $render_obj->has_field_type( 'currency' );
 		$has_paypal   = $render_obj->has_field_type( 'paypal' );
-		$has_stripe   = $render_obj->has_field_type( 'stripe' );
+		$has_stripe   = $render_obj->has_field_type( 'stripe' ) || $render_obj->has_field_type( 'stripe-ocs' );
 
 		$has_password = $render_obj->has_field_type( 'password' );
 
 		$has_signature = $render_obj->has_field_type( 'signature' );
 
 		// Forminator UI - Base stylesheet.
-		if ( 'none' !== $form_design ) {
+		if ( 'none' !== $form_design && 'basic' !== $form_design ) {
 
 			// Forminator UI - Full stylesheet.
 			if ( $has_phone_settings || $has_address_country || $has_select_multiple || $has_datepicker || $has_timepicker || $has_uploader || $has_post_feat_image || ( $has_post_categories && $has_multi_categories ) || ( $has_post_tags && $has_multi_tags ) || $has_currency || $has_paypal || $has_stripe || $has_signature || $has_dateselect || $has_select_single || $has_timepicker ) {
-				wp_enqueue_style(
+				Forminator_Assets_Enqueue::fui_enqueue_style(
 					'forminator-forms-' . $form_design . '-full',
 					forminator_plugin_url() . 'assets/forminator-ui/css/src/form/forminator-form-' . $form_design . '.full.min.css',
 					array(),
@@ -168,7 +182,7 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 			// Forminator UI - Pagination stylesheet.
 			if ( $render_obj->has_field_type( 'page-break' ) ) {
 
-				wp_enqueue_style(
+				Forminator_Assets_Enqueue::fui_enqueue_style(
 					'forminator-forms-' . $form_design . '-pagination',
 					forminator_plugin_url() . 'assets/forminator-ui/css/src/form/forminator-form-' . $form_design . '.pagination.min.css',
 					array(),
@@ -180,7 +194,7 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 		// Forminator UI - Authentication stylesheet.
 		if ( $has_password ) {
 
-			wp_enqueue_style(
+			Forminator_Assets_Enqueue::fui_enqueue_style(
 				'forminator-authentication',
 				forminator_plugin_url() . 'assets/forminator-ui/css/src/form/forminator-authentication.min.css',
 				array(),
@@ -275,7 +289,7 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 		$script_src     = forminator_plugin_url() . 'assets/js/library/intlTelInput.min.js';
 		$script_version = FORMINATOR_VERSION;
 
-		wp_enqueue_style( 'intlTelInput-forminator-css', $style_src, array(), $style_version ); // intlTelInput.
+		Forminator_Assets_Enqueue::fui_enqueue_style( 'intlTelInput-forminator-css', $style_src, array(), $style_version ); // intlTelInput.
 		wp_enqueue_script( 'forminator-intlTelInput', $script_src, array( 'jquery' ), $script_version, false ); // intlTelInput.
 	}
 
@@ -347,7 +361,7 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 
 		if ( $has_element ) {
 			// Load Forminator styles for select2.
-			wp_enqueue_style(
+			Forminator_Assets_Enqueue::fui_enqueue_style(
 				'forminator-forms-' . $form_design . '-select2',
 				forminator_plugin_url() . 'assets/forminator-ui/css/src/form/forminator-form-' . $form_design . '.select2.min.css',
 				array(),

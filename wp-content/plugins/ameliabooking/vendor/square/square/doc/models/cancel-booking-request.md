@@ -16,8 +16,8 @@
 
 ```json
 {
-  "idempotency_key": null,
-  "booking_version": null
+  "idempotency_key": "idempotency_key0",
+  "booking_version": 224
 }
 ```
 

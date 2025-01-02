@@ -71,9 +71,10 @@ abstract class Forminator_GFBlock_Abstract {
 						'forminator-ui-utilities',
 						'forminator-ui-grid-open',
 						'forminator-ui-grid-enclosed',
+						'forminator-ui-basic',
 						'forminator-ui',
 					),
-					'script'          => array( 'forminator-front-scripts' ),
+					'script'          => array( 'forminator-front-scripts', 'select2-forminator', 'jquery-ui-slider' ),
 					'render_callback' => array( $this, 'render_block' ),
 				)
 			);

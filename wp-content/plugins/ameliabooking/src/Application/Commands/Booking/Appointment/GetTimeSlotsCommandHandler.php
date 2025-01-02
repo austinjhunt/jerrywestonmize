@@ -15,6 +15,7 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\PositiveDuration;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use DateTimeZone;
@@ -166,8 +167,6 @@ class GetTimeSlotsCommandHandler extends CommandHandler
             $maximumBookingTimeInDays
         );
 
-        $maximumDateTime->setTimezone(new DateTimeZone($timeZone));
-
         if ($isFrontEndBooking) {
             $startDateTime = $startDateTime < $minimumDateTime ? $minimumDateTime : $startDateTime;
 
@@ -271,6 +270,8 @@ class GetTimeSlotsCommandHandler extends CommandHandler
 
                 AbstractOutlookCalendarService::$providersOutlookEvents = [];
 
+                AbstractAppleCalendarService::$providersAppleEvents = [];
+
                 $freeSlots = $applicationTimeSlotService->getSlotsByProps(
                     $settings,
                     array_merge(
@@ -283,10 +284,14 @@ class GetTimeSlotsCommandHandler extends CommandHandler
                     $filteredSlotEntities
                 );
 
-                if ($endDateTime->format('Y-m-d H:i') === $maximumDateTime->format('Y-m-d H:i') ||
-                    ($endDateTime->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i') ===
-                        $maximumDateTime->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i')) ||
-                    ($endDateTime > $maximumDateTime)
+                $endDateTimeCopy = clone $endDateTime;
+
+                $maximumDateTimeCopy = clone $maximumDateTime;
+
+                if ($endDateTimeCopy->format('Y-m-d H:i') === $maximumDateTimeCopy->format('Y-m-d H:i') ||
+                    ($endDateTimeCopy->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i') ===
+                        $maximumDateTimeCopy->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i')) ||
+                    ($endDateTimeCopy > $maximumDateTimeCopy)
                 ) {
                     break;
                 }
@@ -312,6 +317,8 @@ class GetTimeSlotsCommandHandler extends CommandHandler
                     AbstractGoogleCalendarService::$providersGoogleEvents = [];
 
                     AbstractOutlookCalendarService::$providersOutlookEvents = [];
+
+                    AbstractAppleCalendarService::$providersAppleEvents = [];
 
                     $freeSlots = $applicationTimeSlotService->getSlotsByProps(
                         $settings,

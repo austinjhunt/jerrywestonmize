@@ -15,7 +15,7 @@ class Issn extends Constraint
  public $message = 'This value is not a valid ISSN.';
  public $caseSensitive = \false;
  public $requireHyphen = \false;
- public function __construct(array $options = null, string $message = null, bool $caseSensitive = null, bool $requireHyphen = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $message = null, ?bool $caseSensitive = null, ?bool $requireHyphen = null, ?array $groups = null, $payload = null)
  {
  parent::__construct($options, $groups, $payload);
  $this->message = $message ?? $this->message;

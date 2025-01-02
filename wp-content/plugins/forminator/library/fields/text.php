@@ -52,13 +52,6 @@ class Forminator_Text extends Forminator_Field {
 	public $options = array();
 
 	/**
-	 * Category
-	 *
-	 * @var string
-	 */
-	public $category = 'standard';
-
-	/**
 	 * Is input
 	 *
 	 * @var bool

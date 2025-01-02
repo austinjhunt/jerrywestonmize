@@ -16,8 +16,27 @@
 
 ```json
 {
-  "errors": null,
-  "snippet": null
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "snippet": {
+    "id": "id0",
+    "site_id": "site_id6",
+    "content": "content4",
+    "created_at": "created_at8",
+    "updated_at": "updated_at4"
+  }
 }
 ```
 

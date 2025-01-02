@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Symfony\Component\Validator\Exception\ValidatorException;
 class GetterMetadata extends MemberMetadata
 {
- public function __construct(string $class, string $property, string $method = null)
+ public function __construct(string $class, string $property, ?string $method = null)
  {
  if (null === $method) {
  $getMethod = 'get' . \ucfirst($property);

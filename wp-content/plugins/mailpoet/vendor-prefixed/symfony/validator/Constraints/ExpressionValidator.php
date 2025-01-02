@@ -8,7 +8,7 @@ use MailPoetVendor\Symfony\Component\Validator\Exception\UnexpectedTypeException
 class ExpressionValidator extends ConstraintValidator
 {
  private $expressionLanguage;
- public function __construct(ExpressionLanguage $expressionLanguage = null)
+ public function __construct(?ExpressionLanguage $expressionLanguage = null)
  {
  $this->expressionLanguage = $expressionLanguage;
  }

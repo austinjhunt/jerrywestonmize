@@ -5,24 +5,24 @@ use MailPoetVendor\Symfony\Component\Translation\Exception\InvalidArgumentExcept
 trait TranslatorTrait
 {
  private $locale;
- public function setLocale($locale)
+ public function setLocale(string $locale)
  {
- $this->locale = (string) $locale;
+ $this->locale = $locale;
  }
  public function getLocale()
  {
  return $this->locale ?: (\class_exists(\Locale::class) ? \Locale::getDefault() : 'en');
  }
- public function trans($id, array $parameters = [], $domain = null, $locale = null)
+ public function trans(?string $id, array $parameters = [], ?string $domain = null, ?string $locale = null) : string
  {
- if ('' === ($id = (string) $id)) {
+ if (null === $id || '' === $id) {
  return '';
  }
  if (!isset($parameters['%count%']) || !\is_numeric($parameters['%count%'])) {
  return \strtr($id, $parameters);
  }
  $number = (float) $parameters['%count%'];
- $locale = (string) $locale ?: $this->getLocale();
+ $locale = $locale ?: $this->getLocale();
  $parts = [];
  if (\preg_match('/^\\|++$/', $id)) {
  $parts = \explode('|', $id);

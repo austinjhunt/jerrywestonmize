@@ -10,7 +10,6 @@ use MailPoet\AdminPages\Pages\AutomationAnalytics;
 use MailPoet\AdminPages\Pages\AutomationEditor;
 use MailPoet\AdminPages\Pages\AutomationTemplates;
 use MailPoet\AdminPages\Pages\DynamicSegments;
-use MailPoet\AdminPages\Pages\EmailEditor as EmailEditorPage;
 use MailPoet\AdminPages\Pages\ExperimentalFeatures;
 use MailPoet\AdminPages\Pages\FormEditor;
 use MailPoet\AdminPages\Pages\Forms;
@@ -29,6 +28,7 @@ use MailPoet\AdminPages\Pages\Upgrade;
 use MailPoet\AdminPages\Pages\WelcomeWizard;
 use MailPoet\AdminPages\Pages\WooCommerceSetup;
 use MailPoet\DI\ContainerWrapper;
+use MailPoet\EmailEditor\Integrations\MailPoet\EmailEditor;
 use MailPoet\Form\Util\CustomFonts;
 use MailPoet\Util\License\Features\CapabilitiesManager;
 use MailPoet\WP\Functions as WPFunctions;
@@ -40,7 +40,6 @@ class Menu {
   const EMAILS_PAGE_SLUG = 'mailpoet-newsletters';
   const FORMS_PAGE_SLUG = 'mailpoet-forms';
   const EMAIL_EDITOR_PAGE_SLUG = 'mailpoet-newsletter-editor';
-  const EMAIL_EDITOR_V2_PAGE_SLUG = 'mailpoet-email-editor';
   const FORM_EDITOR_PAGE_SLUG = 'mailpoet-form-editor';
   const HOMEPAGE_PAGE_SLUG = 'mailpoet-homepage';
   const FORM_TEMPLATES_PAGE_SLUG = 'mailpoet-form-editor-template-selection';
@@ -86,6 +85,9 @@ class Menu {
   /** @var CustomFonts  */
   private $customFonts;
 
+  /** @var EmailEditor  */
+  private $emailEditor;
+
   private CapabilitiesManager $capabilitiesManager;
 
   public function __construct(
@@ -95,7 +97,8 @@ class Menu {
     ContainerWrapper $container,
     Router $router,
     CustomFonts $customFonts,
-    CapabilitiesManager $capabilitiesManager
+    CapabilitiesManager $capabilitiesManager,
+    EmailEditor $emailEditor
   ) {
     $this->accessControl = $accessControl;
     $this->wp = $wp;
@@ -104,6 +107,7 @@ class Menu {
     $this->router = $router;
     $this->customFonts = $customFonts;
     $this->capabilitiesManager = $capabilitiesManager;
+    $this->emailEditor = $emailEditor;
   }
 
   public function init() {
@@ -259,27 +263,6 @@ class Menu {
         'newletterEditor',
       ]
     );
-
-    // newsletter editor
-    $emailEditorPage = $this->wp->addSubmenuPage(
-      self::EMAILS_PAGE_SLUG,
-      $this->setPageTitle(__('Email', 'mailpoet')),
-      esc_html__('Email Editor', 'mailpoet'),
-      AccessControl::PERMISSION_MANAGE_EMAILS,
-      self::EMAIL_EDITOR_V2_PAGE_SLUG,
-      [
-        $this,
-        'emailEditor',
-      ]
-    );
-
-    // Add body class for email editor page
-    // We need to mark the page as a block editor page so that some of the block editor styles are applied properly
-    $this->wp->addAction('load-' . $emailEditorPage, function() {
-      $this->wp->addFilter('admin_body_class', function ($classes) {
-        return ltrim($classes . ' block-editor-page');
-      });
-    });
 
     $this->registerAutomationMenu();
 
@@ -651,10 +634,6 @@ class Menu {
     $this->container->get(NewsletterEditor::class)->render();
   }
 
-  public function emailEditor() {
-    $this->container->get(EmailEditorPage::class)->render();
-  }
-
   public function import() {
     $this->container->get(SubscribersImport::class)->render();
   }
@@ -686,6 +665,13 @@ class Menu {
     if ($page) {
       $plugin_page = $page;
       return $parentFile;
+    }
+
+    // In case we are on the email editor page, we want to highlight the Emails menu item
+    if ($this->emailEditor->isEditorPage(false)) {
+      $plugin_page = self::EMAILS_PAGE_SLUG;
+      $submenu_file = self::EMAILS_PAGE_SLUG;
+      return self::EMAILS_PAGE_SLUG;
     }
 
     if ($parentFile === self::MAIN_PAGE_SLUG || !self::isOnMailPoetAdminPage()) {

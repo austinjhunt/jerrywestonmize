@@ -78,7 +78,21 @@ Defines the response returned by [CancelPayment](../../doc/apis/payments.md#canc
     },
     "updated_at": "2021-10-13T20:31:21.597Z",
     "version_token": "N8AGYgEjCiY9Q57Jw7aVHEpBq8bzGCDCQMRX8Vs56N06o"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

@@ -139,7 +139,11 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         $data = $placeholderService->getPlaceholdersData(
             $appointmentArray,
             $bookingKey,
-            'whatsapp'
+            'whatsapp',
+            null,
+            null,
+            false,
+            $notification->getName()->getValue()
         );
 
         $isCustomerPackage = isset($appointmentArray['isForCustomer']) && $appointmentArray['isForCustomer'];

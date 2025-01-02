@@ -16,14 +16,14 @@ A purchase that is disqualified from earning points because of this limit might 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `times` | `int` | Required | The maximum number of times a buyer can trigger the promotion during the specified `interval`.<br>**Constraints**: `>= 1`, `<= 30` | getTimes(): int | setTimes(int times): void |
-| `interval` | [`?string (LoyaltyPromotionTriggerLimitInterval)`](../../doc/models/loyalty-promotion-trigger-limit-interval.md) | Optional | Indicates the time period that the [trigger limit](../../doc/models/loyalty-promotion-trigger-limit.md) applies to,<br>which is used to determine the number of times a buyer can earn points for a [loyalty promotion](../../doc/models/loyalty-promotion.md). | getInterval(): ?string | setInterval(?string interval): void |
+| `interval` | [`?string(LoyaltyPromotionTriggerLimitInterval)`](../../doc/models/loyalty-promotion-trigger-limit-interval.md) | Optional | Indicates the time period that the [trigger limit](../../doc/models/loyalty-promotion-trigger-limit.md) applies to,<br>which is used to determine the number of times a buyer can earn points for a [loyalty promotion](../../doc/models/loyalty-promotion.md). | getInterval(): ?string | setInterval(?string interval): void |
 
 ## Example (as JSON)
 
 ```json
 {
-  "times": 28,
-  "interval": null
+  "times": 32,
+  "interval": "ALL_TIME"
 }
 ```
 

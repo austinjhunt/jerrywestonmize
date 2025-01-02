@@ -29,7 +29,7 @@ class File extends Constraint
  public $uploadExtensionErrorMessage = 'A PHP extension caused the upload to fail.';
  public $uploadErrorMessage = 'The file could not be uploaded.';
  protected $maxSize;
- public function __construct(array $options = null, $maxSize = null, bool $binaryFormat = null, $mimeTypes = null, string $notFoundMessage = null, string $notReadableMessage = null, string $maxSizeMessage = null, string $mimeTypesMessage = null, string $disallowEmptyMessage = null, string $uploadIniSizeErrorMessage = null, string $uploadFormSizeErrorMessage = null, string $uploadPartialErrorMessage = null, string $uploadNoFileErrorMessage = null, string $uploadNoTmpDirErrorMessage = null, string $uploadCantWriteErrorMessage = null, string $uploadExtensionErrorMessage = null, string $uploadErrorMessage = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, $maxSize = null, ?bool $binaryFormat = null, $mimeTypes = null, ?string $notFoundMessage = null, ?string $notReadableMessage = null, ?string $maxSizeMessage = null, ?string $mimeTypesMessage = null, ?string $disallowEmptyMessage = null, ?string $uploadIniSizeErrorMessage = null, ?string $uploadFormSizeErrorMessage = null, ?string $uploadPartialErrorMessage = null, ?string $uploadNoFileErrorMessage = null, ?string $uploadNoTmpDirErrorMessage = null, ?string $uploadCantWriteErrorMessage = null, ?string $uploadExtensionErrorMessage = null, ?string $uploadErrorMessage = null, ?array $groups = null, $payload = null)
  {
  if (null !== $maxSize && !\is_int($maxSize) && !\is_string($maxSize)) {
  throw new \TypeError(\sprintf('"%s": Expected argument $maxSize to be either null, an integer or a string, got "%s".', __METHOD__, \get_debug_type($maxSize)));

@@ -113,6 +113,20 @@ class PackageCustomerServiceRepository extends AbstractRepository
             $where[] = 'pcs.id IN (' . implode(', ', $queryIds) . ')';
         }
 
+        if (!empty($criteria['packageCustomerIds'])) {
+            $queryIds = [];
+
+            foreach ($criteria['packageCustomerIds'] as $index => $value) {
+                $param = ':id' . $index;
+
+                $queryIds[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = 'pc.id IN (' . implode(', ', $queryIds) . ')';
+        }
+
         if (!empty($criteria['purchased'])) {
             $where[] = "(DATE_FORMAT(pc.purchased, '%Y-%m-%d %H:%i:%s') BETWEEN :purchasedFrom AND :purchasedTo)";
 
@@ -223,11 +237,14 @@ class PackageCustomerServiceRepository extends AbstractRepository
                     p.data AS payment_data,
                     p.wcOrderId AS payment_wcOrderId,
                     p.wcOrderItemId AS payment_wcOrderItemId,
-                    
+                    p.invoiceNumber AS payment_invoiceNumber,
+                    p.created AS payment_created,
+                
                     cu.firstName AS customer_firstName,
                     cu.lastName AS customer_lastName,
                     cu.email AS customer_email,
-                    cu.phone AS customer_phone
+                    cu.phone AS customer_phone,
+                    cu.status AS customer_status
                 FROM {$this->table} pcs
                 INNER JOIN {$this->packagesCustomersTable} pc ON pcs.packageCustomerId = pc.id
                 INNER JOIN {$usersTable} cu ON cu.id = pc.customerId

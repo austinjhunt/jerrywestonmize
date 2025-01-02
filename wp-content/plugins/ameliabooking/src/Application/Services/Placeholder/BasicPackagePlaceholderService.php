@@ -28,11 +28,15 @@ class BasicPackagePlaceholderService extends AppointmentPlaceholderService
         return [];
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param array        $package
      * @param int          $bookingKey
      * @param string       $type
      * @param AbstractUser $customer
+     * @param array        $allBookings
+     * @param bool         $invoice
+     * @param string       $notificationType
      *
      * @return array
      *
@@ -40,8 +44,15 @@ class BasicPackagePlaceholderService extends AppointmentPlaceholderService
      * @throws ContainerException
      * @throws Exception
      */
-    public function getPlaceholdersData($package, $bookingKey = null, $type = null, $customer = null, $allBookings = null)
-    {
+    public function getPlaceholdersData(
+        $package,
+        $bookingKey = null,
+        $type = null,
+        $customer = null,
+        $allBookings = null,
+        $invoice = false,
+        $notificationType = false
+    ) {
         return [];
     }
 

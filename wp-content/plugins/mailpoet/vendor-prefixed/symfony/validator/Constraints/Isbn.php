@@ -18,7 +18,7 @@ class Isbn extends Constraint
  public $bothIsbnMessage = 'This value is neither a valid ISBN-10 nor a valid ISBN-13.';
  public $type;
  public $message;
- public function __construct($type = null, string $message = null, string $isbn10Message = null, string $isbn13Message = null, string $bothIsbnMessage = null, array $groups = null, $payload = null, array $options = [])
+ public function __construct($type = null, ?string $message = null, ?string $isbn10Message = null, ?string $isbn13Message = null, ?string $bothIsbnMessage = null, ?array $groups = null, $payload = null, array $options = [])
  {
  if (\is_array($type)) {
  $options = \array_merge($type, $options);

@@ -152,7 +152,21 @@ a request to the `CreateCheckout` endpoint.
     },
     "redirect_url": "https://merchant.website.com/order-confirm",
     "version": 1
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

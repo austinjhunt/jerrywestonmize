@@ -29,6 +29,54 @@
       "amount": 10000,
       "currency": "USD"
     }
+  },
+  "description": "description6",
+  "order": {
+    "id": "id6",
+    "location_id": "location_id0",
+    "reference_id": "reference_id4",
+    "source": {
+      "name": "name4"
+    },
+    "customer_id": "customer_id4",
+    "line_items": [
+      {
+        "uid": "uid8",
+        "name": "name8",
+        "quantity": "quantity4",
+        "quantity_unit": {
+          "measurement_unit": {
+            "custom_unit": {
+              "name": "name2",
+              "abbreviation": "abbreviation4"
+            },
+            "area_unit": "IMPERIAL_ACRE",
+            "length_unit": "IMPERIAL_INCH",
+            "volume_unit": "METRIC_LITER",
+            "weight_unit": "IMPERIAL_WEIGHT_OUNCE"
+          },
+          "precision": 54,
+          "catalog_object_id": "catalog_object_id0",
+          "catalog_version": 12
+        },
+        "note": "note4",
+        "catalog_object_id": "catalog_object_id2"
+      }
+    ]
+  },
+  "checkout_options": {
+    "allow_tipping": false,
+    "custom_fields": [
+      {
+        "title": "title8"
+      },
+      {
+        "title": "title8"
+      }
+    ],
+    "subscription_plan_id": "subscription_plan_id8",
+    "redirect_url": "redirect_url2",
+    "merchant_support_email": "merchant_support_email8"
   }
 }
 ```

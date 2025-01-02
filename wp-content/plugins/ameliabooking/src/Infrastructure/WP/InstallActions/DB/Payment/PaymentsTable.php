@@ -46,6 +46,7 @@ class PaymentsTable extends AbstractDatabaseTable
                    `wcOrderItemId` bigint(20) NULL,
                    `transactionId` varchar(255) NULL,
                    `transfers` text NULL,
+                   `invoiceNumber` int(11) NULL,
                     PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     }

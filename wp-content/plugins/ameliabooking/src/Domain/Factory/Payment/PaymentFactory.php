@@ -69,6 +69,10 @@ class PaymentFactory
             $payment->setParentId(new Id($data['parentId']));
         }
 
+        if (!empty($data['invoiceNumber'])) {
+            $payment->setInvoiceNumber(new Id($data['invoiceNumber']));
+        }
+
         if (!empty($data['entity'])) {
             $payment->setEntity(new Name($data['entity']));
         }

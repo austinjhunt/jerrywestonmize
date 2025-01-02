@@ -9,7 +9,7 @@ class Type extends Constraint
  protected static $errorNames = [self::INVALID_TYPE_ERROR => 'INVALID_TYPE_ERROR'];
  public $message = 'This value should be of type {{ type }}.';
  public $type;
- public function __construct($type, string $message = null, array $groups = null, $payload = null, array $options = [])
+ public function __construct($type, ?string $message = null, ?array $groups = null, $payload = null, array $options = [])
  {
  if (\is_array($type) && \is_string(\key($type))) {
  $options = \array_merge($type, $options);

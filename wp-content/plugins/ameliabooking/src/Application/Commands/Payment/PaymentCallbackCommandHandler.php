@@ -6,7 +6,6 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
-use AmeliaBooking\Domain\Entity\Cache\Cache;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Payment\PaymentGateway;
@@ -16,21 +15,15 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
-use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
-use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAddedEventHandler;
 use Interop\Container\Exception\ContainerException;
-use Square\Models\Order;
-use Square\Models\UpdateOrderRequest;
-use Square\Models\UpdatePaymentRequest;
 
 /**
  * Class PaymentCallbackCommandHandler
@@ -219,12 +212,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
 
                         if ($payment->getEntity()->getValue() === Entities::APPOINTMENT) {
                             if ($changeBookingStatus && $data['booking']['status'] !== BookingStatus::APPROVED) {
-                                $appointmentAS->updateBookingStatus($paymentId);
-
-                                BookingAddedEventHandler::handle(
-                                    $reservation,
-                                    $this->container
-                                );
+                                $appointmentAS->approveBooking($data['booking']['id']);
                             }
                         }
                     }

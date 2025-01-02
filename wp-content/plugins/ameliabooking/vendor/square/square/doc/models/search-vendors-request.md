@@ -33,7 +33,23 @@ Represents an input into a call to [SearchVendors](../../doc/apis/vendors.md#sea
       "field": "CREATED_AT",
       "order": "ASC"
     }
-  }
+  },
+  "filter": {
+    "name": [
+      "name4",
+      "name5",
+      "name6"
+    ],
+    "status": [
+      "ACTIVE",
+      "INACTIVE"
+    ]
+  },
+  "sort": {
+    "field": "NAME",
+    "order": "DESC"
+  },
+  "cursor": "cursor0"
 }
 ```
 

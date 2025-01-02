@@ -305,7 +305,7 @@ class FormEditor {
   }
 
   private function getPreviewPageUrl() {
-    $mailpoetPage = Pages::getDefaultMailPoetPage();
+    $mailpoetPage = Pages::getMailPoetPage(Pages::PAGE_SUBSCRIPTIONS);
     if (!$mailpoetPage) {
       return null;
     }

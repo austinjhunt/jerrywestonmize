@@ -12,7 +12,7 @@ Represents a [CreateGiftCard](../../doc/apis/gift-cards.md#create-gift-card) req
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `idempotencyKey` | `string` | Required | A unique identifier for this request, used to ensure idempotency. For more information,<br>see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).<br>**Constraints**: *Minimum Length*: `1`, *Maximum Length*: `128` | getIdempotencyKey(): string | setIdempotencyKey(string idempotencyKey): void |
-| `locationId` | `string` | Required | The ID of the [location](../../doc/models/location.md) where the gift card should be registered for<br>reporting purposes. Gift cards can be redeemed at any of the seller's locations.<br>**Constraints**: *Minimum Length*: `1` | getLocationId(): string | setLocationId(string locationId): void |
+| `locationId` | `string` | Required | The ID of the [location](entity:Location) where the gift card should be registered for<br>reporting purposes. Gift cards can be redeemed at any of the seller's locations.<br>**Constraints**: *Minimum Length*: `1` | getLocationId(): string | setLocationId(string locationId): void |
 | `giftCard` | [`GiftCard`](../../doc/models/gift-card.md) | Required | Represents a Square gift card. | getGiftCard(): GiftCard | setGiftCard(GiftCard giftCard): void |
 
 ## Example (as JSON)
@@ -20,7 +20,15 @@ Represents a [CreateGiftCard](../../doc/apis/gift-cards.md#create-gift-card) req
 ```json
 {
   "gift_card": {
-    "type": "DIGITAL"
+    "type": "DIGITAL",
+    "id": "id0",
+    "gan_source": "SQUARE",
+    "state": "ACTIVE",
+    "balance_money": {
+      "amount": 146,
+      "currency": "MVR"
+    },
+    "gan": "gan6"
   },
   "idempotency_key": "NC9Tm69EjbjtConu",
   "location_id": "81FN9BNFZTKS4"

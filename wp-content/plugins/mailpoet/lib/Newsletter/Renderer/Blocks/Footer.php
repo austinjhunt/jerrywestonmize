@@ -5,12 +5,25 @@ namespace MailPoet\Newsletter\Renderer\Blocks;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Newsletter\NewsletterHtmlSanitizer;
 use MailPoet\Newsletter\Renderer\EscapeHelper as EHelper;
 use MailPoet\Newsletter\Renderer\StylesHelper;
 use MailPoet\Util\pQuery\pQuery;
+use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\CSS;
 
 class Footer {
+  private NewsletterHtmlSanitizer $htmlSanitizer;
+  private WPFunctions $wp;
+
+  public function __construct(
+    NewsletterHtmlSanitizer $htmlSanitizer,
+    WPFunctions $wp
+  ) {
+    $this->htmlSanitizer = $htmlSanitizer;
+    $this->wp = $wp;
+  }
+
   public function render($element) {
     $element['text'] = preg_replace('/\n/', '<br />', $element['text']);
     $element['text'] = preg_replace('/(<\/?p.*?>)/i', '', $element['text']);
@@ -35,7 +48,7 @@ class Footer {
     }
     $backgroundColor = $element['styles']['block']['backgroundColor'];
     $backgroundColor = ($backgroundColor !== 'transparent') ?
-      'bgcolor="' . $backgroundColor . '"' :
+      'bgcolor="' . $this->wp->escAttr($backgroundColor) . '"' :
       false;
     if (!$backgroundColor) unset($element['styles']['block']['backgroundColor']);
     $style = 'line-height: ' . $lineHeight . ';' . StylesHelper::getBlockStyles($element) . StylesHelper::getStyles($element['styles'], 'text');
@@ -43,7 +56,7 @@ class Footer {
     $template = '
       <tr>
         <td class="mailpoet_header_footer_padded mailpoet_footer" ' . $backgroundColor . ' style="' . $style . '">
-          ' . str_replace('&', '&amp;', $DOM->html()) . '
+          ' . $this->htmlSanitizer->sanitize($DOM->__toString()) . '
         </td>
       </tr>';
     return $template;

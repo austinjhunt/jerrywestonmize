@@ -372,7 +372,10 @@ class Forminator_Mixpanel_Modules extends Events {
 
 		// Stripe data.
 		if ( is_plugin_active( 'forminator-stripe/forminator-stripe.php' ) ) {
-			$stripe_data = self::fields_array( $fields, 'stripe' );
+			$stripe_data = self::fields_array( $fields, 'stripe-ocs' );
+			if ( empty( $stripe_data ) ) {
+				$stripe_data = self::fields_array( $fields, 'stripe' );
+			}
 			if ( ! empty( $stripe_data[0]['payments'] ) ) {
 				$addon_data['stripe_addon'] = in_array( 'subscription', array_column( $stripe_data[0]['payments'], 'payment_method' ), true );
 			}

@@ -46,22 +46,23 @@ function createLoyaltyAccount(CreateLoyaltyAccountRequest $body): ApiResponse
 
 ## Response Type
 
-[`CreateLoyaltyAccountResponse`](../../doc/models/create-loyalty-account-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateLoyaltyAccountResponse`](../../doc/models/create-loyalty-account-response.md).
 
 ## Example Usage
 
 ```php
-$body_loyaltyAccount_programId = 'd619f755-2d17-41f3-990d-c04ecedd64dd';
-$body_loyaltyAccount = new Models\LoyaltyAccount(
-    $body_loyaltyAccount_programId
-);
-$body_loyaltyAccount->setMapping(new Models\LoyaltyAccountMapping());
-$body_loyaltyAccount->getMapping()->setPhoneNumber('+14155551234');
-$body_idempotencyKey = 'ec78c477-b1c3-4899-a209-a4e71337c996';
-$body = new Models\CreateLoyaltyAccountRequest(
-    $body_loyaltyAccount,
-    $body_idempotencyKey
-);
+$body = CreateLoyaltyAccountRequestBuilder::init(
+    LoyaltyAccountBuilder::init(
+        'd619f755-2d17-41f3-990d-c04ecedd64dd'
+    )
+        ->mapping(
+            LoyaltyAccountMappingBuilder::init()
+                ->phoneNumber('+14155551234')
+                ->build()
+        )
+        ->build(),
+    'ec78c477-b1c3-4899-a209-a4e71337c996'
+)->build();
 
 $apiResponse = $loyaltyApi->createLoyaltyAccount($body);
 
@@ -71,9 +72,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -97,20 +98,25 @@ function searchLoyaltyAccounts(SearchLoyaltyAccountsRequest $body): ApiResponse
 
 ## Response Type
 
-[`SearchLoyaltyAccountsResponse`](../../doc/models/search-loyalty-accounts-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`SearchLoyaltyAccountsResponse`](../../doc/models/search-loyalty-accounts-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\SearchLoyaltyAccountsRequest();
-$body->setQuery(new Models\SearchLoyaltyAccountsRequestLoyaltyAccountQuery());
-$body_query_mappings = [];
-
-$body_query_mappings[0] = new Models\LoyaltyAccountMapping();
-$body_query_mappings[0]->setPhoneNumber('+14155551234');
-$body->getQuery()->setMappings($body_query_mappings);
-
-$body->setLimit(10);
+$body = SearchLoyaltyAccountsRequestBuilder::init()
+    ->query(
+        SearchLoyaltyAccountsRequestLoyaltyAccountQueryBuilder::init()
+            ->mappings(
+                [
+                    LoyaltyAccountMappingBuilder::init()
+                        ->phoneNumber('+14155551234')
+                        ->build()
+                ]
+            )
+            ->build()
+    )
+    ->limit(10)
+    ->build();
 
 $apiResponse = $loyaltyApi->searchLoyaltyAccounts($body);
 
@@ -120,9 +126,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -138,11 +144,11 @@ function retrieveLoyaltyAccount(string $accountId): ApiResponse
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `accountId` | `string` | Template, Required | The ID of the [loyalty account](../../doc/models/loyalty-account.md) to retrieve. |
+| `accountId` | `string` | Template, Required | The ID of the [loyalty account](entity:LoyaltyAccount) to retrieve. |
 
 ## Response Type
 
-[`RetrieveLoyaltyAccountResponse`](../../doc/models/retrieve-loyalty-account-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveLoyaltyAccountResponse`](../../doc/models/retrieve-loyalty-account-response.md).
 
 ## Example Usage
 
@@ -157,9 +163,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -188,28 +194,30 @@ function accumulateLoyaltyPoints(string $accountId, AccumulateLoyaltyPointsReque
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `accountId` | `string` | Template, Required | The ID of the target [loyalty account](../../doc/models/loyalty-account.md). |
+| `accountId` | `string` | Template, Required | The ID of the target [loyalty account](entity:LoyaltyAccount). |
 | `body` | [`AccumulateLoyaltyPointsRequest`](../../doc/models/accumulate-loyalty-points-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
 
 ## Response Type
 
-[`AccumulateLoyaltyPointsResponse`](../../doc/models/accumulate-loyalty-points-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`AccumulateLoyaltyPointsResponse`](../../doc/models/accumulate-loyalty-points-response.md).
 
 ## Example Usage
 
 ```php
 $accountId = 'account_id2';
-$body_accumulatePoints = new Models\LoyaltyEventAccumulatePoints();
-$body_accumulatePoints->setOrderId('RFZfrdtm3mhO1oGzf5Cx7fEMsmGZY');
-$body_idempotencyKey = '58b90739-c3e8-4b11-85f7-e636d48d72cb';
-$body_locationId = 'P034NEENMD09F';
-$body = new Models\AccumulateLoyaltyPointsRequest(
-    $body_accumulatePoints,
-    $body_idempotencyKey,
-    $body_locationId
-);
 
-$apiResponse = $loyaltyApi->accumulateLoyaltyPoints($accountId, $body);
+$body = AccumulateLoyaltyPointsRequestBuilder::init(
+    LoyaltyEventAccumulatePointsBuilder::init()
+        ->orderId('RFZfrdtm3mhO1oGzf5Cx7fEMsmGZY')
+        ->build(),
+    '58b90739-c3e8-4b11-85f7-e636d48d72cb',
+    'P034NEENMD09F'
+)->build();
+
+$apiResponse = $loyaltyApi->accumulateLoyaltyPoints(
+    $accountId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $accumulateLoyaltyPointsResponse = $apiResponse->getResult();
@@ -217,9 +225,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -239,29 +247,31 @@ function adjustLoyaltyPoints(string $accountId, AdjustLoyaltyPointsRequest $body
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `accountId` | `string` | Template, Required | The ID of the target [loyalty account](../../doc/models/loyalty-account.md). |
+| `accountId` | `string` | Template, Required | The ID of the target [loyalty account](entity:LoyaltyAccount). |
 | `body` | [`AdjustLoyaltyPointsRequest`](../../doc/models/adjust-loyalty-points-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
 
 ## Response Type
 
-[`AdjustLoyaltyPointsResponse`](../../doc/models/adjust-loyalty-points-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`AdjustLoyaltyPointsResponse`](../../doc/models/adjust-loyalty-points-response.md).
 
 ## Example Usage
 
 ```php
 $accountId = 'account_id2';
-$body_idempotencyKey = 'bc29a517-3dc9-450e-aa76-fae39ee849d1';
-$body_adjustPoints_points = 10;
-$body_adjustPoints = new Models\LoyaltyEventAdjustPoints(
-    $body_adjustPoints_points
-);
-$body_adjustPoints->setReason('Complimentary points');
-$body = new Models\AdjustLoyaltyPointsRequest(
-    $body_idempotencyKey,
-    $body_adjustPoints
-);
 
-$apiResponse = $loyaltyApi->adjustLoyaltyPoints($accountId, $body);
+$body = AdjustLoyaltyPointsRequestBuilder::init(
+    'bc29a517-3dc9-450e-aa76-fae39ee849d1',
+    LoyaltyEventAdjustPointsBuilder::init(
+        10
+    )
+        ->reason('Complimentary points')
+        ->build()
+)->build();
+
+$apiResponse = $loyaltyApi->adjustLoyaltyPoints(
+    $accountId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $adjustLoyaltyPointsResponse = $apiResponse->getResult();
@@ -269,9 +279,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -298,19 +308,25 @@ function searchLoyaltyEvents(SearchLoyaltyEventsRequest $body): ApiResponse
 
 ## Response Type
 
-[`SearchLoyaltyEventsResponse`](../../doc/models/search-loyalty-events-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`SearchLoyaltyEventsResponse`](../../doc/models/search-loyalty-events-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\SearchLoyaltyEventsRequest();
-$body->setQuery(new Models\LoyaltyEventQuery());
-$body->getQuery()->setFilter(new Models\LoyaltyEventFilter());
-$body_query_filter_orderFilter_orderId = 'PyATxhYLfsMqpVkcKJITPydgEYfZY';
-$body->getQuery()->getFilter()->setOrderFilter(new Models\LoyaltyEventOrderFilter(
-    $body_query_filter_orderFilter_orderId
-));
-$body->setLimit(30);
+$body = SearchLoyaltyEventsRequestBuilder::init()
+    ->query(
+        LoyaltyEventQueryBuilder::init()
+            ->filter(
+                LoyaltyEventFilterBuilder::init()
+                    ->orderFilter(
+                        LoyaltyEventOrderFilterBuilder::init(
+                            'PyATxhYLfsMqpVkcKJITPydgEYfZY'
+                        )->build()
+                    )->build()
+            )->build()
+    )
+    ->limit(30)
+    ->build();
 
 $apiResponse = $loyaltyApi->searchLoyaltyEvents($body);
 
@@ -320,9 +336,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -333,7 +349,7 @@ if ($apiResponse->isSuccess()) {
 Returns a list of loyalty programs in the seller's account.
 Loyalty programs define how buyers can earn points and redeem points for rewards. Square sellers can have only one loyalty program, which is created and managed from the Seller Dashboard. For more information, see [Loyalty Program Overview](https://developer.squareup.com/docs/loyalty/overview).
 
-Replaced with [RetrieveLoyaltyProgram](../../doc/apis/loyalty.md#retrieve-loyalty-program) when used with the keyword `main`.
+Replaced with [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram) when used with the keyword `main`.
 
 ```php
 function listLoyaltyPrograms(): ApiResponse
@@ -341,7 +357,7 @@ function listLoyaltyPrograms(): ApiResponse
 
 ## Response Type
 
-[`ListLoyaltyProgramsResponse`](../../doc/models/list-loyalty-programs-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListLoyaltyProgramsResponse`](../../doc/models/list-loyalty-programs-response.md).
 
 ## Example Usage
 
@@ -354,9 +370,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -378,7 +394,7 @@ function retrieveLoyaltyProgram(string $programId): ApiResponse
 
 ## Response Type
 
-[`RetrieveLoyaltyProgramResponse`](../../doc/models/retrieve-loyalty-program-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveLoyaltyProgramResponse`](../../doc/models/retrieve-loyalty-program-response.md).
 
 ## Example Usage
 
@@ -393,9 +409,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -425,22 +441,27 @@ function calculateLoyaltyPoints(string $programId, CalculateLoyaltyPointsRequest
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `programId` | `string` | Template, Required | The ID of the [loyalty program](../../doc/models/loyalty-program.md), which defines the rules for accruing points. |
+| `programId` | `string` | Template, Required | The ID of the [loyalty program](entity:LoyaltyProgram), which defines the rules for accruing points. |
 | `body` | [`CalculateLoyaltyPointsRequest`](../../doc/models/calculate-loyalty-points-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
 
 ## Response Type
 
-[`CalculateLoyaltyPointsResponse`](../../doc/models/calculate-loyalty-points-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CalculateLoyaltyPointsResponse`](../../doc/models/calculate-loyalty-points-response.md).
 
 ## Example Usage
 
 ```php
 $programId = 'program_id0';
-$body = new Models\CalculateLoyaltyPointsRequest();
-$body->setOrderId('RFZfrdtm3mhO1oGzf5Cx7fEMsmGZY');
-$body->setLoyaltyAccountId('79b807d2-d786-46a9-933b-918028d7a8c5');
 
-$apiResponse = $loyaltyApi->calculateLoyaltyPoints($programId, $body);
+$body = CalculateLoyaltyPointsRequestBuilder::init()
+    ->orderId('RFZfrdtm3mhO1oGzf5Cx7fEMsmGZY')
+    ->loyaltyAccountId('79b807d2-d786-46a9-933b-918028d7a8c5')
+    ->build();
+
+$apiResponse = $loyaltyApi->calculateLoyaltyPoints(
+    $programId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $calculateLoyaltyPointsResponse = $apiResponse->getResult();
@@ -448,9 +469,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -472,14 +493,14 @@ function listLoyaltyPromotions(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `programId` | `string` | Template, Required | The ID of the base [loyalty program](../../doc/models/loyalty-program.md). To get the program ID,<br>call [RetrieveLoyaltyProgram](../../doc/apis/loyalty.md#retrieve-loyalty-program) using the `main` keyword. |
-| `status` | [`?string (LoyaltyPromotionStatus)`](../../doc/models/loyalty-promotion-status.md) | Query, Optional | The status to filter the results by. If a status is provided, only loyalty promotions<br>with the specified status are returned. Otherwise, all loyalty promotions associated with<br>the loyalty program are returned. |
+| `programId` | `string` | Template, Required | The ID of the base [loyalty program](entity:LoyaltyProgram). To get the program ID,<br>call [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram) using the `main` keyword. |
+| `status` | [`?string(LoyaltyPromotionStatus)`](../../doc/models/loyalty-promotion-status.md) | Query, Optional | The status to filter the results by. If a status is provided, only loyalty promotions<br>with the specified status are returned. Otherwise, all loyalty promotions associated with<br>the loyalty program are returned. |
 | `cursor` | `?string` | Query, Optional | The cursor returned in the paged response from the previous call to this endpoint.<br>Provide this cursor to retrieve the next page of results for your original request.<br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
 | `limit` | `?int` | Query, Optional | The maximum number of results to return in a single paged response.<br>The minimum value is 1 and the maximum value is 30. The default value is 30.<br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
 
 ## Response Type
 
-[`ListLoyaltyPromotionsResponse`](../../doc/models/list-loyalty-promotions-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListLoyaltyPromotionsResponse`](../../doc/models/list-loyalty-promotions-response.md).
 
 ## Example Usage
 
@@ -494,9 +515,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -517,55 +538,66 @@ function createLoyaltyPromotion(string $programId, CreateLoyaltyPromotionRequest
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `programId` | `string` | Template, Required | The ID of the [loyalty program](../../doc/models/loyalty-program.md) to associate with the promotion.<br>To get the program ID, call [RetrieveLoyaltyProgram](../../doc/apis/loyalty.md#retrieve-loyalty-program)<br>using the `main` keyword. |
+| `programId` | `string` | Template, Required | The ID of the [loyalty program](entity:LoyaltyProgram) to associate with the promotion.<br>To get the program ID, call [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram)<br>using the `main` keyword. |
 | `body` | [`CreateLoyaltyPromotionRequest`](../../doc/models/create-loyalty-promotion-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
 
 ## Response Type
 
-[`CreateLoyaltyPromotionResponse`](../../doc/models/create-loyalty-promotion-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateLoyaltyPromotionResponse`](../../doc/models/create-loyalty-promotion-response.md).
 
 ## Example Usage
 
 ```php
 $programId = 'program_id0';
-$body_loyaltyPromotion_name = 'Tuesday Happy Hour Promo';
-$body_loyaltyPromotion_incentive_type = Models\LoyaltyPromotionIncentiveType::POINTS_MULTIPLIER;
-$body_loyaltyPromotion_incentive = new Models\LoyaltyPromotionIncentive(
-    $body_loyaltyPromotion_incentive_type
-);
-$body_loyaltyPromotion_incentive_pointsMultiplierData_pointsMultiplier = 3;
-$body_loyaltyPromotion_incentive->setPointsMultiplierData(new Models\LoyaltyPromotionIncentivePointsMultiplierData(
-    $body_loyaltyPromotion_incentive_pointsMultiplierData_pointsMultiplier
-));
-$body_loyaltyPromotion_availableTime_timePeriods = ['BEGIN:VEVENT
+
+$body = CreateLoyaltyPromotionRequestBuilder::init(
+    LoyaltyPromotionBuilder::init(
+        'Tuesday Happy Hour Promo',
+        LoyaltyPromotionIncentiveBuilder::init(
+            LoyaltyPromotionIncentiveType::POINTS_MULTIPLIER
+        )
+            ->pointsMultiplierData(
+                LoyaltyPromotionIncentivePointsMultiplierDataBuilder::init()
+                    ->multiplier('3.0')
+                    ->build()
+            )
+            ->build(),
+        LoyaltyPromotionAvailableTimeDataBuilder::init(
+            [
+                'BEGIN:VEVENT
 DTSTART:20220816T160000
 DURATION:PT2H
 RRULE:FREQ=WEEKLY;BYDAY=TU
-END:VEVENT'];
-$body_loyaltyPromotion_availableTime = new Models\LoyaltyPromotionAvailableTimeData(
-    $body_loyaltyPromotion_availableTime_timePeriods
-);
-$body_loyaltyPromotion = new Models\LoyaltyPromotion(
-    $body_loyaltyPromotion_name,
-    $body_loyaltyPromotion_incentive,
-    $body_loyaltyPromotion_availableTime
-);
-$body_loyaltyPromotion_triggerLimit_times = 1;
-$body_loyaltyPromotion->setTriggerLimit(new Models\LoyaltyPromotionTriggerLimit(
-    $body_loyaltyPromotion_triggerLimit_times
-));
-$body_loyaltyPromotion->getTriggerLimit()->setInterval(Models\LoyaltyPromotionTriggerLimitInterval::DAY);
-$body_loyaltyPromotion->setMinimumSpendAmountMoney(new Models\Money());
-$body_loyaltyPromotion->getMinimumSpendAmountMoney()->setAmount(2000);
-$body_loyaltyPromotion->getMinimumSpendAmountMoney()->setCurrency(Models\Currency::USD);
-$body_loyaltyPromotion->setQualifyingCategoryIds(['XTQPYLR3IIU9C44VRCB3XD12']);
-$body_idempotencyKey = 'ec78c477-b1c3-4899-a209-a4e71337c996';
-$body = new Models\CreateLoyaltyPromotionRequest(
-    $body_loyaltyPromotion,
-    $body_idempotencyKey
-);
+END:VEVENT'
+            ]
+        )->build()
+    )
+        ->triggerLimit(
+            LoyaltyPromotionTriggerLimitBuilder::init(
+                1
+            )
+                ->interval(LoyaltyPromotionTriggerLimitInterval::DAY)
+                ->build()
+        )
+        ->minimumSpendAmountMoney(
+            MoneyBuilder::init()
+                ->amount(2000)
+                ->currency(Currency::USD)
+                ->build()
+        )
+        ->qualifyingCategoryIds(
+            [
+                'XTQPYLR3IIU9C44VRCB3XD12'
+            ]
+        )
+        ->build(),
+    'ec78c477-b1c3-4899-a209-a4e71337c996'
+)->build();
 
-$apiResponse = $loyaltyApi->createLoyaltyPromotion($programId, $body);
+$apiResponse = $loyaltyApi->createLoyaltyPromotion(
+    $programId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $createLoyaltyPromotionResponse = $apiResponse->getResult();
@@ -573,9 +605,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -591,20 +623,24 @@ function retrieveLoyaltyPromotion(string $promotionId, string $programId): ApiRe
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `promotionId` | `string` | Template, Required | The ID of the [loyalty promotion](../../doc/models/loyalty-promotion.md) to retrieve. |
-| `programId` | `string` | Template, Required | The ID of the base [loyalty program](../../doc/models/loyalty-program.md). To get the program ID,<br>call [RetrieveLoyaltyProgram](../../doc/apis/loyalty.md#retrieve-loyalty-program) using the `main` keyword. |
+| `promotionId` | `string` | Template, Required | The ID of the [loyalty promotion](entity:LoyaltyPromotion) to retrieve. |
+| `programId` | `string` | Template, Required | The ID of the base [loyalty program](entity:LoyaltyProgram). To get the program ID,<br>call [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram) using the `main` keyword. |
 
 ## Response Type
 
-[`RetrieveLoyaltyPromotionResponse`](../../doc/models/retrieve-loyalty-promotion-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveLoyaltyPromotionResponse`](../../doc/models/retrieve-loyalty-promotion-response.md).
 
 ## Example Usage
 
 ```php
 $promotionId = 'promotion_id0';
+
 $programId = 'program_id0';
 
-$apiResponse = $loyaltyApi->retrieveLoyaltyPromotion($promotionId, $programId);
+$apiResponse = $loyaltyApi->retrieveLoyaltyPromotion(
+    $promotionId,
+    $programId
+);
 
 if ($apiResponse->isSuccess()) {
     $retrieveLoyaltyPromotionResponse = $apiResponse->getResult();
@@ -612,9 +648,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -635,20 +671,24 @@ function cancelLoyaltyPromotion(string $promotionId, string $programId): ApiResp
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `promotionId` | `string` | Template, Required | The ID of the [loyalty promotion](../../doc/models/loyalty-promotion.md) to cancel. You can cancel a<br>promotion that has an `ACTIVE` or `SCHEDULED` status. |
-| `programId` | `string` | Template, Required | The ID of the base [loyalty program](../../doc/models/loyalty-program.md). |
+| `promotionId` | `string` | Template, Required | The ID of the [loyalty promotion](entity:LoyaltyPromotion) to cancel. You can cancel a<br>promotion that has an `ACTIVE` or `SCHEDULED` status. |
+| `programId` | `string` | Template, Required | The ID of the base [loyalty program](entity:LoyaltyProgram). |
 
 ## Response Type
 
-[`CancelLoyaltyPromotionResponse`](../../doc/models/cancel-loyalty-promotion-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CancelLoyaltyPromotionResponse`](../../doc/models/cancel-loyalty-promotion-response.md).
 
 ## Example Usage
 
 ```php
 $promotionId = 'promotion_id0';
+
 $programId = 'program_id0';
 
-$apiResponse = $loyaltyApi->cancelLoyaltyPromotion($promotionId, $programId);
+$apiResponse = $loyaltyApi->cancelLoyaltyPromotion(
+    $promotionId,
+    $programId
+);
 
 if ($apiResponse->isSuccess()) {
     $cancelLoyaltyPromotionResponse = $apiResponse->getResult();
@@ -656,9 +696,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -685,23 +725,20 @@ function createLoyaltyReward(CreateLoyaltyRewardRequest $body): ApiResponse
 
 ## Response Type
 
-[`CreateLoyaltyRewardResponse`](../../doc/models/create-loyalty-reward-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateLoyaltyRewardResponse`](../../doc/models/create-loyalty-reward-response.md).
 
 ## Example Usage
 
 ```php
-$body_reward_loyaltyAccountId = '5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd';
-$body_reward_rewardTierId = 'e1b39225-9da5-43d1-a5db-782cdd8ad94f';
-$body_reward = new Models\LoyaltyReward(
-    $body_reward_loyaltyAccountId,
-    $body_reward_rewardTierId
-);
-$body_reward->setOrderId('RFZfrdtm3mhO1oGzf5Cx7fEMsmGZY');
-$body_idempotencyKey = '18c2e5ea-a620-4b1f-ad60-7b167285e451';
-$body = new Models\CreateLoyaltyRewardRequest(
-    $body_reward,
-    $body_idempotencyKey
-);
+$body = CreateLoyaltyRewardRequestBuilder::init(
+    LoyaltyRewardBuilder::init(
+        '5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd',
+        'e1b39225-9da5-43d1-a5db-782cdd8ad94f'
+    )
+        ->orderId('RFZfrdtm3mhO1oGzf5Cx7fEMsmGZY')
+        ->build(),
+    '18c2e5ea-a620-4b1f-ad60-7b167285e451'
+)->build();
 
 $apiResponse = $loyaltyApi->createLoyaltyReward($body);
 
@@ -711,9 +748,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -739,17 +776,19 @@ function searchLoyaltyRewards(SearchLoyaltyRewardsRequest $body): ApiResponse
 
 ## Response Type
 
-[`SearchLoyaltyRewardsResponse`](../../doc/models/search-loyalty-rewards-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`SearchLoyaltyRewardsResponse`](../../doc/models/search-loyalty-rewards-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\SearchLoyaltyRewardsRequest();
-$body_query_loyaltyAccountId = '5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd';
-$body->setQuery(new Models\SearchLoyaltyRewardsRequestLoyaltyRewardQuery(
-    $body_query_loyaltyAccountId
-));
-$body->setLimit(10);
+$body = SearchLoyaltyRewardsRequestBuilder::init()
+    ->query(
+        SearchLoyaltyRewardsRequestLoyaltyRewardQueryBuilder::init(
+            '5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd'
+        )->build()
+    )
+    ->limit(10)
+    ->build();
 
 $apiResponse = $loyaltyApi->searchLoyaltyRewards($body);
 
@@ -759,9 +798,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -785,11 +824,11 @@ function deleteLoyaltyReward(string $rewardId): ApiResponse
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `rewardId` | `string` | Template, Required | The ID of the [loyalty reward](../../doc/models/loyalty-reward.md) to delete. |
+| `rewardId` | `string` | Template, Required | The ID of the [loyalty reward](entity:LoyaltyReward) to delete. |
 
 ## Response Type
 
-[`DeleteLoyaltyRewardResponse`](../../doc/models/delete-loyalty-reward-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteLoyaltyRewardResponse`](../../doc/models/delete-loyalty-reward-response.md).
 
 ## Example Usage
 
@@ -804,9 +843,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -822,11 +861,11 @@ function retrieveLoyaltyReward(string $rewardId): ApiResponse
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `rewardId` | `string` | Template, Required | The ID of the [loyalty reward](../../doc/models/loyalty-reward.md) to retrieve. |
+| `rewardId` | `string` | Template, Required | The ID of the [loyalty reward](entity:LoyaltyReward) to retrieve. |
 
 ## Response Type
 
-[`RetrieveLoyaltyRewardResponse`](../../doc/models/retrieve-loyalty-reward-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveLoyaltyRewardResponse`](../../doc/models/retrieve-loyalty-reward-response.md).
 
 ## Example Usage
 
@@ -841,9 +880,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -869,25 +908,27 @@ function redeemLoyaltyReward(string $rewardId, RedeemLoyaltyRewardRequest $body)
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `rewardId` | `string` | Template, Required | The ID of the [loyalty reward](../../doc/models/loyalty-reward.md) to redeem. |
+| `rewardId` | `string` | Template, Required | The ID of the [loyalty reward](entity:LoyaltyReward) to redeem. |
 | `body` | [`RedeemLoyaltyRewardRequest`](../../doc/models/redeem-loyalty-reward-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
 
 ## Response Type
 
-[`RedeemLoyaltyRewardResponse`](../../doc/models/redeem-loyalty-reward-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RedeemLoyaltyRewardResponse`](../../doc/models/redeem-loyalty-reward-response.md).
 
 ## Example Usage
 
 ```php
 $rewardId = 'reward_id4';
-$body_idempotencyKey = '98adc7f7-6963-473b-b29c-f3c9cdd7d994';
-$body_locationId = 'P034NEENMD09F';
-$body = new Models\RedeemLoyaltyRewardRequest(
-    $body_idempotencyKey,
-    $body_locationId
-);
 
-$apiResponse = $loyaltyApi->redeemLoyaltyReward($rewardId, $body);
+$body = RedeemLoyaltyRewardRequestBuilder::init(
+    '98adc7f7-6963-473b-b29c-f3c9cdd7d994',
+    'P034NEENMD09F'
+)->build();
+
+$apiResponse = $loyaltyApi->redeemLoyaltyReward(
+    $rewardId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $redeemLoyaltyRewardResponse = $apiResponse->getResult();
@@ -895,8 +936,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

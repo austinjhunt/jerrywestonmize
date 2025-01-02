@@ -34,7 +34,24 @@ a request to the `BatchRetrieveOrders` endpoint.
             "amount": 1599,
             "currency": "USD"
           },
-          "uid": "945986d1-9586-11e6-ad5a-28cfe92138cf"
+          "uid": "945986d1-9586-11e6-ad5a-28cfe92138cf",
+          "quantity_unit": {
+            "measurement_unit": {
+              "custom_unit": {
+                "name": "name2",
+                "abbreviation": "abbreviation4"
+              },
+              "area_unit": "IMPERIAL_ACRE",
+              "length_unit": "IMPERIAL_INCH",
+              "volume_unit": "METRIC_LITER",
+              "weight_unit": "IMPERIAL_WEIGHT_OUNCE"
+            },
+            "precision": 54,
+            "catalog_object_id": "catalog_object_id0",
+            "catalog_version": 12
+          },
+          "note": "note4",
+          "catalog_object_id": "catalog_object_id2"
         },
         {
           "base_price_money": {
@@ -47,7 +64,24 @@ a request to the `BatchRetrieveOrders` endpoint.
             "amount": 6000,
             "currency": "USD"
           },
-          "uid": "a8f4168c-9586-11e6-bdf0-28cfe92138cf"
+          "uid": "a8f4168c-9586-11e6-bdf0-28cfe92138cf",
+          "quantity_unit": {
+            "measurement_unit": {
+              "custom_unit": {
+                "name": "name2",
+                "abbreviation": "abbreviation4"
+              },
+              "area_unit": "IMPERIAL_ACRE",
+              "length_unit": "IMPERIAL_INCH",
+              "volume_unit": "METRIC_LITER",
+              "weight_unit": "IMPERIAL_WEIGHT_OUNCE"
+            },
+            "precision": 54,
+            "catalog_object_id": "catalog_object_id0",
+            "catalog_version": 12
+          },
+          "note": "note4",
+          "catalog_object_id": "catalog_object_id2"
         }
       ],
       "location_id": "057P5VYJ4A5X1",
@@ -55,7 +89,31 @@ a request to the `BatchRetrieveOrders` endpoint.
       "total_money": {
         "amount": 7599,
         "currency": "USD"
-      }
+      },
+      "source": {
+        "name": "name4"
+      },
+      "customer_id": "customer_id0"
+    }
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
     }
   ]
 }

@@ -10,8 +10,8 @@
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Any errors that occurred during the request. | getErrors(): ?array | setErrors(?array errors): void |
-| `objects` | [`?(CatalogObject[])`](../../doc/models/catalog-object.md) | Optional | A list of [CatalogObject](../../doc/models/catalog-object.md)s returned. | getObjects(): ?array | setObjects(?array objects): void |
-| `relatedObjects` | [`?(CatalogObject[])`](../../doc/models/catalog-object.md) | Optional | A list of [CatalogObject](../../doc/models/catalog-object.md)s referenced by the object in the `objects` field. | getRelatedObjects(): ?array | setRelatedObjects(?array relatedObjects): void |
+| `objects` | [`?(CatalogObject[])`](../../doc/models/catalog-object.md) | Optional | A list of [CatalogObject](entity:CatalogObject)s returned. | getObjects(): ?array | setObjects(?array objects): void |
+| `relatedObjects` | [`?(CatalogObject[])`](../../doc/models/catalog-object.md) | Optional | A list of [CatalogObject](entity:CatalogObject)s referenced by the object in the `objects` field. | getRelatedObjects(): ?array | setRelatedObjects(?array relatedObjects): void |
 
 ## Example (as JSON)
 
@@ -22,7 +22,12 @@
       "id": "W62UWFY35CWMYGVWK6TWJDNI",
       "is_deleted": false,
       "item_data": {
-        "category_id": "BJNQCF2FJ6S6UIDT65ABHLRX",
+        "categories": [
+          {
+            "id": "BJNQCF2FJ6S6UIDT65ABHLRX",
+            "ordinal": 0
+          }
+        ],
         "description": "Hot Leaf Juice",
         "name": "Tea",
         "tax_ids": [
@@ -52,13 +57,48 @@
       "present_at_all_locations": true,
       "type": "ITEM",
       "updated_at": "2016-11-16T22:25:24.878Z",
-      "version": 1479335124878
+      "version": 1479335124878,
+      "custom_attribute_values": {
+        "key0": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        },
+        "key1": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        }
+      },
+      "catalog_v1_ids": [
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        },
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        },
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        }
+      ]
     },
     {
       "id": "AA27W3M2GGTF3H6AVPNB77CK",
       "is_deleted": false,
       "item_data": {
-        "category_id": "BJNQCF2FJ6S6UIDT65ABHLRX",
+        "categories": [
+          {
+            "id": "BJNQCF2FJ6S6UIDT65ABHLRX",
+            "ordinal": 0
+          }
+        ],
         "description": "Hot Bean Juice",
         "name": "Coffee",
         "tax_ids": [
@@ -106,7 +146,37 @@
       "present_at_all_locations": true,
       "type": "ITEM",
       "updated_at": "2016-11-16T22:25:24.878Z",
-      "version": 1479335124878
+      "version": 1479335124878,
+      "custom_attribute_values": {
+        "key0": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        },
+        "key1": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        }
+      },
+      "catalog_v1_ids": [
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        },
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        },
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        }
+      ]
     }
   ],
   "related_objects": [
@@ -119,7 +189,29 @@
       "present_at_all_locations": true,
       "type": "CATEGORY",
       "updated_at": "2016-11-16T22:25:24.878Z",
-      "version": 1479335124878
+      "version": 1479335124878,
+      "custom_attribute_values": {
+        "key0": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        },
+        "key1": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        }
+      },
+      "catalog_v1_ids": [
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        }
+      ]
     },
     {
       "id": "HURXQOOAIC4IZSI2BEXQRYFY",
@@ -134,7 +226,49 @@
       },
       "type": "TAX",
       "updated_at": "2016-11-16T22:25:24.878Z",
-      "version": 1479335124878
+      "version": 1479335124878,
+      "custom_attribute_values": {
+        "key0": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        },
+        "key1": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        }
+      },
+      "catalog_v1_ids": [
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
     }
   ]
 }

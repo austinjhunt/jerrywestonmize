@@ -27,7 +27,15 @@
     "product_type": "TERMINAL_API",
     "status": "PAIRED",
     "status_changed_at": "2020-02-06T18:47:28.000Z"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

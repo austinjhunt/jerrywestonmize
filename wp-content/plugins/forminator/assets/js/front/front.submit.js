@@ -198,7 +198,7 @@
 					return false;
 				}
 
-				if ( self.$el.data( 'forminatorFrontPayment' ) && ! $saveDraft ) {
+				if ( ( self.$el.data( 'forminatorFrontPayment' ) || self.$el.data('forminatorFrontStripe') ) && ! $saveDraft ) {
 					// Disable submit button right away to prevent multiple submissions
 					$this.find( '.forminator-button-submit' ).attr( 'disabled', true );
 					if ( false === self.processCaptcha( self, e, $target_message, submitter ) ) {
@@ -222,7 +222,7 @@
 						formData.append( 'draft_page', formStep );
 					}
 
-					if ( ! self.$el.data( 'forminatorFrontPayment' ) && ! $saveDraft ) {
+					if ( ! self.$el.data( 'forminatorFrontPayment' ) && ! self.$el.data('forminatorFrontStripe' ) && ! $saveDraft ) {
 						if ( false === self.processCaptcha( self, e, $target_message, submitter ) ) {
 							self.disable_form_submit( self, false );
 							return false;
@@ -261,6 +261,7 @@
 								.addClass('forminator-loading forminator-show');
 						}
 
+						var keep_froze = false;
 						e.preventDefault();
 						$.ajax({
 							type: 'POST',
@@ -407,8 +408,15 @@
 											} else {
 												$this.trigger('forminator:form:submit:stripe:3dsecurity', [ data.data.secret, false ]);
 											}
+										} else if ( typeof data.data.redirect_to_url !== "undefined" ) {
+
+											$this.trigger('forminator:form:submit:stripe:redirect', [ data.data.redirect_to_url, data.data.secret, data.data.subscription || '' ]);
 										}
 									}
+								}
+								if ( data.data.secret ) {
+									keep_froze = true;
+									return false;
 								}
 
 								if ( ! data.data.success ) {
@@ -551,6 +559,9 @@
 								self.multi_upload_disable( $this, false );
 							},
 							complete: function(xhr,status) {
+								if (keep_froze) {
+									return false;
+								}
 								self.$el.find('.forminator-button-submit').removeClass('forminator-button-onload');
 
 								$this.trigger('forminator:form:submit:complete', formData);
@@ -558,6 +569,9 @@
 								self.showLeadsLoader( self );
 							}
 						}).always(function () {
+							if (keep_froze) {
+								return false;
+							}
 							if( typeof self.settings.has_loader !== "undefined" && self.settings.has_loader ) {
 								// Enable form fields
 								self.$el.removeClass('forminator-fields-disabled forminator-partial-disabled');
@@ -595,7 +609,7 @@
 				// payment setup
 				var paymentIsHidden = self.$el.find('div[data-is-payment="true"]')
 					.closest('.forminator-row, .forminator-col').hasClass('forminator-hidden');
-				if ( self.$el.data('forminatorFrontPayment') && ! paymentIsHidden && ! $saveDraft ) {
+				if ( ( self.$el.data('forminatorFrontPayment') || self.$el.data('forminatorFrontStripe') ) && ! paymentIsHidden && ! $saveDraft ) {
 					setTimeout( function() {
 						self.$el.trigger('payment.before.submit.forminator', [formData, function () {
 							submitCallback.apply(thisForm);
@@ -809,7 +823,7 @@
 						$captcha_field.addClass("error");
 					}
 
-					$target_message.removeAttr("aria-hidden").html('<label class="forminator-label--error"><span>' + window.ForminatorFront.cform.captcha_error + '</span></label>');
+					$target_message.removeAttr("aria-hidden").html('<label class="forminator-label--error forminator-invalid-captcha"><span>' + window.ForminatorFront.cform.captcha_error + '</span></label>');
 
 					if ( ! self.settings.inline_validation ) {
 						self.focus_to_element($target_message);
@@ -817,7 +831,7 @@
 
 						if ( ! $captcha_parent.hasClass( 'forminator-has_error' ) && $captcha_field.data( 'size' ) !== 'invisible' ) {
 							$captcha_parent.addClass( 'forminator-has_error' )
-								.append( '<span class="forminator-error-message" aria-hidden="true">' + window.ForminatorFront.cform.captcha_error + '</span>' );
+								.append( '<span class="forminator-error-message forminator-invalid-captcha" aria-hidden="true">' + window.ForminatorFront.cform.captcha_error + '</span>' );
 							self.focus_to_element( $captcha_parent );
 						}
 

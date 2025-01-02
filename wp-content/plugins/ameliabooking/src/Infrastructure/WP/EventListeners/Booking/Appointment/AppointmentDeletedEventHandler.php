@@ -8,6 +8,7 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment;
 
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
+use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -18,9 +19,6 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
-use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
-use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
-use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 
 /**
  * Class AppointmentDeletedEventHandler
@@ -46,10 +44,8 @@ class AppointmentDeletedEventHandler
      */
     public static function handle($commandResult, $container)
     {
-        /** @var AbstractGoogleCalendarService $googleCalendarService */
-        $googleCalendarService = $container->get('infrastructure.google.calendar.service');
-        /** @var AbstractOutlookCalendarService $outlookCalendarService */
-        $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
+        /** @var ApplicationIntegrationService $applicationIntegrationService */
+        $applicationIntegrationService = $container->get('application.integration.service');
         /** @var EmailNotificationService $emailNotificationService */
         $emailNotificationService = $container->get('application.emailNotification.service');
         /** @var SMSNotificationService $smsNotificationService */
@@ -62,8 +58,6 @@ class AppointmentDeletedEventHandler
         $webHookService = $container->get('application.webHook.service');
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
-        /** @var AbstractZoomApplicationService $zoomService */
-        $zoomService = $container->get('application.zoom.service');
 
         $appointment = $commandResult->getData()[Entities::APPOINTMENT];
 
@@ -74,38 +68,18 @@ class AppointmentDeletedEventHandler
 
         $bookingApplicationService->setReservationEntities($reservationObject);
 
-        if ($zoomService && $reservationObject->getProvider()) {
-            $zoomService->handleAppointmentMeeting($reservationObject, self::APPOINTMENT_DELETED);
-
-            if ($reservationObject->getZoomMeeting()) {
-                $appointment['zoomMeeting'] = $reservationObject->getZoomMeeting()->toArray();
-            }
-        }
-
-        try {
-            if ($googleCalendarService && $reservationObject->getProvider()) {
-                $googleCalendarService->handleEvent($reservationObject, self::APPOINTMENT_DELETED);
-            }
-        } catch (\Exception $e) {
-        }
-
-        if ($reservationObject->getGoogleCalendarEventId() !== null) {
-            $appointment['googleCalendarEventId'] = $reservationObject->getGoogleCalendarEventId()->getValue();
-        }
-        if ($reservationObject->getGoogleMeetUrl() !== null) {
-            $appointment['googleMeetUrl'] = $reservationObject->getGoogleMeetUrl();
-        }
-
-        try {
-            if ($outlookCalendarService && $reservationObject->getProvider()) {
-                $outlookCalendarService->handleEvent($reservationObject, self::APPOINTMENT_DELETED);
-            }
-        } catch (\Exception $e) {
-        }
-
-        if ($reservationObject->getOutlookCalendarEventId() !== null) {
-            $appointment['outlookCalendarEventId'] = $reservationObject->getOutlookCalendarEventId()->getValue();
-        }
+        $applicationIntegrationService->handleAppointment(
+            $reservationObject,
+            $appointment,
+            ApplicationIntegrationService::APPOINTMENT_DELETED,
+            [
+                ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  => !$reservationObject->getProvider(),
+                ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR => !$reservationObject->getProvider(),
+                ApplicationIntegrationService::SKIP_ZOOM_MEETING     => !$reservationObject->getProvider(),
+                ApplicationIntegrationService::SKIP_LESSON_SPACE     => true,
+                ApplicationIntegrationService::SKIP_APPLE_CALENDAR   => !$reservationObject->getProvider(),
+            ]
+        );
 
         $emailNotificationService->sendAppointmentStatusNotifications($appointment, false, false);
 

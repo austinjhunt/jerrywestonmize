@@ -9,6 +9,7 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
+use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -20,15 +21,10 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
-use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
-use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
-use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
-use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -42,10 +38,6 @@ class AppointmentEditedEventHandler
 {
     /** @var string */
     const APPOINTMENT_EDITED = 'appointmentEdited';
-    /** @var string */
-    const APPOINTMENT_ADDED = 'appointmentAdded';
-    /** @var string */
-    const APPOINTMENT_DELETED = 'appointmentDeleted';
     /** @var string */
     const APPOINTMENT_STATUS_AND_TIME_UPDATED = 'appointmentStatusAndTimeUpdated';
     /** @var string */
@@ -74,10 +66,8 @@ class AppointmentEditedEventHandler
      */
     public static function handle($commandResult, $container)
     {
-        /** @var AbstractGoogleCalendarService $googleCalendarService */
-        $googleCalendarService = $container->get('infrastructure.google.calendar.service');
-        /** @var AbstractOutlookCalendarService $outlookCalendarService */
-        $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
+        /** @var ApplicationIntegrationService $applicationIntegrationService */
+        $applicationIntegrationService = $container->get('application.integration.service');
         /** @var EmailNotificationService $emailNotificationService */
         $emailNotificationService = $container->get('application.emailNotification.service');
         /** @var SMSNotificationService $smsNotificationService */
@@ -90,10 +80,6 @@ class AppointmentEditedEventHandler
         $webHookService = $container->get('application.webHook.service');
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
-        /** @var AbstractZoomApplicationService $zoomService */
-        $zoomService = $container->get('application.zoom.service');
-        /** @var AbstractLessonSpaceService $lessonSpaceService */
-        $lessonSpaceService = $container->get('infrastructure.lesson.space.service');
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $container->get('application.payment.service');
 
@@ -109,11 +95,11 @@ class AppointmentEditedEventHandler
 
         $appointmentZoomUserChanged = $commandResult->getData()['appointmentZoomUserChanged'];
 
-        $bookingAdded = $commandResult->getData()['bookingAdded'];
+        $bookingAdded = !empty($commandResult->getData()['bookingAdded']) ? $commandResult->getData()['bookingAdded'] : null;
 
         $appointmentZoomUsersLicenced = $commandResult->getData()['appointmentZoomUsersLicenced'];
 
-        $createPaymentLinks = $commandResult->getData()['createPaymentLinks'];
+        $createPaymentLinks = !empty($commandResult->getData()['createPaymentLinks']) ? $commandResult->getData()['createPaymentLinks'] : null;
 
         /** @var Appointment $reservationObject */
         $reservationObject = AppointmentFactory::create($appointment);
@@ -129,99 +115,38 @@ class AppointmentEditedEventHandler
             }
         }
 
-        if ($zoomService) {
-            $commandSlug = self::APPOINTMENT_EDITED;
+        $commandSlug = self::APPOINTMENT_EDITED;
 
-            if ($appointmentEmployeeChanged && $appointmentZoomUserChanged && $appointmentZoomUsersLicenced && $appointmentStatusChanged) {
-                $commandSlug = self::APPOINTMENT_STATUS_AND_ZOOM_LICENCED_USER_CHANGED;
-            } elseif ($appointmentEmployeeChanged && $appointmentZoomUserChanged && $appointmentZoomUsersLicenced) {
-                $commandSlug = self::ZOOM_LICENCED_USER_CHANGED;
-            } elseif ($appointmentEmployeeChanged && $appointmentZoomUserChanged) {
-                $commandSlug = self::ZOOM_USER_CHANGED;
-            } elseif ($appointmentStatusChanged && $appointmentRescheduled) {
-                $commandSlug = self::APPOINTMENT_STATUS_AND_TIME_UPDATED;
-            } elseif ($appointmentStatusChanged) {
-                $commandSlug = self::BOOKING_STATUS_UPDATED;
-            } elseif ($appointmentRescheduled) {
-                $commandSlug = self::TIME_UPDATED;
-            }
-
-            if ($commandSlug || !$reservationObject->getZoomMeeting()) {
-                $zoomService->handleAppointmentMeeting($reservationObject, $commandSlug);
-            }
-
-            if ($reservationObject->getZoomMeeting()) {
-                $appointment['zoomMeeting'] = $reservationObject->getZoomMeeting()->toArray();
-            }
+        if ($appointmentEmployeeChanged && $appointmentZoomUserChanged && $appointmentZoomUsersLicenced && $appointmentStatusChanged) {
+            $commandSlug = self::APPOINTMENT_STATUS_AND_ZOOM_LICENCED_USER_CHANGED;
+        } elseif ($appointmentEmployeeChanged && $appointmentZoomUserChanged && $appointmentZoomUsersLicenced) {
+            $commandSlug = self::ZOOM_LICENCED_USER_CHANGED;
+        } elseif ($appointmentEmployeeChanged && $appointmentZoomUserChanged) {
+            $commandSlug = self::ZOOM_USER_CHANGED;
+        } elseif ($appointmentStatusChanged && $appointmentRescheduled) {
+            $commandSlug = self::APPOINTMENT_STATUS_AND_TIME_UPDATED;
+        } elseif ($appointmentStatusChanged) {
+            $commandSlug = self::BOOKING_STATUS_UPDATED;
+        } elseif ($appointmentRescheduled) {
+            $commandSlug = self::TIME_UPDATED;
         }
 
-        if ($lessonSpaceService) {
-            $lessonSpaceService->handle($reservationObject, Entities::APPOINTMENT);
-            if ($reservationObject->getLessonSpace()) {
-                $appointment['lessonSpace'] = $reservationObject->getLessonSpace();
-            }
-        }
+        $applicationIntegrationService->handleAppointment(
+            $reservationObject,
+            $appointment,
+            $commandSlug,
+            [
+                ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  => true,
+                ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR => true,
+                ApplicationIntegrationService::SKIP_APPLE_CALENDAR => true
+            ]
+        );
 
-        if (!$appointmentEmployeeChanged && $reservationObject->getProvider()) {
-            try {
-                $googleCalendarService->handleEvent($reservationObject, self::APPOINTMENT_EDITED);
-            } catch (Exception $e) {
-            }
-        } else {
-            $newProviderId = $reservationObject->getProviderId()->getValue();
-
-            $reservationObject->setProviderId(new Id($appointmentEmployeeChanged));
-
-            try {
-                $googleCalendarService->handleEvent($reservationObject, self::APPOINTMENT_DELETED);
-            } catch (Exception $e) {
-            }
-
-            $reservationObject->setGoogleCalendarEventId(null);
-
-            $reservationObject->setProviderId(new Id($newProviderId));
-
-            try {
-                $googleCalendarService->handleEvent($reservationObject, self::APPOINTMENT_ADDED);
-            } catch (Exception $e) {
-            }
-        }
-
-        if ($reservationObject->getGoogleCalendarEventId() !== null) {
-            $appointment['googleCalendarEventId'] = $reservationObject->getGoogleCalendarEventId()->getValue();
-        }
-        if ($reservationObject->getGoogleMeetUrl() !== null) {
-            $appointment['googleMeetUrl'] = $reservationObject->getGoogleMeetUrl();
-        }
-
-        if (!$appointmentEmployeeChanged && $reservationObject->getProvider()) {
-            try {
-                $outlookCalendarService->handleEvent($reservationObject, self::APPOINTMENT_EDITED);
-            } catch (Exception $e) {
-            }
-        } else {
-            $newProviderId = $reservationObject->getProviderId()->getValue();
-
-            $reservationObject->setProviderId(new Id($appointmentEmployeeChanged));
-
-            try {
-                $outlookCalendarService->handleEvent($reservationObject, self::APPOINTMENT_DELETED);
-            } catch (Exception $e) {
-            }
-
-            $reservationObject->setOutlookCalendarEventId(null);
-
-            $reservationObject->setProviderId(new Id($newProviderId));
-
-            try {
-                $outlookCalendarService->handleEvent($reservationObject, self::APPOINTMENT_ADDED);
-            } catch (Exception $e) {
-            }
-        }
-
-        if ($reservationObject->getOutlookCalendarEventId() !== null) {
-            $appointment['outlookCalendarEventId'] = $reservationObject->getOutlookCalendarEventId()->getValue();
-        }
+        $applicationIntegrationService->handleAppointmentEmployeeChange(
+            $reservationObject,
+            $appointment,
+            $appointmentEmployeeChanged
+        );
 
         foreach ($appointment['bookings'] as $index => $booking) {
             $newBookingKey = array_search($booking['id'], array_column($bookings, 'id'), true);
@@ -264,7 +189,7 @@ class AppointmentEditedEventHandler
         }
 
         if ($appointmentStatusChanged === true) {
-            $emailNotificationService->sendAppointmentStatusNotifications($appointment, true, true);
+            $emailNotificationService->sendAppointmentStatusNotifications($appointment, true, true, false, !empty($settingsService->getSetting('notifications', 'sendInvoice')));
 
             if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
                 $smsNotificationService->sendAppointmentStatusNotifications($appointment, true, true);
@@ -305,7 +230,8 @@ class AppointmentEditedEventHandler
             $emailNotificationService->sendAppointmentEditedNotifications(
                 $appointment,
                 $bookings,
-                $appointmentStatusChanged
+                $appointmentStatusChanged,
+                !empty($settingsService->getSetting('notifications', 'sendInvoice'))
             );
 
             if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {

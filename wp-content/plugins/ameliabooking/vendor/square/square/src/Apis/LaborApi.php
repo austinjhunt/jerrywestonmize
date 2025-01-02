@@ -9,7 +9,6 @@ use Core\Request\Parameters\HeaderParam;
 use Core\Request\Parameters\QueryParam;
 use Core\Request\Parameters\TemplateParam;
 use CoreInterfaces\Core\Request\RequestMethod;
-use Square\Exceptions\ApiException;
 use Square\Http\ApiResponse;
 use Square\Models\CreateBreakTypeRequest;
 use Square\Models\CreateBreakTypeResponse;
@@ -48,8 +47,6 @@ class LaborApi extends BaseApi
      * @param string|null $cursor A pointer to the next page of `BreakType` results to fetch.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function listBreakTypes(?string $locationId = null, ?int $limit = null, ?string $cursor = null): ApiResponse
     {
@@ -86,8 +83,6 @@ class LaborApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function createBreakType(CreateBreakTypeRequest $body): ApiResponse
     {
@@ -108,8 +103,6 @@ class LaborApi extends BaseApi
      * @param string $id The UUID for the `BreakType` being deleted.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function deleteBreakType(string $id): ApiResponse
     {
@@ -128,8 +121,6 @@ class LaborApi extends BaseApi
      * @param string $id The UUID for the `BreakType` being retrieved.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function getBreakType(string $id): ApiResponse
     {
@@ -150,8 +141,6 @@ class LaborApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function updateBreakType(string $id, UpdateBreakTypeRequest $body): ApiResponse
     {
@@ -181,8 +170,6 @@ class LaborApi extends BaseApi
      * @param string|null $cursor A pointer to the next page of `EmployeeWage` results to fetch.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function listEmployeeWages(
         ?string $employeeId = null,
@@ -212,8 +199,6 @@ class LaborApi extends BaseApi
      * @param string $id The UUID for the `EmployeeWage` being retrieved.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function getEmployeeWage(string $id): ApiResponse
     {
@@ -231,19 +216,19 @@ class LaborApi extends BaseApi
     /**
      * Creates a new `Shift`.
      *
-     * A `Shift` represents a complete workday for a single employee.
+     * A `Shift` represents a complete workday for a single team member.
      * You must provide the following values in your request to this
      * endpoint:
      *
      * - `location_id`
-     * - `employee_id`
+     * - `team_member_id`
      * - `start_at`
      *
      * An attempt to create a new `Shift` can result in a `BAD_REQUEST` error when:
-     * - The `status` of the new `Shift` is `OPEN` and the employee has another
+     * - The `status` of the new `Shift` is `OPEN` and the team member has another
      * shift with an `OPEN` status.
      * - The `start_at` date is in the future.
-     * - The `start_at` or `end_at` date overlaps another shift for the same employee.
+     * - The `start_at` or `end_at` date overlaps another shift for the same team member.
      * - The `Break` instances are set in the request and a break `start_at`
      * is before the `Shift.start_at`, a break `end_at` is after
      * the `Shift.end_at`, or both.
@@ -252,8 +237,6 @@ class LaborApi extends BaseApi
      *        the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function createShift(CreateShiftRequest $body): ApiResponse
     {
@@ -269,25 +252,23 @@ class LaborApi extends BaseApi
     /**
      * Returns a paginated list of `Shift` records for a business.
      * The list to be returned can be filtered by:
-     * - Location IDs.
-     * - Employee IDs.
-     * - Shift status (`OPEN` and `CLOSED`).
-     * - Shift start.
-     * - Shift end.
-     * - Workday details.
+     * - Location IDs
+     * - Team member IDs
+     * - Shift status (`OPEN` or `CLOSED`)
+     * - Shift start
+     * - Shift end
+     * - Workday details
      *
      * The list can be sorted by:
-     * - `start_at`.
-     * - `end_at`.
-     * - `created_at`.
-     * - `updated_at`.
+     * - `START_AT`
+     * - `END_AT`
+     * - `CREATED_AT`
+     * - `UPDATED_AT`
      *
      * @param SearchShiftsRequest $body An object containing the fields to POST for the request. See
      *        the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function searchShifts(SearchShiftsRequest $body): ApiResponse
     {
@@ -306,8 +287,6 @@ class LaborApi extends BaseApi
      * @param string $id The UUID for the `Shift` being deleted.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function deleteShift(string $id): ApiResponse
     {
@@ -326,8 +305,6 @@ class LaborApi extends BaseApi
      * @param string $id The UUID for the `Shift` being retrieved.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function getShift(string $id): ApiResponse
     {
@@ -354,8 +331,6 @@ class LaborApi extends BaseApi
      *        the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function updateShift(string $id, UpdateShiftRequest $body): ApiResponse
     {
@@ -384,8 +359,6 @@ class LaborApi extends BaseApi
      * @param string|null $cursor A pointer to the next page of `EmployeeWage` results to fetch.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function listTeamMemberWages(
         ?string $teamMemberId = null,
@@ -406,13 +379,11 @@ class LaborApi extends BaseApi
     }
 
     /**
-     * Returns a single `TeamMemberWage` specified by `id `.
+     * Returns a single `TeamMemberWage` specified by `id`.
      *
      * @param string $id The UUID for the `TeamMemberWage` being retrieved.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function getTeamMemberWage(string $id): ApiResponse
     {
@@ -432,8 +403,6 @@ class LaborApi extends BaseApi
      * @param string|null $cursor A pointer to the next page of `WorkweekConfig` results to fetch.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function listWorkweekConfigs(?int $limit = null, ?string $cursor = null): ApiResponse
     {
@@ -456,8 +425,6 @@ class LaborApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function updateWorkweekConfig(string $id, UpdateWorkweekConfigRequest $body): ApiResponse
     {

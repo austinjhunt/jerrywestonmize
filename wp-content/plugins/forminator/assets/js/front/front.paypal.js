@@ -156,7 +156,7 @@
 						self.focus_to_element($target_message);
                     } else {
 						$form.trigger( 'forminator:preSubmit:paypal', [ $target_message ] );
-						if ( $target_message.html() ) {
+						if ( $target_message.find( '.forminator-invalid-captcha' ).html() ) {
 							self.focus_to_element($target_message);
 							return false;
 						}

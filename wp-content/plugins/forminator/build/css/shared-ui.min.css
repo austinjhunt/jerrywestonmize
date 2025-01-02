@@ -20952,6 +20952,148 @@ html.sui-has-overlay {
   background-color: rgba(0,0,0,0);
 }
 
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option {
+  cursor: default;
+  pointer-events: none;
+  display: block;
+  margin: 0 0 20px;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option--wrapper {
+  overflow: hidden;
+  display: block;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: .2s ease;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form {
+  padding: 20px;
+  border-bottom: 1px solid #ddd;
+  transition: .2s ease;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form,
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form span {
+  display: block;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form--field {
+  margin: 0 0 20px;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form--field:last-child {
+  margin-bottom: 0;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form--label {
+  margin: 0 0 5px;
+  color: #777771;
+  font: bold 12px/1.7em "Roboto",Arial,sans-serif;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form--input {
+  overflow: hidden;
+  display: block;
+  border-style: solid;
+  border-color: #777771;
+  background-color: #ededed;
+  color: #aaa;
+  font: 400 16px/1.3em "Roboto",Arial,sans-serif;
+  white-space: nowrap;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form--input.fui-is_filled {
+  color: #000;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form[data-design=default] .fui-demo-form--input {
+  padding: 9px;
+  border-width: 1px;
+  border-radius: 2px;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form[data-design=flat] .fui-demo-form--input {
+  padding: 10px;
+  border-width: 0;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form[data-design=bold] .fui-demo-form--input {
+  padding: 7px;
+  border-width: 3px;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form[data-design=material] .fui-demo-form--input {
+  margin: 25px 0 0;
+  padding: 10px 0 9px;
+  border-width: 0 0 1px 0;
+  background-color: rgba(0,0,0,0);
+  text-overflow: ellipsis;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .fui-demo-form[data-design=material] .fui-demo-form--input.fui-is_filled {
+  margin: 0;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option .sui-radio {
+  padding: 20px;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option:last-child {
+  margin-bottom: 0;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option.fui-selected .fui-subdesign-option--wrapper {
+  border-color: #17a8e3;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option.fui-selected .fui-demo-form {
+  border-bottom-color: #17a8e3;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option.fui-selected .sui-radio {
+  background-color: #e1f6ff;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option:not(.fui-selected) .fui-subdesign-option--wrapper {
+  cursor: pointer;
+  pointer-events: initial;
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option:not(.fui-selected):hover .fui-subdesign-option--wrapper {
+  border-color: #aaa;
+  box-shadow: 0px 3px 7px rgba(0,0,0,.05);
+}
+
+.sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option:not(.fui-selected):hover .fui-demo-form {
+  border-bottom-color: #aaa;
+}
+
+@media (min-width: 783px) {
+  .sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option {
+    width: 50%;
+    min-width: 220px;
+    display: block;
+    flex: 1 1 auto;
+    margin: 0;
+    padding: 15px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .sui-2-12-23 .sui-wrap .fui-subdesign-options .fui-subdesign-option {
+    width: 25%;
+  }
+}
+
+@media (min-width: 783px) {
+  .sui-2-12-23 .sui-wrap .fui-subdesign-options {
+    display: flex;
+    flex-flow: row wrap;
+    margin: -15px !important;
+  }
+}
+
 .sui-2-12-23 .sui-wrap .multivalue-modal div[id^=forminator-modal-body-] .sui-tab-content.active:not(:has(.sui-tooltip)) {
   overflow: hidden;
 }
@@ -21646,6 +21788,12 @@ html.sui-has-overlay {
   .sui-2-12-23 .sui-wrap .fui-box-entries .fui-table-entries>tbody>tr:not(.sui-accordion-item-content)>td .sui-tag.draft-tag {
     margin-left: 15px;
   }
+}
+
+.sui-2-12-23 .sui-wrap .fui-box-entries .fui-table-entries>thead>tr:not(.sui-accordion-item-content)>th,
+.sui-2-12-23 .sui-wrap .fui-box-entries .fui-table-entries>tbody>tr:not(.sui-accordion-item-content)>th {
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .sui-2-12-23 .sui-wrap .fui-box-entries .fui-table-entries>thead>tr:not(.sui-accordion-item-content)>td:last-child .sui-accordion-open-indicator,

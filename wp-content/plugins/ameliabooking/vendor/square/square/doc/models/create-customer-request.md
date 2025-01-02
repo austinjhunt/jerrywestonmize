@@ -42,7 +42,10 @@ Defines the body parameters that can be included in a request to the
   "given_name": "Amelia",
   "note": "a customer",
   "phone_number": "+1-212-555-4240",
-  "reference_id": "YOUR_REFERENCE_ID"
+  "reference_id": "YOUR_REFERENCE_ID",
+  "idempotency_key": "idempotency_key4",
+  "company_name": "company_name4",
+  "nickname": "nickname4"
 }
 ```
 

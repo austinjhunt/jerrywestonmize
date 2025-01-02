@@ -1824,4 +1824,30 @@ Thank you,
             ],
         ];
     }
+
+
+    /**
+     * default invoice notifications
+     *
+     * @return array
+     */
+    public static function getInvoiceNotification()
+    {
+        return [
+            [
+                'name'       => 'customer_invoice',
+                'entity'     => 'appointment',
+                'type'       => 'email',
+                'time'       => 'NULL',
+                'timeBefore' => 'NULL',
+                'timeAfter'  => 'NULL',
+                'sendTo'     => 'customer',
+                'subject'    => 'Booking Invoice',
+                'content'    =>
+                    'Dear <strong>%customer_full_name%</strong>,<br><br>Please find the attached invoice for your reference. If you have any questions, feel free to contact us.
+                    <br><br>Thank you for choosing our company, <br>
+                    <strong>%company_name%</strong>'
+            ]
+        ];
+    }
 }

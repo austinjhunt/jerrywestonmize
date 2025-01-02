@@ -26,7 +26,7 @@ class Range extends Constraint
  public $maxPropertyPath;
  public $deprecatedMinMessageSet = \false;
  public $deprecatedMaxMessageSet = \false;
- public function __construct(array $options = null, string $notInRangeMessage = null, string $minMessage = null, string $maxMessage = null, string $invalidMessage = null, string $invalidDateTimeMessage = null, $min = null, $minPropertyPath = null, $max = null, $maxPropertyPath = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $notInRangeMessage = null, ?string $minMessage = null, ?string $maxMessage = null, ?string $invalidMessage = null, ?string $invalidDateTimeMessage = null, $min = null, $minPropertyPath = null, $max = null, $maxPropertyPath = null, ?array $groups = null, $payload = null)
  {
  parent::__construct($options, $groups, $payload);
  $this->notInRangeMessage = $notInRangeMessage ?? $this->notInRangeMessage;

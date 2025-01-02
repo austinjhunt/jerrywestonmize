@@ -19,9 +19,9 @@ A request for a set of `EmployeeWage` objects.
 
 ```json
 {
-  "employee_id": null,
-  "limit": null,
-  "cursor": null
+  "employee_id": "employee_id2",
+  "limit": 58,
+  "cursor": "cursor4"
 }
 ```
 

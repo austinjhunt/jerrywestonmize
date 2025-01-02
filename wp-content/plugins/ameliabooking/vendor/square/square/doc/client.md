@@ -5,7 +5,7 @@ The following parameters are configurable for the API Client:
 
 | Parameter | Type | Description |
 |  --- | --- | --- |
-| `squareVersion` | `string` | Square Connect API versions<br>*Default*: `'2023-03-15'` |
+| `squareVersion` | `string` | Square Connect API versions<br>*Default*: `'2024-09-19'` |
 | `customUrl` | `string` | Sets the base URL requests are made to. Defaults to `https://connect.squareup.com`<br>*Default*: `'https://connect.squareup.com'` |
 | `environment` | `string` | The API environment. <br> **Default: `production`** |
 | `timeout` | `int` | Timeout for API calls in seconds.<br>*Default*: `60` |
@@ -19,15 +19,19 @@ The following parameters are configurable for the API Client:
 | `httpMethodsToRetry` | `array` | Http methods to retry against.<br>*Default*: `'GET', 'PUT'` |
 | `additionalHeaders` | `array` | Additional headers to add to each API call<br>*Default*: `[]` |
 | `userAgentDetail` | `string` | User agent detail, to be appended with user-agent header. |
-| `accessToken` | `string` | The OAuth 2.0 Access Token to use for API requests. |
+| `bearerAuthCredentials` | [`BearerAuthCredentials`](auth/oauth-2-bearer-token.md) | The Credentials Setter for OAuth 2 Bearer token |
 
 The API client can be initialized as follows:
 
 ```php
-$client = Square\SquareClientBuilder::init()
-    ->accessToken('AccessToken')
-    ->squareVersion('2023-03-15')
-    ->environment('production')
+$client = SquareClientBuilder::init()
+    ->bearerAuthCredentials(
+        BearerAuthCredentialsBuilder::init(
+            'AccessToken'
+        )
+    )
+    ->squareVersion('2024-09-19')
+    ->environment(Environment::PRODUCTION)
     ->customUrl('https://connect.squareup.com')
     ->build();
 ```
@@ -47,14 +51,22 @@ API calls return an `ApiResponse` object that includes the following fields:
 
 require_once "vendor/autoload.php";
 
-$client = Square\SquareClientBuilder::init()
-    ->accessToken('AccessToken')
-    ->squareVersion('2023-03-15')
+use Square\SquareClientBuilder;
+use Square\Authentication\BearerAuthCredentialsBuilder;
+use Square\Environment;
+
+$client = SquareClientBuilder::init()
+    ->bearerAuthCredentials(
+        BearerAuthCredentialsBuilder::init(
+            'AccessToken'
+        )
+    )
+    ->squareVersion('2024-09-19')
+    ->environment(Environment::PRODUCTION)
+    ->customUrl('https://connect.squareup.com')
     ->build();
 
-$locationsApi = $client->getLocationsApi();
-
-$apiResponse = $locationsApi->listLocations();
+$apiResponse = $client->getLocationsApi()->listLocations();
 
 if ($apiResponse->isSuccess()) {
     $listLocationsResponse = $apiResponse->getResult();
@@ -62,9 +74,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 ## Square Client
@@ -92,6 +104,7 @@ The gateway for the SDK. This class acts as a factory for the Apis and also hold
 | getDevicesApi() | Gets DevicesApi |
 | getDisputesApi() | Gets DisputesApi |
 | getEmployeesApi() | Gets EmployeesApi |
+| getEventsApi() | Gets EventsApi |
 | getGiftCardsApi() | Gets GiftCardsApi |
 | getGiftCardActivitiesApi() | Gets GiftCardActivitiesApi |
 | getInventoryApi() | Gets InventoryApi |
@@ -103,6 +116,7 @@ The gateway for the SDK. This class acts as a factory for the Apis and also hold
 | getTransactionsApi() | Gets TransactionsApi |
 | getLoyaltyApi() | Gets LoyaltyApi |
 | getMerchantsApi() | Gets MerchantsApi |
+| getMerchantCustomAttributesApi() | Gets MerchantCustomAttributesApi |
 | getOrdersApi() | Gets OrdersApi |
 | getOrderCustomAttributesApi() | Gets OrderCustomAttributesApi |
 | getPaymentsApi() | Gets PaymentsApi |

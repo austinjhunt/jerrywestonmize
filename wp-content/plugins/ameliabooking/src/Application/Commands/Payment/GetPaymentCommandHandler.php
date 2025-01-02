@@ -46,13 +46,12 @@ class GetPaymentCommandHandler extends CommandHandler
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
 
-        $payment = $paymentRepository->getById($command->getArg('id'));
+        if ($command->getField('invoice')) {
+            $paymentArray = $paymentRepository->getFiltered(['paymentId' => $command->getArg('id')]);
+        } else {
+            $payment = $paymentRepository->getById($command->getArg('id'));
 
-        if (!$payment instanceof Payment) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage('Could not get payment payment.');
-
-            return $result;
+            $paymentArray = [$payment->toArray()];
         }
 
         $paymentArray = $payment->toArray();
@@ -60,6 +59,7 @@ class GetPaymentCommandHandler extends CommandHandler
         $paymentArray = apply_filters('amelia_get_payment_filter', $paymentArray);
 
         do_action('amelia_get_payment', $paymentArray);
+
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved payment.');

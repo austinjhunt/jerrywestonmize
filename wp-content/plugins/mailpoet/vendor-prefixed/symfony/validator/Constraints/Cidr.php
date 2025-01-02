@@ -15,7 +15,7 @@ class Cidr extends Constraint
  public $netmaskRangeViolationMessage = 'The value of the netmask should be between {{ min }} and {{ max }}.';
  public $netmaskMin = 0;
  public $netmaskMax;
- public function __construct(array $options = null, string $version = null, int $netmaskMin = null, int $netmaskMax = null, string $message = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $version = null, ?int $netmaskMin = null, ?int $netmaskMax = null, ?string $message = null, ?array $groups = null, $payload = null)
  {
  $this->version = $version ?? $options['version'] ?? $this->version;
  if (!\in_array($this->version, \array_keys(self::NET_MAXES))) {

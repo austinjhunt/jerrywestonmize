@@ -25,11 +25,46 @@ A response that includes the `LoyaltyEvent` published for redeeming the reward.
     "loyalty_account_id": "5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd",
     "redeem_reward": {
       "loyalty_program_id": "d619f755-2d17-41f3-990d-c04ecedd64dd",
-      "reward_id": "9f18ac21-233a-31c3-be77-b45840f5a810"
+      "reward_id": "9f18ac21-233a-31c3-be77-b45840f5a810",
+      "order_id": "order_id8"
     },
     "source": "LOYALTY_API",
-    "type": "REDEEM_REWARD"
-  }
+    "type": "REDEEM_REWARD",
+    "accumulate_points": {
+      "loyalty_program_id": "loyalty_program_id8",
+      "points": 118,
+      "order_id": "order_id8"
+    },
+    "create_reward": {
+      "loyalty_program_id": "loyalty_program_id2",
+      "reward_id": "reward_id6",
+      "points": 90
+    },
+    "delete_reward": {
+      "loyalty_program_id": "loyalty_program_id4",
+      "reward_id": "reward_id8",
+      "points": 104
+    },
+    "adjust_points": {
+      "loyalty_program_id": "loyalty_program_id2",
+      "points": 96,
+      "reason": "reason2"
+    }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

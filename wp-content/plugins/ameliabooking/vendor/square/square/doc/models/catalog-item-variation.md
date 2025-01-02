@@ -21,15 +21,15 @@ decreases by 2, and the stockable count automatically decreases by 0.4 bottle ac
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `itemId` | `?string` | Optional | The ID of the `CatalogItem` associated with this item variation. | getItemId(): ?string | setItemId(?string itemId): void |
-| `name` | `?string` | Optional | The item variation's name. This is a searchable attribute for use in applicable query filters, and its value length is of Unicode code points.<br>**Constraints**: *Maximum Length*: `255` | getName(): ?string | setName(?string name): void |
+| `name` | `?string` | Optional | The item variation's name. This is a searchable attribute for use in applicable query filters.<br><br>Its value has a maximum length of 255 Unicode code points. However, when the parent [item](entity:CatalogItem)<br>uses [item options](entity:CatalogItemOption), this attribute is auto-generated, read-only, and can be<br>longer than 255 Unicode code points. | getName(): ?string | setName(?string name): void |
 | `sku` | `?string` | Optional | The item variation's SKU, if any. This is a searchable attribute for use in applicable query filters. | getSku(): ?string | setSku(?string sku): void |
 | `upc` | `?string` | Optional | The universal product code (UPC) of the item variation, if any. This is a searchable attribute for use in applicable query filters.<br><br>The value of this attribute should be a number of 12-14 digits long.  This restriction is enforced on the Square Seller Dashboard,<br>Square Point of Sale or Retail Point of Sale apps, where this attribute shows in the GTIN field. If a non-compliant UPC value is assigned<br>to this attribute using the API, the value is not editable on the Seller Dashboard, Square Point of Sale or Retail Point of Sale apps<br>unless it is updated to fit the expected format. | getUpc(): ?string | setUpc(?string upc): void |
 | `ordinal` | `?int` | Optional | The order in which this item variation should be displayed. This value is read-only. On writes, the ordinal<br>for each item variation within a parent `CatalogItem` is set according to the item variations's<br>position. On reads, the value is not guaranteed to be sequential or unique. | getOrdinal(): ?int | setOrdinal(?int ordinal): void |
-| `pricingType` | [`?string (CatalogPricingType)`](../../doc/models/catalog-pricing-type.md) | Optional | Indicates whether the price of a CatalogItemVariation should be entered manually at the time of sale. | getPricingType(): ?string | setPricingType(?string pricingType): void |
+| `pricingType` | [`?string(CatalogPricingType)`](../../doc/models/catalog-pricing-type.md) | Optional | Indicates whether the price of a CatalogItemVariation should be entered manually at the time of sale. | getPricingType(): ?string | setPricingType(?string pricingType): void |
 | `priceMoney` | [`?Money`](../../doc/models/money.md) | Optional | Represents an amount of money. `Money` fields can be signed or unsigned.<br>Fields that do not explicitly define whether they are signed or unsigned are<br>considered unsigned and can only hold positive amounts. For signed fields, the<br>sign of the value indicates the purpose of the money transfer. See<br>[Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)<br>for more information. | getPriceMoney(): ?Money | setPriceMoney(?Money priceMoney): void |
 | `locationOverrides` | [`?(ItemVariationLocationOverrides[])`](../../doc/models/item-variation-location-overrides.md) | Optional | Per-location price and inventory overrides. | getLocationOverrides(): ?array | setLocationOverrides(?array locationOverrides): void |
 | `trackInventory` | `?bool` | Optional | If `true`, inventory tracking is active for the variation. | getTrackInventory(): ?bool | setTrackInventory(?bool trackInventory): void |
-| `inventoryAlertType` | [`?string (InventoryAlertType)`](../../doc/models/inventory-alert-type.md) | Optional | Indicates whether Square should alert the merchant when the inventory quantity of a CatalogItemVariation is low. | getInventoryAlertType(): ?string | setInventoryAlertType(?string inventoryAlertType): void |
+| `inventoryAlertType` | [`?string(InventoryAlertType)`](../../doc/models/inventory-alert-type.md) | Optional | Indicates whether Square should alert the merchant when the inventory quantity of a CatalogItemVariation is low. | getInventoryAlertType(): ?string | setInventoryAlertType(?string inventoryAlertType): void |
 | `inventoryAlertThreshold` | `?int` | Optional | If the inventory quantity for the variation is less than or equal to this value and `inventory_alert_type`<br>is `LOW_QUANTITY`, the variation displays an alert in the merchant dashboard.<br><br>This value is always an integer. | getInventoryAlertThreshold(): ?int | setInventoryAlertThreshold(?int inventoryAlertThreshold): void |
 | `userData` | `?string` | Optional | Arbitrary user metadata to associate with the item variation. This attribute value length is of Unicode code points.<br>**Constraints**: *Maximum Length*: `255` | getUserData(): ?string | setUserData(?string userData): void |
 | `serviceDuration` | `?int` | Optional | If the `CatalogItem` that owns this item variation is of type<br>`APPOINTMENTS_SERVICE`, then this is the duration of the service in milliseconds. For<br>example, a 30 minute appointment would have the value `1800000`, which is equal to<br>30 (minutes) * 60 (seconds per minute) * 1000 (milliseconds per second). | getServiceDuration(): ?int | setServiceDuration(?int serviceDuration): void |
@@ -46,27 +46,11 @@ decreases by 2, and the stockable count automatically decreases by 0.4 bottle ac
 
 ```json
 {
-  "item_id": null,
-  "name": null,
-  "sku": null,
-  "upc": null,
-  "ordinal": null,
-  "pricing_type": null,
-  "price_money": null,
-  "location_overrides": null,
-  "track_inventory": null,
-  "inventory_alert_type": null,
-  "inventory_alert_threshold": null,
-  "user_data": null,
-  "service_duration": null,
-  "available_for_booking": null,
-  "item_option_values": null,
-  "measurement_unit_id": null,
-  "sellable": null,
-  "stockable": null,
-  "image_ids": null,
-  "team_member_ids": null,
-  "stockable_conversion": null
+  "item_id": "item_id4",
+  "name": "name4",
+  "sku": "sku0",
+  "upc": "upc2",
+  "ordinal": 76
 }
 ```
 

@@ -530,4 +530,24 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 
 		return $element_value;
 	}
+
+	/**
+	 * Prepare Stripe subscription id for passing to addon
+	 *
+	 * @param array $submitted_data Submitted data.
+	 * @param array $form_entry_fields Form entry fields.
+	 * @return array
+	 */
+	public static function prepare_stripe_subscription_id_for_addon( $submitted_data, $form_entry_fields ) {
+		if ( ! empty( $submitted_data['paymentid'] ) && 'subscription' === $submitted_data['paymentid'] ) {
+			$field_data = wp_list_pluck( $form_entry_fields, 'value', 'name' );
+			foreach ( $field_data as $element_id => $value ) {
+				if ( self::element_is_stripe( $element_id ) && ! empty( $value['subscription_id'] ) ) {
+					$submitted_data['subscriptionid'] = $value['subscription_id'];
+					break;
+				}
+			}
+		}
+		return $submitted_data;
+	}
 }

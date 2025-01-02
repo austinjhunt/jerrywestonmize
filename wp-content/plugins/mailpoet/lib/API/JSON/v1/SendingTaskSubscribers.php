@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\API\JSON\Endpoint as APIEndpoint;
 use MailPoet\API\JSON\Error as APIError;
+use MailPoet\API\JSON\Response;
 use MailPoet\API\JSON\ResponseBuilders\ScheduledTaskSubscriberResponseBuilder;
 use MailPoet\Config\AccessControl;
 use MailPoet\Cron\CronHelper;
@@ -128,9 +129,17 @@ class SendingTaskSubscribers extends APIEndpoint {
       ]);
     }
 
+    if ($newsletter->canBeSetActive() && $newsletter->getStatus() !== NewsletterEntity::STATUS_ACTIVE) {
+      return $this->errorResponse([
+        APIError::BAD_REQUEST => __('Failed to resend! The email is not active. Please activate it first.', 'mailpoet'),
+      ], [], Response::STATUS_BAD_REQUEST);
+    }
+
     $taskSubscriber->resetToUnprocessed();
     $taskSubscriber->getTask()->setStatus(null);
-    $newsletter->setStatus(NewsletterEntity::STATUS_SENDING);
+    if (!$newsletter->canBeSetActive()) {
+      $newsletter->setStatus(NewsletterEntity::STATUS_SENDING);
+    }
     // Each repository flushes all changes
     $this->scheduledTaskSubscribersRepository->flush();
     return $this->successResponse([]);

@@ -28,8 +28,36 @@ Represents an [AdjustLoyaltyPoints](../../doc/apis/loyalty.md#adjust-loyalty-poi
     "id": "613a6fca-8d67-39d0-bad2-3b4bc45c8637",
     "loyalty_account_id": "5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd",
     "source": "LOYALTY_API",
-    "type": "ADJUST_POINTS"
-  }
+    "type": "ADJUST_POINTS",
+    "accumulate_points": {
+      "loyalty_program_id": "loyalty_program_id8",
+      "points": 118,
+      "order_id": "order_id8"
+    },
+    "create_reward": {
+      "loyalty_program_id": "loyalty_program_id2",
+      "reward_id": "reward_id6",
+      "points": 90
+    },
+    "redeem_reward": {
+      "loyalty_program_id": "loyalty_program_id8",
+      "reward_id": "reward_id2",
+      "order_id": "order_id8"
+    },
+    "delete_reward": {
+      "loyalty_program_id": "loyalty_program_id4",
+      "reward_id": "reward_id8",
+      "points": 104
+    }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

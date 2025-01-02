@@ -40,9 +40,11 @@ class AppointmentsTable extends AbstractDatabaseTable
                    `googleCalendarEventId` VARCHAR(255) NULL,
                    `googleMeetUrl` VARCHAR(255) NULL,
                    `outlookCalendarEventId` VARCHAR(255) NULL,
+                   `appleCalendarEventId` VARCHAR(255) NULL,
                    `zoomMeeting` TEXT({$description}) NULL,
                    `lessonSpace` TEXT({$description}) NULL,
                    `parentId` INT(11) NULL,
+                   `error` TEXT({$description}) DEFAULT NULL,
                     PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     }

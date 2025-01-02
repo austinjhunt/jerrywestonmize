@@ -11,13 +11,13 @@ Represents additional data for rules with the `ITEM_VARIATION` accrual type.
 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
-| `itemVariationId` | `string` | Required | The ID of the `ITEM_VARIATION` [catalog object](../../doc/models/catalog-object.md) that buyers can purchase to earn<br>points.<br>**Constraints**: *Minimum Length*: `1` | getItemVariationId(): string | setItemVariationId(string itemVariationId): void |
+| `itemVariationId` | `string` | Required | The ID of the `ITEM_VARIATION` [catalog object](entity:CatalogObject) that buyers can purchase to earn<br>points.<br>**Constraints**: *Minimum Length*: `1` | getItemVariationId(): string | setItemVariationId(string itemVariationId): void |
 
 ## Example (as JSON)
 
 ```json
 {
-  "item_variation_id": "item_variation_id4"
+  "item_variation_id": "item_variation_id6"
 }
 ```
 

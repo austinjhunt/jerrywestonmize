@@ -36,7 +36,8 @@ class ListWebhookSubscriptionsRequest implements \JsonSerializable
      * A pagination cursor returned by a previous call to this endpoint.
      * Provide this to retrieve the next set of results for your original query.
      *
-     * For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination).
+     * For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-
+     * patterns/pagination).
      */
     public function getCursor(): ?string
     {
@@ -51,7 +52,8 @@ class ListWebhookSubscriptionsRequest implements \JsonSerializable
      * A pagination cursor returned by a previous call to this endpoint.
      * Provide this to retrieve the next set of results for your original query.
      *
-     * For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination).
+     * For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-
+     * patterns/pagination).
      *
      * @maps cursor
      */
@@ -65,7 +67,8 @@ class ListWebhookSubscriptionsRequest implements \JsonSerializable
      * A pagination cursor returned by a previous call to this endpoint.
      * Provide this to retrieve the next set of results for your original query.
      *
-     * For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination).
+     * For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-
+     * patterns/pagination).
      */
     public function unsetCursor(): void
     {
@@ -74,8 +77,8 @@ class ListWebhookSubscriptionsRequest implements \JsonSerializable
 
     /**
      * Returns Include Disabled.
-     * Includes disabled [Subscription]($m/WebhookSubscription)s.
-     * By default, all enabled [Subscription]($m/WebhookSubscription)s are returned.
+     * Includes disabled [Subscription](entity:WebhookSubscription)s.
+     * By default, all enabled [Subscription](entity:WebhookSubscription)s are returned.
      */
     public function getIncludeDisabled(): ?bool
     {
@@ -87,8 +90,8 @@ class ListWebhookSubscriptionsRequest implements \JsonSerializable
 
     /**
      * Sets Include Disabled.
-     * Includes disabled [Subscription]($m/WebhookSubscription)s.
-     * By default, all enabled [Subscription]($m/WebhookSubscription)s are returned.
+     * Includes disabled [Subscription](entity:WebhookSubscription)s.
+     * By default, all enabled [Subscription](entity:WebhookSubscription)s are returned.
      *
      * @maps include_disabled
      */
@@ -99,8 +102,8 @@ class ListWebhookSubscriptionsRequest implements \JsonSerializable
 
     /**
      * Unsets Include Disabled.
-     * Includes disabled [Subscription]($m/WebhookSubscription)s.
-     * By default, all enabled [Subscription]($m/WebhookSubscription)s are returned.
+     * Includes disabled [Subscription](entity:WebhookSubscription)s.
+     * By default, all enabled [Subscription](entity:WebhookSubscription)s are returned.
      */
     public function unsetIncludeDisabled(): void
     {

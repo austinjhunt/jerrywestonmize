@@ -13,7 +13,7 @@ Defines fields in a `ListDisputes` response.
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Information about errors encountered during the request. | getErrors(): ?array | setErrors(?array errors): void |
 | `disputes` | [`?(Dispute[])`](../../doc/models/dispute.md) | Optional | The list of disputes. | getDisputes(): ?array | setDisputes(?array disputes): void |
-| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent request.<br>If unset, this is the final response. For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
+| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent request.<br>If unset, this is the final response. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
 
 ## Example (as JSON)
 
@@ -39,7 +39,8 @@ Defines fields in a `ListDisputes` response.
       "reported_at": "2022-06-29T00:00:00.000Z",
       "state": "ACCEPTED",
       "updated_at": "2022-07-07T19:14:42.650Z",
-      "version": 2
+      "version": 2,
+      "dispute_id": "dispute_id4"
     },
     {
       "amount_money": {
@@ -59,7 +60,16 @@ Defines fields in a `ListDisputes` response.
       "reported_at": "2022-04-29T00:00:00.000Z",
       "state": "EVIDENCE_REQUIRED",
       "updated_at": "2022-04-29T18:45:22.265Z",
-      "version": 1
+      "version": 1,
+      "dispute_id": "dispute_id4"
+    }
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
     }
   ]
 }

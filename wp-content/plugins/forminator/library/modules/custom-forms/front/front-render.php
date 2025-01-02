@@ -465,7 +465,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 
 		// Load Paypal scripts.
 		if ( $this->has_paypal() ) {
-			$paypal_src = $this->paypal_script_argument( 'https://www.paypal.com/sdk/js' );
+			$paypal_src = $this->paypal_script_argument( 'https://www.paypal.com/sdk/js?enable-funding=venmo' );
 
 			// If there is more than 1 paypal field in a page, even if it's ajax loaded, enqueue script as usual to prevent paypal button errors.
 			if ( ! $is_ajax_load || forminator_count_field_type_in_page( 'paypal' ) > 1 ) {
@@ -532,7 +532,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			);
 		}
 
-		$this->maybe_load_slider_styles( $is_ajax_load );
+		$this->load_jquery_styles( $is_ajax_load );
 
 		// todo: solve this.
 		// load buttons css.
@@ -608,25 +608,46 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	}
 
 	/**
-	 * Load styles for slider fields for None design style.
+	 * Load jQuery ui styles for fields for None and basic design style.
 	 *
 	 * @param bool $is_ajax_load Is it loading via AJAX.
 	 **/
-	private function maybe_load_slider_styles( bool $is_ajax_load ) : void {
-		if ( ! $this->has_field_type( 'slider' ) || 'none' !== $this->get_form_design() ) {
+	private function load_jquery_styles( bool $is_ajax_load ): void {
+		$design = $this->get_form_design();
+
+		// Check if design is not none or basic.
+		if ( 'none' !== $design && 'basic' !== $design ) {
 			return;
 		}
-		$src     = apply_filters( 'forminator_none_design_slider_css', 'https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.min.css' );
-		$version = apply_filters( 'forminator_none_design_slider_css_version', '1' );
+
+		// Check if slider and datepicker field exists.
+		if ( ! $this->has_field_type( 'slider' ) && ! $this->has_field_type( 'date' ) ) {
+			return;
+		}
+
+		$src                 = apply_filters( 'forminator_jquery_ui_css', 'https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.min.css' );
+		$version             = apply_filters( 'forminator_jquery_ui_css_version', '1' );
+		$src_slider_divi     = apply_filters( 'forminator_jquery_ui_slider_css', forminator_plugin_url() . 'assets/css/jquery-ui-slider.builder_divi.min.css' );
+		$version_slider_divi = apply_filters( 'forminator_jquery_ui__slider_css_version', '1' );
+		$is_divi             = Forminator_Assets_Enqueue::is_divi_active_or_preview();
+
 		if ( ! $src ) {
 			return;
 		}
 
 		if ( ! $is_ajax_load ) {
-			wp_enqueue_style( 'forminator-none-design-slider', $src, array(), $version );
+			wp_enqueue_style( 'forminator-jquery-ui-styles', $src, array(), $version );
+
+			if ( $is_divi ) {
+				wp_enqueue_style( 'forminator-jquery-ui-slider-styles', $src_slider_divi, array(), $version_slider_divi );
+			}
 		} else {
 			// load later via ajax to avoid cache.
-			$this->styles['forminator-none-design-slider'] = array( 'src' => add_query_arg( 'ver', $version, $src ) );
+			$this->styles['forminator-jquery-ui-styles'] = array( 'src' => add_query_arg( 'ver', $version, $src ) );
+
+			if ( $is_divi ) {
+				$this->styles['forminator-jquery-ui-slider-styles'] = array( 'src' => add_query_arg( 'ver', $version_slider_divi, $src_slider_divi ) );
+			}
 		}
 	}
 
@@ -693,7 +714,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	public function get_wrappers() {
 		if ( is_object( $this->model ) ) {
 			$wrappers          = $this->model->get_fields_grouped();
-			$restricted_fields = array( 'page-break', 'paypal', 'stripe', 'signature', 'captcha', 'postdata', 'group' );
+			$restricted_fields = array( 'page-break', 'paypal', 'stripe', 'stripe-ocs', 'signature', 'captcha', 'postdata', 'group' );
 			foreach ( $wrappers as $key => $wrapper ) {
 				if ( empty( $wrapper['parent_group'] ) ) {
 					continue;
@@ -1626,13 +1647,12 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 * @return mixed|string
 	 */
 	public function get_form_design() {
-		$form_settings = $this->get_form_settings();
+		$form_settings  = $this->get_form_settings();
+		$form_style     = $form_settings['form-style'] ?? 'default';
+		$form_sub_style = $form_settings['form-substyle'] ?? 'default';
 
-		if ( ! isset( $form_settings['form-style'] ) ) {
-			return 'default';
-		}
-
-		return $form_settings['form-style'];
+		return 'default' === $form_style ?
+			$form_sub_style : $form_style;
 	}
 
 	/**
@@ -1642,10 +1662,12 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 * @return mixed
 	 */
 	public function get_fields_style() {
-		$form_settings = $this->get_form_settings();
+		$form_settings   = $this->get_form_settings();
+		$form_design     = $this->get_form_design();
+		$field_style_key = 'basic' === $form_design ? 'basic-fields-style' : 'fields-style';
 
-		if ( isset( $form_settings['fields-style'] ) ) {
-			return $form_settings['fields-style'];
+		if ( isset( $form_settings[ $field_style_key ] ) ) {
+			return $form_settings[ $field_style_key ];
 		}
 
 		return 'open';
@@ -2791,6 +2813,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		if ( empty( $form_properties ) ) {
 			return array();
 		}
+		$has_stripe = $this->has_stripe();
 
 		$options = array(
 			'form_type'           => $this->get_form_type(),
@@ -2821,7 +2844,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			'loader_label'        => $this->get_loader_label( $form_properties ),
 			'calcs_memoize_time'  => $this->get_memoize_time(),
 			'is_reset_enabled'    => $this->is_reset_enabled(),
-			'has_stripe'          => $this->has_stripe(),
+			'has_stripe'          => $has_stripe,
 			'has_paypal'          => $this->has_paypal(),
 			'submit_button_class' => esc_attr( $form_properties['submit_button_class'] ),
 		);
@@ -2831,6 +2854,16 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			$options['form_placement'] = $this->get_form_placement( $this->lead_model->settings );
 			$options['leads_id']       = $this->get_leads_id( $this->lead_model->settings );
 			$options['quiz_id']        = $this->lead_model->id;
+		}
+
+		if ( $has_stripe ) {
+			$stripe_settings = $this->get_stripe_settings();
+			if ( ! empty( $stripe_settings['automatic_payment_methods'] ) && 'false' !== $stripe_settings['automatic_payment_methods'] ) {
+				$stripe_field              = Forminator_Core::get_field_object( 'stripe' );
+				$options['stripe_depends'] = $stripe_field->get_amount_dependent_fields_all( $stripe_settings );
+			} else {
+				$options['stripe_depends'] = array();
+			}
 		}
 
 		return $options;
@@ -3069,11 +3102,48 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 
 		if ( ! empty( $fields ) ) {
 			foreach ( $fields as $field ) {
-				if ( 'stripe' === $field['type'] ) {
+				if ( 'stripe' === $field['type'] || 'stripe-ocs' === $field['type'] ) {
 					$stripe = new Forminator_Gateway_Stripe();
 					return $stripe->is_ready();
 				}
 			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get stripe settings
+	 *
+	 * @return array|bool
+	 */
+	public function get_stripe_settings() {
+		$fields = $this->get_fields();
+		$stripe = new Forminator_Gateway_Stripe();
+
+		if ( empty( $fields ) || ! $stripe->is_ready() ) {
+			return false;
+		}
+		// Filter elements where type is 'stripe-ocs'.
+		$stripe_fields = array_filter(
+			$fields,
+			function ( $item ) {
+				return 'stripe-ocs' === $item['type'];
+			}
+		);
+
+		if ( empty( $stripe_fields ) ) {
+			// filter elements where type is 'stripe'.
+			$stripe_fields = array_filter(
+				$fields,
+				function ( $item ) {
+					return 'stripe' === $item['type'];
+				}
+			);
+		}
+
+		if ( ! empty( $stripe_fields ) ) {
+			return array_shift( $stripe_fields );
 		}
 
 		return false;

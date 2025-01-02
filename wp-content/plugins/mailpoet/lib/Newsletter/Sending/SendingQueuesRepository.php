@@ -200,7 +200,7 @@ class SendingQueuesRepository extends Repository {
         $queue->setNewsletterRenderedBody(null);
         $this->persist($queue);
       }
-      $newsletter->setStatus(NewsletterEntity::STATUS_SENDING);
+      $newsletter->setStatus($newsletter->canBeSetActive() ? NewsletterEntity::STATUS_ACTIVE : NewsletterEntity::STATUS_SENDING);
       $task->setStatus(null);
       $this->flush();
     }

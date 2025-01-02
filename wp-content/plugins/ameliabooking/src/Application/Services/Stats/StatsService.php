@@ -120,9 +120,26 @@ class StatsService
                     'skipPayments'  => true,
                     'skipExtras'    => true,
                     'skipCoupons'   => true,
+                    'skipBookings'  => true,
                 ]
             )
         );
+
+        /** @var CustomerBookingRepository $bookingRepository */
+        $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+        /** @var Collection $bookings */
+        $bookings = $appointments->length()
+            ? $bookingRepository->getByCriteria(['appointmentIds' => $appointments->keys()])
+            : new Collection();
+
+        /** @var CustomerBooking $booking */
+        foreach ($bookings->getItems() as $booking) {
+            /** @var Appointment $appointment */
+            $appointment = $appointments->getItem($booking->getAppointmentId()->getValue());
+
+            $appointment->getBookings()->addItem($booking, $booking->getId()->getValue());
+        }
 
         /** @var Collection $bookingsPayments */
         $bookingsPayments = new Collection();
@@ -172,7 +189,7 @@ class StatsService
         $services = $serviceRepository->getAllArrayIndexedById();
 
         /** @var Collection $providers */
-        $providers = $providerRepository->getWithSchedule([]);
+        $providers = $providerRepository->getWithSchedule(['dates' => $params['dates']]);
 
         /** @var Provider $provider */
         foreach ($providers->getItems() as $provider) {

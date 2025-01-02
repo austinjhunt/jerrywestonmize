@@ -67,13 +67,15 @@ class GetPaymentsCommandHandler extends CommandHandler
 
         do_action('amelia_get_payments', $payments);
 
+        $isInvoicePage = !empty($params['invoices']) && filter_var($params['invoices'], FILTER_VALIDATE_BOOLEAN);
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved payments.');
         $result->setData(
             [
                 Entities::PAYMENTS => $payments,
-                'filteredCount'    => (int)$paymentRepository->getCount($params),
-                'totalCount'       => (int)$paymentRepository->getCount([]),
+                'filteredCount'    => (int)$paymentRepository->getFilteredIdsCount($params, $isInvoicePage),
+                'totalCount'       => (int)$paymentRepository->getFilteredIdsCount([], $isInvoicePage),
             ]
         );
 

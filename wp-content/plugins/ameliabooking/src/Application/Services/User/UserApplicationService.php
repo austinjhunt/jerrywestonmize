@@ -340,6 +340,7 @@ class UserApplicationService
                     $user
                 );
             } catch (\Exception $e) {
+                $providerRepository->updateErrorColumn($user->getId()->getValue(), $e->getMessage());
             }
 
             try {
@@ -349,6 +350,7 @@ class UserApplicationService
                     $user
                 );
             } catch (\Exception $e) {
+                $providerRepository->updateErrorColumn($user->getId()->getValue(), $e->getMessage());
             }
         }
 

@@ -12,7 +12,7 @@ class Url extends Constraint
  public $protocols = ['http', 'https'];
  public $relativeProtocol = \false;
  public $normalizer;
- public function __construct(array $options = null, string $message = null, array $protocols = null, bool $relativeProtocol = null, callable $normalizer = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $message = null, ?array $protocols = null, ?bool $relativeProtocol = null, ?callable $normalizer = null, ?array $groups = null, $payload = null)
  {
  parent::__construct($options, $groups, $payload);
  $this->message = $message ?? $this->message;

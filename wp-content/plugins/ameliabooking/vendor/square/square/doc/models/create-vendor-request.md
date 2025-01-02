@@ -11,7 +11,7 @@ Represents an input to a call to [CreateVendor](../../doc/apis/vendors.md#create
 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
-| `idempotencyKey` | `string` | Required | A client-supplied, universally unique identifier (UUID) to make this [CreateVendor](../../doc/apis/vendors.md#create-vendor) call idempotent.<br><br>See [Idempotency](https://developer.squareup.com/docs/basics/api101/idempotency) in the<br>[API Development 101](https://developer.squareup.com/docs/basics/api101/overview) section for more<br>information.<br>**Constraints**: *Minimum Length*: `1`, *Maximum Length*: `128` | getIdempotencyKey(): string | setIdempotencyKey(string idempotencyKey): void |
+| `idempotencyKey` | `string` | Required | A client-supplied, universally unique identifier (UUID) to make this [CreateVendor](api-endpoint:Vendors-CreateVendor) call idempotent.<br><br>See [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) in the<br>[API Development 101](https://developer.squareup.com/docs/buildbasics) section for more<br>information.<br>**Constraints**: *Minimum Length*: `1`, *Maximum Length*: `128` | getIdempotencyKey(): string | setIdempotencyKey(string idempotencyKey): void |
 | `vendor` | [`?Vendor`](../../doc/models/vendor.md) | Optional | Represents a supplier to a seller. | getVendor(): ?Vendor | setVendor(?Vendor vendor): void |
 
 ## Example (as JSON)
@@ -19,7 +19,19 @@ Represents an input to a call to [CreateVendor](../../doc/apis/vendors.md#create
 ```json
 {
   "idempotency_key": "idempotency_key6",
-  "vendor": null
+  "vendor": {
+    "id": "id6",
+    "created_at": "created_at4",
+    "updated_at": "updated_at2",
+    "name": "name6",
+    "address": {
+      "address_line_1": "address_line_16",
+      "address_line_2": "address_line_26",
+      "address_line_3": "address_line_32",
+      "locality": "locality6",
+      "sublocality": "sublocality6"
+    }
+  }
 }
 ```
 

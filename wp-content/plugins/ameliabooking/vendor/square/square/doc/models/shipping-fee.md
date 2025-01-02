@@ -16,10 +16,10 @@
 
 ```json
 {
-  "name": null,
+  "name": "name6",
   "charge": {
-    "amount": null,
-    "currency": null
+    "amount": 80,
+    "currency": "UNKNOWN_CURRENCY"
   }
 }
 ```

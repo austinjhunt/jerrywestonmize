@@ -35,22 +35,26 @@ function listCards(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `cursor` | `?string` | Query, Optional | A pagination cursor returned by a previous call to this endpoint.<br>Provide this to retrieve the next set of results for your original query.<br><br>See [Pagination](https://developer.squareup.com/docs/basics/api101/pagination) for more information. |
+| `cursor` | `?string` | Query, Optional | A pagination cursor returned by a previous call to this endpoint.<br>Provide this to retrieve the next set of results for your original query.<br><br>See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information. |
 | `customerId` | `?string` | Query, Optional | Limit results to cards associated with the customer supplied.<br>By default, all cards owned by the merchant are returned. |
 | `includeDisabled` | `?bool` | Query, Optional | Includes disabled cards.<br>By default, all enabled cards owned by the merchant are returned.<br>**Default**: `false` |
 | `referenceId` | `?string` | Query, Optional | Limit results to cards associated with the reference_id supplied. |
-| `sortOrder` | [`?string (SortOrder)`](../../doc/models/sort-order.md) | Query, Optional | Sorts the returned list by when the card was created with the specified order.<br>This field defaults to ASC. |
+| `sortOrder` | [`?string(SortOrder)`](../../doc/models/sort-order.md) | Query, Optional | Sorts the returned list by when the card was created with the specified order.<br>This field defaults to ASC. |
 
 ## Response Type
 
-[`ListCardsResponse`](../../doc/models/list-cards-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListCardsResponse`](../../doc/models/list-cards-response.md).
 
 ## Example Usage
 
 ```php
 $includeDisabled = false;
 
-$apiResponse = $cardsApi->listCards(null, null, $includeDisabled);
+$apiResponse = $cardsApi->listCards(
+    null,
+    null,
+    $includeDisabled
+);
 
 if ($apiResponse->isSuccess()) {
     $listCardsResponse = $apiResponse->getResult();
@@ -58,9 +62,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -80,29 +84,30 @@ function createCard(CreateCardRequest $body): ApiResponse
 
 ## Response Type
 
-[`CreateCardResponse`](../../doc/models/create-card-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateCardResponse`](../../doc/models/create-card-response.md).
 
 ## Example Usage
 
 ```php
-$body_idempotencyKey = '4935a656-a929-4792-b97c-8848be85c27c';
-$body_sourceId = 'cnon:uIbfJXhXETSP197M3GB';
-$body_card = new Models\Card();
-$body_card->setCardholderName('Amelia Earhart');
-$body_card->setBillingAddress(new Models\Address());
-$body_card->getBillingAddress()->setAddressLine1('500 Electric Ave');
-$body_card->getBillingAddress()->setAddressLine2('Suite 600');
-$body_card->getBillingAddress()->setLocality('New York');
-$body_card->getBillingAddress()->setAdministrativeDistrictLevel1('NY');
-$body_card->getBillingAddress()->setPostalCode('10003');
-$body_card->getBillingAddress()->setCountry(Models\Country::US);
-$body_card->setCustomerId('VDKXEEKPJN48QDG3BGGFAK05P8');
-$body_card->setReferenceId('user-id-1');
-$body = new Models\CreateCardRequest(
-    $body_idempotencyKey,
-    $body_sourceId,
-    $body_card
-);
+$body = CreateCardRequestBuilder::init(
+    '4935a656-a929-4792-b97c-8848be85c27c',
+    'cnon:uIbfJXhXETSP197M3GB',
+    CardBuilder::init()
+        ->cardholderName('Amelia Earhart')
+        ->billingAddress(
+            AddressBuilder::init()
+                ->addressLine1('500 Electric Ave')
+                ->addressLine2('Suite 600')
+                ->locality('New York')
+                ->administrativeDistrictLevel1('NY')
+                ->postalCode('10003')
+                ->country(Country::US)
+                ->build()
+        )
+        ->customerId('VDKXEEKPJN48QDG3BGGFAK05P8')
+        ->referenceId('user-id-1')
+        ->build()
+)->build();
 
 $apiResponse = $cardsApi->createCard($body);
 
@@ -112,9 +117,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -134,7 +139,7 @@ function retrieveCard(string $cardId): ApiResponse
 
 ## Response Type
 
-[`RetrieveCardResponse`](../../doc/models/retrieve-card-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveCardResponse`](../../doc/models/retrieve-card-response.md).
 
 ## Example Usage
 
@@ -149,9 +154,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -172,7 +177,7 @@ function disableCard(string $cardId): ApiResponse
 
 ## Response Type
 
-[`DisableCardResponse`](../../doc/models/disable-card-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DisableCardResponse`](../../doc/models/disable-card-response.md).
 
 ## Example Usage
 
@@ -187,8 +192,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

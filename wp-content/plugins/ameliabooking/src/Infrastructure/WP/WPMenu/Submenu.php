@@ -30,14 +30,6 @@ class Submenu
     }
 
     /**
-     * Initialize admin menu in WP
-     */
-    public function init()
-    {
-        add_action('admin_menu', [$this, 'addOptionsPages']);
-    }
-
-    /**
      * Add options in WP menu
      */
     public function addOptionsPages()

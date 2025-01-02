@@ -32,7 +32,15 @@ which contains a map of responses that each corresponds to an individual delete 
       "errors": [],
       "location_id": "L0TBCBTB7P8RQ"
     }
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

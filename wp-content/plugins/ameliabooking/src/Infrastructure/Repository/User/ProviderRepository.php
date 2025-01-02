@@ -180,6 +180,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.pictureFullPath AS picture_full_path,
                     u.pictureThumbPath AS picture_thumb_path,
                     u.zoomUserId AS user_zoom_user_id,
+                    u.appleCalendarId as user_apple_calendar_id,
                     u.stripeConnect AS user_stripeConnect,
                     u.translations AS user_translations,
                     u.timeZone AS user_timeZone,
@@ -448,6 +449,24 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             $where[] = 'u.id IN (' . implode(', ', $queryProviders) . ')';
         }
 
+        $dotJoinQuery = '';
+
+        if (isset($criteria['dates'][0], $criteria['dates'][1])) {
+            $dotJoinQuery = "AND (dot.repeat = 1 OR (
+              DATE_FORMAT(dot.startDate, '%Y-%m-%d %H:%i:%s') BETWEEN :from1 AND :to1 OR
+              DATE_FORMAT(dot.endDate, '%Y-%m-%d %H:%i:%s') BETWEEN :from2 AND :to2 OR
+              (DATE_FORMAT(dot.startDate, '%Y-%m-%d %H:%i:%s') <= :from3 AND DATE_FORMAT(dot.endDate, '%Y-%m-%d %H:%i:%s') >= :to3)
+            ))";
+
+            $userParams[':from1'] = $userParams[':from2'] = $userParams[':from3'] = $criteria['dates'][0];
+
+            $userParams[':to1'] = $userParams[':to2'] = $userParams[':to3'] = $criteria['dates'][1];
+        } elseif (isset($criteria['dates'][0])) {
+            $dotJoinQuery = "AND (dot.repeat = 1 OR DATE_FORMAT(dot.startDate, '%Y-%m-%d %H:%i:%s') >= :from1 OR DATE_FORMAT(dot.endDate, '%Y-%m-%d %H:%i:%s') >= :from2)";
+
+            $userParams[':from1'] = $userParams[':from2'] = $criteria['dates'][0];
+        }
+
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         try {
@@ -460,6 +479,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.lastName AS user_lastName,
                     u.email AS user_email,
                     u.zoomUserId AS user_zoom_user_id,
+                    u.appleCalendarId AS user_apple_calendar_id,
                     u.stripeConnect AS user_stripeConnect,
                     u.countryPhoneIso AS user_countryPhoneIso,
                     u.note AS note,
@@ -486,7 +506,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 LEFT JOIN {$this->providerServicesTable} pst ON pst.userId = u.id
                 LEFT JOIN {$this->providerLocationTable} plt ON plt.userId = u.id
                 {$calendarJoin}
-                LEFT JOIN {$this->providerDayOffTable} dot ON dot.userId = u.id
+                LEFT JOIN {$this->providerDayOffTable} dot ON dot.userId = u.id {$dotJoinQuery}
                 {$where}
                 ORDER BY CONCAT(u.firstName, ' ', u.lastName), u.id"
             );
@@ -565,7 +585,30 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             )->setWeekDayList($provider->getWeekDayList());
         }
 
-        $where = 'WHERE sdt.userId IN (' . implode(', ', $providers->keys()) . ')';
+        $where = ['sdt.userId IN (' . implode(', ', $providers->keys()) . ')'];
+
+        $sdtParams = [];
+
+        if (isset($criteria['dates'][0], $criteria['dates'][1])) {
+            $where[] = "(
+              DATE_FORMAT(sdt.startDate, '%Y-%m-%d %H:%i:%s') BETWEEN :from1 AND :to1 OR
+              DATE_FORMAT(sdt.endDate, '%Y-%m-%d %H:%i:%s') BETWEEN :from2 AND :to2 OR
+              (DATE_FORMAT(sdt.startDate, '%Y-%m-%d %H:%i:%s') <= :from3 AND DATE_FORMAT(sdt.endDate, '%Y-%m-%d %H:%i:%s') >= :to3)
+            )";
+
+            $sdtParams[':from1'] = $sdtParams[':from2'] = $sdtParams[':from3'] = $criteria['dates'][0];
+
+            $sdtParams[':to1'] = $sdtParams[':to2'] = $sdtParams[':to3'] = $criteria['dates'][1];
+        } elseif (isset($criteria['dates'][0])) {
+            $where[] = "(
+              DATE_FORMAT(sdt.startDate, '%Y-%m-%d %H:%i:%s') >= :from1 OR
+              DATE_FORMAT(sdt.endDate, '%Y-%m-%d %H:%i:%s') >= :from2
+            )";
+
+            $sdtParams[':from1'] = $sdtParams[':from2'] = $criteria['dates'][0];
+        }
+
+        $where = 'WHERE ' . implode(' AND ', $where);
 
         try {
             $statement = $this->connection->prepare(
@@ -589,7 +632,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 {$where}"
             );
 
-            $statement->execute();
+            $statement->execute($sdtParams);
 
             while ($row = $statement->fetch()) {
                 $this->parseUserRow($row, $providerRows, $serviceRows, $providerServiceRows);
@@ -1308,6 +1351,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 'serviceList'      => [],
                 'timeZone'         => isset($row['user_timeZone']) ? $row['user_timeZone'] : null,
                 'badgeId'          => isset($row['badge_id']) ? $row['badge_id'] : null,
+                'appleCalendarId'  => isset($row['user_apple_calendar_id']) ? $row['user_apple_calendar_id'] : null
             ];
         }
 

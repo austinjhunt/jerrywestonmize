@@ -51,7 +51,18 @@ A response that contains the loyalty program.
         "definition": {
           "discount_type": "FIXED_PERCENTAGE",
           "percentage_discount": "10",
-          "scope": "ORDER"
+          "scope": "ORDER",
+          "catalog_object_ids": [
+            "catalog_object_ids6"
+          ],
+          "fixed_discount_money": {
+            "amount": 36,
+            "currency": "TTD"
+          },
+          "max_discount_money": {
+            "amount": 84,
+            "currency": "STD"
+          }
         },
         "id": "e1b39225-9da5-43d1-a5db-782cdd8ad94f",
         "name": "10% off entire sale",
@@ -67,8 +78,19 @@ A response that contains the loyalty program.
       "one": "Point",
       "other": "Points"
     },
-    "updated_at": "2020-05-01T02:00:02Z"
-  }
+    "updated_at": "2020-05-01T02:00:02Z",
+    "expiration_policy": {
+      "expiration_duration": "expiration_duration0"
+    }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

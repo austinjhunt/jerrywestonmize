@@ -5,7 +5,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 return array(
  'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
- 'MailPoet\\EmailEditor\\' => array($vendorDir . '/mailpoet/email-editor/src'),
  'MailPoet\\' => array($baseDir . '/lib'),
  'MailPoetVendor\\' => array($baseDir . '/vendor-prefixed'),
  'MailPoetGenerated\\' => array($baseDir . '/generated'),

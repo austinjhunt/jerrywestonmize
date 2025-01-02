@@ -123,36 +123,4 @@ class CustomerBookingEventTicketRepository extends AbstractRepository implements
             throw new QueryExecutionException('Unable to delete data from ' . __CLASS__, $e->getCode(), $e);
         }
     }
-
-    /**
-     * @param int $customerBookingId
-     *
-     * @return bool
-     * @throws QueryExecutionException
-     */
-    public function calculateTotalPrice($customerBookingId)
-    {
-        try {
-            $bookingsTable = CustomerBookingsTable::getTableName();
-            //  CHANGE WHEN ADDING AGGREGATED PRICE PROPERTY TO EVENTS
-            $statement = $this->connection->prepare(
-                "SELECT
-                      cbt.customerBookingId,
-                      SUM(CASE WHEN cb.aggregatedPrice = 1 THEN cbt.persons*cbt.price ELSE cbt.price END) as totalPrice
-                FROM {$this->table} cbt
-                INNER JOIN {$bookingsTable} cb ON cb.id = cbt.customerBookingId
-                WHERE cbt.customerBookingId = :customerBookingId
-                GROUP BY cbt.customerBookingId
-                "
-            );
-
-            $statement->execute([':customerBookingId' => $customerBookingId]);
-
-             $rows = $statement->fetchAll();
-
-             return $rows ? $rows[0]['totalPrice'] : null;
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to calculate total price in ' . __CLASS__, $e->getCode(), $e);
-        }
-    }
 }

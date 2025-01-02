@@ -25,6 +25,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventPeriodsRepository;
+use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
@@ -196,12 +197,58 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      * @param string      $commandSlug
      *
      * @return void
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     */
+    public function handleEvent($appointment, $commandSlug)
+    {
+        try {
+            $this->handleEventAction($appointment, $commandSlug);
+        } catch (Exception $e) {
+            /** @var AppointmentRepository $appointmentRepository */
+            $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
+
+            $appointmentRepository->updateErrorColumn($appointment->getId()->getValue(), $e->getMessage());
+        }
+    }
+
+    /**
+     * Handle Google Calendar Events.
+     *
+     * @param Event $event
+     * @param string $commandSlug
+     * @param Collection $periods
+     * @param array $providers
+     *
+     * @return void
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     */
+    public function handleEventPeriodsChange($event, $commandSlug, $periods, $providers = null, $providersRemove = null)
+    {
+        try {
+            $this->handleEventPeriodsChangeAction($event, $commandSlug, $periods, $providers, $providersRemove);
+        } catch (Exception $e) {
+            /** @var EventRepository $eventRepository */
+            $eventRepository = $this->container->get('domain.booking.event.repository');
+
+            $eventRepository->updateErrorColumn($event->getId()->getValue(), $e->getMessage());
+        }
+    }
+
+    /**
+     * Handle Google Calendar Event's.
+     *
+     * @param Appointment|Event $appointment
+     * @param string      $commandSlug
+     *
+     * @return void
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
      * @throws ContainerException
      */
-    public function handleEvent($appointment, $commandSlug)
+    private function handleEventAction($appointment, $commandSlug)
     {
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
@@ -269,7 +316,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      * @throws QueryExecutionException
      * @throws ContainerException
      */
-    public function handleEventPeriodsChange($event, $commandSlug, $periods, $providers = null, $providersRemove = null)
+    private function handleEventPeriodsChangeAction($event, $commandSlug, $periods, $providers = null, $providersRemove = null)
     {
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
@@ -548,14 +595,12 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
         do_action('amelia_before_google_calendar_event_added', $event, $appointment->toArray(), $provider->toArray());
 
-        try {
-            $event = $this->service->events->insert(
-                $provider->getGoogleCalendar()->getCalendarId()->getValue(),
-                $event,
-                $queryParams
-            );
-        } catch (Exception $e) {
-        }
+        $event = $this->service->events->insert(
+            $provider->getGoogleCalendar()->getCalendarId()->getValue(),
+            $event,
+            $queryParams
+        );
+
 
         if ($period) {
             /** @var EventPeriodsRepository $eventPeriodsRepository */

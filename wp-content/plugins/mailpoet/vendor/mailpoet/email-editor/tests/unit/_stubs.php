@@ -1,14 +1,14 @@
-<?php declare(strict_types = 1);
+<?php
+declare(strict_types = 1);
 if (!defined('ABSPATH')) exit;
-// phpcs:ignoreFile - We want to allow multiple classes etc.
-// Dummy WP classes
-if (!class_exists(\WP_Theme_JSON::class)) {
+// Dummy WP classes.
+if ( ! class_exists( \WP_Theme_JSON::class ) ) {
  class WP_Theme_JSON {
  public function get_data() {
- return [];
+ return array();
  }
  public function get_settings() {
- return [];
+ return array();
  }
  }
 }

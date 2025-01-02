@@ -7,6 +7,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Factory\Outlook\OutlookCalendarFactory;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use AmeliaBooking\Infrastructure\Repository\Outlook\OutlookCalendarRepository;
 
@@ -42,10 +43,18 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
         /** @var AbstractOutlookCalendarService $outlookCalendarService */
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
 
-        $token = $outlookCalendarService->fetchAccessTokenWithAuthCode(
-            $command->getField('authCode'),
-            $command->getField('redirectUri')
-        );
+        $providerId = $command->getField('userId');
+
+        try {
+            $token = $outlookCalendarService->fetchAccessTokenWithAuthCode(
+                $command->getField('authCode'),
+                $command->getField('redirectUri')
+            );
+        } catch (\Exception $e) {
+            /** @var ProviderRepository $providerRepository */
+            $providerRepository = $this->container->get('domain.users.providers.repository');
+            $providerRepository->updateErrorColumn($providerId, $e->getMessage());
+        }
 
         if (!$token['outcome']) {
             $result->setResult(CommandResult::RESULT_ERROR);
@@ -63,7 +72,7 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
 
         do_action('amelia_before_outlook_calendar_added', $outlookCalendar ? $outlookCalendar->toArray() : null, $command->getField('userId'));
 
-        if (!$outlookCalendarRepository->add($outlookCalendar, $command->getField('userId'))) {
+        if (!$outlookCalendarRepository->add($outlookCalendar, $providerId)) {
             $outlookCalendarRepository->rollback();
         }
 

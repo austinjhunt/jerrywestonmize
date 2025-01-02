@@ -5,6 +5,11 @@ namespace MailPoet\Subscribers;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Captcha\CaptchaConstants;
+use MailPoet\Captcha\CaptchaSession;
+use MailPoet\Captcha\Validator\CaptchaValidator;
+use MailPoet\Captcha\Validator\RecaptchaValidator;
+use MailPoet\Captcha\Validator\ValidationError;
 use MailPoet\Entities\FormEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Entities\SubscriberTagEntity;
@@ -14,11 +19,6 @@ use MailPoet\NotFoundException;
 use MailPoet\Segments\SubscribersFinder;
 use MailPoet\Settings\SettingsController;
 use MailPoet\Statistics\StatisticsFormsRepository;
-use MailPoet\Subscription\Captcha\CaptchaConstants;
-use MailPoet\Subscription\Captcha\CaptchaSession;
-use MailPoet\Subscription\Captcha\Validator\BuiltInCaptchaValidator;
-use MailPoet\Subscription\Captcha\Validator\RecaptchaValidator;
-use MailPoet\Subscription\Captcha\Validator\ValidationError;
 use MailPoet\Subscription\Throttling as SubscriptionThrottling;
 use MailPoet\Tags\TagRepository;
 use MailPoet\UnexpectedValueException;
@@ -60,7 +60,7 @@ class SubscriberSubscribeController {
 
   /** @var SubscriberTagRepository */
   private $subscriberTagRepository;
-  /** @var BuiltInCaptchaValidator  */
+  /** @var CaptchaValidator  */
   private $builtInCaptchaValidator;
 
   /** @var RecaptchaValidator  */
@@ -79,7 +79,7 @@ class SubscriberSubscribeController {
     TagRepository $tagRepository,
     SubscriberTagRepository $subscriberTagRepository,
     WPFunctions $wp,
-    BuiltInCaptchaValidator $builtInCaptchaValidator,
+    CaptchaValidator $builtInCaptchaValidator,
     RecaptchaValidator $recaptchaValidator
   ) {
     $this->formsRepository = $formsRepository;

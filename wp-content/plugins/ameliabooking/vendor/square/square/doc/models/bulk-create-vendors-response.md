@@ -12,7 +12,7 @@ Represents an output from a call to [BulkCreateVendors](../../doc/apis/vendors.m
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Any errors that occurred during the request. | getErrors(): ?array | setErrors(?array errors): void |
-| `responses` | [`?array<string,CreateVendorResponse>`](../../doc/models/create-vendor-response.md) | Optional | A set of [CreateVendorResponse](../../doc/models/create-vendor-response.md) objects encapsulating successfully created [Vendor](../../doc/models/vendor.md)<br>objects or error responses for failed attempts. The set is represented by<br>a collection of idempotency-key/`Vendor`-object or idempotency-key/error-object pairs. The idempotency keys correspond to those specified<br>in the input. | getResponses(): ?array | setResponses(?array responses): void |
+| `responses` | [`?array<string,CreateVendorResponse>`](../../doc/models/create-vendor-response.md) | Optional | A set of [CreateVendorResponse](entity:CreateVendorResponse) objects encapsulating successfully created [Vendor](entity:Vendor)<br>objects or error responses for failed attempts. The set is represented by<br>a collection of idempotency-key/`Vendor`-object or idempotency-key/error-object pairs. The idempotency keys correspond to those specified<br>in the input. | getResponses(): ?array | setResponses(?array responses): void |
 
 ## Example (as JSON)
 
@@ -64,6 +64,43 @@ Represents an output from a call to [BulkCreateVendors](../../doc/apis/vendors.m
         "status": "ACTIVE",
         "updated_at": "2022-03-16T10:21:54.859Z",
         "version": 0
+      }
+    }
+  },
+  "responses": {
+    "key0": {
+      "errors": [
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        }
+      ],
+      "vendor": {
+        "id": "id6",
+        "created_at": "created_at4",
+        "updated_at": "updated_at2",
+        "name": "name6",
+        "address": {
+          "address_line_1": "address_line_16",
+          "address_line_2": "address_line_26",
+          "address_line_3": "address_line_32",
+          "locality": "locality6",
+          "sublocality": "sublocality6"
+        }
       }
     }
   }

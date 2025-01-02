@@ -52,13 +52,6 @@ class Forminator_Name extends Forminator_Field {
 	public $options = array();
 
 	/**
-	 * Category
-	 *
-	 * @var string
-	 */
-	public $category = 'standard';
-
-	/**
 	 * Icon
 	 *
 	 * @var string
@@ -289,7 +282,7 @@ class Forminator_Name extends Forminator_Field {
 			$prefix_data = array(
 				'name'       => self::get_subfield_id( $id, '-prefix' ),
 				'id'         => self::get_field_id( $this->form_settings['form_id'] . '__field--' . $id ),
-				'class'      => 'forminator-select2',
+				'class'      => 'basic' === $design ? '' : 'forminator-select2',
 				'data-multi' => true,
 			);
 

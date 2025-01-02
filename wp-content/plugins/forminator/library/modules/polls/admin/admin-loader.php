@@ -252,6 +252,7 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 				'akismet-protection' => true,
 				'formName'           => $name,
 				'version'            => FORMINATOR_VERSION,
+				'store_submissions'  => '1',
 			),
 			$settings
 		);
@@ -276,6 +277,10 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 		$status = Forminator_Poll_Model::STATUS_DRAFT;
 
 		$id = self::create( $name, $status );
+
+		if ( is_wp_error( $id ) ) {
+			return;
+		}
 
 		$wizard_url = admin_url( 'admin.php?page=forminator-poll-wizard&id=' . $id );
 
@@ -382,6 +387,10 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 
 		// Save data.
 		$id = $form_model->save();
+
+		if ( is_wp_error( $id ) ) {
+			return $id;
+		}
 
 		/**
 		* Action called after poll saved to database

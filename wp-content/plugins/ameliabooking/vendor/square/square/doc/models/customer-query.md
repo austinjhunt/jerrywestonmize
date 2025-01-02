@@ -18,8 +18,36 @@ Represents filtering and sorting criteria for a [SearchCustomers](../../doc/apis
 
 ```json
 {
-  "filter": null,
-  "sort": null
+  "filter": {
+    "creation_source": {
+      "values": [
+        "THIRD_PARTY_IMPORT",
+        "THIRD_PARTY",
+        "TERMINAL"
+      ],
+      "rule": "INCLUDE"
+    },
+    "created_at": {
+      "start_at": "start_at4",
+      "end_at": "end_at8"
+    },
+    "updated_at": {
+      "start_at": "start_at6",
+      "end_at": "end_at6"
+    },
+    "email_address": {
+      "exact": "exact2",
+      "fuzzy": "fuzzy8"
+    },
+    "phone_number": {
+      "exact": "exact2",
+      "fuzzy": "fuzzy8"
+    }
+  },
+  "sort": {
+    "field": "DEFAULT",
+    "order": "DESC"
+  }
 }
 ```
 

@@ -13,7 +13,7 @@ class Expression extends Constraint
  public $message = 'This value is not valid.';
  public $expression;
  public $values = [];
- public function __construct($expression, string $message = null, array $values = null, array $groups = null, $payload = null, array $options = [])
+ public function __construct($expression, ?string $message = null, ?array $values = null, ?array $groups = null, $payload = null, array $options = [])
  {
  if (!\class_exists(ExpressionLanguage::class)) {
  throw new LogicException(\sprintf('The "symfony/expression-language" component is required to use the "%s" constraint.', __CLASS__));

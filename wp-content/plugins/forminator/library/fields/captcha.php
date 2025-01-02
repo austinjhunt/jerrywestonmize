@@ -52,13 +52,6 @@ class Forminator_Captcha extends Forminator_Field {
 	public $options = array();
 
 	/**
-	 * Category
-	 *
-	 * @var string
-	 */
-	public $category = 'standard';
-
-	/**
 	 * Hide advanced
 	 *
 	 * @var string

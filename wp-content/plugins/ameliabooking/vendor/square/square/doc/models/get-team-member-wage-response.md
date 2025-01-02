@@ -26,9 +26,19 @@ the request resulted in errors.
       "currency": "USD"
     },
     "id": "pXS3qCv7BERPnEGedM4S8mhm",
+    "job_id": "jxJNN6eCJsLrhg5UFJrDWDGE",
     "team_member_id": "33fJchumvVdJwxV0H6L9",
+    "tip_eligible": false,
     "title": "Manager"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

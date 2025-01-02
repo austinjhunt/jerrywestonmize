@@ -12,6 +12,10 @@ $customersApi = $client->getCustomersApi();
 
 * [List Customers](../../doc/apis/customers.md#list-customers)
 * [Create Customer](../../doc/apis/customers.md#create-customer)
+* [Bulk Create Customers](../../doc/apis/customers.md#bulk-create-customers)
+* [Bulk Delete Customers](../../doc/apis/customers.md#bulk-delete-customers)
+* [Bulk Retrieve Customers](../../doc/apis/customers.md#bulk-retrieve-customers)
+* [Bulk Update Customers](../../doc/apis/customers.md#bulk-update-customers)
 * [Search Customers](../../doc/apis/customers.md#search-customers)
 * [Delete Customer](../../doc/apis/customers.md#delete-customer)
 * [Retrieve Customer](../../doc/apis/customers.md#retrieve-customer)
@@ -35,7 +39,8 @@ function listCustomers(
     ?string $cursor = null,
     ?int $limit = null,
     ?string $sortField = null,
-    ?string $sortOrder = null
+    ?string $sortOrder = null,
+    ?bool $count = false
 ): ApiResponse
 ```
 
@@ -45,17 +50,26 @@ function listCustomers(
 |  --- | --- | --- | --- |
 | `cursor` | `?string` | Query, Optional | A pagination cursor returned by a previous call to this endpoint.<br>Provide this cursor to retrieve the next set of results for your original query.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
 | `limit` | `?int` | Query, Optional | The maximum number of results to return in a single page. This limit is advisory. The response might contain more or fewer results.<br>If the specified limit is less than 1 or greater than 100, Square returns a `400 VALUE_TOO_LOW` or `400 VALUE_TOO_HIGH` error. The default value is 100.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
-| `sortField` | [`?string (CustomerSortField)`](../../doc/models/customer-sort-field.md) | Query, Optional | Indicates how customers should be sorted.<br><br>The default value is `DEFAULT`. |
-| `sortOrder` | [`?string (SortOrder)`](../../doc/models/sort-order.md) | Query, Optional | Indicates whether customers should be sorted in ascending (`ASC`) or<br>descending (`DESC`) order.<br><br>The default value is `ASC`. |
+| `sortField` | [`?string(CustomerSortField)`](../../doc/models/customer-sort-field.md) | Query, Optional | Indicates how customers should be sorted.<br><br>The default value is `DEFAULT`. |
+| `sortOrder` | [`?string(SortOrder)`](../../doc/models/sort-order.md) | Query, Optional | Indicates whether customers should be sorted in ascending (`ASC`) or<br>descending (`DESC`) order.<br><br>The default value is `ASC`. |
+| `count` | `?bool` | Query, Optional | Indicates whether to return the total count of customers in the `count` field of the response.<br><br>The default value is `false`.<br>**Default**: `false` |
 
 ## Response Type
 
-[`ListCustomersResponse`](../../doc/models/list-customers-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListCustomersResponse`](../../doc/models/list-customers-response.md).
 
 ## Example Usage
 
 ```php
-$apiResponse = $customersApi->listCustomers();
+$count = false;
+
+$apiResponse = $customersApi->listCustomers(
+    null,
+    null,
+    null,
+    null,
+    $count
+);
 
 if ($apiResponse->isSuccess()) {
     $listCustomersResponse = $apiResponse->getResult();
@@ -63,9 +77,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -94,25 +108,29 @@ function createCustomer(CreateCustomerRequest $body): ApiResponse
 
 ## Response Type
 
-[`CreateCustomerResponse`](../../doc/models/create-customer-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateCustomerResponse`](../../doc/models/create-customer-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\CreateCustomerRequest();
-$body->setGivenName('Amelia');
-$body->setFamilyName('Earhart');
-$body->setEmailAddress('Amelia.Earhart@example.com');
-$body->setAddress(new Models\Address());
-$body->getAddress()->setAddressLine1('500 Electric Ave');
-$body->getAddress()->setAddressLine2('Suite 600');
-$body->getAddress()->setLocality('New York');
-$body->getAddress()->setAdministrativeDistrictLevel1('NY');
-$body->getAddress()->setPostalCode('10003');
-$body->getAddress()->setCountry(Models\Country::US);
-$body->setPhoneNumber('+1-212-555-4240');
-$body->setReferenceId('YOUR_REFERENCE_ID');
-$body->setNote('a customer');
+$body = CreateCustomerRequestBuilder::init()
+    ->givenName('Amelia')
+    ->familyName('Earhart')
+    ->emailAddress('Amelia.Earhart@example.com')
+    ->address(
+        AddressBuilder::init()
+            ->addressLine1('500 Electric Ave')
+            ->addressLine2('Suite 600')
+            ->locality('New York')
+            ->administrativeDistrictLevel1('NY')
+            ->postalCode('10003')
+            ->country(Country::US)
+            ->build()
+    )
+    ->phoneNumber('+1-212-555-4240')
+    ->referenceId('YOUR_REFERENCE_ID')
+    ->note('a customer')
+    ->build();
 
 $apiResponse = $customersApi->createCustomer($body);
 
@@ -122,9 +140,240 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
+```
+
+
+# Bulk Create Customers
+
+Creates multiple [customer profiles](../../doc/models/customer.md) for a business.
+
+This endpoint takes a map of individual create requests and returns a map of responses.
+
+You must provide at least one of the following values in each create request:
+
+- `given_name`
+- `family_name`
+- `company_name`
+- `email_address`
+- `phone_number`
+
+```php
+function bulkCreateCustomers(BulkCreateCustomersRequest $body): ApiResponse
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `body` | [`BulkCreateCustomersRequest`](../../doc/models/bulk-create-customers-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
+
+## Response Type
+
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BulkCreateCustomersResponse`](../../doc/models/bulk-create-customers-response.md).
+
+## Example Usage
+
+```php
+$body = BulkCreateCustomersRequestBuilder::init(
+    [
+        '8bb76c4f-e35d-4c5b-90de-1194cd9179f0' => BulkCreateCustomerDataBuilder::init()
+            ->givenName('Amelia')
+            ->familyName('Earhart')
+            ->emailAddress('Amelia.Earhart@example.com')
+            ->address(
+                AddressBuilder::init()
+                    ->addressLine1('500 Electric Ave')
+                    ->addressLine2('Suite 600')
+                    ->locality('New York')
+                    ->administrativeDistrictLevel1('NY')
+                    ->postalCode('10003')
+                    ->country(Country::US)
+                    ->build()
+            )
+            ->phoneNumber('+1-212-555-4240')
+            ->referenceId('YOUR_REFERENCE_ID')
+            ->note('a customer')
+            ->build(),
+        'd1689f23-b25d-4932-b2f0-aed00f5e2029' => BulkCreateCustomerDataBuilder::init()
+            ->givenName('Marie')
+            ->familyName('Curie')
+            ->emailAddress('Marie.Curie@example.com')
+            ->address(
+                AddressBuilder::init()
+                    ->addressLine1('500 Electric Ave')
+                    ->addressLine2('Suite 601')
+                    ->locality('New York')
+                    ->administrativeDistrictLevel1('NY')
+                    ->postalCode('10003')
+                    ->country(Country::US)
+                    ->build()
+            )
+            ->phoneNumber('+1-212-444-4240')
+            ->referenceId('YOUR_REFERENCE_ID')
+            ->note('another customer')
+            ->build()
+    ]
+)->build();
+
+$apiResponse = $customersApi->bulkCreateCustomers($body);
+
+if ($apiResponse->isSuccess()) {
+    $bulkCreateCustomersResponse = $apiResponse->getResult();
+} else {
+    $errors = $apiResponse->getErrors();
+}
+
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
+```
+
+
+# Bulk Delete Customers
+
+Deletes multiple customer profiles.
+
+The endpoint takes a list of customer IDs and returns a map of responses.
+
+```php
+function bulkDeleteCustomers(BulkDeleteCustomersRequest $body): ApiResponse
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `body` | [`BulkDeleteCustomersRequest`](../../doc/models/bulk-delete-customers-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
+
+## Response Type
+
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BulkDeleteCustomersResponse`](../../doc/models/bulk-delete-customers-response.md).
+
+## Example Usage
+
+```php
+$body = BulkDeleteCustomersRequestBuilder::init(
+    [
+        '8DDA5NZVBZFGAX0V3HPF81HHE0',
+        'N18CPRVXR5214XPBBA6BZQWF3C',
+        '2GYD7WNXF7BJZW1PMGNXZ3Y8M8'
+    ]
+)->build();
+
+$apiResponse = $customersApi->bulkDeleteCustomers($body);
+
+if ($apiResponse->isSuccess()) {
+    $bulkDeleteCustomersResponse = $apiResponse->getResult();
+} else {
+    $errors = $apiResponse->getErrors();
+}
+
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
+```
+
+
+# Bulk Retrieve Customers
+
+Retrieves multiple customer profiles.
+
+This endpoint takes a list of customer IDs and returns a map of responses.
+
+```php
+function bulkRetrieveCustomers(BulkRetrieveCustomersRequest $body): ApiResponse
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `body` | [`BulkRetrieveCustomersRequest`](../../doc/models/bulk-retrieve-customers-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
+
+## Response Type
+
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BulkRetrieveCustomersResponse`](../../doc/models/bulk-retrieve-customers-response.md).
+
+## Example Usage
+
+```php
+$body = BulkRetrieveCustomersRequestBuilder::init(
+    [
+        '8DDA5NZVBZFGAX0V3HPF81HHE0',
+        'N18CPRVXR5214XPBBA6BZQWF3C',
+        '2GYD7WNXF7BJZW1PMGNXZ3Y8M8'
+    ]
+)->build();
+
+$apiResponse = $customersApi->bulkRetrieveCustomers($body);
+
+if ($apiResponse->isSuccess()) {
+    $bulkRetrieveCustomersResponse = $apiResponse->getResult();
+} else {
+    $errors = $apiResponse->getErrors();
+}
+
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
+```
+
+
+# Bulk Update Customers
+
+Updates multiple customer profiles.
+
+This endpoint takes a map of individual update requests and returns a map of responses.
+
+You cannot use this endpoint to change cards on file. To make changes, use the [Cards API](../../doc/apis/cards.md) or [Gift Cards API](../../doc/apis/gift-cards.md).
+
+```php
+function bulkUpdateCustomers(BulkUpdateCustomersRequest $body): ApiResponse
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `body` | [`BulkUpdateCustomersRequest`](../../doc/models/bulk-update-customers-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
+
+## Response Type
+
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BulkUpdateCustomersResponse`](../../doc/models/bulk-update-customers-response.md).
+
+## Example Usage
+
+```php
+$body = BulkUpdateCustomersRequestBuilder::init(
+    [
+        '8DDA5NZVBZFGAX0V3HPF81HHE0' => BulkUpdateCustomerDataBuilder::init()
+            ->emailAddress('New.Amelia.Earhart@example.com')
+            ->phoneNumber('phone_number2')
+            ->note('updated customer note')
+            ->version(2)
+            ->build(),
+        'N18CPRVXR5214XPBBA6BZQWF3C' => BulkUpdateCustomerDataBuilder::init()
+            ->givenName('Marie')
+            ->familyName('Curie')
+            ->version(0)
+            ->build()
+    ]
+)->build();
+
+$apiResponse = $customersApi->bulkUpdateCustomers($body);
+
+if ($apiResponse->isSuccess()) {
+    $bulkUpdateCustomersResponse = $apiResponse->getResult();
+} else {
+    $errors = $apiResponse->getErrors();
+}
+
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -152,28 +401,58 @@ function searchCustomers(SearchCustomersRequest $body): ApiResponse
 
 ## Response Type
 
-[`SearchCustomersResponse`](../../doc/models/search-customers-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`SearchCustomersResponse`](../../doc/models/search-customers-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\SearchCustomersRequest();
-$body->setLimit(2);
-$body->setQuery(new Models\CustomerQuery());
-$body->getQuery()->setFilter(new Models\CustomerFilter());
-$body->getQuery()->getFilter()->setCreationSource(new Models\CustomerCreationSourceFilter());
-$body->getQuery()->getFilter()->getCreationSource()->setValues([Models\CustomerCreationSource::THIRD_PARTY]);
-$body->getQuery()->getFilter()->getCreationSource()->setRule(Models\CustomerInclusionExclusion::INCLUDE_);
-$body->getQuery()->getFilter()->setCreatedAt(new Models\TimeRange());
-$body->getQuery()->getFilter()->getCreatedAt()->setStartAt('2018-01-01T00:00:00+00:00');
-$body->getQuery()->getFilter()->getCreatedAt()->setEndAt('2018-02-01T00:00:00+00:00');
-$body->getQuery()->getFilter()->setEmailAddress(new Models\CustomerTextFilter());
-$body->getQuery()->getFilter()->getEmailAddress()->setFuzzy('example.com');
-$body->getQuery()->getFilter()->setGroupIds(new Models\FilterValue());
-$body->getQuery()->getFilter()->getGroupIds()->setAll(['545AXB44B4XXWMVQ4W8SBT3HHF']);
-$body->getQuery()->setSort(new Models\CustomerSort());
-$body->getQuery()->getSort()->setField(Models\CustomerSortField::CREATED_AT);
-$body->getQuery()->getSort()->setOrder(Models\SortOrder::ASC);
+$body = SearchCustomersRequestBuilder::init()
+    ->limit(2)
+    ->query(
+        CustomerQueryBuilder::init()
+            ->filter(
+                CustomerFilterBuilder::init()
+                    ->creationSource(
+                        CustomerCreationSourceFilterBuilder::init()
+                            ->values(
+                                [
+                                    CustomerCreationSource::THIRD_PARTY
+                                ]
+                            )
+                            ->rule(CustomerInclusionExclusion::INCLUDE_)
+                            ->build()
+                    )
+                    ->createdAt(
+                        TimeRangeBuilder::init()
+                            ->startAt('2018-01-01T00:00:00-00:00')
+                            ->endAt('2018-02-01T00:00:00-00:00')
+                            ->build()
+                    )
+                    ->emailAddress(
+                        CustomerTextFilterBuilder::init()
+                            ->fuzzy('example.com')
+                            ->build()
+                    )
+                    ->groupIds(
+                        FilterValueBuilder::init()
+                            ->all(
+                                [
+                                    '545AXB44B4XXWMVQ4W8SBT3HHF'
+                                ]
+                            )
+                            ->build()
+                    )
+                    ->build()
+            )
+            ->sort(
+                CustomerSortBuilder::init()
+                    ->field(CustomerSortField::CREATED_AT)
+                    ->order(SortOrder::ASC)
+                    ->build()
+            )
+            ->build()
+    )
+    ->build();
 
 $apiResponse = $customersApi->searchCustomers($body);
 
@@ -183,18 +462,15 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
 # Delete Customer
 
 Deletes a customer profile from a business. This operation also unlinks any associated cards on file.
-
-As a best practice, include the `version` field in the request to enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency) control.
-If included, the value must be set to the current version of the customer profile.
 
 To delete a customer profile that was created by merging existing profiles, you must use the ID of the newly created profile.
 
@@ -211,7 +487,7 @@ function deleteCustomer(string $customerId, ?int $version = null): ApiResponse
 
 ## Response Type
 
-[`DeleteCustomerResponse`](../../doc/models/delete-customer-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteCustomerResponse`](../../doc/models/delete-customer-response.md).
 
 ## Example Usage
 
@@ -226,9 +502,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -248,7 +524,7 @@ function retrieveCustomer(string $customerId): ApiResponse
 
 ## Response Type
 
-[`RetrieveCustomerResponse`](../../doc/models/retrieve-customer-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveCustomerResponse`](../../doc/models/retrieve-customer-response.md).
 
 ## Example Usage
 
@@ -263,20 +539,16 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
 # Update Customer
 
 Updates a customer profile. This endpoint supports sparse updates, so only new or changed fields are required in the request.
-To add or update a field, specify the new value. To remove a field, specify `null` and include the `X-Clear-Null` header set to `true`
-(recommended) or specify an empty string (string fields only).
-
-As a best practice, include the `version` field in the request to enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency) control.
-If included, the value must be set to the current version of the customer profile.
+To add or update a field, specify the new value. To remove a field, specify `null`.
 
 To update a customer profile that was created by merging existing profiles, you must use the ID of the newly created profile.
 
@@ -295,19 +567,24 @@ function updateCustomer(string $customerId, UpdateCustomerRequest $body): ApiRes
 
 ## Response Type
 
-[`UpdateCustomerResponse`](../../doc/models/update-customer-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateCustomerResponse`](../../doc/models/update-customer-response.md).
 
 ## Example Usage
 
 ```php
 $customerId = 'customer_id8';
-$body = new Models\UpdateCustomerRequest();
-$body->setEmailAddress('New.Amelia.Earhart@example.com');
-$body->setPhoneNumber('');
-$body->setNote('updated customer note');
-$body->setVersion(2);
 
-$apiResponse = $customersApi->updateCustomer($customerId, $body);
+$body = UpdateCustomerRequestBuilder::init()
+    ->emailAddress('New.Amelia.Earhart@example.com')
+    ->phoneNumber('phone_number2')
+    ->note('updated customer note')
+    ->version(2)
+    ->build();
+
+$apiResponse = $customersApi->updateCustomer(
+    $customerId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $updateCustomerResponse = $apiResponse->getResult();
@@ -315,9 +592,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -344,26 +621,33 @@ function createCustomerCard(string $customerId, CreateCustomerCardRequest $body)
 
 ## Response Type
 
-[`CreateCustomerCardResponse`](../../doc/models/create-customer-card-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateCustomerCardResponse`](../../doc/models/create-customer-card-response.md).
 
 ## Example Usage
 
 ```php
 $customerId = 'customer_id8';
-$body_cardNonce = 'YOUR_CARD_NONCE';
-$body = new Models\CreateCustomerCardRequest(
-    $body_cardNonce
-);
-$body->setBillingAddress(new Models\Address());
-$body->getBillingAddress()->setAddressLine1('500 Electric Ave');
-$body->getBillingAddress()->setAddressLine2('Suite 600');
-$body->getBillingAddress()->setLocality('New York');
-$body->getBillingAddress()->setAdministrativeDistrictLevel1('NY');
-$body->getBillingAddress()->setPostalCode('10003');
-$body->getBillingAddress()->setCountry(Models\Country::US);
-$body->setCardholderName('Amelia Earhart');
 
-$apiResponse = $customersApi->createCustomerCard($customerId, $body);
+$body = CreateCustomerCardRequestBuilder::init(
+    'YOUR_CARD_NONCE'
+)
+    ->billingAddress(
+        AddressBuilder::init()
+            ->addressLine1('500 Electric Ave')
+            ->addressLine2('Suite 600')
+            ->locality('New York')
+            ->administrativeDistrictLevel1('NY')
+            ->postalCode('10003')
+            ->country(Country::US)
+            ->build()
+    )
+    ->cardholderName('Amelia Earhart')
+    ->build();
+
+$apiResponse = $customersApi->createCustomerCard(
+    $customerId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $createCustomerCardResponse = $apiResponse->getResult();
@@ -371,9 +655,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -396,15 +680,19 @@ function deleteCustomerCard(string $customerId, string $cardId): ApiResponse
 
 ## Response Type
 
-[`DeleteCustomerCardResponse`](../../doc/models/delete-customer-card-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteCustomerCardResponse`](../../doc/models/delete-customer-card-response.md).
 
 ## Example Usage
 
 ```php
 $customerId = 'customer_id8';
+
 $cardId = 'card_id4';
 
-$apiResponse = $customersApi->deleteCustomerCard($customerId, $cardId);
+$apiResponse = $customersApi->deleteCustomerCard(
+    $customerId,
+    $cardId
+);
 
 if ($apiResponse->isSuccess()) {
     $deleteCustomerCardResponse = $apiResponse->getResult();
@@ -412,9 +700,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -438,15 +726,19 @@ function removeGroupFromCustomer(string $customerId, string $groupId): ApiRespon
 
 ## Response Type
 
-[`RemoveGroupFromCustomerResponse`](../../doc/models/remove-group-from-customer-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RemoveGroupFromCustomerResponse`](../../doc/models/remove-group-from-customer-response.md).
 
 ## Example Usage
 
 ```php
 $customerId = 'customer_id8';
+
 $groupId = 'group_id0';
 
-$apiResponse = $customersApi->removeGroupFromCustomer($customerId, $groupId);
+$apiResponse = $customersApi->removeGroupFromCustomer(
+    $customerId,
+    $groupId
+);
 
 if ($apiResponse->isSuccess()) {
     $removeGroupFromCustomerResponse = $apiResponse->getResult();
@@ -454,9 +746,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -480,15 +772,19 @@ function addGroupToCustomer(string $customerId, string $groupId): ApiResponse
 
 ## Response Type
 
-[`AddGroupToCustomerResponse`](../../doc/models/add-group-to-customer-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`AddGroupToCustomerResponse`](../../doc/models/add-group-to-customer-response.md).
 
 ## Example Usage
 
 ```php
 $customerId = 'customer_id8';
+
 $groupId = 'group_id0';
 
-$apiResponse = $customersApi->addGroupToCustomer($customerId, $groupId);
+$apiResponse = $customersApi->addGroupToCustomer(
+    $customerId,
+    $groupId
+);
 
 if ($apiResponse->isSuccess()) {
     $addGroupToCustomerResponse = $apiResponse->getResult();
@@ -496,8 +792,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

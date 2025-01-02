@@ -15,7 +15,7 @@ The total amount of the payout will equal the sum of the payout entries for a ba
 | `id` | `string` | Required | A unique ID for the payout entry.<br>**Constraints**: *Minimum Length*: `1` | getId(): string | setId(string id): void |
 | `payoutId` | `string` | Required | The ID of the payout entries’ associated payout.<br>**Constraints**: *Minimum Length*: `1` | getPayoutId(): string | setPayoutId(string payoutId): void |
 | `effectiveAt` | `?string` | Optional | The timestamp of when the payout entry affected the balance, in RFC 3339 format. | getEffectiveAt(): ?string | setEffectiveAt(?string effectiveAt): void |
-| `type` | [`?string (ActivityType)`](../../doc/models/activity-type.md) | Optional | - | getType(): ?string | setType(?string type): void |
+| `type` | [`?string(ActivityType)`](../../doc/models/activity-type.md) | Optional | - | getType(): ?string | setType(?string type): void |
 | `grossAmountMoney` | [`?Money`](../../doc/models/money.md) | Optional | Represents an amount of money. `Money` fields can be signed or unsigned.<br>Fields that do not explicitly define whether they are signed or unsigned are<br>considered unsigned and can only hold positive amounts. For signed fields, the<br>sign of the value indicates the purpose of the money transfer. See<br>[Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)<br>for more information. | getGrossAmountMoney(): ?Money | setGrossAmountMoney(?Money grossAmountMoney): void |
 | `feeAmountMoney` | [`?Money`](../../doc/models/money.md) | Optional | Represents an amount of money. `Money` fields can be signed or unsigned.<br>Fields that do not explicitly define whether they are signed or unsigned are<br>considered unsigned and can only hold positive amounts. For signed fields, the<br>sign of the value indicates the purpose of the money transfer. See<br>[Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)<br>for more information. | getFeeAmountMoney(): ?Money | setFeeAmountMoney(?Money feeAmountMoney): void |
 | `netAmountMoney` | [`?Money`](../../doc/models/money.md) | Optional | Represents an amount of money. `Money` fields can be signed or unsigned.<br>Fields that do not explicitly define whether they are signed or unsigned are<br>considered unsigned and can only hold positive amounts. For signed fields, the<br>sign of the value indicates the purpose of the money transfer. See<br>[Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)<br>for more information. | getNetAmountMoney(): ?Money | setNetAmountMoney(?Money netAmountMoney): void |
@@ -46,35 +46,22 @@ The total amount of the payout will equal the sum of the payout entries for a ba
 
 ```json
 {
-  "id": "id0",
-  "payout_id": "payout_id6",
-  "effective_at": null,
-  "type": null,
-  "gross_amount_money": null,
-  "fee_amount_money": null,
-  "net_amount_money": null,
-  "type_app_fee_revenue_details": null,
-  "type_app_fee_refund_details": null,
-  "type_automatic_savings_details": null,
-  "type_automatic_savings_reversed_details": null,
-  "type_charge_details": null,
-  "type_deposit_fee_details": null,
-  "type_dispute_details": null,
-  "type_fee_details": null,
-  "type_free_processing_details": null,
-  "type_hold_adjustment_details": null,
-  "type_open_dispute_details": null,
-  "type_other_details": null,
-  "type_other_adjustment_details": null,
-  "type_refund_details": null,
-  "type_release_adjustment_details": null,
-  "type_reserve_hold_details": null,
-  "type_reserve_release_details": null,
-  "type_square_capital_payment_details": null,
-  "type_square_capital_reversed_payment_details": null,
-  "type_tax_on_fee_details": null,
-  "type_third_party_fee_details": null,
-  "type_third_party_fee_refund_details": null
+  "id": "id8",
+  "payout_id": "payout_id4",
+  "effective_at": "effective_at8",
+  "type": "SQUARE_CAPITAL_REVERSED_PAYMENT",
+  "gross_amount_money": {
+    "amount": 186,
+    "currency": "BWP"
+  },
+  "fee_amount_money": {
+    "amount": 126,
+    "currency": "NIO"
+  },
+  "net_amount_money": {
+    "amount": 6,
+    "currency": "LTL"
+  }
 }
 ```
 

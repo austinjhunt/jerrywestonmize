@@ -18,7 +18,15 @@
 ```json
 {
   "cancelled_order_id": "asx8LgZ6MRzD0fObfkJ6obBmSh4F",
-  "id": "MQASNYL6QB6DFCJ3"
+  "id": "MQASNYL6QB6DFCJ3",
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

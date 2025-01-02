@@ -22,8 +22,49 @@
       "caption": "A picture of a cup of coffee",
       "url": "https://..."
     },
-    "type": "IMAGE"
-  }
+    "type": "IMAGE",
+    "updated_at": "updated_at2",
+    "version": 100,
+    "is_deleted": false,
+    "custom_attribute_values": {
+      "key0": {
+        "name": "name8",
+        "string_value": "string_value2",
+        "custom_attribute_definition_id": "custom_attribute_definition_id4",
+        "type": "STRING",
+        "number_value": "number_value8"
+      },
+      "key1": {
+        "name": "name8",
+        "string_value": "string_value2",
+        "custom_attribute_definition_id": "custom_attribute_definition_id4",
+        "type": "STRING",
+        "number_value": "number_value8"
+      }
+    },
+    "catalog_v1_ids": [
+      {
+        "catalog_v1_id": "catalog_v1_id4",
+        "location_id": "location_id4"
+      },
+      {
+        "catalog_v1_id": "catalog_v1_id4",
+        "location_id": "location_id4"
+      },
+      {
+        "catalog_v1_id": "catalog_v1_id4",
+        "location_id": "location_id4"
+      }
+    ]
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

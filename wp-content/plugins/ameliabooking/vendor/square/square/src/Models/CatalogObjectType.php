@@ -6,7 +6,7 @@ namespace Square\Models;
 
 /**
  * Possible types of CatalogObjects returned from the catalog, each
- * containing type-specific properties in the `*_data` field corresponding to the specfied object type.
+ * containing type-specific properties in the `*_data` field corresponding to the specified object type.
  */
 class CatalogObjectType
 {
@@ -96,6 +96,13 @@ class CatalogObjectType
     public const MEASUREMENT_UNIT = 'MEASUREMENT_UNIT';
 
     /**
+     * The `CatalogObject` instance is of the [CatalogSubscriptionPlan]($m/CatalogSubscriptionPlan) type
+     * and represents a subscription plan.
+     * The subscription-plan-specific data must be stored on the `subscription_plan_data` field.
+     */
+    public const SUBSCRIPTION_PLAN_VARIATION = 'SUBSCRIPTION_PLAN_VARIATION';
+
+    /**
      * The `CatalogObject` instance is of the [CatalogItemOption]($m/CatalogItemOption) type and represents
      * a list of options (such as a color or size of a T-shirt)
      * that can be assigned to item variations. The item-option-specific data must be on the
@@ -135,4 +142,11 @@ class CatalogObjectType
      * The subscription plan specific data must be stored on the `subscription_plan_data` field.
      */
     public const SUBSCRIPTION_PLAN = 'SUBSCRIPTION_PLAN';
+
+    /**
+     * The `CatalogObject` instance is of the [CatalogAvailabilityPeriod]($m/CatalogAvailabilityPeriod)
+     * type and represents an availability period.
+     * The availability period specific data must be stored on the `availability_period_data` field.
+     */
+    public const AVAILABILITY_PERIOD = 'AVAILABILITY_PERIOD';
 }

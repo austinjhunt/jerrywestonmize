@@ -55,17 +55,17 @@
 	.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-dropdown--<?php echo $theme; ?> .select2-search input:hover {
 		<?php if ( forminator_array_value_exists( $properties, 'dropdown-search-border' ) && !empty( $properties['dropdown-search-border'] ) ) { ?>
 			border-color: <?php echo $properties['dropdown-search-border'] ?>;
-		<?php } else { ?>
+		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
 			border-color: #17A8E3;
 		<?php } ?>
 		<?php if ( forminator_array_value_exists( $properties, 'dropdown-search-background' ) && !empty( $properties['dropdown-search-background'] ) ) { ?>
 			background-color: <?php echo $properties['dropdown-search-background'] ?>;
-		<?php } else { ?>
+		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
 			background-color: #FFFFFF;
 		<?php } ?>
 		<?php if ( forminator_array_value_exists( $properties, 'dropdown-search-color' ) && !empty( $properties['dropdown-search-color'] ) ) { ?>
 			color: <?php echo $properties['dropdown-search-color'] ?>;
-		<?php } else { ?>
+		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
 			color: #000000;
 		<?php } ?>
 	}
@@ -94,12 +94,14 @@
 		color: #FFFFFF;
 	}
 
-	.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-dropdown--<?php echo $theme; ?> .select2-search input,
-	.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-dropdown--<?php echo $theme; ?> .select2-search input:focus,
-	.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-dropdown--<?php echo $theme; ?> .select2-search input:hover {
-		border-color: #17A8E3;
-		background-color: #FFFFFF;
-		color: #000000;
-	}
+	<?php if ( forminator_can_apply_default_color( $properties ) ) { ?>
+		.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-dropdown--<?php echo $theme; ?> .select2-search input,
+		.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-dropdown--<?php echo $theme; ?> .select2-search input:focus,
+		.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-dropdown--<?php echo $theme; ?> .select2-search input:hover {
+			border-color: #17A8E3;
+			background-color: #FFFFFF;
+			color: #000000;
+		}
+	<?php } ?>
 
 <?php } ?>

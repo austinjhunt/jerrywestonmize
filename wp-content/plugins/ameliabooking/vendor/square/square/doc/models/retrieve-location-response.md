@@ -25,7 +25,10 @@ endpoint returns in a response.
       "administrative_district_level_1": "CA",
       "country": "US",
       "locality": "San Francisco",
-      "postal_code": "94114"
+      "postal_code": "94114",
+      "address_line_2": "address_line_26",
+      "address_line_3": "address_line_32",
+      "sublocality": "sublocality6"
     },
     "business_name": "Jet Fuel Coffee",
     "capabilities": [
@@ -41,7 +44,15 @@ endpoint returns in a response.
     "phone_number": "+1 650-354-7217",
     "status": "ACTIVE",
     "timezone": "America/Los_Angeles"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

@@ -155,12 +155,13 @@ interface ReservationServiceInterface
     /**
      * @param AbstractCustomerBooking $booking
      * @param AbstractBookable        $bookable
+     * @oaram boolean                 $invoice
      *
-     * @return float
+     * @return array
      *
      * @throws InvalidArgumentException
      */
-    public function getPaymentAmount($booking, $bookable);
+    public function getPaymentAmount($booking, $bookable, $invoice = false);
 
     /**
      * @param Appointment|Event  $reservation

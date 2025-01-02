@@ -73,6 +73,7 @@ class EventsTable extends AbstractDatabaseTable
                    `closeAfterMin` INT(11) NULL DEFAULT NULL,
                    `closeAfterMinBookings` TINYINT(1) DEFAULT 0,
                    `aggregatedPrice` TINYINT(1) DEFAULT 1,
+                   `error` TEXT({$description}) DEFAULT NULL,
                    PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     }

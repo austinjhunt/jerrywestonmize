@@ -42,13 +42,32 @@ or error messages.
           "currency": "USD"
         },
         "job_title": "Cashier",
-        "pay_type": "HOURLY"
+        "pay_type": "HOURLY",
+        "annual_rate": {
+          "amount": 232,
+          "currency": "SBD"
+        },
+        "weekly_hours": 98
       }
     ],
     "team_member_id": "-3oZQKPKVk6gUXU_V5Qa",
     "updated_at": "2020-06-11T23:12:04+00:00",
     "version": 1
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

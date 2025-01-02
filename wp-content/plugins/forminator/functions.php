@@ -22,8 +22,10 @@ if ( ! function_exists( 'forminator' ) ) {
 	 * Init the plugin and load the plugin instance
 	 *
 	 * @since 1.0
+	 * Priority is set to 4 to support Gutenberg blocks.
+	 * Priority is set to 0 to support Forminator widget.
 	 */
-	add_action( 'plugins_loaded', 'forminator' );
+	add_action( 'init', 'forminator', 0 );
 }
 
 if ( ! function_exists( 'forminator_plugin_url' ) ) {

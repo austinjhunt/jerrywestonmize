@@ -18,8 +18,8 @@ A named selection for this `SELECTION`-type custom attribute definition.
 
 ```json
 {
-  "uid": null,
-  "name": "name0"
+  "uid": "uid4",
+  "name": "name4"
 }
 ```
 

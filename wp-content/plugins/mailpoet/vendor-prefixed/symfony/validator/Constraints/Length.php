@@ -21,7 +21,7 @@ class Length extends Constraint
  public $charset = 'UTF-8';
  public $normalizer;
  public $allowEmptyString = \false;
- public function __construct($exactly = null, int $min = null, int $max = null, string $charset = null, callable $normalizer = null, string $exactMessage = null, string $minMessage = null, string $maxMessage = null, string $charsetMessage = null, array $groups = null, $payload = null, array $options = [])
+ public function __construct($exactly = null, ?int $min = null, ?int $max = null, ?string $charset = null, ?callable $normalizer = null, ?string $exactMessage = null, ?string $minMessage = null, ?string $maxMessage = null, ?string $charsetMessage = null, ?array $groups = null, $payload = null, array $options = [])
  {
  if (\is_array($exactly)) {
  $options = \array_merge($exactly, $options);

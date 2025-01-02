@@ -52,13 +52,6 @@ class Forminator_Website extends Forminator_Field {
 	public $options = array();
 
 	/**
-	 * Category
-	 *
-	 * @var string
-	 */
-	public $category = 'standard';
-
-	/**
 	 * Is input
 	 *
 	 * @var bool
@@ -164,7 +157,7 @@ class Forminator_Website extends Forminator_Field {
 			'value'         => $value,
 			'placeholder'   => $placeholder,
 			'id'            => $id,
-			'class'         => 'forminator-input forminator-website--field',
+			'class'         => 'forminator-input forminator-website--field' . ( 'basic' === $design ? ' input-text s' : '' ),
 			'data-required' => $required,
 			'aria-required' => $ariareq,
 		);

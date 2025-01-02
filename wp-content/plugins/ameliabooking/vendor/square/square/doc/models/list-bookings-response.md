@@ -17,9 +17,36 @@
 
 ```json
 {
-  "bookings": null,
-  "cursor": null,
-  "errors": null
+  "bookings": [
+    {
+      "id": "id4",
+      "version": 218,
+      "status": "ACCEPTED",
+      "created_at": "created_at2",
+      "updated_at": "updated_at0"
+    }
+  ],
+  "cursor": "cursor6",
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

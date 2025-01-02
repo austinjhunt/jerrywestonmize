@@ -196,7 +196,8 @@ class Scheduler {
     }
 
     // ensure that subscribers are in segments
-    $subscribersCount = $this->subscribersFinder->addSubscribersToTaskFromSegments($task, $segments, $newsletter->getFilterSegmentId());
+    $this->subscribersFinder->addSubscribersToTaskFromSegments($task, $segments, $newsletter->getFilterSegmentId());
+    $subscribersCount = $task->getSubscribers()->count();
     if (empty($subscribersCount)) {
       $this->loggerFactory->getLogger(LoggerFactory::TOPIC_POST_NOTIFICATIONS)->info(
         'post notification no subscribers',
@@ -242,9 +243,8 @@ class Scheduler {
     if ($newsletter->getOptionValue('sendTo') === 'segment') {
       $segment = $this->segmentsRepository->findOneById($newsletter->getOptionValue('segment'));
       if ($segment instanceof SegmentEntity) {
-        $result = $this->subscribersFinder->addSubscribersToTaskFromSegments($task, [(int)$segment->getId()]);
-
-        if (empty($result)) {
+        $this->subscribersFinder->addSubscribersToTaskFromSegments($task, [(int)$segment->getId()]);
+        if (!$task->getSubscribers()->count()) {
           $this->deleteByTask($task);
           return false;
         }

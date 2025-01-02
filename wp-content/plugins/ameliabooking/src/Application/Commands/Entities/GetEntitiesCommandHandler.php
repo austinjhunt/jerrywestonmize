@@ -7,6 +7,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
+use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Coupon\AbstractCouponApplicationService;
 use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
@@ -124,22 +125,22 @@ class GetEntitiesCommandHandler extends CommandHandler
 
         /** Events */
         if (in_array(Entities::EVENTS, $params['types'], true)) {
-            /** @var EventRepository $eventRepository */
-            $eventRepository = $this->container->get('domain.booking.event.repository');
-
-            $dateFilter = ['dates' => [DateTimeService::getNowDateTime()], 'itemsPerPage' => 10000, 'page' => 1];
+            /** @var EventApplicationService $eventAS */
+            $eventAS = $this->container->get('application.booking.event.service');
 
             /** @var Collection $events */
-            $events = $eventRepository->getFiltered($dateFilter);
+            $events = $eventAS->getEventsByCriteria(
+                [
+                    'dates' => [DateTimeService::getNowDateTime()],
+                    'page'  => 1,
+                ],
+                [
+                    'fetchEventsPeriods' => true,
+                ],
+                1000
+            );
 
-            /** @var Event $event */
-            foreach ($events->getItems() as $event) {
-                $event->setBookings(new Collection());
-            }
-
-            $resultData['events'] = $events->toArray();
-
-            $resultData['events'] = $eventDS->getShortcodeForEventList($this->container, $resultData['events']);
+            $resultData['events'] = $eventDS->getShortcodeForEventList($this->container, $events->toArray());
         }
 
         /** Event Tags */
@@ -261,7 +262,9 @@ class GetEntitiesCommandHandler extends CommandHandler
             $providerRepository = $this->container->get('domain.users.providers.repository');
 
             /** @var Collection $testProviders */
-            $providers = $providerRepository->getWithSchedule([]);
+            $providers = $providerRepository->getWithSchedule(
+                ['dates' => [DateTimeService::getNowDateTimeObject()->modify('-1 days')->format('Y-m-d H:i:s')]]
+            );
 
             /** @var Provider $provider */
             foreach ($providers->getItems() as $provider) {
@@ -297,6 +300,7 @@ class GetEntitiesCommandHandler extends CommandHandler
             ) {
                 foreach ($resultData['employees'] as &$employee) {
                     unset(
+                        $employee['appleCalendarId'],
                         $employee['googleCalendar'],
                         $employee['outlookCalendar'],
                         $employee['stripeConnect'],
@@ -409,6 +413,11 @@ class GetEntitiesCommandHandler extends CommandHandler
                     /** @var Coupon $coupon */
                     $coupon = $coupons->getItem($ids['couponId']);
 
+                    if ($coupon->getAllServices() && $coupon->getAllServices()->getValue()) {
+                        $coupon->setServiceList(new Collection($allServices->getItems()));
+                        continue;
+                    }
+
                     $coupon->getServiceList()->addItem(
                         $allServices->getItem($ids['serviceId']),
                         $ids['serviceId']
@@ -422,6 +431,11 @@ class GetEntitiesCommandHandler extends CommandHandler
                     /** @var Coupon $coupon */
                     $coupon = $coupons->getItem($ids['couponId']);
 
+                    if ($coupon->getAllEvents() && $coupon->getAllEvents()->getValue()) {
+                        $coupon->setEventList(new Collection($allEvents->getItems()));
+                        continue;
+                    }
+
                     $coupon->getEventList()->addItem(
                         $allEvents->getItem($ids['eventId']),
                         $ids['eventId']
@@ -434,6 +448,11 @@ class GetEntitiesCommandHandler extends CommandHandler
                 foreach ($couponRepository->getCouponsPackagesIds($coupons->keys()) as $ids) {
                     /** @var Coupon $coupon */
                     $coupon = $coupons->getItem($ids['couponId']);
+
+                    if ($coupon->getAllPackages() && $coupon->getAllPackages()->getValue()) {
+                        $coupon->setPackageList(new Collection($allPackages->getItems()));
+                        continue;
+                    }
 
                     $coupon->getPackageList()->addItem(
                         $allPackages->getItem($ids['packageId']),

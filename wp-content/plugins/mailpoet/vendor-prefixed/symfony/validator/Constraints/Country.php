@@ -11,7 +11,7 @@ class Country extends Constraint
  protected static $errorNames = [self::NO_SUCH_COUNTRY_ERROR => 'NO_SUCH_COUNTRY_ERROR'];
  public $message = 'This value is not a valid country.';
  public $alpha3 = \false;
- public function __construct(array $options = null, string $message = null, bool $alpha3 = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $message = null, ?bool $alpha3 = null, ?array $groups = null, $payload = null)
  {
  if (!\class_exists(Countries::class)) {
  throw new LogicException('The Intl component is required to use the Country constraint. Try running "composer require symfony/intl".');

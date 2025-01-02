@@ -326,6 +326,7 @@ function forminator_get_allowed_field_types_for_addon() {
 		// 1.7 fields.
 		'calculation',
 		'stripe',
+		'stripe-ocs',
 		'paypal',
 		'signature',
 		// 1.15.

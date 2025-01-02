@@ -537,6 +537,10 @@ class Forminator_Admin_L10n {
 			$properties['notices']['custom_notice'] = Forminator_Core::sanitize_text_field( 'forminator_text_notice' );
 		}
 
+		if ( isset( $_GET['forminator_error_notice'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$properties['notices']['error_notice'] = Forminator_Core::sanitize_text_field( 'forminator_error_notice' );
+		}
+
 		return $properties;
 	}
 

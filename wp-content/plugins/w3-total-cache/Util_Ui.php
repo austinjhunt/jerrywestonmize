@@ -3,6 +3,7 @@ namespace W3TC;
 
 use DOMDocument;
 
+
 class Util_Ui {
 	/**
 	 * Returns button html
@@ -201,24 +202,27 @@ class Util_Ui {
 	 * @param string $class
 	 * @param string $id
 	 * @param string $adv_link
+	 * @param string $premium_link
 	 * @param array  $extra_links
 	 * @return void
 	 */
-	public static function postbox_header_tabs( $title, $description = '', $class = '', $id = '', $adv_link = '', $extra_links = array() ) {
+	public static function postbox_header_tabs( $title, $description = '', $class = '', $id = '', $adv_link = '', $premium_link = '', $tutorials_tab = '', $extra_links = array() ) {
 		$display_id         = ( ! empty( $id ) ) ? ' id="' . esc_attr( $id ) . '"' : '';
 		$description        = ( ! empty( $description ) ) ? '<div class="postbox-description">' . wp_kses( $description, self::get_allowed_html_for_wp_kses_from_content( $description ) ) . '</div>' : '';
-		$basic_settings_tab = ( ! empty( $adv_link ) ) ? '<a class="nav-tab nav-tab-active no-link">' . esc_html__( 'Basic Settings', 'w3-total-cache' ) . '</a>' : '';
+		$basic_settings_tab = ( ! empty( $adv_link ) ) ? '<a class="w3tc-basic-settings nav-tab nav-tab-active no-link">' . esc_html__( 'Basic Settings', 'w3-total-cache' ) . '</a>' : '';
 		$adv_settings_tab   = ( ! empty( $adv_link ) ) ? '<a class="nav-tab link-tab" href="' . esc_url( $adv_link ) . '" gatitle="' . esc_attr( $id ) . '">' . esc_html__( 'Advanced Settings', 'w3-total-cache' ) . '<span class="dashicons dashicons-arrow-right-alt2"></span></a>' : '';
+		$premium_link_tab   = ( ! empty( $premium_link ) ) ? '<a class="nav-tab link-tab ' . esc_attr( $id ) . '" data-tab-type="premium-services">' . esc_html__( 'Premium Services', 'w3-total-cache' ) . '</a>' : '';
+		$tutorials_tab      = ( ! empty( $premium_link ) ) ? '<a class="nav-tab link-tab ' . esc_attr( $id ) . '" data-tab-type="help">' . esc_html__( 'Help', 'w3-total-cache' ) . '</a>' : '';
 
 		$extra_link_tabs = '';
 		foreach ( $extra_links as $extra_link_text => $extra_link ) {
-			$extra_link_tabs .= '<a class="nav-tab link-tab" href="' . esc_url( $extra_link ) . '" gatitle="' . esc_attr( $extra_link_text ) . '">' . esc_html( $extra_link_text ) . '<span class="dashicons dashicons-arrow-right-alt2"></span></a>';
+			$extra_link_tabs .= '<a class="nav-tab link-tab" href="' . esc_url( $extra_link ) . '" gatitle="' . esc_attr( $extra_link_text ) . '">' . esc_html( $extra_link_text ) . '</a>';
 		}
 
 		echo '<div' . $display_id . ' class="postbox-tabs ' . esc_attr( $class ) . '">
 			<h3 class="postbox-title"><span>' . wp_kses( $title, self::get_allowed_html_for_wp_kses_from_content( $title ) ) . '</span></h3>
 			' . $description . '
-			<h2 class="nav-tab-wrapper">' . $basic_settings_tab . $adv_settings_tab . $extra_link_tabs . '</h2>
+			<h2 class="nav-tab-wrapper">' . $basic_settings_tab . $adv_settings_tab . $premium_link_tab . $tutorials_tab . $extra_link_tabs . '</h2>
 			<div class="inside">';
 	}
 
@@ -229,6 +233,49 @@ class Util_Ui {
 	 */
 	public static function postbox_footer() {
 		echo '</div></div>';
+	}
+
+	/**
+	 * Retrieves a specific tab's content based on the provided key and tab type.
+	 *
+	 * @since X.X.X
+	 *
+	 * This function dynamically loads content for a specified tab type (e.g., tutorials, premium services)
+	 * based on a given configuration key. It uses a mapping to fetch the correct tab content, which is then
+	 * wrapped in a `<div>` element with a `data-tab-type` attribute for identification.
+	 *
+	 * @param string $key      The configuration key used to retrieve tab settings.
+	 * @param string $tab_type The type of tab to retrieve (e.g., 'tutorials', 'premium-services').
+	 *
+	 * @return string|null     The HTML content for the specified tab, or null if the tab or key is not found.
+	 *
+	 * Usage:
+	 * ```
+	 * echo wp_kses_post( Util_Ui::get_tab('example_key', 'tutorials');  // Retrieves the tutorials tab for 'example_key'
+	 * ```
+	 */
+	public static function get_tab( string $key, string $tab_type ) : ?string {
+
+		// If for any reason the key or tab type is empty, return an empty string.
+		if ( empty( $key ) || empty( $tab_type ) ) {
+			return '';
+		}
+
+		require_once 'ConfigSettingsTabs.php';
+		$configs = Config_Tab_Settings::get_config( $key );
+
+		// Define a mapping of tab types to the corresponding config keys.
+		$tab_mapping = array(
+			'help'             => 'help',
+			'premium-services' => 'premium_support',
+		);
+
+		// Check if the provided tab type exists in the mapping and in the configs.
+		if ( isset( $tab_mapping[ $tab_type ] ) && isset( $configs['tabs'][ $tab_mapping[ $tab_type ] ] ) ) {
+			return '<div data-tab-type="' . esc_attr( $tab_type ) . '">' . $configs['tabs'][ $tab_mapping[ $tab_type ] ] . '</div>';
+		}
+
+		return null;
 	}
 
 	public static function button_config_save( $id = '', $extra = '' ) {
@@ -1626,6 +1673,10 @@ class Util_Ui {
 							'text' => esc_html__( 'Browser Cache', 'w3-total-cache' ),
 						),
 						array(
+							'id'   => 'allcache_wp_cron',
+							'text' => esc_html__( 'Purge via WP Cron', 'w3-total-cache' ),
+						),
+						array(
 							'id'   => 'cdn',
 							'text' => wp_kses(
 								sprintf(
@@ -1707,6 +1758,7 @@ class Util_Ui {
 					<a href="#purge_policy"><?php esc_html_e( 'Purge Policy', 'w3-total-cache' ); ?></a> |
 					<a href="#rest"><?php esc_html_e( 'Rest API', 'w3-total-cache' ); ?></a> |
 					<a href="#advanced"><?php esc_html_e( 'Advanced', 'w3-total-cache' ); ?></a> |
+					<a href="#pgcache_wp_cron"><?php esc_html_e( 'Purge via WP Cron', 'w3-total-cache' ); ?></a> |
 					<a href="#notes"><?php esc_html_e( 'Note(s)', 'w3-total-cache' ); ?></a>
 				</div>
 				<?php
@@ -1780,6 +1832,7 @@ class Util_Ui {
 						?>
 					</a> |
 					<a href="#advanced"><?php esc_html_e( 'Advanced', 'w3-total-cache' ); ?></a> |
+					<a href="#minify_wp_cron"><?php esc_html_e( 'Purge via WP Cron', 'w3-total-cache' ); ?></a> |
 					<a href="#notes"><?php esc_html_e( 'Note(s)', 'w3-total-cache' ); ?></a>
 				</div>
 				<?php
@@ -1789,7 +1842,8 @@ class Util_Ui {
 				?>
 				<div id="w3tc-options-menu">
 					<a href="#general"><?php esc_html_e( 'General', 'w3-total-cache' ); ?></a> |
-					<a href="#advanced"><?php esc_html_e( 'Advanced', 'w3-total-cache' ); ?></a>
+					<a href="#advanced"><?php esc_html_e( 'Advanced', 'w3-total-cache' ); ?></a> |
+					<a href="#dbcache_wp_cron"><?php esc_html_e( 'Purge via WP Cron', 'w3-total-cache' ); ?></a>
 				</div>
 				<?php
 				break;
@@ -1797,7 +1851,8 @@ class Util_Ui {
 			case 'w3tc_objectcache':
 				?>
 				<div id="w3tc-options-menu">
-					<!--<a href="#advanced"><?php esc_html_e( 'Advanced', 'w3-total-cache' ); ?></a>-->
+					<a href="#advanced"><?php esc_html_e( 'Advanced', 'w3-total-cache' ); ?></a> |
+					<a href="#objectcache_wp_cron"><?php esc_html_e( 'Purge via WP Cron', 'w3-total-cache' ); ?></a>
 				</div>
 				<?php
 				break;
@@ -2013,6 +2068,16 @@ class Util_Ui {
 							<a href="#content"><?php esc_html_e( 'Content', 'w3-total-cache' ); ?></a> |
 							<a href="#sidebar"><?php esc_html_e( 'Sidebar', 'w3-total-cache' ); ?></a> |
 							<a href="#exclusions"><?php esc_html_e( 'Exclusions', 'w3-total-cache' ); ?></a>
+						</div>
+						<?php
+						break;
+					case 'alwayscached':
+						?>
+						<div id="w3tc-options-menu">
+							<a href="#queue"><?php esc_html_e( 'Queue', 'w3-total-cache' ); ?></a> |
+							<a href="#exclusions"><?php esc_html_e( 'Exclusions', 'w3-total-cache' ); ?></a> |
+							<a href="#cron"><?php esc_html_e( 'Cron', 'w3-total-cache' ); ?></a> |
+							<a href="#purge-all-behavior"><?php esc_html_e( 'Purge All Behavior', 'w3-total-cache' ); ?></a>
 						</div>
 						<?php
 						break;

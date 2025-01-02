@@ -13,6 +13,7 @@ use Core\Response\Types\ErrorType;
 use Core\Types\Sdk\CoreCallback;
 use Core\Utils\JsonHelper;
 use CoreInterfaces\Core\Authentication\AuthInterface;
+use CoreInterfaces\Core\Logger\ApiLoggerInterface;
 use CoreInterfaces\Core\Request\ParamInterface;
 use CoreInterfaces\Http\HttpClientInterface;
 use CoreInterfaces\Sdk\ConverterInterface;
@@ -46,6 +47,7 @@ class Client
     private $globalRuntimeConfig;
     private $globalErrors;
     private $apiCallback;
+    private $apiLogger;
 
     /**
      * @param HttpClientInterface $httpClient
@@ -58,6 +60,7 @@ class Client
      * @param ParamInterface[] $globalRuntimeConfig
      * @param array<string,ErrorType> $globalErrors
      * @param CoreCallback|null $apiCallback
+     * @param ApiLoggerInterface $apiLogger
      */
     public function __construct(
         HttpClientInterface $httpClient,
@@ -69,7 +72,8 @@ class Client
         array $globalConfig,
         array $globalRuntimeConfig,
         array $globalErrors,
-        ?CoreCallback $apiCallback
+        ?CoreCallback $apiCallback,
+        ApiLoggerInterface $apiLogger
     ) {
         $this->httpClient = $httpClient;
         self::$converter = $converter;
@@ -83,15 +87,14 @@ class Client
         $this->globalRuntimeConfig = $globalRuntimeConfig;
         $this->globalErrors = $globalErrors;
         $this->apiCallback = $apiCallback;
+        $this->apiLogger = $apiLogger;
     }
 
     public function getGlobalRequest(?string $server = null): Request
     {
-        $request = new Request($this->serverUrls[$server ?? $this->defaultServer], $this);
-        $paramGroup = new MultipleParams('Global Parameters');
-        $paramGroup->parameters($this->globalConfig)->validate(self::getJsonHelper($this));
-        $paramGroup->apply($request);
-        return $request;
+        $globalParams = new MultipleParams('Global Parameters');
+        $globalParams->parameters($this->globalConfig)->validate(self::getJsonHelper($this));
+        return new Request($this->serverUrls[$server ?? $this->defaultServer], $this, $globalParams);
     }
 
     public function getGlobalResponseHandler(): ResponseHandler
@@ -106,6 +109,11 @@ class Client
     public function getHttpClient(): HttpClientInterface
     {
         return $this->httpClient;
+    }
+
+    public function getApiLogger(): ApiLoggerInterface
+    {
+        return $this->apiLogger;
     }
 
     public function validateAuth(Auth $auth): Auth
@@ -130,6 +138,7 @@ class Client
         if (isset($this->apiCallback)) {
             $this->apiCallback->callOnBeforeWithConversion($request, self::getConverter($this));
         }
+        $this->apiLogger->logRequest($request);
     }
 
     public function afterResponse(Context $context)
@@ -137,5 +146,6 @@ class Client
         if (isset($this->apiCallback)) {
             $this->apiCallback->callOnAfterWithConversion($context, self::getConverter($this));
         }
+        $this->apiLogger->logResponse($context->getResponse());
     }
 }

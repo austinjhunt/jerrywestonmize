@@ -52,13 +52,6 @@ class Forminator_Calculation extends Forminator_Field {
 	public $options = array();
 
 	/**
-	 * Category
-	 *
-	 * @var string
-	 */
-	public $category = 'standard';
-
-	/**
 	 * Is input
 	 *
 	 * @var bool
@@ -176,6 +169,7 @@ class Forminator_Calculation extends Forminator_Field {
 		}
 
 		$number_attr = array(
+			'type'               => 'text',
 			'name'               => $name,
 			'value'              => $value,
 			'id'                 => $id,

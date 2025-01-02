@@ -17,9 +17,36 @@
 
 ```json
 {
-  "employees": null,
-  "cursor": null,
-  "errors": null
+  "employees": [
+    {
+      "id": "id4",
+      "first_name": "first_name4",
+      "last_name": "last_name2",
+      "email": "email2",
+      "phone_number": "phone_number8"
+    }
+  ],
+  "cursor": "cursor8",
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

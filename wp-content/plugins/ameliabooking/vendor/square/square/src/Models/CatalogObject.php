@@ -160,6 +160,16 @@ class CatalogObject implements \JsonSerializable
     private $quickAmountsSettingsData;
 
     /**
+     * @var CatalogSubscriptionPlanVariation|null
+     */
+    private $subscriptionPlanVariationData;
+
+    /**
+     * @var CatalogAvailabilityPeriod|null
+     */
+    private $availabilityPeriodData;
+
+    /**
      * @param string $type
      * @param string $id
      */
@@ -172,7 +182,7 @@ class CatalogObject implements \JsonSerializable
     /**
      * Returns Type.
      * Possible types of CatalogObjects returned from the catalog, each
-     * containing type-specific properties in the `*_data` field corresponding to the specfied object type.
+     * containing type-specific properties in the `*_data` field corresponding to the specified object type.
      */
     public function getType(): string
     {
@@ -182,7 +192,7 @@ class CatalogObject implements \JsonSerializable
     /**
      * Sets Type.
      * Possible types of CatalogObjects returned from the catalog, each
-     * containing type-specific properties in the `*_data` field corresponding to the specfied object type.
+     * containing type-specific properties in the `*_data` field corresponding to the specified object type.
      *
      * @required
      * @maps type
@@ -310,10 +320,10 @@ class CatalogObject implements \JsonSerializable
      * Returns Custom Attribute Values.
      * A map (key-value pairs) of application-defined custom attribute values. The value of a key-value
      * pair
-     * is a [CatalogCustomAttributeValue]($m/CatalogCustomAttributeValue) object. The key is the `key`
+     * is a [CatalogCustomAttributeValue](entity:CatalogCustomAttributeValue) object. The key is the `key`
      * attribute
-     * value defined in the associated
-     * [CatalogCustomAttributeDefinition]($m/CatalogCustomAttributeDefinition)
+     * value defined in the associated [CatalogCustomAttributeDefinition](entity:
+     * CatalogCustomAttributeDefinition)
      * object defined by the application making the request.
      *
      * If the `CatalogCustomAttributeDefinition` object is
@@ -346,10 +356,10 @@ class CatalogObject implements \JsonSerializable
      * Sets Custom Attribute Values.
      * A map (key-value pairs) of application-defined custom attribute values. The value of a key-value
      * pair
-     * is a [CatalogCustomAttributeValue]($m/CatalogCustomAttributeValue) object. The key is the `key`
+     * is a [CatalogCustomAttributeValue](entity:CatalogCustomAttributeValue) object. The key is the `key`
      * attribute
-     * value defined in the associated
-     * [CatalogCustomAttributeDefinition]($m/CatalogCustomAttributeDefinition)
+     * value defined in the associated [CatalogCustomAttributeDefinition](entity:
+     * CatalogCustomAttributeDefinition)
      * object defined by the application making the request.
      *
      * If the `CatalogCustomAttributeDefinition` object is
@@ -381,10 +391,10 @@ class CatalogObject implements \JsonSerializable
      * Unsets Custom Attribute Values.
      * A map (key-value pairs) of application-defined custom attribute values. The value of a key-value
      * pair
-     * is a [CatalogCustomAttributeValue]($m/CatalogCustomAttributeValue) object. The key is the `key`
+     * is a [CatalogCustomAttributeValue](entity:CatalogCustomAttributeValue) object. The key is the `key`
      * attribute
-     * value defined in the associated
-     * [CatalogCustomAttributeDefinition]($m/CatalogCustomAttributeDefinition)
+     * value defined in the associated [CatalogCustomAttributeDefinition](entity:
+     * CatalogCustomAttributeDefinition)
      * object defined by the application making the request.
      *
      * If the `CatalogCustomAttributeDefinition` object is
@@ -710,12 +720,22 @@ class CatalogObject implements \JsonSerializable
 
     /**
      * Returns Modifier List Data.
-     * A list of modifiers applicable to items at the time of sale.
+     * For a text-based modifier, this encapsulates the modifier's text when its `modifier_type` is `TEXT`.
+     * For example, to sell T-shirts with custom prints, a text-based modifier can be used to capture the
+     * buyer-supplied
+     * text string to be selected for the T-shirt at the time of sale.
      *
+     * For non text-based modifiers, this encapsulates a non-empty list of modifiers applicable to items
+     * at the time of sale. Each element of the modifier list is a `CatalogObject` instance of the
+     * `MODIFIER` type.
      * For example, a "Condiments" modifier list applicable to a "Hot Dog" item
      * may contain "Ketchup", "Mustard", and "Relish" modifiers.
-     * Use the `selection_type` field to specify whether or not multiple selections from
-     * the modifier list are allowed.
+     *
+     * A non text-based modifier can be applied to the modified item once or multiple times, if the
+     * `selection_type` field
+     * is set to `SINGLE` or `MULTIPLE`, respectively. On the other hand, a text-based modifier can be
+     * applied to the item
+     * only once and the `selection_type` field is always set to `SINGLE`.
      */
     public function getModifierListData(): ?CatalogModifierList
     {
@@ -724,12 +744,22 @@ class CatalogObject implements \JsonSerializable
 
     /**
      * Sets Modifier List Data.
-     * A list of modifiers applicable to items at the time of sale.
+     * For a text-based modifier, this encapsulates the modifier's text when its `modifier_type` is `TEXT`.
+     * For example, to sell T-shirts with custom prints, a text-based modifier can be used to capture the
+     * buyer-supplied
+     * text string to be selected for the T-shirt at the time of sale.
      *
+     * For non text-based modifiers, this encapsulates a non-empty list of modifiers applicable to items
+     * at the time of sale. Each element of the modifier list is a `CatalogObject` instance of the
+     * `MODIFIER` type.
      * For example, a "Condiments" modifier list applicable to a "Hot Dog" item
      * may contain "Ketchup", "Mustard", and "Relish" modifiers.
-     * Use the `selection_type` field to specify whether or not multiple selections from
-     * the modifier list are allowed.
+     *
+     * A non text-based modifier can be applied to the modified item once or multiple times, if the
+     * `selection_type` field
+     * is set to `SINGLE` or `MULTIPLE`, respectively. On the other hand, a text-based modifier can be
+     * applied to the item
+     * only once and the `selection_type` field is always set to `SINGLE`.
      *
      * @maps modifier_list_data
      */
@@ -740,7 +770,8 @@ class CatalogObject implements \JsonSerializable
 
     /**
      * Returns Modifier Data.
-     * A modifier applicable to items at the time of sale.
+     * A modifier applicable to items at the time of sale. An example of a modifier is a Cheese add-on to a
+     * Burger item.
      */
     public function getModifierData(): ?CatalogModifier
     {
@@ -749,7 +780,8 @@ class CatalogObject implements \JsonSerializable
 
     /**
      * Sets Modifier Data.
-     * A modifier applicable to items at the time of sale.
+     * A modifier applicable to items at the time of sale. An example of a modifier is a Cheese add-on to a
+     * Burger item.
      *
      * @maps modifier_data
      */
@@ -882,9 +914,10 @@ class CatalogObject implements \JsonSerializable
 
     /**
      * Returns Subscription Plan Data.
-     * Describes a subscription plan. For more information, see
-     * [Set Up and Manage a Subscription Plan](https://developer.squareup.com/docs/subscriptions-api/setup-
-     * plan).
+     * Describes a subscription plan. A subscription plan represents what you want to sell in a
+     * subscription model, and includes references to each of the associated subscription plan variations.
+     * For more information, see [Subscription Plans and Variations](https://developer.squareup.
+     * com/docs/subscriptions-api/plans-and-variations).
      */
     public function getSubscriptionPlanData(): ?CatalogSubscriptionPlan
     {
@@ -893,9 +926,10 @@ class CatalogObject implements \JsonSerializable
 
     /**
      * Sets Subscription Plan Data.
-     * Describes a subscription plan. For more information, see
-     * [Set Up and Manage a Subscription Plan](https://developer.squareup.com/docs/subscriptions-api/setup-
-     * plan).
+     * Describes a subscription plan. A subscription plan represents what you want to sell in a
+     * subscription model, and includes references to each of the associated subscription plan variations.
+     * For more information, see [Subscription Plans and Variations](https://developer.squareup.
+     * com/docs/subscriptions-api/plans-and-variations).
      *
      * @maps subscription_plan_data
      */
@@ -1000,6 +1034,53 @@ class CatalogObject implements \JsonSerializable
     }
 
     /**
+     * Returns Subscription Plan Variation Data.
+     * Describes a subscription plan variation. A subscription plan variation represents how the
+     * subscription for a product or service is sold.
+     * For more information, see [Subscription Plans and Variations](https://developer.squareup.
+     * com/docs/subscriptions-api/plans-and-variations).
+     */
+    public function getSubscriptionPlanVariationData(): ?CatalogSubscriptionPlanVariation
+    {
+        return $this->subscriptionPlanVariationData;
+    }
+
+    /**
+     * Sets Subscription Plan Variation Data.
+     * Describes a subscription plan variation. A subscription plan variation represents how the
+     * subscription for a product or service is sold.
+     * For more information, see [Subscription Plans and Variations](https://developer.squareup.
+     * com/docs/subscriptions-api/plans-and-variations).
+     *
+     * @maps subscription_plan_variation_data
+     */
+    public function setSubscriptionPlanVariationData(
+        ?CatalogSubscriptionPlanVariation $subscriptionPlanVariationData
+    ): void {
+        $this->subscriptionPlanVariationData = $subscriptionPlanVariationData;
+    }
+
+    /**
+     * Returns Availability Period Data.
+     * Represents a time period of availability.
+     */
+    public function getAvailabilityPeriodData(): ?CatalogAvailabilityPeriod
+    {
+        return $this->availabilityPeriodData;
+    }
+
+    /**
+     * Sets Availability Period Data.
+     * Represents a time period of availability.
+     *
+     * @maps availability_period_data
+     */
+    public function setAvailabilityPeriodData(?CatalogAvailabilityPeriod $availabilityPeriodData): void
+    {
+        $this->availabilityPeriodData = $availabilityPeriodData;
+    }
+
+    /**
      * Encode this object to JSON
      *
      * @param bool $asArrayWhenEmpty Whether to serialize this model as an array whenever no fields
@@ -1087,6 +1168,12 @@ class CatalogObject implements \JsonSerializable
         }
         if (isset($this->quickAmountsSettingsData)) {
             $json['quick_amounts_settings_data']      = $this->quickAmountsSettingsData;
+        }
+        if (isset($this->subscriptionPlanVariationData)) {
+            $json['subscription_plan_variation_data'] = $this->subscriptionPlanVariationData;
+        }
+        if (isset($this->availabilityPeriodData)) {
+            $json['availability_period_data']         = $this->availabilityPeriodData;
         }
         $json = array_filter($json, function ($val) {
             return $val !== null;

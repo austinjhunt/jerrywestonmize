@@ -36,7 +36,15 @@ Represents a response from an update request containing the updated `TeamMember`
     "reference_id": "reference_id_1",
     "status": "ACTIVE",
     "updated_at": "2021-06-15T17:38:05Z"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

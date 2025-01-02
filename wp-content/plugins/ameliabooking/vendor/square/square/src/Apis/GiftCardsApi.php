@@ -9,7 +9,6 @@ use Core\Request\Parameters\HeaderParam;
 use Core\Request\Parameters\QueryParam;
 use Core\Request\Parameters\TemplateParam;
 use CoreInterfaces\Core\Request\RequestMethod;
-use Square\Exceptions\ApiException;
 use Square\Http\ApiResponse;
 use Square\Models\CreateGiftCardRequest;
 use Square\Models\CreateGiftCardResponse;
@@ -30,15 +29,15 @@ class GiftCardsApi extends BaseApi
      * Lists all gift cards. You can specify optional filters to retrieve
      * a subset of the gift cards. Results are sorted by `created_at` in ascending order.
      *
-     * @param string|null $type If a [type]($m/GiftCardType) is provided, the endpoint returns gift
-     *        cards of the specified type.
+     * @param string|null $type If a [type](entity:GiftCardType) is provided, the endpoint returns
+     *        gift cards of the specified type.
      *        Otherwise, the endpoint returns gift cards of all types.
-     * @param string|null $state If a [state]($m/GiftCardStatus) is provided, the endpoint returns
-     *        the gift cards in the specified state.
+     * @param string|null $state If a [state](entity:GiftCardStatus) is provided, the endpoint
+     *        returns the gift cards in the specified state.
      *        Otherwise, the endpoint returns the gift cards of all states.
      * @param int|null $limit If a limit is provided, the endpoint returns only the specified number
      *        of results per page.
-     *        The maximum value is 50. The default value is 30.
+     *        The maximum value is 200. The default value is 30.
      *        For more information, see [Pagination](https://developer.squareup.com/docs/working-
      *        with-apis/pagination).
      * @param string|null $cursor A pagination cursor returned by a previous call to this endpoint.
@@ -50,8 +49,6 @@ class GiftCardsApi extends BaseApi
      *        gift cards linked to the specified customer.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function listGiftCards(
         ?string $type = null,
@@ -76,16 +73,17 @@ class GiftCardsApi extends BaseApi
     }
 
     /**
-     * Creates a digital gift card or registers a physical (plastic) gift card. After the gift card
-     * is created, you must call [CreateGiftCardActivity]($e/GiftCardActivities/CreateGiftCardActivity)
-     * to activate the card with an initial balance before it can be used for payment.
+     * Creates a digital gift card or registers a physical (plastic) gift card. The resulting gift card
+     * has a `PENDING` state. To activate a gift card so that it can be redeemed for purchases, call
+     * [CreateGiftCardActivity]($e/GiftCardActivities/CreateGiftCardActivity) and create an `ACTIVATE`
+     * activity with the initial balance. Alternatively, you can use
+     * [RefundPayment]($e/Refunds/RefundPayment)
+     * to refund a payment to the new gift card.
      *
      * @param CreateGiftCardRequest $body An object containing the fields to POST for the request.
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function createGiftCard(CreateGiftCardRequest $body): ApiResponse
     {
@@ -107,8 +105,6 @@ class GiftCardsApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function retrieveGiftCardFromGAN(RetrieveGiftCardFromGANRequest $body): ApiResponse
     {
@@ -130,8 +126,6 @@ class GiftCardsApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function retrieveGiftCardFromNonce(RetrieveGiftCardFromNonceRequest $body): ApiResponse
     {
@@ -154,8 +148,6 @@ class GiftCardsApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function linkCustomerToGiftCard(string $giftCardId, LinkCustomerToGiftCardRequest $body): ApiResponse
     {
@@ -182,8 +174,6 @@ class GiftCardsApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function unlinkCustomerFromGiftCard(
         string $giftCardId,
@@ -208,8 +198,6 @@ class GiftCardsApi extends BaseApi
      * @param string $id The ID of the gift card to retrieve.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function retrieveGiftCard(string $id): ApiResponse
     {

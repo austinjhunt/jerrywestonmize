@@ -149,13 +149,15 @@ class IcsApplicationService
 
         switch ($type) {
             case Entities::APPOINTMENT:
-                $locationName = $reservation->getLocation() ? $reservation->getLocation()->getName()->getValue() : '';
+                if ($reservation->getLocation()) {
+                    $locationName = $reservation->getLocation()->getAddress() && $reservation->getLocation()->getAddress()->getValue() ? $reservation->getLocation()->getAddress()->getValue() : $reservation->getLocation()->getName()->getValue();
+                }
 
                 break;
 
             case Entities::EVENT:
                 if ($reservation->getLocation()) {
-                    $locationName = $reservation->getLocation()->getName()->getValue();
+                    $locationName = $reservation->getLocation()->getAddress() && $reservation->getLocation()->getAddress()->getValue() ? $reservation->getLocation()->getAddress()->getValue() : $reservation->getLocation()->getName()->getValue();
                 } elseif ($bookable->getCustomLocation()) {
                     $locationName = $bookable->getCustomLocation()->getValue();
                 }
@@ -292,7 +294,11 @@ class IcsApplicationService
 
                 $address = $customFieldService->getCalendarEventLocation($reservation);
 
-                $locationName = $address ?: ($location ? $location->getName()->getValue() : '');
+                if ($address) {
+                    $locationName = $address;
+                } else if ($location) {
+                    $locationName = $location->getAddress() && $location->getAddress()->getValue() ? $location->getAddress()->getValue() : $location->getName()->getValue();
+                }
 
                 break;
 
@@ -313,7 +319,7 @@ class IcsApplicationService
                 if ($address) {
                     $locationName = $address;
                 } elseif ($location) {
-                    $locationName = $location->getName()->getValue();
+                    $locationName = $location->getAddress() && $location->getAddress()->getValue() ? $location->getAddress()->getValue() : $location->getName()->getValue();
                 } elseif ($bookable->getCustomLocation()) {
                     $locationName = $bookable->getCustomLocation()->getValue();
                 }
@@ -381,7 +387,11 @@ class IcsApplicationService
             $recurringLocation = $recurringReservation->getLocationId() ?
                 $locationRepository->getById($recurringReservation->getLocationId()->getValue()) : null;
 
-            $locationName = $recurringLocation ? $recurringLocation->getName()->getValue() : '';
+            if ($recurringLocation) {
+                $locationName = $recurringLocation->getAddress() && $recurringLocation->getAddress()->getValue() ? $recurringLocation->getAddress()->getValue() : $recurringLocation->getName()->getValue();
+            } else {
+                $locationName = '';
+            }
 
             $recurringPlaceholdersData = $description || $descriptionTr ? $placeholderService->getPlaceholdersData(
                 $recurringReservation->toArray(),

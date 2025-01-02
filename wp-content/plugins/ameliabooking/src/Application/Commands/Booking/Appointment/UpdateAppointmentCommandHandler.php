@@ -268,6 +268,7 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         $appointment->setGoogleCalendarEventId($oldAppointment->getGoogleCalendarEventId());
         $appointment->setGoogleMeetUrl($oldAppointment->getGoogleMeetUrl());
         $appointment->setOutlookCalendarEventId($oldAppointment->getOutlookCalendarEventId());
+        $appointment->setAppleCalendarEventId($oldAppointment->getAppleCalendarEventId());
 
         $appointmentRepo->beginTransaction();
 

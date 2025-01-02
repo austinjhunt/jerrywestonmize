@@ -78,7 +78,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
         $packageCustomerData = [
             'customerId'    => $customerId,
             'packageId'     => $package->getId()->getValue(),
-            'price'         => $reservationService->getPaymentAmount(null, $package),
+            'price'         => $reservationService->getPaymentAmount(null, $package)['price'],
             'end'           => $endDateTime ? $endDateTime->format('Y-m-d H:i:s') : null,
             'start'         => $startDateTimeString,
             'purchased'     => $startDateTimeString,
@@ -93,7 +93,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
         /** @var PackageCustomer $packageCustomer */
         $packageCustomer = PackageCustomerFactory::create($packageCustomerData);
 
-        $price = $reservationService->getPaymentAmount(null, $package);
+        $price = $reservationService->getPaymentAmount(null, $package)['price'];
 
         $packageCustomer->setPrice(new Price($price));
 
@@ -551,11 +551,11 @@ class PackageApplicationService extends AbstractPackageApplicationService
         }
 
         /** @var Collection $appointmentsPackageCustomerServices */
-        $appointmentsPackageCustomerServices = $packageCustomerServiceRepository->getByCriteria(
+        $appointmentsPackageCustomerServices = $packageCustomerServiceIds ? $packageCustomerServiceRepository->getByCriteria(
             [
                 'ids' => array_keys($packageCustomerServiceIds),
             ]
-        );
+        ) : new Collection();
 
         return $appointmentsPackageCustomerServices;
     }
@@ -580,22 +580,26 @@ class PackageApplicationService extends AbstractPackageApplicationService
         /** @var Collection $packageCustomerServices */
         $packageCustomerServices = $packageCustomerServiceRepository->getByCriteria(
             [
-                'purchased'  => !empty($params['purchased']) ? $params['purchased'] : [],
-                'customerId' => !empty($params['customerId']) ? $params['customerId'] : null,
-                'packages'   => !empty($params['packageId']) ? [$params['packageId']] : [],
+                'packageCustomerIds' => !empty($params['packageCustomerIds']) ? $params['packageCustomerIds'] : [],
+                'purchased'          => !empty($params['purchased']) ? $params['purchased'] : [],
+                'customerId'         => !empty($params['customerId']) ? $params['customerId'] : null,
+                'packages'           => !empty($params['packageId']) ? [$params['packageId']] : []
             ]
         );
 
-        /** @var PackageCustomerService $packageCustomerService */
-        foreach ($packageCustomerServices->getItems() as $key => $packageCustomerService) {
-            /** @var Collection $payments */
-            $payments = $packageCustomerService->getPackageCustomer()->getPayments();
+        if (empty($params['managePackagePage'])) {
 
-            if ($payments && $payments->length() > 0 &&
-                in_array($payments->getItem($payments->keys()[0])->getGateway()->getName()->getValue(), [PaymentType::MOLLIE, PaymentType::SQUARE]) &&
-                $payments->getItem($payments->keys()[0])->getStatus()->getValue() === PaymentStatus::PENDING
-            ) {
-                $packageCustomerServices->deleteItem($key);
+            /** @var PackageCustomerService $packageCustomerService */
+            foreach ($packageCustomerServices->getItems() as $key => $packageCustomerService) {
+                /** @var Collection $payments */
+                $payments = $packageCustomerService->getPackageCustomer()->getPayments();
+
+                if ($payments && $payments->length() > 0 &&
+                    in_array($payments->getItem($payments->keys()[0])->getGateway()->getName()->getValue(), [PaymentType::MOLLIE, PaymentType::SQUARE]) &&
+                    $payments->getItem($payments->keys()[0])->getStatus()->getValue() === PaymentStatus::PENDING
+                ) {
+                    $packageCustomerServices->deleteItem($key);
+                }
             }
         }
 
@@ -739,10 +743,6 @@ class PackageApplicationService extends AbstractPackageApplicationService
         $packageCustomerIds = [];
 
         foreach ($paymentsData as $payment) {
-            if (!$payment['appointmentId']) {
-                $eventBookingIds[] = $payment['customerBookingId'];
-            }
-
             if (!$payment['customerBookingId']) {
                 $packageCustomerIds[] = $payment['packageCustomerId'];
             }
@@ -905,10 +905,32 @@ class PackageApplicationService extends AbstractPackageApplicationService
      *
      * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
+     * @throws QueryExecutionException
      */
     public function getPackageUnusedBookingsCount($packageCustomerServices, $appointments)
     {
         $packageData = [];
+
+        $couponsIds = [];
+
+        /** @var PackageCustomerService $packageCustomerService */
+        foreach ($packageCustomerServices->getItems() as $packageCustomerService) {
+            /** @var PackageCustomer $packageCustomer */
+            $packageCustomer = $packageCustomerService->getPackageCustomer();
+
+            if ($packageCustomer->getCouponId() && $packageCustomer->getCouponId()->getValue()) {
+                $couponsIds[$packageCustomer->getCouponId()->getValue()] = true;
+            }
+        }
+
+        /** @var CouponRepository $couponRepository */
+        $couponRepository = $this->container->get('domain.coupon.repository');
+
+        /** @var Collection $coupons */
+        $coupons = $couponsIds ? $couponRepository->getFiltered(
+            ['ids' => array_keys($couponsIds)],
+            0
+        ) : new Collection();
 
         /** @var PackageCustomerService $packageCustomerService */
         foreach ($packageCustomerServices->getItems() as $packageCustomerService) {
@@ -931,18 +953,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
             /** @var Id  $couponId */
             $couponId = $packageCustomer->getCouponId() ? $packageCustomer->getCouponId()->getValue() : null;
 
-            $coupon = null;
-
-            if ($couponId) {
-                /** @var CouponRepository $couponRepository */
-                $couponRepository = $this->container->get('domain.coupon.repository');
-
-                $coupon = $couponRepository->getById($couponId)->toArray();
-
-                unset($coupon['serviceList']);
-                unset($coupon['eventList']);
-                unset($coupon['packageList']);
-            }
+            /** @var Coupon $coupon */
+            $coupon = $couponId && $coupons->keyExists($couponId) ? $coupons->getItem($couponId) : null;
 
             if (($packageCustomer->getEnd() ?
                     $packageCustomer->getEnd()->getValue() > DateTimeService::getNowDateTimeObject() : true) &&

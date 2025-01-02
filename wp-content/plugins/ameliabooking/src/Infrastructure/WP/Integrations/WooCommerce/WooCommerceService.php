@@ -60,7 +60,6 @@ use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentEditedEventHandler;
-use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingEditedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\PackageCustomerUpdatedEventHandler;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
@@ -895,6 +894,10 @@ class WooCommerceService
      */
     public static function addToCart($data)
     {
+        if (!$data) {
+            return false;
+        }
+
         $wooCommerceCart = self::getWooCommerceCart();
 
         if (!$wooCommerceCart) {
@@ -1674,6 +1677,17 @@ class WooCommerceService
                 }
 
                 $description = $descriptionParts ? implode('<p', $descriptionParts) : $description;
+
+                $paymentDueAmount = 0;
+
+                if (self::hasDeposit($wc_item[self::AMELIA])) {
+                    $paymentDueAmount = (self::getPaymentAmount($wc_item[self::AMELIA], true) -
+                        self::getPaymentAmount($wc_item[self::AMELIA]));
+
+                    $placeholderData["payment_due_amount"] = $paymentDueAmount < 0
+                        ? $helperService->getFormattedPrice(0)
+                        : $helperService->getFormattedPrice($paymentDueAmount);
+                }
 
                 $placeholderData["{$wc_item[self::AMELIA]['type']}_deposit_payment"] = self::hasDeposit($wc_item[self::AMELIA])
                     ? $helperService->getFormattedPrice(self::getPaymentAmount($wc_item[self::AMELIA]))
@@ -3158,16 +3172,7 @@ class WooCommerceService
 
                         //call woo (update or create?) rules here
                         if ($changeBookingStatus && $data['booking']['status'] !== BookingStatus::APPROVED) {
-                            $appointmentAS->updateBookingStatus($payment->getId()->getValue());
-
-                            $reservationData = $reservationService->getReservationByPayment($payment, true);
-
-                            do_action('AmeliaBookingAddedBeforeNotify', $reservationData, self::$container);
-
-                            BookingAddedEventHandler::handle(
-                                $reservationData,
-                                self::$container
-                            );
+                            $appointmentAS->approveBooking($data['booking']['id']);
                         }
                     }
                 }
@@ -3234,6 +3239,10 @@ class WooCommerceService
                 $data['processed'] = true;
 
                 wc_update_order_item_meta($item_id, self::AMELIA, $data);
+
+                if (!self::isAmeliaOrderPrePaid()) {
+                    self::manageOrderUpdateStatus($order);
+                }
 
                 if (isset($data['result']) && self::shouldAmeliaActionsRun($data['cacheData'])) {
                     /** @var ReservationServiceInterface $reservationService */

@@ -35,6 +35,14 @@ Represents a `ListSites` response. The response can include either `sites` or `e
       "site_title": "My First Site",
       "updated_at": "2020-11-23T02:19:10.000000Z"
     }
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
   ]
 }
 ```

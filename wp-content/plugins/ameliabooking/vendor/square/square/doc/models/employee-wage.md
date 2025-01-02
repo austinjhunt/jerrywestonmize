@@ -1,8 +1,7 @@
 
 # Employee Wage
 
-The hourly wage rate that an employee earns on a `Shift` for doing the job
-specified by the `title` property of this object. Deprecated at version 2020-08-26. Use `TeamMemberWage` instead.
+The hourly wage rate that an employee earns on a `Shift` for doing the job specified by the `title` property of this object. Deprecated at version 2020-08-26. Use [TeamMemberWage](entity:TeamMemberWage).
 
 ## Structure
 
@@ -21,10 +20,13 @@ specified by the `title` property of this object. Deprecated at version 2020-08-
 
 ```json
 {
-  "id": null,
-  "employee_id": null,
-  "title": null,
-  "hourly_rate": null
+  "id": "id0",
+  "employee_id": "employee_id0",
+  "title": "title6",
+  "hourly_rate": {
+    "amount": 172,
+    "currency": "OMR"
+  }
 }
 ```
 

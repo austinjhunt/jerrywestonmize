@@ -78,12 +78,14 @@ class Forminator_Migration {
 		 */
 		$settings = self::migrate_pagination_form_settings( $settings, $fields );
 
-		/**
-		 * Migrate Data Storage settings
-		 *
-		 * @since 1.15.12
-		 */
-		$settings = self::migrate_data_storage_settings( $settings );
+		if ( version_compare( $version, '1.37', 'lt' ) ) {
+			/**
+			 * Migrate Data Storage settings
+			 *
+			 * @since 1.15.12
+			 */
+			$settings = self::migrate_data_storage_settings( $settings );
+		}
 
 		/**
 		 * Migrate behaviour settings
@@ -91,6 +93,15 @@ class Forminator_Migration {
 		 * @since 1.15.12
 		 */
 		$settings = self::migrate_data_behaviour_settings( $settings, $fields );
+
+		if ( version_compare( $version, '1.37', 'lt' ) ) {
+			/**
+			 * Migrate appearance settings.
+			 *
+			 * @since 1.36
+			 */
+			$settings = self::migrate_appearance_settings( $settings );
+		}
 
 		return $settings;
 	}
@@ -252,12 +263,14 @@ class Forminator_Migration {
 			$settings = self::migrate_padding_border_settings_1_6_1( $settings );
 		}
 
-		/**
-		 * Migrate Data Storage settings
-		 *
-		 * @since 1.15.12
-		 */
-		$settings = self::migrate_data_storage_settings( $settings );
+		if ( version_compare( $version, '1.37', 'lt' ) ) {
+			/**
+			 * Migrate Data Storage settings
+			 *
+			 * @since 1.15.12
+			 */
+			$settings = self::migrate_data_storage_settings( $settings );
+		}
 
 		return $settings;
 	}
@@ -287,12 +300,14 @@ class Forminator_Migration {
 			$settings = self::migrate_share_settings_1_6_2( $settings );
 		}
 
-		/**
-		 * Migrate Data Storage settings
-		 *
-		 * @since 1.15.12
-		 */
-		$settings = self::migrate_data_storage_settings( $settings );
+		if ( version_compare( $version, '1.37', 'lt' ) ) {
+			/**
+			 * Migrate Data Storage settings
+			 *
+			 * @since 1.15.12
+			 */
+			$settings = self::migrate_data_storage_settings( $settings );
+		}
 
 		return $settings;
 	}
@@ -1023,7 +1038,7 @@ class Forminator_Migration {
 	 * @return mixed
 	 */
 	public static function migrate_payment_plan_field( $field ) {
-		if ( 'stripe' === $field['type'] && empty( $field['payments'] ) ) {
+		if ( ( 'stripe' === $field['type'] || 'stripe-ocs' === $field['type'] ) && empty( $field['payments'] ) ) {
 			$payment_plan = array(
 				'plan_name'                => esc_html__( 'Plan 1', 'forminator' ),
 				'payment_method'           => 'single',
@@ -1114,10 +1129,32 @@ class Forminator_Migration {
 		}
 
 		foreach ( $fields as $field ) {
-			if ( isset( $field['type'] ) && 'stripe' === $field['type'] ) {
+			if ( isset( $field['type'] ) && ( 'stripe' === $field['type'] || 'stripe-ocs' === $field['type'] ) ) {
 				$settings['enable-ajax'] = 'true';
+				break;
 			}
 		}
+		return $settings;
+	}
+
+	/**
+	 * Migrate appearance settings
+	 *
+	 * @param array $settings Settings.
+	 *
+	 * @since 1.36
+	 *
+	 * @return mixed
+	 */
+	public static function migrate_appearance_settings( $settings ) {
+		$form_style = $settings['form-style'] ?? 'default';
+
+		if ( isset( $settings['form-substyle'] ) || in_array( $form_style, array( 'basic', 'none' ), true ) ) {
+			return $settings;
+		}
+
+		$settings['form-substyle'] = $form_style;
+		$settings['form-style']    = 'default';
 
 		return $settings;
 	}

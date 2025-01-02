@@ -4,6 +4,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Symfony\Component\Validator\Constraint;
 use MailPoetVendor\Symfony\Component\Validator\ConstraintValidator;
 use MailPoetVendor\Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use MailPoetVendor\Symfony\Component\Validator\Exception\UnexpectedValueException;
 class JsonValidator extends ConstraintValidator
 {
  public function validate($value, Constraint $constraint)
@@ -15,7 +16,7 @@ class JsonValidator extends ConstraintValidator
  return;
  }
  if (!\is_scalar($value) && !(\is_object($value) && \method_exists($value, '__toString'))) {
- throw new UnexpectedTypeException($value, 'string');
+ throw new UnexpectedValueException($value, 'string');
  }
  $value = (string) $value;
  \json_decode($value);

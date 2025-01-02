@@ -9,7 +9,7 @@
             <img class="am-wpdt-logo" src="<?php echo AMELIA_URL ?>public/wpdt/img/wpDataTables-logo.svg" alt="WPDT Logo">
             <img class="am-wpdt-logo-mobile" src="<?php echo AMELIA_URL ?>public/wpdt/img/wpDT-logo-w.webp" alt="WPDT Logo">
             <p class="am-wpdt-message"><?php esc_html_e("Have you tried our table plugin?", "wpamelia") ?></p>
-            <button id="am-download-it" onclick="window.open('https://wpdatatables.com/pricing/', '_blank')">
+            <button id="am-download-it" onclick="window.open('https://wpdatatables.com/pricing/?utm_source=amelia-lite&utm_medium=banner&utm_content=wpdt&utm_campaign=wpdt', '_blank')">
                 <?php esc_html_e("Get started", "wpamelia") ?>
             </button>
         </div>

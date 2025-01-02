@@ -14,14 +14,17 @@ $terminalApi = $client->getTerminalApi();
 * [Search Terminal Actions](../../doc/apis/terminal.md#search-terminal-actions)
 * [Get Terminal Action](../../doc/apis/terminal.md#get-terminal-action)
 * [Cancel Terminal Action](../../doc/apis/terminal.md#cancel-terminal-action)
+* [Dismiss Terminal Action](../../doc/apis/terminal.md#dismiss-terminal-action)
 * [Create Terminal Checkout](../../doc/apis/terminal.md#create-terminal-checkout)
 * [Search Terminal Checkouts](../../doc/apis/terminal.md#search-terminal-checkouts)
 * [Get Terminal Checkout](../../doc/apis/terminal.md#get-terminal-checkout)
 * [Cancel Terminal Checkout](../../doc/apis/terminal.md#cancel-terminal-checkout)
+* [Dismiss Terminal Checkout](../../doc/apis/terminal.md#dismiss-terminal-checkout)
 * [Create Terminal Refund](../../doc/apis/terminal.md#create-terminal-refund)
 * [Search Terminal Refunds](../../doc/apis/terminal.md#search-terminal-refunds)
 * [Get Terminal Refund](../../doc/apis/terminal.md#get-terminal-refund)
 * [Cancel Terminal Refund](../../doc/apis/terminal.md#cancel-terminal-refund)
+* [Dismiss Terminal Refund](../../doc/apis/terminal.md#dismiss-terminal-refund)
 
 
 # Create Terminal Action
@@ -40,25 +43,26 @@ function createTerminalAction(CreateTerminalActionRequest $body): ApiResponse
 
 ## Response Type
 
-[`CreateTerminalActionResponse`](../../doc/models/create-terminal-action-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateTerminalActionResponse`](../../doc/models/create-terminal-action-response.md).
 
 ## Example Usage
 
 ```php
-$body_idempotencyKey = 'thahn-70e75c10-47f7-4ab6-88cc-aaa4076d065e';
-$body_action = new Models\TerminalAction();
-$body_action->setDeviceId('{{DEVICE_ID}}');
-$body_action->setDeadlineDuration('PT5M');
-$body_action->setType(Models\TerminalActionActionType::SAVE_CARD);
-$body_action_saveCardOptions_customerId = '{{CUSTOMER_ID}}';
-$body_action->setSaveCardOptions(new Models\SaveCardOptions(
-    $body_action_saveCardOptions_customerId
-));
-$body_action->getSaveCardOptions()->setReferenceId('user-id-1');
-$body = new Models\CreateTerminalActionRequest(
-    $body_idempotencyKey,
-    $body_action
-);
+$body = CreateTerminalActionRequestBuilder::init(
+    'thahn-70e75c10-47f7-4ab6-88cc-aaa4076d065e',
+    TerminalActionBuilder::init()
+        ->deviceId('{{DEVICE_ID}}')
+        ->deadlineDuration('PT5M')
+        ->type(TerminalActionActionType::SAVE_CARD)
+        ->saveCardOptions(
+            SaveCardOptionsBuilder::init(
+                '{{CUSTOMER_ID}}'
+            )
+                ->referenceId('user-id-1')
+                ->build()
+        )
+        ->build()
+)->build();
 
 $apiResponse = $terminalApi->createTerminalAction($body);
 
@@ -68,9 +72,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -90,19 +94,32 @@ function searchTerminalActions(SearchTerminalActionsRequest $body): ApiResponse
 
 ## Response Type
 
-[`SearchTerminalActionsResponse`](../../doc/models/search-terminal-actions-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`SearchTerminalActionsResponse`](../../doc/models/search-terminal-actions-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\SearchTerminalActionsRequest();
-$body->setQuery(new Models\TerminalActionQuery());
-$body->getQuery()->setFilter(new Models\TerminalActionQueryFilter());
-$body->getQuery()->getFilter()->setCreatedAt(new Models\TimeRange());
-$body->getQuery()->getFilter()->getCreatedAt()->setStartAt('2022-04-01T00:00:00Z');
-$body->getQuery()->setSort(new Models\TerminalActionQuerySort());
-$body->getQuery()->getSort()->setSortOrder(Models\SortOrder::DESC);
-$body->setLimit(2);
+$body = SearchTerminalActionsRequestBuilder::init()
+    ->query(
+        TerminalActionQueryBuilder::init()
+            ->filter(
+                TerminalActionQueryFilterBuilder::init()
+                    ->createdAt(
+                        TimeRangeBuilder::init()
+                            ->startAt('2022-04-01T00:00:00.000Z')
+                            ->build()
+                    )
+                    ->build()
+            )
+            ->sort(
+                TerminalActionQuerySortBuilder::init()
+                    ->sortOrder(SortOrder::DESC)
+                    ->build()
+            )
+            ->build()
+    )
+    ->limit(2)
+    ->build();
 
 $apiResponse = $terminalApi->searchTerminalActions($body);
 
@@ -112,9 +129,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -130,11 +147,11 @@ function getTerminalAction(string $actionId): ApiResponse
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `actionId` | `string` | Template, Required | Unique ID for the desired `TerminalAction` |
+| `actionId` | `string` | Template, Required | Unique ID for the desired `TerminalAction`. |
 
 ## Response Type
 
-[`GetTerminalActionResponse`](../../doc/models/get-terminal-action-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`GetTerminalActionResponse`](../../doc/models/get-terminal-action-response.md).
 
 ## Example Usage
 
@@ -149,9 +166,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -167,11 +184,11 @@ function cancelTerminalAction(string $actionId): ApiResponse
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `actionId` | `string` | Template, Required | Unique ID for the desired `TerminalAction` |
+| `actionId` | `string` | Template, Required | Unique ID for the desired `TerminalAction`. |
 
 ## Response Type
 
-[`CancelTerminalActionResponse`](../../doc/models/cancel-terminal-action-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CancelTerminalActionResponse`](../../doc/models/cancel-terminal-action-response.md).
 
 ## Example Usage
 
@@ -186,9 +203,48 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
+```
+
+
+# Dismiss Terminal Action
+
+Dismisses a Terminal action request if the status and type of the request permits it.
+
+See [Link and Dismiss Actions](https://developer.squareup.com/docs/terminal-api/advanced-features/custom-workflows/link-and-dismiss-actions) for more details.
+
+```php
+function dismissTerminalAction(string $actionId): ApiResponse
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `actionId` | `string` | Template, Required | Unique ID for the `TerminalAction` associated with the action to be dismissed. |
+
+## Response Type
+
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DismissTerminalActionResponse`](../../doc/models/dismiss-terminal-action-response.md).
+
+## Example Usage
+
+```php
+$actionId = 'action_id6';
+
+$apiResponse = $terminalApi->dismissTerminalAction($actionId);
+
+if ($apiResponse->isSuccess()) {
+    $dismissTerminalActionResponse = $apiResponse->getResult();
+} else {
+    $errors = $apiResponse->getErrors();
+}
+
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -209,29 +265,26 @@ function createTerminalCheckout(CreateTerminalCheckoutRequest $body): ApiRespons
 
 ## Response Type
 
-[`CreateTerminalCheckoutResponse`](../../doc/models/create-terminal-checkout-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateTerminalCheckoutResponse`](../../doc/models/create-terminal-checkout-response.md).
 
 ## Example Usage
 
 ```php
-$body_idempotencyKey = '28a0c3bc-7839-11ea-bc55-0242ac130003';
-$body_checkout_amountMoney = new Models\Money();
-$body_checkout_amountMoney->setAmount(2610);
-$body_checkout_amountMoney->setCurrency(Models\Currency::USD);
-$body_checkout_deviceOptions_deviceId = 'dbb5d83a-7838-11ea-bc55-0242ac130003';
-$body_checkout_deviceOptions = new Models\DeviceCheckoutOptions(
-    $body_checkout_deviceOptions_deviceId
-);
-$body_checkout = new Models\TerminalCheckout(
-    $body_checkout_amountMoney,
-    $body_checkout_deviceOptions
-);
-$body_checkout->setReferenceId('id11572');
-$body_checkout->setNote('A brief note');
-$body = new Models\CreateTerminalCheckoutRequest(
-    $body_idempotencyKey,
-    $body_checkout
-);
+$body = CreateTerminalCheckoutRequestBuilder::init(
+    '28a0c3bc-7839-11ea-bc55-0242ac130003',
+    TerminalCheckoutBuilder::init(
+        MoneyBuilder::init()
+            ->amount(2610)
+            ->currency(Currency::USD)
+            ->build(),
+        DeviceCheckoutOptionsBuilder::init(
+            'dbb5d83a-7838-11ea-bc55-0242ac130003'
+        )->build()
+    )
+        ->referenceId('id11572')
+        ->note('A brief note')
+        ->build()
+)->build();
 
 $apiResponse = $terminalApi->createTerminalCheckout($body);
 
@@ -241,9 +294,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -263,16 +316,23 @@ function searchTerminalCheckouts(SearchTerminalCheckoutsRequest $body): ApiRespo
 
 ## Response Type
 
-[`SearchTerminalCheckoutsResponse`](../../doc/models/search-terminal-checkouts-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`SearchTerminalCheckoutsResponse`](../../doc/models/search-terminal-checkouts-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\SearchTerminalCheckoutsRequest();
-$body->setQuery(new Models\TerminalCheckoutQuery());
-$body->getQuery()->setFilter(new Models\TerminalCheckoutQueryFilter());
-$body->getQuery()->getFilter()->setStatus('COMPLETED');
-$body->setLimit(2);
+$body = SearchTerminalCheckoutsRequestBuilder::init()
+    ->query(
+        TerminalCheckoutQueryBuilder::init()
+            ->filter(
+                TerminalCheckoutQueryFilterBuilder::init()
+                    ->status('COMPLETED')
+                    ->build()
+            )
+            ->build()
+    )
+    ->limit(2)
+    ->build();
 
 $apiResponse = $terminalApi->searchTerminalCheckouts($body);
 
@@ -282,9 +342,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -304,7 +364,7 @@ function getTerminalCheckout(string $checkoutId): ApiResponse
 
 ## Response Type
 
-[`GetTerminalCheckoutResponse`](../../doc/models/get-terminal-checkout-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`GetTerminalCheckoutResponse`](../../doc/models/get-terminal-checkout-response.md).
 
 ## Example Usage
 
@@ -319,9 +379,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -341,7 +401,7 @@ function cancelTerminalCheckout(string $checkoutId): ApiResponse
 
 ## Response Type
 
-[`CancelTerminalCheckoutResponse`](../../doc/models/cancel-terminal-checkout-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CancelTerminalCheckoutResponse`](../../doc/models/cancel-terminal-checkout-response.md).
 
 ## Example Usage
 
@@ -356,9 +416,46 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
+```
+
+
+# Dismiss Terminal Checkout
+
+Dismisses a Terminal checkout request if the status and type of the request permits it.
+
+```php
+function dismissTerminalCheckout(string $checkoutId): ApiResponse
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `checkoutId` | `string` | Template, Required | Unique ID for the `TerminalCheckout` associated with the checkout to be dismissed. |
+
+## Response Type
+
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DismissTerminalCheckoutResponse`](../../doc/models/dismiss-terminal-checkout-response.md).
+
+## Example Usage
+
+```php
+$checkoutId = 'checkout_id8';
+
+$apiResponse = $terminalApi->dismissTerminalCheckout($checkoutId);
+
+if ($apiResponse->isSuccess()) {
+    $dismissTerminalCheckoutResponse = $apiResponse->getResult();
+} else {
+    $errors = $apiResponse->getErrors();
+}
+
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -378,27 +475,25 @@ function createTerminalRefund(CreateTerminalRefundRequest $body): ApiResponse
 
 ## Response Type
 
-[`CreateTerminalRefundResponse`](../../doc/models/create-terminal-refund-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateTerminalRefundResponse`](../../doc/models/create-terminal-refund-response.md).
 
 ## Example Usage
 
 ```php
-$body_idempotencyKey = '402a640b-b26f-401f-b406-46f839590c04';
-$body = new Models\CreateTerminalRefundRequest(
-    $body_idempotencyKey
-);
-$body_refund_paymentId = '5O5OvgkcNUhl7JBuINflcjKqUzXZY';
-$body_refund_amountMoney = new Models\Money();
-$body_refund_amountMoney->setAmount(111);
-$body_refund_amountMoney->setCurrency(Models\Currency::CAD);
-$body_refund_reason = 'Returning items';
-$body_refund_deviceId = 'f72dfb8e-4d65-4e56-aade-ec3fb8d33291';
-$body->setRefund(new Models\TerminalRefund(
-    $body_refund_paymentId,
-    $body_refund_amountMoney,
-    $body_refund_reason,
-    $body_refund_deviceId
-));
+$body = CreateTerminalRefundRequestBuilder::init(
+    '402a640b-b26f-401f-b406-46f839590c04'
+)
+    ->refund(
+        TerminalRefundBuilder::init(
+            '5O5OvgkcNUhl7JBuINflcjKqUzXZY',
+            MoneyBuilder::init()
+                ->amount(111)
+                ->currency(Currency::CAD)
+                ->build(),
+            'Returning items',
+            'f72dfb8e-4d65-4e56-aade-ec3fb8d33291'
+        )->build()
+    )->build();
 
 $apiResponse = $terminalApi->createTerminalRefund($body);
 
@@ -408,9 +503,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -430,16 +525,23 @@ function searchTerminalRefunds(SearchTerminalRefundsRequest $body): ApiResponse
 
 ## Response Type
 
-[`SearchTerminalRefundsResponse`](../../doc/models/search-terminal-refunds-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`SearchTerminalRefundsResponse`](../../doc/models/search-terminal-refunds-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\SearchTerminalRefundsRequest();
-$body->setQuery(new Models\TerminalRefundQuery());
-$body->getQuery()->setFilter(new Models\TerminalRefundQueryFilter());
-$body->getQuery()->getFilter()->setStatus('COMPLETED');
-$body->setLimit(1);
+$body = SearchTerminalRefundsRequestBuilder::init()
+    ->query(
+        TerminalRefundQueryBuilder::init()
+            ->filter(
+                TerminalRefundQueryFilterBuilder::init()
+                    ->status('COMPLETED')
+                    ->build()
+            )
+            ->build()
+    )
+    ->limit(1)
+    ->build();
 
 $apiResponse = $terminalApi->searchTerminalRefunds($body);
 
@@ -449,9 +551,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -471,7 +573,7 @@ function getTerminalRefund(string $terminalRefundId): ApiResponse
 
 ## Response Type
 
-[`GetTerminalRefundResponse`](../../doc/models/get-terminal-refund-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`GetTerminalRefundResponse`](../../doc/models/get-terminal-refund-response.md).
 
 ## Example Usage
 
@@ -486,9 +588,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -508,7 +610,7 @@ function cancelTerminalRefund(string $terminalRefundId): ApiResponse
 
 ## Response Type
 
-[`CancelTerminalRefundResponse`](../../doc/models/cancel-terminal-refund-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CancelTerminalRefundResponse`](../../doc/models/cancel-terminal-refund-response.md).
 
 ## Example Usage
 
@@ -523,8 +625,45 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
+```
+
+
+# Dismiss Terminal Refund
+
+Dismisses a Terminal refund request if the status and type of the request permits it.
+
+```php
+function dismissTerminalRefund(string $terminalRefundId): ApiResponse
+```
+
+## Parameters
+
+| Parameter | Type | Tags | Description |
+|  --- | --- | --- | --- |
+| `terminalRefundId` | `string` | Template, Required | Unique ID for the `TerminalRefund` associated with the refund to be dismissed. |
+
+## Response Type
+
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DismissTerminalRefundResponse`](../../doc/models/dismiss-terminal-refund-response.md).
+
+## Example Usage
+
+```php
+$terminalRefundId = 'terminal_refund_id0';
+
+$apiResponse = $terminalApi->dismissTerminalRefund($terminalRefundId);
+
+if ($apiResponse->isSuccess()) {
+    $dismissTerminalRefundResponse = $apiResponse->getResult();
+} else {
+    $errors = $apiResponse->getErrors();
+}
+
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

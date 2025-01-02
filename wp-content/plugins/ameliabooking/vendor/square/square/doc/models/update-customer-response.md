@@ -2,7 +2,8 @@
 # Update Customer Response
 
 Defines the fields that are included in the response body of
-a request to the `UpdateCustomer` endpoint.
+a request to the [UpdateCustomer](../../doc/apis/customers.md#update-customer) or
+[BulkUpdateCustomers](../../doc/apis/customers.md#bulk-update-customers) endpoint.
 
 Either `errors` or `customer` is present in a given response (never both).
 
@@ -42,8 +43,31 @@ Either `errors` or `customer` is present in a given response (never both).
     },
     "reference_id": "YOUR_REFERENCE_ID",
     "updated_at": "2016-05-15T20:21:55Z",
-    "version": 3
-  }
+    "version": 3,
+    "cards": [
+      {
+        "id": "id8",
+        "card_brand": "DISCOVER",
+        "last_4": "last_40",
+        "exp_month": 152,
+        "exp_year": 144
+      }
+    ]
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

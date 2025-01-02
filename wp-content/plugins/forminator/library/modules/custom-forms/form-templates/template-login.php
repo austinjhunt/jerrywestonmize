@@ -95,6 +95,7 @@ class Forminator_Template_Login extends Forminator_Template {
 			'enable-ajax'                       => 'true',
 			'validation-inline'                 => true,
 			'fields-style'                      => 'open',
+			'basic-fields-style'                => 'open',
 			'form-expire'                       => 'no_expire',
 			'use-admin-email'                   => 'true',
 			'admin-email-title'                 => '',
@@ -192,6 +193,7 @@ class Forminator_Template_Login extends Forminator_Template {
 			'hidden-login-form-message'         => '<p>' . esc_html__( 'You are already logged in.', 'forminator' ) . '</p>',
 			// Layout - Radio/Checkbox.
 			'field-image-size'                  => 'custom',
+			'cform-color-option'                => 'theme',
 		);
 	}
 }

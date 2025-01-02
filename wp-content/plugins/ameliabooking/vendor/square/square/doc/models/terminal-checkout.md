@@ -20,47 +20,52 @@ Represents a checkout processed by the Square Terminal.
 | `deviceOptions` | [`DeviceCheckoutOptions`](../../doc/models/device-checkout-options.md) | Required | - | getDeviceOptions(): DeviceCheckoutOptions | setDeviceOptions(DeviceCheckoutOptions deviceOptions): void |
 | `deadlineDuration` | `?string` | Optional | An RFC 3339 duration, after which the checkout is automatically canceled.<br>A `TerminalCheckout` that is `PENDING` is automatically `CANCELED` and has a cancellation reason<br>of `TIMED_OUT`.<br><br>Default: 5 minutes from creation<br><br>Maximum: 5 minutes | getDeadlineDuration(): ?string | setDeadlineDuration(?string deadlineDuration): void |
 | `status` | `?string` | Optional | The status of the `TerminalCheckout`.<br>Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, `COMPLETED` | getStatus(): ?string | setStatus(?string status): void |
-| `cancelReason` | [`?string (ActionCancelReason)`](../../doc/models/action-cancel-reason.md) | Optional | - | getCancelReason(): ?string | setCancelReason(?string cancelReason): void |
+| `cancelReason` | [`?string(ActionCancelReason)`](../../doc/models/action-cancel-reason.md) | Optional | - | getCancelReason(): ?string | setCancelReason(?string cancelReason): void |
 | `paymentIds` | `?(string[])` | Optional | A list of IDs for payments created by this `TerminalCheckout`. | getPaymentIds(): ?array | setPaymentIds(?array paymentIds): void |
 | `createdAt` | `?string` | Optional | The time when the `TerminalCheckout` was created, as an RFC 3339 timestamp. | getCreatedAt(): ?string | setCreatedAt(?string createdAt): void |
 | `updatedAt` | `?string` | Optional | The time when the `TerminalCheckout` was last updated, as an RFC 3339 timestamp. | getUpdatedAt(): ?string | setUpdatedAt(?string updatedAt): void |
 | `appId` | `?string` | Optional | The ID of the application that created the checkout. | getAppId(): ?string | setAppId(?string appId): void |
-| `locationId` | `?string` | Optional | The location of the device where the `TerminalCheckout` was directed. | getLocationId(): ?string | setLocationId(?string locationId): void |
-| `paymentType` | [`?string (CheckoutOptionsPaymentType)`](../../doc/models/checkout-options-payment-type.md) | Optional | - | getPaymentType(): ?string | setPaymentType(?string paymentType): void |
+| `locationId` | `?string` | Optional | The location of the device where the `TerminalCheckout` was directed.<br>**Constraints**: *Maximum Length*: `64` | getLocationId(): ?string | setLocationId(?string locationId): void |
+| `paymentType` | [`?string(CheckoutOptionsPaymentType)`](../../doc/models/checkout-options-payment-type.md) | Optional | - | getPaymentType(): ?string | setPaymentType(?string paymentType): void |
+| `teamMemberId` | `?string` | Optional | An optional ID of the team member associated with creating the checkout. | getTeamMemberId(): ?string | setTeamMemberId(?string teamMemberId): void |
 | `customerId` | `?string` | Optional | An optional ID of the customer associated with the checkout. | getCustomerId(): ?string | setCustomerId(?string customerId): void |
 | `appFeeMoney` | [`?Money`](../../doc/models/money.md) | Optional | Represents an amount of money. `Money` fields can be signed or unsigned.<br>Fields that do not explicitly define whether they are signed or unsigned are<br>considered unsigned and can only hold positive amounts. For signed fields, the<br>sign of the value indicates the purpose of the money transfer. See<br>[Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)<br>for more information. | getAppFeeMoney(): ?Money | setAppFeeMoney(?Money appFeeMoney): void |
+| `statementDescriptionIdentifier` | `?string` | Optional | Optional additional payment information to include on the customer's card statement as<br>part of the statement description. This can be, for example, an invoice number, ticket number,<br>or short description that uniquely identifies the purchase. Supported only in the US.<br>**Constraints**: *Maximum Length*: `20` | getStatementDescriptionIdentifier(): ?string | setStatementDescriptionIdentifier(?string statementDescriptionIdentifier): void |
+| `tipMoney` | [`?Money`](../../doc/models/money.md) | Optional | Represents an amount of money. `Money` fields can be signed or unsigned.<br>Fields that do not explicitly define whether they are signed or unsigned are<br>considered unsigned and can only hold positive amounts. For signed fields, the<br>sign of the value indicates the purpose of the money transfer. See<br>[Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)<br>for more information. | getTipMoney(): ?Money | setTipMoney(?Money tipMoney): void |
 
 ## Example (as JSON)
 
 ```json
 {
-  "id": null,
+  "id": "id6",
   "amount_money": {
-    "amount": null,
-    "currency": null
+    "amount": 186,
+    "currency": "TZS"
   },
-  "reference_id": null,
-  "note": null,
-  "order_id": null,
-  "payment_options": null,
+  "reference_id": "reference_id6",
+  "note": "note8",
+  "order_id": "order_id0",
+  "payment_options": {
+    "autocomplete": false,
+    "delay_duration": "delay_duration2",
+    "accept_partial_authorization": false,
+    "delay_action": "CANCEL"
+  },
   "device_options": {
     "device_id": "device_id6",
-    "skip_receipt_screen": null,
-    "collect_signature": null,
-    "tip_settings": null,
-    "show_itemized_cart": null
-  },
-  "deadline_duration": null,
-  "status": null,
-  "cancel_reason": null,
-  "payment_ids": null,
-  "created_at": null,
-  "updated_at": null,
-  "app_id": null,
-  "location_id": null,
-  "payment_type": null,
-  "customer_id": null,
-  "app_fee_money": null
+    "skip_receipt_screen": false,
+    "collect_signature": false,
+    "tip_settings": {
+      "allow_tipping": false,
+      "separate_tip_screen": false,
+      "custom_tip_field": false,
+      "tip_percentages": [
+        48
+      ],
+      "smart_tipping": false
+    },
+    "show_itemized_cart": false
+  }
 }
 ```
 

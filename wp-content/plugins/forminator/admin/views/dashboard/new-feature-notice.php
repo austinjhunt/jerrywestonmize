@@ -21,7 +21,7 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 		aria-labelledby="forminator-new-feature__title"
 	>
 
-		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1320" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
+		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1380" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
 
 			<div class="sui-box-header sui-flatten sui-content-center">
 
@@ -39,87 +39,39 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 				</button>
 
 				<h3 class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: initial;">
-					<?php esc_html_e( 'New: Preset Templates and Rating Field', 'forminator' ); ?>
+					<?php esc_html_e( 'New: Stripe Optimized Checkout Suite (OCS)', 'forminator' ); ?>
 				</h3>
 
 				<p class="sui-description">
 					<?php
 					printf(
-						/* translators: 1. Admin name 2. Open b tag, 3. Close b tag */
-						esc_html__( 'Hey %1$s, we\'re excited to introduce our latest additions to Forminator: %2$sPreset Templates (Pro)%3$s, %2$sRating Field%3$s, and %2$sEnhanced Multi-Select UI%3$s. These new additions will speed up your form creation process and enhance the functionality of your forms.', 'forminator' ),
+						/* translators: 1. Admin name */
+						esc_html__( 'Hello, %s! we’ve made important improvements to the Forminator Stripe field and integrated a new Dynamic Payment Method, Payment Element. You can now enjoy enhanced security and support for multiple payment methods, such as PayPal, GPay, Apple Pay, and more.', 'forminator' ),
 						esc_html( ucfirst( $user->display_name ) ),
-						'<b>',
-						'</b>'
 					);
 					?>
 				</p>
-
-				<div class="sui-modal-list">
-					<ul style="text-align: left;">
-
-						<li>
-							<h3 style="margin-bottom: 0;">
-								<span class="sui-icon-check sui-sm" aria-hidden="true"></span>
-								&nbsp;&nbsp;
-								<?php esc_html_e( 'Preset and Cloud Templates', 'forminator' ); ?>
-								<span class="sui-tag sui-tag-sm sui-tag-purple">Pro</span>
-							</h3>
-							<p class="sui-description" style="margin-left: 24px; margin-bottom: 30px;">
-								<?php
-								printf(
-									/* translators: 1. Open link tag, 2. Close link tag */
-									esc_html__( 'With our pre-designed templates, you can easily create forms for different purposes. You can also create custom form templates, save them to the cloud and reuse them on any sites you manage via the Hub. %1$sLearn more%2$s', 'forminator' ),
-									'<a href="' . esc_url( 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#templates' ) . '" target="_blank">',
-									' <span class="sui-icon-open-new-window" aria-hidden="true"></span></a>'
-								);
-								?>
-							</p>
-						</li>
-
-						<li>
-							<h3 style="margin-bottom: 0;">
-								<span class="sui-icon-check sui-sm" aria-hidden="true"></span>
-								&nbsp;&nbsp;
-								<?php esc_html_e( 'Rating Field', 'forminator' ); ?>
-							</h3>
-							<p class="sui-description" style="margin-left: 24px; margin-bottom: 30px;">
-								<?php
-								printf(
-									/* translators: 1. Open link tag, 2. Close link tag */
-									esc_html__( 'With the new Rating field, you can now add star ratings to your forms and allow users to submit their feedback on your products, services, ideas etc. %1$sLearn more%2$s', 'forminator' ),
-									'<a href="' . esc_url( 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#rating-field' ) . '" target="_blank">',
-									' <span class="sui-icon-open-new-window" aria-hidden="true"></span></a>'
-								);
-								?>
-							</p>
-						</li>
-
-						<li>
-							<h3 style="margin-bottom: 0;">
-								<span class="sui-icon-check sui-sm" aria-hidden="true"></span>
-								&nbsp;&nbsp;
-								<?php esc_html_e( 'Enhanced UI for Multi-Select', 'forminator' ); ?></h3>
-							<p class="sui-description" style="margin-left: 24px;">
-								<?php
-								printf(
-									/* translators: 1. Open link tag, 2. Close link tag */
-									esc_html__( 'We’ve improved our Select field to support modern multi-selection styles and tags, creating a better experience for form users. %1$sCheck it out%2$s', 'forminator' ),
-									'<a href="' . esc_url( 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#multi-select' ) . '" target="_blank">',
-									' <span class="sui-icon-open-new-window" aria-hidden="true"></span></a>'
-								);
-								?>
-							</p>
-						</li>
-
-					</ul>
-				</div>
+				<p></p>
+				<p class="sui-description">
+					<?php
+					printf(
+						/* translators: 1. Open a tag. 2, Close a tag. */
+						esc_html__( 'If you\'ve been using the old Stripe setup in your form(s), migrate to the new Stripe field today to ensure uninterrupted transactions. %1$sLearn more%2$s.', 'forminator' ),
+						'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#stripe-field" target="_blank">',
+						'</a>'
+					);
+					?>
+				</p>
 
 			</div>
 
 			<div class="sui-box-footer sui-flatten sui-content-center">
 
-				<button class="sui-button forminator-dismiss-new-feature" data-modal-close>
-					<?php esc_html_e( 'Got it!', 'forminator' ); ?>
+				<button class="sui-button sui-button-ghost forminator-dismiss-new-feature" data-modal-close>
+					<?php esc_html_e( 'Close', 'forminator' ); ?>
+				</button>
+				<button data-link="<?php echo esc_url( add_query_arg( array( 'page' => 'forminator-cform' ), admin_url( 'admin.php' ) ) ); ?>" class="sui-button sui-button-blue forminator-dismiss-new-feature" data-modal-close>
+					<?php esc_html_e( 'Migrate Forms', 'forminator' ); ?>
 				</button>
 
 			</div>
@@ -136,6 +88,7 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 
 	var $notice = jQuery(e.currentTarget).closest('.forminator-feature-modal'),
 		ajaxUrl = '<?php echo esc_url( forminator_ajax_url() ); ?>',
+		$self   = jQuery(this),
 		dataType = jQuery(this).data('type'),
 		ajaxData = {
 		action: 'forminator_dismiss_notification',
@@ -149,7 +102,11 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 
 	jQuery.post(ajaxUrl, ajaxData)
 		.always(function () {
-		$notice.hide()
+			$notice.hide();
+			let link = $self.data('link');
+			if ( link ) {
+				location.href = link;
+			}
 		})
 	})
 </script>

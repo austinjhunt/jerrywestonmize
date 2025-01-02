@@ -36,6 +36,16 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
     /**
      * @param Container $c
      *
+     * @return InfrastructureServices\Apple\AbstractAppleCalendarService
+     */
+    public static function getAppleCalendarService($c)
+    {
+        return new InfrastructureServices\Apple\AppleCalendarService($c);
+    }
+
+    /**
+     * @param Container $c
+     *
      * @return InfrastructureServices\Zoom\AbstractZoomService
      */
     public static function getZoomService($c)

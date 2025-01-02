@@ -22,7 +22,7 @@ class CardScheme extends Constraint
  protected static $errorNames = [self::NOT_NUMERIC_ERROR => 'NOT_NUMERIC_ERROR', self::INVALID_FORMAT_ERROR => 'INVALID_FORMAT_ERROR'];
  public $message = 'Unsupported card type or invalid card number.';
  public $schemes;
- public function __construct($schemes, string $message = null, array $groups = null, $payload = null, array $options = [])
+ public function __construct($schemes, ?string $message = null, ?array $groups = null, $payload = null, array $options = [])
  {
  if (\is_array($schemes) && \is_string(\key($schemes))) {
  $options = \array_merge($schemes, $options);

@@ -24,6 +24,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
+use AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use DateTime;
@@ -265,6 +266,9 @@ class TimeSlotService
         /** @var AbstractOutlookCalendarService $outlookCalendarService */
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
 
+        /** @var AbstractAppleCalendarService $appleCalendarService */
+        $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
+
         /** @var EventApplicationService $eventApplicationService */
         $eventApplicationService = $this->container->get('application.booking.event.service');
 
@@ -280,6 +284,16 @@ class TimeSlotService
 
         try {
             $outlookCalendarService->removeSlotsFromOutlookCalendar(
+                $providers,
+                $props['excludeAppointmentId'],
+                !empty($props['minimumDateTime']) ? $props['minimumDateTime'] : $props['startDateTime'],
+                !empty($props['maximumDateTime']) ? $props['maximumDateTime'] : $props['endDateTime']
+            );
+        } catch (Exception $e) {
+        }
+
+        try {
+            $appleCalendarService->removeSlotsFromAppleCalendar(
                 $providers,
                 $props['excludeAppointmentId'],
                 !empty($props['minimumDateTime']) ? $props['minimumDateTime'] : $props['startDateTime'],
@@ -420,6 +434,9 @@ class TimeSlotService
         $providers = $providerRepository->getWithSchedule(
             array_merge(
                 [
+                    'dates'          => [
+                        DateTimeService::getNowDateTimeObject()->modify('-1 days')->format('Y-m-d H:i:s')
+                    ],
                     'providers'      => $props['providerIds'],
                     'fetchCalendars' => true,
                 ],

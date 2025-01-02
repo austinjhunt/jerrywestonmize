@@ -469,7 +469,7 @@ class Forminator_Admin {
 	 * Shown in forminator pages. Per user notification.
 	 */
 	public function check_stripe_addon_version() {
-		$min_stripe_addon_version = '1.2';
+		$min_stripe_addon_version = '1.3.0';
 		// Show the notice only if Stripe Addon is active and its version is less than 1.0.4.
 		if ( ! defined( 'FORMINATOR_STRIPE_ADDON' ) || ! class_exists( 'Forminator_Stripe_Addon' )
 			|| version_compare( FORMINATOR_STRIPE_ADDON, $min_stripe_addon_version, '>=' ) ) {
@@ -972,7 +972,7 @@ class Forminator_Admin {
 			} else {
 				$action_links['renew'] = '<a href="' . forminator_get_link( 'plugin', 'forminator_pluginlist_renew' ) . '" aria-label="' . esc_attr__( 'Upgrade For 80% Off!', 'forminator' ) . '" style="color: #8D00B1;" target="_blank">' . esc_html__( 'Upgrade For 80% Off!', 'forminator' ) . '</a>';
 			}
-		} elseif ( in_array( $membership_type, array( 'expired', 'free', 'paused', '' ), true ) ) {
+		} elseif ( in_array( $membership_type, array( 'expired', 'free', 'paused', '' ), true ) && ! $can_install_pro ) {
 			$action_links['renew'] = '<a href="' . forminator_get_link( 'plugin', 'forminator_pluginlist_renew' ) . '" aria-label="' . esc_attr__( 'Renew Membership', 'forminator' ) . '" style="color: #8D00B1;" target="_blank">' . esc_html__( 'Renew Membership', 'forminator' ) . '</a>';
 		}
 

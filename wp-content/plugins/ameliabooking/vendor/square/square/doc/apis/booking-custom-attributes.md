@@ -43,7 +43,7 @@ function listBookingCustomAttributeDefinitions(?int $limit = null, ?string $curs
 
 ## Response Type
 
-[`ListBookingCustomAttributeDefinitionsResponse`](../../doc/models/list-booking-custom-attribute-definitions-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListBookingCustomAttributeDefinitionsResponse`](../../doc/models/list-booking-custom-attribute-definitions-response.md).
 
 ## Example Usage
 
@@ -56,9 +56,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -86,15 +86,14 @@ function createBookingCustomAttributeDefinition(
 
 ## Response Type
 
-[`CreateBookingCustomAttributeDefinitionResponse`](../../doc/models/create-booking-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateBookingCustomAttributeDefinitionResponse`](../../doc/models/create-booking-custom-attribute-definition-response.md).
 
 ## Example Usage
 
 ```php
-$body_customAttributeDefinition = new Models\CustomAttributeDefinition();
-$body = new Models\CreateBookingCustomAttributeDefinitionRequest(
-    $body_customAttributeDefinition
-);
+$body = CreateBookingCustomAttributeDefinitionRequestBuilder::init(
+    CustomAttributeDefinitionBuilder::init()->build()
+)->build();
 
 $apiResponse = $bookingCustomAttributesApi->createBookingCustomAttributeDefinition($body);
 
@@ -104,9 +103,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -132,7 +131,7 @@ function deleteBookingCustomAttributeDefinition(string $key): ApiResponse
 
 ## Response Type
 
-[`DeleteBookingCustomAttributeDefinitionResponse`](../../doc/models/delete-booking-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteBookingCustomAttributeDefinitionResponse`](../../doc/models/delete-booking-custom-attribute-definition-response.md).
 
 ## Example Usage
 
@@ -147,9 +146,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -173,7 +172,7 @@ function retrieveBookingCustomAttributeDefinition(string $key, ?int $version = n
 
 ## Response Type
 
-[`RetrieveBookingCustomAttributeDefinitionResponse`](../../doc/models/retrieve-booking-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveBookingCustomAttributeDefinitionResponse`](../../doc/models/retrieve-booking-custom-attribute-definition-response.md).
 
 ## Example Usage
 
@@ -188,9 +187,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -220,18 +219,21 @@ function updateBookingCustomAttributeDefinition(
 
 ## Response Type
 
-[`UpdateBookingCustomAttributeDefinitionResponse`](../../doc/models/update-booking-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateBookingCustomAttributeDefinitionResponse`](../../doc/models/update-booking-custom-attribute-definition-response.md).
 
 ## Example Usage
 
 ```php
 $key = 'key0';
-$body_customAttributeDefinition = new Models\CustomAttributeDefinition();
-$body = new Models\UpdateBookingCustomAttributeDefinitionRequest(
-    $body_customAttributeDefinition
-);
 
-$apiResponse = $bookingCustomAttributesApi->updateBookingCustomAttributeDefinition($key, $body);
+$body = UpdateBookingCustomAttributeDefinitionRequestBuilder::init(
+    CustomAttributeDefinitionBuilder::init()->build()
+)->build();
+
+$apiResponse = $bookingCustomAttributesApi->updateBookingCustomAttributeDefinition(
+    $key,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $updateBookingCustomAttributeDefinitionResponse = $apiResponse->getResult();
@@ -239,9 +241,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -267,30 +269,23 @@ function bulkDeleteBookingCustomAttributes(BulkDeleteBookingCustomAttributesRequ
 
 ## Response Type
 
-[`BulkDeleteBookingCustomAttributesResponse`](../../doc/models/bulk-delete-booking-custom-attributes-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BulkDeleteBookingCustomAttributesResponse`](../../doc/models/bulk-delete-booking-custom-attributes-response.md).
 
 ## Example Usage
 
 ```php
-$body_values = [];
-
-$body_values_key0_bookingId = 'booking_id8';
-$body_values_key0_key = 'key4';
-$body_values['key0'] = new Models\BookingCustomAttributeDeleteRequest(
-    $body_values_key0_bookingId,
-    $body_values_key0_key
-);
-
-$body_values_key1_bookingId = 'booking_id9';
-$body_values_key1_key = 'key5';
-$body_values['key1'] = new Models\BookingCustomAttributeDeleteRequest(
-    $body_values_key1_bookingId,
-    $body_values_key1_key
-);
-
-$body = new Models\BulkDeleteBookingCustomAttributesRequest(
-    $body_values
-);
+$body = BulkDeleteBookingCustomAttributesRequestBuilder::init(
+    [
+        'key0' => BookingCustomAttributeDeleteRequestBuilder::init(
+            'booking_id4',
+            'key0'
+        )->build(),
+        'key1' => BookingCustomAttributeDeleteRequestBuilder::init(
+            'booking_id4',
+            'key0'
+        )->build()
+    ]
+)->build();
 
 $apiResponse = $bookingCustomAttributesApi->bulkDeleteBookingCustomAttributes($body);
 
@@ -300,9 +295,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -328,30 +323,23 @@ function bulkUpsertBookingCustomAttributes(BulkUpsertBookingCustomAttributesRequ
 
 ## Response Type
 
-[`BulkUpsertBookingCustomAttributesResponse`](../../doc/models/bulk-upsert-booking-custom-attributes-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BulkUpsertBookingCustomAttributesResponse`](../../doc/models/bulk-upsert-booking-custom-attributes-response.md).
 
 ## Example Usage
 
 ```php
-$body_values = [];
-
-$body_values_key0_bookingId = 'booking_id8';
-$body_values_key0_customAttribute = new Models\CustomAttribute();
-$body_values['key0'] = new Models\BookingCustomAttributeUpsertRequest(
-    $body_values_key0_bookingId,
-    $body_values_key0_customAttribute
-);
-
-$body_values_key1_bookingId = 'booking_id9';
-$body_values_key1_customAttribute = new Models\CustomAttribute();
-$body_values['key1'] = new Models\BookingCustomAttributeUpsertRequest(
-    $body_values_key1_bookingId,
-    $body_values_key1_customAttribute
-);
-
-$body = new Models\BulkUpsertBookingCustomAttributesRequest(
-    $body_values
-);
+$body = BulkUpsertBookingCustomAttributesRequestBuilder::init(
+    [
+        'key0' => BookingCustomAttributeUpsertRequestBuilder::init(
+            'booking_id4',
+            CustomAttributeBuilder::init()->build()
+        )->build(),
+        'key1' => BookingCustomAttributeUpsertRequestBuilder::init(
+            'booking_id4',
+            CustomAttributeBuilder::init()->build()
+        )->build()
+    ]
+)->build();
 
 $apiResponse = $bookingCustomAttributesApi->bulkUpsertBookingCustomAttributes($body);
 
@@ -361,9 +349,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -387,22 +375,28 @@ function listBookingCustomAttributes(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `bookingId` | `string` | Template, Required | The ID of the target [booking](../../doc/models/booking.md). |
+| `bookingId` | `string` | Template, Required | The ID of the target [booking](entity:Booking). |
 | `limit` | `?int` | Query, Optional | The maximum number of results to return in a single paged response. This limit is advisory.<br>The response might contain more or fewer results. The minimum value is 1 and the maximum value is 100.<br>The default value is 20. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
 | `cursor` | `?string` | Query, Optional | The cursor returned in the paged response from the previous call to this endpoint.<br>Provide this cursor to retrieve the next page of results for your original request. For more<br>information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
-| `withDefinitions` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](../../doc/models/custom-attribute-definition.md) in the `definition` field of each<br>custom attribute. Set this parameter to `true` to get the name and description of each custom<br>attribute, information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
+| `withDefinitions` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](entity:CustomAttributeDefinition) in the `definition` field of each<br>custom attribute. Set this parameter to `true` to get the name and description of each custom<br>attribute, information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
 
 ## Response Type
 
-[`ListBookingCustomAttributesResponse`](../../doc/models/list-booking-custom-attributes-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListBookingCustomAttributesResponse`](../../doc/models/list-booking-custom-attributes-response.md).
 
 ## Example Usage
 
 ```php
 $bookingId = 'booking_id4';
+
 $withDefinitions = false;
 
-$apiResponse = $bookingCustomAttributesApi->listBookingCustomAttributes($bookingId, null, null, $withDefinitions);
+$apiResponse = $bookingCustomAttributesApi->listBookingCustomAttributes(
+    $bookingId,
+    null,
+    null,
+    $withDefinitions
+);
 
 if ($apiResponse->isSuccess()) {
     $listBookingCustomAttributesResponse = $apiResponse->getResult();
@@ -410,9 +404,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -434,20 +428,24 @@ function deleteBookingCustomAttribute(string $bookingId, string $key): ApiRespon
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `bookingId` | `string` | Template, Required | The ID of the target [booking](../../doc/models/booking.md). |
+| `bookingId` | `string` | Template, Required | The ID of the target [booking](entity:Booking). |
 | `key` | `string` | Template, Required | The key of the custom attribute to delete. This key must match the `key` of a custom<br>attribute definition in the Square seller account. If the requesting application is not the<br>definition owner, you must use the qualified key. |
 
 ## Response Type
 
-[`DeleteBookingCustomAttributeResponse`](../../doc/models/delete-booking-custom-attribute-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteBookingCustomAttributeResponse`](../../doc/models/delete-booking-custom-attribute-response.md).
 
 ## Example Usage
 
 ```php
 $bookingId = 'booking_id4';
+
 $key = 'key0';
 
-$apiResponse = $bookingCustomAttributesApi->deleteBookingCustomAttribute($bookingId, $key);
+$apiResponse = $bookingCustomAttributesApi->deleteBookingCustomAttribute(
+    $bookingId,
+    $key
+);
 
 if ($apiResponse->isSuccess()) {
     $deleteBookingCustomAttributeResponse = $apiResponse->getResult();
@@ -455,9 +453,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -481,23 +479,29 @@ function retrieveBookingCustomAttribute(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `bookingId` | `string` | Template, Required | The ID of the target [booking](../../doc/models/booking.md). |
+| `bookingId` | `string` | Template, Required | The ID of the target [booking](entity:Booking). |
 | `key` | `string` | Template, Required | The key of the custom attribute to retrieve. This key must match the `key` of a custom<br>attribute definition in the Square seller account. If the requesting application is not the<br>definition owner, you must use the qualified key. |
-| `withDefinition` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](../../doc/models/custom-attribute-definition.md) in the `definition` field of<br>the custom attribute. Set this parameter to `true` to get the name and description of the custom<br>attribute, information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
+| `withDefinition` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](entity:CustomAttributeDefinition) in the `definition` field of<br>the custom attribute. Set this parameter to `true` to get the name and description of the custom<br>attribute, information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
 | `version` | `?int` | Query, Optional | The current version of the custom attribute, which is used for strongly consistent reads to<br>guarantee that you receive the most up-to-date data. When included in the request, Square<br>returns the specified version or a higher version if one exists. If the specified version is<br>higher than the current version, Square returns a `BAD_REQUEST` error. |
 
 ## Response Type
 
-[`RetrieveBookingCustomAttributeResponse`](../../doc/models/retrieve-booking-custom-attribute-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveBookingCustomAttributeResponse`](../../doc/models/retrieve-booking-custom-attribute-response.md).
 
 ## Example Usage
 
 ```php
 $bookingId = 'booking_id4';
+
 $key = 'key0';
+
 $withDefinition = false;
 
-$apiResponse = $bookingCustomAttributesApi->retrieveBookingCustomAttribute($bookingId, $key, $withDefinition);
+$apiResponse = $bookingCustomAttributesApi->retrieveBookingCustomAttribute(
+    $bookingId,
+    $key,
+    $withDefinition
+);
 
 if ($apiResponse->isSuccess()) {
     $retrieveBookingCustomAttributeResponse = $apiResponse->getResult();
@@ -505,9 +509,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -533,25 +537,30 @@ function upsertBookingCustomAttribute(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `bookingId` | `string` | Template, Required | The ID of the target [booking](../../doc/models/booking.md). |
+| `bookingId` | `string` | Template, Required | The ID of the target [booking](entity:Booking). |
 | `key` | `string` | Template, Required | The key of the custom attribute to create or update. This key must match the `key` of a<br>custom attribute definition in the Square seller account. If the requesting application is not<br>the definition owner, you must use the qualified key. |
 | `body` | [`UpsertBookingCustomAttributeRequest`](../../doc/models/upsert-booking-custom-attribute-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
 
 ## Response Type
 
-[`UpsertBookingCustomAttributeResponse`](../../doc/models/upsert-booking-custom-attribute-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpsertBookingCustomAttributeResponse`](../../doc/models/upsert-booking-custom-attribute-response.md).
 
 ## Example Usage
 
 ```php
 $bookingId = 'booking_id4';
-$key = 'key0';
-$body_customAttribute = new Models\CustomAttribute();
-$body = new Models\UpsertBookingCustomAttributeRequest(
-    $body_customAttribute
-);
 
-$apiResponse = $bookingCustomAttributesApi->upsertBookingCustomAttribute($bookingId, $key, $body);
+$key = 'key0';
+
+$body = UpsertBookingCustomAttributeRequestBuilder::init(
+    CustomAttributeBuilder::init()->build()
+)->build();
+
+$apiResponse = $bookingCustomAttributesApi->upsertBookingCustomAttribute(
+    $bookingId,
+    $key,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $upsertBookingCustomAttributeResponse = $apiResponse->getResult();
@@ -559,8 +568,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

@@ -1,23 +1,57 @@
 <?php
+/**
+ * File: Generic_Plugin.php
+ *
+ * @package W3TC
+ */
+
 namespace W3TC;
 
 /**
- * W3 Total Cache plugin
+ * Class Generic_Plugin
+ *
+ * phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore
+ * phpcs:disable PSR2.Methods.MethodDeclaration.Underscore
  */
 class Generic_Plugin {
-	private $is_wp_die     = false;
-	private $_translations = array();
-	private $_config       = null;
+	/**
+	 * Is WP die
+	 *
+	 * @var bool
+	 */
+	private $is_wp_die = false;
 
-	function __construct() {
+	/**
+	 * Translations
+	 *
+	 * @var array
+	 */
+	private $_translations = array();
+
+	/**
+	 * Config
+	 *
+	 * @var Config
+	 */
+	private $_config = null;
+
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
+	public function __construct() {
 		$this->_config = Dispatcher::config();
 	}
 
 	/**
 	 * Runs plugin
+	 *
+	 * @return void
 	 */
-	function run() {
-		add_filter( 'cron_schedules', array( $this, 'cron_schedules' ), 5 );
+	public function run() {
+		add_filter( 'cron_schedules', array( $this, 'cron_schedules' ), 5 ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+		add_action( 'w3tc_purge_all_wpcron', array( $this, 'w3tc_purgeall_wpcron' ) );
 
 		/* need this to run before wp-cron to issue w3tc redirect */
 		add_action( 'init', array( $this, 'init' ), 1 );
@@ -56,7 +90,11 @@ class Generic_Plugin {
 
 	/**
 	 * Marks wp_die was called so response is system message
-	 **/
+	 *
+	 * @param callable $v Callback.
+	 *
+	 * @return callable
+	 */
 	public function wp_die_handler( $v ) {
 		$this->is_wp_die = true;
 		return $v;
@@ -65,16 +103,18 @@ class Generic_Plugin {
 	/**
 	 * Cron schedules filter
 	 *
-	 * @param array   $schedules
+	 * Sets default values which are overriden by apropriate plugins if they are enabled
+	 *
+	 * Absense of keys (if e.g. pgcaching became disabled, but there is cron event scheduled in db) causes PHP notices.
+	 *
+	 * @param array $schedules Schedules.
+	 *
 	 * @return array
 	 */
-	function cron_schedules( $schedules ) {
-		// Sets default values which are overriden by apropriate plugins
-		// if they are enabled
-		//
-		// absense of keys (if e.g. pgcaching became disabled, but there is
-		// cron event scheduled in db) causes PHP notices.
-		return array_merge(
+	public function cron_schedules( $schedules ) {
+		$c = $this->_config;
+
+		$schedules = array_merge(
 			$schedules,
 			array(
 				'w3_cdn_cron_queue_process' => array(
@@ -111,6 +151,20 @@ class Generic_Plugin {
 				),
 			)
 		);
+
+		return $schedules;
+	}
+
+	/**
+	 * Cron job for processing purging page cache.
+	 *
+	 * @since 2.8.0
+	 *
+	 * @return void
+	 */
+	public function w3tc_purgeall_wpcron() {
+		$flusher = Dispatcher::component( 'CacheFlush' );
+		$flusher->flush_all();
 	}
 
 	/**
@@ -118,7 +172,7 @@ class Generic_Plugin {
 	 *
 	 * @return void
 	 */
-	function init() {
+	public function init() {
 		// Load W3TC textdomain for translations.
 		$this->reset_l10n();
 		load_plugin_textdomain( W3TC_TEXT_DOMAIN, false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
@@ -154,7 +208,7 @@ class Generic_Plugin {
 			// redirect to the same url causes "redirect loop" error in browser,
 			// so need to redirect to something a bit different.
 			if ( $do_redirect ) {
-				if ( ( defined( 'WP_CLI' ) && WP_CLI ) || php_sapi_name() === 'cli' ) {
+				if ( ( defined( 'WP_CLI' ) && WP_CLI ) || php_sapi_name() === 'cli' ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
 					// command-line mode, no real requests made,
 					// try to switch context in-request.
 				} else {
@@ -195,9 +249,14 @@ class Generic_Plugin {
 		}
 	}
 
+	/**
+	 * Admin bar init
+	 *
+	 * @return void
+	 */
 	public function admin_bar_init() {
 		$font_base = plugins_url( 'pub/fonts/w3tc', W3TC_FILE );
-		$css = "
+		$css       = "
 			@font-face {
 				font-family: 'w3tc';
 			src: url('$font_base.eot');
@@ -213,7 +272,7 @@ class Generic_Plugin {
 			font-family: 'w3tc';
 		}";
 
-		wp_add_inline_style( 'admin-bar', $css);
+		wp_add_inline_style( 'admin-bar', $css );
 	}
 
 	/**
@@ -221,7 +280,7 @@ class Generic_Plugin {
 	 *
 	 * @return void
 	 */
-	function admin_bar_menu() {
+	public function admin_bar_menu() {
 		global $wp_admin_bar;
 
 		$base_capability = apply_filters( 'w3tc_capability_admin_bar', 'manage_options' );
@@ -335,6 +394,19 @@ class Generic_Plugin {
 					'w3tc'
 				),
 			);
+
+			if ( Extension_AlwaysCached_Plugin::is_enabled() ) {
+				$menu_items['40015.alwayscached'] = array(
+					'id'     => 'w3tc_alwayscached',
+					'parent' => 'w3tc',
+					'title'  => __( 'Page Cache Queue', 'w3-total-cache' ),
+					'href'   => wp_nonce_url(
+						network_admin_url( 'admin.php?page=w3tc_extensions&extension=alwayscached&action=view' ),
+						'w3tc'
+					),
+				);
+			}
+
 			$menu_items['40020.generic'] = array(
 				'id'     => 'w3tc_settings_extensions',
 				'parent' => 'w3tc',
@@ -394,10 +466,11 @@ class Generic_Plugin {
 	/**
 	 * Template filter
 	 *
-	 * @param unknown $template
+	 * @param unknown $template Template.
+	 *
 	 * @return string
 	 */
-	function template( $template ) {
+	public function template( $template ) {
 		$w3_mobile = Dispatcher::component( 'Mobile_UserAgent' );
 
 		$mobile_template = $w3_mobile->get_template();
@@ -420,10 +493,11 @@ class Generic_Plugin {
 	/**
 	 * Stylesheet filter
 	 *
-	 * @param unknown $stylesheet
+	 * @param unknown $stylesheet Stylesheet.
+	 *
 	 * @return string
 	 */
-	function stylesheet( $stylesheet ) {
+	public function stylesheet( $stylesheet ) {
 		$w3_mobile = Dispatcher::component( 'Mobile_UserAgent' );
 
 		$mobile_stylesheet = $w3_mobile->get_stylesheet();
@@ -446,10 +520,11 @@ class Generic_Plugin {
 	/**
 	 * Template filter
 	 *
-	 * @param unknown $template
+	 * @param unknown $template Template.
+	 *
 	 * @return string
 	 */
-	function template_preview( $template ) {
+	public function template_preview( $template ) {
 		$theme_name = Util_Request::get_string( 'w3tc_theme' );
 
 		$theme = Util_Theme::get( $theme_name );
@@ -464,10 +539,11 @@ class Generic_Plugin {
 	/**
 	 * Stylesheet filter
 	 *
-	 * @param unknown $stylesheet
+	 * @param unknown $stylesheet Stylesheet.
+	 *
 	 * @return string
 	 */
-	function stylesheet_preview( $stylesheet ) {
+	public function stylesheet_preview( $stylesheet ) {
 		$theme_name = Util_Request::get_string( 'w3tc_theme' );
 
 		$theme = Util_Theme::get( $theme_name );
@@ -482,10 +558,11 @@ class Generic_Plugin {
 	/**
 	 * Output buffering callback
 	 *
-	 * @param string  $buffer
+	 * @param string $buffer Buffer.
+	 *
 	 * @return string
 	 */
-	function ob_callback( $buffer ) {
+	public function ob_callback( $buffer ) {
 		global $wpdb;
 
 		global $w3_late_caching_succeeded;
@@ -493,8 +570,8 @@ class Generic_Plugin {
 			return $buffer;
 		}
 
-		if ( $this->is_wp_die && ! apply_filters( 'w3tc_process_wp_die', false, $buffer ) ) {
-			// wp_die is dynamic output (usually fatal errors), dont process it
+		if ( $this->is_wp_die && ! apply_filters( 'w3tc_process_wp_die', false, $buffer ) ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
+			// wp_die is dynamic output (usually fatal errors), dont process it.
 		} else {
 			$buffer = apply_filters( 'w3tc_process_content', $buffer );
 
@@ -563,7 +640,7 @@ class Generic_Plugin {
 	 *
 	 * @return boolean
 	 */
-	function can_ob() {
+	public function can_ob() {
 		global $w3_late_init;
 		if ( $w3_late_init ) {
 			return false;
@@ -616,11 +693,18 @@ class Generic_Plugin {
 	}
 
 	/**
-	 * User login hook
-	 * Check if current user is not listed in pgcache.reject.* rules
+	 * User login hook. Check if current user is not listed in pgcache.reject.* rules
 	 * If so, set a role cookie so the requests wont be cached
+	 *
+	 * @param bool   $logged_in_cookie Logged in cookie flag.
+	 * @param string $expire           Expire timestamp.
+	 * @param int    $expiration       Time to expire.
+	 * @param int    $user_id          User ID.
+	 * @param string $action           Action.
+	 *
+	 * @return void
 	 */
-	function check_login_action( $logged_in_cookie = false, $expire = ' ', $expiration = 0, $user_id = 0, $action = 'logged_out' ) {
+	public function check_login_action( $logged_in_cookie = false, $expire = ' ', $expiration = 0, $user_id = 0, $action = 'logged_out' ) {
 		$current_user = wp_get_current_user();
 		if ( isset( $current_user->ID ) && ! $current_user->ID ) {
 			$user_id = new \WP_User( $user_id );
@@ -673,7 +757,12 @@ class Generic_Plugin {
 		}
 	}
 
-	function popup_script() {
+	/**
+	 * Popup script embed
+	 *
+	 * @return void
+	 */
+	public function popup_script() {
 		if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
 			return;
 		}
@@ -686,6 +775,11 @@ class Generic_Plugin {
 		<?php
 	}
 
+	/**
+	 * Check if debugging is enabled
+	 *
+	 * @return bool
+	 */
 	private function is_debugging() {
 		$debug = $this->_config->get_boolean( 'pgcache.enabled' ) && $this->_config->get_boolean( 'pgcache.debug' );
 		$debug = $debug || ( $this->_config->get_boolean( 'dbcache.enabled' ) && $this->_config->get_boolean( 'dbcache.debug' ) );
@@ -697,6 +791,11 @@ class Generic_Plugin {
 		return $debug;
 	}
 
+	/**
+	 * Output HTML in footer if dev mode enabled
+	 *
+	 * @return void
+	 */
 	public function pro_dev_mode() {
 		echo '<!-- W3 Total Cache is currently running in Pro version Development mode. --><div style="border:2px solid red;text-align:center;font-size:1.2em;color:red"><p><strong>W3 Total Cache is currently running in Pro version Development mode.</strong></p></div>';
 	}

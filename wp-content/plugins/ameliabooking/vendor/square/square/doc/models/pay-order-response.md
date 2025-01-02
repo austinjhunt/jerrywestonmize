@@ -51,7 +51,24 @@ Defines the fields that are included in the response body of a request to the
           "amount": 0,
           "currency": "USD"
         },
-        "uid": "QW6kofLHJK7JEKMjlSVP5C"
+        "uid": "QW6kofLHJK7JEKMjlSVP5C",
+        "quantity_unit": {
+          "measurement_unit": {
+            "custom_unit": {
+              "name": "name2",
+              "abbreviation": "abbreviation4"
+            },
+            "area_unit": "IMPERIAL_ACRE",
+            "length_unit": "IMPERIAL_INCH",
+            "volume_unit": "METRIC_LITER",
+            "weight_unit": "IMPERIAL_WEIGHT_OUNCE"
+          },
+          "precision": 54,
+          "catalog_object_id": "catalog_object_id0",
+          "catalog_version": 12
+        },
+        "note": "note4",
+        "catalog_object_id": "catalog_object_id2"
       },
       {
         "base_price_money": {
@@ -80,7 +97,24 @@ Defines the fields that are included in the response body of a request to the
           "amount": 0,
           "currency": "USD"
         },
-        "uid": "zhw8MNfRGdFQMI2WE1UBJD"
+        "uid": "zhw8MNfRGdFQMI2WE1UBJD",
+        "quantity_unit": {
+          "measurement_unit": {
+            "custom_unit": {
+              "name": "name2",
+              "abbreviation": "abbreviation4"
+            },
+            "area_unit": "IMPERIAL_ACRE",
+            "length_unit": "IMPERIAL_INCH",
+            "volume_unit": "METRIC_LITER",
+            "weight_unit": "IMPERIAL_WEIGHT_OUNCE"
+          },
+          "precision": 54,
+          "catalog_object_id": "catalog_object_id0",
+          "catalog_version": 12
+        },
+        "note": "note4",
+        "catalog_object_id": "catalog_object_id2"
       }
     ],
     "location_id": "P3CCK6HSNDAS7",
@@ -175,8 +209,18 @@ Defines the fields that are included in the response body of a request to the
       "currency": "USD"
     },
     "updated_at": "2019-08-06T02:47:37.140Z",
-    "version": 4
-  }
+    "version": 4,
+    "reference_id": "reference_id4",
+    "customer_id": "customer_id4"
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 trait ZeroComparisonConstraintTrait
 {
- public function __construct(array $options = null, string $message = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $message = null, ?array $groups = null, $payload = null)
  {
  if (null === $options) {
  $options = [];

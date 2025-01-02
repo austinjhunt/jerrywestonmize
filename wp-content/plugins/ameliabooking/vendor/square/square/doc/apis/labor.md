@@ -46,7 +46,7 @@ function listBreakTypes(?string $locationId = null, ?int $limit = null, ?string 
 
 ## Response Type
 
-[`ListBreakTypesResponse`](../../doc/models/list-break-types-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListBreakTypesResponse`](../../doc/models/list-break-types-response.md).
 
 ## Example Usage
 
@@ -59,9 +59,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -94,25 +94,21 @@ function createBreakType(CreateBreakTypeRequest $body): ApiResponse
 
 ## Response Type
 
-[`CreateBreakTypeResponse`](../../doc/models/create-break-type-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateBreakTypeResponse`](../../doc/models/create-break-type-response.md).
 
 ## Example Usage
 
 ```php
-$body_breakType_locationId = 'CGJN03P1D08GF';
-$body_breakType_breakName = 'Lunch Break';
-$body_breakType_expectedDuration = 'PT30M';
-$body_breakType_isPaid = true;
-$body_breakType = new Models\BreakType(
-    $body_breakType_locationId,
-    $body_breakType_breakName,
-    $body_breakType_expectedDuration,
-    $body_breakType_isPaid
-);
-$body = new Models\CreateBreakTypeRequest(
-    $body_breakType
-);
-$body->setIdempotencyKey('PAD3NG5KSN2GL');
+$body = CreateBreakTypeRequestBuilder::init(
+    BreakTypeBuilder::init(
+        'CGJN03P1D08GF',
+        'Lunch Break',
+        'PT30M',
+        true
+    )->build()
+)
+    ->idempotencyKey('PAD3NG5KSN2GL')
+    ->build();
 
 $apiResponse = $laborApi->createBreakType($body);
 
@@ -122,9 +118,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -146,7 +142,7 @@ function deleteBreakType(string $id): ApiResponse
 
 ## Response Type
 
-[`DeleteBreakTypeResponse`](../../doc/models/delete-break-type-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteBreakTypeResponse`](../../doc/models/delete-break-type-response.md).
 
 ## Example Usage
 
@@ -161,9 +157,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -183,7 +179,7 @@ function getBreakType(string $id): ApiResponse
 
 ## Response Type
 
-[`GetBreakTypeResponse`](../../doc/models/get-break-type-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`GetBreakTypeResponse`](../../doc/models/get-break-type-response.md).
 
 ## Example Usage
 
@@ -198,9 +194,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -221,28 +217,28 @@ function updateBreakType(string $id, UpdateBreakTypeRequest $body): ApiResponse
 
 ## Response Type
 
-[`UpdateBreakTypeResponse`](../../doc/models/update-break-type-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateBreakTypeResponse`](../../doc/models/update-break-type-response.md).
 
 ## Example Usage
 
 ```php
 $id = 'id0';
-$body_breakType_locationId = '26M7H24AZ9N6R';
-$body_breakType_breakName = 'Lunch';
-$body_breakType_expectedDuration = 'PT50M';
-$body_breakType_isPaid = true;
-$body_breakType = new Models\BreakType(
-    $body_breakType_locationId,
-    $body_breakType_breakName,
-    $body_breakType_expectedDuration,
-    $body_breakType_isPaid
-);
-$body_breakType->setVersion(1);
-$body = new Models\UpdateBreakTypeRequest(
-    $body_breakType
-);
 
-$apiResponse = $laborApi->updateBreakType($id, $body);
+$body = UpdateBreakTypeRequestBuilder::init(
+    BreakTypeBuilder::init(
+        '26M7H24AZ9N6R',
+        'Lunch',
+        'PT50M',
+        true
+    )
+        ->version(1)
+        ->build()
+)->build();
+
+$apiResponse = $laborApi->updateBreakType(
+    $id,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $updateBreakTypeResponse = $apiResponse->getResult();
@@ -250,9 +246,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -276,7 +272,7 @@ function listEmployeeWages(?string $employeeId = null, ?int $limit = null, ?stri
 
 ## Response Type
 
-[`ListEmployeeWagesResponse`](../../doc/models/list-employee-wages-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListEmployeeWagesResponse`](../../doc/models/list-employee-wages-response.md).
 
 ## Example Usage
 
@@ -289,9 +285,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -313,7 +309,7 @@ function getEmployeeWage(string $id): ApiResponse
 
 ## Response Type
 
-[`GetEmployeeWageResponse`](../../doc/models/get-employee-wage-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`GetEmployeeWageResponse`](../../doc/models/get-employee-wage-response.md).
 
 ## Example Usage
 
@@ -328,9 +324,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -338,20 +334,20 @@ if ($apiResponse->isSuccess()) {
 
 Creates a new `Shift`.
 
-A `Shift` represents a complete workday for a single employee.
+A `Shift` represents a complete workday for a single team member.
 You must provide the following values in your request to this
 endpoint:
 
 - `location_id`
-- `employee_id`
+- `team_member_id`
 - `start_at`
 
 An attempt to create a new `Shift` can result in a `BAD_REQUEST` error when:
 
-- The `status` of the new `Shift` is `OPEN` and the employee has another
+- The `status` of the new `Shift` is `OPEN` and the team member has another
   shift with an `OPEN` status.
 - The `start_at` date is in the future.
-- The `start_at` or `end_at` date overlaps another shift for the same employee.
+- The `start_at` or `end_at` date overlaps another shift for the same team member.
 - The `Break` instances are set in the request and a break `start_at`
   is before the `Shift.start_at`, a break `end_at` is after
   the `Shift.end_at`, or both.
@@ -368,44 +364,53 @@ function createShift(CreateShiftRequest $body): ApiResponse
 
 ## Response Type
 
-[`CreateShiftResponse`](../../doc/models/create-shift-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateShiftResponse`](../../doc/models/create-shift-response.md).
 
 ## Example Usage
 
 ```php
-$body_shift_startAt = '2019-01-25T08:11:00+00:00';
-$body_shift = new Models\Shift(
-    $body_shift_startAt
-);
-$body_shift->setLocationId('PAA1RJZZKXBFG');
-$body_shift->setEndAt('2019-01-25T18:11:00+00:00');
-$body_shift->setWage(new Models\ShiftWage());
-$body_shift->getWage()->setTitle('Barista');
-$body_shift->getWage()->setHourlyRate(new Models\Money());
-$body_shift->getWage()->getHourlyRate()->setAmount(1100);
-$body_shift->getWage()->getHourlyRate()->setCurrency(Models\Currency::USD);
-$body_shift_breaks = [];
-
-$body_shift_breaks_0_startAt = '2019-01-25T11:11:00+00:00';
-$body_shift_breaks_0_breakTypeId = 'REGS1EQR1TPZ5';
-$body_shift_breaks_0_name = 'Tea Break';
-$body_shift_breaks_0_expectedDuration = 'PT5M';
-$body_shift_breaks_0_isPaid = true;
-$body_shift_breaks[0] = new Models\MBreak(
-    $body_shift_breaks_0_startAt,
-    $body_shift_breaks_0_breakTypeId,
-    $body_shift_breaks_0_name,
-    $body_shift_breaks_0_expectedDuration,
-    $body_shift_breaks_0_isPaid
-);
-$body_shift_breaks[0]->setEndAt('2019-01-25T11:16:00+00:00');
-$body_shift->setBreaks($body_shift_breaks);
-
-$body_shift->setTeamMemberId('ormj0jJJZ5OZIzxrZYJI');
-$body = new Models\CreateShiftRequest(
-    $body_shift
-);
-$body->setIdempotencyKey('HIDSNG5KS478L');
+$body = CreateShiftRequestBuilder::init(
+    ShiftBuilder::init(
+        'PAA1RJZZKXBFG',
+        '2019-01-25T03:11:00-05:00'
+    )
+        ->endAt('2019-01-25T13:11:00-05:00')
+        ->wage(
+            ShiftWageBuilder::init()
+                ->title('Barista')
+                ->hourlyRate(
+                    MoneyBuilder::init()
+                        ->amount(1100)
+                        ->currency(Currency::USD)
+                        ->build()
+                )
+                ->tipEligible(true)
+                ->build()
+        )
+        ->breaks(
+            [
+                MBreakBuilder::init(
+                    '2019-01-25T06:11:00-05:00',
+                    'REGS1EQR1TPZ5',
+                    'Tea Break',
+                    'PT5M',
+                    true
+                )
+                    ->endAt('2019-01-25T06:16:00-05:00')
+                    ->build()
+            ]
+        )
+        ->teamMemberId('ormj0jJJZ5OZIzxrZYJI')
+        ->declaredCashTipMoney(
+            MoneyBuilder::init()
+                ->amount(500)
+                ->currency(Currency::USD)
+                ->build()
+        )
+        ->build()
+)
+    ->idempotencyKey('HIDSNG5KS478L')
+    ->build();
 
 $apiResponse = $laborApi->createShift($body);
 
@@ -415,9 +420,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -426,19 +431,19 @@ if ($apiResponse->isSuccess()) {
 Returns a paginated list of `Shift` records for a business.
 The list to be returned can be filtered by:
 
-- Location IDs.
-- Employee IDs.
-- Shift status (`OPEN` and `CLOSED`).
-- Shift start.
-- Shift end.
-- Workday details.
+- Location IDs
+- Team member IDs
+- Shift status (`OPEN` or `CLOSED`)
+- Shift start
+- Shift end
+- Workday details
 
 The list can be sorted by:
 
-- `start_at`.
-- `end_at`.
-- `created_at`.
-- `updated_at`.
+- `START_AT`
+- `END_AT`
+- `CREATED_AT`
+- `UPDATED_AT`
 
 ```php
 function searchShifts(SearchShiftsRequest $body): ApiResponse
@@ -452,21 +457,34 @@ function searchShifts(SearchShiftsRequest $body): ApiResponse
 
 ## Response Type
 
-[`SearchShiftsResponse`](../../doc/models/search-shifts-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`SearchShiftsResponse`](../../doc/models/search-shifts-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\SearchShiftsRequest();
-$body->setQuery(new Models\ShiftQuery());
-$body->getQuery()->setFilter(new Models\ShiftFilter());
-$body->getQuery()->getFilter()->setWorkday(new Models\ShiftWorkday());
-$body->getQuery()->getFilter()->getWorkday()->setDateRange(new Models\DateRange());
-$body->getQuery()->getFilter()->getWorkday()->getDateRange()->setStartDate('2019-01-20');
-$body->getQuery()->getFilter()->getWorkday()->getDateRange()->setEndDate('2019-02-03');
-$body->getQuery()->getFilter()->getWorkday()->setMatchShiftsBy(Models\ShiftWorkdayMatcher::START_AT);
-$body->getQuery()->getFilter()->getWorkday()->setDefaultTimezone('America/Los_Angeles');
-$body->setLimit(100);
+$body = SearchShiftsRequestBuilder::init()
+    ->query(
+        ShiftQueryBuilder::init()
+            ->filter(
+                ShiftFilterBuilder::init()
+                    ->workday(
+                        ShiftWorkdayBuilder::init()
+                            ->dateRange(
+                                DateRangeBuilder::init()
+                                    ->startDate('2019-01-20')
+                                    ->endDate('2019-02-03')
+                                    ->build()
+                            )
+                            ->matchShiftsBy(ShiftWorkdayMatcher::START_AT)
+                            ->defaultTimezone('America/Los_Angeles')
+                            ->build()
+                    )
+                    ->build()
+            )
+            ->build()
+    )
+    ->limit(100)
+    ->build();
 
 $apiResponse = $laborApi->searchShifts($body);
 
@@ -476,9 +494,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -498,7 +516,7 @@ function deleteShift(string $id): ApiResponse
 
 ## Response Type
 
-[`DeleteShiftResponse`](../../doc/models/delete-shift-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteShiftResponse`](../../doc/models/delete-shift-response.md).
 
 ## Example Usage
 
@@ -513,9 +531,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -535,7 +553,7 @@ function getShift(string $id): ApiResponse
 
 ## Response Type
 
-[`GetShiftResponse`](../../doc/models/get-shift-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`GetShiftResponse`](../../doc/models/get-shift-response.md).
 
 ## Example Usage
 
@@ -550,9 +568,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -579,48 +597,60 @@ function updateShift(string $id, UpdateShiftRequest $body): ApiResponse
 
 ## Response Type
 
-[`UpdateShiftResponse`](../../doc/models/update-shift-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateShiftResponse`](../../doc/models/update-shift-response.md).
 
 ## Example Usage
 
 ```php
 $id = 'id0';
-$body_shift_startAt = '2019-01-25T08:11:00+00:00';
-$body_shift = new Models\Shift(
-    $body_shift_startAt
-);
-$body_shift->setLocationId('PAA1RJZZKXBFG');
-$body_shift->setEndAt('2019-01-25T18:11:00+00:00');
-$body_shift->setWage(new Models\ShiftWage());
-$body_shift->getWage()->setTitle('Bartender');
-$body_shift->getWage()->setHourlyRate(new Models\Money());
-$body_shift->getWage()->getHourlyRate()->setAmount(1500);
-$body_shift->getWage()->getHourlyRate()->setCurrency(Models\Currency::USD);
-$body_shift_breaks = [];
 
-$body_shift_breaks_0_startAt = '2019-01-25T11:11:00+00:00';
-$body_shift_breaks_0_breakTypeId = 'REGS1EQR1TPZ5';
-$body_shift_breaks_0_name = 'Tea Break';
-$body_shift_breaks_0_expectedDuration = 'PT5M';
-$body_shift_breaks_0_isPaid = true;
-$body_shift_breaks[0] = new Models\MBreak(
-    $body_shift_breaks_0_startAt,
-    $body_shift_breaks_0_breakTypeId,
-    $body_shift_breaks_0_name,
-    $body_shift_breaks_0_expectedDuration,
-    $body_shift_breaks_0_isPaid
-);
-$body_shift_breaks[0]->setId('X7GAQYVVRRG6P');
-$body_shift_breaks[0]->setEndAt('2019-01-25T11:16:00+00:00');
-$body_shift->setBreaks($body_shift_breaks);
+$body = UpdateShiftRequestBuilder::init(
+    ShiftBuilder::init(
+        'PAA1RJZZKXBFG',
+        '2019-01-25T03:11:00-05:00'
+    )
+        ->endAt('2019-01-25T13:11:00-05:00')
+        ->wage(
+            ShiftWageBuilder::init()
+                ->title('Bartender')
+                ->hourlyRate(
+                    MoneyBuilder::init()
+                        ->amount(1500)
+                        ->currency(Currency::USD)
+                        ->build()
+                )
+                ->tipEligible(true)
+                ->build()
+        )
+        ->breaks(
+            [
+                MBreakBuilder::init(
+                    '2019-01-25T06:11:00-05:00',
+                    'REGS1EQR1TPZ5',
+                    'Tea Break',
+                    'PT5M',
+                    true
+                )
+                    ->id('X7GAQYVVRRG6P')
+                    ->endAt('2019-01-25T06:16:00-05:00')
+                    ->build()
+            ]
+        )
+        ->version(1)
+        ->teamMemberId('ormj0jJJZ5OZIzxrZYJI')
+        ->declaredCashTipMoney(
+            MoneyBuilder::init()
+                ->amount(500)
+                ->currency(Currency::USD)
+                ->build()
+        )
+        ->build()
+)->build();
 
-$body_shift->setVersion(1);
-$body_shift->setTeamMemberId('ormj0jJJZ5OZIzxrZYJI');
-$body = new Models\UpdateShiftRequest(
-    $body_shift
+$apiResponse = $laborApi->updateShift(
+    $id,
+    $body
 );
-
-$apiResponse = $laborApi->updateShift($id, $body);
 
 if ($apiResponse->isSuccess()) {
     $updateShiftResponse = $apiResponse->getResult();
@@ -628,9 +658,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -656,7 +686,7 @@ function listTeamMemberWages(
 
 ## Response Type
 
-[`ListTeamMemberWagesResponse`](../../doc/models/list-team-member-wages-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListTeamMemberWagesResponse`](../../doc/models/list-team-member-wages-response.md).
 
 ## Example Usage
 
@@ -669,9 +699,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -691,7 +721,7 @@ function getTeamMemberWage(string $id): ApiResponse
 
 ## Response Type
 
-[`GetTeamMemberWageResponse`](../../doc/models/get-team-member-wage-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`GetTeamMemberWageResponse`](../../doc/models/get-team-member-wage-response.md).
 
 ## Example Usage
 
@@ -706,9 +736,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -729,7 +759,7 @@ function listWorkweekConfigs(?int $limit = null, ?string $cursor = null): ApiRes
 
 ## Response Type
 
-[`ListWorkweekConfigsResponse`](../../doc/models/list-workweek-configs-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListWorkweekConfigsResponse`](../../doc/models/list-workweek-configs-response.md).
 
 ## Example Usage
 
@@ -742,9 +772,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -765,24 +795,26 @@ function updateWorkweekConfig(string $id, UpdateWorkweekConfigRequest $body): Ap
 
 ## Response Type
 
-[`UpdateWorkweekConfigResponse`](../../doc/models/update-workweek-config-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateWorkweekConfigResponse`](../../doc/models/update-workweek-config-response.md).
 
 ## Example Usage
 
 ```php
 $id = 'id0';
-$body_workweekConfig_startOfWeek = Models\Weekday::MON;
-$body_workweekConfig_startOfDayLocalTime = '10:00';
-$body_workweekConfig = new Models\WorkweekConfig(
-    $body_workweekConfig_startOfWeek,
-    $body_workweekConfig_startOfDayLocalTime
-);
-$body_workweekConfig->setVersion(10);
-$body = new Models\UpdateWorkweekConfigRequest(
-    $body_workweekConfig
-);
 
-$apiResponse = $laborApi->updateWorkweekConfig($id, $body);
+$body = UpdateWorkweekConfigRequestBuilder::init(
+    WorkweekConfigBuilder::init(
+        Weekday::MON,
+        '10:00'
+    )
+        ->version(10)
+        ->build()
+)->build();
+
+$apiResponse = $laborApi->updateWorkweekConfig(
+    $id,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $updateWorkweekConfigResponse = $apiResponse->getResult();
@@ -790,8 +822,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

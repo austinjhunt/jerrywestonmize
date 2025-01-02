@@ -448,7 +448,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 				// if no subfield enabled when multiple name remove mapper (means dont show it on export).
 				$mapper = array();
 			}
-		} elseif ( 'stripe' === $field_type ) {
+		} elseif ( 'stripe' === $field_type || 'stripe-ocs' === $field_type ) {
 			$mapper['label']         = esc_html__( 'Stripe Payment', 'forminator' );
 			$mapper['sub_metas']     = array();
 			$mapper['sub_metas'][]   = array(

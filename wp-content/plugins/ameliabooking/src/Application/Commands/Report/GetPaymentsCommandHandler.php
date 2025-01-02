@@ -57,7 +57,7 @@ class GetPaymentsCommandHandler extends CommandHandler
             $params['dates'][1] .= ' 23:59:59';
         }
 
-        $paymentsData = $paymentAS->getPaymentsData($params, 0, true);
+        $paymentsData = $paymentAS->getPaymentsData($params, 0);
 
         $rows = [];
 

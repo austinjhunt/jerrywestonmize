@@ -2,6 +2,9 @@
 
 namespace Core\Tests;
 
+use apimatic\jsonmapper\AnyOfValidationException;
+use apimatic\jsonmapper\JsonMapperException;
+use apimatic\jsonmapper\OneOfValidationException;
 use Core\Request\Parameters\AdditionalFormParams;
 use Core\Request\Parameters\AdditionalQueryParams;
 use Core\Request\Parameters\BodyParam;
@@ -27,10 +30,13 @@ use CoreInterfaces\Core\Request\RequestMethod;
 use CoreInterfaces\Http\RetryOption;
 use CURLFile;
 use Exception;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class ApiCallTest extends TestCase
 {
+    private const DUMMY_BODY = ['res' => 'This is raw body'];
+
     /**
      * @param string $query Just the query path of the url
      * @return array<string,string>
@@ -370,21 +376,27 @@ class ApiCallTest extends TestCase
                 ->parameters(
                     FormParam::init('myFile', MockHelper::getFileWrapper())
                         ->encodingHeader('content-type', 'image/png'),
-                    FormParam::init('object', new MockClass(["key" => 234]))
-                        ->encodingHeader('content-type', 'application/json')
+                    FormParam::init('object', new MockClass(["key" => 234, "myBool" => true]))
+                        ->encodingHeader('content-type', 'application/json'),
+                    FormParam::init('my bool', true)
+                        ->encodingHeader('content-type', 'application/text')
                 ))
             ->responseHandler(MockHelper::responseHandler()->type(MockClass::class))
             ->execute();
         $this->assertInstanceOf(MockClass::class, $result);
         $this->assertEquals([], $result->body['parametersEncoded']);
+
         $file = $result->body['parametersMultipart']['myFile'];
         $this->assertInstanceOf(CURLFile::class, $file);
         $this->assertStringEndsWith('testFile.txt', $file->getFilename());
         $this->assertEquals('text/plain', $file->getMimeType());
         $this->assertEquals('My Text', $file->getPostFilename());
-        $this->assertEquals($file, $result->body['parameters']['myFile']);
-        $object = $result->body['parametersMultipart']['object'];
-        $this->assertEquals('{"body":{"key":234}}', $object);
+
+        $this->assertEquals([
+            'myFile' => $file,
+            'object' => '{"body":{"key":234,"myBool":true}}',
+            'my bool' => 'true'
+        ], $result->body['parametersMultipart']);
     }
 
     public function testSendFileFormWithEncodingHeader()
@@ -414,6 +426,8 @@ class ApiCallTest extends TestCase
                 ->parameters(
                     FormParam::init('myFile', MockHelper::getFileWrapper()),
                     FormParam::init('key', 'val 01'),
+                    FormParam::init('my bool', true),
+                    FormParam::init('object', new MockClass(["key" => 234, "myBool" => true])),
                     FormParam::init('special', ['%^&&*^?.. + @214', true])
                 ))
             ->responseHandler(MockHelper::responseHandler()
@@ -422,7 +436,9 @@ class ApiCallTest extends TestCase
         $this->assertInstanceOf(MockClass::class, $result);
         $this->assertEquals([
             'key' => 'key=val+01',
-            'special' => 'special%5B0%5D=%25%5E%26%26%2A%5E%3F..+%2B+%40214&special%5B1%5D=true'
+            'special' => 'special%5B0%5D=%25%5E%26%26%2A%5E%3F..+%2B+%40214&special%5B1%5D=true',
+            'my bool' => 'my+bool=true',
+            'object' => 'object%5Bbody%5D%5Bkey%5D=234&object%5Bbody%5D%5BmyBool%5D=true'
         ], $result->body['parametersEncoded']);
         $this->assertEquals(1, count($result->body['parametersMultipart']));
         $file = $result->body['parametersMultipart']['myFile'];
@@ -433,7 +449,9 @@ class ApiCallTest extends TestCase
         $this->assertEquals([
             'myFile' => $file,
             'key' => 'val 01',
-            'special' => ['%^&&*^?.. + @214', 'true']
+            'special' => ['%^&&*^?.. + @214', 'true'],
+            'my bool' => 'true',
+            'object' => [ 'body' => [ 'key' => 234, 'myBool' => 'true']]
         ], $result->body['parameters']);
     }
 
@@ -752,13 +770,13 @@ class ApiCallTest extends TestCase
 
     public function testReceiveByWrongType()
     {
-        $this->expectException(MockException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('JsonMapper::mapClass() requires second argument to be a class name, ' .
-            'MockClass given.');
+            'InvalidClass given.');
         MockHelper::newApiCall()
             ->requestBuilder((new RequestBuilder(RequestMethod::POST, '/simple/{tyu}')))
             ->responseHandler(MockHelper::responseHandler()
-                ->type('MockClass'))
+                ->type('InvalidClass'))
             ->execute();
     }
 
@@ -772,7 +790,7 @@ class ApiCallTest extends TestCase
 
     public function testReceiveByWrongDeserializerMethod()
     {
-        $this->expectException(MockException::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Invalid argument found');
         MockHelper::newApiCall()
             ->requestBuilder((new RequestBuilder(RequestMethod::POST, '/simple/{tyu}')))
@@ -781,14 +799,25 @@ class ApiCallTest extends TestCase
             ->execute();
     }
 
-    public function testReceiveByWrongTypeGroup()
+    public function testReceiveByWrongAnyOfTypeGroup()
     {
-        $this->expectException(MockException::class);
-        $this->expectExceptionMessage('Unable to map AnyOf (MockCla,string) on: ');
+        $this->expectException(AnyOfValidationException::class);
+        $this->expectExceptionMessage('We could not match any acceptable type from (MockCla,string) on: ');
         MockHelper::newApiCall()
             ->requestBuilder((new RequestBuilder(RequestMethod::POST, '/simple/{tyu}')))
             ->responseHandler(MockHelper::responseHandler()
-                ->typeGroup('oneof(MockCla,string)'))
+                ->typeGroup('anyOf(MockCla,string)'))
+            ->execute();
+    }
+
+    public function testReceiveByWrongOneOfTypeGroup()
+    {
+        $this->expectException(OneOfValidationException::class);
+        $this->expectExceptionMessage('There are more than one matching types i.e. { object and MockClass } on: ');
+        MockHelper::newApiCall()
+            ->requestBuilder((new RequestBuilder(RequestMethod::POST, '/simple/{tyu}')))
+            ->responseHandler(MockHelper::responseHandler()
+                ->typeGroup('oneOf(MockClass,object)'))
             ->execute();
     }
 
@@ -797,7 +826,7 @@ class ApiCallTest extends TestCase
         $result = MockHelper::newApiCall()
             ->requestBuilder((new RequestBuilder(RequestMethod::POST, '/simple/{tyu}')))
             ->responseHandler(MockHelper::responseHandler()
-                ->typeGroup('oneof(MockClass,string)'))
+                ->typeGroup('oneOf(MockClass,string)'))
             ->execute();
 
         $this->assertInstanceOf(MockClass::class, $result);
@@ -808,7 +837,7 @@ class ApiCallTest extends TestCase
         $result = MockHelper::newApiCall()
             ->requestBuilder((new RequestBuilder(RequestMethod::POST, '/simple/{tyu}')))
             ->responseHandler(MockHelper::responseHandler()
-                ->typeGroup('oneof(MockClass,string)')
+                ->typeGroup('oneOf(MockClass,string)')
                 ->returnApiResponse())
             ->execute();
         $this->assertInstanceOf(MockApiResponse::class, $result);
@@ -837,10 +866,11 @@ class ApiCallTest extends TestCase
     {
         $response = new MockResponse();
         $response->setStatusCode(400);
+        $response->setBody(self::DUMMY_BODY);
         $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
         $result = MockHelper::responseHandler()->type(MockClass::class)->returnApiResponse()->getResult($context);
         $this->assertInstanceOf(MockApiResponse::class, $result);
-        $this->assertEquals(['res' => 'This is raw body'], $result->getResult());
+        $this->assertEquals(self::DUMMY_BODY, $result->getResult());
         $this->assertTrue($result->isError());
     }
 
@@ -848,10 +878,11 @@ class ApiCallTest extends TestCase
     {
         $response = new MockResponse();
         $response->setStatusCode(100);
+        $response->setBody(self::DUMMY_BODY);
         $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
         $result = MockHelper::responseHandler()->type(MockClass::class)->returnApiResponse()->getResult($context);
         $this->assertInstanceOf(MockApiResponse::class, $result);
-        $this->assertEquals(['res' => 'This is raw body'], $result->getResult());
+        $this->assertEquals(self::DUMMY_BODY, $result->getResult());
         $this->assertTrue($result->isError());
     }
 
@@ -892,6 +923,110 @@ class ApiCallTest extends TestCase
         $response->setStatusCode(400);
         $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
         MockHelper::responseHandler()->nullOn404()->getResult($context);
+    }
+
+    public function testNullableTypeWithMissingBody()
+    {
+        $response = new MockResponse();
+        $response->setStatusCode(200);
+        $response->setBody('');
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        $result = MockHelper::responseHandler()->nullableType()->getResult($context);
+        $this->assertNull($result);
+    }
+
+    public function testNullableTypeWithMissingBodyAndApiResponse()
+    {
+        $response = new MockResponse();
+        $response->setStatusCode(200);
+        $response->setBody('');
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        $result = MockHelper::responseHandler()->nullableType()->returnApiResponse()->getResult($context);
+        $this->assertInstanceOf(MockApiResponse::class, $result);
+        $this->assertNull($result->getResult());
+        $this->assertFalse($result->isError());
+    }
+
+    public function testNullableTypeWithNullBody()
+    {
+        $response = new MockResponse();
+        $response->setStatusCode(200);
+        $response->setBody(null);
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        $result = MockHelper::responseHandler()->nullableType()->getResult($context);
+        $this->assertNull($result);
+    }
+
+    public function testNullableTypeWithWhiteSpacedBody()
+    {
+        $response = new MockResponse();
+        $response->setStatusCode(200);
+        $response->setBody('  ');
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        $result = MockHelper::responseHandler()->nullableType()->getResult($context);
+        $this->assertNull($result);
+    }
+
+    public function testNullableTypeWithBody()
+    {
+        $response = new MockResponse();
+        $response->setStatusCode(200);
+        $response->setBody(214);
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        $result = MockHelper::responseHandler()->nullableType()->getResult($context);
+        $this->assertEquals(214, $result);
+    }
+
+    public function testNonNullableTypeWithMissingBody()
+    {
+        $response = new MockResponse();
+        $response->setStatusCode(200);
+        $response->setBody('');
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        $result = MockHelper::responseHandler()->getResult($context);
+        $this->assertEquals('', $result);
+    }
+
+    public function testNonNullableTypeWithWhiteSpacedBody()
+    {
+        $response = new MockResponse();
+        $response->setStatusCode(200);
+        $response->setBody('  ');
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        $result = MockHelper::responseHandler()->getResult($context);
+        $this->assertEquals('  ', $result);
+    }
+
+    public function testNonNullableTypeWithMissingBodyAndApiResponse()
+    {
+        $response = new MockResponse();
+        $response->setStatusCode(200);
+        $response->setBody('');
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        $result = MockHelper::responseHandler()->returnApiResponse()->getResult($context);
+        $this->assertInstanceOf(MockApiResponse::class, $result);
+        $this->assertEquals('', $result->getResult());
+        $this->assertFalse($result->isError());
+    }
+
+    public function testNonNullableTypeWithNullBody()
+    {
+        $response = new MockResponse();
+        $response->setStatusCode(200);
+        $response->setBody(null);
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        $result = MockHelper::responseHandler()->getResult($context);
+        $this->assertNull($result);
+    }
+
+    public function testNonNullableTypeWithBody()
+    {
+        $response = new MockResponse();
+        $response->setStatusCode(200);
+        $response->setBody(214);
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        $result = MockHelper::responseHandler()->getResult($context);
+        $this->assertEquals(214, $result);
     }
 
     public function testGlobalMockException()
@@ -1297,6 +1432,43 @@ class ApiCallTest extends TestCase
             ["34", "asad", "this is new", ["key1" => "val1", "key2" => "val2"], "this is attribute", null],
             $result->body
         );
+    }
+
+    public function testTypeXmlFailure()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
+            'Required value not found at XML path "/mockClass/new1[1]" during deserialization.'
+        );
+        $response = new MockResponse();
+        $response->setRawBody("<?xml version=\"1.0\"?>\n" .
+            "<mockClass attr=\"this is attribute\">\n" .
+            "  <body>34</body>\n" .
+            "  <body>asad</body>\n" .
+            "  <newInvalid>this is new</newInvalid>\n" .
+            "  <new2>\n" .
+            "    <entry key=\"key1\">val1</entry>\n" .
+            "    <entry key=\"key2\">val2</entry>\n" .
+            "  </new2>\n" .
+            "</mockClass>\n");
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        MockHelper::responseHandler()
+            ->typeXml(MockClass::class, 'mockClass')
+            ->getResult($context);
+    }
+
+    public function testTypeInvalidJsonFailure()
+    {
+        $this->expectException(JsonMapperException::class);
+        $this->expectExceptionMessage(
+            'Could not find required constructor arguments for Core\Tests\Mocking\Other\MockClass: body'
+        );
+        $response = new MockResponse();
+        $response->setBody(json_decode('{"invalidItem":"wrong item"}'));
+        $context = new Context(MockHelper::getClient()->getGlobalRequest(), $response, MockHelper::getClient());
+        MockHelper::responseHandler()
+            ->type(MockClass::class)
+            ->getResult($context);
     }
 
     public function testTypeXmlArray()

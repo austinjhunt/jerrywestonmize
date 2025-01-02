@@ -31,7 +31,7 @@ class Forminator_Assets_Enqueue_Quiz extends Forminator_Assets_Enqueue {
 
 		if ( 'none' !== $form_design ) {
 
-			wp_enqueue_style(
+			Forminator_Assets_Enqueue::fui_enqueue_style(
 				'forminator-quiz-' . $form_design . '-base',
 				forminator_plugin_url() . 'assets/forminator-ui/css/src/quiz/forminator-quiz-' . $form_design . '.base.min.css',
 				array(),
@@ -41,7 +41,7 @@ class Forminator_Assets_Enqueue_Quiz extends Forminator_Assets_Enqueue {
 
 		if ( isset( $form_settings['hasLeads'] ) && $form_settings['hasLeads'] ) {
 
-			wp_enqueue_style(
+			Forminator_Assets_Enqueue::fui_enqueue_style(
 				'forminator-quiz-' . $form_design . '-leads',
 				forminator_plugin_url() . 'assets/forminator-ui/css/src/quiz/forminator-quiz-' . $form_design . '.leads.min.css',
 				array(),

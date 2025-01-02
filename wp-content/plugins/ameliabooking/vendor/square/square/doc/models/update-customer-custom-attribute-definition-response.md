@@ -24,11 +24,34 @@ Either `custom_attribute_definition` or `errors` is present in the response.
     "description": "Update the description as desired.",
     "key": "favoritemovie",
     "name": "Favorite Movie",
-    "schema": null,
+    "schema": {
+      "key1": "val1",
+      "key2": "val2"
+    },
     "updated_at": "2022-04-26T15:39:38Z",
     "version": 2,
     "visibility": "VISIBILITY_READ_ONLY"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

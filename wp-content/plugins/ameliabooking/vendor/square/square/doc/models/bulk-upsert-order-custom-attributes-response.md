@@ -18,19 +18,55 @@ Represents a response from a bulk upsert of order custom attributes.
 
 ```json
 {
-  "errors": null,
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
   "values": {
     "key0": {
-      "custom_attribute": null,
-      "errors": null
-    },
-    "key1": {
-      "custom_attribute": null,
-      "errors": null
-    },
-    "key2": {
-      "custom_attribute": null,
-      "errors": null
+      "custom_attribute": {
+        "key": "key2",
+        "value": {
+          "key1": "val1",
+          "key2": "val2"
+        },
+        "version": 102,
+        "visibility": "VISIBILITY_READ_ONLY",
+        "definition": {
+          "key": "key0",
+          "schema": {
+            "key1": "val1",
+            "key2": "val2"
+          },
+          "name": "name0",
+          "description": "description0",
+          "visibility": "VISIBILITY_HIDDEN"
+        }
+      },
+      "errors": [
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        }
+      ]
     }
   }
 }

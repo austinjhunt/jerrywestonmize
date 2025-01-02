@@ -20,7 +20,7 @@ abstract class Constraint
  }
  return static::$errorNames[$errorCode];
  }
- public function __construct($options = null, array $groups = null, $payload = null)
+ public function __construct($options = null, ?array $groups = null, $payload = null)
  {
  unset($this->groups);
  // enable lazy initialization

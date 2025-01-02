@@ -21,6 +21,14 @@
   "deleted_object_ids": [
     "7SB3ZQYJ5GDMVFL7JK46JCHT",
     "KQLFFHA6K6J3YQAQAWDQAL57"
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
   ]
 }
 ```

@@ -16,8 +16,8 @@ present.
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Information on errors encountered during the request. | getErrors(): ?array | setErrors(?array errors): void |
-| `subscriptions` | [`?(WebhookSubscription[])`](../../doc/models/webhook-subscription.md) | Optional | The requested list of [Subscription](../../doc/models/webhook-subscription.md)s. | getSubscriptions(): ?array | setSubscriptions(?array subscriptions): void |
-| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent request. If empty,<br>this is the final response.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
+| `subscriptions` | [`?(WebhookSubscription[])`](../../doc/models/webhook-subscription.md) | Optional | The requested list of [Subscription](entity:WebhookSubscription)s. | getSubscriptions(): ?array | setSubscriptions(?array subscriptions): void |
+| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent request. If empty,<br>this is the final response.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
 
 ## Example (as JSON)
 
@@ -37,7 +37,16 @@ present.
       "notification_url": "https://example-webhook-url.com",
       "updated_at": "2022-01-10 23:29:48 +0000 UTC"
     }
-  ]
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "cursor": "cursor6"
 }
 ```
 

@@ -20,13 +20,13 @@ Represents an additional recipient (other than the merchant) receiving a portion
 
 ```json
 {
-  "location_id": "location_id4",
-  "description": null,
+  "location_id": "location_id2",
+  "description": "description2",
   "amount_money": {
-    "amount": null,
-    "currency": null
+    "amount": 186,
+    "currency": "TZS"
   },
-  "receivable_id": null
+  "receivable_id": "receivable_id8"
 }
 ```
 

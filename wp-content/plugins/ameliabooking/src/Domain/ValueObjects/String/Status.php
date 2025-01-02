@@ -12,6 +12,7 @@ final class Status
     const HIDDEN = 'hidden';
     const VISIBLE = 'visible';
     const DISABLED = 'disabled';
+    const BLOCKED = 'blocked';
     /**
      * @var string
      */

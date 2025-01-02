@@ -17,7 +17,23 @@ The hours of operation for a location.
 
 ```json
 {
-  "periods": null
+  "periods": [
+    {
+      "day_of_week": "WED",
+      "start_local_time": "start_local_time4",
+      "end_local_time": "end_local_time6"
+    },
+    {
+      "day_of_week": "WED",
+      "start_local_time": "start_local_time4",
+      "end_local_time": "end_local_time6"
+    },
+    {
+      "day_of_week": "WED",
+      "start_local_time": "start_local_time4",
+      "end_local_time": "end_local_time6"
+    }
+  ]
 }
 ```
 

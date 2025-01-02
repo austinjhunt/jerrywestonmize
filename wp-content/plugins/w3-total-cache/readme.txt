@@ -2,8 +2,8 @@
 Contributors: boldgrid, fredericktownes, maxicusc, gidomanders, bwmarkle, harryjackson1221, joemoto, vmarko, jacobd91
 Tags: CDN, pagespeed, caching, performance, optimize
 Requires at least: 5.3
-Tested up to: 6.6
-Stable tag: 2.7.7
+Tested up to: 6.7
+Stable tag: 2.8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -356,10 +356,37 @@ It's quite difficult to recall all of the innovators that have shared their thou
 * [Gopal Vijayaraghavan](http://notmysock.org/)
 * [Bart Vanbraban](http://eaccelerator.net/)
 * [mOo](http://xcache.lighttpd.net/)
+* [villu164] (https://www.wordfence.com/threat-intel/vulnerabilities/researchers/villu164)
 
 Please reach out to all of these people and support their projects if you're so inclined.
 
 == Changelog ==
+
+= 2.8.2 =
+* Fix: Added additional user capability checks
+* Fix: Ensure Object Cache garbage collection (disk) WP Cron event is scheduled
+* Fix: Added additional checks when loading the Object Cache dropin
+* Fix: Disable Database, Object, and Fragment Cache when using WP-CLI
+* Fix: Object Cache debug logging
+* Fix: FAQ help tabs
+* Update: Coding standards
+
+= 2.8.1=
+* Fix: Ensure WP Cron events get scheduled when using the Setup Guide wizard and on upgrade
+* Fix: Undefined variable when the Object Cache purge debug log is enabled
+* Update: Added warnings in the Setup Guide and the General Settings page when using Disk for Database and Object Caches
+* Update: Skip Database and Object caches when using WP-CLI
+
+= 2.8.0 =
+* Feature: Always Cached extension
+* Feature: Purge caches on WP-Cron schedules
+* Fix: Cloudflare: Some settings were not saved correctly
+* Fix: Check and update file mode/permissions for cache files
+* Fix: Issue prompting for credentials for some non-direct filesystem types
+* Enhancement: Added an admin notice if WP-Cron is not functioning correctly
+* Enhancement: Added Browser Cache filters
+* Update: Upgraded JSMin library to 2.4.3
+* Update: Added Premium Services tabs
 
 = 2.7.7 =
 * Update: CDN: Added support for Microsoft Azure EntraID Managed identities
@@ -371,9 +398,9 @@ Please reach out to all of these people and support their projects if you're so 
 * Fix: License status fix
 * Fix: Statistics PHP warning when some data is stale
 * Fix: API improvement for non-200 responses
+* Enhancement: Added notices when choosing Disk for object and database cache engines
 * Update: Object cache improvements
 * Update: Allow WPML extension activation for TranslatePress
-* Update: Added notices when choosing Disk for object and database cache engines
 * Update: Added more information for selections in the setup guide wizard
 * Update: Updated cache header directive choices (no-cache/no-store)
 * Update: Nginx configuration examples
@@ -1173,6 +1200,12 @@ Please reach out to all of these people and support their projects if you're so 
 
 
 == Upgrade Notice ==
+
+= 2.8.2
+This is a security update.  All users are encouraged to update to this version.
+
+= 2.8.1 =
+Users with Object Cache enabled using Disk storage should upgrade to this version to ensure proper garbage collection.  A memory-based engine is recommended for database and object cache engines.  Using the Disk option can lead to a large number of cache files.  Hosting accounts with inode limits may experience issues, including downtime, if limits are reached.
 
 = 2.7.3 =
 Thanks for using W3 Total Cache! The minimum required PHP version has been raised to PHP 7.2.5.  We recommend using PHP 8.  StackPath CDN has cased all operations and will be removed in a future release.  We recommend switching to Bunny CDN.

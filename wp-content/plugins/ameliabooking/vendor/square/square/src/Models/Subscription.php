@@ -7,11 +7,10 @@ namespace Square\Models;
 use stdClass;
 
 /**
- * Represents a subscription to a subscription plan by a subscriber.
+ * Represents a subscription purchased by a customer.
  *
- * For an overview of the `Subscription` type, see
- * [Subscription object](https://developer.squareup.com/docs/subscriptions-api/overview#subscription-
- * object-overview).
+ * For more information, see
+ * [Manage Subscriptions](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions).
  */
 class Subscription implements \JsonSerializable
 {
@@ -28,7 +27,7 @@ class Subscription implements \JsonSerializable
     /**
      * @var string|null
      */
-    private $planId;
+    private $planVariationId;
 
     /**
      * @var string|null
@@ -101,6 +100,16 @@ class Subscription implements \JsonSerializable
     private $actions = [];
 
     /**
+     * @var int|null
+     */
+    private $monthlyBillingAnchorDate;
+
+    /**
+     * @var Phase[]|null
+     */
+    private $phases;
+
+    /**
      * Returns Id.
      * The Square-assigned ID of the subscription.
      */
@@ -141,28 +150,28 @@ class Subscription implements \JsonSerializable
     }
 
     /**
-     * Returns Plan Id.
-     * The ID of the subscribed-to [subscription plan]($m/CatalogSubscriptionPlan).
+     * Returns Plan Variation Id.
+     * The ID of the subscribed-to [subscription plan variation](entity:CatalogSubscriptionPlanVariation).
      */
-    public function getPlanId(): ?string
+    public function getPlanVariationId(): ?string
     {
-        return $this->planId;
+        return $this->planVariationId;
     }
 
     /**
-     * Sets Plan Id.
-     * The ID of the subscribed-to [subscription plan]($m/CatalogSubscriptionPlan).
+     * Sets Plan Variation Id.
+     * The ID of the subscribed-to [subscription plan variation](entity:CatalogSubscriptionPlanVariation).
      *
-     * @maps plan_id
+     * @maps plan_variation_id
      */
-    public function setPlanId(?string $planId): void
+    public function setPlanVariationId(?string $planVariationId): void
     {
-        $this->planId = $planId;
+        $this->planVariationId = $planVariationId;
     }
 
     /**
      * Returns Customer Id.
-     * The ID of the subscribing [customer]($m/Customer) profile.
+     * The ID of the subscribing [customer](entity:Customer) profile.
      */
     public function getCustomerId(): ?string
     {
@@ -171,7 +180,7 @@ class Subscription implements \JsonSerializable
 
     /**
      * Sets Customer Id.
-     * The ID of the subscribing [customer]($m/Customer) profile.
+     * The ID of the subscribing [customer](entity:Customer) profile.
      *
      * @maps customer_id
      */
@@ -346,7 +355,7 @@ class Subscription implements \JsonSerializable
 
     /**
      * Returns Invoice Ids.
-     * The IDs of the [invoices]($m/Invoice) created for the
+     * The IDs of the [invoices](entity:Invoice) created for the
      * subscription, listed in order when the invoices were created
      * (newest invoices appear first).
      *
@@ -359,7 +368,7 @@ class Subscription implements \JsonSerializable
 
     /**
      * Sets Invoice Ids.
-     * The IDs of the [invoices]($m/Invoice) created for the
+     * The IDs of the [invoices](entity:Invoice) created for the
      * subscription, listed in order when the invoices were created
      * (newest invoices appear first).
      *
@@ -450,7 +459,7 @@ class Subscription implements \JsonSerializable
 
     /**
      * Returns Card Id.
-     * The ID of the [subscriber's]($m/Customer) [card]($m/Card)
+     * The ID of the [subscriber's](entity:Customer) [card](entity:Card)
      * used to charge for the subscription.
      */
     public function getCardId(): ?string
@@ -463,7 +472,7 @@ class Subscription implements \JsonSerializable
 
     /**
      * Sets Card Id.
-     * The ID of the [subscriber's]($m/Customer) [card]($m/Card)
+     * The ID of the [subscriber's](entity:Customer) [card](entity:Card)
      * used to charge for the subscription.
      *
      * @maps card_id
@@ -475,7 +484,7 @@ class Subscription implements \JsonSerializable
 
     /**
      * Unsets Card Id.
-     * The ID of the [subscriber's]($m/Customer) [card]($m/Card)
+     * The ID of the [subscriber's](entity:Customer) [card](entity:Card)
      * used to charge for the subscription.
      */
     public function unsetCardId(): void
@@ -578,6 +587,50 @@ class Subscription implements \JsonSerializable
     }
 
     /**
+     * Returns Monthly Billing Anchor Date.
+     * The day of the month on which the subscription will issue invoices and publish orders.
+     */
+    public function getMonthlyBillingAnchorDate(): ?int
+    {
+        return $this->monthlyBillingAnchorDate;
+    }
+
+    /**
+     * Sets Monthly Billing Anchor Date.
+     * The day of the month on which the subscription will issue invoices and publish orders.
+     *
+     * @maps monthly_billing_anchor_date
+     */
+    public function setMonthlyBillingAnchorDate(?int $monthlyBillingAnchorDate): void
+    {
+        $this->monthlyBillingAnchorDate = $monthlyBillingAnchorDate;
+    }
+
+    /**
+     * Returns Phases.
+     * array of phases for this subscription
+     *
+     * @return Phase[]|null
+     */
+    public function getPhases(): ?array
+    {
+        return $this->phases;
+    }
+
+    /**
+     * Sets Phases.
+     * array of phases for this subscription
+     *
+     * @maps phases
+     *
+     * @param Phase[]|null $phases
+     */
+    public function setPhases(?array $phases): void
+    {
+        $this->phases = $phases;
+    }
+
+    /**
      * Encode this object to JSON
      *
      * @param bool $asArrayWhenEmpty Whether to serialize this model as an array whenever no fields
@@ -590,55 +643,61 @@ class Subscription implements \JsonSerializable
     {
         $json = [];
         if (isset($this->id)) {
-            $json['id']                   = $this->id;
+            $json['id']                          = $this->id;
         }
         if (isset($this->locationId)) {
-            $json['location_id']          = $this->locationId;
+            $json['location_id']                 = $this->locationId;
         }
-        if (isset($this->planId)) {
-            $json['plan_id']              = $this->planId;
+        if (isset($this->planVariationId)) {
+            $json['plan_variation_id']           = $this->planVariationId;
         }
         if (isset($this->customerId)) {
-            $json['customer_id']          = $this->customerId;
+            $json['customer_id']                 = $this->customerId;
         }
         if (isset($this->startDate)) {
-            $json['start_date']           = $this->startDate;
+            $json['start_date']                  = $this->startDate;
         }
         if (!empty($this->canceledDate)) {
-            $json['canceled_date']        = $this->canceledDate['value'];
+            $json['canceled_date']               = $this->canceledDate['value'];
         }
         if (isset($this->chargedThroughDate)) {
-            $json['charged_through_date'] = $this->chargedThroughDate;
+            $json['charged_through_date']        = $this->chargedThroughDate;
         }
         if (isset($this->status)) {
-            $json['status']               = $this->status;
+            $json['status']                      = $this->status;
         }
         if (!empty($this->taxPercentage)) {
-            $json['tax_percentage']       = $this->taxPercentage['value'];
+            $json['tax_percentage']              = $this->taxPercentage['value'];
         }
         if (isset($this->invoiceIds)) {
-            $json['invoice_ids']          = $this->invoiceIds;
+            $json['invoice_ids']                 = $this->invoiceIds;
         }
         if (isset($this->priceOverrideMoney)) {
-            $json['price_override_money'] = $this->priceOverrideMoney;
+            $json['price_override_money']        = $this->priceOverrideMoney;
         }
         if (isset($this->version)) {
-            $json['version']              = $this->version;
+            $json['version']                     = $this->version;
         }
         if (isset($this->createdAt)) {
-            $json['created_at']           = $this->createdAt;
+            $json['created_at']                  = $this->createdAt;
         }
         if (!empty($this->cardId)) {
-            $json['card_id']              = $this->cardId['value'];
+            $json['card_id']                     = $this->cardId['value'];
         }
         if (isset($this->timezone)) {
-            $json['timezone']             = $this->timezone;
+            $json['timezone']                    = $this->timezone;
         }
         if (isset($this->source)) {
-            $json['source']               = $this->source;
+            $json['source']                      = $this->source;
         }
         if (!empty($this->actions)) {
-            $json['actions']              = $this->actions['value'];
+            $json['actions']                     = $this->actions['value'];
+        }
+        if (isset($this->monthlyBillingAnchorDate)) {
+            $json['monthly_billing_anchor_date'] = $this->monthlyBillingAnchorDate;
+        }
+        if (isset($this->phases)) {
+            $json['phases']                      = $this->phases;
         }
         $json = array_filter($json, function ($val) {
             return $val !== null;

@@ -11,7 +11,7 @@ Represents an accrual rule, which defines how buyers can earn points from the ba
 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
-| `accrualType` | [`string (LoyaltyProgramAccrualRuleType)`](../../doc/models/loyalty-program-accrual-rule-type.md) | Required | The type of the accrual rule that defines how buyers can earn points. | getAccrualType(): string | setAccrualType(string accrualType): void |
+| `accrualType` | [`string(LoyaltyProgramAccrualRuleType)`](../../doc/models/loyalty-program-accrual-rule-type.md) | Required | The type of the accrual rule that defines how buyers can earn points. | getAccrualType(): string | setAccrualType(string accrualType): void |
 | `points` | `?int` | Optional | The number of points that<br>buyers earn based on the `accrual_type`.<br>**Constraints**: `>= 1` | getPoints(): ?int | setPoints(?int points): void |
 | `visitData` | [`?LoyaltyProgramAccrualRuleVisitData`](../../doc/models/loyalty-program-accrual-rule-visit-data.md) | Optional | Represents additional data for rules with the `VISIT` accrual type. | getVisitData(): ?LoyaltyProgramAccrualRuleVisitData | setVisitData(?LoyaltyProgramAccrualRuleVisitData visitData): void |
 | `spendData` | [`?LoyaltyProgramAccrualRuleSpendData`](../../doc/models/loyalty-program-accrual-rule-spend-data.md) | Optional | Represents additional data for rules with the `SPEND` accrual type. | getSpendData(): ?LoyaltyProgramAccrualRuleSpendData | setSpendData(?LoyaltyProgramAccrualRuleSpendData spendData): void |
@@ -22,12 +22,35 @@ Represents an accrual rule, which defines how buyers can earn points from the ba
 
 ```json
 {
-  "accrual_type": "ITEM_VARIATION",
-  "points": null,
-  "visit_data": null,
-  "spend_data": null,
-  "item_variation_data": null,
-  "category_data": null
+  "accrual_type": "VISIT",
+  "points": 86,
+  "visit_data": {
+    "minimum_amount_money": {
+      "amount": 146,
+      "currency": "MYR"
+    },
+    "tax_mode": "BEFORE_TAX"
+  },
+  "spend_data": {
+    "amount_money": {
+      "amount": 186,
+      "currency": "TZS"
+    },
+    "excluded_category_ids": [
+      "excluded_category_ids4"
+    ],
+    "excluded_item_variation_ids": [
+      "excluded_item_variation_ids3",
+      "excluded_item_variation_ids4"
+    ],
+    "tax_mode": "BEFORE_TAX"
+  },
+  "item_variation_data": {
+    "item_variation_id": "item_variation_id0"
+  },
+  "category_data": {
+    "category_id": "category_id4"
+  }
 }
 ```
 

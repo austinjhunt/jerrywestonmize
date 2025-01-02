@@ -4,6 +4,7 @@ namespace AmeliaBooking\Application\Commands\Outlook;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Interop\Container\Exception\ContainerException;
 
@@ -27,7 +28,16 @@ class GetOutlookAuthURLCommandHandler extends CommandHandler
         /** @var AbstractOutlookCalendarService $outlookCalendarService */
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
 
-        $authUrl = $outlookCalendarService->createAuthUrl((int)$command->getField('id'));
+        $providerId = (int)$command->getField('id');
+
+        try {
+            $authUrl = $outlookCalendarService->createAuthUrl($providerId);
+        } catch (\Exception $e) {
+            /** @var ProviderRepository $providerRepository */
+            $providerRepository = $this->container->get('domain.users.providers.repository');
+            $providerRepository->updateErrorColumn($providerId, $e->getMessage());
+        }
+
 
         $authUrl = apply_filters('amelia_get_outlook_calendar_auth_url_filter', $authUrl, $command->getField('id'));
 

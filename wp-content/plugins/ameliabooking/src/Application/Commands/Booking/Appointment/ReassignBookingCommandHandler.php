@@ -459,6 +459,7 @@ class ReassignBookingCommandHandler extends CommandHandler
                             'id'                     => null,
                             'googleCalendarEventId'  => null,
                             'outlookCalendarEventId' => null,
+                            'appleCalendarEventId'   => null,
                             'zoomMeeting'            => null,
                             'bookings'               => [],
                         ]

@@ -24,11 +24,22 @@ Either `custom_attribute_definition` or `errors` is present in the response.
     "description": "Bestselling item at location",
     "key": "bestseller",
     "name": "Bestseller",
-    "schema": null,
+    "schema": {
+      "key1": "val1",
+      "key2": "val2"
+    },
     "updated_at": "2022-12-02T19:06:36.559Z",
     "version": 1,
     "visibility": "VISIBILITY_READ_WRITE_VALUES"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

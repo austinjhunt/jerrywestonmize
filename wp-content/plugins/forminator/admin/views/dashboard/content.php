@@ -35,11 +35,13 @@
 	</div>
 
 	<?php
-	$notice_dismissed = get_option( 'forminator_dismiss_feature_1320', false );
+	$notice_dismissed = get_option( 'forminator_dismiss_feature_1380', false );
 	$version_upgraded = get_option( 'forminator_version_upgraded', false );
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( ! $notice_dismissed && $version_upgraded && forminator_is_show_documentation_link() && ! isset( $_GET['createnew'] ) ) {
+	$show_popup = ! $notice_dismissed && $version_upgraded && forminator_is_show_documentation_link() && ! isset( $_GET['createnew'] );
+	$force      = filter_input( INPUT_GET, 'show-new-feature-notice', FILTER_VALIDATE_BOOLEAN );
+	if ( $show_popup || $force ) {
 		$this->template( 'dashboard/new-feature-notice' );
 	}
 	?>

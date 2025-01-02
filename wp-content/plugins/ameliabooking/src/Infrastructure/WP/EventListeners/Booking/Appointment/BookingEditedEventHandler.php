@@ -7,6 +7,7 @@
 namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment;
 
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -20,8 +21,6 @@ use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
-use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
-use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -34,12 +33,6 @@ class BookingEditedEventHandler
 {
     /** @var string */
     const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
-
-    /** @var string */
-    const BOOKING_CANCELED = 'bookingCanceled';
-
-    /** @var string */
-    const BOOKING_ADDED = 'bookingAdded';
 
     /**
      * @param CommandResult $commandResult
@@ -54,10 +47,8 @@ class BookingEditedEventHandler
      */
     public static function handle($commandResult, $container)
     {
-        /** @var AbstractGoogleCalendarService $googleCalendarService */
-        $googleCalendarService = $container->get('infrastructure.google.calendar.service');
-        /** @var AbstractOutlookCalendarService $outlookCalendarService */
-        $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
+        /** @var ApplicationIntegrationService $applicationIntegrationService */
+        $applicationIntegrationService = $container->get('application.integration.service');
         /** @var EmailNotificationService $emailNotificationService */
         $emailNotificationService = $container->get('application.emailNotification.service');
         /** @var SMSNotificationService $smsNotificationService */
@@ -70,14 +61,14 @@ class BookingEditedEventHandler
         $webHookService = $container->get('application.webHook.service');
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $container->get('application.payment.service');
+        /** @var EventRepository $eventRepository */
+        $eventRepository = $container->get('domain.booking.event.repository');
 
         $appointment = $commandResult->getData()[$commandResult->getData()['type']];
         $booking     = $commandResult->getData()[Entities::BOOKING];
         $bookingStatusChanged = $commandResult->getData()['bookingStatusChanged'];
 
         if ($bookingStatusChanged) {
-            /** @var EventRepository $eventRepository */
-            $eventRepository   = $container->get('domain.booking.event.repository');
             $reservationObject = $eventRepository->getById($appointment['id']);
 
             if ($commandResult->getData()['createPaymentLinks']) {
@@ -97,21 +88,24 @@ class BookingEditedEventHandler
             }
 
 
-            if ($googleCalendarService) {
-                if ($booking['status'] === BookingStatus::APPROVED) {
-                    $googleCalendarService->handleEventPeriodsChange($reservationObject, self::BOOKING_ADDED, $reservationObject->getPeriods());
-                } else if ($booking['status'] === BookingStatus::CANCELED || $booking['status'] === BookingStatus::REJECTED) {
-                    $googleCalendarService->handleEventPeriodsChange($reservationObject, self::BOOKING_CANCELED, $reservationObject->getPeriods());
-                }
+            if ($booking['status'] === BookingStatus::APPROVED ||
+                $booking['status'] === BookingStatus::CANCELED ||
+                $booking['status'] === BookingStatus::REJECTED
+            ) {
+                $applicationIntegrationService->handleEvent(
+                    $reservationObject,
+                    $reservationObject->getPeriods(),
+                    $reservation,
+                    $booking['status'] === BookingStatus::APPROVED
+                        ? ApplicationIntegrationService::BOOKING_ADDED
+                        : ApplicationIntegrationService::BOOKING_CANCELED,
+                    [
+                        ApplicationIntegrationService::SKIP_ZOOM_MEETING => true,
+                        ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                    ]
+                );
             }
 
-            if ($outlookCalendarService) {
-                if ($booking['status'] === BookingStatus::APPROVED) {
-                    $outlookCalendarService->handleEventPeriod($reservationObject, self::BOOKING_ADDED, $reservationObject->getPeriods());
-                } else if ($booking['status'] === BookingStatus::CANCELED || $booking['status'] === BookingStatus::REJECTED) {
-                    $outlookCalendarService->handleEventPeriod($reservationObject, self::BOOKING_CANCELED, $reservationObject->getPeriods());
-                }
-            }
             $emailNotificationService->sendCustomerBookingNotification($appointment, $booking);
             $emailNotificationService->sendProviderBookingNotification($appointment, $booking);
 

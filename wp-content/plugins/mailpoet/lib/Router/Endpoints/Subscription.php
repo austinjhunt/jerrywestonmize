@@ -13,10 +13,6 @@ use MailPoet\WP\Functions as WPFunctions;
 
 class Subscription {
   const ENDPOINT = 'subscription';
-  const ACTION_CAPTCHA = 'captcha';
-  const ACTION_CAPTCHA_IMAGE = 'captchaImage';
-  const ACTION_CAPTCHA_AUDIO = 'captchaAudio';
-  const ACTION_CAPTCHA_REFRESH = 'captchaRefresh';
   const ACTION_CONFIRM = 'confirm';
   const ACTION_MANAGE = 'manage';
   const ACTION_UNSUBSCRIBE = 'unsubscribe';
@@ -24,10 +20,6 @@ class Subscription {
   const ACTION_RE_ENGAGEMENT = 'reEngagement';
 
   public $allowedActions = [
-    self::ACTION_CAPTCHA,
-    self::ACTION_CAPTCHA_IMAGE,
-    self::ACTION_CAPTCHA_AUDIO,
-    self::ACTION_CAPTCHA_REFRESH,
     self::ACTION_CONFIRM,
     self::ACTION_MANAGE,
     self::ACTION_UNSUBSCRIBE,
@@ -45,54 +37,17 @@ class Subscription {
   /** @var WPFunctions */
   private $wp;
 
-  /** @var UserSubscription\Captcha\CaptchaRenderer */
-  private $captchaRenderer;
-
   /*** @var Request */
   private $request;
 
   public function __construct(
     UserSubscription\Pages $subscriptionPages,
     WPFunctions $wp,
-    UserSubscription\Captcha\CaptchaRenderer $captchaRenderer,
     Request $request
   ) {
     $this->subscriptionPages = $subscriptionPages;
     $this->wp = $wp;
-    $this->captchaRenderer = $captchaRenderer;
     $this->request = $request;
-  }
-
-  public function captcha($data) {
-    $this->initSubscriptionPage(UserSubscription\Pages::ACTION_CAPTCHA, $data);
-  }
-
-  public function captchaImage($data): void {
-    $width = !empty($data['width']) ? (int)$data['width'] : null;
-    $height = !empty($data['height']) ? (int)$data['height'] : null;
-    $sessionId = $data['captcha_session_id'] ?? null;
-    if (!$sessionId) {
-      return;
-    }
-    $this->captchaRenderer->renderImage($sessionId, $width, $height);
-    exit;
-  }
-
-  public function captchaAudio($data): void {
-    $sessionId = $data['captcha_session_id'] ?? null;
-    if (!$sessionId) {
-      return;
-    }
-    $this->captchaRenderer->renderAudio($sessionId);
-    exit;
-  }
-
-  public function captchaRefresh($data): void {
-    $captchaSessionId = $data['captcha_session_id'] ?? null;
-    if (!$captchaSessionId) {
-      return;
-    }
-    $this->captchaRenderer->refreshPhrase($captchaSessionId);
   }
 
   public function confirm($data) {

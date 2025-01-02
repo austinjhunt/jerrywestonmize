@@ -36,7 +36,7 @@ function listCashDrawerShifts(
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
 | `locationId` | `string` | Query, Required | The ID of the location to query for a list of cash drawer shifts. |
-| `sortOrder` | [`?string (SortOrder)`](../../doc/models/sort-order.md) | Query, Optional | The order in which cash drawer shifts are listed in the response,<br>based on their opened_at field. Default value: ASC |
+| `sortOrder` | [`?string(SortOrder)`](../../doc/models/sort-order.md) | Query, Optional | The order in which cash drawer shifts are listed in the response,<br>based on their opened_at field. Default value: ASC |
 | `beginTime` | `?string` | Query, Optional | The inclusive start time of the query on opened_at, in ISO 8601 format. |
 | `endTime` | `?string` | Query, Optional | The exclusive end date of the query on opened_at, in ISO 8601 format. |
 | `limit` | `?int` | Query, Optional | Number of cash drawer shift events in a page of results (200 by<br>default, 1000 max). |
@@ -44,7 +44,7 @@ function listCashDrawerShifts(
 
 ## Response Type
 
-[`ListCashDrawerShiftsResponse`](../../doc/models/list-cash-drawer-shifts-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListCashDrawerShiftsResponse`](../../doc/models/list-cash-drawer-shifts-response.md).
 
 ## Example Usage
 
@@ -59,9 +59,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -83,15 +83,19 @@ function retrieveCashDrawerShift(string $locationId, string $shiftId): ApiRespon
 
 ## Response Type
 
-[`RetrieveCashDrawerShiftResponse`](../../doc/models/retrieve-cash-drawer-shift-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveCashDrawerShiftResponse`](../../doc/models/retrieve-cash-drawer-shift-response.md).
 
 ## Example Usage
 
 ```php
 $locationId = 'location_id4';
+
 $shiftId = 'shift_id0';
 
-$apiResponse = $cashDrawersApi->retrieveCashDrawerShift($locationId, $shiftId);
+$apiResponse = $cashDrawersApi->retrieveCashDrawerShift(
+    $locationId,
+    $shiftId
+);
 
 if ($apiResponse->isSuccess()) {
     $retrieveCashDrawerShiftResponse = $apiResponse->getResult();
@@ -99,9 +103,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -129,15 +133,19 @@ function listCashDrawerShiftEvents(
 
 ## Response Type
 
-[`ListCashDrawerShiftEventsResponse`](../../doc/models/list-cash-drawer-shift-events-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListCashDrawerShiftEventsResponse`](../../doc/models/list-cash-drawer-shift-events-response.md).
 
 ## Example Usage
 
 ```php
 $locationId = 'location_id4';
+
 $shiftId = 'shift_id0';
 
-$apiResponse = $cashDrawersApi->listCashDrawerShiftEvents($locationId, $shiftId);
+$apiResponse = $cashDrawersApi->listCashDrawerShiftEvents(
+    $locationId,
+    $shiftId
+);
 
 if ($apiResponse->isSuccess()) {
     $listCashDrawerShiftEventsResponse = $apiResponse->getResult();
@@ -145,8 +153,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

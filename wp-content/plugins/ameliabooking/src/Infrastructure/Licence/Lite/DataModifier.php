@@ -210,6 +210,8 @@ class DataModifier
 
         $data['zoomUserId'] = null;
 
+        $data['appleCalendarId'] = null;
+
         $data['translations'] = null;
 
         $data['timeZone'] = null;

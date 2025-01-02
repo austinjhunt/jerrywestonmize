@@ -33,7 +33,7 @@ function listBankAccounts(?string $cursor = null, ?int $limit = null, ?string $l
 
 ## Response Type
 
-[`ListBankAccountsResponse`](../../doc/models/list-bank-accounts-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListBankAccountsResponse`](../../doc/models/list-bank-accounts-response.md).
 
 ## Example Usage
 
@@ -46,9 +46,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -68,7 +68,7 @@ function getBankAccountByV1Id(string $v1BankAccountId): ApiResponse
 
 ## Response Type
 
-[`GetBankAccountByV1IdResponse`](../../doc/models/get-bank-account-by-v1-id-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`GetBankAccountByV1IdResponse`](../../doc/models/get-bank-account-by-v1-id-response.md).
 
 ## Example Usage
 
@@ -83,9 +83,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -106,7 +106,7 @@ function getBankAccount(string $bankAccountId): ApiResponse
 
 ## Response Type
 
-[`GetBankAccountResponse`](../../doc/models/get-bank-account-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`GetBankAccountResponse`](../../doc/models/get-bank-account-response.md).
 
 ## Example Usage
 
@@ -121,8 +121,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

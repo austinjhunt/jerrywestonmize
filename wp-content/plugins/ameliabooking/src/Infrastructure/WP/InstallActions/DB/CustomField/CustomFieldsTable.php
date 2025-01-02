@@ -25,7 +25,7 @@ class CustomFieldsTable extends AbstractDatabaseTable
 
         return "CREATE TABLE {$table} (
                    `id` INT(11) NOT NULL AUTO_INCREMENT,
-                   `label` TEXT NOT NULL DEFAULT '',
+                   `label` TEXT DEFAULT NULL,
                    `type` ENUM('text', 'text-area', 'select', 'checkbox', 'radio', 'content', 'file', 'datepicker', 'address') NOT NULL DEFAULT 'text',
                    `required` TINYINT(1) NOT NULL DEFAULT 0,
                    `position` int(11) NOT NULL,

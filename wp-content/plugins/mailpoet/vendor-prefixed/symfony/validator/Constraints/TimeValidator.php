@@ -7,7 +7,7 @@ use MailPoetVendor\Symfony\Component\Validator\Exception\UnexpectedTypeException
 use MailPoetVendor\Symfony\Component\Validator\Exception\UnexpectedValueException;
 class TimeValidator extends ConstraintValidator
 {
- public const PATTERN = '/^(\\d{2}):(\\d{2}):(\\d{2})$/';
+ public const PATTERN = '/^(\\d{2}):(\\d{2}):(\\d{2})$/D';
  public static function checkTime(int $hour, int $minute, float $second) : bool
  {
  return $hour >= 0 && $hour < 24 && $minute >= 0 && $minute < 60 && $second >= 0 && $second < 60;

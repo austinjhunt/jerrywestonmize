@@ -74,7 +74,9 @@ class EventPeriodFactory
             $eventPeriod->setOutlookCalendarEventId(new Label($data['outlookCalendarEventId']));
         }
 
-
+        if (!empty($data['appleCalendarEventId'])) {
+            $eventPeriod->setAppleCalendarEventId(new Label($data['appleCalendarEventId']));
+        }
 
         return $eventPeriod;
     }

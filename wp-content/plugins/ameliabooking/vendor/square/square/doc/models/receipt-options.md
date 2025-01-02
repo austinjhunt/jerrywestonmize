@@ -19,9 +19,9 @@ Describes receipt action fields.
 
 ```json
 {
-  "payment_id": "payment_id0",
-  "print_only": null,
-  "is_duplicate": null
+  "payment_id": "payment_id6",
+  "print_only": false,
+  "is_duplicate": false
 }
 ```
 

@@ -239,6 +239,7 @@ class CustomerBookingFactory
                     'customerBookingId' => $id,
                     'amount'            => $row['payment_amount'],
                     'dateTime'          => $row['payment_dateTime'],
+                    'created'           => !empty($row['payment_created']) ? $row['payment_created'] : null,
                     'status'            => $row['payment_status'],
                     'gateway'           => $row['payment_gateway'],
                     'gatewayTitle'      => $row['payment_gatewayTitle'],
@@ -247,6 +248,7 @@ class CustomerBookingFactory
                     'data'              => $row['payment_data'],
                     'wcOrderId'         => !empty($row['payment_wcOrderId']) ? $row['payment_wcOrderId'] : null,
                     'wcOrderItemId'     => !empty($row['payment_wcOrderItemId']) ? $row['payment_wcOrderItemId'] : null,
+                    'invoiceNumber'     => !empty($row['payment_invoiceNumber']) ? $row['payment_invoiceNumber'] : null
                 ];
             }
 

@@ -40,7 +40,8 @@
     </div>
 <?php } else { ?>
     <script>
-      var ameliaShortcodeData = bookingEntitiesIds;
+      var ameliaShortcodeData = (typeof ameliaShortcodeData === 'undefined') ? [] : ameliaShortcodeData;
+      ameliaShortcodeData = [...ameliaShortcodeData, ...bookingEntitiesIds];
       var ameliaShortcodeDataTriggered = (typeof ameliaShortcodeDataTriggered === 'undefined') ? [] : ameliaShortcodeDataTriggered;
       if (ameliaShortcodeData[ameliaShortcodeData.length - 1].trigger !== '') {
         if (ameliaShortcodeDataTriggered.filter(a => a.counter === ameliaShortcodeData[ameliaShortcodeData.length - 1].counter).length === 0) {

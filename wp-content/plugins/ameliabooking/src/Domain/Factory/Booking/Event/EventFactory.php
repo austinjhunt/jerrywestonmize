@@ -429,15 +429,17 @@ class EventFactory
                         'startUrl' => $zoomMeetingJson ? $zoomMeetingJson['startUrl'] : null,
                         'joinUrl'  => $zoomMeetingJson ? $zoomMeetingJson['joinUrl'] : null,
                     ],
-                    'lessonSpace'    => !empty($row['event_periodLessonSpace']) ?
+                    'lessonSpace'            => !empty($row['event_periodLessonSpace']) ?
                         $row['event_periodLessonSpace'] : null,
-                    'bookings'       => [],
-                    'googleCalendarEventId' => !empty($row['event_googleCalendarEventId']) ?
+                    'bookings'               => [],
+                    'googleCalendarEventId'  => !empty($row['event_googleCalendarEventId']) ?
                         $row['event_googleCalendarEventId'] : null,
-                    'googleMeetUrl'     => !empty($row['event_googleMeetUrl']) ?
+                    'googleMeetUrl'          => !empty($row['event_googleMeetUrl']) ?
                         $row['event_googleMeetUrl'] : null,
                     'outlookCalendarEventId' => !empty($row['event_outlookCalendarEventId']) ?
-                        $row['event_outlookCalendarEventId'] : null
+                        $row['event_outlookCalendarEventId'] : null,
+                    'appleCalendarEventId'   => !empty($row['event_appleCalendarEventId']) ?
+                        $row['event_appleCalendarEventId'] : null
                 ];
             }
 
@@ -522,6 +524,7 @@ class EventFactory
                         'wcOrderId'         => !empty($row['payment_wcOrderId']) ? $row['payment_wcOrderId'] : null,
                         'wcOrderItemId'     => !empty($row['payment_wcOrderItemId']) ?
                             $row['payment_wcOrderItemId'] : null,
+                        'invoiceNumber'     => !empty($row['payment_invoiceNumber']) ? $row['payment_invoiceNumber'] : null,
                     ];
             }
 

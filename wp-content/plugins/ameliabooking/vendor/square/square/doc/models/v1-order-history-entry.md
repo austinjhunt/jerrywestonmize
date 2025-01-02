@@ -11,15 +11,15 @@ V1OrderHistoryEntry
 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
-| `action` | [`?string (V1OrderHistoryEntryAction)`](../../doc/models/v1-order-history-entry-action.md) | Optional | - | getAction(): ?string | setAction(?string action): void |
+| `action` | [`?string(V1OrderHistoryEntryAction)`](../../doc/models/v1-order-history-entry-action.md) | Optional | - | getAction(): ?string | setAction(?string action): void |
 | `createdAt` | `?string` | Optional | The time when the action was performed, in ISO 8601 format. | getCreatedAt(): ?string | setCreatedAt(?string createdAt): void |
 
 ## Example (as JSON)
 
 ```json
 {
-  "action": null,
-  "created_at": null
+  "action": "EXPIRED",
+  "created_at": "created_at8"
 }
 ```
 

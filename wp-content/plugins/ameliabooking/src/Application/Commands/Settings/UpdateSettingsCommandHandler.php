@@ -11,6 +11,7 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Api\BasicApiService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Frontend\LessParserService;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
@@ -419,6 +420,24 @@ class UpdateSettingsCommandHandler extends CommandHandler
                     $settingsFields['apiKeys']['apiKeys'][$index]['key'] = $apiService->createHash($settingsFields['apiKeys']['apiKeys'][$index]['key']);
                 }
                 unset($settingsFields['apiKeys']['apiKeys'][$index]['isNew']);
+            }
+        }
+
+        if (!empty($command->getField('appleCalendar')['clientID']) || !empty($command->getField('appleCalendar')['clientSecret'])) {
+            /** @var AbstractAppleCalendarService $appleCalendarService */
+            $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
+
+            $appleId = $command->getField('appleCalendar')['clientID'];
+            $applePassword = $command->getField('appleCalendar')['clientSecret'];
+
+            $credentials = $appleCalendarService->handleAppleCredentials($appleId, $applePassword);
+
+            if (!$credentials) {
+                $result->setDataInResponse(true);
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage('Make sure you are using the correct iCloud email address and app-specific password.');
+
+                return $result;
             }
         }
 

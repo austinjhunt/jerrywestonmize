@@ -36,10 +36,38 @@
         "state": "IN_STOCK",
         "team_member_id": "LRK57NSQ5X7PUD05"
       },
-      "type": "PHYSICAL_COUNT"
+      "type": "PHYSICAL_COUNT",
+      "adjustment": {
+        "id": "id4",
+        "reference_id": "reference_id2",
+        "from_state": "IN_TRANSIT_TO",
+        "to_state": "SOLD",
+        "location_id": "location_id8"
+      },
+      "transfer": {
+        "id": "id8",
+        "reference_id": "reference_id6",
+        "state": "RESERVED_FOR_SALE",
+        "from_location_id": "from_location_id0",
+        "to_location_id": "to_location_id0"
+      },
+      "measurement_unit": {
+        "measurement_unit": {
+          "custom_unit": {
+            "name": "name2",
+            "abbreviation": "abbreviation4"
+          },
+          "area_unit": "IMPERIAL_ACRE",
+          "length_unit": "IMPERIAL_INCH",
+          "volume_unit": "METRIC_LITER",
+          "weight_unit": "IMPERIAL_WEIGHT_OUNCE"
+        },
+        "precision": 184
+      }
     }
   ],
-  "errors": []
+  "errors": [],
+  "cursor": "cursor2"
 }
 ```
 

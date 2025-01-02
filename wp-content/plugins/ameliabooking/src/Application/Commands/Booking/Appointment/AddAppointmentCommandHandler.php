@@ -150,7 +150,7 @@ class AddAppointmentCommandHandler extends CommandHandler
             $service
         );
 
-        if ($existingAppointment && $appointmentData['internalNotes']) {
+        if ($existingAppointment && !empty($appointmentData['internalNotes'])) {
             if ($existingAppointment->getInternalNotes() &&
                 $existingAppointment->getInternalNotes()->getValue()
             ) {
@@ -180,6 +180,8 @@ class AddAppointmentCommandHandler extends CommandHandler
                 $paymentData
             );
         } catch (CustomerBookedException $e) {
+            $appointmentRepo->rollback();
+
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage($e->getMessage());
             $result->setData(
@@ -190,6 +192,8 @@ class AddAppointmentCommandHandler extends CommandHandler
 
             return $result;
         } catch (BookingUnavailableException $e) {
+            $appointmentRepo->rollback();
+
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage($e->getMessage());
             $result->setData(
@@ -279,6 +283,8 @@ class AddAppointmentCommandHandler extends CommandHandler
                     $paymentData
                 );
             } catch (CustomerBookedException $e) {
+                $appointmentRepo->rollback();
+
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setMessage($e->getMessage());
                 $result->setData(
@@ -289,6 +295,8 @@ class AddAppointmentCommandHandler extends CommandHandler
 
                 $error = true;
             } catch (BookingUnavailableException $e) {
+                $appointmentRepo->rollback();
+
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setMessage($e->getMessage());
                 $result->setData(

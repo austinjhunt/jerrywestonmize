@@ -29,9 +29,29 @@ A request for a filtered and sorted set of `Shift` objects.
         },
         "default_timezone": "America/Los_Angeles",
         "match_shifts_by": "START_AT"
+      },
+      "location_ids": [
+        "location_ids4"
+      ],
+      "employee_ids": [
+        "employee_ids9"
+      ],
+      "status": "OPEN",
+      "start": {
+        "start_at": "start_at6",
+        "end_at": "end_at6"
+      },
+      "end": {
+        "start_at": "start_at0",
+        "end_at": "end_at2"
       }
+    },
+    "sort": {
+      "field": "START_AT",
+      "order": "DESC"
     }
-  }
+  },
+  "cursor": "cursor2"
 }
 ```
 

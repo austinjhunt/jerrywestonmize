@@ -33,7 +33,11 @@ Response object returned by ListBankAccounts.
       "location_id": "S8GWD5example",
       "primary_bank_identification_number": "112200303",
       "status": "VERIFICATION_IN_PROGRESS",
-      "version": 5
+      "version": 5,
+      "secondary_bank_identification_number": "secondary_bank_identification_number0",
+      "debit_mandate_reference_id": "debit_mandate_reference_id4",
+      "reference_id": "reference_id8",
+      "fingerprint": "fingerprint6"
     },
     {
       "account_number_suffix": "972",
@@ -48,9 +52,22 @@ Response object returned by ListBankAccounts.
       "location_id": "S8GWD5example",
       "primary_bank_identification_number": "112200303",
       "status": "VERIFICATION_IN_PROGRESS",
-      "version": 5
+      "version": 5,
+      "secondary_bank_identification_number": "secondary_bank_identification_number0",
+      "debit_mandate_reference_id": "debit_mandate_reference_id4",
+      "reference_id": "reference_id8",
+      "fingerprint": "fingerprint6"
     }
-  ]
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "cursor": "cursor2"
 }
 ```
 

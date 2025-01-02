@@ -504,6 +504,12 @@ class Forminator_CForm_User_Signups {
 			return $signup;
 		}
 
+		$roles = forminator_get_accessible_user_roles();
+		// Do not allow if it is a backend request and the user lacks access to the specified user role.
+		if ( $is_user_signon && ! empty( $signup->user_data['role'] ) && ! isset( $roles[ $signup->user_data['role'] ] ) ) {
+			return new WP_Error( 'invalid_access', esc_html__( 'Unfortunately, you do not have the required permissions or user role to perform this action.', 'forminator' ), $signup );
+		}
+
 		$user_id = username_exists( $signup->user_data['user_login'] );
 		if ( $user_id ) {
 			// User already exists.
@@ -583,6 +589,9 @@ class Forminator_CForm_User_Signups {
 	 * @return bool|int|WP_Error
 	 */
 	public static function delete_signup( $key ) {
+		if ( ! current_user_can( 'delete_users' ) ) {
+			return new WP_Error( 'invalid_access', esc_html__( 'Unfortunately, you do not have the required permissions or user role to perform this action.', 'forminator' ) );
+		}
 		$signup = self::get( $key );
 		if ( is_wp_error( $signup ) ) {
 			return $signup;

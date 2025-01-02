@@ -7,6 +7,8 @@ use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
+use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -16,7 +18,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventPeriodsRepository;
-use AmeliaBooking\Infrastructure\Routes\Booking\Event\Event;
 use Interop\Container\Exception\ContainerException;
 
 class LessonSpaceService extends AbstractLessonSpaceService
@@ -45,7 +46,6 @@ class LessonSpaceService extends AbstractLessonSpaceService
      * @param Appointment|Event $appointment
      * @param int $entity
      * @param Collection $periods
-     * @param array $booking
      *
      * @return void
      *
@@ -54,7 +54,7 @@ class LessonSpaceService extends AbstractLessonSpaceService
      * @throws NotFoundException
      * @throws ContainerException
      */
-    public function handle($appointment, $entity, $periods = null, $booking = null)
+    public function handle($appointment, $entity, $periods = null)
     {
         /** @var AppointmentRepository $appointmentRepository */
         $appointmentRepository = $this->container->get("domain.booking.appointment.repository");
@@ -91,12 +91,22 @@ class LessonSpaceService extends AbstractLessonSpaceService
                     $appointment->getStatus()->getValue() === BookingStatus::PENDING &&
                     $createForPending
                 );
-            if ($shouldCreateSpace && !$appointment->getLessonSpace() && $booking) {
+
+            $lastBookingCustomerId = null;
+
+            /** @var CustomerBooking $customerBooking */
+            foreach ($appointment->getBookings()->getItems() as $customerBooking) {
+                if ($customerBooking->isLastBooking() && $customerBooking->isLastBooking()->getValue()) {
+                    $lastBookingCustomerId = $customerBooking->getCustomerId()->getValue();
+                }
+            }
+
+            if ($shouldCreateSpace && !$appointment->getLessonSpace() && $lastBookingCustomerId) {
                 $previousAppointment = $appointmentRepository->getFiltered(
                     [
                     'services' => [$appointment->getServiceId()->getValue()],
                     'providerId' => $appointment->getProvider()->getId()->getValue(),
-                    'customerId' => $booking['customerId'],
+                    'customerId' => $lastBookingCustomerId,
                     'skipServices' => true,
                     'skipProviders' => true,
                     'skipCustomers' => true,

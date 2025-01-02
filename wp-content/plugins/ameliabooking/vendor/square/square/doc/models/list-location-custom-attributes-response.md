@@ -21,9 +21,61 @@ results are available, the `cursor` field is also present along with `custom_att
 
 ```json
 {
-  "custom_attributes": null,
-  "cursor": null,
-  "errors": null
+  "custom_attributes": [
+    {
+      "key": "key8",
+      "value": {
+        "key1": "val1",
+        "key2": "val2"
+      },
+      "version": 180,
+      "visibility": "VISIBILITY_HIDDEN",
+      "definition": {
+        "key": "key0",
+        "schema": {
+          "key1": "val1",
+          "key2": "val2"
+        },
+        "name": "name0",
+        "description": "description0",
+        "visibility": "VISIBILITY_HIDDEN"
+      }
+    },
+    {
+      "key": "key8",
+      "value": {
+        "key1": "val1",
+        "key2": "val2"
+      },
+      "version": 180,
+      "visibility": "VISIBILITY_HIDDEN",
+      "definition": {
+        "key": "key0",
+        "schema": {
+          "key1": "val1",
+          "key2": "val2"
+        },
+        "name": "name0",
+        "description": "description0",
+        "visibility": "VISIBILITY_HIDDEN"
+      }
+    }
+  ],
+  "cursor": "cursor0",
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

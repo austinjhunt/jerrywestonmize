@@ -21,11 +21,84 @@ A group of variations for a `CatalogItem`.
 
 ```json
 {
-  "name": null,
-  "display_name": null,
-  "description": null,
-  "show_colors": null,
-  "values": null
+  "name": "name2",
+  "display_name": "display_name2",
+  "description": "description2",
+  "show_colors": false,
+  "values": [
+    {
+      "type": "IMAGE",
+      "id": "id0",
+      "updated_at": "updated_at6",
+      "version": 116,
+      "is_deleted": false,
+      "custom_attribute_values": {
+        "key0": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        },
+        "key1": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        },
+        "key2": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        }
+      },
+      "catalog_v1_ids": [
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        }
+      ]
+    },
+    {
+      "type": "IMAGE",
+      "id": "id0",
+      "updated_at": "updated_at6",
+      "version": 116,
+      "is_deleted": false,
+      "custom_attribute_values": {
+        "key0": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        },
+        "key1": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        },
+        "key2": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        }
+      },
+      "catalog_v1_ids": [
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        }
+      ]
+    }
+  ]
 }
 ```
 

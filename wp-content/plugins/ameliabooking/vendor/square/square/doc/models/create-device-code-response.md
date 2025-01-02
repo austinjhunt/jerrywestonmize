@@ -25,8 +25,17 @@
     "pair_by": "2020-02-06T18:49:33.000Z",
     "product_type": "TERMINAL_API",
     "status": "UNPAIRED",
-    "status_changed_at": "2020-02-06T18:44:33.000Z"
-  }
+    "status_changed_at": "2020-02-06T18:44:33.000Z",
+    "device_id": "device_id0"
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

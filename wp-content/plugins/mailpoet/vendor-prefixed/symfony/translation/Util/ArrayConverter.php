@@ -7,7 +7,7 @@ class ArrayConverter
  {
  $tree = [];
  foreach ($messages as $id => $value) {
- $referenceToElement =& self::getElementByPath($tree, \explode('.', $id));
+ $referenceToElement =& self::getElementByPath($tree, self::getKeyParts($id));
  $referenceToElement = $value;
  unset($referenceToElement);
  }
@@ -30,7 +30,7 @@ class ArrayConverter
  }
  return $elem;
  }
- private static function cancelExpand(array &$tree, $prefix, array $node)
+ private static function cancelExpand(array &$tree, string $prefix, array $node)
  {
  $prefix .= '.';
  foreach ($node as $id => $value) {
@@ -40,5 +40,34 @@ class ArrayConverter
  self::cancelExpand($tree, $prefix . $id, $value);
  }
  }
+ }
+ private static function getKeyParts(string $key) : array
+ {
+ $parts = \explode('.', $key);
+ $partsCount = \count($parts);
+ $result = [];
+ $buffer = '';
+ foreach ($parts as $index => $part) {
+ if (0 === $index && '' === $part) {
+ $buffer = '.';
+ continue;
+ }
+ if ($index === $partsCount - 1 && '' === $part) {
+ $buffer .= '.';
+ $result[] = $buffer;
+ continue;
+ }
+ if (isset($parts[$index + 1]) && '' === $parts[$index + 1]) {
+ $buffer .= $part;
+ continue;
+ }
+ if ($buffer) {
+ $result[] = $buffer . $part;
+ $buffer = '';
+ continue;
+ }
+ $result[] = $part;
+ }
+ return $result;
  }
 }

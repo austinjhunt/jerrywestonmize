@@ -81,6 +81,26 @@
           margin-bottom: @margin-medium;
         }
       }
+
+      .am-package-appointment-filters {
+        .el-col {
+          .el-form-item {
+            @media @less-then-large {
+              margin-bottom: @margin-medium;
+            }
+            @media @less-then-small {
+              margin-bottom: 0;
+            }
+          }
+        }
+        .v-calendar-column {
+          .el-form-item {
+            @media @less-then-medium {
+              margin-bottom: @margin-medium;
+            }
+          }
+        }
+      }
     }
 
     .el-input-group__append {
@@ -394,6 +414,30 @@
             }
           }
         }
+
+        &-package-purchased-status {
+          width: fit-content;
+          max-width: 80%;
+          line-height: 22px;
+          border-radius: 4px;
+          padding: 0 4px;
+          margin-top: 2px;
+
+          &-unlimited {
+            background-color: fade(@color-green, 10%);
+            color: @color-green;
+          }
+
+          &-active {
+            background-color: fade(@color-orange, 10%);
+            color: @color-orange;
+          }
+
+          &-expired {
+            background-color: fade(@color-red, 10%);
+            color: @color-red;
+          }
+        }
       }
     }
   }
@@ -410,6 +454,13 @@
     text-overflow: ellipsis;
     display: block;
     line-height: 24px;
+
+    &.am-customer-blocked {
+      padding: 0px 4px 0 20px;
+      &::before {
+        content: url("../../img/block.svg");
+      }
+    }
 
     &.am-no-show {
 

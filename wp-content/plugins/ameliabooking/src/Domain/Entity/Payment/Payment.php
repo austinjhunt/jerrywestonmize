@@ -35,6 +35,9 @@ class Payment
     /** @var  Id */
     private $parentId;
 
+    /** @var Id */
+    private $invoiceNumber;
+
     /** @var  Price */
     private $amount;
 
@@ -176,6 +179,23 @@ class Payment
     {
         $this->parentId = $parentId;
     }
+
+    /**
+     * @return Id
+     */
+    public function getInvoiceNumber()
+    {
+        return $this->invoiceNumber;
+    }
+
+    /**
+     * @param Id $invoiceNumber
+     */
+    public function setInvoiceNumber($invoiceNumber)
+    {
+        $this->invoiceNumber = $invoiceNumber;
+    }
+
 
     /**
      * @return Price
@@ -478,6 +498,7 @@ class Payment
             'wcItemTaxValue'    => $this->getWcItemTaxValue() ? $this->getWcItemTaxValue()->getValue() : null,
             'transactionId'     => $this->getTransactionId(),
             'transfers'         => $this->getTransfers() ? $this->getTransfers()->getValue() : null,
+            'invoiceNumber'     => $this->getInvoiceNumber() ? $this->getInvoiceNumber()->getValue() : null,
         ];
     }
 }

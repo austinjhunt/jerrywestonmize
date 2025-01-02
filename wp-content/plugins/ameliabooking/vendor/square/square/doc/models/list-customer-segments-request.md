@@ -17,6 +17,9 @@ Defines the valid parameters for requests to the `ListCustomerSegments` endpoint
 ## Example (as JSON)
 
 ```json
-{}
+{
+  "cursor": "cursor4",
+  "limit": 4
+}
 ```
 

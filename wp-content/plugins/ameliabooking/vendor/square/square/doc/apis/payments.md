@@ -38,7 +38,10 @@ function listPayments(
     ?int $total = null,
     ?string $last4 = null,
     ?string $cardBrand = null,
-    ?int $limit = null
+    ?int $limit = null,
+    ?bool $isOfflinePayment = false,
+    ?string $offlineBeginTime = null,
+    ?string $offlineEndTime = null
 ): ApiResponse
 ```
 
@@ -46,24 +49,40 @@ function listPayments(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `beginTime` | `?string` | Query, Optional | The timestamp for the beginning of the reporting period, in RFC 3339 format.<br>Inclusive. Default: The current time minus one year. |
-| `endTime` | `?string` | Query, Optional | The timestamp for the end of the reporting period, in RFC 3339 format.<br><br>Default: The current time. |
-| `sortOrder` | `?string` | Query, Optional | The order in which results are listed:<br><br>- `ASC` - Oldest to newest.<br>- `DESC` - Newest to oldest (default). |
-| `cursor` | `?string` | Query, Optional | A pagination cursor returned by a previous call to this endpoint.<br>Provide this cursor to retrieve the next set of results for the original query.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination). |
+| `beginTime` | `?string` | Query, Optional | Indicates the start of the time range to retrieve payments for, in RFC 3339 format.  <br>The range is determined using the `created_at` field for each Payment.<br>Inclusive. Default: The current time minus one year. |
+| `endTime` | `?string` | Query, Optional | Indicates the end of the time range to retrieve payments for, in RFC 3339 format.  The<br>range is determined using the `created_at` field for each Payment.<br><br>Default: The current time. |
+| `sortOrder` | `?string` | Query, Optional | The order in which results are listed by `Payment.created_at`:<br><br>- `ASC` - Oldest to newest.<br>- `DESC` - Newest to oldest (default). |
+| `cursor` | `?string` | Query, Optional | A pagination cursor returned by a previous call to this endpoint.<br>Provide this cursor to retrieve the next set of results for the original query.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
 | `locationId` | `?string` | Query, Optional | Limit results to the location supplied. By default, results are returned<br>for the default (main) location associated with the seller. |
 | `total` | `?int` | Query, Optional | The exact amount in the `total_money` for a payment. |
 | `last4` | `?string` | Query, Optional | The last four digits of a payment card. |
 | `cardBrand` | `?string` | Query, Optional | The brand of the payment card (for example, VISA). |
 | `limit` | `?int` | Query, Optional | The maximum number of results to be returned in a single page.<br>It is possible to receive fewer results than the specified limit on a given page.<br><br>The default value of 100 is also the maximum allowed value. If the provided value is<br>greater than 100, it is ignored and the default value is used instead.<br><br>Default: `100` |
+| `isOfflinePayment` | `?bool` | Query, Optional | Whether the payment was taken offline or not.<br>**Default**: `false` |
+| `offlineBeginTime` | `?string` | Query, Optional | Indicates the start of the time range for which to retrieve offline payments, in RFC 3339<br>format for timestamps. The range is determined using the<br>`offline_payment_details.client_created_at` field for each Payment. If set, payments without a<br>value set in `offline_payment_details.client_created_at` will not be returned.<br><br>Default: The current time. |
+| `offlineEndTime` | `?string` | Query, Optional | Indicates the end of the time range for which to retrieve offline payments, in RFC 3339<br>format for timestamps. The range is determined using the<br>`offline_payment_details.client_created_at` field for each Payment. If set, payments without a<br>value set in `offline_payment_details.client_created_at` will not be returned.<br><br>Default: The current time. |
 
 ## Response Type
 
-[`ListPaymentsResponse`](../../doc/models/list-payments-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListPaymentsResponse`](../../doc/models/list-payments-response.md).
 
 ## Example Usage
 
 ```php
-$apiResponse = $paymentsApi->listPayments();
+$isOfflinePayment = false;
+
+$apiResponse = $paymentsApi->listPayments(
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    $isOfflinePayment
+);
 
 if ($apiResponse->isSuccess()) {
     $listPaymentsResponse = $apiResponse->getResult();
@@ -71,9 +90,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -100,29 +119,33 @@ function createPayment(CreatePaymentRequest $body): ApiResponse
 
 ## Response Type
 
-[`CreatePaymentResponse`](../../doc/models/create-payment-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreatePaymentResponse`](../../doc/models/create-payment-response.md).
 
 ## Example Usage
 
 ```php
-$body_sourceId = 'ccof:GaJGNaZa8x4OgDJn4GB';
-$body_idempotencyKey = '7b0f3ec5-086a-4871-8f13-3c81b3875218';
-$body_amountMoney = new Models\Money();
-$body_amountMoney->setAmount(1000);
-$body_amountMoney->setCurrency(Models\Currency::USD);
-$body = new Models\CreatePaymentRequest(
-    $body_sourceId,
-    $body_idempotencyKey,
-    $body_amountMoney
-);
-$body->setAppFeeMoney(new Models\Money());
-$body->getAppFeeMoney()->setAmount(10);
-$body->getAppFeeMoney()->setCurrency(Models\Currency::USD);
-$body->setAutocomplete(true);
-$body->setCustomerId('W92WH6P11H4Z77CTET0RNTGFW8');
-$body->setLocationId('L88917AVBK2S5');
-$body->setReferenceId('123456');
-$body->setNote('Brief description');
+$body = CreatePaymentRequestBuilder::init(
+    'ccof:GaJGNaZa8x4OgDJn4GB',
+    '7b0f3ec5-086a-4871-8f13-3c81b3875218'
+)
+    ->amountMoney(
+        MoneyBuilder::init()
+            ->amount(1000)
+            ->currency(Currency::USD)
+            ->build()
+    )
+    ->appFeeMoney(
+        MoneyBuilder::init()
+            ->amount(10)
+            ->currency(Currency::USD)
+            ->build()
+    )
+    ->autocomplete(true)
+    ->customerId('W92WH6P11H4Z77CTET0RNTGFW8')
+    ->locationId('L88917AVBK2S5')
+    ->referenceId('123456')
+    ->note('Brief description')
+    ->build();
 
 $apiResponse = $paymentsApi->createPayment($body);
 
@@ -132,9 +155,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -164,15 +187,14 @@ function cancelPaymentByIdempotencyKey(CancelPaymentByIdempotencyKeyRequest $bod
 
 ## Response Type
 
-[`CancelPaymentByIdempotencyKeyResponse`](../../doc/models/cancel-payment-by-idempotency-key-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CancelPaymentByIdempotencyKeyResponse`](../../doc/models/cancel-payment-by-idempotency-key-response.md).
 
 ## Example Usage
 
 ```php
-$body_idempotencyKey = 'a7e36d40-d24b-11e8-b568-0800200c9a66';
-$body = new Models\CancelPaymentByIdempotencyKeyRequest(
-    $body_idempotencyKey
-);
+$body = CancelPaymentByIdempotencyKeyRequestBuilder::init(
+    'a7e36d40-d24b-11e8-b568-0800200c9a66'
+)->build();
 
 $apiResponse = $paymentsApi->cancelPaymentByIdempotencyKey($body);
 
@@ -182,9 +204,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -204,7 +226,7 @@ function getPayment(string $paymentId): ApiResponse
 
 ## Response Type
 
-[`GetPaymentResponse`](../../doc/models/get-payment-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`GetPaymentResponse`](../../doc/models/get-payment-response.md).
 
 ## Example Usage
 
@@ -219,9 +241,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -243,26 +265,39 @@ function updatePayment(string $paymentId, UpdatePaymentRequest $body): ApiRespon
 
 ## Response Type
 
-[`UpdatePaymentResponse`](../../doc/models/update-payment-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdatePaymentResponse`](../../doc/models/update-payment-response.md).
 
 ## Example Usage
 
 ```php
 $paymentId = 'payment_id0';
-$body_idempotencyKey = '956f8b13-e4ec-45d6-85e8-d1d95ef0c5de';
-$body = new Models\UpdatePaymentRequest(
-    $body_idempotencyKey
-);
-$body->setPayment(new Models\Payment());
-$body->getPayment()->setAmountMoney(new Models\Money());
-$body->getPayment()->getAmountMoney()->setAmount(1000);
-$body->getPayment()->getAmountMoney()->setCurrency(Models\Currency::USD);
-$body->getPayment()->setTipMoney(new Models\Money());
-$body->getPayment()->getTipMoney()->setAmount(100);
-$body->getPayment()->getTipMoney()->setCurrency(Models\Currency::USD);
-$body->getPayment()->setVersionToken('ODhwVQ35xwlzRuoZEwKXucfu7583sPTzK48c5zoGd0g6o');
 
-$apiResponse = $paymentsApi->updatePayment($paymentId, $body);
+$body = UpdatePaymentRequestBuilder::init(
+    '956f8b13-e4ec-45d6-85e8-d1d95ef0c5de'
+)
+    ->payment(
+        PaymentBuilder::init()
+            ->amountMoney(
+                MoneyBuilder::init()
+                    ->amount(1000)
+                    ->currency(Currency::USD)
+                    ->build()
+            )
+            ->tipMoney(
+                MoneyBuilder::init()
+                    ->amount(100)
+                    ->currency(Currency::USD)
+                    ->build()
+            )
+            ->versionToken('ODhwVQ35xwlzRuoZEwKXucfu7583sPTzK48c5zoGd0g6o')
+            ->build()
+    )
+    ->build();
+
+$apiResponse = $paymentsApi->updatePayment(
+    $paymentId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $updatePaymentResponse = $apiResponse->getResult();
@@ -270,9 +305,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -293,7 +328,7 @@ function cancelPayment(string $paymentId): ApiResponse
 
 ## Response Type
 
-[`CancelPaymentResponse`](../../doc/models/cancel-payment-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CancelPaymentResponse`](../../doc/models/cancel-payment-response.md).
 
 ## Example Usage
 
@@ -308,9 +343,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -334,15 +369,19 @@ function completePayment(string $paymentId, CompletePaymentRequest $body): ApiRe
 
 ## Response Type
 
-[`CompletePaymentResponse`](../../doc/models/complete-payment-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CompletePaymentResponse`](../../doc/models/complete-payment-response.md).
 
 ## Example Usage
 
 ```php
 $paymentId = 'payment_id0';
-$body = new Models\CompletePaymentRequest();
 
-$apiResponse = $paymentsApi->completePayment($paymentId, $body);
+$body = CompletePaymentRequestBuilder::init()->build();
+
+$apiResponse = $paymentsApi->completePayment(
+    $paymentId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $completePaymentResponse = $apiResponse->getResult();
@@ -350,8 +389,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

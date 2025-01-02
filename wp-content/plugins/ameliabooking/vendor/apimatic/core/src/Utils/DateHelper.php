@@ -87,7 +87,7 @@ class DateHelper
         }
         $x = DateTime::createFromFormat(static::SIMPLE_DATE, $date);
         if ($x instanceof DateTime) {
-            return $x;
+            return $x->setTime(0, 0);
         }
         throw new InvalidArgumentException('Incorrect format.');
     }
@@ -379,8 +379,9 @@ class DateHelper
         if (is_null($date)) {
             return null;
         }
+
         // Check for timezone information and append it if missing
-        if (substr($date, strlen($date) - 1) !== 'Z' && strpos($date, '+') === false) {
+        if (empty(preg_match("/T.*[+-]|T.*Z/", $date))) {
             $date .= 'Z';
         }
 

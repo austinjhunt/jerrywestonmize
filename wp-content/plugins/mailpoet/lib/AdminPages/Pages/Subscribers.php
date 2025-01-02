@@ -12,7 +12,6 @@ use MailPoet\Entities\CustomFieldEntity;
 use MailPoet\Form\Block;
 use MailPoet\Listing\PageLimit;
 use MailPoet\Segments\SegmentsSimpleListRepository;
-use MailPoet\Subscribers\ConfirmationEmailMailer;
 
 class Subscribers {
   /** @var PageRenderer */
@@ -71,7 +70,6 @@ class Subscribers {
 
     $data['date_formats'] = $this->dateBlock->getDateFormats();
     $data['month_names'] = $this->dateBlock->getMonthNames();
-    $data['max_confirmation_emails'] = ConfirmationEmailMailer::MAX_CONFIRMATION_EMAILS;
     $this->pageRenderer->displayPage('subscribers/subscribers.html', $data);
   }
 }

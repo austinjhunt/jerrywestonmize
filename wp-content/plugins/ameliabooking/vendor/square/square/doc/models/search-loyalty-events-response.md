@@ -14,7 +14,7 @@ criteria, in order by the `created_at` date.
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Any errors that occurred during the request. | getErrors(): ?array | setErrors(?array errors): void |
 | `events` | [`?(LoyaltyEvent[])`](../../doc/models/loyalty-event.md) | Optional | The loyalty events that satisfy the search criteria. | getEvents(): ?array | setEvents(?array events): void |
-| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent<br>request. If empty, this is the final response.<br>For more information,<br>see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
+| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent<br>request. If empty, this is the final response.<br>For more information,<br>see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
 
 ## Example (as JSON)
 
@@ -32,7 +32,27 @@ criteria, in order by the `created_at` date.
       "location_id": "P034NEENMD09F",
       "loyalty_account_id": "5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd",
       "source": "LOYALTY_API",
-      "type": "ACCUMULATE_POINTS"
+      "type": "ACCUMULATE_POINTS",
+      "create_reward": {
+        "loyalty_program_id": "loyalty_program_id2",
+        "reward_id": "reward_id6",
+        "points": 90
+      },
+      "redeem_reward": {
+        "loyalty_program_id": "loyalty_program_id8",
+        "reward_id": "reward_id2",
+        "order_id": "order_id8"
+      },
+      "delete_reward": {
+        "loyalty_program_id": "loyalty_program_id4",
+        "reward_id": "reward_id8",
+        "points": 104
+      },
+      "adjust_points": {
+        "loyalty_program_id": "loyalty_program_id2",
+        "points": 96,
+        "reason": "reason2"
+      }
     },
     {
       "created_at": "2020-05-08T22:01:15Z",
@@ -45,7 +65,27 @@ criteria, in order by the `created_at` date.
         "reward_id": "d03f79f4-815f-3500-b851-cc1e68a457f9"
       },
       "source": "LOYALTY_API",
-      "type": "REDEEM_REWARD"
+      "type": "REDEEM_REWARD",
+      "accumulate_points": {
+        "loyalty_program_id": "loyalty_program_id8",
+        "points": 118,
+        "order_id": "order_id8"
+      },
+      "create_reward": {
+        "loyalty_program_id": "loyalty_program_id2",
+        "reward_id": "reward_id6",
+        "points": 90
+      },
+      "delete_reward": {
+        "loyalty_program_id": "loyalty_program_id4",
+        "reward_id": "reward_id8",
+        "points": 104
+      },
+      "adjust_points": {
+        "loyalty_program_id": "loyalty_program_id2",
+        "points": 96,
+        "reason": "reason2"
+      }
     },
     {
       "create_reward": {
@@ -57,9 +97,50 @@ criteria, in order by the `created_at` date.
       "id": "5e127479-0b03-3671-ab1e-15faea8b7188",
       "loyalty_account_id": "5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd",
       "source": "LOYALTY_API",
-      "type": "CREATE_REWARD"
+      "type": "CREATE_REWARD",
+      "accumulate_points": {
+        "loyalty_program_id": "loyalty_program_id8",
+        "points": 118,
+        "order_id": "order_id8"
+      },
+      "redeem_reward": {
+        "loyalty_program_id": "loyalty_program_id8",
+        "reward_id": "reward_id2",
+        "order_id": "order_id8"
+      },
+      "delete_reward": {
+        "loyalty_program_id": "loyalty_program_id4",
+        "reward_id": "reward_id8",
+        "points": 104
+      },
+      "adjust_points": {
+        "loyalty_program_id": "loyalty_program_id2",
+        "points": 96,
+        "reason": "reason2"
+      }
     }
-  ]
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "cursor": "cursor4"
 }
 ```
 

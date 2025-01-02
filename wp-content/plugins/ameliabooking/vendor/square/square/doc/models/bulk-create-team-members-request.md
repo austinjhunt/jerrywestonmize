@@ -11,7 +11,7 @@ Represents a bulk create request for `TeamMember` objects.
 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
-| `teamMembers` | [`array<string,CreateTeamMemberRequest>`](../../doc/models/create-team-member-request.md) | Required | The data used to create the `TeamMember` objects. Each key is the `idempotency_key` that maps to the `CreateTeamMemberRequest`. | getTeamMembers(): array | setTeamMembers(array teamMembers): void |
+| `teamMembers` | [`array<string,CreateTeamMemberRequest>`](../../doc/models/create-team-member-request.md) | Required | The data used to create the `TeamMember` objects. Each key is the `idempotency_key` that maps to the `CreateTeamMemberRequest`. The maximum number of create objects is 25. | getTeamMembers(): array | setTeamMembers(array teamMembers): void |
 
 ## Example (as JSON)
 
@@ -31,8 +31,12 @@ Represents a bulk create request for `TeamMember` objects.
         "family_name": "Doe",
         "given_name": "Joe",
         "phone_number": "+14159283333",
-        "reference_id": "reference_id_1"
-      }
+        "reference_id": "reference_id_1",
+        "id": "id6",
+        "is_owner": false,
+        "status": "ACTIVE"
+      },
+      "idempotency_key": "idempotency_key4"
     },
     "idempotency-key-2": {
       "team_member": {
@@ -43,8 +47,12 @@ Represents a bulk create request for `TeamMember` objects.
         "family_name": "Smith",
         "given_name": "Jane",
         "phone_number": "+14159223334",
-        "reference_id": "reference_id_2"
-      }
+        "reference_id": "reference_id_2",
+        "id": "id6",
+        "is_owner": false,
+        "status": "ACTIVE"
+      },
+      "idempotency_key": "idempotency_key4"
     }
   }
 }

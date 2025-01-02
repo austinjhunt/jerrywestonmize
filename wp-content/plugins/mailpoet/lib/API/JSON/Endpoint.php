@@ -5,6 +5,7 @@ namespace MailPoet\API\JSON;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\API\JSON\v1\RedirectResponse;
 use MailPoet\Config\AccessControl;
 
 abstract class Endpoint {
@@ -42,6 +43,10 @@ abstract class Endpoint {
       ];
     }
     return new ErrorResponse($errors, $meta, Response::STATUS_BAD_REQUEST);
+  }
+
+  public function redirectResponse($url) {
+    return new RedirectResponse($url);
   }
 
   public function isMethodAllowed($name, $type) {

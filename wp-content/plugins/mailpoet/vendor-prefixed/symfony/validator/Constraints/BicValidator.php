@@ -3,6 +3,7 @@ namespace MailPoetVendor\Symfony\Component\Validator\Constraints;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Symfony\Component\Intl\Countries;
 use MailPoetVendor\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
+use MailPoetVendor\Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use MailPoetVendor\Symfony\Component\PropertyAccess\PropertyAccess;
 use MailPoetVendor\Symfony\Component\PropertyAccess\PropertyAccessor;
 use MailPoetVendor\Symfony\Component\Validator\Constraint;
@@ -58,7 +59,7 @@ class BicValidator extends ConstraintValidator
  'EA' => 'ES',
  ];
  private $propertyAccessor;
- public function __construct(PropertyAccessor $propertyAccessor = null)
+ public function __construct(?PropertyAccessor $propertyAccessor = null)
  {
  $this->propertyAccessor = $propertyAccessor;
  }
@@ -84,11 +85,6 @@ class BicValidator extends ConstraintValidator
  $this->context->buildViolation($constraint->message)->setParameter('{{ value }}', $this->formatValue($value))->setCode(Bic::INVALID_CHARACTERS_ERROR)->addViolation();
  return;
  }
- // first 4 letters must be alphabetic (bank code)
- if (!\ctype_alpha(\substr($canonicalize, 0, 4))) {
- $this->context->buildViolation($constraint->message)->setParameter('{{ value }}', $this->formatValue($value))->setCode(Bic::INVALID_BANK_CODE_ERROR)->addViolation();
- return;
- }
  $bicCountryCode = \substr($canonicalize, 4, 2);
  if (!isset(self::BIC_COUNTRY_TO_IBAN_COUNTRY_MAP[$bicCountryCode]) && !Countries::exists($bicCountryCode)) {
  $this->context->buildViolation($constraint->message)->setParameter('{{ value }}', $this->formatValue($value))->setCode(Bic::INVALID_COUNTRY_CODE_ERROR)->addViolation();
@@ -107,6 +103,8 @@ class BicValidator extends ConstraintValidator
  $iban = $this->getPropertyAccessor()->getValue($object, $path);
  } catch (NoSuchPropertyException $e) {
  throw new ConstraintDefinitionException(\sprintf('Invalid property path "%s" provided to "%s" constraint: ', $path, \get_debug_type($constraint)) . $e->getMessage(), 0, $e);
+ } catch (UninitializedPropertyException $e) {
+ $iban = null;
  }
  }
  if (!$iban) {

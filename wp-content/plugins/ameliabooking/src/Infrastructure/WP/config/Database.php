@@ -18,6 +18,7 @@ class Database
     private $host;
     private $charset;
     private $collate;
+    public static $connection;
 
     /**
      * Database constructor.
@@ -28,7 +29,7 @@ class Database
         $this->username = DB_USER;
         $this->password = DB_PASSWORD;
         $this->host = defined('DB_HOST') && DB_HOST ? DB_HOST : 'localhost';
-        $this->charset = DB_CHARSET;
+        $this->charset = defined('DB_CHARSET') ? DB_CHARSET : '';
         $this->collate = defined('DB_COLLATE') && DB_COLLATE ? DB_COLLATE : '';
     }
 

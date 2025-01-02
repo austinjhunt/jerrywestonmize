@@ -23,7 +23,7 @@ class CssColor extends Constraint
  private static $validationModes = [self::HEX_LONG, self::HEX_LONG_WITH_ALPHA, self::HEX_SHORT, self::HEX_SHORT_WITH_ALPHA, self::BASIC_NAMED_COLORS, self::EXTENDED_NAMED_COLORS, self::SYSTEM_COLORS, self::KEYWORDS, self::RGB, self::RGBA, self::HSL, self::HSLA];
  public $message = 'This value is not a valid CSS color.';
  public $formats;
- public function __construct($formats = [], string $message = null, array $groups = null, $payload = null, array $options = null)
+ public function __construct($formats = [], ?string $message = null, ?array $groups = null, $payload = null, ?array $options = null)
  {
  $validationModesAsString = \implode(', ', self::$validationModes);
  if (!$formats) {

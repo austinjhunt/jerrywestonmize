@@ -9,6 +9,7 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
+use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -25,10 +26,6 @@ use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
-use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
-use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
-use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -56,10 +53,8 @@ class AppointmentAddedEventHandler
      */
     public static function handle($commandResult, $container)
     {
-        /** @var AbstractGoogleCalendarService $googleCalendarService */
-        $googleCalendarService = $container->get('infrastructure.google.calendar.service');
-        /** @var AbstractOutlookCalendarService $outlookCalendarService */
-        $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
+        /** @var ApplicationIntegrationService $applicationIntegrationService */
+        $applicationIntegrationService = $container->get('application.integration.service');
         /** @var EmailNotificationService $emailNotificationService */
         $emailNotificationService = $container->get('application.emailNotification.service');
         /** @var SMSNotificationService $smsNotificationService */
@@ -68,10 +63,6 @@ class AppointmentAddedEventHandler
         $settingsService = $container->get('domain.settings.service');
         /** @var AbstractWebHookApplicationService $webHookService */
         $webHookService = $container->get('application.webHook.service');
-        /** @var AbstractZoomApplicationService $zoomService */
-        $zoomService = $container->get('application.zoom.service');
-        /** @var AbstractLessonSpaceService $lessonSpaceService */
-        $lessonSpaceService = $container->get('infrastructure.lesson.space.service');
         /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $container->get('application.whatsAppNotification.service');
         /** @var PaymentApplicationService $paymentAS */
@@ -95,45 +86,15 @@ class AppointmentAddedEventHandler
 
         $pastAppointment = $appointmentObject->getBookingStart()->getValue() < DateTimeService::getNowDateTimeObject();
 
-        if ($zoomService && !$pastAppointment) {
-            $zoomService->handleAppointmentMeeting($appointmentObject, self::APPOINTMENT_ADDED);
-
-            if ($appointmentObject->getZoomMeeting()) {
-                $appointment['zoomMeeting'] = $appointmentObject->getZoomMeeting()->toArray();
-            }
-        }
-
-        if ($lessonSpaceService && !$pastAppointment) {
-            $lessonSpaceService->handle($appointmentObject, Entities::APPOINTMENT);
-            if ($appointmentObject->getLessonSpace()) {
-                $appointment['lessonSpace'] = $appointmentObject->getLessonSpace();
-            }
-        }
-
-        if ($googleCalendarService) {
-            try {
-                $googleCalendarService->handleEvent($appointmentObject, self::APPOINTMENT_ADDED);
-            } catch (\Exception $e) {
-            }
-
-            if ($appointmentObject->getGoogleCalendarEventId() !== null) {
-                $appointment['googleCalendarEventId'] = $appointmentObject->getGoogleCalendarEventId()->getValue();
-            }
-            if ($appointmentObject->getGoogleMeetUrl() !== null) {
-                $appointment['googleMeetUrl'] = $appointmentObject->getGoogleMeetUrl();
-            }
-        }
-
-        if ($outlookCalendarService) {
-            try {
-                $outlookCalendarService->handleEvent($appointmentObject, self::APPOINTMENT_ADDED);
-            } catch (\Exception $e) {
-            }
-
-            if ($appointmentObject->getOutlookCalendarEventId() !== null) {
-                $appointment['outlookCalendarEventId'] = $appointmentObject->getOutlookCalendarEventId()->getValue();
-            }
-        }
+        $applicationIntegrationService->handleAppointment(
+            $appointmentObject,
+            $appointment,
+            ApplicationIntegrationService::APPOINTMENT_ADDED,
+            [
+                ApplicationIntegrationService::SKIP_ZOOM_MEETING => $pastAppointment,
+                ApplicationIntegrationService::SKIP_LESSON_SPACE => $pastAppointment,
+            ]
+        );
 
         foreach ($recurringData as $key => $recurringReservationData) {
             /** @var Appointment $recurringReservationObject */
@@ -145,49 +106,15 @@ class AppointmentAddedEventHandler
 
             $pastRecurringAppointment = $recurringReservationObject->getBookingStart()->getValue() < DateTimeService::getNowDateTimeObject();
 
-            if ($zoomService && !$pastRecurringAppointment) {
-                $zoomService->handleAppointmentMeeting($recurringReservationObject, self::BOOKING_ADDED);
-
-                if ($recurringReservationObject->getZoomMeeting()) {
-                    $recurringData[$key][Entities::APPOINTMENT]['zoomMeeting'] =
-                        $recurringReservationObject->getZoomMeeting()->toArray();
-                }
-            }
-
-            if ($lessonSpaceService && !$pastRecurringAppointment) {
-                $lessonSpaceService->handle($recurringReservationObject, Entities::APPOINTMENT);
-                if ($recurringReservationObject->getLessonSpace()) {
-                    $recurringData[$key][Entities::APPOINTMENT]['lessonSpace'] = $recurringReservationObject->getLessonSpace();
-                }
-            }
-
-            if ($googleCalendarService) {
-                try {
-                    $googleCalendarService->handleEvent($recurringReservationObject, self::BOOKING_ADDED);
-                } catch (\Exception $e) {
-                }
-
-                if ($recurringReservationObject->getGoogleCalendarEventId() !== null) {
-                    $recurringData[$key][Entities::APPOINTMENT]['googleCalendarEventId'] =
-                        $recurringReservationObject->getGoogleCalendarEventId()->getValue();
-                }
-                if ($recurringReservationObject->getGoogleMeetUrl() !== null) {
-                    $recurringData[$key][Entities::APPOINTMENT]['googleMeetUrl'] =
-                        $recurringReservationObject->getGoogleMeetUrl();
-                }
-            }
-
-            if ($outlookCalendarService) {
-                try {
-                    $outlookCalendarService->handleEvent($recurringReservationObject, self::BOOKING_ADDED);
-                } catch (\Exception $e) {
-                }
-
-                if ($recurringReservationObject->getOutlookCalendarEventId() !== null) {
-                    $recurringData[$key][Entities::APPOINTMENT]['outlookCalendarEventId'] =
-                        $recurringReservationObject->getOutlookCalendarEventId()->getValue();
-                }
-            }
+            $applicationIntegrationService->handleAppointment(
+                $recurringReservationObject,
+                $recurringData[$key][Entities::APPOINTMENT],
+                ApplicationIntegrationService::BOOKING_ADDED,
+                [
+                    ApplicationIntegrationService::SKIP_ZOOM_MEETING => $pastRecurringAppointment,
+                    ApplicationIntegrationService::SKIP_LESSON_SPACE => $pastRecurringAppointment,
+                ]
+            );
         }
 
         $appointment['recurring'] = $recurringData;
@@ -220,7 +147,7 @@ class AppointmentAddedEventHandler
                 }
             }
 
-            $emailNotificationService->sendAppointmentStatusNotifications($appointment, false, true, true);
+            $emailNotificationService->sendAppointmentStatusNotifications($appointment, false, true, true, !empty($settingsService->getSetting('notifications', 'sendInvoice')));
 
             if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
                 $smsNotificationService->sendAppointmentStatusNotifications($appointment, false, true);

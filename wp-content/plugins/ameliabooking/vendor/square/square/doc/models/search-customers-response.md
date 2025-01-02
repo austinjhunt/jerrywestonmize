@@ -15,8 +15,9 @@ Either `errors` or `customers` is present in a given response (never both).
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Any errors that occurred during the request. | getErrors(): ?array | setErrors(?array errors): void |
-| `customers` | [`?(Customer[])`](../../doc/models/customer.md) | Optional | The customer profiles that match the search query. If any search condition is not met, the result is an empty object (`{}`). | getCustomers(): ?array | setCustomers(?array customers): void |
+| `customers` | [`?(Customer[])`](../../doc/models/customer.md) | Optional | The customer profiles that match the search query. If any search condition is not met, the result is an empty object (`{}`).<br>Only customer profiles with public information (`given_name`, `family_name`, `company_name`, `email_address`, or `phone_number`)<br>are included in the response. | getCustomers(): ?array | setCustomers(?array customers): void |
 | `cursor` | `?string` | Optional | A pagination cursor that can be used during subsequent calls<br>to `SearchCustomers` to retrieve the next set of results associated<br>with the original query. Pagination cursors are only present when<br>a request succeeds and additional results are available.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
+| `count` | `?int` | Optional | The total count of customers associated with the Square account that match the search query. Only customer profiles with<br>public information (`given_name`, `family_name`, `company_name`, `email_address`, or `phone_number`) are counted. This field is<br>present only if `count` is set to `true` in the request. | getCount(): ?int | setCount(?int count): void |
 
 ## Example (as JSON)
 
@@ -51,7 +52,23 @@ Either `errors` or `customers` is present in a given response (never both).
         "1KB9JE5EGJXCW.REACHABLE"
       ],
       "updated_at": "2020-04-20T10:02:43.083Z",
-      "version": 7
+      "version": 7,
+      "cards": [
+        {
+          "id": "id8",
+          "card_brand": "DISCOVER",
+          "last_4": "last_40",
+          "exp_month": 152,
+          "exp_year": 144
+        },
+        {
+          "id": "id8",
+          "card_brand": "DISCOVER",
+          "last_4": "last_40",
+          "exp_month": 152,
+          "exp_year": 144
+        }
+      ]
     },
     {
       "address": {
@@ -81,9 +98,34 @@ Either `errors` or `customers` is present in a given response (never both).
         "1KB9JE5EGJXCW.REACHABLE"
       ],
       "updated_at": "2018-03-08T18:25:21.342Z",
-      "version": 1
+      "version": 1,
+      "cards": [
+        {
+          "id": "id8",
+          "card_brand": "DISCOVER",
+          "last_4": "last_40",
+          "exp_month": 152,
+          "exp_year": 144
+        },
+        {
+          "id": "id8",
+          "card_brand": "DISCOVER",
+          "last_4": "last_40",
+          "exp_month": 152,
+          "exp_year": 144
+        }
+      ]
     }
-  ]
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "count": 90
 }
 ```
 

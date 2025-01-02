@@ -5,11 +5,11 @@ namespace MailPoet\API\JSON;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Captcha\CaptchaConstants;
 use MailPoet\Config\AccessControl;
 use MailPoet\Exception;
 use MailPoet\Logging\LoggerFactory;
 use MailPoet\Settings\SettingsController;
-use MailPoet\Subscription\Captcha\CaptchaConstants;
 use MailPoet\Tracy\ApiPanel\ApiPanel;
 use MailPoet\Tracy\DIPanel\DIPanel;
 use MailPoet\Util\Helpers;
@@ -31,6 +31,7 @@ class API {
   private $availableApiVersions = [
       'v1',
   ];
+
   /** @var ContainerInterface */
   private $container;
 
@@ -74,7 +75,7 @@ class API {
   }
 
   public function init() {
-     // admin security token and API version
+    // admin security token and API version
     WPFunctions::get()->addAction(
       'admin_head',
       [$this, 'setTokenAndAPIVersion']
@@ -109,10 +110,12 @@ class API {
     }
 
     $ignoreToken = (
-      $this->settings->get('captcha.type') != CaptchaConstants::TYPE_DISABLED &&
-      $this->requestEndpoint === 'subscribers' &&
-      $this->requestMethod === 'subscribe'
-    );
+        $this->settings->get('captcha.type') != CaptchaConstants::TYPE_DISABLED &&
+        $this->requestEndpoint === 'subscribers' &&
+        $this->requestMethod === 'subscribe'
+      ) || (
+        $this->requestEndpoint === 'captcha'
+      );
 
     if (!$ignoreToken && $this->wp->wpVerifyNonce($this->requestToken, 'mailpoet_token') === false) {
       $errorMessage = __("Sorry, but we couldn't connect to the MailPoet server. Please refresh the web page and try again.", 'mailpoet');
@@ -125,20 +128,20 @@ class API {
   }
 
   public function setRequestData($data, $requestType) {
-    $this->requestApiVersion = !empty($data['api_version']) ? $data['api_version'] : false;
+    $this->requestApiVersion = (!empty($data['api_version']) && is_string($data['api_version'])) ? $data['api_version'] : false;
 
-    $this->requestEndpoint = isset($data['endpoint'])
+    $this->requestEndpoint = (isset($data['endpoint']) && is_string($data['endpoint']))
       ? Helpers::underscoreToCamelCase(trim($data['endpoint']))
       : null;
 
     // JS part of /wp-admin/customize.php does not like a 'method' field in a form widget
     $methodParamName = isset($data['mailpoet_method']) ? 'mailpoet_method' : 'method';
-    $this->requestMethod = isset($data[$methodParamName])
+    $this->requestMethod = (isset($data[$methodParamName]) && is_string($data[$methodParamName]))
       ? Helpers::underscoreToCamelCase(trim($data[$methodParamName]))
       : null;
     $this->requestType = $requestType;
 
-    $this->requestToken = isset($data['token'])
+    $this->requestToken = (isset($data['token']) && is_string($data['token']))
       ? trim($data['token'])
       : null;
 

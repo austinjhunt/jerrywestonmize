@@ -13,13 +13,17 @@ associated with the order. It does not filter based on the
 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
-| `customerIds` | `?(string[])` | Optional | A list of customer IDs to filter by.<br><br>Max: 10 customer IDs. | getCustomerIds(): ?array | setCustomerIds(?array customerIds): void |
+| `customerIds` | `?(string[])` | Optional | A list of customer IDs to filter by.<br><br>Max: 10 customer ids. | getCustomerIds(): ?array | setCustomerIds(?array customerIds): void |
 
 ## Example (as JSON)
 
 ```json
 {
-  "customer_ids": null
+  "customer_ids": [
+    "customer_ids9",
+    "customer_ids0",
+    "customer_ids1"
+  ]
 }
 ```
 

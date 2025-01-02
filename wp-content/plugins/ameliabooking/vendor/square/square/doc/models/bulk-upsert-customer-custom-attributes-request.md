@@ -21,41 +21,25 @@ Represents a [BulkUpsertCustomerCustomAttributes](../../doc/apis/customer-custom
     "key0": {
       "customer_id": "customer_id8",
       "custom_attribute": {
-        "key": null,
-        "value": null,
-        "version": null,
-        "visibility": null,
-        "definition": null,
-        "updated_at": null,
-        "created_at": null
+        "key": "key2",
+        "value": {
+          "key1": "val1",
+          "key2": "val2"
+        },
+        "version": 102,
+        "visibility": "VISIBILITY_READ_ONLY",
+        "definition": {
+          "key": "key0",
+          "schema": {
+            "key1": "val1",
+            "key2": "val2"
+          },
+          "name": "name0",
+          "description": "description0",
+          "visibility": "VISIBILITY_HIDDEN"
+        }
       },
-      "idempotency_key": null
-    },
-    "key1": {
-      "customer_id": "customer_id9",
-      "custom_attribute": {
-        "key": null,
-        "value": null,
-        "version": null,
-        "visibility": null,
-        "definition": null,
-        "updated_at": null,
-        "created_at": null
-      },
-      "idempotency_key": null
-    },
-    "key2": {
-      "customer_id": "customer_id0",
-      "custom_attribute": {
-        "key": null,
-        "value": null,
-        "version": null,
-        "visibility": null,
-        "definition": null,
-        "updated_at": null,
-        "created_at": null
-      },
-      "idempotency_key": null
+      "idempotency_key": "idempotency_key6"
     }
   }
 }

@@ -182,9 +182,56 @@ class UtilsTest extends TestCase
         $this->assertEquals("false", CoreHelper::convertToNullableString("false"));
     }
 
+    public function testIsNullOrEmpty()
+    {
+        $this->assertTrue(CoreHelper::isNullOrEmpty(0));
+        $this->assertTrue(CoreHelper::isNullOrEmpty([]));
+        $this->assertTrue(CoreHelper::isNullOrEmpty(''));
+        $this->assertTrue(CoreHelper::isNullOrEmpty(null));
+        $this->assertTrue(CoreHelper::isNullOrEmpty(false));
+        $this->assertFalse(CoreHelper::isNullOrEmpty('0'));
+        $this->assertFalse(CoreHelper::isNullOrEmpty('some value'));
+    }
+
+    public function testOsInfo()
+    {
+        $expected = PHP_OS_FAMILY . '-' . php_uname('r');
+        $this->assertEquals($expected, CoreHelper::getOsInfo());
+    }
+
     public function testEmptyOsInfo()
     {
-        $this->assertEquals('', CoreHelper::getOsInfo(true));
+        $this->assertEquals('', CoreHelper::getOsInfo(''));
+        $this->assertEquals('', CoreHelper::getOsInfo('Unknown'));
+    }
+
+    public function testDisabledOsVersion()
+    {
+        $this->assertEquals(PHP_OS_FAMILY, CoreHelper::getOsInfo(PHP_OS_FAMILY, 'unknown_func'));
+    }
+
+    public function testBasicAuthEncodedString()
+    {
+        $expected = 'Basic dXNlcm5hbWU6X1BhNTV3MHJk';
+        $this->assertEquals($expected, CoreHelper::getBasicAuthEncodedString('username', '_Pa55w0rd'));
+    }
+
+    public function testEmptyBasicAuthEncodedString()
+    {
+        $this->assertEmpty(CoreHelper::getBasicAuthEncodedString('', '_Pa55w0rd'));
+        $this->assertEmpty(CoreHelper::getBasicAuthEncodedString('username', ''));
+        $this->assertEmpty(CoreHelper::getBasicAuthEncodedString('', ''));
+    }
+
+    public function testBearerAuthString()
+    {
+        $expected = 'Bearer my-token';
+        $this->assertEquals($expected, CoreHelper::getBearerAuthString('my-token'));
+    }
+
+    public function testEmptyBearerAuthString()
+    {
+        $this->assertEmpty(CoreHelper::getBearerAuthString(''));
     }
 
     public function testFromSimpleDateFailure()
@@ -289,6 +336,12 @@ class UtilsTest extends TestCase
             null], DateHelper::toSimpleDate2DArray($res));
     }
 
+    public function testFromSimpleDateStringTimeInfo()
+    {
+        $date = DateHelper::fromSimpleDate('2024-01-16');
+        $this->assertEquals(strtotime('2024-01-16'), $date->getTimestamp());
+    }
+
     public function testFromRFC1123DateString()
     {
         $this->assertNull(DateHelper::fromRfc1123DateTimeMapOfArray(null));
@@ -309,6 +362,21 @@ class UtilsTest extends TestCase
             ['key1' => new DateTime("2021-09-31"), 'key2' => new DateTime("2021-09-30")],
             ['keyA' => null, 'keyB' => new DateTime("2021-09-29")],
             null], $res);
+    }
+
+    public function testAddingTimezoneInRFC3339DateString()
+    {
+        $date = DateHelper::fromRfc3339DateTime("2021-10-01T00:00:00");
+        $this->assertEquals("2021-10-01T00:00:00+00:00", DateHelper::toRfc3339DateTime($date));
+
+        $date = DateHelper::fromRfc3339DateTime("2021-10-01T00:00:00Z");
+        $this->assertEquals("2021-10-01T00:00:00+00:00", DateHelper::toRfc3339DateTime($date));
+
+        $date = DateHelper::fromRfc3339DateTime("2021-10-01T00:00:00+01:00");
+        $this->assertEquals("2021-09-30T23:00:00+00:00", DateHelper::toRfc3339DateTime($date));
+
+        $date = DateHelper::fromRfc3339DateTime("2021-10-01T00:00:00-01:00");
+        $this->assertEquals("2021-10-01T01:00:00+00:00", DateHelper::toRfc3339DateTime($date));
     }
 
     public function testFromRFC3339DateString()

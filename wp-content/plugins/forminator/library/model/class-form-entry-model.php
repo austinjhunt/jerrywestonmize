@@ -290,6 +290,11 @@ class Forminator_Form_Entry_Model {
 				'value' => is_array( $result->meta_value ) ? array_map( 'maybe_unserialize', $result->meta_value ) : maybe_unserialize( $result->meta_value ),
 			);
 		}
+
+		// Allow new field to get data of old field for old submissions.
+		if ( in_array( 'stripe-1', array_keys( $this->meta_data ), true ) && ! isset( $this->meta_data['stripe-ocs-1'] ) ) {
+			$this->meta_data['stripe-ocs-1'] = $this->meta_data['stripe-1'];
+		}
 	}
 
 	/**
@@ -527,7 +532,7 @@ class Forminator_Form_Entry_Model {
 			LEFT JOIN {$entry_table_name} e
 			ON (m.entry_id = e.entry_id)
 			WHERE e.form_id = %d
-			AND ( m.meta_key = 'stripe-1' || m.meta_key = 'paypal-1' )
+			AND ( m.meta_key = 'stripe-1' || m.meta_key = 'stripe-ocs-1' || m.meta_key = 'paypal-1' )
 			AND m.meta_value LIKE '%4:\"mode\";s:4:\"live\"%'
 			LIMIT 1";
 
@@ -1216,7 +1221,6 @@ class Forminator_Form_Entry_Model {
 		}
 	}
 
-
 	/**
 	 * Delete by entry
 	 *
@@ -1464,6 +1468,7 @@ class Forminator_Form_Entry_Model {
 				}
 				break;
 			case 'stripe':
+			case 'stripe-ocs':
 				// In case stripe requested without mapper, we return transaction_id.
 				$string_value = '';
 				if ( is_array( $meta_value ) && isset( $meta_value['transaction_id'] ) ) {
@@ -2812,7 +2817,7 @@ class Forminator_Form_Entry_Model {
 			LEFT JOIN {$entry_table_name} e
 			ON (m.entry_id = e.entry_id)
 			WHERE e.form_id = %d
-			AND ( m.meta_key = 'stripe-1' || m.meta_key = 'paypal-1' )
+			AND ( m.meta_key = 'stripe-1' || m.meta_key = 'stripe-ocs-1' || m.meta_key = 'paypal-1' )
 			AND m.meta_value LIKE '%4:\"mode\";s:4:\"live\"%'{$where}";
 
 		$results = $wpdb->get_results( $wpdb->prepare( $sql, $form_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery -- false positive

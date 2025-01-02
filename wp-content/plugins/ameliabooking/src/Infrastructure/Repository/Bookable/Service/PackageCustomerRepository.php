@@ -8,6 +8,10 @@ use AmeliaBooking\Domain\Factory\Bookable\Service\PackageCustomerFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\PackagesCustomersServicesTable;
+use AmeliaBooking\Infrastructure\Connection;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingsTable;
 
 /**
  * Class PackageCustomerRepository
@@ -17,6 +21,24 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 class PackageCustomerRepository extends AbstractRepository
 {
     const FACTORY = PackageCustomerFactory::class;
+
+    /** @var string */
+    protected $packagesCustomersServicesTable;
+
+    /**
+     * @param Connection $connection
+     * @param string     $table
+     *
+     * @throws InvalidArgumentException
+     */
+    public function __construct(
+        Connection $connection,
+                   $table
+    ) {
+        parent::__construct($connection, $table);
+
+        $this->packagesCustomersServicesTable = PackagesCustomersServicesTable::getTableName();
+    }
 
     /**
      * @param PackageCustomer $entity
@@ -148,6 +170,192 @@ class PackageCustomerRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (Exception $e) {
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @return array
+     * @throws QueryExecutionException
+     */
+    public function getIds($criteria = [])
+    {
+        $bookingsTable = CustomerBookingsTable::getTableName();
+
+        $where = [];
+
+        $params = [];
+
+        if (!empty($criteria['purchased'])) {
+            $where[] = "(DATE_FORMAT(pc.purchased, '%Y-%m-%d %H:%i:%s') BETWEEN :purchasedFrom AND :purchasedTo)";
+
+            $params[':purchasedFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['purchased'][0]);
+
+            $params[':purchasedTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['purchased'][1]);
+        }
+
+        if (!empty($criteria['packages'])) {
+            $queryServices = [];
+
+            foreach ($criteria['packages'] as $index => $value) {
+                $param = ':package' . $index;
+
+                $queryServices[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = 'pc.packageId IN (' . implode(', ', $queryServices) . ')';
+        }
+
+        if (!empty($criteria['packageStatus'])) {
+            switch ($criteria['packageStatus']) {
+                case 'expired':
+                    $where[] = "(pc.end IS NOT NULL && pc.end < NOW())";
+                    break;
+                case 'approved':
+                    $where[] = "(pc.end > NOW() OR pc.end IS NULL)";
+                    $where[] = "(pc.status = :packageStatus)";
+                    $params[':packageStatus'] = $criteria['packageStatus'];
+                    break;
+                case 'canceled':
+                    $where[] = "(pc.status = :packageStatus)";
+                    $params[':packageStatus'] = $criteria['packageStatus'];
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (!empty($criteria['customerId'])) {
+            $params[':customerId'] = $criteria['customerId'];
+
+            $where[] = 'pc.customerId = :customerId';
+        }
+
+        $limit = $this->getLimit(
+            !empty($criteria['page']) ? (int)$criteria['page'] : 0,
+            !empty($criteria['itemsPerPage']) ? (int)$criteria['itemsPerPage'] : 0
+        );
+
+        $where = $where ? ' WHERE ' . implode(' AND ', $where) : '';
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT 
+                    pc.id AS id,
+                    pc.packageId AS package_customer_packageId,
+                    pc.purchased AS package_customer_purchased,
+                    pc.end AS package_customer_end,
+                    pc.status AS package_customer_status,
+                    pc.customerId AS package_customer_customerId,
+                    pc.bookingsCount AS package_customer_bookingsCount,
+                    
+                    pcs.id AS package_customer_service_id,
+                    pcs.packageCustomerId AS package_customer_customerId,
+                    pcs.bookingsCount AS service_bookingsCount
+                FROM {$this->table} pc
+                INNER JOIN {$this->packagesCustomersServicesTable} AS pcs ON pc.id = pcs.packageCustomerId
+                LEFT JOIN $bookingsTable cb ON pcs.id = cb.packageCustomerServiceId
+                {$where}
+                GROUP BY pc.id
+                {$limit}"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        return array_map('intval', array_column($rows, 'id'));
+    }
+
+    /**
+     * @param array $criteria
+     * @return int
+     * @throws QueryExecutionException
+     */
+    public function getPackagePurchasedCount($criteria = [])
+    {
+        $params = [];
+
+        $where = [];
+
+        if (!empty($criteria['purchased'])) {
+            $where[] = "(DATE_FORMAT(pc.purchased, '%Y-%m-%d %H:%i:%s') BETWEEN :purchasedFrom AND :purchasedTo)";
+
+            $params[':purchasedFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['purchased'][0]);
+
+            $params[':purchasedTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['purchased'][1]);
+        }
+
+        if (!empty($criteria['customerId'])) {
+            $params[':customerId'] = $criteria['customerId'];
+
+            $where[] = 'pc.customerId = :customerId';
+        }
+
+        if (!empty($criteria['packages'])) {
+            $queryServices = [];
+
+            foreach ($criteria['packages'] as $index => $value) {
+                $param = ':package' . $index;
+
+                $queryServices[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = 'pc.packageId IN (' . implode(', ', $queryServices) . ')';
+        }
+
+        if (!empty($criteria['packageStatus'])) {
+            switch ($criteria['packageStatus']) {
+                case 'expired':
+                    $where[] = "(pc.end IS NOT NULL && pc.end < NOW())";
+                    break;
+                case 'approved':
+                    $where[] = "(pc.end > NOW() OR pc.end IS NULL)";
+                    $where[] = "(pc.status = :packageStatus)";
+                    $params[':packageStatus'] = $criteria['packageStatus'];
+                    break;
+                case 'canceled':
+                    $where[] = "(pc.status = :packageStatus)";
+                    $params[':packageStatus'] = $criteria['packageStatus'];
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        $where = $where ? ' WHERE ' . implode(' AND ', $where) : '';
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT
+                    pc.id AS id,
+                    pc.packageId AS package_customer_packageId,
+                    pc.purchased AS package_customer_purchased,
+                    pc.end AS package_customer_end,
+                    pc.status AS package_customer_status,
+                    pc.customerId AS package_customer_customerId,
+                    COUNT(DISTINCT pc.id) AS count,
+                    
+                    pcs.id AS package_customer_service_id,
+                    pcs.packageCustomerId AS package_customer_customerId
+                FROM {$this->table} pc
+                INNER JOIN {$this->packagesCustomersServicesTable} AS pcs ON pc.id = pcs.packageCustomerId
+                {$where}"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetch()['count'];
+        } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
         }
 

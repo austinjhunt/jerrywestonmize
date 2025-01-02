@@ -197,6 +197,8 @@ class SettingsStorage implements SettingsStorageInterface
             ],
             'outlookCalendar'        =>
                 $this->getSetting('outlookCalendar', 'clientID') && $this->getSetting('outlookCalendar', 'clientSecret'),
+            'appleCalendar'          =>
+                $this->getSetting('appleCalendar', 'clientID') && $this->getSetting('appleCalendar', 'clientSecret'),
             'zoom'                   => [
                 'enabled' => (
                     $this->getSetting('zoom', 'enabled') &&

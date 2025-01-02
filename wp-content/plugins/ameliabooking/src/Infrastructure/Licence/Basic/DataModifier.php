@@ -63,22 +63,26 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
             'values'                 =>
                 [
                     ':zoomUserId'       => isset($data['zoomUserId']) ? $data['zoomUserId'] : null,
+                    ':appleCalendarId'  => isset($data['appleCalendarId']) ? $data['appleCalendarId'] : null,
                     ':translations'     => isset($data['translations']) ? $data['translations'] : null,
                     ':timeZone'         => isset($data['timeZone']) ? $data['timeZone'] : null,
                     ':badgeId'          => isset($data['badgeId']) ? $data['badgeId'] : null,
                 ],
             'columns'                =>
                 '`zoomUserId`,
+                `appleCalendarId`,
                 `translations`,
                 `timeZone`,
                 `badgeId`,',
             'placeholders'           =>
                 ':zoomUserId,
+                :appleCalendarId,
                 :translations,
                 :timeZone,
                 :badgeId,',
             'columnsPlaceholders'    =>
                 '`zoomUserId` = :zoomUserId,
+                `appleCalendarId` = :appleCalendarId,
                 `translations` = :translations,
                 `timeZone` = :timeZone,
                 `badgeId` = :badgeId,',

@@ -30,8 +30,17 @@ A response that includes loyalty account created.
       "phone_number": "+14155551234"
     },
     "program_id": "d619f755-2d17-41f3-990d-c04ecedd64dd",
-    "updated_at": "2020-05-08T21:44:32Z"
-  }
+    "updated_at": "2020-05-08T21:44:32Z",
+    "enrolled_at": "enrolled_at6"
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

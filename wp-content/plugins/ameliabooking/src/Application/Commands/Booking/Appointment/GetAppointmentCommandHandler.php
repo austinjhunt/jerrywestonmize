@@ -114,6 +114,7 @@ class GetAppointmentCommandHandler extends CommandHandler
         $recurringAppointments = $bookingIds ? $appointmentRepo->getFiltered(
             [
                 'bookingIds' => array_unique($bookingIds),
+                'customerId' => !empty($command->getField('params')['customerId']) ? $command->getField('params')['customerId'] : null
             ]
         ) : $appointmentRepo->getFiltered(
             [

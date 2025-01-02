@@ -120,6 +120,18 @@ class CouponFactory
             }
         }
 
+        if (!empty($data['allServices'])) {
+            $coupon->setAllServices(new BooleanValueObject($data['allServices']));
+        }
+
+        if (!empty($data['allEvents'])) {
+            $coupon->setAllEvents(new BooleanValueObject($data['allEvents']));
+        }
+
+        if (!empty($data['allPackages'])) {
+            $coupon->setAllPackages(new BooleanValueObject($data['allPackages']));
+        }
+
         $coupon->setServiceList($serviceList);
         $coupon->setEventList($eventList);
         $coupon->setPackageList($packageList);
@@ -154,6 +166,9 @@ class CouponFactory
             $coupons[$couponId]['notificationRecurring'] = $row['coupon_notificationRecurring'];
             $coupons[$couponId]['status'] = $row['coupon_status'];
             $coupons[$couponId]['expirationDate'] = $row['coupon_expirationDate'];
+            $coupons[$couponId]['allServices'] = $row['coupon_allServices'];
+            $coupons[$couponId]['allEvents'] = $row['coupon_allEvents'];
+            $coupons[$couponId]['allPackages'] = $row['coupon_allPackages'];
 
             if ($bookingId) {
                 $coupons[$couponId]['bookings'][$bookingId] = $bookingId;

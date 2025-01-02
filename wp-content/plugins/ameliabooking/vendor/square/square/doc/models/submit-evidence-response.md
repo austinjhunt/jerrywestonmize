@@ -36,8 +36,29 @@ Defines the fields in a `SubmitEvidence` response.
     "reported_at": "2022-05-18T00:00:00.000Z",
     "state": "PROCESSING",
     "updated_at": "2022-05-18T16:02:15.313Z",
-    "version": 4
-  }
+    "version": 4,
+    "dispute_id": "dispute_id8"
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

@@ -117,6 +117,7 @@ class Forminator_Template_Registration extends Forminator_Template {
 			'enable-ajax'                       => 'true',
 			'validation-inline'                 => true,
 			'fields-style'                      => 'open',
+			'basic-fields-style'                => 'open',
 			'form-expire'                       => 'no_expire',
 			'use-admin-email'                   => 'true',
 			// Main container.
@@ -218,6 +219,7 @@ class Forminator_Template_Registration extends Forminator_Template {
 			'autoclose'                         => false,
 			// Layout - Radio/Checkbox.
 			'field-image-size'                  => 'custom',
+			'cform-color-option'                => 'theme',
 		);
 	}
 }

@@ -3635,7 +3635,7 @@ hr {
     padding-right: calc(2 * 1rem); } }
 
 .wp-block-latest-comments .wp-block-latest-comments__comment-meta {
-  font-weight: bold; }
+  font-weight: normal; }
   .wp-block-latest-comments .wp-block-latest-comments__comment-meta .wp-block-latest-comments__comment-date {
     font-weight: normal; }
 
@@ -12292,7 +12292,6 @@ body.woocommerce ul.products {
   padding-top: 15px; }
 
 #colibri .comment-respond .comment-reply-title {
-  font-family: Open Sans;
   font-weight: 600;
   font-size: 1.25em;
   color: black; }
@@ -22199,7 +22198,7 @@ hr {
 }
 }
 .wp-block-latest-comments .wp-block-latest-comments__comment-meta {
-  font-weight: bold;
+  font-weight: normal;
 }
 .wp-block-latest-comments .wp-block-latest-comments__comment-meta .wp-block-latest-comments__comment-date {
     font-weight: normal;
@@ -32101,7 +32100,6 @@ body.woocommerce ul.products.columns-6 li.product {
   padding-top: 15px;
 }
 #colibri .comment-respond .comment-reply-title {
-  font-family: Open Sans;
   font-weight: 600;
   font-size: 1.25em;
   color: black;

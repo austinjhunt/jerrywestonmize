@@ -7,18 +7,22 @@
 namespace AmeliaBooking\Application\Services\Placeholder;
 
 use AmeliaBooking\Application\Services\Helper\HelperService;
+use AmeliaBooking\Application\Services\Reservation\AbstractReservationService;
+use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\CustomerBookingEventTicket;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
+use AmeliaBooking\Domain\Entity\Tax\Tax;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
@@ -94,6 +98,7 @@ class EventPlaceholderService extends PlaceholderService
             'event_period_date_time'    =>
                 $ulStartTag .
                     $liStartTag . $dateTimeString . $liEndTag .
+                    $liStartTag . $dateTimeString . $liEndTag .
                 $ulEndTag,
             'event_start_date'          => date_i18n($dateFormat, $periodStartDate),
             'event_start_time'          => date_i18n($timeFormat, $periodStartTime),
@@ -111,6 +116,7 @@ class EventPlaceholderService extends PlaceholderService
             'zoom_host_url_date_time'   => $type === 'email' ?
                 '<ul>' .
                     '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['zoom_click_to_start'] . '</a></li>' .
+                    '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['zoom_click_to_start'] . '</a></li>' .
                 '</ul>' : date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . ': ' . 'http://start_zoom_meeting_link.com',
             'zoom_join_url_date'        => $type === 'email' ?
                 '<ul>' .
@@ -119,6 +125,7 @@ class EventPlaceholderService extends PlaceholderService
                 '</ul>' : date_i18n($dateFormat, $periodStartDate) . ': ' . 'http://join_zoom_meeting_link.com',
             'zoom_join_url_date_time'   => $type === 'email' ?
                 '<ul>' .
+                    '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['zoom_click_to_join'] . '</a></li>' .
                     '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['zoom_click_to_join'] . '</a></li>' .
                 '</ul>' : date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . ': ' . 'http://join_zoom_meeting_link.com' ,
             'google_meet_url_date'        => $type === 'email' ?
@@ -129,6 +136,7 @@ class EventPlaceholderService extends PlaceholderService
             'google_meet_url_date_time'   => $type === 'email' ?
                 '<ul>' .
                 '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['google_meet_join'] . '</a></li>' .
+                '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['google_meet_join'] . '</a></li>' .
                 '</ul>' : date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . ': ' . 'https://join_google_meet_link.com' ,
             'lesson_space_url_date'        => $type === 'email' ?
                 '<ul>' .
@@ -137,6 +145,7 @@ class EventPlaceholderService extends PlaceholderService
                 '</ul>' : date_i18n($dateFormat, $periodStartDate) . ': ' . 'https://lesson_space.com/room-id',
             'lesson_space_url_date_time'   => $type === 'email' ?
                 '<ul>' .
+                '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['lesson_space_join'] . '</a></li>' .
                 '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['lesson_space_join'] . '</a></li>' .
                 '</ul>' : date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . ': ' . 'https://lesson_space.com/room-id',
             'event_description'         => 'Event Description',
@@ -149,11 +158,14 @@ class EventPlaceholderService extends PlaceholderService
         ];
     }
 
+
     /**
      * @param array        $event
      * @param int          $bookingKey
      * @param string       $type
-     * @param AbstractUser $customer
+     * @param string       $token
+     * @param bool         $invoice
+     * @param string       $notificationType
      *
      * @return array
      *
@@ -164,31 +176,130 @@ class EventPlaceholderService extends PlaceholderService
      * @throws \Interop\Container\Exception\ContainerException
      * @throws \Exception
      */
-    public function getPlaceholdersData($event, $bookingKey = null, $type = null, $customer = null, $allBookings = null)
-    {
+    public function getEventPlaceholdersData(
+        $event,
+        $bookingKey = null,
+        $type = null,
+        $token = null,
+        $invoice = false,
+        $notificationType = null
+    ) {
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
         $this->setData($event, $bookingKey);
-
-        $locale = $this->getLocale($event, $bookingKey);
 
         $token = isset($event['bookings'][$bookingKey]) ?
             $bookingRepository->getToken($event['bookings'][$bookingKey]['id']) : null;
 
         $token = isset($token['token']) ? $token['token'] : null;
 
+
         $data = [];
 
         $data = array_merge($data, $this->getEventData($event, $bookingKey, $token, $type));
+        $data = array_merge($data, $this->getBookingData($event, $type, $bookingKey, $token, null, null, $invoice));
+        $data = array_merge($data, $this->getCustomFieldsData($event, $type, $bookingKey));
+        $data = array_merge($data, $notificationType ? $this->getCouponsData($event, $type, $bookingKey) : []);
+
+        return $data;
+    }
+
+
+    /**
+     * @param array        $event
+     * @param int          $bookingKey
+     * @param string       $type
+     * @param AbstractUser $customer
+     * @param array        $allBookings
+     * @param bool         $invoice
+     * @param string       $notificationType
+     *
+     * @return array
+     *
+     * @throws InvalidArgumentException
+     * @throws \Slim\Exception\ContainerValueNotFoundException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     * @throws \Interop\Container\Exception\ContainerException
+     * @throws \Exception
+     */
+    public function getPlaceholdersData(
+        $event,
+        $bookingKey = null,
+        $type = null,
+        $customer = null,
+        $allBookings = null,
+        $invoice = false,
+        $notificationType = null
+    ) {
+        $this->setData($event, $bookingKey);
+
+        $locale = $this->getLocale($event, $bookingKey);
+
+        $data = [];
+
+        $data = array_merge($data, $this->getEventPlaceholdersData($event, $bookingKey, $type, null, false, $notificationType));
         if (empty($customer)) {
             $data = array_merge($data, $this->getGroupedEventData($event, $bookingKey, $type, $allBookings));
         }
-        $data = array_merge($data, $this->getBookingData($event, $type, $bookingKey, $token));
         $data = array_merge($data, $this->getCompanyData($bookingKey !== null ? $locale : null));
         $data = array_merge($data, $this->getCustomersData($event, $type, $bookingKey, $customer));
-        $data = array_merge($data, $this->getCustomFieldsData($event, $type, $bookingKey));
-        $data = array_merge($data, $this->getCouponsData($event, $type, $bookingKey));
+
+        return $data;
+    }
+
+
+    /**
+     * @param array  $reservationData
+     * @param int    $bookingKey
+     * @param string $type
+     *
+     * @return array
+     *
+     * @throws InvalidArgumentException
+     * @throws ContainerValueNotFoundException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     */
+    public function getInvoicePlaceholdersData($reservationData)
+    {
+        $type = 'email';
+
+        $data = [];
+
+        $event      = $reservationData['event'];
+        $bookingKey = array_search($reservationData['booking']['id'], array_column($event['bookings'], 'id'));
+
+        $this->setData($event, $bookingKey);
+
+        $locale = $this->getLocale($event, $bookingKey);
+
+        $placeholders = $this->getEventPlaceholdersData($event, $bookingKey, $type, null, true);
+
+        $data['items'] = $placeholders['invoice_items_event'];
+
+        $firstElement = true;
+        foreach ($data['items'] as $itemKey => &$item) {
+            if (!empty($placeholders['invoice_items_booking'][$itemKey])) {
+                $item = array_merge($placeholders['invoice_items_booking'][$itemKey], $item);
+            }
+            if (!empty($placeholders['invoice_items_booking'][0]['invoice_tickets_tax']) &&
+                ($placeholders['invoice_items_booking'][0]['invoice_tax_type'] === 'percentage' || $firstElement)
+            ) {
+                $item['invoice_tax']      = $placeholders['invoice_items_booking'][0]['invoice_tickets_tax'][$item['item_id']];
+                $item['invoice_tax_rate'] = $placeholders['invoice_items_booking'][0]['invoice_tax_rate'];
+            }
+            $firstElement = false;
+        }
+
+        $data['invoice_number'] = $placeholders['payment_invoice_number'];
+        $data['invoice_method'] = !empty($placeholders['payment_gateway_title']) ? $placeholders['payment_gateway_title'] : $placeholders['payment_type'];
+        $data['invoice_issued'] = $placeholders['payment_created'];
+
+        $data = array_merge($data, $this->getCompanyData($bookingKey !== null ? $locale : null));
+        $data = array_merge($data, $this->getCustomersData($event, $type, $bookingKey));
 
         return $data;
     }
@@ -261,17 +372,19 @@ class EventPlaceholderService extends PlaceholderService
 
         $staff = [];
 
+        $haveBulletPoints = !empty($event['periods']) && sizeof($event['periods']) > 1;
+
         /** @var string $liStartTag */
-        $liStartTag = $type === 'email' ? '<li>' : '';
+        $liStartTag = $type === 'email' ? ($haveBulletPoints ? '<li>' : '') : '';
 
         /** @var string $liEndTag */
-        $liEndTag = $type === 'email' ? '</li>' : ($type === 'whatsapp' ? '; ' : PHP_EOL);
+        $liEndTag = $type === 'email' ? ($haveBulletPoints ? '</li>' : '') : ($type === 'whatsapp' ? '; ' : PHP_EOL);
 
         /** @var string $ulStartTag */
-        $ulStartTag = $type === 'email' ? '<ul>' : '';
+        $ulStartTag = $type === 'email' ? ($haveBulletPoints ? '<ul>' : '') : '';
 
         /** @var string $ulEndTag */
-        $ulEndTag = $type === 'email' ? '</ul>' : '';
+        $ulEndTag = $type === 'email' ? ($haveBulletPoints ? '</ul>' : '') : '';
 
         $providers = (array)$event['providers'];
 
@@ -466,24 +579,40 @@ class EventPlaceholderService extends PlaceholderService
                 $startUrl = $event['periods'][$key]['zoomMeeting']['startUrl'];
                 $joinUrl  = $event['periods'][$key]['zoomMeeting']['joinUrl'];
 
-                $eventZoomStartDateList[]     =  $type === 'email' ? '<li><a href="' . $startUrl . '">' . $dateString . ' ' . BackendStrings::getCommonStrings()['zoom_click_to_start'] . '</a></li>' : $dateString . ': ' . $startUrl;
-                $eventZoomStartDateTimeList[] = $type === 'email' ? '<li><a href="' . $startUrl . '">' . $dateTimeString . ' ' . BackendStrings::getCommonStrings()['zoom_click_to_start'] . '</a></li>' : $dateTimeString . ': ' . $startUrl;
-                $eventZoomJoinDateList[]      = $type === 'email' ? '<li><a href="' . $joinUrl . '">' . $dateString . ' ' . BackendStrings::getCommonStrings()['zoom_click_to_join'] . '</a></li>' : $dateString . ': ' . $joinUrl;
-                $eventZoomJoinDateTimeList[]  = $type === 'email' ? '<li><a href="' . $joinUrl . '">' . $dateTimeString . ' ' . BackendStrings::getCommonStrings()['zoom_click_to_join'] . '</a></li>' : $dateTimeString . ': ' . $joinUrl;
+                $eventZoomStartDateList[]     =  $type === 'email' ?
+                    ($liStartTag . '<a href="' . $startUrl . '">' . $dateString . ' ' . BackendStrings::getCommonStrings()['zoom_click_to_start'] . '</a>' . $liEndTag)
+                    : $dateString . ': ' . $startUrl;
+                $eventZoomStartDateTimeList[] = $type === 'email' ?
+                    ($liStartTag . '<a href="' . $startUrl . '">' . $dateTimeString . ' ' . BackendStrings::getCommonStrings()['zoom_click_to_start'] . '</a>' . $liEndTag)
+                    : $dateTimeString . ': ' . $startUrl;
+                $eventZoomJoinDateList[]      = $type === 'email' ?
+                    ($liStartTag . '<a href="' . $joinUrl . '">' . $dateString . ' ' . BackendStrings::getCommonStrings()['zoom_click_to_join'] . '</a>' . $liEndTag)
+                    : $dateString . ': ' . $joinUrl;
+                $eventZoomJoinDateTimeList[]  = $type === 'email' ?
+                    ($liStartTag . '<a href="' . $joinUrl . '">' . $dateTimeString . ' ' . BackendStrings::getCommonStrings()['zoom_click_to_join'] . '</a>' . $liEndTag)
+                    : $dateTimeString . ': ' . $joinUrl;
             }
 
             if ($event['periods'][$key]['googleMeetUrl']) {
                 $googleMeetUrl = $event['periods'][$key]['googleMeetUrl'];
 
-                $eventGoogleMeetDateList[]     = $type === 'email' ? '<li><a href="' . $googleMeetUrl . '">' . $dateString . ' ' . BackendStrings::getCommonStrings()['google_meet_join'] . '</a></li>' : $dateString . ': ' . $googleMeetUrl;
-                $eventGoogleMeetDateTimeList[] = $type === 'email' ? '<li><a href="' . $googleMeetUrl . '">' . $dateTimeString . ' ' . BackendStrings::getCommonStrings()['google_meet_join'] . '</a></li>' : $dateTimeString . ': ' . $googleMeetUrl;
+                $eventGoogleMeetDateList[]     = $type === 'email' ?
+                    ($liStartTag . '<a href="' . $googleMeetUrl . '">' . $dateString . ' ' . BackendStrings::getCommonStrings()['google_meet_join'] . '</a>' . $liEndTag)
+                    : $dateString . ': ' . $googleMeetUrl;
+                $eventGoogleMeetDateTimeList[] = $type === 'email' ?
+                    ($liStartTag . '<a href="' . $googleMeetUrl . '">' . $dateTimeString . ' ' . BackendStrings::getCommonStrings()['google_meet_join'] . '</a>' . $liEndTag)
+                    : $dateTimeString . ': ' . $googleMeetUrl;
             }
 
             if ($event['periods'][$key]['lessonSpace']) {
                 $lessonSpaceUrl = $event['periods'][$key]['lessonSpace'];
 
-                $eventLessonSpaceDateList[]     = $type === 'email' ? '<li><a href="' . $lessonSpaceUrl . '">' . $dateString . ' ' . BackendStrings::getCommonStrings()['lesson_space_join'] . '</a></li>' : $dateString . ': ' . $lessonSpaceUrl;
-                $eventLessonSpaceDateTimeList[] = $type === 'email' ? '<li><a href="' . $lessonSpaceUrl . '">' . $dateTimeString . ' ' . BackendStrings::getCommonStrings()['lesson_space_join'] . '</a></li>' : $dateTimeString . ': ' . $lessonSpaceUrl;
+                $eventLessonSpaceDateList[]     = $type === 'email' ?
+                    ($liStartTag . '<a href="' . $lessonSpaceUrl . '">' . $dateString . ' ' . BackendStrings::getCommonStrings()['lesson_space_join'] . '</a>' . $liEndTag)
+                    : $dateString . ': ' . $lessonSpaceUrl;
+                $eventLessonSpaceDateTimeList[] = $type === 'email' ?
+                    ($liStartTag . '<a href="' . $lessonSpaceUrl . '">' . $dateTimeString . ' ' . BackendStrings::getCommonStrings()['lesson_space_join'] . '</a>' . $liEndTag)
+                    : $dateTimeString . ': ' . $lessonSpaceUrl;
             }
         }
 
@@ -526,7 +655,20 @@ class EventPlaceholderService extends PlaceholderService
         /** @var EventTicketRepository $eventTicketRepository */
         $eventTicketRepository = $this->container->get('domain.booking.event.ticket.repository');
 
+
+        $ticketsPriceByDateRange = null;
+
+        if ($event['customPricing']) {
+            /** @var EventApplicationService $eventApplicationService */
+            $eventApplicationService = $this->container->get('application.booking.event.service');
+            $ticketsPriceByDateRange = $eventApplicationService->getTicketsPriceByDateRange($event['customTickets']);
+        }
+
+
         $ticketsPrice = null;
+
+        $invoiceItems = [];
+
         $eventPrices  = [];
         if ($bookingKey !== null) {
             /** @var CustomerBookingEventTicketRepository $bookingEventTicketRepository */
@@ -546,6 +688,10 @@ class EventPlaceholderService extends PlaceholderService
                     /** @var EventTicket $ticket */
                     $ticket = $eventTicketRepository->getById($bookingToEventTicket->getEventTicketId()->getValue());
 
+                    if  ($ticketsPriceByDateRange && $ticketsPriceByDateRange->getItem($key)->getDateRangePrice()) {
+                        $ticket->setPrice(new Price($ticketsPriceByDateRange->getItem($key)->getDateRangePrice()->getValue()));
+                    }
+
                     $ticketName = $helperService->getBookingTranslation(
                         $locale,
                         $ticket->getTranslations() ? $ticket->getTranslations()->getValue() : null,
@@ -559,14 +705,27 @@ class EventPlaceholderService extends PlaceholderService
                     $eventPrices[] = $helperService->getFormattedPrice($ticket->getPrice()->getValue());
                     $ticketsPrice +=
                         $bookingToEventTicket->getPersons()->getValue() * $bookingToEventTicket->getPrice()->getValue();
+
+                    $invoiceItems[] = [
+                        'item_id' => $bookingToEventTicket->getId()->getValue(),
+                        'item_name' => $event['name'] . ' - ' . $ticket->getName()->getValue(),
+                        'invoice_unit_price' => $bookingToEventTicket->getPrice()->getValue(),
+                        'invoice_qty' => $bookingToEventTicket->getPersons()->getValue(),
+                        'invoice_subtotal' => empty($event['bookings'][$bookingKey]['aggregatedPrice']) ? $bookingToEventTicket->getPrice()->getValue()
+                            : ($bookingToEventTicket->getPersons()->getValue() * $bookingToEventTicket->getPrice()->getValue()),
+                    ];
                 }
             } elseif (!empty($event['bookings'][$bookingKey]['ticketsData'])) {
                 $ticketsPrice = 0;
                 $eventPrices  = [];
                 foreach ($event['bookings'][$bookingKey]['ticketsData'] as $key => $bookingToEventTicket) {
+                    /** @var EventTicket $ticket */
+                    $ticket = $eventTicketRepository->getById($bookingToEventTicket['eventTicketId']);
+
                     if ($bookingToEventTicket['price']) {
-                        /** @var EventTicket $ticket */
-                        $ticket = $eventTicketRepository->getById($bookingToEventTicket['eventTicketId']);
+                        if  ($ticketsPriceByDateRange && $ticketsPriceByDateRange->getItem($key)->getDateRangePrice()) {
+                            $ticket->setPrice(new Price($ticketsPriceByDateRange->getItem($key)->getDateRangePrice()->getValue()));
+                        }
 
                         $ticketName = $helperService->getBookingTranslation(
                             $locale,
@@ -582,7 +741,24 @@ class EventPlaceholderService extends PlaceholderService
                         $ticketsPrice +=
                             $bookingToEventTicket['persons'] * $bookingToEventTicket['price'];
                     }
+
+                    $invoiceItems[] = $invoiceItems[] = [
+                        'item_id' => $bookingToEventTicket['id'],
+                        'item_name' => $event['name'] . ' - ' . $ticket->getName()->getValue(),
+                        'invoice_unit_price' => $bookingToEventTicket['price'],
+                        'invoice_qty' => $bookingToEventTicket['persons'],
+                        'invoice_subtotal' => empty($event['bookings'][$bookingKey]['aggregatedPrice']) ? $bookingToEventTicket['price']
+                            : ($bookingToEventTicket['persons'] * $bookingToEventTicket['price'])
+                    ];
                 }
+            } else {
+                $invoiceItems[] = [
+                    'item_id' => $event['id'],
+                    'item_name' => $event['name'],
+                    'invoice_unit_price' => $event['price'],
+                    'invoice_qty' => $event['bookings'][$bookingKey]['persons'],
+                    'invoice_subtotal' => empty($event['bookings'][$bookingKey]['aggregatedPrice']) ? $event['price'] : ($event['price'] * $event['bookings'][$bookingKey]['persons'])
+                ];
             }
         } else {
             $sendAttendeeCode = [];
@@ -612,6 +788,10 @@ class EventPlaceholderService extends PlaceholderService
                         /** @var EventTicket $ticket */
                         $ticket = $eventTicketRepository->getById($bookingToEventTicket->getEventTicketId()->getValue());
 
+                        if  ($ticketsPriceByDateRange && $ticketsPriceByDateRange->getItem($key)->getDateRangePrice()) {
+                            $ticket->setPrice(new Price($ticketsPriceByDateRange->getItem($key)->getDateRangePrice()->getValue()));
+                        }
+
                         $eventTickets[] = $bookingToEventTicket->getPersons()->getValue() . ' x ' . $ticket->getName()->getValue();
 
                         $eventPrices[] = $helperService->getFormattedPrice($ticket->getPrice()->getValue());
@@ -625,6 +805,10 @@ class EventPlaceholderService extends PlaceholderService
                         if ($bookingToEventTicket['price']) {
                             /** @var EventTicket $ticket */
                             $ticket = $eventTicketRepository->getById($bookingToEventTicket['eventTicketId']);
+
+                            if  ($ticketsPriceByDateRange && $ticketsPriceByDateRange->getItem($key)->getDateRangePrice()) {
+                                $ticket->setPrice(new Price($ticketsPriceByDateRange->getItem($key)->getDateRangePrice()->getValue()));
+                            }
 
                             $ticketName = $helperService->getBookingTranslation(
                                 $locale,
@@ -732,7 +916,8 @@ class EventPlaceholderService extends PlaceholderService
             'initial_event_end_time'           => !empty($oldEventEnd) ? date_i18n(
                 $timeFormat,
                 $oldEventEnd->getTimestamp()
-            ) : ''
+            ) : '',
+            'invoice_items_event'              => $invoiceItems
             ],
             $staff
         );
@@ -829,7 +1014,7 @@ class EventPlaceholderService extends PlaceholderService
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
-    public function getAmountData(&$bookingArray, $entity)
+    public function getAmountData(&$bookingArray, $entity, $invoice = false)
     {
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get(Entities::EVENT);
@@ -844,13 +1029,21 @@ class EventPlaceholderService extends PlaceholderService
             $bookingArray['coupon'] = $coupon ? $coupon->toArray() : null;
         }
 
+        $ticketsPriceByDateRange = null;
+
+        if ($entity['customPricing']) {
+            /** @var EventApplicationService $eventApplicationService */
+            $eventApplicationService = $this->container->get('application.booking.event.service');
+            $ticketsPriceByDateRange = $eventApplicationService->getTicketsPriceByDateRange($entity['customTickets']);
+        }
+
         $eventCustomPricing = [];
 
-        foreach ($entity['customTickets'] as $customTicket) {
+        foreach ($entity['customTickets'] as $key => $customTicket) {
             $eventCustomPricing[$customTicket['id']] = [
                 'dateRanges' => '[]',
-                'price'      => !empty($customTicket['dateRangePrice'])
-                    ? $customTicket['dateRangePrice'] : $customTicket['price'],
+                'price'      => $ticketsPriceByDateRange && $ticketsPriceByDateRange->getItem($key)->getDateRangePrice() ?
+                    $ticketsPriceByDateRange->getItem($key)->getDateRangePrice()->getValue() : $customTicket['price'],
             ];
         }
 
@@ -873,10 +1066,6 @@ class EventPlaceholderService extends PlaceholderService
             ]
         );
 
-        return [
-            'price'     => $reservationService->getPaymentAmount($booking, $bookable),
-            'discount'  => $reservationService->getPaymentAmount($booking, $bookable, 'discount'),
-            'deduction' => $reservationService->getPaymentAmount($booking, $bookable, 'deduction'),
-        ];
+        return $reservationService->getPaymentAmount($booking, $bookable, $invoice);
     }
 }

@@ -176,6 +176,9 @@ class Forminator_Core {
 	 * @return object
 	 */
 	public static function get_field_object( $type ) {
+		if ( 'stripe-ocs' === $type ) {
+			$type = 'stripe';
+		}
 		$object = isset( self::$field_objects[ $type ] ) ? self::$field_objects[ $type ] : null;
 
 		return $object;

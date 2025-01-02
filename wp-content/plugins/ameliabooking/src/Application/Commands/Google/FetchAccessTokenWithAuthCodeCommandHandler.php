@@ -5,6 +5,7 @@ namespace AmeliaBooking\Application\Commands\Google;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Domain\Factory\Google\GoogleCalendarFactory;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Repository\Google\GoogleCalendarRepository;
 
@@ -41,12 +42,20 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
         /** @var AbstractGoogleCalendarService $googleCalService */
         $googleCalService = $this->container->get('infrastructure.google.calendar.service');
 
-        $accessToken = $googleCalService->fetchAccessTokenWithAuthCode(
-            $command->getField('authCode'),
-            $command->getField('isBackend')
-                ? AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-employees'
-                : $command->getField('redirectUri')
-        );
+        $providerId = $command->getField('userId');
+
+        try {
+            $accessToken = $googleCalService->fetchAccessTokenWithAuthCode(
+                $command->getField('authCode'),
+                $command->getField('isBackend')
+                    ? AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-employees'
+                    : $command->getField('redirectUri')
+            );
+        } catch (\Exception $e) {
+            /** @var ProviderRepository $providerRepository */
+            $providerRepository = $this->container->get('domain.users.providers.repository');
+            $providerRepository->updateErrorColumn($providerId, $e->getMessage());
+        }
 
         $accessToken = apply_filters('amelia_before_google_calendar_added_filter', $accessToken, $command->getField('userId'));
 
@@ -56,7 +65,7 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
 
         do_action('amelia_before_google_calendar_added', $googleCalendar ? $googleCalendar->toArray() : null, $command->getField('userId'));
 
-        if (!$googleCalendarRepository->add($googleCalendar, $command->getField('userId'))) {
+        if (!$googleCalendarRepository->add($googleCalendar, $providerId)) {
             $googleCalendarRepository->rollback();
         }
 

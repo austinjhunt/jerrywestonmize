@@ -129,6 +129,11 @@ class Invoice implements \JsonSerializable
     private $storePaymentMethodEnabled = [];
 
     /**
+     * @var InvoiceAttachment[]|null
+     */
+    private $attachments;
+
+    /**
      * Returns Id.
      * The Square-assigned ID of the invoice.
      */
@@ -213,11 +218,11 @@ class Invoice implements \JsonSerializable
 
     /**
      * Returns Order Id.
-     * The ID of the [order]($m/Order) for which the invoice is created.
+     * The ID of the [order](entity:Order) for which the invoice is created.
      * This field is required when creating an invoice, and the order must be in the `OPEN` state.
      *
      * To view the line items and other information for the associated order, call the
-     * [RetrieveOrder]($e/Orders/RetrieveOrder) endpoint using the order ID.
+     * [RetrieveOrder](api-endpoint:Orders-RetrieveOrder) endpoint using the order ID.
      */
     public function getOrderId(): ?string
     {
@@ -229,11 +234,11 @@ class Invoice implements \JsonSerializable
 
     /**
      * Sets Order Id.
-     * The ID of the [order]($m/Order) for which the invoice is created.
+     * The ID of the [order](entity:Order) for which the invoice is created.
      * This field is required when creating an invoice, and the order must be in the `OPEN` state.
      *
      * To view the line items and other information for the associated order, call the
-     * [RetrieveOrder]($e/Orders/RetrieveOrder) endpoint using the order ID.
+     * [RetrieveOrder](api-endpoint:Orders-RetrieveOrder) endpoint using the order ID.
      *
      * @maps order_id
      */
@@ -244,11 +249,11 @@ class Invoice implements \JsonSerializable
 
     /**
      * Unsets Order Id.
-     * The ID of the [order]($m/Order) for which the invoice is created.
+     * The ID of the [order](entity:Order) for which the invoice is created.
      * This field is required when creating an invoice, and the order must be in the `OPEN` state.
      *
      * To view the line items and other information for the associated order, call the
-     * [RetrieveOrder]($e/Orders/RetrieveOrder) endpoint using the order ID.
+     * [RetrieveOrder](api-endpoint:Orders-RetrieveOrder) endpoint using the order ID.
      */
     public function unsetOrderId(): void
     {
@@ -773,7 +778,7 @@ class Invoice implements \JsonSerializable
 
     /**
      * Returns Subscription Id.
-     * The ID of the [subscription]($m/Subscription) associated with the invoice.
+     * The ID of the [subscription](entity:Subscription) associated with the invoice.
      * This field is present only on subscription billing invoices.
      */
     public function getSubscriptionId(): ?string
@@ -783,7 +788,7 @@ class Invoice implements \JsonSerializable
 
     /**
      * Sets Subscription Id.
-     * The ID of the [subscription]($m/Subscription) associated with the invoice.
+     * The ID of the [subscription](entity:Subscription) associated with the invoice.
      * This field is present only on subscription billing invoices.
      *
      * @maps subscription_id
@@ -932,6 +937,34 @@ class Invoice implements \JsonSerializable
     }
 
     /**
+     * Returns Attachments.
+     * Metadata about the attachments on the invoice. Invoice attachments are managed using the
+     * [CreateInvoiceAttachment](api-endpoint:Invoices-CreateInvoiceAttachment) and
+     * [DeleteInvoiceAttachment](api-endpoint:Invoices-DeleteInvoiceAttachment) endpoints.
+     *
+     * @return InvoiceAttachment[]|null
+     */
+    public function getAttachments(): ?array
+    {
+        return $this->attachments;
+    }
+
+    /**
+     * Sets Attachments.
+     * Metadata about the attachments on the invoice. Invoice attachments are managed using the
+     * [CreateInvoiceAttachment](api-endpoint:Invoices-CreateInvoiceAttachment) and
+     * [DeleteInvoiceAttachment](api-endpoint:Invoices-DeleteInvoiceAttachment) endpoints.
+     *
+     * @maps attachments
+     *
+     * @param InvoiceAttachment[]|null $attachments
+     */
+    public function setAttachments(?array $attachments): void
+    {
+        $this->attachments = $attachments;
+    }
+
+    /**
      * Encode this object to JSON
      *
      * @param bool $asArrayWhenEmpty Whether to serialize this model as an array whenever no fields
@@ -1011,6 +1044,9 @@ class Invoice implements \JsonSerializable
         }
         if (!empty($this->storePaymentMethodEnabled)) {
             $json['store_payment_method_enabled'] = $this->storePaymentMethodEnabled['value'];
+        }
+        if (isset($this->attachments)) {
+            $json['attachments']                  = $this->attachments;
         }
         $json = array_filter($json, function ($val) {
             return $val !== null;

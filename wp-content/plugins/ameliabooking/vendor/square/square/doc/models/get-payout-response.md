@@ -19,7 +19,8 @@
   "payout": {
     "amount_money": {
       "amount": -103,
-      "currency_code": "USD"
+      "currency_code": "USD",
+      "currency": "TZS"
     },
     "arrival_date": "2022-03-24",
     "created_at": "2022-03-24T03:07:09Z",
@@ -33,7 +34,21 @@
     "type": "BATCH",
     "updated_at": "2022-03-24T03:07:09Z",
     "version": 1
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

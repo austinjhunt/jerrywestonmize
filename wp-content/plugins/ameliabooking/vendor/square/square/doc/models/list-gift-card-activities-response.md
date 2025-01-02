@@ -61,7 +61,16 @@ the response contains a set of `Error` objects.
       "location_id": "81FN9BNFZTKS4",
       "type": "ACTIVATE"
     }
-  ]
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "cursor": "cursor2"
 }
 ```
 

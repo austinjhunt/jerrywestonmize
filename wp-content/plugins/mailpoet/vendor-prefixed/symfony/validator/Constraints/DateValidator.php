@@ -7,7 +7,7 @@ use MailPoetVendor\Symfony\Component\Validator\Exception\UnexpectedTypeException
 use MailPoetVendor\Symfony\Component\Validator\Exception\UnexpectedValueException;
 class DateValidator extends ConstraintValidator
 {
- public const PATTERN = '/^(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})$/';
+ public const PATTERN = '/^(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})$/D';
  public static function checkDate(int $year, int $month, int $day) : bool
  {
  return \checkdate($month, $day, $year);

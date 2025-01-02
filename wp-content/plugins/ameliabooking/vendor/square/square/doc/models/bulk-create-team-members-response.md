@@ -36,7 +36,21 @@ Represents a response from a bulk create request containing the created `TeamMem
         "phone_number": "+14159283333",
         "reference_id": "reference_id_1",
         "status": "ACTIVE"
-      }
+      },
+      "errors": [
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        }
+      ]
     },
     "idempotency-key-2": {
       "team_member": {
@@ -51,9 +65,31 @@ Represents a response from a bulk create request containing the created `TeamMem
         "phone_number": "+14159223334",
         "reference_id": "reference_id_2",
         "status": "ACTIVE"
-      }
+      },
+      "errors": [
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        }
+      ]
     }
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

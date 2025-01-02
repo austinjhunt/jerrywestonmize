@@ -457,6 +457,27 @@ function forminator_get_payment_vars() {
 }
 
 /**
+ * Return Stripe subscription vars
+ *
+ * @since 1.38
+ * @return array
+ */
+function forminator_get_stripe_subscription_vars() {
+	$vars_list = array(
+		'subscription_id' => esc_html__( 'Subscription ID', 'forminator' ),
+	);
+
+	/**
+	 * Filter forminator Stripe subscription var list
+	 *
+	 * @since 1.38
+	 *
+	 * @param array $vars_list
+	 */
+	return apply_filters( 'forminator_stripe_subscription_vars_list', $vars_list );
+}
+
+/**
  * Return required icon
  *
  * @since 1.0
@@ -2347,6 +2368,7 @@ function forminator_replace_form_payment_data( $content, Forminator_Form_Model $
 			'{payment_amount}'   => $payment_meta['amount'],
 			'{payment_currency}' => $payment_meta['currency'],
 			'{transaction_id}'   => $payment_meta['transaction_id'],
+			'{subscription_id}'  => ! empty( $payment_meta['subscription_id'] ) ? $payment_meta['subscription_id'] : '',
 		);
 
 		$content = str_replace( array_keys( $replaces ), array_values( $replaces ), $content );
@@ -2373,7 +2395,7 @@ function forminator_payment_data( $content, $custom_form, $entry ) {
 	if ( ! empty( $form_fields ) && ! empty( $entry ) ) {
 		foreach ( $form_fields as $field ) {
 			$field_type = $field->__get( 'type' );
-			if ( in_array( $field_type, array( 'stripe', 'paypal' ), true ) && ! empty( $entry->meta_data[ $field->slug ] ) ) {
+			if ( in_array( $field_type, array( 'stripe', 'stripe-ocs', 'paypal' ), true ) && ! empty( $entry->meta_data[ $field->slug ] ) ) {
 				$payment_meta                   = $entry->meta_data[ $field->slug ]['value'];
 				$payment_meta['payment_method'] = $field_type;
 			}
@@ -2478,6 +2500,15 @@ function forminator_get_entry_field_value( $entry, $mapper, $sub_meta_key = '', 
 		$value      = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $meta_value, $allow_html, $truncate );
 	} else {
 		$meta_value = $entry->get_meta( $mapper['meta_key'], '' );
+		$field_keys = array_keys( $entry->meta_data );
+
+		// Fix for Stripe OCS and Stripe old field to show only one.
+		if ( 'stripe-ocs' === $mapper['type'] ) {
+			if ( in_array( 'stripe-1', $field_keys, true ) && empty( $meta_value['mode'] ) ) {
+				$meta_value = $entry->get_meta( 'stripe-1', '' );
+			}
+		}
+
 		// meta_key based.
 		if ( ! isset( $mapper['sub_metas'] ) ) {
 			$value = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value, $allow_html, $truncate );

@@ -68,12 +68,6 @@ class GetEventsCommandHandler extends CommandHandler
 
         $isFrontEnd = isset($params['page']) && empty($params['group']);
 
-        $groupById = isset($params['page']) || isset($params['group']);
-
-        if ($groupById) {
-            $params['groupById'] = true;
-        }
-
         $isCalendarPage = $isFrontEnd && (int)$params['page'] === 0;
 
         $isCabinetPage = $command->getPage() === 'cabinet';
@@ -125,38 +119,25 @@ class GetEventsCommandHandler extends CommandHandler
             }
         }
 
-        $filteredEventIds = $eventRepository->getFilteredIds(
-            $params,
-            $isFrontEnd ? (!empty($params['limit']) ? $params['limit'] : $settingsDS->getSetting('general', 'itemsPerPage')):
-                    $settingsDS->getSetting('general', 'itemsPerPageBackEnd')
-        );
-
-        if ($isCabinetPage) {
-            $params['fetchCoupons'] = true;
-        }
-
-        if ($isCalendarPage) {
-            $params['allProviders'] = true;
-        }
-
-        $eventsIds = array_column($filteredEventIds, 'id');
-
         /** @var Collection $events */
-        $events = $eventsIds ? $eventAS->getEventsByIds(
-            $eventsIds,
+        $events = $eventAS->getEventsByCriteria(
+            $params,
             [
                 'fetchEventsPeriods'    => true,
                 'fetchEventsTickets'    => true,
-                'fetchEventsTags'       => true,
-                'fetchEventsProviders'  => true,
-                'fetchEventsImages'     => true,
+                'fetchEventsTags'       => $isFrontEnd,
+                'fetchEventsProviders'  => ($isFrontEnd || $command->getPage() === 'calendar'),
+                'fetchEventsImages'     => $isFrontEnd,
+                'fetchBookings'         => true,
                 'fetchBookingsTickets'  => true,
-                'fetchBookingsCoupons'  => true,
-                'fetchApprovedBookings' => false,
-                'fetchBookingsPayments' => true,
+                'fetchBookingsCoupons'  => $isCabinetPage,
+                'fetchBookingsPayments' => $isCabinetPage,
                 'fetchBookingsUsers'    => $isCabinetPage,
-            ]
-        ) : new Collection();
+            ],
+            $isFrontEnd
+                ? (!empty($params['limit']) ? $params['limit'] : $settingsDS->getSetting('general', 'itemsPerPage'))
+                : $settingsDS->getSetting('general', 'itemsPerPageBackEnd')
+        );
 
         $currentDateTime = DateTimeService::getNowDateTimeObject();
 
@@ -236,6 +217,9 @@ class GetEventsCommandHandler extends CommandHandler
 
                 if (!empty($params['timeZone'])) {
                     $timeZone = $params['timeZone'];
+                } elseif ($user && $user->getType() === AbstractUser::USER_ROLE_PROVIDER &&
+                    empty($user->getTimeZone()) && !empty(get_option('timezone_string'))) {
+                    $timeZone = get_option('timezone_string');
                 }
 
                 /** @var EventPeriod $period */

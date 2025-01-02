@@ -21,7 +21,12 @@
     "id": "W62UWFY35CWMYGVWK6TWJDNI",
     "is_deleted": false,
     "item_data": {
-      "category_id": "BJNQCF2FJ6S6UIDT65ABHLRX",
+      "categories": [
+        {
+          "id": "BJNQCF2FJ6S6UIDT65ABHLRX",
+          "ordinal": 0
+        }
+      ],
       "description": "Hot Leaf Juice",
       "name": "Tea",
       "tax_ids": [
@@ -51,7 +56,29 @@
     "present_at_all_locations": true,
     "type": "ITEM",
     "updated_at": "2016-11-16T22:25:24.878Z",
-    "version": 1479335124878
+    "version": 1479335124878,
+    "custom_attribute_values": {
+      "key0": {
+        "name": "name8",
+        "string_value": "string_value2",
+        "custom_attribute_definition_id": "custom_attribute_definition_id4",
+        "type": "STRING",
+        "number_value": "number_value8"
+      },
+      "key1": {
+        "name": "name8",
+        "string_value": "string_value2",
+        "custom_attribute_definition_id": "custom_attribute_definition_id4",
+        "type": "STRING",
+        "number_value": "number_value8"
+      }
+    },
+    "catalog_v1_ids": [
+      {
+        "catalog_v1_id": "catalog_v1_id4",
+        "location_id": "location_id4"
+      }
+    ]
   },
   "related_objects": [
     {
@@ -63,7 +90,29 @@
       "present_at_all_locations": true,
       "type": "CATEGORY",
       "updated_at": "2016-11-16T22:25:24.878Z",
-      "version": 1479335124878
+      "version": 1479335124878,
+      "custom_attribute_values": {
+        "key0": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        },
+        "key1": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        }
+      },
+      "catalog_v1_ids": [
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        }
+      ]
     },
     {
       "id": "HURXQOOAIC4IZSI2BEXQRYFY",
@@ -78,7 +127,43 @@
       },
       "type": "TAX",
       "updated_at": "2016-11-16T22:25:24.878Z",
-      "version": 1479335124878
+      "version": 1479335124878,
+      "custom_attribute_values": {
+        "key0": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        },
+        "key1": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        }
+      },
+      "catalog_v1_ids": [
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
     }
   ]
 }

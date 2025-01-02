@@ -1122,7 +1122,7 @@ class Forminator_Export {
 					// if no subfield enabled when multiple name remove mapper (means dont show it on export).
 					$mapper = array();
 				}
-			} elseif ( 'stripe' === $field_type || 'paypal' === $field_type ) {
+			} elseif ( 'stripe' === $field_type || 'stripe-ocs' === $field_type || 'paypal' === $field_type ) {
 				$mapper['sub_metas']   = array();
 				$mapper['sub_metas'][] = array(
 					'key'   => 'mode',

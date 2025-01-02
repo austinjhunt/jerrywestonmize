@@ -212,6 +212,17 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		$forminator_stripe_field = Forminator_Core::get_field_object( 'stripe' );
 
 		if ( $forminator_stripe_field instanceof Forminator_Stripe ) {
+			if ( ! empty( self::$prepared_data['stripe-intent'] ) && isset( self::$prepared_data['paymentPlan'] ) &&
+				( empty( $forminator_stripe_field->payment_plan )
+					|| self::$prepared_data['paymentPlan'] === $forminator_stripe_field->payment_plan_hash )
+			) {
+				// No need to update paymentIntent if it's the same plan.
+				wp_send_json_success(
+					array(
+						'paymentPlan' => $forminator_stripe_field->payment_plan_hash,
+					)
+				);
+			}
 			$forminator_stripe_field->update_paymentIntent(
 				self::$prepared_data,
 				self::$info['stripe_field']
@@ -531,7 +542,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		$element_id  = Forminator_Field::get_property( 'element_id', $field_array );
 
 		if ( self::$is_draft ) {
-			if ( in_array( $field_type, array( 'hidden', 'stripe', 'paypal', 'signature' ), true ) ) {
+			if ( in_array( $field_type, array( 'hidden', 'stripe', 'stripe-ocs', 'paypal', 'signature' ), true ) ) {
 				return;
 			}
 
@@ -545,7 +556,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		}
 
 		// if certain field types - go to next field.
-		if ( in_array( $field_type, array( 'stripe', 'paypal', 'calculation', 'group' ), true ) ) {
+		if ( in_array( $field_type, array( 'stripe', 'stripe-ocs', 'paypal', 'calculation', 'group' ), true ) ) {
 			return;
 		}
 
@@ -719,6 +730,42 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	}
 
 	/**
+	 * Subscriptions payment intent
+	 *
+	 * @since 1.38
+	 *
+	 * @return null|object
+	 */
+	public static function subscription_payment_intent() {
+		if ( class_exists( 'Forminator_Stripe_Subscription' ) ) {
+			return;
+		}
+		try {
+			self::prepare_fields_info();
+			$stripe_addon = Forminator_Stripe_Subscription::get_instance();
+			$field_object = Forminator_Core::get_field_object( 'stripe' );
+
+			if ( ! $field_object ) {
+				return;
+			}
+
+			$field = self::$info['stripe_field'];
+
+			$payment_plan = $field_object->get_payment_plan( $field );
+			$amount_type  = $payment_plan['subscription_amount_type'] ?? 'fixed';
+			$amount       = $payment_plan['subscription_amount'] ?? 0.0;
+
+			if ( 'fixed' === $amount_type && empty( $amount ) ) {
+				return; // Payment amount should be larger than 0.
+			}
+
+			return $stripe_addon->create_payment_intent( $field_object, self::$module_object, self::$prepared_data, $field, $payment_plan );
+		} catch ( Exception $e ) {
+			return;
+		}
+	}
+
+	/**
 	 * Handle stripe single payment
 	 *
 	 * @since 1.15
@@ -779,6 +826,16 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 
 				return new WP_Error( 'forminator_stripe_error', $e->getMessage() );
 			}
+		} else {
+			return new WP_Error(
+				'forminator_stripe_error',
+				esc_html(
+					apply_filters(
+						'forminator_payment_require_stripe_subscription_addon_error_message',
+						esc_html__( 'Forminator Stripe Subscription Add-on is required to submit this form.', 'forminator' )
+					)
+				)
+			);
 		}
 	}
 
@@ -844,33 +901,24 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			}
 
 			// Don't process confirm if status is requires_capture as it confirmed already.
-			if ( 'requires_capture' !== $intent->status ) {
-				$result = $intent->confirm();
+			if ( 'requires_confirmation' === $intent->status ) {
+				$result = $intent->confirm(
+					array(
+						'return_url' => Forminator_Stripe::get_return_url(),
+					)
+				);
+			} else {
+				$result = $intent;
 			}
-		} catch ( Exception $e ) {
-			// Delete entry if paymentIntent confirmation is not successful.
-			$entry->delete();
 
-			return new WP_Error( 'forminator_stripe_error', $e->getMessage() );
-		}
-
-		// Don't process confirm result if status is requires_capture.
-		if ( 'requires_capture' !== $intent->status ) {
 			// If we have 3D security on the card return for verification.
-			if ( 'requires_action' === $result->status ) {
-				// Delete entry if 3d security is needed, we will store it on next attempt.
-				$entry->delete();
+			if ( 'requires_action' === $result->status || 'requires_confirmation' === $result->status ) {
+				$error_data = self::handle_failed_stripe_response( $result, $entry );
 
-				self::$response_attrs['stripe3d'] = true;
-				self::$response_attrs['secret']   = $result->client_secret;
-
-				return new WP_Error( 'forminator_stripe_error', esc_html__( 'This payment require 3D Secure authentication! Please follow the instructions.', 'forminator' ) );
+				self::$response_attrs           = array_merge( self::$response_attrs, $error_data );
+				self::$response_attrs['secret'] = $result->client_secret;
+				return new WP_Error( 'forminator_stripe_error', esc_html( $error_data['message'] ) );
 			}
-		}
-
-		// Try to capture payment.
-		try {
-			$capture = $intent->capture();
 		} catch ( Exception $e ) {
 			// Delete entry if capture is not successful.
 			$entry->delete();
@@ -878,7 +926,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			return new WP_Error( 'forminator_stripe_error', $e->getMessage() );
 		}
 
-		if ( ! isset( $capture->status ) || 'succeeded' !== $capture->status ) {
+		if ( 'succeeded' !== $intent->status ) {
 			// Delete entry if capture is not successful.
 			$entry->delete();
 
@@ -893,6 +941,38 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		$stripe_entry_data['value'] = array_merge( $stripe_entry_data['value'], $result );
 
 		return $stripe_entry_data;
+	}
+
+	/**
+	 * Handle stripe failed response
+	 *
+	 * @param object $result Stripe result.
+	 * @param object $entry Entry object.
+	 *
+	 * @return array
+	 */
+	public static function handle_failed_stripe_response( $result, $entry ) {
+		// Delete entry if 3d security or additional confirmation is needed, we will store it on next attempt.
+		$entry->delete();
+		$error_data = array(
+			'message' => __( 'This payment require additional authentication! Please follow the instructions.', 'forminator' ),
+		);
+
+		if ( ! empty( $result->next_action->redirect_to_url->url ) && 0 !== strpos( $result->next_action->redirect_to_url->url, 'https://hooks.stripe.com' ) ) {
+			$error_data['redirect_to_url'] = $result->next_action->redirect_to_url->url;
+		} elseif ( ! empty( $result->next_action->alipay_handle_redirect->url ) ) {
+			$error_data['redirect_to_url'] = $result->next_action->alipay_handle_redirect->url;
+		} elseif ( ! empty( $result->next_action->wechat_pay_display_qr_code->data ) ) {
+			$error_data['redirect_to_url'] = $result->next_action->wechat_pay_display_qr_code->data;
+		} elseif ( ! empty( $result->next_action->cashapp_handle_redirect_or_display_qr_code->mobile_auth_url ) ) {
+			$error_data['redirect_to_url'] = $result->next_action->cashapp_handle_redirect_or_display_qr_code->mobile_auth_url;
+		} else {
+			$error_data['stripe3d'] = true;
+
+			$error_data['message'] = __( 'This payment require 3D Secure authentication! Please follow the instructions.', 'forminator' );
+		}
+
+		return apply_filters( 'forminator_stripe_next_action_after_payment_confirmation', $error_data, $result );
 	}
 
 	/**
@@ -1085,6 +1165,8 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		foreach ( wp_list_pluck( $current_entry_fields, 'name' ) as $element_id ) {
 			$data[ $element_id ] = Forminator_Integration_Form_Hooks::prepare_field_value_for_addon( $element_id, $current_entry_fields, $data );
 		}
+
+		$data = Forminator_Integration_Form_Hooks::prepare_stripe_subscription_id_for_addon( $data, $current_entry_fields );
 
 		// Remove technical info.
 		$data = array_filter(
@@ -1707,7 +1789,9 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			throw new Exception( esc_html( $plan_data_array->get_error_message() ) );
 		}
 
-		self::$info['field_data_array'][] = $plan_data_array;
+		if ( ! empty( $plan_data_array ) ) {
+			self::$info['field_data_array'][] = $plan_data_array;
+		}
 	}
 
 	/**
@@ -1810,9 +1894,11 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		$fields         = self::$module_object->get_fields();
 		$visible_fields = array(); // Visible fields with calculable values.
 		$unspecified    = array(); // it's not clear these fields are hidden or visible.
+		$field_slugs    = wp_list_pluck( $fields, 'slug' );
 		do { // We do it recursevely because sometimes fields on which visibility depends are placed in the array after dependent fields.
 			$previous_unspecified = $unspecified;
 			$unspecified          = array();
+
 			foreach ( $fields as $field ) {
 				$field_settings = $field->to_formatted_array();
 				$field_id       = Forminator_Field::get_property( 'element_id', $field_settings );
@@ -1837,6 +1923,11 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 					$field_type   = Forminator_Field::get_property( 'type', $field_settings );
 					$field_object = Forminator_Core::get_field_object( $field_type );
 
+					// if it's stripe field and there is stripe OCS field - skip it.
+					if ( 'stripe' === $field_type && in_array( 'stripe-ocs-1', $field_slugs, true ) ) {
+						continue;
+					}
+
 					if ( $conditions ) {
 						$dependent_fields = wp_list_pluck( $conditions, 'element_id' );
 						$depends          = self::dependencies_not_ready( $dependent_fields, $visible_fields );
@@ -1855,7 +1946,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 					$submitted_field_data = self::$prepared_data[ $field_id . $group_suffix ] ?? null;
 					$calculable_value     = $field_object::get_calculable_value( $submitted_field_data, $field_settings );
 					if ( 'calculation' !== $field_type ) {
-						if ( in_array( $field_type, array( 'stripe', 'paypal' ), true ) ) {
+						if ( in_array( $field_type, array( 'stripe', 'stripe-ocs', 'paypal' ), true ) ) {
 							$dependent_fields = $field_object->get_amount_dependent_fields( $field_settings );
 							$depends          = self::dependencies_not_ready( $dependent_fields, $visible_fields );
 							if ( $depends ) {
@@ -1870,7 +1961,9 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 							}
 							self::$prepared_data[ $field_id ] = $amount;
 							// Save 'stripe_field' and 'paypal_field'.
-							self::$info[ $field_type . '_field' ] = $field_settings;
+							$payment_key = str_replace( '-ocs', '', $field_type ) . '_field';
+
+							self::$info[ $payment_key ] = $field_settings;
 						} else {
 							$not_calculable                              = $calculable_value === $field_object::FIELD_NOT_CALCULABLE;
 							$visible_fields[ $field_id . $group_suffix ] = $not_calculable ? $submitted_field_data : $calculable_value;

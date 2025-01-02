@@ -39,7 +39,7 @@ children.
 IDs can be deleted. The response will only include IDs that were
 actually deleted.
 
-To ensure consistency, only one delete request is processed at a time per seller account.  
+To ensure consistency, only one delete request is processed at a time per seller account.
 While one (batch or non-batch) delete request is being processed, other (batched and non-batched)
 delete requests are rejected with the `429` error code.
 
@@ -55,13 +55,19 @@ function batchDeleteCatalogObjects(BatchDeleteCatalogObjectsRequest $body): ApiR
 
 ## Response Type
 
-[`BatchDeleteCatalogObjectsResponse`](../../doc/models/batch-delete-catalog-objects-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BatchDeleteCatalogObjectsResponse`](../../doc/models/batch-delete-catalog-objects-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\BatchDeleteCatalogObjectsRequest();
-$body->setObjectIds(['W62UWFY35CWMYGVWK6TWJDNI', 'AA27W3M2GGTF3H6AVPNB77CK']);
+$body = BatchDeleteCatalogObjectsRequestBuilder::init()
+    ->objectIds(
+        [
+            'W62UWFY35CWMYGVWK6TWJDNI',
+            'AA27W3M2GGTF3H6AVPNB77CK'
+        ]
+    )
+    ->build();
 
 $apiResponse = $catalogApi->batchDeleteCatalogObjects($body);
 
@@ -71,9 +77,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -98,16 +104,19 @@ function batchRetrieveCatalogObjects(BatchRetrieveCatalogObjectsRequest $body): 
 
 ## Response Type
 
-[`BatchRetrieveCatalogObjectsResponse`](../../doc/models/batch-retrieve-catalog-objects-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BatchRetrieveCatalogObjectsResponse`](../../doc/models/batch-retrieve-catalog-objects-response.md).
 
 ## Example Usage
 
 ```php
-$body_objectIds = ['W62UWFY35CWMYGVWK6TWJDNI', 'AA27W3M2GGTF3H6AVPNB77CK'];
-$body = new Models\BatchRetrieveCatalogObjectsRequest(
-    $body_objectIds
-);
-$body->setIncludeRelatedObjects(true);
+$body = BatchRetrieveCatalogObjectsRequestBuilder::init(
+    [
+        'W62UWFY35CWMYGVWK6TWJDNI',
+        'AA27W3M2GGTF3H6AVPNB77CK'
+    ]
+)
+    ->includeRelatedObjects(true)
+    ->build();
 
 $apiResponse = $catalogApi->batchRetrieveCatalogObjects($body);
 
@@ -117,9 +126,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -135,7 +144,7 @@ batches will be processed in order as long as the total object count for the
 request (items, variations, modifier lists, discounts, and taxes) is no more
 than 10,000.
 
-To ensure consistency, only one update request is processed at a time per seller account.  
+To ensure consistency, only one update request is processed at a time per seller account.
 While one (batch or non-batch) update request is being processed, other (batched and non-batched)
 update requests are rejected with the `429` error code.
 
@@ -151,96 +160,160 @@ function batchUpsertCatalogObjects(BatchUpsertCatalogObjectsRequest $body): ApiR
 
 ## Response Type
 
-[`BatchUpsertCatalogObjectsResponse`](../../doc/models/batch-upsert-catalog-objects-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BatchUpsertCatalogObjectsResponse`](../../doc/models/batch-upsert-catalog-objects-response.md).
 
 ## Example Usage
 
 ```php
-$body_idempotencyKey = '789ff020-f723-43a9-b4b5-43b5dc1fa3dc';
-$body_batches = [];
-
-$body_batches_0_objects = [];
-
-$body_batches_0_objects_0_type = Models\CatalogObjectType::ITEM;
-$body_batches_0_objects_0_id = '#Tea';
-$body_batches_0_objects[0] = new Models\CatalogObject(
-    $body_batches_0_objects_0_type,
-    $body_batches_0_objects_0_id
-);
-$body_batches_0_objects[0]->setPresentAtAllLocations(true);
-$body_batches_0_objects[0]->setItemData(new Models\CatalogItem());
-$body_batches_0_objects[0]->getItemData()->setName('Tea');
-$body_batches_0_objects[0]->getItemData()->setCategoryId('#Beverages');
-$body_batches_0_objects[0]->getItemData()->setTaxIds(['#SalesTax']);
-$body_batches_0_objects_0_itemData_variations = [];
-
-$body_batches_0_objects_0_itemData_variations_0_type = Models\CatalogObjectType::ITEM_VARIATION;
-$body_batches_0_objects_0_itemData_variations_0_id = '#Tea_Mug';
-$body_batches_0_objects_0_itemData_variations[0] = new Models\CatalogObject(
-    $body_batches_0_objects_0_itemData_variations_0_type,
-    $body_batches_0_objects_0_itemData_variations_0_id
-);
-$body_batches_0_objects_0_itemData_variations[0]->setPresentAtAllLocations(true);
-$body_batches_0_objects[0]->getItemData()->setVariations($body_batches_0_objects_0_itemData_variations);
-
-$body_batches_0_objects[0]->getItemData()->setDescriptionHtml('<p><strong>Hot</strong> Leaf Juice</p>');
-
-$body_batches_0_objects_1_type = Models\CatalogObjectType::ITEM;
-$body_batches_0_objects_1_id = '#Coffee';
-$body_batches_0_objects[1] = new Models\CatalogObject(
-    $body_batches_0_objects_1_type,
-    $body_batches_0_objects_1_id
-);
-$body_batches_0_objects[1]->setPresentAtAllLocations(true);
-$body_batches_0_objects[1]->setItemData(new Models\CatalogItem());
-$body_batches_0_objects[1]->getItemData()->setName('Coffee');
-$body_batches_0_objects[1]->getItemData()->setCategoryId('#Beverages');
-$body_batches_0_objects[1]->getItemData()->setTaxIds(['#SalesTax']);
-$body_batches_0_objects_1_itemData_variations = [];
-
-$body_batches_0_objects_1_itemData_variations_0_type = Models\CatalogObjectType::ITEM_VARIATION;
-$body_batches_0_objects_1_itemData_variations_0_id = '#Coffee_Regular';
-$body_batches_0_objects_1_itemData_variations[0] = new Models\CatalogObject(
-    $body_batches_0_objects_1_itemData_variations_0_type,
-    $body_batches_0_objects_1_itemData_variations_0_id
-);
-$body_batches_0_objects_1_itemData_variations[0]->setPresentAtAllLocations(true);
-
-$body_batches_0_objects_1_itemData_variations_1_type = Models\CatalogObjectType::ITEM_VARIATION;
-$body_batches_0_objects_1_itemData_variations_1_id = '#Coffee_Large';
-$body_batches_0_objects_1_itemData_variations[1] = new Models\CatalogObject(
-    $body_batches_0_objects_1_itemData_variations_1_type,
-    $body_batches_0_objects_1_itemData_variations_1_id
-);
-$body_batches_0_objects_1_itemData_variations[1]->setPresentAtAllLocations(true);
-$body_batches_0_objects[1]->getItemData()->setVariations($body_batches_0_objects_1_itemData_variations);
-
-$body_batches_0_objects[1]->getItemData()->setDescriptionHtml('<p>Hot <em>Bean Juice</em></p>');
-
-$body_batches_0_objects_2_type = Models\CatalogObjectType::CATEGORY;
-$body_batches_0_objects_2_id = '#Beverages';
-$body_batches_0_objects[2] = new Models\CatalogObject(
-    $body_batches_0_objects_2_type,
-    $body_batches_0_objects_2_id
-);
-$body_batches_0_objects[2]->setPresentAtAllLocations(true);
-
-$body_batches_0_objects_3_type = Models\CatalogObjectType::TAX;
-$body_batches_0_objects_3_id = '#SalesTax';
-$body_batches_0_objects[3] = new Models\CatalogObject(
-    $body_batches_0_objects_3_type,
-    $body_batches_0_objects_3_id
-);
-$body_batches_0_objects[3]->setPresentAtAllLocations(true);
-
-$body_batches[0] = new Models\CatalogObjectBatch(
-    $body_batches_0_objects
-);
-
-$body = new Models\BatchUpsertCatalogObjectsRequest(
-    $body_idempotencyKey,
-    $body_batches
-);
+$body = BatchUpsertCatalogObjectsRequestBuilder::init(
+    '789ff020-f723-43a9-b4b5-43b5dc1fa3dc',
+    [
+        CatalogObjectBatchBuilder::init(
+            [
+                CatalogObjectBuilder::init(
+                    CatalogObjectType::ITEM,
+                    '#Tea'
+                )
+                    ->presentAtAllLocations(true)
+                    ->itemData(
+                        CatalogItemBuilder::init()
+                            ->name('Tea')
+                            ->taxIds(
+                                [
+                                    '#SalesTax'
+                                ]
+                            )
+                            ->variations(
+                                [
+                                    CatalogObjectBuilder::init(
+                                        CatalogObjectType::ITEM_VARIATION,
+                                        '#Tea_Mug'
+                                    )
+                                        ->presentAtAllLocations(true)
+                                        ->itemVariationData(
+                                            CatalogItemVariationBuilder::init()
+                                                ->itemId('#Tea')
+                                                ->name('Mug')
+                                                ->pricingType(CatalogPricingType::FIXED_PRICING)
+                                                ->priceMoney(
+                                                    MoneyBuilder::init()
+                                                        ->amount(150)
+                                                        ->currency(Currency::USD)
+                                                        ->build()
+                                                )
+                                                ->build()
+                                        )
+                                        ->build()
+                                ]
+                            )
+                            ->categories(
+                                [
+                                    CatalogObjectCategoryBuilder::init()
+                                        ->id('#Beverages')
+                                        ->build()
+                                ]
+                            )
+                            ->descriptionHtml('<p><strong>Hot</strong> Leaf Juice</p>')
+                            ->build()
+                    )
+                    ->build(),
+                CatalogObjectBuilder::init(
+                    CatalogObjectType::ITEM,
+                    '#Coffee'
+                )
+                    ->presentAtAllLocations(true)
+                    ->itemData(
+                        CatalogItemBuilder::init()
+                            ->name('Coffee')
+                            ->taxIds(
+                                [
+                                    '#SalesTax'
+                                ]
+                            )
+                            ->variations(
+                                [
+                                    CatalogObjectBuilder::init(
+                                        CatalogObjectType::ITEM_VARIATION,
+                                        '#Coffee_Regular'
+                                    )
+                                        ->presentAtAllLocations(true)
+                                        ->itemVariationData(
+                                            CatalogItemVariationBuilder::init()
+                                                ->itemId('#Coffee')
+                                                ->name('Regular')
+                                                ->pricingType(CatalogPricingType::FIXED_PRICING)
+                                                ->priceMoney(
+                                                    MoneyBuilder::init()
+                                                        ->amount(250)
+                                                        ->currency(Currency::USD)
+                                                        ->build()
+                                                )
+                                                ->build()
+                                        )
+                                        ->build(),
+                                    CatalogObjectBuilder::init(
+                                        CatalogObjectType::ITEM_VARIATION,
+                                        '#Coffee_Large'
+                                    )
+                                        ->presentAtAllLocations(true)
+                                        ->itemVariationData(
+                                            CatalogItemVariationBuilder::init()
+                                                ->itemId('#Coffee')
+                                                ->name('Large')
+                                                ->pricingType(CatalogPricingType::FIXED_PRICING)
+                                                ->priceMoney(
+                                                    MoneyBuilder::init()
+                                                        ->amount(350)
+                                                        ->currency(Currency::USD)
+                                                        ->build()
+                                                )
+                                                ->build()
+                                        )
+                                        ->build()
+                                ]
+                            )
+                            ->categories(
+                                [
+                                    CatalogObjectCategoryBuilder::init()
+                                        ->id('#Beverages')
+                                        ->build()
+                                ]
+                            )
+                            ->descriptionHtml('<p>Hot <em>Bean Juice</em></p>')
+                            ->build()
+                    )
+                    ->build(),
+                CatalogObjectBuilder::init(
+                    CatalogObjectType::CATEGORY,
+                    '#Beverages'
+                )
+                    ->presentAtAllLocations(true)
+                    ->categoryData(
+                        CatalogCategoryBuilder::init()
+                            ->name('Beverages')
+                            ->build()
+                    )
+                    ->build(),
+                CatalogObjectBuilder::init(
+                    CatalogObjectType::TAX,
+                    '#SalesTax'
+                )
+                    ->presentAtAllLocations(true)
+                    ->taxData(
+                        CatalogTaxBuilder::init()
+                            ->name('Sales Tax')
+                            ->calculationPhase(TaxCalculationPhase::TAX_SUBTOTAL_PHASE)
+                            ->inclusionType(TaxInclusionType::ADDITIVE)
+                            ->percentage('5.0')
+                            ->appliesToCustomAmounts(true)
+                            ->enabled(true)
+                            ->build()
+                    )
+                    ->build()
+            ]
+        )->build()
+    ]
+)->build();
 
 $apiResponse = $catalogApi->batchUpsertCatalogObjects($body);
 
@@ -250,9 +323,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -281,23 +354,26 @@ function createCatalogImage(
 
 ## Response Type
 
-[`CreateCatalogImageResponse`](../../doc/models/create-catalog-image-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateCatalogImageResponse`](../../doc/models/create-catalog-image-response.md).
 
 ## Example Usage
 
 ```php
-$request_idempotencyKey = '528dea59-7bfb-43c1-bd48-4a6bba7dd61f86';
-$request_image_type = Models\CatalogObjectType::IMAGE;
-$request_image_id = '#TEMP_ID';
-$request_image = new Models\CatalogObject(
-    $request_image_type,
-    $request_image_id
-);
-$request = new Models\CreateCatalogImageRequest(
-    $request_idempotencyKey,
-    $request_image
-);
-$request->setObjectId('ND6EA5AAJEO5WL3JNNIAQA32');
+$request = CreateCatalogImageRequestBuilder::init(
+    '528dea59-7bfb-43c1-bd48-4a6bba7dd61f86',
+    CatalogObjectBuilder::init(
+        CatalogObjectType::IMAGE,
+        '#TEMP_ID'
+    )
+        ->imageData(
+            CatalogImageBuilder::init()
+                ->caption('A picture of a cup of coffee')
+                ->build()
+        )
+        ->build()
+)
+    ->objectId('ND6EA5AAJEO5WL3JNNIAQA32')
+    ->build();
 
 $apiResponse = $catalogApi->createCatalogImage($request);
 
@@ -307,9 +383,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -338,18 +414,21 @@ function updateCatalogImage(
 
 ## Response Type
 
-[`UpdateCatalogImageResponse`](../../doc/models/update-catalog-image-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateCatalogImageResponse`](../../doc/models/update-catalog-image-response.md).
 
 ## Example Usage
 
 ```php
 $imageId = 'image_id4';
-$request_idempotencyKey = '528dea59-7bfb-43c1-bd48-4a6bba7dd61f86';
-$request = new Models\UpdateCatalogImageRequest(
-    $request_idempotencyKey
-);
 
-$apiResponse = $catalogApi->updateCatalogImage($imageId, $request);
+$request = UpdateCatalogImageRequestBuilder::init(
+    '528dea59-7bfb-43c1-bd48-4a6bba7dd61f86'
+)->build();
+
+$apiResponse = $catalogApi->updateCatalogImage(
+    $imageId,
+    $request
+);
 
 if ($apiResponse->isSuccess()) {
     $updateCatalogImageResponse = $apiResponse->getResult();
@@ -357,9 +436,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -374,7 +453,7 @@ function catalogInfo(): ApiResponse
 
 ## Response Type
 
-[`CatalogInfoResponse`](../../doc/models/catalog-info-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CatalogInfoResponse`](../../doc/models/catalog-info-response.md).
 
 ## Example Usage
 
@@ -387,9 +466,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -412,13 +491,13 @@ function listCatalog(?string $cursor = null, ?string $types = null, ?int $catalo
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `cursor` | `?string` | Query, Optional | The pagination cursor returned in the previous response. Leave unset for an initial request.<br>The page size is currently set to be 100.<br>See [Pagination](https://developer.squareup.com/docs/basics/api101/pagination) for more information. |
-| `types` | `?string` | Query, Optional | An optional case-insensitive, comma-separated list of object types to retrieve.<br><br>The valid values are defined in the [CatalogObjectType](../../doc/models/catalog-object-type.md) enum, for example,<br>`ITEM`, `ITEM_VARIATION`, `CATEGORY`, `DISCOUNT`, `TAX`,<br>`MODIFIER`, `MODIFIER_LIST`, `IMAGE`, etc.<br><br>If this is unspecified, the operation returns objects of all the top level types at the version<br>of the Square API used to make the request. Object types that are nested onto other object types<br>are not included in the defaults.<br><br>At the current API version the default object types are:<br>ITEM, CATEGORY, TAX, DISCOUNT, MODIFIER_LIST,<br>PRICING_RULE, PRODUCT_SET, TIME_PERIOD, MEASUREMENT_UNIT,<br>SUBSCRIPTION_PLAN, ITEM_OPTION, CUSTOM_ATTRIBUTE_DEFINITION, QUICK_AMOUNT_SETTINGS. |
+| `cursor` | `?string` | Query, Optional | The pagination cursor returned in the previous response. Leave unset for an initial request.<br>The page size is currently set to be 100.<br>See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information. |
+| `types` | `?string` | Query, Optional | An optional case-insensitive, comma-separated list of object types to retrieve.<br><br>The valid values are defined in the [CatalogObjectType](entity:CatalogObjectType) enum, for example,<br>`ITEM`, `ITEM_VARIATION`, `CATEGORY`, `DISCOUNT`, `TAX`,<br>`MODIFIER`, `MODIFIER_LIST`, `IMAGE`, etc.<br><br>If this is unspecified, the operation returns objects of all the top level types at the version<br>of the Square API used to make the request. Object types that are nested onto other object types<br>are not included in the defaults.<br><br>At the current API version the default object types are:<br>ITEM, CATEGORY, TAX, DISCOUNT, MODIFIER_LIST,<br>PRICING_RULE, PRODUCT_SET, TIME_PERIOD, MEASUREMENT_UNIT,<br>SUBSCRIPTION_PLAN, ITEM_OPTION, CUSTOM_ATTRIBUTE_DEFINITION, QUICK_AMOUNT_SETTINGS. |
 | `catalogVersion` | `?int` | Query, Optional | The specific version of the catalog objects to be included in the response.<br>This allows you to retrieve historical versions of objects. The specified version value is matched against<br>the [CatalogObject](../../doc/models/catalog-object.md)s' `version` attribute.  If not included, results will be from the<br>current version of the catalog. |
 
 ## Response Type
 
-[`ListCatalogResponse`](../../doc/models/list-catalog-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListCatalogResponse`](../../doc/models/list-catalog-response.md).
 
 ## Example Usage
 
@@ -431,9 +510,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -441,7 +520,7 @@ if ($apiResponse->isSuccess()) {
 
 Creates a new or updates the specified [CatalogObject](../../doc/models/catalog-object.md).
 
-To ensure consistency, only one update request is processed at a time per seller account.  
+To ensure consistency, only one update request is processed at a time per seller account.
 While one (batch or non-batch) update request is being processed, other (batched and non-batched)
 update requests are rejected with the `429` error code.
 
@@ -457,43 +536,60 @@ function upsertCatalogObject(UpsertCatalogObjectRequest $body): ApiResponse
 
 ## Response Type
 
-[`UpsertCatalogObjectResponse`](../../doc/models/upsert-catalog-object-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpsertCatalogObjectResponse`](../../doc/models/upsert-catalog-object-response.md).
 
 ## Example Usage
 
 ```php
-$body_idempotencyKey = 'af3d1afc-7212-4300-b463-0bfc5314a5ae';
-$body_object_type = Models\CatalogObjectType::ITEM;
-$body_object_id = '#Cocoa';
-$body_object = new Models\CatalogObject(
-    $body_object_type,
-    $body_object_id
-);
-$body_object->setItemData(new Models\CatalogItem());
-$body_object->getItemData()->setName('Cocoa');
-$body_object->getItemData()->setAbbreviation('Ch');
-$body_object_itemData_variations = [];
-
-$body_object_itemData_variations_0_type = Models\CatalogObjectType::ITEM_VARIATION;
-$body_object_itemData_variations_0_id = '#Small';
-$body_object_itemData_variations[0] = new Models\CatalogObject(
-    $body_object_itemData_variations_0_type,
-    $body_object_itemData_variations_0_id
-);
-
-$body_object_itemData_variations_1_type = Models\CatalogObjectType::ITEM_VARIATION;
-$body_object_itemData_variations_1_id = '#Large';
-$body_object_itemData_variations[1] = new Models\CatalogObject(
-    $body_object_itemData_variations_1_type,
-    $body_object_itemData_variations_1_id
-);
-$body_object->getItemData()->setVariations($body_object_itemData_variations);
-
-$body_object->getItemData()->setDescriptionHtml('<p><strong>Hot</strong> Chocolate</p>');
-$body = new Models\UpsertCatalogObjectRequest(
-    $body_idempotencyKey,
-    $body_object
-);
+$body = UpsertCatalogObjectRequestBuilder::init(
+    'af3d1afc-7212-4300-b463-0bfc5314a5ae',
+    CatalogObjectBuilder::init(
+        CatalogObjectType::ITEM,
+        '#Cocoa'
+    )
+        ->itemData(
+            CatalogItemBuilder::init()
+                ->name('Cocoa')
+                ->abbreviation('Ch')
+                ->variations(
+                    [
+                        CatalogObjectBuilder::init(
+                            CatalogObjectType::ITEM_VARIATION,
+                            '#Small'
+                        )
+                            ->itemVariationData(
+                                CatalogItemVariationBuilder::init()
+                                    ->itemId('#Cocoa')
+                                    ->name('Small')
+                                    ->pricingType(CatalogPricingType::VARIABLE_PRICING)
+                                    ->build()
+                            )
+                            ->build(),
+                        CatalogObjectBuilder::init(
+                            CatalogObjectType::ITEM_VARIATION,
+                            '#Large'
+                        )
+                            ->itemVariationData(
+                                CatalogItemVariationBuilder::init()
+                                    ->itemId('#Cocoa')
+                                    ->name('Large')
+                                    ->pricingType(CatalogPricingType::FIXED_PRICING)
+                                    ->priceMoney(
+                                        MoneyBuilder::init()
+                                            ->amount(400)
+                                            ->currency(Currency::USD)
+                                            ->build()
+                                    )
+                                    ->build()
+                            )
+                            ->build()
+                    ]
+                )
+                ->descriptionHtml('<p><strong>Hot</strong> Chocolate</p>')
+                ->build()
+        )
+        ->build()
+)->build();
 
 $apiResponse = $catalogApi->upsertCatalogObject($body);
 
@@ -503,9 +599,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -518,7 +614,7 @@ are also deleted. For example, deleting a [CatalogItem](../../doc/models/catalog
 will also delete all of its
 [CatalogItemVariation](../../doc/models/catalog-item-variation.md) children.
 
-To ensure consistency, only one delete request is processed at a time per seller account.  
+To ensure consistency, only one delete request is processed at a time per seller account.
 While one (batch or non-batch) delete request is being processed, other (batched and non-batched)
 delete requests are rejected with the `429` error code.
 
@@ -534,7 +630,7 @@ function deleteCatalogObject(string $objectId): ApiResponse
 
 ## Response Type
 
-[`DeleteCatalogObjectResponse`](../../doc/models/delete-catalog-object-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteCatalogObjectResponse`](../../doc/models/delete-catalog-object-response.md).
 
 ## Example Usage
 
@@ -549,9 +645,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -569,7 +665,8 @@ any [CatalogTax](../../doc/models/catalog-tax.md) objects that apply to it.
 function retrieveCatalogObject(
     string $objectId,
     ?bool $includeRelatedObjects = false,
-    ?int $catalogVersion = null
+    ?int $catalogVersion = null,
+    ?bool $includeCategoryPathToRoot = false
 ): ApiResponse
 ```
 
@@ -580,18 +677,27 @@ function retrieveCatalogObject(
 | `objectId` | `string` | Template, Required | The object ID of any type of catalog objects to be retrieved. |
 | `includeRelatedObjects` | `?bool` | Query, Optional | If `true`, the response will include additional objects that are related to the<br>requested objects. Related objects are defined as any objects referenced by ID by the results in the `objects` field<br>of the response. These objects are put in the `related_objects` field. Setting this to `true` is<br>helpful when the objects are needed for immediate display to a user.<br>This process only goes one level deep. Objects referenced by the related objects will not be included. For example,<br><br>if the `objects` field of the response contains a CatalogItem, its associated<br>CatalogCategory objects, CatalogTax objects, CatalogImage objects and<br>CatalogModifierLists will be returned in the `related_objects` field of the<br>response. If the `objects` field of the response contains a CatalogItemVariation,<br>its parent CatalogItem will be returned in the `related_objects` field of<br>the response.<br><br>Default value: `false`<br>**Default**: `false` |
 | `catalogVersion` | `?int` | Query, Optional | Requests objects as of a specific version of the catalog. This allows you to retrieve historical<br>versions of objects. The value to retrieve a specific version of an object can be found<br>in the version field of [CatalogObject](../../doc/models/catalog-object.md)s. If not included, results will<br>be from the current version of the catalog. |
+| `includeCategoryPathToRoot` | `?bool` | Query, Optional | Specifies whether or not to include the `path_to_root` list for each returned category instance. The `path_to_root` list consists<br>of `CategoryPathToRootNode` objects and specifies the path that starts with the immediate parent category of the returned category<br>and ends with its root category. If the returned category is a top-level category, the `path_to_root` list is empty and is not returned<br>in the response payload.<br>**Default**: `false` |
 
 ## Response Type
 
-[`RetrieveCatalogObjectResponse`](../../doc/models/retrieve-catalog-object-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveCatalogObjectResponse`](../../doc/models/retrieve-catalog-object-response.md).
 
 ## Example Usage
 
 ```php
 $objectId = 'object_id8';
+
 $includeRelatedObjects = false;
 
-$apiResponse = $catalogApi->retrieveCatalogObject($objectId, $includeRelatedObjects);
+$includeCategoryPathToRoot = false;
+
+$apiResponse = $catalogApi->retrieveCatalogObject(
+    $objectId,
+    $includeRelatedObjects,
+    null,
+    $includeCategoryPathToRoot
+);
 
 if ($apiResponse->isSuccess()) {
     $retrieveCatalogObjectResponse = $apiResponse->getResult();
@@ -599,9 +705,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -630,21 +736,28 @@ function searchCatalogObjects(SearchCatalogObjectsRequest $body): ApiResponse
 
 ## Response Type
 
-[`SearchCatalogObjectsResponse`](../../doc/models/search-catalog-objects-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`SearchCatalogObjectsResponse`](../../doc/models/search-catalog-objects-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\SearchCatalogObjectsRequest();
-$body->setObjectTypes([Models\CatalogObjectType::ITEM]);
-$body->setQuery(new Models\CatalogQuery());
-$body_query_prefixQuery_attributeName = 'name';
-$body_query_prefixQuery_attributePrefix = 'tea';
-$body->getQuery()->setPrefixQuery(new Models\CatalogQueryPrefix(
-    $body_query_prefixQuery_attributeName,
-    $body_query_prefixQuery_attributePrefix
-));
-$body->setLimit(100);
+$body = SearchCatalogObjectsRequestBuilder::init()
+    ->objectTypes(
+        [
+            CatalogObjectType::ITEM
+        ]
+    )
+    ->query(
+        CatalogQueryBuilder::init()
+            ->prefixQuery(
+                CatalogQueryPrefixBuilder::init(
+                    'name',
+                    'tea'
+                )->build()
+            )->build()
+    )
+    ->limit(100)
+    ->build();
 
 $apiResponse = $catalogApi->searchCatalogObjects($body);
 
@@ -654,9 +767,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -685,39 +798,61 @@ function searchCatalogItems(SearchCatalogItemsRequest $body): ApiResponse
 
 ## Response Type
 
-[`SearchCatalogItemsResponse`](../../doc/models/search-catalog-items-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`SearchCatalogItemsResponse`](../../doc/models/search-catalog-items-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\SearchCatalogItemsRequest();
-$body->setTextFilter('red');
-$body->setCategoryIds(['WINE_CATEGORY_ID']);
-$body->setStockLevels([Models\SearchCatalogItemsRequestStockLevel::OUT, Models\SearchCatalogItemsRequestStockLevel::LOW]);
-$body->setEnabledLocationIds(['ATL_LOCATION_ID']);
-$body->setLimit(100);
-$body->setSortOrder(Models\SortOrder::ASC);
-$body->setProductTypes([Models\CatalogItemProductType::REGULAR]);
-$body_customAttributeFilters = [];
-
-$body_customAttributeFilters[0] = new Models\CustomAttributeFilter();
-$body_customAttributeFilters[0]->setCustomAttributeDefinitionId('VEGAN_DEFINITION_ID');
-$body_customAttributeFilters[0]->setBoolFilter(true);
-
-$body_customAttributeFilters[1] = new Models\CustomAttributeFilter();
-$body_customAttributeFilters[1]->setCustomAttributeDefinitionId('BRAND_DEFINITION_ID');
-$body_customAttributeFilters[1]->setStringFilter('Dark Horse');
-
-$body_customAttributeFilters[2] = new Models\CustomAttributeFilter();
-$body_customAttributeFilters[2]->setKey('VINTAGE');
-$body_customAttributeFilters[2]->setNumberFilter(new Models\Range());
-$body_customAttributeFilters[2]->getNumberFilter()->setMin('2017');
-$body_customAttributeFilters[2]->getNumberFilter()->setMax('2018');
-
-$body_customAttributeFilters[3] = new Models\CustomAttributeFilter();
-$body_customAttributeFilters[3]->setCustomAttributeDefinitionId('VARIETAL_DEFINITION_ID');
-$body->setCustomAttributeFilters($body_customAttributeFilters);
-
+$body = SearchCatalogItemsRequestBuilder::init()
+    ->textFilter('red')
+    ->categoryIds(
+        [
+            'WINE_CATEGORY_ID'
+        ]
+    )
+    ->stockLevels(
+        [
+            SearchCatalogItemsRequestStockLevel::OUT,
+            SearchCatalogItemsRequestStockLevel::LOW
+        ]
+    )
+    ->enabledLocationIds(
+        [
+            'ATL_LOCATION_ID'
+        ]
+    )
+    ->limit(100)
+    ->sortOrder(SortOrder::ASC)
+    ->productTypes(
+        [
+            CatalogItemProductType::REGULAR
+        ]
+    )
+    ->customAttributeFilters(
+        [
+            CustomAttributeFilterBuilder::init()
+                ->customAttributeDefinitionId('VEGAN_DEFINITION_ID')
+                ->boolFilter(true)
+                ->build(),
+            CustomAttributeFilterBuilder::init()
+                ->customAttributeDefinitionId('BRAND_DEFINITION_ID')
+                ->stringFilter('Dark Horse')
+                ->build(),
+            CustomAttributeFilterBuilder::init()
+                ->key('VINTAGE')
+                ->numberFilter(
+                    RangeBuilder::init()
+                        ->min('2017')
+                        ->max('2018')
+                        ->build()
+                )
+                ->build(),
+            CustomAttributeFilterBuilder::init()
+                ->customAttributeDefinitionId('VARIETAL_DEFINITION_ID')
+                ->build()
+        ]
+    )
+    ->build();
 
 $apiResponse = $catalogApi->searchCatalogItems($body);
 
@@ -727,9 +862,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -751,17 +886,29 @@ function updateItemModifierLists(UpdateItemModifierListsRequest $body): ApiRespo
 
 ## Response Type
 
-[`UpdateItemModifierListsResponse`](../../doc/models/update-item-modifier-lists-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateItemModifierListsResponse`](../../doc/models/update-item-modifier-lists-response.md).
 
 ## Example Usage
 
 ```php
-$body_itemIds = ['H42BRLUJ5KTZTTMPVSLFAACQ', '2JXOBJIHCWBQ4NZ3RIXQGJA6'];
-$body = new Models\UpdateItemModifierListsRequest(
-    $body_itemIds
-);
-$body->setModifierListsToEnable(['H42BRLUJ5KTZTTMPVSLFAACQ', '2JXOBJIHCWBQ4NZ3RIXQGJA6']);
-$body->setModifierListsToDisable(['7WRC16CJZDVLSNDQ35PP6YAD']);
+$body = UpdateItemModifierListsRequestBuilder::init(
+    [
+        'H42BRLUJ5KTZTTMPVSLFAACQ',
+        '2JXOBJIHCWBQ4NZ3RIXQGJA6'
+    ]
+)
+    ->modifierListsToEnable(
+        [
+            'H42BRLUJ5KTZTTMPVSLFAACQ',
+            '2JXOBJIHCWBQ4NZ3RIXQGJA6'
+        ]
+    )
+    ->modifierListsToDisable(
+        [
+            '7WRC16CJZDVLSNDQ35PP6YAD'
+        ]
+    )
+    ->build();
 
 $apiResponse = $catalogApi->updateItemModifierLists($body);
 
@@ -771,9 +918,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -795,17 +942,28 @@ function updateItemTaxes(UpdateItemTaxesRequest $body): ApiResponse
 
 ## Response Type
 
-[`UpdateItemTaxesResponse`](../../doc/models/update-item-taxes-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateItemTaxesResponse`](../../doc/models/update-item-taxes-response.md).
 
 ## Example Usage
 
 ```php
-$body_itemIds = ['H42BRLUJ5KTZTTMPVSLFAACQ', '2JXOBJIHCWBQ4NZ3RIXQGJA6'];
-$body = new Models\UpdateItemTaxesRequest(
-    $body_itemIds
-);
-$body->setTaxesToEnable(['4WRCNHCJZDVLSNDQ35PP6YAD']);
-$body->setTaxesToDisable(['AQCEGCEBBQONINDOHRGZISEX']);
+$body = UpdateItemTaxesRequestBuilder::init(
+    [
+        'H42BRLUJ5KTZTTMPVSLFAACQ',
+        '2JXOBJIHCWBQ4NZ3RIXQGJA6'
+    ]
+)
+    ->taxesToEnable(
+        [
+            '4WRCNHCJZDVLSNDQ35PP6YAD'
+        ]
+    )
+    ->taxesToDisable(
+        [
+            'AQCEGCEBBQONINDOHRGZISEX'
+        ]
+    )
+    ->build();
 
 $apiResponse = $catalogApi->updateItemTaxes($body);
 
@@ -815,8 +973,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

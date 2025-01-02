@@ -299,7 +299,8 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
             u.note AS note,
             u.phone AS phone,
             u.gender AS gender,
-            u.birthday AS birthday
+            u.birthday AS birthday,
+            u.status AS status
         ';
 
         if (!empty($criteria['ids'])) {

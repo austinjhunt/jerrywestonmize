@@ -85,6 +85,20 @@ class CoreHelper
     }
 
     /**
+     * Check if provided value is null or empty.
+     *
+     * @param $value mixed Value to be checked.
+     * @return bool True if given value is empty of null.
+     */
+    public static function isNullOrEmpty($value): bool
+    {
+        if (is_string($value) && $value == '0') {
+            return false;
+        }
+        return empty($value);
+    }
+
+    /**
      * Check if all the given value or values are present in the provided list.
      *
      * @param mixed $value        Value to be checked, could be scalar, array, 2D array, etc.
@@ -140,11 +154,36 @@ class CoreHelper
     /**
      * Return basic OS info.
      */
-    public static function getOsInfo(bool $test = false): string
+    public static function getOsInfo(string $osFamily = PHP_OS_FAMILY, string $functionName = 'php_uname'): string
     {
-        if ($test || PHP_OS_FAMILY === 'Unknown') {
+        if ($osFamily === 'Unknown' || empty($osFamily)) {
             return '';
         }
-        return PHP_OS_FAMILY . '-' . php_uname('r');
+        if (!function_exists($functionName)) {
+            return $osFamily;
+        }
+        return $osFamily . '-' . call_user_func($functionName, 'r');
+    }
+
+    /**
+     * Return base64 encoded string for given username and password, prepended with Basic substring.
+     */
+    public static function getBasicAuthEncodedString(string $username, string $password): string
+    {
+        if ($username == '' || $password == '') {
+            return '';
+        }
+        return 'Basic ' . base64_encode("$username:$password");
+    }
+
+    /**
+     * Return the accessToken prepended with Bearer substring.
+     */
+    public static function getBearerAuthString(string $accessToken): string
+    {
+        if ($accessToken == '') {
+            return '';
+        }
+        return 'Bearer ' . $accessToken;
     }
 }

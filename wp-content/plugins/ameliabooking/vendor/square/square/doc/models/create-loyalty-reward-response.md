@@ -27,7 +27,21 @@ A response that includes the loyalty reward created.
     "reward_tier_id": "e1b39225-9da5-43d1-a5db-782cdd8ad94f",
     "status": "ISSUED",
     "updated_at": "2020-05-01T21:49:54Z"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

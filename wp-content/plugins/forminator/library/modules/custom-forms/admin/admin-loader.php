@@ -377,25 +377,30 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	public static function get_default_settings( $name, $settings = array() ) {
 		$default_settings = array_merge(
 			array(
-				'formName'             => $name,
-				'pagination-header'    => 'nav',
-				'version'              => FORMINATOR_VERSION,
-				'form-border-style'    => 'solid',
-				'form-padding'         => '',
-				'form-border'          => '',
-				'fields-style'         => 'open',
-				'field-image-size'     => 'custom',
-				'validation'           => 'on_submit',
-				'akismet-protection'   => true,
-				'form-style'           => 'default',
-				'enable-ajax'          => 'true',
-				'autoclose'            => 'true',
-				'submission-indicator' => 'show',
-				'indicator-label'      => esc_html__( 'Submitting...', 'forminator' ),
-				'paginationData'       => array(
+				'formName'               => $name,
+				'pagination-header'      => 'nav',
+				'version'                => FORMINATOR_VERSION,
+				'form-border-style'      => 'solid',
+				'form-padding'           => '',
+				'form-border'            => '',
+				'fields-style'           => 'open',
+				'field-image-size'       => 'custom',
+				'validation'             => 'on_submit',
+				'akismet-protection'     => true,
+				'form-style'             => 'default',
+				'form-substyle'          => 'default',
+				'enable-ajax'            => 'true',
+				'autoclose'              => 'true',
+				'submission-indicator'   => 'show',
+				'indicator-label'        => esc_html__( 'Submitting...', 'forminator' ),
+				'paginationData'         => array(
 					'pagination-header-design' => 'show',
 					'pagination-header'        => 'nav',
 				),
+				'cform-color-option'     => 'theme',
+				'basic-field-image-size' => 'custom',
+				'basic-fields-style'     => 'open',
+				'store_submissions'      => '1',
 			),
 			$settings
 		);
@@ -482,9 +487,9 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 	 * @param string $name Template name.
 	 * @param string $trigger_from Trigger from Template page or Form builder.
 	 *
-	 * @return int
+	 * @return int | WP_Error
 	 */
-	public function create_module_from_free_template( string $slug, string $name = '', string $trigger_from = '' ): int {
+	public function create_module_from_free_template( string $slug, string $name = '', string $trigger_from = '' ) {
 		// Load settings from template.
 		$template = $this->get_template( $slug );
 
@@ -561,6 +566,12 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 
 		// Save data.
 		$id = $model->save();
+		if ( ! is_wp_error( $id ) ) {
+			$form_model = $model->load( $id );
+			if ( false !== $form_model ) {
+				Forminator_Base_Form_Model::module_update_do_action( 'form', $id, $form_model );
+			}
+		}
 
 		return $id;
 	}
@@ -615,7 +626,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 
 		// Validate User access and role in registration form.
 		if ( isset( $settings['form-type'] ) && 'registration' === $settings['form-type'] ) {
-			$validation_result = self::validate_registration_form_settings( $settings );
+			$validation_result = forminator_validate_registration_form_settings( $settings );
 			if ( is_wp_error( $validation_result ) ) {
 				return $validation_result;
 			}
@@ -662,6 +673,10 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 
 		// Save data.
 		$id = $form_model->save();
+
+		if ( is_wp_error( $id ) ) {
+			return $id;
+		}
 
 		try {
 			/**
@@ -710,31 +725,6 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		wp_cache_delete( 'forminator_form_total_entries_draft', 'forminator_form_total_entries_draft' );
 
 		return $id;
-	}
-
-	/**
-	 * Validate registration form settings.
-	 *
-	 * @param array $settings Settings.
-	 * @return bool|WP_Error
-	 */
-	private static function validate_registration_form_settings( $settings ) {
-		if ( ! current_user_can( 'create_users' ) ) {
-			return new WP_Error( 'invalid_access', esc_html__( 'Invalid access', 'forminator' ) );
-		}
-		$roles = forminator_get_accessible_user_roles();
-		if ( isset( $settings['registration-user-role'] ) && 'fixed' === $settings['registration-user-role'] ) {
-			if ( isset( $settings['registration-role-field'] ) && ! isset( $roles[ $settings['registration-role-field'] ] ) ) {
-				return new WP_Error( 'invalid_user_role', esc_html__( 'Invalid user role', 'forminator' ) );
-			}
-		} elseif ( ! empty( $settings['user_role'] ) && is_array( $settings['user_role'] ) ) {
-			foreach ( $settings['user_role'] as $user_role ) {
-				if ( isset( $user_role['role'] ) && ! isset( $roles[ $user_role['role'] ] ) ) {
-					return new WP_Error( 'invalid_user_role', esc_html__( 'Invalid user role', 'forminator' ) );
-				}
-			}
-		}
-		return true;
 	}
 
 	/**
@@ -791,6 +781,16 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		$templates = array();
 		if ( FORMINATOR_PRO ) {
 			$templates = Forminator_Template_API::get_templates( false, $page_number );
+			foreach ( $templates as $key => $template ) {
+				$config = json_decode( $template['config'], true );
+				if ( ! empty( $config['data'] ) && ! empty( $config['data']['settings'] ) ) {
+					$settings = $config['data']['settings'];
+					if ( is_wp_error( forminator_validate_registration_form_settings( $settings ) ) ) {
+						unset( $templates[ $key ] );
+					}
+				}
+			}
+			$templates = array_values( $templates );
 		}
 
 		wp_send_json_success( $templates );

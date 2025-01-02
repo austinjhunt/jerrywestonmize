@@ -52,13 +52,6 @@ class Forminator_Date extends Forminator_Field {
 	public $options = array();
 
 	/**
-	 * Category
-	 *
-	 * @var string
-	 */
-	public $category = 'standard';
-
-	/**
 	 * Icon
 	 *
 	 * @var string
@@ -156,6 +149,7 @@ class Forminator_Date extends Forminator_Field {
 		$disabled_range  = self::get_property( 'disable-date-range', $field, array() );
 		$id              = self::get_field_id( $name );
 		$describedby     = esc_attr( $id . '-description' );
+		$is_basic        = 'basic' === $design;
 
 		if ( false !== strpos( $date_format, '-' ) ) {
 			$sep = '-';
@@ -398,7 +392,7 @@ class Forminator_Date extends Forminator_Field {
 						$day_data = array(
 							'name'        => $day_id,
 							'id'          => self::get_field_id( $settings['form_id'] . '__field--' . $day_id ),
-							'class'       => 'forminator-select2',
+							'class'       => $is_basic ? '' : 'forminator-select2',
 							'data-format' => $date_format,
 							'data-parent' => $name,
 						);
@@ -452,7 +446,7 @@ class Forminator_Date extends Forminator_Field {
 						$month_data = array(
 							'name'        => $month_id,
 							'id'          => self::get_field_id( $settings['form_id'] . '__field--' . $month_id ),
-							'class'       => 'forminator-select2',
+							'class'       => $is_basic ? '' : 'forminator-select2',
 							'data-format' => $date_format,
 							'data-parent' => $name,
 						);
@@ -506,7 +500,7 @@ class Forminator_Date extends Forminator_Field {
 						$year_data = array(
 							'name'        => $year_id,
 							'id'          => self::get_field_id( $settings['form_id'] . '__field--' . $year_id ),
-							'class'       => 'forminator-select2',
+							'class'       => $is_basic ? '' : 'forminator-select2',
 							'data-format' => $date_format,
 							'data-parent' => $name,
 						);

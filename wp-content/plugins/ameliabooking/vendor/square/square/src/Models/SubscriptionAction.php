@@ -29,7 +29,17 @@ class SubscriptionAction implements \JsonSerializable
     /**
      * @var array
      */
-    private $newPlanId = [];
+    private $monthlyBillingAnchorDate = [];
+
+    /**
+     * @var array
+     */
+    private $phases = [];
+
+    /**
+     * @var array
+     */
+    private $newPlanVariationId = [];
 
     /**
      * Returns Id.
@@ -104,35 +114,103 @@ class SubscriptionAction implements \JsonSerializable
     }
 
     /**
-     * Returns New Plan Id.
-     * The target subscription plan a subscription switches to, for a `SWAP_PLAN` action.
+     * Returns Monthly Billing Anchor Date.
+     * The new billing anchor day value, for a `CHANGE_BILLING_ANCHOR_DATE` action.
      */
-    public function getNewPlanId(): ?string
+    public function getMonthlyBillingAnchorDate(): ?int
     {
-        if (count($this->newPlanId) == 0) {
+        if (count($this->monthlyBillingAnchorDate) == 0) {
             return null;
         }
-        return $this->newPlanId['value'];
+        return $this->monthlyBillingAnchorDate['value'];
     }
 
     /**
-     * Sets New Plan Id.
-     * The target subscription plan a subscription switches to, for a `SWAP_PLAN` action.
+     * Sets Monthly Billing Anchor Date.
+     * The new billing anchor day value, for a `CHANGE_BILLING_ANCHOR_DATE` action.
      *
-     * @maps new_plan_id
+     * @maps monthly_billing_anchor_date
      */
-    public function setNewPlanId(?string $newPlanId): void
+    public function setMonthlyBillingAnchorDate(?int $monthlyBillingAnchorDate): void
     {
-        $this->newPlanId['value'] = $newPlanId;
+        $this->monthlyBillingAnchorDate['value'] = $monthlyBillingAnchorDate;
     }
 
     /**
-     * Unsets New Plan Id.
-     * The target subscription plan a subscription switches to, for a `SWAP_PLAN` action.
+     * Unsets Monthly Billing Anchor Date.
+     * The new billing anchor day value, for a `CHANGE_BILLING_ANCHOR_DATE` action.
      */
-    public function unsetNewPlanId(): void
+    public function unsetMonthlyBillingAnchorDate(): void
     {
-        $this->newPlanId = [];
+        $this->monthlyBillingAnchorDate = [];
+    }
+
+    /**
+     * Returns Phases.
+     * A list of Phases, to pass phase-specific information used in the swap.
+     *
+     * @return Phase[]|null
+     */
+    public function getPhases(): ?array
+    {
+        if (count($this->phases) == 0) {
+            return null;
+        }
+        return $this->phases['value'];
+    }
+
+    /**
+     * Sets Phases.
+     * A list of Phases, to pass phase-specific information used in the swap.
+     *
+     * @maps phases
+     *
+     * @param Phase[]|null $phases
+     */
+    public function setPhases(?array $phases): void
+    {
+        $this->phases['value'] = $phases;
+    }
+
+    /**
+     * Unsets Phases.
+     * A list of Phases, to pass phase-specific information used in the swap.
+     */
+    public function unsetPhases(): void
+    {
+        $this->phases = [];
+    }
+
+    /**
+     * Returns New Plan Variation Id.
+     * The target subscription plan variation that a subscription switches to, for a `SWAP_PLAN` action.
+     */
+    public function getNewPlanVariationId(): ?string
+    {
+        if (count($this->newPlanVariationId) == 0) {
+            return null;
+        }
+        return $this->newPlanVariationId['value'];
+    }
+
+    /**
+     * Sets New Plan Variation Id.
+     * The target subscription plan variation that a subscription switches to, for a `SWAP_PLAN` action.
+     *
+     * @maps new_plan_variation_id
+     */
+    public function setNewPlanVariationId(?string $newPlanVariationId): void
+    {
+        $this->newPlanVariationId['value'] = $newPlanVariationId;
+    }
+
+    /**
+     * Unsets New Plan Variation Id.
+     * The target subscription plan variation that a subscription switches to, for a `SWAP_PLAN` action.
+     */
+    public function unsetNewPlanVariationId(): void
+    {
+        $this->newPlanVariationId = [];
     }
 
     /**
@@ -148,16 +226,22 @@ class SubscriptionAction implements \JsonSerializable
     {
         $json = [];
         if (isset($this->id)) {
-            $json['id']             = $this->id;
+            $json['id']                          = $this->id;
         }
         if (isset($this->type)) {
-            $json['type']           = $this->type;
+            $json['type']                        = $this->type;
         }
         if (!empty($this->effectiveDate)) {
-            $json['effective_date'] = $this->effectiveDate['value'];
+            $json['effective_date']              = $this->effectiveDate['value'];
         }
-        if (!empty($this->newPlanId)) {
-            $json['new_plan_id']    = $this->newPlanId['value'];
+        if (!empty($this->monthlyBillingAnchorDate)) {
+            $json['monthly_billing_anchor_date'] = $this->monthlyBillingAnchorDate['value'];
+        }
+        if (!empty($this->phases)) {
+            $json['phases']                      = $this->phases['value'];
+        }
+        if (!empty($this->newPlanVariationId)) {
+            $json['new_plan_variation_id']       = $this->newPlanVariationId['value'];
         }
         $json = array_filter($json, function ($val) {
             return $val !== null;

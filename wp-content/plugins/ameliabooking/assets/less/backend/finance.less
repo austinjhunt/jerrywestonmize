@@ -46,6 +46,10 @@
         @media @less-then-medium {
           display: inline-block;
         }
+
+        &-invoice {
+          right: 8px
+        }
       }
     }
 
@@ -78,6 +82,17 @@
             @media @less-then-medium {
               margin-right: @margin-medium;
               width: calc(~'100% - 118px');
+            }
+          }
+
+          &.calc-width-mobile-invoice {
+            @media @less-then-large {
+              margin-right: @margin-medium;
+              width: 100%;
+            }
+            @media @less-then-medium {
+              margin-right: @margin-medium;
+              width: calc(~'100% - 59px');
             }
           }
 
@@ -183,6 +198,13 @@
             line-height: 24px;
             margin-bottom: 2px;
 
+            &.am-customer-blocked {
+              padding: 0px 4px 0 20px;
+              &::before {
+                content: url("../../img/block.svg");
+              }
+            }
+
             &.am-no-show {
 
               &-gray {
@@ -262,6 +284,13 @@
             }
           }
         }
+
+        &-invoices {
+          .el-button {
+            margin: 0;
+          }
+        }
+
       }
 
       .am-finance-flex-row-middle-align {

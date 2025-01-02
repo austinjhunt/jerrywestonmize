@@ -11,15 +11,14 @@ The query filter to return the search result whose searchable attribute values c
 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
-| `keywords` | `string[]` | Required | A list of 1, 2, or 3 search keywords. Keywords with fewer than 3 characters are ignored. | getKeywords(): array | setKeywords(array keywords): void |
+| `keywords` | `string[]` | Required | A list of 1, 2, or 3 search keywords. Keywords with fewer than 3 alphanumeric characters are ignored. | getKeywords(): array | setKeywords(array keywords): void |
 
 ## Example (as JSON)
 
 ```json
 {
   "keywords": [
-    "keywords3",
-    "keywords4"
+    "keywords1"
   ]
 }
 ```

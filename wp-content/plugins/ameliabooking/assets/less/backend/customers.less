@@ -116,6 +116,14 @@
             overflow: hidden;
             text-overflow: ellipsis;
 
+            &.am-customer-blocked {
+              &::before {
+                content: url("../../img/block.svg");
+                height: 22px;
+                margin-right: 4px;
+              }
+            }
+
             &.am-no-show {
 
               &-gray {

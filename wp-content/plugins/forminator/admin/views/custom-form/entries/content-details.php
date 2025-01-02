@@ -19,7 +19,7 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 	<div class="sui-box-settings-slim-row sui-sm">
 
 		<?php
-		if ( isset( $detail_item['type'] ) && in_array( $detail_item['type'], array( 'stripe', 'paypal', 'group' ), true ) ) {
+		if ( isset( $detail_item['type'] ) && in_array( $detail_item['type'], array( 'stripe', 'paypal', 'group', 'stripe-ocs' ), true ) ) {
 
 			if ( ! empty( $sub_entries ) ) {
 				?>
@@ -78,12 +78,7 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 							<tr class="sui-accordion-item">
 
 								<?php
-								$end             = count( $sub_entries );
-								$subscription_id = array_search( 'subscription_id', array_column( $sub_entries, 'key', 'value' ), true );
-								if ( class_exists( 'Forminator_Stripe_Subscription' ) && 'stripe' === $detail_item['type'] && empty( $subscription_id ) ) {
-									$keys = array_search( 'subscription_id', array_column( $sub_entries, 'key' ), true );
-									unset( $sub_entries[ $keys ] );
-								}
+								$end = count( $sub_entries );
 								foreach ( $sub_entries as $sub_key => $sub_entry ) {
 
 									++$sub_key;
@@ -238,13 +233,15 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
  * @return array
  */
 function forminator_submissions_remove_quantity( $sub_entries, $item_type ) {
-	if ( 'stripe' === $item_type ) {
+	if ( 'stripe' === $item_type || 'stripe-ocs' === $item_type ) {
 		$payment_type_index = array_search( 'payment_type', array_column( $sub_entries, 'key' ), true );
 		$quantity_index     = array_search( 'quantity', array_column( $sub_entries, 'key' ), true );
+		$subscription_index = array_search( 'subscription_id', array_column( $sub_entries, 'key' ), true );
 		$payment_type       = $sub_entries[ $payment_type_index ]['value'];
 
 		if ( strtolower( esc_html__( 'One Time', 'forminator' ) ) === strtolower( $payment_type ) ) {
 			unset( $sub_entries[ $quantity_index ] );
+			unset( $sub_entries[ $subscription_index ] );
 		}
 	}
 

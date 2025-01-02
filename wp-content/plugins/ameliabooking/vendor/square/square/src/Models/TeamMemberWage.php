@@ -33,6 +33,16 @@ class TeamMemberWage implements \JsonSerializable
     private $hourlyRate;
 
     /**
+     * @var array
+     */
+    private $jobId = [];
+
+    /**
+     * @var array
+     */
+    private $tipEligible = [];
+
+    /**
      * Returns Id.
      * The UUID for this object.
      */
@@ -149,6 +159,73 @@ class TeamMemberWage implements \JsonSerializable
     }
 
     /**
+     * Returns Job Id.
+     * An identifier for the job that this wage relates to. This cannot be
+     * used to retrieve the job.
+     */
+    public function getJobId(): ?string
+    {
+        if (count($this->jobId) == 0) {
+            return null;
+        }
+        return $this->jobId['value'];
+    }
+
+    /**
+     * Sets Job Id.
+     * An identifier for the job that this wage relates to. This cannot be
+     * used to retrieve the job.
+     *
+     * @maps job_id
+     */
+    public function setJobId(?string $jobId): void
+    {
+        $this->jobId['value'] = $jobId;
+    }
+
+    /**
+     * Unsets Job Id.
+     * An identifier for the job that this wage relates to. This cannot be
+     * used to retrieve the job.
+     */
+    public function unsetJobId(): void
+    {
+        $this->jobId = [];
+    }
+
+    /**
+     * Returns Tip Eligible.
+     * Whether team members are eligible for tips when working this job.
+     */
+    public function getTipEligible(): ?bool
+    {
+        if (count($this->tipEligible) == 0) {
+            return null;
+        }
+        return $this->tipEligible['value'];
+    }
+
+    /**
+     * Sets Tip Eligible.
+     * Whether team members are eligible for tips when working this job.
+     *
+     * @maps tip_eligible
+     */
+    public function setTipEligible(?bool $tipEligible): void
+    {
+        $this->tipEligible['value'] = $tipEligible;
+    }
+
+    /**
+     * Unsets Tip Eligible.
+     * Whether team members are eligible for tips when working this job.
+     */
+    public function unsetTipEligible(): void
+    {
+        $this->tipEligible = [];
+    }
+
+    /**
      * Encode this object to JSON
      *
      * @param bool $asArrayWhenEmpty Whether to serialize this model as an array whenever no fields
@@ -171,6 +248,12 @@ class TeamMemberWage implements \JsonSerializable
         }
         if (isset($this->hourlyRate)) {
             $json['hourly_rate']    = $this->hourlyRate;
+        }
+        if (!empty($this->jobId)) {
+            $json['job_id']         = $this->jobId['value'];
+        }
+        if (!empty($this->tipEligible)) {
+            $json['tip_eligible']   = $this->tipEligible['value'];
         }
         $json = array_filter($json, function ($val) {
             return $val !== null;

@@ -27,7 +27,11 @@ Represents an update request for the `WageSetting` object describing a `TeamMemb
         },
         "job_title": "Manager",
         "pay_type": "SALARY",
-        "weekly_hours": 40
+        "weekly_hours": 40,
+        "hourly_rate": {
+          "amount": 172,
+          "currency": "OMR"
+        }
       },
       {
         "hourly_rate": {
@@ -35,9 +39,17 @@ Represents an update request for the `WageSetting` object describing a `TeamMemb
           "currency": "USD"
         },
         "job_title": "Cashier",
-        "pay_type": "HOURLY"
+        "pay_type": "HOURLY",
+        "annual_rate": {
+          "amount": 232,
+          "currency": "SBD"
+        },
+        "weekly_hours": 98
       }
-    ]
+    ],
+    "team_member_id": "team_member_id8",
+    "version": 130,
+    "created_at": "created_at6"
   }
 }
 ```

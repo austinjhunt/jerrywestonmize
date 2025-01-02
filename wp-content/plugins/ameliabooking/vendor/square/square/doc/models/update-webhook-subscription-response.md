@@ -34,7 +34,15 @@ present.
     "name": "Updated Example Webhook Subscription",
     "notification_url": "https://example-webhook-url.com",
     "updated_at": "2022-01-10 23:45:51 +0000 UTC"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

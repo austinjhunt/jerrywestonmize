@@ -95,10 +95,9 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 			}
 
 			$is_connected   = false;
-			$setting_values = $this->get_all_settings_values();
-			$tokens         = array_column( $setting_values, 'token' );
+			$setting_values = $this->get_settings_values();
 			// if user completed api setup.
-			if ( ! empty( $tokens ) ) {
+			if ( ! empty( $setting_values ) ) {
 				$is_connected = true;
 			}
 		} catch ( Forminator_Integration_Exception $e ) {

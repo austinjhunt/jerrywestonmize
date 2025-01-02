@@ -82,8 +82,26 @@ Defines the response returned by[CompletePayment](../../doc/apis/payments.md#com
       "currency": "USD"
     },
     "updated_at": "2021-10-13T19:34:34.339Z",
-    "version_token": "56pRkL3slrzet2iQrTp9n0bdJVYTB9YEWdTNjQfZOPV6o"
-  }
+    "version_token": "56pRkL3slrzet2iQrTp9n0bdJVYTB9YEWdTNjQfZOPV6o",
+    "tip_money": {
+      "amount": 190,
+      "currency": "ZMK"
+    }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

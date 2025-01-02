@@ -11,7 +11,6 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
-use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
@@ -109,11 +108,15 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
                 /** @var EventRepository $eventRepository */
                 $eventRepository = $this->container->get('domain.booking.event.repository');
 
-                /** @var Collection $events */
-                $events = $eventRepository->getByBookingIds([$customerBooking->getId()->getValue()]);
-
                 /** @var Event $event */
-                $event = $events->getItem($events->keys()[0]);
+                $event = $eventRepository->getByBookingId(
+                    $customerBooking->getId()->getValue(),
+                    [
+                        'fetchEventsProviders' => true,
+                    ]
+                );
+
+                $event->getBookings()->addItem($customerBooking, $customerBooking->getId()->getValue());
 
                 /** @var Provider $provider */
                 foreach ($event->getProviders()->getItems() as $provider) {

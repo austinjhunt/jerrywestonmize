@@ -29,7 +29,15 @@ the request resulted in errors.
     "location_id": "26M7H24AZ9N6R",
     "updated_at": "2019-02-26T23:12:59Z",
     "version": 2
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

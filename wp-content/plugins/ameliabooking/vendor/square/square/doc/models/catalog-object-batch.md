@@ -19,62 +19,93 @@ A batch of catalog objects.
 {
   "objects": [
     {
-      "type": "CUSTOM_ATTRIBUTE_DEFINITION",
-      "id": "id8",
-      "updated_at": null,
-      "version": null,
-      "is_deleted": null,
-      "custom_attribute_values": null,
-      "catalog_v1_ids": null,
-      "present_at_all_locations": null,
-      "present_at_location_ids": null,
-      "absent_at_location_ids": null,
-      "item_data": null,
-      "category_data": null,
-      "item_variation_data": null,
-      "tax_data": null,
-      "discount_data": null,
-      "modifier_list_data": null,
-      "modifier_data": null,
-      "time_period_data": null,
-      "product_set_data": null,
-      "pricing_rule_data": null,
-      "image_data": null,
-      "measurement_unit_data": null,
-      "subscription_plan_data": null,
-      "item_option_data": null,
-      "item_option_value_data": null,
-      "custom_attribute_definition_data": null,
-      "quick_amounts_settings_data": null
-    },
-    {
-      "type": "ITEM_OPTION_VAL",
-      "id": "id9",
-      "updated_at": null,
-      "version": null,
-      "is_deleted": null,
-      "custom_attribute_values": null,
-      "catalog_v1_ids": null,
-      "present_at_all_locations": null,
-      "present_at_location_ids": null,
-      "absent_at_location_ids": null,
-      "item_data": null,
-      "category_data": null,
-      "item_variation_data": null,
-      "tax_data": null,
-      "discount_data": null,
-      "modifier_list_data": null,
-      "modifier_data": null,
-      "time_period_data": null,
-      "product_set_data": null,
-      "pricing_rule_data": null,
-      "image_data": null,
-      "measurement_unit_data": null,
-      "subscription_plan_data": null,
-      "item_option_data": null,
-      "item_option_value_data": null,
-      "custom_attribute_definition_data": null,
-      "quick_amounts_settings_data": null
+      "type": "PRODUCT_SET",
+      "id": "id6",
+      "category_data": {
+        "object": {
+          "category_data": {
+            "name": "Beverages"
+          },
+          "id": "#Beverages",
+          "present_at_all_locations": true,
+          "type": "CATEGORY"
+        }
+      },
+      "tax_data": {
+        "object": {
+          "id": "#SalesTax",
+          "present_at_all_locations": true,
+          "tax_data": {
+            "calculation_phase": "TAX_SUBTOTAL_PHASE",
+            "enabled": true,
+            "fee_applies_to_custom_amounts": true,
+            "inclusion_type": "ADDITIVE",
+            "name": "Sales Tax",
+            "percentage": "5.0"
+          },
+          "type": "TAX"
+        }
+      },
+      "discount_data": {
+        "object": {
+          "discount_data": {
+            "discount_type": "FIXED_PERCENTAGE",
+            "label_color": "red",
+            "name": "Welcome to the Dark(Roast) Side!",
+            "percentage": "5.4",
+            "pin_required": false
+          },
+          "id": "#Maythe4th",
+          "present_at_all_locations": true,
+          "type": "DISCOUNT"
+        }
+      },
+      "modifier_data": {
+        "object": {
+          "modifier_data": {
+            "name": "Almond Milk",
+            "price_money": {
+              "amount": 250,
+              "currency": "USD"
+            }
+          },
+          "present_at_all_locations": true,
+          "type": "MODIFIER"
+        }
+      },
+      "updated_at": "updated_at2",
+      "version": 164,
+      "is_deleted": false,
+      "custom_attribute_values": {
+        "key0": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        },
+        "key1": {
+          "name": "name8",
+          "string_value": "string_value2",
+          "custom_attribute_definition_id": "custom_attribute_definition_id4",
+          "type": "STRING",
+          "number_value": "number_value8"
+        }
+      },
+      "catalog_v1_ids": [
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        },
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        },
+        {
+          "catalog_v1_id": "catalog_v1_id4",
+          "location_id": "location_id4"
+        }
+      ]
     }
   ]
 }

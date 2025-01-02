@@ -115,4 +115,13 @@ abstract class AbstractCouponApplicationService
      * @return Collection
      */
     abstract public function getAll();
+
+    /**
+     * @param array $criteria
+     *
+     * @return Collection
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    abstract public function getAllByCriteria($criteria = []);
 }

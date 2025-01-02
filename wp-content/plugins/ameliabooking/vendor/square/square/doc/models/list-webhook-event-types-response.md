@@ -17,7 +17,7 @@ present.
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Information on errors encountered during the request. | getErrors(): ?array | setErrors(?array errors): void |
 | `eventTypes` | `?(string[])` | Optional | The list of event types. | getEventTypes(): ?array | setEventTypes(?array eventTypes): void |
-| `metadata` | [`?(EventTypeMetadata[])`](../../doc/models/event-type-metadata.md) | Optional | Contains the metadata of a webhook event type. For more information, see [EventTypeMetadata](../../doc/models/event-type-metadata.md). | getMetadata(): ?array | setMetadata(?array metadata): void |
+| `metadata` | [`?(EventTypeMetadata[])`](../../doc/models/event-type-metadata.md) | Optional | Contains the metadata of a webhook event type. For more information, see [EventTypeMetadata](entity:EventTypeMetadata). | getMetadata(): ?array | setMetadata(?array metadata): void |
 
 ## Example (as JSON)
 
@@ -31,6 +31,14 @@ present.
       "api_version_introduced": "2018-07-12",
       "event_type": "inventory.count.updated",
       "release_status": "PUBLIC"
+    }
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
     }
   ]
 }

@@ -16,7 +16,7 @@ the original payment and the amount of money refunded.
 | `status` | `?string` | Optional | The refund's status:<br><br>- `PENDING` - Awaiting approval.<br>- `COMPLETED` - Successfully completed.<br>- `REJECTED` - The refund was rejected.<br>- `FAILED` - An error occurred.<br>**Constraints**: *Maximum Length*: `50` | getStatus(): ?string | setStatus(?string status): void |
 | `locationId` | `?string` | Optional | The location ID associated with the payment this refund is attached to.<br>**Constraints**: *Maximum Length*: `50` | getLocationId(): ?string | setLocationId(?string locationId): void |
 | `unlinked` | `?bool` | Optional | Flag indicating whether or not the refund is linked to an existing payment in Square. | getUnlinked(): ?bool | setUnlinked(?bool unlinked): void |
-| `destinationType` | `?string` | Optional | The destination type for this refund.<br><br>Current values include `CARD`, `BANK_ACCOUNT`, `WALLET`, `BUY_NOW_PAY_LATER`, `CASH`, and<br>`EXTERNAL`.<br>**Constraints**: *Maximum Length*: `50` | getDestinationType(): ?string | setDestinationType(?string destinationType): void |
+| `destinationType` | `?string` | Optional | The destination type for this refund.<br><br>Current values include `CARD`, `BANK_ACCOUNT`, `WALLET`, `BUY_NOW_PAY_LATER`, `CASH`,<br>`EXTERNAL`, and `SQUARE_ACCOUNT`.<br>**Constraints**: *Maximum Length*: `50` | getDestinationType(): ?string | setDestinationType(?string destinationType): void |
 | `destinationDetails` | [`?DestinationDetails`](../../doc/models/destination-details.md) | Optional | Details about a refund's destination. | getDestinationDetails(): ?DestinationDetails | setDestinationDetails(?DestinationDetails destinationDetails): void |
 | `amountMoney` | [`Money`](../../doc/models/money.md) | Required | Represents an amount of money. `Money` fields can be signed or unsigned.<br>Fields that do not explicitly define whether they are signed or unsigned are<br>considered unsigned and can only hold positive amounts. For signed fields, the<br>sign of the value indicates the purpose of the money transfer. See<br>[Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)<br>for more information. | getAmountMoney(): Money | setAmountMoney(Money amountMoney): void |
 | `appFeeMoney` | [`?Money`](../../doc/models/money.md) | Optional | Represents an amount of money. `Money` fields can be signed or unsigned.<br>Fields that do not explicitly define whether they are signed or unsigned are<br>considered unsigned and can only hold positive amounts. For signed fields, the<br>sign of the value indicates the purpose of the money transfer. See<br>[Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)<br>for more information. | getAppFeeMoney(): ?Money | setAppFeeMoney(?Money appFeeMoney): void |
@@ -32,24 +32,28 @@ the original payment and the amount of money refunded.
 
 ```json
 {
-  "id": "id0",
-  "status": null,
-  "location_id": null,
-  "unlinked": null,
-  "destination_type": null,
-  "destination_details": null,
-  "amount_money": {
-    "amount": null,
-    "currency": null
+  "id": "id4",
+  "status": "status6",
+  "location_id": "location_id8",
+  "unlinked": false,
+  "destination_type": "destination_type8",
+  "destination_details": {
+    "card_details": {
+      "card": {
+        "id": "id6",
+        "card_brand": "OTHER_BRAND",
+        "last_4": "last_48",
+        "exp_month": 228,
+        "exp_year": 68
+      },
+      "entry_method": "entry_method8",
+      "auth_result_code": "auth_result_code0"
+    }
   },
-  "app_fee_money": null,
-  "processing_fee": null,
-  "payment_id": null,
-  "order_id": null,
-  "reason": null,
-  "created_at": null,
-  "updated_at": null,
-  "team_member_id": null
+  "amount_money": {
+    "amount": 186,
+    "currency": "TZS"
+  }
 }
 ```
 

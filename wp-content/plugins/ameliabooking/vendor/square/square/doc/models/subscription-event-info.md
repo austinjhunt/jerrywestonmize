@@ -12,14 +12,14 @@ Provides information about the subscription event.
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `detail` | `?string` | Optional | A human-readable explanation for the event. | getDetail(): ?string | setDetail(?string detail): void |
-| `code` | [`?string (SubscriptionEventInfoCode)`](../../doc/models/subscription-event-info-code.md) | Optional | Supported info codes of a subscription event. | getCode(): ?string | setCode(?string code): void |
+| `code` | [`?string(SubscriptionEventInfoCode)`](../../doc/models/subscription-event-info-code.md) | Optional | Supported info codes of a subscription event. | getCode(): ?string | setCode(?string code): void |
 
 ## Example (as JSON)
 
 ```json
 {
-  "detail": null,
-  "code": null
+  "detail": "detail8",
+  "code": "CUSTOMER_NO_NAME"
 }
 ```
 

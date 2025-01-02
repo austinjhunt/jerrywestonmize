@@ -23,9 +23,6 @@ class Forminator_Template_API {
 	 */
 	private static ?Forminator_Template_API $instance = null;
 
-	const API_URL = 'https://wpmudev.com/';
-
-
 
 	/**
 	 * Get instance of this class.
@@ -287,11 +284,21 @@ class Forminator_Template_API {
 	 * @return array
 	 */
 	private static function request( string $endpoint, string $method, array $data = array() ): array {
-		$url = self::API_URL . $endpoint;
+		$base = 'https://wpmudev.com/';
+
+		// Support custom API base.
+		if ( defined( 'WPMUDEV_CUSTOM_API_SERVER' ) && ! empty( WPMUDEV_CUSTOM_API_SERVER ) ) {
+			$base = trailingslashit( WPMUDEV_CUSTOM_API_SERVER );
+		}
+		$url = $base . $endpoint;
 
 		$args = array(
 			'method' => $method,
 		);
+
+		if ( class_exists( 'WPMUDEV_Dashboard' ) && method_exists( WPMUDEV_Dashboard::$api, 'get_site_id' ) ) {
+			$data['site_id'] = WPMUDEV_Dashboard::$api->get_site_id();
+		}
 
 		if ( 'GET' === $method ) {
 			$url = add_query_arg( $data, $url );

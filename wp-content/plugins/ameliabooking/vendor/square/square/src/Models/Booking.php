@@ -94,6 +94,11 @@ class Booking implements \JsonSerializable
     private $source;
 
     /**
+     * @var Address|null
+     */
+    private $address;
+
+    /**
      * Returns Id.
      * A unique ID of this object representing a booking.
      */
@@ -227,8 +232,8 @@ class Booking implements \JsonSerializable
 
     /**
      * Returns Location Id.
-     * The ID of the [Location]($m/Location) object representing the location where the booked service is
-     * provided. Once set when the booking is created, its value cannot be changed.
+     * The ID of the [Location](entity:Location) object representing the location where the booked service
+     * is provided. Once set when the booking is created, its value cannot be changed.
      */
     public function getLocationId(): ?string
     {
@@ -240,8 +245,8 @@ class Booking implements \JsonSerializable
 
     /**
      * Sets Location Id.
-     * The ID of the [Location]($m/Location) object representing the location where the booked service is
-     * provided. Once set when the booking is created, its value cannot be changed.
+     * The ID of the [Location](entity:Location) object representing the location where the booked service
+     * is provided. Once set when the booking is created, its value cannot be changed.
      *
      * @maps location_id
      */
@@ -252,8 +257,8 @@ class Booking implements \JsonSerializable
 
     /**
      * Unsets Location Id.
-     * The ID of the [Location]($m/Location) object representing the location where the booked service is
-     * provided. Once set when the booking is created, its value cannot be changed.
+     * The ID of the [Location](entity:Location) object representing the location where the booked service
+     * is provided. Once set when the booking is created, its value cannot be changed.
      */
     public function unsetLocationId(): void
     {
@@ -262,7 +267,8 @@ class Booking implements \JsonSerializable
 
     /**
      * Returns Customer Id.
-     * The ID of the [Customer]($m/Customer) object representing the customer receiving the booked service.
+     * The ID of the [Customer](entity:Customer) object representing the customer receiving the booked
+     * service.
      */
     public function getCustomerId(): ?string
     {
@@ -274,7 +280,8 @@ class Booking implements \JsonSerializable
 
     /**
      * Sets Customer Id.
-     * The ID of the [Customer]($m/Customer) object representing the customer receiving the booked service.
+     * The ID of the [Customer](entity:Customer) object representing the customer receiving the booked
+     * service.
      *
      * @maps customer_id
      */
@@ -285,7 +292,8 @@ class Booking implements \JsonSerializable
 
     /**
      * Unsets Customer Id.
-     * The ID of the [Customer]($m/Customer) object representing the customer receiving the booked service.
+     * The ID of the [Customer](entity:Customer) object representing the customer receiving the booked
+     * service.
      */
     public function unsetCustomerId(): void
     {
@@ -295,8 +303,8 @@ class Booking implements \JsonSerializable
     /**
      * Returns Customer Note.
      * The free-text field for the customer to supply notes about the booking. For example, the note can be
-     * preferences that cannot be expressed by supported attributes of a relevant
-     * [CatalogObject]($m/CatalogObject) instance.
+     * preferences that cannot be expressed by supported attributes of a relevant [CatalogObject](entity:
+     * CatalogObject) instance.
      */
     public function getCustomerNote(): ?string
     {
@@ -309,8 +317,8 @@ class Booking implements \JsonSerializable
     /**
      * Sets Customer Note.
      * The free-text field for the customer to supply notes about the booking. For example, the note can be
-     * preferences that cannot be expressed by supported attributes of a relevant
-     * [CatalogObject]($m/CatalogObject) instance.
+     * preferences that cannot be expressed by supported attributes of a relevant [CatalogObject](entity:
+     * CatalogObject) instance.
      *
      * @maps customer_note
      */
@@ -322,8 +330,8 @@ class Booking implements \JsonSerializable
     /**
      * Unsets Customer Note.
      * The free-text field for the customer to supply notes about the booking. For example, the note can be
-     * preferences that cannot be expressed by supported attributes of a relevant
-     * [CatalogObject]($m/CatalogObject) instance.
+     * preferences that cannot be expressed by supported attributes of a relevant [CatalogObject](entity:
+     * CatalogObject) instance.
      */
     public function unsetCustomerNote(): void
     {
@@ -333,8 +341,8 @@ class Booking implements \JsonSerializable
     /**
      * Returns Seller Note.
      * The free-text field for the seller to supply notes about the booking. For example, the note can be
-     * preferences that cannot be expressed by supported attributes of a specific
-     * [CatalogObject]($m/CatalogObject) instance.
+     * preferences that cannot be expressed by supported attributes of a specific [CatalogObject](entity:
+     * CatalogObject) instance.
      * This field should not be visible to customers.
      */
     public function getSellerNote(): ?string
@@ -348,8 +356,8 @@ class Booking implements \JsonSerializable
     /**
      * Sets Seller Note.
      * The free-text field for the seller to supply notes about the booking. For example, the note can be
-     * preferences that cannot be expressed by supported attributes of a specific
-     * [CatalogObject]($m/CatalogObject) instance.
+     * preferences that cannot be expressed by supported attributes of a specific [CatalogObject](entity:
+     * CatalogObject) instance.
      * This field should not be visible to customers.
      *
      * @maps seller_note
@@ -362,8 +370,8 @@ class Booking implements \JsonSerializable
     /**
      * Unsets Seller Note.
      * The free-text field for the seller to supply notes about the booking. For example, the note can be
-     * preferences that cannot be expressed by supported attributes of a specific
-     * [CatalogObject]($m/CatalogObject) instance.
+     * preferences that cannot be expressed by supported attributes of a specific [CatalogObject](entity:
+     * CatalogObject) instance.
      * This field should not be visible to customers.
      */
     public function unsetSellerNote(): void
@@ -510,6 +518,30 @@ class Booking implements \JsonSerializable
     }
 
     /**
+     * Returns Address.
+     * Represents a postal address in a country.
+     * For more information, see [Working with Addresses](https://developer.squareup.com/docs/build-
+     * basics/working-with-addresses).
+     */
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    /**
+     * Sets Address.
+     * Represents a postal address in a country.
+     * For more information, see [Working with Addresses](https://developer.squareup.com/docs/build-
+     * basics/working-with-addresses).
+     *
+     * @maps address
+     */
+    public function setAddress(?Address $address): void
+    {
+        $this->address = $address;
+    }
+
+    /**
      * Encode this object to JSON
      *
      * @param bool $asArrayWhenEmpty Whether to serialize this model as an array whenever no fields
@@ -568,6 +600,9 @@ class Booking implements \JsonSerializable
         }
         if (isset($this->source)) {
             $json['source']                  = $this->source;
+        }
+        if (isset($this->address)) {
+            $json['address']                 = $this->address;
         }
         $json = array_filter($json, function ($val) {
             return $val !== null;

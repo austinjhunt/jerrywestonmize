@@ -152,6 +152,7 @@ class Forminator_Admin_Data {
 			'variables'                      => forminator_get_vars(),
 			'variablesForHiddenField'        => forminator_get_vars( true ),
 			'payment_variables'              => forminator_get_payment_vars(),
+			'stripe_subscription_variables'  => forminator_get_stripe_subscription_vars(),
 			'maxUpload'                      => forminator_get_max_upload(),
 			'captchaLangs'                   => forminator_get_captcha_languages(),
 			'erasure'                        => get_option( 'forminator_enable_erasure_request_erase_form_submissions', false ),
@@ -216,7 +217,7 @@ class Forminator_Admin_Data {
 					foreach ( $form->fields as $f => $field ) {
 						$field_array = $field->to_formatted_array();
 						$field_type  = isset( $field_array['type'] ) ? $field_array['type'] : '';
-						if ( $type === $field_type ) {
+						if ( $type === $field_type || ( 'stripe' === $type && 'stripe-ocs' === $field_type ) ) {
 							$field_forms[ $form->id ] = isset( $form->settings['formName'] ) ? $form->settings['formName'] : '';
 						}
 					}

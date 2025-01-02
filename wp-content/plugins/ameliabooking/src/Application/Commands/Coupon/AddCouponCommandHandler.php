@@ -9,6 +9,7 @@ namespace AmeliaBooking\Application\Commands\Coupon;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -18,7 +19,6 @@ use AmeliaBooking\Domain\Factory\Coupon\CouponFactory;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
-use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 
 /**
@@ -63,11 +63,11 @@ class AddCouponCommandHandler extends CommandHandler
         /** @var ServiceRepository $serviceRepository */
         $serviceRepository = $this->container->get('domain.bookable.service.repository');
 
-        /** @var EventRepository $eventRepository */
-        $eventRepository = $this->container->get('domain.booking.event.repository');
-
         /** @var PackageRepository $packageRepository */
         $packageRepository = $this->container->get('domain.bookable.package.repository');
+
+        /** @var EventApplicationService $eventAS */
+        $eventAS = $this->container->get('application.booking.event.service');
 
         $couponArray = $command->getFields();
 
@@ -95,9 +95,9 @@ class AddCouponCommandHandler extends CommandHandler
         $coupon->setServiceList($services);
 
         /** @var Collection $events */
-        $events = $command->getFields()['events'] ? $eventRepository->getFiltered(
+        $events = $command->getFields()['events'] ? $eventAS->getEventsByIds(
+            $command->getFields()['events'],
             [
-                'ids' => $command->getFields()['events']
             ]
         ) : new Collection();
 

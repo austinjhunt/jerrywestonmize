@@ -10,7 +10,6 @@ use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Cache\CacheApplicationService;
-use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
 use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
 use AmeliaBooking\Application\Services\Gallery\GalleryApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
@@ -455,6 +454,17 @@ $entries['application.payment.service'] = function ($c) {
 };
 
 /**
+ * Invoice service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Invoice\AbstractInvoiceApplicationService
+ */
+$entries['application.invoice.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getInvoiceService($c);
+};
+
+/**
  * Custom Field Service
  *
  * @param Container $c
@@ -474,6 +484,17 @@ $entries['application.customField.service'] = function ($c) {
  */
 $entries['application.webHook.service'] = function ($c) {
     return AmeliaBooking\Infrastructure\Licence\ApplicationService::getWebHookService($c);
+};
+
+/**
+ * Integration Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService
+ */
+$entries['application.integration.service'] = function ($c) {
+    return new AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService($c);
 };
 
 /**

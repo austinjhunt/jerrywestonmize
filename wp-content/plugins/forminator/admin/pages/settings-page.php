@@ -168,6 +168,7 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 		);
 		$props   = array(
 			'form-style',
+			'form-substyle',
 
 			'cform-color-settings',
 
@@ -202,7 +203,7 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 
 		foreach ( $all_settings as $key => $value ) {
 			$apply = false;
-			if ( in_array( $key, $props, true ) ) {
+			if ( in_array( $key, $props, true ) || 'basic-' === substr( $key, 0, 6 ) ) {
 				$apply = true;
 			}
 			if ( ! $apply ) {

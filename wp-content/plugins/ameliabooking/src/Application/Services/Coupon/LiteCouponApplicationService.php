@@ -101,4 +101,14 @@ class LiteCouponApplicationService extends AbstractCouponApplicationService
     {
         return new Collection();
     }
+
+    /**
+     * @param array $criteria
+     *
+     * @return Collection
+     */
+    public function getAllByCriteria($criteria = [])
+    {
+        return new Collection();
+    }
 }

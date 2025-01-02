@@ -21,11 +21,17 @@ Information about the fulfillment recipient.
 
 ```json
 {
-  "customer_id": null,
-  "display_name": null,
-  "email_address": null,
-  "phone_number": null,
-  "address": null
+  "customer_id": "customer_id0",
+  "display_name": "display_name2",
+  "email_address": "email_address0",
+  "phone_number": "phone_number0",
+  "address": {
+    "address_line_1": "address_line_16",
+    "address_line_2": "address_line_26",
+    "address_line_3": "address_line_32",
+    "locality": "locality6",
+    "sublocality": "sublocality6"
+  }
 }
 ```
 

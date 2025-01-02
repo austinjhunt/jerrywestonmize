@@ -137,6 +137,8 @@ class ServiceFactory
 
         if (isset($data['recurringPayment'])) {
             $service->setRecurringPayment(new WholeNumber($data['recurringPayment']));
+        } else {
+            $service->setRecurringPayment(new WholeNumber(0));
         }
 
         if (isset($data['translations'])) {

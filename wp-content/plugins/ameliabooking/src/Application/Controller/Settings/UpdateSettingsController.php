@@ -27,6 +27,7 @@ class UpdateSettingsController extends Controller
         'general',
         'googleCalendar',
         'outlookCalendar',
+        'appleCalendar',
         'labels',
         'notifications',
         'payments',

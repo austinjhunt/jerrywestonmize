@@ -12,7 +12,7 @@ Describes a `SearchInvoices` response.
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `invoices` | [`?(Invoice[])`](../../doc/models/invoice.md) | Optional | The list of invoices returned by the search. | getInvoices(): ?array | setInvoices(?array invoices): void |
-| `cursor` | `?string` | Optional | When a response is truncated, it includes a cursor that you can use in a<br>subsequent request to fetch the next set of invoices. If empty, this is the final<br>response.<br>For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
+| `cursor` | `?string` | Optional | When a response is truncated, it includes a cursor that you can use in a<br>subsequent request to fetch the next set of invoices. If empty, this is the final<br>response.<br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Information about errors encountered during the request. | getErrors(): ?array | setErrors(?array errors): void |
 
 ## Example (as JSON)
@@ -26,6 +26,7 @@ Describes a `SearchInvoices` response.
         "bank_account": false,
         "buy_now_pay_later": false,
         "card": true,
+        "cash_app_pay": false,
         "square_gift_card": false
       },
       "created_at": "2020-06-18T17:45:13Z",
@@ -77,7 +78,14 @@ Describes a `SearchInvoices` response.
         "email_address": "Amelia.Earhart@example.com",
         "family_name": "Earhart",
         "given_name": "Amelia",
-        "phone_number": "1-212-555-4240"
+        "phone_number": "1-212-555-4240",
+        "address": {
+          "address_line_1": "address_line_16",
+          "address_line_2": "address_line_26",
+          "address_line_3": "address_line_32",
+          "locality": "locality6",
+          "sublocality": "sublocality6"
+        }
       },
       "sale_or_service_date": "2030-01-24",
       "scheduled_at": "2030-01-13T10:00:00Z",
@@ -93,6 +101,7 @@ Describes a `SearchInvoices` response.
         "bank_account": false,
         "buy_now_pay_later": false,
         "card": true,
+        "cash_app_pay": false,
         "square_gift_card": true
       },
       "created_at": "2021-01-23T15:29:12Z",
@@ -145,7 +154,14 @@ Describes a `SearchInvoices` response.
         "email_address": "Amelia.Earhart@example.com",
         "family_name": "Earhart",
         "given_name": "Amelia",
-        "phone_number": "1-212-555-4240"
+        "phone_number": "1-212-555-4240",
+        "address": {
+          "address_line_1": "address_line_16",
+          "address_line_2": "address_line_26",
+          "address_line_3": "address_line_32",
+          "locality": "locality6",
+          "sublocality": "sublocality6"
+        }
       },
       "public_url": "https://squareup.com/pay-invoice/h9sfsfTGTSnYEhISUDBhEQ",
       "sale_or_service_date": "2030-01-24",
@@ -154,6 +170,20 @@ Describes a `SearchInvoices` response.
       "timezone": "America/Los_Angeles",
       "updated_at": "2021-01-23T15:29:56Z",
       "version": 3
+    }
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
     }
   ]
 }

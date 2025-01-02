@@ -6,7 +6,7 @@ use MailPoetVendor\Symfony\Component\Validator\Constraint;
 class Valid extends Constraint
 {
  public $traverse = \true;
- public function __construct(array $options = null, array $groups = null, $payload = null, bool $traverse = null)
+ public function __construct(?array $options = null, ?array $groups = null, $payload = null, ?bool $traverse = null)
  {
  parent::__construct($options ?? [], $groups, $payload);
  $this->traverse = $traverse ?? $this->traverse;

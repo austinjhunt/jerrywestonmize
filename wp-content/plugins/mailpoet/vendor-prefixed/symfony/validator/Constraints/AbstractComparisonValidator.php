@@ -2,6 +2,7 @@
 namespace MailPoetVendor\Symfony\Component\Validator\Constraints;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
+use MailPoetVendor\Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use MailPoetVendor\Symfony\Component\PropertyAccess\PropertyAccess;
 use MailPoetVendor\Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use MailPoetVendor\Symfony\Component\Validator\Constraint;
@@ -11,7 +12,7 @@ use MailPoetVendor\Symfony\Component\Validator\Exception\UnexpectedTypeException
 abstract class AbstractComparisonValidator extends ConstraintValidator
 {
  private $propertyAccessor;
- public function __construct(PropertyAccessorInterface $propertyAccessor = null)
+ public function __construct(?PropertyAccessorInterface $propertyAccessor = null)
  {
  $this->propertyAccessor = $propertyAccessor;
  }
@@ -31,6 +32,8 @@ abstract class AbstractComparisonValidator extends ConstraintValidator
  $comparedValue = $this->getPropertyAccessor()->getValue($object, $path);
  } catch (NoSuchPropertyException $e) {
  throw new ConstraintDefinitionException(\sprintf('Invalid property path "%s" provided to "%s" constraint: ', $path, \get_debug_type($constraint)) . $e->getMessage(), 0, $e);
+ } catch (UninitializedPropertyException $e) {
+ $comparedValue = null;
  }
  } else {
  $comparedValue = $constraint->value;

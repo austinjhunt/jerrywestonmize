@@ -9,6 +9,7 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
+use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -23,9 +24,6 @@ use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
-use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
-use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -40,18 +38,6 @@ class BookingReassignedEventHandler
     /** @var string */
     const TIME_UPDATED = 'bookingTimeUpdated';
 
-    /** @var string */
-    const APPOINTMENT_DELETED = 'appointmentDeleted';
-
-    /** @var string */
-    const APPOINTMENT_ADDED = 'appointmentAdded';
-
-    /** @var string */
-    const BOOKING_ADDED = 'bookingAdded';
-
-    /** @var string */
-    const BOOKING_CANCELED = 'bookingCanceled';
-
     /**
      * @param CommandResult $commandResult
      * @param Container     $container
@@ -65,10 +51,8 @@ class BookingReassignedEventHandler
      */
     public static function handle($commandResult, $container)
     {
-        /** @var AbstractGoogleCalendarService $googleCalendarService */
-        $googleCalendarService = $container->get('infrastructure.google.calendar.service');
-        /** @var AbstractOutlookCalendarService $outlookCalendarService */
-        $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
+        /** @var ApplicationIntegrationService $applicationIntegrationService */
+        $applicationIntegrationService = $container->get('application.integration.service');
         /** @var EmailNotificationService $emailNotificationService */
         $emailNotificationService = $container->get('application.emailNotification.service');
         /** @var SMSNotificationService $smsNotificationService */
@@ -81,11 +65,8 @@ class BookingReassignedEventHandler
         $webHookService = $container->get('application.webHook.service');
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
-        /** @var AbstractZoomApplicationService $zoomService */
-        $zoomService = $container->get('application.zoom.service');
         /** @var IcsApplicationService $icsService */
         $icsService = $container->get('application.ics.service');
-
 
         $booking = $commandResult->getData()['booking'];
 
@@ -161,38 +142,14 @@ class BookingReassignedEventHandler
                 }
             }
 
-            if ($zoomService) {
-                $zoomService->handleAppointmentMeeting($oldAppointmentObject, self::TIME_UPDATED);
-
-                if ($oldAppointmentObject->getZoomMeeting()) {
-                    $oldAppointment['zoomMeeting'] = $oldAppointmentObject->getZoomMeeting()->toArray();
-                }
-            }
-
-            if ($googleCalendarService) {
-                try {
-                    $googleCalendarService->handleEvent($oldAppointmentObject, self::TIME_UPDATED);
-                } catch (Exception $e) {
-                }
-
-                if ($oldAppointmentObject->getGoogleCalendarEventId() !== null) {
-                    $oldAppointment['googleCalendarEventId'] = $oldAppointmentObject->getGoogleCalendarEventId()->getValue();
-                }
-                if ($oldAppointmentObject->getGoogleMeetUrl() !== null) {
-                    $oldAppointment['googleMeetUrl'] = $oldAppointmentObject->getGoogleMeetUrl();
-                }
-            }
-
-            if ($outlookCalendarService) {
-                try {
-                    $outlookCalendarService->handleEvent($oldAppointmentObject, self::TIME_UPDATED);
-                } catch (Exception $e) {
-                }
-
-                if ($oldAppointmentObject->getOutlookCalendarEventId() !== null) {
-                    $oldAppointment['outlookCalendarEventId'] = $oldAppointmentObject->getOutlookCalendarEventId()->getValue();
-                }
-            }
+            $applicationIntegrationService->handleAppointment(
+                $oldAppointmentObject,
+                $oldAppointment,
+                ApplicationIntegrationService::TIME_UPDATED,
+                [
+                    ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                ]
+            );
 
             $oldAppointment['initialAppointmentDateTime'] = $commandResult->getData()['initialAppointmentDateTime'];
 
@@ -213,68 +170,33 @@ class BookingReassignedEventHandler
 
         // old appointment got status changed to Cancelled because booking is rescheduled to new OR existing appointment
         if ($oldAppointmentObject->getStatus()->getValue() === BookingStatus::CANCELED) {
-            if ($zoomService) {
-                $zoomService->handleAppointmentMeeting($oldAppointmentObject, self::APPOINTMENT_DELETED);
-
-                if ($oldAppointmentObject->getZoomMeeting()) {
-                    $oldAppointment['zoomMeeting'] = $oldAppointmentObject->getZoomMeeting()->toArray();
-                }
-            }
-
-            if ($googleCalendarService) {
-                try {
-                    $googleCalendarService->handleEvent($oldAppointmentObject, self::APPOINTMENT_DELETED);
-                } catch (\Exception $e) {
-                }
-
-                if ($oldAppointmentObject->getGoogleCalendarEventId() !== null) {
-                    $oldAppointment['googleCalendarEventId'] = $oldAppointmentObject->getGoogleCalendarEventId()->getValue();
-                }
-            }
-
-            if ($outlookCalendarService) {
-                try {
-                    $outlookCalendarService->handleEvent($oldAppointmentObject, self::APPOINTMENT_DELETED);
-                } catch (\Exception $e) {
-                }
-
-                if ($oldAppointmentObject->getOutlookCalendarEventId() !== null) {
-                    $oldAppointment['outlookCalendarEventId'] = $oldAppointmentObject->getOutlookCalendarEventId()->getValue();
-                }
-            }
+            $applicationIntegrationService->handleAppointment(
+                $oldAppointmentObject,
+                $oldAppointment,
+                ApplicationIntegrationService::APPOINTMENT_DELETED,
+                [
+                    ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                ]
+            );
         }
 
         // booking is rescheduled to new OR existing appointment
         if (($newAppointment !== null || $existingAppointment !== null) &&
             $oldAppointmentObject->getStatus()->getValue() !== BookingStatus::CANCELED
         ) {
-            if ($zoomService) {
-                if ($oldAppointmentObject->getZoomMeeting()) {
-                    $oldAppointment['zoomMeeting'] = $oldAppointmentObject->getZoomMeeting()->toArray();
-                }
+            if ($oldAppointmentObject->getZoomMeeting()) {
+                $oldAppointment['zoomMeeting'] = $oldAppointmentObject->getZoomMeeting()->toArray();
             }
 
-            if ($googleCalendarService) {
-                try {
-                    $googleCalendarService->handleEvent($oldAppointmentObject, self::BOOKING_CANCELED);
-                } catch (\Exception $e) {
-                }
-
-                if ($oldAppointmentObject->getGoogleCalendarEventId() !== null) {
-                    $oldAppointment['googleCalendarEventId'] = $oldAppointmentObject->getGoogleCalendarEventId()->getValue();
-                }
-            }
-
-            if ($outlookCalendarService) {
-                try {
-                    $outlookCalendarService->handleEvent($oldAppointmentObject, self::BOOKING_CANCELED);
-                } catch (\Exception $e) {
-                }
-
-                if ($oldAppointmentObject->getOutlookCalendarEventId() !== null) {
-                    $oldAppointment['outlookCalendarEventId'] = $oldAppointmentObject->getOutlookCalendarEventId()->getValue();
-                }
-            }
+            $applicationIntegrationService->handleAppointment(
+                $oldAppointmentObject,
+                $oldAppointment,
+                ApplicationIntegrationService::BOOKING_CANCELED,
+                [
+                    ApplicationIntegrationService::SKIP_ZOOM_MEETING => true,
+                    ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                ]
+            );
 
             if ($oldAppointmentStatusChanged) {
                 foreach ($oldAppointment['bookings'] as $bookingKey => $bookingArray) {
@@ -305,35 +227,14 @@ class BookingReassignedEventHandler
         }
 
         if ($newAppointment !== null) {
-            if ($zoomService) {
-                $zoomService->handleAppointmentMeeting($newAppointmentObject, self::APPOINTMENT_ADDED);
-
-                if ($newAppointmentObject->getZoomMeeting()) {
-                    $newAppointment['zoomMeeting'] = $newAppointmentObject->getZoomMeeting()->toArray();
-                }
-            }
-
-            if ($googleCalendarService) {
-                try {
-                    $googleCalendarService->handleEvent($newAppointmentObject, self::APPOINTMENT_ADDED);
-                } catch (\Exception $e) {
-                }
-
-                if ($newAppointmentObject->getGoogleCalendarEventId() !== null) {
-                    $newAppointment['googleCalendarEventId'] = $newAppointmentObject->getGoogleCalendarEventId()->getValue();
-                }
-            }
-
-            if ($outlookCalendarService) {
-                try {
-                    $outlookCalendarService->handleEvent($newAppointmentObject, self::APPOINTMENT_ADDED);
-                } catch (\Exception $e) {
-                }
-
-                if ($newAppointmentObject->getOutlookCalendarEventId() !== null) {
-                    $newAppointment['outlookCalendarEventId'] = $newAppointmentObject->getOutlookCalendarEventId()->getValue();
-                }
-            }
+            $applicationIntegrationService->handleAppointment(
+                $newAppointmentObject,
+                $newAppointment,
+                ApplicationIntegrationService::APPOINTMENT_ADDED,
+                [
+                    ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                ]
+            );
 
             foreach ($newAppointment['bookings'] as $bookingKey => $bookingArray) {
                 if ($booking['id'] === $bookingArray['id'] && ($bookingArray['status'] === BookingStatus::APPROVED || $bookingArray['status'] === BookingStatus::PENDING)) {
@@ -360,35 +261,14 @@ class BookingReassignedEventHandler
 
             $webHookService->process(self::TIME_UPDATED, $newAppointment, []);
         } else if ($existingAppointment !== null) {
-            if ($zoomService) {
-                $zoomService->handleAppointmentMeeting($existingAppointmentObject, self::BOOKING_ADDED);
-
-                if ($existingAppointmentObject->getZoomMeeting()) {
-                    $existingAppointment['zoomMeeting'] = $existingAppointmentObject->getZoomMeeting()->toArray();
-                }
-            }
-
-            if ($googleCalendarService) {
-                try {
-                    $googleCalendarService->handleEvent($existingAppointmentObject, self::BOOKING_ADDED);
-                } catch (Exception $e) {
-                }
-
-                if ($existingAppointmentObject->getGoogleCalendarEventId() !== null) {
-                    $existingAppointment['googleCalendarEventId'] = $existingAppointmentObject->getGoogleCalendarEventId()->getValue();
-                }
-            }
-
-            if ($outlookCalendarService) {
-                try {
-                    $outlookCalendarService->handleEvent($existingAppointmentObject, self::BOOKING_ADDED);
-                } catch (Exception $e) {
-                }
-
-                if ($existingAppointmentObject->getOutlookCalendarEventId() !== null) {
-                    $existingAppointment['outlookCalendarEventId'] = $existingAppointmentObject->getOutlookCalendarEventId()->getValue();
-                }
-            }
+            $applicationIntegrationService->handleAppointment(
+                $existingAppointmentObject,
+                $existingAppointment,
+                ApplicationIntegrationService::BOOKING_ADDED,
+                [
+                    ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                ]
+            );
 
             $booking['icsFiles'] = $icsService->getIcsData(
                 Entities::APPOINTMENT,

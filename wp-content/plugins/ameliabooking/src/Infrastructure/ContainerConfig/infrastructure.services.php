@@ -175,3 +175,15 @@ $entries['infrastructure.outlook.calendar.service'] = function ($c) {
 $entries['infrastructure.recaptcha.service'] = function ($c) {
     return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getRecaptchaService($c);
 };
+
+/**
+ * Apple Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService
+ */
+
+$entries['infrastructure.apple.calendar.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getAppleCalendarService($c);
+};

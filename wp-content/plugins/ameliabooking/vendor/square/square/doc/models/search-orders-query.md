@@ -18,8 +18,52 @@ Contains query criteria for the search.
 
 ```json
 {
-  "filter": null,
-  "sort": null
+  "filter": {
+    "state_filter": {
+      "states": [
+        "CANCELED",
+        "DRAFT"
+      ]
+    },
+    "date_time_filter": {
+      "created_at": {
+        "start_at": "start_at4",
+        "end_at": "end_at8"
+      },
+      "updated_at": {
+        "start_at": "start_at6",
+        "end_at": "end_at6"
+      },
+      "closed_at": {
+        "start_at": "start_at4",
+        "end_at": "end_at8"
+      }
+    },
+    "fulfillment_filter": {
+      "fulfillment_types": [
+        "DELIVERY"
+      ],
+      "fulfillment_states": [
+        "CANCELED",
+        "FAILED"
+      ]
+    },
+    "source_filter": {
+      "source_names": [
+        "source_names6"
+      ]
+    },
+    "customer_filter": {
+      "customer_ids": [
+        "customer_ids3",
+        "customer_ids4"
+      ]
+    }
+  },
+  "sort": {
+    "sort_field": "UPDATED_AT",
+    "sort_order": "DESC"
+  }
 }
 ```
 

@@ -4,9 +4,9 @@ namespace AmeliaBooking\Infrastructure\Services\LessonSpace;
 
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
+use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
-use AmeliaBooking\Infrastructure\Routes\Booking\Event\Event;
 
 class LiteLessonSpaceService extends AbstractLessonSpaceService
 {

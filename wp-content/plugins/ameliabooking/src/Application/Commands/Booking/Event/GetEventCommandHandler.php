@@ -73,7 +73,7 @@ class GetEventCommandHandler extends CommandHandler
                 'fetchEventsTags'       => true,
                 'fetchEventsProviders'  => true,
                 'fetchEventsImages'     => true,
-                'fetchApprovedBookings' => false,
+                'fetchBookings'         => true,
                 'fetchBookingsTickets'  => true,
                 'fetchBookingsUsers'    => true,
                 'fetchBookingsPayments' => true,

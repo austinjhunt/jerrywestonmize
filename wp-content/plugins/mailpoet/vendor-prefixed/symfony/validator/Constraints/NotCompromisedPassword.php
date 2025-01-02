@@ -10,7 +10,7 @@ class NotCompromisedPassword extends Constraint
  public $message = 'This password has been leaked in a data breach, it must not be used. Please use another password.';
  public $threshold = 1;
  public $skipOnError = \false;
- public function __construct(array $options = null, string $message = null, int $threshold = null, bool $skipOnError = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $message = null, ?int $threshold = null, ?bool $skipOnError = null, ?array $groups = null, $payload = null)
  {
  parent::__construct($options, $groups, $payload);
  $this->message = $message ?? $this->message;

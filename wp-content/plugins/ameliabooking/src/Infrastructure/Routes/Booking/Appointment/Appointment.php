@@ -10,6 +10,7 @@ use AmeliaBooking\Application\Controller\Booking\Appointment\AddAppointmentContr
 use AmeliaBooking\Application\Controller\Booking\Appointment\DeleteAppointmentController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\GetAppointmentController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\GetAppointmentsController;
+use AmeliaBooking\Application\Controller\Booking\Appointment\GetPackageAppointmentsController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\UpdateAppointmentController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\UpdateAppointmentStatusController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\UpdateAppointmentTimeController;
@@ -42,5 +43,7 @@ class Appointment
         $app->post('/appointments/status/{id:[0-9]+}', UpdateAppointmentStatusController::class);
 
         $app->post('/appointments/time/{id:[0-9]+}', UpdateAppointmentTimeController::class);
+
+        $app->get('/package/appointments', GetPackageAppointmentsController::class);
     }
 }

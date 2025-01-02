@@ -79,7 +79,8 @@ foreach ( $template_vars as $key => $val ) {
 		<input
 				class="sui-form-control"
 				name="name" placeholder="<?php esc_attr_e( 'Friendly Name', 'forminator' ); ?>"
-				value="<?php echo esc_attr( $vars['name'] ); ?>">
+				value="<?php echo esc_attr( $vars['name'] ); ?>"
+				onkeydown="return event.key !== 'Enter';" />
 		<?php if ( ! empty( $vars['name_error'] ) ) : ?>
 			<span class="sui-error-message"><?php echo esc_html( $vars['name_error'] ); ?></span>
 		<?php endif; ?>

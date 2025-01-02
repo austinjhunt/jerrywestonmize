@@ -15,7 +15,36 @@
 
 ```json
 {
-  "items": null
+  "items": [
+    {
+      "errors": [
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        }
+      ],
+      "id": "id8",
+      "buyer_email": "buyer_email0",
+      "recipient_name": "recipient_name6",
+      "recipient_phone_number": "recipient_phone_number6"
+    },
+    {
+      "errors": [
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        }
+      ],
+      "id": "id8",
+      "buyer_email": "buyer_email0",
+      "recipient_name": "recipient_name6",
+      "recipient_phone_number": "recipient_phone_number6"
+    }
+  ]
 }
 ```
 

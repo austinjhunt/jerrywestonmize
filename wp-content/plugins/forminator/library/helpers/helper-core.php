@@ -56,6 +56,25 @@ function forminator_array_value_exists( $array_values, $key ) {
 }
 
 /**
+ * Check for theme and return key.
+ *
+ * @since 1.36.0
+ *
+ * @param string $key - default key value.
+ * @param string $theme - current theme of the form.
+ * @since 1.0
+ * @return string
+ */
+function forminator_get_prefixed_key_name( $key, $theme ) {
+	// If the theme is 'basic', modify the key to have the prefix.
+	if ( 'basic' === $theme ) {
+		$key = 'basic-' . $key;
+	}
+
+	return $key;
+}
+
+/**
  * Check if array value exists
  *
  * @since 1.14.7
@@ -340,11 +359,12 @@ function forminator_enqueue_color_picker_alpha() {
 function forminator_print_front_styles() {
 	// Load old styles.
 	// Remove on v1.12.0 quizzes migrate to Forminator UI.
-	wp_enqueue_style( 'forminator-ui-icons', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-icons.min.css', array(), FORMINATOR_VERSION );
-	wp_enqueue_style( 'forminator-ui-utilities', forminator_plugin_url() . 'assets/forminator-ui/css/src/forminator-utilities.min.css', array(), FORMINATOR_VERSION );
-	wp_enqueue_style( 'forminator-ui-grid-open', forminator_plugin_url() . 'assets/forminator-ui/css/src/grid/forminator-grid.open.min.css', array(), FORMINATOR_VERSION );
-	wp_enqueue_style( 'forminator-ui-grid-enclosed', forminator_plugin_url() . 'assets/forminator-ui/css/src/grid/forminator-grid.enclosed.min.css', array(), FORMINATOR_VERSION );
-	wp_enqueue_style( 'forminator-ui', forminator_plugin_url() . 'assets/forminator-ui/css/src/forminator-ui.min.css', array(), FORMINATOR_VERSION );
+	Forminator_Assets_Enqueue::fui_enqueue_style( 'forminator-ui-icons', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-icons.min.css', array(), FORMINATOR_VERSION );
+	Forminator_Assets_Enqueue::fui_enqueue_style( 'forminator-ui-utilities', forminator_plugin_url() . 'assets/forminator-ui/css/src/forminator-utilities.min.css', array(), FORMINATOR_VERSION );
+	Forminator_Assets_Enqueue::fui_enqueue_style( 'forminator-ui-grid-open', forminator_plugin_url() . 'assets/forminator-ui/css/src/grid/forminator-grid.open.min.css', array(), FORMINATOR_VERSION );
+	Forminator_Assets_Enqueue::fui_enqueue_style( 'forminator-ui-grid-enclosed', forminator_plugin_url() . 'assets/forminator-ui/css/src/grid/forminator-grid.enclosed.min.css', array(), FORMINATOR_VERSION );
+	Forminator_Assets_Enqueue::fui_enqueue_style( 'forminator-ui-basic', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-base.min.css', array(), FORMINATOR_VERSION );
+	Forminator_Assets_Enqueue::fui_enqueue_style( 'forminator-ui', forminator_plugin_url() . 'assets/forminator-ui/css/src/forminator-ui.min.css', array(), FORMINATOR_VERSION );
 }
 
 /**
@@ -479,6 +499,8 @@ function forminator_localize_data() {
 			// This is the file "/build/js/utils.js" found into intlTelInput plugin. Renamed so it makes sense within the "js/library" directory context.
 			'intlTelInput_utils_script' => forminator_plugin_url() . 'assets/js/library/intlTelInputUtils.js',
 			'process_error'             => esc_html__( 'Please try again', 'forminator' ),
+			'payment_failed'            => esc_html__( 'Payment failed. Please try again.', 'forminator' ),
+			'payment_cancelled'         => esc_html__( 'Payment was cancelled', 'forminator' ),
 		),
 		'poll'    => array(
 			'processing' => esc_html__( 'Submitting vote, please wait', 'forminator' ),
@@ -1921,6 +1943,10 @@ function forminator_get_accessible_user_roles() {
 		return array();
 	}
 
+	if ( ! function_exists( 'get_editable_roles' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/user.php';
+	}
+
 	// Get roles.
 	$roles = get_editable_roles();
 
@@ -1944,4 +1970,52 @@ function forminator_get_accessible_user_roles() {
 		}
 	}
 	return $roles;
+}
+
+/**
+ * Validate registration form settings.
+ *
+ * @param array $settings Settings.
+ * @return bool|WP_Error
+ */
+function forminator_validate_registration_form_settings( $settings ) {
+	if ( ! empty( $settings['form-type'] ) && 'registration' === $settings['form-type'] ) {
+		$error_message = esc_html__( 'Unfortunately, you do not have the required permissions or user role to perform this action.', 'forminator' );
+		if ( ! current_user_can( 'create_users' ) ) {
+			return new WP_Error( 'invalid_access', $error_message );
+		}
+		$roles = forminator_get_accessible_user_roles();
+		if ( isset( $settings['registration-user-role'] ) && 'fixed' === $settings['registration-user-role'] ) {
+			if ( isset( $settings['registration-role-field'] ) && ! isset( $roles[ $settings['registration-role-field'] ] ) ) {
+				return new WP_Error( 'invalid_user_role', $error_message );
+			}
+		} elseif ( ! empty( $settings['user_role'] ) && is_array( $settings['user_role'] ) ) {
+			foreach ( $settings['user_role'] as $user_role ) {
+				if ( isset( $user_role['role'] ) && ! isset( $roles[ $user_role['role'] ] ) ) {
+					return new WP_Error( 'invalid_user_role', $error_message );
+				}
+			}
+		}
+	}
+	return true;
+}
+
+/**
+ * Can apply forminator default color
+ *
+ * @param array $settings Form settings.
+ * @return bool
+ */
+function forminator_can_apply_default_color( $settings ) {
+	$form_style = $settings['form-style'] ?? 'default';
+	$prefix     = '';
+	if ( 'basic' === $form_style ) {
+		$prefix = 'basic-';
+	}
+	$color_option_key = $prefix . 'cform-color-option';
+	// For backward compatible.
+	$default_color_option = empty( $settings[ $color_option_key ] ) ? 'forminator' : 'theme';
+
+	$color_option = $settings[ $color_option_key ] ?? $default_color_option;
+	return 'forminator' === $color_option;
 }

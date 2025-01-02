@@ -31,9 +31,69 @@ Represents an [AccumulateLoyaltyPoints](../../doc/apis/loyalty.md#accumulate-loy
       "location_id": "P034NEENMD09F",
       "loyalty_account_id": "5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd",
       "source": "LOYALTY_API",
-      "type": "ACCUMULATE_POINTS"
+      "type": "ACCUMULATE_POINTS",
+      "create_reward": {
+        "loyalty_program_id": "loyalty_program_id2",
+        "reward_id": "reward_id6",
+        "points": 90
+      },
+      "redeem_reward": {
+        "loyalty_program_id": "loyalty_program_id8",
+        "reward_id": "reward_id2",
+        "order_id": "order_id8"
+      },
+      "delete_reward": {
+        "loyalty_program_id": "loyalty_program_id4",
+        "reward_id": "reward_id8",
+        "points": 104
+      },
+      "adjust_points": {
+        "loyalty_program_id": "loyalty_program_id2",
+        "points": 96,
+        "reason": "reason2"
+      }
     }
-  ]
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "event": {
+    "id": "id0",
+    "type": "ADJUST_POINTS",
+    "created_at": "created_at8",
+    "accumulate_points": {
+      "loyalty_program_id": "loyalty_program_id8",
+      "points": 118,
+      "order_id": "order_id8"
+    },
+    "create_reward": {
+      "loyalty_program_id": "loyalty_program_id2",
+      "reward_id": "reward_id6",
+      "points": 90
+    },
+    "redeem_reward": {
+      "loyalty_program_id": "loyalty_program_id8",
+      "reward_id": "reward_id2",
+      "order_id": "order_id8"
+    },
+    "delete_reward": {
+      "loyalty_program_id": "loyalty_program_id4",
+      "reward_id": "reward_id8",
+      "points": 104
+    },
+    "adjust_points": {
+      "loyalty_program_id": "loyalty_program_id2",
+      "points": 96,
+      "reason": "reason2"
+    },
+    "loyalty_account_id": "loyalty_account_id0",
+    "source": "SQUARE"
+  }
 }
 ```
 

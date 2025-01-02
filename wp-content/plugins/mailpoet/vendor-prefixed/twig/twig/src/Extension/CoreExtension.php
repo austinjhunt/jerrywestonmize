@@ -47,6 +47,8 @@ use MailPoetVendor\Twig\Node\Expression\Unary\NegUnary;
 use MailPoetVendor\Twig\Node\Expression\Unary\NotUnary;
 use MailPoetVendor\Twig\Node\Expression\Unary\PosUnary;
 use MailPoetVendor\Twig\NodeVisitor\MacroAutoImportNodeVisitor;
+use MailPoetVendor\Twig\Sandbox\SecurityNotAllowedMethodError;
+use MailPoetVendor\Twig\Sandbox\SecurityNotAllowedPropertyError;
 use MailPoetVendor\Twig\Source;
 use MailPoetVendor\Twig\Template;
 use MailPoetVendor\Twig\TemplateWrapper;
@@ -71,6 +73,7 @@ use MailPoetVendor\Twig\TwigFunction;
 use MailPoetVendor\Twig\TwigTest;
 final class CoreExtension extends AbstractExtension
 {
+ public const ARRAY_LIKE_CLASSES = ['ArrayIterator', 'ArrayObject', 'CachingIterator', 'RecursiveArrayIterator', 'RecursiveCachingIterator', 'SplDoublyLinkedList', 'SplFixedArray', 'SplObjectStorage', 'SplQueue', 'SplStack', 'WeakMap'];
  private $dateFormats = ['F j, Y H:i', '%d days'];
  private $numberFormat = [0, '.', ','];
  private $timezone = null;
@@ -810,9 +813,17 @@ final class CoreExtension extends AbstractExtension
  }
  public static function getAttribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = 'any', $isDefinedTest = \false, $ignoreStrictCheck = \false, $sandboxed = \false, int $lineno = -1)
  {
+ $propertyNotAllowedError = null;
  // array
  if ('method' !== $type) {
  $arrayItem = \is_bool($item) || \is_float($item) ? (int) $item : $item;
+ if ($sandboxed && $object instanceof \ArrayAccess && !\in_array(\get_class($object), self::ARRAY_LIKE_CLASSES, \true)) {
+ try {
+ $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $arrayItem, $lineno, $source);
+ } catch (SecurityNotAllowedPropertyError $propertyNotAllowedError) {
+ goto methodCheck;
+ }
+ }
  if ((\is_array($object) || $object instanceof \ArrayObject) && (isset($object[$arrayItem]) || \array_key_exists($arrayItem, (array) $object)) || $object instanceof \ArrayAccess && isset($object[$arrayItem])) {
  if ($isDefinedTest) {
  return \true;
@@ -871,16 +882,21 @@ final class CoreExtension extends AbstractExtension
  }
  // object property
  if ('method' !== $type) {
+ if ($sandboxed) {
+ try {
+ $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $item, $lineno, $source);
+ } catch (SecurityNotAllowedPropertyError $propertyNotAllowedError) {
+ goto methodCheck;
+ }
+ }
  if (isset($object->{$item}) || \array_key_exists((string) $item, (array) $object)) {
  if ($isDefinedTest) {
  return \true;
  }
- if ($sandboxed) {
- $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $item, $lineno, $source);
- }
  return $object->{$item};
  }
  }
+ methodCheck:
  static $cache = [];
  $class = \get_class($object);
  // object method
@@ -934,16 +950,29 @@ final class CoreExtension extends AbstractExtension
  if ($isDefinedTest) {
  return \false;
  }
+ if ($propertyNotAllowedError) {
+ throw $propertyNotAllowedError;
+ }
  if ($ignoreStrictCheck || !$env->isStrictVariables()) {
  return;
  }
  throw new RuntimeError(\sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()"/"has%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, $class), $lineno, $source);
  }
+ if ($sandboxed) {
+ try {
+ $env->getExtension(SandboxExtension::class)->checkMethodAllowed($object, $method, $lineno, $source);
+ } catch (SecurityNotAllowedMethodError $e) {
+ if ($isDefinedTest) {
+ return \false;
+ }
+ if ($propertyNotAllowedError) {
+ throw $propertyNotAllowedError;
+ }
+ throw $e;
+ }
+ }
  if ($isDefinedTest) {
  return \true;
- }
- if ($sandboxed) {
- $env->getExtension(SandboxExtension::class)->checkMethodAllowed($object, $method, $lineno, $source);
  }
  // Some objects throw exceptions when they have __call, and the method we try
  // to call is not supported. If ignoreStrictCheck is true, we should return null.

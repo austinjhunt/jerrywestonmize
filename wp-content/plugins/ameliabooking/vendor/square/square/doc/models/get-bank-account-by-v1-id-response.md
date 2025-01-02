@@ -31,8 +31,32 @@ Response object returned by GetBankAccountByV1Id.
     "location_id": "S8GWD5example",
     "primary_bank_identification_number": "112200303",
     "status": "VERIFICATION_IN_PROGRESS",
-    "version": 5
-  }
+    "version": 5,
+    "secondary_bank_identification_number": "secondary_bank_identification_number4",
+    "debit_mandate_reference_id": "debit_mandate_reference_id0",
+    "reference_id": "reference_id2",
+    "fingerprint": "fingerprint0"
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

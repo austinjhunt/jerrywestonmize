@@ -57,6 +57,9 @@ class Appointment extends AbstractBooking
     /** @var Label */
     private $outlookCalendarEventId;
 
+    /** @var Label */
+    private $appleCalendarEventId;
+
     /** @var DateTimeValue */
     protected $bookingStart;
 
@@ -215,7 +218,7 @@ class Appointment extends AbstractBooking
     }
 
     /**
-     * @param Token $googleCalendarEventId
+     * @param Token|null $googleCalendarEventId
      */
     public function setGoogleCalendarEventId($googleCalendarEventId)
     {
@@ -247,11 +250,27 @@ class Appointment extends AbstractBooking
     }
 
     /**
-     * @param Label $outlookCalendarEventId
+     * @param Label|null $outlookCalendarEventId
      */
     public function setOutlookCalendarEventId($outlookCalendarEventId)
     {
         $this->outlookCalendarEventId = $outlookCalendarEventId;
+    }
+
+    /**
+     * @return Label
+     */
+    public function getAppleCalendarEventId()
+    {
+        return $this->appleCalendarEventId;
+    }
+
+    /**
+     * @param Label|null $appleCalendarEventId
+     */
+    public function setAppleCalendarEventId($appleCalendarEventId)
+    {
+        $this->appleCalendarEventId = $appleCalendarEventId;
     }
 
     /**
@@ -426,6 +445,8 @@ class Appointment extends AbstractBooking
                 'googleMeetUrl'          => null !== $this->getGoogleMeetUrl() ? $this->getGoogleMeetUrl() : null,
                 'outlookCalendarEventId' => null !== $this->getOutlookCalendarEventId() ?
                     $this->getOutlookCalendarEventId()->getValue() : null,
+                'appleCalendarEventId'   => null !== $this->getAppleCalendarEventId() ?
+                    $this->getAppleCalendarEventId()->getValue() : null,
                 'zoomMeeting'            => $this->getZoomMeeting() ? $this->getZoomMeeting()->toArray() : null,
                 'lessonSpace'            => $this->getLessonSpace() ?: null,
                 'bookingStart'           => $this->getBookingStart()->getValue()->format('Y-m-d H:i:s'),

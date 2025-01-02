@@ -31,7 +31,7 @@ class PublishInvoiceRequest implements \JsonSerializable
 
     /**
      * Returns Version.
-     * The version of the [invoice]($m/Invoice) to publish.
+     * The version of the [invoice](entity:Invoice) to publish.
      * This must match the current version of the invoice; otherwise, the request is rejected.
      */
     public function getVersion(): int
@@ -41,7 +41,7 @@ class PublishInvoiceRequest implements \JsonSerializable
 
     /**
      * Sets Version.
-     * The version of the [invoice]($m/Invoice) to publish.
+     * The version of the [invoice](entity:Invoice) to publish.
      * This must match the current version of the invoice; otherwise, the request is rejected.
      *
      * @required
@@ -58,8 +58,8 @@ class PublishInvoiceRequest implements \JsonSerializable
      * provide `idempotency_key` (or provide an empty string as the value), the endpoint
      * treats each request as independent.
      *
-     * For more information, see [Idempotency](https://developer.squareup.com/docs/working-with-
-     * apis/idempotency).
+     * For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-
+     * patterns/idempotency).
      */
     public function getIdempotencyKey(): ?string
     {
@@ -75,8 +75,8 @@ class PublishInvoiceRequest implements \JsonSerializable
      * provide `idempotency_key` (or provide an empty string as the value), the endpoint
      * treats each request as independent.
      *
-     * For more information, see [Idempotency](https://developer.squareup.com/docs/working-with-
-     * apis/idempotency).
+     * For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-
+     * patterns/idempotency).
      *
      * @maps idempotency_key
      */
@@ -91,8 +91,8 @@ class PublishInvoiceRequest implements \JsonSerializable
      * provide `idempotency_key` (or provide an empty string as the value), the endpoint
      * treats each request as independent.
      *
-     * For more information, see [Idempotency](https://developer.squareup.com/docs/working-with-
-     * apis/idempotency).
+     * For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-
+     * patterns/idempotency).
      */
     public function unsetIdempotencyKey(): void
     {

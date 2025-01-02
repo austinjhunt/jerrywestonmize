@@ -15,6 +15,7 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventPeriodsRepository;
+use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingApprovedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingRejectedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventAddedEventHandler;
@@ -57,6 +58,55 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
      */
     public function handleAppointmentMeeting($reservation, $commandSlug)
+    {
+        try {
+            $this->handleAppointmentMeetingAction($reservation, $commandSlug);
+        } catch (\Exception $e) {
+            /** @var AppointmentRepository $appointmentRepository */
+            $appointmentRepository = $this->container->get("domain.booking.appointment.repository");
+
+            $appointmentRepository->updateErrorColumn($reservation->getId()->getValue(), $e->getMessage());
+        }
+    }
+
+
+    /**
+     * @param Event      $reservation
+     * @param Collection $periods
+     * @param string     $commandSlug
+     *
+     * @return void
+     *
+     * @throws \Interop\Container\Exception\ContainerException
+     * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
+     * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
+     * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
+     */
+    public function handleEventMeeting($reservation, $periods, $commandSlug, $newZoomUser = null)
+    {
+        try {
+            $this->handleEventMeetingAction($reservation, $periods, $commandSlug, $newZoomUser);
+        } catch (\Exception $e) {
+            /** @var EventRepository $eventRepository */
+            $eventRepository = $this->container->get("domain.booking.event.repository");
+
+            $eventRepository->updateErrorColumn($reservation->getId()->getValue(), $e->getMessage());
+        }
+    }
+
+
+    /**
+     * @param Appointment $reservation
+     * @param string $commandSlug
+     *
+     * @return void
+     *
+     * @throws \Interop\Container\Exception\ContainerException
+     * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
+     * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
+     * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
+     */
+    private function handleAppointmentMeetingAction($reservation, $commandSlug)
     {
         /** @var AppointmentRepository $appointmentRepository */
         $appointmentRepository = $this->container->get("domain.booking.appointment.repository");
@@ -137,9 +187,6 @@ class ZoomApplicationService extends AbstractZoomApplicationService
                 $reservation->getZoomMeeting()->getId() &&
                 (!$reservation->getZoomMeeting()->getStartUrl() || !$reservation->getZoomMeeting()->getStartUrl())
             ) {
-                /** @var AppointmentRepository $appointmentRepository */
-                $appointmentRepository = $this->container->get("domain.booking.appointment.repository");
-
                 $this->getMeeting($reservation);
 
                 $appointmentRepository->updateFieldById(
@@ -163,8 +210,9 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
      */
-    public function handleEventMeeting($reservation, $periods, $commandSlug, $newZoomUser = null)
+    private function handleEventMeetingAction($reservation, $periods, $commandSlug, $newZoomUser = null)
     {
+
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 

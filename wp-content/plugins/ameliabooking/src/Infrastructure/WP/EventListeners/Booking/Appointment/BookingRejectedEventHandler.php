@@ -8,6 +8,7 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment;
 
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
+use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -19,9 +20,6 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
-use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
-use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -53,10 +51,8 @@ class BookingRejectedEventHandler
      */
     public static function handle($commandResult, $container)
     {
-        /** @var AbstractGoogleCalendarService $googleCalendarService */
-        $googleCalendarService = $container->get('infrastructure.google.calendar.service');
-        /** @var AbstractOutlookCalendarService $outlookCalendarService */
-        $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
+        /** @var ApplicationIntegrationService $applicationIntegrationService */
+        $applicationIntegrationService = $container->get('application.integration.service');
         /** @var EmailNotificationService $emailNotificationService */
         $emailNotificationService = $container->get('application.emailNotification.service');
         /** @var SMSNotificationService $smsNotificationService */
@@ -69,8 +65,6 @@ class BookingRejectedEventHandler
         $webHookService = $container->get('application.webHook.service');
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
-        /** @var AbstractZoomApplicationService $zoomService */
-        $zoomService = $container->get('application.zoom.service');
 
         $appointment = $commandResult->getData()[$commandResult->getData()['type']];
 
@@ -79,34 +73,14 @@ class BookingRejectedEventHandler
 
             $bookingApplicationService->setReservationEntities($reservationObject);
 
-            if ($zoomService) {
-                $zoomService->handleAppointmentMeeting($reservationObject, self::BOOKING_REJECTED);
-
-                if ($reservationObject->getZoomMeeting()) {
-                    $appointment['zoomMeeting'] = $reservationObject->getZoomMeeting()->toArray();
-                }
-            }
-
-            try {
-                $googleCalendarService->handleEvent($reservationObject, self::BOOKING_REJECTED);
-            } catch (Exception $e) {
-            }
-
-            if ($reservationObject->getGoogleCalendarEventId() !== null) {
-                $appointment['googleCalendarEventId'] = $reservationObject->getGoogleCalendarEventId()->getValue();
-            }
-            if ($reservationObject->getGoogleMeetUrl() !== null) {
-                $appointment['googleMeetUrl'] = $reservationObject->getGoogleMeetUrl();
-            }
-
-            try {
-                $outlookCalendarService->handleEvent($reservationObject, self::BOOKING_REJECTED);
-            } catch (Exception $e) {
-            }
-
-            if ($reservationObject->getOutlookCalendarEventId() !== null) {
-                $appointment['outlookCalendarEventId'] = $reservationObject->getOutlookCalendarEventId()->getValue();
-            }
+            $applicationIntegrationService->handleAppointment(
+                $reservationObject,
+                $appointment,
+                ApplicationIntegrationService::BOOKING_REJECTED,
+                [
+                    ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                ]
+            );
         }
 
         $booking = $commandResult->getData()[Entities::BOOKING];

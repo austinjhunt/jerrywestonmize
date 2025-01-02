@@ -11,7 +11,7 @@ Represents an input to a call to [BulkUpdateVendors](../../doc/apis/vendors.md#b
 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
-| `vendors` | [`array<string,UpdateVendorRequest>`](../../doc/models/update-vendor-request.md) | Required | A set of [UpdateVendorRequest](../../doc/models/update-vendor-request.md) objects encapsulating to-be-updated [Vendor](../../doc/models/vendor.md)<br>objects. The set is represented by  a collection of `Vendor`-ID/`UpdateVendorRequest`-object pairs. | getVendors(): array | setVendors(array vendors): void |
+| `vendors` | [`array<string,UpdateVendorRequest>`](../../doc/models/update-vendor-request.md) | Required | A set of [UpdateVendorRequest](entity:UpdateVendorRequest) objects encapsulating to-be-updated [Vendor](entity:Vendor)<br>objects. The set is represented by  a collection of `Vendor`-ID/`UpdateVendorRequest`-object pairs. | getVendors(): array | setVendors(array vendors): void |
 
 ## Example (as JSON)
 
@@ -19,48 +19,51 @@ Represents an input to a call to [BulkUpdateVendors](../../doc/apis/vendors.md#b
 {
   "vendors": {
     "key0": {
-      "idempotency_key": null,
+      "idempotency_key": "idempotency_key4",
       "vendor": {
-        "id": null,
-        "created_at": null,
-        "updated_at": null,
-        "name": null,
-        "address": null,
-        "contacts": null,
-        "account_number": null,
-        "note": null,
-        "version": null,
-        "status": null
+        "id": "id6",
+        "created_at": "created_at4",
+        "updated_at": "updated_at2",
+        "name": "name6",
+        "address": {
+          "address_line_1": "address_line_16",
+          "address_line_2": "address_line_26",
+          "address_line_3": "address_line_32",
+          "locality": "locality6",
+          "sublocality": "sublocality6"
+        }
       }
     },
     "key1": {
-      "idempotency_key": null,
+      "idempotency_key": "idempotency_key4",
       "vendor": {
-        "id": null,
-        "created_at": null,
-        "updated_at": null,
-        "name": null,
-        "address": null,
-        "contacts": null,
-        "account_number": null,
-        "note": null,
-        "version": null,
-        "status": null
+        "id": "id6",
+        "created_at": "created_at4",
+        "updated_at": "updated_at2",
+        "name": "name6",
+        "address": {
+          "address_line_1": "address_line_16",
+          "address_line_2": "address_line_26",
+          "address_line_3": "address_line_32",
+          "locality": "locality6",
+          "sublocality": "sublocality6"
+        }
       }
     },
     "key2": {
-      "idempotency_key": null,
+      "idempotency_key": "idempotency_key4",
       "vendor": {
-        "id": null,
-        "created_at": null,
-        "updated_at": null,
-        "name": null,
-        "address": null,
-        "contacts": null,
-        "account_number": null,
-        "note": null,
-        "version": null,
-        "status": null
+        "id": "id6",
+        "created_at": "created_at4",
+        "updated_at": "updated_at2",
+        "name": "name6",
+        "address": {
+          "address_line_1": "address_line_16",
+          "address_line_2": "address_line_26",
+          "address_line_3": "address_line_32",
+          "locality": "locality6",
+          "sublocality": "sublocality6"
+        }
       }
     }
   }

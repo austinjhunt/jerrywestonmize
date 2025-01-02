@@ -28,7 +28,7 @@ class Ip extends Constraint
  public $version = self::V4;
  public $message = 'This is not a valid IP address.';
  public $normalizer;
- public function __construct(array $options = null, string $version = null, string $message = null, callable $normalizer = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $version = null, ?string $message = null, ?callable $normalizer = null, ?array $groups = null, $payload = null)
  {
  parent::__construct($options, $groups, $payload);
  $this->version = $version ?? $this->version;

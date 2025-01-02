@@ -12,7 +12,7 @@ class Isin extends Constraint
  public const INVALID_CHECKSUM_ERROR = '32089b-0ee1-93ba-399e-aa232e62f2d29d';
  protected static $errorNames = [self::INVALID_LENGTH_ERROR => 'INVALID_LENGTH_ERROR', self::INVALID_PATTERN_ERROR => 'INVALID_PATTERN_ERROR', self::INVALID_CHECKSUM_ERROR => 'INVALID_CHECKSUM_ERROR'];
  public $message = 'This value is not a valid International Securities Identification Number (ISIN).';
- public function __construct(array $options = null, string $message = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $message = null, ?array $groups = null, $payload = null)
  {
  parent::__construct($options, $groups, $payload);
  $this->message = $message ?? $this->message;

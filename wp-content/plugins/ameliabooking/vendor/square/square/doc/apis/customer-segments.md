@@ -31,7 +31,7 @@ function listCustomerSegments(?string $cursor = null, ?int $limit = null): ApiRe
 
 ## Response Type
 
-[`ListCustomerSegmentsResponse`](../../doc/models/list-customer-segments-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListCustomerSegmentsResponse`](../../doc/models/list-customer-segments-response.md).
 
 ## Example Usage
 
@@ -44,9 +44,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -66,7 +66,7 @@ function retrieveCustomerSegment(string $segmentId): ApiResponse
 
 ## Response Type
 
-[`RetrieveCustomerSegmentResponse`](../../doc/models/retrieve-customer-segment-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveCustomerSegmentResponse`](../../doc/models/retrieve-customer-segment-response.md).
 
 ## Example Usage
 
@@ -81,8 +81,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

@@ -23,7 +23,7 @@ class Choice extends Constraint
  {
  return 'choices';
  }
- public function __construct($options = [], array $choices = null, $callback = null, bool $multiple = null, bool $strict = null, int $min = null, int $max = null, string $message = null, string $multipleMessage = null, string $minMessage = null, string $maxMessage = null, $groups = null, $payload = null)
+ public function __construct($options = [], ?array $choices = null, $callback = null, ?bool $multiple = null, ?bool $strict = null, ?int $min = null, ?int $max = null, ?string $message = null, ?string $multipleMessage = null, ?string $minMessage = null, ?string $maxMessage = null, $groups = null, $payload = null)
  {
  if (\is_array($options) && $options && \array_is_list($options)) {
  $choices = $choices ?? $options;

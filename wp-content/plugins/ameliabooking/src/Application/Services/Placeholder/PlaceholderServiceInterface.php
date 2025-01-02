@@ -31,11 +31,13 @@ interface PlaceholderServiceInterface
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @param array        $appointment
+     * @param array        $data
      * @param int          $bookingKey
      * @param string       $type
      * @param AbstractUser $customer
      * @param array        $allBookings
+     * @param bool         $invoice
+     * @param string       $notificationType
      *
      * @return array
      *
@@ -46,13 +48,37 @@ interface PlaceholderServiceInterface
      * @throws ContainerException
      * @throws Exception
      */
-    public function getPlaceholdersData($appointment, $bookingKey = null, $type = null, $customer = null, $allBookings = null);
+    public function getPlaceholdersData(
+        $data,
+        $bookingKey = null,
+        $type = null,
+        $customer = null,
+        $allBookings = null,
+        $invoice = false,
+        $notificationType = null
+    );
 
     /**
      * @param array $bookingArray
      * @param array $entity
+     * @param boolean $invoice
      *
      * @return array
      */
-    public function getAmountData(&$bookingArray, $entity);
+    public function getAmountData(&$bookingArray, $entity, $invoice = false);
+
+
+    /**
+     * @param array $reservationData
+     *
+     * @return array
+     *
+     * @throws InvalidArgumentException
+     * @throws ContainerValueNotFoundException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     * @throws Exception
+     */
+    public function getInvoicePlaceholdersData($reservationData);
 }

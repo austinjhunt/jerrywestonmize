@@ -153,7 +153,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                     [
                         'customers' => $isCabinetPage && $user->getType() === Entities::CUSTOMER ?
                             [$user->getId()->getValue()] : [],
-                        'providers' => $isCabinetPage && $user->getType() === Entities::PROVIDER ?
+                        'providers' => $user && $user->getType() === Entities::PROVIDER ?
                             [$user->getId()->getValue()] : [],
                     ],
                     array_merge($params, ['endsInDateRange' => $isCalendarPage]),
@@ -332,6 +332,9 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
                 if (!empty($params['timeZone'])) {
                     $timeZone = $params['timeZone'];
+                } elseif (($user && $user->getType() === Entities::PROVIDER) &&
+                    empty($user->getTimeZone()) && !empty(get_option('timezone_string'))) {
+                    $timeZone = get_option('timezone_string');
                 }
 
                 $appointment->getBookingStart()->getValue()->setTimezone(new \DateTimeZone($timeZone));

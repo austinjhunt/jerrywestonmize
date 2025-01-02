@@ -33,6 +33,11 @@ class InvoiceAcceptedPaymentMethods implements \JsonSerializable
     private $buyNowPayLater = [];
 
     /**
+     * @var array
+     */
+    private $cashAppPay = [];
+
+    /**
      * Returns Card.
      * Indicates whether credit card or debit card payments are accepted. The default value is `false`.
      */
@@ -98,9 +103,7 @@ class InvoiceAcceptedPaymentMethods implements \JsonSerializable
 
     /**
      * Returns Bank Account.
-     * Indicates whether bank transfer payments are accepted. The default value is `false`.
-     *
-     * This option is allowed only for invoices that have a single payment request of the `BALANCE` type.
+     * Indicates whether ACH bank transfer payments are accepted. The default value is `false`.
      */
     public function getBankAccount(): ?bool
     {
@@ -112,9 +115,7 @@ class InvoiceAcceptedPaymentMethods implements \JsonSerializable
 
     /**
      * Sets Bank Account.
-     * Indicates whether bank transfer payments are accepted. The default value is `false`.
-     *
-     * This option is allowed only for invoices that have a single payment request of the `BALANCE` type.
+     * Indicates whether ACH bank transfer payments are accepted. The default value is `false`.
      *
      * @maps bank_account
      */
@@ -125,9 +126,7 @@ class InvoiceAcceptedPaymentMethods implements \JsonSerializable
 
     /**
      * Unsets Bank Account.
-     * Indicates whether bank transfer payments are accepted. The default value is `false`.
-     *
-     * This option is allowed only for invoices that have a single payment request of the `BALANCE` type.
+     * Indicates whether ACH bank transfer payments are accepted. The default value is `false`.
      */
     public function unsetBankAccount(): void
     {
@@ -203,6 +202,44 @@ class InvoiceAcceptedPaymentMethods implements \JsonSerializable
     }
 
     /**
+     * Returns Cash App Pay.
+     * Indicates whether Cash App payments are accepted. The default value is `false`.
+     *
+     * This payment method is supported only for seller [locations](entity:Location) in the United States.
+     */
+    public function getCashAppPay(): ?bool
+    {
+        if (count($this->cashAppPay) == 0) {
+            return null;
+        }
+        return $this->cashAppPay['value'];
+    }
+
+    /**
+     * Sets Cash App Pay.
+     * Indicates whether Cash App payments are accepted. The default value is `false`.
+     *
+     * This payment method is supported only for seller [locations](entity:Location) in the United States.
+     *
+     * @maps cash_app_pay
+     */
+    public function setCashAppPay(?bool $cashAppPay): void
+    {
+        $this->cashAppPay['value'] = $cashAppPay;
+    }
+
+    /**
+     * Unsets Cash App Pay.
+     * Indicates whether Cash App payments are accepted. The default value is `false`.
+     *
+     * This payment method is supported only for seller [locations](entity:Location) in the United States.
+     */
+    public function unsetCashAppPay(): void
+    {
+        $this->cashAppPay = [];
+    }
+
+    /**
      * Encode this object to JSON
      *
      * @param bool $asArrayWhenEmpty Whether to serialize this model as an array whenever no fields
@@ -225,6 +262,9 @@ class InvoiceAcceptedPaymentMethods implements \JsonSerializable
         }
         if (!empty($this->buyNowPayLater)) {
             $json['buy_now_pay_later'] = $this->buyNowPayLater['value'];
+        }
+        if (!empty($this->cashAppPay)) {
+            $json['cash_app_pay']      = $this->cashAppPay['value'];
         }
         $json = array_filter($json, function ($val) {
             return $val !== null;

@@ -34,7 +34,7 @@ function listCustomerGroups(?string $cursor = null, ?int $limit = null): ApiResp
 
 ## Response Type
 
-[`ListCustomerGroupsResponse`](../../doc/models/list-customer-groups-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListCustomerGroupsResponse`](../../doc/models/list-customer-groups-response.md).
 
 ## Example Usage
 
@@ -47,9 +47,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -71,18 +71,16 @@ function createCustomerGroup(CreateCustomerGroupRequest $body): ApiResponse
 
 ## Response Type
 
-[`CreateCustomerGroupResponse`](../../doc/models/create-customer-group-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateCustomerGroupResponse`](../../doc/models/create-customer-group-response.md).
 
 ## Example Usage
 
 ```php
-$body_group_name = 'Loyal Customers';
-$body_group = new Models\CustomerGroup(
-    $body_group_name
-);
-$body = new Models\CreateCustomerGroupRequest(
-    $body_group
-);
+$body = CreateCustomerGroupRequestBuilder::init(
+    CustomerGroupBuilder::init(
+        'Loyal Customers'
+    )->build()
+)->build();
 
 $apiResponse = $customerGroupsApi->createCustomerGroup($body);
 
@@ -92,9 +90,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -114,7 +112,7 @@ function deleteCustomerGroup(string $groupId): ApiResponse
 
 ## Response Type
 
-[`DeleteCustomerGroupResponse`](../../doc/models/delete-customer-group-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteCustomerGroupResponse`](../../doc/models/delete-customer-group-response.md).
 
 ## Example Usage
 
@@ -129,9 +127,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -151,7 +149,7 @@ function retrieveCustomerGroup(string $groupId): ApiResponse
 
 ## Response Type
 
-[`RetrieveCustomerGroupResponse`](../../doc/models/retrieve-customer-group-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveCustomerGroupResponse`](../../doc/models/retrieve-customer-group-response.md).
 
 ## Example Usage
 
@@ -166,9 +164,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -189,21 +187,23 @@ function updateCustomerGroup(string $groupId, UpdateCustomerGroupRequest $body):
 
 ## Response Type
 
-[`UpdateCustomerGroupResponse`](../../doc/models/update-customer-group-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateCustomerGroupResponse`](../../doc/models/update-customer-group-response.md).
 
 ## Example Usage
 
 ```php
 $groupId = 'group_id0';
-$body_group_name = 'Loyal Customers';
-$body_group = new Models\CustomerGroup(
-    $body_group_name
-);
-$body = new Models\UpdateCustomerGroupRequest(
-    $body_group
-);
 
-$apiResponse = $customerGroupsApi->updateCustomerGroup($groupId, $body);
+$body = UpdateCustomerGroupRequestBuilder::init(
+    CustomerGroupBuilder::init(
+        'Loyal Customers'
+    )->build()
+)->build();
+
+$apiResponse = $customerGroupsApi->updateCustomerGroup(
+    $groupId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $updateCustomerGroupResponse = $apiResponse->getResult();
@@ -211,8 +211,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

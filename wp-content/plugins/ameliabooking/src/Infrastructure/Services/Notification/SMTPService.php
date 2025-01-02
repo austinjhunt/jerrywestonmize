@@ -88,7 +88,9 @@ class SMTPService extends AbstractMailService implements MailServiceInterface
             }
 
             foreach ($attachments as $attachment) {
-                $mail->addStringAttachment($attachment['content'], $attachment['name'], 'base64', $attachment['type']);
+                if (!empty($attachment['content'])) {
+                    $mail->addStringAttachment($attachment['content'], $attachment['name'], 'base64', $attachment['type']);
+                }
             }
 
             //Content

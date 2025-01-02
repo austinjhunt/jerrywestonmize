@@ -13,7 +13,7 @@ A response that includes loyalty accounts that satisfy the search criteria.
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Any errors that occurred during the request. | getErrors(): ?array | setErrors(?array errors): void |
 | `loyaltyAccounts` | [`?(LoyaltyAccount[])`](../../doc/models/loyalty-account.md) | Optional | The loyalty accounts that met the search criteria,  <br>in order of creation date. | getLoyaltyAccounts(): ?array | setLoyaltyAccounts(?array loyaltyAccounts): void |
-| `cursor` | `?string` | Optional | The pagination cursor to use in a subsequent<br>request. If empty, this is the final response.<br>For more information,<br>see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
+| `cursor` | `?string` | Optional | The pagination cursor to use in a subsequent<br>request. If empty, this is the final response.<br>For more information,<br>see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
 
 ## Example (as JSON)
 
@@ -32,9 +32,25 @@ A response that includes loyalty accounts that satisfy the search criteria.
         "phone_number": "+14155551234"
       },
       "program_id": "d619f755-2d17-41f3-990d-c04ecedd64dd",
-      "updated_at": "2020-05-08T21:44:32Z"
+      "updated_at": "2020-05-08T21:44:32Z",
+      "enrolled_at": "enrolled_at4"
     }
-  ]
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "cursor": "cursor8"
 }
 ```
 

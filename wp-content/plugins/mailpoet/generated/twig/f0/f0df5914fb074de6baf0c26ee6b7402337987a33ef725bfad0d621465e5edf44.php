@@ -78,13 +78,13 @@ class __TwigTemplate_dada0e5bfec8608eb9f123444f9396788d2220a0663c5d2c4a893ecbc6a
     <h1 class=\"mailpoet-h0\">
       ";
             // line 22
-            yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("MailPoet Starter plan is yours for free", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+            yield $this->extensions['MailPoet\Twig\I18n']->translate("MailPoet Starter plan is yours for free");
             yield "
     </h1>
     <p class=\"mailpoet-premium-page-section-large\">
       ";
             // line 25
-            yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Website owners with less than 1,000 subscribers, like you, can get their emails delivered reliably for free with MailPoet Sending Service.", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+            yield $this->extensions['MailPoet\Twig\I18n']->translate("Website owners with less than 1,000 subscribers, like you, can get their emails delivered reliably for free with MailPoet Sending Service.");
             yield "
     </p>
     <a
@@ -97,7 +97,7 @@ class __TwigTemplate_dada0e5bfec8608eb9f123444f9396788d2220a0663c5d2c4a893ecbc6a
     >
       ";
             // line 32
-            yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Sign up for free", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+            yield $this->extensions['MailPoet\Twig\I18n']->translate("Sign up for free");
             yield "
     </a>
   </div>
@@ -111,17 +111,17 @@ class __TwigTemplate_dada0e5bfec8608eb9f123444f9396788d2220a0663c5d2c4a893ecbc6a
     <h1 class=\"mailpoet-h0\">
       ";
         // line 41
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Take your email marketing strategy<br> to the next level", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Take your email marketing strategy<br> to the next level");
         yield "
     </h1>
     <p class=\"mailpoet-premium-page-section-narrow\">
       ";
         // line 44
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Ready to level up your email marketing efforts?", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Ready to level up your email marketing efforts?");
         yield "<br>
       ";
         // line 45
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Upgrade your plan to unlock MailPoet’s <b>advanced features</b>, access to <b>detailed analytics</b>, and <b>priority support</b>.", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Upgrade your plan to unlock MailPoet’s <b>advanced features</b>, access to <b>detailed analytics</b>, and <b>priority support</b>.");
         yield "
     </p>
     <div class=\"mailpoet-premium-page-options mailpoet-grid-two-columns\">
@@ -130,50 +130,50 @@ class __TwigTemplate_dada0e5bfec8608eb9f123444f9396788d2220a0663c5d2c4a893ecbc6a
           <div class=\"mailpoet-premium-page-options-label\">
             ";
         // line 51
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Recommended", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Recommended");
         yield "
           </div>
         </div>
         <h1 class=\"mailpoet-h0\">
           <b>";
         // line 55
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Business", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Business");
         yield "</b>
         </h1>
         <p class=\"mailpoet-premium-page-text-large\">
           ";
         // line 58
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("From <b>\$10/month</b><br>for 500 contacts", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("From <b>\$10/month</b><br>for 500 contacts");
         yield "
         </h3>
         <ul>
           <li>";
         // line 61
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("MailPoet Sending Service", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("MailPoet Sending Service");
         yield "</li>
           <li>";
         // line 62
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Send unlimited emails per month", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Send unlimited emails per month");
         yield "</li>
           <li>";
         // line 63
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Remove MailPoet branding", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Remove MailPoet branding");
         yield "</li>
           <li>";
         // line 64
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Priority customer support", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Priority customer support");
         yield "</li>
           <li>";
         // line 65
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Subscriber segmentation", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Subscriber segmentation");
         yield "</li>
           <li>";
         // line 66
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Targeted marketing automation", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Targeted marketing automation");
         yield "</li>
           <li>";
         // line 67
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Detailed email engagement and ecommerce statistics", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Detailed email engagement and ecommerce statistics");
         yield "</li>
         </ul>
         <a
@@ -198,7 +198,7 @@ class __TwigTemplate_dada0e5bfec8608eb9f123444f9396788d2220a0663c5d2c4a893ecbc6a
         >
           ";
         // line 78
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Get started", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Get started");
         yield "
         </a>
       </div>
@@ -207,20 +207,20 @@ class __TwigTemplate_dada0e5bfec8608eb9f123444f9396788d2220a0663c5d2c4a893ecbc6a
         <h1 class=\"mailpoet-h0\">
           <b>";
         // line 84
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Creator", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Creator");
         yield "</b>
         </h1>
         <p class=\"mailpoet-premium-page-text-large\">
           ";
         // line 87
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("From <b>\$8/month</b><br>for 500 contacts", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("From <b>\$8/month</b><br>for 500 contacts");
         yield "
         </p>
         <div class=\"mailpoet-premium-page-options-divider\"></div>
         <p>
           ";
         // line 91
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Want to manage your own email sending? Our Creator plan offers all the features of the Business plan <b>without the MailPoet Sending Service</b>.", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Want to manage your own email sending? Our Creator plan offers all the features of the Business plan <b>without the MailPoet Sending Service</b>.");
         yield "
         </p>
         <div class=\"mailpoet-premium-page-options-divider\"></div>
@@ -246,7 +246,7 @@ class __TwigTemplate_dada0e5bfec8608eb9f123444f9396788d2220a0663c5d2c4a893ecbc6a
         >
           ";
         // line 103
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Get started", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Get started");
         yield "
         </a>
       </div>
@@ -259,17 +259,17 @@ class __TwigTemplate_dada0e5bfec8608eb9f123444f9396788d2220a0663c5d2c4a893ecbc6a
     <h1 class=\"mailpoet-h0\">
       ";
         // line 113
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Get started today!", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Get started today!");
         yield "
     </h1>
     <p class=\"mailpoet-premium-page-text-large\">
       ";
         // line 116
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Over 700,000 people trust MailPoet to power their email marketing campaigns – why not join them?!", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(MailPoetVendor\Twig\Extension\CoreExtension::replace($this->extensions['MailPoet\Twig\I18n']->translate("Over %s people trust MailPoet to power their email marketing campaigns – why not join them?"), ["%s" => "600,000"]), "html", null, true);
         yield "
       ";
         // line 117
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Upgrade now to grow your business and achieve your business goals.", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Upgrade now to grow your business and achieve your business goals.");
         yield "
     </p>
     <a
@@ -294,7 +294,7 @@ class __TwigTemplate_dada0e5bfec8608eb9f123444f9396788d2220a0663c5d2c4a893ecbc6a
     >
       ";
         // line 128
-        yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Get started", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade");
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Get started");
         yield "
     </a>
     <p>
@@ -303,7 +303,7 @@ class __TwigTemplate_dada0e5bfec8608eb9f123444f9396788d2220a0663c5d2c4a893ecbc6a
         $context["allowedHtml"] = ["a" => ["href" => [], "target" => []]];
         // line 132
         yield "      ";
-        yield $this->extensions['MailPoet\Twig\Filters']->wpKses(MailPoet\Util\Helpers::replaceLinkTags($this->extensions['MailPoet\Twig\I18n']->translateWithContext("And if you’re not sure which plan is the right one for you, our [link]Customer Support team[/link] are on hand to help you decide.", "This text resides in the Upgrade page: /wp-admin/admin.php?page=mailpoet-upgrade"), "https://www.mailpoet.com/support/sales-pre-sales-questions/?ref=plugin-upgrade-page", ["target" => "_blank"]),         // line 135
+        yield $this->extensions['MailPoet\Twig\Filters']->wpKses(MailPoet\Util\Helpers::replaceLinkTags($this->extensions['MailPoet\Twig\I18n']->translate("And if you’re not sure which plan is the right one for you, our [link]Customer Support team[/link] are on hand to help you decide."), "https://www.mailpoet.com/support/sales-pre-sales-questions/?ref=plugin-upgrade-page", ["target" => "_blank"]),         // line 135
 ($context["allowedHtml"] ?? null));
         // line 136
         yield "

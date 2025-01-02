@@ -83,7 +83,7 @@ class Forminator_Poll_Model extends Forminator_Base_Form_Model {
 				return $this->poll_votes_method_browser_cookie();
 			} else {
 				$user_ip      = Forminator_Geo::get_user_ip();
-				$key_requests = 'forminator_request_from_ip_' . $user_ip;
+				$key_requests = 'forminator_request_from_ip_' . $this->id . '_' . $user_ip;
 				// Check if the IP has made a request within the allowed interval.
 				if ( get_transient( $key_requests ) ) {
 					// IP has made a request too soon.

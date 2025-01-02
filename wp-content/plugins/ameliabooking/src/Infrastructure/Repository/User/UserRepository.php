@@ -56,6 +56,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             ':usedTokens'       => isset($data['usedTokens']) ? $data['usedTokens'] : null,
             ':countryPhoneIso'  => isset($data['countryPhoneIso']) ? $data['countryPhoneIso'] : null,
             ':stripeConnect'    => !empty($data['stripeConnect']) ? json_encode($data['stripeConnect']) : null,
+            ':error'            => '',
         ];
 
         $additionalData = Licence\DataModifier::getUserRepositoryData($data);
@@ -82,7 +83,8 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 `countryPhoneIso`,
                 `usedTokens`,
                 `stripeConnect`,
-                `password`
+                `password`,
+                `error`
                 ) VALUES (
                 {$additionalData['placeholders']}
                 :type,
@@ -101,7 +103,8 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 :countryPhoneIso,
                 :usedTokens,
                 :stripeConnect,
-                :password
+                :password,
+                :error
                 )"
             );
 

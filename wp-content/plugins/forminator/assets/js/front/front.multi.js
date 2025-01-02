@@ -193,11 +193,11 @@
 			//initiate pagination
 			this.init_pagination( form_selector );
 
-			// initiate payment if exist
-			var first_payment = $( form_selector ).find('div[data-is-payment="true"], input[data-is-payment="true"]').first();
-
 			if( self.settings.has_stripe ) {
-				var stripe_payment = $(this.element).find('.forminator-stripe-element').first();
+				var stripe_payment = $(this.element).find('.forminator-stripe-element[data-type="stripe-ocs"]').first();
+				if ( 1 > stripe_payment.length ) {
+					stripe_payment = $(this.element).find('.forminator-stripe-element').first();
+				}
 
 				if ( $( self.element ).is( ':visible' ) ) {
 					this.renderStripe( self, stripe_payment );
@@ -686,6 +686,10 @@
 
 				if ( stripe.length ) {
 					stripe.each( function() {
+						if ($(this).hasClass('forminator-stripe-payment-element')) {
+							return; // Skip to the next iteration
+						}
+
 						var field = $(this).closest('.forminator-field');
 						var label = field.find('.forminator-label');
 
@@ -1478,14 +1482,21 @@
 
 				if ( 'undefined' !== typeof Stripe ) {
 
-					$( form.element ).forminatorFrontPayment({
+					let options= {
 						type: 'stripe',
 						paymentEl: stripe_payment,
 						paymentRequireSsl: form.settings.payment_require_ssl,
 						generalMessages: form.settings.general_messages,
 						has_loader: form.settings.has_loader,
 						loader_label: form.settings.loader_label,
-					});
+						stripe_depends: form.settings.stripe_depends,
+					};
+
+					if ( stripe_payment.data('is-ocs') ) {
+						$( form.element ).forminatorFrontStripe( options );
+					} else {
+						$( form.element ).forminatorFrontPayment( options );
+					}
 
 				// Retry checking for 30 seconds
 				} else if ( stripeLoadCounter < 300 ) {

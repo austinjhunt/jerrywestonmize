@@ -3,43 +3,29 @@ namespace MailPoetVendor\Symfony\Component\Translation;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use MailPoetVendor\Symfony\Component\Translation\Exception\InvalidArgumentException;
-use MailPoetVendor\Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
 use MailPoetVendor\Symfony\Contracts\Translation\LocaleAwareInterface;
 use MailPoetVendor\Symfony\Contracts\Translation\TranslatorInterface;
-class DataCollectorTranslator implements LegacyTranslatorInterface, TranslatorInterface, TranslatorBagInterface, WarmableInterface
+class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface, WarmableInterface
 {
  public const MESSAGE_DEFINED = 0;
  public const MESSAGE_MISSING = 1;
  public const MESSAGE_EQUALS_FALLBACK = 2;
  private $translator;
  private $messages = [];
- public function __construct($translator)
+ public function __construct(TranslatorInterface $translator)
  {
- if (!$translator instanceof LegacyTranslatorInterface && !$translator instanceof TranslatorInterface) {
- throw new \TypeError(\sprintf('Argument 1 passed to "%s()" must be an instance of "%s", "%s" given.', __METHOD__, TranslatorInterface::class, \is_object($translator) ? \get_class($translator) : \gettype($translator)));
- }
  if (!$translator instanceof TranslatorBagInterface || !$translator instanceof LocaleAwareInterface) {
- throw new InvalidArgumentException(\sprintf('The Translator "%s" must implement TranslatorInterface, TranslatorBagInterface and LocaleAwareInterface.', \get_class($translator)));
+ throw new InvalidArgumentException(\sprintf('The Translator "%s" must implement TranslatorInterface, TranslatorBagInterface and LocaleAwareInterface.', \get_debug_type($translator)));
  }
  $this->translator = $translator;
  }
- public function trans($id, array $parameters = [], $domain = null, $locale = null)
+ public function trans(?string $id, array $parameters = [], ?string $domain = null, ?string $locale = null)
  {
- $trans = $this->translator->trans($id, $parameters, $domain, $locale);
+ $trans = $this->translator->trans($id = (string) $id, $parameters, $domain, $locale);
  $this->collectMessage($locale, $domain, $id, $trans, $parameters);
  return $trans;
  }
- public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
- {
- if ($this->translator instanceof TranslatorInterface) {
- $trans = $this->translator->trans($id, ['%count%' => $number] + $parameters, $domain, $locale);
- } else {
- $trans = $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
- }
- $this->collectMessage($locale, $domain, $id, $trans, ['%count%' => $number] + $parameters);
- return $trans;
- }
- public function setLocale($locale)
+ public function setLocale(string $locale)
  {
  $this->translator->setLocale($locale);
  }
@@ -47,15 +33,20 @@ class DataCollectorTranslator implements LegacyTranslatorInterface, TranslatorIn
  {
  return $this->translator->getLocale();
  }
- public function getCatalogue($locale = null)
+ public function getCatalogue(?string $locale = null)
  {
  return $this->translator->getCatalogue($locale);
  }
- public function warmUp($cacheDir)
+ public function getCatalogues() : array
+ {
+ return $this->translator->getCatalogues();
+ }
+ public function warmUp(string $cacheDir)
  {
  if ($this->translator instanceof WarmableInterface) {
- $this->translator->warmUp($cacheDir);
+ return (array) $this->translator->warmUp($cacheDir);
  }
+ return [];
  }
  public function getFallbackLocales()
  {
@@ -64,7 +55,7 @@ class DataCollectorTranslator implements LegacyTranslatorInterface, TranslatorIn
  }
  return [];
  }
- public function __call($method, $args)
+ public function __call(string $method, array $args)
  {
  return $this->translator->{$method}(...$args);
  }
@@ -72,12 +63,11 @@ class DataCollectorTranslator implements LegacyTranslatorInterface, TranslatorIn
  {
  return $this->messages;
  }
- private function collectMessage(?string $locale, ?string $domain, ?string $id, string $translation, ?array $parameters = [])
+ private function collectMessage(?string $locale, ?string $domain, string $id, string $translation, ?array $parameters = [])
  {
  if (null === $domain) {
  $domain = 'messages';
  }
- $id = (string) $id;
  $catalogue = $this->translator->getCatalogue($locale);
  $locale = $catalogue->getLocale();
  $fallbackLocale = null;

@@ -73,7 +73,24 @@
         "variation_total_price_money": {
           "amount": 500,
           "currency": "USD"
-        }
+        },
+        "quantity_unit": {
+          "measurement_unit": {
+            "custom_unit": {
+              "name": "name2",
+              "abbreviation": "abbreviation4"
+            },
+            "area_unit": "IMPERIAL_ACRE",
+            "length_unit": "IMPERIAL_INCH",
+            "volume_unit": "METRIC_LITER",
+            "weight_unit": "IMPERIAL_WEIGHT_OUNCE"
+          },
+          "precision": 54,
+          "catalog_object_id": "catalog_object_id0",
+          "catalog_version": 12
+        },
+        "note": "note4",
+        "catalog_object_id": "catalog_object_id2"
       },
       {
         "applied_discounts": [
@@ -116,7 +133,24 @@
         "variation_total_price_money": {
           "amount": 600,
           "currency": "USD"
-        }
+        },
+        "quantity_unit": {
+          "measurement_unit": {
+            "custom_unit": {
+              "name": "name2",
+              "abbreviation": "abbreviation4"
+            },
+            "area_unit": "IMPERIAL_ACRE",
+            "length_unit": "IMPERIAL_INCH",
+            "volume_unit": "METRIC_LITER",
+            "weight_unit": "IMPERIAL_WEIGHT_OUNCE"
+          },
+          "precision": 54,
+          "catalog_object_id": "catalog_object_id0",
+          "catalog_version": 12
+        },
+        "note": "note4",
+        "catalog_object_id": "catalog_object_id2"
       }
     ],
     "location_id": "D7AVYMEAPJ3A3",
@@ -164,8 +198,34 @@
       "currency": "USD"
     },
     "updated_at": "2020-05-18T16:30:49.614Z",
-    "version": 1
-  }
+    "version": 1,
+    "id": "id6",
+    "reference_id": "reference_id4",
+    "source": {
+      "name": "name4"
+    },
+    "customer_id": "customer_id4"
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

@@ -20,9 +20,9 @@ objects linked to a account.
 
 ```json
 {
-  "cursor": null,
-  "limit": null,
-  "location_id": null
+  "cursor": "cursor8",
+  "limit": 182,
+  "location_id": "location_id2"
 }
 ```
 

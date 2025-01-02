@@ -11,6 +11,9 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Factory\Bookable\Service\PackageFactory;
+use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
+use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
@@ -19,6 +22,8 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
@@ -233,12 +238,13 @@ class CouponApplicationService extends AbstractCouponApplicationService
         $couponsCaseInsensitive = $settingsService->getSetting('payments', 'couponsCaseInsensitive');
 
         /** @var Collection $coupons */
-        $coupons = $couponRepository->getAllByCriteria(
+        $coupons = $this->getAllByCriteria(
             [
                 'code'                   => $couponCode,
                 'entityType'             => $couponEntityType,
                 'entityIds'              => $entityIds,
                 'couponsCaseInsensitive' => $couponsCaseInsensitive,
+                'notExpired'             => true,
             ]
         );
 
@@ -373,12 +379,13 @@ class CouponApplicationService extends AbstractCouponApplicationService
         /** @var EventRepository $eventRepository */
         $eventRepository = $this->container->get('domain.booking.event.repository');
 
-        $customerEventReservations = $eventRepository->getFiltered(
+        $eventsIds = $eventRepository->getFilteredIds(
             [
-                'customerId'      => $userId,
-                'bookingStatus'   => BookingStatus::APPROVED,
-                'bookingCouponId' => $couponId
-            ]
+                'customerId'              => $userId,
+                'customerBookingStatus'   => BookingStatus::APPROVED,
+                'customerBookingCouponId' => $couponId,
+            ],
+            0
         );
 
         /** @var PackageCustomerRepository $packageCustomerRepository */
@@ -392,7 +399,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
             ]
         );
 
-        return $customerAppointmentReservations->length() + $customerEventReservations->length() + count($customerPackageReservations);
+        return $customerAppointmentReservations->length() + sizeof($eventsIds) + count($customerPackageReservations);
     }
 
     /**
@@ -431,5 +438,215 @@ class CouponApplicationService extends AbstractCouponApplicationService
         $couponRepository = $this->container->get('domain.coupon.repository');
 
         return $couponRepository->getAllIndexedById();
+    }
+
+    /**
+     * @param array $criteria
+     *
+     * @return Collection
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public function getAllByCriteria($criteria = [])
+    {
+        /** @var CouponRepository $couponRepository */
+        $couponRepository = $this->container->get('domain.coupon.repository');
+
+        /** @var ServiceRepository $serviceRepository */
+        $serviceRepository = $this->container->get('domain.bookable.service.repository');
+
+        /** @var EventRepository $eventRepository */
+        $eventRepository = $this->container->get('domain.booking.event.repository');
+
+        /** @var PackageRepository $packageRepository */
+        $packageRepository = $this->container->get('domain.bookable.package.repository');
+
+        /** @var Collection $coupons */
+        $coupons = $couponRepository->getAllByCriteria(
+            [
+                'code'                   => isset($criteria['code']) ? $criteria['code'] : null,
+                'couponIds'              => isset($criteria['couponIds']) ? $criteria['couponIds'] : [],
+                'couponsCaseInsensitive' => !empty($criteria['couponsCaseInsensitive']),
+                'notificationInterval'   => !empty($criteria['notificationInterval']),
+                'notExpired'             => !empty($criteria['notExpired']),
+            ]
+        );
+
+        if (!$coupons->length()) {
+            return $coupons;
+        }
+
+        $fetchAllServices = false;
+
+        $fetchAllEvents = false;
+
+        $fetchAllPackages = false;
+
+        if (!empty($criteria['entityType'])) {
+            switch ($criteria['entityType']) {
+                case Entities::SERVICE:
+                    /** @var Coupon $coupon */
+                    foreach ($coupons->getItems() as $coupon) {
+                        if ($coupon->getAllServices() && $coupon->getAllServices()->getValue()) {
+                            $fetchAllServices = true;
+
+                            break;
+                        }
+                    }
+
+                    break;
+
+                case Entities::EVENT:
+                    /** @var Coupon $coupon */
+                    foreach ($coupons->getItems() as $coupon) {
+                        if ($coupon->getAllEvents() && $coupon->getAllEvents()->getValue()) {
+                            $fetchAllEvents = true;
+
+                            break;
+                        }
+                    }
+
+                    break;
+
+                case Entities::PACKAGE:
+                    /** @var Coupon $coupon */
+                    foreach ($coupons->getItems() as $coupon) {
+                        if ($coupon->getAllPackages() && $coupon->getAllPackages()->getValue()) {
+                            $fetchAllPackages = true;
+
+                            break;
+                        }
+                    }
+
+                    break;
+            }
+        }
+
+        if (!empty($criteria['entityType']) && $criteria['entityType'] === Entities::SERVICE) {
+            /** @var Collection $allServices */
+            $allServices = new Collection();
+
+            $couponsServicesIds = [];
+
+            if ($fetchAllServices) {
+                foreach ($serviceRepository->getIds() as $id) {
+                    $allServices->addItem(ServiceFactory::create(['id' => $id]), $id);
+                }
+            } else {
+                $couponsServicesIds = $couponRepository->getCouponsServicesIds(
+                    !empty($criteria['couponIds']) ? $criteria['couponIds'] : [],
+                    !empty($criteria['entityIds']) ? $criteria['entityIds'] : []
+                );
+
+                foreach ($couponsServicesIds as $ids) {
+                    $allServices->addItem(
+                        ServiceFactory::create(['id' => $ids['serviceId']]),
+                        $ids['serviceId'],
+                        true
+                    );
+                }
+            }
+
+            /** @var Coupon $coupon */
+            foreach ($coupons->getItems() as $coupon) {
+                if ($coupon->getAllServices() && $coupon->getAllServices()->getValue()) {
+                    $coupon->setServiceList($allServices);
+                } else {
+                    foreach ($couponsServicesIds as $ids) {
+                        if ($coupon->getId()->getValue() === (int)$ids['couponId']) {
+                            $coupon->getServiceList()->addItem(
+                                $allServices->getItem($ids['serviceId']),
+                                $ids['serviceId'],
+                                true
+                            );
+                        }
+                    }
+                }
+            }
+        } else if (!empty($criteria['entityType']) && $criteria['entityType'] === Entities::EVENT) {
+            /** @var Collection $allEvents */
+            $allEvents = new Collection();
+
+            $couponsEventsIds = [];
+
+            if ($fetchAllEvents) {
+                foreach ($eventRepository->getIds() as $id) {
+                    $allEvents->addItem(EventFactory::create(['id' => $id]), $id);
+                }
+            } else {
+                $couponsEventsIds = $couponRepository->getCouponsEventsIds(
+                    !empty($criteria['couponIds']) ? $criteria['couponIds'] : [],
+                    !empty($criteria['entityIds']) ? $criteria['entityIds'] : []
+                );
+
+                foreach ($couponsEventsIds as $ids) {
+                    $allEvents->addItem(
+                        EventFactory::create(['id' => $ids['eventId']]),
+                        $ids['eventId'],
+                        true
+                    );
+                }
+            }
+
+            /** @var Coupon $coupon */
+            foreach ($coupons->getItems() as $coupon) {
+                if ($coupon->getAllEvents() && $coupon->getAllEvents()->getValue()) {
+                    $coupon->setEventList($allEvents);
+                } else {
+                    foreach ($couponsEventsIds as $ids) {
+                        if ($coupon->getId()->getValue() === (int)$ids['couponId']) {
+                            $coupon->getEventList()->addItem(
+                                $allEvents->getItem($ids['eventId']),
+                                $ids['eventId'],
+                                true
+                            );
+                        }
+                    }
+                }
+            }
+        } else if (!empty($criteria['entityType']) && $criteria['entityType'] === Entities::PACKAGE) {
+            /** @var Collection $allPackages */
+            $allPackages = new Collection();
+
+            $couponsPackagesIds = [];
+
+            if ($fetchAllPackages) {
+                foreach ($packageRepository->getIds() as $id) {
+                    $allPackages->addItem(PackageFactory::create(['id' => $id]), $id);
+                }
+            } else {
+                $couponsPackagesIds = $couponRepository->getCouponsPackagesIds(
+                    !empty($criteria['couponIds']) ? $criteria['couponIds'] : [],
+                    !empty($criteria['entityIds']) ? $criteria['entityIds'] : []
+                );
+
+                foreach ($couponsPackagesIds as $ids) {
+                    $allPackages->addItem(
+                        PackageFactory::create(['id' => $ids['packageId']]),
+                        $ids['packageId'],
+                        true
+                    );
+                }
+            }
+
+            /** @var Coupon $coupon */
+            foreach ($coupons->getItems() as $coupon) {
+                if ($coupon->getAllPackages() && $coupon->getAllPackages()->getValue()) {
+                    $coupon->setPackageList($allPackages);
+                } else {
+                    foreach ($couponsPackagesIds as $ids) {
+                        if ($coupon->getId()->getValue() === (int)$ids['couponId']) {
+                            $coupon->getPackageList()->addItem(
+                                $allPackages->getItem($ids['packageId']),
+                                $ids['packageId'],
+                                true
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        return $coupons;
     }
 }

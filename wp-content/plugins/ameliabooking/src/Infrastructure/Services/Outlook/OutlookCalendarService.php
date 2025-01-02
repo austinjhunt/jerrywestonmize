@@ -23,6 +23,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventPeriodsRepository;
+use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
@@ -211,11 +212,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
         $tokenArray = json_decode($token, true);
 
-        if ($tokenArray && isset($tokenArray['access_token'])) {
-            $this->graph->setAccessToken($tokenArray['access_token']);
-        } else {
-            throw new \Exception();
-        }
+        $this->graph->setAccessToken($tokenArray['access_token']);
     }
 
     /**
@@ -287,6 +284,54 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         return null;
     }
 
+
+    /**
+     * Handle Google Calendar Event's.
+     *
+     * @param Appointment $appointment
+     * @param string      $commandSlug
+     *
+     * @return void
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     */
+    public function handleEvent($appointment, $commandSlug, $oldStatus = null)
+    {
+        try {
+            $this->handleEventAction($appointment, $commandSlug);
+        } catch (Exception $e) {
+            /** @var AppointmentRepository $appointmentRepository */
+            $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
+
+            $appointmentRepository->updateErrorColumn($appointment->getId()->getValue(), $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Handle Google Calendar Events.
+     *
+     * @param \AmeliaBooking\Domain\Entity\Booking\Event\Event $event
+     * @param string $commandSlug
+     * @param Collection $periods
+     * @param array $providers
+     *
+     * @return void
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     */
+    public function handleEventPeriod($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null)
+    {
+        try {
+            $this->handleEventPeriodAction($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null);
+        } catch (Exception $e) {
+            /** @var EventRepository $eventRepository */
+            $eventRepository = $this->container->get('domain.booking.event.repository');
+
+            $eventRepository->updateErrorColumn($event->getId()->getValue(), $e->getMessage());
+        }
+    }
+
     /**
      * @param Appointment $appointment
      * @param string      $commandSlug
@@ -298,7 +343,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public function handleEvent($appointment, $commandSlug, $oldStatus = null)
+    private function handleEventAction($appointment, $commandSlug, $oldStatus = null)
     {
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
@@ -370,7 +415,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public function handleEventPeriod($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null)
+    private function handleEventPeriodAction($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null)
     {
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');

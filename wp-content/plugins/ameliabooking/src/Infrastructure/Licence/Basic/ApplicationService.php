@@ -71,4 +71,14 @@ class ApplicationService extends \AmeliaBooking\Infrastructure\Licence\Starter\A
     {
         return new ApplicationServices\Zoom\ZoomApplicationService($c);
     }
+
+    /**
+     * @param Container $c
+     *
+     * @return ApplicationServices\Invoice\AbstractInvoiceApplicationService
+     */
+    public static function getInvoiceService($c)
+    {
+        return new ApplicationServices\Invoice\InvoiceApplicationService($c);
+    }
 }

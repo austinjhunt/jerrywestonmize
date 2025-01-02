@@ -19,9 +19,14 @@ Describes query filters to apply.
 ```json
 {
   "location_ids": [
-    "location_ids0"
+    "location_ids0",
+    "location_ids1",
+    "location_ids2"
   ],
-  "customer_ids": null
+  "customer_ids": [
+    "customer_ids3",
+    "customer_ids2"
+  ]
 }
 ```
 

@@ -18,8 +18,8 @@ Represents a [ListBookingCustomAttributeDefinitions](../../doc/apis/booking-cust
 
 ```json
 {
-  "limit": null,
-  "cursor": null
+  "limit": 98,
+  "cursor": "cursor6"
 }
 ```
 

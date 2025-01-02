@@ -79,6 +79,8 @@ class Forminator_Webhook_Form_Hooks extends Forminator_Integration_Form_Hooks {
 			$webhook_api = $this->addon->get_api( $endpoint );
 
 			$args = $submitted_data;
+			// Remove password in webhook data.
+			$args = Forminator_Password::remove_password_field_values( $args );
 
 			$args['form-title'] = $form_settings['formName'];
 			$args['entry-time'] = current_time( 'Y-m-d H:i:s' );

@@ -5,12 +5,14 @@ use MailPoetVendor\Twig\Environment;
 use MailPoetVendor\Twig\Node\CheckSecurityCallNode;
 use MailPoetVendor\Twig\Node\CheckSecurityNode;
 use MailPoetVendor\Twig\Node\CheckToStringNode;
+use MailPoetVendor\Twig\Node\Expression\ArrayExpression;
 use MailPoetVendor\Twig\Node\Expression\Binary\ConcatBinary;
 use MailPoetVendor\Twig\Node\Expression\Binary\RangeBinary;
 use MailPoetVendor\Twig\Node\Expression\FilterExpression;
 use MailPoetVendor\Twig\Node\Expression\FunctionExpression;
 use MailPoetVendor\Twig\Node\Expression\GetAttrExpression;
 use MailPoetVendor\Twig\Node\Expression\NameExpression;
+use MailPoetVendor\Twig\Node\Expression\Unary\SpreadUnary;
 use MailPoetVendor\Twig\Node\ModuleNode;
 use MailPoetVendor\Twig\Node\Node;
 use MailPoetVendor\Twig\Node\PrintNode;
@@ -88,7 +90,18 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
  {
  $expr = $node->getNode($name);
  if (($expr instanceof NameExpression || $expr instanceof GetAttrExpression) && !$expr->isGenerator()) {
- $node->setNode($name, new CheckToStringNode($expr));
+ // Simplify in 4.0 as the spread attribute has been removed there
+ $new = new CheckToStringNode($expr);
+ if ($expr->hasAttribute('spread')) {
+ $new->setAttribute('spread', $expr->getAttribute('spread'));
+ }
+ $node->setNode($name, $new);
+ } elseif ($expr instanceof SpreadUnary) {
+ $this->wrapNode($expr, 'node');
+ } elseif ($expr instanceof ArrayExpression) {
+ foreach ($expr as $name => $_) {
+ $this->wrapNode($expr, $name);
+ }
  }
  }
  private function wrapArrayNode(Node $node, string $name) : void

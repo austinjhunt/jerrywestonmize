@@ -40,8 +40,17 @@
     "payment_id": "5O5OvgkcNUhl7JBuINflcjKqUzXZY",
     "reason": "Returning items",
     "status": "PENDING",
-    "updated_at": "2020-09-29T15:21:46.771Z"
-  }
+    "updated_at": "2020-09-29T15:21:46.771Z",
+    "refund_id": "refund_id2"
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

@@ -19,9 +19,9 @@ Details about the device that took the payment.
 
 ```json
 {
-  "device_id": null,
-  "device_installation_id": null,
-  "device_name": null
+  "device_id": "device_id0",
+  "device_installation_id": "device_installation_id2",
+  "device_name": "device_name2"
 }
 ```
 

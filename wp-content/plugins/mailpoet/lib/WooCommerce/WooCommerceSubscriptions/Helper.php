@@ -36,7 +36,11 @@ class Helper {
     if (!function_exists('wcs_get_subscription_period_strings')) {
       return [];
     }
-    return wcs_get_subscription_period_strings();
+    $strings = wcs_get_subscription_period_strings();
+    if (!is_array($strings)) {
+      return [];
+    }
+    return $strings;
   }
 
   public function wcsGetSubscriptionTrialPeriodStrings(): array {

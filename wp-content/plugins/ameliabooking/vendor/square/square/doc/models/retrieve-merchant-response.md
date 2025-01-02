@@ -27,7 +27,21 @@ The response object returned by the [RetrieveMerchant](../../doc/apis/merchants.
     "language_code": "en-US",
     "main_location_id": "9A65CGC72ZQG1",
     "status": "ACTIVE"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

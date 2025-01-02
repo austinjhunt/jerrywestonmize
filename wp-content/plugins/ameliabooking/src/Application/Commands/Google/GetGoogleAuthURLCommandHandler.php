@@ -4,6 +4,7 @@ namespace AmeliaBooking\Application\Commands\Google;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use Interop\Container\Exception\ContainerException;
 
@@ -27,10 +28,18 @@ class GetGoogleAuthURLCommandHandler extends CommandHandler
         /** @var AbstractGoogleCalendarService $googleCalendarService */
         $googleCalendarService = $this->container->get('infrastructure.google.calendar.service');
 
-        $authUrl = $googleCalendarService->createAuthUrl(
-            (int)$command->getField('id'),
-            $command->getField('redirectUri')
-        );
+        $providerId = (int)$command->getField('id');
+
+        try {
+            $authUrl = $googleCalendarService->createAuthUrl(
+                $providerId,
+                $command->getField('redirectUri')
+            );
+        } catch (\Exception $e) {
+            /** @var ProviderRepository $providerRepository */
+            $providerRepository = $this->container->get('domain.users.providers.repository');
+            $providerRepository->updateErrorColumn($providerId, $e->getMessage());
+        }
 
         $authUrl = apply_filters('amelia_get_google_calendar_auth_url_filter', $authUrl, $command->getField('id'));
 

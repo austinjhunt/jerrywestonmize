@@ -24,6 +24,7 @@ use Square\Apis\CustomerSegmentsApi;
 use Square\Apis\DevicesApi;
 use Square\Apis\DisputesApi;
 use Square\Apis\EmployeesApi;
+use Square\Apis\EventsApi;
 use Square\Apis\GiftCardActivitiesApi;
 use Square\Apis\GiftCardsApi;
 use Square\Apis\InventoryApi;
@@ -32,6 +33,7 @@ use Square\Apis\LaborApi;
 use Square\Apis\LocationCustomAttributesApi;
 use Square\Apis\LocationsApi;
 use Square\Apis\LoyaltyApi;
+use Square\Apis\MerchantCustomAttributesApi;
 use Square\Apis\MerchantsApi;
 use Square\Apis\MobileAuthorizationApi;
 use Square\Apis\OAuthApi;
@@ -49,6 +51,8 @@ use Square\Apis\TransactionsApi;
 use Square\Apis\V1TransactionsApi;
 use Square\Apis\VendorsApi;
 use Square\Apis\WebhookSubscriptionsApi;
+use Square\Authentication\BearerAuthCredentialsBuilder;
+use Square\Authentication\BearerAuthManager;
 use Square\Utils\CompatibilityConverter;
 use Unirest\Configuration;
 use Unirest\HttpClient;
@@ -89,6 +93,8 @@ class SquareClient implements ConfigurationInterface
 
     private $employees;
 
+    private $events;
+
     private $giftCards;
 
     private $giftCardActivities;
@@ -110,6 +116,8 @@ class SquareClient implements ConfigurationInterface
     private $loyalty;
 
     private $merchants;
+
+    private $merchantCustomAttributes;
 
     private $orders;
 
@@ -150,16 +158,14 @@ class SquareClient implements ConfigurationInterface
     public function __construct(array $config = [])
     {
         $this->config = array_merge(ConfigurationDefaults::_ALL, CoreHelper::clone($config));
-        $this->bearerAuthManager = new BearerAuthManager(
-            $this->config['accessToken'] ?? ConfigurationDefaults::ACCESS_TOKEN
-        );
+        $this->bearerAuthManager = new BearerAuthManager($this->config);
         $this->validateConfig();
         $this->client = ClientBuilder::init(new HttpClient(Configuration::init($this)))
             ->converter(new CompatibilityConverter())
             ->jsonHelper(ApiHelper::getJsonHelper())
             ->apiCallback($this->config['httpCallback'] ?? null)
             ->userAgent(
-                'Square-PHP-SDK/25.2.0.20230315 ({api-version}) {engine}/{engine-version} ({os-' .
+                'Square-PHP-SDK/38.1.0.20240919 ({api-version}) {engine}/{engine-version} ({os-' .
                 'info}) {detail}'
             )
             ->userAgentConfig(
@@ -182,7 +188,7 @@ class SquareClient implements ConfigurationInterface
      */
     public function toBuilder(): SquareClientBuilder
     {
-        return SquareClientBuilder::init()
+        $builder = SquareClientBuilder::init()
             ->timeout($this->getTimeout())
             ->enableRetries($this->shouldEnableRetries())
             ->numberOfRetries($this->getNumberOfRetries())
@@ -197,8 +203,13 @@ class SquareClient implements ConfigurationInterface
             ->userAgentDetail($this->getUserAgentDetail())
             ->environment($this->getEnvironment())
             ->customUrl($this->getCustomUrl())
-            ->accessToken($this->bearerAuthManager->getAccessToken())
             ->httpCallback($this->config['httpCallback'] ?? null);
+
+        $bearerAuth = $this->getBearerAuthCredentialsBuilder();
+        if ($bearerAuth != null) {
+            $builder->bearerAuthCredentials($bearerAuth);
+        }
+        return $builder;
     }
 
     public function getTimeout(): int
@@ -271,9 +282,17 @@ class SquareClient implements ConfigurationInterface
         return $this->config['customUrl'] ?? ConfigurationDefaults::CUSTOM_URL;
     }
 
-    public function getBearerAuthCredentials(): ?BearerAuthCredentials
+    public function getBearerAuthCredentials(): BearerAuthCredentials
     {
         return $this->bearerAuthManager;
+    }
+
+    public function getBearerAuthCredentialsBuilder(): ?BearerAuthCredentialsBuilder
+    {
+        if (empty($this->bearerAuthManager->getAccessToken())) {
+            return null;
+        }
+        return BearerAuthCredentialsBuilder::init($this->bearerAuthManager->getAccessToken());
     }
 
     /**
@@ -301,7 +320,7 @@ class SquareClient implements ConfigurationInterface
      */
     public function getSdkVersion(): string
     {
-        return '25.2.0.20230315';
+        return '38.1.0.20240919';
     }
 
     /**
@@ -514,6 +533,17 @@ class SquareClient implements ConfigurationInterface
     }
 
     /**
+     * Returns Events Api
+     */
+    public function getEventsApi(): EventsApi
+    {
+        if ($this->events == null) {
+            $this->events = new EventsApi($this->client);
+        }
+        return $this->events;
+    }
+
+    /**
      * Returns Gift Cards Api
      */
     public function getGiftCardsApi(): GiftCardsApi
@@ -632,6 +662,17 @@ class SquareClient implements ConfigurationInterface
             $this->merchants = new MerchantsApi($this->client);
         }
         return $this->merchants;
+    }
+
+    /**
+     * Returns Merchant Custom Attributes Api
+     */
+    public function getMerchantCustomAttributesApi(): MerchantCustomAttributesApi
+    {
+        if ($this->merchantCustomAttributes == null) {
+            $this->merchantCustomAttributes = new MerchantCustomAttributesApi($this->client);
+        }
+        return $this->merchantCustomAttributes;
     }
 
     /**

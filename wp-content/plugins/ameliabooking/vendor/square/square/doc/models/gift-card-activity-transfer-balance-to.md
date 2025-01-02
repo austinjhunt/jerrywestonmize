@@ -18,10 +18,10 @@ Represents details about a `TRANSFER_BALANCE_TO` [gift card activity type](../..
 
 ```json
 {
-  "transfer_from_gift_card_id": "transfer_from_gift_card_id0",
+  "transfer_from_gift_card_id": "transfer_from_gift_card_id6",
   "amount_money": {
-    "amount": null,
-    "currency": null
+    "amount": 186,
+    "currency": "TZS"
   }
 }
 ```

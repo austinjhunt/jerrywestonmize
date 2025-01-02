@@ -53,13 +53,6 @@ class Forminator_Select extends Forminator_Field {
 	public $options = array();
 
 	/**
-	 * Category
-	 *
-	 * @var string
-	 */
-	public $category = 'standard';
-
-	/**
 	 * Icon
 	 *
 	 * @var string
@@ -429,7 +422,7 @@ class Forminator_Select extends Forminator_Field {
 				$name,
 				$default,
 				$hidden_calc_behavior,
-				$placeholder,
+				$this->sanitize_value( $placeholder ),
 				$search,
 				$search_placeholder,
 				$has_checkbox,

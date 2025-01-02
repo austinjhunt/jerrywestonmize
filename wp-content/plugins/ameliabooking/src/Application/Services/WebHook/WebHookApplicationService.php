@@ -64,7 +64,7 @@ class WebHookApplicationService extends AbstractWebHookApplicationService
 
                 $bookingEntityArray['isPackageBooking'] = $booking['isPackageBooking'];
 
-                $bookingEntityArray['isPackageAppointment'] = $booking['isPackageAppointment'];
+                $bookingEntityArray['isPackageAppointment'] = isset($booking['isPackageAppointment']) ? $booking['isPackageAppointment'] : null;
             }
 
             $affectedBookingEntitiesArray[] = $bookingEntityArray;

@@ -26,8 +26,18 @@ Defines the fields in a `RetrieveDisputeEvidence` response.
     },
     "evidence_type": "CARDHOLDER_COMMUNICATION",
     "id": "TOomLInj6iWmP3N8qfCXrB",
-    "uploaded_at": "2022-05-18T16:01:10.000Z"
-  }
+    "uploaded_at": "2022-05-18T16:01:10.000Z",
+    "evidence_id": "evidence_id0",
+    "evidence_text": "evidence_text6"
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

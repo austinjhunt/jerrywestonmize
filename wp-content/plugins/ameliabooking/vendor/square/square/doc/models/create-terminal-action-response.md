@@ -29,8 +29,23 @@
     },
     "status": "PENDING",
     "type": "SAVE_CARD",
-    "updated_at": "2021-07-28T23:22:07.476Z"
-  }
+    "updated_at": "2021-07-28T23:22:07.476Z",
+    "cancel_reason": "TIMED_OUT"
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

@@ -50,13 +50,6 @@ class Forminator_Group extends Forminator_Field {
 	public $options = array();
 
 	/**
-	 * Category
-	 *
-	 * @var string
-	 */
-	public $category = 'standard';
-
-	/**
 	 * Icon CSS class
 	 *
 	 * @var string

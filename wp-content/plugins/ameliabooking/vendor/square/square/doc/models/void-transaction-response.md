@@ -2,7 +2,7 @@
 # Void Transaction Response
 
 Defines the fields that are included in the response body of
-a request to the [VoidTransaction](../../doc/apis/transactions.md#void-transaction) endpoint.
+a request to the [VoidTransaction](api-endpoint:Transactions-VoidTransaction) endpoint.
 
 ## Structure
 
@@ -17,6 +17,27 @@ a request to the [VoidTransaction](../../doc/apis/transactions.md#void-transacti
 ## Example (as JSON)
 
 ```json
-{}
+{
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
+}
 ```
 

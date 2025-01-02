@@ -187,10 +187,9 @@ class Forminator_Shortcode_Generator {
 		 *
 		 * @since 1.7.0
 		 */
-		wp_enqueue_style( 'forminator-scgen-global', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-global.min.css', array(), FORMINATOR_VERSION );
-		wp_enqueue_style( 'forminator-scgen-icons', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-icons.min.css', array(), FORMINATOR_VERSION );
-		wp_enqueue_style( 'forminator-scgen-forms', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-forms.min.css', array(), FORMINATOR_VERSION );
-
+		Forminator_Assets_Enqueue::fui_enqueue_style( 'forminator-scgen-global', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-global.min.css', array(), FORMINATOR_VERSION );
+		Forminator_Assets_Enqueue::fui_enqueue_style( 'forminator-scgen-icons', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-icons.min.css', array(), FORMINATOR_VERSION );
+		Forminator_Assets_Enqueue::fui_enqueue_style( 'forminator-scgen-forms', forminator_plugin_url() . 'assets/forminator-ui/css/forminator-forms.min.css', array(), FORMINATOR_VERSION );
 	}
 
 	/**

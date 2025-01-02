@@ -28,7 +28,10 @@ Either `errors` or `locations` is present in a given response (never both).
         "administrative_district_level_1": "CA",
         "country": "US",
         "locality": "San Francisco",
-        "postal_code": "94114"
+        "postal_code": "94114",
+        "address_line_2": "address_line_26",
+        "address_line_3": "address_line_32",
+        "sublocality": "sublocality6"
       },
       "business_name": "Jet Fuel Coffee",
       "capabilities": [
@@ -50,7 +53,10 @@ Either `errors` or `locations` is present in a given response (never both).
         "address_line_1": "1234 Peachtree St. NE",
         "administrative_district_level_1": "GA",
         "locality": "Atlanta",
-        "postal_code": "30309"
+        "postal_code": "30309",
+        "address_line_2": "address_line_26",
+        "address_line_3": "address_line_32",
+        "sublocality": "sublocality6"
       },
       "business_name": "Jet Fuel Coffee",
       "capabilities": [
@@ -72,6 +78,20 @@ Either `errors` or `locations` is present in a given response (never both).
       "status": "ACTIVE",
       "timezone": "America/New_York",
       "type": "PHYSICAL"
+    }
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
     }
   ]
 }

@@ -66,6 +66,16 @@ class Coupon
     /** @var DateTimeValue */
     private $expirationDate;
 
+    /** @var BooleanValueObject */
+    private $allServices;
+
+    /** @var BooleanValueObject */
+    private $allEvents;
+
+
+    /** @var BooleanValueObject */
+    private $allPackages;
+
     /**
      * @return Id
      */
@@ -291,6 +301,54 @@ class Coupon
     }
 
     /**
+     * @return BooleanValueObject
+     */
+    public function getAllServices()
+    {
+        return $this->allServices;
+    }
+
+    /**
+     * @param BooleanValueObject $allServices
+     */
+    public function setAllServices($allServices)
+    {
+        $this->allServices = $allServices;
+    }
+
+    /**
+     * @return BooleanValueObject
+     */
+    public function getAllEvents()
+    {
+        return $this->allEvents;
+    }
+
+    /**
+     * @param BooleanValueObject $allEvents
+     */
+    public function setAllEvents($allEvents)
+    {
+        $this->allEvents = $allEvents;
+    }
+
+    /**
+     * @return BooleanValueObject
+     */
+    public function getAllPackages()
+    {
+        return $this->allPackages;
+    }
+
+    /**
+     * @param BooleanValueObject $allPackages
+     */
+    public function setAllPackages($allPackages)
+    {
+        $this->allPackages = $allPackages;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
@@ -310,6 +368,9 @@ class Coupon
             'eventList'             => $this->getEventList() ? $this->getEventList()->toArray() : [],
             'packageList'           => $this->getPackageList() ? $this->getPackageList()->toArray() : [],
             'expirationDate'        => $this->getExpirationDate() ? $this->getExpirationDate()->getValue()->format('Y-m-d') : null,
+            'allServices'           => $this->getAllServices() ? $this->getAllServices()->getValue() : 0,
+            'allEvents'             => $this->getAllEvents() ? $this->getAllEvents()->getValue() : 0,
+            'allPackages'           => $this->getAllPackages() ? $this->getAllPackages()->getValue() : 0,
         ];
     }
 }

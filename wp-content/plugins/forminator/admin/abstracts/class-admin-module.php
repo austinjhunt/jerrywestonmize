@@ -309,6 +309,14 @@ abstract class Forminator_Admin_Module {
 			$import_data['data']['settings'] = array_merge( $import_data['data']['settings'], $extra_args );
 		}
 
+		if ( ! empty( $import_data['data']['settings'] ) ) {
+			$validate = forminator_validate_registration_form_settings( $import_data['data']['settings'] );
+			if ( is_wp_error( $validate ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message is already escaped.
+				throw new Exception( $validate->get_error_message() );
+			}
+		}
+
 		$model = $class::create_from_import_data( $import_data, $name );
 
 		if ( is_wp_error( $model ) ) {

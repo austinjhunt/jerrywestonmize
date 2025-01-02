@@ -14,8 +14,8 @@ includes a `redeem_activity_details` field that contains information about the r
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `id` | `?string` | Optional | The Square-assigned ID of the gift card activity. | getId(): ?string | setId(?string id): void |
-| `type` | [`string (GiftCardActivityType)`](../../doc/models/gift-card-activity-type.md) | Required | Indicates the type of [gift card activity](../../doc/models/gift-card-activity.md). | getType(): string | setType(string type): void |
-| `locationId` | `string` | Required | The ID of the [business location](../../doc/models/location.md) where the activity occurred. | getLocationId(): string | setLocationId(string locationId): void |
+| `type` | [`string(GiftCardActivityType)`](../../doc/models/gift-card-activity-type.md) | Required | Indicates the type of [gift card activity](../../doc/models/gift-card-activity.md). | getType(): string | setType(string type): void |
+| `locationId` | `string` | Required | The ID of the [business location](entity:Location) where the activity occurred. | getLocationId(): string | setLocationId(string locationId): void |
 | `createdAt` | `?string` | Optional | The timestamp when the gift card activity was created, in RFC 3339 format. | getCreatedAt(): ?string | setCreatedAt(?string createdAt): void |
 | `giftCardId` | `?string` | Optional | The gift card ID. When creating a gift card activity, `gift_card_id` is not required if<br>`gift_card_gan` is specified. | getGiftCardId(): ?string | setGiftCardId(?string giftCardId): void |
 | `giftCardGan` | `?string` | Optional | The gift card account number (GAN). When creating a gift card activity, `gift_card_gan`<br>is not required if `gift_card_id` is specified. | getGiftCardGan(): ?string | setGiftCardGan(?string giftCardGan): void |
@@ -40,28 +40,16 @@ includes a `redeem_activity_details` field that contains information about the r
 
 ```json
 {
-  "id": null,
-  "type": "ADJUST_INCREMENT",
-  "location_id": "location_id4",
-  "created_at": null,
-  "gift_card_id": null,
-  "gift_card_gan": null,
-  "gift_card_balance_money": null,
-  "load_activity_details": null,
-  "activate_activity_details": null,
-  "redeem_activity_details": null,
-  "clear_balance_activity_details": null,
-  "deactivate_activity_details": null,
-  "adjust_increment_activity_details": null,
-  "adjust_decrement_activity_details": null,
-  "refund_activity_details": null,
-  "unlinked_activity_refund_activity_details": null,
-  "import_activity_details": null,
-  "block_activity_details": null,
-  "unblock_activity_details": null,
-  "import_reversal_activity_details": null,
-  "transfer_balance_to_activity_details": null,
-  "transfer_balance_from_activity_details": null
+  "id": "id8",
+  "type": "REDEEM",
+  "location_id": "location_id2",
+  "created_at": "created_at6",
+  "gift_card_id": "gift_card_id6",
+  "gift_card_gan": "gift_card_gan4",
+  "gift_card_balance_money": {
+    "amount": 82,
+    "currency": "KPW"
+  }
 }
 ```
 

@@ -33,6 +33,10 @@ the request resulted in errors.
       }
     ],
     "created_at": "2019-02-28T00:39:02Z",
+    "declared_cash_tip_money": {
+      "amount": 500,
+      "currency": "USD"
+    },
     "employee_id": "ormj0jJJZ5OZIzxrZYJI",
     "end_at": "2019-01-25T13:11:00-05:00",
     "id": "K0YH4CV5462JB",
@@ -48,9 +52,31 @@ the request resulted in errors.
         "amount": 1100,
         "currency": "USD"
       },
+      "job_id": "FzbJAtt9qEWncK1BWgVCxQ6M",
+      "tip_eligible": true,
       "title": "Barista"
     }
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

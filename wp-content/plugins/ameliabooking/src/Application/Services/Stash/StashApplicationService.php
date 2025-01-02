@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Application\Services\Stash;
 
+use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Location\AbstractLocationApplicationService;
 use AmeliaBooking\Application\Services\Tax\TaxApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
@@ -29,7 +30,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\CategoryRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
-use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventTagsRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
@@ -71,6 +71,9 @@ class StashApplicationService
         /** @var ProviderApplicationService $providerAS */
         $providerAS = $this->container->get('application.user.provider.service');
 
+        /** @var EventApplicationService $eventAS */
+        $eventAS = $this->container->get('application.booking.event.service');
+
         /** @var ProviderService $providerService */
         $providerService = $this->container->get('domain.user.provider.service');
 
@@ -92,11 +95,16 @@ class StashApplicationService
         /** @var EventTagsRepository $eventTagsRepository */
         $eventTagsRepository = $this->container->get('domain.booking.event.tag.repository');
 
-        /** @var EventRepository $eventRepository */
-        $eventRepository = $this->container->get('domain.booking.event.repository');
-
         /** @var Collection $events */
-        $events = $eventRepository->getFiltered(['dates' => [DateTimeService::getNowDateTime()], 'show' => 1]);
+        $events = $eventAS->getEventsByCriteria(
+            [
+                'dates' => [DateTimeService::getNowDateTime()],
+                'show'  => 1
+            ],
+            [
+            ],
+            0
+        );
 
         /** @var TaxApplicationService $taxApplicationService */
         $taxApplicationService = $this->container->get('application.tax.service');
@@ -111,19 +119,9 @@ class StashApplicationService
         $locations = $locationAS->getAllOrderedByName();
 
         /** @var Collection $providers */
-        $providers = $providerRepository->getWithSchedule([]);
-
-
-        $entitiesRelations = [];
-
-        /** @var Provider $provider */
-        foreach ($providers->getItems() as $providerId => $provider) {
-            $providerService->setProviderServices($provider, $services, true);
-
-            if ($data = $providerAS->getProviderServiceLocations($provider, $locations, $services, true)) {
-                $entitiesRelations[$providerId] = $data;
-            }
-        }
+        $providers = $providerRepository->getWithSchedule(
+            ['dates' => [DateTimeService::getNowDateTimeObject()->modify('-1 days')->format('Y-m-d H:i:s')]]
+        );
 
 
         /** @var Collection $availableLocations */
@@ -134,6 +132,24 @@ class StashApplicationService
 
         /** @var Collection $availableProviders */
         $availableProviders = new Collection();
+
+        $entitiesRelations = [];
+
+        /** @var Provider $provider */
+        foreach ($providers->getItems() as $providerId => $provider) {
+            if ($provider->getLocationId()) {
+                $availableLocations->addItem(
+                    $locations->getItem($provider->getLocationId()->getValue()),
+                    $provider->getLocationId()->getValue()
+                );
+            }
+
+            $providerService->setProviderServices($provider, $services, true);
+
+            if ($data = $providerAS->getProviderServiceLocations($provider, $locations, $services, true)) {
+                $entitiesRelations[$providerId] = $data;
+            }
+        }
 
         foreach ($entitiesRelations as $providerId => $providerServiceRelations) {
             foreach ($providerServiceRelations as $serviceId => $serviceLocationRelations) {

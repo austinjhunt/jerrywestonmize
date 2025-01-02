@@ -23,13 +23,19 @@ Represents a [CreateLoyaltyPromotion](../../doc/apis/loyalty.md#create-loyalty-p
     "available_time": {
       "time_periods": [
         "BEGIN:VEVENT\nDTSTART:20220816T160000\nDURATION:PT2H\nRRULE:FREQ=WEEKLY;BYDAY=TU\nEND:VEVENT"
-      ]
+      ],
+      "start_date": "start_date4",
+      "end_date": "end_date8"
     },
     "incentive": {
       "points_multiplier_data": {
-        "points_multiplier": 3
+        "multiplier": "3.0",
+        "points_multiplier": 134
       },
-      "type": "POINTS_MULTIPLIER"
+      "type": "POINTS_MULTIPLIER",
+      "points_addition_data": {
+        "points_addition": 218
+      }
     },
     "minimum_spend_amount_money": {
       "amount": 2000,
@@ -42,7 +48,11 @@ Represents a [CreateLoyaltyPromotion](../../doc/apis/loyalty.md#create-loyalty-p
     "trigger_limit": {
       "interval": "DAY",
       "times": 1
-    }
+    },
+    "id": "id4",
+    "status": "ACTIVE",
+    "created_at": "created_at2",
+    "canceled_at": "canceled_at0"
   }
 }
 ```

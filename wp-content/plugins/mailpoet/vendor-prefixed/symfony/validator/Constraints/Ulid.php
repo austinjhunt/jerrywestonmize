@@ -11,7 +11,7 @@ class Ulid extends Constraint
  public const TOO_LARGE_ERROR = 'df8cfb9a-ce6d-4a69-ae5a-eea7ab6f278b';
  protected static $errorNames = [self::TOO_SHORT_ERROR => 'TOO_SHORT_ERROR', self::TOO_LONG_ERROR => 'TOO_LONG_ERROR', self::INVALID_CHARACTERS_ERROR => 'INVALID_CHARACTERS_ERROR', self::TOO_LARGE_ERROR => 'TOO_LARGE_ERROR'];
  public $message = 'This is not a valid ULID.';
- public function __construct(array $options = null, string $message = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $message = null, ?array $groups = null, $payload = null)
  {
  parent::__construct($options, $groups, $payload);
  $this->message = $message ?? $this->message;

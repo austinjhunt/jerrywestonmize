@@ -11,7 +11,7 @@
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Information on errors encountered during the request. | getErrors(): ?array | setErrors(?array errors): void |
 | `action` | [`?(TerminalAction[])`](../../doc/models/terminal-action.md) | Optional | The requested search result of `TerminalAction`s. | getAction(): ?array | setAction(?array action): void |
-| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent request. If empty,<br>this is the final response.<br><br>See [Pagination](https://developer.squareup.com/docs/basics/api101/pagination) for more<br>information. | getCursor(): ?string | setCursor(?string cursor): void |
+| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent request. If empty,<br>this is the final response.<br><br>See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more<br>information. | getCursor(): ?string | setCursor(?string cursor): void |
 
 ## Example (as JSON)
 
@@ -31,7 +31,8 @@
       },
       "status": "IN_PROGRESS",
       "type": "SAVE_CARD",
-      "updated_at": "2022-04-08T15:14:05.446Z"
+      "updated_at": "2022-04-08T15:14:05.446Z",
+      "cancel_reason": "TIMED_OUT"
     },
     {
       "app_id": "APP_ID",
@@ -47,10 +48,19 @@
       },
       "status": "COMPLETED",
       "type": "SAVE_CARD",
-      "updated_at": "2022-04-08T15:14:09.861Z"
+      "updated_at": "2022-04-08T15:14:09.861Z",
+      "cancel_reason": "TIMED_OUT"
     }
   ],
-  "cursor": "CURSOR"
+  "cursor": "CURSOR",
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

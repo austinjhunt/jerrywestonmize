@@ -8,7 +8,6 @@ if (!defined('ABSPATH')) exit;
 use MailPoet\Config\ServicesChecker;
 use MailPoet\Cron\CronHelper;
 use MailPoet\Cron\Supervisor;
-use MailPoet\Cron\Workers\Beamer as BeamerWorker;
 use MailPoet\Cron\Workers\Bounce as BounceWorker;
 use MailPoet\Cron\Workers\KeyCheck\PremiumKeyCheck as PremiumKeyCheckWorker;
 use MailPoet\Cron\Workers\KeyCheck\SendingServiceKeyCheck as SendingServiceKeyCheckWorker;
@@ -142,7 +141,6 @@ class WordPress {
       || $this->isSendingServiceKeyCheckActive()
       || $this->isPremiumKeyCheckActive()
       || $this->isSubscriberStatsReportActive()
-      || $this->isBeamerCheckActive()
       || $isSimpleWorkerActive
     );
   }
@@ -226,21 +224,6 @@ class WordPress {
     ]);
 
     return ($validAccountKey && ($statsReportDueTasks || !$statsReportFutureTasks));
-  }
-
-  private function isBeamerCheckActive(): bool {
-    $beamerDueChecks = $this->getTasksCount([
-      'type' => BeamerWorker::TASK_TYPE,
-      'scheduled_in' => [self::SCHEDULED_IN_THE_PAST],
-      'status' => ['null', ScheduledTaskEntity::STATUS_SCHEDULED],
-    ]);
-    $beamerFutureChecks = $this->getTasksCount([
-      'type' => BeamerWorker::TASK_TYPE,
-      'scheduled_in' => [self::SCHEDULED_IN_THE_FUTURE],
-      'status' => [ScheduledTaskEntity::STATUS_SCHEDULED],
-    ]);
-
-    return $beamerDueChecks || !$beamerFutureChecks;
   }
 
   private function loadTasksCounts(): void {

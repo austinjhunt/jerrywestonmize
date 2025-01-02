@@ -17,6 +17,7 @@ class FormHtmlSanitizer {
    */
   const ALLOWED_HTML = [
     'a' => [
+      'class' => true,
       'href' => true,
       'title' => true,
       'data-id' => true,

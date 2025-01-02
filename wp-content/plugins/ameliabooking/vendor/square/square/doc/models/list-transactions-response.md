@@ -2,7 +2,7 @@
 # List Transactions Response
 
 Defines the fields that are included in the response body of
-a request to the [ListTransactions](../../doc/apis/transactions.md#list-transactions) endpoint.
+a request to the [ListTransactions](api-endpoint:Transactions-ListTransactions) endpoint.
 
 One of `errors` or `transactions` is present in a given response (never both).
 
@@ -38,7 +38,8 @@ One of `errors` or `transactions` is present in a given response (never both).
                 "currency": "USD"
               },
               "description": "Application fees",
-              "location_id": "057P5VYJ4A5X1"
+              "location_id": "057P5VYJ4A5X1",
+              "receivable_id": "receivable_id6"
             }
           ],
           "amount_money": {
@@ -95,7 +96,16 @@ One of `errors` or `transactions` is present in a given response (never both).
         }
       ]
     }
-  ]
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "cursor": "cursor8"
 }
 ```
 

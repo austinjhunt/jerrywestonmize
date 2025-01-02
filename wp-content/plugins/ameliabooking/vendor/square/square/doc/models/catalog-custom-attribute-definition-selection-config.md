@@ -18,8 +18,21 @@ Configuration associated with `SELECTION`-type custom attribute definitions.
 
 ```json
 {
-  "max_allowed_selections": null,
-  "allowed_selections": null
+  "max_allowed_selections": 124,
+  "allowed_selections": [
+    {
+      "uid": "uid0",
+      "name": "name0"
+    },
+    {
+      "uid": "uid0",
+      "name": "name0"
+    },
+    {
+      "uid": "uid0",
+      "name": "name0"
+    }
+  ]
 }
 ```
 

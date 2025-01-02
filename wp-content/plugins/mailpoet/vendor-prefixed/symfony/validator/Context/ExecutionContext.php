@@ -32,7 +32,7 @@ class ExecutionContext implements ExecutionContextInterface
  private $validatedConstraints = [];
  private $initializedObjects;
  private $cachedObjectsRefs;
- public function __construct(ValidatorInterface $validator, $root, TranslatorInterface $translator, string $translationDomain = null)
+ public function __construct(ValidatorInterface $validator, $root, TranslatorInterface $translator, ?string $translationDomain = null)
  {
  $this->validator = $validator;
  $this->root = $root;
@@ -41,7 +41,7 @@ class ExecutionContext implements ExecutionContextInterface
  $this->violations = new ConstraintViolationList();
  $this->cachedObjectsRefs = new \SplObjectStorage();
  }
- public function setNode($value, ?object $object, MetadataInterface $metadata = null, string $propertyPath)
+ public function setNode($value, ?object $object, ?MetadataInterface $metadata, string $propertyPath)
  {
  $this->value = $value;
  $this->object = $object;

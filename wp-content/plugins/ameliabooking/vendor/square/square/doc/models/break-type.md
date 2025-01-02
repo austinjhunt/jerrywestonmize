@@ -25,14 +25,14 @@ instances on a `Shift`.
 
 ```json
 {
-  "id": null,
-  "location_id": "location_id4",
-  "break_name": "break_name8",
-  "expected_duration": "expected_duration4",
+  "id": "id4",
+  "location_id": "location_id8",
+  "break_name": "break_name4",
+  "expected_duration": "expected_duration0",
   "is_paid": false,
-  "version": null,
-  "created_at": null,
-  "updated_at": null
+  "version": 236,
+  "created_at": "created_at8",
+  "updated_at": "updated_at0"
 }
 ```
 

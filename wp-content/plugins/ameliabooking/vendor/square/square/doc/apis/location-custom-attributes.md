@@ -42,13 +42,13 @@ function listLocationCustomAttributeDefinitions(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `visibilityFilter` | [`?string (VisibilityFilter)`](../../doc/models/visibility-filter.md) | Query, Optional | Filters the `CustomAttributeDefinition` results by their `visibility` values. |
+| `visibilityFilter` | [`?string(VisibilityFilter)`](../../doc/models/visibility-filter.md) | Query, Optional | Filters the `CustomAttributeDefinition` results by their `visibility` values. |
 | `limit` | `?int` | Query, Optional | The maximum number of results to return in a single paged response. This limit is advisory.<br>The response might contain more or fewer results. The minimum value is 1 and the maximum value is 100.<br>The default value is 20. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
 | `cursor` | `?string` | Query, Optional | The cursor returned in the paged response from the previous call to this endpoint.<br>Provide this cursor to retrieve the next page of results for your original request.<br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
 
 ## Response Type
 
-[`ListLocationCustomAttributeDefinitionsResponse`](../../doc/models/list-location-custom-attribute-definitions-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListLocationCustomAttributeDefinitionsResponse`](../../doc/models/list-location-custom-attribute-definitions-response.md).
 
 ## Example Usage
 
@@ -61,9 +61,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -91,19 +91,19 @@ function createLocationCustomAttributeDefinition(
 
 ## Response Type
 
-[`CreateLocationCustomAttributeDefinitionResponse`](../../doc/models/create-location-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateLocationCustomAttributeDefinitionResponse`](../../doc/models/create-location-custom-attribute-definition-response.md).
 
 ## Example Usage
 
 ```php
-$body_customAttributeDefinition = new Models\CustomAttributeDefinition();
-$body_customAttributeDefinition->setKey('bestseller');
-$body_customAttributeDefinition->setName('Bestseller');
-$body_customAttributeDefinition->setDescription('Bestselling item at location');
-$body_customAttributeDefinition->setVisibility(Models\CustomAttributeDefinitionVisibility::VISIBILITY_READ_WRITE_VALUES);
-$body = new Models\CreateLocationCustomAttributeDefinitionRequest(
-    $body_customAttributeDefinition
-);
+$body = CreateLocationCustomAttributeDefinitionRequestBuilder::init(
+    CustomAttributeDefinitionBuilder::init()
+        ->key('bestseller')
+        ->name('Bestseller')
+        ->description('Bestselling item at location')
+        ->visibility(CustomAttributeDefinitionVisibility::VISIBILITY_READ_WRITE_VALUES)
+        ->build()
+)->build();
 
 $apiResponse = $locationCustomAttributesApi->createLocationCustomAttributeDefinition($body);
 
@@ -113,9 +113,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -138,7 +138,7 @@ function deleteLocationCustomAttributeDefinition(string $key): ApiResponse
 
 ## Response Type
 
-[`DeleteLocationCustomAttributeDefinitionResponse`](../../doc/models/delete-location-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteLocationCustomAttributeDefinitionResponse`](../../doc/models/delete-location-custom-attribute-definition-response.md).
 
 ## Example Usage
 
@@ -153,9 +153,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -178,7 +178,7 @@ function retrieveLocationCustomAttributeDefinition(string $key, ?int $version = 
 
 ## Response Type
 
-[`RetrieveLocationCustomAttributeDefinitionResponse`](../../doc/models/retrieve-location-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveLocationCustomAttributeDefinitionResponse`](../../doc/models/retrieve-location-custom-attribute-definition-response.md).
 
 ## Example Usage
 
@@ -193,9 +193,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -222,20 +222,24 @@ function updateLocationCustomAttributeDefinition(
 
 ## Response Type
 
-[`UpdateLocationCustomAttributeDefinitionResponse`](../../doc/models/update-location-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateLocationCustomAttributeDefinitionResponse`](../../doc/models/update-location-custom-attribute-definition-response.md).
 
 ## Example Usage
 
 ```php
 $key = 'key0';
-$body_customAttributeDefinition = new Models\CustomAttributeDefinition();
-$body_customAttributeDefinition->setDescription('Update the description as desired.');
-$body_customAttributeDefinition->setVisibility(Models\CustomAttributeDefinitionVisibility::VISIBILITY_READ_ONLY);
-$body = new Models\UpdateLocationCustomAttributeDefinitionRequest(
-    $body_customAttributeDefinition
-);
 
-$apiResponse = $locationCustomAttributesApi->updateLocationCustomAttributeDefinition($key, $body);
+$body = UpdateLocationCustomAttributeDefinitionRequestBuilder::init(
+    CustomAttributeDefinitionBuilder::init()
+        ->description('Update the description as desired.')
+        ->visibility(CustomAttributeDefinitionVisibility::VISIBILITY_READ_ONLY)
+        ->build()
+)->build();
+
+$apiResponse = $locationCustomAttributesApi->updateLocationCustomAttributeDefinition(
+    $key,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $updateLocationCustomAttributeDefinitionResponse = $apiResponse->getResult();
@@ -243,9 +247,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -267,22 +271,24 @@ function bulkDeleteLocationCustomAttributes(BulkDeleteLocationCustomAttributesRe
 
 ## Response Type
 
-[`BulkDeleteLocationCustomAttributesResponse`](../../doc/models/bulk-delete-location-custom-attributes-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BulkDeleteLocationCustomAttributesResponse`](../../doc/models/bulk-delete-location-custom-attributes-response.md).
 
 ## Example Usage
 
 ```php
-$body_values = [];
-
-$body_values['id1'] = new Models\BulkDeleteLocationCustomAttributesRequestLocationCustomAttributeDeleteRequest();
-
-$body_values['id2'] = new Models\BulkDeleteLocationCustomAttributesRequestLocationCustomAttributeDeleteRequest();
-
-$body_values['id3'] = new Models\BulkDeleteLocationCustomAttributesRequestLocationCustomAttributeDeleteRequest();
-
-$body = new Models\BulkDeleteLocationCustomAttributesRequest(
-    $body_values
-);
+$body = BulkDeleteLocationCustomAttributesRequestBuilder::init(
+    [
+        'id1' => BulkDeleteLocationCustomAttributesRequestLocationCustomAttributeDeleteRequestBuilder::init()
+            ->key('bestseller')
+            ->build(),
+        'id2' => BulkDeleteLocationCustomAttributesRequestLocationCustomAttributeDeleteRequestBuilder::init()
+            ->key('bestseller')
+            ->build(),
+        'id3' => BulkDeleteLocationCustomAttributesRequestLocationCustomAttributeDeleteRequestBuilder::init()
+            ->key('phone-number')
+            ->build()
+    ]
+)->build();
 
 $apiResponse = $locationCustomAttributesApi->bulkDeleteLocationCustomAttributes($body);
 
@@ -292,9 +298,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -323,30 +329,23 @@ function bulkUpsertLocationCustomAttributes(BulkUpsertLocationCustomAttributesRe
 
 ## Response Type
 
-[`BulkUpsertLocationCustomAttributesResponse`](../../doc/models/bulk-upsert-location-custom-attributes-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BulkUpsertLocationCustomAttributesResponse`](../../doc/models/bulk-upsert-location-custom-attributes-response.md).
 
 ## Example Usage
 
 ```php
-$body_values = [];
-
-$body_values_key0_locationId = 'location_id8';
-$body_values_key0_customAttribute = new Models\CustomAttribute();
-$body_values['key0'] = new Models\BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequest(
-    $body_values_key0_locationId,
-    $body_values_key0_customAttribute
-);
-
-$body_values_key1_locationId = 'location_id9';
-$body_values_key1_customAttribute = new Models\CustomAttribute();
-$body_values['key1'] = new Models\BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequest(
-    $body_values_key1_locationId,
-    $body_values_key1_customAttribute
-);
-
-$body = new Models\BulkUpsertLocationCustomAttributesRequest(
-    $body_values
-);
+$body = BulkUpsertLocationCustomAttributesRequestBuilder::init(
+    [
+        'key0' => BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequestBuilder::init(
+            'location_id4',
+            CustomAttributeBuilder::init()->build()
+        )->build(),
+        'key1' => BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequestBuilder::init(
+            'location_id4',
+            CustomAttributeBuilder::init()->build()
+        )->build()
+    ]
+)->build();
 
 $apiResponse = $locationCustomAttributesApi->bulkUpsertLocationCustomAttributes($body);
 
@@ -356,9 +355,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -385,23 +384,30 @@ function listLocationCustomAttributes(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `locationId` | `string` | Template, Required | The ID of the target [location](../../doc/models/location.md). |
-| `visibilityFilter` | [`?string (VisibilityFilter)`](../../doc/models/visibility-filter.md) | Query, Optional | Filters the `CustomAttributeDefinition` results by their `visibility` values. |
+| `locationId` | `string` | Template, Required | The ID of the target [location](entity:Location). |
+| `visibilityFilter` | [`?string(VisibilityFilter)`](../../doc/models/visibility-filter.md) | Query, Optional | Filters the `CustomAttributeDefinition` results by their `visibility` values. |
 | `limit` | `?int` | Query, Optional | The maximum number of results to return in a single paged response. This limit is advisory.<br>The response might contain more or fewer results. The minimum value is 1 and the maximum value is 100.<br>The default value is 20. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
 | `cursor` | `?string` | Query, Optional | The cursor returned in the paged response from the previous call to this endpoint.<br>Provide this cursor to retrieve the next page of results for your original request. For more<br>information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
-| `withDefinitions` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](../../doc/models/custom-attribute-definition.md) in the `definition` field of each<br>custom attribute. Set this parameter to `true` to get the name and description of each custom<br>attribute, information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
+| `withDefinitions` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](entity:CustomAttributeDefinition) in the `definition` field of each<br>custom attribute. Set this parameter to `true` to get the name and description of each custom<br>attribute, information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
 
 ## Response Type
 
-[`ListLocationCustomAttributesResponse`](../../doc/models/list-location-custom-attributes-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListLocationCustomAttributesResponse`](../../doc/models/list-location-custom-attributes-response.md).
 
 ## Example Usage
 
 ```php
 $locationId = 'location_id4';
+
 $withDefinitions = false;
 
-$apiResponse = $locationCustomAttributesApi->listLocationCustomAttributes($locationId, null, null, null, $withDefinitions);
+$apiResponse = $locationCustomAttributesApi->listLocationCustomAttributes(
+    $locationId,
+    null,
+    null,
+    null,
+    $withDefinitions
+);
 
 if ($apiResponse->isSuccess()) {
     $listLocationCustomAttributesResponse = $apiResponse->getResult();
@@ -409,9 +415,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -429,20 +435,24 @@ function deleteLocationCustomAttribute(string $locationId, string $key): ApiResp
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `locationId` | `string` | Template, Required | The ID of the target [location](../../doc/models/location.md). |
+| `locationId` | `string` | Template, Required | The ID of the target [location](entity:Location). |
 | `key` | `string` | Template, Required | The key of the custom attribute to delete. This key must match the `key` of a custom<br>attribute definition in the Square seller account. If the requesting application is not the<br>definition owner, you must use the qualified key. |
 
 ## Response Type
 
-[`DeleteLocationCustomAttributeResponse`](../../doc/models/delete-location-custom-attribute-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteLocationCustomAttributeResponse`](../../doc/models/delete-location-custom-attribute-response.md).
 
 ## Example Usage
 
 ```php
 $locationId = 'location_id4';
+
 $key = 'key0';
 
-$apiResponse = $locationCustomAttributesApi->deleteLocationCustomAttribute($locationId, $key);
+$apiResponse = $locationCustomAttributesApi->deleteLocationCustomAttribute(
+    $locationId,
+    $key
+);
 
 if ($apiResponse->isSuccess()) {
     $deleteLocationCustomAttributeResponse = $apiResponse->getResult();
@@ -450,9 +460,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -477,23 +487,29 @@ function retrieveLocationCustomAttribute(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `locationId` | `string` | Template, Required | The ID of the target [location](../../doc/models/location.md). |
+| `locationId` | `string` | Template, Required | The ID of the target [location](entity:Location). |
 | `key` | `string` | Template, Required | The key of the custom attribute to retrieve. This key must match the `key` of a custom<br>attribute definition in the Square seller account. If the requesting application is not the<br>definition owner, you must use the qualified key. |
-| `withDefinition` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](../../doc/models/custom-attribute-definition.md) in the `definition` field of<br>the custom attribute. Set this parameter to `true` to get the name and description of the custom<br>attribute, information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
+| `withDefinition` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](entity:CustomAttributeDefinition) in the `definition` field of<br>the custom attribute. Set this parameter to `true` to get the name and description of the custom<br>attribute, information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
 | `version` | `?int` | Query, Optional | The current version of the custom attribute, which is used for strongly consistent reads to<br>guarantee that you receive the most up-to-date data. When included in the request, Square<br>returns the specified version or a higher version if one exists. If the specified version is<br>higher than the current version, Square returns a `BAD_REQUEST` error. |
 
 ## Response Type
 
-[`RetrieveLocationCustomAttributeResponse`](../../doc/models/retrieve-location-custom-attribute-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveLocationCustomAttributeResponse`](../../doc/models/retrieve-location-custom-attribute-response.md).
 
 ## Example Usage
 
 ```php
 $locationId = 'location_id4';
+
 $key = 'key0';
+
 $withDefinition = false;
 
-$apiResponse = $locationCustomAttributesApi->retrieveLocationCustomAttribute($locationId, $key, $withDefinition);
+$apiResponse = $locationCustomAttributesApi->retrieveLocationCustomAttribute(
+    $locationId,
+    $key,
+    $withDefinition
+);
 
 if ($apiResponse->isSuccess()) {
     $retrieveLocationCustomAttributeResponse = $apiResponse->getResult();
@@ -501,9 +517,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -528,25 +544,30 @@ function upsertLocationCustomAttribute(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `locationId` | `string` | Template, Required | The ID of the target [location](../../doc/models/location.md). |
+| `locationId` | `string` | Template, Required | The ID of the target [location](entity:Location). |
 | `key` | `string` | Template, Required | The key of the custom attribute to create or update. This key must match the `key` of a<br>custom attribute definition in the Square seller account. If the requesting application is not<br>the definition owner, you must use the qualified key. |
 | `body` | [`UpsertLocationCustomAttributeRequest`](../../doc/models/upsert-location-custom-attribute-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
 
 ## Response Type
 
-[`UpsertLocationCustomAttributeResponse`](../../doc/models/upsert-location-custom-attribute-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpsertLocationCustomAttributeResponse`](../../doc/models/upsert-location-custom-attribute-response.md).
 
 ## Example Usage
 
 ```php
 $locationId = 'location_id4';
-$key = 'key0';
-$body_customAttribute = new Models\CustomAttribute();
-$body = new Models\UpsertLocationCustomAttributeRequest(
-    $body_customAttribute
-);
 
-$apiResponse = $locationCustomAttributesApi->upsertLocationCustomAttribute($locationId, $key, $body);
+$key = 'key0';
+
+$body = UpsertLocationCustomAttributeRequestBuilder::init(
+    CustomAttributeBuilder::init()->build()
+)->build();
+
+$apiResponse = $locationCustomAttributesApi->upsertLocationCustomAttribute(
+    $locationId,
+    $key,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $upsertLocationCustomAttributeResponse = $apiResponse->getResult();
@@ -554,8 +575,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

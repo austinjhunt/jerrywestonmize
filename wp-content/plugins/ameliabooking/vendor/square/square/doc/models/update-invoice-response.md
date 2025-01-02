@@ -23,6 +23,7 @@ Describes a `UpdateInvoice` response.
       "bank_account": false,
       "buy_now_pay_later": false,
       "card": true,
+      "cash_app_pay": false,
       "square_gift_card": false
     },
     "created_at": "2020-06-18T17:45:13Z",
@@ -70,7 +71,14 @@ Describes a `UpdateInvoice` response.
       "email_address": "Amelia.Earhart@example.com",
       "family_name": "Earhart",
       "given_name": "Amelia",
-      "phone_number": "1-212-555-4240"
+      "phone_number": "1-212-555-4240",
+      "address": {
+        "address_line_1": "address_line_16",
+        "address_line_2": "address_line_26",
+        "address_line_3": "address_line_32",
+        "locality": "locality6",
+        "sublocality": "sublocality6"
+      }
     },
     "sale_or_service_date": "2030-01-24",
     "scheduled_at": "2030-01-13T10:00:00Z",
@@ -80,7 +88,21 @@ Describes a `UpdateInvoice` response.
     "title": "Event Planning Services",
     "updated_at": "2020-06-18T18:23:11Z",
     "version": 2
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

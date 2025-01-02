@@ -131,6 +131,10 @@ abstract class Forminator_Base_Form_Model {
 				}
 			}
 		}
+		$validate = forminator_validate_registration_form_settings( $meta_data['settings'] );
+		if ( is_wp_error( $validate ) ) {
+			return $validate;
+		}
 
 		$post_data['post_type'] = $this->post_type;
 
@@ -576,6 +580,36 @@ abstract class Forminator_Base_Form_Model {
 	}
 
 	/**
+	 * Get 3 models with old stripe field
+	 *
+	 * @return array
+	 */
+	public function get_models_with_old_stripe() {
+		$max_title_length = 50;
+
+		$models = array();
+		$data   = $this->get_models( 99, 'publish' );
+
+		foreach ( $data as $model ) {
+			if ( $model->get_field( 'stripe-1' ) && ! $model->get_field( 'stripe-ocs-1' ) ) {
+				$title = $model->settings['formName'] ?? "Form #{$model->id}";
+				$title = mb_strlen( $title ) > $max_title_length ? mb_substr( $title, 0, $max_title_length ) . '...' : $title;
+
+				$models[] = array(
+					'id'    => $model->id,
+					'title' => $title,
+				);
+			}
+			// Return only 3 forms.
+			if ( 3 === count( $models ) ) {
+				break;
+			}
+		}
+
+		return $models;
+	}
+
+	/**
 	 * Get modules from field
 	 *
 	 * @param int $id Id.
@@ -874,7 +908,7 @@ abstract class Forminator_Base_Form_Model {
 	 * @since 1.15
 	 */
 	private function migrate_payments( $field ) {
-		if ( ! isset( $field['type'] ) || 'stripe' !== $field['type'] ) {
+		if ( ! isset( $field['type'] ) || ( 'stripe' !== $field['type'] && 'stripe-ocs' !== $field['type'] ) ) {
 			return $field;
 		}
 
@@ -1297,7 +1331,7 @@ abstract class Forminator_Base_Form_Model {
 		if ( isset( $data['fields'] ) ) {
 			$i = 0;
 			foreach ( $data['fields'] as $field ) {
-				if ( isset( $field['type'] ) && 'stripe' === $field['type'] ) {
+				if ( isset( $field['type'] ) && ( 'stripe' === $field['type'] || 'stripe-ocs' === $field['type'] ) ) {
 					if ( isset( $field['payments'] ) ) {
 						$x = 0;
 						foreach ( $field['payments'] as $plan ) {

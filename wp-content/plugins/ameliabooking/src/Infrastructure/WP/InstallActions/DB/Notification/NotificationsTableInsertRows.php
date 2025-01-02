@@ -187,6 +187,14 @@ class NotificationsTableInsertRows extends AbstractDatabaseTable
             $rows = array_merge($rows, NotificationsStrings::getEventUpdatedNotifications($addEmail));
         }
 
+        $invoiceNotifications = !(int)$wpdb->get_row(
+            "SELECT COUNT(*) AS count FROM {$table} WHERE name = 'customer_invoice'"
+        )->count;
+
+        if ($invoiceNotifications) {
+            $rows = array_merge($rows, NotificationsStrings::getInvoiceNotification());
+        }
+
         $result = [];
 
         foreach ($rows as $row) {

@@ -27,11 +27,11 @@ use MailPoetVendor\Twig\RuntimeLoader\RuntimeLoaderInterface;
 use MailPoetVendor\Twig\TokenParser\TokenParserInterface;
 class Environment
 {
- public const VERSION = '3.11.1';
- public const VERSION_ID = 301101;
+ public const VERSION = '3.11.2';
+ public const VERSION_ID = 301102;
  public const MAJOR_VERSION = 4;
  public const MINOR_VERSION = 11;
- public const RELEASE_VERSION = 1;
+ public const RELEASE_VERSION = 2;
  public const EXTRA_VERSION = '';
  private $charset;
  private $loader;

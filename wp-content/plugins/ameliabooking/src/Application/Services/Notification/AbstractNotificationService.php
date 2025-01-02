@@ -8,11 +8,11 @@ namespace AmeliaBooking\Application\Services\Notification;
 
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
+use AmeliaBooking\Application\Services\Invoice\AbstractInvoiceApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
-use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Notification\Notification;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
@@ -184,7 +184,7 @@ abstract class AbstractNotificationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendAppointmentStatusNotifications($appointmentArray, $forcedStatusChange, $logNotification, $isBackend = false)
+    public function sendAppointmentStatusNotifications($appointmentArray, $forcedStatusChange, $logNotification, $isBackend = false, $sendInvoice = false)
     {
         /** @var BookingApplicationService $bookingAS */
         $bookingAS = $this->container->get('application.booking.booking.service');
@@ -251,11 +251,21 @@ abstract class AbstractNotificationService
                             continue;
                         }
 
+                        $invoice = null;
+                        if ($sendInvoice) {
+                            /** @var AbstractInvoiceApplicationService $invoiceService */
+                            $invoiceService = $this->container->get('application.invoice.service');
+
+                            $invoice = $invoiceService->generateInvoice($appointmentArray['bookings'][$bookingKey]['payments'][0]['id']);
+                        }
+
                         $this->sendNotification(
                             $appointmentArray,
                             $customerNotification,
                             $logNotification,
-                            $bookingKey
+                            $bookingKey,
+                            null,
+                            $invoice
                         );
                     }
                 }
@@ -271,7 +281,7 @@ abstract class AbstractNotificationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendAppointmentEditedNotifications($appointmentArray, $bookingsArray, $forcedStatusChange)
+    public function sendAppointmentEditedNotifications($appointmentArray, $bookingsArray, $forcedStatusChange, $sendInvoice = false)
     {
         /** @var BookingApplicationService $bookingAS */
         $bookingAS = $this->container->get('application.booking.booking.service');
@@ -320,11 +330,21 @@ abstract class AbstractNotificationService
                         }
 
                         if (!$appointmentArray['employee_changed']) {
+                            $invoice = null;
+                            if ($sendInvoice) {
+                                /** @var AbstractInvoiceApplicationService $invoiceService */
+                                $invoiceService = $this->container->get('application.invoice.service');
+
+                                $invoice = $invoiceService->generateInvoice($appointmentArray['bookings'][$bookingKey]['payments'][0]['id']);
+                            }
+
                             $this->sendNotification(
                                 $appointmentArray,
                                 $customerNotification,
                                 true,
-                                $bookingKey
+                                $bookingKey,
+                                null,
+                                $invoice
                             );
                         }
                     }
@@ -487,13 +507,13 @@ abstract class AbstractNotificationService
      * @param array $appointmentArray
      * @param array $bookingArray
      * @param bool $logNotification
+     * @param array $invoice
      *
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendBookingAddedNotifications($appointmentArray, $bookingArray, $logNotification)
+    public function sendBookingAddedNotifications($appointmentArray, $bookingArray, $logNotification, $invoice = null)
     {
-
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
@@ -529,7 +549,9 @@ abstract class AbstractNotificationService
                     $appointmentArray,
                     $customerNotification,
                     $logNotification,
-                    array_search($bookingArray['id'], array_column($appointmentArray['bookings'], 'id'), true)
+                    $bookingArray ? array_search($bookingArray['id'], array_column($appointmentArray['bookings'], 'id'), true) : null,
+                    null,
+                    $invoice
                 );
             }
         }
@@ -896,16 +918,10 @@ abstract class AbstractNotificationService
                             $reservations->keys(),
                             [
                                 'fetchEventsPeriods'    => true,
-                                'fetchEventsTickets'    => false,
-                                'fetchEventsTags'       => false,
                                 'fetchEventsProviders'  => true,
-                                'fetchEventsImages'     => false,
-                                'fetchBookingsTickets'  => false,
-                                'fetchBookingsCoupons'  => true,
-                                'fetchApprovedBookings' => false,
-                                'fetchBookingsPayments' => true,
-                                'fetchBookingsUsers'    => false,
                                 'fetchBookings'         => true,
+                                'fetchBookingsCoupons'  => true,
+                                'fetchBookingsPayments' => true,
                             ]
                         ) : new Collection();
 
@@ -1138,7 +1154,7 @@ abstract class AbstractNotificationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendPackageNotifications($data, $logNotification, $notifyCustomers = true)
+    public function sendPackageNotifications($data, $logNotification, $notifyCustomers = true, $invoice = null)
     {
         /** @var Collection $customerNotifications */
         $customerNotifications = $this->getByNameAndType(
@@ -1153,7 +1169,10 @@ abstract class AbstractNotificationService
                 $this->sendNotification(
                     $data,
                     $customerNotification,
-                    $logNotification
+                    $logNotification,
+                    null,
+                    null,
+                    $invoice
                 );
             }
         }

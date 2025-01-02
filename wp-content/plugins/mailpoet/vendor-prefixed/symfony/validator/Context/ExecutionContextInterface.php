@@ -13,7 +13,7 @@ interface ExecutionContextInterface
  public function buildViolation(string $message, array $parameters = []);
  public function getValidator();
  public function getObject();
- public function setNode($value, ?object $object, MetadataInterface $metadata = null, string $propertyPath);
+ public function setNode($value, ?object $object, ?MetadataInterface $metadata, string $propertyPath);
  public function setGroup(?string $group);
  public function setConstraint(Constraint $constraint);
  public function markGroupAsValidated(string $cacheKey, string $groupHash);

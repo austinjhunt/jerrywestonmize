@@ -9,7 +9,7 @@ class Hostname extends Constraint
  protected static $errorNames = [self::INVALID_HOSTNAME_ERROR => 'INVALID_HOSTNAME_ERROR'];
  public $message = 'This value is not a valid hostname.';
  public $requireTld = \true;
- public function __construct(array $options = null, string $message = null, bool $requireTld = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $message = null, ?bool $requireTld = null, ?array $groups = null, $payload = null)
  {
  parent::__construct($options, $groups, $payload);
  $this->message = $message ?? $this->message;

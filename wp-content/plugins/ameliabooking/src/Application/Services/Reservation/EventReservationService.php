@@ -6,6 +6,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
 use AmeliaBooking\Application\Services\Deposit\AbstractDepositApplicationService;
+use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Tax\TaxApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
@@ -42,6 +43,7 @@ use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
+use AmeliaBooking\Domain\ValueObjects\String\AmountType;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
@@ -129,6 +131,7 @@ class EventReservationService extends AbstractReservationService
                 'fetchEventsPeriods'    => true,
                 'fetchEventsTickets'    => true,
                 'fetchApprovedBookings' => true,
+                'fetchBookings'         => true,
                 'fetchBookingsTickets'  => true,
                 'fetchEventsProviders'  => true,
             ]
@@ -234,7 +237,7 @@ class EventReservationService extends AbstractReservationService
 
         $booking->setAggregatedPrice(new BooleanValueObject($event->getAggregatedPrice() ? $event->getAggregatedPrice()->getValue() : true));
 
-        $paymentAmount = $this->getPaymentAmount($booking, $event);
+        $paymentAmount = $this->getPaymentAmount($booking, $event)['price'];
 
         $applyDeposit =
             $eventData['bookings'][0]['deposit'] && $eventData['payment']['gateway'] !== PaymentType::ON_SITE;
@@ -910,11 +913,11 @@ class EventReservationService extends AbstractReservationService
      * @param Event           $bookable
      * @param string|null     $reduction
      *
-     * @return float
+     * @return array
      *
      * @throws InvalidArgumentException
      */
-    public function getPaymentAmount($booking, $bookable, $reduction = null)
+    public function getPaymentAmount($booking, $bookable, $invoice = false)
     {
         /** @var TaxApplicationService $taxApplicationService */
         $taxApplicationService = $this->container->get('application.tax.service');
@@ -922,8 +925,15 @@ class EventReservationService extends AbstractReservationService
         /** @var Tax $eventTax */
         $eventTax = $this->getTax($booking->getTax());
 
-        $price = (float)$bookable->getPrice()->getValue() *
-            ($this->isAggregatedPrice($bookable) ? $booking->getPersons()->getValue() : 1);
+        $persons = $booking->getPersons()->getValue();
+
+        $unitPrice = (float)$bookable->getPrice()->getValue();
+
+        $price = $unitPrice * ($this->isAggregatedPrice($bookable) ? $persons : 1);
+
+        $taxAmount = 0;
+
+        $ticketsTax = [];
 
         if ($booking->getTicketsBooking() &&
             $booking->getTicketsBooking()->length() &&
@@ -947,15 +957,29 @@ class EventReservationService extends AbstractReservationService
                 $ticketPrice = $ticket->getDateRangePrice() ?
                     $ticket->getDateRangePrice()->getValue() : $ticket->getPrice()->getValue();
 
-                $ticketSumPrice += $bookingToEventTicket->getPersons() ?
+                $ticketPersons = $bookingToEventTicket->getPersons() ?
                     ($booking->getAggregatedPrice()->getValue() ? $bookingToEventTicket->getPersons()->getValue() : 1)
-                    * $ticketPrice : 0;
+                    : 0;
+
+                $ticketSubtotal = $ticketPersons * $ticketPrice;
+
+                $ticketSumPrice += $ticketSubtotal;
+
+                if ($bookingToEventTicket->getId()) {
+                    if ($eventTax && $eventTax->getExcluded()->getValue()) {
+                        $ticketsTax[$bookingToEventTicket->getId()->getValue()] = $this->getTaxAmount($eventTax, $ticketSubtotal);
+                    } else if ($eventTax && !$eventTax->getExcluded()->getValue()) {
+                        $ticketsTax[$bookingToEventTicket->getId()->getValue()] = $this->getTaxAmount($eventTax, $taxApplicationService->getBasePrice($ticketSubtotal, $eventTax));
+                    } else {
+                        $ticketsTax[$bookingToEventTicket->getId()->getValue()] = 0;
+                    }
+                }
             }
 
             $price = $ticketSumPrice;
         }
 
-        if ($eventTax && !$eventTax->getExcluded()->getValue() && $booking->getCoupon()) {
+        if ($eventTax && !$eventTax->getExcluded()->getValue() && ($booking->getCoupon() || $invoice)) {
             $price = $taxApplicationService->getBasePrice($price, $eventTax);
         }
 
@@ -976,15 +1000,27 @@ class EventReservationService extends AbstractReservationService
             $price = max($price - $subtraction, 0);
         }
 
-        if ($eventTax && ($eventTax->getExcluded()->getValue() || $subtraction)) {
-            $price += $this->getTaxAmount($eventTax, $price);
+        if ($eventTax && ($eventTax->getExcluded()->getValue() || $subtraction || $invoice)) {
+            $taxAmount = $this->getTaxAmount($eventTax, $price);
+            $price    += $taxAmount;
         }
 
         $price = (float)max(round($price, 2), 0);
 
-        return $reduction === null ?
-            apply_filters('amelia_modify_payment_amount', $price, $booking)
-            : $reductionAmount[$reduction];
+        return [
+            'price'        => apply_filters('amelia_modify_payment_amount', $price, $booking),
+            'discount'     => $reductionAmount['discount'],
+            'deduction'    => $reductionAmount['deduction'],
+            'unit_price'   => $unitPrice,
+            'qty'          => $persons,
+            'subtotal'     => $unitPrice * ($this->isAggregatedPrice($bookable) ? $persons : 1),
+            'tax'          => !empty($ticketsTax) ? null : $taxAmount,
+            'tax_rate'     => $eventTax ? $this->getTaxRate($eventTax) : '',
+            'tax_type'     => $eventTax ? $eventTax->getType()->getValue() : '',
+            'tax_excluded' => $eventTax ? $eventTax->getExcluded()->getValue() : false,
+            'tickets_tax'  => $ticketsTax,
+            'full_discount' => $this->getCouponDiscountAmount($booking->getCoupon(), $unitPrice) + ($booking->getCoupon() && $booking->getCoupon()->getDeduction() ? $booking->getCoupon()->getDeduction()->getValue() : 0)
+        ];
     }
 
     /**
@@ -1002,7 +1038,7 @@ class EventReservationService extends AbstractReservationService
         /** @var Event $bookable */
         $bookable = $reservation->getBookable();
 
-        $paymentAmount = $this->getPaymentAmount($reservation->getBooking(), $bookable);
+        $paymentAmount = $this->getPaymentAmount($reservation->getBooking(), $bookable)['price'];
 
         if ($reservation->getApplyDeposit()->getValue()) {
             $personsCount = $reservation->getBooking()->getPersons()->getValue();
@@ -1118,10 +1154,11 @@ class EventReservationService extends AbstractReservationService
                 'paymentId'                => $payment->getId()->getValue(),
                 'packageCustomerId'        => null,
                 'payment'                  => [
-                    'id'           => $payment->getId()->getValue(),
-                    'amount'       => $payment->getAmount()->getValue(),
-                    'gateway'      => $payment->getGateway()->getName()->getValue(),
-                    'gatewayTitle' => $payment->getGatewayTitle() ? $payment->getGatewayTitle()->getValue() : '',
+                    'id'            => $payment->getId()->getValue(),
+                    'amount'        => $payment->getAmount()->getValue(),
+                    'gateway'       => $payment->getGateway()->getName()->getValue(),
+                    'gatewayTitle'  => $payment->getGatewayTitle() ? $payment->getGatewayTitle()->getValue() : '',
+                    'invoiceNumber' => $payment->getInvoiceNumber() ? $payment->getInvoiceNumber()->getValue() : '',
                 ],
             ]
         );

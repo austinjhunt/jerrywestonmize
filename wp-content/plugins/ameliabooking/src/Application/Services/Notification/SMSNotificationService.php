@@ -66,7 +66,9 @@ class SMSNotificationService extends AbstractNotificationService
             $bookingKey,
             'sms',
             null,
-            $allBookings
+            $allBookings,
+            false,
+            $notification->getName()->getValue()
         );
 
         $isCustomerPackage = isset($appointmentArray['isForCustomer']) && $appointmentArray['isForCustomer'];

@@ -18,20 +18,28 @@
 | `acceptedPaymentMethods` | [`?AcceptedPaymentMethods`](../../doc/models/accepted-payment-methods.md) | Optional | - | getAcceptedPaymentMethods(): ?AcceptedPaymentMethods | setAcceptedPaymentMethods(?AcceptedPaymentMethods acceptedPaymentMethods): void |
 | `appFeeMoney` | [`?Money`](../../doc/models/money.md) | Optional | Represents an amount of money. `Money` fields can be signed or unsigned.<br>Fields that do not explicitly define whether they are signed or unsigned are<br>considered unsigned and can only hold positive amounts. For signed fields, the<br>sign of the value indicates the purpose of the money transfer. See<br>[Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)<br>for more information. | getAppFeeMoney(): ?Money | setAppFeeMoney(?Money appFeeMoney): void |
 | `shippingFee` | [`?ShippingFee`](../../doc/models/shipping-fee.md) | Optional | - | getShippingFee(): ?ShippingFee | setShippingFee(?ShippingFee shippingFee): void |
+| `enableCoupon` | `?bool` | Optional | Indicates whether to include the `Add coupon` section for the buyer to provide a Square marketing coupon in the payment form. | getEnableCoupon(): ?bool | setEnableCoupon(?bool enableCoupon): void |
+| `enableLoyalty` | `?bool` | Optional | Indicates whether to include the `REWARDS` section for the buyer to opt in to loyalty, redeem rewards in the payment form, or both. | getEnableLoyalty(): ?bool | setEnableLoyalty(?bool enableLoyalty): void |
 
 ## Example (as JSON)
 
 ```json
 {
-  "allow_tipping": null,
-  "custom_fields": null,
-  "subscription_plan_id": null,
-  "redirect_url": null,
-  "merchant_support_email": null,
-  "ask_for_shipping_address": null,
-  "accepted_payment_methods": null,
-  "app_fee_money": null,
-  "shipping_fee": null
+  "allow_tipping": false,
+  "custom_fields": [
+    {
+      "title": "title8"
+    },
+    {
+      "title": "title8"
+    },
+    {
+      "title": "title8"
+    }
+  ],
+  "subscription_plan_id": "subscription_plan_id0",
+  "redirect_url": "redirect_url4",
+  "merchant_support_email": "merchant_support_email0"
 }
 ```
 

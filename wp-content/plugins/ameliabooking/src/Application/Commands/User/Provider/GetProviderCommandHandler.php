@@ -14,6 +14,7 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Interop\Container\Exception\ContainerException;
@@ -65,6 +66,9 @@ class GetProviderCommandHandler extends CommandHandler
         $googleCalService = $this->container->get('infrastructure.google.calendar.service');
         /** @var AbstractOutlookCalendarService $outlookCalendarService */
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
 
         $companyDaysOff = $settingsService->getCategorySettings('daysOff');
 
@@ -96,6 +100,7 @@ class GetProviderCommandHandler extends CommandHandler
 
             $providerArray['googleCalendar']['calendarId'] = $googleCalService->getProviderGoogleCalendarId($provider);
         } catch (\Exception $e) {
+            $providerRepository->updateErrorColumn($providerId, $e->getMessage());
             $successfulGoogleConnection = false;
         }
 
@@ -106,6 +111,7 @@ class GetProviderCommandHandler extends CommandHandler
                 $provider
             );
         } catch (\Exception $e) {
+            $providerRepository->updateErrorColumn($providerId, $e->getMessage());
             $successfulOutlookConnection = false;
         }
 

@@ -38,7 +38,21 @@ The response might contain a set of `Error` objects if the request resulted in e
     "id": "gcact_c8f8cbf1f24b448d8ecf39ed03f97864",
     "location_id": "81FN9BNFZTKS4",
     "type": "ACTIVATE"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

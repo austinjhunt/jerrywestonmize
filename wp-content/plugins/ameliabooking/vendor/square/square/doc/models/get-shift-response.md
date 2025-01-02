@@ -33,6 +33,10 @@ the request resulted in errors.
       }
     ],
     "created_at": "2019-02-27T00:12:12Z",
+    "declared_cash_tip_money": {
+      "amount": 500,
+      "currency": "USD"
+    },
     "employee_id": "D71KRMQof6cXGUW0aAv7",
     "end_at": "2019-02-23T21:00:00-05:00",
     "id": "T35HMQSN89SV4",
@@ -48,9 +52,31 @@ the request resulted in errors.
         "amount": 1457,
         "currency": "USD"
       },
+      "job_id": "N4YKVLzFj3oGtNocqoYHYpW3",
+      "tip_eligible": true,
       "title": "Cashier"
     }
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

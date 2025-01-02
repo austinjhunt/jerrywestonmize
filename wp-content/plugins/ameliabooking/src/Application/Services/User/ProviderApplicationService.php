@@ -1300,7 +1300,7 @@ class ProviderApplicationService
                 $hasVisibleLocations
             );
 
-            if ($providerLocation && !$availablePeriodLocations->keyExists($providerLocation->getId()->getValue())) {
+            if ($providerLocation && $availablePeriodLocations->length() === 0) {
                 $availablePeriodLocations->addItem($providerLocation, $providerLocation->getId()->getValue());
             }
 

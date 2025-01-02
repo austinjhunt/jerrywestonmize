@@ -100,6 +100,10 @@
           padding: @padding-medium;
           margin-bottom: 130px;
         }
+
+        .el-tabs__content:has(.popover-origin) {
+          overflow: visible;
+        }
       }
 
       &.am-add-custom-fields {
@@ -789,6 +793,13 @@
             line-height: 24px;
             margin-bottom: 2px;
 
+            &.am-customer-blocked {
+              padding: 0px 4px 0 20px;
+              &::before {
+                content: url("../../img/block.svg");
+              }
+            }
+
             &.am-no-show {
 
               &-gray {
@@ -881,6 +892,19 @@
           flex-wrap:wrap;
           align-items: center;
           margin-top:8px
+        }
+      }
+    }
+
+    .invoice-download {
+      display: block;
+      @media @less-then-small {
+        display: none;
+      }
+      &-mobile {
+        display: none;
+        @media @less-then-small {
+          display: block;
         }
       }
     }
@@ -1615,6 +1639,13 @@
             display: block;
             line-height: 24px;
             margin-bottom: 2px;
+
+            &.am-customer-blocked {
+              padding: 0px 4px 0 20px;
+              &::before {
+                content: url("../../img/block.svg");
+              }
+            }
 
             &.am-no-show {
 

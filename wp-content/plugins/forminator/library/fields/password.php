@@ -52,13 +52,6 @@ class Forminator_Password extends Forminator_Field {
 	public $options = array();
 
 	/**
-	 * Category
-	 *
-	 * @var string
-	 */
-	public $category = 'standard';
-
-	/**
 	 * Is input
 	 *
 	 * @var bool
@@ -549,7 +542,7 @@ class Forminator_Password extends Forminator_Field {
 		}
 
 		$password         = Forminator_CForm_Front_Action::$prepared_data[ $id ];
-		$confirm_password = Forminator_CForm_Front_Action::$prepared_data[ 'confirm_' . $id ];
+		$confirm_password = ! empty( Forminator_CForm_Front_Action::$prepared_data[ 'confirm_' . $id ] ) ? Forminator_CForm_Front_Action::$prepared_data[ 'confirm_' . $id ] : '';
 		if ( $is_confirm && ! empty( $data ) && $password !== $confirm_password ) {
 			$validation_message_not_match         = self::get_property( 'validation_message', $field, '' );
 			$validation_message_not_match_message = apply_filters(

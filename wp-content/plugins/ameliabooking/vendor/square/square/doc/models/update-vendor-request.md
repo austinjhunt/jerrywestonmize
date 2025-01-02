@@ -11,7 +11,7 @@ Represents an input to a call to [UpdateVendor](../../doc/apis/vendors.md#update
 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
-| `idempotencyKey` | `?string` | Optional | A client-supplied, universally unique identifier (UUID) for the<br>request.<br><br>See [Idempotency](https://developer.squareup.com/docs/basics/api101/idempotency) in the<br>[API Development 101](https://developer.squareup.com/docs/basics/api101/overview) section for more<br>information.<br>**Constraints**: *Maximum Length*: `128` | getIdempotencyKey(): ?string | setIdempotencyKey(?string idempotencyKey): void |
+| `idempotencyKey` | `?string` | Optional | A client-supplied, universally unique identifier (UUID) for the<br>request.<br><br>See [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) in the<br>[API Development 101](https://developer.squareup.com/docs/buildbasics) section for more<br>information.<br>**Constraints**: *Maximum Length*: `128` | getIdempotencyKey(): ?string | setIdempotencyKey(?string idempotencyKey): void |
 | `vendor` | [`Vendor`](../../doc/models/vendor.md) | Required | Represents a supplier to a seller. | getVendor(): Vendor | setVendor(Vendor vendor): void |
 
 ## Example (as JSON)
@@ -23,7 +23,16 @@ Represents an input to a call to [UpdateVendor](../../doc/apis/vendors.md#update
     "id": "INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4",
     "name": "Jack's Chicken Shack",
     "status": "ACTIVE",
-    "version": 1
+    "version": 1,
+    "created_at": "created_at4",
+    "updated_at": "updated_at2",
+    "address": {
+      "address_line_1": "address_line_16",
+      "address_line_2": "address_line_26",
+      "address_line_3": "address_line_32",
+      "locality": "locality6",
+      "sublocality": "sublocality6"
+    }
   }
 }
 ```

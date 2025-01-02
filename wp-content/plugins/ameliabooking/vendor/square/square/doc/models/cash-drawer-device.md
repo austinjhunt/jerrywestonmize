@@ -16,8 +16,8 @@
 
 ```json
 {
-  "id": null,
-  "name": null
+  "id": "id2",
+  "name": "name2"
 }
 ```
 

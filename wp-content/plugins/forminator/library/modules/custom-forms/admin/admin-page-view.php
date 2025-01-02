@@ -24,6 +24,48 @@ class Forminator_CForm_Page extends Forminator_Admin_Module_Edit_Page {
 	protected static $module_slug = 'form';
 
 	/**
+	 * Initialize
+	 */
+	public function init() {
+		parent::init();
+		self::maybe_migrate_stripe_field();
+	}
+
+	/**
+	 * Migration for stripe field
+	 *
+	 * @return bool
+	 */
+	private static function maybe_migrate_stripe_field() {
+		$form_id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
+		if ( 'true' !== filter_input( INPUT_GET, 'migrate_stripe' ) || ! $form_id ) {
+			return false;
+		}
+		$meta   = get_post_meta( $form_id, Forminator_Base_Form_Model::META_KEY, true );
+		$fields = ! empty( $meta['fields'] ) ? $meta['fields'] : array();
+
+		$fields_types = wp_list_pluck( $fields, 'type' );
+
+		// Check if form has stripe field and not stripe-ocs field.
+		if ( ! in_array( 'stripe', $fields_types, true )
+			|| in_array( 'stripe-ocs', $fields_types, true ) ) {
+			return false;
+		}
+		// Get stripe field.
+		$stripe_field_key = array_search( 'stripe', $fields_types, true );
+		$stripe_field     = $fields[ $stripe_field_key ];
+		$stripe_object    = new Forminator_Stripe_Payment_Element();
+		// Creat stripe-ocs field based on stripe field.
+		$new_stripe_field = $stripe_object->migrate_stripe_settings( $stripe_field );
+		array_splice( $fields, $stripe_field_key, 0, array( $new_stripe_field ) );
+		// Update fields.
+		$meta['fields'] = $fields;
+		update_post_meta( $form_id, Forminator_Base_Form_Model::META_KEY, $meta );
+
+		return true;
+	}
+
+	/**
 	 * Bulk actions
 	 *
 	 * @since 1.0

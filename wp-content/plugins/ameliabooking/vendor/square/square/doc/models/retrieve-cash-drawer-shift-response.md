@@ -38,13 +38,13 @@
       "amount": 9970,
       "currency": "USD"
     },
-    "closing_employee_id": "",
+    "closing_team_member_id": "",
     "description": "Misplaced some change",
     "device": {
       "name": "My iPad"
     },
     "ended_at": "2019-11-22T00:44:49.000Z",
-    "ending_employee_id": "",
+    "ending_team_member_id": "",
     "expected_cash_money": {
       "amount": 10000,
       "currency": "USD"
@@ -55,9 +55,23 @@
       "amount": 10000,
       "currency": "USD"
     },
-    "opening_employee_id": "",
+    "opening_team_member_id": "",
     "state": "CLOSED"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

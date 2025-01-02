@@ -21,7 +21,7 @@ function listSites(): ApiResponse
 
 ## Response Type
 
-[`ListSitesResponse`](../../doc/models/list-sites-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListSitesResponse`](../../doc/models/list-sites-response.md).
 
 ## Example Usage
 
@@ -34,8 +34,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

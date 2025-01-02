@@ -246,6 +246,12 @@
 
 		},
 
+		encodeHTMLEntities( value ) {
+			const textArea = document.createElement( 'textarea' );
+			textArea.innerText = value;
+			return textArea.innerHTML;
+		},
+
 		render_navigation: function () {
 			var $navigation = this.$el.find('.forminator-pagination-steps');
 
@@ -257,6 +263,8 @@
 
 			var steps = this.$el.find( '.forminator-pagination' ).not( '.forminator-pagination-start' );
 
+			var basicDesign = this.$el.hasClass('forminator-design--basic');
+
 			$navigation.append( '<div class="forminator-break"></div>' );
 
 			var self = this;
@@ -264,13 +272,18 @@
 			steps.each( function() {
 
 				var $step        = $( this ),
-					$stepLabel   = $step.data( 'label' ),
+					$stepLabel   = self.encodeHTMLEntities( $step.data( 'label' ) ),
 					$stepNumb    = $step.data('step') - 1,
 					$stepControl = 'forminator-custom-form-' + self.form_id + '-' + render + '--page-' + $stepNumb,
 					$stepId      = $stepControl + '-label'
 				;
 
-				var $stepMarkup = '<button role="tab" id="' + $stepId + '" class="forminator-step forminator-step-' + $stepNumb + '" aria-selected="false" aria-controls="' + $stepControl + '" data-nav="' + $stepNumb + '">' +
+				var $stepClass = 'forminator-step forminator-step-' + $stepNumb;
+				if ( basicDesign ) {
+					$stepClass += ' has-text-color';
+				}
+
+				var $stepMarkup = '<button role="tab" id="' + $stepId + '" class="' + $stepClass + '" aria-selected="false" aria-controls="' + $stepControl + '" data-nav="' + $stepNumb + '">' +
 					'<span class="forminator-step-label">' + $stepLabel + '</span>' +
 					'<span class="forminator-step-dot" aria-hidden="true"></span>' +
 				'</button>';
@@ -283,13 +296,18 @@
 
 			finalSteps.each(function () {
 				var $step   = $(this),
-					label   = $step.data('label'),
+					label   = self.encodeHTMLEntities( $step.data( 'label' ) ),
 					numb    = steps.length,
 					control = 'forminator-custom-form-' + self.form_id + '--page-' + numb,
 					stepid  = control + '-label'
 				;
 
-				var $stepMarkup = '<button role="tab" id="' + stepid + '" class="forminator-step forminator-step-' + numb + '" data-nav="' + numb + '" aria-selected="false" aria-controls="' + control + '">' +
+				var $stepClass = 'forminator-step forminator-step-' + numb
+				if ( basicDesign ) {
+					$stepClass += ' has-text-color';
+				}
+
+				var $stepMarkup = '<button role="tab" id="' + stepid + '" class="' + $stepClass + '" data-nav="' + numb + '" aria-selected="false" aria-controls="' + control + '">' +
 					'<span class="forminator-step-label">' + label + '</span>' +
 					'<span class="forminator-step-dot" aria-hidden="true"></span>' +
 				'</button>';

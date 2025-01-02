@@ -27,9 +27,9 @@ class SubscriptionEvent implements \JsonSerializable
     private $effectiveDate;
 
     /**
-     * @var string
+     * @var int|null
      */
-    private $planId;
+    private $monthlyBillingAnchorDate;
 
     /**
      * @var SubscriptionEventInfo|null
@@ -37,17 +37,31 @@ class SubscriptionEvent implements \JsonSerializable
     private $info;
 
     /**
+     * @var array
+     */
+    private $phases = [];
+
+    /**
+     * @var string
+     */
+    private $planVariationId;
+
+    /**
      * @param string $id
      * @param string $subscriptionEventType
      * @param string $effectiveDate
-     * @param string $planId
+     * @param string $planVariationId
      */
-    public function __construct(string $id, string $subscriptionEventType, string $effectiveDate, string $planId)
-    {
+    public function __construct(
+        string $id,
+        string $subscriptionEventType,
+        string $effectiveDate,
+        string $planVariationId
+    ) {
         $this->id = $id;
         $this->subscriptionEventType = $subscriptionEventType;
         $this->effectiveDate = $effectiveDate;
-        $this->planId = $planId;
+        $this->planVariationId = $planVariationId;
     }
 
     /**
@@ -114,24 +128,23 @@ class SubscriptionEvent implements \JsonSerializable
     }
 
     /**
-     * Returns Plan Id.
-     * The ID of the subscription plan associated with the subscription.
+     * Returns Monthly Billing Anchor Date.
+     * The day-of-the-month the billing anchor date was changed to, if applicable.
      */
-    public function getPlanId(): string
+    public function getMonthlyBillingAnchorDate(): ?int
     {
-        return $this->planId;
+        return $this->monthlyBillingAnchorDate;
     }
 
     /**
-     * Sets Plan Id.
-     * The ID of the subscription plan associated with the subscription.
+     * Sets Monthly Billing Anchor Date.
+     * The day-of-the-month the billing anchor date was changed to, if applicable.
      *
-     * @required
-     * @maps plan_id
+     * @maps monthly_billing_anchor_date
      */
-    public function setPlanId(string $planId): void
+    public function setMonthlyBillingAnchorDate(?int $monthlyBillingAnchorDate): void
     {
-        $this->planId = $planId;
+        $this->monthlyBillingAnchorDate = $monthlyBillingAnchorDate;
     }
 
     /**
@@ -155,6 +168,63 @@ class SubscriptionEvent implements \JsonSerializable
     }
 
     /**
+     * Returns Phases.
+     * A list of Phases, to pass phase-specific information used in the swap.
+     *
+     * @return Phase[]|null
+     */
+    public function getPhases(): ?array
+    {
+        if (count($this->phases) == 0) {
+            return null;
+        }
+        return $this->phases['value'];
+    }
+
+    /**
+     * Sets Phases.
+     * A list of Phases, to pass phase-specific information used in the swap.
+     *
+     * @maps phases
+     *
+     * @param Phase[]|null $phases
+     */
+    public function setPhases(?array $phases): void
+    {
+        $this->phases['value'] = $phases;
+    }
+
+    /**
+     * Unsets Phases.
+     * A list of Phases, to pass phase-specific information used in the swap.
+     */
+    public function unsetPhases(): void
+    {
+        $this->phases = [];
+    }
+
+    /**
+     * Returns Plan Variation Id.
+     * The ID of the subscription plan variation associated with the subscription.
+     */
+    public function getPlanVariationId(): string
+    {
+        return $this->planVariationId;
+    }
+
+    /**
+     * Sets Plan Variation Id.
+     * The ID of the subscription plan variation associated with the subscription.
+     *
+     * @required
+     * @maps plan_variation_id
+     */
+    public function setPlanVariationId(string $planVariationId): void
+    {
+        $this->planVariationId = $planVariationId;
+    }
+
+    /**
      * Encode this object to JSON
      *
      * @param bool $asArrayWhenEmpty Whether to serialize this model as an array whenever no fields
@@ -166,13 +236,19 @@ class SubscriptionEvent implements \JsonSerializable
     public function jsonSerialize(bool $asArrayWhenEmpty = false)
     {
         $json = [];
-        $json['id']                      = $this->id;
-        $json['subscription_event_type'] = $this->subscriptionEventType;
-        $json['effective_date']          = $this->effectiveDate;
-        $json['plan_id']                 = $this->planId;
-        if (isset($this->info)) {
-            $json['info']                = $this->info;
+        $json['id']                              = $this->id;
+        $json['subscription_event_type']         = $this->subscriptionEventType;
+        $json['effective_date']                  = $this->effectiveDate;
+        if (isset($this->monthlyBillingAnchorDate)) {
+            $json['monthly_billing_anchor_date'] = $this->monthlyBillingAnchorDate;
         }
+        if (isset($this->info)) {
+            $json['info']                        = $this->info;
+        }
+        if (!empty($this->phases)) {
+            $json['phases']                      = $this->phases['value'];
+        }
+        $json['plan_variation_id']               = $this->planVariationId;
         $json = array_filter($json, function ($val) {
             return $val !== null;
         });

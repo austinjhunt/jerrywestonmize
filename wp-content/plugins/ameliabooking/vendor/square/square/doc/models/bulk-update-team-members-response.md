@@ -34,7 +34,21 @@ Represents a response from a bulk update request containing the updated `TeamMem
         "reference_id": "reference_id_2",
         "status": "ACTIVE",
         "updated_at": "2020-03-24T18:18:00Z"
-      }
+      },
+      "errors": [
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        }
+      ]
     },
     "fpgteZNMaf0qOK-a4t6P": {
       "team_member": {
@@ -55,9 +69,31 @@ Represents a response from a bulk update request containing the updated `TeamMem
         "reference_id": "reference_id_1",
         "status": "ACTIVE",
         "updated_at": "2020-03-24T18:18:00Z"
-      }
+      },
+      "errors": [
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        }
+      ]
     }
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

@@ -5,12 +5,12 @@ namespace MailPoet\Form;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Captcha\CaptchaConstants;
 use MailPoet\Entities\FormEntity;
 use MailPoet\Form\Templates\FormTemplate;
 use MailPoet\Form\Util\CustomFonts;
 use MailPoet\Form\Util\Styles;
 use MailPoet\Settings\SettingsController;
-use MailPoet\Subscription\Captcha\CaptchaConstants;
 
 class Renderer {
   /** @var Styles */

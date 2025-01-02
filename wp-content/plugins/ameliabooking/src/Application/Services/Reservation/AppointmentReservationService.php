@@ -50,6 +50,7 @@ use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
@@ -242,6 +243,8 @@ class AppointmentReservationService extends AbstractReservationService
                     $recurringData['wcOrderItemId'] : null;
 
                 $recurringAppointmentData['payment']['parentId'] = $payment ? $payment->getId()->getValue() : null;
+
+                $recurringAppointmentData['payment']['invoiceNumber'] = $payment && $payment->getInvoiceNumber() ? $payment->getInvoiceNumber()->getValue() : null;
 
                 /** @var Reservation $recurringReservation */
                 $recurringReservation = new Reservation();
@@ -454,6 +457,25 @@ class AppointmentReservationService extends AbstractReservationService
 
             $booking->setAggregatedPrice($service->getAggregatedPrice());
         }
+
+
+        if ($booking->getPackageCustomerService() && $booking->getPackageCustomerService()->getId() === null
+            && $booking->getPackageCustomerService()->getPackageCustomer() && $booking->getPackageCustomerService()->getPackageCustomer()->getId()) {
+            /** @var PackageCustomerServiceRepository $packageCustomerServiceRepository */
+            $packageCustomerServiceRepository = $this->container->get('domain.bookable.packageCustomerService.repository');
+
+            $packageCustomerService = $packageCustomerServiceRepository->getByCriteria(
+                [
+                    'packagesCustomers' => [$booking->getPackageCustomerService()->getPackageCustomer()->getId()->getValue()],
+                    'services'          => [$service->getId()->getValue()]
+                ]
+            );
+
+            if ($packageCustomerService->length()) {
+                $booking->getPackageCustomerService()->setId(new Id($packageCustomerService->toArray()[0]['id']));
+            }
+        }
+
 
         $bookableAS->modifyServicePriceByDuration($service, $service->getDuration()->getValue());
 
@@ -1175,13 +1197,12 @@ class AppointmentReservationService extends AbstractReservationService
     /**
      * @param CustomerBooking $booking
      * @param Service         $bookable
-     * @param string|null     $reduction
      *
-     * @return float
+     * @return array
      *
      * @throws InvalidArgumentException
      */
-    public function getPaymentAmount($booking, $bookable, $reduction = null)
+    public function getPaymentAmount($booking, $bookable, $invoice = false)
     {
         /** @var TaxApplicationService $taxApplicationService */
         $taxApplicationService = $this->container->get('application.tax.service');
@@ -1189,14 +1210,17 @@ class AppointmentReservationService extends AbstractReservationService
         /** @var Tax $serviceTax */
         $serviceTax = $this->getTax($booking->getTax());
 
-        $serviceAmount = (float)$bookable->getPrice()->getValue() *
-            ($this->isAggregatedPrice($bookable) ? $booking->getPersons()->getValue() : 1);
+        $persons = $booking->getPersons()->getValue();
+
+        $serviceAmount = (float)$bookable->getPrice()->getValue() * ($this->isAggregatedPrice($bookable) ? $persons : 1);
 
         $serviceBookingAmount = $serviceAmount;
 
-        if ($serviceTax && !$serviceTax->getExcluded()->getValue() && $booking->getCoupon()) {
+        if ($serviceTax && !$serviceTax->getExcluded()->getValue() && ($booking->getCoupon() || $invoice)) {
             $serviceAmount = $taxApplicationService->getBasePrice($serviceBookingAmount, $serviceTax);
         }
+
+        $fullDiscount = $this->getCouponDiscountAmount($booking->getCoupon(), $serviceBookingAmount);
 
         $serviceDiscountAmount = $this->getCouponDiscountAmount($booking->getCoupon(), $serviceAmount);
 
@@ -1211,6 +1235,8 @@ class AppointmentReservationService extends AbstractReservationService
         $serviceDeductionAmount = 0;
 
         if ($serviceDiscountedAmount > 0 && $deduction > 0) {
+            $fullDiscount += $deduction;
+
             $serviceDeductionAmount = min($serviceDiscountedAmount, $deduction);
 
             $serviceAmount = $serviceDiscountedAmount - $serviceDeductionAmount;
@@ -1225,17 +1251,22 @@ class AppointmentReservationService extends AbstractReservationService
 
         $bookingAmount = $serviceAmount;
 
-        if ($serviceTax && !$serviceTax->getExcluded()->getValue() && $booking->getCoupon()) {
-            $serviceAmount = $taxApplicationService->getBasePrice($serviceBookingAmount, $serviceTax);
+        $serviceTaxAmount = 0;
 
-            $bookingAmount = $serviceAmount + $this->getTaxAmount(
+        if ($serviceTax && !$serviceTax->getExcluded()->getValue() && ($booking->getCoupon() || $invoice)) {
+            $serviceAmount = $taxApplicationService->getBasePrice($serviceBookingAmount, $serviceTax);
+            $serviceTaxAmount = $this->getTaxAmount(
                 $serviceTax,
                 $serviceAmount - $serviceDiscountAmount - $serviceDeductionAmount
-            ) - $serviceDiscountAmount - $serviceDeductionAmount;
+            );
+
+            $bookingAmount = $serviceAmount + $serviceTaxAmount - $serviceDiscountAmount - $serviceDeductionAmount;
         } else if ($serviceTax && $serviceTax->getExcluded()->getValue()) {
-            $bookingAmount += $this->getTaxAmount($serviceTax, $serviceAmount);
+            $serviceTaxAmount = $this->getTaxAmount($serviceTax, $serviceAmount);
+            $bookingAmount += $serviceTaxAmount;
         }
 
+        $extras = [];
         /** @var CustomerBookingExtra $customerBookingExtra */
         foreach ($booking->getExtras()->getItems() as $customerBookingExtra) {
             /** @var Tax $extraTax */
@@ -1254,9 +1285,11 @@ class AppointmentReservationService extends AbstractReservationService
 
             $extraBookingAmount = $extraAmount;
 
-            if ($extraTax && !$extraTax->getExcluded()->getValue() && $booking->getCoupon()) {
+            if ($extraTax && !$extraTax->getExcluded()->getValue() && ($booking->getCoupon() || $invoice)) {
                 $extraAmount = $taxApplicationService->getBasePrice($extraBookingAmount, $extraTax);
             }
+
+            $fullDiscount += $this->getCouponDiscountAmount($booking->getCoupon(), $extraBookingAmount);
 
             $extraDiscountAmount = $this->getCouponDiscountAmount($booking->getCoupon(), $extraAmount);
 
@@ -1267,6 +1300,8 @@ class AppointmentReservationService extends AbstractReservationService
             $extraDeductionAmount = 0;
 
             if ($extraAmount > 0 && $deduction > 0) {
+                $fullDiscount += $deduction;
+
                 $extraDeductionAmount = min($extraDiscountedAmount, $deduction);
 
                 $extraAmount = $extraDiscountedAmount - $extraDeductionAmount;
@@ -1278,25 +1313,43 @@ class AppointmentReservationService extends AbstractReservationService
 
             $reductionAmount['discount'] += $extraDiscountAmount;
 
-            if ($extraTax && !$extraTax->getExcluded()->getValue() && $booking->getCoupon()) {
+            $extraTaxAmount = 0;
+            if ($extraTax && !$extraTax->getExcluded()->getValue() && ($booking->getCoupon() || $invoice)) {
                 $extraAmount = $taxApplicationService->getBasePrice($extraBookingAmount, $extraTax);
 
-                $bookingAmount += $extraAmount + $this->getTaxAmount(
+                $extraTaxAmount = $this->getTaxAmount(
                     $extraTax,
                     $extraAmount - $extraDiscountAmount - $extraDeductionAmount
-                ) - $extraDiscountAmount - $extraDeductionAmount;
+                );
+
+                $bookingAmount += $extraAmount + $extraTaxAmount - $extraDiscountAmount - $extraDeductionAmount;
             } else if ($extraTax && $extraTax->getExcluded()->getValue()) {
-                $bookingAmount += $extraAmount + $this->getTaxAmount($extraTax, $extraAmount);
+                $extraTaxAmount = $this->getTaxAmount($extraTax, $extraAmount);
+                $bookingAmount += $extraAmount + $extraTaxAmount;
             } else {
                 $bookingAmount += $extraAmount;
+            }
+            if ($extraTax) {
+                $extras[$customerBookingExtra->getExtraId()->getValue()] = ['amount' => $extraTaxAmount, 'rate' => $this->getTaxRate($extraTax), 'excluded' => $extraTax->getExcluded()->getValue()];
             }
         }
 
         $bookingAmount = (float)max(round($bookingAmount, 2), 0);
 
-        return $reduction === null
-            ? apply_filters('amelia_modify_payment_amount', $bookingAmount, $booking)
-            : $reductionAmount[$reduction];
+        return [
+            'price'      => apply_filters('amelia_modify_payment_amount', $bookingAmount, $booking),
+            'deduction'  => $reductionAmount['deduction'],
+            'discount'   => $reductionAmount['discount'],
+            'unit_price' => (float)$bookable->getPrice()->getValue(),
+            'qty'        => $persons,
+            'subtotal'   => $serviceBookingAmount,
+            'tax'        => $serviceTaxAmount,
+            'tax_rate'   => $serviceTax ? $this->getTaxRate($serviceTax) : '',
+            'tax_type'   => $serviceTax ? $serviceTax->getType()->getValue() : '',
+            'tax_excluded' => $serviceTax ? $serviceTax->getExcluded()->getValue() : false,
+            'extras_tax' => $extras,
+            'full_discount' => $fullDiscount
+        ];
     }
 
     /**
@@ -1376,7 +1429,7 @@ class AppointmentReservationService extends AbstractReservationService
         /** @var Service $bookable */
         $bookable = $reservation->getBookable();
 
-        $paymentAmount = $this->getPaymentAmount($reservation->getBooking(), $bookable);
+        $paymentAmount = $this->getPaymentAmount($reservation->getBooking(), $bookable)['price'];
 
         if ($reservation->getApplyDeposit()->getValue()) {
             $paymentAmount = $depositAS->calculateDepositAmount(
@@ -1759,20 +1812,22 @@ class AppointmentReservationService extends AbstractReservationService
             /** @var Collection $taxes */
             $taxes = $taxAS->getAll();
 
-            if (empty($data['bookings'][0]['packageCustomerService'])) {
-                $data['bookings'][0]['tax'] = $taxAS->getTaxData(
-                    $data['serviceId'],
-                    Entities::SERVICE,
-                    $taxes
-                );
+            foreach ($data['bookings'] as $bookingKey => $booking) {
+                if (empty($data['bookings'][$bookingKey]['packageCustomerService'])) {
+                    $data['bookings'][$bookingKey]['tax'] = $taxAS->getTaxData(
+                        $data['serviceId'],
+                        Entities::SERVICE,
+                        $taxes
+                    );
 
-                if (!empty($data['bookings'][0]['extras'])) {
-                    foreach ($data['bookings'][0]['extras'] as $extraKey => $bookingData) {
-                        $data['bookings'][0]['extras'][$extraKey]['tax'] = $taxAS->getTaxData(
-                            $bookingData['extraId'],
-                            Entities::EXTRA,
-                            $taxes
-                        );
+                    if (!empty($data['bookings'][$bookingKey]['extras'])) {
+                        foreach ($data['bookings'][$bookingKey]['extras'] as $extraKey => $bookingData) {
+                            $data['bookings'][$bookingKey]['extras'][$extraKey]['tax'] = $taxAS->getTaxData(
+                                $bookingData['extraId'],
+                                Entities::EXTRA,
+                                $taxes
+                            );
+                        }
                     }
                 }
             }

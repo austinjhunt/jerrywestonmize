@@ -49,6 +49,13 @@ class Forminator_Custom extends Forminator_Field {
 	 *
 	 * @var string
 	 */
+	public $category = '';
+
+	/**
+	 * Category
+	 *
+	 * @var string
+	 */
 	// public $category = 'posts';.
 	// Disable for now until we know what to do with this.
 

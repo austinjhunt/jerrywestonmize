@@ -25,6 +25,12 @@
 		<?php } ?>
 	}
 
+	<!-- Add this in the FUI and remove it from here -->
+	<!-- Intl input phone field style -->
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--material .forminator-iti-input input.iti__tel-input[type=text] {
+		padding-left: 0 !important;
+	}
+
 <?php } else { ?>
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input,
@@ -32,6 +38,12 @@
 		font-size: 16px;
 		font-family: inherit;
 		font-weight: 400;
+	}
+
+	<!-- Add this in the FUI and remove it from here -->
+	<!-- Intl input phone field style -->
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--material .forminator-iti-input input.iti__tel-input[type=text] {
+		padding-left: 0 !important;
 	}
 
 <?php } ?>

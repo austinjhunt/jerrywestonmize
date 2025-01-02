@@ -85,6 +85,7 @@ if ( $this->total_entries() > 0 ) :
 				<tbody>
 
 				<?php
+				$roles        = forminator_get_accessible_user_roles();
 				$url_entry_id = filter_input( INPUT_GET, 'entry_id', FILTER_VALIDATE_INT );
 				$url_entry_id = $url_entry_id ? $url_entry_id : 0;
 				foreach ( $this->entries_iterator() as $entries ) {
@@ -98,6 +99,14 @@ if ( $this->total_entries() > 0 ) :
 
 					$detail       = $entries['detail'];
 					$detail_items = $detail['items'];
+
+					// Fix for Stripe OCS and Stripe old field to show only one.
+					$item_types = wp_list_pluck( $detail_items, 'type' );
+					if ( in_array( 'stripe-ocs', $item_types, true ) && in_array( 'stripe', $item_types, true ) ) {
+						$stripe_key = array_search( 'stripe', $item_types, true );
+
+						unset( $detail_items[ $stripe_key ] );
+					}
 
 					$accordion_classes = '';
 					// Open entry tab by received submission link.
@@ -241,9 +250,8 @@ if ( $this->total_entries() > 0 ) :
 											type="button"
 											class="sui-button sui-button-ghost sui-button-red wpmudev-open-modal"
 										<?php
-										if ( isset( $entries['activation_key'] ) ) {
-											$button_title      = esc_html__( 'Delete Submission & User', 'forminator' );
-											$is_activation_key = true;
+										if ( isset( $entries['activation_key'] ) && current_user_can( 'delete_users' ) ) {
+											$button_title = esc_html__( 'Delete Submission & User', 'forminator' );
 											?>
 											data-activation-key="<?php echo esc_attr( $entries['activation_key'] ); ?>"
 											data-modal="delete-unconfirmed-user-module"
@@ -251,8 +259,7 @@ if ( $this->total_entries() > 0 ) :
 											data-form-id="<?php echo esc_attr( $this->model->id ); ?>"
 											<?php
 										} else {
-											$button_title      = esc_html__( 'Delete', 'forminator' );
-											$is_activation_key = false;
+											$button_title = esc_html__( 'Delete', 'forminator' );
 											?>
 											data-modal="delete-module"
 											data-form-id="<?php echo esc_attr( $db_entry_id ); ?>"
@@ -264,7 +271,11 @@ if ( $this->total_entries() > 0 ) :
 										<i class="sui-icon-trash" aria-hidden="true"></i> <?php echo wp_kses_post( $button_title ); ?>
 									</button>
 
-									<?php if ( isset( $entries['activation_method'] ) && 'manual' === $entries['activation_method'] && $is_activation_key ) { ?>
+									<?php
+									if ( isset( $entries['activation_method'] ) && 'manual' === $entries['activation_method'] && ! empty( $entries['activation_key'] ) ) {
+										$signup = Forminator_CForm_User_Signups::get( $entries['activation_key'] );
+										if ( ! empty( $signup->user_data['role'] ) && isset( $roles[ $signup->user_data['role'] ] ) ) {
+											?>
 
 										<div class="sui-actions-right">
 											<button
@@ -281,7 +292,10 @@ if ( $this->total_entries() > 0 ) :
 											</button>
 										</div>
 
-									<?php } ?>
+											<?php
+										}
+									}
+									?>
 
 									<div class="sui-actions-right">
 

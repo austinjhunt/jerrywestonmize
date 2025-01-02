@@ -10,7 +10,6 @@ use Core\Request\Parameters\HeaderParam;
 use Core\Request\Parameters\QueryParam;
 use Core\Request\Parameters\TemplateParam;
 use CoreInterfaces\Core\Request\RequestMethod;
-use Square\Exceptions\ApiException;
 use Square\Http\ApiResponse;
 use Square\Models\BatchDeleteCatalogObjectsRequest;
 use Square\Models\BatchDeleteCatalogObjectsResponse;
@@ -62,8 +61,6 @@ class CatalogApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function batchDeleteCatalogObjects(BatchDeleteCatalogObjectsRequest $body): ApiResponse
     {
@@ -90,8 +87,6 @@ class CatalogApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function batchRetrieveCatalogObjects(BatchRetrieveCatalogObjectsRequest $body): ApiResponse
     {
@@ -125,8 +120,6 @@ class CatalogApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function batchUpsertCatalogObjects(BatchUpsertCatalogObjectsRequest $body): ApiResponse
     {
@@ -154,8 +147,6 @@ class CatalogApi extends BaseApi
      * @param FileWrapper|null $imageFile
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function createCatalogImage(
         ?CreateCatalogImageRequest $request = null,
@@ -188,8 +179,6 @@ class CatalogApi extends BaseApi
      * @param FileWrapper|null $imageFile
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function updateCatalogImage(
         string $imageId,
@@ -215,8 +204,6 @@ class CatalogApi extends BaseApi
      * limits that can be used by the `BatchUpsertCatalogObjects` endpoint.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function catalogInfo(): ApiResponse
     {
@@ -242,13 +229,13 @@ class CatalogApi extends BaseApi
      * @param string|null $cursor The pagination cursor returned in the previous response. Leave
      *        unset for an initial request.
      *        The page size is currently set to be 100.
-     *        See [Pagination](https://developer.squareup.com/docs/basics/api101/pagination) for
-     *        more information.
+     *        See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-
+     *        patterns/pagination) for more information.
      * @param string|null $types An optional case-insensitive, comma-separated list of object types
      *        to retrieve.
      *
-     *        The valid values are defined in the [CatalogObjectType]($m/CatalogObjectType) enum,
-     *        for example,
+     *        The valid values are defined in the [CatalogObjectType](entity:CatalogObjectType)
+     *        enum, for example,
      *        `ITEM`, `ITEM_VARIATION`, `CATEGORY`, `DISCOUNT`, `TAX`,
      *        `MODIFIER`, `MODIFIER_LIST`, `IMAGE`, etc.
      *
@@ -271,8 +258,6 @@ class CatalogApi extends BaseApi
      *        current version of the catalog.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function listCatalog(
         ?string $cursor = null,
@@ -305,8 +290,6 @@ class CatalogApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function upsertCatalogObject(UpsertCatalogObjectRequest $body): ApiResponse
     {
@@ -338,8 +321,6 @@ class CatalogApi extends BaseApi
      *        catalog item will delete its catalog item variations).
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function deleteCatalogObject(string $objectId): ApiResponse
     {
@@ -387,22 +368,30 @@ class CatalogApi extends BaseApi
      *        in the version field of [CatalogObject]($m/CatalogObject)s. If not included, results
      *        will
      *        be from the current version of the catalog.
+     * @param bool|null $includeCategoryPathToRoot Specifies whether or not to include the
+     *        `path_to_root` list for each returned category instance. The `path_to_root` list
+     *        consists
+     *        of `CategoryPathToRootNode` objects and specifies the path that starts with the
+     *        immediate parent category of the returned category
+     *        and ends with its root category. If the returned category is a top-level category,
+     *        the `path_to_root` list is empty and is not returned
+     *        in the response payload.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function retrieveCatalogObject(
         string $objectId,
         ?bool $includeRelatedObjects = false,
-        ?int $catalogVersion = null
+        ?int $catalogVersion = null,
+        ?bool $includeCategoryPathToRoot = false
     ): ApiResponse {
         $_reqBuilder = $this->requestBuilder(RequestMethod::GET, '/v2/catalog/object/{object_id}')
             ->auth('global')
             ->parameters(
                 TemplateParam::init('object_id', $objectId),
                 QueryParam::init('include_related_objects', $includeRelatedObjects),
-                QueryParam::init('catalog_version', $catalogVersion)
+                QueryParam::init('catalog_version', $catalogVersion),
+                QueryParam::init('include_category_path_to_root', $includeCategoryPathToRoot)
             );
 
         $_resHandler = $this->responseHandler()->type(RetrieveCatalogObjectResponse::class)->returnApiResponse();
@@ -434,8 +423,6 @@ class CatalogApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function searchCatalogObjects(SearchCatalogObjectsRequest $body): ApiResponse
     {
@@ -471,8 +458,6 @@ class CatalogApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function searchCatalogItems(SearchCatalogItemsRequest $body): ApiResponse
     {
@@ -496,8 +481,6 @@ class CatalogApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function updateItemModifierLists(UpdateItemModifierListsRequest $body): ApiResponse
     {
@@ -519,8 +502,6 @@ class CatalogApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function updateItemTaxes(UpdateItemTaxesRequest $body): ApiResponse
     {

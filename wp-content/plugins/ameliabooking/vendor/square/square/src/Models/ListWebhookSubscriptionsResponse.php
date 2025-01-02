@@ -57,7 +57,7 @@ class ListWebhookSubscriptionsResponse implements \JsonSerializable
 
     /**
      * Returns Subscriptions.
-     * The requested list of [Subscription]($m/WebhookSubscription)s.
+     * The requested list of [Subscription](entity:WebhookSubscription)s.
      *
      * @return WebhookSubscription[]|null
      */
@@ -68,7 +68,7 @@ class ListWebhookSubscriptionsResponse implements \JsonSerializable
 
     /**
      * Sets Subscriptions.
-     * The requested list of [Subscription]($m/WebhookSubscription)s.
+     * The requested list of [Subscription](entity:WebhookSubscription)s.
      *
      * @maps subscriptions
      *
@@ -84,7 +84,8 @@ class ListWebhookSubscriptionsResponse implements \JsonSerializable
      * The pagination cursor to be used in a subsequent request. If empty,
      * this is the final response.
      *
-     * For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination).
+     * For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-
+     * patterns/pagination).
      */
     public function getCursor(): ?string
     {
@@ -96,7 +97,8 @@ class ListWebhookSubscriptionsResponse implements \JsonSerializable
      * The pagination cursor to be used in a subsequent request. If empty,
      * this is the final response.
      *
-     * For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination).
+     * For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-
+     * patterns/pagination).
      *
      * @maps cursor
      */

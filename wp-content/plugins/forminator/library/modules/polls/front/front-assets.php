@@ -54,7 +54,7 @@ class Forminator_Assets_Enqueue_Poll extends Forminator_Assets_Enqueue {
 
 			if ( $has_custom_answer || $has_chart_enabled ) {
 
-				wp_enqueue_style(
+				Forminator_Assets_Enqueue::fui_enqueue_style(
 					'forminator-polls-' . $form_design . '-full',
 					forminator_plugin_url() . 'assets/forminator-ui/css/src/poll/forminator-poll-' . $form_design . '.full.min.css',
 					array(),
@@ -62,7 +62,7 @@ class Forminator_Assets_Enqueue_Poll extends Forminator_Assets_Enqueue {
 				);
 			} else {
 
-				wp_enqueue_style(
+				Forminator_Assets_Enqueue::fui_enqueue_style(
 					'forminator-polls-' . $form_design . '-base',
 					forminator_plugin_url() . 'assets/forminator-ui/css/src/poll/forminator-poll-' . $form_design . '.base.min.css',
 					array(),
@@ -74,7 +74,7 @@ class Forminator_Assets_Enqueue_Poll extends Forminator_Assets_Enqueue {
 		// Forminator UI - Pie chart.
 		if ( $has_chart_enabled && $has_chart_pie ) {
 
-			wp_enqueue_style(
+			Forminator_Assets_Enqueue::fui_enqueue_style(
 				'forminator-chart-pie',
 				forminator_plugin_url() . 'assets/forminator-ui/css/src/chart/forminator-chart.pie.min.css',
 				array(),
@@ -85,7 +85,7 @@ class Forminator_Assets_Enqueue_Poll extends Forminator_Assets_Enqueue {
 		// Forminator UI - Bar chart.
 		if ( $has_chart_enabled && $has_chart_bar ) {
 
-			wp_enqueue_style(
+			Forminator_Assets_Enqueue::fui_enqueue_style(
 				'forminator-chart-bar',
 				forminator_plugin_url() . 'assets/forminator-ui/css/src/chart/forminator-chart.bar.min.css',
 				array(),

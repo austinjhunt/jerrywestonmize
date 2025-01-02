@@ -467,4 +467,31 @@ class AbstractRepository
 
         return array_map('intval', array_column($rows, 'id'));
     }
+
+    /**
+     * @param int $entityId
+     * @param string $errorMessage
+     *
+     * @throws QueryExecutionException
+     */
+    public function updateErrorColumn($entityId, $errorMessage)
+    {
+        $params = [
+            ':error' => $errorMessage,
+            ':id' => $entityId
+        ];
+
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table} e 
+                    SET e.error = CONCAT(e.error, ' | ', :error)
+                    WHERE e.id=:id;
+                "
+            );
+
+            $statement->execute($params);
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to add error "' . $errorMessage . '" to ' . $this->table . ' with id ' . $entityId . ' in ' . __CLASS__, $e->getCode(), $e);
+        }
+    }
 }

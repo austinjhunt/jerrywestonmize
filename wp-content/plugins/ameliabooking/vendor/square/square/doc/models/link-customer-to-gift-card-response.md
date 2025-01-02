@@ -33,7 +33,15 @@ the response contains a set of `Error` objects.
     "id": "gftc:71ea002277a34f8a945e284b04822edb",
     "state": "ACTIVE",
     "type": "DIGITAL"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

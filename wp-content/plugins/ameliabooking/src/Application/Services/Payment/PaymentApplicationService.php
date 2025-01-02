@@ -20,6 +20,7 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBookingExtra;
+use AmeliaBooking\Domain\Entity\Booking\Event\CustomerBookingEventTicket;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Booking\Reservation;
 use AmeliaBooking\Domain\Entity\Cache\Cache;
@@ -27,7 +28,6 @@ use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
-use AmeliaBooking\Domain\Entity\Payment\PaymentGateway;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Entity\User\Provider;
@@ -61,8 +61,6 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServ
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
-use AmeliaBooking\Infrastructure\Repository\Booking\Event\CustomerBookingEventTicketRepository;
-use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
@@ -108,30 +106,100 @@ class PaymentApplicationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function getPaymentsData($params, $itemsPerPage)
+    public function getPaymentsData($params, $itemsPerPage = null)
     {
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
 
-        /** @var EventRepository $eventRepository */
-        $eventRepository = $this->container->get('domain.booking.event.repository');
-
         /** @var AbstractPackageApplicationService $packageApplicationService */
         $packageApplicationService = $this->container->get('application.bookable.package');
 
-        $paymentsData = $paymentRepository->getFiltered($params, $itemsPerPage);
+        /** @var EventApplicationService $eventAS */
+        $eventAS = $this->container->get('application.booking.event.service');
+
+        $isInvoicePage = !empty($params['invoices']) && filter_var($params['invoices'], FILTER_VALIDATE_BOOLEAN);
+
+        $paymentsTypesIds = $paymentRepository->getFilteredIds($params, $itemsPerPage, $isInvoicePage);
+
+        if (empty($paymentsTypesIds['appointment']) &&
+            empty($paymentsTypesIds['event']) &&
+            empty($paymentsTypesIds['package'])
+        ) {
+            return [];
+        }
+
+        $paymentsData = $paymentRepository->getFiltered($paymentsTypesIds, $isInvoicePage);
 
         $eventBookingIds = [];
 
+        $secondaryPaymentsData = [];
+
+        foreach ($paymentsData as $paymentData) {
+            $secondaryPaymentsData[] = [
+                'paymentId'  => $paymentData['id'],
+                'parentId'   => $paymentData['parentId'],
+                'columnName' => !empty($paymentData['packageCustomerId']) ? 'packageCustomerId' : 'customerBookingId',
+                'columnId'   => $paymentData['packageCustomerId'] ?: $paymentData['customerBookingId'],
+            ];
+        }
+
+        $secondaryPaymentsIds = $paymentRepository->getSecondaryPaymentIds($secondaryPaymentsData, $isInvoicePage);
+
+        if (empty($secondaryPaymentsIds['appointment']) &&
+            empty($secondaryPaymentsIds['event']) &&
+            empty($secondaryPaymentsIds['package'])
+        ) {
+            $secondaryPaymentsData = [];
+        } else {
+            $secondaryPaymentsData = $paymentRepository->getFiltered($secondaryPaymentsIds, $isInvoicePage);
+        }
+
         foreach ($paymentsData as &$paymentData) {
+            $paymentData['secondaryPayments'] = [];
+
+            foreach ($secondaryPaymentsData as $secondaryPayment) {
+                if ($paymentData['id'] !== $secondaryPayment['id'] &&
+                (
+                   (
+                    $paymentData['packageCustomerId'] &&
+                    $secondaryPayment['packageCustomerId'] &&
+                    (int)$paymentData['packageCustomerId'] === (int)$secondaryPayment['packageCustomerId']
+                    ) ||
+                    (
+                        $paymentData['customerBookingId'] &&
+                        $secondaryPayment['customerBookingId'] &&
+                        (int)$paymentData['customerBookingId'] === (int)$secondaryPayment['customerBookingId']
+                    ) ||
+                    (
+                        $isInvoicePage &&
+                        ((int)$paymentData['id'] === (int)$secondaryPayment['parentId'] ||
+                        (int)$paymentData['parentId'] === (int)$secondaryPayment['id'] ||
+                        ($paymentData['parentId'] && (int)$paymentData['parentId'] === (int)$secondaryPayment['parentId']))
+                    )
+                )) {
+                    $paymentData['secondaryPayments'][] = $secondaryPayment;
+                }
+            }
+
             if (empty($paymentData['serviceId']) && empty($paymentData['packageId'])) {
                 $eventBookingIds[] = $paymentData['customerBookingId'];
             }
-            $paymentData['secondaryPayments'] = $paymentRepository->getSecondaryPayments($paymentData['packageCustomerId'] ?: $paymentData['customerBookingId'], $paymentData['id'], !empty($paymentData['packageCustomerId']));
         }
 
         /** @var Collection $events */
-        $events = !empty($eventBookingIds) ? $eventRepository->getByBookingIds($eventBookingIds) : new Collection();
+        $events = !empty($paymentsTypesIds['event']) ? $eventAS->getEventsByCriteria(
+            [
+                'customerBookingsIds' => $eventBookingIds,
+            ],
+            [
+                'fetchEventsPeriods'   => true,
+                'fetchEventsTickets'   => true,
+                'fetchEventsProviders' => true,
+                'fetchBookings'        => true,
+                'fetchBookingsTickets' => true,
+            ],
+            0
+        ) : new Collection();
 
         $paymentDataValues = array_values($paymentsData);
 
@@ -159,43 +227,62 @@ class PaymentApplicationService
                     $paymentsData[$paymentDataValues[$key]['id']]['name'] = $event->getName()->getValue();
 
                     if ($event->getCustomPricing() && $event->getCustomPricing()->getValue()) {
-                        /** @var CustomerBookingEventTicketRepository $bookingEventTicketRepository */
-                        $bookingEventTicketRepository = $this->container->get('domain.booking.customerBookingEventTicket.repository');
-                        $price = $bookingEventTicketRepository->calculateTotalPrice($paymentsData[$paymentDataValues[$key]['id']]['customerBookingId']);
-                        if ($price) {
-                            $paymentsData[$paymentDataValues[$key]['id']]['bookedPrice'] = $price;
+                        $price = 0;
+
+                        /** @var CustomerBookingEventTicket $bookingToEventTicket */
+                        foreach ($booking->getTicketsBooking()->getItems() as $bookingToEventTicket) {
+                            $price += $bookingToEventTicket->getPersons()
+                                ? (
+                                $booking->getAggregatedPrice()->getValue()
+                                    ? $bookingToEventTicket->getPersons()->getValue()
+                                    : 1
+                                ) * $bookingToEventTicket->getPrice()->getValue()
+                                : 0;
                         }
+
+                        $paymentsData[$paymentDataValues[$key]['id']]['bookedPrice'] = $price;
+
                         $paymentsData[$paymentDataValues[$key]['id']]['aggregatedPrice'] = 0;
                     }
                 }
             }
         }
 
-        $packageApplicationService->setPaymentData($paymentsData);
+        if (!empty($paymentsTypesIds['package'])) {
+            $packageApplicationService->setPaymentData($paymentsData);
+        }
 
         foreach ($paymentsData as $index => $value) {
-            !empty($paymentsData[$index]['providers']) ?
-                $paymentsData[$index]['providers'] = array_values($paymentsData[$index]['providers']) : [];
+            $paymentsData[$index]['providers'] = !empty($value['providers']) ? array_values($value['providers']) : [];
         }
 
         foreach ($paymentsData as &$item) {
-            if (!empty($item['wcOrderId']) && WooCommerceService::isEnabled()) {
-                $item['wcOrderUrl'] = HelperService::getWooCommerceOrderUrl($item['wcOrderId']);
-
-                $wcOrderItemValues = HelperService::getWooCommerceOrderItemAmountValues($item['wcOrderId']);
-
-                $key = !empty($item['wcOrderItemId']) && !empty($wcOrderItemValues[$item['wcOrderItemId']]) ?
-                    $item['wcOrderItemId'] : array_keys($wcOrderItemValues)[0];
-
-                if ($wcOrderItemValues) {
-                    $item['wcItemCouponValue'] = $wcOrderItemValues[$key]['coupon'];
-
-                    $item['wcItemTaxValue'] = $wcOrderItemValues[$key]['tax'];
-                }
+            $item = $this->addWcFields($item);
+            foreach ($item['secondaryPayments'] as &$secondaryPayment) {
+                $secondaryPayment = $this->addWcFields($secondaryPayment);
             }
         }
 
         return $paymentsData;
+    }
+
+    public function addWcFields ($item) {
+        if (!empty($item['wcOrderId']) && WooCommerceService::isEnabled()) {
+            $item['wcOrderUrl'] = HelperService::getWooCommerceOrderUrl($item['wcOrderId']);
+
+            $wcOrderItemValues = HelperService::getWooCommerceOrderItemAmountValues($item['wcOrderId']);
+
+            $key = !empty($item['wcOrderItemId']) && !empty($wcOrderItemValues[$item['wcOrderItemId']]) ?
+                $item['wcOrderItemId'] : array_keys($wcOrderItemValues)[0];
+
+            if ($wcOrderItemValues) {
+                $item['wcItemCouponValue'] = $wcOrderItemValues[$key]['coupon'];
+
+                $item['wcItemTaxValue'] = $wcOrderItemValues[$key]['tax'];
+            }
+        }
+
+        return $item;
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
@@ -404,7 +491,7 @@ class PaymentApplicationService
                     return false;
                 }
 
-                if (!empty($response['customerId']) && $stripeCustomerId === null) {
+                if (!empty($response['customerId']) && ($stripeCustomerId === null || $response['customerId'] !== $stripeCustomerId)) {
                     $stripeConnect = StripeFactory::create(['id' => $response['customerId']]);
                     $customerRepository->updateFieldById($reservation->getCustomer()->getId()->getValue(),
                         json_encode($stripeConnect->toArray()), 'stripeConnect');
@@ -1210,27 +1297,25 @@ class PaymentApplicationService
     public function getFullStatus($booking, $type)
     {
         $bookingPrice = $this->calculateAppointmentPrice($booking, $type); //add wc tax
-        $paidAmount   = array_sum(
-            array_column(
-                array_filter(
-                    $booking['payments'],
-                    function ($value) {
-                        return $value['status'] !== 'pending';
-                    }
-                ),
-                'amount'
-            )
-        );
+
+        $paidAmount = 0;
+        $refundedAmount = 0;
+        foreach ($booking['payments'] as $payment) {
+            if ($payment['status'] === 'paid' || $payment['status'] === 'partiallyPaid') {
+                $paidAmount += $payment['amount'];
+            } else if ($payment['status'] === 'refunded') {
+                $refundedAmount += $payment['amount'];
+            }
+        }
+
         if ($paidAmount >= $bookingPrice) {
             return 'paid';
         }
-        $partialPayments = array_filter(
-            $booking['payments'],
-            function ($value) {
-                return $value['status'] === 'partiallyPaid';
-            }
-        );
-        return !empty($partialPayments) ? 'partiallyPaid' : 'pending';
+        if ($refundedAmount >= $bookingPrice) {
+            return 'refunded';
+        }
+
+        return $paidAmount > 0 ? 'partiallyPaid' : 'pending';
     }
 
     /**
@@ -1775,7 +1860,7 @@ class PaymentApplicationService
 
                     $paymentRepository->updateFieldById(
                         $payment->getId()->getValue(),
-                        $reservationService->getPaymentAmount($booking, $event) > $payment->getAmount()->getValue() ?
+                        $reservationService->getPaymentAmount($booking, $event)['price'] > $payment->getAmount()->getValue() ?
                             PaymentStatus::PARTIALLY_PAID : PaymentStatus::PAID,
                         'status'
                     );

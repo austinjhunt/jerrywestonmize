@@ -5,7 +5,7 @@
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-consent__label p {
 		<?php if ( forminator_array_value_exists( $properties, 'consent-cbox-label' ) && !empty( $properties['consent-cbox-label'] ) ) { ?>
 			color: <?php echo $properties['consent-cbox-label'] ?>;
-		<?php } else { ?>
+		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
 			color: #000000;
 		<?php } ?>
 	}
@@ -51,11 +51,13 @@
 
 <?php } else { ?>
 
-	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-consent,
-	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-consent__label,
-	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-consent__label p {
-		color: #000000;
-	}
+	<?php if ( forminator_can_apply_default_color( $properties ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-consent,
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-consent__label,
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-consent__label p {
+			color: #000000;
+		}
+	<?php } ?>
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-consent .forminator-checkbox-box {
 		border-color: #777771;

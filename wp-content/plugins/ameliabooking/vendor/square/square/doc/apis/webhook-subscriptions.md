@@ -36,7 +36,7 @@ function listWebhookEventTypes(?string $apiVersion = null): ApiResponse
 
 ## Response Type
 
-[`ListWebhookEventTypesResponse`](../../doc/models/list-webhook-event-types-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListWebhookEventTypesResponse`](../../doc/models/list-webhook-event-types-response.md).
 
 ## Example Usage
 
@@ -49,9 +49,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -72,21 +72,24 @@ function listWebhookSubscriptions(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `cursor` | `?string` | Query, Optional | A pagination cursor returned by a previous call to this endpoint.<br>Provide this to retrieve the next set of results for your original query.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination). |
-| `includeDisabled` | `?bool` | Query, Optional | Includes disabled [Subscription](../../doc/models/webhook-subscription.md)s.<br>By default, all enabled [Subscription](../../doc/models/webhook-subscription.md)s are returned.<br>**Default**: `false` |
-| `sortOrder` | [`?string (SortOrder)`](../../doc/models/sort-order.md) | Query, Optional | Sorts the returned list by when the [Subscription](../../doc/models/webhook-subscription.md) was created with the specified order.<br>This field defaults to ASC. |
+| `cursor` | `?string` | Query, Optional | A pagination cursor returned by a previous call to this endpoint.<br>Provide this to retrieve the next set of results for your original query.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
+| `includeDisabled` | `?bool` | Query, Optional | Includes disabled [Subscription](entity:WebhookSubscription)s.<br>By default, all enabled [Subscription](entity:WebhookSubscription)s are returned.<br>**Default**: `false` |
+| `sortOrder` | [`?string(SortOrder)`](../../doc/models/sort-order.md) | Query, Optional | Sorts the returned list by when the [Subscription](entity:WebhookSubscription) was created with the specified order.<br>This field defaults to ASC. |
 | `limit` | `?int` | Query, Optional | The maximum number of results to be returned in a single page.<br>It is possible to receive fewer results than the specified limit on a given page.<br>The default value of 100 is also the maximum allowed value.<br><br>Default: 100 |
 
 ## Response Type
 
-[`ListWebhookSubscriptionsResponse`](../../doc/models/list-webhook-subscriptions-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListWebhookSubscriptionsResponse`](../../doc/models/list-webhook-subscriptions-response.md).
 
 ## Example Usage
 
 ```php
 $includeDisabled = false;
 
-$apiResponse = $webhookSubscriptionsApi->listWebhookSubscriptions(null, $includeDisabled);
+$apiResponse = $webhookSubscriptionsApi->listWebhookSubscriptions(
+    null,
+    $includeDisabled
+);
 
 if ($apiResponse->isSuccess()) {
     $listWebhookSubscriptionsResponse = $apiResponse->getResult();
@@ -94,9 +97,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -116,20 +119,26 @@ function createWebhookSubscription(CreateWebhookSubscriptionRequest $body): ApiR
 
 ## Response Type
 
-[`CreateWebhookSubscriptionResponse`](../../doc/models/create-webhook-subscription-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateWebhookSubscriptionResponse`](../../doc/models/create-webhook-subscription-response.md).
 
 ## Example Usage
 
 ```php
-$body_subscription = new Models\WebhookSubscription();
-$body_subscription->setName('Example Webhook Subscription');
-$body_subscription->setEventTypes(['payment.created', 'payment.updated']);
-$body_subscription->setNotificationUrl('https://example-webhook-url.com');
-$body_subscription->setApiVersion('2021-12-15');
-$body = new Models\CreateWebhookSubscriptionRequest(
-    $body_subscription
-);
-$body->setIdempotencyKey('63f84c6c-2200-4c99-846c-2670a1311fbf');
+$body = CreateWebhookSubscriptionRequestBuilder::init(
+    WebhookSubscriptionBuilder::init()
+        ->name('Example Webhook Subscription')
+        ->eventTypes(
+            [
+                'payment.created',
+                'payment.updated'
+            ]
+        )
+        ->notificationUrl('https://example-webhook-url.com')
+        ->apiVersion('2021-12-15')
+        ->build()
+)
+    ->idempotencyKey('63f84c6c-2200-4c99-846c-2670a1311fbf')
+    ->build();
 
 $apiResponse = $webhookSubscriptionsApi->createWebhookSubscription($body);
 
@@ -139,9 +148,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -157,11 +166,11 @@ function deleteWebhookSubscription(string $subscriptionId): ApiResponse
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `subscriptionId` | `string` | Template, Required | [REQUIRED] The ID of the [Subscription](../../doc/models/webhook-subscription.md) to delete. |
+| `subscriptionId` | `string` | Template, Required | [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to delete. |
 
 ## Response Type
 
-[`DeleteWebhookSubscriptionResponse`](../../doc/models/delete-webhook-subscription-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteWebhookSubscriptionResponse`](../../doc/models/delete-webhook-subscription-response.md).
 
 ## Example Usage
 
@@ -176,9 +185,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -194,11 +203,11 @@ function retrieveWebhookSubscription(string $subscriptionId): ApiResponse
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `subscriptionId` | `string` | Template, Required | [REQUIRED] The ID of the [Subscription](../../doc/models/webhook-subscription.md) to retrieve. |
+| `subscriptionId` | `string` | Template, Required | [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to retrieve. |
 
 ## Response Type
 
-[`RetrieveWebhookSubscriptionResponse`](../../doc/models/retrieve-webhook-subscription-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveWebhookSubscriptionResponse`](../../doc/models/retrieve-webhook-subscription-response.md).
 
 ## Example Usage
 
@@ -213,9 +222,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -231,23 +240,31 @@ function updateWebhookSubscription(string $subscriptionId, UpdateWebhookSubscrip
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `subscriptionId` | `string` | Template, Required | [REQUIRED] The ID of the [Subscription](../../doc/models/webhook-subscription.md) to update. |
+| `subscriptionId` | `string` | Template, Required | [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to update. |
 | `body` | [`UpdateWebhookSubscriptionRequest`](../../doc/models/update-webhook-subscription-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
 
 ## Response Type
 
-[`UpdateWebhookSubscriptionResponse`](../../doc/models/update-webhook-subscription-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateWebhookSubscriptionResponse`](../../doc/models/update-webhook-subscription-response.md).
 
 ## Example Usage
 
 ```php
 $subscriptionId = 'subscription_id0';
-$body = new Models\UpdateWebhookSubscriptionRequest();
-$body->setSubscription(new Models\WebhookSubscription());
-$body->getSubscription()->setName('Updated Example Webhook Subscription');
-$body->getSubscription()->setEnabled(false);
 
-$apiResponse = $webhookSubscriptionsApi->updateWebhookSubscription($subscriptionId, $body);
+$body = UpdateWebhookSubscriptionRequestBuilder::init()
+    ->subscription(
+        WebhookSubscriptionBuilder::init()
+            ->name('Updated Example Webhook Subscription')
+            ->enabled(false)
+            ->build()
+    )
+    ->build();
+
+$apiResponse = $webhookSubscriptionsApi->updateWebhookSubscription(
+    $subscriptionId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $updateWebhookSubscriptionResponse = $apiResponse->getResult();
@@ -255,9 +272,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -276,21 +293,26 @@ function updateWebhookSubscriptionSignatureKey(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `subscriptionId` | `string` | Template, Required | [REQUIRED] The ID of the [Subscription](../../doc/models/webhook-subscription.md) to update. |
+| `subscriptionId` | `string` | Template, Required | [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to update. |
 | `body` | [`UpdateWebhookSubscriptionSignatureKeyRequest`](../../doc/models/update-webhook-subscription-signature-key-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
 
 ## Response Type
 
-[`UpdateWebhookSubscriptionSignatureKeyResponse`](../../doc/models/update-webhook-subscription-signature-key-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateWebhookSubscriptionSignatureKeyResponse`](../../doc/models/update-webhook-subscription-signature-key-response.md).
 
 ## Example Usage
 
 ```php
 $subscriptionId = 'subscription_id0';
-$body = new Models\UpdateWebhookSubscriptionSignatureKeyRequest();
-$body->setIdempotencyKey('ed80ae6b-0654-473b-bbab-a39aee89a60d');
 
-$apiResponse = $webhookSubscriptionsApi->updateWebhookSubscriptionSignatureKey($subscriptionId, $body);
+$body = UpdateWebhookSubscriptionSignatureKeyRequestBuilder::init()
+    ->idempotencyKey('ed80ae6b-0654-473b-bbab-a39aee89a60d')
+    ->build();
+
+$apiResponse = $webhookSubscriptionsApi->updateWebhookSubscriptionSignatureKey(
+    $subscriptionId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $updateWebhookSubscriptionSignatureKeyResponse = $apiResponse->getResult();
@@ -298,9 +320,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -316,21 +338,26 @@ function testWebhookSubscription(string $subscriptionId, TestWebhookSubscription
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `subscriptionId` | `string` | Template, Required | [REQUIRED] The ID of the [Subscription](../../doc/models/webhook-subscription.md) to test. |
+| `subscriptionId` | `string` | Template, Required | [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to test. |
 | `body` | [`TestWebhookSubscriptionRequest`](../../doc/models/test-webhook-subscription-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
 
 ## Response Type
 
-[`TestWebhookSubscriptionResponse`](../../doc/models/test-webhook-subscription-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`TestWebhookSubscriptionResponse`](../../doc/models/test-webhook-subscription-response.md).
 
 ## Example Usage
 
 ```php
 $subscriptionId = 'subscription_id0';
-$body = new Models\TestWebhookSubscriptionRequest();
-$body->setEventType('payment.created');
 
-$apiResponse = $webhookSubscriptionsApi->testWebhookSubscription($subscriptionId, $body);
+$body = TestWebhookSubscriptionRequestBuilder::init()
+    ->eventType('payment.created')
+    ->build();
+
+$apiResponse = $webhookSubscriptionsApi->testWebhookSubscription(
+    $subscriptionId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $testWebhookSubscriptionResponse = $apiResponse->getResult();
@@ -338,8 +365,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

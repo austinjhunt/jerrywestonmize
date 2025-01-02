@@ -132,6 +132,7 @@ abstract class Forminator_Import_Mediator {
 			'postdata',
 			'pagination',
 			'stripe',
+			'stripe-ocs',
 			'currency',
 			'consent',
 			'gdprcheckbox',

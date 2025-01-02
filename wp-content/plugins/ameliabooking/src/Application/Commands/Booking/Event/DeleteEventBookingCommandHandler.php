@@ -15,6 +15,7 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -47,6 +48,11 @@ class DeleteEventBookingCommandHandler extends CommandHandler
         /** @var UserApplicationService $userAS */
         $userAS = $this->container->get('application.user.service');
 
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+
+        $user = null;
         if (!$command->getPermissionService()->currentUserCanDelete(Entities::EVENTS)) {
             try {
                 /** @var AbstractUser $user */
@@ -87,11 +93,30 @@ class DeleteEventBookingCommandHandler extends CommandHandler
         /** @var CustomerBooking $customerBooking */
         $customerBooking = $customerBookingRepository->getById((int)$command->getField('id'));
 
-        /** @var Collection $events */
-        $events = $eventRepository->getByBookingIds([$customerBooking->getId()->getValue()]);
-
         /** @var Event $event */
-        $event = $events->getItem($events->keys()[0]);
+        $event = $eventRepository->getByBookingId(
+            $customerBooking->getId()->getValue(),
+            [
+                'fetchEventsTags'       => true,
+                'fetchEventsProviders'  => true,
+                'fetchBookingsCoupons'  => true,
+                'fetchBookingsPayments' => true,
+                'fetchBookingsUsers'    => true,
+            ]
+        );
+
+        $event->getBookings()->addItem($customerBooking, $customerBooking->getId()->getValue());
+
+        if ($user &&
+            $userAS->isProvider($user) &&
+            (
+                !$settingsDS->getSetting('roles', 'allowWriteEvents') ||
+                (!$event->getProviders()->keyExists($user->getId()->getValue()) &&
+                    (!$event->getOrganizerId() || $event->getOrganizerId()->getValue() !== $user->getId()->getValue()))
+            )
+        ) {
+            throw new AccessDeniedException('You are not allowed to delete this booking');
+        }
 
         $customerBookingRepository->beginTransaction();
 

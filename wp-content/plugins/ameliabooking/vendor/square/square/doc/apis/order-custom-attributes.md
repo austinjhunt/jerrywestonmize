@@ -44,13 +44,13 @@ function listOrderCustomAttributeDefinitions(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `visibilityFilter` | [`?string (VisibilityFilter)`](../../doc/models/visibility-filter.md) | Query, Optional | Requests that all of the custom attributes be returned, or only those that are read-only or read-write. |
+| `visibilityFilter` | [`?string(VisibilityFilter)`](../../doc/models/visibility-filter.md) | Query, Optional | Requests that all of the custom attributes be returned, or only those that are read-only or read-write. |
 | `cursor` | `?string` | Query, Optional | The cursor returned in the paged response from the previous call to this endpoint.<br>Provide this cursor to retrieve the next page of results for your original request.<br>For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination). |
 | `limit` | `?int` | Query, Optional | The maximum number of results to return in a single paged response. This limit is advisory.<br>The response might contain more or fewer results. The minimum value is 1 and the maximum value is 100.<br>The default value is 20.<br>For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination). |
 
 ## Response Type
 
-[`ListOrderCustomAttributeDefinitionsResponse`](../../doc/models/list-order-custom-attribute-definitions-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListOrderCustomAttributeDefinitionsResponse`](../../doc/models/list-order-custom-attribute-definitions-response.md).
 
 ## Example Usage
 
@@ -63,9 +63,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -89,20 +89,21 @@ function createOrderCustomAttributeDefinition(CreateOrderCustomAttributeDefiniti
 
 ## Response Type
 
-[`CreateOrderCustomAttributeDefinitionResponse`](../../doc/models/create-order-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateOrderCustomAttributeDefinitionResponse`](../../doc/models/create-order-custom-attribute-definition-response.md).
 
 ## Example Usage
 
 ```php
-$body_customAttributeDefinition = new Models\CustomAttributeDefinition();
-$body_customAttributeDefinition->setKey('cover-count');
-$body_customAttributeDefinition->setName('Cover count');
-$body_customAttributeDefinition->setDescription('The number of people seated at a table');
-$body_customAttributeDefinition->setVisibility(Models\CustomAttributeDefinitionVisibility::VISIBILITY_READ_WRITE_VALUES);
-$body = new Models\CreateOrderCustomAttributeDefinitionRequest(
-    $body_customAttributeDefinition
-);
-$body->setIdempotencyKey('IDEMPOTENCY_KEY');
+$body = CreateOrderCustomAttributeDefinitionRequestBuilder::init(
+    CustomAttributeDefinitionBuilder::init()
+        ->key('cover-count')
+        ->name('Cover count')
+        ->description('The number of people seated at a table')
+        ->visibility(CustomAttributeDefinitionVisibility::VISIBILITY_READ_WRITE_VALUES)
+        ->build()
+)
+    ->idempotencyKey('IDEMPOTENCY_KEY')
+    ->build();
 
 $apiResponse = $orderCustomAttributesApi->createOrderCustomAttributeDefinition($body);
 
@@ -112,9 +113,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -136,7 +137,7 @@ function deleteOrderCustomAttributeDefinition(string $key): ApiResponse
 
 ## Response Type
 
-[`DeleteOrderCustomAttributeDefinitionResponse`](../../doc/models/delete-order-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteOrderCustomAttributeDefinitionResponse`](../../doc/models/delete-order-custom-attribute-definition-response.md).
 
 ## Example Usage
 
@@ -151,9 +152,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -178,7 +179,7 @@ function retrieveOrderCustomAttributeDefinition(string $key, ?int $version = nul
 
 ## Response Type
 
-[`RetrieveOrderCustomAttributeDefinitionResponse`](../../doc/models/retrieve-order-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveOrderCustomAttributeDefinitionResponse`](../../doc/models/retrieve-order-custom-attribute-definition-response.md).
 
 ## Example Usage
 
@@ -193,9 +194,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -221,22 +222,27 @@ function updateOrderCustomAttributeDefinition(
 
 ## Response Type
 
-[`UpdateOrderCustomAttributeDefinitionResponse`](../../doc/models/update-order-custom-attribute-definition-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateOrderCustomAttributeDefinitionResponse`](../../doc/models/update-order-custom-attribute-definition-response.md).
 
 ## Example Usage
 
 ```php
 $key = 'key0';
-$body_customAttributeDefinition = new Models\CustomAttributeDefinition();
-$body_customAttributeDefinition->setKey('cover-count');
-$body_customAttributeDefinition->setVisibility(Models\CustomAttributeDefinitionVisibility::VISIBILITY_READ_ONLY);
-$body_customAttributeDefinition->setVersion(1);
-$body = new Models\UpdateOrderCustomAttributeDefinitionRequest(
-    $body_customAttributeDefinition
-);
-$body->setIdempotencyKey('IDEMPOTENCY_KEY');
 
-$apiResponse = $orderCustomAttributesApi->updateOrderCustomAttributeDefinition($key, $body);
+$body = UpdateOrderCustomAttributeDefinitionRequestBuilder::init(
+    CustomAttributeDefinitionBuilder::init()
+        ->key('cover-count')
+        ->visibility(CustomAttributeDefinitionVisibility::VISIBILITY_READ_ONLY)
+        ->version(1)
+        ->build()
+)
+    ->idempotencyKey('IDEMPOTENCY_KEY')
+    ->build();
+
+$apiResponse = $orderCustomAttributesApi->updateOrderCustomAttributeDefinition(
+    $key,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $updateOrderCustomAttributeDefinitionResponse = $apiResponse->getResult();
@@ -244,9 +250,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -279,28 +285,25 @@ function bulkDeleteOrderCustomAttributes(BulkDeleteOrderCustomAttributesRequest 
 
 ## Response Type
 
-[`BulkDeleteOrderCustomAttributesResponse`](../../doc/models/bulk-delete-order-custom-attributes-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BulkDeleteOrderCustomAttributesResponse`](../../doc/models/bulk-delete-order-custom-attributes-response.md).
 
 ## Example Usage
 
 ```php
-$body_values = [];
-
-$body_values_cover-count_orderId = '7BbXGEIWNldxAzrtGf9GPVZTwZ4F';
-$body_values['cover-count'] = new Models\BulkDeleteOrderCustomAttributesRequestDeleteCustomAttribute(
-    $body_values_cover-count_orderId
-);
-$body_values['cover-count']->setKey('cover-count');
-
-$body_values_table-number_orderId = '7BbXGEIWNldxAzrtGf9GPVZTwZ4F';
-$body_values['table-number'] = new Models\BulkDeleteOrderCustomAttributesRequestDeleteCustomAttribute(
-    $body_values_table-number_orderId
-);
-$body_values['table-number']->setKey('table-number');
-
-$body = new Models\BulkDeleteOrderCustomAttributesRequest(
-    $body_values
-);
+$body = BulkDeleteOrderCustomAttributesRequestBuilder::init(
+    [
+        'cover-count' => BulkDeleteOrderCustomAttributesRequestDeleteCustomAttributeBuilder::init(
+            '7BbXGEIWNldxAzrtGf9GPVZTwZ4F'
+        )
+            ->key('cover-count')
+            ->build(),
+        'table-number' => BulkDeleteOrderCustomAttributesRequestDeleteCustomAttributeBuilder::init(
+            '7BbXGEIWNldxAzrtGf9GPVZTwZ4F'
+        )
+            ->key('table-number')
+            ->build()
+    ]
+)->build();
 
 $apiResponse = $orderCustomAttributesApi->bulkDeleteOrderCustomAttributes($body);
 
@@ -310,9 +313,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -345,30 +348,23 @@ function bulkUpsertOrderCustomAttributes(BulkUpsertOrderCustomAttributesRequest 
 
 ## Response Type
 
-[`BulkUpsertOrderCustomAttributesResponse`](../../doc/models/bulk-upsert-order-custom-attributes-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`BulkUpsertOrderCustomAttributesResponse`](../../doc/models/bulk-upsert-order-custom-attributes-response.md).
 
 ## Example Usage
 
 ```php
-$body_values = [];
-
-$body_values_key0_customAttribute = new Models\CustomAttribute();
-$body_values_key0_orderId = 'order_id2';
-$body_values['key0'] = new Models\BulkUpsertOrderCustomAttributesRequestUpsertCustomAttribute(
-    $body_values_key0_customAttribute,
-    $body_values_key0_orderId
-);
-
-$body_values_key1_customAttribute = new Models\CustomAttribute();
-$body_values_key1_orderId = 'order_id1';
-$body_values['key1'] = new Models\BulkUpsertOrderCustomAttributesRequestUpsertCustomAttribute(
-    $body_values_key1_customAttribute,
-    $body_values_key1_orderId
-);
-
-$body = new Models\BulkUpsertOrderCustomAttributesRequest(
-    $body_values
-);
+$body = BulkUpsertOrderCustomAttributesRequestBuilder::init(
+    [
+        'key0' => BulkUpsertOrderCustomAttributesRequestUpsertCustomAttributeBuilder::init(
+            CustomAttributeBuilder::init()->build(),
+            'order_id4'
+        )->build(),
+        'key1' => BulkUpsertOrderCustomAttributesRequestUpsertCustomAttributeBuilder::init(
+            CustomAttributeBuilder::init()->build(),
+            'order_id4'
+        )->build()
+    ]
+)->build();
 
 $apiResponse = $orderCustomAttributesApi->bulkUpsertOrderCustomAttributes($body);
 
@@ -378,9 +374,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -409,23 +405,30 @@ function listOrderCustomAttributes(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `orderId` | `string` | Template, Required | The ID of the target [order](../../doc/models/order.md). |
-| `visibilityFilter` | [`?string (VisibilityFilter)`](../../doc/models/visibility-filter.md) | Query, Optional | Requests that all of the custom attributes be returned, or only those that are read-only or read-write. |
+| `orderId` | `string` | Template, Required | The ID of the target [order](entity:Order). |
+| `visibilityFilter` | [`?string(VisibilityFilter)`](../../doc/models/visibility-filter.md) | Query, Optional | Requests that all of the custom attributes be returned, or only those that are read-only or read-write. |
 | `cursor` | `?string` | Query, Optional | The cursor returned in the paged response from the previous call to this endpoint.<br>Provide this cursor to retrieve the next page of results for your original request.<br>For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination). |
 | `limit` | `?int` | Query, Optional | The maximum number of results to return in a single paged response. This limit is advisory.<br>The response might contain more or fewer results. The minimum value is 1 and the maximum value is 100.<br>The default value is 20.<br>For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination). |
-| `withDefinitions` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](../../doc/models/custom-attribute-definition.md) in the `definition` field of each<br>custom attribute. Set this parameter to `true` to get the name and description of each custom attribute,<br>information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
+| `withDefinitions` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](entity:CustomAttributeDefinition) in the `definition` field of each<br>custom attribute. Set this parameter to `true` to get the name and description of each custom attribute,<br>information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
 
 ## Response Type
 
-[`ListOrderCustomAttributesResponse`](../../doc/models/list-order-custom-attributes-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListOrderCustomAttributesResponse`](../../doc/models/list-order-custom-attributes-response.md).
 
 ## Example Usage
 
 ```php
 $orderId = 'order_id6';
+
 $withDefinitions = false;
 
-$apiResponse = $orderCustomAttributesApi->listOrderCustomAttributes($orderId, null, null, null, $withDefinitions);
+$apiResponse = $orderCustomAttributesApi->listOrderCustomAttributes(
+    $orderId,
+    null,
+    null,
+    null,
+    $withDefinitions
+);
 
 if ($apiResponse->isSuccess()) {
     $listOrderCustomAttributesResponse = $apiResponse->getResult();
@@ -433,9 +436,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -455,20 +458,24 @@ function deleteOrderCustomAttribute(string $orderId, string $customAttributeKey)
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `orderId` | `string` | Template, Required | The ID of the target [order](../../doc/models/order.md). |
+| `orderId` | `string` | Template, Required | The ID of the target [order](entity:Order). |
 | `customAttributeKey` | `string` | Template, Required | The key of the custom attribute to delete.  This key must match the key of an<br>existing custom attribute definition. |
 
 ## Response Type
 
-[`DeleteOrderCustomAttributeResponse`](../../doc/models/delete-order-custom-attribute-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteOrderCustomAttributeResponse`](../../doc/models/delete-order-custom-attribute-response.md).
 
 ## Example Usage
 
 ```php
 $orderId = 'order_id6';
+
 $customAttributeKey = 'custom_attribute_key2';
 
-$apiResponse = $orderCustomAttributesApi->deleteOrderCustomAttribute($orderId, $customAttributeKey);
+$apiResponse = $orderCustomAttributesApi->deleteOrderCustomAttribute(
+    $orderId,
+    $customAttributeKey
+);
 
 if ($apiResponse->isSuccess()) {
     $deleteOrderCustomAttributeResponse = $apiResponse->getResult();
@@ -476,9 +483,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -506,23 +513,30 @@ function retrieveOrderCustomAttribute(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `orderId` | `string` | Template, Required | The ID of the target [order](../../doc/models/order.md). |
+| `orderId` | `string` | Template, Required | The ID of the target [order](entity:Order). |
 | `customAttributeKey` | `string` | Template, Required | The key of the custom attribute to retrieve.  This key must match the key of an<br>existing custom attribute definition. |
 | `version` | `?int` | Query, Optional | To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)<br>control, include this optional field and specify the current version of the custom attribute. |
-| `withDefinition` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](../../doc/models/custom-attribute-definition.md) in the `definition` field of each<br>custom attribute. Set this parameter to `true` to get the name and description of each custom attribute,<br>information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
+| `withDefinition` | `?bool` | Query, Optional | Indicates whether to return the [custom attribute definition](entity:CustomAttributeDefinition) in the `definition` field of each<br>custom attribute. Set this parameter to `true` to get the name and description of each custom attribute,<br>information about the data type, or other definition details. The default value is `false`.<br>**Default**: `false` |
 
 ## Response Type
 
-[`RetrieveOrderCustomAttributeResponse`](../../doc/models/retrieve-order-custom-attribute-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveOrderCustomAttributeResponse`](../../doc/models/retrieve-order-custom-attribute-response.md).
 
 ## Example Usage
 
 ```php
 $orderId = 'order_id6';
+
 $customAttributeKey = 'custom_attribute_key2';
+
 $withDefinition = false;
 
-$apiResponse = $orderCustomAttributesApi->retrieveOrderCustomAttribute($orderId, $customAttributeKey, null, $withDefinition);
+$apiResponse = $orderCustomAttributesApi->retrieveOrderCustomAttribute(
+    $orderId,
+    $customAttributeKey,
+    null,
+    $withDefinition
+);
 
 if ($apiResponse->isSuccess()) {
     $retrieveOrderCustomAttributeResponse = $apiResponse->getResult();
@@ -530,9 +544,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -560,25 +574,30 @@ function upsertOrderCustomAttribute(
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `orderId` | `string` | Template, Required | The ID of the target [order](../../doc/models/order.md). |
+| `orderId` | `string` | Template, Required | The ID of the target [order](entity:Order). |
 | `customAttributeKey` | `string` | Template, Required | The key of the custom attribute to create or update.  This key must match the key<br>of an existing custom attribute definition. |
 | `body` | [`UpsertOrderCustomAttributeRequest`](../../doc/models/upsert-order-custom-attribute-request.md) | Body, Required | An object containing the fields to POST for the request.<br><br>See the corresponding object definition for field details. |
 
 ## Response Type
 
-[`UpsertOrderCustomAttributeResponse`](../../doc/models/upsert-order-custom-attribute-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpsertOrderCustomAttributeResponse`](../../doc/models/upsert-order-custom-attribute-response.md).
 
 ## Example Usage
 
 ```php
 $orderId = 'order_id6';
-$customAttributeKey = 'custom_attribute_key2';
-$body_customAttribute = new Models\CustomAttribute();
-$body = new Models\UpsertOrderCustomAttributeRequest(
-    $body_customAttribute
-);
 
-$apiResponse = $orderCustomAttributesApi->upsertOrderCustomAttribute($orderId, $customAttributeKey, $body);
+$customAttributeKey = 'custom_attribute_key2';
+
+$body = UpsertOrderCustomAttributeRequestBuilder::init(
+    CustomAttributeBuilder::init()->build()
+)->build();
+
+$apiResponse = $orderCustomAttributesApi->upsertOrderCustomAttribute(
+    $orderId,
+    $customAttributeKey,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $upsertOrderCustomAttributeResponse = $apiResponse->getResult();
@@ -586,8 +605,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

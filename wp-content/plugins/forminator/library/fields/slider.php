@@ -31,7 +31,6 @@ class Forminator_Slider extends Forminator_Field {
 		$this->type = 'slider';
 		$this->icon = 'sui-icon-settings-slider-control';
 
-		$this->category = 'standard';
 		$this->position = 27;
 
 		add_filter( 'forminator_is_subfield_enabled', array( __CLASS__, 'is_subfield_enabled' ), 10, 3 );

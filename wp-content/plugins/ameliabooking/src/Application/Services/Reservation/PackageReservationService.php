@@ -300,7 +300,7 @@ class PackageReservationService extends AppointmentReservationService
         $reservation->setPackageReservations($packageReservations);
         $reservation->setRecurring(new Collection());
 
-        $paymentAmount = $this->getPaymentAmount($packageCustomer, $package);
+        $paymentAmount = $this->getPaymentAmount($packageCustomer, $package)['price'];
 
         $applyDeposit = $appointmentData['deposit'] && $appointmentData['payment']['gateway'] !== PaymentType::ON_SITE;
 
@@ -574,7 +574,7 @@ class PackageReservationService extends AppointmentReservationService
         /** @var PackageCustomer $packageCustomer */
         $packageCustomer = $reservation->getPackageCustomer();
 
-        $paymentAmount = $this->getPaymentAmount($packageCustomer, $bookable);
+        $paymentAmount = $this->getPaymentAmount($packageCustomer, $bookable)['price'];
 
         if ($reservation->getApplyDeposit()->getValue()) {
             $paymentAmount = $depositAS->calculateDepositAmount(
@@ -632,10 +632,10 @@ class PackageReservationService extends AppointmentReservationService
      * @param Package              $bookable
      * @param string|null          $reduction
      *
-     * @return float
+     * @return array
      * @throws InvalidArgumentException
      */
-    public function getPaymentAmount($booking, $bookable, $reduction = null)
+    public function getPaymentAmount($booking, $bookable, $invoice = false)
     {
         /** @var TaxApplicationService $taxApplicationService */
         $taxApplicationService = $this->container->get('application.tax.service');
@@ -651,7 +651,9 @@ class PackageReservationService extends AppointmentReservationService
             $price = $bookable->getPrice()->getValue() - $subtraction;
         }
 
-        if ($packageTax && !$packageTax->getExcluded()->getValue() && $booking && $booking->getCoupon()) {
+        $bookingPrice = $price;
+
+        if ($packageTax && !$packageTax->getExcluded()->getValue() && ($booking && $booking->getCoupon() || $invoice)) {
             $price = $taxApplicationService->getBasePrice($price, $packageTax);
         }
 
@@ -672,15 +674,25 @@ class PackageReservationService extends AppointmentReservationService
             $price = max($price - $subtraction, 0);
         }
 
-        if ($packageTax && ($packageTax->getExcluded()->getValue() || $subtraction)) {
+        if ($packageTax && ($packageTax->getExcluded()->getValue() || $subtraction || $invoice)) {
             $price += $this->getTaxAmount($packageTax, $price);
         }
 
         $price = (float)max(round($price, 2), 0);
 
-        return $reduction === null ?
-            apply_filters('amelia_modify_payment_amount', $price, $booking)
-            : $reductionAmount[$reduction];
+        return [
+            'price' => apply_filters('amelia_modify_payment_amount', $price, $booking),
+            'discount' => $reductionAmount['discount'],
+            'deduction' => $reductionAmount['deduction'],
+            'unit_price' => $bookingPrice,
+            'qty'        => 1,
+            'subtotal'   => $bookingPrice,
+            'tax'        => $packageTax ? $this->getTaxAmount($packageTax, $bookingPrice) : 0,
+            'tax_rate'   => $packageTax ? $this->getTaxRate($packageTax) : '',
+            'tax_type'   => $packageTax ? $packageTax->getType()->getValue() : '',
+            'tax_excluded' => $packageTax ? $packageTax->getExcluded()->getValue() : false,
+            'full_discount' => $booking ? $this->getCouponDiscountAmount($booking->getCoupon(), $bookingPrice) + ($booking->getCoupon() && $booking->getCoupon()->getDeduction() ? $booking->getCoupon()->getDeduction()->getValue() : 0) : null
+        ];
     }
 
     /**
@@ -853,6 +865,7 @@ class PackageReservationService extends AppointmentReservationService
                     'amount'       => $payment->getAmount()->getValue(),
                     'gateway'      => $payment->getGateway()->getName()->getValue(),
                     'gatewayTitle' => $payment->getGatewayTitle() ? $payment->getGatewayTitle()->getValue() : '',
+                    'invoiceNumber' => $payment->getInvoiceNumber() ? $payment->getInvoiceNumber()->getValue() : '',
                 ],
                 'customerCabinetUrl'       => $customerCabinetUrl,
             ]

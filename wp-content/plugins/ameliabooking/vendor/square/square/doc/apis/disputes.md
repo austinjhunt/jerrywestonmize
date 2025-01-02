@@ -33,13 +33,13 @@ function listDisputes(?string $cursor = null, ?string $states = null, ?string $l
 
 | Parameter | Type | Tags | Description |
 |  --- | --- | --- | --- |
-| `cursor` | `?string` | Query, Optional | A pagination cursor returned by a previous call to this endpoint.<br>Provide this cursor to retrieve the next set of results for the original query.<br>For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination). |
-| `states` | [`?string (DisputeState)`](../../doc/models/dispute-state.md) | Query, Optional | The dispute states used to filter the result. If not specified, the endpoint returns all disputes. |
+| `cursor` | `?string` | Query, Optional | A pagination cursor returned by a previous call to this endpoint.<br>Provide this cursor to retrieve the next set of results for the original query.<br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). |
+| `states` | [`?string(DisputeState)`](../../doc/models/dispute-state.md) | Query, Optional | The dispute states used to filter the result. If not specified, the endpoint returns all disputes. |
 | `locationId` | `?string` | Query, Optional | The ID of the location for which to return a list of disputes.<br>If not specified, the endpoint returns disputes associated with all locations. |
 
 ## Response Type
 
-[`ListDisputesResponse`](../../doc/models/list-disputes-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListDisputesResponse`](../../doc/models/list-disputes-response.md).
 
 ## Example Usage
 
@@ -52,9 +52,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -74,7 +74,7 @@ function retrieveDispute(string $disputeId): ApiResponse
 
 ## Response Type
 
-[`RetrieveDisputeResponse`](../../doc/models/retrieve-dispute-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveDisputeResponse`](../../doc/models/retrieve-dispute-response.md).
 
 ## Example Usage
 
@@ -89,9 +89,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -115,7 +115,7 @@ function acceptDispute(string $disputeId): ApiResponse
 
 ## Response Type
 
-[`AcceptDisputeResponse`](../../doc/models/accept-dispute-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`AcceptDisputeResponse`](../../doc/models/accept-dispute-response.md).
 
 ## Example Usage
 
@@ -130,9 +130,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -153,7 +153,7 @@ function listDisputeEvidence(string $disputeId, ?string $cursor = null): ApiResp
 
 ## Response Type
 
-[`ListDisputeEvidenceResponse`](../../doc/models/list-dispute-evidence-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListDisputeEvidenceResponse`](../../doc/models/list-dispute-evidence-response.md).
 
 ## Example Usage
 
@@ -168,9 +168,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -197,7 +197,7 @@ function createDisputeEvidenceFile(
 
 ## Response Type
 
-[`CreateDisputeEvidenceFileResponse`](../../doc/models/create-dispute-evidence-file-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateDisputeEvidenceFileResponse`](../../doc/models/create-dispute-evidence-file-response.md).
 
 ## Example Usage
 
@@ -212,9 +212,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -235,21 +235,24 @@ function createDisputeEvidenceText(string $disputeId, CreateDisputeEvidenceTextR
 
 ## Response Type
 
-[`CreateDisputeEvidenceTextResponse`](../../doc/models/create-dispute-evidence-text-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateDisputeEvidenceTextResponse`](../../doc/models/create-dispute-evidence-text-response.md).
 
 ## Example Usage
 
 ```php
 $disputeId = 'dispute_id2';
-$body_idempotencyKey = 'ed3ee3933d946f1514d505d173c82648';
-$body_evidenceText = '1Z8888888888888888';
-$body = new Models\CreateDisputeEvidenceTextRequest(
-    $body_idempotencyKey,
-    $body_evidenceText
-);
-$body->setEvidenceType(Models\DisputeEvidenceType::TRACKING_NUMBER);
 
-$apiResponse = $disputesApi->createDisputeEvidenceText($disputeId, $body);
+$body = CreateDisputeEvidenceTextRequestBuilder::init(
+    'ed3ee3933d946f1514d505d173c82648',
+    '1Z8888888888888888'
+)
+    ->evidenceType(DisputeEvidenceType::TRACKING_NUMBER)
+    ->build();
+
+$apiResponse = $disputesApi->createDisputeEvidenceText(
+    $disputeId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $createDisputeEvidenceTextResponse = $apiResponse->getResult();
@@ -257,9 +260,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -281,15 +284,19 @@ function deleteDisputeEvidence(string $disputeId, string $evidenceId): ApiRespon
 
 ## Response Type
 
-[`DeleteDisputeEvidenceResponse`](../../doc/models/delete-dispute-evidence-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`DeleteDisputeEvidenceResponse`](../../doc/models/delete-dispute-evidence-response.md).
 
 ## Example Usage
 
 ```php
 $disputeId = 'dispute_id2';
+
 $evidenceId = 'evidence_id2';
 
-$apiResponse = $disputesApi->deleteDisputeEvidence($disputeId, $evidenceId);
+$apiResponse = $disputesApi->deleteDisputeEvidence(
+    $disputeId,
+    $evidenceId
+);
 
 if ($apiResponse->isSuccess()) {
     $deleteDisputeEvidenceResponse = $apiResponse->getResult();
@@ -297,9 +304,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -322,15 +329,19 @@ function retrieveDisputeEvidence(string $disputeId, string $evidenceId): ApiResp
 
 ## Response Type
 
-[`RetrieveDisputeEvidenceResponse`](../../doc/models/retrieve-dispute-evidence-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveDisputeEvidenceResponse`](../../doc/models/retrieve-dispute-evidence-response.md).
 
 ## Example Usage
 
 ```php
 $disputeId = 'dispute_id2';
+
 $evidenceId = 'evidence_id2';
 
-$apiResponse = $disputesApi->retrieveDisputeEvidence($disputeId, $evidenceId);
+$apiResponse = $disputesApi->retrieveDisputeEvidence(
+    $disputeId,
+    $evidenceId
+);
 
 if ($apiResponse->isSuccess()) {
     $retrieveDisputeEvidenceResponse = $apiResponse->getResult();
@@ -338,9 +349,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -366,7 +377,7 @@ function submitEvidence(string $disputeId): ApiResponse
 
 ## Response Type
 
-[`SubmitEvidenceResponse`](../../doc/models/submit-evidence-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`SubmitEvidenceResponse`](../../doc/models/submit-evidence-response.md).
 
 ## Example Usage
 
@@ -381,8 +392,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

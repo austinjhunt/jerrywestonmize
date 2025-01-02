@@ -41,8 +41,29 @@
     "payment_id": "5O5OvgkcNUhl7JBuINflcjKqUzXZY",
     "reason": "reason",
     "status": "CANCELED",
-    "updated_at": "2020-10-21T22:47:30.096Z"
-  }
+    "updated_at": "2020-10-21T22:47:30.096Z",
+    "refund_id": "refund_id2"
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

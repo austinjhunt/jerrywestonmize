@@ -5,7 +5,7 @@ use MailPoetVendor\Symfony\Component\Validator\Constraint;
 use MailPoetVendor\Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 abstract class Composite extends Constraint
 {
- public function __construct($options = null, array $groups = null, $payload = null)
+ public function __construct($options = null, ?array $groups = null, $payload = null)
  {
  parent::__construct($options, $groups, $payload);
  $this->initializeNestedConstraints();

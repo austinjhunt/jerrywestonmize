@@ -643,6 +643,9 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 
 			// save it to create new record.
 			$new_id = $model->save( true );
+			if ( is_wp_error( $new_id ) ) {
+				return $new_id;
+			}
 
 			/**
 			 * Action called after module cloned
@@ -681,6 +684,10 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 		// check if this id is valid and the record is exists.
 		$model = Forminator_Base_Form_Model::get_model( $id );
 		if ( is_object( $model ) ) {
+			$validate = forminator_validate_registration_form_settings( $model->settings );
+			if ( is_wp_error( $validate ) ) {
+				return $validate;
+			}
 			// For Quizzes with Leads.
 			if ( isset( $model->settings['hasLeads'] ) && isset( $model->settings['leadsId'] ) && $model->settings['hasLeads'] ) {
 				$leads_id    = $model->settings['leadsId'];
@@ -895,22 +902,31 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			return;
 		}
 
-		$plural_slug = forminator_get_prefix( static::$module_slug, '', false, true );
-		$is_redirect = true;
-		$ids         = Forminator_Core::sanitize_text_field( 'ids' );
-		$module_ids  = ! empty( $ids ) ? explode( ',', $ids ) : array();
+		$plural_slug      = forminator_get_prefix( static::$module_slug, '', false, true );
+		$is_redirect      = true;
+		$ids              = Forminator_Core::sanitize_text_field( 'ids' );
+		$module_ids       = ! empty( $ids ) ? explode( ',', $ids ) : array();
+		$has_access_error = 0;
 		switch ( $action ) {
 			case 'delete':
 				if ( ! empty( $id ) ) {
-					static::delete_module( $id );
-					$notice = static::$module_slug . '_deleted';
+					$result = static::delete_module( $id );
+					if ( is_wp_error( $result ) ) {
+						$error_message = $result->get_error_message();
+					} else {
+						$notice = static::$module_slug . '_deleted';
+					}
 				}
 				break;
 
 			case 'clone':
 				if ( ! empty( $id ) ) {
-					$this->clone_module( $id );
-					$notice = static::$module_slug . '_duplicated';
+					$result = $this->clone_module( $id );
+					if ( is_wp_error( $result ) ) {
+						$error_message = $result->get_error_message();
+					} else {
+						$notice = static::$module_slug . '_duplicated';
+					}
 				}
 				break;
 
@@ -937,7 +953,13 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 
 			case 'delete-' . $plural_slug:
 				foreach ( $module_ids as $id ) {
-					static::delete_module( $id );
+					$result = static::delete_module( $id );
+					if ( is_wp_error( $result ) && ( in_array( $result->get_error_code(), array( 'invalid_access', 'invalid_user_role' ), true ) ) ) {
+						++$has_access_error;
+					}
+				}
+				if ( $has_access_error ) {
+					$text_message = __( 'The selected form(s) have been deleted. Note: This action cannot be performed on forms without sufficient permissions.', 'forminator' );
 				}
 				break;
 
@@ -950,7 +972,13 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 
 			case 'clone-' . $plural_slug:
 				foreach ( $module_ids as $id ) {
-					$this->clone_module( $id );
+					$result = $this->clone_module( $id );
+					if ( is_wp_error( $result ) && ( in_array( $result->get_error_code(), array( 'invalid_access', 'invalid_user_role' ), true ) ) ) {
+						++$has_access_error;
+					}
+				}
+				if ( $has_access_error ) {
+					$text_message = esc_html__( 'The selected form(s) have been duplicated. Note: This action cannot be performed on forms without sufficient permissions.', 'forminator' );
 				}
 				break;
 
@@ -969,9 +997,13 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 						$model = Forminator_Base_Form_Model::get_model( $id );
 						if ( $model instanceof Forminator_Base_Form_Model ) {
 							$model->status = $status;
-							$model->save();
-							// Call module update do action on status update.
-							Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
+							$result        = $model->save();
+							if ( is_wp_error( $result ) ) {
+								$error_message = $result->get_error_message();
+							} else {
+								// Call module update do action on status update.
+								Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
+							}
 						}
 					}
 				}
@@ -985,23 +1017,42 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 						$model = Forminator_Base_Form_Model::get_model( $id );
 						if ( $model instanceof Forminator_Base_Form_Model ) {
 							$model->status = $status;
-							$model->save();
-							// Call module update do action on status update.
-							Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
+							$result        = $model->save();
+							if ( is_wp_error( $result ) && ( in_array( $result->get_error_code(), array( 'invalid_access', 'invalid_user_role' ), true ) ) ) {
+								++$has_access_error;
+							} else {
+								// Call module update do action on status update.
+								Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
+							}
 						}
+					}
+					if ( $has_access_error ) {
+						$text_message = esc_html__( 'The selected form(s) have been updated. Note: This action cannot be performed on forms without sufficient permissions.', 'forminator' );
 					}
 				}
 				break;
 
 			case 'draft-' . $plural_slug:
 				foreach ( $module_ids as $form_id ) {
-					$this->update_module_status( $form_id, 'draft' );
+					$result = $this->update_module_status( $form_id, 'draft' );
+					if ( is_wp_error( $result ) && ( in_array( $result->get_error_code(), array( 'invalid_access', 'invalid_user_role' ), true ) ) ) {
+						++$has_access_error;
+					}
+				}
+				if ( $has_access_error ) {
+					$text_message = esc_html__( 'The selected form(s) have been updated. Note: This action cannot be performed on forms without sufficient permissions.', 'forminator' );
 				}
 				break;
 
 			case 'publish-' . $plural_slug:
 				foreach ( $module_ids as $form_id ) {
-					$this->update_module_status( $form_id, 'publish' );
+					$result = $this->update_module_status( $form_id, 'publish' );
+					if ( is_wp_error( $result ) && ( in_array( $result->get_error_code(), array( 'invalid_access', 'invalid_user_role' ), true ) ) ) {
+						++$has_access_error;
+					}
+				}
+				if ( $has_access_error ) {
+					$text_message = esc_html__( 'The selected form(s) have been updated. Note: This action cannot be performed on forms without sufficient permissions.', 'forminator' );
 				}
 				break;
 
@@ -1027,6 +1078,16 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			if ( ! empty( $notice ) ) {
 				$args['forminator_notice'] = $notice;
 				$to_referer                = false;
+			}
+
+			if ( ! empty( $error_message ) ) {
+				$args['forminator_error_notice'] = $error_message;
+				$to_referer                      = false;
+			}
+
+			if ( ! empty( $text_message ) ) {
+				$args['forminator_text_notice'] = $text_message;
+				$to_referer                     = false;
 			}
 
 			$fallback_redirect = add_query_arg(
@@ -1102,9 +1163,13 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			$model = Forminator_Base_Form_Model::get_model( $id );
 			if ( $model instanceof Forminator_Base_Form_Model ) {
 				$model->status = $status;
-				$model->save();
-				// Call module update do action on status update.
-				Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
+				$result        = $model->save();
+				if ( is_wp_error( $result ) ) {
+					return $result;
+				} else {
+					// Call module update do action on status update.
+					Forminator_Base_Form_Model::module_update_do_action( static::$module_slug, $id, $model );
+				}
 			}
 		}
 	}

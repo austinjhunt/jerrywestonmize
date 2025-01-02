@@ -135,6 +135,7 @@ class Forminator_Template_Leads extends Forminator_Template {
 			'enable-ajax'                       => 'true',
 			'validation-inline'                 => true,
 			'fields-style'                      => 'open',
+			'basic-fields-style'                => 'open',
 			'form-expire'                       => 'no_expire',
 			// Main container.
 			'form-padding'                      => 'custom',
@@ -219,6 +220,7 @@ class Forminator_Template_Leads extends Forminator_Template {
 			'submission-file'                   => 'delete',
 			// Layout - Radio/Checkbox.
 			'field-image-size'                  => 'custom',
+			'cform-color-option'                => 'theme',
 		);
 	}
 }

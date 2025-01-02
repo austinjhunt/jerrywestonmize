@@ -12,7 +12,7 @@ Represents an output from a call to [BulkUpdateVendors](../../doc/apis/vendors.m
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Errors encountered when the request fails. | getErrors(): ?array | setErrors(?array errors): void |
-| `responses` | [`?array<string,UpdateVendorResponse>`](../../doc/models/update-vendor-response.md) | Optional | A set of [UpdateVendorResponse](../../doc/models/update-vendor-response.md) objects encapsulating successfully created [Vendor](../../doc/models/vendor.md)<br>objects or error responses for failed attempts. The set is represented by a collection of `Vendor`-ID/`UpdateVendorResponse`-object or<br>`Vendor`-ID/error-object pairs. | getResponses(): ?array | setResponses(?array responses): void |
+| `responses` | [`?array<string,UpdateVendorResponse>`](../../doc/models/update-vendor-response.md) | Optional | A set of [UpdateVendorResponse](entity:UpdateVendorResponse) objects encapsulating successfully created [Vendor](entity:Vendor)<br>objects or error responses for failed attempts. The set is represented by a collection of `Vendor`-ID/`UpdateVendorResponse`-object or<br>`Vendor`-ID/error-object pairs. | getResponses(): ?array | setResponses(?array responses): void |
 
 ## Example (as JSON)
 
@@ -69,6 +69,127 @@ Represents an output from a call to [BulkUpdateVendors](../../doc/apis/vendors.m
       "status": "ACTIVE",
       "updated_at": "2022-03-16T20:21:54.859Z",
       "version": 31
+    }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "responses": {
+    "key0": {
+      "errors": [
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        }
+      ],
+      "vendor": {
+        "id": "id6",
+        "created_at": "created_at4",
+        "updated_at": "updated_at2",
+        "name": "name6",
+        "address": {
+          "address_line_1": "address_line_16",
+          "address_line_2": "address_line_26",
+          "address_line_3": "address_line_32",
+          "locality": "locality6",
+          "sublocality": "sublocality6"
+        }
+      }
+    },
+    "key1": {
+      "errors": [
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        }
+      ],
+      "vendor": {
+        "id": "id6",
+        "created_at": "created_at4",
+        "updated_at": "updated_at2",
+        "name": "name6",
+        "address": {
+          "address_line_1": "address_line_16",
+          "address_line_2": "address_line_26",
+          "address_line_3": "address_line_32",
+          "locality": "locality6",
+          "sublocality": "sublocality6"
+        }
+      }
+    },
+    "key2": {
+      "errors": [
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        },
+        {
+          "category": "MERCHANT_SUBSCRIPTION_ERROR",
+          "code": "MAP_KEY_LENGTH_TOO_LONG",
+          "detail": "detail6",
+          "field": "field4"
+        }
+      ],
+      "vendor": {
+        "id": "id6",
+        "created_at": "created_at4",
+        "updated_at": "updated_at2",
+        "name": "name6",
+        "address": {
+          "address_line_1": "address_line_16",
+          "address_line_2": "address_line_26",
+          "address_line_3": "address_line_32",
+          "locality": "locality6",
+          "sublocality": "sublocality6"
+        }
+      }
     }
   }
 }

@@ -220,10 +220,15 @@ class PgCache_ContentGrabber {
 		}
 
 		$this->_page_key_extension = $this->_get_key_extension();
+
 		if ( !$this->_page_key_extension['cache'] ) {
 			$this->_caching = false;
 			$this->cache_reject_reason =
 				$this->_page_key_extension['cache_reject_reason'];
+		}
+
+		if ( ! empty( $_SERVER['HTTP_W3TCALWAYSCACHED'] ) ) {
+			$this->_page_key_extension['alwayscached'] = true;
 		}
 
 		if ( $this->_caching && !$this->_late_caching ) {
@@ -248,6 +253,7 @@ class PgCache_ContentGrabber {
 		/**
 		 * Start output buffering
 		 */
+
 		Util_Bus::add_ob_callback( 'pagecache', array( $this, 'ob_callback' ) );
 	}
 
@@ -279,6 +285,10 @@ class PgCache_ContentGrabber {
 	 * @return boolean
 	 */
 	function _extract_cached_page( $with_filter ) {
+		if ( ! empty( $this->_page_key_extension['alwayscached'] ) ) {
+			return null;
+		}
+
 		$cache = $this->_get_cache( $this->_page_key_extension['group'] );
 
 		$mobile_group = $this->_page_key_extension['useragent'];
@@ -1496,8 +1506,8 @@ class PgCache_ContentGrabber {
 
 		$key_urlpart =
 			$request_url_fragments['host'] .
-			$request_url_fragments['path'] .
-			$request_url_fragments['querystring'];
+			( $request_url_fragments['path'] ?? '' ) .
+			( $request_url_fragments['querystring'] ?? '' );
 
 		$key_urlpart = $this->_get_page_key_urlpart( $key_urlpart, $page_key_extension );
 
@@ -2164,14 +2174,21 @@ class PgCache_ContentGrabber {
 		$buffers = array();
 		$something_was_set = false;
 
+		do_action( 'w3tc_pagecache_before_set', array(
+				'request_url_fragments' => $this->_request_url_fragments,
+				'page_key_extension' => $this->_page_key_extension
+			) );
+
 		foreach ( $compressions_to_store as $_compression ) {
 			$this->_set_extract_page_key(
-				array_merge( $this->_page_key_extension,
-					array(
+				array_merge( $this->_page_key_extension, [
 						'compression' => $_compression,
-						'content_type' => $content_type ) ), true );
-			if ( empty( $this->_page_key ) )
+						'content_type' => $content_type
+					] ),
+				true );
+			if ( empty( $this->_page_key ) ) {
 				continue;
+			}
 
 			// Compress content
 			$buffers[$_compression] = $this->_compress( $buffer, $_compression );
@@ -2248,12 +2265,14 @@ class PgCache_ContentGrabber {
 	 */
 	static protected function log( $msg ) {
 		$data = sprintf(
-			"[%s] [%s] [%s] %s\n", date( 'r' ),
+			'[%1$s] [%2$s] [%3$s] %4$s ' . "\n",
+			date( 'r' ),
 			isset( $_SERVER['REQUEST_URI'] ) ? filter_var( stripslashes( $_SERVER['REQUEST_URI'] ), FILTER_SANITIZE_URL ) : '',
 			! empty( $_SERVER['HTTP_REFERER'] ) ? htmlspecialchars( $_SERVER['HTTP_REFERER'] ) : '-',
 			$msg
 		);
 		$data = strtr( $data, '<>', '..' );
+		$date = Util_Debug::redact_wpnonce( $data );
 
 		$filename = Util_Debug::log_filename( 'pagecache' );
 

@@ -30,7 +30,16 @@ The response object returned by the [ListMerchant](../../doc/apis/merchants.md#l
       "main_location_id": "9A65CGC72ZQG1",
       "status": "ACTIVE"
     }
-  ]
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "cursor": 124
 }
 ```
 

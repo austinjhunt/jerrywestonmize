@@ -25,17 +25,11 @@
 
 ```json
 {
-  "batch_upsert_max_objects_per_batch": null,
-  "batch_upsert_max_total_objects": null,
-  "batch_retrieve_max_object_ids": null,
-  "search_max_page_limit": null,
-  "batch_delete_max_object_ids": null,
-  "update_item_taxes_max_item_ids": null,
-  "update_item_taxes_max_taxes_to_enable": null,
-  "update_item_taxes_max_taxes_to_disable": null,
-  "update_item_modifier_lists_max_item_ids": null,
-  "update_item_modifier_lists_max_modifier_lists_to_enable": null,
-  "update_item_modifier_lists_max_modifier_lists_to_disable": null
+  "batch_upsert_max_objects_per_batch": 206,
+  "batch_upsert_max_total_objects": 122,
+  "batch_retrieve_max_object_ids": 54,
+  "search_max_page_limit": 144,
+  "batch_delete_max_object_ids": 40
 }
 ```
 

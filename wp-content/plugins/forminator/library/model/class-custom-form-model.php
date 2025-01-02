@@ -355,7 +355,7 @@ class Forminator_Form_Model extends Forminator_Base_Form_Model {
 		$fields = $this->get_real_fields();
 		foreach ( $fields as $field ) {
 			$field_array = $field->to_formatted_array();
-			if ( isset( $field_array['type'] ) && 'stripe' === $field_array['type'] ) {
+			if ( isset( $field_array['type'] ) && ( 'stripe' === $field_array['type'] || 'stripe-ocs' === $field_array['type'] ) ) {
 				return $field;
 			}
 		}
@@ -373,7 +373,7 @@ class Forminator_Form_Model extends Forminator_Base_Form_Model {
 		$fields = $this->get_real_fields();
 		foreach ( $fields as $field ) {
 			$field = $field->to_formatted_array();
-			if ( isset( $field['type'] ) && in_array( $field['type'], array( 'paypal', 'stripe' ), true ) ) {
+			if ( isset( $field['type'] ) && in_array( $field['type'], array( 'paypal', 'stripe', 'stripe-ocs' ), true ) ) {
 				return true;
 			}
 		}

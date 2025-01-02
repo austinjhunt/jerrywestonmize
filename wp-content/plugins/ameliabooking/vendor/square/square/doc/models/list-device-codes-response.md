@@ -39,9 +39,31 @@
       "pair_by": "2020-02-07T20:00:04.000Z",
       "product_type": "TERMINAL_API",
       "status": "UNPAIRED",
-      "status_changed_at": "2020-02-07T19:55:04.000Z"
+      "status_changed_at": "2020-02-07T19:55:04.000Z",
+      "device_id": "device_id4"
     }
-  ]
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "cursor": "cursor6"
 }
 ```
 

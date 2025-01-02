@@ -648,4 +648,73 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
 
         return $result;
     }
+
+    /**
+     * @param array $criteria
+     *
+     * @return Collection
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function getByCriteria($criteria)
+    {
+        try {
+            $params = [];
+
+            $where = [];
+
+            if (!empty($criteria['appointmentIds'])) {
+                $queryAppointments = [];
+
+                foreach ($criteria['appointmentIds'] as $index => $value) {
+                    $param = ':appointmentId' . $index;
+
+                    $queryAppointments[] = $param;
+
+                    $params[$param] = $value;
+                }
+
+                $where[] = 'cb.appointmentId IN (' . implode(', ', $queryAppointments) . ')';
+            }
+
+            $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+
+            $statement = $this->connection->prepare(
+                "SELECT
+                    cb.id AS id,
+                    cb.appointmentId AS appointmentId,
+                    cb.customerId AS customerId,
+                    cb.status AS status,
+                    cb.price AS price,
+                    cb.tax AS tax,
+                    cb.persons AS persons,
+                    cb.customFields AS customFields,
+                    cb.info AS info,
+                    cb.aggregatedPrice AS aggregatedPrice,
+                    cb.packageCustomerServiceId AS packageCustomerServiceId,
+                    cb.duration AS duration,
+                    cb.created AS created,
+                    cb.tax AS tax
+                FROM {$this->table} cb
+                {$where}"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        $result = new Collection();
+
+        foreach ($rows as $row) {
+            $result->addItem(
+                call_user_func([static::FACTORY, 'create'], $row),
+                $row['id']
+            );
+        }
+
+        return $result;
+    }
 }

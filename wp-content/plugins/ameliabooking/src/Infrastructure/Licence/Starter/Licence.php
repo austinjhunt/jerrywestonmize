@@ -56,6 +56,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Lite\Licence
                 Commands\Search\GetSearchCommand::class                            => new Commands\Search\GetSearchCommandHandler($c),
                 // User/Customer
                 Commands\User\Customer\ReauthorizeCommand::class                   => new Commands\User\Customer\ReauthorizeCommandHandler($c),
+                Commands\User\Customer\UpdateCustomerStatusCommand::class          => new Commands\User\Customer\UpdateCustomerStatusCommandHandler($c),
                 // User
                 Commands\User\LoginCabinetCommand::class                           => new Commands\User\LoginCabinetCommandHandler($c),
                 Commands\User\LogoutCabinetCommand::class                          => new Commands\User\LogoutCabinetCommandHandler($c),

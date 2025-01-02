@@ -68,6 +68,11 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\Tax\UpdateTaxStatusCommand::class                         => new Commands\Tax\UpdateTaxStatusCommandHandler($c),
                 // Zoom
                 Commands\Zoom\GetUsersCommand::class                               => new Commands\Zoom\GetUsersCommandHandler($c),
+                // Invoices
+                Commands\Invoice\GenerateInvoiceCommand::class                     => new Commands\Invoice\GenerateInvoiceCommandHandler($c),
+                // Apple
+                Commands\Apple\GetAppleCalendarListCommand::class                  => new Commands\Apple\GetAppleCalendarListCommandHandler($c),
+                Commands\Apple\DisconnectFromAppleCalendarCommand::class           => new Commands\Apple\DisconnectFromAppleCalendarCommandHandler($c),
             ]
         );
     }
@@ -94,6 +99,10 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
 
         Routes\Tax\Tax::routes($app);
 
+        Routes\Invoice\Invoice::routes($app);
+
         Routes\Zoom\Zoom::routes($app);
+
+        Routes\Apple\Apple::routes($app);
     }
 }

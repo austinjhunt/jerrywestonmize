@@ -794,6 +794,8 @@ abstract class Forminator_Render_Form {
 	public function styles_template_path( $theme ) {
 		if ( 'none' === $theme ) {
 			return realpath( forminator_plugin_dir() . '/assets/js/front/templates/common/vanilla.html' );
+		} elseif ( 'basic' === $theme ) {
+			return realpath( forminator_plugin_dir() . '/assets/js/front/templates/' . static::$module_slug . '/basic.html' );
 		}
 
 		return realpath( forminator_plugin_dir() . '/assets/js/front/templates/' . static::$module_slug . '/main.html' );
@@ -1680,7 +1682,7 @@ abstract class Forminator_Render_Form {
 				}
 
 				$theme = $this->get_form_design();
-				if ( 'quiz' !== static::$module_slug && ! in_array( $theme, array( 'bold', 'flat', 'material' ), true ) ) {
+				if ( 'quiz' !== static::$module_slug && ! in_array( $theme, array( 'bold', 'flat', 'material', 'basic', 'none' ), true ) ) {
 					$theme = 'default';
 				}
 

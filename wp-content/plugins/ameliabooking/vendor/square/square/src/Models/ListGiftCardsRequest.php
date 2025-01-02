@@ -39,7 +39,7 @@ class ListGiftCardsRequest implements \JsonSerializable
 
     /**
      * Returns Type.
-     * If a [type]($m/GiftCardType) is provided, the endpoint returns gift cards of the specified type.
+     * If a [type](entity:GiftCardType) is provided, the endpoint returns gift cards of the specified type.
      * Otherwise, the endpoint returns gift cards of all types.
      */
     public function getType(): ?string
@@ -52,7 +52,7 @@ class ListGiftCardsRequest implements \JsonSerializable
 
     /**
      * Sets Type.
-     * If a [type]($m/GiftCardType) is provided, the endpoint returns gift cards of the specified type.
+     * If a [type](entity:GiftCardType) is provided, the endpoint returns gift cards of the specified type.
      * Otherwise, the endpoint returns gift cards of all types.
      *
      * @maps type
@@ -64,7 +64,7 @@ class ListGiftCardsRequest implements \JsonSerializable
 
     /**
      * Unsets Type.
-     * If a [type]($m/GiftCardType) is provided, the endpoint returns gift cards of the specified type.
+     * If a [type](entity:GiftCardType) is provided, the endpoint returns gift cards of the specified type.
      * Otherwise, the endpoint returns gift cards of all types.
      */
     public function unsetType(): void
@@ -74,8 +74,8 @@ class ListGiftCardsRequest implements \JsonSerializable
 
     /**
      * Returns State.
-     * If a [state]($m/GiftCardStatus) is provided, the endpoint returns the gift cards in the specified
-     * state.
+     * If a [state](entity:GiftCardStatus) is provided, the endpoint returns the gift cards in the
+     * specified state.
      * Otherwise, the endpoint returns the gift cards of all states.
      */
     public function getState(): ?string
@@ -88,8 +88,8 @@ class ListGiftCardsRequest implements \JsonSerializable
 
     /**
      * Sets State.
-     * If a [state]($m/GiftCardStatus) is provided, the endpoint returns the gift cards in the specified
-     * state.
+     * If a [state](entity:GiftCardStatus) is provided, the endpoint returns the gift cards in the
+     * specified state.
      * Otherwise, the endpoint returns the gift cards of all states.
      *
      * @maps state
@@ -101,8 +101,8 @@ class ListGiftCardsRequest implements \JsonSerializable
 
     /**
      * Unsets State.
-     * If a [state]($m/GiftCardStatus) is provided, the endpoint returns the gift cards in the specified
-     * state.
+     * If a [state](entity:GiftCardStatus) is provided, the endpoint returns the gift cards in the
+     * specified state.
      * Otherwise, the endpoint returns the gift cards of all states.
      */
     public function unsetState(): void
@@ -113,7 +113,7 @@ class ListGiftCardsRequest implements \JsonSerializable
     /**
      * Returns Limit.
      * If a limit is provided, the endpoint returns only the specified number of results per page.
-     * The maximum value is 50. The default value is 30.
+     * The maximum value is 200. The default value is 30.
      * For more information, see [Pagination](https://developer.squareup.com/docs/working-with-
      * apis/pagination).
      */
@@ -128,7 +128,7 @@ class ListGiftCardsRequest implements \JsonSerializable
     /**
      * Sets Limit.
      * If a limit is provided, the endpoint returns only the specified number of results per page.
-     * The maximum value is 50. The default value is 30.
+     * The maximum value is 200. The default value is 30.
      * For more information, see [Pagination](https://developer.squareup.com/docs/working-with-
      * apis/pagination).
      *
@@ -142,7 +142,7 @@ class ListGiftCardsRequest implements \JsonSerializable
     /**
      * Unsets Limit.
      * If a limit is provided, the endpoint returns only the specified number of results per page.
-     * The maximum value is 50. The default value is 30.
+     * The maximum value is 200. The default value is 30.
      * For more information, see [Pagination](https://developer.squareup.com/docs/working-with-
      * apis/pagination).
      */

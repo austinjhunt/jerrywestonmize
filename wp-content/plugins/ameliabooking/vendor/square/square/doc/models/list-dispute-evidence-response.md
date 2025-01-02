@@ -19,9 +19,27 @@ Defines the fields in a `ListDisputeEvidence` response.
 
 ```json
 {
-  "evidence": null,
-  "errors": null,
-  "cursor": null
+  "evidence": [
+    {
+      "evidence_id": "evidence_id0",
+      "id": "id2",
+      "dispute_id": "dispute_id4",
+      "evidence_file": {
+        "filename": "filename8",
+        "filetype": "filetype8"
+      },
+      "evidence_text": "evidence_text6"
+    }
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "cursor": "cursor6"
 }
 ```
 

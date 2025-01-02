@@ -24,7 +24,15 @@ Represents a `RetrieveSnippet` response. The response can include either `snippe
     "id": "snippet_5d178150-a6c0-11eb-a9f1-437e6a2881e7",
     "site_id": "site_278075276488921835",
     "updated_at": "2021-03-11T25:40:09.000000Z"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

@@ -11,7 +11,7 @@ class Locale extends Constraint
  protected static $errorNames = [self::NO_SUCH_LOCALE_ERROR => 'NO_SUCH_LOCALE_ERROR'];
  public $message = 'This value is not a valid locale.';
  public $canonicalize = \true;
- public function __construct(array $options = null, string $message = null, bool $canonicalize = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $message = null, ?bool $canonicalize = null, ?array $groups = null, $payload = null)
  {
  if (!\class_exists(Locales::class)) {
  throw new LogicException('The Intl component is required to use the Locale constraint. Try running "composer require symfony/intl".');

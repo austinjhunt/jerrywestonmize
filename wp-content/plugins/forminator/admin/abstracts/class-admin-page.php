@@ -160,6 +160,7 @@ abstract class Forminator_Admin_Page {
 	public function remove_notice_params( $vars ) {
 		$vars[] = 'forminator_notice';
 		$vars[] = 'forminator_text_notice';
+		$vars[] = 'forminator_error_notice';
 
 		return $vars;
 	}
@@ -207,6 +208,7 @@ abstract class Forminator_Admin_Page {
 	 */
 	protected function render_header() {
 		$this->show_css_warning();
+		$this->show_stripe_migration_notice();
 
 		if ( $this->template_exists( $this->folder . '/header' ) ) {
 			$this->template( $this->folder . '/header' );
@@ -443,7 +445,7 @@ abstract class Forminator_Admin_Page {
 	protected function maybe_redirect_to_referer( $fallback_redirect = '', $to_referer = true ) {
 		$referer = wp_get_referer();
 		$referer = ! empty( $referer ) ? $referer : wp_get_raw_referer();
-		$referer = remove_query_arg( array( 'export', 'delete', 'forminator_notice', 'forminator_text_notice' ), $referer );
+		$referer = remove_query_arg( array( 'export', 'delete', 'forminator_notice', 'forminator_text_notice', 'forminator_error_notice' ), $referer );
 
 		if ( $referer && $to_referer ) {
 			wp_safe_redirect( $referer );
@@ -514,6 +516,63 @@ abstract class Forminator_Admin_Page {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Show migration notice for stripe
+	 *
+	 * @return void
+	 */
+	public function show_stripe_migration_notice() {
+		$active_forms = Forminator_Form_Model::model()->get_models_with_old_stripe();
+		if ( ! $active_forms ) {
+			return;
+		}
+		?>
+
+
+		<div
+			role="alert"
+			class="sui-notice sui-notice-yellow sui-active"
+			style="display: block; text-align: left;"
+			aria-live="assertive"
+		>
+
+			<div class="sui-notice-content">
+
+				<div class="sui-notice-message">
+
+					<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
+
+					<p>
+						<b><?php esc_html_e( 'Migrate to new Forminator Stripe field', 'forminator' ); ?></b>
+					</p>
+					<p>
+						<?php
+						$stripe_link = 'https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#stripe-field';
+						printf(
+							/* Translators: 1. Opening <a> tag with link 2. closing <a> tag. */
+							esc_html__( 'You are using the Stripe simple card payment element, which is being deprecated by Stripe. %1$sLearn more%2$s. To ensure seamless transactions, update the Stripe field in the form(s) below to the new Stripe payment element.', 'forminator' ),
+							'<a href="' . esc_url( $stripe_link ) . '" target="_blank">',
+							'</a>'
+						);
+						?>
+					</p>
+
+					<?php foreach ( $active_forms as $form ) : ?>
+						<li>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=forminator-cform-wizard&id=' . intval( $form['id'] ) ) ); ?>"
+								class="">
+								<?php echo esc_html( $form['title'] ); ?>
+								<i class="sui-icon-pencil" aria-hidden="true"></i>
+							</a>
+						</li>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		</div>
+
+		<?php
 	}
 
 	/**

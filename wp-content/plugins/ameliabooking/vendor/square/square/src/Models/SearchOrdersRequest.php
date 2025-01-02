@@ -6,12 +6,6 @@ namespace Square\Models;
 
 use stdClass;
 
-/**
- * The request does not have any required fields. When given no query criteria,
- * `SearchOrders` returns all results for all of the seller's locations. When retrieving additional
- * pages using a `cursor`, the `query` must be equal to the `query` used to retrieve the first page of
- * results.
- */
 class SearchOrdersRequest implements \JsonSerializable
 {
     /**
@@ -44,8 +38,6 @@ class SearchOrdersRequest implements \JsonSerializable
      * The location IDs for the orders to query. All locations must belong to
      * the same merchant.
      *
-     * Min: 1 location ID.
-     *
      * Max: 10 location IDs.
      *
      * @return string[]|null
@@ -59,8 +51,6 @@ class SearchOrdersRequest implements \JsonSerializable
      * Sets Location Ids.
      * The location IDs for the orders to query. All locations must belong to
      * the same merchant.
-     *
-     * Min: 1 location ID.
      *
      * Max: 10 location IDs.
      *
@@ -77,7 +67,8 @@ class SearchOrdersRequest implements \JsonSerializable
      * Returns Cursor.
      * A pagination cursor returned by a previous call to this endpoint.
      * Provide this cursor to retrieve the next set of results for your original query.
-     * For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination).
+     * For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-
+     * patterns/pagination).
      */
     public function getCursor(): ?string
     {
@@ -88,7 +79,8 @@ class SearchOrdersRequest implements \JsonSerializable
      * Sets Cursor.
      * A pagination cursor returned by a previous call to this endpoint.
      * Provide this cursor to retrieve the next set of results for your original query.
-     * For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination).
+     * For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-
+     * patterns/pagination).
      *
      * @maps cursor
      */
@@ -119,10 +111,10 @@ class SearchOrdersRequest implements \JsonSerializable
 
     /**
      * Returns Limit.
-     * The maximum number of results to be returned in a single page. It is
-     * possible to receive fewer results than the specified limit on a given page.
+     * The maximum number of results to be returned in a single page.
      *
      * Default: `500`
+     * Max: `1000`
      */
     public function getLimit(): ?int
     {
@@ -131,10 +123,10 @@ class SearchOrdersRequest implements \JsonSerializable
 
     /**
      * Sets Limit.
-     * The maximum number of results to be returned in a single page. It is
-     * possible to receive fewer results than the specified limit on a given page.
+     * The maximum number of results to be returned in a single page.
      *
      * Default: `500`
+     * Max: `1000`
      *
      * @maps limit
      */
@@ -146,7 +138,7 @@ class SearchOrdersRequest implements \JsonSerializable
     /**
      * Returns Return Entries.
      * A Boolean that controls the format of the search results. If `true`,
-     * `SearchOrders` returns [OrderEntry]($m/OrderEntry) objects. If `false`, `SearchOrders`
+     * `SearchOrders` returns [OrderEntry](entity:OrderEntry) objects. If `false`, `SearchOrders`
      * returns complete order objects.
      *
      * Default: `false`.
@@ -159,7 +151,7 @@ class SearchOrdersRequest implements \JsonSerializable
     /**
      * Sets Return Entries.
      * A Boolean that controls the format of the search results. If `true`,
-     * `SearchOrders` returns [OrderEntry]($m/OrderEntry) objects. If `false`, `SearchOrders`
+     * `SearchOrders` returns [OrderEntry](entity:OrderEntry) objects. If `false`, `SearchOrders`
      * returns complete order objects.
      *
      * Default: `false`.

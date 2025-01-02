@@ -24,16 +24,21 @@ Either `loyalty_promotion` or `errors` is present in the response.
       "start_date": "2022-08-16",
       "time_periods": [
         "BEGIN:VEVENT\nDTSTART:20220816T160000\nDURATION:PT2H\nRRULE:FREQ=WEEKLY;BYDAY=TU\nEND:VEVENT"
-      ]
+      ],
+      "end_date": "end_date8"
     },
     "canceled_at": "2022-08-17T12:42:49Z",
     "created_at": "2022-08-16T08:38:54Z",
     "id": "loypromo_f0f9b849-725e-378d-b810-511237e07b67",
     "incentive": {
       "points_multiplier_data": {
+        "multiplier": "3.000",
         "points_multiplier": 3
       },
-      "type": "POINTS_MULTIPLIER"
+      "type": "POINTS_MULTIPLIER",
+      "points_addition_data": {
+        "points_addition": 218
+      }
     },
     "loyalty_program_id": "d619f755-2d17-41f3-990d-c04ecedd64dd",
     "minimum_spend_amount_money": {
@@ -50,7 +55,27 @@ Either `loyalty_promotion` or `errors` is present in the response.
       "times": 1
     },
     "updated_at": "2022-08-17T12:42:49Z"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

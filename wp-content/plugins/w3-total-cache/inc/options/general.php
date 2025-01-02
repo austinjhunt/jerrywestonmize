@@ -10,7 +10,6 @@ namespace W3TC;
 if ( ! defined( 'W3TC' ) ) {
 	die();
 }
-
 require W3TC_INC_DIR . '/options/common/header.php';
 
 ?>
@@ -102,7 +101,9 @@ require W3TC_INC_DIR . '/options/common/header.php';
 			),
 			'',
 			'page_cache',
-			Util_UI::admin_url( 'admin.php?page=w3tc_pgcache' )
+			Util_UI::admin_url( 'admin.php?page=w3tc_pgcache' ),
+			'w3tc_premium_services',
+			'w3tc_tutorial'
 		);
 		Util_Ui::config_overloading_button( array( 'key' => 'pgcache.configuration_overloaded' ) );
 		?>
@@ -176,6 +177,11 @@ require W3TC_INC_DIR . '/options/common/header.php';
 			?>
 		</table>
 
+		<?php
+			echo wp_kses_post( Util_Ui::get_tab( 'page_cache', 'help' ) );
+			echo wp_kses_post( Util_Ui::get_tab( 'page_cache', 'premium-services' ) );
+		?>
+
 		<?php Util_Ui::postbox_footer(); ?>
 
 		<?php
@@ -187,7 +193,9 @@ require W3TC_INC_DIR . '/options/common/header.php';
 			),
 			'',
 			'minify',
-			Util_UI::admin_url( 'admin.php?page=w3tc_minify' )
+			Util_UI::admin_url( 'admin.php?page=w3tc_minify' ),
+			'w3tc_premium_services',
+			'w3tc_tutorial'
 		);
 		Util_Ui::config_overloading_button( array( 'key' => 'minify.configuration_overloaded' ) );
 		?>
@@ -303,6 +311,11 @@ require W3TC_INC_DIR . '/options/common/header.php';
 			?>
 		</table>
 
+		<?php
+			echo wp_kses_post( Util_Ui::get_tab( 'minify', 'help' ) );
+			echo wp_kses_post( Util_Ui::get_tab( 'minify', 'premium-services' ) );
+		?>
+
 		<?php Util_Ui::postbox_footer(); ?>
 
 
@@ -317,7 +330,9 @@ require W3TC_INC_DIR . '/options/common/header.php';
 			),
 			'',
 			'database_cache',
-			Util_UI::admin_url( 'admin.php?page=w3tc_dbcache' )
+			Util_UI::admin_url( 'admin.php?page=w3tc_dbcache' ),
+			'w3tc_premium_services',
+			'w3tc_tutorial'
 		);
 		Util_Ui::config_overloading_button( array( 'key' => 'dbcache.configuration_overloaded' ) );
 		?>
@@ -336,8 +351,16 @@ require W3TC_INC_DIR . '/options/common/header.php';
 			?>
 			<div class="dbcache_disk_notice notice notice-warning">
 				<p><b><?php esc_html_e( 'Warning: Disk-Based Database Caching Selected', 'w3-total-cache' ); ?></b></p>
-				<p><?php esc_html_e( 'Using disk as the cache engine for database caching is not recommended due to its potential for slow performance depending on storage device types and server configuration. For optimal performance, consider using a memory-based caching solution like Redis or Memcached.', 'w3-total-cache' ); ?></p>
-				<p><a target="_blank" href="<?php echo esc_url( 'https://www.boldgrid.com/comparing-disk-redis-memcached-caching/' ); ?>"><?php esc_html_e( 'Comparing Disk, Redis, and Memcached: Understanding Caching Solutions', 'w3-total-cache' ); ?></a></p>
+				<p>
+					<li style="margin-left:15px;"><?php esc_html_e( 'Using disk as the cache engine for database caching is not recommended due to its potential for slow performance depending on storage device types and server configuration.', 'w3-total-cache' ); ?></li>
+					<li style="margin-left:15px;"><?php esc_html_e( 'This setting can potentially create a large number of files.  Please be aware of any inode or disk space limits you may have on your hosting account.', 'w3-total-cache' ); ?></li>
+				</p>
+				<p>
+					<?php esc_html_e( 'For optimal performance, consider using a memory-based caching solution like Redis or Memcached.', 'w3-total-cache' ); ?>
+					<a target="_blank" href="<?php echo esc_url( 'https://www.boldgrid.com/comparing-disk-redis-memcached-caching/' ); ?>"
+						title="<?php esc_attr_e( 'Comparing Disk, Redis, and Memcached: Understanding Caching Solutions', 'w3-total-cache' ); ?>">
+						<?php esc_html_e( 'Learn more', 'w3-total-cache' ); ?> <span class="dashicons dashicons-external"></span></a>
+				</p>
 			</div>
 			<?php
 
@@ -348,6 +371,11 @@ require W3TC_INC_DIR . '/options/common/header.php';
 				<?php require W3TC_INC_OPTIONS_DIR . '/enterprise/dbcluster_general_section.php'; ?>
 			<?php endif; ?>
 		</table>
+
+		<?php
+			echo wp_kses_post( Util_Ui::get_tab( 'database_cache', 'help' ) );
+			echo wp_kses_post( Util_Ui::get_tab( 'database_cache', 'premium-services' ) );
+		?>
 
 		<?php Util_Ui::postbox_footer(); ?>
 
@@ -360,10 +388,12 @@ require W3TC_INC_DIR . '/options/common/header.php';
 			),
 			'',
 			'object_cache',
-			Util_UI::admin_url( 'admin.php?page=w3tc_objectcache' )
+			Util_UI::admin_url( 'admin.php?page=w3tc_objectcache' ),
+			'w3tc_premium_services',
+			'w3tc_tutorial'
 		);
 		Util_Ui::config_overloading_button( array( 'key' => 'objectcache.configuration_overloaded' ) );
-		echo ( ! $this->_config->getf_boolean( 'objectcache.enabled' ) && has_filter( 'w3tc_config_item_objectcache.enabled' ) ? '<p class="notice notice-warning inline" style="margin-top:10px !important;">' . esc_html__( 'Object Cache is disabled via filter.', 'w3-total-cache' ) . '</p>' : '' );
+		echo ( ! $this->_config->getf_boolean( 'objectcache.enabled' ) && has_filter( 'w3tc_config_item_objectcache.enabled' ) ? '<p class="notice notice-warning inline w3tc-postbox-notice" style="margin-top:10px !important;">' . esc_html__( 'Object Cache is disabled via filter.', 'w3-total-cache' ) . '</p>' : '' );
 		?>
 
 		<table class="form-table">
@@ -403,13 +433,26 @@ require W3TC_INC_DIR . '/options/common/header.php';
 			?>
 			<div class="objectcache_disk_notice notice notice-warning">
 				<p><b><?php esc_html_e( 'Warning: Disk-Based Object Caching Selected', 'w3-total-cache' ); ?></b></p>
-				<p><?php esc_html_e( 'Using disk as the cache engine for object caching is not recommended due to its potential for slow performance depending on storage device types and server configuration. For optimal performance, consider using a memory-based caching solution like Redis or Memcached.', 'w3-total-cache' ); ?></p>
-				<p><a target="_blank" href="<?php echo esc_url( 'https://www.boldgrid.com/comparing-disk-redis-memcached-caching/' ); ?>"><?php esc_html_e( 'Comparing Disk, Redis, and Memcached: Understanding Caching Solutions', 'w3-total-cache' ); ?></a></p>
+				<p>
+					<li style="margin-left:15px;"><?php esc_html_e( 'Using disk as the cache engine for object caching is not recommended due to its potential for slow performance depending on storage device types and server configuration.', 'w3-total-cache' ); ?></li>
+					<li style="margin-left:15px;"><?php esc_html_e( 'This setting can potentially create a large number of files.  Please be aware of any inode or disk space limits you may have on your hosting account.', 'w3-total-cache' ); ?></li>
+				</p>
+				<p>
+					<?php esc_html_e( 'For optimal performance, consider using a memory-based caching solution like Redis or Memcached.', 'w3-total-cache' ); ?>
+					<a target="_blank" href="<?php echo esc_url( 'https://www.boldgrid.com/comparing-disk-redis-memcached-caching/' ); ?>"
+						title="<?php esc_attr_e( 'Comparing Disk, Redis, and Memcached: Understanding Caching Solutions', 'w3-total-cache' ); ?>">
+						<?php esc_html_e( 'Learn more', 'w3-total-cache' ); ?> <span class="dashicons dashicons-external"></span></a>
+				</p>
 			</div>
 			<?php
 			Util_Ui::config_item_engine( array( 'key' => 'objectcache.engine' ) );
 			?>
 		</table>
+
+		<?php
+			echo wp_kses_post( Util_Ui::get_tab( 'object_cache', 'help' ) );
+			echo wp_kses_post( Util_Ui::get_tab( 'object_cache', 'premium-services' ) );
+		?>
 
 		<?php Util_Ui::postbox_footer(); ?>
 
@@ -422,7 +465,9 @@ require W3TC_INC_DIR . '/options/common/header.php';
 			),
 			'',
 			'browser_cache',
-			Util_UI::admin_url( 'admin.php?page=w3tc_browsercache' )
+			Util_UI::admin_url( 'admin.php?page=w3tc_browsercache' ),
+			'w3tc_premium_services',
+			'w3tc_tutorial'
 		);
 		Util_Ui::config_overloading_button( array( 'key' => 'browsercache.configuration_overloaded' ) );
 		?>
@@ -455,6 +500,89 @@ require W3TC_INC_DIR . '/options/common/header.php';
 			?>
 		</table>
 
+		<?php
+			echo wp_kses_post( Util_Ui::get_tab( 'browser_cache', 'help' ) );
+			echo wp_kses_post( Util_Ui::get_tab( 'browser_cache', 'premium-services' ) );
+		?>
+
+		<?php Util_Ui::postbox_footer(); ?>
+
+		<?php
+		Util_Ui::postbox_header_tabs(
+			esc_html__( 'Purge via WP Cron', 'w3-total-cache' ),
+			wp_kses(
+				sprintf(
+					// Translators: 1 opening HTML a tag, 2 closing HTML a tag.
+					__(
+						'Enabling this will schedule a WP-Cron event that will flush all enabled Caches via a single cron job. Each cache\'s advanced settings page features similar settings to this if you wish to schedule purges for specific caches only. If you prefer to use a system cron job instead of WP-Cron, you can schedule the following command to run at your desired interval: "wp w3tc flush all". If the Always Cached extension is active and enabled, page cache entries will instead be added to the queue instead of being purged from the cache. Visit %1$shere%2$s for more information.',
+						'w3-total-cache'
+					),
+					'<a href="' . esc_url( 'https://www.boldgrid.com/support/w3-total-cache/schedule-cache-purges/' ) . '" target="_blank">',
+					'</a>'
+				),
+				array(
+					'a' => array(
+						'href'   => array(),
+						'target' => array(),
+					),
+				)
+			),
+			'',
+			'allcache_wp_cron'
+		);
+		?>
+		<table class="form-table">
+			<?php
+			$c           = Dispatcher::config();
+			$wp_disabled = ! $c->get_boolean( 'allcache.wp_cron' );
+
+			Util_Ui::config_item(
+				array(
+					'key'            => 'allcache.wp_cron',
+					'label'          => esc_html__( 'Enable WP-Cron Event', 'w3-total-cache' ),
+					'checkbox_label' => esc_html__( 'Enable', 'w3-total-cache' ),
+					'control'        => 'checkbox',
+				)
+			);
+
+			$time_options = array();
+			for ( $hour = 0; $hour < 24; $hour++ ) {
+				foreach ( array('00', '30') as $minute ) {
+					$time_value                = $hour * 60 + intval( $minute );
+					$scheduled_time            = new \DateTime( "{$hour}:{$minute}", wp_timezone() );
+					$time_label                = $scheduled_time->format( 'g:i a' );
+					$time_options[$time_value] = $time_label;
+				}
+			}
+
+			Util_Ui::config_item(
+				array(
+					'key'              => 'allcache.wp_cron_time',
+					'label'            => esc_html__( 'Start Time', 'w3-total-cache' ),
+					'control'          => 'selectbox',
+					'selectbox_values' => $time_options,
+					'description'      => esc_html__( 'This setting controls the initial start time of the cron job. If the selected time has already passed, it will schedule the job for the following day at the selected time.', 'w3-total-cache' ),
+					'disabled'         => $wp_disabled,
+				)
+			);
+
+			Util_Ui::config_item(
+				array(
+					'key'              => 'allcache.wp_cron_interval',
+					'label'            => esc_html__( 'Interval', 'w3-total-cache' ),
+					'control'          => 'selectbox',
+					'selectbox_values' => array(
+						'hourly'     => esc_html__( 'Hourly', 'w3-total-cache' ),
+						'twicedaily' => esc_html__( 'Twice Daily', 'w3-total-cache' ),
+						'daily'      => esc_html__( 'Daily', 'w3-total-cache' ),
+						'weekly'     => esc_html__( 'Weekly', 'w3-total-cache' ),
+					),
+					'description'      => esc_html__( 'This setting controls the interval that the cron job should occur.', 'w3-total-cache' ),
+					'disabled'         => $wp_disabled,
+				)
+			);
+			?>
+		</table>
 		<?php Util_Ui::postbox_footer(); ?>
 
 		<?php do_action( 'w3tc_settings_general_boxarea_cdn' ); ?>
@@ -1064,6 +1192,7 @@ require W3TC_INC_DIR . '/options/common/header.php';
 			),
 			'',
 			'google_pagespeed',
+			'',
 			'',
 			array( esc_html__( 'PageSpeed Tool', 'w3-total-cache' ) => Util_UI::admin_url( 'admin.php?page=w3tc_pagespeed' ) )
 		);

@@ -120,6 +120,7 @@ class LiteFrontendStrings
             'licence_button_text'          => __('Upgrade', 'wpamelia'),
             'min'                          => __('min', 'wpamelia'),
             'on_site'                      => __('On-site', 'wpamelia'),
+            'payment_btn_on_site'          => __('On-Site', 'wpamelia'),
             'oops'                         => __('Oops...'),
             'payment_btn_square'           => __('Square', 'wpamelia'),
             'open'                         => __('Open', 'wpamelia'),

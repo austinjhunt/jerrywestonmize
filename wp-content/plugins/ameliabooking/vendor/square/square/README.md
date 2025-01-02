@@ -19,7 +19,7 @@ Use this library to integrate Square payments into your app and grow your busine
 
 Use of the Square PHP SDK requires:
 
-* PHP 7.4 through PHP 8.1
+* PHP 7.4 through PHP ^8.0
 
 ## Installation
 
@@ -87,6 +87,7 @@ All environment variables:
 
 ### Orders
 * [Orders]
+* [Order Custom Attributes]
 
 ### Subscriptions
 * [Subscriptions]
@@ -113,10 +114,13 @@ All environment variables:
 
 ### Bookings
 * [Bookings]
+* [Booking Custom Attributes]
 
 ### Business
 * [Merchants]
+* [Merchant Custom Attributes]
 * [Locations]
+* [Location Custom Attributes]
 * [Devices]
 * [Cash Drawers]
 * [Vendors]
@@ -136,6 +140,8 @@ All environment variables:
 * [Mobile Authorization]
 * [OAuth]
 
+### Webhook Subscriptions
+* [Webhook Subscriptions]
 ## Deprecated APIs
 
 The following Square APIs are [deprecated](https://developer.squareup.com/docs/build-basics/api-lifecycle):
@@ -168,9 +174,13 @@ The following Square APIs are [deprecated](https://developer.squareup.com/docs/b
 [Labor]: doc/apis/labor.md
 [Loyalty]: doc/apis/loyalty.md
 [Bookings]: doc/apis/bookings.md
+[Booking Custom Attributes]: doc/api/booking-custom-attributes.md
 [Locations]: doc/apis/locations.md
+[Location Custom Attributes]: doc/api/location-custom-attributes.md
 [Merchants]: doc/apis/merchants.md
+[Merchant Custom Attributes]: doc/api/merchant-custom-attributes.md
 [Orders]: doc/apis/orders.md
+[Order Custom Attributes]: doc/api/order-custom-attributes.md
 [Invoices]: doc/apis/invoices.md
 [Apple Pay]: doc/apis/apple-pay.md
 [Refunds]: doc/apis/refunds.md
@@ -180,9 +190,10 @@ The following Square APIs are [deprecated](https://developer.squareup.com/docs/b
 [Team]: doc/apis/team.md
 [Sites]: doc/apis/sites.md
 [Snippets]: doc/apis/snippets.md
-[Cards]: doc/api/cards.md
-[Payouts]: doc/api/payouts.md
-[Gift Cards]: doc/api/gift-cards.md
-[Gift Card Activities]: doc/api/gift-card-activities.md
+[Cards]: doc/apis/cards.md
+[Payouts]: doc/apis/payouts.md
+[Gift Cards]: doc/apis/gift-cards.md
+[Gift Card Activities]: doc/apis/gift-card-activities.md
 [Employees]: doc/apis/employees.md
 [Transactions]: doc/apis/transactions.md
+[Webhook Subscriptions]: doc/api/webhook-subscriptions.md

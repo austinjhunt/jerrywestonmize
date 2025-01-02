@@ -17,9 +17,25 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function forminator_get_all_fonts() {
 	$cached_fonts = forminator_cached_fonts();
+	$cached_fonts = ! empty( $cached_fonts ) ? json_decode( $cached_fonts, true ) : forminator_load_from_google();
 
-	return ! empty( $cached_fonts )
-		? json_decode( $cached_fonts, true ) : forminator_load_from_google();
+	/**
+	 * Retrieve all available fonts.
+	 *
+	 * Example format:
+	 * array(
+	 *     'family'   => 'ABeeZee',
+	 *     'category' => 'sans-serif',
+	 *     'variants' => array('regular', 'italic')
+	 * )
+	 *
+	 * @since 1.37
+	 *
+	 * @param array $cached_fonts Array of supported fonts.
+	 *
+	 * @return array Filtered list of fonts.
+	 */
+	return apply_filters( 'forminator_on_get_all_fonts', $cached_fonts );
 }
 
 /**

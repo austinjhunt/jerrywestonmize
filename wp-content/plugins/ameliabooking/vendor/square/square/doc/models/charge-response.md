@@ -2,7 +2,7 @@
 # Charge Response
 
 Defines the fields that are included in the response body of
-a request to the [Charge]($e/Transactions/Charge) endpoint.
+a request to the [Charge](api-endpoint:Transactions-Charge) endpoint.
 
 One of `errors` or `transaction` is present in a given response (never both).
 
@@ -59,8 +59,129 @@ One of `errors` or `transaction` is present in a given response (never both).
         "transaction_id": "KnL67ZIwXCPtzOrqj0HrkxMF",
         "type": "CARD"
       }
+    ],
+    "refunds": [
+      {
+        "id": "id8",
+        "location_id": "location_id2",
+        "transaction_id": "transaction_id6",
+        "tender_id": "tender_id6",
+        "created_at": "created_at6",
+        "reason": "reason4",
+        "amount_money": {
+          "amount": 186,
+          "currency": "TZS"
+        },
+        "status": "PENDING",
+        "processing_fee_money": {
+          "amount": 112,
+          "currency": "BBD"
+        },
+        "additional_recipients": [
+          {
+            "location_id": "location_id0",
+            "description": "description6",
+            "amount_money": {
+              "amount": 186,
+              "currency": "TZS"
+            },
+            "receivable_id": "receivable_id6"
+          },
+          {
+            "location_id": "location_id0",
+            "description": "description6",
+            "amount_money": {
+              "amount": 186,
+              "currency": "TZS"
+            },
+            "receivable_id": "receivable_id6"
+          }
+        ]
+      },
+      {
+        "id": "id8",
+        "location_id": "location_id2",
+        "transaction_id": "transaction_id6",
+        "tender_id": "tender_id6",
+        "created_at": "created_at6",
+        "reason": "reason4",
+        "amount_money": {
+          "amount": 186,
+          "currency": "TZS"
+        },
+        "status": "PENDING",
+        "processing_fee_money": {
+          "amount": 112,
+          "currency": "BBD"
+        },
+        "additional_recipients": [
+          {
+            "location_id": "location_id0",
+            "description": "description6",
+            "amount_money": {
+              "amount": 186,
+              "currency": "TZS"
+            },
+            "receivable_id": "receivable_id6"
+          },
+          {
+            "location_id": "location_id0",
+            "description": "description6",
+            "amount_money": {
+              "amount": 186,
+              "currency": "TZS"
+            },
+            "receivable_id": "receivable_id6"
+          }
+        ]
+      },
+      {
+        "id": "id8",
+        "location_id": "location_id2",
+        "transaction_id": "transaction_id6",
+        "tender_id": "tender_id6",
+        "created_at": "created_at6",
+        "reason": "reason4",
+        "amount_money": {
+          "amount": 186,
+          "currency": "TZS"
+        },
+        "status": "PENDING",
+        "processing_fee_money": {
+          "amount": 112,
+          "currency": "BBD"
+        },
+        "additional_recipients": [
+          {
+            "location_id": "location_id0",
+            "description": "description6",
+            "amount_money": {
+              "amount": 186,
+              "currency": "TZS"
+            },
+            "receivable_id": "receivable_id6"
+          },
+          {
+            "location_id": "location_id0",
+            "description": "description6",
+            "amount_money": {
+              "amount": 186,
+              "currency": "TZS"
+            },
+            "receivable_id": "receivable_id6"
+          }
+        ]
+      }
     ]
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

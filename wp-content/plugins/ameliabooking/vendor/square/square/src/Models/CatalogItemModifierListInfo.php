@@ -7,7 +7,9 @@ namespace Square\Models;
 use stdClass;
 
 /**
- * Options to control the properties of a `CatalogModifierList` applied to a `CatalogItem` instance.
+ * References a text-based modifier or a list of non text-based modifiers applied to a `CatalogItem`
+ * instance
+ * and specifies supported behaviors of the application.
  */
 class CatalogItemModifierListInfo implements \JsonSerializable
 {
@@ -35,6 +37,11 @@ class CatalogItemModifierListInfo implements \JsonSerializable
      * @var array
      */
     private $enabled = [];
+
+    /**
+     * @var array
+     */
+    private $ordinal = [];
 
     /**
      * @param string $modifierListId
@@ -108,6 +115,19 @@ class CatalogItemModifierListInfo implements \JsonSerializable
      * Returns Min Selected Modifiers.
      * If 0 or larger, the smallest number of `CatalogModifier`s that must be selected from this
      * `CatalogModifierList`.
+     * The default value is `-1`.
+     *
+     * When  `CatalogModifierList.selection_type` is `MULTIPLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that from zero to the maximum number of
+     * modifiers of
+     * the `CatalogModifierList` can be selected from the `CatalogModifierList`.
+     *
+     * When the `CatalogModifierList.selection_type` is `SINGLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that exactly one modifier must be
+     * present in
+     * and can be selected from the `CatalogModifierList`
      */
     public function getMinSelectedModifiers(): ?int
     {
@@ -121,6 +141,19 @@ class CatalogItemModifierListInfo implements \JsonSerializable
      * Sets Min Selected Modifiers.
      * If 0 or larger, the smallest number of `CatalogModifier`s that must be selected from this
      * `CatalogModifierList`.
+     * The default value is `-1`.
+     *
+     * When  `CatalogModifierList.selection_type` is `MULTIPLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that from zero to the maximum number of
+     * modifiers of
+     * the `CatalogModifierList` can be selected from the `CatalogModifierList`.
+     *
+     * When the `CatalogModifierList.selection_type` is `SINGLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that exactly one modifier must be
+     * present in
+     * and can be selected from the `CatalogModifierList`
      *
      * @maps min_selected_modifiers
      */
@@ -133,6 +166,19 @@ class CatalogItemModifierListInfo implements \JsonSerializable
      * Unsets Min Selected Modifiers.
      * If 0 or larger, the smallest number of `CatalogModifier`s that must be selected from this
      * `CatalogModifierList`.
+     * The default value is `-1`.
+     *
+     * When  `CatalogModifierList.selection_type` is `MULTIPLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that from zero to the maximum number of
+     * modifiers of
+     * the `CatalogModifierList` can be selected from the `CatalogModifierList`.
+     *
+     * When the `CatalogModifierList.selection_type` is `SINGLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that exactly one modifier must be
+     * present in
+     * and can be selected from the `CatalogModifierList`
      */
     public function unsetMinSelectedModifiers(): void
     {
@@ -143,6 +189,19 @@ class CatalogItemModifierListInfo implements \JsonSerializable
      * Returns Max Selected Modifiers.
      * If 0 or larger, the largest number of `CatalogModifier`s that can be selected from this
      * `CatalogModifierList`.
+     * The default value is `-1`.
+     *
+     * When  `CatalogModifierList.selection_type` is `MULTIPLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that from zero to the maximum number of
+     * modifiers of
+     * the `CatalogModifierList` can be selected from the `CatalogModifierList`.
+     *
+     * When the `CatalogModifierList.selection_type` is `SINGLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that exactly one modifier must be
+     * present in
+     * and can be selected from the `CatalogModifierList`
      */
     public function getMaxSelectedModifiers(): ?int
     {
@@ -156,6 +215,19 @@ class CatalogItemModifierListInfo implements \JsonSerializable
      * Sets Max Selected Modifiers.
      * If 0 or larger, the largest number of `CatalogModifier`s that can be selected from this
      * `CatalogModifierList`.
+     * The default value is `-1`.
+     *
+     * When  `CatalogModifierList.selection_type` is `MULTIPLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that from zero to the maximum number of
+     * modifiers of
+     * the `CatalogModifierList` can be selected from the `CatalogModifierList`.
+     *
+     * When the `CatalogModifierList.selection_type` is `SINGLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that exactly one modifier must be
+     * present in
+     * and can be selected from the `CatalogModifierList`
      *
      * @maps max_selected_modifiers
      */
@@ -168,6 +240,19 @@ class CatalogItemModifierListInfo implements \JsonSerializable
      * Unsets Max Selected Modifiers.
      * If 0 or larger, the largest number of `CatalogModifier`s that can be selected from this
      * `CatalogModifierList`.
+     * The default value is `-1`.
+     *
+     * When  `CatalogModifierList.selection_type` is `MULTIPLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that from zero to the maximum number of
+     * modifiers of
+     * the `CatalogModifierList` can be selected from the `CatalogModifierList`.
+     *
+     * When the `CatalogModifierList.selection_type` is `SINGLE`, `CatalogModifierListInfo.
+     * min_selected_modifiers=-1`
+     * and `CatalogModifierListInfo.max_selected_modifier=-1` means that exactly one modifier must be
+     * present in
+     * and can be selected from the `CatalogModifierList`
      */
     public function unsetMaxSelectedModifiers(): void
     {
@@ -207,6 +292,44 @@ class CatalogItemModifierListInfo implements \JsonSerializable
     }
 
     /**
+     * Returns Ordinal.
+     * The position of this `CatalogItemModifierListInfo` object within the `modifier_list_info` list
+     * applied
+     * to a `CatalogItem` instance.
+     */
+    public function getOrdinal(): ?int
+    {
+        if (count($this->ordinal) == 0) {
+            return null;
+        }
+        return $this->ordinal['value'];
+    }
+
+    /**
+     * Sets Ordinal.
+     * The position of this `CatalogItemModifierListInfo` object within the `modifier_list_info` list
+     * applied
+     * to a `CatalogItem` instance.
+     *
+     * @maps ordinal
+     */
+    public function setOrdinal(?int $ordinal): void
+    {
+        $this->ordinal['value'] = $ordinal;
+    }
+
+    /**
+     * Unsets Ordinal.
+     * The position of this `CatalogItemModifierListInfo` object within the `modifier_list_info` list
+     * applied
+     * to a `CatalogItem` instance.
+     */
+    public function unsetOrdinal(): void
+    {
+        $this->ordinal = [];
+    }
+
+    /**
      * Encode this object to JSON
      *
      * @param bool $asArrayWhenEmpty Whether to serialize this model as an array whenever no fields
@@ -230,6 +353,9 @@ class CatalogItemModifierListInfo implements \JsonSerializable
         }
         if (!empty($this->enabled)) {
             $json['enabled']                = $this->enabled['value'];
+        }
+        if (!empty($this->ordinal)) {
+            $json['ordinal']                = $this->ordinal['value'];
         }
         $json = array_filter($json, function ($val) {
             return $val !== null;

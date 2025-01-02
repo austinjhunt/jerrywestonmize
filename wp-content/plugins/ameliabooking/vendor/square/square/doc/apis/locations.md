@@ -19,7 +19,7 @@ $locationsApi = $client->getLocationsApi();
 # List Locations
 
 Provides details about all of the seller's [locations](https://developer.squareup.com/docs/locations-api),
-including those with an inactive status.
+including those with an inactive status. Locations are listed alphabetically by `name`.
 
 ```php
 function listLocations(): ApiResponse
@@ -27,7 +27,7 @@ function listLocations(): ApiResponse
 
 ## Response Type
 
-[`ListLocationsResponse`](../../doc/models/list-locations-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListLocationsResponse`](../../doc/models/list-locations-response.md).
 
 ## Example Usage
 
@@ -40,9 +40,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -68,20 +68,27 @@ function createLocation(CreateLocationRequest $body): ApiResponse
 
 ## Response Type
 
-[`CreateLocationResponse`](../../doc/models/create-location-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CreateLocationResponse`](../../doc/models/create-location-response.md).
 
 ## Example Usage
 
 ```php
-$body = new Models\CreateLocationRequest();
-$body->setLocation(new Models\Location());
-$body->getLocation()->setName('Midtown');
-$body->getLocation()->setAddress(new Models\Address());
-$body->getLocation()->getAddress()->setAddressLine1('1234 Peachtree St. NE');
-$body->getLocation()->getAddress()->setLocality('Atlanta');
-$body->getLocation()->getAddress()->setAdministrativeDistrictLevel1('GA');
-$body->getLocation()->getAddress()->setPostalCode('30309');
-$body->getLocation()->setDescription('Midtown Atlanta store');
+$body = CreateLocationRequestBuilder::init()
+    ->location(
+        LocationBuilder::init()
+            ->name('Midtown')
+            ->address(
+                AddressBuilder::init()
+                    ->addressLine1('1234 Peachtree St. NE')
+                    ->locality('Atlanta')
+                    ->administrativeDistrictLevel1('GA')
+                    ->postalCode('30309')
+                    ->build()
+            )
+            ->description('Midtown Atlanta store')
+            ->build()
+    )
+    ->build();
 
 $apiResponse = $locationsApi->createLocation($body);
 
@@ -91,9 +98,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -114,7 +121,7 @@ function retrieveLocation(string $locationId): ApiResponse
 
 ## Response Type
 
-[`RetrieveLocationResponse`](../../doc/models/retrieve-location-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveLocationResponse`](../../doc/models/retrieve-location-response.md).
 
 ## Example Usage
 
@@ -129,9 +136,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -152,36 +159,48 @@ function updateLocation(string $locationId, UpdateLocationRequest $body): ApiRes
 
 ## Response Type
 
-[`UpdateLocationResponse`](../../doc/models/update-location-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`UpdateLocationResponse`](../../doc/models/update-location-response.md).
 
 ## Example Usage
 
 ```php
 $locationId = 'location_id4';
-$body = new Models\UpdateLocationRequest();
-$body->setLocation(new Models\Location());
-$body->getLocation()->setBusinessHours(new Models\BusinessHours());
-$body_location_businessHours_periods = [];
 
-$body_location_businessHours_periods[0] = new Models\BusinessHoursPeriod();
-$body_location_businessHours_periods[0]->setDayOfWeek(Models\DayOfWeek::FRI);
-$body_location_businessHours_periods[0]->setStartLocalTime('07:00');
-$body_location_businessHours_periods[0]->setEndLocalTime('18:00');
+$body = UpdateLocationRequestBuilder::init()
+    ->location(
+        LocationBuilder::init()
+            ->businessHours(
+                BusinessHoursBuilder::init()
+                    ->periods(
+                        [
+                            BusinessHoursPeriodBuilder::init()
+                                ->dayOfWeek(DayOfWeek::FRI)
+                                ->startLocalTime('07:00')
+                                ->endLocalTime('18:00')
+                                ->build(),
+                            BusinessHoursPeriodBuilder::init()
+                                ->dayOfWeek(DayOfWeek::SAT)
+                                ->startLocalTime('07:00')
+                                ->endLocalTime('18:00')
+                                ->build(),
+                            BusinessHoursPeriodBuilder::init()
+                                ->dayOfWeek(DayOfWeek::SUN)
+                                ->startLocalTime('09:00')
+                                ->endLocalTime('15:00')
+                                ->build()
+                        ]
+                    )
+                    ->build()
+            )
+            ->description('Midtown Atlanta store - Open weekends')
+            ->build()
+    )
+    ->build();
 
-$body_location_businessHours_periods[1] = new Models\BusinessHoursPeriod();
-$body_location_businessHours_periods[1]->setDayOfWeek(Models\DayOfWeek::SAT);
-$body_location_businessHours_periods[1]->setStartLocalTime('07:00');
-$body_location_businessHours_periods[1]->setEndLocalTime('18:00');
-
-$body_location_businessHours_periods[2] = new Models\BusinessHoursPeriod();
-$body_location_businessHours_periods[2]->setDayOfWeek(Models\DayOfWeek::SUN);
-$body_location_businessHours_periods[2]->setStartLocalTime('09:00');
-$body_location_businessHours_periods[2]->setEndLocalTime('15:00');
-$body->getLocation()->getBusinessHours()->setPeriods($body_location_businessHours_periods);
-
-$body->getLocation()->setDescription('Midtown Atlanta store - Open weekends');
-
-$apiResponse = $locationsApi->updateLocation($locationId, $body);
+$apiResponse = $locationsApi->updateLocation(
+    $locationId,
+    $body
+);
 
 if ($apiResponse->isSuccess()) {
     $updateLocationResponse = $apiResponse->getResult();
@@ -189,8 +208,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

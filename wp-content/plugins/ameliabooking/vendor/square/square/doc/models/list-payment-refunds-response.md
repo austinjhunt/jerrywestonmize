@@ -15,7 +15,7 @@ Either `errors` or `refunds` is present in a given response (never both).
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Information about errors encountered during the request. | getErrors(): ?array | setErrors(?array errors): void |
 | `refunds` | [`?(PaymentRefund[])`](../../doc/models/payment-refund.md) | Optional | The list of requested refunds. | getRefunds(): ?array | setRefunds(?array refunds): void |
-| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent request. If empty,<br>this is the final response.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
+| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent request. If empty,<br>this is the final response.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
 
 ## Example (as JSON)
 
@@ -45,7 +45,36 @@ Either `errors` or `refunds` is present in a given response (never both).
       ],
       "reason": "Example Refund",
       "status": "COMPLETED",
-      "updated_at": "2021-10-13T20:00:03.497Z"
+      "updated_at": "2021-10-13T20:00:03.497Z",
+      "unlinked": false,
+      "destination_type": "destination_type2",
+      "destination_details": {
+        "card_details": {
+          "card": {
+            "id": "id6",
+            "card_brand": "OTHER_BRAND",
+            "last_4": "last_48",
+            "exp_month": 228,
+            "exp_year": 68
+          },
+          "entry_method": "entry_method8",
+          "auth_result_code": "auth_result_code0"
+        }
+      }
+    }
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
     }
   ]
 }

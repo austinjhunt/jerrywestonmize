@@ -10,7 +10,7 @@
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
 | `order` | [`?Order`](../../doc/models/order.md) | Optional | Contains all information related to a single order to process with Square,<br>including line items that specify the products to purchase. `Order` objects also<br>include information about any associated tenders, refunds, and returns.<br><br>All Connect V2 Transactions have all been converted to Orders including all associated<br>itemization data. | getOrder(): ?Order | setOrder(?Order order): void |
-| `idempotencyKey` | `?string` | Optional | A value you specify that uniquely identifies this<br>order among orders you have created.<br><br>If you are unsure whether a particular order was created successfully,<br>you can try it again with the same idempotency key without<br>worrying about creating duplicate orders.<br><br>For more information, see [Idempotency](https://developer.squareup.com/docs/basics/api101/idempotency).<br>**Constraints**: *Maximum Length*: `192` | getIdempotencyKey(): ?string | setIdempotencyKey(?string idempotencyKey): void |
+| `idempotencyKey` | `?string` | Optional | A value you specify that uniquely identifies this<br>order among orders you have created.<br><br>If you are unsure whether a particular order was created successfully,<br>you can try it again with the same idempotency key without<br>worrying about creating duplicate orders.<br><br>For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).<br>**Constraints**: *Maximum Length*: `192` | getIdempotencyKey(): ?string | setIdempotencyKey(?string idempotencyKey): void |
 
 ## Example (as JSON)
 
@@ -47,7 +47,25 @@
           "currency": "USD"
         },
         "name": "New York Strip Steak",
-        "quantity": "1"
+        "quantity": "1",
+        "uid": "uid8",
+        "quantity_unit": {
+          "measurement_unit": {
+            "custom_unit": {
+              "name": "name2",
+              "abbreviation": "abbreviation4"
+            },
+            "area_unit": "IMPERIAL_ACRE",
+            "length_unit": "IMPERIAL_INCH",
+            "volume_unit": "METRIC_LITER",
+            "weight_unit": "IMPERIAL_WEIGHT_OUNCE"
+          },
+          "precision": 54,
+          "catalog_object_id": "catalog_object_id0",
+          "catalog_version": 12
+        },
+        "note": "note4",
+        "catalog_object_id": "catalog_object_id2"
       },
       {
         "applied_discounts": [
@@ -61,7 +79,25 @@
             "catalog_object_id": "CHQX7Y4KY6N5KINJKZCFURPZ"
           }
         ],
-        "quantity": "2"
+        "quantity": "2",
+        "uid": "uid8",
+        "name": "name8",
+        "quantity_unit": {
+          "measurement_unit": {
+            "custom_unit": {
+              "name": "name2",
+              "abbreviation": "abbreviation4"
+            },
+            "area_unit": "IMPERIAL_ACRE",
+            "length_unit": "IMPERIAL_INCH",
+            "volume_unit": "METRIC_LITER",
+            "weight_unit": "IMPERIAL_WEIGHT_OUNCE"
+          },
+          "precision": 54,
+          "catalog_object_id": "catalog_object_id0",
+          "catalog_version": 12
+        },
+        "note": "note4"
       }
     ],
     "location_id": "057P5VYJ4A5X1",
@@ -73,7 +109,12 @@
         "scope": "ORDER",
         "uid": "state-sales-tax"
       }
-    ]
+    ],
+    "id": "id6",
+    "source": {
+      "name": "name4"
+    },
+    "customer_id": "customer_id4"
   }
 }
 ```

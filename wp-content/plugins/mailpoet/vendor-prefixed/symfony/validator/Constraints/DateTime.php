@@ -11,7 +11,7 @@ class DateTime extends Constraint
  protected static $errorNames = [self::INVALID_FORMAT_ERROR => 'INVALID_FORMAT_ERROR', self::INVALID_DATE_ERROR => 'INVALID_DATE_ERROR', self::INVALID_TIME_ERROR => 'INVALID_TIME_ERROR'];
  public $format = 'Y-m-d H:i:s';
  public $message = 'This value is not a valid datetime.';
- public function __construct($format = null, string $message = null, array $groups = null, $payload = null, array $options = [])
+ public function __construct($format = null, ?string $message = null, ?array $groups = null, $payload = null, array $options = [])
  {
  if (\is_array($format)) {
  $options = \array_merge($format, $options);

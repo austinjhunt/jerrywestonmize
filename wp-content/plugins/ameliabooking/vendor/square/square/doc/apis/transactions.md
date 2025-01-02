@@ -44,12 +44,12 @@ function listTransactions(
 | `locationId` | `string` | Template, Required | The ID of the location to list transactions for. |
 | `beginTime` | `?string` | Query, Optional | The beginning of the requested reporting period, in RFC 3339 format.<br><br>See [Date ranges](https://developer.squareup.com/docs/build-basics/working-with-dates) for details on date inclusivity/exclusivity.<br><br>Default value: The current time minus one year. |
 | `endTime` | `?string` | Query, Optional | The end of the requested reporting period, in RFC 3339 format.<br><br>See [Date ranges](https://developer.squareup.com/docs/build-basics/working-with-dates) for details on date inclusivity/exclusivity.<br><br>Default value: The current time. |
-| `sortOrder` | [`?string (SortOrder)`](../../doc/models/sort-order.md) | Query, Optional | The order in which results are listed in the response (`ASC` for<br>oldest first, `DESC` for newest first).<br><br>Default value: `DESC` |
+| `sortOrder` | [`?string(SortOrder)`](../../doc/models/sort-order.md) | Query, Optional | The order in which results are listed in the response (`ASC` for<br>oldest first, `DESC` for newest first).<br><br>Default value: `DESC` |
 | `cursor` | `?string` | Query, Optional | A pagination cursor returned by a previous call to this endpoint.<br>Provide this to retrieve the next set of results for your original query.<br><br>See [Paginating results](https://developer.squareup.com/docs/working-with-apis/pagination) for more information. |
 
 ## Response Type
 
-[`ListTransactionsResponse`](../../doc/models/list-transactions-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`ListTransactionsResponse`](../../doc/models/list-transactions-response.md).
 
 ## Example Usage
 
@@ -64,9 +64,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -89,15 +89,19 @@ function retrieveTransaction(string $locationId, string $transactionId): ApiResp
 
 ## Response Type
 
-[`RetrieveTransactionResponse`](../../doc/models/retrieve-transaction-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`RetrieveTransactionResponse`](../../doc/models/retrieve-transaction-response.md).
 
 ## Example Usage
 
 ```php
 $locationId = 'location_id4';
+
 $transactionId = 'transaction_id8';
 
-$apiResponse = $transactionsApi->retrieveTransaction($locationId, $transactionId);
+$apiResponse = $transactionsApi->retrieveTransaction(
+    $locationId,
+    $transactionId
+);
 
 if ($apiResponse->isSuccess()) {
     $retrieveTransactionResponse = $apiResponse->getResult();
@@ -105,9 +109,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -115,7 +119,7 @@ if ($apiResponse->isSuccess()) {
 
 **This endpoint is deprecated.**
 
-Captures a transaction that was created with the [Charge]($e/Transactions/Charge)
+Captures a transaction that was created with the [Charge](api-endpoint:Transactions-Charge)
 endpoint with a `delay_capture` value of `true`.
 
 See [Delayed capture transactions](https://developer.squareup.com/docs/payments/transactions/overview#delayed-capture)
@@ -134,15 +138,19 @@ function captureTransaction(string $locationId, string $transactionId): ApiRespo
 
 ## Response Type
 
-[`CaptureTransactionResponse`](../../doc/models/capture-transaction-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`CaptureTransactionResponse`](../../doc/models/capture-transaction-response.md).
 
 ## Example Usage
 
 ```php
 $locationId = 'location_id4';
+
 $transactionId = 'transaction_id8';
 
-$apiResponse = $transactionsApi->captureTransaction($locationId, $transactionId);
+$apiResponse = $transactionsApi->captureTransaction(
+    $locationId,
+    $transactionId
+);
 
 if ($apiResponse->isSuccess()) {
     $captureTransactionResponse = $apiResponse->getResult();
@@ -150,9 +158,9 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 
 
@@ -160,7 +168,7 @@ if ($apiResponse->isSuccess()) {
 
 **This endpoint is deprecated.**
 
-Cancels a transaction that was created with the [Charge]($e/Transactions/Charge)
+Cancels a transaction that was created with the [Charge](api-endpoint:Transactions-Charge)
 endpoint with a `delay_capture` value of `true`.
 
 See [Delayed capture transactions](https://developer.squareup.com/docs/payments/transactions/overview#delayed-capture)
@@ -179,15 +187,19 @@ function voidTransaction(string $locationId, string $transactionId): ApiResponse
 
 ## Response Type
 
-[`VoidTransactionResponse`](../../doc/models/void-transaction-response.md)
+This method returns a `Square\Utils\ApiResponse` instance. The `getResult()` method on this instance returns the response data which is of type [`VoidTransactionResponse`](../../doc/models/void-transaction-response.md).
 
 ## Example Usage
 
 ```php
 $locationId = 'location_id4';
+
 $transactionId = 'transaction_id8';
 
-$apiResponse = $transactionsApi->voidTransaction($locationId, $transactionId);
+$apiResponse = $transactionsApi->voidTransaction(
+    $locationId,
+    $transactionId
+);
 
 if ($apiResponse->isSuccess()) {
     $voidTransactionResponse = $apiResponse->getResult();
@@ -195,8 +207,8 @@ if ($apiResponse->isSuccess()) {
     $errors = $apiResponse->getErrors();
 }
 
-// Get more response info...
-// $statusCode = $apiResponse->getStatusCode();
-// $headers = $apiResponse->getHeaders();
+// Getting more response information
+var_dump($apiResponse->getStatusCode());
+var_dump($apiResponse->getHeaders());
 ```
 

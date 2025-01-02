@@ -13,7 +13,7 @@ Defines the response returned by [ListPayments](../../doc/apis/payments.md#list-
 |  --- | --- | --- | --- | --- | --- |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Information about errors encountered during the request. | getErrors(): ?array | setErrors(?array errors): void |
 | `payments` | [`?(Payment[])`](../../doc/models/payment.md) | Optional | The requested list of payments. | getPayments(): ?array | setPayments(?array payments): void |
-| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent request. If empty,<br>this is the final response.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/basics/api101/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
+| `cursor` | `?string` | Optional | The pagination cursor to be used in a subsequent request. If empty,<br>this is the final response.<br><br>For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination). | getCursor(): ?string | setCursor(?string cursor): void |
 
 ## Example (as JSON)
 
@@ -84,9 +84,22 @@ Defines the response returned by [ListPayments](../../doc/apis/payments.md#list-
         "currency": "USD"
       },
       "updated_at": "2021-10-13T19:34:37.261Z",
-      "version_token": "vguW2km0KpVCdAXZcNTZ438qg5LlVPTP4HO5OpiHNfa6o"
+      "version_token": "vguW2km0KpVCdAXZcNTZ438qg5LlVPTP4HO5OpiHNfa6o",
+      "tip_money": {
+        "amount": 190,
+        "currency": "ZMK"
+      }
     }
-  ]
+  ],
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ],
+  "cursor": "cursor0"
 }
 ```
 

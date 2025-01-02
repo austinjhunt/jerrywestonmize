@@ -392,7 +392,7 @@ class Forminator_Admin_Report_Page {
 				$meta_value = maybe_unserialize( $data->meta_value );
 				if ( $data->date_created >= $start_date && $data->date_created <= $end_date ) {
 					$payments['selected_payment'] += $meta_value['amount'];
-					if ( 'stripe-1' === $data->meta_key ) {
+					if ( 'stripe-1' === $data->meta_key || 'stripe-ocs-1' === $data->meta_key ) {
 						$payments['stripe_payment'] += $meta_value['amount'];
 					}
 					if ( 'paypal-1' === $data->meta_key ) {

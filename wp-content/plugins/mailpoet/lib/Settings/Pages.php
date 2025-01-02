@@ -9,6 +9,9 @@ use MailPoet\Subscription;
 use MailPoet\WP\Functions as WPFunctions;
 
 class Pages {
+  const PAGE_SUBSCRIPTIONS = 'subscriptions';
+  const PAGE_CAPTCHA = 'captcha';
+
   public function __construct() {
   }
 
@@ -30,7 +33,7 @@ class Pages {
     ]);
   }
 
-  public static function createMailPoetPage() {
+  public static function createMailPoetPage($postName) {
     WPFunctions::get()->removeAllActions('pre_post_update');
     WPFunctions::get()->removeAllActions('save_post');
     WPFunctions::get()->removeAllActions('wp_insert_post');
@@ -41,19 +44,20 @@ class Pages {
       'post_author' => 1,
       'post_content' => '[mailpoet_page]',
       'post_title' => __('MailPoet Page', 'mailpoet'),
-      'post_name' => 'subscriptions',
+      'post_name' => $postName,
     ]);
 
     return ((int)$id > 0) ? (int)$id : false;
   }
 
-  public static function getDefaultMailPoetPage() {
+  public static function getMailPoetPage($postName) {
     $wp = WPFunctions::get();
     $pages = $wp->getPosts([
       'posts_per_page' => 1,
       'orderby' => 'date',
       'order' => 'DESC',
       'post_type' => 'mailpoet_page',
+      'post_name__in' => [$postName],
     ]);
 
     $page = null;
@@ -69,6 +73,7 @@ class Pages {
   public static function getMailPoetPages() {
     return WPFunctions::get()->getPosts([
       'post_type' => 'mailpoet_page',
+      'post_name__in' => [self::PAGE_SUBSCRIPTIONS],
     ]);
   }
 

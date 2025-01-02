@@ -38,8 +38,37 @@ present, or it might be present with a status of `FAILED`.
     "payment_id": "R2B3Z8WMVt3EAmzYWLZvz7Y69EbZY",
     "reason": "Example",
     "status": "PENDING",
-    "updated_at": "2021-10-13T21:23:19.508Z"
-  }
+    "updated_at": "2021-10-13T21:23:19.508Z",
+    "unlinked": false,
+    "destination_type": "destination_type2",
+    "destination_details": {
+      "card_details": {
+        "card": {
+          "id": "id6",
+          "card_brand": "OTHER_BRAND",
+          "last_4": "last_48",
+          "exp_month": 228,
+          "exp_year": 68
+        },
+        "entry_method": "entry_method8",
+        "auth_result_code": "auth_result_code0"
+      }
+    }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

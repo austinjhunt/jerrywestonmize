@@ -10,7 +10,7 @@ class Unique extends Constraint
  protected static $errorNames = [self::IS_NOT_UNIQUE => 'IS_NOT_UNIQUE'];
  public $message = 'This collection should contain only unique elements.';
  public $normalizer;
- public function __construct(array $options = null, string $message = null, callable $normalizer = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $message = null, ?callable $normalizer = null, ?array $groups = null, $payload = null)
  {
  parent::__construct($options, $groups, $payload);
  $this->message = $message ?? $this->message;

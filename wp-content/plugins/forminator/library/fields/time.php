@@ -53,13 +53,6 @@ class Forminator_Time extends Forminator_Field {
 	public $options = array();
 
 	/**
-	 * Category
-	 *
-	 * @var string
-	 */
-	public $category = 'standard';
-
-	/**
 	 * Icon
 	 *
 	 * @var string
@@ -164,6 +157,7 @@ class Forminator_Time extends Forminator_Field {
 		$default_time_hour   = '';
 		$default_time_minute = '';
 		$default_time_ampm   = '';
+		$is_basic            = 'basic' === $design;
 
 		if ( 'default' === $default_time ) {
 			$default_time_hour   = self::get_property( 'default_time_hour', $field, '0' );
@@ -255,10 +249,10 @@ class Forminator_Time extends Forminator_Field {
 				if ( 'select' === $field_type ) {
 
 					$hours_data = array(
-						'name'             => $hour_id,
-						'id'               => self::get_field_id( $settings['form_id'] . '__field--' . $hour_id ),
-						'class'            => 'forminator-select2 time-hours ' . $has_limiter,
-						'data-field'       => 'hours',
+						'name'       => $hour_id,
+						'id'         => self::get_field_id( $settings['form_id'] . '__field--' . $hour_id ),
+						'class'      => $is_basic ? 'time-hours ' : 'forminator-select2 time-hours ' . $has_limiter,
+						'data-field' => 'hours',
 					);
 
 					if ( ! empty( $description ) ) {
@@ -332,7 +326,7 @@ class Forminator_Time extends Forminator_Field {
 					$minutes_data = array(
 						'name'       => $min_id,
 						'id'         => self::get_field_id( $settings['form_id'] . '__field--' . $min_id ),
-						'class'      => 'forminator-select2 time-minutes ' . $has_limiter,
+						'class'      => $is_basic ? 'time-minutes ' : 'forminator-select2 time-minutes ' . $has_limiter,
 						'data-field' => 'minutes',
 					);
 
@@ -371,7 +365,7 @@ class Forminator_Time extends Forminator_Field {
 					$ampm = array(
 						'name'       => $ampm_id,
 						'id'         => self::get_field_id( $settings['form_id'] . '__field--' . $ampm_id ),
-						'class'      => 'forminator-select2 time-ampm ' . $has_limiter,
+						'class'      => $is_basic ? 'time-ampm ' : 'forminator-select2 time-ampm ' . $has_limiter,
 						'data-field' => 'ampm',
 					);
 

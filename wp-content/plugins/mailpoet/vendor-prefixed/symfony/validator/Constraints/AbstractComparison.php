@@ -10,7 +10,7 @@ abstract class AbstractComparison extends Constraint
  public $message;
  public $value;
  public $propertyPath;
- public function __construct($value = null, $propertyPath = null, string $message = null, array $groups = null, $payload = null, array $options = [])
+ public function __construct($value = null, $propertyPath = null, ?string $message = null, ?array $groups = null, $payload = null, array $options = [])
  {
  if (\is_array($value)) {
  $options = \array_merge($value, $options);

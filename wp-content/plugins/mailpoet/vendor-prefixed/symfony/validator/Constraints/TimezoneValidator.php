@@ -37,7 +37,7 @@ class TimezoneValidator extends ConstraintValidator
  }
  $this->context->buildViolation($constraint->message)->setParameter('{{ value }}', $this->formatValue($value))->setCode($code)->addViolation();
  }
- private static function getPhpTimezones(int $zone, string $countryCode = null) : array
+ private static function getPhpTimezones(int $zone, ?string $countryCode = null) : array
  {
  if (null !== $countryCode) {
  try {
@@ -48,7 +48,7 @@ class TimezoneValidator extends ConstraintValidator
  }
  return \DateTimeZone::listIdentifiers($zone);
  }
- private static function getIntlTimezones(int $zone, string $countryCode = null) : array
+ private static function getIntlTimezones(int $zone, ?string $countryCode = null) : array
  {
  if (!\class_exists(Timezones::class)) {
  return [];

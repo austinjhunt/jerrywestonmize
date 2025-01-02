@@ -320,6 +320,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 			'page-indicator-font-family'              => 'Roboto',
 			'page-indicator-font-size'                => '13',
 			'page-indicator-font-weight'              => '400',
+			'store_submissions'                       => '1',
 		);
 	}
 
@@ -751,6 +752,10 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 
 		$id = self::create( $name, $status, $template );
 
+		if ( is_wp_error( $id ) ) {
+			return;
+		}
+
 		$wizard_url = admin_url( 'admin.php?page=forminator-' . $quiz_type . '-wizard&id=' . $id );
 
 		wp_safe_redirect( $wizard_url );
@@ -770,6 +775,9 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 		// If we have leads, create leads form automatically.
 		if ( $has_leads ) {
 			$leads_id = self::create_leads_form( $name );
+			if ( is_wp_error( $leads_id ) ) {
+				return $leads_id;
+			}
 		}
 
 		if ( 'knowledge' === $quiz_type ) {
@@ -952,6 +960,10 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 
 		// Save data.
 		$id = $form_model->save();
+
+		if ( is_wp_error( $id ) ) {
+			return $id;
+		}
 
 		$type = $form_model->quiz_type;
 

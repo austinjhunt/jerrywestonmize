@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Core\Response\Types;
 
 use Core\Response\Context;
-use Exception;
 
 class ResponseMultiType
 {
@@ -40,14 +39,10 @@ class ResponseMultiType
      */
     public function getFrom(Context $context)
     {
-        if (is_null($this->typeGroup)) {
+        if (is_null($this->typeGroup) || $context->isBodyMissing()) {
             return null;
         }
         $responseBody = $context->getResponse()->getBody();
-        try {
-            return $context->getJsonHelper()->mapTypes($responseBody, $this->typeGroup, $this->deserializers);
-        } catch (Exception $e) {
-            throw $context->toApiException($e->getMessage());
-        }
+        return $context->getJsonHelper()->mapTypes($responseBody, $this->typeGroup, $this->deserializers);
     }
 }

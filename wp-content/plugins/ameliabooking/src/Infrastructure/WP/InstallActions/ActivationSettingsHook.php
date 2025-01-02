@@ -68,6 +68,8 @@ class ActivationSettingsHook
         self::initGoogleAnalyticsSettings();
 
         self::initGoogleTagSettings();
+
+        self::initAppleCalendarSettings();
     }
 
     /**
@@ -257,6 +259,7 @@ class ActivationSettingsHook
             'rejectErrorUrl'       => '',
             'breakReplacement'     => '<br>',
             'pendingReminder'      => false,
+            'sendInvoice'          => false,
             'whatsAppEnabled'      =>
                 $savedSettings &&
                 !empty($savedSettings['whatsAppPhoneID']) &&
@@ -422,6 +425,34 @@ This message does not have an option for responding. If you need additional info
         ];
 
         self::initSettings('outlookCalendar', $settings);
+    }
+
+    /**
+     * Init Apple Calendar Settings
+     */
+    private static function initAppleCalendarSettings()
+    {
+        $settings = [
+            'clientID'                        => '',
+            'clientSecret'                    => '',
+            'redirectURI'                     => AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-employees',
+            'insertPendingAppointments'       => false,
+            'addAttendees'                    => false,
+            'removeAppleCalendarBusySlots'    => false,
+            'eventTitle'                      => '%service_name%',
+            'eventDescription'                => '',
+            'includeBufferTimeAppleCalendar' => false,
+            'title'                           => [
+                'appointment' => '%service_name%',
+                'event' => '%event_name%'
+            ],
+            'description'                      => [
+                'appointment' => '',
+                'event' => ''
+            ],
+        ];
+
+        self::initSettings('appleCalendar', $settings);
     }
 
     /**

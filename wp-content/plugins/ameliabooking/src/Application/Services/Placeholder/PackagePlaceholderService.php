@@ -63,15 +63,20 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             'package_deposit_payment'     => $helperService->getFormattedPrice(20),
             'package_description'         => 'Package Description',
             'package_duration'            => date_i18n($dateFormat, date_create()->getTimestamp()),
-            'reservation_description'     => 'Reservation Description'
+            'reservation_description'     => 'Reservation Description',
+            'payment_due_amount'          => $helperService->getFormattedPrice(80)
         ], $placeholderService->getEntityPlaceholdersDummyData($type));
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param array        $package
      * @param int          $bookingKey
      * @param string       $type
      * @param AbstractUser $customer
+     * @param array        $allBookings
+     * @param bool         $invoice
+     * @param string       $notificationType
      *
      * @return array
      *
@@ -81,8 +86,15 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
      * @throws ContainerException
      * @throws Exception
      */
-    public function getPlaceholdersData($package, $bookingKey = null, $type = null, $customer = null, $allBookings = null)
-    {
+    public function getPlaceholdersData(
+        $package,
+        $bookingKey = null,
+        $type = null,
+        $customer = null,
+        $allBookings = null,
+        $invoice = false,
+        $notificationType = null
+    ) {
         /** @var HelperService $helperService */
         $helperService = $this->container->get('application.helper.service');
 
@@ -112,7 +124,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
 
         return array_merge(
             $paymentLinks,
-            $this->getPackageData($package),
+            $this->getPackageData($package, $invoice),
             $this->getCompanyData($locale),
             $this->getCustomersData(
                 $package,
@@ -124,8 +136,27 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             [
                 'icsFiles' => !empty($package['icsFiles']) ? $package['icsFiles'] : []
             ],
-            $this->getCouponsData($package, $type, 0)
+            $notificationType ? $this->getCouponsData($package, $type, 0) : []
         );
+    }
+
+    /**
+     *
+     * @param array  $reservationData
+     *
+     * @return array
+     *
+     * @throws ContainerValueNotFoundException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     * @throws Exception
+     */
+    public function getInvoicePlaceholdersData($reservationData)
+    {
+        $reservationData['bookable']['packageCustomerId'] = $reservationData['packageCustomerId'];
+        $reservationData['bookable']['customer'] = $reservationData['customer'];
+        return $this->getPlaceholdersData($reservationData['bookable'], null, 'email', UserFactory::create($reservationData['customer']), null, true);
     }
 
     /**
@@ -137,7 +168,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
      * @throws ContainerException
      * @throws Exception
      */
-    private function getPackageData($package)
+    private function getPackageData($package, $invoice = false)
     {
         /** @var HelperService $helperService */
         $helperService = $this->container->get('application.helper.service');
@@ -166,8 +197,12 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
 
         $deposit = null;
 
+        $wcItemTax = 0;
+
         /** @var PackageCustomer $packageCustomer */
         $packageCustomer = null;
+
+        $invoiceItem = [];
 
         /** @var PackageCustomerService $packageCustomerService */
         foreach ($packageCustomerServices->getItems() as $packageCustomerService) {
@@ -191,10 +226,22 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
 
             if ($packageCustomerService->getPackageCustomer()->getPayments()) {
                 $payments = $packageCustomerService->getPackageCustomer()->getPayments()->getItems();
+
+                $invoiceItem['invoice_paid_amount'] = 0;
                 /** @var Payment $payment */
                 foreach ($payments as $index => $payment) {
-                    if (!empty($package['deposit']) && $payment->getStatus()->getValue() === PaymentStatus::PARTIALLY_PAID) {
-                        $deposit = $payment->getAmount()->getValue();
+                    if (!empty($package['deposit'])) {
+                        if ($payment->getStatus()->getValue() === PaymentStatus::PARTIALLY_PAID) {
+                            $deposit = $payment->getAmount()->getValue();
+                            $wcItemTax = !empty($payment->getWcItemTaxValue()) ? $payment->getWcItemTaxValue()->getValue() : 0;
+                        }
+
+                        if (!empty($package['packageCustomerId']) &&
+                            $packageCustomerService->getPackageCustomer()->getId()->getValue() === $package['packageCustomerId'] &&
+                            ($payment->getStatus()->getValue() === PaymentStatus::PARTIALLY_PAID || $payment->getStatus()->getValue() === PaymentStatus::PAID)
+                        ) {
+                            $invoiceItem['invoice_paid_amount'] += $payment->getAmount()->getValue();
+                        }
                     }
 
                     switch ($payment->getGateway()->getName()->getValue()) {
@@ -210,6 +257,18 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                     }
 
                     $paymentType .= ($index === array_keys($payments)[0] ? '' : ', ') . $method;
+
+                    if (!empty($package['packageCustomerId']) && $packageCustomerService->getPackageCustomer()->getId()->getValue() === $package['packageCustomerId']) {
+                        $invoiceItem['invoice_number'] = $payment->getInvoiceNumber() ? $payment->getInvoiceNumber()->getValue() : '';
+                        $invoiceItem['invoice_issued'] = !empty($payment->toArray()['created']) ? date_i18n($dateFormat,$payment->toArray()['created']) : '';
+                        $invoiceItem['invoice_method'] = $payment->getGatewayTitle() ? $payment->getGatewayTitle()->getValue() : $method;
+                    }
+                }
+
+                if (!empty($package['packageCustomerId']) && $packageCustomerService->getPackageCustomer()->getId()->getValue() === $package['packageCustomerId']) {
+                    $price = $packageCustomerService->getPackageCustomer()->getPrice()->getValue();
+                    $invoiceItem['invoice_unit_price']  = $invoiceItem['invoice_subtotal'] = $price;
+                    $invoiceItem['invoice_qty']         = 1;
                 }
             }
 
@@ -245,21 +304,30 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             ]
         );
 
-        $price = $reservationService->getPaymentAmount($packageCustomer, $bookable);
-
-        $discountValue = $reservationService->getPaymentAmount($packageCustomer, $bookable, 'discount');
-
-        $deductionValue = $reservationService->getPaymentAmount($packageCustomer, $bookable, 'deduction');
-
-        $expirationDate = null;
 
         // get coupon for WC description
-        if ($coupon === null && !empty($package['bookings']) && !empty($package['bookings'][0]['couponId'])) {
+        if ($packageCustomer && $packageCustomer->getCouponId() && $packageCustomer->getCouponId()->getValue()) {
             /** @var CouponRepository $couponRepository */
             $couponRepository = $this->container->get('domain.coupon.repository');
 
-            $coupon = $couponRepository->getById($package['bookings'][0]['couponId'])->toArray();
+            $coupon = $couponRepository->getById($packageCustomer->getCouponId()->getValue());
+
+            $packageCustomer->setCoupon($coupon);
+
+            $coupon = $coupon->toArray();
         }
+
+        $amountData = $reservationService->getPaymentAmount($packageCustomer, $bookable, $invoice);
+
+        $price = $amountData['price'];
+
+        $discountValue = $amountData['discount'];
+
+        $deductionValue = $amountData['deduction'];
+
+        $expirationDate = null;
+
+        $couponDiscount = $discountValue + $deductionValue;
 
         if ($coupon) {
             if (!empty($coupon['expirationDate'])) {
@@ -276,6 +344,12 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                     $expirationDate : '');
         }
 
+        $invoiceItem['invoice_discount'] = $amountData['full_discount'];
+        $invoiceItem['invoice_tax']      = $amountData['tax'];
+        $invoiceItem['invoice_tax_rate'] = $amountData['tax_rate'];
+        $invoiceItem['invoice_tax_excluded'] = $amountData['tax_excluded'];
+        $invoiceItem['invoice_tax_type'] = $amountData['tax_type'];
+
         $locale = !empty($package['isForCustomer']) && !empty($package['customer']['translations']) ?
             $helperService->getLocaleFromTranslations(
                 $package['customer']['translations']
@@ -286,6 +360,8 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             $package['translations'],
             'name'
         ) ?: $package['name'];
+
+        $invoiceItem['item_name'] = $packageName;
 
         $packageDescription = $helperService->getBookingTranslation(
             $locale,
@@ -304,6 +380,10 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             $timeZone = !empty($package['customer']['timeZone']) ? $package['customer']['timeZone'] : '';
         }
 
+        $paymentDueAmount = $deposit !== null ?
+            $helperService->getFormattedPrice($price - ($deposit - $wcItemTax)) :
+            $helperService->getFormattedPrice((!empty($method) && $method === 'On-site') ? $price : 0);
+
         return [
             'reservation_name'        => $packageName,
             'package_name'            => $packageName,
@@ -315,8 +395,13 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             'package_price'           => $helperService->getFormattedPrice($price),
             'package_deposit_payment' => $deposit !== null ? $helperService->getFormattedPrice($deposit) : '',
             'payment_type'            => $paymentType,
+            "payment_due_amount"      => $paymentDueAmount,
             'coupon_used'             => $couponsUsed ? implode($break, $couponsUsed) : '',
             'time_zone'               => $timeZone,
+            'items'                   => [$invoiceItem],
+            'invoice_number'          => isset($invoiceItem['invoice_number']) ? $invoiceItem['invoice_number'] : '',
+            'invoice_issued'          => isset($invoiceItem['invoice_issued']) ? $invoiceItem['invoice_issued'] : '',
+            'invoice_method'          => isset($invoiceItem['invoice_method']) ? $invoiceItem['invoice_method'] : '',
         ];
     }
 

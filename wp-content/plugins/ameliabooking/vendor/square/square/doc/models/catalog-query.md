@@ -11,14 +11,15 @@ Any combination of the following types may be used together:
 - [range_query](../../doc/models/catalog-query-range.md)
 - [sorted_attribute_query](../../doc/models/catalog-query-sorted-attribute.md)
 - [text_query](../../doc/models/catalog-query-text.md)
-  All other query types cannot be combined with any others.
+
+All other query types cannot be combined with any others.
 
 When a query filter is based on an attribute, the attribute must be searchable.
 Searchable attributes are listed as follows, along their parent types that can be searched for with applicable query filters.
 
-* Searchable attribute and objects queryable by searchable attributes **
+Searchable attribute and objects queryable by searchable attributes:
 
-- `name`:  `CatalogItem`, `CatalogItemVariation`, `CatalogCategory`, `CatalogTax`, `CatalogDiscount`, `CatalogModifier`, 'CatalogModifierList`,`CatalogItemOption`,`CatalogItemOptionValue`
+- `name`:  `CatalogItem`, `CatalogItemVariation`, `CatalogCategory`, `CatalogTax`, `CatalogDiscount`, `CatalogModifier`, `CatalogModifierList`, `CatalogItemOption`, `CatalogItemOptionValue`
 - `description`: `CatalogItem`, `CatalogItemOptionValue`
 - `abbreviation`: `CatalogItem`
 - `upc`: `CatalogItemVariation`
@@ -52,16 +53,30 @@ the `"name"`, `"description"`, or `"abbreviation"` attribute in an applicable qu
 
 ```json
 {
-  "sorted_attribute_query": null,
-  "exact_query": null,
-  "set_query": null,
-  "prefix_query": null,
-  "range_query": null,
-  "text_query": null,
-  "items_for_tax_query": null,
-  "items_for_modifier_list_query": null,
-  "items_for_item_options_query": null,
-  "item_variations_for_item_option_values_query": null
+  "sorted_attribute_query": {
+    "attribute_name": "attribute_name0",
+    "initial_attribute_value": "initial_attribute_value8",
+    "sort_order": "DESC"
+  },
+  "exact_query": {
+    "attribute_name": "attribute_name4",
+    "attribute_value": "attribute_value6"
+  },
+  "set_query": {
+    "attribute_name": "attribute_name2",
+    "attribute_values": [
+      "attribute_values6"
+    ]
+  },
+  "prefix_query": {
+    "attribute_name": "attribute_name6",
+    "attribute_prefix": "attribute_prefix8"
+  },
+  "range_query": {
+    "attribute_name": "attribute_name0",
+    "attribute_min_value": 208,
+    "attribute_max_value": 138
+  }
 }
 ```
 

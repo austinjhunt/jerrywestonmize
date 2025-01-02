@@ -18,8 +18,8 @@ Latitude and longitude coordinates.
 
 ```json
 {
-  "latitude": null,
-  "longitude": null
+  "latitude": 200.94,
+  "longitude": 52.86
 }
 ```
 

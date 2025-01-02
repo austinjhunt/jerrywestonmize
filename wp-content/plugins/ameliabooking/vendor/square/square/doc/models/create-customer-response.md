@@ -2,7 +2,8 @@
 # Create Customer Response
 
 Defines the fields that are included in the response body of
-a request to the `CreateCustomer` endpoint.
+a request to the [CreateCustomer](../../doc/apis/customers.md#create-customer) or
+[BulkCreateCustomers](../../doc/apis/customers.md#bulk-create-customers) endpoint.
 
 Either `errors` or `customer` is present in a given response (never both).
 
@@ -43,8 +44,25 @@ Either `errors` or `customer` is present in a given response (never both).
     },
     "reference_id": "YOUR_REFERENCE_ID",
     "updated_at": "2016-03-23T20:21:54.859Z",
-    "version": 0
-  }
+    "version": 0,
+    "cards": [
+      {
+        "id": "id8",
+        "card_brand": "DISCOVER",
+        "last_4": "last_40",
+        "exp_month": 152,
+        "exp_year": 144
+      }
+    ]
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

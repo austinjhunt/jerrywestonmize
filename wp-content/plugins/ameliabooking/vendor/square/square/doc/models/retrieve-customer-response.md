@@ -49,8 +49,37 @@ Either `errors` or `customer` is present in a given response (never both).
       "1KB9JE5EGJXCW.REACHABLE"
     ],
     "updated_at": "2016-03-23T20:21:54.859Z",
-    "version": 1
-  }
+    "version": 1,
+    "cards": [
+      {
+        "id": "id8",
+        "card_brand": "DISCOVER",
+        "last_4": "last_40",
+        "exp_month": 152,
+        "exp_year": 144
+      }
+    ]
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

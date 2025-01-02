@@ -10,7 +10,6 @@ use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
-use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaStripe\Customer;
 use AmeliaStripe\Exception\ApiErrorException;
 use AmeliaStripe\PaymentIntent;
@@ -137,20 +136,6 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             if ($customerId) {
                 $stripeData = array_merge($stripeData, ['customer' => $customerId]);
             }
-            
-
-            //BEGIN MODS
-
-            if ($data['metaData']['Customer Email']) {
-                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
-            }
-            // also added a fallback description since that was appearing as null on the Stripe side
-            if ($data['description']) {
-                $stripeData['description'] = $data['description'];
-            } else {
-                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
-            }
-            // END MODS
 
             $stripeData = apply_filters(
                 'amelia_before_stripe_payment',
@@ -551,6 +536,14 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
         );
 
         $customerId = $data['customerId'];
+        if (!empty($customerId)) {
+            try {
+                $customer = Customer::retrieve($customerId);
+            } catch (Exception $e) {
+                $customerId = null;
+            }
+        }
+
         if (empty($customerId)) {
             $customer = Customer::create([
                 'address' => !empty($data['address']) ? [

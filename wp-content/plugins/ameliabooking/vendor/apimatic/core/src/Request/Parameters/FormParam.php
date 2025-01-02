@@ -30,9 +30,6 @@ class FormParam extends EncodedParam
 
     /**
      * Sets encoding header with the key and value provided.
-     *
-     * @param string $key
-     * @param string $value
      */
     public function encodingHeader(string $key, string $value): self
     {
@@ -58,7 +55,7 @@ class FormParam extends EncodedParam
         return $this;
     }
 
-    private function isMultipart(): bool
+    protected function isMultipart(): bool
     {
         return isset($this->encodingHeaders['content-type']) &&
             $this->encodingHeaders['content-type'] != 'application/x-www-form-urlencoded';

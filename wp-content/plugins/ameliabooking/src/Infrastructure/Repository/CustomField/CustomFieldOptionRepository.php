@@ -34,7 +34,7 @@ class CustomFieldOptionRepository extends AbstractRepository implements CustomFi
 
         $params = [
             ':customFieldId' => $data['customFieldId'],
-            ':label'         => $data['label'],
+            ':label'         => isset($data['label']) ? $data['label'] : '',
             ':position'      => $data['position'],
             ':translations'  => $data['translations'],
         ];

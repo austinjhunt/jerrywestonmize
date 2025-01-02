@@ -20,33 +20,28 @@ Represents a payment refund processed by the Square Terminal. Only supports Inte
 | `deviceId` | `string` | Required | The unique ID of the device intended for this `TerminalRefund`.<br>The Id can be retrieved from /v2/devices api. | getDeviceId(): string | setDeviceId(string deviceId): void |
 | `deadlineDuration` | `?string` | Optional | The RFC 3339 duration, after which the refund is automatically canceled.<br>A `TerminalRefund` that is `PENDING` is automatically `CANCELED` and has a cancellation reason<br>of `TIMED_OUT`.<br><br>Default: 5 minutes from creation.<br><br>Maximum: 5 minutes | getDeadlineDuration(): ?string | setDeadlineDuration(?string deadlineDuration): void |
 | `status` | `?string` | Optional | The status of the `TerminalRefund`.<br>Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, or `COMPLETED`. | getStatus(): ?string | setStatus(?string status): void |
-| `cancelReason` | [`?string (ActionCancelReason)`](../../doc/models/action-cancel-reason.md) | Optional | - | getCancelReason(): ?string | setCancelReason(?string cancelReason): void |
+| `cancelReason` | [`?string(ActionCancelReason)`](../../doc/models/action-cancel-reason.md) | Optional | - | getCancelReason(): ?string | setCancelReason(?string cancelReason): void |
 | `createdAt` | `?string` | Optional | The time when the `TerminalRefund` was created, as an RFC 3339 timestamp. | getCreatedAt(): ?string | setCreatedAt(?string createdAt): void |
 | `updatedAt` | `?string` | Optional | The time when the `TerminalRefund` was last updated, as an RFC 3339 timestamp. | getUpdatedAt(): ?string | setUpdatedAt(?string updatedAt): void |
 | `appId` | `?string` | Optional | The ID of the application that created the refund. | getAppId(): ?string | setAppId(?string appId): void |
-| `locationId` | `?string` | Optional | The location of the device where the `TerminalRefund` was directed. | getLocationId(): ?string | setLocationId(?string locationId): void |
+| `locationId` | `?string` | Optional | The location of the device where the `TerminalRefund` was directed.<br>**Constraints**: *Maximum Length*: `64` | getLocationId(): ?string | setLocationId(?string locationId): void |
 
 ## Example (as JSON)
 
 ```json
 {
-  "id": null,
-  "refund_id": null,
-  "payment_id": "payment_id0",
-  "order_id": null,
+  "id": "id8",
+  "refund_id": "refund_id2",
+  "payment_id": "payment_id8",
+  "order_id": "order_id2",
   "amount_money": {
-    "amount": null,
-    "currency": null
+    "amount": 186,
+    "currency": "TZS"
   },
-  "reason": "reason4",
-  "device_id": "device_id6",
-  "deadline_duration": null,
-  "status": null,
-  "cancel_reason": null,
-  "created_at": null,
-  "updated_at": null,
-  "app_id": null,
-  "location_id": null
+  "reason": "reason6",
+  "device_id": "device_id4",
+  "deadline_duration": "deadline_duration0",
+  "status": "status0"
 }
 ```
 

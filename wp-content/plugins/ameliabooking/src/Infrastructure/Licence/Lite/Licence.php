@@ -67,6 +67,7 @@ class Licence
             Commands\Booking\Appointment\DeleteAppointmentCommand::class       => new Commands\Booking\Appointment\DeleteAppointmentCommandHandler($c),
             Commands\Booking\Appointment\GetAppointmentCommand::class          => new Commands\Booking\Appointment\GetAppointmentCommandHandler($c),
             Commands\Booking\Appointment\GetAppointmentsCommand::class         => new Commands\Booking\Appointment\GetAppointmentsCommandHandler($c),
+            Commands\Booking\Appointment\GetPackageAppointmentsCommand::class  => new Commands\Booking\Appointment\GetPackageAppointmentsCommandHandler($c),
             Commands\Booking\Appointment\GetIcsCommand::class                  => new Commands\Booking\Appointment\GetIcsCommandHandler($c),
             Commands\Booking\Appointment\GetTimeSlotsCommand::class            => new Commands\Booking\Appointment\GetTimeSlotsCommandHandler($c),
             Commands\Booking\Appointment\UpdateAppointmentCommand::class       => new Commands\Booking\Appointment\UpdateAppointmentCommandHandler($c),

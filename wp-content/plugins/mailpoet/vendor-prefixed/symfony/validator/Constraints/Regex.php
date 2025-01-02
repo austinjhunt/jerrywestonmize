@@ -13,7 +13,7 @@ class Regex extends Constraint
  public $htmlPattern;
  public $match = \true;
  public $normalizer;
- public function __construct($pattern, string $message = null, string $htmlPattern = null, bool $match = null, callable $normalizer = null, array $groups = null, $payload = null, array $options = [])
+ public function __construct($pattern, ?string $message = null, ?string $htmlPattern = null, ?bool $match = null, ?callable $normalizer = null, ?array $groups = null, $payload = null, array $options = [])
  {
  if (\is_array($pattern)) {
  $options = \array_merge($pattern, $options);

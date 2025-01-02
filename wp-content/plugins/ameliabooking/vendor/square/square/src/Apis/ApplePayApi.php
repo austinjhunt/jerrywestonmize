@@ -7,7 +7,6 @@ namespace Square\Apis;
 use Core\Request\Parameters\BodyParam;
 use Core\Request\Parameters\HeaderParam;
 use CoreInterfaces\Core\Request\RequestMethod;
-use Square\Exceptions\ApiException;
 use Square\Http\ApiResponse;
 use Square\Models\RegisterDomainRequest;
 use Square\Models\RegisterDomainResponse;
@@ -22,11 +21,14 @@ class ApplePayApi extends BaseApi
      * This endpoint provides an easy way for platform developers to bulk activate
      * Apple Pay on the Web with Square for merchants using their platform.
      *
-     * Note: The SqPaymentForm library is deprecated as of May 13, 2021, and will only receive critical
-     * security updates until it is retired on October 31, 2022.
-     * You must migrate your payment form code to the Web Payments SDK to continue using your domain for
-     * Apple Pay. For more information on migrating to the Web Payments SDK, see [Migrate to the Web
-     * Payments SDK](https://developer.squareup.com/docs/web-payments/migrate).
+     * Note: You will need to host a valid domain verification file on your domain to support Apple Pay.
+     * The
+     * current version of this file is always available at https://app.squareup.com/digital-wallets/apple-
+     * pay/apple-developer-merchantid-domain-association,
+     * and should be hosted at `.well_known/apple-developer-merchantid-domain-association` on your
+     * domain.  This file is subject to change; we strongly recommend checking for updates regularly and
+     * avoiding
+     * long-lived caches that might not keep in sync with the correct file version.
      *
      * To learn more about the Web Payments SDK and how to add Apple Pay, see [Take an Apple Pay
      * Payment](https://developer.squareup.com/docs/web-payments/apple-pay).
@@ -35,8 +37,6 @@ class ApplePayApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function registerDomain(RegisterDomainRequest $body): ApiResponse
     {

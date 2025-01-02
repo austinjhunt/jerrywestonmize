@@ -52,18 +52,18 @@ class Forminator_Upload extends Forminator_Field {
 	public $options = array();
 
 	/**
-	 * Category
-	 *
-	 * @var string
-	 */
-	public $category = 'standard';
-
-	/**
 	 * Icon
 	 *
 	 * @var string
 	 */
 	public $icon = 'sui-icon-download';
+
+	/**
+	 * Additional MIME type
+	 *
+	 * @var array
+	 */
+	private static $additional_mime_types = array();
 
 	/**
 	 * Forminator_Upload constructor.
@@ -94,7 +94,7 @@ class Forminator_Upload extends Forminator_Field {
 			'all-interactive',
 		);
 
-		$mimes     = forminator_allowed_mime_types();
+		$mimes     = forminator_allowed_mime_types( array(), false );
 		$file_type = array_merge( $default_all, array_keys( $mimes ) );
 
 		return array(
@@ -334,17 +334,18 @@ class Forminator_Upload extends Forminator_Field {
 	 * @return bool|array
 	 */
 	public function handle_file_upload( $form_id, $field, $post_data = array(), $upload_type = 'submit', $file_input = array() ) {
-		$this->field       = $field;
-		$id                = self::get_property( 'element_id', $field );
-		$field_name        = $id;
-		$custom_limit_size = true;
-		$upload_limit      = self::get_property( 'upload-limit', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST );
-		$filesize          = self::get_property( 'filesize', $field, 'MB' );
-		$custom_file_type  = self::get_property( 'custom-files', $field, false );
-		$use_library       = self::get_property( 'use_library', $field, false );
-		$file_type         = self::get_property( 'file-type', $field, 'single' );
-		$use_library       = filter_var( $use_library, FILTER_VALIDATE_BOOLEAN );
-		$mime_types        = array();
+		$this->field           = $field;
+		$id                    = self::get_property( 'element_id', $field );
+		$field_name            = $id;
+		$custom_limit_size     = true;
+		$upload_limit          = self::get_property( 'upload-limit', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST );
+		$filesize              = self::get_property( 'filesize', $field, 'MB' );
+		$custom_file_type      = self::get_property( 'custom-files', $field, false );
+		$use_library           = self::get_property( 'use_library', $field, false );
+		$file_type             = self::get_property( 'file-type', $field, 'single' );
+		$use_library           = filter_var( $use_library, FILTER_VALIDATE_BOOLEAN );
+		$mime_types            = array();
+		$additional_mime_types = array();
 
 		if ( self::FIELD_PROPERTY_VALUE_NOT_EXIST === $upload_limit || empty( $upload_limit ) ) {
 			$custom_limit_size = false;
@@ -353,10 +354,12 @@ class Forminator_Upload extends Forminator_Field {
 		$custom_file_type = filter_var( $custom_file_type, FILTER_VALIDATE_BOOLEAN );
 		if ( $custom_file_type ) {
 			// check custom mime.
-			$filetypes           = self::get_property( 'filetypes', $field, array(), 'array' );
-			$additional          = str_replace( '.', '', self::get_property( 'additional-type', $field, '', 'string' ) );
-			$additional_filetype = array_map( 'trim', explode( ',', $additional ) );
-			$all_file_type       = array_merge( $filetypes, $additional_filetype );
+			$filetypes             = self::get_property( 'filetypes', $field, array(), 'array' );
+			$additional            = str_replace( '.', '', self::get_property( 'additional-type', $field, '', 'string' ) );
+			$additional_filetype   = array_map( 'trim', explode( ',', $additional ) );
+			$additional_filetypes  = $this->get_additional_file_types( $additional_filetype );
+			$additional_mime_types = $this->get_additional_file_mime_types( $additional_filetype );
+			$all_file_type         = array_merge( $filetypes, $additional_filetypes );
 			foreach ( $all_file_type as $filetype ) {
 				// Mime type format = Key is the file extension with value as the mime type.
 				$mime_types[ $filetype ] = $filetype;
@@ -423,7 +426,7 @@ class Forminator_Upload extends Forminator_Field {
 					);
 				}
 
-				$valid_mime = self::check_mime_type( $file_object['tmp_name'], $file_object['name'] );
+				$valid_mime = self::check_mime_type( $file_object['tmp_name'], $file_object['name'], $additional_mime_types );
 
 				if ( ! $valid_mime ) {
 					return array(
@@ -550,12 +553,36 @@ class Forminator_Upload extends Forminator_Field {
 	 *
 	 * @param string $file Full path to the file.
 	 * @param string $file_name The name of the file.
+	 * @param array  $additional_mime_types Additional MIME type.
 	 * @return bool
 	 */
-	private static function check_mime_type( string $file, string $file_name ): bool {
+	private static function check_mime_type( string $file, string $file_name, $additional_mime_types ): bool {
+		if ( ! empty( $additional_mime_types ) ) {
+			self::$additional_mime_types = $additional_mime_types;
+			// Add additional MIME types through the upload_mimes event to support extra file types.
+			add_filter( 'upload_mimes', array( __CLASS__, 'add_additional_mime_type_for_validation' ), 10 );
+		}
+
 		$wp_filetype = wp_check_filetype_and_ext( $file, $file_name );
 
+		if ( ! empty( $additional_mime_types ) ) {
+			// Remove the upload_mimes event after file type checks to avoid conflicts with other forms/fields.
+			remove_filter( 'upload_mimes', array( __CLASS__, 'add_additional_mime_type_for_validation' ), 10 );
+			self::$additional_mime_types = array();
+		}
+
 		return ! empty( $wp_filetype['ext'] ) && ! empty( $wp_filetype['type'] );
+	}
+
+	/**
+	 * Add additional MIME types through the upload_mimes event to validate file uploads.
+	 *
+	 * @param array $mime_types File MIME types.
+	 * @return array
+	 */
+	public static function add_additional_mime_type_for_validation( $mime_types ) {
+		$mime_types = array_merge( $mime_types, self::$additional_mime_types );
+		return $mime_types;
 	}
 
 	/**
@@ -971,8 +998,8 @@ class Forminator_Upload extends Forminator_Field {
 	 * @return array
 	 */
 	public function file_mime_type( $field ) {
-		$mime_types          = array();
-		$default_all         = array(
+		$mime_types           = array();
+		$default_all          = array(
 			'all-image',
 			'all-video',
 			'all-document',
@@ -982,17 +1009,53 @@ class Forminator_Upload extends Forminator_Field {
 			'all-spreadsheet',
 			'all-interactive',
 		);
-		$filetypes           = self::get_property( 'filetypes', $field, array(), 'array' );
-		$file_types          = array_diff( array_merge( $default_all, $filetypes ), $default_all );
-		$additional          = str_replace( '.', '', self::get_property( 'additional-type', $field, '', 'string' ) );
-		$additional_filetype = array_map( 'trim', explode( ',', $additional ) );
-		$all_filetype        = array_merge( $file_types, $additional_filetype );
+		$filetypes            = self::get_property( 'filetypes', $field, array(), 'array' );
+		$file_types           = array_diff( array_merge( $default_all, $filetypes ), $default_all );
+		$additional           = str_replace( '.', '', self::get_property( 'additional-type', $field, '', 'string' ) );
+		$additional_filetype  = array_map( 'trim', explode( ',', $additional ) );
+		$additional_filetypes = $this->get_additional_file_types( $additional_filetype );
+		$all_filetype         = array_merge( $file_types, $additional_filetypes );
 		if ( ! empty( $all_filetype ) ) {
 			foreach ( $all_filetype as $filetype ) {
 				$mime_types[ $filetype ] = $filetype;
 			}
 		}
 
+		// Backward compatibility: allow only the allowed file types.
+		$mime_types = forminator_allowed_mime_types( $mime_types, false );
+
+		return $mime_types;
+	}
+
+	/**
+	 * Get additional file types.
+	 *
+	 * @param array $custom_filetypes Custom file types.
+	 * @return string[]
+	 */
+	private function get_additional_file_types( $custom_filetypes ) {
+		$file_types = array();
+		foreach ( $custom_filetypes as $custom_filetype ) {
+			$custom_type  = array_map( 'trim', explode( '|', $custom_filetype ) );
+			$file_types[] = $custom_type[0];
+		}
+		return $file_types;
+	}
+
+	/**
+	 * Get additional file MIME types.
+	 *
+	 * @param array $custom_filetypes Custom file types.
+	 * @return string[]
+	 */
+	private function get_additional_file_mime_types( $custom_filetypes ) {
+		$mime_types = array();
+		foreach ( $custom_filetypes as $custom_filetype ) {
+			$custom_type = array_map( 'trim', explode( '|', $custom_filetype ) );
+			if ( ! empty( $custom_type[1] ) ) {
+				$mime_types[ $custom_type[0] ] = $custom_type[1];
+			}
+		}
 		return $mime_types;
 	}
 

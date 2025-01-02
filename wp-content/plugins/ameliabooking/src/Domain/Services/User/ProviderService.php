@@ -19,6 +19,7 @@ use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Schedule\PeriodFactory;
+use AmeliaBooking\Domain\Factory\Schedule\PeriodLocationFactory;
 use AmeliaBooking\Domain\Factory\Schedule\WeekDayFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Interval\IntervalService;
@@ -57,123 +58,34 @@ class ProviderService
      * @return void
      * @throws InvalidArgumentException
      */
-    private function makePeriodsAvailable($day)
+    private function makePeriodsAvailable($day, $removeBreaks)
     {
-        $periodsInSeconds = [];
+        $locations = [];
+
+        if ($removeBreaks) {
+            $day->setTimeOutList(new Collection());
+        }
 
         /** @var Period $period */
-        foreach ($day->getPeriodList()->getItems() as $key => $period) {
-            if ($period->getLocationId()) {
-                $startInSeconds = $this->intervalService->getSeconds(
-                    $period->getStartTime()->getValue()->format('H:i:s')
-                );
-
-                $periodsInSeconds[$startInSeconds] = $this->intervalService->getSeconds(
-                    $period->getEndTime()->getValue()->format('H:i:s')
-                );
+        foreach ($day->getPeriodList()->getItems() as $period) {
+            /** @var PeriodLocation $periodLocation */
+            foreach ($period->getPeriodLocationList()->getItems() as $periodLocation) {
+                if (empty($locations[$periodLocation->getLocationId()->getValue()])) {
+                    $locations[$periodLocation->getLocationId()->getValue()] = PeriodLocationFactory::create(['locationId' => $periodLocation->getLocationId()->getValue()]);
+                }
             }
         }
 
-        if (!$periodsInSeconds) {
-            $day->getPeriodList()->addItem(
-                PeriodFactory::create(
-                    [
-                        'startTime'          => '00:00:00',
-                        'endTime'            => '24:00:00',
-                        'periodServiceList'  => [],
-                        'periodLocationList' => [],
-                    ]
-                )
-            );
-
-            return;
-        }
-
-
-        $periodsStartTimes = array_keys($periodsInSeconds);
-
-        sort($periodsStartTimes);
-
-        $sortedPeriodsInSeconds = [];
-
-        foreach ($periodsStartTimes as $seconds) {
-            $sortedPeriodsInSeconds[$seconds] = $periodsInSeconds[$seconds];
-        }
-
-        $periodsInSeconds = $sortedPeriodsInSeconds;
-
-        $extraPeriods = [];
-
-        $i = 0;
-
-        $periodsCount = sizeof($periodsInSeconds);
-
-        $periodsStarts = array_keys($periodsInSeconds);
-
-        foreach ($periodsInSeconds as $secondsStart => $secondsEnd) {
-            if ($i === 0) {
-                if ($secondsStart !== 0) {
-                    $extraPeriods[0] = $secondsStart;
-                }
-
-                if (!empty($periodsStarts[$i + 1]) && $periodsStarts[$i + 1] !== $secondsEnd) {
-                    $extraPeriods[$secondsEnd] = $periodsStarts[$i + 1];
-                }
-
-                if ($periodsCount === 1 && $secondsEnd !== 86400) {
-                    $extraPeriods[$secondsEnd] = 86400;
-                }
-            } elseif ($i === $periodsCount - 1) {
-                if ($secondsEnd !== 86400) {
-                    $extraPeriods[$secondsEnd] = 86400;
-                }
-            } else {
-                if ($periodsStarts[$i + 1] !== $secondsEnd) {
-                    $extraPeriods[$secondsEnd] = $periodsStarts[$i + 1];
-                }
-            }
-
-            $i++;
-        }
-
-        foreach ($extraPeriods as $extraPeriodStart => $extraPeriodEnd) {
-            $day->getPeriodList()->addItem(
-                PeriodFactory::create(
-                    [
-                        'startTime'          => sprintf('%02d', floor($extraPeriodStart / 3600)) . ':'
-                            . sprintf('%02d', floor(($extraPeriodStart / 60) % 60)) . ':00',
-                        'endTime'            => sprintf('%02d', floor($extraPeriodEnd / 3600)) . ':'
-                            . sprintf('%02d', floor(($extraPeriodEnd / 60) % 60)) . ':00',
-                        'periodServiceList'  => [],
-                        'periodLocationList' => [],
-                    ]
-                )
-            );
-        }
-
-        /** @var Collection $sortedPeriods */
-        $sortedPeriods = new Collection();
-
-        $allPeriodsInSeconds = [];
-
-        /** @var Period $period */
-        foreach ($day->getPeriodList()->getItems() as $key => $period) {
-            $startInSeconds = $this->intervalService->getSeconds(
-                $period->getStartTime()->getValue()->format('H:i:s')
-            );
-
-            $allPeriodsInSeconds[$startInSeconds] = $key;
-        }
-
-        $allPeriodsInSecondsKeys = array_keys($allPeriodsInSeconds);
-
-        sort($allPeriodsInSecondsKeys);
-
-        foreach ($allPeriodsInSecondsKeys as $periodStart) {
-            $sortedPeriods->addItem($day->getPeriodList()->getItem($allPeriodsInSeconds[$periodStart]));
-        }
-
-        $day->setPeriodList($sortedPeriods);
+        $day->getPeriodList()->addItem(
+            PeriodFactory::create(
+                [
+                    'startTime'          => '00:00:00',
+                    'endTime'            => '24:00:00',
+                    'periodServiceList'  => [],
+                    'periodLocationList' => array_values($locations),
+                ]
+            )
+        );
     }
 
     /**
@@ -217,12 +129,12 @@ class ProviderService
 
             /** @var WeekDay $weekDay */
             foreach ($provider->getWeekDayList()->getItems() as $index => $weekDay) {
-                $this->makePeriodsAvailable($weekDay);
+                $this->makePeriodsAvailable($weekDay, true);
             }
 
             /** @var SpecialDay $specialDay */
             foreach ($provider->getSpecialDayList()->getItems() as $specialDay) {
-                $this->makePeriodsAvailable($specialDay);
+                $this->makePeriodsAvailable($specialDay, false);
             }
 
             $provider->setDayOffList(new Collection());
@@ -536,6 +448,8 @@ class ProviderService
         }
 
         $yearsDiff = $startDateTime->diff($endDateTime)->format('%y');
+
+        $yearsDiff = $yearsDiff === '0' ? '1' : $yearsDiff;
 
         $startYear = $startDateTime->format('Y');
 

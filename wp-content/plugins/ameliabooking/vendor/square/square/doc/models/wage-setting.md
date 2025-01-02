@@ -22,12 +22,51 @@ An object representing a team member's wage information.
 
 ```json
 {
-  "team_member_id": null,
-  "job_assignments": null,
-  "is_overtime_exempt": null,
-  "version": null,
-  "created_at": null,
-  "updated_at": null
+  "team_member_id": "team_member_id2",
+  "job_assignments": [
+    {
+      "job_title": "job_title6",
+      "pay_type": "SALARY",
+      "hourly_rate": {
+        "amount": 172,
+        "currency": "OMR"
+      },
+      "annual_rate": {
+        "amount": 232,
+        "currency": "SBD"
+      },
+      "weekly_hours": 98
+    },
+    {
+      "job_title": "job_title6",
+      "pay_type": "SALARY",
+      "hourly_rate": {
+        "amount": 172,
+        "currency": "OMR"
+      },
+      "annual_rate": {
+        "amount": 232,
+        "currency": "SBD"
+      },
+      "weekly_hours": 98
+    },
+    {
+      "job_title": "job_title6",
+      "pay_type": "SALARY",
+      "hourly_rate": {
+        "amount": 172,
+        "currency": "OMR"
+      },
+      "annual_rate": {
+        "amount": 232,
+        "currency": "SBD"
+      },
+      "weekly_hours": 98
+    }
+  ],
+  "is_overtime_exempt": false,
+  "version": 140,
+  "created_at": "created_at0"
 }
 ```
 

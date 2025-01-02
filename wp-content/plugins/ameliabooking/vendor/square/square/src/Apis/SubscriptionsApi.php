@@ -9,9 +9,12 @@ use Core\Request\Parameters\HeaderParam;
 use Core\Request\Parameters\QueryParam;
 use Core\Request\Parameters\TemplateParam;
 use CoreInterfaces\Core\Request\RequestMethod;
-use Square\Exceptions\ApiException;
 use Square\Http\ApiResponse;
+use Square\Models\BulkSwapPlanRequest;
+use Square\Models\BulkSwapPlanResponse;
 use Square\Models\CancelSubscriptionResponse;
+use Square\Models\ChangeBillingAnchorDateRequest;
+use Square\Models\ChangeBillingAnchorDateResponse;
 use Square\Models\CreateSubscriptionRequest;
 use Square\Models\CreateSubscriptionResponse;
 use Square\Models\DeleteSubscriptionActionResponse;
@@ -31,12 +34,15 @@ use Square\Models\UpdateSubscriptionResponse;
 class SubscriptionsApi extends BaseApi
 {
     /**
-     * Creates a subscription to a subscription plan by a customer.
+     * Enrolls a customer in a subscription.
      *
      * If you provide a card on file in the request, Square charges the card for
-     * the subscription. Otherwise, Square bills an invoice to the customer's email
+     * the subscription. Otherwise, Square sends an invoice to the customer's email
      * address. The subscription starts immediately, unless the request includes
      * the optional `start_date`. Each individual subscription is associated with a particular location.
+     *
+     * For more information, see [Create a subscription](https://developer.squareup.com/docs/subscriptions-
+     * api/manage-subscriptions#create-a-subscription).
      *
      * @param CreateSubscriptionRequest $body An object containing the fields to POST for the
      *        request.
@@ -44,8 +50,6 @@ class SubscriptionsApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function createSubscription(CreateSubscriptionRequest $body): ApiResponse
     {
@@ -54,6 +58,27 @@ class SubscriptionsApi extends BaseApi
             ->parameters(HeaderParam::init('Content-Type', 'application/json'), BodyParam::init($body));
 
         $_resHandler = $this->responseHandler()->type(CreateSubscriptionResponse::class)->returnApiResponse();
+
+        return $this->execute($_reqBuilder, $_resHandler);
+    }
+
+    /**
+     * Schedules a plan variation change for all active subscriptions under a given plan
+     * variation. For more information, see [Swap Subscription Plan Variations](https://developer.squareup.
+     * com/docs/subscriptions-api/swap-plan-variations).
+     *
+     * @param BulkSwapPlanRequest $body An object containing the fields to POST for the request. See
+     *        the corresponding object definition for field details.
+     *
+     * @return ApiResponse Response from the API call
+     */
+    public function bulkSwapPlan(BulkSwapPlanRequest $body): ApiResponse
+    {
+        $_reqBuilder = $this->requestBuilder(RequestMethod::POST, '/v2/subscriptions/bulk-swap-plan')
+            ->auth('global')
+            ->parameters(HeaderParam::init('Content-Type', 'application/json'), BodyParam::init($body));
+
+        $_resHandler = $this->responseHandler()->type(BulkSwapPlanResponse::class)->returnApiResponse();
 
         return $this->execute($_reqBuilder, $_resHandler);
     }
@@ -74,18 +99,12 @@ class SubscriptionsApi extends BaseApi
      * first by location, within location by customer ID, and within
      * customer by subscription creation date.
      *
-     * For more information, see
-     * [Retrieve subscriptions](https://developer.squareup.com/docs/subscriptions-api/overview#retrieve-
-     * subscriptions).
-     *
      * @param SearchSubscriptionsRequest $body An object containing the fields to POST for the
      *        request.
      *
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function searchSubscriptions(SearchSubscriptionsRequest $body): ApiResponse
     {
@@ -99,7 +118,7 @@ class SubscriptionsApi extends BaseApi
     }
 
     /**
-     * Retrieves a subscription.
+     * Retrieves a specific subscription.
      *
      * @param string $subscriptionId The ID of the subscription to retrieve.
      * @param string|null $mInclude A query parameter to specify related information to be included
@@ -110,8 +129,6 @@ class SubscriptionsApi extends BaseApi
      *        - `actions`: to include scheduled actions on the targeted subscription.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function retrieveSubscription(string $subscriptionId, ?string $mInclude = null): ApiResponse
     {
@@ -128,8 +145,8 @@ class SubscriptionsApi extends BaseApi
     }
 
     /**
-     * Updates a subscription. You can set, modify, and clear the
-     * `subscription` field values.
+     * Updates a subscription by modifying or clearing `subscription` field values.
+     * To clear a field, set its value to `null`.
      *
      * @param string $subscriptionId The ID of the subscription to update.
      * @param UpdateSubscriptionRequest $body An object containing the fields to POST for the
@@ -138,8 +155,6 @@ class SubscriptionsApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function updateSubscription(string $subscriptionId, UpdateSubscriptionRequest $body): ApiResponse
     {
@@ -163,8 +178,6 @@ class SubscriptionsApi extends BaseApi
      * @param string $actionId The ID of the targeted action to be deleted.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function deleteSubscriptionAction(string $subscriptionId, string $actionId): ApiResponse
     {
@@ -184,15 +197,44 @@ class SubscriptionsApi extends BaseApi
     }
 
     /**
-     * Schedules a `CANCEL` action to cancel an active subscription
-     * by setting the `canceled_date` field to the end of the active billing period
-     * and changing the subscription status from ACTIVE to CANCELED after this date.
+     * Changes the [billing anchor date](https://developer.squareup.com/docs/subscriptions-api/subscription-
+     * billing#billing-dates)
+     * for a subscription.
+     *
+     * @param string $subscriptionId The ID of the subscription to update the billing anchor date.
+     * @param ChangeBillingAnchorDateRequest $body An object containing the fields to POST for the
+     *        request.
+     *
+     *        See the corresponding object definition for field details.
+     *
+     * @return ApiResponse Response from the API call
+     */
+    public function changeBillingAnchorDate(string $subscriptionId, ChangeBillingAnchorDateRequest $body): ApiResponse
+    {
+        $_reqBuilder = $this->requestBuilder(
+            RequestMethod::POST,
+            '/v2/subscriptions/{subscription_id}/billing-anchor'
+        )
+            ->auth('global')
+            ->parameters(
+                TemplateParam::init('subscription_id', $subscriptionId),
+                HeaderParam::init('Content-Type', 'application/json'),
+                BodyParam::init($body)
+            );
+
+        $_resHandler = $this->responseHandler()->type(ChangeBillingAnchorDateResponse::class)->returnApiResponse();
+
+        return $this->execute($_reqBuilder, $_resHandler);
+    }
+
+    /**
+     * Schedules a `CANCEL` action to cancel an active subscription. This
+     * sets the `canceled_date` field to the end of the active billing period. After this date,
+     * the subscription status changes from ACTIVE to CANCELED.
      *
      * @param string $subscriptionId The ID of the subscription to cancel.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function cancelSubscription(string $subscriptionId): ApiResponse
     {
@@ -206,7 +248,8 @@ class SubscriptionsApi extends BaseApi
     }
 
     /**
-     * Lists all events for a specific subscription.
+     * Lists all [events](https://developer.squareup.com/docs/subscriptions-api/actions-events) for a
+     * specific subscription.
      *
      * @param string $subscriptionId The ID of the subscription to retrieve the events for.
      * @param string|null $cursor When the total number of resulting subscription events exceeds the
@@ -215,14 +258,12 @@ class SubscriptionsApi extends BaseApi
      *        results.
      *        If the cursor is unset, the response contains the last page of the results.
      *
-     *        For more information, see [Pagination](https://developer.squareup.com/docs/working-
-     *        with-apis/pagination).
+     *        For more information, see [Pagination](https://developer.squareup.com/docs/build-
+     *        basics/common-api-patterns/pagination).
      * @param int|null $limit The upper limit on the number of subscription events to return in a
      *        paged response.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function listSubscriptionEvents(
         string $subscriptionId,
@@ -252,8 +293,6 @@ class SubscriptionsApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function pauseSubscription(string $subscriptionId, PauseSubscriptionRequest $body): ApiResponse
     {
@@ -280,8 +319,6 @@ class SubscriptionsApi extends BaseApi
      *        See the corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function resumeSubscription(string $subscriptionId, ResumeSubscriptionRequest $body): ApiResponse
     {
@@ -299,15 +336,15 @@ class SubscriptionsApi extends BaseApi
     }
 
     /**
-     * Schedules a `SWAP_PLAN` action to swap a subscription plan in an existing subscription.
+     * Schedules a `SWAP_PLAN` action to swap a subscription plan variation in an existing subscription.
+     * For more information, see [Swap Subscription Plan Variations](https://developer.squareup.
+     * com/docs/subscriptions-api/swap-plan-variations).
      *
      * @param string $subscriptionId The ID of the subscription to swap the subscription plan for.
      * @param SwapPlanRequest $body An object containing the fields to POST for the request. See the
      *        corresponding object definition for field details.
      *
      * @return ApiResponse Response from the API call
-     *
-     * @throws ApiException Thrown if API call fails
      */
     public function swapPlan(string $subscriptionId, SwapPlanRequest $body): ApiResponse
     {

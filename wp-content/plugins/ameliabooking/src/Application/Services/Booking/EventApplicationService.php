@@ -261,6 +261,9 @@ class EventApplicationService
         /** @var EventDomainService $eventDomainService */
         $eventDomainService = $this->container->get('domain.booking.event.service');
 
+        /** @var EventApplicationService $eventAS */
+        $eventAS = $this->container->get('application.booking.event.service');
+
         /** @var Collection $rescheduledEvents */
         $rescheduledEvents = new Collection();
 
@@ -303,11 +306,20 @@ class EventApplicationService
         // update following events parentId, if new event recurring value is removed and if it's origin event
         if (!$newEvent->getRecurring() && $oldEvent->getRecurring() && !$newEvent->getParentId()) {
             /** @var Collection $followingEvents */
-            $followingEvents = $eventRepository->getFiltered(
+            $followingEvents = $eventAS->getEventsByCriteria(
                 [
                     'parentId' => $newEvent->getId()->getValue(),
-                    'allProviders' => true
-                ]
+                ],
+                [
+                    'fetchEventsPeriods'   => true,
+                    'fetchEventsTickets'   => true,
+                    'fetchEventsTags'      => true,
+                    'fetchEventsProviders' => true,
+                    'fetchEventsImages'    => true,
+                    'fetchBookings'        => true,
+                    'fetchBookingsUsers'   => true,
+                ],
+                0
             );
 
             $firstFollowingEventId = null;
@@ -333,12 +345,21 @@ class EventApplicationService
 
         if ($updateFollowing && $newEvent->getRecurring()) {
             /** @var Collection $followingEvents */
-            $followingEvents = $eventRepository->getFiltered(
+            $followingEvents = $eventAS->getEventsByCriteria(
                 [
                     'parentId' => $newEvent->getParentId() ?
                         $newEvent->getParentId()->getValue() : $newEvent->getId()->getValue(),
-                    'allProviders' => true
-                ]
+                ],
+                [
+                    'fetchEventsPeriods'   => true,
+                    'fetchEventsTickets'   => true,
+                    'fetchEventsTags'      => true,
+                    'fetchEventsProviders' => true,
+                    'fetchEventsImages'    => true,
+                    'fetchBookings'        => true,
+                    'fetchBookingsUsers'   => true,
+                ],
+                0
             );
 
             /** @var Event $firstEvent **/
@@ -737,6 +758,9 @@ class EventApplicationService
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
+        /** @var EventApplicationService $eventAS */
+        $eventAS = $this->container->get('application.booking.event.service');
+
         /** @var Collection $updatedEvents */
         $updatedEvents = new Collection();
 
@@ -765,12 +789,21 @@ class EventApplicationService
 
         if ($updateFollowing) {
             /** @var Collection $followingEvents */
-            $followingEvents = $eventRepository->getFiltered(
+            $followingEvents = $eventAS->getEventsByCriteria(
                 [
                     'parentId' => $event->getParentId() ?
                         $event->getParentId()->getValue() : $event->getId()->getValue(),
-                    'allProviders' => true
-                ]
+                ],
+                [
+                    'fetchEventsPeriods'   => true,
+                    'fetchEventsTickets'   => true,
+                    'fetchEventsTags'      => true,
+                    'fetchEventsProviders' => true,
+                    'fetchEventsImages'    => true,
+                    'fetchBookings'        => true,
+                    'fetchBookingsUsers'   => true,
+                ],
+                0
             );
 
             /** @var Event $followingEvent */
@@ -827,12 +860,24 @@ class EventApplicationService
         /** @var NotificationsToEntitiesRepository $notificationEntitiesRepo */
         $notificationEntitiesRepo = $this->container->get('domain.notificationEntities.repository');
 
+        /** @var EventApplicationService $eventAS */
+        $eventAS = $this->container->get('application.booking.event.service');
+
         /** @var Collection $recurringEvents */
-        $recurringEvents = $eventRepository->getFiltered(
+        $recurringEvents = $eventAS->getEventsByCriteria(
             [
                 'parentId' => $event->getParentId() ?
                     $event->getParentId()->getValue() : $event->getId()->getValue()
-            ]
+            ],
+            [
+                'fetchEventsPeriods' => true,
+                'fetchEventsTickets' => true,
+                'fetchEventsTags'    => true,
+                'fetchEventsImages'  => true,
+                'fetchBookings'      => true,
+                'fetchBookingsUsers' => true,
+            ],
+            0
         );
 
         $deletedEvents = new Collection();
@@ -1317,7 +1362,7 @@ class EventApplicationService
     }
 
     /**
-     * @param Collection $tickets
+     * @param Collection|array $tickets
      *
      * @return Collection
      *
@@ -1329,8 +1374,22 @@ class EventApplicationService
         /** @var Collection $newTickets */
         $newTickets = new Collection();
 
+        $ticketsCollection = new Collection();
+
+        if (is_array($tickets)) {
+            foreach ($tickets as $ticket) {
+                $ticketsCollection->addItem(
+                    EventTicketFactory::create(
+                        $ticket
+                    )
+                );
+            }
+        } else {
+            $ticketsCollection = $tickets;
+        }
+
         /** @var EventTicket $ticket */
-        foreach ($tickets->getItems() as $key => $ticket) {
+        foreach ($ticketsCollection->getItems() as $key => $ticket) {
             if ($ticket->getDateRanges()) {
                 $ticketDateRanges = json_decode($ticket->getDateRanges()->getValue(), true);
 
@@ -1354,6 +1413,31 @@ class EventApplicationService
     }
 
     /**
+     * @param array $params
+     * @param array $criteria
+     * @param int   $limit
+     *
+     * @return Collection
+     *
+     * @throws ContainerValueNotFoundException
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function getEventsByCriteria($params, $criteria, $limit)
+    {
+        /** @var EventRepository $eventRepository */
+        $eventRepository = $this->container->get('domain.booking.event.repository');
+
+        $eventsIds = $eventRepository->getFilteredIds($params, $limit);
+
+        /** @var Collection $events */
+        return $eventsIds ? $this->getEventsByIds(
+            $eventsIds,
+            $criteria
+        ) : new Collection();
+    }
+
+    /**
      * @param array $ids
      * @param array $criteria
      *
@@ -1372,9 +1456,9 @@ class EventApplicationService
         $customerRepository = $this->container->get('domain.users.customers.repository');
 
         /** @var Collection $events */
-        $events = $eventRepository->getByCriteria(
+        $events = $eventRepository->getByIdsWithEntities(
+            $ids,
             [
-                'ids'                  => $ids,
                 'fetchEventsPeriods'   => !empty($criteria['fetchEventsPeriods']) ?
                     $criteria['fetchEventsPeriods'] : false,
                 'fetchEventsTickets'   => !empty($criteria['fetchEventsTickets']) ?
@@ -1389,7 +1473,7 @@ class EventApplicationService
         );
 
         /** @var Collection $eventsBookings */
-        $eventsBookings = $events->length() ? $eventRepository->getBookingsByCriteria(
+        $eventsBookings = $events->length() && !empty($criteria['fetchBookings']) ? $eventRepository->getBookingsByCriteria(
             [
                 'ids'                   => $ids,
                 'fetchBookingsTickets'  => !empty($criteria['fetchBookingsTickets']) ?
@@ -1456,16 +1540,20 @@ class EventApplicationService
         $events = $this->getEventsByIds(
             [$id],
             [
-                'fetchEventsPeriods'   => !empty($criteria['fetchEventsPeriods']) ?
+                'fetchEventsPeriods'    => !empty($criteria['fetchEventsPeriods']) ?
                     $criteria['fetchEventsPeriods'] : false,
-                'fetchEventsTickets'   => !empty($criteria['fetchEventsTickets']) ?
+                'fetchEventsTickets'    => !empty($criteria['fetchEventsTickets']) ?
                     $criteria['fetchEventsTickets'] : false,
-                'fetchEventsTags'      => !empty($criteria['fetchEventsTags']) ?
+                'fetchEventsTags'       => !empty($criteria['fetchEventsTags']) ?
                     $criteria['fetchEventsTags'] : false,
-                'fetchEventsProviders' => !empty($criteria['fetchEventsProviders']) ?
+                'fetchEventsProviders'  => !empty($criteria['fetchEventsProviders']) ?
                     $criteria['fetchEventsProviders'] : false,
-                'fetchEventsImages'    => !empty($criteria['fetchEventsImages']) ?
+                'fetchEventsImages'     => !empty($criteria['fetchEventsImages']) ?
                     $criteria['fetchEventsImages'] : false,
+                'fetchApprovedBookings' => !empty($criteria['fetchApprovedBookings']) ?
+                    $criteria['fetchApprovedBookings'] : false,
+                'fetchBookings'         => !empty($criteria['fetchBookings']) ?
+                    $criteria['fetchBookings'] : false,
                 'fetchBookingsTickets'  => !empty($criteria['fetchBookingsTickets']) ?
                     $criteria['fetchBookingsTickets'] : false,
                 'fetchBookingsUsers'    => !empty($criteria['fetchBookingsUsers']) ?
@@ -1474,8 +1562,6 @@ class EventApplicationService
                     $criteria['fetchBookingsPayments'] : false,
                 'fetchBookingsCoupons'  => !empty($criteria['fetchBookingsCoupons']) ?
                     $criteria['fetchBookingsCoupons'] : false,
-                'fetchApprovedBookings' => !empty($criteria['fetchApprovedBookings']) ?
-                    $criteria['fetchApprovedBookings'] : false,
             ]
         );
 

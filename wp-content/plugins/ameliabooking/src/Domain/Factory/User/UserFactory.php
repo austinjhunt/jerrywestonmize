@@ -217,6 +217,10 @@ class UserFactory
                     $user->setBadgeId(new Id($data['badgeId']));
                 }
 
+                if (!empty($data['appleCalendarId'])) {
+                    $user->setAppleCalendarId(new Name($data['appleCalendarId']));
+                }
+
                 break;
             case 'manager':
                 $user = new Manager(

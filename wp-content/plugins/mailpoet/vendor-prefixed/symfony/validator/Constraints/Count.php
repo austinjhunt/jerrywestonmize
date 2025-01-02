@@ -18,7 +18,7 @@ class Count extends Constraint
  public $min;
  public $max;
  public $divisibleBy;
- public function __construct($exactly = null, int $min = null, int $max = null, int $divisibleBy = null, string $exactMessage = null, string $minMessage = null, string $maxMessage = null, string $divisibleByMessage = null, array $groups = null, $payload = null, array $options = [])
+ public function __construct($exactly = null, ?int $min = null, ?int $max = null, ?int $divisibleBy = null, ?string $exactMessage = null, ?string $minMessage = null, ?string $maxMessage = null, ?string $divisibleByMessage = null, ?array $groups = null, $payload = null, array $options = [])
  {
  if (\is_array($exactly)) {
  $options = \array_merge($exactly, $options);

@@ -13,7 +13,7 @@ the request resulted in errors.
 
 | Name | Type | Tags | Description | Getter | Setter |
 |  --- | --- | --- | --- | --- | --- |
-| `employeeWage` | [`?EmployeeWage`](../../doc/models/employee-wage.md) | Optional | The hourly wage rate that an employee earns on a `Shift` for doing the job<br>specified by the `title` property of this object. Deprecated at version 2020-08-26. Use `TeamMemberWage` instead. | getEmployeeWage(): ?EmployeeWage | setEmployeeWage(?EmployeeWage employeeWage): void |
+| `employeeWage` | [`?EmployeeWage`](../../doc/models/employee-wage.md) | Optional | The hourly wage rate that an employee earns on a `Shift` for doing the job specified by the `title` property of this object. Deprecated at version 2020-08-26. Use [TeamMemberWage](entity:TeamMemberWage). | getEmployeeWage(): ?EmployeeWage | setEmployeeWage(?EmployeeWage employeeWage): void |
 | `errors` | [`?(Error[])`](../../doc/models/error.md) | Optional | Any errors that occurred during the request. | getErrors(): ?array | setErrors(?array errors): void |
 
 ## Example (as JSON)
@@ -28,7 +28,27 @@ the request resulted in errors.
     },
     "id": "pXS3qCv7BERPnEGedM4S8mhm",
     "title": "Manager"
-  }
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

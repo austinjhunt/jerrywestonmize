@@ -375,6 +375,11 @@
 				validator.form();
 			});
 
+			// Inline validation for upload field.
+			$form.find( '.forminator-input-file, .forminator-input-file-required' ).on( 'change', function () {
+				$( this ).trigger( 'focusout' );
+			})
+
 			// Trigger change for the hour field.
 			$( '.time-minutes.has-time-limiter, .time-ampm.has-time-limiter' ).on( 'change', function () {
 				var hourContainer = $( this ).closest( '.forminator-col' ).siblings( '.forminator-col' ).first();

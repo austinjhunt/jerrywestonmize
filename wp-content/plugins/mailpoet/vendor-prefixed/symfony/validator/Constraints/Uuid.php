@@ -13,7 +13,7 @@ class Uuid extends Constraint
  public const INVALID_VERSION_ERROR = '21ba13b4-b185-4882-ac6f-d147355987eb';
  public const INVALID_VARIANT_ERROR = '164ef693-2b9d-46de-ad7f-836201f0c2db';
  protected static $errorNames = [self::TOO_SHORT_ERROR => 'TOO_SHORT_ERROR', self::TOO_LONG_ERROR => 'TOO_LONG_ERROR', self::INVALID_CHARACTERS_ERROR => 'INVALID_CHARACTERS_ERROR', self::INVALID_HYPHEN_PLACEMENT_ERROR => 'INVALID_HYPHEN_PLACEMENT_ERROR', self::INVALID_VERSION_ERROR => 'INVALID_VERSION_ERROR', self::INVALID_VARIANT_ERROR => 'INVALID_VARIANT_ERROR'];
- // Possible versions defined by RFC 4122
+ // Possible versions defined by RFC 9562/4122
  public const V1_MAC = 1;
  public const V2_DCE = 2;
  public const V3_MD5 = 3;
@@ -25,7 +25,7 @@ class Uuid extends Constraint
  public $strict = \true;
  public $versions = self::ALL_VERSIONS;
  public $normalizer;
- public function __construct(array $options = null, string $message = null, array $versions = null, bool $strict = null, callable $normalizer = null, array $groups = null, $payload = null)
+ public function __construct(?array $options = null, ?string $message = null, ?array $versions = null, ?bool $strict = null, ?callable $normalizer = null, ?array $groups = null, $payload = null)
  {
  parent::__construct($options, $groups, $payload);
  $this->message = $message ?? $this->message;

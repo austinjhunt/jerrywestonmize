@@ -29,8 +29,8 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->register(ContainerWrapper::class)
       ->setPublic(true)
       ->setFactory([
-      ContainerWrapper::class,
-      'getInstance',
+        ContainerWrapper::class,
+        'getInstance',
       ]);
     // AdminPages
     $container->autowire(\MailPoet\AdminPages\AssetsController::class)->setPublic(true);
@@ -40,7 +40,6 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\AdminPages\Pages\AutomationEditor::class)->setPublic(true);
     $container->autowire(\MailPoet\AdminPages\Pages\AutomationAnalytics::class)->setPublic(true);
     $container->autowire(\MailPoet\AdminPages\Pages\DynamicSegments::class)->setPublic(true);
-    $container->autowire(\MailPoet\AdminPages\Pages\EmailEditor::class)->setPublic(true);
     $container->autowire(\MailPoet\AdminPages\Pages\ExperimentalFeatures::class)->setPublic(true);
     $container->autowire(\MailPoet\AdminPages\Pages\FormEditor::class)->setPublic(true);
     $container->autowire(\MailPoet\AdminPages\Pages\Forms::class)->setPublic(true);
@@ -99,6 +98,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\API\JSON\v1\SubscriberStats::class)->setPublic(true);
     $container->autowire(\MailPoet\API\JSON\v1\Subscribers::class)->setPublic(true);
     $container->autowire(\MailPoet\API\JSON\v1\WoocommerceSettings::class)->setPublic(true);
+    $container->autowire(\MailPoet\API\JSON\v1\Captcha::class)->setPublic(true);
     $container->autowire(\MailPoet\Util\APIPermissionHelper::class)->setPublic(true);
     // API response builders
     $container->autowire(\MailPoet\API\JSON\ResponseBuilders\NewslettersResponseBuilder::class)->setPublic(true);
@@ -320,7 +320,6 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\Cron\Workers\Bounce::class)->setPublic(true);
     $container->autowire(\MailPoet\Cron\Workers\WooCommerceSync::class)->setPublic(true);
     $container->autowire(\MailPoet\Cron\Workers\ExportFilesCleanup::class)->setPublic(true);
-    $container->autowire(\MailPoet\Cron\Workers\Beamer::class)->setPublic(true);
     $container->autowire(\MailPoet\Cron\Workers\SubscribersEmailCount::class)->setPublic(true);
     $container->autowire(\MailPoet\Cron\Workers\InactiveSubscribers::class)->setPublic(true);
     $container->autowire(\MailPoet\Cron\Workers\Mixpanel::class)->setPublic(true);
@@ -340,33 +339,38 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\CustomFields\ApiDataSanitizer::class);
     $container->autowire(\MailPoet\CustomFields\CustomFieldsRepository::class)->setPublic(true);
     // Email Editor
-    $container->autowire(\MailPoet\EmailEditor\Utils\CdnAssetUrl::class)
-      ->setPublic(true)
-      ->setFactory([__CLASS__, 'getEmailEditorCdnAssetsUrl']);
-    $container->autowire(\MailPoet\EmailEditor\Engine\EmailEditor::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\EmailApiController::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\SettingsController::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\ThemeController::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Postprocessors\HighlightingPostprocessor::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Postprocessors\VariablesPostprocessor::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\BlocksWidthPreprocessor::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\CleanupPreprocessor::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\SpacingPreprocessor::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\TypographyPreprocessor::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Email_Editor::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Email_Api_Controller::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Settings_Controller::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Theme_Controller::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\User_Theme::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Send_Preview_Email::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Postprocessors\Highlighting_Postprocessor::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Postprocessors\Variables_Postprocessor::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\Blocks_Width_Preprocessor::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\Cleanup_Preprocessor::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\Spacing_Preprocessor::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\Typography_Preprocessor::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\Renderer::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Templates\Templates::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Templates\Utils::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\Templates\TemplatePreview::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Patterns\Patterns::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\ContentRenderer::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\BlocksRegistry::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\ProcessManager::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Blocks_Registry::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Process_Manager::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\Core\Initializer::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\Cli::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\EmailEditor::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\EditorPageRenderer::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\EmailApiController::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\EmailEditorPreviewEmail::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\Blocks\BlockTypesController::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\Blocks\BlockTypes\PoweredByMailpoet::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\Patterns\PatternsController::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Personalizer::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Subscriber::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTagManager::class)->setPublic(true);
     // Features
     $container->autowire(\MailPoet\Features\FeaturesController::class)->setPublic(true);
     $container->autowire(\MailPoet\Features\FeatureFlagsController::class)->setPublic(true);
@@ -427,6 +431,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\Router\Endpoints\ViewInBrowser::class)->setPublic(true);
     $container->autowire(\MailPoet\Router\Endpoints\TemplateImage::class)->setPublic(true);
     $container->autowire(\MailPoet\Router\Endpoints\Track::class)->setPublic(true);
+    $container->autowire(\MailPoet\Router\Endpoints\Captcha::class)->setPublic(true);
     // Statistics
     $container->autowire(\MailPoet\Statistics\Track\Clicks::class);
     $container->autowire(\MailPoet\Statistics\Track\Opens::class)->setPublic(true);
@@ -545,13 +550,6 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\Settings\UserFlagsController::class);
     $container->autowire(\MailPoet\Settings\UserFlagsRepository::class)->setPublic(true);
     // Subscription
-    $container->autowire(\MailPoet\Subscription\Captcha\CaptchaConstants::class)->setPublic(true);
-    $container->autowire(\MailPoet\Subscription\CaptchaFormRenderer::class)->setPublic(true);
-    $container->autowire(\MailPoet\Subscription\Captcha\CaptchaSession::class)->setPublic(true);
-    $container->autowire(\MailPoet\Subscription\Captcha\CaptchaRenderer::class)->setPublic(true);
-    $container->autowire(\MailPoet\Subscription\Captcha\CaptchaPhrase::class);
-    $container->autowire(\MailPoet\Subscription\Captcha\Validator\BuiltInCaptchaValidator::class)->setPublic(true);
-    $container->autowire(\MailPoet\Subscription\Captcha\Validator\RecaptchaValidator::class)->setPublic(true);
     $container->autowire(\MailPoet\Subscription\Comment::class)->setPublic(true);
     $container->autowire(\MailPoet\Subscription\Form::class)->setPublic(true);
     $container->autowire(\MailPoet\Subscription\Manage::class)->setPublic(true);
@@ -657,6 +655,17 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\WooCommerce\WooSystemInfoController::class)->setPublic(true);
     $container->autowire(\MailPoet\WooCommerce\MultichannelMarketing\MPMarketingChannelController::class)->setPublic(true);
     $container->autowire(\MailPoet\WooCommerce\MultichannelMarketing\MPMarketingChannelDataController::class)->setPublic(true);
+    // CAPTCHA
+    $container->autowire(\MailPoet\Captcha\CaptchaUrlFactory::class)->setPublic(true);
+    $container->autowire(\MailPoet\Captcha\CaptchaFormRenderer::class)->setPublic(true);
+    $container->autowire(\MailPoet\Captcha\PageRenderer::class)->setPublic(true);
+    $container->autowire(\MailPoet\Captcha\CaptchaConstants::class)->setPublic(true);
+    $container->autowire(\MailPoet\Captcha\CaptchaSession::class)->setPublic(true);
+    $container->autowire(\MailPoet\Captcha\CaptchaRenderer::class)->setPublic(true);
+    $container->autowire(\MailPoet\Captcha\CaptchaHooks::class)->setPublic(true);
+    $container->autowire(\MailPoet\Captcha\CaptchaPhrase::class);
+    $container->autowire(\MailPoet\Captcha\Validator\CaptchaValidator::class)->setPublic(true);
+    $container->autowire(\MailPoet\Captcha\Validator\RecaptchaValidator::class)->setPublic(true);
 
     // WooCommerce Subscriptions
     $container->autowire(\MailPoet\WooCommerce\WooCommerceSubscriptions\Helper::class)->setPublic(true);
@@ -675,6 +684,10 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\Cache\TransientCache::class)->setPublic(true);
     // Tags
     $container->autowire(\MailPoet\Tags\TagRepository::class)->setPublic(true);
+    // CAPTCHA
+    $container->autowire(\MailPoet\Config\HooksReCaptcha::class)->setPublic(true);
+    $container->autowire(\MailPoet\Captcha\ReCaptchaValidator::class)->setPublic(true);
+    $container->autowire(\MailPoet\Captcha\ReCaptchaRenderer::class)->setPublic(true);
     return $container;
   }
 
@@ -690,9 +703,5 @@ class ContainerConfigurator implements IContainerConfigurator {
 
   public static function getCdnAssetsUrl(): \MailPoet\Util\CdnAssetUrl {
     return new \MailPoet\Util\CdnAssetUrl((string)Env::$baseUrl);
-  }
-
-  public static function getEmailEditorCdnAssetsUrl(): \MailPoet\EmailEditor\Utils\CdnAssetUrl {
-    return new \MailPoet\EmailEditor\Utils\CdnAssetUrl((string)Env::$baseUrl);
   }
 }

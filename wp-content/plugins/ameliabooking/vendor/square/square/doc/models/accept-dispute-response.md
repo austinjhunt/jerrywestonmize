@@ -36,8 +36,29 @@ Defines the fields in an `AcceptDispute` response.
     "reported_at": "2022-06-29T00:00:00.000Z",
     "state": "ACCEPTED",
     "updated_at": "2022-07-07T19:14:42.650Z",
-    "version": 2
-  }
+    "version": 2,
+    "dispute_id": "dispute_id8"
+  },
+  "errors": [
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    },
+    {
+      "category": "MERCHANT_SUBSCRIPTION_ERROR",
+      "code": "MAP_KEY_LENGTH_TOO_LONG",
+      "detail": "detail6",
+      "field": "field4"
+    }
+  ]
 }
 ```
 

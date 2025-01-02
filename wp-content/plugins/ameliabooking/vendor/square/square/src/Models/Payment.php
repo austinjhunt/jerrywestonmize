@@ -117,6 +117,11 @@ class Payment implements \JsonSerializable
     private $buyNowPayLaterDetails;
 
     /**
+     * @var SquareAccountDetails|null
+     */
+    private $squareAccountDetails;
+
+    /**
      * @var string|null
      */
     private $locationId;
@@ -142,9 +147,9 @@ class Payment implements \JsonSerializable
     private $employeeId;
 
     /**
-     * @var string|null
+     * @var array
      */
-    private $teamMemberId;
+    private $teamMemberId = [];
 
     /**
      * @var string[]|null
@@ -155,6 +160,11 @@ class Payment implements \JsonSerializable
      * @var RiskEvaluation|null
      */
     private $riskEvaluation;
+
+    /**
+     * @var string|null
+     */
+    private $terminalCheckoutId;
 
     /**
      * @var string|null
@@ -205,6 +215,16 @@ class Payment implements \JsonSerializable
      * @var ApplicationDetails|null
      */
     private $applicationDetails;
+
+    /**
+     * @var bool|null
+     */
+    private $isOfflinePayment;
+
+    /**
+     * @var OfflinePaymentDetails|null
+     */
+    private $offlinePaymentDetails;
 
     /**
      * @var array
@@ -625,8 +645,8 @@ class Payment implements \JsonSerializable
      * Returns Source Type.
      * The source type for this payment.
      *
-     * Current values include `CARD`, `BANK_ACCOUNT`, `WALLET`, `BUY_NOW_PAY_LATER`, `CASH`
-     * and `EXTERNAL`. For information about these payment source types,
+     * Current values include `CARD`, `BANK_ACCOUNT`, `WALLET`, `BUY_NOW_PAY_LATER`, `SQUARE_ACCOUNT`,
+     * `CASH` and `EXTERNAL`. For information about these payment source types,
      * see [Take Payments](https://developer.squareup.com/docs/payments-api/take-payments).
      */
     public function getSourceType(): ?string
@@ -638,8 +658,8 @@ class Payment implements \JsonSerializable
      * Sets Source Type.
      * The source type for this payment.
      *
-     * Current values include `CARD`, `BANK_ACCOUNT`, `WALLET`, `BUY_NOW_PAY_LATER`, `CASH`
-     * and `EXTERNAL`. For information about these payment source types,
+     * Current values include `CARD`, `BANK_ACCOUNT`, `WALLET`, `BUY_NOW_PAY_LATER`, `SQUARE_ACCOUNT`,
+     * `CASH` and `EXTERNAL`. For information about these payment source types,
      * see [Take Payments](https://developer.squareup.com/docs/payments-api/take-payments).
      *
      * @maps source_type
@@ -780,6 +800,26 @@ class Payment implements \JsonSerializable
     }
 
     /**
+     * Returns Square Account Details.
+     * Additional details about Square Account payments.
+     */
+    public function getSquareAccountDetails(): ?SquareAccountDetails
+    {
+        return $this->squareAccountDetails;
+    }
+
+    /**
+     * Sets Square Account Details.
+     * Additional details about Square Account payments.
+     *
+     * @maps square_account_details
+     */
+    public function setSquareAccountDetails(?SquareAccountDetails $squareAccountDetails): void
+    {
+        $this->squareAccountDetails = $squareAccountDetails;
+    }
+
+    /**
      * Returns Location Id.
      * The ID of the location associated with the payment.
      */
@@ -911,22 +951,34 @@ class Payment implements \JsonSerializable
 
     /**
      * Returns Team Member Id.
-     * An optional ID of the [TeamMember]($m/TeamMember) associated with taking the payment.
+     * An optional ID of the [TeamMember](entity:TeamMember) associated with taking the payment.
      */
     public function getTeamMemberId(): ?string
     {
-        return $this->teamMemberId;
+        if (count($this->teamMemberId) == 0) {
+            return null;
+        }
+        return $this->teamMemberId['value'];
     }
 
     /**
      * Sets Team Member Id.
-     * An optional ID of the [TeamMember]($m/TeamMember) associated with taking the payment.
+     * An optional ID of the [TeamMember](entity:TeamMember) associated with taking the payment.
      *
      * @maps team_member_id
      */
     public function setTeamMemberId(?string $teamMemberId): void
     {
-        $this->teamMemberId = $teamMemberId;
+        $this->teamMemberId['value'] = $teamMemberId;
+    }
+
+    /**
+     * Unsets Team Member Id.
+     * An optional ID of the [TeamMember](entity:TeamMember) associated with taking the payment.
+     */
+    public function unsetTeamMemberId(): void
+    {
+        $this->teamMemberId = [];
     }
 
     /**
@@ -981,6 +1033,26 @@ class Payment implements \JsonSerializable
     public function setRiskEvaluation(?RiskEvaluation $riskEvaluation): void
     {
         $this->riskEvaluation = $riskEvaluation;
+    }
+
+    /**
+     * Returns Terminal Checkout Id.
+     * An optional ID for a Terminal checkout that is associated with the payment.
+     */
+    public function getTerminalCheckoutId(): ?string
+    {
+        return $this->terminalCheckoutId;
+    }
+
+    /**
+     * Sets Terminal Checkout Id.
+     * An optional ID for a Terminal checkout that is associated with the payment.
+     *
+     * @maps terminal_checkout_id
+     */
+    public function setTerminalCheckoutId(?string $terminalCheckoutId): void
+    {
+        $this->terminalCheckoutId = $terminalCheckoutId;
     }
 
     /**
@@ -1220,6 +1292,46 @@ class Payment implements \JsonSerializable
     }
 
     /**
+     * Returns Is Offline Payment.
+     * Whether or not this payment was taken offline.
+     */
+    public function getIsOfflinePayment(): ?bool
+    {
+        return $this->isOfflinePayment;
+    }
+
+    /**
+     * Sets Is Offline Payment.
+     * Whether or not this payment was taken offline.
+     *
+     * @maps is_offline_payment
+     */
+    public function setIsOfflinePayment(?bool $isOfflinePayment): void
+    {
+        $this->isOfflinePayment = $isOfflinePayment;
+    }
+
+    /**
+     * Returns Offline Payment Details.
+     * Details specific to offline payments.
+     */
+    public function getOfflinePaymentDetails(): ?OfflinePaymentDetails
+    {
+        return $this->offlinePaymentDetails;
+    }
+
+    /**
+     * Sets Offline Payment Details.
+     * Details specific to offline payments.
+     *
+     * @maps offline_payment_details
+     */
+    public function setOfflinePaymentDetails(?OfflinePaymentDetails $offlinePaymentDetails): void
+    {
+        $this->offlinePaymentDetails = $offlinePaymentDetails;
+    }
+
+    /**
      * Returns Version Token.
      * Used for optimistic concurrency. This opaque token identifies a specific version of the
      * `Payment` object.
@@ -1329,6 +1441,9 @@ class Payment implements \JsonSerializable
         if (isset($this->buyNowPayLaterDetails)) {
             $json['buy_now_pay_later_details']        = $this->buyNowPayLaterDetails;
         }
+        if (isset($this->squareAccountDetails)) {
+            $json['square_account_details']           = $this->squareAccountDetails;
+        }
         if (isset($this->locationId)) {
             $json['location_id']                      = $this->locationId;
         }
@@ -1344,14 +1459,17 @@ class Payment implements \JsonSerializable
         if (isset($this->employeeId)) {
             $json['employee_id']                      = $this->employeeId;
         }
-        if (isset($this->teamMemberId)) {
-            $json['team_member_id']                   = $this->teamMemberId;
+        if (!empty($this->teamMemberId)) {
+            $json['team_member_id']                   = $this->teamMemberId['value'];
         }
         if (isset($this->refundIds)) {
             $json['refund_ids']                       = $this->refundIds;
         }
         if (isset($this->riskEvaluation)) {
             $json['risk_evaluation']                  = $this->riskEvaluation;
+        }
+        if (isset($this->terminalCheckoutId)) {
+            $json['terminal_checkout_id']             = $this->terminalCheckoutId;
         }
         if (isset($this->buyerEmailAddress)) {
             $json['buyer_email_address']              = $this->buyerEmailAddress;
@@ -1382,6 +1500,12 @@ class Payment implements \JsonSerializable
         }
         if (isset($this->applicationDetails)) {
             $json['application_details']              = $this->applicationDetails;
+        }
+        if (isset($this->isOfflinePayment)) {
+            $json['is_offline_payment']               = $this->isOfflinePayment;
+        }
+        if (isset($this->offlinePaymentDetails)) {
+            $json['offline_payment_details']          = $this->offlinePaymentDetails;
         }
         if (!empty($this->versionToken)) {
             $json['version_token']                    = $this->versionToken['value'];

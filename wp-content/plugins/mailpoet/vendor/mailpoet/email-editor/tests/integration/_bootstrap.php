@@ -1,159 +1,237 @@
-<?php declare(strict_types = 1);
+<?php
+declare(strict_types = 1);
 if (!defined('ABSPATH')) exit;
 use Codeception\Stub;
 use MailPoet\EmailEditor\Container;
-use MailPoet\EmailEditor\Engine\EmailApiController;
-use MailPoet\EmailEditor\Engine\EmailEditor;
+use MailPoet\EmailEditor\Engine\Email_Api_Controller;
+use MailPoet\EmailEditor\Engine\Email_Editor;
 use MailPoet\EmailEditor\Engine\Patterns\Patterns;
-use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\BlocksRegistry;
-use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\ContentRenderer;
-use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Postprocessors\HighlightingPostprocessor;
-use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Postprocessors\VariablesPostprocessor;
-use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\BlocksWidthPreprocessor;
-use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\CleanupPreprocessor;
-use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\SpacingPreprocessor;
-use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\TypographyPreprocessor;
-use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\ProcessManager;
+use MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Blocks_Registry;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Postprocessors\Highlighting_Postprocessor;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Postprocessors\Variables_Postprocessor;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\Blocks_Width_Preprocessor;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\Cleanup_Preprocessor;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\Spacing_Preprocessor;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\Typography_Preprocessor;
+use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Process_Manager;
 use MailPoet\EmailEditor\Engine\Renderer\Renderer;
-use MailPoet\EmailEditor\Engine\SettingsController;
-use MailPoet\EmailEditor\Engine\Templates\TemplatePreview;
+use MailPoet\EmailEditor\Engine\Settings_Controller;
 use MailPoet\EmailEditor\Engine\Templates\Templates;
 use MailPoet\EmailEditor\Engine\Templates\Utils;
-use MailPoet\EmailEditor\Engine\ThemeController;
+use MailPoet\EmailEditor\Engine\Theme_Controller;
+use MailPoet\EmailEditor\Engine\User_Theme;
 use MailPoet\EmailEditor\Integrations\Core\Initializer;
 use MailPoet\EmailEditor\Integrations\MailPoet\Blocks\BlockTypesController;
-use MailPoet\EmailEditor\Utils\CdnAssetUrl;
-if ((boolean)getenv('MULTISITE') === true) {
- // REQUEST_URI needs to be set for WP to load the proper subsite where MailPoet is activated
- $_SERVER['REQUEST_URI'] = '/' . getenv('WP_TEST_MULTISITE_SLUG');
- $wpLoadFile = getenv('WP_ROOT_MULTISITE') . '/wp-load.php';
+use MailPoet\EmailEditor\Engine\Send_Preview_Email;
+if ( (bool) getenv( 'MULTISITE' ) === true ) {
+ // REQUEST_URI needs to be set for WP to load the proper subsite where MailPoet is activated.
+ $_SERVER['REQUEST_URI'] = '/' . getenv( 'WP_TEST_MULTISITE_SLUG' );
+ $wp_load_file = getenv( 'WP_ROOT_MULTISITE' ) . '/wp-load.php';
 } else {
- $wpLoadFile = getenv('WP_ROOT') . '/wp-load.php';
+ $wp_load_file = getenv( 'WP_ROOT' ) . '/wp-load.php';
 }
-$console = new \Codeception\Lib\Console\Output([]);
-$console->writeln('Loading WP core... (' . $wpLoadFile . ')');
-require_once($wpLoadFile);
+$console = new \Codeception\Lib\Console\Output( array() );
+$console->writeln( 'Loading WP core... (' . $wp_load_file . ')' );
+require_once $wp_load_file;
 abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
- public Container $diContainer;
+ public Container $di_container;
+ public $tester;
+ // phpcs:disable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
  protected $backupGlobals = false;
  protected $backupStaticAttributes = false;
  protected $runTestInSeparateProcess = false;
  protected $preserveGlobalState = false;
+ // phpcs:enable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
  public function setUp(): void {
  $this->initContainer();
  parent::setUp();
  }
- protected function checkValidHTML(string $html): void {
+ public function _after() {
+ parent::_after();
+ $this->tester->cleanup();
+ }
+ protected function checkValidHTML( string $html ): void {
  $dom = new \DOMDocument();
- libxml_use_internal_errors(true);
- $dom->loadHTML($html);
- // Check for errors during parsing
+ libxml_use_internal_errors( true );
+ $dom->loadHTML( $html );
+ // Check for errors during parsing.
  $errors = libxml_get_errors();
  libxml_clear_errors();
- $this->assertEmpty($errors, 'HTML is not valid: ' . $html);
+ $this->assertEmpty( $errors, 'HTML is not valid: ' . $html );
  }
- public function getServiceWithOverrides(string $id, array $overrides) {
- $instance = $this->diContainer->get($id);
- return Stub::copy($instance, $overrides);
+ public function getServiceWithOverrides( $id, array $overrides ) {
+ $instance = $this->di_container->get( $id );
+ return Stub::copy( $instance, $overrides );
  }
  protected function initContainer(): void {
  $container = new Container();
- // Start: MailPoet plugin dependencies
- $container->set(Initializer::class, function() {
+ // Start: MailPoet plugin dependencies.
+ $container->set(
+ Initializer::class,
+ function () {
  return new Initializer();
- });
- $container->set(CdnAssetUrl::class, function() {
- return new CdnAssetUrl('http://localhost');
- });
- $container->set(EmailApiController::class, function() {
- return new EmailApiController();
- });
- $container->set(BlockTypesController::class, function() {
- return $this->createMock(BlockTypesController::class);
- });
- // End: MailPoet plugin dependencies
- $container->set(Utils::class, function() {
+ }
+ );
+ $container->set(
+ Email_Api_Controller::class,
+ function () {
+ return new Email_Api_Controller();
+ }
+ );
+ $container->set(
+ BlockTypesController::class,
+ function () {
+ return $this->createMock( BlockTypesController::class );
+ }
+ );
+ // End: MailPoet plugin dependencies.
+ $container->set(
+ Utils::class,
+ function () {
  return new Utils();
- });
- $container->set(ThemeController::class, function() {
- return new ThemeController();
- });
- $container->set(SettingsController::class, function ($container) {
- return new SettingsController($container->get(ThemeController::class));
- });
- $container->set(SettingsController::class, function ($container) {
- return new SettingsController($container->get(ThemeController::class));
- });
- $container->set(Templates::class, function ($container) {
- return new Templates($container->get(Utils::class));
- });
- $container->set(TemplatePreview::class, function ($container) {
- return new TemplatePreview(
- $container->get(ThemeController::class),
- $container->get(SettingsController::class),
- $container->get(Templates::class),
+ }
  );
- });
- $container->set(Patterns::class, function ($container) {
- return new Patterns(
- $container->get(CdnAssetUrl::class),
+ $container->set(
+ Theme_Controller::class,
+ function () {
+ return new Theme_Controller();
+ }
  );
- });
- $container->set(CleanupPreprocessor::class, function () {
- return new CleanupPreprocessor();
- });
- $container->set(BlocksWidthPreprocessor::class, function () {
- return new BlocksWidthPreprocessor();
- });
- $container->set(TypographyPreprocessor::class, function ($container) {
- return new TypographyPreprocessor($container->get(SettingsController::class));
- });
- $container->set(SpacingPreprocessor::class, function () {
- return new SpacingPreprocessor();
- });
- $container->set(HighlightingPostprocessor::class, function () {
- return new HighlightingPostprocessor();
- });
- $container->set(VariablesPostprocessor::class, function ($container) {
- return new VariablesPostprocessor($container->get(ThemeController::class));
- });
- $container->set(ProcessManager::class, function ($container) {
- return new ProcessManager(
- $container->get(CleanupPreprocessor::class),
- $container->get(BlocksWidthPreprocessor::class),
- $container->get(TypographyPreprocessor::class),
- $container->get(SpacingPreprocessor::class),
- $container->get(HighlightingPostprocessor::class),
- $container->get(VariablesPostprocessor::class),
+ $container->set(
+ User_Theme::class,
+ function () {
+ return new User_Theme();
+ }
  );
- });
- $container->set(BlocksRegistry::class, function() {
- return new BlocksRegistry();
- });
- $container->set(ContentRenderer::class, function ($container) {
- return new ContentRenderer(
- $container->get(ProcessManager::class),
- $container->get(BlocksRegistry::class),
- $container->get(SettingsController::class),
- $container->get(ThemeController::class),
+ $container->set(
+ Settings_Controller::class,
+ function ( $container ) {
+ return new Settings_Controller( $container->get( Theme_Controller::class ) );
+ }
  );
- });
- $container->set(Renderer::class, function ($container) {
+ $container->set(
+ Settings_Controller::class,
+ function ( $container ) {
+ return new Settings_Controller( $container->get( Theme_Controller::class ) );
+ }
+ );
+ $container->set(
+ Templates::class,
+ function ( $container ) {
+ return new Templates( $container->get( Utils::class ) );
+ }
+ );
+ $container->set(
+ Patterns::class,
+ function () {
+ return new Patterns();
+ }
+ );
+ $container->set(
+ Cleanup_Preprocessor::class,
+ function () {
+ return new Cleanup_Preprocessor();
+ }
+ );
+ $container->set(
+ Blocks_Width_Preprocessor::class,
+ function () {
+ return new Blocks_Width_Preprocessor();
+ }
+ );
+ $container->set(
+ Typography_Preprocessor::class,
+ function ( $container ) {
+ return new Typography_Preprocessor( $container->get( Settings_Controller::class ) );
+ }
+ );
+ $container->set(
+ Spacing_Preprocessor::class,
+ function () {
+ return new Spacing_Preprocessor();
+ }
+ );
+ $container->set(
+ Highlighting_Postprocessor::class,
+ function () {
+ return new Highlighting_Postprocessor();
+ }
+ );
+ $container->set(
+ Variables_Postprocessor::class,
+ function ( $container ) {
+ return new Variables_Postprocessor( $container->get( Theme_Controller::class ) );
+ }
+ );
+ $container->set(
+ Process_Manager::class,
+ function ( $container ) {
+ return new Process_Manager(
+ $container->get( Cleanup_Preprocessor::class ),
+ $container->get( Blocks_Width_Preprocessor::class ),
+ $container->get( Typography_Preprocessor::class ),
+ $container->get( Spacing_Preprocessor::class ),
+ $container->get( Highlighting_Postprocessor::class ),
+ $container->get( Variables_Postprocessor::class ),
+ );
+ }
+ );
+ $container->set(
+ Blocks_Registry::class,
+ function () {
+ return new Blocks_Registry();
+ }
+ );
+ $container->set(
+ Content_Renderer::class,
+ function ( $container ) {
+ return new Content_Renderer(
+ $container->get( Process_Manager::class ),
+ $container->get( Blocks_Registry::class ),
+ $container->get( Settings_Controller::class ),
+ $container->get( Theme_Controller::class ),
+ );
+ }
+ );
+ $container->set(
+ Renderer::class,
+ function ( $container ) {
  return new Renderer(
- $container->get(ContentRenderer::class),
- $container->get(Templates::class),
- $container->get(ThemeController::class),
+ $container->get( Content_Renderer::class ),
+ $container->get( Templates::class ),
+ $container->get( Theme_Controller::class ),
  );
- });
- $container->set(EmailEditor::class, function ($container) {
- return new EmailEditor(
- $container->get(EmailApiController::class),
- $container->get(Templates::class),
- $container->get(TemplatePreview::class),
- $container->get(Patterns::class),
- $container->get(SettingsController::class),
+ }
  );
- });
- $this->diContainer = $container;
+ $container->set(
+ Send_Preview_Email::class,
+ function ( $container ) {
+ return new Send_Preview_Email(
+ $container->get( Renderer::class ),
+ );
+ }
+ );
+ $container->set(
+ Personalization_Tags_Registry::class,
+ function () {
+ return new Personalization_Tags_Registry();
+ }
+ );
+ $container->set(
+ Email_Editor::class,
+ function ( $container ) {
+ return new Email_Editor(
+ $container->get( Email_Api_Controller::class ),
+ $container->get( Templates::class ),
+ $container->get( Patterns::class ),
+ $container->get( Settings_Controller::class ),
+ $container->get( Send_Preview_Email::class ),
+ $container->get( Personalization_Tags_Registry::class ),
+ );
+ }
+ );
+ $this->di_container = $container;
  }
 }

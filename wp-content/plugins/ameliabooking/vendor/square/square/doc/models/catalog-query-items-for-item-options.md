@@ -17,7 +17,10 @@ The query filter to return the items containing the specified item option IDs.
 
 ```json
 {
-  "item_option_ids": null
+  "item_option_ids": [
+    "item_option_ids5",
+    "item_option_ids6"
+  ]
 }
 ```
 

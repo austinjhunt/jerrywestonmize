@@ -77,7 +77,7 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
         $data = $entity->toArray();
 
         $params = [
-            ':label'        => $data['label'],
+            ':label'        => isset($data['label']) ? $data['label'] : '',
             ':type'         => $data['type'],
             ':required'     => $data['required'] ? 1 : 0,
             ':position'     => $data['position'],
