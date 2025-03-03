@@ -34,7 +34,7 @@ class ActionScheduler_AdminView_Deprecated {
  public static function admin_notices() {
  _deprecated_function( __METHOD__, '2.0.0' );
  }
- public function custom_orderby( $orderby, $query ){
+ public function custom_orderby( $orderby, $query ) {
  _deprecated_function( __METHOD__, '2.0.0' );
  }
  public function search_post_password( $search, $query ) {

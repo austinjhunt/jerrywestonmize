@@ -7,11 +7,11 @@ class ActionScheduler_StoreSchema extends ActionScheduler_Abstract_Schema {
  const DEFAULT_DATE = '0000-00-00 00:00:00';
  protected $schema_version = 7;
  public function __construct() {
- $this->tables = [
+ $this->tables = array(
  self::ACTIONS_TABLE,
  self::CLAIMS_TABLE,
  self::GROUPS_TABLE,
- ];
+ );
  }
  public function init() {
  add_action( 'action_scheduler_before_schema_update', array( $this, 'update_schema_5_0' ), 10, 2 );
@@ -20,9 +20,10 @@ class ActionScheduler_StoreSchema extends ActionScheduler_Abstract_Schema {
  global $wpdb;
  $table_name = $wpdb->$table;
  $charset_collate = $wpdb->get_charset_collate();
+ $default_date = self::DEFAULT_DATE;
+ // phpcs:ignore Squiz.PHP.CommentedOutCode
  $max_index_length = 191; // @see wp_get_db_schema()
  $hook_status_scheduled_date_gmt_max_index_length = $max_index_length - 20 - 8; // - status, - scheduled_date_gmt
- $default_date = self::DEFAULT_DATE;
  switch ( $table ) {
  case self::ACTIONS_TABLE:
  return "CREATE TABLE {$table_name} (

@@ -397,7 +397,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         $periodsAppointmentsPendingCount = 0;
 
-        if (!$isCabinetPackageRequest && !$isCabinetPage && !$isCalendarPage) {
+        if (!empty($countParams['page']) || (!$isCabinetPackageRequest && !$isCabinetPage && !$isCalendarPage)) {
             if ((!$readOthers) &&
                 $user->getType() === Entities::PROVIDER
             ) {

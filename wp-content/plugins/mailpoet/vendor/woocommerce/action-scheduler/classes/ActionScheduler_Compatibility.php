@@ -21,7 +21,7 @@ class ActionScheduler_Compatibility {
  if ( function_exists( 'wp_raise_memory_limit' ) ) {
  return wp_raise_memory_limit( 'admin' );
  }
- $current_limit = @ini_get( 'memory_limit' );
+ $current_limit = @ini_get( 'memory_limit' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
  $current_limit_int = self::convert_hr_to_bytes( $current_limit );
  if ( -1 === $current_limit_int ) {
  return false;
@@ -30,6 +30,8 @@ class ActionScheduler_Compatibility {
  $wp_max_limit_int = self::convert_hr_to_bytes( $wp_max_limit );
  $filtered_limit = apply_filters( 'admin_memory_limit', $wp_max_limit );
  $filtered_limit_int = self::convert_hr_to_bytes( $filtered_limit );
+ // phpcs:disable WordPress.PHP.IniSet.memory_limit_Blacklisted
+ // phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
  if ( -1 === $filtered_limit_int || ( $filtered_limit_int > $wp_max_limit_int && $filtered_limit_int > $current_limit_int ) ) {
  if ( false !== @ini_set( 'memory_limit', $filtered_limit ) ) {
  return $filtered_limit;
@@ -43,6 +45,7 @@ class ActionScheduler_Compatibility {
  return false;
  }
  }
+ // phpcs:enable
  return false;
  }
  public static function raise_time_limit( $limit = 0 ) {

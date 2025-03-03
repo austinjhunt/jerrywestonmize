@@ -100,6 +100,8 @@ class Forminator_Core {
 			add_action( 'wp_head', array( $this, 'localize_pointers' ) );
 		}
 
+		Forminator_Hub_Connector::get_instance();
+
 		// Get enabled modules.
 		$modules       = new Forminator_Modules();
 		$this->modules = $modules->get_modules();
@@ -134,9 +136,6 @@ class Forminator_Core {
 			if ( ! FORMINATOR_PRO ) {
 				$this->admin->add_upgrade_page();
 			}
-
-			// Call Mixpanel class.
-			new Forminator_Mixpanel();
 		}
 
 		// Protection management.
@@ -212,6 +211,36 @@ class Forminator_Core {
 		}
 
 		return $field_type;
+	}
+
+	/**
+	 * Initialize Mixpanel tracking.
+	 *
+	 * @param bool $force Force tracking.
+	 * @return void
+	 */
+	public static function init_mixpanel( bool $force = false ) {
+		if ( ( ! self::is_tracking_active() && ! $force ) || ! is_admin() ) {
+			return;
+		}
+		$autoload = plugin_dir_path( __FILE__ ) . 'lib/analytics/autoload.php';
+		if ( ! file_exists( $autoload ) ) {
+			return;
+		}
+		// Prefixed vendor autoload.
+		include_once $autoload;
+		include_once plugin_dir_path( __FILE__ ) . 'mixpanel/class-mixpanel.php';
+
+		Forminator_Mixpanel::get_instance();
+	}
+
+	/**
+	 * Check if usage tracking is active.
+	 *
+	 * @return bool
+	 */
+	public static function is_tracking_active() {
+		return get_option( 'forminator_usage_tracking' );
 	}
 
 	/**
@@ -330,6 +359,13 @@ class Forminator_Core {
 		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'library/model/class-form-views-model.php';
 		include_once forminator_plugin_dir() . 'library/model/class-form-reports-model.php';
+
+		include_once forminator_plugin_dir() . 'library/class-forminator-hub-connector.php';
+		$hub_connector_lib = forminator_plugin_dir() . 'library/lib/hub-connector/connector.php';
+		if ( file_exists( $hub_connector_lib ) ) {
+			include_once $hub_connector_lib;
+		}
+
 		if ( is_admin() ) {
 			/* @noinspection PhpIncludeInspection */
 			include_once forminator_plugin_dir() . 'admin/abstracts/class-admin-page.php';
@@ -354,8 +390,7 @@ class Forminator_Core {
 				/* @noinspection PhpIncludeInspection */
 				require_once ABSPATH . 'wp-admin/includes/template.php';
 			}
-			/* @noinspection PhpIncludeInspection */
-			include_once forminator_plugin_dir() . 'library/mixpanel/class-mixpanel.php';
+			self::init_mixpanel();
 		}
 
 		if ( Forminator::is_internal_page_cache_support_enabled() ) {
@@ -514,6 +549,8 @@ class Forminator_Core {
 			'payer_info',
 			'payment_note',
 		);
+
+		$allow_iframe = array( 'variations' );
 		if (
 			in_array( $current_key, $allow_html, true ) ||
 			0 === strpos( $current_key, 'html-' ) ||
@@ -523,6 +560,13 @@ class Forminator_Core {
 			false !== strpos( $current_key, '-post-content' ) ||
 			false !== strpos( $current_key, '-post-excerpt' )
 		) {
+			if ( in_array( $current_key, $allow_iframe, true ) ) {
+				// To allow iframes in content.
+				add_filter( 'wp_kses_allowed_html', array( __CLASS__, 'maybe_add_iframe_to_kses_allowed_html' ) );
+				$data = trim( wp_kses_post( $data ) );
+				remove_filter( 'wp_kses_allowed_html', array( __CLASS__, 'maybe_add_iframe_to_kses_allowed_html' ) );
+				return $data;
+			}
 			return trim( wp_kses_post( $data ) );
 		}
 
@@ -576,10 +620,7 @@ class Forminator_Core {
 	 * @return mixed
 	 */
 	public function schedule_action_scheduler_cleanup() {
-		// Create new schedule using AS.
-		if ( false === as_has_scheduled_action( 'forminator_action_scheduler_cleanup' ) ) {
-			as_schedule_recurring_action( time(), HOUR_IN_SECONDS * 2, 'forminator_action_scheduler_cleanup', array(), 'forminator', true );
-		}
+		forminator_set_recurring_action( 'forminator_action_scheduler_cleanup', HOUR_IN_SECONDS * 2 );
 	}
 
 	/**
@@ -605,8 +646,14 @@ class Forminator_Core {
 		$table_logs    = $db_prefix . 'actionscheduler_logs';
 		$table_groups  = $db_prefix . 'actionscheduler_groups';
 		$slug          = 'forminator';
-		$group_id      = (int) $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$table_groups} WHERE slug = %s", $slug ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$and           = '';
+
+		// Check if all tables exist.
+		if ( ! self::check_action_scheduler_tables( $db_prefix ) ) {
+			return;
+		}
+
+		$group_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$table_groups} WHERE slug = %s", $slug ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$and      = '';
 
 		// If not uninstall, do not delete pending tasks.
 		if ( ! $is_uninstall ) {
@@ -652,5 +699,82 @@ class Forminator_Core {
 				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 			);
 		}
+	}
+
+	/**
+	 * Check if Action Scheduler tables exist.
+	 *
+	 * @param string $db_prefix DB Prefix.
+	 *
+	 * @return bool
+	 */
+	public static function check_action_scheduler_tables( $db_prefix = null ) {
+		global $wpdb;
+
+		if ( is_null( $db_prefix ) ) {
+			$db_prefix = $wpdb->prefix;
+		}
+
+		$table_actions = $db_prefix . 'actionscheduler_actions';
+		$table_logs    = $db_prefix . 'actionscheduler_logs';
+		$table_groups  = $db_prefix . 'actionscheduler_groups';
+
+		// Check if all tables exist.
+		$table_count = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->prepare(
+				'SELECT count(*)
+				FROM information_schema.tables
+				WHERE table_schema = %s AND table_name IN (%s, %s, %s)',
+				$wpdb->dbname,
+				$table_actions,
+				$table_logs,
+				$table_groups
+			)
+		);
+
+		if ( 3 !== $table_count ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Add iframe to the wp_kses_allowed_html filter for the front end.
+	 * It is strongly recommended to call this method via maybe_add_iframe_to_kses_allowed_html unless it's an exceptional case.
+	 *
+	 * @param array $allowed_html Allowed HTML tags.
+	 * @return array
+	 */
+	public static function add_iframe_to_kses_allowed_html( $allowed_html ) {
+		$allowed_html['iframe'] = array(
+			'align'           => true,
+			'width'           => true,
+			'height'          => true,
+			'frameborder'     => true,
+			'name'            => true,
+			'src'             => true,
+			'id'              => true,
+			'class'           => true,
+			'style'           => true,
+			'scrolling'       => true,
+			'marginwidth'     => true,
+			'marginheight'    => true,
+			'allowfullscreen' => true,
+		);
+		return $allowed_html;
+	}
+
+	/**
+	 * Add iframe on filter wp_kses_allowed_html
+	 *
+	 * @param array $allowed_html Allowed HTML tags.
+	 * @return array
+	 */
+	public static function maybe_add_iframe_to_kses_allowed_html( $allowed_html ) {
+		if ( current_user_can( 'unfiltered_html' ) ) {
+			return self::add_iframe_to_kses_allowed_html( $allowed_html );
+		}
+		return $allowed_html;
 	}
 }

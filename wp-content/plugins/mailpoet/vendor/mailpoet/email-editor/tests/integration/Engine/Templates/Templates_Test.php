@@ -7,34 +7,26 @@ class Templates_Test extends \MailPoetTest {
  public function _before() {
  parent::_before();
  $this->templates = $this->di_container->get( Templates::class );
- $this->templates->initialize();
  }
  public function testItCanFetchBlockTemplate(): void {
- $template_id = 'mailpoet/mailpoet//email-general';
- $template = $this->templates->get_block_template( $template_id );
+ $this->templates->initialize( array( 'mailpoet_email' ) );
+ $template = $this->templates->get_block_template( 'email-general' );
  self::assertInstanceOf( \WP_Block_Template::class, $template );
  verify( $template->slug )->equals( 'email-general' );
- verify( $template->id )->equals( 'mailpoet/mailpoet//email-general' );
+ verify( $template->id )->stringContainsString( 'email-general' );
  verify( $template->title )->equals( 'General Email' );
  verify( $template->description )->equals( 'A general template for emails.' );
  }
- public function testItCanAddBlockTemplates(): void {
- $result = $this->templates->add_block_templates( array(), array( 'post_type' => 'mailpoet_email' ), 'wp_template' );
- verify( $result )->arrayCount( 2 );
- verify( $result[0]->content )->notEmpty();
- verify( $result[1]->content )->notEmpty();
+ public function testItTriggersActionForRegisteringTemplates(): void {
+ $trigger_check = false;
+ add_filter(
+ 'mailpoet_email_editor_register_templates',
+ function ( $registry ) use ( &$trigger_check ) {
+ $trigger_check = true;
+ return $registry;
  }
- public function testItCanAddBlockTemplateDetails(): void {
- // add_block_template_details.
- $basic_template = new \WP_Block_Template();
- $basic_template->slug = 'simple-light';
- // confirm it has no title or description.
- verify( $basic_template->title )->equals( '' );
- verify( $basic_template->description )->equals( '' );
- $result = $this->templates->add_block_template_details( $basic_template );
- // confirm template was updated.
- verify( $basic_template->title )->equals( 'Simple Light' );
- verify( $basic_template->description )->equals( 'A basic template with header and footer.' );
- verify( $result )->equals( $basic_template );
+ );
+ $this->templates->initialize( array( 'mailpoet_email' ) );
+ verify( $trigger_check )->true();
  }
 }

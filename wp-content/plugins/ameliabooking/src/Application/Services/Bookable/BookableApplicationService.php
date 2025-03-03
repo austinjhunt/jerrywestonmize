@@ -108,7 +108,7 @@ class BookableApplicationService
         $providerServices = $serviceRepository->getProviderServicesWithExtras($serviceId, $providerId);
 
         return $providerServices->keyExists($serviceId) ?
-            $providerServices->getItem($serviceId) : $serviceRepository->getById($serviceId);
+            $providerServices->getItem($serviceId) : $serviceRepository->getByIdWithExtras($serviceId);
     }
 
     /**

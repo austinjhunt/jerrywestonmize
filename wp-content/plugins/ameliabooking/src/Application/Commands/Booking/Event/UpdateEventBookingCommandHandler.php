@@ -131,14 +131,16 @@ class UpdateEventBookingCommandHandler extends CommandHandler
         $bookingEventTicketRepository =
             $this->container->get('domain.booking.customerBookingEventTicket.repository');
 
-        if ($event->getCustomTickets() &&
+        if ($event->getCustomPricing() &&
+            $event->getCustomPricing()->getValue() &&
+            $event->getCustomTickets() &&
             $event->getCustomTickets()->length()
         ) {
             $event->setCustomTickets($eventAS->getTicketsPriceByDateRange($event->getCustomTickets()));
 
             if (!empty($bookingData['ticketsData'])) {
                 foreach ($bookingData['ticketsData'] as $ticketBooking) {
-                    if (!$ticketBooking['id'] && $ticketBooking['persons']) {
+                    if (empty($ticketBooking['id']) && $ticketBooking['persons']) {
                         /** @var EventTicket $ticket */
                         $ticket = $event->getCustomTickets()->getItem($ticketBooking['eventTicketId']);
 

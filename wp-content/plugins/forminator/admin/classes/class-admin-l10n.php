@@ -480,12 +480,8 @@ class Forminator_Admin_L10n {
 					esc_html__( 'Hey %s, your WPMU DEV membership has expired. You need an active membership to access cloud templates. Renew your membership to get instant access to the cloud templates.', 'forminator' ),
 					esc_html( $current_user->display_name )
 				),
-				'install_title'     => esc_html__( 'Install WPMU DEV Dashboard Plugin', 'forminator' ),
 				'install_dashboard' => esc_html__( 'You don\'t have the WPMU DEV Dashboard plugin, which you\'ll need to access Pro preset templates. Install and log in to the dashboard to unlock the complete list of preset templates.', 'forminator' ),
 				'install_button'    => esc_html__( 'Install Plugin', 'forminator' ),
-				'upgrade_title'     => esc_html__( 'Save Forms as Templates', 'forminator' ),
-				'upgrade_desc'      => esc_html__( 'Save your forms as templates in the Hub cloud to easily reuse them on any sites you manage via the Hub. Customize once and reuse on different sites with one click.', 'forminator' ),
-				'upgrade_button'    => esc_html__( 'Upgrade to Save Template', 'forminator' ),
 				'no_templates'      => esc_html__( 'No templates available', 'forminator' ),
 				'no_templates_desc' => sprintf(
 					/* translators: %1$s - opening anchor tag, %2$s - closing anchor tag */

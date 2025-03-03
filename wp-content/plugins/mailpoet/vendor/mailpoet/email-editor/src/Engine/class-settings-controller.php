@@ -26,10 +26,8 @@ class Settings_Controller {
  ) {
  $this->theme_controller = $theme_controller;
  }
- public function init(): void {
- $this->iframe_assets = _wp_get_iframed_editor_assets();
- }
  public function get_settings(): array {
+ $this->init_iframe_assets();
  $core_default_settings = \get_default_block_editor_settings();
  $theme_settings = $this->theme_controller->get_settings();
  $settings = array_merge( $core_default_settings, self::DEFAULT_SETTINGS );
@@ -89,5 +87,24 @@ class Settings_Controller {
  }
  public function translate_slug_to_color( string $color_slug ): string {
  return $this->theme_controller->translate_slug_to_color( $color_slug );
+ }
+ private function init_iframe_assets(): void {
+ if ( ! empty( $this->iframe_assets ) ) {
+ return;
+ }
+ $this->iframe_assets = _wp_get_iframed_editor_assets();
+ // Remove layout styles and block library for classic themes. They are added only when a classic theme is active
+ // and they add unwanted margins and paddings in the editor content.
+ $cleaned_styles = array();
+ foreach ( explode( "\n", (string) $this->iframe_assets['styles'] ) as $asset ) {
+ if ( strpos( $asset, 'wp-editor-classic-layout-styles-css' ) !== false ) {
+ continue;
+ }
+ if ( strpos( $asset, 'wp-block-library-theme-css' ) !== false ) {
+ continue;
+ }
+ $cleaned_styles[] = $asset;
+ }
+ $this->iframe_assets['styles'] = implode( "\n", $cleaned_styles );
  }
 }

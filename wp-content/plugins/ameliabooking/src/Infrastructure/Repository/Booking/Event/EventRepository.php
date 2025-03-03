@@ -954,6 +954,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     ep.googleCalendarEventId AS event_googleCalendarEventId,
                     ep.googleMeetUrl AS event_googleMeetUrl,
                     ep.outlookCalendarEventId AS event_outlookCalendarEventId,
+                    ep.microsoftTeamsUrl AS event_microsoftTeamsUrl,
                     ep.appleCalendarEventId AS event_appleCalendarEventId,
                     
                     et.id AS event_tagId,
@@ -1380,6 +1381,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             ep.googleCalendarEventId AS event_googleCalendarEventId,
             ep.googleMeetUrl AS event_googleMeetUrl,
             ep.outlookCalendarEventId AS event_outlookCalendarEventId,
+            ep.microsoftTeamsUrl AS event_microsoftTeamsUrl,
             ep.appleCalendarEventId AS event_appleCalendarEventId
         ";
 
@@ -1443,6 +1445,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 ep.googleCalendarEventId AS event_googleCalendarEventId,
                 ep.googleMeetUrl AS event_googleMeetUrl,
                 ep.outlookCalendarEventId AS event_outlookCalendarEventId,
+                ep.microsoftTeamsUrl AS event_microsoftTeamsUrl,
                 ep.appleCalendarEventId AS event_appleCalendarEventId,
             ';
 

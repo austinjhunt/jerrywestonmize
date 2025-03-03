@@ -59,9 +59,6 @@ class Forminator_Upgrade {
 				}
 			);
 		}
-
-		// cleanup ip address on views.
-		self::cleanup_views_ip_address();
 	}
 
 	/**
@@ -72,21 +69,5 @@ class Forminator_Upgrade {
 	public static function flush_rewrite() {
 		// Flush rewrite rules.
 		flush_rewrite_rules();
-	}
-
-	/**
-	 * Clean up up address on views
-	 *
-	 * @since 1.5.4
-	 * @return bool
-	 */
-	public static function cleanup_views_ip_address() {
-		if ( defined( 'FORMINATOR_VIEWS_ENABLE_TRACK_IP' ) && FORMINATOR_VIEWS_ENABLE_TRACK_IP ) {
-			return false;
-		}
-		$views = new Forminator_Form_Views_Model();
-		$views->maybe_cleanup_ip_address();
-
-		return true;
 	}
 }

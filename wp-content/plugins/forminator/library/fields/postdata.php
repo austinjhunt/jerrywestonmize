@@ -173,6 +173,8 @@ class Forminator_Postdata extends Forminator_Field {
 		$this->field        = $field;
 		$this->draft_values = ! empty( $draft_value['value'] ) ? $draft_value['value'] : array();
 
+		self::$description_position = self::get_description_position( $field, $settings );
+
 		$html     = '';
 		$required = self::get_property( 'required', $field, false );
 		$id       = self::get_property( 'element_id', $field );
@@ -445,7 +447,7 @@ class Forminator_Postdata extends Forminator_Field {
 					$label,
 					$description,
 					$required,
-					$design
+					self::$description_position,
 				);
 
 				if ( 'wp_editor' === $type ) {
@@ -470,7 +472,8 @@ class Forminator_Postdata extends Forminator_Field {
 					$options,
 					$value,
 					$description,
-					$required
+					$required,
+					self::$description_position,
 				);
 			} elseif ( 'multiselect' === $type ) {
 				$html .= self::get_field_label( $label, $id . '-field', $required );
@@ -484,8 +487,12 @@ class Forminator_Postdata extends Forminator_Field {
 
 				$name   = $id . '-' . $field_name . '[]';
 				$get_id = $id . '-' . $field_name;
-				$html  .= '<div class="forminator-multiselect">';
 				$i      = 1;
+
+				if ( 'above' === self::$description_position ) {
+					$html .= self::get_description( $description, $get_id, self::$description_position );
+				}
+				$html .= '<div class="forminator-multiselect">';
 
 				foreach ( $options as $option ) {
 
@@ -527,8 +534,8 @@ class Forminator_Postdata extends Forminator_Field {
 
 				$html .= '</div>';
 
-				if ( ! empty( $description ) ) {
-					$html .= self::get_description( $description, $get_id );
+				if ( 'above' !== self::$description_position ) {
+					$html .= self::get_description( $description, $get_id, self::$description_position );
 				}
 			} elseif ( 'file' === $type ) {
 
@@ -558,7 +565,7 @@ class Forminator_Postdata extends Forminator_Field {
 					$label,
 					$description,
 					$required,
-					$design
+					self::$description_position,
 				);
 			}
 

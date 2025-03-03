@@ -16,7 +16,7 @@ $forminator_usage_tracking = get_option( 'forminator_usage_tracking', false );
 			printf(
 				/* translators: 1: Anchor tag with forminator data tracking doc URL, 2: Close anchor tag */
 				esc_html__( 'Help us improve Forminator by sharing anonymous and non-sensitive usage data. See %1$smore info%2$s about the data we collect', 'forminator' ),
-				'<a href="https://wpmudev.com/docs/privacy/our-plugins/#usage-tracking-fm" target="_blank">',
+				'<a href="https://wpmudev.com/docs/privacy/our-plugins/#usage-tracking-for" target="_blank">',
 				'</a>'
 			);
 			?>

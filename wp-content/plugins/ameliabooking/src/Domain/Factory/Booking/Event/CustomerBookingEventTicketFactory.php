@@ -47,7 +47,7 @@ class CustomerBookingEventTicketFactory
         }
 
         if (isset($data['price'])) {
-            $customerBookingEventTicket->setPrice(new Price($data['price']));
+            $customerBookingEventTicket->setPrice(new Price((float)$data['price']));
         }
 
         return $customerBookingEventTicket;

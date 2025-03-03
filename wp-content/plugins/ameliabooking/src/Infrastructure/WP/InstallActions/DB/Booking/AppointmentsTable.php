@@ -40,6 +40,7 @@ class AppointmentsTable extends AbstractDatabaseTable
                    `googleCalendarEventId` VARCHAR(255) NULL,
                    `googleMeetUrl` VARCHAR(255) NULL,
                    `outlookCalendarEventId` VARCHAR(255) NULL,
+                   `microsoftTeamsUrl` VARCHAR(255) NULL,
                    `appleCalendarEventId` VARCHAR(255) NULL,
                    `zoomMeeting` TEXT({$description}) NULL,
                    `lessonSpace` TEXT({$description}) NULL,

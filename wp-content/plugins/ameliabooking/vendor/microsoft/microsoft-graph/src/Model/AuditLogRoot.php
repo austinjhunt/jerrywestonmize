@@ -7,10 +7,9 @@
 *
 * @category  Library
 * @package   Microsoft.Graph
-* @copyright © Microsoft Corporation. All rights reserved.
+* @copyright (c) Microsoft Corporation. All rights reserved.
 * @license   https://opensource.org/licenses/MIT MIT License
-* @version   GIT: 1.4.0
-* @link      https://graph.microsoft.io/
+* @link      https://graph.microsoft.com
 */
 namespace Microsoft\Graph\Model;
 
@@ -19,49 +18,18 @@ namespace Microsoft\Graph\Model;
 *
 * @category  Model
 * @package   Microsoft.Graph
-* @copyright © Microsoft Corporation. All rights reserved.
+* @copyright (c) Microsoft Corporation. All rights reserved.
 * @license   https://opensource.org/licenses/MIT MIT License
-* @version   Release: 1.4.0
-* @link      https://graph.microsoft.io/
+* @link      https://graph.microsoft.com
 */
 class AuditLogRoot extends Entity
 {
 
-     /** 
-     * Gets the signIns
-    * Read-only. Nullable.
-     *
-     * @return array The signIns
-     */
-    public function getSignIns()
-    {
-        if (array_key_exists("signIns", $this->_propDict)) {
-           return $this->_propDict["signIns"];
-        } else {
-            return null;
-        }
-    }
-    
-    /** 
-    * Sets the signIns
-    * Read-only. Nullable.
-    *
-    * @param SignIn $val The signIns
-    *
-    * @return AuditLogRoot
-    */
-    public function setSignIns($val)
-    {
-		$this->_propDict["signIns"] = $val;
-        return $this;
-    }
-    
-
-     /** 
+     /**
      * Gets the directoryAudits
     * Read-only. Nullable.
      *
-     * @return array The directoryAudits
+     * @return array|null The directoryAudits
      */
     public function getDirectoryAudits()
     {
@@ -71,26 +39,54 @@ class AuditLogRoot extends Entity
             return null;
         }
     }
-    
-    /** 
+
+    /**
     * Sets the directoryAudits
     * Read-only. Nullable.
     *
-    * @param DirectoryAudit $val The directoryAudits
+    * @param DirectoryAudit[] $val The directoryAudits
     *
     * @return AuditLogRoot
     */
     public function setDirectoryAudits($val)
     {
-		$this->_propDict["directoryAudits"] = $val;
+        $this->_propDict["directoryAudits"] = $val;
         return $this;
     }
-    
 
-     /** 
+
+     /**
+     * Gets the provisioning
+     *
+     * @return array|null The provisioning
+     */
+    public function getProvisioning()
+    {
+        if (array_key_exists("provisioning", $this->_propDict)) {
+           return $this->_propDict["provisioning"];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+    * Sets the provisioning
+    *
+    * @param ProvisioningObjectSummary[] $val The provisioning
+    *
+    * @return AuditLogRoot
+    */
+    public function setProvisioning($val)
+    {
+        $this->_propDict["provisioning"] = $val;
+        return $this;
+    }
+
+
+     /**
      * Gets the restrictedSignIns
      *
-     * @return array The restrictedSignIns
+     * @return array|null The restrictedSignIns
      */
     public function getRestrictedSignIns()
     {
@@ -100,18 +96,48 @@ class AuditLogRoot extends Entity
             return null;
         }
     }
-    
-    /** 
+
+    /**
     * Sets the restrictedSignIns
     *
-    * @param RestrictedSignIn $val The restrictedSignIns
+    * @param RestrictedSignIn[] $val The restrictedSignIns
     *
     * @return AuditLogRoot
     */
     public function setRestrictedSignIns($val)
     {
-		$this->_propDict["restrictedSignIns"] = $val;
+        $this->_propDict["restrictedSignIns"] = $val;
         return $this;
     }
-    
+
+
+     /**
+     * Gets the signIns
+    * Read-only. Nullable.
+     *
+     * @return array|null The signIns
+     */
+    public function getSignIns()
+    {
+        if (array_key_exists("signIns", $this->_propDict)) {
+           return $this->_propDict["signIns"];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+    * Sets the signIns
+    * Read-only. Nullable.
+    *
+    * @param SignIn[] $val The signIns
+    *
+    * @return AuditLogRoot
+    */
+    public function setSignIns($val)
+    {
+        $this->_propDict["signIns"] = $val;
+        return $this;
+    }
+
 }

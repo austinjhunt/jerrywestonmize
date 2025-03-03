@@ -112,7 +112,7 @@ abstract class Forminator_Admin_Module {
 			#toplevel_page_forminator ul.wp-submenu li a[href="admin.php?page=forminator-templates"] .menu-new-tag { font-size: 8px; line-height: 8px; padding: 2px 6px; background: #1ABC9C; border-radius: 9px; text-transform: uppercase; color: #fff; font-weight: 900; height: 100%; letter-spacing: -0.25px; }
 		</style>';
 		if ( ! FORMINATOR_PRO ) {
-			echo '<style>#toplevel_page_forminator ul.wp-submenu li:last-child a[href^="https://wpmudev.com"] { background-color: #8d00b1 !important; color: #fff !important; font-weight: 700 !important; }</style>';
+			echo '<style>#toplevel_page_forminator ul.wp-submenu li:last-child a[href^="https://wpmudev.com"] { background-color: #8d00b1 !important; color: #fff !important; font-weight: 500 !important; letter-spacing: -0.2px; }</style>';
 			echo '<script>jQuery(function() {jQuery(\'#toplevel_page_forminator ul.wp-submenu li:last-child a[href^="https://wpmudev.com"]\').attr("target", "_blank");});</script>';
 		}
 	}
@@ -283,7 +283,18 @@ abstract class Forminator_Admin_Module {
 	 * @throws Exception When import failed.
 	 */
 	public static function import_json( string $json, string $name, string $slug, bool $change_recipients, bool $draft = false, array $extra_args = array() ) {
-		$import_data = Forminator_Core::sanitize_array( json_decode( $json, true ) );
+		$import_data = json_decode( $json, true );
+
+		if ( $import_data ) {
+			array_walk_recursive(
+				$import_data,
+				function ( &$item ) {
+					$item = html_entity_decode( $item, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+				}
+			);
+		}
+
+		$import_data = Forminator_Core::sanitize_array( $import_data );
 
 		if ( $change_recipients ) {
 			$import_data = self::change_recipients( $import_data );

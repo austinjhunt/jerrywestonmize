@@ -213,9 +213,6 @@ class Forminator_Admin {
 
 		// TODO: remove this after converted to JS.
 		$addons = Forminator_Integration_Loader::get_instance()->get_addons()->to_array();
-
-		$old_addon_list = Forminator_Addon_Loader::get_instance()->get_addons()->to_array();
-		$addons         = array_merge( $addons, $old_addon_list );
 		foreach ( $addons as $slug => $addon_array ) {
 			$addon_class = forminator_get_addon( $slug );
 
@@ -435,21 +432,26 @@ class Forminator_Admin {
 		}
 
 		$button_1 = '<a href="https://wpmudev.com/register/?free_hub&utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_wp_admin_free_plan_1" target="_blank" class="button button-primary">'
-				. esc_html__( 'Claim your free gift', 'forminator' )
+				. esc_html__( 'Connect to Unlock Cloud Templates', 'forminator' )
 				. '</a>';
-		$button_2 = '<button class="button" id="forminator-promote-popup-open">' . esc_html__( 'Find out more', 'forminator' ) . '</button>';
 		$remind   = '<a style="margin-left:20px;text-decoration: none;" href="#" id="forminator-promote-remind-later" data-nonce="' . esc_attr( wp_create_nonce( 'forminator_promote_remind_later' ) ) . '">' . esc_html__( 'Remind me later', 'forminator' ) . '</a>';
 
 		$message  = '<p><strong>';
-		$message .= esc_html__( 'Managing multiple WP sites for clients? Here’s a free gift to make it easier', 'forminator' );
+		$message .= esc_html__( 'Free Cloud Templates—Build Forms Across All Your Sites in 1 Click!', 'forminator' );
 		$message .= '</strong></p>';
 		$message .= '<p>';
-		$message .= esc_html__( 'In addition to Forminator, WPMU DEV has everything you need for fast and convenient site management.', 'forminator' );
+		$message .= sprintf(
+			/* translators: %1$s - opening <b> tag, %2$s - closing </b> tag */
+			esc_html__( 'Say goodbye to manual exports! Now, %1$sForminator Hub%2$s users get FREE access to %1$sCloud Templates%2$s—instantly reuse your custom forms on any connected WordPress site.', 'forminator' ),
+			'<b>',
+			'</b>'
+		);
 		$message .= '</p>';
 		$message .= '<p>';
-		$message .= esc_html__( 'Trusted by over 50K web developers. Completely free to try.', 'forminator' );
+		$message .= esc_html__( 'Plus, unlock WPMU DEV’s full suite of tools trusted by 50K+ developers.', 'forminator' );
+		$message .= ' <b>' . esc_html__( 'Completely free.', 'forminator' ) . '</b>';
 		$message .= '</p>';
-		$message .= '<p>' . $button_1 . '&nbsp;&nbsp;&nbsp;&nbsp;' . $button_2 . $remind . '</p>';
+		$message .= '<p>' . $button_1 . '&nbsp;' . $remind . '</p>';
 
 		echo '<div class="forminator-grouped-notice notice notice-info is-dismissible"'
 			. ' data-notice-slug="forminator_promote_free_plan"'
@@ -1053,7 +1055,7 @@ class Forminator_Admin {
 	 * Show addons update notice
 	 */
 	public function show_addons_update_notice() {
-		if ( ! FORMINATOR_PRO ) {
+		if ( ! FORMINATOR_PRO || 'forminator-addons' === filter_input( INPUT_GET, 'page' ) ) {
 			return;
 		}
 
@@ -1170,6 +1172,7 @@ class Forminator_Admin {
 				'jquery',
 				'react',
 				'react-dom',
+				'wp-element',
 			),
 			FORMINATOR_VERSION,
 			true

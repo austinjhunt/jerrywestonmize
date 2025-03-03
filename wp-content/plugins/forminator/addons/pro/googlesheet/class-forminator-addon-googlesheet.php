@@ -537,6 +537,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 *
 	 * @param ForminatorGoogleAddon\Google\Client $google_client Google client.
 	 * @return ForminatorGoogleAddon\Google\Client
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function refresh_token_if_expired( $google_client ) {
 		if ( $google_client->isAccessTokenExpired() ) {
@@ -544,6 +545,9 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 			if ( ! empty( $client_access_token ) && is_string( $client_access_token ) ) {
 				// Backward compatible.
 				$client_access_token = json_decode( $client_access_token, true );
+			}
+			if ( empty( $client_access_token['refresh_token'] ) ) {
+				throw new Forminator_Integration_Exception( esc_html__( 'Refresh token doesn\'t exist. Please reauthorize the Google Sheets integration.', 'forminator' ) );
 			}
 			$google_client->fetchAccessTokenWithRefreshToken( $client_access_token['refresh_token'] );
 		}

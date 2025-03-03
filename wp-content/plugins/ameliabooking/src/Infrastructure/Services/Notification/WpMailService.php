@@ -21,9 +21,9 @@ class WpMailService extends AbstractMailService implements MailServiceInterface
      * @param        $from
      * @param        $fromName
      */
-    public function __construct($from, $fromName)
+    public function __construct($from, $fromName, $replyTo)
     {
-        parent::__construct($from, $fromName);
+        parent::__construct($from, $fromName, $replyTo);
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
@@ -40,7 +40,11 @@ class WpMailService extends AbstractMailService implements MailServiceInterface
 
     public function send($to, $subject, $body, $bccEmails = [], $attachments = [])
     {
-        $content = ['Content-Type: text/html; charset=UTF-8','From: '  . $this->fromName . ' <' . $this->from . '>'];
+        $content = [
+            'Content-Type: text/html; charset=UTF-8',
+            'From: '  . $this->fromName . ' <' . $this->from . '>',
+            'Reply-To: ' . (!empty($this->replyTo) ? $this->replyTo : $this->from)
+        ];
 
         if ($bccEmails) {
             $content[] = 'Bcc:' . implode(', ', $bccEmails);
@@ -49,12 +53,18 @@ class WpMailService extends AbstractMailService implements MailServiceInterface
         $attachmentsLocations = [];
 
         foreach ($attachments as $attachment) {
-            if (!empty($attachment['content']) &&
-                ($tmpFile = tempnam(sys_get_temp_dir(), 'cal_')) !== false &&
-                file_put_contents($tmpFile, $attachment['content']) !== false &&
-                @rename($tmpFile, $tmpFile .= '.ics') !== false
-            ) {
-                $attachmentsLocations[] = $tmpFile;
+            if (!empty($attachment['content'])) {
+                $isInvoice = strpos($attachment['type'], 'pdf') !== false;
+                if ($isInvoice) {
+                    $tmpFile = tempnam(sys_get_temp_dir(), 'Invoice_');
+                } else {
+                    $tmpFile = tempnam(sys_get_temp_dir(), 'cal_');
+                }
+                if ($tmpFile &&
+                    file_put_contents($tmpFile, $attachment['content']) !== false &&
+                    @rename($tmpFile, $tmpFile .= ($isInvoice ? '.pdf' : '.ics')) !== false) {
+                    $attachmentsLocations[] = $tmpFile;
+                }
             }
         }
 

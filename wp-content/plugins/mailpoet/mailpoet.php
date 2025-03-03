@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) exit;
 
 /*
  * Plugin Name: MailPoet
- * Version: 5.5.2
+ * Version: 5.8.0
  * Plugin URI: https://www.mailpoet.com
  * Description: Create and send newsletters, post notifications and welcome emails from your WordPress.
  * Author: MailPoet
@@ -14,8 +14,8 @@ if (!defined('ABSPATH')) exit;
  * Text Domain: mailpoet
  * Domain Path: /lang
  *
- * WC requires at least: 9.3.3
- * WC tested up to: 9.4.2
+ * WC requires at least: 9.5.1
+ * WC tested up to: 9.6.0
  *
  * @package WordPress
  * @author MailPoet
@@ -23,52 +23,16 @@ if (!defined('ABSPATH')) exit;
  */
 
 $mailpoetPlugin = [
-  'version' => '5.5.2',
+  'version' => '5.8.0',
   'filename' => __FILE__,
   'path' => dirname(__FILE__),
   'autoloader' => dirname(__FILE__) . '/vendor/autoload.php',
   'initializer' => dirname(__FILE__) . '/mailpoet_initializer.php',
 ];
 
-const MAILPOET_MINIMUM_REQUIRED_WP_VERSION = '6.6';
-const MAILPOET_MINIMUM_REQUIRED_WOOCOMMERCE_VERSION = '9.3';
+const MAILPOET_MINIMUM_REQUIRED_WP_VERSION = '6.6'; // L-1 version, not the latest
+const MAILPOET_MINIMUM_REQUIRED_WOOCOMMERCE_VERSION = '9.5'; // L-1 version, not the latest
 
-function mailpoet_deactivate_plugin() {
-  deactivate_plugins(plugin_basename(__FILE__));
-  if (!empty($_GET['activate'])) {
-    unset($_GET['activate']);
-  }
-}
-
-// Check for minimum supported WP version
-if (version_compare(get_bloginfo('version'), MAILPOET_MINIMUM_REQUIRED_WP_VERSION, '<')) {
-  add_action('admin_notices', 'mailpoet_wp_version_notice');
-  // deactivate the plugin
-  add_action('admin_init', 'mailpoet_deactivate_plugin');
-  return;
-}
-
-// Check for minimum supported PHP version
-if (version_compare(phpversion(), '7.4.0', '<')) {
-  add_action('admin_notices', 'mailpoet_php_version_notice');
-  // deactivate the plugin
-  add_action('admin_init', 'mailpoet_deactivate_plugin');
-  return;
-}
-
-// Check for minimum supported WooCommerce version
-if (!function_exists('is_plugin_active')) {
-  require_once ABSPATH . 'wp-admin/includes/plugin.php';
-}
-if (is_plugin_active('woocommerce/woocommerce.php')) {
-  $woocommerceVersion = get_plugin_data(WP_PLUGIN_DIR . '/woocommerce/woocommerce.php', false, false)['Version'];
-  if (version_compare($woocommerceVersion, MAILPOET_MINIMUM_REQUIRED_WOOCOMMERCE_VERSION, '<')) {
-    add_action('admin_notices', 'mailpoet_woocommerce_version_notice');
-    // deactivate the plugin
-    add_action('admin_init', 'mailpoet_deactivate_plugin');
-    return;
-  }
-}
 
 // Display WP version error notice
 function mailpoet_wp_version_notice() {
@@ -122,10 +86,28 @@ function mailpoet_woocommerce_version_notice() {
   );
 }
 
+// Display IIS server error notice
+function mailpoet_microsoft_iis_notice() {
+  $notice = __("MailPoet plugin cannot run under Microsoft's Internet Information Services (IIS) web server. We recommend that you use a web server powered by Apache or NGINX.", 'mailpoet');
+  printf('<div class="error"><p>%1$s</p></div>', esc_html($notice));
+}
+
+// Display missing core dependencies error notice
+function mailpoet_core_dependency_notice() {
+  $notice = __('MailPoet cannot start because it is missing core files. Please reinstall the plugin.', 'mailpoet');
+  printf('<div class="error"><p>%1$s</p></div>', esc_html($notice));
+}
+
 // Display PHP version error notice
 function mailpoet_php_version_notice() {
-  $noticeP1 = __('MailPoet requires PHP version 7.4 or newer (8.1 recommended). You are running version [version].', 'mailpoet');
-  $noticeP1 = str_replace('[version]', phpversion(), $noticeP1);
+  $noticeP1 = sprintf(
+    // translators: %1$s is the plugin name (MailPoet or MailPoet Premium), %2$s, %3$s, and %4$s are PHP version (e.g. "8.1.30")
+    __('%1$s requires PHP version %2$s or newer (%3$s recommended). You are running version %4$s.', 'mailpoet'),
+    'MailPoet',
+    '7.4',
+    '8.1',
+    phpversion()
+  );
 
   $noticeP2 = __('Please read our [link]instructions[/link] on how to upgrade your site.', 'mailpoet');
   $noticeP2 = str_replace(
@@ -135,14 +117,6 @@ function mailpoet_php_version_notice() {
   );
   $noticeP2 = str_replace('[/link]', '</a>', $noticeP2);
 
-  $noticeP3 = __('If you can’t upgrade the PHP version, [link]install this version[/link] of MailPoet. Remember to not update MailPoet ever again!', 'mailpoet');
-  $noticeP3 = str_replace(
-    '[link]',
-    '<a href="https://downloads.wordpress.org/plugin/mailpoet.4.38.0.zip" target="_blank">',
-    $noticeP3
-  );
-  $noticeP3 = str_replace('[/link]', '</a>', $noticeP3);
-
   $allowedTags = [
     'a' => [
       'href' => true,
@@ -150,45 +124,57 @@ function mailpoet_php_version_notice() {
     ],
   ];
   printf(
-    '<div class="error"><p><strong>%s</strong></p><p>%s</p><p>%s</p></div>',
+    '<div class="error"><p><strong>%s</strong></p><p>%s</p></div>',
     esc_html($noticeP1),
     wp_kses(
       $noticeP2,
-      $allowedTags
-    ),
-    wp_kses(
-      $noticeP3,
       $allowedTags
     )
   );
 }
 
-if (isset($_SERVER['SERVER_SOFTWARE']) && strpos(strtolower(sanitize_text_field(wp_unslash($_SERVER['SERVER_SOFTWARE']))), 'microsoft-iis') !== false) {
-  add_action('admin_notices', 'mailpoet_microsoft_iis_notice');
-  // deactivate the plugin
-  add_action('admin_init', 'mailpoet_deactivate_plugin');
-  return;
-}
+function mailpoet_check_requirements(array $mailpoetPlugin) {
 
-// Display IIS server error notice
-function mailpoet_microsoft_iis_notice() {
-  $notice = __("MailPoet plugin cannot run under Microsoft's Internet Information Services (IIS) web server. We recommend that you use a web server powered by Apache or NGINX.", 'mailpoet');
-  printf('<div class="error"><p>%1$s</p></div>', esc_html($notice));
-}
+  // Check for presence of core dependencies
+  if (!file_exists($mailpoetPlugin['autoloader']) || !file_exists($mailpoetPlugin['initializer'])) {
+    add_action('admin_notices', 'mailpoet_core_dependency_notice');
+    return false;
+  }
 
-// Check for presence of core dependencies
-if (!file_exists($mailpoetPlugin['autoloader']) || !file_exists($mailpoetPlugin['initializer'])) {
-  add_action('admin_notices', 'mailpoet_core_dependency_notice');
-  // deactivate the plugin
-  add_action('admin_init', 'mailpoet_deactivate_plugin');
-  return;
-}
+  // Check for Microsoft IIS server
+  if (isset($_SERVER['SERVER_SOFTWARE']) && strpos(strtolower(sanitize_text_field(wp_unslash($_SERVER['SERVER_SOFTWARE']))), 'microsoft-iis') !== false) {
+    add_action('admin_notices', 'mailpoet_microsoft_iis_notice');
+    return false;
+  }
 
-// Display missing core dependencies error notice
-function mailpoet_core_dependency_notice() {
-  $notice = __('MailPoet cannot start because it is missing core files. Please reinstall the plugin.', 'mailpoet');
-  printf('<div class="error"><p>%1$s</p></div>', esc_html($notice));
+  // Check for minimum supported WooCommerce version
+  if (!function_exists('is_plugin_active')) {
+    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+  }
+  if (is_plugin_active('woocommerce/woocommerce.php')) {
+    $woocommerceVersion = get_plugin_data(WP_PLUGIN_DIR . '/woocommerce/woocommerce.php', false, false)['Version'];
+    if (version_compare($woocommerceVersion, MAILPOET_MINIMUM_REQUIRED_WOOCOMMERCE_VERSION, '<')) {
+      add_action('admin_notices', 'mailpoet_woocommerce_version_notice');
+      return false;
+    }
+  }
+
+  // Check for minimum supported WP version
+  if (version_compare(get_bloginfo('version'), MAILPOET_MINIMUM_REQUIRED_WP_VERSION, '<')) {
+    add_action('admin_notices', 'mailpoet_wp_version_notice');
+    return false;
+  }
+
+  // Check for minimum supported PHP version
+  if (version_compare(phpversion(), '7.4.0', '<')) {
+    add_action('admin_notices', 'mailpoet_php_version_notice');
+    return false;
+  }
+
+  return true;
 }
 
 // Initialize plugin
-require_once($mailpoetPlugin['initializer']);
+if (mailpoet_check_requirements($mailpoetPlugin)) {
+  require_once($mailpoetPlugin['initializer']);
+}

@@ -222,6 +222,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCancelledTrigger::class)->setPublic(true)->setShared(false);
     $container->autowire(\MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysAProductTrigger::class)->setPublic(true)->setShared(false);
     $container->autowire(\MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysFromACategoryTrigger::class)->setPublic(true)->setShared(false);
+    $container->autowire(\MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysFromATagTrigger::class)->setPublic(true)->setShared(false);
     $container->autowire(\MailPoet\Automation\Integrations\WooCommerce\Subjects\OrderSubject::class)->setPublic(true)->setShared(false);
     $container->autowire(\MailPoet\Automation\Integrations\WooCommerce\Subjects\OrderStatusChangeSubject::class)->setPublic(true)->setShared(false);
     $container->autowire(\MailPoet\Automation\Integrations\WooCommerce\Subjects\CustomerSubject::class)->setPublic(true)->setShared(false);
@@ -340,6 +341,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\CustomFields\CustomFieldsRepository::class)->setPublic(true);
     // Email Editor
     $container->autowire(\MailPoet\EmailEditor\Engine\Email_Editor::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Dependency_Check::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Email_Api_Controller::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Settings_Controller::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Theme_Controller::class)->setPublic(true);
@@ -353,7 +355,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\Typography_Preprocessor::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\Renderer::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Templates\Templates::class)->setPublic(true);
-    $container->autowire(\MailPoet\EmailEditor\Engine\Templates\Utils::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Engine\Templates\Templates_Registry::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Patterns\Patterns::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Blocks_Registry::class)->setPublic(true);
@@ -362,15 +364,24 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\Cli::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\EmailEditor::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\EditorPageRenderer::class)->setPublic(true);
+    $container->register(\MailPoet\EmailEditor\Engine\Renderer\Css_Inliner::class)
+      ->setPublic(true)
+      ->setFactory([\MailPoet\EmailEditor\Integrations\MailPoet\MailpoetCssInlinerFactory::class, 'create']);
+    $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\MailPoetCssInliner::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\EmailApiController::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\EmailEditorPreviewEmail::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\DependencyNotice::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\Blocks\BlockTypesController::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\Blocks\BlockTypes\PoweredByMailpoet::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\Patterns\PatternsController::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Engine\Personalizer::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Link::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\LinksToShortcodesConvertor::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Site::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Subscriber::class)->setPublic(true);
     $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTagManager::class)->setPublic(true);
+    $container->autowire(\MailPoet\EmailEditor\Integrations\MailPoet\Templates\TemplatesController::class)->setPublic(true);
     // Features
     $container->autowire(\MailPoet\Features\FeaturesController::class)->setPublic(true);
     $container->autowire(\MailPoet\Features\FeatureFlagsController::class)->setPublic(true);
@@ -685,7 +696,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     // Tags
     $container->autowire(\MailPoet\Tags\TagRepository::class)->setPublic(true);
     // CAPTCHA
-    $container->autowire(\MailPoet\Config\HooksReCaptcha::class)->setPublic(true);
+    $container->autowire(\MailPoet\Captcha\ReCaptchaHooks::class)->setPublic(true);
     $container->autowire(\MailPoet\Captcha\ReCaptchaValidator::class)->setPublic(true);
     $container->autowire(\MailPoet\Captcha\ReCaptchaRenderer::class)->setPublic(true);
     return $container;

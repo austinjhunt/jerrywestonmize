@@ -483,7 +483,7 @@
               })
             }
 
-            if (view === 'customer_panel') {
+            if (view === 'customer_panel' || view === 'employee_panel') {
               // Selector
               viewBody.push({
                 type: 'listbox',
@@ -696,10 +696,8 @@
 
               case ('customer_panel'):
               case ('employee_panel'):
-                if (view === 'customer_panel') {
-                  if (e.data.am_version) {
-                    shortCodeString += ' version=' + e.data.am_version
-                  }
+                if (e.data.am_version) {
+                  shortCodeString += ' version=' + e.data.am_version
                 }
 
                 if (e.data.am_cabinet_appointments) {

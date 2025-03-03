@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?p5l5pl');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?p5l5pl#iefix') format('embedded-opentype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?p5l5pl') format('truetype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?p5l5pl') format('woff'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?p5l5pl##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?oedm2j');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?oedm2j#iefix') format('embedded-opentype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?oedm2j') format('truetype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?oedm2j') format('woff'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?oedm2j##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -27,6 +27,136 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.am-icon-list-bulleted {
+  &:before {
+    content: $am-icon-list-bulleted;
+  }
+}
+.am-icon-list-numbered {
+  &:before {
+    content: $am-icon-list-numbered;
+  }
+}
+.am-icon-paragraph {
+  &:before {
+    content: $am-icon-paragraph;
+  }
+}
+.am-icon-paragraph-l {
+  &:before {
+    content: $am-icon-paragraph-l;
+  }
+}
+.am-icon-paragraph-r {
+  &:before {
+    content: $am-icon-paragraph-r;
+  }
+}
+.am-icon-text-align-center {
+  &:before {
+    content: $am-icon-text-align-center;
+  }
+}
+.am-icon-text-align-justify {
+  &:before {
+    content: $am-icon-text-align-justify;
+  }
+}
+.am-icon-text-align-left {
+  &:before {
+    content: $am-icon-text-align-left;
+  }
+}
+.am-icon-text-align-right {
+  &:before {
+    content: $am-icon-text-align-right;
+  }
+}
+.am-icon-text-bold {
+  &:before {
+    content: $am-icon-text-bold;
+  }
+}
+.am-icon-text-color {
+  &:before {
+    content: $am-icon-text-color;
+  }
+}
+.am-icon-text-italic {
+  &:before {
+    content: $am-icon-text-italic;
+  }
+}
+.am-icon-text-link {
+  &:before {
+    content: $am-icon-text-link;
+  }
+}
+.am-icon-text-quotes {
+  &:before {
+    content: $am-icon-text-quotes;
+  }
+}
+.am-icon-text-strikethrough {
+  &:before {
+    content: $am-icon-text-strikethrough;
+  }
+}
+.am-icon-text-Tx {
+  &:before {
+    content: $am-icon-text-Tx;
+  }
+}
+.am-icon-text-underline {
+  &:before {
+    content: $am-icon-text-underline;
+  }
+}
+.am-icon-x2-down {
+  &:before {
+    content: $am-icon-x2-down;
+  }
+}
+.am-icon-x2-up {
+  &:before {
+    content: $am-icon-x2-up;
+  }
+}
+.am-icon-duplicate {
+  &:before {
+    content: $am-icon-duplicate;
+  }
+}
+.am-icon-gender {
+  &:before {
+    content: $am-icon-gender;
+  }
+}
+.am-icon-refund {
+  &:before {
+    content: $am-icon-refund;
+  }
+}
+.am-icon-prepaid {
+  &:before {
+    content: $am-icon-prepaid;
+  }
+}
+.am-icon-no-show-1 {
+  &:before {
+    content: $am-icon-no-show-1;
+  }
+}
+.am-icon-no-show-2 {
+  &:before {
+    content: $am-icon-no-show-2;
+  }
+}
+.am-icon-no-show-3 {
+  &:before {
+    content: $am-icon-no-show-3;
+  }
+}
 .am-icon-circle-empty {
   &:before {
     content: $am-icon-circle-empty;
@@ -417,4 +547,3 @@
     content: $am-icon-yahoo;
   }
 }
-

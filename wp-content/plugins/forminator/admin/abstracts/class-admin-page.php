@@ -145,6 +145,11 @@ abstract class Forminator_Admin_Page {
 	 * @since 1.0
 	 */
 	public function add_page_hooks() {
+		$page_action = filter_input( INPUT_GET, 'page_action' );
+		if ( ! forminator_cloud_templates_disabled() && 'hub_connection' === $page_action
+				&& ! Forminator_Hub_Connector::hub_connector_connected() ) {
+			return;
+		}
 		add_filter( 'user_can_richedit', '__return_true' ); // Confirms wp editor script is loaded on Forminator admin pages.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_filter( 'admin_body_class', array( $this, 'admin_body_classes' ) );
@@ -161,6 +166,9 @@ abstract class Forminator_Admin_Page {
 		$vars[] = 'forminator_notice';
 		$vars[] = 'forminator_text_notice';
 		$vars[] = 'forminator_error_notice';
+		if ( Forminator_Hub_Connector::hub_connector_connected() ) {
+			$vars[] = 'page_action';
+		}
 
 		return $vars;
 	}
@@ -306,15 +314,63 @@ abstract class Forminator_Admin_Page {
 		<main class="sui-wrap <?php echo $accessibility_enabled ? 'sui-color-accessible' : ''; ?> <?php echo esc_attr( 'wpmudev-forminator-' . $this->page_slug ); ?>">
 
 			<?php
-			$this->render_header();
 
-			$this->render_page_content();
+			$page_action    = filter_input( INPUT_GET, 'page_action' );
+			$hub_connecting = ! forminator_cloud_templates_disabled() && 'hub_connection' === $page_action;
+			if ( $hub_connecting && ! Forminator_Hub_Connector::hub_connector_connected() ) {
+				do_action( 'wpmudev_hub_connector_ui', 'forminator' );
+			} else {
+				$this->render_header();
 
-			$this->render_footer();
+				$this->render_page_content();
+
+				$this->render_footer();
+
+				if ( $hub_connecting && Forminator_Hub_Connector::hub_connector_connected() ) {
+					self::hub_connected_successfully_modal();
+				}
+			}
 			?>
 
 		</main>
 
+		<?php
+	}
+
+	/**
+	 * Show modal when hub connected successfully
+	 */
+	public static function hub_connected_successfully_modal() {
+		?>
+		<div class="sui-modal sui-modal-sm">
+			<div
+				role="dialog"
+				id="forminator-hub-connected-successfully-modal"
+				class="sui-modal-content"
+				aria-modal="true"
+				aria-labelledby="forminator-hub-connected-successfully-modal-title"
+				aria-describedby="forminator-hub-connected-successfully-modal-description"
+				data-esc-close="true"
+			>
+				<div class="sui-box">
+					<div class="sui-box-header sui-flatten sui-content-center sui-spacing-top--60">
+						<span class="sui-icon-check-tick sui-success sui-xl" aria-hidden="true"></span>
+						<h3 id="forminator-hub-connected-successfully-modal-title" class="sui-box-title sui-lg">
+							<?php esc_html_e( 'Site connected successfully!', 'forminator' ); ?>
+						</h3>
+						<p id="forminator-hub-connected-successfully-modal-description" class="sui-description">
+							<b><?php esc_html_e( 'Congratulations!', 'forminator' ); ?></b>
+							<?php esc_html_e( 'Your site is connected to the Hub. You can now save your forms to the Hub cloud.', 'forminator' ); ?>
+						</p>
+					</div>
+					<div class="sui-box-footer sui-flatten sui-content-center">
+						<button class="sui-button sui-button-blue" data-modal-close>
+							<?php esc_html_e( 'Close', 'forminator' ); ?>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		<?php
 	}
 

@@ -180,6 +180,7 @@ class SettingsStorage implements SettingsStorageInterface
                 'showClientTimeZone'                     => $this->getSetting('general', 'showClientTimeZone'),
                 'redirectUrlAfterAppointment'            => $this->getSetting('general', 'redirectUrlAfterAppointment'),
                 'customFieldsUploadsPath'                => $this->getSetting('general', 'customFieldsUploadsPath'),
+                'customFieldsAllowedExtensions'          => $this->getSetting('general', 'customFieldsAllowedExtensions'),
                 'runInstantPostBookingActions'           => $this->getSetting('general', 'runInstantPostBookingActions'),
                 'sortingPackages'                        => $this->getSetting('general', 'sortingPackages'),
                 'backLink'                               => $this->getSetting('general', 'backLink'),
@@ -191,12 +192,20 @@ class SettingsStorage implements SettingsStorageInterface
                 ],
                 'usedLanguages' => $this->getSetting('general', 'usedLanguages'),
             ],
+            'googleMeet'             => [
+                'enabled' => $this->getSetting('googleCalendar', 'enableGoogleMeet'),
+            ],
+            'microsoftTeams'         => [
+                'enabled' => $this->getSetting('outlookCalendar', 'enableMicrosoftTeams'),
+            ],
             'googleCalendar'         => [
               'enabled' => $this->getSetting('googleCalendar', 'clientID') && $this->getSetting('googleCalendar', 'clientSecret'),
               'googleMeetEnabled' => $this->getSetting('googleCalendar', 'enableGoogleMeet')
             ],
-            'outlookCalendar'        =>
-                $this->getSetting('outlookCalendar', 'clientID') && $this->getSetting('outlookCalendar', 'clientSecret'),
+            'outlookCalendar'        => [
+                'enabled'               => $this->getSetting('outlookCalendar', 'clientID') && $this->getSetting('outlookCalendar', 'clientSecret'),
+                'microsoftTeamsEnabled' => $this->getSetting('outlookCalendar', 'enableMicrosoftTeams'),
+            ],
             'appleCalendar'          =>
                 $this->getSetting('appleCalendar', 'clientID') && $this->getSetting('appleCalendar', 'clientSecret'),
             'zoom'                   => [
@@ -215,6 +224,7 @@ class SettingsStorage implements SettingsStorageInterface
             ],
             'notifications'          => [
                 'senderName'          => $this->getSetting('notifications', 'senderName'),
+                'replyTo'             => $this->getSetting('notifications', 'replyTo'),
                 'senderEmail'         => $this->getSetting('notifications', 'senderEmail'),
                 'notifyCustomers'     => $this->getSetting('notifications', 'notifyCustomers'),
                 'sendAllCF'           => $this->getSetting('notifications', 'sendAllCF'),
@@ -317,6 +327,7 @@ class SettingsStorage implements SettingsStorageInterface
                 'allowConfigureSpecialDays'   => $this->getSetting('roles', 'allowConfigureSpecialDays'),
                 'allowConfigureServices'      => $this->getSetting('roles', 'allowConfigureServices'),
                 'allowWriteAppointments'      => $this->getSetting('roles', 'allowWriteAppointments'),
+                'allowWriteCustomers'         => $this->getSetting('roles', 'allowWriteCustomers'),
                 'automaticallyCreateCustomer' => $this->getSetting('roles', 'automaticallyCreateCustomer'),
                 'inspectCustomerInfo'         => $this->getSetting('roles', 'inspectCustomerInfo'),
                 'allowCustomerReschedule'     => $this->getSetting('roles', 'allowCustomerReschedule'),

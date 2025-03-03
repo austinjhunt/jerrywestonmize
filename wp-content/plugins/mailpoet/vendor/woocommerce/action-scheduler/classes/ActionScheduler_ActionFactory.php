@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 class ActionScheduler_ActionFactory {
- public function get_stored_action( $status, $hook, array $args = array(), ActionScheduler_Schedule $schedule = null, $group = '' ) {
+ public function get_stored_action( $status, $hook, array $args = array(), ?ActionScheduler_Schedule $schedule = null, $group = '' ) {
  // The 6th parameter ($priority) is not formally declared in the method signature to maintain compatibility with
  // third-party subclasses created before this param was added.
  $priority = func_num_args() >= 6 ? (int) func_get_arg( 5 ) : 10;
@@ -113,6 +113,7 @@ class ActionScheduler_ActionFactory {
  $schedule = new ActionScheduler_SimpleSchedule( $date );
  break;
  default:
+ // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
  error_log( "Unknown action type '{$options['type']}' specified when trying to create an action for '{$options['hook']}'." );
  return 0;
  }
@@ -122,6 +123,7 @@ class ActionScheduler_ActionFactory {
  try {
  $action_id = $options['unique'] ? $this->store_unique_action( $action ) : $this->store( $action );
  } catch ( Exception $e ) {
+ // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
  error_log(
  sprintf(
  __( 'Caught exception while enqueuing action "%1$s": %2$s', 'action-scheduler' ),

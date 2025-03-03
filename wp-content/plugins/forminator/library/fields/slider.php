@@ -76,6 +76,8 @@ class Forminator_Slider extends Forminator_Field {
 	 */
 	public function markup( $field, $views_obj, $draft_value = array() ) {
 		self::$module_id = $views_obj->get_module_id();
+		$settings        = $views_obj->model->settings;
+		$descr_position  = self::get_description_position( $field, $settings );
 
 		$name        = self::get_property( 'element_id', $field );
 		$required    = self::get_property( 'required', $field );
@@ -87,8 +89,13 @@ class Forminator_Slider extends Forminator_Field {
 
 		$html  = '<div class="forminator-field">';
 		$html .= self::get_field_label( $label, $id, $required );
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $name, $descr_position );
+		}
 		$html .= $full_slider;
-		$html .= self::get_description( $description, $name );
+		if ( 'above' !== $descr_position ) {
+			$html .= self::get_description( $description, $name, $descr_position );
+		}
 		$html .= '</div>';
 
 		/**

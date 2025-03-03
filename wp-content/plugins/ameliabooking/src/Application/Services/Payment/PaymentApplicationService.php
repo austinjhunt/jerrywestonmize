@@ -920,8 +920,9 @@ class PaymentApplicationService
                 return null;
             }
 
-            $redirectUrl = $paymentLinksSettings && $paymentLinksSettings['redirectUrl'] ? $paymentLinksSettings['redirectUrl'] :
+            $redirectUrl = $paymentLinksSettings && !empty($paymentLinksSettings['redirectUrl']) ? $paymentLinksSettings['redirectUrl'] :
                 $settingsService->getSetting('payments', 'paymentLinks')['redirectUrl'];
+
             $redirectUrl = empty($redirectUrl) ? AMELIA_SITE_URL : $redirectUrl;
 
             $customerPanelUrl = $settingsService->getSetting('roles', 'customerCabinet')['pageUrl'];

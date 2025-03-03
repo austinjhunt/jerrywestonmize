@@ -137,7 +137,7 @@ class StashApplicationService
 
         /** @var Provider $provider */
         foreach ($providers->getItems() as $providerId => $provider) {
-            if ($provider->getLocationId()) {
+            if ($provider->getLocationId() && !$availableLocations->keyExists($provider->getLocationId()->getValue())) {
                 $availableLocations->addItem(
                     $locations->getItem($provider->getLocationId()->getValue()),
                     $provider->getLocationId()->getValue()

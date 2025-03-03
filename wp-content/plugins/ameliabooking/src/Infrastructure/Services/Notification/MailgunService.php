@@ -33,9 +33,9 @@ class MailgunService extends AbstractMailService implements MailServiceInterface
      * @param string $domain
      * @param string $endpoint
      */
-    public function __construct($from, $fromName, $apiKey, $domain, $endpoint)
+    public function __construct($from, $fromName, $apiKey, $domain, $endpoint, $replyTo)
     {
-        parent::__construct($from, $fromName);
+        parent::__construct($from, $fromName, $replyTo);
         $this->apiKey = $apiKey;
         $this->domain = $domain;
         $this->endpoint = $endpoint;
@@ -61,7 +61,8 @@ class MailgunService extends AbstractMailService implements MailServiceInterface
             'to'         => $to,
             'subject'    => $subject,
             'html'       => $body,
-            'attachment' => []
+            'attachment' => [],
+            'h:Reply-To' => !empty($this->replyTo) ? $this->replyTo : $this->from
         ];
 
         if ($bccEmails) {
@@ -69,12 +70,18 @@ class MailgunService extends AbstractMailService implements MailServiceInterface
         }
 
         foreach ($attachments as $attachment) {
-            if (!empty($attachment['content']) &&
-                ($tmpFile = tempnam(sys_get_temp_dir(), 'cal_')) !== false &&
-                file_put_contents($tmpFile, $attachment['content']) !== false &&
-                @rename($tmpFile, $tmpFile .= '.ics') !== false
-            ) {
-                $mgArgs['attachment'][] = ['filePath' => $tmpFile, 'filename' => $tmpFile];
+            if (!empty($attachment['content'])) {
+                $isInvoice = strpos($attachment['type'], 'pdf') !== false;
+                if ($isInvoice) {
+                    $tmpFile = tempnam(sys_get_temp_dir(), 'Invoice_');
+                } else {
+                    $tmpFile = tempnam(sys_get_temp_dir(), 'cal_');
+                }
+                if ($tmpFile &&
+                    file_put_contents($tmpFile, $attachment['content']) !== false &&
+                    @rename($tmpFile, $tmpFile .= ($isInvoice ? '.pdf' : '.ics')) !== false) {
+                    $mgArgs['attachment'][] = ['filePath' => $tmpFile, 'filename' => $tmpFile];
+                }
             }
         }
 

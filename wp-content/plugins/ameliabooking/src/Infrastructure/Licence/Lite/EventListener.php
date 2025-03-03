@@ -18,6 +18,7 @@ use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAp
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingCanceledEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingEditedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingRejectedEventHandler;
+use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingStatusUpdatedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventEventsListener;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventStatusUpdatedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\User\Provider\ProviderAddedEventHandler;
@@ -70,6 +71,7 @@ class EventListener
         $eventBus->addListener('AppointmentDeleted', $appointmentListener);
         $eventBus->addListener('AppointmentStatusUpdated', $appointmentListener);
         $eventBus->addListener('BookingAdded', $appointmentListener);
+        $eventBus->addListener('BookingStatusUpdated', $appointmentListener);
         $eventBus->addListener('BookingCanceled', $appointmentListener);
         $eventBus->addListener('BookingApproved', $appointmentListener);
         $eventBus->addListener('BookingRejected', $appointmentListener);
@@ -121,6 +123,9 @@ class EventListener
             case 'BookingAdded':
                 do_action('AmeliaBookingAddedBeforeNotify', $param->getData(), $container);
                 BookingAddedEventHandler::handle($param, $container);
+                break;
+            case 'BookingStatusUpdated':
+                BookingStatusUpdatedEventHandler::handle($param, $container);
                 break;
             case 'BookingCanceled':
                 BookingCanceledEventHandler::handle($param, $container);

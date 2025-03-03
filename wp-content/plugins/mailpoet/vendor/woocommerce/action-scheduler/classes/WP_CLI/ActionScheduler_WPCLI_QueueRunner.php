@@ -5,7 +5,7 @@ class ActionScheduler_WPCLI_QueueRunner extends ActionScheduler_Abstract_QueueRu
  protected $actions;
  protected $claim;
  protected $progress_bar;
- public function __construct( ActionScheduler_Store $store = null, ActionScheduler_FatalErrorMonitor $monitor = null, ActionScheduler_QueueCleaner $cleaner = null ) {
+ public function __construct( ?ActionScheduler_Store $store = null, ?ActionScheduler_FatalErrorMonitor $monitor = null, ?ActionScheduler_QueueCleaner $cleaner = null ) {
  if ( ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
  throw new Exception( sprintf( __( 'The %s class can only be run within WP CLI.', 'action-scheduler' ), __CLASS__ ) );
  }
@@ -45,7 +45,7 @@ class ActionScheduler_WPCLI_QueueRunner extends ActionScheduler_Abstract_QueueRu
  $this->setup_progress_bar();
  foreach ( $this->actions as $action_id ) {
  // Error if we lost the claim.
- if ( ! in_array( $action_id, $this->store->find_actions_by_claim_id( $this->claim->get_id() ) ) ) {
+ if ( ! in_array( $action_id, $this->store->find_actions_by_claim_id( $this->claim->get_id() ), true ) ) {
  WP_CLI::warning( __( 'The claim has been lost. Aborting current batch.', 'action-scheduler' ) );
  break;
  }
@@ -62,7 +62,7 @@ class ActionScheduler_WPCLI_QueueRunner extends ActionScheduler_Abstract_QueueRu
  WP_CLI::log( sprintf( __( 'Started processing action %s', 'action-scheduler' ), $action_id ) );
  }
  public function after_execute( $action_id, $action = null ) {
- // backward compatibility
+ // backward compatibility.
  if ( null === $action ) {
  $action = $this->store->fetch_action( $action_id );
  }

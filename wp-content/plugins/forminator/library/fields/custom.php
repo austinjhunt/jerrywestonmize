@@ -218,6 +218,9 @@ class Forminator_Custom extends Forminator_Field {
 		$html          = '';
 		$default_value = esc_html( self::get_property( 'default_value', $field ) );
 		$post_value    = self::get_post_data( $name, false );
+		$settings      = $views_obj->model->settings;
+
+		$descr_position = self::get_description_position( $field, $settings );
 
 		switch ( $field_type ) {
 			case 'text':
@@ -239,7 +242,7 @@ class Forminator_Custom extends Forminator_Field {
 					'placeholder' => $placeholder,
 					'required'    => $required,
 				);
-				$html        .= self::create_textarea( $field_markup, $label, $description );
+				$html        .= self::create_textarea( $field_markup, $label, $description, $required, $descr_position );
 				break;
 			case 'dropdown':
 				break;

@@ -397,22 +397,25 @@ function forminator_post_categories( $type = '' ) {
  */
 function forminator_get_vars( $add_query = false ) {
 	$vars_list = array(
-		'user_ip'         => esc_html__( 'User IP Address', 'forminator' ),
-		'date_mdy'        => esc_html__( 'Date (mm/dd/yyyy)', 'forminator' ),
-		'date_dmy'        => esc_html__( 'Date (dd/mm/yyyy)', 'forminator' ),
-		'submission_id'   => esc_html__( 'Submission ID', 'forminator' ),
-		'submission_time' => esc_html__( 'Submission Time (hh:mm:ss am/pm, timezone)', 'forminator' ),
-		'embed_id'        => esc_html__( 'Embed Post/Page ID', 'forminator' ),
-		'embed_title'     => esc_html__( 'Embed Post/Page Title', 'forminator' ),
-		'embed_url'       => esc_html__( 'Embed URL', 'forminator' ),
-		'login_url'       => esc_html__( 'Login URL', 'forminator' ),
-		'user_agent'      => esc_html__( 'HTTP User Agent', 'forminator' ),
-		'refer_url'       => esc_html__( 'HTTP Refer URL', 'forminator' ),
-		'user_id'         => esc_html__( 'User ID', 'forminator' ),
-		'user_name'       => esc_html__( 'User Display Name', 'forminator' ),
-		'user_email'      => esc_html__( 'User Email', 'forminator' ),
-		'user_login'      => esc_html__( 'User Login', 'forminator' ),
-		'custom_value'    => esc_html__( 'Custom Value', 'forminator' ),
+		'user_ip'             => esc_html__( 'User IP Address', 'forminator' ),
+		'date_mdy'            => esc_html__( 'Date (mm/dd/yyyy)', 'forminator' ),
+		'date_dmy'            => esc_html__( 'Date (dd/mm/yyyy)', 'forminator' ),
+		'submission_id'       => esc_html__( 'Submission ID', 'forminator' ),
+		'submission_time'     => esc_html__( 'Submission Time (hh:mm:ss am/pm, timezone)', 'forminator' ),
+		'submission_date'     => esc_html__( 'Submission Date (F d, Y)', 'forminator' ),
+		'submission_date_mdy' => esc_html__( 'Submission Date (mm/dd/yyyy)', 'forminator' ),
+		'submission_date_dmy' => esc_html__( 'Submission Date (dd/mm/yyyy)', 'forminator' ),
+		'embed_id'            => esc_html__( 'Embed Post/Page ID', 'forminator' ),
+		'embed_title'         => esc_html__( 'Embed Post/Page Title', 'forminator' ),
+		'embed_url'           => esc_html__( 'Embed URL', 'forminator' ),
+		'login_url'           => esc_html__( 'Login URL', 'forminator' ),
+		'user_agent'          => esc_html__( 'HTTP User Agent', 'forminator' ),
+		'refer_url'           => esc_html__( 'HTTP Refer URL', 'forminator' ),
+		'user_id'             => esc_html__( 'User ID', 'forminator' ),
+		'user_name'           => esc_html__( 'User Display Name', 'forminator' ),
+		'user_email'          => esc_html__( 'User Email', 'forminator' ),
+		'user_login'          => esc_html__( 'User Login', 'forminator' ),
+		'custom_value'        => esc_html__( 'Custom Value', 'forminator' ),
 	);
 
 	if ( $add_query ) {
@@ -704,6 +707,7 @@ function forminator_replace_field_data( $custom_form, $element_id, $data, $quiz_
 			}
 		} else {
 			$selected_values = is_array( $field_value ) ? $field_value : array( $field_value );
+			$selected_values = array_map( 'htmlspecialchars_decode', $selected_values );
 			$value           = implode( ', ', array_keys( array_intersect( array_flip( $field_options ), array_map( 'stripslashes', $selected_values ) ) ) );
 		}
 	}
@@ -1145,47 +1149,60 @@ function forminator_replace_variables( $content, $id = false, $entry = null ) {
 		$refer_url = forminator_get_referer_url( $embed_url );
 		$login_url = forminator_get_login_url( $embed_url );
 
+		// Use the date from the entry if date_created_sql exists.
+		if ( ! empty( $entry->date_created_sql ) ) {
+			$date_created = strtotime( $entry->date_created_sql );
+		} else {
+			$date_created = forminator_local_timestamp();
+		}
+
 		$variables = array(
 			// Handle User IP Address variable.
-			'{user_ip}'            => forminator_user_ip(),
+			'{user_ip}'             => forminator_user_ip(),
 			// Handle Date (F d, Y) variable.
-			'{date}'               => date_i18n( 'F d, Y', forminator_local_timestamp(), true ),
+			'{date}'                => date_i18n( 'F d, Y', forminator_local_timestamp(), true ),
 			// Handle Date (mm/dd/yyyy) variable.
-			'{date_mdy}'           => date_i18n( 'm/d/Y', forminator_local_timestamp(), true ),
+			'{date_mdy}'            => date_i18n( 'm/d/Y', forminator_local_timestamp(), true ),
 			// Handle Date (dd/mm/yyyy) variable.
-			'{date_dmy}'           => date_i18n( 'd/m/Y', forminator_local_timestamp(), true ),
+			'{date_dmy}'            => date_i18n( 'd/m/Y', forminator_local_timestamp(), true ),
 			// Submission ID.
-			'{submission_id}'      => forminator_get_submission_id( new Forminator_Form_Model(), $entry ),
+			'{submission_id}'       => forminator_get_submission_id( new Forminator_Form_Model(), $entry ),
 			// Submission time.
-			'{submission_time}'    => date_i18n( 'g:i:s a, T', forminator_local_timestamp(), true ),
+			'{submission_time}'     => date_i18n( 'g:i:s a, T', $date_created, true ),
+			// Submission Date (F d, Y) variable.
+			'{submission_date}'     => date_i18n( 'F d, Y', $date_created, true ),
+			// Submission Date (mm/dd/yyyy) variable.
+			'{submission_date_mdy}' => date_i18n( 'm/d/Y', $date_created, true ),
+			// Submission Date (dd/mm/yyyy) variable.
+			'{submission_date_dmy}' => date_i18n( 'd/m/Y', $date_created, true ),
 			// Handle Embed Post/Page ID variable.
-			'{embed_id}'           => forminator_get_post_data( 'ID', $post_id ),
+			'{embed_id}'            => forminator_get_post_data( 'ID', $post_id ),
 			// Handle Embed Post/Page Title variable.
-			'{embed_title}'        => forminator_get_post_data( 'post_title', $post_id ),
+			'{embed_title}'         => forminator_get_post_data( 'post_title', $post_id ),
 			// Handle Embed URL variable.
-			'{embed_url}'          => $embed_url,
+			'{embed_url}'           => $embed_url,
 			// Handle HTTP User Agent variable.
 			// some browser not sending HTTP_USER_AGENT or some servers probably stripped this value.
-			'{user_agent}'         => isset( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) ) : '',
+			'{user_agent}'          => isset( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) ) : '',
 			// Handle site url variable.
-			'{site_url}'           => site_url(),
+			'{site_url}'            => site_url(),
 			// Handle login url variable.
-			'{login_url}'          => $login_url,
+			'{login_url}'           => $login_url,
 			// Handle HTTP Refer URL variable.
-			'{refer_url}'          => $refer_url,
-			'{http_refer}'         => $refer_url,
+			'{refer_url}'           => $refer_url,
+			'{http_refer}'          => $refer_url,
 			// Handle User ID variable.
-			'{user_id}'            => forminator_get_user_data( 'ID' ),
+			'{user_id}'             => forminator_get_user_data( 'ID' ),
 			// Handle User Display Name variable.
-			'{user_name}'          => forminator_get_user_data( 'display_name' ),
+			'{user_name}'           => forminator_get_user_data( 'display_name' ),
 			// Handle User Email variable.
-			'{user_email}'         => forminator_get_user_data( 'user_email' ),
+			'{user_email}'          => forminator_get_user_data( 'user_email' ),
 			// Handle User Login variable.
-			'{user_login}'         => forminator_get_user_data( 'user_login' ),
+			'{user_login}'          => forminator_get_user_data( 'user_login' ),
 			// Handle Submissions number.
-			'{submissions_number}' => Forminator_Form_Entry_Model::count_entries( $id ),
+			'{submissions_number}'  => Forminator_Form_Entry_Model::count_entries( $id ),
 			// Handle site title variable.
-			'{site_title}'         => get_bloginfo( 'name' ),
+			'{site_title}'          => get_bloginfo( 'name' ),
 		);
 		// Handle form_name data.
 		if ( strpos( $content, '{form_name}' ) !== false ) {
@@ -1617,260 +1634,259 @@ function forminator_remove_prefixes( $field_id ) {
  * @return array
  */
 function forminator_get_countries_list() {
-	return apply_filters(
-		'forminator_countries_list',
-		array(
-			'AF' => esc_html__( 'Afghanistan', 'forminator' ),
-			'AL' => esc_html__( 'Albania', 'forminator' ),
-			'DZ' => esc_html__( 'Algeria', 'forminator' ),
-			'AS' => esc_html__( 'American Samoa', 'forminator' ),
-			'AD' => esc_html__( 'Andorra', 'forminator' ),
-			'AO' => esc_html__( 'Angola', 'forminator' ),
-			'AI' => esc_html__( 'Anguilla', 'forminator' ),
-			'AQ' => esc_html__( 'Antarctica', 'forminator' ),
-			'AG' => esc_html__( 'Antigua and Barbuda', 'forminator' ),
-			'AR' => esc_html__( 'Argentina', 'forminator' ),
-			'AM' => esc_html__( 'Armenia', 'forminator' ),
-			'AU' => esc_html__( 'Australia', 'forminator' ),
-			'AW' => esc_html__( 'Aruba', 'forminator' ),
-			'AT' => esc_html__( 'Austria', 'forminator' ),
-			'AZ' => esc_html__( 'Azerbaijan', 'forminator' ),
-			'BS' => esc_html__( 'Bahamas', 'forminator' ),
-			'BH' => esc_html__( 'Bahrain', 'forminator' ),
-			'BD' => esc_html__( 'Bangladesh', 'forminator' ),
-			'BB' => esc_html__( 'Barbados', 'forminator' ),
-			'BY' => esc_html__( 'Belarus', 'forminator' ),
-			'BE' => esc_html__( 'Belgium', 'forminator' ),
-			'BZ' => esc_html__( 'Belize', 'forminator' ),
-			'BJ' => esc_html__( 'Benin', 'forminator' ),
-			'BM' => esc_html__( 'Bermuda', 'forminator' ),
-			'BT' => esc_html__( 'Bhutan', 'forminator' ),
-			'BO' => esc_html__( 'Bolivia', 'forminator' ),
-			'BA' => esc_html__( 'Bosnia and Herzegovina', 'forminator' ),
-			'BW' => esc_html__( 'Botswana', 'forminator' ),
-			'BV' => esc_html__( 'Bouvet Island', 'forminator' ),
-			'BR' => esc_html__( 'Brazil', 'forminator' ),
-			'IO' => esc_html__( 'British Indian Ocean Territory', 'forminator' ),
-			'BN' => esc_html__( 'Brunei', 'forminator' ),
-			'BG' => esc_html__( 'Bulgaria', 'forminator' ),
-			'BF' => esc_html__( 'Burkina Faso', 'forminator' ),
-			'BI' => esc_html__( 'Burundi', 'forminator' ),
-			'KH' => esc_html__( 'Cambodia', 'forminator' ),
-			'CM' => esc_html__( 'Cameroon', 'forminator' ),
-			'CA' => esc_html__( 'Canada', 'forminator' ),
-			'CV' => esc_html__( 'Cabo Verde', 'forminator' ),
-			'KY' => esc_html__( 'Cayman Islands', 'forminator' ),
-			'CF' => esc_html__( 'Central African Republic', 'forminator' ),
-			'TD' => esc_html__( 'Chad', 'forminator' ),
-			'CL' => esc_html__( 'Chile', 'forminator' ),
-			'CN' => html_entity_decode( esc_html__( 'China, People\'s Republic of', 'forminator' ), ENT_QUOTES ),
-			'CX' => esc_html__( 'Christmas Island', 'forminator' ),
-			'CC' => esc_html__( 'Cocos Islands', 'forminator' ),
-			'CO' => esc_html__( 'Colombia', 'forminator' ),
-			'KM' => esc_html__( 'Comoros', 'forminator' ),
-			'CD' => esc_html__( 'Congo, Democratic Republic of the', 'forminator' ),
-			'CG' => esc_html__( 'Congo, Republic of the', 'forminator' ),
-			'CK' => esc_html__( 'Cook Islands', 'forminator' ),
-			'CR' => esc_html__( 'Costa Rica', 'forminator' ),
-			'CI' => html_entity_decode( esc_html__( 'Côte d\'Ivoire', 'forminator' ), ENT_QUOTES ),
-			'HR' => esc_html__( 'Croatia', 'forminator' ),
-			'CU' => esc_html__( 'Cuba', 'forminator' ),
-			'CW' => esc_html__( 'Curaçao', 'forminator' ),
-			'CY' => esc_html__( 'Cyprus', 'forminator' ),
-			'CZ' => esc_html__( 'Czech Republic', 'forminator' ),
-			'DK' => esc_html__( 'Denmark', 'forminator' ),
-			'DJ' => esc_html__( 'Djibouti', 'forminator' ),
-			'DM' => esc_html__( 'Dominica', 'forminator' ),
-			'DO' => esc_html__( 'Dominican Republic', 'forminator' ),
-			'TL' => esc_html__( 'East Timor', 'forminator' ),
-			'EC' => esc_html__( 'Ecuador', 'forminator' ),
-			'EG' => esc_html__( 'Egypt', 'forminator' ),
-			'SV' => esc_html__( 'El Salvador', 'forminator' ),
-			'GQ' => esc_html__( 'Equatorial Guinea', 'forminator' ),
-			'ER' => esc_html__( 'Eritrea', 'forminator' ),
-			'EE' => esc_html__( 'Estonia', 'forminator' ),
-			'ET' => esc_html__( 'Ethiopia', 'forminator' ),
-			'FK' => esc_html__( 'Falkland Islands', 'forminator' ),
-			'FO' => esc_html__( 'Faroe Islands', 'forminator' ),
-			'FJ' => esc_html__( 'Fiji', 'forminator' ),
-			'FI' => esc_html__( 'Finland', 'forminator' ),
-			'FR' => esc_html__( 'France', 'forminator' ),
-			'FX' => esc_html__( 'France, Metropolitan', 'forminator' ),
-			'GF' => esc_html__( 'French Guiana', 'forminator' ),
-			'PF' => esc_html__( 'French Polynesia', 'forminator' ),
-			'TF' => esc_html__( 'French South Territories', 'forminator' ),
-			'GA' => esc_html__( 'Gabon', 'forminator' ),
-			'GM' => esc_html__( 'Gambia', 'forminator' ),
-			'GE' => esc_html__( 'Georgia', 'forminator' ),
-			'DE' => esc_html__( 'Germany', 'forminator' ),
-			'GG' => esc_html__( 'Guernsey', 'forminator' ),
-			'GH' => esc_html__( 'Ghana', 'forminator' ),
-			'GI' => esc_html__( 'Gibraltar', 'forminator' ),
-			'GR' => esc_html__( 'Greece', 'forminator' ),
-			'GL' => esc_html__( 'Greenland', 'forminator' ),
-			'GD' => esc_html__( 'Grenada', 'forminator' ),
-			'GP' => esc_html__( 'Guadeloupe', 'forminator' ),
-			'GU' => esc_html__( 'Guam', 'forminator' ),
-			'GT' => esc_html__( 'Guatemala', 'forminator' ),
-			'GN' => esc_html__( 'Guinea', 'forminator' ),
-			'GW' => esc_html__( 'Guinea-Bissau', 'forminator' ),
-			'GY' => esc_html__( 'Guyana', 'forminator' ),
-			'HT' => esc_html__( 'Haiti', 'forminator' ),
-			'HM' => esc_html__( 'Heard Island And Mcdonald Island', 'forminator' ),
-			'HN' => esc_html__( 'Honduras', 'forminator' ),
-			'HK' => esc_html__( 'Hong Kong', 'forminator' ),
-			'HU' => esc_html__( 'Hungary', 'forminator' ),
-			'IS' => esc_html__( 'Iceland', 'forminator' ),
-			'IN' => esc_html__( 'India', 'forminator' ),
-			'ID' => esc_html__( 'Indonesia', 'forminator' ),
-			'IR' => esc_html__( 'Iran', 'forminator' ),
-			'IQ' => esc_html__( 'Iraq', 'forminator' ),
-			'IE' => esc_html__( 'Ireland', 'forminator' ),
-			'IL' => esc_html__( 'Israel', 'forminator' ),
-			'IT' => esc_html__( 'Italy', 'forminator' ),
-			'JM' => esc_html__( 'Jamaica', 'forminator' ),
-			'JP' => esc_html__( 'Japan', 'forminator' ),
-			'JE' => esc_html__( 'Jersey', 'forminator' ),
-			'JT' => esc_html__( 'Johnston Island', 'forminator' ),
-			'JO' => esc_html__( 'Jordan', 'forminator' ),
-			'KZ' => esc_html__( 'Kazakhstan', 'forminator' ),
-			'KE' => esc_html__( 'Kenya', 'forminator' ),
-			'KI' => esc_html__( 'Kiribati', 'forminator' ),
-			'KP' => html_entity_decode( esc_html__( 'Korea, Democratic People\'s Republic of', 'forminator' ), ENT_QUOTES ),
-			'KR' => esc_html__( 'Korea, Republic of', 'forminator' ),
-			'XK' => esc_html__( 'Kosovo', 'forminator' ),
-			'KW' => esc_html__( 'Kuwait', 'forminator' ),
-			'KG' => esc_html__( 'Kyrgyzstan', 'forminator' ),
-			'LA' => html_entity_decode( esc_html__( 'Lao People\'s Democratic Republic', 'forminator' ), ENT_QUOTES ),
-			'LV' => esc_html__( 'Latvia', 'forminator' ),
-			'LB' => esc_html__( 'Lebanon', 'forminator' ),
-			'LS' => esc_html__( 'Lesotho', 'forminator' ),
-			'LR' => esc_html__( 'Liberia', 'forminator' ),
-			'LY' => esc_html__( 'Libya', 'forminator' ),
-			'LI' => esc_html__( 'Liechtenstein', 'forminator' ),
-			'LT' => esc_html__( 'Lithuania', 'forminator' ),
-			'LU' => esc_html__( 'Luxembourg', 'forminator' ),
-			'MO' => esc_html__( 'Macau', 'forminator' ),
-			'MK' => esc_html__( 'North Macedonia', 'forminator' ),
-			'MG' => esc_html__( 'Madagascar', 'forminator' ),
-			'MW' => esc_html__( 'Malawi', 'forminator' ),
-			'MY' => esc_html__( 'Malaysia', 'forminator' ),
-			'MV' => esc_html__( 'Maldives', 'forminator' ),
-			'ML' => esc_html__( 'Mali', 'forminator' ),
-			'MT' => esc_html__( 'Malta', 'forminator' ),
-			'MH' => esc_html__( 'Marshall Islands', 'forminator' ),
-			'MQ' => esc_html__( 'Martinique', 'forminator' ),
-			'MR' => esc_html__( 'Mauritania', 'forminator' ),
-			'MU' => esc_html__( 'Mauritius', 'forminator' ),
-			'YT' => esc_html__( 'Mayotte', 'forminator' ),
-			'MX' => esc_html__( 'Mexico', 'forminator' ),
-			'FM' => esc_html__( 'Micronesia', 'forminator' ),
-			'MD' => esc_html__( 'Moldova', 'forminator' ),
-			'MC' => esc_html__( 'Monaco', 'forminator' ),
-			'MN' => esc_html__( 'Mongolia', 'forminator' ),
-			'MS' => esc_html__( 'Montserrat', 'forminator' ),
-			'ME' => esc_html__( 'Montenegro', 'forminator' ),
-			'MA' => esc_html__( 'Morocco', 'forminator' ),
-			'MZ' => esc_html__( 'Mozambique', 'forminator' ),
-			'MM' => esc_html__( 'Myanmar', 'forminator' ),
-			'NA' => esc_html__( 'Namibia', 'forminator' ),
-			'NR' => esc_html__( 'Nauru', 'forminator' ),
-			'NP' => esc_html__( 'Nepal', 'forminator' ),
-			'NL' => esc_html__( 'Netherlands', 'forminator' ),
-			'AN' => esc_html__( 'Netherlands Antilles', 'forminator' ),
-			'NC' => esc_html__( 'New Caledonia', 'forminator' ),
-			'NZ' => esc_html__( 'New Zealand', 'forminator' ),
-			'NI' => esc_html__( 'Nicaragua', 'forminator' ),
-			'NE' => esc_html__( 'Niger', 'forminator' ),
-			'NG' => esc_html__( 'Nigeria', 'forminator' ),
-			'NU' => esc_html__( 'Niue', 'forminator' ),
-			'NF' => esc_html__( 'Norfolk Island', 'forminator' ),
-			'MP' => esc_html__( 'Northern Mariana Islands', 'forminator' ),
-			'NO' => esc_html__( 'Norway', 'forminator' ),
-			'OM' => esc_html__( 'Oman', 'forminator' ),
-			'PK' => esc_html__( 'Pakistan', 'forminator' ),
-			'PW' => esc_html__( 'Palau', 'forminator' ),
-			'PS' => esc_html__( 'Palestine, State of', 'forminator' ),
-			'PA' => esc_html__( 'Panama', 'forminator' ),
-			'PG' => esc_html__( 'Papua New Guinea', 'forminator' ),
-			'PY' => esc_html__( 'Paraguay', 'forminator' ),
-			'PE' => esc_html__( 'Peru', 'forminator' ),
-			'PH' => esc_html__( 'Philippines', 'forminator' ),
-			'PN' => esc_html__( 'Pitcairn Islands', 'forminator' ),
-			'PL' => esc_html__( 'Poland', 'forminator' ),
-			'PT' => esc_html__( 'Portugal', 'forminator' ),
-			'PR' => esc_html__( 'Puerto Rico', 'forminator' ),
-			'QA' => esc_html__( 'Qatar', 'forminator' ),
-			'RE' => esc_html__( 'Reunion Island', 'forminator' ),
-			'RO' => esc_html__( 'Romania', 'forminator' ),
-			'RU' => esc_html__( 'Russia', 'forminator' ),
-			'RW' => esc_html__( 'Rwanda', 'forminator' ),
-			'KN' => esc_html__( 'Saint Kitts and Nevis', 'forminator' ),
-			'LC' => esc_html__( 'Saint Lucia', 'forminator' ),
-			'VC' => esc_html__( 'Saint Vincent and the Grenadines', 'forminator' ),
-			'WS' => esc_html__( 'Samoa', 'forminator' ),
-			'SH' => esc_html__( 'Saint Helena', 'forminator' ),
-			'PM' => html_entity_decode( esc_html__( 'Saint Pierre & Miquelon', 'forminator' ), ENT_QUOTES ),
-			'SM' => esc_html__( 'San Marino', 'forminator' ),
-			'ST' => esc_html__( 'Sao Tome and Principe', 'forminator' ),
-			'SA' => esc_html__( 'Saudi Arabia', 'forminator' ),
-			'SN' => esc_html__( 'Senegal', 'forminator' ),
-			'RS' => esc_html__( 'Serbia', 'forminator' ),
-			'SC' => esc_html__( 'Seychelles', 'forminator' ),
-			'SL' => esc_html__( 'Sierra Leone', 'forminator' ),
-			'SG' => esc_html__( 'Singapore', 'forminator' ),
-			'MF' => esc_html__( 'Sint Maarten', 'forminator' ),
-			'SK' => esc_html__( 'Slovakia', 'forminator' ),
-			'SI' => esc_html__( 'Slovenia', 'forminator' ),
-			'SB' => esc_html__( 'Solomon Islands', 'forminator' ),
-			'SO' => esc_html__( 'Somalia', 'forminator' ),
-			'ZA' => esc_html__( 'South Africa', 'forminator' ),
-			'GS' => esc_html__( 'South Georgia and South Sandwich', 'forminator' ),
-			'ES' => esc_html__( 'Spain', 'forminator' ),
-			'LK' => esc_html__( 'Sri Lanka', 'forminator' ),
-			'XX' => esc_html__( 'Stateless Persons', 'forminator' ),
-			'SD' => esc_html__( 'Sudan', 'forminator' ),
-			'SS' => esc_html__( 'Sudan, South', 'forminator' ),
-			'SR' => esc_html__( 'Suriname', 'forminator' ),
-			'SJ' => esc_html__( 'Svalbard and Jan Mayen', 'forminator' ),
-			'SZ' => esc_html__( 'Swaziland', 'forminator' ),
-			'SE' => esc_html__( 'Sweden', 'forminator' ),
-			'CH' => esc_html__( 'Switzerland', 'forminator' ),
-			'SY' => esc_html__( 'Syria', 'forminator' ),
-			'TW' => esc_html__( 'Taiwan, Republic of China', 'forminator' ),
-			'TJ' => esc_html__( 'Tajikistan', 'forminator' ),
-			'TZ' => esc_html__( 'Tanzania', 'forminator' ),
-			'TH' => esc_html__( 'Thailand', 'forminator' ),
-			'TG' => esc_html__( 'Togo', 'forminator' ),
-			'TK' => esc_html__( 'Tokelau', 'forminator' ),
-			'TO' => esc_html__( 'Tonga', 'forminator' ),
-			'TT' => esc_html__( 'Trinidad and Tobago', 'forminator' ),
-			'TN' => esc_html__( 'Tunisia', 'forminator' ),
-			'TR' => esc_html__( 'Turkey', 'forminator' ),
-			'TM' => esc_html__( 'Turkmenistan', 'forminator' ),
-			'TC' => esc_html__( 'Turks And Caicos Islands', 'forminator' ),
-			'TV' => esc_html__( 'Tuvalu', 'forminator' ),
-			'UG' => esc_html__( 'Uganda', 'forminator' ),
-			'UA' => esc_html__( 'Ukraine', 'forminator' ),
-			'AE' => esc_html__( 'United Arab Emirates', 'forminator' ),
-			'GB' => esc_html__( 'United Kingdom', 'forminator' ),
-			'UM' => esc_html__( 'US Minor Outlying Islands', 'forminator' ),
-			'US' => esc_html__( 'United States of America (USA)', 'forminator' ),
-			'UY' => esc_html__( 'Uruguay', 'forminator' ),
-			'UZ' => esc_html__( 'Uzbekistan', 'forminator' ),
-			'VU' => esc_html__( 'Vanuatu', 'forminator' ),
-			'VA' => esc_html__( 'Vatican City', 'forminator' ),
-			'VE' => esc_html__( 'Venezuela', 'forminator' ),
-			'VN' => esc_html__( 'Vietnam', 'forminator' ),
-			'VG' => esc_html__( 'Virgin Islands, British', 'forminator' ),
-			'VI' => esc_html__( 'Virgin Islands, U.S.', 'forminator' ),
-			'WF' => esc_html__( 'Wallis And Futuna Islands', 'forminator' ),
-			'EH' => esc_html__( 'Western Sahara', 'forminator' ),
-			'YE' => esc_html__( 'Yemen', 'forminator' ),
-			'ZM' => esc_html__( 'Zambia', 'forminator' ),
-			'ZW' => esc_html__( 'Zimbabwe', 'forminator' ),
-		)
+	$countries = array(
+		'AF' => esc_html__( 'Afghanistan', 'forminator' ),
+		'AL' => esc_html__( 'Albania', 'forminator' ),
+		'DZ' => esc_html__( 'Algeria', 'forminator' ),
+		'AS' => esc_html__( 'American Samoa', 'forminator' ),
+		'AD' => esc_html__( 'Andorra', 'forminator' ),
+		'AO' => esc_html__( 'Angola', 'forminator' ),
+		'AI' => esc_html__( 'Anguilla', 'forminator' ),
+		'AQ' => esc_html__( 'Antarctica', 'forminator' ),
+		'AG' => esc_html__( 'Antigua and Barbuda', 'forminator' ),
+		'AR' => esc_html__( 'Argentina', 'forminator' ),
+		'AM' => esc_html__( 'Armenia', 'forminator' ),
+		'AU' => esc_html__( 'Australia', 'forminator' ),
+		'AW' => esc_html__( 'Aruba', 'forminator' ),
+		'AT' => esc_html__( 'Austria', 'forminator' ),
+		'AZ' => esc_html__( 'Azerbaijan', 'forminator' ),
+		'BS' => esc_html__( 'Bahamas', 'forminator' ),
+		'BH' => esc_html__( 'Bahrain', 'forminator' ),
+		'BD' => esc_html__( 'Bangladesh', 'forminator' ),
+		'BB' => esc_html__( 'Barbados', 'forminator' ),
+		'BY' => esc_html__( 'Belarus', 'forminator' ),
+		'BE' => esc_html__( 'Belgium', 'forminator' ),
+		'BZ' => esc_html__( 'Belize', 'forminator' ),
+		'BJ' => esc_html__( 'Benin', 'forminator' ),
+		'BM' => esc_html__( 'Bermuda', 'forminator' ),
+		'BT' => esc_html__( 'Bhutan', 'forminator' ),
+		'BO' => esc_html__( 'Bolivia', 'forminator' ),
+		'BA' => esc_html__( 'Bosnia and Herzegovina', 'forminator' ),
+		'BW' => esc_html__( 'Botswana', 'forminator' ),
+		'BV' => esc_html__( 'Bouvet Island', 'forminator' ),
+		'BR' => esc_html__( 'Brazil', 'forminator' ),
+		'IO' => esc_html__( 'British Indian Ocean Territory', 'forminator' ),
+		'BN' => esc_html__( 'Brunei', 'forminator' ),
+		'BG' => esc_html__( 'Bulgaria', 'forminator' ),
+		'BF' => esc_html__( 'Burkina Faso', 'forminator' ),
+		'BI' => esc_html__( 'Burundi', 'forminator' ),
+		'KH' => esc_html__( 'Cambodia', 'forminator' ),
+		'CM' => esc_html__( 'Cameroon', 'forminator' ),
+		'CA' => esc_html__( 'Canada', 'forminator' ),
+		'CV' => esc_html__( 'Cabo Verde', 'forminator' ),
+		'KY' => esc_html__( 'Cayman Islands', 'forminator' ),
+		'CF' => esc_html__( 'Central African Republic', 'forminator' ),
+		'TD' => esc_html__( 'Chad', 'forminator' ),
+		'CL' => esc_html__( 'Chile', 'forminator' ),
+		'CN' => html_entity_decode( esc_html__( 'China, People\'s Republic of', 'forminator' ), ENT_QUOTES ),
+		'CX' => esc_html__( 'Christmas Island', 'forminator' ),
+		'CC' => esc_html__( 'Cocos Islands', 'forminator' ),
+		'CO' => esc_html__( 'Colombia', 'forminator' ),
+		'KM' => esc_html__( 'Comoros', 'forminator' ),
+		'CD' => esc_html__( 'Congo, Democratic Republic of the', 'forminator' ),
+		'CG' => esc_html__( 'Congo, Republic of the', 'forminator' ),
+		'CK' => esc_html__( 'Cook Islands', 'forminator' ),
+		'CR' => esc_html__( 'Costa Rica', 'forminator' ),
+		'CI' => html_entity_decode( esc_html__( 'Côte d\'Ivoire', 'forminator' ), ENT_QUOTES ),
+		'HR' => esc_html__( 'Croatia', 'forminator' ),
+		'CU' => esc_html__( 'Cuba', 'forminator' ),
+		'CW' => esc_html__( 'Curaçao', 'forminator' ),
+		'CY' => esc_html__( 'Cyprus', 'forminator' ),
+		'CZ' => esc_html__( 'Czech Republic', 'forminator' ),
+		'DK' => esc_html__( 'Denmark', 'forminator' ),
+		'DJ' => esc_html__( 'Djibouti', 'forminator' ),
+		'DM' => esc_html__( 'Dominica', 'forminator' ),
+		'DO' => esc_html__( 'Dominican Republic', 'forminator' ),
+		'TL' => esc_html__( 'East Timor', 'forminator' ),
+		'EC' => esc_html__( 'Ecuador', 'forminator' ),
+		'EG' => esc_html__( 'Egypt', 'forminator' ),
+		'SV' => esc_html__( 'El Salvador', 'forminator' ),
+		'GQ' => esc_html__( 'Equatorial Guinea', 'forminator' ),
+		'ER' => esc_html__( 'Eritrea', 'forminator' ),
+		'EE' => esc_html__( 'Estonia', 'forminator' ),
+		'ET' => esc_html__( 'Ethiopia', 'forminator' ),
+		'FK' => esc_html__( 'Falkland Islands', 'forminator' ),
+		'FO' => esc_html__( 'Faroe Islands', 'forminator' ),
+		'FJ' => esc_html__( 'Fiji', 'forminator' ),
+		'FI' => esc_html__( 'Finland', 'forminator' ),
+		'FR' => esc_html__( 'France', 'forminator' ),
+		'FX' => esc_html__( 'France, Metropolitan', 'forminator' ),
+		'GF' => esc_html__( 'French Guiana', 'forminator' ),
+		'PF' => esc_html__( 'French Polynesia', 'forminator' ),
+		'TF' => esc_html__( 'French South Territories', 'forminator' ),
+		'GA' => esc_html__( 'Gabon', 'forminator' ),
+		'GM' => esc_html__( 'Gambia', 'forminator' ),
+		'GE' => esc_html__( 'Georgia', 'forminator' ),
+		'DE' => esc_html__( 'Germany', 'forminator' ),
+		'GG' => esc_html__( 'Guernsey', 'forminator' ),
+		'GH' => esc_html__( 'Ghana', 'forminator' ),
+		'GI' => esc_html__( 'Gibraltar', 'forminator' ),
+		'GR' => esc_html__( 'Greece', 'forminator' ),
+		'GL' => esc_html__( 'Greenland', 'forminator' ),
+		'GD' => esc_html__( 'Grenada', 'forminator' ),
+		'GP' => esc_html__( 'Guadeloupe', 'forminator' ),
+		'GU' => esc_html__( 'Guam', 'forminator' ),
+		'GT' => esc_html__( 'Guatemala', 'forminator' ),
+		'GN' => esc_html__( 'Guinea', 'forminator' ),
+		'GW' => esc_html__( 'Guinea-Bissau', 'forminator' ),
+		'GY' => esc_html__( 'Guyana', 'forminator' ),
+		'HT' => esc_html__( 'Haiti', 'forminator' ),
+		'HM' => esc_html__( 'Heard Island And Mcdonald Island', 'forminator' ),
+		'HN' => esc_html__( 'Honduras', 'forminator' ),
+		'HK' => esc_html__( 'Hong Kong', 'forminator' ),
+		'HU' => esc_html__( 'Hungary', 'forminator' ),
+		'IS' => esc_html__( 'Iceland', 'forminator' ),
+		'IN' => esc_html__( 'India', 'forminator' ),
+		'ID' => esc_html__( 'Indonesia', 'forminator' ),
+		'IR' => esc_html__( 'Iran', 'forminator' ),
+		'IQ' => esc_html__( 'Iraq', 'forminator' ),
+		'IE' => esc_html__( 'Ireland', 'forminator' ),
+		'IL' => esc_html__( 'Israel', 'forminator' ),
+		'IT' => esc_html__( 'Italy', 'forminator' ),
+		'JM' => esc_html__( 'Jamaica', 'forminator' ),
+		'JP' => esc_html__( 'Japan', 'forminator' ),
+		'JE' => esc_html__( 'Jersey', 'forminator' ),
+		'JT' => esc_html__( 'Johnston Island', 'forminator' ),
+		'JO' => esc_html__( 'Jordan', 'forminator' ),
+		'KZ' => esc_html__( 'Kazakhstan', 'forminator' ),
+		'KE' => esc_html__( 'Kenya', 'forminator' ),
+		'KI' => esc_html__( 'Kiribati', 'forminator' ),
+		'KP' => html_entity_decode( esc_html__( 'Korea, Democratic People\'s Republic of', 'forminator' ), ENT_QUOTES ),
+		'KR' => esc_html__( 'Korea, Republic of', 'forminator' ),
+		'XK' => esc_html__( 'Kosovo', 'forminator' ),
+		'KW' => esc_html__( 'Kuwait', 'forminator' ),
+		'KG' => esc_html__( 'Kyrgyzstan', 'forminator' ),
+		'LA' => html_entity_decode( esc_html__( 'Lao People\'s Democratic Republic', 'forminator' ), ENT_QUOTES ),
+		'LV' => esc_html__( 'Latvia', 'forminator' ),
+		'LB' => esc_html__( 'Lebanon', 'forminator' ),
+		'LS' => esc_html__( 'Lesotho', 'forminator' ),
+		'LR' => esc_html__( 'Liberia', 'forminator' ),
+		'LY' => esc_html__( 'Libya', 'forminator' ),
+		'LI' => esc_html__( 'Liechtenstein', 'forminator' ),
+		'LT' => esc_html__( 'Lithuania', 'forminator' ),
+		'LU' => esc_html__( 'Luxembourg', 'forminator' ),
+		'MO' => esc_html__( 'Macau', 'forminator' ),
+		'MK' => esc_html__( 'North Macedonia', 'forminator' ),
+		'MG' => esc_html__( 'Madagascar', 'forminator' ),
+		'MW' => esc_html__( 'Malawi', 'forminator' ),
+		'MY' => esc_html__( 'Malaysia', 'forminator' ),
+		'MV' => esc_html__( 'Maldives', 'forminator' ),
+		'ML' => esc_html__( 'Mali', 'forminator' ),
+		'MT' => esc_html__( 'Malta', 'forminator' ),
+		'MH' => esc_html__( 'Marshall Islands', 'forminator' ),
+		'MQ' => esc_html__( 'Martinique', 'forminator' ),
+		'MR' => esc_html__( 'Mauritania', 'forminator' ),
+		'MU' => esc_html__( 'Mauritius', 'forminator' ),
+		'YT' => esc_html__( 'Mayotte', 'forminator' ),
+		'MX' => esc_html__( 'Mexico', 'forminator' ),
+		'FM' => esc_html__( 'Micronesia', 'forminator' ),
+		'MD' => esc_html__( 'Moldova', 'forminator' ),
+		'MC' => esc_html__( 'Monaco', 'forminator' ),
+		'MN' => esc_html__( 'Mongolia', 'forminator' ),
+		'MS' => esc_html__( 'Montserrat', 'forminator' ),
+		'ME' => esc_html__( 'Montenegro', 'forminator' ),
+		'MA' => esc_html__( 'Morocco', 'forminator' ),
+		'MZ' => esc_html__( 'Mozambique', 'forminator' ),
+		'MM' => esc_html__( 'Myanmar', 'forminator' ),
+		'NA' => esc_html__( 'Namibia', 'forminator' ),
+		'NR' => esc_html__( 'Nauru', 'forminator' ),
+		'NP' => esc_html__( 'Nepal', 'forminator' ),
+		'NL' => esc_html__( 'Netherlands', 'forminator' ),
+		'AN' => esc_html__( 'Netherlands Antilles', 'forminator' ),
+		'NC' => esc_html__( 'New Caledonia', 'forminator' ),
+		'NZ' => esc_html__( 'New Zealand', 'forminator' ),
+		'NI' => esc_html__( 'Nicaragua', 'forminator' ),
+		'NE' => esc_html__( 'Niger', 'forminator' ),
+		'NG' => esc_html__( 'Nigeria', 'forminator' ),
+		'NU' => esc_html__( 'Niue', 'forminator' ),
+		'NF' => esc_html__( 'Norfolk Island', 'forminator' ),
+		'MP' => esc_html__( 'Northern Mariana Islands', 'forminator' ),
+		'NO' => esc_html__( 'Norway', 'forminator' ),
+		'OM' => esc_html__( 'Oman', 'forminator' ),
+		'PK' => esc_html__( 'Pakistan', 'forminator' ),
+		'PW' => esc_html__( 'Palau', 'forminator' ),
+		'PS' => esc_html__( 'Palestine, State of', 'forminator' ),
+		'PA' => esc_html__( 'Panama', 'forminator' ),
+		'PG' => esc_html__( 'Papua New Guinea', 'forminator' ),
+		'PY' => esc_html__( 'Paraguay', 'forminator' ),
+		'PE' => esc_html__( 'Peru', 'forminator' ),
+		'PH' => esc_html__( 'Philippines', 'forminator' ),
+		'PN' => esc_html__( 'Pitcairn Islands', 'forminator' ),
+		'PL' => esc_html__( 'Poland', 'forminator' ),
+		'PT' => esc_html__( 'Portugal', 'forminator' ),
+		'PR' => esc_html__( 'Puerto Rico', 'forminator' ),
+		'QA' => esc_html__( 'Qatar', 'forminator' ),
+		'RE' => esc_html__( 'Reunion Island', 'forminator' ),
+		'RO' => esc_html__( 'Romania', 'forminator' ),
+		'RU' => esc_html__( 'Russia', 'forminator' ),
+		'RW' => esc_html__( 'Rwanda', 'forminator' ),
+		'KN' => esc_html__( 'Saint Kitts and Nevis', 'forminator' ),
+		'LC' => esc_html__( 'Saint Lucia', 'forminator' ),
+		'VC' => esc_html__( 'Saint Vincent and the Grenadines', 'forminator' ),
+		'WS' => esc_html__( 'Samoa', 'forminator' ),
+		'SH' => esc_html__( 'Saint Helena', 'forminator' ),
+		'PM' => html_entity_decode( esc_html__( 'Saint Pierre & Miquelon', 'forminator' ), ENT_QUOTES ),
+		'SM' => esc_html__( 'San Marino', 'forminator' ),
+		'ST' => esc_html__( 'Sao Tome and Principe', 'forminator' ),
+		'SA' => esc_html__( 'Saudi Arabia', 'forminator' ),
+		'SN' => esc_html__( 'Senegal', 'forminator' ),
+		'RS' => esc_html__( 'Serbia', 'forminator' ),
+		'SC' => esc_html__( 'Seychelles', 'forminator' ),
+		'SL' => esc_html__( 'Sierra Leone', 'forminator' ),
+		'SG' => esc_html__( 'Singapore', 'forminator' ),
+		'MF' => esc_html__( 'Sint Maarten', 'forminator' ),
+		'SK' => esc_html__( 'Slovakia', 'forminator' ),
+		'SI' => esc_html__( 'Slovenia', 'forminator' ),
+		'SB' => esc_html__( 'Solomon Islands', 'forminator' ),
+		'SO' => esc_html__( 'Somalia', 'forminator' ),
+		'ZA' => esc_html__( 'South Africa', 'forminator' ),
+		'GS' => esc_html__( 'South Georgia and South Sandwich', 'forminator' ),
+		'ES' => esc_html__( 'Spain', 'forminator' ),
+		'LK' => esc_html__( 'Sri Lanka', 'forminator' ),
+		'XX' => esc_html__( 'Stateless Persons', 'forminator' ),
+		'SD' => esc_html__( 'Sudan', 'forminator' ),
+		'SS' => esc_html__( 'Sudan, South', 'forminator' ),
+		'SR' => esc_html__( 'Suriname', 'forminator' ),
+		'SJ' => esc_html__( 'Svalbard and Jan Mayen', 'forminator' ),
+		'SZ' => esc_html__( 'Swaziland', 'forminator' ),
+		'SE' => esc_html__( 'Sweden', 'forminator' ),
+		'CH' => esc_html__( 'Switzerland', 'forminator' ),
+		'SY' => esc_html__( 'Syria', 'forminator' ),
+		'TW' => esc_html__( 'Taiwan, Republic of China', 'forminator' ),
+		'TJ' => esc_html__( 'Tajikistan', 'forminator' ),
+		'TZ' => esc_html__( 'Tanzania', 'forminator' ),
+		'TH' => esc_html__( 'Thailand', 'forminator' ),
+		'TG' => esc_html__( 'Togo', 'forminator' ),
+		'TK' => esc_html__( 'Tokelau', 'forminator' ),
+		'TO' => esc_html__( 'Tonga', 'forminator' ),
+		'TT' => esc_html__( 'Trinidad and Tobago', 'forminator' ),
+		'TN' => esc_html__( 'Tunisia', 'forminator' ),
+		'TR' => esc_html__( 'Turkey', 'forminator' ),
+		'TM' => esc_html__( 'Turkmenistan', 'forminator' ),
+		'TC' => esc_html__( 'Turks And Caicos Islands', 'forminator' ),
+		'TV' => esc_html__( 'Tuvalu', 'forminator' ),
+		'UG' => esc_html__( 'Uganda', 'forminator' ),
+		'UA' => esc_html__( 'Ukraine', 'forminator' ),
+		'AE' => esc_html__( 'United Arab Emirates', 'forminator' ),
+		'GB' => esc_html__( 'United Kingdom', 'forminator' ),
+		'UM' => esc_html__( 'US Minor Outlying Islands', 'forminator' ),
+		'US' => esc_html__( 'United States of America (USA)', 'forminator' ),
+		'UY' => esc_html__( 'Uruguay', 'forminator' ),
+		'UZ' => esc_html__( 'Uzbekistan', 'forminator' ),
+		'VU' => esc_html__( 'Vanuatu', 'forminator' ),
+		'VA' => esc_html__( 'Vatican City', 'forminator' ),
+		'VE' => esc_html__( 'Venezuela', 'forminator' ),
+		'VN' => esc_html__( 'Vietnam', 'forminator' ),
+		'VG' => esc_html__( 'Virgin Islands, British', 'forminator' ),
+		'VI' => esc_html__( 'Virgin Islands, U.S.', 'forminator' ),
+		'WF' => esc_html__( 'Wallis And Futuna Islands', 'forminator' ),
+		'EH' => esc_html__( 'Western Sahara', 'forminator' ),
+		'YE' => esc_html__( 'Yemen', 'forminator' ),
+		'ZM' => esc_html__( 'Zambia', 'forminator' ),
+		'ZW' => esc_html__( 'Zimbabwe', 'forminator' ),
 	);
+	asort( $countries );
+	return apply_filters( 'forminator_countries_list', $countries );
 }
 
 /**
@@ -2017,7 +2033,6 @@ function forminator_get_ext_types() {
 			'tar'     => 'application/x-tar',
 			'zip'     => 'application/zip',
 			'gz|gzip' => 'application/x-gzip',
-			'rar'     => 'application/rar',
 			'7z'      => 'application/x-7z-compressed',
 		),
 		'text'        => array(
@@ -2539,16 +2554,15 @@ function forminator_get_entry_field_value( $entry, $mapper, $sub_meta_key = '', 
 /**
  * Forminator upload path
  *
- * @return string|null
+ * @return string|null|WP_Error
  */
 function forminator_upload_root_temp() {
-	$dir = wp_upload_dir();
-
-	if ( $dir['error'] ) {
-		return null;
+	$upload_root_path = forminator_upload_root();
+	if ( is_wp_error( $upload_root_path ) ) {
+		return $upload_root_path;
 	}
 
-	return forminator_upload_root() . 'temp';
+	return $upload_root_path . 'temp';
 }
 
 /**
@@ -2556,13 +2570,13 @@ function forminator_upload_root_temp() {
  *
  * @param string $base Base type.
  *
- * @return string|null
+ * @return string|null|WP_Error
  */
 function forminator_upload_root( $base = 'path' ) {
 	$dir = wp_upload_dir();
 
 	if ( $dir['error'] ) {
-		return null;
+		return new WP_Error( 'upload_dir_error', $dir['error'] );
 	}
 
 	$upload_root = forminator_custom_upload_root( $dir, $base );
@@ -2629,6 +2643,9 @@ function forminator_get_upload_path( $form_id, $dir = '', $base = 'path' ) {
 	$sub_folder = apply_filters( 'forminator_custom_upload_subfolder', $sub_folder, $form_id, $dir );
 
 	$upload_root = forminator_upload_root( $base );
+	if ( is_wp_error( $upload_root ) ) {
+		$upload_root = null;
+	}
 
 	return wp_normalize_path( $upload_root . $sub_folder );
 }
@@ -2791,6 +2808,25 @@ function forminator_trim_array( $value ) {
 }
 
 /**
+ * Convert special HTML entities back to characters
+ *
+ * @since 1.40
+ * @param array $value Value array.
+ * @return array
+ */
+function forminator_htmlspecialchars_decode_array( $value ) {
+	foreach ( $value as $key => $val ) {
+		if ( is_array( $val ) ) {
+			$value[ $key ] = forminator_htmlspecialchars_decode_array( $val );
+		} else {
+			$value[ $key ] = htmlspecialchars_decode( $val );
+		}
+	}
+
+	return $value;
+}
+
+/**
  * Get cloned fields keys
  *
  * @param object $entry Entry object.
@@ -2890,7 +2926,7 @@ function forminator_allowed_mime_types( $mimes = array(), $allow = true ) {
 		$mimes = get_allowed_mime_types();
 	}
 	if ( ! $allow ) {
-		$filters = array( 'htm|html', 'js', 'jse', 'jar', 'php', 'php3', 'php4', 'php5', 'phtml', 'svg', 'swf', 'exe', 'html', 'htm', 'shtml', 'xhtml', 'xml', 'css', 'asp', 'aspx', 'jsp', 'sql', 'hta', 'dll', 'bat', 'com', 'sh', 'bash', 'py', 'pl', 'dfxp' );
+		$filters = array( 'htm|html', 'js', 'jse', 'jar', 'php', 'php3', 'php4', 'php5', 'phtml', 'svg', 'swf', 'exe', 'html', 'htm', 'shtml', 'xhtml', 'xml', 'css', 'asp', 'aspx', 'jsp', 'sql', 'hta', 'dll', 'bat', 'com', 'sh', 'bash', 'py', 'pl', 'dfxp', 'rar' );
 		foreach ( array_keys( $mimes ) as $mime_key ) {
 			$key = strtolower( $mime_key );
 			if ( in_array( $key, $filters, true ) ) {

@@ -3,15 +3,15 @@ if (!defined('ABSPATH')) exit;
 class ActionScheduler_Action {
  protected $hook = '';
  protected $args = array();
- protected $schedule = NULL;
+ protected $schedule = null;
  protected $group = '';
  protected $priority = 10;
- public function __construct( $hook, array $args = array(), ActionScheduler_Schedule $schedule = NULL, $group = '' ) {
+ public function __construct( $hook, array $args = array(), ?ActionScheduler_Schedule $schedule = null, $group = '' ) {
  $schedule = empty( $schedule ) ? new ActionScheduler_NullSchedule() : $schedule;
- $this->set_hook($hook);
- $this->set_schedule($schedule);
- $this->set_args($args);
- $this->set_group($group);
+ $this->set_hook( $hook );
+ $this->set_schedule( $schedule );
+ $this->set_args( $args );
+ $this->set_group( $group );
  }
  public function execute() {
  $hook = $this->get_hook();
@@ -50,7 +50,7 @@ class ActionScheduler_Action {
  return $this->group;
  }
  public function is_finished() {
- return FALSE;
+ return false;
  }
  public function set_priority( $priority ) {
  if ( $priority < 0 ) {

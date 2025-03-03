@@ -56,10 +56,6 @@ class Forminator_Mixpanel_General extends Events {
 	 * @since 1.27.0
 	 */
 	public static function tracking_manual_export( $form_id, $form_type ) {
-		if ( ! self::is_tracking_active() ) {
-			return;
-		}
-
 		self::event_submission_export( $form_type, 'manual' );
 	}
 
@@ -74,10 +70,6 @@ class Forminator_Mixpanel_General extends Events {
 	 * @since 1.27.0
 	 */
 	public static function tracking_schedule_export( $form_id, $form_type, $data ) {
-		if ( ! self::is_tracking_active() ) {
-			return;
-		}
-
 		$schedule_active = isset( $data[ $form_id . $form_type ] ) ? $data[ $form_id . $form_type ] : array();
 
 		if ( ! $schedule_active['enabled'] ) {
@@ -96,10 +88,6 @@ class Forminator_Mixpanel_General extends Events {
 	 * @return void
 	 */
 	private static function event_form_import_export( $slug, $type ) {
-		if ( ! self::is_tracking_active() ) {
-			return;
-		}
-
 		self::track_event(
 			'form_import_export',
 			array(

@@ -101,7 +101,14 @@ if ( $this->total_entries() > 0 ) :
 					$detail_items = $detail['items'];
 
 					// Fix for Stripe OCS and Stripe old field to show only one.
-					$item_types = wp_list_pluck( $detail_items, 'type' );
+					$detail_items_with_type = array_filter(
+						$detail_items,
+						function ( $item ) {
+							return isset( $item['type'] );
+						}
+					);
+
+					$item_types = wp_list_pluck( $detail_items_with_type, 'type' );
 					if ( in_array( 'stripe-ocs', $item_types, true ) && in_array( 'stripe', $item_types, true ) ) {
 						$stripe_key = array_search( 'stripe', $item_types, true );
 

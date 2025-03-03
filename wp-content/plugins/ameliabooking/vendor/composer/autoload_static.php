@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit096070989325193e800ee239c958faf0
+class ComposerStaticInit3969dcac708556c6ef4cb85fbf632076
 {
     public static $files = array (
         '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
@@ -17,13 +17,13 @@ class ComposerStaticInit096070989325193e800ee239c958faf0
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         'c964ee0ededf28c96ebd9db5099ef910_am' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052_am' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
-        '383eaff206634a77a1be54e64e6459c7' => __DIR__ . '/..' . '/sabre/uri/lib/functions.php',
+        '383eaff206634a77a1be54e64e6459c7_am' => __DIR__ . '/..' . '/sabre/uri/lib/functions.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62_am' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
-        '3569eecfeed3bcf0bad3c998a494ecb8' => __DIR__ . '/..' . '/sabre/xml/lib/Deserializer/functions.php',
-        '93aa591bc4ca510c520999e34229ee79' => __DIR__ . '/..' . '/sabre/xml/lib/Serializer/functions.php',
+        '3569eecfeed3bcf0bad3c998a494ecb8_am' => __DIR__ . '/..' . '/sabre/xml/lib/Deserializer/functions.php',
+        '93aa591bc4ca510c520999e34229ee79_am' => __DIR__ . '/..' . '/sabre/xml/lib/Serializer/functions.php',
         'cf150f72bd303a2ff07711c9a70f2d53' => __DIR__ . '/..' . '/google/apiclient/src/Google/autoload.php',
     );
 
@@ -83,7 +83,6 @@ class ComposerStaticInit096070989325193e800ee239c958faf0
         'M' => 
         array (
             'Money\\' => 6,
-            'Microsoft\\Graph\\Test\\' => 21,
             'Microsoft\\Graph\\' => 16,
             'Masterminds\\' => 12,
         ),
@@ -117,6 +116,7 @@ class ComposerStaticInit096070989325193e800ee239c958faf0
         'B' => 
         array (
             'Box\\Spout\\' => 10,
+            'Beta\\Microsoft\\Graph\\' => 21,
         ),
         'A' => 
         array (
@@ -250,10 +250,6 @@ class ComposerStaticInit096070989325193e800ee239c958faf0
         array (
             0 => __DIR__ . '/..' . '/moneyphp/money/src',
         ),
-        'Microsoft\\Graph\\Test\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/microsoft/microsoft-graph/tests/Functional',
-        ),
         'Microsoft\\Graph\\' => 
         array (
             0 => __DIR__ . '/..' . '/microsoft/microsoft-graph/src',
@@ -313,6 +309,10 @@ class ComposerStaticInit096070989325193e800ee239c958faf0
         'Box\\Spout\\' => 
         array (
             0 => __DIR__ . '/..' . '/box/spout/src/Spout',
+        ),
+        'Beta\\Microsoft\\Graph\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/microsoft/microsoft-graph/src/Beta/Microsoft/Graph',
         ),
         'AmeliaStripe\\' => 
         array (
@@ -453,10 +453,10 @@ class ComposerStaticInit096070989325193e800ee239c958faf0
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit096070989325193e800ee239c958faf0::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit096070989325193e800ee239c958faf0::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit096070989325193e800ee239c958faf0::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit096070989325193e800ee239c958faf0::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3969dcac708556c6ef4cb85fbf632076::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3969dcac708556c6ef4cb85fbf632076::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit3969dcac708556c6ef4cb85fbf632076::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit3969dcac708556c6ef4cb85fbf632076::$classMap;
 
         }, null, ClassLoader::class);
     }

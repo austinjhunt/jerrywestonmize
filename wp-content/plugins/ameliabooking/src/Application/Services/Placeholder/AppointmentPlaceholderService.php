@@ -98,10 +98,12 @@ class AppointmentPlaceholderService extends PlaceholderService
                 '<a href="#">' . BackendStrings::getCommonStrings()['zoom_click_to_join'] . '</a>' : 'https://join_zoom_link.com',
             'zoom_host_url'           => $type === 'email' ?
                 '<a href="#">' . BackendStrings::getCommonStrings()['zoom_click_to_start'] . '</a>' : 'https://start_zoom_link.com',
-            'google_meet_url'          => $type === 'email' ?
+            'google_meet_url'         => $type === 'email' ?
                 '<a href="#">' . BackendStrings::getCommonStrings()['google_meet_join'] . '</a>' : 'https://join_google_meet_link.com',
-            'lesson_space_url'       => $type === 'email' ?
+            'lesson_space_url'        => $type === 'email' ?
                 '<a href="#">' . BackendStrings::getCommonStrings()['lesson_space_join'] . '</a>' : 'https://lessonspace.com/room-id',
+            'microsoft_teams_url'     => $type === 'email' ?
+                '<a href="#">' . BackendStrings::getCommonStrings()['microsoft_teams_join'] . '</a>' : 'https://join_microsoft_teams_link.com',
             'appointment_duration'    => $helperService->secondsToNiceDuration(1800),
             'appointment_deposit_payment'     => $helperService->getFormattedPrice(20),
             'appointment_status'      => BackendStrings::getCommonStrings()['approved'],
@@ -420,6 +422,13 @@ class AppointmentPlaceholderService extends PlaceholderService
                 : $appointment['googleMeetUrl'];
         }
 
+        $microsoftTeamsUrl = '';
+        if (array_key_exists('microsoftTeamsUrl', $appointment) && $appointment['microsoftTeamsUrl']) {
+            $microsoftTeamsUrl = $type === 'email' ?
+                '<a href="' . $appointment['microsoftTeamsUrl'] . '">' . BackendStrings::getCommonStrings()['microsoft_teams_join'] . '</a>'
+                : $appointment['microsoftTeamsUrl'];
+        }
+
         return [
             'appointment_id'         => !empty($appointment['id']) ? $appointment['id'] : '',
             'appointment_status'     => BackendStrings::getCommonStrings()[$appointment['status']],
@@ -440,6 +449,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                 '<a href="' . $zoomJoinUrl . '">' . BackendStrings::getCommonStrings()['zoom_click_to_join'] . '</a>'
                 : $zoomJoinUrl,
             'google_meet_url'        => $googleMeetUrl,
+            'microsoft_teams_url'    => $microsoftTeamsUrl,
             'time_zone'              => $timeZone,
         ];
     }

@@ -27,6 +27,10 @@ class WordPress {
     do_action($hookName, ...$arg);
   }
 
+  public function addFilter(string $hookName, callable $callback, int $priority = 10, int $acceptedArgs = 1): bool {
+    return add_filter($hookName, $callback, $priority, $acceptedArgs);
+  }
+
   /**
    * @param mixed $value
    * @param mixed ...$args
@@ -148,6 +152,7 @@ class WordPress {
   }
 
   /**
+   * @param 'names'|'objects' $output
    * @return string[]|\WP_Post_Type[]
    */
   public function getPostTypes(array $args = [], string $output = 'names', string $operator = 'and'): array {
@@ -159,6 +164,7 @@ class WordPress {
   }
 
   /**
+   * @param 'names'|'objects' $output
    * @param 'and'|'or' $operator
    * @return string[]|\WP_Taxonomy[]
    */

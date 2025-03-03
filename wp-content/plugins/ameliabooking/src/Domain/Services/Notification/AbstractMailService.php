@@ -19,15 +19,19 @@ class AbstractMailService
     /** @var string */
     protected $fromName;
 
+    /** @var string */
+    protected $replyTo;
+
     /**
      * AbstractMailService constructor.
      *
      * @param $from
      * @param $fromName
      */
-    public function __construct($from, $fromName)
+    public function __construct($from, $fromName, $replyTo)
     {
         $this->from = $from;
         $this->fromName = $fromName;
+        $this->replyTo = $replyTo;
     }
 }

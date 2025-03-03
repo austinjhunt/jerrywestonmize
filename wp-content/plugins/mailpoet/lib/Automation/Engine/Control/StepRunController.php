@@ -5,6 +5,7 @@ namespace MailPoet\Automation\Engine\Control;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Automation\Engine\Control\StepRunLogger;
 use MailPoet\Automation\Engine\Data\StepRunArgs;
 
 class StepRunController {
@@ -14,12 +15,17 @@ class StepRunController {
   /** @var StepRunArgs */
   private $stepRunArgs;
 
+  /** @var StepRunLogger */
+  private $stepRunLogger;
+
   public function __construct(
     StepScheduler $stepScheduler,
-    StepRunArgs $stepRunArgs
+    StepRunArgs $stepRunArgs,
+    StepRunLogger $stepRunLogger
   ) {
     $this->stepScheduler = $stepScheduler;
     $this->stepRunArgs = $stepRunArgs;
+    $this->stepRunLogger = $stepRunLogger;
   }
 
   public function scheduleProgress(int $timestamp = null): int {
@@ -36,5 +42,9 @@ class StepRunController {
 
   public function hasScheduledNextStep(): bool {
     return $this->stepScheduler->hasScheduledNextStep($this->stepRunArgs);
+  }
+
+  public function getRunLog(): StepRunLogger {
+    return $this->stepRunLogger;
   }
 }

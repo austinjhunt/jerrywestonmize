@@ -30,7 +30,11 @@ class Initializer {
  $editor_theme_json->merge( new \WP_Theme_JSON( $theme_json, 'default' ) );
  return $editor_theme_json;
  }
- public function allow_styles( array $allowed_styles ): array {
+ public function allow_styles( ?array $allowed_styles ): array {
+ // The styles can be null in some cases.
+ if ( ! is_array( $allowed_styles ) ) {
+ $allowed_styles = array();
+ }
  $allowed_styles[] = 'display';
  $allowed_styles[] = 'mso-padding-alt';
  $allowed_styles[] = 'mso-font-width';

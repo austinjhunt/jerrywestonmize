@@ -130,7 +130,6 @@ class Forminator_Email extends Forminator_Field {
 		$html        = '';
 		$id          = self::get_property( 'element_id', $field );
 		$name        = $id;
-		$design      = $this->get_form_style( $settings );
 		$id          = self::get_field_id( $id );
 		$required    = self::get_property( 'required', $field, false );
 		$ariareq     = 'false';
@@ -138,6 +137,8 @@ class Forminator_Email extends Forminator_Field {
 		$value       = esc_html( self::get_property( 'value', $field ) );
 		$label       = esc_html( self::get_property( 'field_label', $field ) );
 		$description = self::get_property( 'description', $field );
+
+		$descr_position = self::get_description_position( $field, $settings );
 
 		if ( (bool) $required ) {
 			$ariareq = 'true';
@@ -175,7 +176,7 @@ class Forminator_Email extends Forminator_Field {
 				$label,
 				$description,
 				$required,
-				$design
+				$descr_position
 			);
 
 		$html .= '</div>';

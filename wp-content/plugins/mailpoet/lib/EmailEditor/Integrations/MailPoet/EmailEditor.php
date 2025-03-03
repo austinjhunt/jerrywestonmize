@@ -6,15 +6,13 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\EmailEditor\Integrations\MailPoet\Patterns\PatternsController;
-use MailPoet\Features\FeaturesController;
+use MailPoet\EmailEditor\Integrations\MailPoet\Templates\TemplatesController;
 use MailPoet\WP\Functions as WPFunctions;
 
 class EmailEditor {
   const MAILPOET_EMAIL_POST_TYPE = 'mailpoet_email';
 
   private WPFunctions $wp;
-
-  private FeaturesController $featuresController;
 
   private EmailApiController $emailApiController;
 
@@ -28,30 +26,29 @@ class EmailEditor {
 
   private PersonalizationTagManager $personalizationTagManager;
 
+  private TemplatesController $templatesController;
+
   public function __construct(
     WPFunctions $wp,
-    FeaturesController $featuresController,
     EmailApiController $emailApiController,
     EditorPageRenderer $editorPageRenderer,
     EmailEditorPreviewEmail $emailEditorPreviewEmail,
     PatternsController $patternsController,
+    TemplatesController $templatesController,
     Cli $cli,
     PersonalizationTagManager $personalizationTagManager
   ) {
     $this->wp = $wp;
-    $this->featuresController = $featuresController;
     $this->emailApiController = $emailApiController;
     $this->editorPageRenderer = $editorPageRenderer;
     $this->patternsController = $patternsController;
+    $this->templatesController = $templatesController;
     $this->cli = $cli;
     $this->emailEditorPreviewEmail = $emailEditorPreviewEmail;
     $this->personalizationTagManager = $personalizationTagManager;
   }
 
   public function initialize(): void {
-    if (!$this->featuresController->isSupported(FeaturesController::GUTENBERG_EMAIL_EDITOR)) {
-      return;
-    }
     $this->cli->initialize();
     $this->wp->addFilter('mailpoet_email_editor_post_types', [$this, 'addEmailPostType']);
     $this->wp->addAction('rest_delete_mailpoet_email', [$this->emailApiController, 'trashEmail'], 10, 1);
@@ -59,6 +56,7 @@ class EmailEditor {
     $this->wp->addFilter('replace_editor', [$this, 'replaceEditor'], 10, 2);
     $this->wp->addFilter('mailpoet_email_editor_send_preview_email', [$this->emailEditorPreviewEmail, 'sendPreviewEmail'], 10, 1);
     $this->patternsController->registerPatterns();
+    $this->templatesController->initialize();
     $this->extendEmailPostApi();
     $this->personalizationTagManager->initialize();
   }

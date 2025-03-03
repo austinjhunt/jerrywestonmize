@@ -265,6 +265,30 @@ abstract class Forminator_Render_Form {
 		do_action( 'forminator_after_form_render', $id, $form_type, $post_id, $form_fields, $form_settings );
 	}
 
+
+	/**
+	 * Maybe wrap description
+	 *
+	 * @param string $html HTML.
+	 * @param string $description Description.
+	 * @param string $id ID.
+	 * @param string $descr_position Description position.
+	 *
+	 * @return string
+	 */
+	public function maybe_wrap_description( $html, $description, $id, $descr_position ) {
+		if ( empty( $html ) ) {
+			return $html;
+		}
+
+		if ( 'above' === $descr_position && 'none' === $this->get_form_design() ) {
+			$html = '<div>' . $html . '</div>';
+		}
+
+		return $html;
+	}
+
+
 	/**
 	 * Return form markup
 	 *
@@ -329,6 +353,8 @@ abstract class Forminator_Render_Form {
 			if ( $this->has_pagination() ) {
 				$draft_page = $this->get_draft_page();
 			}
+
+			add_filter( 'forminator_field_description', array( $this, 'maybe_wrap_description' ), 10, 4 );
 		}
 
 		// Markup Loader.
@@ -474,7 +500,7 @@ abstract class Forminator_Render_Form {
 			$post_id   = $this->get_post_id();
 
 			if ( ! $this->is_admin && forminator_global_tracking() ) {
-				$form_view->save_view( $id, $post_id, '' );
+				$form_view->save_view( $id, $post_id );
 			}
 		}
 

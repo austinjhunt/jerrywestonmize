@@ -100,6 +100,12 @@ class GetProviderCommandHandler extends CommandHandler
 
             $providerArray['googleCalendar']['calendarId'] = $googleCalService->getProviderGoogleCalendarId($provider);
         } catch (\Exception $e) {
+            $providerArray['googleCalendar']['calendarId'] = !empty($providerArray['googleCalendar']['calendarId'])
+                ? $providerArray['googleCalendar']['calendarId']
+                : null;
+
+            $providerArray['googleCalendar']['calendarList'] = [];
+
             $providerRepository->updateErrorColumn($providerId, $e->getMessage());
             $successfulGoogleConnection = false;
         }
@@ -111,6 +117,12 @@ class GetProviderCommandHandler extends CommandHandler
                 $provider
             );
         } catch (\Exception $e) {
+            $providerArray['outlookCalendar']['calendarId'] = !empty($providerArray['outlookCalendar']['calendarId'])
+                ? $providerArray['outlookCalendar']['calendarId']
+                : null;
+
+            $providerArray['outlookCalendar']['calendarList'] = [];
+
             $providerRepository->updateErrorColumn($providerId, $e->getMessage());
             $successfulOutlookConnection = false;
         }

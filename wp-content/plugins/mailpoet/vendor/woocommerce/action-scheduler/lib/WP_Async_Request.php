@@ -51,7 +51,7 @@ if ( ! class_exists( 'WP_Async_Request' ) ) {
  return apply_filters( $this->identifier . '_post_args', $args );
  }
  public function maybe_handle() {
- // Don't lock up other requests while processing
+ // Don't lock up other requests while processing.
  session_write_close();
  check_ajax_referer( $this->identifier, 'nonce' );
  $this->handle();

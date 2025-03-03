@@ -50,7 +50,7 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 			);
 
 			// Payment box.
-			if ( 'forminator_forms' === $args['form_type'] ) {
+			if ( 'forminator_forms' === $args['form_type'] && ! forminator_payments_disabled() ) {
 				Forminator_Admin_Addons_Page::get_instance()->render_template(
 					'admin/views/common/reports/single-report',
 					array(

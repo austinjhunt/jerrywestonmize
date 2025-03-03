@@ -4,23 +4,23 @@ class ActionScheduler_DBStore extends ActionScheduler_Store {
  private $claim_before_date = null;
  protected static $max_args_length = 8000;
  protected static $max_index_length = 191;
- protected $claim_filters = [
+ protected $claim_filters = array(
  'group' => '',
  'hooks' => '',
  'exclude-groups' => '',
- ];
+ );
  public function init() {
  $table_maker = new ActionScheduler_StoreSchema();
  $table_maker->init();
  $table_maker->register_tables();
  }
- public function save_unique_action( ActionScheduler_Action $action, \DateTime $scheduled_date = null ) {
+ public function save_unique_action( ActionScheduler_Action $action, ?DateTime $scheduled_date = null ) {
  return $this->save_action_to_db( $action, $scheduled_date, true );
  }
- public function save_action( ActionScheduler_Action $action, \DateTime $scheduled_date = null ) {
+ public function save_action( ActionScheduler_Action $action, ?DateTime $scheduled_date = null ) {
  return $this->save_action_to_db( $action, $scheduled_date, false );
  }
- private function save_action_to_db( ActionScheduler_Action $action, DateTime $date = null, $unique = false ) {
+ private function save_action_to_db( ActionScheduler_Action $action, ?DateTime $date = null, $unique = false ) {
  global $wpdb;
  try {
  $this->validate_action( $action );
@@ -119,7 +119,7 @@ AND `group_id` = %d
  'last_attempt_local',
  'extended_args',
  );
- return in_array( $column_name, $string_columns ) ? '%s' : '%d';
+ return in_array( $column_name, $string_columns, true ) ? '%s' : '%d';
  }
  protected function hash_args( $args ) {
  return md5( $args );
@@ -208,10 +208,12 @@ AND `group_id` = %d
  if ( ! in_array( $select_or_count, array( 'select', 'count' ), true ) ) {
  throw new InvalidArgumentException( __( 'Invalid value for select or count parameter. Cannot query actions.', 'action-scheduler' ) );
  }
- $query = wp_parse_args( $query, array(
+ $query = wp_parse_args(
+ $query,
+ array(
  'hook' => '',
  'args' => null,
- 'partial_args_matching' => 'off', // can be 'like' or 'json'
+ 'partial_args_matching' => 'off', // can be 'like' or 'json'.
  'date' => null,
  'date_compare' => '<=',
  'modified' => null,
@@ -223,7 +225,8 @@ AND `group_id` = %d
  'offset' => 0,
  'orderby' => 'date',
  'order' => 'ASC',
- ) );
+ )
+ );
  global $wpdb;
  $db_server_info = is_callable( array( $wpdb, 'db_server_info' ) ) ? $wpdb->db_server_info() : $wpdb->db_version();
  if ( false !== strpos( $db_server_info, 'MariaDB' ) ) {
@@ -241,13 +244,13 @@ AND `group_id` = %d
  if ( ! empty( $query['group'] ) || 'group' === $query['orderby'] ) {
  $sql .= " LEFT JOIN {$wpdb->actionscheduler_groups} g ON g.group_id=a.group_id";
  }
- $sql .= " WHERE 1=1";
+ $sql .= ' WHERE 1=1';
  if ( ! empty( $query['group'] ) ) {
- $sql .= " AND g.slug=%s";
+ $sql .= ' AND g.slug=%s';
  $sql_params[] = $query['group'];
  }
  if ( ! empty( $query['hook'] ) ) {
- $sql .= " AND a.hook=%s";
+ $sql .= ' AND a.hook=%s';
  $sql_params[] = $query['hook'];
  }
  if ( ! is_null( $query['args'] ) ) {
@@ -269,13 +272,15 @@ AND `group_id` = %d
  }
  $placeholder = isset( $supported_types[ $value_type ] ) ? $supported_types[ $value_type ] : false;
  if ( ! $placeholder ) {
- throw new \RuntimeException( sprintf(
+ throw new \RuntimeException(
+ sprintf(
  __( 'The value type for the JSON partial matching is not supported. Must be either integer, boolean, double or string. %s type provided.', 'action-scheduler' ),
  $value_type
- ) );
+ )
+ );
  }
- $sql .= ' AND JSON_EXTRACT(a.args, %s)='.$placeholder;
- $sql_params[] = '$.'.$key;
+ $sql .= ' AND JSON_EXTRACT(a.args, %s)=' . $placeholder;
+ $sql_params[] = '$.' . $key;
  $sql_params[] = $value;
  }
  break;
@@ -287,7 +292,7 @@ AND `group_id` = %d
  }
  break;
  case 'off':
- $sql .= " AND a.args=%s";
+ $sql .= ' AND a.args=%s';
  $sql_params[] = $this->get_args_for_query( $query['args'] );
  break;
  default:
@@ -403,7 +408,7 @@ AND `group_id` = %d
  array( '%d' )
  );
  if ( false === $updated ) {
- throw new \InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'action-scheduler' ), $action_id ) );
+ throw new \InvalidArgumentException( sprintf( __( 'Unidentified action %s: we were unable to cancel this action. It may may have been deleted by another process.', 'action-scheduler' ), $action_id ) );
  }
  do_action( 'action_scheduler_canceled_action', $action_id );
  }
@@ -453,7 +458,7 @@ AND `group_id` = %d
  global $wpdb;
  $deleted = $wpdb->delete( $wpdb->actionscheduler_actions, array( 'action_id' => $action_id ), array( '%d' ) );
  if ( empty( $deleted ) ) {
- throw new \InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'action-scheduler' ), $action_id ) ); //phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+ throw new \InvalidArgumentException( sprintf( __( 'Unidentified action %s: we were unable to delete this action. It may may have been deleted by another process.', 'action-scheduler' ), $action_id ) );
  }
  do_action( 'action_scheduler_deleted_action', $action_id );
  }
@@ -466,7 +471,7 @@ AND `group_id` = %d
  global $wpdb;
  $record = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->actionscheduler_actions} WHERE action_id=%d", $action_id ) );
  if ( empty( $record ) ) {
- throw new \InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'action-scheduler' ), $action_id ) ); //phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+ throw new \InvalidArgumentException( sprintf( __( 'Unidentified action %s: we were unable to determine the date of this action. It may may have been deleted by another process.', 'action-scheduler' ), $action_id ) );
  }
  if ( self::STATUS_PENDING === $record->status ) {
  return as_get_datetime_object( $record->scheduled_date_gmt );
@@ -474,7 +479,7 @@ AND `group_id` = %d
  return as_get_datetime_object( $record->last_attempt_gmt );
  }
  }
- public function stake_claim( $max_actions = 10, \DateTime $before_date = null, $hooks = array(), $group = '' ) {
+ public function stake_claim( $max_actions = 10, ?DateTime $before_date = null, $hooks = array(), $group = '' ) {
  $claim_id = $this->generate_claim_id();
  $this->claim_before_date = $before_date;
  $this->claim_actions( $claim_id, $max_actions, $before_date, $hooks, $group );
@@ -499,7 +504,7 @@ AND `group_id` = %d
  }
  return '';
  }
- protected function claim_actions( $claim_id, $limit, \DateTime $before_date = null, $hooks = array(), $group = '' ) {
+ protected function claim_actions( $claim_id, $limit, ?DateTime $before_date = null, $hooks = array(), $group = '' ) {
  global $wpdb;
  $now = as_get_datetime_object();
  $date = is_null( $before_date ) ? $now : clone $before_date;
@@ -553,7 +558,7 @@ AND `group_id` = %d
  $id_list = implode( ',', array_map( 'intval', $group_ids ) );
  $where .= " AND group_id {$group_operator} ( $id_list )";
  }
- $order = apply_filters( 'action_scheduler_claim_actions_order_by', 'ORDER BY priority ASC, attempts ASC, scheduled_date_gmt ASC, action_id ASC' );
+ $order = apply_filters( 'action_scheduler_claim_actions_order_by', 'ORDER BY priority ASC, attempts ASC, scheduled_date_gmt ASC, action_id ASC', $claim_id, $hooks );
  $params[] = $limit;
  $sql = $wpdb->prepare( "{$update} {$where} {$order} LIMIT %d", $params ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
  $rows_affected = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -639,7 +644,7 @@ AND `group_id` = %d
  array( '%d' )
  );
  if ( empty( $updated ) ) {
- throw new \InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'action-scheduler' ), $action_id ) ); //phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+ throw new \InvalidArgumentException( sprintf( __( 'Unidentified action %s: we were unable to mark this action as having failed. It may may have been deleted by another process.', 'action-scheduler' ), $action_id ) );
  }
  }
  public function log_execution( $action_id ) {
@@ -672,7 +677,7 @@ AND `group_id` = %d
  array( '%d' )
  );
  if ( empty( $updated ) ) {
- throw new \InvalidArgumentException( sprintf( __( 'Unidentified action %s', 'action-scheduler' ), $action_id ) ); //phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+ throw new \InvalidArgumentException( sprintf( __( 'Unidentified action %s: we were unable to mark this action as having completed. It may may have been deleted by another process.', 'action-scheduler' ), $action_id ) );
  }
  do_action( 'action_scheduler_completed_action', $action_id );
  }
@@ -681,7 +686,7 @@ AND `group_id` = %d
  $sql = "SELECT status FROM {$wpdb->actionscheduler_actions} WHERE action_id=%d";
  $sql = $wpdb->prepare( $sql, $action_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
  $status = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
- if ( null === $status ) {
+ if ( is_null( $status ) ) {
  throw new \InvalidArgumentException( __( 'Invalid action ID. No status found.', 'action-scheduler' ) );
  } elseif ( empty( $status ) ) {
  throw new \RuntimeException( __( 'Unknown status found for action.', 'action-scheduler' ) );

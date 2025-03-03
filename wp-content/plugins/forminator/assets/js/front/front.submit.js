@@ -74,15 +74,19 @@
 			});
 		},
 
-		removeCountryCode: function( form ) {
+		addCountryCode: function( form ) {
 			form.find('.forminator-field--phone').each(function() {
 				var phone_element = $(this),
+					national_mode = phone_element.data('national_mode') === 'enabled',
 				    iti           = intlTelInput.getInstance(this);
-				if ( !phone_element.data('required') && iti ) {
+
+				if ( !national_mode && iti ) {
 					var dialCode = '+' + iti.getSelectedCountryData().dialCode;
 					var currentInput = phone_element.val();
-					if (dialCode === currentInput) {
-						phone_element.val('');
+					if (currentInput !== '' && !currentInput.trim().startsWith('+')) {
+						phone_element.closest('.iti').find('.iti__selected-dial-code').hide();
+						phone_element.css('padding-inline-start', '45px');
+						phone_element.val(dialCode + ' ' + currentInput);
 					}
 				}
 			});
@@ -173,8 +177,8 @@
 					$datepicker = $('body').find( '#ui-datepicker-div.forminator-custom-form-' + self.$el.data( 'form-id' ) )
 					;
 
-				// to remove dial code from the phone field which are optional so that validation doesn't throw error.
-				self.removeCountryCode( $this );
+				// add country code before submitting values to the form submissions.
+				self.addCountryCode( $this );
 
 				if( self.settings.inline_validation && self.$el.find('.forminator-uploaded-files').length > 0 && ! $saveDraft ) {
 					var file_error = self.$el.find('.forminator-uploaded-files li.forminator-has_error');

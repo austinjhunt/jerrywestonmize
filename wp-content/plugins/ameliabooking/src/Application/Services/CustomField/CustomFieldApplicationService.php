@@ -64,6 +64,12 @@ class CustomFieldApplicationService extends AbstractCustomFieldApplicationServic
      */
     public function processCustomFields(&$customFields)
     {
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        $allowedUploadedFileExtensions = !empty($settingsDS->getSetting('general', 'customFieldsAllowedExtensions')) ?
+            $settingsDS->getSetting('general', 'customFieldsAllowedExtensions') : self::$allowedUploadedFileExtensions;
+
         $uploadedFilesInfo = [];
 
         foreach ($customFields as $customFieldId => $customField) {
@@ -75,7 +81,7 @@ class CustomFieldApplicationService extends AbstractCustomFieldApplicationServic
                             PATHINFO_EXTENSION
                         );
 
-                        if (!array_key_exists('.' . strtolower($fileExtension), self::$allowedUploadedFileExtensions)) {
+                        if (!array_key_exists('.' . strtolower($fileExtension), $allowedUploadedFileExtensions)) {
                             continue;
                         }
 
@@ -117,6 +123,12 @@ class CustomFieldApplicationService extends AbstractCustomFieldApplicationServic
      */
     public function saveUploadedFiles($bookingId, $uploadedCustomFieldFilesNames, $folder, $copy)
     {
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        $allowedUploadedFileExtensions = !empty($settingsDS->getSetting('general', 'customFieldsAllowedExtensions')) ?
+            $settingsDS->getSetting('general', 'customFieldsAllowedExtensions') : self::$allowedUploadedFileExtensions;
+
         $uploadPath = $this->getUploadsPath() . $folder;
 
         do_action('amelia_before_cf_file_uploaded', $bookingId, $uploadPath, $uploadedCustomFieldFilesNames);
@@ -137,7 +149,7 @@ class CustomFieldApplicationService extends AbstractCustomFieldApplicationServic
             foreach ((array)$uploadedCustomFieldFilesNames[$customFieldId]['value'] as $index => $data) {
                 $fileExtension = pathinfo($data['fileName'], PATHINFO_EXTENSION);
 
-                if (!array_key_exists('.' . strtolower($fileExtension), self::$allowedUploadedFileExtensions)) {
+                if (!array_key_exists('.' . strtolower($fileExtension), $allowedUploadedFileExtensions)) {
                     continue;
                 }
 

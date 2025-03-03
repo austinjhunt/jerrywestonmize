@@ -25,9 +25,17 @@ class GetCustomersController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new GetCustomersCommand($args);
-        $command->setField('params', (array)$request->getQueryParams());
+
+        $params = (array)$request->getQueryParams();
+
+        $this->setArrayParams($params);
+
+        $command->setField('params', $params);
+
         $requestBody = $request->getParsedBody();
+
         $this->setCommandFields($command, $requestBody);
+
         $command->setToken($request);
 
         return $command;

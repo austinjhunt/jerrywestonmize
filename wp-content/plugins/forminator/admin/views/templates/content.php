@@ -14,6 +14,8 @@ if ( FORMINATOR_PRO ) {
 		echo forminator_template( 'templates/banner/wpmudev-expired' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
+
+$current_tab = filter_input( INPUT_GET, 'tab' ) ?? 'preset';
 ?>
 
 <div id="forminator-templates" class="sui-tabs">
@@ -24,35 +26,31 @@ if ( FORMINATOR_PRO ) {
 			type="button"
 			role="tab"
 			id="all-templates"
-			class="sui-tab-item active"
+			class="sui-tab-item<?php echo 'preset' === $current_tab ? ' active' : ''; ?>"
 			aria-controls="all-templates-content"
-			aria-selected="true"
+			aria-selected="<?php echo 'preset' === $current_tab ? 'true' : 'false" tabindex="-1'; ?>"
 		>
 			<?php esc_html_e( 'Preset Templates', 'forminator' ); ?>
 		</button>
-		<?php if ( is_wpmu_dev_admin() || ! forminator_can_whitelabel() ) { ?>
+		<?php if ( ! forminator_cloud_templates_disabled() ) { ?>
 			<button
 				type="button"
 				role="tab"
 				id="cloud-templates"
-				class="sui-tab-item"
+				class="sui-tab-item <?php echo 'cloud' === $current_tab ? ' active' : ''; ?>"
 				aria-controls="cloud-templates-content"
-				aria-selected="false"
-				tabindex="-1"
+				aria-selected="<?php echo 'cloud' === $current_tab ? 'true' : 'false" tabindex="-1'; ?>"
 			>
 				<?php esc_html_e( 'Cloud Templates', 'forminator' ); ?>
-				<?php if ( ! FORMINATOR_PRO ) : ?>
-					<span class="sui-tag sui-tag-pro"><?php esc_html_e( 'Pro', 'forminator' ); ?></span>
-				<?php endif; ?>
 			</button>
 		<?php } ?>
 	</div>
 
 	<div class="sui-tabs-content">
 		<?php
-		echo forminator_template( 'templates/preset/content' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		if ( is_wpmu_dev_admin() || ! forminator_can_whitelabel() ) {
-			echo forminator_template( 'templates/cloud/content' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo forminator_template( 'templates/preset/content', array( 'current_tab' => $current_tab ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		if ( ! forminator_cloud_templates_disabled() ) {
+			echo forminator_template( 'templates/cloud/content', array( 'current_tab' => $current_tab ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 		?>
 	</div>

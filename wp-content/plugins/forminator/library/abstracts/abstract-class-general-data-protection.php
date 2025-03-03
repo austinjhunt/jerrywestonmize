@@ -34,7 +34,7 @@ abstract class Forminator_General_Data_Protection {
 	 *
 	 * @var int
 	 */
-	protected $cron_cleanup_interval;
+	protected static $cron_cleanup_interval;
 
 	/**
 	 * Exporters
@@ -58,7 +58,7 @@ abstract class Forminator_General_Data_Protection {
 	 */
 	public function __construct( $name, $cron_cleanup_interval = HOUR_IN_SECONDS ) {
 		$this->name                  = $name;
-		$this->cron_cleanup_interval = $cron_cleanup_interval;
+		self::$cron_cleanup_interval = $cron_cleanup_interval;
 		$this->init();
 	}
 
@@ -72,24 +72,15 @@ abstract class Forminator_General_Data_Protection {
 		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'register_exporters' ), 10 );
 		add_filter( 'wp_privacy_personal_data_erasers', array( $this, 'register_erasers' ), 10 );
 
-		add_action( 'init', array( &$this, 'data_protection_cleanup' ) );
+		add_action( 'init', array( __CLASS__, 'data_protection_cleanup' ) );
 		add_action( 'forminator_general_data_protection_cleanup', array( $this, 'personal_data_cleanup' ) );
 	}
 
 	/**
 	 * Data cleanup action
 	 */
-	public function data_protection_cleanup() {
-		// Clear old cron schedule.
-		if ( wp_next_scheduled( 'forminator_general_data_protection_cleanup' ) ) {
-			wp_clear_scheduled_hook( 'forminator_general_data_protection_cleanup' );
-		}
-
-		// Create new schedule using AS.
-		if ( false === as_has_scheduled_action( 'forminator_general_data_protection_cleanup' ) ) {
-			// for data removal / anonymize data.
-			as_schedule_recurring_action( time(), $this->get_cron_cleanup_interval(), 'forminator_general_data_protection_cleanup', array(), 'forminator', true );
-		}
+	public static function data_protection_cleanup() {
+		forminator_set_recurring_action( 'forminator_general_data_protection_cleanup', self::get_cron_cleanup_interval() );
 	}
 
 	/**
@@ -250,8 +241,8 @@ abstract class Forminator_General_Data_Protection {
 	 *
 	 * @return string
 	 */
-	public function get_cron_cleanup_interval() {
-		$cron_cleanup_interval = $this->cron_cleanup_interval;
+	public static function get_cron_cleanup_interval() {
+		$cron_cleanup_interval = self::$cron_cleanup_interval;
 
 		/**
 		 * Filter interval to be used for cleanup process

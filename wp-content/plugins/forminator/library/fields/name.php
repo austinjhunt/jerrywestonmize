@@ -160,6 +160,8 @@ class Forminator_Name extends Forminator_Field {
 		$description = self::get_property( 'description', $field, '' );
 		$placeholder = $this->sanitize_value( self::get_property( 'placeholder', $field ) );
 
+		$descr_position = self::get_property( 'descr_position', $field );
+
 		if ( (bool) $required ) {
 			$ariareq = 'true';
 		}
@@ -193,7 +195,7 @@ class Forminator_Name extends Forminator_Field {
 
 		$html .= '<div class="forminator-field">';
 
-			$html .= self::create_input( $name_attr, $label, $description, $required, $design );
+			$html .= self::create_input( $name_attr, $label, $description, $required, $descr_position );
 
 		$html .= '</div>';
 
@@ -223,6 +225,8 @@ class Forminator_Name extends Forminator_Field {
 		$lname       = self::get_property( 'lname', $field, false );
 		$columns     = self::get_property( 'layout_columns', $field, false );
 		$draft_value = isset( $draft_value['value'] ) ? $draft_value['value'] : '';
+
+		$descr_position = self::get_property( 'descr_position', $field );
 
 		// Return If prefix and first name, middle name and last name is not enabled.
 		if ( empty( $prefix ) && empty( $fname ) && empty( $mname ) && empty( $lname ) ) {
@@ -323,7 +327,8 @@ class Forminator_Name extends Forminator_Field {
 						$options,
 						self::get_property( 'prefix_placeholder', $field ),
 						self::get_property( 'prefix_description', $field ),
-						$prefix_required
+						$prefix_required,
+						$descr_position,
 					);
 
 				$html .= '</div>';
@@ -367,7 +372,7 @@ class Forminator_Name extends Forminator_Field {
 						esc_html( self::get_property( 'fname_label', $field ) ),
 						esc_html( self::get_property( 'fname_description', $field ) ),
 						$fname_required,
-						$design
+						$descr_position,
 					);
 
 				$html .= '</div>';
@@ -407,7 +412,7 @@ class Forminator_Name extends Forminator_Field {
 					esc_html( self::get_property( 'mname_label', $field ) ),
 					esc_html( self::get_property( 'mname_description', $field ) ),
 					$mname_required,
-					$design
+					$descr_position,
 				);
 
 				$html .= '</div>';
@@ -451,7 +456,7 @@ class Forminator_Name extends Forminator_Field {
 					esc_html( self::get_property( 'lname_label', $field ) ),
 					esc_html( self::get_property( 'lname_description', $field ) ),
 					$lname_required,
-					$design
+					$descr_position,
 				);
 
 				$html .= '</div>';
@@ -480,6 +485,8 @@ class Forminator_Name extends Forminator_Field {
 		$settings            = $views_obj->model->settings;
 		$this->field         = $field;
 		$this->form_settings = $settings;
+
+		$field['descr_position'] = self::get_description_position( $field, $settings );
 
 		$multiple = self::get_property( 'multiple_name', $field, false, 'bool' );
 		$design   = $this->get_form_style( $settings );

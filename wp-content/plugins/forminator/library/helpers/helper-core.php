@@ -1340,8 +1340,6 @@ function forminator_reset_settings() {
 	delete_option( 'forminator_retain_poll_submissions_interval_number' );
 	delete_option( 'forminator_retain_poll_submissions_interval_unit' );
 	delete_option( 'forminator_posts_map' );
-	delete_option( 'forminator_module_enable_load_ajax' );
-	delete_option( 'forminator_module_use_donotcachepage' );
 	delete_option( 'forminator_retain_quiz_submissions_interval_number' );
 	delete_option( 'forminator_retain_quiz_submissions_interval_unit' );
 	delete_option( 'forminator_dashboard_settings' );
@@ -1357,9 +1355,8 @@ function forminator_reset_settings() {
 	delete_option( 'forminator_custom_upload' );
 	delete_option( 'forminator_custom_upload_root' );
 	delete_option( 'forminator_stripe_configuration' );
+	delete_option( 'forminator_stripe_payment_intents' );
 	delete_option( 'forminator_paypal_configuration' );
-
-	$usage_tracking = get_option( 'forminator_usage_tracking', false );
 	delete_option( 'forminator_usage_tracking' );
 
 	/**
@@ -1404,11 +1401,9 @@ function forminator_reset_settings() {
 	/**
 	 * Fires after Settings reset
 	 *
-	 * @param bool $usage_data usage tracking data enable or not
-	 *
 	 * @since 1.27.0
 	 */
-	do_action( 'forminator_after_reset_settings', $usage_tracking );
+	do_action( 'forminator_after_reset_settings' );
 }
 
 /**
@@ -1762,6 +1757,11 @@ function forminator_get_permission( $page_slug ) {
 	if ( current_user_can( $default_cap ) || empty( $page_slug ) ) {
 		return $default_cap;
 	}
+	// If current user a guest, return the default admin cap because they don't have any capabilities anyway.
+	$user = wp_get_current_user();
+	if ( empty( $user->ID ) ) {
+		return $default_cap;
+	}
 
 	$permissions = get_option( 'forminator_permissions', array() );
 	if ( empty( $permissions ) ) {
@@ -1808,8 +1808,6 @@ function forminator_get_permission( $page_slug ) {
 			break;
 	}
 
-	// Get current user.
-	$user         = wp_get_current_user();
 	$user_allowed = false;
 	$role_allowed = false;
 
@@ -1819,10 +1817,7 @@ function forminator_get_permission( $page_slug ) {
 		// If role.
 		if ( 'role' === $permission['permission_type'] ) {
 
-			if (
-				! isset( $permission['exclude_users'] ) ||
-				empty( $permission['exclude_users'] )
-			) {
+			if ( empty( $permission['exclude_users'] ) ) {
 				$role_allowed = true;
 				continue;
 			}
@@ -2018,4 +2013,60 @@ function forminator_can_apply_default_color( $settings ) {
 
 	$color_option = $settings[ $color_option_key ] ?? $default_color_option;
 	return 'forminator' === $color_option;
+}
+
+/**
+ * Schedule recurring action.
+ *
+ * @param string $action Action name.
+ * @param int    $interval Expiration time in seconds.
+ *
+ * @return bool
+ */
+function forminator_set_recurring_action( string $action, int $interval ): bool {
+	// Check cache first.
+	if ( get_transient( $action ) ) {
+		return true;
+	}
+
+	// if tables exist.
+	if ( ! Forminator_Core::check_action_scheduler_tables() ) {
+		return false;
+	}
+
+	// Clear old cron schedule.
+	if ( wp_next_scheduled( $action ) ) {
+		wp_clear_scheduled_hook( $action );
+	}
+
+	$scheduled = as_has_scheduled_action( $action );
+	if ( $scheduled ) {
+		// Set cache.
+		$expiration = 2 * HOUR_IN_SECONDS;
+		set_transient( $action, true, $expiration );
+	} else {
+		// Create new schedule using AS.
+		$action_id = as_schedule_recurring_action( time() + 20, $interval, $action, array(), 'forminator', true );
+		$scheduled = $action_id > 0;
+	}
+
+	return $scheduled;
+}
+
+/**
+ * Check if cloud templates are disabled
+ *
+ * @return bool
+ */
+function forminator_cloud_templates_disabled(): bool {
+	$is_disabled = apply_filters( 'forminator_disable_cloud_templates', false );
+	if ( ! $is_disabled ) {
+		if ( is_wpmu_dev_admin() ) {
+			$is_disabled = false;
+		} elseif ( forminator_can_whitelabel() ) {
+			$is_disabled = true;
+		}
+	}
+
+	return $is_disabled;
 }

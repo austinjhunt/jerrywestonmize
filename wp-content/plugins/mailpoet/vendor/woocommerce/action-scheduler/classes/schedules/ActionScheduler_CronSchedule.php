@@ -1,9 +1,9 @@
 <?php
 if (!defined('ABSPATH')) exit;
 class ActionScheduler_CronSchedule extends ActionScheduler_Abstract_RecurringSchedule implements ActionScheduler_Schedule {
- private $start_timestamp = NULL;
- private $cron = NULL;
- public function __construct( DateTime $start, $recurrence, DateTime $first = null ) {
+ private $start_timestamp = null;
+ private $cron = null;
+ public function __construct( DateTime $start, $recurrence, ?DateTime $first = null ) {
  if ( ! is_a( $recurrence, 'CronExpression' ) ) {
  $recurrence = CronExpression::factory( $recurrence );
  }
@@ -23,10 +23,13 @@ class ActionScheduler_CronSchedule extends ActionScheduler_Abstract_RecurringSch
  $sleep_params = parent::__sleep();
  $this->start_timestamp = $this->scheduled_timestamp;
  $this->cron = $this->recurrence;
- return array_merge( $sleep_params, array(
+ return array_merge(
+ $sleep_params,
+ array(
  'start_timestamp',
- 'cron'
- ) );
+ 'cron',
+ )
+ );
  }
  public function __wakeup() {
  if ( is_null( $this->scheduled_timestamp ) && ! is_null( $this->start_timestamp ) ) {

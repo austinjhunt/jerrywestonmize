@@ -13,25 +13,26 @@ class CaptchaHooks {
 
   private SettingsController $settings;
   private CaptchaValidator $captchaValidator;
+  private CaptchaRenderer $captchaRenderer;
 
   public function __construct(
     SettingsController $settings,
-    CaptchaValidator $captchaValidator
+    CaptchaValidator $captchaValidator,
+    CaptchaRenderer $captchaRenderer
   ) {
     $this->settings = $settings;
     $this->captchaValidator = $captchaValidator;
+    $this->captchaRenderer = $captchaRenderer;
   }
 
   public function isEnabled(): bool {
-    // A transient code to enable incremental development of the feature.
-    // Later when a setting is introduced, this function will be adjusted.
-    if (!in_array(getenv('MP_ENV'), ['development', 'test'])) {
+    if (!$this->settings->get(CaptchaConstants::ON_REGISTER_FORMS_SETTING_NAME, false)) {
       return false;
     }
 
-    return CaptchaConstants::isBuiltIn(
-      $this->settings->get('captcha.type')
-    );
+    $type = $this->settings->get('captcha.type');
+    return CaptchaConstants::isBuiltIn($type)
+      || (CaptchaConstants::isDisabled($type) && $this->captchaRenderer->isSupported());
   }
 
   public function renderInWPRegisterForm() {

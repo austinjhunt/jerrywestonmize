@@ -36,7 +36,7 @@ class PHPMailService extends AbstractMailService implements MailServiceInterface
             //Recipients
             $mail->setFrom($this->from, $this->fromName);
             $mail->addAddress($to);
-            $mail->addReplyTo($this->from);
+            $mail->addReplyTo(!empty($this->replyTo) ? $this->replyTo : $this->from);
             foreach ($bccEmails as $bccEmail) {
                 $mail->addBCC($bccEmail);
             }

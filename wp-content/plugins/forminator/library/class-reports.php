@@ -64,15 +64,7 @@ class Forminator_Reports {
 	 * @since 1.0
 	 */
 	public function schedule_reports() {
-		// Clear old cron schedule.
-		if ( wp_next_scheduled( 'forminator_process_report' ) ) {
-			wp_clear_scheduled_hook( 'forminator_process_report' );
-		}
-
-		// Create new schedule using AS.
-		if ( false === as_has_scheduled_action( 'forminator_process_report' ) ) {
-			as_schedule_recurring_action( time() + 20, MINUTE_IN_SECONDS, 'forminator_process_report', array(), 'forminator', true );
-		}
+		forminator_set_recurring_action( 'forminator_process_report', MINUTE_IN_SECONDS );
 	}
 
 	/**

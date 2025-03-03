@@ -49,7 +49,11 @@ class Forminator_Template_API {
 	 */
 	private static function get_api_key() {
 		if ( is_null( self::$api_key ) ) {
-			self::$api_key = class_exists( 'WPMUDEV_Dashboard' ) ? WPMUDEV_Dashboard::$api->get_key() : '';
+			if ( class_exists( 'WPMUDEV_Dashboard' ) ) {
+				self::$api_key = WPMUDEV_Dashboard::$api->get_key();
+			} elseif ( Forminator_Hub_Connector::hub_connector_connected() ) {
+				self::$api_key = \WPMUDEV\Hub\Connector\API::get()->get_api_key();
+			}
 		}
 		return self::$api_key;
 	}
@@ -298,6 +302,8 @@ class Forminator_Template_API {
 
 		if ( class_exists( 'WPMUDEV_Dashboard' ) && method_exists( WPMUDEV_Dashboard::$api, 'get_site_id' ) ) {
 			$data['site_id'] = WPMUDEV_Dashboard::$api->get_site_id();
+		} elseif ( Forminator_Hub_Connector::hub_connector_logged_in() ) {
+			$data['site_id'] = \WPMUDEV\Hub\Connector\Data::get()->hub_site_id();
 		}
 
 		if ( 'GET' === $method ) {

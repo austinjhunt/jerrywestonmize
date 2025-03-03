@@ -10,7 +10,7 @@ class ActionScheduler_HybridStore extends Store {
  private $secondary_store;
  private $migration_runner;
  private $demarkation_id = 0;
- public function __construct( Config $config = null ) {
+ public function __construct( ?Config $config = null ) {
  $this->demarkation_id = (int) get_option( self::DEMARKATION_OPTION, 0 );
  if ( empty( $config ) ) {
  $config = Controller::instance()->get_migration_config_object();
@@ -20,10 +20,10 @@ class ActionScheduler_HybridStore extends Store {
  $this->migration_runner = new Runner( $config );
  }
  public function init() {
- add_action( 'action_scheduler/created_table', [ $this, 'set_autoincrement' ], 10, 2 );
+ add_action( 'action_scheduler/created_table', array( $this, 'set_autoincrement' ), 10, 2 );
  $this->primary_store->init();
  $this->secondary_store->init();
- remove_action( 'action_scheduler/created_table', [ $this, 'set_autoincrement' ], 10 );
+ remove_action( 'action_scheduler/created_table', array( $this, 'set_autoincrement' ), 10 );
  }
  public function set_autoincrement( $table_name, $table_suffix ) {
  if ( ActionScheduler_StoreSchema::ACTIONS_TABLE === $table_suffix ) {
@@ -37,7 +37,7 @@ class ActionScheduler_HybridStore extends Store {
  $date_local = $this->get_scheduled_date_string_local( $null_action, $default_date );
  $row_count = $wpdb->insert(
  $wpdb->{ActionScheduler_StoreSchema::ACTIONS_TABLE},
- [
+ array(
  'action_id' => $this->demarkation_id,
  'hook' => '',
  'status' => '',
@@ -45,12 +45,12 @@ class ActionScheduler_HybridStore extends Store {
  'scheduled_date_local' => $date_local,
  'last_attempt_gmt' => $date_gmt,
  'last_attempt_local' => $date_local,
- ]
+ )
  );
  if ( $row_count > 0 ) {
  $wpdb->delete(
  $wpdb->{ActionScheduler_StoreSchema::ACTIONS_TABLE},
- [ 'action_id' => $this->demarkation_id ]
+ array( 'action_id' => $this->demarkation_id )
  );
  }
  }
@@ -59,19 +59,19 @@ class ActionScheduler_HybridStore extends Store {
  if ( empty( $id ) ) {
  global $wpdb;
  $id = (int) $wpdb->get_var( "SELECT MAX(ID) FROM $wpdb->posts" );
- $id ++;
+ $id++;
  }
  update_option( self::DEMARKATION_OPTION, $id );
  return $id;
  }
- public function find_action( $hook, $params = [] ) {
+ public function find_action( $hook, $params = array() ) {
  $found_unmigrated_action = $this->secondary_store->find_action( $hook, $params );
  if ( ! empty( $found_unmigrated_action ) ) {
- $this->migrate( [ $found_unmigrated_action ] );
+ $this->migrate( array( $found_unmigrated_action ) );
  }
  return $this->primary_store->find_action( $hook, $params );
  }
- public function query_actions( $query = [], $query_type = 'select' ) {
+ public function query_actions( $query = array(), $query_type = 'select' ) {
  $found_unmigrated_actions = $this->secondary_store->query_actions( $query, 'select' );
  if ( ! empty( $found_unmigrated_actions ) ) {
  $this->migrate( $found_unmigrated_actions );
@@ -95,7 +95,7 @@ class ActionScheduler_HybridStore extends Store {
  $actions_count_by_status = array_filter( $actions_count_by_status );
  return $actions_count_by_status;
  }
- public function stake_claim( $max_actions = 10, DateTime $before_date = null, $hooks = array(), $group = '' ) {
+ public function stake_claim( $max_actions = 10, ?DateTime $before_date = null, $hooks = array(), $group = '' ) {
  $claim = $this->secondary_store->stake_claim( $max_actions, $before_date, $hooks, $group );
  $claimed_actions = $claim->get_actions();
  if ( ! empty( $claimed_actions ) ) {
@@ -107,7 +107,7 @@ class ActionScheduler_HybridStore extends Store {
  private function migrate( $action_ids ) {
  $this->migration_runner->migrate_actions( $action_ids );
  }
- public function save_action( ActionScheduler_Action $action, DateTime $date = null ) {
+ public function save_action( ActionScheduler_Action $action, ?DateTime $date = null ) {
  return $this->primary_store->save_action( $action, $date );
  }
  public function fetch_action( $action_id ) {
@@ -165,19 +165,19 @@ class ActionScheduler_HybridStore extends Store {
  }
  protected function get_store_from_action_id( $action_id, $primary_first = false ) {
  if ( $primary_first ) {
- $stores = [
+ $stores = array(
  $this->primary_store,
  $this->secondary_store,
- ];
+ );
  } elseif ( $action_id < $this->demarkation_id ) {
- $stores = [
+ $stores = array(
  $this->secondary_store,
  $this->primary_store,
- ];
+ );
  } else {
- $stores = [
+ $stores = array(
  $this->primary_store,
- ];
+ );
  }
  foreach ( $stores as $store ) {
  $action = $store->fetch_action( $action_id );

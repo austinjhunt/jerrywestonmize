@@ -20,6 +20,7 @@ class Forminator_Trello_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 * @return array
 	 */
 	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
+		$entry                = func_get_args()[2];
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 

@@ -538,7 +538,7 @@ class Forminator_PayPal_Express extends Forminator_Payment_Gateway {
 	 * @return string
 	 */
 	public function forminator_remove_ver_paypal( $src ) {
-		if ( strpos( $src, 'paypal.com' ) && strpos( $src, 'ver=' ) )
+		if ( $src && strpos( $src, 'paypal.com' ) && strpos( $src, 'ver=' ) )
 			$src = remove_query_arg( 'ver', $src );
 		return $src;
 	}

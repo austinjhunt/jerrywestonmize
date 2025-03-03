@@ -50,6 +50,9 @@ class EventPeriod
     /** @var Label */
     private $outlookCalendarEventId;
 
+    /** @var string */
+    private $microsoftTeamsUrl;
+
     /** @var Label */
     private $appleCalendarEventId;
 
@@ -214,6 +217,22 @@ class EventPeriod
     }
 
     /**
+     * @return string
+     */
+    public function getMicrosoftTeamsUrl()
+    {
+        return $this->microsoftTeamsUrl;
+    }
+
+    /**
+     * @param string $microsoftTeamsUrl
+     */
+    public function setMicrosoftTeamsUrl($microsoftTeamsUrl)
+    {
+        $this->microsoftTeamsUrl = $microsoftTeamsUrl;
+    }
+
+    /**
      * @return Label
      */
     public function getAppleCalendarEventId()
@@ -245,6 +264,7 @@ class EventPeriod
             'googleCalendarEventId'  => $this->getGoogleCalendarEventId() ? $this->getGoogleCalendarEventId()->getValue(): null,
             'googleMeetUrl'          => $this->getGoogleMeetUrl(),
             'outlookCalendarEventId' => $this->getOutlookCalendarEventId() ? $this->getOutlookCalendarEventId()->getValue() : null,
+            'microsoftTeamsUrl'      => $this->getMicrosoftTeamsUrl(),
             'appleCalendarEventId'   => $this->getAppleCalendarEventId() ? $this->getAppleCalendarEventId()->getValue() : null,
         ];
     }

@@ -4,9 +4,9 @@ class ActionScheduler_LoggerSchema extends ActionScheduler_Abstract_Schema {
  const LOG_TABLE = 'actionscheduler_logs';
  protected $schema_version = 3;
  public function __construct() {
- $this->tables = [
+ $this->tables = array(
  self::LOG_TABLE,
- ];
+ );
  }
  public function init() {
  add_action( 'action_scheduler_before_schema_update', array( $this, 'update_schema_3_0' ), 10, 2 );

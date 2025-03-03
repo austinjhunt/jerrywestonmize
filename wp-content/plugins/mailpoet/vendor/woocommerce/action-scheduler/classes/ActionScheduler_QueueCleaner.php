@@ -4,11 +4,11 @@ class ActionScheduler_QueueCleaner {
  protected $batch_size;
  private $store = null;
  private $month_in_seconds = 2678400;
- private $default_statuses_to_purge = [
+ private $default_statuses_to_purge = array(
  ActionScheduler_Store::STATUS_COMPLETE,
  ActionScheduler_Store::STATUS_CANCELED,
- ];
- public function __construct( ActionScheduler_Store $store = null, $batch_size = 20 ) {
+ );
+ public function __construct( ?ActionScheduler_Store $store = null, $batch_size = 20 ) {
  $this->store = $store ? $store : ActionScheduler_Store::instance();
  $this->batch_size = $batch_size;
  }
@@ -31,28 +31,30 @@ class ActionScheduler_QueueCleaner {
  return $this->clean_actions( $statuses_to_purge, $cutoff, $this->get_batch_size() );
  }
  public function clean_actions( array $statuses_to_purge, DateTime $cutoff_date, $batch_size = null, $context = 'old' ) {
- $batch_size = $batch_size !== null ? $batch_size : $this->batch_size;
- $cutoff = $cutoff_date !== null ? $cutoff_date : as_get_datetime_object( $this->month_in_seconds . ' seconds ago' );
+ $batch_size = ! is_null( $batch_size ) ? $batch_size : $this->batch_size;
+ $cutoff = ! is_null( $cutoff_date ) ? $cutoff_date : as_get_datetime_object( $this->month_in_seconds . ' seconds ago' );
  $lifespan = time() - $cutoff->getTimestamp();
  if ( empty( $statuses_to_purge ) ) {
  $statuses_to_purge = $this->default_statuses_to_purge;
  }
- $deleted_actions = [];
+ $deleted_actions = array();
  foreach ( $statuses_to_purge as $status ) {
- $actions_to_delete = $this->store->query_actions( array(
+ $actions_to_delete = $this->store->query_actions(
+ array(
  'status' => $status,
  'modified' => $cutoff,
  'modified_compare' => '<=',
  'per_page' => $batch_size,
  'orderby' => 'none',
- ) );
+ )
+ );
  $deleted_actions = array_merge( $deleted_actions, $this->delete_actions( $actions_to_delete, $lifespan, $context ) );
  }
  return $deleted_actions;
  }
  private function delete_actions( array $actions_to_delete, $lifespan = null, $context = 'old' ) {
- $deleted_actions = [];
- if ( $lifespan === null ) {
+ $deleted_actions = array();
+ if ( is_null( $lifespan ) ) {
  $lifespan = $this->month_in_seconds;
  }
  foreach ( $actions_to_delete as $action_id ) {
@@ -70,15 +72,17 @@ class ActionScheduler_QueueCleaner {
  if ( $timeout < 0 ) {
  return;
  }
- $cutoff = as_get_datetime_object($timeout.' seconds ago');
- $actions_to_reset = $this->store->query_actions( array(
+ $cutoff = as_get_datetime_object( $timeout . ' seconds ago' );
+ $actions_to_reset = $this->store->query_actions(
+ array(
  'status' => ActionScheduler_Store::STATUS_PENDING,
  'modified' => $cutoff,
  'modified_compare' => '<=',
  'claimed' => true,
  'per_page' => $this->get_batch_size(),
  'orderby' => 'none',
- ) );
+ )
+ );
  foreach ( $actions_to_reset as $action_id ) {
  $this->store->unclaim_action( $action_id );
  do_action( 'action_scheduler_reset_action', $action_id );
@@ -89,14 +93,16 @@ class ActionScheduler_QueueCleaner {
  if ( $timeout < 0 ) {
  return;
  }
- $cutoff = as_get_datetime_object($timeout.' seconds ago');
- $actions_to_reset = $this->store->query_actions( array(
+ $cutoff = as_get_datetime_object( $timeout . ' seconds ago' );
+ $actions_to_reset = $this->store->query_actions(
+ array(
  'status' => ActionScheduler_Store::STATUS_RUNNING,
  'modified' => $cutoff,
  'modified_compare' => '<=',
  'per_page' => $this->get_batch_size(),
  'orderby' => 'none',
- ) );
+ )
+ );
  foreach ( $actions_to_reset as $action_id ) {
  $this->store->mark_failure( $action_id );
  do_action( 'action_scheduler_failed_action', $action_id, $timeout );

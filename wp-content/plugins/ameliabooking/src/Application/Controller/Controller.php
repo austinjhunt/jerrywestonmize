@@ -11,6 +11,7 @@ use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Domain\Events\DomainEventBus;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
+use AmeliaBooking\Domain\Common\Exceptions\CustomException;
 use League\Tactician\CommandBus;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -128,8 +129,22 @@ abstract class Controller
         $command->setPermissionService($this->permissionsService);
         $command->setUserApplicationService($this->userApplicationService);
 
-        /** @var CommandResult $commandResult */
-        $commandResult = $this->commandBus->handle($command);
+        try {
+            /** @var CommandResult $commandResult */
+            $commandResult = $this->commandBus->handle($command);
+        } catch (CustomException $e) {
+
+            $response = $response->withHeader('Content-Type', 'application/json;charset=utf-8');
+            $response = $response->withStatus(self::STATUS_INTERNAL_SERVER_ERROR);
+
+            $response =  $response->write(json_encode([
+                'data' => [
+                    'message' => $e->getMessage()
+                ]
+            ]));
+
+            return $response;
+        }
 
         if ($commandResult->getResult() === CommandResult::RESULT_ERROR) {
             if ($settingsService->getSetting('activation', 'responseErrorAsConflict')) {
@@ -216,7 +231,21 @@ abstract class Controller
      */
     protected function setArrayParams(&$params)
     {
-        $names = ['categories', 'services', 'packages', 'employees', 'providers', 'providerIds', 'locations', 'events', 'dates', 'types', 'fields'];
+        $names = [
+            'customers',
+            'categories',
+            'services',
+            'packages',
+            'employees',
+            'providers',
+            'providerIds',
+            'locations',
+            'events',
+            'dates',
+            'types',
+            'fields',
+            'status',
+        ];
 
         foreach ($names as $name) {
             if (!empty($params[$name])) {

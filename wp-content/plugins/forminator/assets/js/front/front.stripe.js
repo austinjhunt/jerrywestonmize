@@ -42,6 +42,7 @@
 		this._beforeSubmitCallback = null;
 		this._form                 = null;
 		this.intent                = true;
+		this.billingDetails        = {};
 		this.init();
 	}
 
@@ -92,7 +93,12 @@
 					return;
 				}
 
-				self._stripe.createPaymentMethod( { elements: self._elements } ).then(function (result) {
+				self._stripe.createPaymentMethod( { elements: self._elements, params: { billing_details: this.billingDetails } } ).then(function (result) {
+					if (result.error) {
+						let resultError = result.error.message || window.ForminatorFront.cform.payment_failed;
+						self.show_error(resultError);
+						return;
+					}
 					var paymentMethod = self.getObjectValue(result, 'paymentMethod');
 
 					self._stripeData['paymentMethod'] = self.getObjectValue(paymentMethod, 'id');
@@ -237,6 +243,7 @@
 
 			if ( this.intent ) {
 				updateFormData.append( 'stripe-intent', true );
+				updateFormData.append( 'stripe_first_payment_intent', ! this._paymentElement ? 1 : 0 );
 			}
 			var receipt = this.getStripeData('receipt');
 			var receiptEmail = this.getStripeData('receiptEmail');
@@ -556,6 +563,7 @@
 			}
 
 			if ( Object.keys(billingDetails).length ) {
+				this.billingDetails = billingDetails;
 				this._paymentElement.update({
 					defaultValues: {
 						billingDetails,

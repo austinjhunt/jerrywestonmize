@@ -355,10 +355,9 @@ abstract class Forminator_Admin_View_Page extends Forminator_Admin_Page {
 			$args = wp_parse_args( $this->filters, $args );
 			$args = wp_parse_args( $this->order, $args );
 
-			$count = 0;
-
-			$this->entries                = Forminator_Form_Entry_Model::query_entries( $args, $count );
-			$this->filtered_total_entries = $count;
+			$result                       = Forminator_Form_Entry_Model::query_entries( $args, true );
+			$this->entries                = ! empty( $result['data'] ) ? $result['data'] : array();
+			$this->filtered_total_entries = ! empty( $result['count'] ) ? $result['count'] : 0;
 		}
 	}
 

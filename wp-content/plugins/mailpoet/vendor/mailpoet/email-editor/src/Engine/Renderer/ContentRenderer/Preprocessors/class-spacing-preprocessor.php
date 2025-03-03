@@ -12,7 +12,7 @@ class Spacing_Preprocessor implements Preprocessor {
  $parent_block_name = $parent_block['blockName'] ?? '';
  // Ensure that email_attrs are set.
  $block['email_attrs'] = $block['email_attrs'] ?? array();
- if ( $parent_block && 0 !== $key && $gap && 'core/buttons' !== $parent_block_name ) {
+ if ( 0 !== $key && $gap && 'core/buttons' !== $parent_block_name ) {
  $block['email_attrs']['margin-top'] = $gap;
  }
  $block['innerBlocks'] = $this->add_block_gaps( $block['innerBlocks'] ?? array(), $gap, $block );

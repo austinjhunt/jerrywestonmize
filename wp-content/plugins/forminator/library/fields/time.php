@@ -153,6 +153,7 @@ class Forminator_Time extends Forminator_Field {
 		$has_limiter      = 'specific' === $restrict_time ? 'has-time-limiter' : '';
 		$required_origin  = $required;
 		$draft_value      = isset( $draft_value['value'] ) ? $draft_value['value'] : '';
+		$descr_position   = self::get_description_position( $field, $settings );
 
 		$default_time_hour   = '';
 		$default_time_minute = '';
@@ -199,6 +200,10 @@ class Forminator_Time extends Forminator_Field {
 		if ( ! empty( $field_label ) ) {
 			// mark hours and minutes required markup as false.
 			$required = false;
+		}
+
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $id, $descr_position );
 		}
 
 		$html .= '<div class="forminator-timepicker" ';
@@ -273,7 +278,8 @@ class Forminator_Time extends Forminator_Field {
 						$this->get_hours( $type, $increment_hour, $default_time_hour, $limits ),
 						$default_time_hour,
 						'',
-						$required
+						$required,
+						$descr_position,
 					);
 				} else {
 
@@ -282,7 +288,6 @@ class Forminator_Time extends Forminator_Field {
 						self::get_property( 'hh_label', $field ),
 						'',
 						$required,
-						$design
 					);
 				}
 
@@ -340,7 +345,8 @@ class Forminator_Time extends Forminator_Field {
 						$this->get_minutes( $type, $increment_minute, $default_time_minute, $required_origin ),
 						$default_time_minute,
 						'',
-						$required
+						$required,
+						$descr_position,
 					);
 				} else {
 
@@ -349,7 +355,6 @@ class Forminator_Time extends Forminator_Field {
 						self::get_property( 'mm_label', $field ),
 						'',
 						$required,
-						$design
 					);
 				}
 
@@ -413,7 +418,9 @@ class Forminator_Time extends Forminator_Field {
 
 				$html .= '</div>';
 
-				$html .= self::get_description( $description, $id );
+				if ( 'above' !== $descr_position ) {
+					$html .= self::get_description( $description, $id, $descr_position );
+				}
 
 				return apply_filters( 'forminator_field_time_markup', $html, $field );
 	}

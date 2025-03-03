@@ -16,7 +16,7 @@ function wc_unschedule_action( $hook, $args = array(), $group = '' ) {
  _deprecated_function( __FUNCTION__, '2.1.0', 'as_unschedule_action()' );
  as_unschedule_action( $hook, $args, $group );
 }
-function wc_next_scheduled_action( $hook, $args = NULL, $group = '' ) {
+function wc_next_scheduled_action( $hook, $args = null, $group = '' ) {
  _deprecated_function( __FUNCTION__, '2.1.0', 'as_next_scheduled_action()' );
  return as_next_scheduled_action( $hook, $args, $group );
 }

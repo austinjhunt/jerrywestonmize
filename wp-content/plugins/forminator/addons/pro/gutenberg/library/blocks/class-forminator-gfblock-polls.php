@@ -159,6 +159,8 @@ class Forminator_GFBlock_Polls extends Forminator_GFBlock_Abstract {
 			'rendering'        => esc_html__( 'Rendering...', 'forminator' ),
 			'poll'             => esc_html__( 'Poll', 'forminator' ),
 			'poll_description' => esc_html__( 'Embed and display your Forminator polls in this block', 'forminator' ),
+			'preview_image'    => forminator_plugin_url() . 'addons/pro/gutenberg/assets/poll-preview-image.png',
+			'preview_alt'      => esc_html__( 'Preview', 'forminator' ),
 		);
 	}
 }

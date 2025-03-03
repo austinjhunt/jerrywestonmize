@@ -40,6 +40,12 @@ class Forminator_Loader {
 	public function load_files( $dir, $requirements = array() ) {
 		$files = scandir( forminator_plugin_dir() . $dir );
 		foreach ( $files as $file ) {
+			if (
+				in_array( $file, array( 'paypal.php', 'stripe.php', 'stripe-payment-element.php' ), true )
+				&& forminator_payments_disabled()
+			) {
+				continue;
+			}
 			$path = forminator_plugin_dir() . $dir . '/' . $file;
 
 			if ( $this->is_php( $file ) && is_file( $path ) ) {

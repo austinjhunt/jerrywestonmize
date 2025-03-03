@@ -10,16 +10,17 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
-use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
-use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
-use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
+use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\WebHook\AbstractWebHookApplicationService;
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
+use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
@@ -66,14 +67,10 @@ class AppointmentEditedEventHandler
      */
     public static function handle($commandResult, $container)
     {
+        /** @var ApplicationNotificationService $applicationNotificationService */
+        $applicationNotificationService = $container->get('application.notification.service');
         /** @var ApplicationIntegrationService $applicationIntegrationService */
         $applicationIntegrationService = $container->get('application.integration.service');
-        /** @var EmailNotificationService $emailNotificationService */
-        $emailNotificationService = $container->get('application.emailNotification.service');
-        /** @var SMSNotificationService $smsNotificationService */
-        $smsNotificationService = $container->get('application.smsNotification.service');
-        /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
-        $whatsAppNotificationService = $container->get('application.whatsAppNotification.service');
         /** @var SettingsService $settingsService */
         $settingsService = $container->get('domain.settings.service');
         /** @var AbstractWebHookApplicationService $webHookService */
@@ -82,10 +79,14 @@ class AppointmentEditedEventHandler
         $bookingApplicationService = $container->get('application.booking.booking.service');
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $container->get('application.payment.service');
+        /** @var IcsApplicationService $icsService */
+        $icsService = $container->get('application.ics.service');
 
         $appointment = $commandResult->getData()[Entities::APPOINTMENT];
 
         $bookings = $commandResult->getData()['bookingsWithChangedStatus'];
+
+        $oldAppointmentStatus = $commandResult->getData()['oldAppointmentStatus'];
 
         $appointmentStatusChanged = $commandResult->getData()['appointmentStatusChanged'];
 
@@ -106,11 +107,52 @@ class AppointmentEditedEventHandler
 
         $bookingApplicationService->setReservationEntities($reservationObject);
 
-        /** @var CustomerBooking $bookingObject */
-        foreach ($reservationObject->getBookings()->getItems() as $bookingObject) {
-            foreach ($appointment['bookings'] as $index => $bookingArray) {
-                if ($bookingArray['id'] === $bookingObject->getId()->getValue()) {
-                    $appointment['bookings'][$index]['customer'] = $bookingObject->getCustomer()->toArray();
+        /** @var Collection $removedBookings */
+        $removedBookings = new Collection();
+
+        foreach ($bookings as $booking) {
+            if ($booking['isChangedStatus'] && $booking['status'] === BookingStatus::REJECTED) {
+                $removedBookings->addItem(CustomerBookingFactory::create($booking));
+            }
+        }
+
+        /** @var CustomerBooking $customerBooking */
+        foreach ($reservationObject->getBookings()->getItems() as $index => $customerBooking) {
+            if ((($customerBooking->isNew() && $customerBooking->isNew()->getValue()) || $appointmentRescheduled) && (
+                    $customerBooking->getStatus()->getValue() === BookingStatus::PENDING ||
+                    $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED
+                ) && (
+                    $reservationObject->getStatus()->getValue() === BookingStatus::PENDING ||
+                    $reservationObject->getStatus()->getValue() === BookingStatus::APPROVED
+                )
+            ) {
+                $customerBooking->setIcsFiles(
+                    $icsService->getIcsData(Entities::APPOINTMENT, $customerBooking->getId()->getValue(), [], true)
+                );
+            }
+
+            if ($createPaymentLinks || ($customerBooking->isNew() && $customerBooking->isNew()->getValue())) {
+                /** @var Payment $payment */
+                $payment = $customerBooking->getPayments()->length()
+                    ? $customerBooking->getPayments()->getItem(0)
+                    : null;
+
+                if ($payment) {
+                    $paymentLinks = $paymentAS->createPaymentLink(
+                        [
+                            'booking'     => $customerBooking->toArray(),
+                            'type'        => Entities::APPOINTMENT,
+                            'appointment' => $reservationObject->toArray(),
+                            'paymentId'   => $payment->getId()->getValue(),
+                            'bookable'    => $reservationObject->getService()->toArray(),
+                            'customer'    => $customerBooking->getCustomer()->toArray(),
+                        ],
+                        $index
+                    );
+
+                    if ($paymentLinks) {
+                        $payment->setPaymentLinks($paymentLinks);
+                    }
                 }
             }
         }
@@ -148,116 +190,64 @@ class AppointmentEditedEventHandler
             $appointmentEmployeeChanged
         );
 
-        foreach ($appointment['bookings'] as $index => $booking) {
-            $newBookingKey = array_search($booking['id'], array_column($bookings, 'id'), true);
-            if ($createPaymentLinks || $newBookingKey !== false) {
-                $paymentId = $booking['payments'][0]['id'];
-                $data      = [
-                    'booking' => $booking,
-                    'type' => Entities::APPOINTMENT,
-                    'appointment' => $appointment,
-                    'paymentId' => $paymentId,
-                    'bookable' => $reservationObject->getService()->toArray(),
-                    'customer' => $booking['customer']
-                ];
-                if (!empty($paymentId)) {
-                    $paymentLinks = $paymentAS->createPaymentLink($data, $index);
-                    $appointment['bookings'][$index]['payments'][0]['paymentLinks'] = $paymentLinks;
-                    if ($newBookingKey !== false) {
-                        $bookings[$newBookingKey]['payments'][0]['paymentLinks'] = $paymentLinks;
-                    }
-                }
-            }
-        }
-
-        /** @var IcsApplicationService $icsService */
-        $icsService = $container->get('application.ics.service');
-
-        // check bookings with changed status for ICS files
-        if ($bookings) {
-            foreach ($bookings as $index => $booking) {
-                if ($booking['status'] === BookingStatus::APPROVED || $booking['status'] === BookingStatus::PENDING) {
-                    $bookings[$index]['icsFiles'] = $icsService->getIcsData(
-                        Entities::APPOINTMENT,
-                        $booking['id'],
-                        [],
-                        true
-                    );
-                    $appointment['bookings'][$index]['icsFiles'] = $bookings[$index]['icsFiles'];
-                }
-            }
-        }
-
-        if ($appointmentStatusChanged === true) {
-            $emailNotificationService->sendAppointmentStatusNotifications($appointment, true, true, false, !empty($settingsService->getSetting('notifications', 'sendInvoice')));
-
-            if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
-                $smsNotificationService->sendAppointmentStatusNotifications($appointment, true, true);
-            }
-
-            if ($whatsAppNotificationService->checkRequiredFields()) {
-                $whatsAppNotificationService->sendAppointmentStatusNotifications($appointment, true, true);
-            }
-        }
-
-        $appointment['initialAppointmentDateTime'] = $commandResult->getData()['initialAppointmentDateTime'];
-
-        $appointment['employee_changed'] = $appointmentEmployeeChanged;
-
-        if ($appointmentRescheduled === true) {
-            foreach ($appointment['bookings'] as $index => $booking) {
-                if ($booking['status'] === BookingStatus::APPROVED || $booking['status'] === BookingStatus::PENDING) {
-                    $appointment['bookings'][$index]['icsFiles'] = $icsService->getIcsData(
-                        Entities::APPOINTMENT,
-                        $booking['id'],
-                        [],
-                        true
-                    );
-                }
-            }
-            $emailNotificationService->sendAppointmentRescheduleNotifications($appointment);
-
-            if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
-                $smsNotificationService->sendAppointmentRescheduleNotifications($appointment);
-            }
-
-            if ($whatsAppNotificationService->checkRequiredFields()) {
-                $whatsAppNotificationService->sendAppointmentRescheduleNotifications($appointment);
-            }
-        }
-
-        if (!$appointmentRescheduled || !empty($appointment['employee_changed'])) {
-            $emailNotificationService->sendAppointmentEditedNotifications(
-                $appointment,
-                $bookings,
-                $appointmentStatusChanged,
-                !empty($settingsService->getSetting('notifications', 'sendInvoice'))
+        if ($appointmentStatusChanged || $appointmentEmployeeChanged) {
+            $applicationNotificationService->sendAppointmentProviderStatusNotifications(
+                $reservationObject
             );
+        }
 
-            if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
-                $smsNotificationService
-                    ->sendAppointmentEditedNotifications($appointment, $bookings, $appointmentStatusChanged);
-            }
+        $applicationNotificationService->sendAppointmentCustomersStatusNotifications(
+            $reservationObject,
+            $reservationObject->getBookings(),
+            true,
+            true,
+            !empty($settingsService->getSetting('notifications', 'sendInvoice'))
+        );
 
-            if ($whatsAppNotificationService->checkRequiredFields()) {
-                $whatsAppNotificationService->sendAppointmentEditedNotifications($appointment, $bookings, $appointmentStatusChanged);
-            }
+        $applicationNotificationService->sendAppointmentCustomersStatusNotifications(
+            $reservationObject,
+            $removedBookings,
+            true,
+            true,
+            !empty($settingsService->getSetting('notifications', 'sendInvoice'))
+        );
 
-            if (!$appointmentStatusChanged) {
-                $emailNotificationService->sendAppointmentUpdatedNotifications(
-                    $appointment,
-                    $appointmentRescheduled
-                );
+        if ($appointmentRescheduled &&
+            (
+                $reservationObject->getStatus()->getValue() === BookingStatus::APPROVED ||
+                $reservationObject->getStatus()->getValue() === BookingStatus::PENDING
+            )
+        ) {
+            $applicationNotificationService->sendAppointmentRescheduleNotifications(
+                $reservationObject,
+                !$appointmentEmployeeChanged
+            );
+        }
 
-                if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
-                    $smsNotificationService
-                        ->sendAppointmentUpdatedNotifications($appointment, $appointmentRescheduled);
-                }
+        if ($appointmentEmployeeChanged &&
+            (
+                $reservationObject->getStatus()->getValue() === BookingStatus::APPROVED ||
+                $oldAppointmentStatus === BookingStatus::APPROVED
+            )
+        ) {
+            $applicationNotificationService->sendAppointmentUpdatedNotifications(
+                $reservationObject,
+                $appointmentEmployeeChanged,
+                $oldAppointmentStatus === BookingStatus::APPROVED,
+                !$appointmentStatusChanged && !$appointmentRescheduled
+            );
+        }
 
-                if ($whatsAppNotificationService->checkRequiredFields()) {
-                    $whatsAppNotificationService->sendAppointmentUpdatedNotifications($appointment, $appointmentRescheduled);
-                }
-            }
+        if (!$appointmentStatusChanged &&
+            !$appointmentRescheduled &&
+            $reservationObject->getStatus()->getValue() === BookingStatus::APPROVED
+        ) {
+            $applicationNotificationService->sendAppointmentUpdatedNotifications(
+                $reservationObject,
+                null,
+                !$appointmentEmployeeChanged,
+                !$appointmentEmployeeChanged
+            );
         }
 
         if ($appointmentRescheduled === true) {

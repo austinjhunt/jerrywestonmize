@@ -361,8 +361,18 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     $appointmentData['bookings'][0]['customer']['stripeConnect'] = $user->getStripeConnect()->toArray();
                 }
             }
+        } else if (!empty($appointmentData['bookings'][0]['customer']['email'])) {
+            $user = $userRepository->getByEmail($appointmentData['bookings'][0]['customer']['email']);
+
+            if ($user && $user->getId()) {
+                $appointmentData['bookings'][0]['customer']['id'] = $user->getId()->getValue();
+
+                $appointmentData['bookings'][0]['customerId'] = $user->getId()->getValue();
+            }
         } else {
-            $user = $userRepository->getById($appointmentData['bookings'][0]['customer']['id']);
+            $user = $userRepository->getById(
+                $appointmentData['bookings'][0]['customerId'] ?: $appointmentData['bookings'][0]['customer']['id']
+            );
         }
 
         if ($user->getStatus() && $user->getStatus()->getValue() === Status::BLOCKED) {
@@ -874,7 +884,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         $customerData,
         $paymentId,
         $packageCustomerId,
-        $isPackageAppointment
+        $isPackageAppointment,
+        $packageBookingFromBackend
     ) {
         $result = new CommandResult();
 
@@ -896,7 +907,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     'isCart'                   => false,
                     'paymentId'                => $paymentId,
                     'packageCustomerId'        => $packageCustomerId,
-                    'isPackageAppointment'     => $isPackageAppointment
+                    'isPackageAppointment'     => $isPackageAppointment,
+                    'packageBookingFromBackend'=> $packageBookingFromBackend
                 ]
             );
 
@@ -950,7 +962,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     'appointmentStatusChanged'          => $appointmentStatusChanged,
                     'paymentId'                         => $paymentId,
                     'packageCustomerId'                 => $packageCustomerId,
-                    'isPackageAppointment'              => $isPackageAppointment
+                    'isPackageAppointment'              => $isPackageAppointment,
+                    'packageBookingFromBackend'         => $packageBookingFromBackend
                 ],
                 [
                     'customer'  => $customerData,
@@ -1056,7 +1069,9 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 !empty($result->getData()['packageCustomerId']) ?
                     $result->getData()['packageCustomerId'] : null,
                 !empty($result->getData()['isPackageAppointment']) ?
-                    $result->getData()['isPackageAppointment'] : null
+                    $result->getData()['isPackageAppointment'] : null,
+                !empty($result->getData()['packageBookingFromBackend']) ?
+                    $result->getData()['packageBookingFromBackend'] : null
             );
 
 

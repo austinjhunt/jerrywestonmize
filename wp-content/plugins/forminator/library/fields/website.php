@@ -138,6 +138,8 @@ class Forminator_Website extends Forminator_Field {
 		$description = $this->get_property( 'description', $field, '' );
 		$design      = $this->get_form_style( $settings );
 
+		$descr_position = self::get_description_position( $field, $settings );
+
 		if ( (bool) $required ) {
 			$ariareq = 'true';
 		}
@@ -169,7 +171,7 @@ class Forminator_Website extends Forminator_Field {
 				$label,
 				$description,
 				$required,
-				$design
+				$descr_position,
 			);
 
 		$html .= '</div>';

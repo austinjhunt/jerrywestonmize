@@ -125,6 +125,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     a.googleCalendarEventId AS appointment_google_calendar_event_id,
                     a.googleMeetUrl AS appointment_google_meet_url,
                     a.outlookCalendarEventId AS appointment_outlook_calendar_event_id,
+                    a.microsoftTeamsUrl AS appointment_microsoft_teams_url,
                     a.appleCalendarEventId AS appointment_apple_calendar_event_id,
                     a.zoomMeeting AS appointment_zoom_meeting,
                     a.lessonSpace AS appointment_lesson_space,
@@ -189,7 +190,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 LEFT JOIN {$this->customerBookingsExtrasTable} cbe ON cbe.customerBookingId = cb.id
                 LEFT JOIN {$this->couponsTable} c ON (pc.couponId IS NOT NULL AND c.id = pc.couponId) OR (c.id = cb.couponId)
                 WHERE a.id = :appointmentId
-                ORDER BY a.bookingStart"
+                ORDER BY cb.id, p.id"
             );
 
             $statement->bindParam(':appointmentId', $id);
@@ -228,6 +229,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     a.googleCalendarEventId AS appointment_google_calendar_event_id,
                     a.googleMeetUrl AS appointment_google_meet_url,
                     a.outlookCalendarEventId AS appointment_outlook_calendar_event_id,
+                    a.microsoftTeamsUrl AS appointment_microsoft_teams_url,
                     a.appleCalendarEventId AS appointment_apple_calendar_event_id,
                     a.zoomMeeting AS appointment_zoom_meeting,
                     a.lessonSpace AS appointment_lesson_space,
@@ -327,6 +329,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     a.googleCalendarEventId AS appointment_google_calendar_event_id,
                     a.googleMeetUrl AS appointment_google_meet_url,
                     a.outlookCalendarEventId AS appointment_outlook_calendar_event_id,
+                    a.microsoftTeamsUrl AS appointment_microsoft_teams_url,
                     a.appleCalendarEventId AS appointment_apple_calendar_event_id,
                     a.zoomMeeting AS appointment_zoom_meeting,
                     a.lessonSpace AS appointment_lesson_space,
@@ -496,6 +499,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
             ':googleCalendarEventId'  => $data['googleCalendarEventId'],
             ':googleMeetUrl'          => $data['googleMeetUrl'],
             ':outlookCalendarEventId' => $data['outlookCalendarEventId'],
+            ':microsoftTeamsUrl'      => $data['microsoftTeamsUrl'],
             ':appleCalendarEventId'   => $data['appleCalendarEventId'],
             ':lessonSpace'            => $data['lessonSpace'],
         ];
@@ -515,6 +519,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 `googleCalendarEventId` = :googleCalendarEventId,                    
                 `googleMeetUrl` = :googleMeetUrl,
                 `outlookCalendarEventId` = :outlookCalendarEventId,
+                `microsoftTeamsUrl` = :microsoftTeamsUrl,
                 `appleCalendarEventId` = :appleCalendarEventId,
                 `lessonSpace` = :lessonSpace
                 WHERE id = :id"
@@ -1237,6 +1242,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     a.googleCalendarEventId AS appointment_google_calendar_event_id,
                     a.googleMeetUrl AS appointment_google_meet_url,
                     a.outlookCalendarEventId AS appointment_outlook_calendar_event_id,
+                    a.microsoftTeamsUrl AS appointment_microsoft_teams_url,
                     a.appleCalendarEventId AS appointment_apple_calendar_event_id,
                     a.zoomMeeting AS appointment_zoom_meeting,
                     a.lessonSpace AS appointment_lesson_space,
@@ -1252,7 +1258,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 {$bookingExtrasJoin}
                 {$couponsJoin}
                 {$where}
-                ORDER BY a.bookingStart"
+                ORDER BY a.bookingStart, a.id"
             );
 
             $statement->execute($params);
@@ -1283,6 +1289,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 a.googleCalendarEventId as appointment_google_calendar_event_id,
                 a.googleMeetUrl AS appointment_google_meet_url,
                 a.outlookCalendarEventId AS appointment_outlook_calendar_event_id,
+                a.microsoftTeamsUrl AS appointment_microsoft_teams_url,
                 a.appleCalendarEventId AS appointment_apple_calendar_event_id,
                 a.notifyParticipants AS appointment_notifyParticipants
             FROM {$this->table} a WHERE (
@@ -1406,6 +1413,20 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
             $params[':status'] = $criteria['status'];
         }
 
+        if (!empty($criteria['locations'])) {
+            $queryLocations = [];
+
+            foreach ((array)$criteria['locations'] as $index => $value) {
+                $param = ':location' . $index;
+
+                $queryLocations[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = 'a.locationId IN (' . implode(', ', $queryLocations) . ')';
+        }
+
         $limit = $this->getLimit(
             !empty($criteria['page']) ? (int)$criteria['page'] : 0,
             (int)$itemsPerPage
@@ -1432,6 +1453,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     a.googleCalendarEventId AS appointment_google_calendar_event_id,
                     a.googleMeetUrl AS appointment_google_meet_url,
                     a.outlookCalendarEventId AS appointment_outlook_calendar_event_id,
+                    a.microsoftTeamsUrl AS appointment_microsoft_teams_url,
                     a.appleCalendarEventId AS appointment_apple_calendar_event_id,
                     a.zoomMeeting AS appointment_zoom_meeting,
                     a.lessonSpace AS appointment_lesson_space,

@@ -12,10 +12,10 @@
  *
  * @param string $slug Addon slug.
  *
- * @return object
+ * @return Forminator_Integration|null
  */
 function forminator_get_addon( $slug ) {
-	return Forminator_Integration_Loader::get_instance()->get_addon( $slug ) ?? Forminator_Addon_Loader::get_instance()->get_addon( $slug );
+	return Forminator_Integration_Loader::get_instance()->get_addon( $slug );
 }
 
 /**
@@ -60,9 +60,6 @@ function forminator_get_pro_addon_list() {
  */
 function forminator_get_registered_addons_list() {
 	$addon_list = Forminator_Integration_Loader::get_instance()->get_addons()->to_array();
-
-	$old_addon_list = Forminator_Addon_Loader::get_instance()->get_addons()->to_array();
-	$addon_list     = array_merge( $addon_list, $old_addon_list );
 	usort( $addon_list, 'sort_addons' );
 
 	return $addon_list;
@@ -135,7 +132,7 @@ function forminator_get_registered_addons_grouped_by_connected() {
  * @return Forminator_Integration[]
  */
 function forminator_get_addons_instance_connected_with_module( $module_id, $module_type ) {
-	$grouped_addons = forminator_get_registered_addons_grouped_by_module_connected( $module_id, $module_type );
+	$grouped_addons = forminator_get_registered_addons_grouped_by_module_connected( $module_id, $module_type, true );
 
 	$addons = array();
 	foreach ( $grouped_addons['connected'] as $property ) {
@@ -161,19 +158,42 @@ function forminator_get_addons_instance_connected_with_module( $module_id, $modu
  *
  * @param int    $module_id Module ID.
  * @param string $module_type Module type.
+ * @param bool   $connected_only Return connected integrations only.
  *
  * @return array
  */
-function forminator_get_registered_addons_grouped_by_module_connected( $module_id, $module_type ) {
+function forminator_get_registered_addons_grouped_by_module_connected( $module_id, $module_type, $connected_only = false ) {
 	$grouped_addons = array(
 		'connected'     => array(),
 		'not_connected' => array(),
 	);
 
 	$addons = Forminator_Integration_Loader::get_instance()->get_addons()->to_array();
-
-	$old_addon_list = Forminator_Addon_Loader::get_instance()->get_addons()->to_array();
-	$addons         = array_merge( $addons, $old_addon_list );
+	// Get only connected integrations to the module to avoid checking all integrations.
+	if ( $connected_only ) {
+		$post_meta = get_post_meta( $module_id );
+		// Remove empty integrations.
+		$post_meta = array_filter(
+			$post_meta,
+			function ( $value ) {
+				return ! empty( $value ) && array( 'a:0:{}' ) !== $value;
+			}
+		);
+		$meta_keys = array_keys( $post_meta );
+		$addons    = array_filter(
+			$addons,
+			function ( $addon ) use ( $meta_keys, $module_type ) {
+				$integration_slug = $addon['slug'] ?? '';
+				foreach ( $meta_keys as $meta_key ) {
+					// Check if there are relevant settings for this integration - leave it, otherwise - remove it.
+					if ( strpos( $meta_key, 'forminator_addon_' . $integration_slug . '_' . $module_type . '_settings' ) === 0 ) {
+						return true;
+					}
+				}
+				return false;
+			}
+		);
+	}
 
 	foreach ( $addons as $slug => $addon_settings ) {
 		$addon           = Forminator_Integration_Loader::get_instance()->get_addon( $slug );
@@ -253,9 +273,9 @@ function forminator_group_addons_by_module( $grouped_addons, $addon, $addon_sett
  *
  * @since 1.1
  *
- * @param object $addon Addon.
+ * @param Forminator_Integration $addon Addon.
  */
-function forminator_maybe_attach_addon_hook( $addon ) {
+function forminator_maybe_attach_addon_hook( Forminator_Integration $addon ) {
 	$addon->global_hookable();
 	// only hooks that available on admin.
 	if ( is_admin() ) {
@@ -1144,9 +1164,7 @@ function forminator_addon_integration_section_admin_url( $addon, $section, $with
  */
 function forminator_get_registered_addons() {
 	$addons            = array();
-	$registered_addons = Forminator_Integration_Loader::get_instance()->get_addons()->to_array();
-	$old_addon_list    = Forminator_Addon_Loader::get_instance()->get_addons()->to_array();
-	$registered_addons = array_merge( $registered_addons, $old_addon_list );
+	$registered_addons = Forminator_Integration_Loader::get_instance()->get_addons();
 
 	foreach ( $registered_addons as $slug => $registered_addon ) {
 		$addon = forminator_get_addon( $slug );

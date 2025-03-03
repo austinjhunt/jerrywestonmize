@@ -25,6 +25,14 @@ class ReassignBookingController extends Controller
         'bookingStart',
         'utcOffset',
         'timeZone',
+        'status',
+        'serviceId',
+        'providerId',
+        'locationId',
+        'notifyParticipants',
+        'createPaymentLinks',
+        'customFields',
+        'internalNotes',
     ];
 
     /**

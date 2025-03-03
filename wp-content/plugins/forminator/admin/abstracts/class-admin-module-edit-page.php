@@ -652,10 +652,13 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			 *
 			 * @since 1.11
 			 *
-			 * @param int    $id - module id.
+			 * @param int    $new_id - module id.
 			 * @param object $model - module model.
+			 *
+			 * @since 1.39
+			 * @param int    $id - Old module id.
 			 */
-			do_action( 'forminator_' . static::$module_slug . '_action_clone', $new_id, $model );
+			do_action( 'forminator_' . static::$module_slug . '_action_clone', $new_id, $model, $id );
 
 			$function = 'forminator_clone_' . static::$module_slug . '_submissions_retention';
 			if ( function_exists( $function ) ) {

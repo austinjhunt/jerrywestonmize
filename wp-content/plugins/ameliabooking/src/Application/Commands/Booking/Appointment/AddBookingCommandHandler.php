@@ -181,6 +181,10 @@ class AddBookingCommandHandler extends CommandHandler
                     $reservation->isNewUser()->getValue()
                 );
 
+                if (!empty($appointmentData['packageBookingFromBackend'])) {
+                    $data['packageBookingFromBackend'] = $appointmentData['packageBookingFromBackend'];
+                }
+
                 $result->setData($data);
             }
 

@@ -170,7 +170,7 @@
 			    message         = '',
 			    wrapper_message = null;
 
-			wrapper_message = this.$el.find('.forminator-response-message');
+			wrapper_message = $(html).find('.forminator-response-message');
 			if (wrapper_message.length) {
 				message = wrapper_message.get(0).outerHTML;
 			}

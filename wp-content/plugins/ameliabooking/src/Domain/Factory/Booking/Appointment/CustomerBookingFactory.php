@@ -108,6 +108,18 @@ class CustomerBookingFactory
             $customerBooking->setLastBooking(new BooleanValueObject($data['isLastBooking']));
         }
 
+        if (isset($data['setIcsFiles'])) {
+            $customerBooking->setIcsFiles($data['setIcsFiles']);
+        }
+
+        if (isset($data['isNew'])) {
+            $customerBooking->setNew(new BooleanValueObject($data['isNew']));
+        }
+
+        if (isset($data['isUpdated'])) {
+            $customerBooking->setUpdated(new BooleanValueObject($data['isUpdated']));
+        }
+
         if (isset($data['deposit'])) {
             $customerBooking->setDeposit(new BooleanValueObject($data['deposit']));
         }
@@ -201,6 +213,12 @@ class CustomerBookingFactory
 
             $bookingEventTicketId = !empty($row['booking_ticket_id']) ? $row['booking_ticket_id'] : null;
 
+            $eventPeriodId = !empty($row['event_periodId']) ? $row['event_periodId'] : null;
+
+            $eventProviderId = !empty($row['provider_id']) ? $row['provider_id'] : null;
+
+            $eventId = !empty($row['event_id']) ? $row['event_id'] : null;
+
             if ($id && empty($data[$id])) {
                 $data[$id] = [
                     'id'              => $id,
@@ -271,6 +289,44 @@ class CustomerBookingFactory
                     'customerBookingId' => $id,
                     'persons'           => $row['booking_ticket_persons'],
                     'price'             => $row['booking_ticket_price'],
+                ];
+            }
+
+            if ($data[$id] && $eventId && empty($data[$id]['event'])) {
+                $data[$id]['event'] = [
+                    'id'            => $eventId,
+                    'name'          => $row['event_name'],
+                    'status'        => $row['event_status'],
+                    'customPricing' => $row['event_customPricing'],
+                    'organizerId'   => $row['event_organizerId'],
+                    'isWaitingList' => $row['event_settings'] ? json_decode($row['event_settings'], true)['waitingList']['enabled'] : false,
+                ];
+            }
+
+            if ($data[$id] && $eventProviderId) {
+                if ($data[$id]['event']['organizerId'] === $eventProviderId && empty($data[$id]['event']['organizer'])) {
+                    $data[$id]['event']['organizer'] = [
+                        'id'        => $eventProviderId,
+                        'firstName' => $row['provider_firstName'],
+                        'lastName'  => $row['provider_lastName'],
+                        'picture'   => $row['provider_pictureThumbPath']
+                    ];
+                } else if ($data[$id]['event']['organizerId'] !== $eventProviderId && empty($data[$id]['event']['providers'][$eventProviderId])) {
+                    $data[$id]['event']['providers'][$eventProviderId] = [
+                        'id'        => $eventProviderId,
+                        'firstName' => $row['provider_firstName'],
+                        'lastName'  => $row['provider_lastName'],
+                        'picture'   => $row['provider_pictureThumbPath']
+                    ];
+                }
+            }
+
+            if ($data[$id] && $eventPeriodId && empty($data[$id]['eventPeriods'][$eventPeriodId])) {
+                $data[$id]['eventPeriods'][$eventPeriodId] = [
+                    'id'          => $eventPeriodId,
+                    'periodStart' => $row['event_periodStart'],
+                    'zoomMeeting' => $row['event_zoomMeeting'],
+                    'googleMeetUrl' => $row['event_googleMeetUrl']
                 ];
             }
         }

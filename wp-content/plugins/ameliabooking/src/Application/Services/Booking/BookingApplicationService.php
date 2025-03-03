@@ -129,6 +129,8 @@ class BookingApplicationService
                 $appointment['bookings'][$key]['isChangedStatus'] = false;
             }
 
+            $booking['isNew'] = $oldBookingKey === false;
+
             if ($oldBookingKey === false || ($changedStatus && !($oldCanceledOrRejected && $newCanceledOrRejected))) {
                 $appointment['bookings'][$key]['isChangedStatus'] = true;
                 $booking['isChangedStatus'] = true;
@@ -169,6 +171,55 @@ class BookingApplicationService
     public function isBookingCanceledOrRejectedOrNoShow($bookingStatus)
     {
         return $bookingStatus === BookingStatus::CANCELED || $bookingStatus === BookingStatus::REJECTED || $bookingStatus === BookingStatus::NO_SHOW;
+    }
+
+    /**
+     * @param string $newBookingStatus
+     * @param string $oldBookingStatus
+     * @param string $newAppointmentStatus
+     * @param string $oldAppointmentStatus
+     *
+     * @return boolean
+     */
+    public function isAppointmentStatusChangedForBooking($newBookingStatus, $oldBookingStatus, $newAppointmentStatus, $oldAppointmentStatus)
+    {
+        return (
+                // booking has changed status from approved to pending IN already approved appointment
+                $oldBookingStatus === BookingStatus::APPROVED &&
+                $newBookingStatus === BookingStatus::PENDING &&
+                $oldAppointmentStatus === BookingStatus::APPROVED &&
+                $newAppointmentStatus === BookingStatus::APPROVED
+            ) || (
+                // booking has changed status from pending to approved IN already approved appointment
+                $oldBookingStatus === BookingStatus::PENDING &&
+                $newBookingStatus === BookingStatus::APPROVED &&
+                $oldAppointmentStatus === BookingStatus::APPROVED &&
+                $newAppointmentStatus === BookingStatus::APPROVED
+            ) || (
+                // booking has changed status from pending to approved and appointment has changed status from pending to approved
+                $oldBookingStatus === BookingStatus::PENDING &&
+                $newBookingStatus === BookingStatus::APPROVED &&
+                $oldAppointmentStatus === BookingStatus::PENDING &&
+                $newAppointmentStatus === BookingStatus::APPROVED
+            ) || (
+                // booking has changed status from approved to pending and appointment has changed status from approved to pending
+                $oldBookingStatus === BookingStatus::APPROVED &&
+                $newBookingStatus === BookingStatus::PENDING &&
+                $oldAppointmentStatus === BookingStatus::APPROVED &&
+                $newAppointmentStatus === BookingStatus::PENDING
+            ) || (
+                // booking is approved and appointment has changed status (capacity is changed)
+                $oldBookingStatus === BookingStatus::APPROVED &&
+                $newBookingStatus === BookingStatus::APPROVED &&
+                $oldAppointmentStatus === BookingStatus::APPROVED &&
+                $newAppointmentStatus === BookingStatus::PENDING
+            ) || (
+                // booking is approved and appointment has changed status (capacity is changed)
+                $oldBookingStatus === BookingStatus::APPROVED &&
+                $newBookingStatus === BookingStatus::APPROVED &&
+                $oldAppointmentStatus === BookingStatus::PENDING &&
+                $newAppointmentStatus === BookingStatus::APPROVED
+            );
     }
 
     /**
@@ -663,7 +714,7 @@ class BookingApplicationService
     public function isBookingAdded($bookings)
     {
         foreach ($bookings->getItems() as $booking) {
-            if ($booking->getId()->getValue() === 0) return true;
+            if (!$booking->getId() || $booking->getId()->getValue() === 0) return true;
         }
         return false;
     }

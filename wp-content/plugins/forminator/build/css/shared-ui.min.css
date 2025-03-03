@@ -24634,10 +24634,6 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   }
 }
 
-.sui-2-12-23 #forminator-templates .sui-box-footer {
-  justify-content: space-between;
-}
-
 @media (max-width: 479px) {
   .sui-2-12-23 #forminator-templates .sui-box-footer .forminator-page-results {
     margin-bottom: 10px;

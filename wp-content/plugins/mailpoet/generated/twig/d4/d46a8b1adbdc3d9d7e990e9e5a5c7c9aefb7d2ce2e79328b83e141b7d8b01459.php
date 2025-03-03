@@ -210,23 +210,27 @@ class __TwigTemplate_9641d7769a94575cd44aaeff4df310da82a8fe07490b66905fc1e575dba
         // line 50
         yield json_encode(($context["sender_restrictions"] ?? null));
         yield ";
+      var mailpoet_block_email_editor_enabled = ";
+        // line 51
+        yield json_encode(($context["block_email_editor_enabled"] ?? null));
+        yield ";
     ";
-        // line 52
+        // line 53
         yield "
     var mailpoet_newsletters_templates_recently_sent_count = ";
-        // line 53
+        // line 54
         yield json_decode(($context["newsletters_templates_recently_sent_count"] ?? null));
         yield ";
     var corrupt_newsletters = ";
-        // line 54
+        // line 55
         yield json_encode(($context["corrupt_newsletters"] ?? null));
         yield ";
     var mailpoet_legacy_automatic_emails_count = ";
-        // line 55
+        // line 56
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["legacy_automatic_emails_count"] ?? null), "html", null, true);
         yield ";
     var mailpoet_legacy_automatic_emails_notice_dismissed = ";
-        // line 56
+        // line 57
         yield json_encode(($context["legacy_automatic_emails_notice_dismissed"] ?? null));
         yield ";
 
@@ -235,11 +239,11 @@ class __TwigTemplate_9641d7769a94575cd44aaeff4df310da82a8fe07490b66905fc1e575dba
         return; yield '';
     }
 
-    // line 61
+    // line 62
     public function block_after_translations($context, array $blocks = [])
     {
         $macros = $this->macros;
-        // line 62
+        // line 63
         yield "  ";
         yield do_action("mailpoet_newsletters_translations_after");
         yield "
@@ -268,7 +272,7 @@ class __TwigTemplate_9641d7769a94575cd44aaeff4df310da82a8fe07490b66905fc1e575dba
      */
     public function getDebugInfo()
     {
-        return array (  240 => 62,  236 => 61,  227 => 56,  223 => 55,  219 => 54,  215 => 53,  212 => 52,  208 => 50,  204 => 49,  200 => 48,  196 => 47,  192 => 46,  188 => 45,  184 => 44,  180 => 43,  176 => 42,  172 => 41,  168 => 40,  164 => 39,  159 => 37,  155 => 36,  151 => 35,  147 => 34,  142 => 32,  138 => 31,  134 => 30,  129 => 28,  125 => 27,  120 => 25,  115 => 23,  111 => 22,  106 => 20,  102 => 19,  98 => 18,  94 => 17,  90 => 16,  86 => 15,  82 => 14,  78 => 13,  74 => 12,  70 => 11,  66 => 10,  62 => 9,  57 => 8,  52 => 4,  48 => 3,  37 => 1,);
+        return array (  244 => 63,  240 => 62,  231 => 57,  227 => 56,  223 => 55,  219 => 54,  216 => 53,  212 => 51,  208 => 50,  204 => 49,  200 => 48,  196 => 47,  192 => 46,  188 => 45,  184 => 44,  180 => 43,  176 => 42,  172 => 41,  168 => 40,  164 => 39,  159 => 37,  155 => 36,  151 => 35,  147 => 34,  142 => 32,  138 => 31,  134 => 30,  129 => 28,  125 => 27,  120 => 25,  115 => 23,  111 => 22,  106 => 20,  102 => 19,  98 => 18,  94 => 17,  90 => 16,  86 => 15,  82 => 14,  78 => 13,  74 => 12,  70 => 11,  66 => 10,  62 => 9,  57 => 8,  52 => 4,  48 => 3,  37 => 1,);
     }
 
     public function getSourceContext()

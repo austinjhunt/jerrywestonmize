@@ -11,7 +11,7 @@ class ActionScheduler_LogEntry {
  }
  $this->action_id = $action_id;
  $this->message = $message;
- $this->date = $date ? $date : new Datetime;
+ $this->date = $date ? $date : new Datetime();
  }
  public function get_date() {
  return $this->date;

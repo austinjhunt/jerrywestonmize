@@ -89,6 +89,9 @@ class Payment
     /** @var Json */
     private $transfers;
 
+    /** @var array */
+    private $paymentLinks;
+
     /**
      * Payment constructor.
      *
@@ -470,6 +473,22 @@ class Payment
         $this->transfers = $transfers;
     }
 
+    /**
+     * @return array
+     */
+    public function getPaymentLinks()
+    {
+        return $this->paymentLinks;
+    }
+
+    /**
+     * @param array $paymentLinks
+     */
+    public function setPaymentLinks($paymentLinks)
+    {
+        $this->paymentLinks = $paymentLinks;
+    }
+
 
     /**
      * @return array
@@ -499,6 +518,7 @@ class Payment
             'transactionId'     => $this->getTransactionId(),
             'transfers'         => $this->getTransfers() ? $this->getTransfers()->getValue() : null,
             'invoiceNumber'     => $this->getInvoiceNumber() ? $this->getInvoiceNumber()->getValue() : null,
+            'paymentLinks'      => $this->getPaymentLinks() ?: null,
         ];
     }
 }

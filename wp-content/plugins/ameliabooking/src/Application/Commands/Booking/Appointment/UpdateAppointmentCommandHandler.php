@@ -159,9 +159,15 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         $appointment->setProvider($provider);
 
         /** @var Appointment $oldAppointment */
-        $oldAppointment      = $appointmentRepo->getById($appointment->getId()->getValue());
-        $initialBookingStart = $oldAppointment->getBookingStart()->getValue();
-        $initialBookingEnd   = $oldAppointment->getBookingEnd()->getValue();
+        $oldAppointment = $appointmentRepo->getById($appointment->getId()->getValue());
+
+        $appointment->setInitialBookingStart(
+            new DateTimeValue(clone $oldAppointment->getBookingStart()->getValue())
+        );
+
+        $appointment->setInitialBookingEnd(
+            new DateTimeValue(clone $oldAppointment->getBookingEnd()->getValue())
+        );
 
         /** @var CustomerBooking $newBooking */
         foreach ($appointment->getBookings()->getItems() as $newBooking) {
@@ -201,46 +207,10 @@ class UpdateAppointmentCommandHandler extends CommandHandler
             )
         );
 
-        $appointmentEmployeeChanged = null;
-
-        $appointmentZoomUserChanged = false;
-
-        $appointmentZoomUsersLicenced = false;
-
-        if ($appointment->getProviderId()->getValue() !== $oldAppointment->getProviderId()->getValue()) {
-            $appointmentEmployeeChanged = $oldAppointment->getProviderId()->getValue();
-
-            $provider = $providerRepository->getById($appointment->getProviderId()->getValue());
-
-            $oldProvider = $providerRepository->getById($oldAppointment->getProviderId()->getValue());
-
-            if ($provider && $oldProvider && $provider->getZoomUserId() && $oldProvider->getZoomUserId() &&
-                $provider->getZoomUserId()->getValue() !== $oldProvider->getZoomUserId()->getValue()) {
-                $appointmentZoomUserChanged = true;
-
-                $zoomUserType = 0;
-
-                $zoomOldUserType = 0;
-
-                $zoomResult = $zoomService->getUsers();
-
-                if (!(isset($zoomResult['code']) && $zoomResult['code'] === 124) &&
-                    !($zoomResult['users'] === null && isset($zoomResult['message']))) {
-                    $zoomUsers = $zoomResult['users'];
-                    foreach ($zoomUsers as $key => $val) {
-                        if ($val['id'] === $provider->getZoomUserId()->getValue()) {
-                            $zoomUserType = $val['type'];
-                        }
-                        if ($val['id'] === $oldProvider->getZoomUserId()->getValue()) {
-                            $zoomOldUserType = $val['type'];
-                        }
-                    }
-                }
-                if ($zoomOldUserType > 1 && $zoomUserType > 1) {
-                    $appointmentZoomUsersLicenced = true;
-                }
-            }
-        }
+        $userConnectionChanges = $appointmentAS->getUserConnectionChanges(
+            $appointment->getProviderId()->getValue(),
+            $oldAppointment->getProviderId()->getValue()
+        );
 
         if ($oldAppointment->getZoomMeeting()) {
             $appointment->setZoomMeeting($oldAppointment->getZoomMeeting());
@@ -268,6 +238,7 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         $appointment->setGoogleCalendarEventId($oldAppointment->getGoogleCalendarEventId());
         $appointment->setGoogleMeetUrl($oldAppointment->getGoogleMeetUrl());
         $appointment->setOutlookCalendarEventId($oldAppointment->getOutlookCalendarEventId());
+        $appointment->setMicrosoftTeamsUrl($oldAppointment->getMicrosoftTeamsUrl());
         $appointment->setAppleCalendarEventId($oldAppointment->getAppleCalendarEventId());
 
         $appointmentRepo->beginTransaction();
@@ -385,6 +356,8 @@ class UpdateAppointmentCommandHandler extends CommandHandler
                     $booking->setChangedStatus(new BooleanValueObject(true));
                 }
             }
+
+            $appointment->setChangedStatus(new BooleanValueObject(true));
         }
 
         $appointmentArray = $appointment->toArray();
@@ -404,16 +377,13 @@ class UpdateAppointmentCommandHandler extends CommandHandler
             [
                 Entities::APPOINTMENT          => $appointmentArray,
                 'appointmentStatusChanged'     => $appointmentStatusChanged,
+                'oldAppointmentStatus'         => $oldAppointment->getStatus()->getValue(),
                 'appointmentRescheduled'       => $appRescheduled,
-                'initialAppointmentDateTime'   => [
-                    'bookingStart' => $initialBookingStart->format('Y-m-d H:i:s'),
-                    'bookingEnd'   => $initialBookingEnd->format('Y-m-d H:i:s'),
-                ],
                 'bookingsWithChangedStatus'    => $bookingsWithChangedStatus,
-                'appointmentEmployeeChanged'   => $appointmentEmployeeChanged,
-                'appointmentZoomUserChanged'   => $appointmentZoomUserChanged,
+                'appointmentEmployeeChanged'   => $userConnectionChanges['appointmentEmployeeChanged'],
+                'appointmentZoomUserChanged'   => $userConnectionChanges['appointmentZoomUserChanged'],
                 'bookingAdded'                 => $bookingAdded,
-                'appointmentZoomUsersLicenced' => $appointmentZoomUsersLicenced,
+                'appointmentZoomUsersLicenced' => $userConnectionChanges['appointmentZoomUsersLicenced'],
                 'createPaymentLinks'           => $command->getField('createPaymentLinks')
             ]
         );

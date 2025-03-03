@@ -182,9 +182,9 @@
             'dev_requirement' => false,
         ),
         'microsoft/microsoft-graph' => array(
-            'pretty_version' => '1.12.0',
-            'version' => '1.12.0.0',
-            'reference' => '8bcd1c3ebcb6dbd65713a180d85432eedb3faeed',
+            'pretty_version' => '1.61.0',
+            'version' => '1.61.0.0',
+            'reference' => '79acac2d8b7235b5f8b935f3227e9824444b8de7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../microsoft/microsoft-graph',
             'aliases' => array(),

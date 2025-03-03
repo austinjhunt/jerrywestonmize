@@ -11,6 +11,7 @@ use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventPeriodFactory;
 use AmeliaBooking\Domain\Factory\Booking\Event\RecurringFactory;
 use AmeliaBooking\Domain\Services\Booking\EventDomainService;
@@ -19,6 +20,7 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Recurring;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Exception;
@@ -67,6 +69,8 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         $eventDomainService = $this->container->get('domain.booking.event.service');
         /** @var EventRepository $eventRepository */
         $eventRepository = $this->container->get('domain.booking.event.repository');
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
 
         try {
             /** @var AbstractUser $user */
@@ -91,10 +95,19 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             throw new AccessDeniedException('You are not allowed to read an event');
         }
 
-        $events       = [];
-        $providerList = $command->getField('providers');
-        $periodList   = $command->getField('periods');
-        $eventParams  = $command->getField('eventIds');
+        $events = [];
+
+        $periodList = $command->getField('periods');
+
+        $eventParams = $command->getField('eventIds');
+
+        /** @var Collection $providers */
+        $providers = $providerRepository->getWithSchedule(
+            [
+                'fetchCalendars' => true,
+                'providers'      => array_column($command->getField('providers'), 'id'),
+            ]
+        );
 
         $eventIds = $eventRepository->getRecurringIds($eventParams[0], $eventParams[1]);
 
@@ -128,19 +141,29 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             }
         }
 
-        foreach ($providerList as $provider) {
+        /** @var Provider $provider */
+        foreach ($providers->getItems() as $provider) {
+            $providerArray = $provider->toArray();
+
             /** @var EventPeriod $period */
             foreach ($periodList as $period) {
                 $periodStart    = DateTimeService::getCustomDateTimeRFC3339($period->getPeriodStart()->getValue()->format('Y-m-d H:i:s'));
                 $periodEnd      = DateTimeService::getCustomDateTimeRFC3339($period->getPeriodEnd()->getValue()->format('Y-m-d H:i:s'));
                 $periodStartEnd = explode('T', $periodStart)[0] . 'T' . explode('T', $periodEnd)[1];
 
-                $events = array_merge($events, $googleCalendarService->getEvents($provider, $periodStart, $periodStartEnd, $periodEnd, $eventIds));
-                $events = array_merge($events, $outlookCalendarService->getEvents($provider, $periodStart, $periodStartEnd, $periodEnd, $eventIds));
+                try {
+                    $events = array_merge($events, $googleCalendarService->getEvents($providerArray, $periodStart, $periodStartEnd, $periodEnd, $eventIds));
+                } catch (Exception $e) {
+                }
 
-                $events = apply_filters('amelia_get_calendar_events_filter', $events, $period->toArray(), $provider);
+                try {
+                    $events = array_merge($events, $outlookCalendarService->getEvents($providerArray, $periodStart, $periodStartEnd, $periodEnd, $eventIds));
+                } catch (Exception $e) {
+                }
 
-                do_action('amelia_get_calendar_events', $events, $period->toArray(), $provider);
+                $events = apply_filters('amelia_get_calendar_events_filter', $events, $period->toArray(), $providerArray);
+
+                do_action('amelia_get_calendar_events', $events, $period->toArray(), $providerArray);
 
                 if (count($events) > 0) {
                     $result->setResult(CommandResult::RESULT_CONFLICT);

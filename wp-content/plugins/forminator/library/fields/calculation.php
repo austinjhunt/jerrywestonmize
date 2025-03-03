@@ -118,6 +118,7 @@ class Forminator_Calculation extends Forminator_Field {
 		$this->field         = $field;
 		$this->form_settings = $settings;
 		$hidden_behavior     = self::get_property( 'hidden_behavior', $field );
+		$descr_position      = self::get_description_position( $field, $settings );
 
 		$html        = '';
 		$wrapper     = array();
@@ -128,7 +129,6 @@ class Forminator_Calculation extends Forminator_Field {
 		$value       = esc_html( self::get_post_data( $name, self::get_property( 'default_value', $field ) ) );
 		$label       = esc_html( self::get_property( 'field_label', $field, '' ) );
 		$description = self::get_property( 'description', $field, '' );
-		$design      = $this->get_form_style( $settings );
 		$formula     = self::get_property( 'formula', $field, '', 'str' );
 		$is_hidden   = self::get_property( 'hidden', $field, false, 'bool' );
 		$suffix      = self::get_property( 'suffix', $field );
@@ -208,7 +208,7 @@ class Forminator_Calculation extends Forminator_Field {
 				$label,
 				$description,
 				$required,
-				$design,
+				$descr_position,
 				$wrapper
 			);
 

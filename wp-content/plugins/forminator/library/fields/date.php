@@ -150,6 +150,7 @@ class Forminator_Date extends Forminator_Field {
 		$id              = self::get_field_id( $name );
 		$describedby     = esc_attr( $id . '-description' );
 		$is_basic        = 'basic' === $design;
+		$descr_position  = self::get_description_position( $field, $settings );
 
 		if ( false !== strpos( $date_format, '-' ) ) {
 			$sep = '-';
@@ -321,7 +322,7 @@ class Forminator_Date extends Forminator_Field {
 				$label,
 				$description,
 				$required,
-				$design,
+				$descr_position,
 				$has_icon ? $icon_markup : ''
 			);
 
@@ -332,6 +333,10 @@ class Forminator_Date extends Forminator_Field {
 
 				// Mark day, month and year required markup as false.
 				$required = false;
+			}
+
+			if ( 'above' === $descr_position ) {
+				$html .= self::get_description( $description, $id, $descr_position );
 			}
 
 			$default_date       = esc_html( self::get_property( 'default_date', $field, false ) );
@@ -555,8 +560,9 @@ class Forminator_Date extends Forminator_Field {
 			// END: Row.
 			$html .= '</div>';
 
-			$html .= self::get_description( $description, $id );
-
+			if ( 'above' !== $descr_position ) {
+				$html .= self::get_description( $description, $id, $descr_position );
+			}
 		} elseif ( 'input' === $type ) {
 			$day_value   = '';
 			$month_value = '';
@@ -574,6 +580,10 @@ class Forminator_Date extends Forminator_Field {
 			}
 
 			$html .= self::get_field_label( $label, 'forminator-field-' . $name, $required );
+
+			if ( 'above' === $descr_position ) {
+				$html .= self::get_description( $description, $id, $descr_position );
+			}
 
 			// START: Row.
 			$html .= '<div class="forminator-date-input">';
@@ -627,7 +637,6 @@ class Forminator_Date extends Forminator_Field {
 								false,
 								'',
 								$required,
-								$design
 							);
 
 						} else {
@@ -637,7 +646,6 @@ class Forminator_Date extends Forminator_Field {
 								$this->sanitize_value( self::get_property( 'day_label', $field ) ),
 								'',
 								$required,
-								$design
 							);
 						}
 
@@ -690,7 +698,6 @@ class Forminator_Date extends Forminator_Field {
 								false,
 								'',
 								$required,
-								$design
 							);
 						} else {
 							$html .= self::create_input(
@@ -698,7 +705,6 @@ class Forminator_Date extends Forminator_Field {
 								$this->sanitize_value( self::get_property( 'month_label', $field ) ),
 								'',
 								$required,
-								$design
 							);
 						}
 
@@ -749,7 +755,6 @@ class Forminator_Date extends Forminator_Field {
 								false,
 								'',
 								$required,
-								$design
 							);
 
 						} else {
@@ -759,7 +764,6 @@ class Forminator_Date extends Forminator_Field {
 								$this->sanitize_value( self::get_property( 'year_label', $field ) ),
 								'',
 								$required,
-								$design
 							);
 						}
 
@@ -778,7 +782,9 @@ class Forminator_Date extends Forminator_Field {
 			// END: Row.
 			$html .= '</div>';
 
-			$html .= self::get_description( $description, $id );
+			if ( 'above' !== $descr_position ) {
+				$html .= self::get_description( $description, $id, $descr_position );
+			}
 		}
 
 		if ( 'picker' === $type ) {

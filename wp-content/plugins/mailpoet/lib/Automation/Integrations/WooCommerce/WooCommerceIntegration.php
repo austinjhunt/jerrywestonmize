@@ -14,6 +14,7 @@ use MailPoet\Automation\Integrations\WooCommerce\SubjectTransformers\WordPressUs
 use MailPoet\Automation\Integrations\WooCommerce\Triggers\AbandonedCart\AbandonedCartTrigger;
 use MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysAProductTrigger;
 use MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysFromACategoryTrigger;
+use MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysFromATagTrigger;
 use MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCancelledTrigger;
 use MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCompletedTrigger;
 use MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCreatedTrigger;
@@ -37,6 +38,9 @@ class WooCommerceIntegration {
 
   /** @var BuysAProductTrigger  */
   private $buysAProductTrigger;
+
+  /** @var BuysFromATagTrigger */
+  private $buysFromATagTrigger;
 
   /** @var BuysFromACategoryTrigger */
   private $buysFromACategoryTrigger;
@@ -70,6 +74,7 @@ class WooCommerceIntegration {
     AbandonedCartTrigger $abandonedCartTrigger,
     BuysAProductTrigger $buysAProductTrigger,
     BuysFromACategoryTrigger $buysFromACategoryTrigger,
+    BuysFromATagTrigger $buysFromATagTrigger,
     AbandonedCartSubject $abandonedCartSubject,
     OrderStatusChangeSubject $orderStatusChangeSubject,
     OrderSubject $orderSubject,
@@ -85,6 +90,7 @@ class WooCommerceIntegration {
     $this->abandonedCartTrigger = $abandonedCartTrigger;
     $this->buysAProductTrigger = $buysAProductTrigger;
     $this->buysFromACategoryTrigger = $buysFromACategoryTrigger;
+    $this->buysFromATagTrigger = $buysFromATagTrigger;
     $this->abandonedCartSubject = $abandonedCartSubject;
     $this->orderStatusChangeSubject = $orderStatusChangeSubject;
     $this->orderSubject = $orderSubject;
@@ -114,6 +120,7 @@ class WooCommerceIntegration {
     $registry->addTrigger($this->abandonedCartTrigger);
     $registry->addTrigger($this->buysAProductTrigger);
     $registry->addTrigger($this->buysFromACategoryTrigger);
+    $registry->addTrigger($this->buysFromATagTrigger);
     $registry->addSubjectTransformer($this->wordPressUserToWooCommerceCustomerTransformer);
   }
 }

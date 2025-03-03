@@ -126,6 +126,7 @@ class Forminator_Admin_AJAX {
 		add_action( 'wp_ajax_forminator_save_payments_settings_popup', array( $this, 'save_payments' ) );
 		add_action( 'wp_ajax_forminator_dismiss_notification', array( $this, 'dismiss_notice' ) );
 		add_action( 'wp_ajax_forminator_dismiss_notice', array( $this, 'dismiss_admin_notice' ) );
+		add_action( 'wp_ajax_forminator_usage_tracking', array( $this, 'toggle_usage_tracking' ) );
 
 		add_action( 'wp_ajax_forminator_promote_remind_later', array( $this, 'promote_remind_later' ) );
 
@@ -350,7 +351,7 @@ class Forminator_Admin_AJAX {
 
 		$id = Forminator_Custom_Form_Admin::update( $id, $title, $status, $template );
 		if ( is_wp_error( $id ) ) {
-			wp_send_json_error( $id->get_error_message() );
+			wp_send_json_error( $id );
 		} else {
 			wp_send_json_success( $id );
 		}
@@ -1511,7 +1512,7 @@ class Forminator_Admin_AJAX {
 		$change_recipients = 'checked' === Forminator_Core::sanitize_text_field( 'change_recipients' );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput
-		$json  = html_entity_decode( wp_unslash( $_POST['importable'] ) );
+		$json  = wp_unslash( $_POST['importable'] );
 		$model = $this->import_json( $json, $slug, $change_recipients );
 
 		$return_url = admin_url( 'admin.php?page=forminator-' . forminator_get_prefix( $slug, 'c' ) );
@@ -1976,16 +1977,20 @@ class Forminator_Admin_AJAX {
 
 		$old_usage_tracking = get_option( 'forminator_usage_tracking' );
 		$usage_tracking     = filter_input( INPUT_POST, 'usage_tracking', FILTER_VALIDATE_BOOLEAN );
+		if ( ! $old_usage_tracking && $usage_tracking ) {
+			Forminator_Core::init_mixpanel( true );
+			do_action( 'forminator_enable_usage_tracking', 'Settings' );
+		} elseif ( $old_usage_tracking && ! $usage_tracking ) {
+			do_action( 'forminator_disable_usage_tracking', 'Settings' );
+		}
 		update_option( 'forminator_usage_tracking', $usage_tracking );
 
 		/**
 		 * Triggered after save dashboard settings
 		 *
-		 * @param boolean $old_usage_tracking Old usage tracking value.
-		 *
 		 * @since 1.27.0
 		 */
-		do_action( 'forminator_after_dashboard_settings', $old_usage_tracking );
+		do_action( 'forminator_after_dashboard_settings' );
 
 		wp_send_json_success();
 	}
@@ -2412,23 +2417,40 @@ class Forminator_Admin_AJAX {
 			update_option( 'forminator_version_upgraded', false );
 		}
 
-		// Remove this code once the next feature is released, as it is a data tracking option.
-		if ( ! empty( $_POST['usage_value'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified in forminator_validate_ajax.
-			$old_usage_tracking = get_option( 'forminator_usage_tracking' );
-			$usage_value        = filter_input( INPUT_POST, 'usage_value', FILTER_VALIDATE_BOOLEAN );
-			update_option( 'forminator_usage_tracking', $usage_value );
+		wp_send_json_success();
+	}
 
+	/**
+	 * Toggle usage tracking
+	 *
+	 * @return void
+	 */
+	public function toggle_usage_tracking() {
+		forminator_validate_ajax( 'forminator_usage_tracking' );
+
+		$usage_value = filter_input( INPUT_POST, 'enabled', FILTER_VALIDATE_BOOLEAN );
+		$source      = 'Upgrade Modal';
+
+		update_option( 'forminator_usage_tracking', $usage_value );
+		Forminator_Core::init_mixpanel( true );
+
+		if ( $usage_value ) {
 			/**
-			 * Triggered after Feature model Usage settings save
+			 * Triggered after enabling Feature model Usage settings on New-feature popup
 			 *
-			 * @param boolean $old_usage_tracking Old usage tracking value.
-			 *
-			 * @since 1.27.0
+			 * @param string $source Source of the action.
 			 */
-			do_action( 'forminator_feature_usage_settings', $old_usage_tracking );
+			do_action( 'forminator_enable_usage_tracking', $source );
+		} else {
+			/**
+			 * Triggered after disabling Feature model Usage settings on New-feature popup
+			 *
+			 * @param string $source Source of the action.
+			 */
+			do_action( 'forminator_disable_usage_tracking', $source );
 		}
 
-		wp_send_json_success();
+		wp_send_json_success( esc_html__( 'Settings saved successfully!', 'forminator' ) );
 	}
 
 	/**

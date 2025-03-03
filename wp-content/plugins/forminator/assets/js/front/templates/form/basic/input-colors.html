@@ -12,6 +12,12 @@
 		<?php } ?>
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input .iti__selected-dial-code {
+		<?php if ( forminator_array_value_exists( $properties, 'basic-input-color' ) && !empty( $properties['basic-input-color'] ) ) { ?>
+			color: <?php echo $properties['basic-input-color'] ?>;
+		<?php } ?>
+	}
+
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:disabled,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-calculation:disabled {
 		<?php if ( forminator_array_value_exists( $properties, 'basic-input-color' ) && !empty( $properties['basic-input-color'] ) ) { ?>
@@ -22,14 +28,17 @@
 		opacity: 1;
 	}
 
-	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:hover {
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:hover,
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input:hover .iti__selected-dial-code {
 		<?php if ( forminator_array_value_exists( $properties, 'basic-input-hover-color' ) && !empty( $properties['basic-input-hover-color'] ) ) { ?>
 			color: <?php echo $properties['basic-input-hover-color'] ?>;
 		<?php } ?>
 	}
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:focus,
-	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:active {
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:active,
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input:focus-within .iti__selected-dial-code,
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input:active .iti__selected-dial-code {
 		<?php if ( forminator_array_value_exists( $properties, 'basic-input-active-color' ) && !empty( $properties['basic-input-active-color'] ) ) { ?>
 			color: <?php echo $properties['basic-input-active-color'] ?>;
 		<?php } ?>

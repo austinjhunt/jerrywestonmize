@@ -103,6 +103,7 @@ class Forminator_Group extends Forminator_Field {
 		$name     = self::get_property( 'element_id', $field );
 		$wrappers = $views_obj::get_grouped_wrappers( $name );
 		$options  = self::prepare_field_options( $field );
+		$settings = $views_obj->model->settings;
 		$html     = '';
 
 		if ( ! empty( $field['field_label'] ) ) {
@@ -112,11 +113,18 @@ class Forminator_Group extends Forminator_Field {
 			);
 		}
 
-		$description = self::get_property( 'description', $field );
-		if ( ! empty( $description ) ) {
-			$html .= sprintf(
-				'<span class="forminator-description forminator-repeater-description">%s</span>',
-				self::esc_description( $description, $name )
+		$description    = self::get_property( 'description', $field );
+		$descr_position = self::get_description_position( $field, $settings );
+		if ( ! empty( $description ) && 'above' === $descr_position ) {
+			$html .= apply_filters(
+				'forminator_field_description',
+				sprintf(
+					'<span class="forminator-description forminator-repeater-description">%s</span>',
+					self::esc_description( $description, $name )
+				),
+				$description,
+				$name,
+				$descr_position
 			);
 		}
 
@@ -156,6 +164,16 @@ class Forminator_Group extends Forminator_Field {
 		} while ( ! empty( $views_obj->draft_data[ $name . '-copies' ] ) && $views_obj->draft_data[ $name . '-copies' ]['value'] >= ( ++$i ) );
 
 		$html .= '</div>';
+
+		if ( 'above' !== $descr_position ) {
+			$html .= apply_filters(
+				'forminator_field_description',
+				self::get_description( $description, $name, $descr_position ),
+				$description,
+				$name,
+				$descr_position
+			);
+		}
 
 		return $html;
 	}

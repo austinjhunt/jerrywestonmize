@@ -226,7 +226,7 @@
 		 */
 		on_restart: function (e) {
 			// restart condition
-			this.$el.find('.forminator-field input:not([type="file"]), .forminator-row input[type=hidden], .forminator-field select, .forminator-field textarea').trigger( 'change', 'forminator_emulate_trigger' );
+			this.$el.find('.forminator-field input, .forminator-row input[type=hidden], .forminator-field select, .forminator-field textarea').trigger( 'forminator.change', 'forminator_emulate_trigger' );
 		},
 
 		/**
@@ -302,7 +302,18 @@
                 if ( 0 === value.length ) {
                     value = null;
                 }
-			} else if ( this.field_is_textarea_wpeditor( $element ) ) {
+			// Check if the element is a multi-select.
+			} else if (this.field_is_select($element) && $element.attr( "multiple" ) ) {
+                value = [];
+                var selected = $element.find("option").filter(':selected');
+                if (selected.length > 0) {
+                    selected.each(function () {
+                        value.push($(this).val().toLowerCase());
+                    });
+                } else {
+                    value = null;
+                }
+            } else if ( this.field_is_textarea_wpeditor( $element ) ) {
                 if ( typeof tinyMCE !== 'undefined' && tinyMCE.activeEditor ) {
                     value = tinyMCE.activeEditor.getContent();
                 }
@@ -353,13 +364,11 @@
 						break;
              	}
 
-            	var formattedDate = new Date();
-
 				if ( '' !== value ) {
-					formattedDate = new Date(value);
+					var formattedDate = new Date(value);
+					value = {'year':formattedDate.getFullYear(), 'month':formattedDate.getMonth(), 'date':formattedDate.getDate(), 'day':formattedDate.getDay()};
 				}
 
-				value = {'year':formattedDate.getFullYear(), 'month':formattedDate.getMonth(), 'date':formattedDate.getDate(), 'day':formattedDate.getDay() };
 
 			} else {
 
@@ -788,7 +797,7 @@
 				undefined !== date.year
 			) {
 				const utcDate = new Date(
-					`${ date.month + 1 }-${ date.date }-${ date.year } UTC`
+					`${ date.month + 1 }/${ date.date }/${ date.year } UTC`
 				);
 				date = utcDate.getTime();
 			}

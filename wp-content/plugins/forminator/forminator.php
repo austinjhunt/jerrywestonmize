@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Forminator
- * Version: 1.38.1
+ * Version: 1.40.0
  * Plugin URI:  https://wpmudev.com/project/forminator/
  * Description: Capture user information (as detailed as you like), engage users with interactive polls that show real-time results and graphs, “no wrong answer” Facebook-style quizzes and knowledge tests.
  * Author: WPMU DEV
@@ -354,7 +354,6 @@ if ( ! class_exists( 'Forminator' ) ) {
 			// Core files.
 			/* @noinspection PhpIncludeInspection */
 			include_once forminator_plugin_dir() . 'library/class-core.php';
-			include_once forminator_plugin_dir() . 'library/class-addon-loader.php';
 			include_once forminator_plugin_dir() . 'library/class-integration-loader.php';
 			include_once forminator_plugin_dir() . 'library/calculator/class-calculator.php';
 		}
@@ -436,8 +435,6 @@ if ( ! class_exists( 'Forminator' ) ) {
 
 			// Prefixed vendor autoload.
 			include_once forminator_plugin_dir() . 'library/external/vendor/autoload.php';
-
-			include_once forminator_plugin_dir() . 'library/lib/analytics/autoload.php';
 
 			if ( ! FORMINATOR_PRO ) {
 
@@ -531,6 +528,24 @@ if ( file_exists( forminator_plugin_dir() . 'library/external/src/Forminator/woo
 			if ( ! get_option( $key ) && class_exists( 'ActionScheduler_StoreSchema' ) ) {
 				global $wpdb;
 				$table = $wpdb->prefix . ActionScheduler_StoreSchema::ACTIONS_TABLE;
+
+				// Check if table exists first.
+				$table_exists = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+					$wpdb->prepare(
+						'SELECT EXISTS (
+							SELECT 1
+							FROM information_schema.tables
+							WHERE table_schema = %s
+							AND table_name = %s
+						)',
+						$wpdb->dbname,
+						$table,
+					)
+				);
+				if ( ! $table_exists ) {
+					return;
+				}
+
 				// It doesn't required cache as it run only once.
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$res = $wpdb->get_var( "SHOW COLUMNS FROM {$table} LIKE 'priority'" );

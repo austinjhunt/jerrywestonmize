@@ -63,3 +63,12 @@ if ( ! function_exists( 'forminator_addons_dir' ) ) {
 		return trailingslashit( forminator_plugin_dir() . 'addons' );
 	}
 }
+
+/**
+ * Check if payments functionality are disabled
+ *
+ * @return bool
+ */
+function forminator_payments_disabled(): bool {
+	return apply_filters( 'forminator_payments_disabled', false );
+}

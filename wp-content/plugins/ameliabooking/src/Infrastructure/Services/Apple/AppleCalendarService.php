@@ -439,6 +439,7 @@ class AppleCalendarService extends AbstractAppleCalendarService
                     if (str_contains($icsFileName[4], 'ameliaAppointmentEvent_') &&
                         $excludeAppointmentId !== null &&
                         $organizer !== null &&
+                        $excludeAppointmentId !== 0 &&
                         $organizer === 'mailto:'.$provider->getEmail()->getValue()
                     ) {
                         continue;

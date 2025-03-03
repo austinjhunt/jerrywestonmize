@@ -7,12 +7,8 @@ use AmeliaBooking\Application\Services\User\CustomerApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Entity\User\AbstractUser;
-use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
-use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
-use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 
 /**
  * Class AddCustomerCommandHandler
@@ -23,7 +19,6 @@ class AddCustomerCommandHandler extends CommandHandler
 {
 
     public $mandatoryFields = [
-        'type',
         'firstName',
         'lastName',
         'email'
@@ -41,8 +36,28 @@ class AddCustomerCommandHandler extends CommandHandler
      */
     public function handle(AddCustomerCommand $command)
     {
+        /** @var CommandResult $result */
+        $result = new CommandResult();
+
+        /** @var UserApplicationService $userAS */
+        $userAS = $this->getContainer()->get('application.user.service');
+
         if (!$command->getPermissionService()->currentUserCanWrite(Entities::CUSTOMERS)) {
-            throw new AccessDeniedException('You are not allowed to perform this action!');
+            if ($command->getToken()) {
+                if ($userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet') === null) {
+                    $result->setResult(CommandResult::RESULT_ERROR);
+                    $result->setMessage('Could not retrieve user');
+                    $result->setData(
+                        [
+                            'reauthorize' => true
+                        ]
+                    );
+
+                    return $result;
+                }
+            } else {
+                throw new AccessDeniedException('You are not allowed to perform this action!');
+            }
         }
 
         /** @var CustomerApplicationService $customerAS */
@@ -55,6 +70,8 @@ class AddCustomerCommandHandler extends CommandHandler
         }
 
         $userData = $command->getFields();
+
+        $userData['type'] = 'customer';
 
         $userData = apply_filters('amelia_before_customer_added_filter', $userData);
 

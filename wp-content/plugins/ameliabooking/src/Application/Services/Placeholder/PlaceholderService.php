@@ -82,6 +82,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
         unset($data['invoice_items_booking']);
         unset($data['invoice_items_extras']);
         unset($data['invoice_items_event']);
+        unset($data['items']);
 
         $placeholders = array_map(
             function ($placeholder) {

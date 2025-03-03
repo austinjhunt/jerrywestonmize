@@ -7,9 +7,9 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
  const STATUS_FAILED = 'failed';
  const STATUS_CANCELED = 'canceled';
  const DEFAULT_CLASS = 'ActionScheduler_wpPostStore';
- private static $store = NULL;
+ private static $store = null;
  protected static $max_args_length = 191;
- abstract public function save_action( ActionScheduler_Action $action, DateTime $scheduled_date = NULL );
+ abstract public function save_action( ActionScheduler_Action $action, ?DateTime $scheduled_date = null );
  abstract public function fetch_action( $action_id );
  public function find_action( $hook, $params = array() ) {
  $params = wp_parse_args(
@@ -48,10 +48,13 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
  abstract public function action_counts();
  public function extra_action_counts() {
  $extra_actions = array();
- $pastdue_action_counts = ( int ) $this->query_actions( array(
+ $pastdue_action_counts = (int) $this->query_actions(
+ array(
  'status' => self::STATUS_PENDING,
  'date' => as_get_datetime_object(),
- ), 'count' );
+ ),
+ 'count'
+ );
  if ( $pastdue_action_counts ) {
  $extra_actions['past-due'] = $pastdue_action_counts;
  }
@@ -60,7 +63,7 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
  abstract public function cancel_action( $action_id );
  abstract public function delete_action( $action_id );
  abstract public function get_date( $action_id );
- abstract public function stake_claim( $max_actions = 10, DateTime $before_date = null, $hooks = array(), $group = '' );
+ abstract public function stake_claim( $max_actions = 10, ?DateTime $before_date = null, $hooks = array(), $group = '' );
  abstract public function get_claim_count();
  abstract public function release_claim( ActionScheduler_ActionClaim $claim );
  abstract public function unclaim_action( $action_id );
@@ -71,21 +74,21 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
  abstract public function get_claim_id( $action_id );
  abstract public function find_actions_by_claim_id( $claim_id );
  protected function validate_sql_comparator( $comparison_operator ) {
- if ( in_array( $comparison_operator, array('!=', '>', '>=', '<', '<=', '=') ) ) {
+ if ( in_array( $comparison_operator, array( '!=', '>', '>=', '<', '<=', '=' ), true ) ) {
  return $comparison_operator;
  }
  return '=';
  }
- protected function get_scheduled_date_string( ActionScheduler_Action $action, DateTime $scheduled_date = NULL ) {
- $next = null === $scheduled_date ? $action->get_schedule()->get_date() : $scheduled_date;
+ protected function get_scheduled_date_string( ActionScheduler_Action $action, ?DateTime $scheduled_date = null ) {
+ $next = is_null( $scheduled_date ) ? $action->get_schedule()->get_date() : $scheduled_date;
  if ( ! $next ) {
  $next = date_create();
  }
  $next->setTimezone( new DateTimeZone( 'UTC' ) );
  return $next->format( 'Y-m-d H:i:s' );
  }
- protected function get_scheduled_date_string_local( ActionScheduler_Action $action, DateTime $scheduled_date = NULL ) {
- $next = null === $scheduled_date ? $action->get_schedule()->get_date() : $scheduled_date;
+ protected function get_scheduled_date_string_local( ActionScheduler_Action $action, ?DateTime $scheduled_date = null ) {
+ $next = is_null( $scheduled_date ) ? $action->get_schedule()->get_date() : $scheduled_date;
  if ( ! $next ) {
  $next = date_create();
  }
@@ -157,11 +160,15 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
  );
  }
  public function has_pending_actions_due() {
- $pending_actions = $this->query_actions( array(
+ $pending_actions = $this->query_actions(
+ array(
+ 'per_page' => 1,
  'date' => as_get_datetime_object(),
- 'status' => ActionScheduler_Store::STATUS_PENDING,
+ 'status' => self::STATUS_PENDING,
  'orderby' => 'none',
- ) );
+ ),
+ 'count'
+ );
  return ! empty( $pending_actions );
  }
  public function init() {}

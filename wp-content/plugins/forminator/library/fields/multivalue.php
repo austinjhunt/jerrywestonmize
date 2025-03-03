@@ -152,6 +152,7 @@ class Forminator_MultiValue extends Forminator_Field {
 		$description = self::get_property( 'description', $field, '' );
 		$label       = esc_html( self::get_property( 'field_label', $field, '' ) );
 		$design      = $this->get_form_style( $settings );
+		$descr_id    = $id . '-' . $uniq_id;
 
 		$calc_enabled     = self::get_property( 'calculations', $field, false, 'bool' );
 		$images_enabled   = self::get_property( 'enable_images', $field, false );
@@ -160,6 +161,7 @@ class Forminator_MultiValue extends Forminator_Field {
 		$input_visibility = filter_var( $input_visibility, FILTER_VALIDATE_BOOLEAN );
 		$draft_value      = isset( $draft_value['value'] ) && ! empty( $draft_value['value'] ) ? array_map( 'trim', $draft_value['value'] ) : '';
 		$hidden_behavior  = self::get_property( 'hidden_behavior', $field );
+		$descr_position   = self::get_description_position( $field, $settings );
 
 		$draft_valid  = false;
 		$prefil_valid = false;
@@ -178,6 +180,10 @@ class Forminator_MultiValue extends Forminator_Field {
 				'forminator-checkbox-group-' . $uniq_id . '-label',
 				$label
 			);
+		}
+
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $descr_id, $descr_position );
 		}
 
 		$hidden_calc_behavior = '';
@@ -312,7 +318,9 @@ class Forminator_MultiValue extends Forminator_Field {
 			++$i;
 		}
 
-			$html .= self::get_description( $description, $id . '-' . $uniq_id );
+		if ( 'above' !== $descr_position ) {
+			$html .= self::get_description( $description, $descr_id, $descr_position );
+		}
 
 		$html .= '</div>';
 
@@ -353,7 +361,7 @@ class Forminator_MultiValue extends Forminator_Field {
 		if ( $is_required ) {
 			$required_message = self::get_property( 'required_message', $field );
 			if ( empty( $required_message ) ) {
-				$required_message = esc_html__( 'This field is required. Please select a value.', 'forminator' );
+				$required_message = __( 'This field is required. Please select a value.', 'forminator' );
 			}
 			$required_message = apply_filters(
 				'forminator_multi_field_required_validation_message',

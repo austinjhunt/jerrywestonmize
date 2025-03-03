@@ -142,6 +142,7 @@ class Forminator_Admin_Data {
 			'load_cloud_templates'           => wp_create_nonce( 'forminator_load_cloud_templates' ),
 			'save_cloud_templates'           => wp_create_nonce( 'forminator_save_cloud_templates' ),
 			'create_form_nonce'              => wp_create_nonce( 'forminator_create_form_from_template' ),
+			'disconnect_hub_nonce'           => wp_create_nonce( 'forminator_disconnect_from_hub' ),
 			'templates_per_page'             => apply_filters( 'forminator_templates_per_page', 100 ),
 			'addons_enabled'                 => Forminator::is_addons_feature_enabled(),
 			'pluginUrl'                      => forminator_plugin_url(),
@@ -174,6 +175,7 @@ class Forminator_Admin_Data {
 			'postTypeList'                   => forminator_post_type_list(),
 			'postCategories'                 => forminator_post_categories(),
 			'isPro'                          => FORMINATOR_PRO,
+			'isHubConnected'                 => false,
 			'dashboardPlugin'                => $dashboard,
 			'isWPMUDEVloggedIn'              => $dashboard && WPMUDEV_Dashboard::$api->get_key(),
 			'expiredMembership'              => $dashboard && forminator_get_wpmudev_membership() === 'expired',
@@ -195,8 +197,7 @@ class Forminator_Admin_Data {
 			'pdfExtensionsEnabled'           => $this->pdf_extensions_enabled(),
 			'userPermissions'                => $user->get_role_caps(),
 			'manage_forminator_templates'    => forminator_is_user_allowed( 'forminator-templates' ),
-			'canWhitelabel'                  => forminator_can_whitelabel(),
-			'isWPMUDEVAdmin'                 => is_wpmu_dev_admin(),
+			'cloudDisabled'                  => forminator_cloud_templates_disabled(),
 			'globalTracking'                 => forminator_global_tracking(),
 		);
 	}

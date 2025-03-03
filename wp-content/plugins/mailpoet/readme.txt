@@ -3,7 +3,7 @@ Contributors: mailpoet, woocommerce, automattic
 Tags: email marketing, post notification, woocommerce emails, email automation, newsletter
 Requires at least: 6.6
 Tested up to: 6.7
-Stable tag: 5.5.2
+Stable tag: 5.8.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -105,39 +105,33 @@ Please note:
 
 = Translations =
 
-**Official translations**
-
+* Albanian
 * Arabic
 * Catalan
-* Chinese
 * Czech
 * Danish
 * Dutch
-* French (FR)
+* Dutch (Formal)
+* French (Canada)
+* French (France)
 * German
+* German (Switzerland)
+* German (Formal)
 * Greek
+* Hindi
 * Italian
 * Japanese
-* Mexican
-* Persian (IR)
 * Polish
-* Portuguese (BR and PT)
+* Portuguese (Brazil)
+* Portuguese (Portugal)
+* Romanian
 * Russian
 * Serbian
-* Spanish
+* Slovak
+* Spanish (Mexico)
+* Spanish (Spain)
 * Swedish
 * Turkish
-
-**Community translations**
-
-* Albanian
-* British
-* French (CA)
-* Hebrew
-* Hungarian
-* Norwegian
-* Persian
-* Romanian
 * Ukrainian
 
 We welcome experienced translators to translate directly on [our Transifex project](https://www.transifex.com/wysija/mp3/). Please note that any translations submitted via the "Translating WordPress" website will not work.
@@ -224,11 +218,13 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 3. MailPoet email types
 4. Newsletter stats (Premium)
 5. Subscriber import (via a CSV file or directly from MailChimp)
-6. WooCommerce emails
+6. Automation editor (Premium)
 
 == Changelog ==
 
-= 5.5.2 - 2024-12-24 =
-* Improved: minor changes and fixes.
+= 5.8.0 - 2025-02-24 =
+* Added: allow generating coupon code in automations for a subscriber the email is sent to;
+* Changed: default MailPoet pages capability changed from post to page (one of improvements is hidden previous/next post links);
+* Fixed: Prevent removing the content block from the Newsletter template in the new editor.
 
-[See the changelog for all versions.](https://github.com/mailpoet/mailpoet/blob/trunk/mailpoet/CHANGELOG.md)
+[See the changelog for all versions.](https://github.com/mailpoet/mailpoet/blob/trunk/mailpoet/changelog.txt)

@@ -46,8 +46,7 @@ class Renderer_Test extends \MailPoetTest {
  )
  );
  $rendered = $this->renderer->render( $email_post, 'Subject', '', 'en' );
- $heading_html = $this->extractBlockHtml( $rendered['html'], 'wp-block-heading', 'h1' );
- verify( $heading_html )->stringContainsString( 'font-size: 42px' ); // large is 42px in theme.json.
+ verify( $rendered['text'] )->stringContainsString( 'Hello' );
  }
  public function testItInlinesHeadingColors() {
  $email_post = $this->tester->create_post(
@@ -90,6 +89,19 @@ class Renderer_Test extends \MailPoetTest {
  verify( $list_style )->stringContainsString( 'background-color: #000' ); // black is #000.
  }
  public function testItInlinesColumnsColors() {
+ $email_post = $this->tester->create_post(
+ array(
+ 'post_content' => '<!-- wp:columns {"backgroundColor":"vivid-green-cyan", "textColor":"black"} -->
+ <div class="wp-block-columns has-black-background-color has-luminous-vivid-orange-color"><!-- wp:column --><!-- /wp:column --></div>
+ <!-- /wp:columns -->',
+ )
+ );
+ $rendered = $this->renderer->render( $email_post, 'Subject', '', 'en' );
+ $style = $this->extractBlockStyle( $rendered['html'], 'wp-block-columns', 'table' );
+ verify( $style )->stringContainsString( 'color: #ff6900' ); // luminous-vivid-orange is #ff6900.
+ verify( $style )->stringContainsString( 'background-color: #000' ); // black is #000.
+ }
+ public function testItRendersTextVersion() {
  $email_post = $this->tester->create_post(
  array(
  'post_content' => '<!-- wp:columns {"backgroundColor":"vivid-green-cyan", "textColor":"black"} -->

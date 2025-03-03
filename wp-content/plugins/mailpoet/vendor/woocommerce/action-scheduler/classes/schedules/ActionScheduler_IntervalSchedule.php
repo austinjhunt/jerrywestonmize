@@ -1,8 +1,8 @@
 <?php
 if (!defined('ABSPATH')) exit;
 class ActionScheduler_IntervalSchedule extends ActionScheduler_Abstract_RecurringSchedule implements ActionScheduler_Schedule {
- private $start_timestamp = NULL;
- private $interval_in_seconds = NULL;
+ private $start_timestamp = null;
+ private $interval_in_seconds = null;
  protected function calculate_next( DateTime $after ) {
  $after->modify( '+' . (int) $this->get_recurrence() . ' seconds' );
  return $after;
@@ -15,10 +15,13 @@ class ActionScheduler_IntervalSchedule extends ActionScheduler_Abstract_Recurrin
  $sleep_params = parent::__sleep();
  $this->start_timestamp = $this->scheduled_timestamp;
  $this->interval_in_seconds = $this->recurrence;
- return array_merge( $sleep_params, array(
+ return array_merge(
+ $sleep_params,
+ array(
  'start_timestamp',
- 'interval_in_seconds'
- ) );
+ 'interval_in_seconds',
+ )
+ );
  }
  public function __wakeup() {
  if ( is_null( $this->scheduled_timestamp ) && ! is_null( $this->start_timestamp ) ) {

@@ -1,15 +1,15 @@
 <?php
 if (!defined('ABSPATH')) exit;
 abstract class ActionScheduler_Logger {
- private static $logger = NULL;
+ private static $logger = null;
  public static function instance() {
- if ( empty(self::$logger) ) {
- $class = apply_filters('action_scheduler_logger_class', 'ActionScheduler_wpCommentLogger');
+ if ( empty( self::$logger ) ) {
+ $class = apply_filters( 'action_scheduler_logger_class', 'ActionScheduler_wpCommentLogger' );
  self::$logger = new $class();
  }
  return self::$logger;
  }
- abstract public function log( $action_id, $message, DateTime $date = NULL );
+ abstract public function log( $action_id, $message, ?DateTime $date = null );
  abstract public function get_entry( $entry_id );
  abstract public function get_logs( $action_id );
  public function init() {
@@ -46,7 +46,7 @@ abstract class ActionScheduler_Logger {
  }
  $this->log( $action_id, $message );
  }
- public function log_completed_action( $action_id, $action = NULL, $context = '' ) {
+ public function log_completed_action( $action_id, $action = null, $context = '' ) {
  if ( ! empty( $context ) ) {
  $message = sprintf( __( 'action complete via %s', 'action-scheduler' ), $context );
  } else {
@@ -81,7 +81,7 @@ abstract class ActionScheduler_Logger {
  }
  $this->log( $action_id, $message );
  }
- public function log_failed_fetch_action( $action_id, Exception $exception = NULL ) {
+ public function log_failed_fetch_action( $action_id, ?Exception $exception = null ) {
  if ( ! is_null( $exception ) ) {
  $log_message = sprintf( __( 'There was a failure fetching this action: %s', 'action-scheduler' ), $exception->getMessage() );
  } else {

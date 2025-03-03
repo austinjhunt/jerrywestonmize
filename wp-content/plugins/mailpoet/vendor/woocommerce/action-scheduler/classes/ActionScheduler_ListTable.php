@@ -40,7 +40,7 @@ class ActionScheduler_ListTable extends ActionScheduler_Abstract_ListTable {
  $request_status = $this->get_request_status();
  if ( empty( $request_status ) ) {
  $this->sort_by[] = 'status';
- } elseif ( in_array( $request_status, array( 'in-progress', 'failed' ) ) ) {
+ } elseif ( in_array( $request_status, array( 'in-progress', 'failed' ), true ) ) {
  $this->columns += array( 'claim_id' => __( 'Claim ID', 'action-scheduler' ) );
  $this->sort_by[] = 'claim_id';
  }
@@ -111,7 +111,8 @@ class ActionScheduler_ListTable extends ActionScheduler_Abstract_ListTable {
  return __( 'Now!', 'action-scheduler' );
  }
  $output = '';
- for ( $time_period_index = 0, $periods_included = 0, $seconds_remaining = $interval; $time_period_index < count( self::$time_periods ) && $seconds_remaining > 0 && $periods_included < $periods_to_include; $time_period_index++ ) {
+ $num_time_periods = count( self::$time_periods );
+ for ( $time_period_index = 0, $periods_included = 0, $seconds_remaining = $interval; $time_period_index < $num_time_periods && $seconds_remaining > 0 && $periods_included < $periods_to_include; $time_period_index++ ) {
  $periods_in_interval = floor( $seconds_remaining / self::$time_periods[ $time_period_index ]['seconds'] );
  if ( $periods_in_interval > 0 ) {
  if ( ! empty( $output ) ) {
@@ -142,7 +143,7 @@ class ActionScheduler_ListTable extends ActionScheduler_Abstract_ListTable {
  }
  $row_html = '<ul>';
  foreach ( $row['args'] as $key => $value ) {
- $row_html .= sprintf( '<li><code>%s => %s</code></li>', esc_html( var_export( $key, true ) ), esc_html( var_export( $value, true ) ) );
+ $row_html .= sprintf( '<li><code>%s => %s</code></li>', esc_html( var_export( $key, true ) ), esc_html( var_export( $value, true ) ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
  }
  $row_html .= '</ul>';
  return apply_filters( 'action_scheduler_list_table_column_args', $row_html, $row );
@@ -162,7 +163,7 @@ class ActionScheduler_ListTable extends ActionScheduler_Abstract_ListTable {
  return sprintf( '<li><strong>%s</strong><br/>%s</li>', esc_html( $date->format( 'Y-m-d H:i:s O' ) ), esc_html( $log_entry->get_message() ) );
  }
  protected function maybe_render_actions( $row, $column_name ) {
- if ( 'pending' === strtolower( $row[ 'status_name' ] ) ) {
+ if ( 'pending' === strtolower( $row['status_name'] ) ) {
  return parent::maybe_render_actions( $row, $column_name );
  }
  return '';
@@ -178,10 +179,10 @@ class ActionScheduler_ListTable extends ActionScheduler_Abstract_ListTable {
  );
  $found_tables = $wpdb->get_col( "SHOW TABLES LIKE '{$wpdb->prefix}actionscheduler%'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
  foreach ( $table_list as $table_name ) {
- if ( ! in_array( $wpdb->prefix . $table_name, $found_tables ) ) {
+ if ( ! in_array( $wpdb->prefix . $table_name, $found_tables, true ) ) {
  $this->admin_notices[] = array(
  'class' => 'error',
- 'message' => __( 'It appears one or more database tables were missing. Attempting to re-create the missing table(s).' , 'action-scheduler' ),
+ 'message' => __( 'It appears one or more database tables were missing. Attempting to re-create the missing table(s).', 'action-scheduler' ),
  );
  $this->recreate_tables();
  parent::display_admin_notices();
@@ -205,7 +206,7 @@ class ActionScheduler_ListTable extends ActionScheduler_Abstract_ListTable {
  );
  } elseif ( $this->store->has_pending_actions_due() ) {
  $async_request_lock_expiration = ActionScheduler::lock()->get_expiration( 'async-request-runner' );
- // No lock set or lock expired
+ // No lock set or lock expired.
  if ( false === $async_request_lock_expiration || $async_request_lock_expiration < time() ) {
  $in_progress_url = add_query_arg( 'status', 'in-progress', remove_query_arg( 'status' ) );
  $async_request_message = sprintf( __( 'A new queue has begun processing. <a href="%s">View actions in-progress &raquo;</a>', 'action-scheduler' ), esc_url( $in_progress_url ) );
@@ -222,16 +223,16 @@ class ActionScheduler_ListTable extends ActionScheduler_Abstract_ListTable {
  delete_transient( 'action_scheduler_admin_notice' );
  $action = $this->store->fetch_action( $notification['action_id'] );
  $action_hook_html = '<strong><code>' . $action->get_hook() . '</code></strong>';
- if ( 1 == $notification['success'] ) {
+ if ( 1 === absint( $notification['success'] ) ) {
  $class = 'updated';
  switch ( $notification['row_action_type'] ) {
- case 'run' :
+ case 'run':
  $action_message_html = sprintf( __( 'Successfully executed action: %s', 'action-scheduler' ), $action_hook_html );
  break;
- case 'cancel' :
+ case 'cancel':
  $action_message_html = sprintf( __( 'Successfully canceled action: %s', 'action-scheduler' ), $action_hook_html );
  break;
- default :
+ default:
  $action_message_html = sprintf( __( 'Successfully processed change for action: %s', 'action-scheduler' ), $action_hook_html );
  break;
  }
@@ -275,6 +276,7 @@ class ActionScheduler_ListTable extends ActionScheduler_Abstract_ListTable {
  } catch ( Exception $e ) {
  // A possible reason for an exception would include a scenario where the same action is deleted by a
  // concurrent request.
+ // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
  error_log(
  sprintf(
  __( 'Action Scheduler was unable to delete action %1$d. Reason: %2$s', 'action-scheduler' ),
@@ -307,10 +309,10 @@ class ActionScheduler_ListTable extends ActionScheduler_Abstract_ListTable {
  protected function process_row_action( $action_id, $row_action_type ) {
  try {
  switch ( $row_action_type ) {
- case 'run' :
+ case 'run':
  $this->runner->process_action( $action_id, 'Admin List Table' );
  break;
- case 'cancel' :
+ case 'cancel':
  $this->store->cancel_action( $action_id );
  break;
  }
@@ -362,11 +364,13 @@ class ActionScheduler_ListTable extends ActionScheduler_Abstract_ListTable {
  'schedule' => $action->get_schedule(),
  );
  }
- $this->set_pagination_args( array(
+ $this->set_pagination_args(
+ array(
  'total_items' => $total_items,
  'per_page' => $per_page,
  'total_pages' => ceil( $total_items / $per_page ),
- ) );
+ )
+ );
  }
  protected function display_filter_by_status() {
  $this->status_counts = $this->store->action_counts() + $this->store->extra_action_counts();

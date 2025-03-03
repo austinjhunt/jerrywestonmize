@@ -6,7 +6,6 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\Entities\NewsletterEntity;
-use MailPoet\Features\FeaturesController;
 use MailPoet\Services\Bridge;
 use MailPoet\Settings\TrackingConfig;
 use MailPoet\Validator\ValidationException;
@@ -19,23 +18,17 @@ class NewsletterValidator {
   /** @var TrackingConfig */
   private $trackingConfig;
 
-  /** @var FeaturesController */
-  private $featuresController;
-
   public function __construct(
     Bridge $bridge,
-    TrackingConfig $trackingConfig,
-    FeaturesController $featuresController
+    TrackingConfig $trackingConfig
   ) {
     $this->bridge = $bridge;
     $this->trackingConfig = $trackingConfig;
-    $this->featuresController = $featuresController;
   }
 
   public function validate(NewsletterEntity $newsletterEntity): ?string {
     if (
-      $this->featuresController->isSupported(FeaturesController::GUTENBERG_EMAIL_EDITOR)
-      && $newsletterEntity->getWpPostId() !== null
+      $newsletterEntity->getWpPostId() !== null
     ) {
       // Temporarily skip validation for emails created via Gutenberg editor
       return null;

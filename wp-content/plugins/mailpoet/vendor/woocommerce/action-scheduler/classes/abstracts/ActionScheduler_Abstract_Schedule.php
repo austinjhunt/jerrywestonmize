@@ -1,8 +1,8 @@
 <?php
 if (!defined('ABSPATH')) exit;
 abstract class ActionScheduler_Abstract_Schedule extends ActionScheduler_Schedule_Deprecated {
- private $scheduled_date = NULL;
- protected $scheduled_timestamp = NULL;
+ private $scheduled_date = null;
+ protected $scheduled_timestamp = null;
  public function __construct( DateTime $date ) {
  $this->scheduled_date = $date;
  }

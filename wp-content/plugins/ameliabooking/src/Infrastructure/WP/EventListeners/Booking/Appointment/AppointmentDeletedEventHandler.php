@@ -81,6 +81,10 @@ class AppointmentDeletedEventHandler
             ]
         );
 
+        if ($reservationObject->getMicrosoftTeamsUrl() !== null) {
+            $appointment['microsoftTeamsUrl'] = $reservationObject->getMicrosoftTeamsUrl();
+        }
+
         $emailNotificationService->sendAppointmentStatusNotifications($appointment, false, false);
 
         if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {

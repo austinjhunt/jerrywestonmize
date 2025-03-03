@@ -33,17 +33,17 @@ class ActionScheduler_WPCLI_Scheduler_command extends WP_CLI_Command {
  ActionScheduler_DataController::set_sleep_time( $sleep );
  $batches_completed = 0;
  $actions_completed = 0;
- $unlimited = $batches === 0;
- if ( is_callable( [ ActionScheduler::store(), 'set_claim_filter' ] ) ) {
+ $unlimited = 0 === $batches;
+ if ( is_callable( array( ActionScheduler::store(), 'set_claim_filter' ) ) ) {
  $exclude_groups = $this->parse_comma_separated_string( $exclude_groups );
  if ( ! empty( $exclude_groups ) ) {
- ActionScheduler::store()->set_claim_filter('exclude-groups', $exclude_groups );
+ ActionScheduler::store()->set_claim_filter( 'exclude-groups', $exclude_groups );
  }
  }
  try {
  // Custom queue cleaner instance.
  $cleaner = new ActionScheduler_QueueCleaner( null, $clean );
- // Get the queue runner instance
+ // Get the queue runner instance.
  $runner = new ActionScheduler_WPCLI_QueueRunner( null, null, $cleaner );
  // Determine how many tasks will be run in the first batch.
  $total = $runner->setup( $batch, $hooks, $group, $force );

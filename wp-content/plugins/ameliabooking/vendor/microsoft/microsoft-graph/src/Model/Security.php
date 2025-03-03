@@ -7,10 +7,9 @@
 *
 * @category  Library
 * @package   Microsoft.Graph
-* @copyright © Microsoft Corporation. All rights reserved.
+* @copyright (c) Microsoft Corporation. All rights reserved.
 * @license   https://opensource.org/licenses/MIT MIT License
-* @version   GIT: 1.4.0
-* @link      https://graph.microsoft.io/
+* @link      https://graph.microsoft.com
 */
 namespace Microsoft\Graph\Model;
 
@@ -19,19 +18,18 @@ namespace Microsoft\Graph\Model;
 *
 * @category  Model
 * @package   Microsoft.Graph
-* @copyright © Microsoft Corporation. All rights reserved.
+* @copyright (c) Microsoft Corporation. All rights reserved.
 * @license   https://opensource.org/licenses/MIT MIT License
-* @version   Release: 1.4.0
-* @link      https://graph.microsoft.io/
+* @link      https://graph.microsoft.com
 */
 class Security extends Entity
 {
 
-     /** 
+     /**
      * Gets the alerts
     * Read-only. Nullable.
      *
-     * @return array The alerts
+     * @return array|null The alerts
      */
     public function getAlerts()
     {
@@ -41,26 +39,26 @@ class Security extends Entity
             return null;
         }
     }
-    
-    /** 
+
+    /**
     * Sets the alerts
     * Read-only. Nullable.
     *
-    * @param Alert $val The alerts
+    * @param Alert[] $val The alerts
     *
     * @return Security
     */
     public function setAlerts($val)
     {
-		$this->_propDict["alerts"] = $val;
+        $this->_propDict["alerts"] = $val;
         return $this;
     }
-    
 
-     /** 
+
+     /**
      * Gets the secureScoreControlProfiles
      *
-     * @return array The secureScoreControlProfiles
+     * @return array|null The secureScoreControlProfiles
      */
     public function getSecureScoreControlProfiles()
     {
@@ -70,25 +68,25 @@ class Security extends Entity
             return null;
         }
     }
-    
-    /** 
+
+    /**
     * Sets the secureScoreControlProfiles
     *
-    * @param SecureScoreControlProfile $val The secureScoreControlProfiles
+    * @param SecureScoreControlProfile[] $val The secureScoreControlProfiles
     *
     * @return Security
     */
     public function setSecureScoreControlProfiles($val)
     {
-		$this->_propDict["secureScoreControlProfiles"] = $val;
+        $this->_propDict["secureScoreControlProfiles"] = $val;
         return $this;
     }
-    
 
-     /** 
+
+     /**
      * Gets the secureScores
      *
-     * @return array The secureScores
+     * @return array|null The secureScores
      */
     public function getSecureScores()
     {
@@ -98,18 +96,18 @@ class Security extends Entity
             return null;
         }
     }
-    
-    /** 
+
+    /**
     * Sets the secureScores
     *
-    * @param SecureScore $val The secureScores
+    * @param SecureScore[] $val The secureScores
     *
     * @return Security
     */
     public function setSecureScores($val)
     {
-		$this->_propDict["secureScores"] = $val;
+        $this->_propDict["secureScores"] = $val;
         return $this;
     }
-    
+
 }

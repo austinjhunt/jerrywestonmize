@@ -139,6 +139,20 @@ class ActivationSettingsHook
             'showClientTimeZone'                     => false,
             'redirectUrlAfterAppointment'            => '',
             'customFieldsUploadsPath'                => '',
+            'customFieldsAllowedExtensions'          => [
+                '.jpg'  => 'image/jpeg',
+                '.jpeg' => 'image/jpeg',
+                '.png'  => 'image/png',
+                '.mp3'  => 'audio/mpeg',
+                '.mpeg' => 'video/mpeg',
+                '.mp4'  => 'video/mp4',
+                '.txt'  => 'text/plain',
+                '.csv'  => 'text/plain',
+                '.xls'  => 'application/vnd.ms-excel',
+                '.pdf'  => 'application/pdf',
+                '.doc'  => 'application/msword',
+                '.docx' => 'application/msword'
+            ],
             'runInstantPostBookingActions'           => false,
             'sortingPackages'                        => 'nameAsc',
             'sortingServices'                        => 'nameAsc',
@@ -186,7 +200,7 @@ class ActivationSettingsHook
         $settings = [
             'mysqliEnabled'      => false,
             'pdoEmulatePrepares' => false,
-            'pdoBigSelect'       => false,
+            'pdoBigSelect'       => true,
             'ssl' => [
                 'enable'      => false,
                 'key'         => null,
@@ -241,6 +255,7 @@ class ActivationSettingsHook
             'mailgunDomain'        => '',
             'mailgunEndpoint'      => '',
             'senderName'           => '',
+            'replyTo'              => '',
             'senderEmail'          => '',
             'notifyCustomers'      => true,
             'sendAllCF'            => true,
@@ -412,7 +427,8 @@ This message does not have an option for responding. If you need additional info
             'eventTitle'                       => '%service_name%',
             'eventDescription'                 => '',
             'includeBufferTimeOutlookCalendar' => false,
-            'title'                           => [
+            'enableMicrosoftTeams'             => false,
+            'title'                            => [
                 'appointment' => $savedSettings && !empty($savedSettings['eventTitle']) ?
                     $savedSettings['eventTitle'] : '%service_name%',
                 'event' => '%event_name%'
@@ -1493,6 +1509,7 @@ This message does not have an option for responding. If you need additional info
             'allowConfigureSpecialDays'   => false,
             'allowConfigureServices'      => false,
             'allowWriteAppointments'      => false,
+            'allowWriteCustomers'         => false,
             'automaticallyCreateCustomer' => true,
             'inspectCustomerInfo'         => false,
             'allowCustomerReschedule'     => false,
@@ -1650,6 +1667,7 @@ This message does not have an option for responding. If you need additional info
                 'enabled'                          => false,
                 'addingMethod'                     => 'Manually'
             ],
+            'pastDaysEvents'                       => 0,
             'employeeSelection'                    => 'random',
             'bringingAnyoneLogic'                  => 'additional',
         ];

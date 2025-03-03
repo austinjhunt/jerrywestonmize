@@ -164,11 +164,10 @@ class Reporter {
       'WP_MAX_MEMORY_LIMIT' => WP_MAX_MEMORY_LIMIT,
       'PHP memory_limit' => ini_get('memory_limit'),
       'PHP max_execution_time' => ini_get('max_execution_time'),
-      'users_can_register' => $this->wp->getOption('users_can_register') ? 'yes' : 'no',
       'MailPoet Free version' => MAILPOET_VERSION,
       'MailPoet Premium version' => (defined('MAILPOET_PREMIUM_VERSION')) ? MAILPOET_PREMIUM_VERSION : 'N/A',
       'Total number of subscribers' => $this->subscribersFeature->getSubscribersCount(),
-      'Sending Method' => isset($mta['method']) ? $mta['method'] : null,
+      'Sending Method' => $mta['method'] ?? null,
       "Send all site's emails with" => $this->settings->get('send_transactional_emails') ? 'current sending method' : 'default WordPress sending method',
       'Date of plugin installation' => $this->settings->get('installed_at'),
       'Subscribe in comments' => (boolean)$this->settings->get('subscribe.on_comment.enabled', false),
@@ -186,11 +185,17 @@ class Reporter {
       'Number of active post notifications' => $newsletters['notifications_count'],
       'Number of active welcome emails' => $newsletters['welcome_newsletters_count'],
       'Total number of standard newsletters sent' => $newsletters['sent_newsletters_count'],
+      'Total number of block editor gutenberg newsletters' => $newsletters['total_gutenberg_newsletter_count'],
+      'Number of block editor gutenberg newsletters sent' => $newsletters['sent_gutenberg_newsletter_count'],
       'Number of segments' => isset($segments['dynamic']) ? (int)$segments['dynamic'] : 0,
       'Number of lists' => isset($segments['default']) ? (int)$segments['default'] : 0,
       'Number of subscriber tags' => $this->tagRepository->countBy([]),
+      'Site is using block theme' => $this->wp->wpIsBlockTheme(),
       'Stop sending to inactive subscribers' => $inactiveSubscribersStatus,
       'CAPTCHA setting' => $this->settings->get(CaptchaConstants::TYPE_SETTING_NAME, '') ?: 'disabled',
+      'Is CAPTCHA on register forms enabled' => $this->settings->get(CaptchaConstants::ON_REGISTER_FORMS_SETTING_NAME, false) ? 'yes' : 'no',
+      'users_can_register' => $this->wp->getOption('users_can_register') ? 'yes' : 'no',
+      'Is WooCommerce account creation on "My account" enabled' => $this->wp->getOption('woocommerce_enable_myaccount_registration') ?? 'no',
       'Plugin > MailPoet Premium' => $this->wp->isPluginActive('mailpoet-premium/mailpoet-premium.php'),
       'Plugin > bounce add-on' => $this->wp->isPluginActive('mailpoet-bounce-handler/mailpoet-bounce-handler.php'),
       'Plugin > Bloom' => $this->wp->isPluginActive('bloom-for-publishers/bloom.php'),
@@ -415,11 +420,15 @@ class Reporter {
   }
 
   public function getTrackingData() {
+    global $wp_version, $woocommerce; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
     $newsletters = $this->newslettersRepository->getAnalytics();
     $segments = $this->segmentsRepository->getCountsPerType();
     $mta = $this->settings->get('mta', []);
     $installedAt = new Carbon($this->settings->get('installed_at'));
-    return [
+    $theme = $this->wp->wpGetTheme();
+    $result = [
+      'WordPressVersion' => $wp_version, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+      'pluginGutenberg' => $this->wp->isPluginActive('gutenberg/gutenberg.php'),
       'installedAtIso' => $installedAt->format(Carbon::ISO8601),
       'newslettersSent' => $newsletters['sent_newsletters_count'],
       'welcomeEmails' => $newsletters['welcome_newsletters_count'],
@@ -427,9 +436,19 @@ class Reporter {
       'woocommerceEmails' => $newsletters['automatic_emails_count'],
       'subscribers' => $this->subscribersFeature->getSubscribersCount(),
       'lists' => isset($segments['default']) ? (int)$segments['default'] : 0,
-      'sendingMethod' => isset($mta['method']) ? $mta['method'] : null,
+      'sendingMethod' => $mta['method'] ?? null,
       'woocommerceIsInstalled' => $this->woocommerceHelper->isWooCommerceActive(),
+      'blockTheme' => $this->wp->wpIsBlockTheme(),
+      'theme' => $theme->Name, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+      'themeVersion' => $theme->Version, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
     ];
+    if (defined('GUTENBERG_VERSION')) {
+      $result['gutenbergVersion'] = GUTENBERG_VERSION;
+    }
+    if ($this->woocommerceHelper->isWooCommerceActive()) {
+      $result['wooCommerceVersion'] = $woocommerce->version;
+    }
+    return $result;
   }
 
   private function isFilterTypeActive(string $filterType, string $action): bool {

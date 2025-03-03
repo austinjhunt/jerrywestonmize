@@ -140,7 +140,7 @@
 								<th style="padding: 8px 5px;"><?php esc_html_e( 'Views', 'forminator' ); ?></th>
 								<th style="padding: 8px 5px;"><?php esc_html_e( 'Submissions', 'forminator' ); ?></th>
 								<th style="padding: 8px 5px;"><?php esc_html_e( 'Conversions', 'forminator' ); ?></th>
-								<?php if ( 'forms' === $args['module'] ) { ?>
+								<?php if ( 'forms' === $args['module'] && ! forminator_payments_disabled() ) { ?>
 									<th style="padding: 8px 20px 8px 5px;"><?php esc_html_e( 'Payments', 'forminator' ); ?></th>
 								<?php } ?>
 							</tr>
@@ -155,7 +155,7 @@
 										<td style="padding: 20px 5px;"><?php echo esc_html( $report['views'] ); ?></td>
 										<td style="padding: 20px 5px;"><?php echo esc_html( $report['submission'] ); ?></td>
 										<td style="padding: 20px 5px;"><?php echo esc_html( $report['conversion'] ); ?></td>
-										<?php if ( 'forms' === $args['module'] ) { ?>
+										<?php if ( 'forms' === $args['module'] && ! forminator_payments_disabled() ) { ?>
 											<td style="padding: 20px 20px 20px 5px;"><?php echo esc_html( $report['payments'] ); ?></td>
 										<?php } ?>
 									</tr>

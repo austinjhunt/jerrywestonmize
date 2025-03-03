@@ -2,7 +2,7 @@
 
 Contributors: ExtendThemes
 Tags:  page builder, editor, landing page, drag-and-drop, colibri, visual editor, wysiwyg, design, website builder, landing page builder, front-end builder
-Stable tag: 1.0.317
+Stable tag: 1.0.318
 Requires at least: 5.6
 Tested up to: 6.7
 License: GPLv3 or later

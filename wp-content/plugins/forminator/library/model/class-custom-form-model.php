@@ -312,6 +312,31 @@ class Forminator_Form_Model extends Forminator_Base_Form_Model {
 	}
 
 	/**
+	 * Disable payments fields if payments are disabled
+	 *
+	 * @param array $fields Fields.
+	 * @return array
+	 */
+	protected static function disable_fields( $fields ) {
+		$disabled_fields = apply_filters( 'forminator_disabled_fields', array() );
+
+		if ( forminator_payments_disabled() ) {
+			$disabled_fields = array_merge( $disabled_fields, array( 'stripe', 'stripe-ocs', 'paypal' ) );
+		}
+
+		if ( $disabled_fields && $fields ) {
+			$fields = array_filter(
+				$fields,
+				function ( $field ) use ( $disabled_fields ) {
+					return empty( $field['type'] ) || ! in_array( $field['type'], $disabled_fields, true );
+				}
+			);
+		}
+
+		return $fields;
+	}
+
+	/**
 	 * Flag whether ssl required when payment exists
 	 *
 	 * @since 1.7

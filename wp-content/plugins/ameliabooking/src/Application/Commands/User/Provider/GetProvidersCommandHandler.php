@@ -49,7 +49,7 @@ class GetProvidersCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
-        $itemsPerPage = $settingsService->getSetting('general', 'itemsPerPage');
+        $itemsPerPage = $settingsService->getSetting('general', 'itemsPerPageBackEnd');
         $companyDaysOff = $settingsService->getCategorySettings('daysOff');
 
         $params = $command->getField('params');

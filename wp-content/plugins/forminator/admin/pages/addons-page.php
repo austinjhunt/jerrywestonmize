@@ -70,6 +70,16 @@ class Forminator_Addons_Page extends Forminator_Admin_Page {
 			$projects = Forminator_Admin_Addons_Page::forminator_get_static_addons();
 		}
 
+		// Remove Stripe Add-on if payments are disabled.
+		if ( forminator_payments_disabled() ) {
+			$projects = array_filter(
+				$projects,
+				function ( $project ) {
+					return 3953609 !== $project->pid;
+				}
+			);
+		}
+
 		$response['all']    = $projects;
 		$response['update'] = $update;
 

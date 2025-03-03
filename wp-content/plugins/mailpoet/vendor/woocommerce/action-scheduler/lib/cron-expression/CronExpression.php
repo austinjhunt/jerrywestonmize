@@ -11,7 +11,7 @@ class CronExpression
  private $cronParts;
  private $fieldFactory;
  private static $order = array(self::YEAR, self::MONTH, self::DAY, self::WEEKDAY, self::HOUR, self::MINUTE);
- public static function factory($expression, CronExpression_FieldFactory $fieldFactory = null)
+ public static function factory($expression, ?CronExpression_FieldFactory $fieldFactory = null)
  {
  $mappings = array(
  '@yearly' => '0 0 1 1 *',

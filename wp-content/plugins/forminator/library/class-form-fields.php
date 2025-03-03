@@ -113,16 +113,7 @@ class Forminator_Fields {
 	 * @since 1.27 Change from WP cron to Action Scheduler
 	 */
 	public function schedule_forminator_daily_cron() {
-		// Clear old cron schedule.
-		if ( wp_next_scheduled( 'forminator_daily_cron' ) ) {
-			wp_clear_scheduled_hook( 'forminator_daily_cron' );
-		}
-
-		// Create new schedule using AS.
-		if ( false === as_has_scheduled_action( 'forminator_daily_cron' ) ) {
-			// Set to run after 25 hours so it will be more than 24 hours compared to file upload time.
-			as_schedule_single_action( strtotime( '+25 hours' ), 'forminator_daily_cron', array(), 'forminator', true );
-		}
+		forminator_set_recurring_action( 'forminator_daily_cron', DAY_IN_SECONDS );
 	}
 
 	/**
@@ -140,7 +131,11 @@ class Forminator_Fields {
 	 * @since 1.13
 	 */
 	public function schedule_delete_temp_files() {
-		$temp_path = forminator_upload_root_temp() . '/';
+		$temp_path = forminator_upload_root_temp();
+		if ( is_wp_error( $temp_path ) ) {
+			return;
+		}
+		$temp_path = $temp_path . '/';
 		$handle    = @opendir( $temp_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		if ( $handle ) {
 			// Check if the dir exist before opening it.
@@ -210,17 +205,17 @@ class Forminator_Fields {
 
 		$upload_root = forminator_upload_root();
 
-		if ( ! is_dir( $upload_root ) ) {
+		if ( is_wp_error( $upload_root ) || ! is_dir( $upload_root ) ) {
 			return;
 		}
 
 		Forminator_Field::check_upload_root_index_file();
 
-		if ( ! file_exists( forminator_upload_root() . 'css/index.php' ) ) {
-			Forminator_Field::add_index_file( forminator_upload_root() . 'css/index.php' );
+		if ( ! file_exists( $upload_root . 'css/index.php' ) ) {
+			Forminator_Field::add_index_file( $upload_root . 'css/index.php' );
 		}
-		if ( ! file_exists( forminator_upload_root() . 'signatures/index.php' ) ) {
-			Forminator_Field::add_index_file( forminator_upload_root() . 'signatures/index.php' );
+		if ( ! file_exists( $upload_root . 'signatures/index.php' ) ) {
+			Forminator_Field::add_index_file( $upload_root . 'signatures/index.php' );
 		}
 	}
 }

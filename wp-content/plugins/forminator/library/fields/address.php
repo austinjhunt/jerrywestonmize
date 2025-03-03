@@ -82,6 +82,7 @@ class Forminator_Address extends Forminator_Field {
 			'address_zip'                      => 'true',
 			'address_country'                  => 'true',
 			'address_line'                     => 'true',
+			'field_label'                      => esc_html__( 'Address', 'forminator' ),
 			'street_address_label'             => esc_html__( 'Street Address', 'forminator' ),
 			'street_address_placeholder'       => esc_html__( 'E.g. 42 Wallaby Way', 'forminator' ),
 			'address_city_label'               => esc_html__( 'City', 'forminator' ),
@@ -155,19 +156,19 @@ class Forminator_Address extends Forminator_Field {
 		$this->form_settings = $settings;
 		$draft_value         = isset( $draft_value['value'] ) ? $draft_value['value'] : '';
 
-		$design = $this->get_form_style( $settings );
+		$field['descr_position'] = self::get_description_position( $field, $settings );
 
 		// Address.
-		$html = $this->get_address( $field, 'street_address', $design, $draft_value );
+		$html = $this->get_address( $field, 'street_address', $draft_value );
 
 		// Second Address.
-		$html .= $this->get_address( $field, 'address_line', $design, $draft_value );
+		$html .= $this->get_address( $field, 'address_line', $draft_value );
 
 		// City & State fields.
-		$html .= $this->get_city_state( $field, $design, $draft_value );
+		$html .= $this->get_city_state( $field, $draft_value );
 
 		// ZIP & Country fields.
-		$html .= $this->get_zip_country( $field, $design, $draft_value );
+		$html .= $this->get_zip_country( $field, $draft_value );
 
 		return apply_filters( 'forminator_field_address_markup', $html, $field );
 	}
@@ -179,12 +180,11 @@ class Forminator_Address extends Forminator_Field {
 	 *
 	 * @param array  $field Field.
 	 * @param string $slug Field slug.
-	 * @param string $design Design.
 	 * @param string $draft_value Draft value.
 	 *
 	 * @return string
 	 */
-	public function get_address( $field, $slug, $design, $draft_value = null ) {
+	public function get_address( $field, $slug, $draft_value = null ) {
 
 		$html        = '';
 		$cols        = 12;
@@ -194,6 +194,8 @@ class Forminator_Address extends Forminator_Field {
 		$ariareq     = 'false';
 		$enabled     = self::get_property( $slug, $field );
 		$description = self::get_property( $slug . '_description', $field );
+
+		$descr_position = self::get_property( 'descr_position', $field );
 
 		if ( (bool) self::get_property( $slug . '_required', $field, false ) ) {
 			$ariareq = 'true';
@@ -231,7 +233,7 @@ class Forminator_Address extends Forminator_Field {
 							self::get_property( $slug . '_label', $field ),
 							$description,
 							$required,
-							$design
+							$descr_position,
 						);
 
 					$html .= '</div>';
@@ -250,12 +252,11 @@ class Forminator_Address extends Forminator_Field {
 	 * @since 1.0
 	 *
 	 * @param array  $field Field.
-	 * @param string $design Design.
 	 * @param string $draft_value Draft value.
 	 *
 	 * @return string
 	 */
-	public function get_city_state( $field, $design, $draft_value = null ) {
+	public function get_city_state( $field, $draft_value = null ) {
 		$html           = '';
 		$cols           = 12;
 		$id             = self::get_property( 'element_id', $field );
@@ -270,6 +271,7 @@ class Forminator_Address extends Forminator_Field {
 		$state_required = self::get_property( 'address_state_required', $field, false, 'bool' );
 		$state_ariareq  = 'false';
 		$multirow       = 'false';
+		$descr_position = self::get_property( 'descr_position', $field );
 
 		if ( (bool) self::get_property( 'address_city_required', $field, false ) ) {
 			$city_ariareq = 'true';
@@ -320,7 +322,7 @@ class Forminator_Address extends Forminator_Field {
 							self::get_property( 'address_city_label', $field ),
 							$city_desc,
 							$city_required,
-							$design
+							$descr_position,
 						);
 
 					$html .= '</div>';
@@ -360,7 +362,7 @@ class Forminator_Address extends Forminator_Field {
 							self::get_property( 'address_state_label', $field ),
 							$state_desc,
 							$state_required,
-							$design
+							$descr_position,
 						);
 
 					$html .= '</div>';
@@ -382,12 +384,11 @@ class Forminator_Address extends Forminator_Field {
 	 * @since 1.0
 	 *
 	 * @param array  $field Field.
-	 * @param string $design Design.
 	 * @param string $draft_value Draft value.
 	 *
 	 * @return string
 	 */
-	public function get_zip_country( $field, $design, $draft_value = null ) {
+	public function get_zip_country( $field, $draft_value = null ) {
 		$html            = '';
 		$cols            = 12;
 		$id              = self::get_property( 'element_id', $field );
@@ -397,6 +398,7 @@ class Forminator_Address extends Forminator_Field {
 		$address_country = self::get_property( 'address_country', $field, false );
 		$zip_desc        = self::get_property( 'address_zip_description', $field );
 		$country_desc    = self::get_property( 'address_country_description', $field );
+		$descr_position  = self::get_property( 'descr_position', $field );
 
 		$zip_required     = self::get_property( 'address_zip_required', $field, false, 'bool' );
 		$country_required = self::get_property( 'address_country_required', $field, false, 'bool' );
@@ -448,7 +450,7 @@ class Forminator_Address extends Forminator_Field {
 							self::get_property( 'address_zip_label', $field ),
 							$zip_desc,
 							$zip_required,
-							$design
+							$descr_position,
 						);
 
 					$html .= '</div>';
@@ -522,7 +524,8 @@ class Forminator_Address extends Forminator_Field {
 							$countries,
 							self::get_property( 'address_country_placeholder', $field ),
 							$country_desc,
-							$country_required
+							$country_required,
+							$descr_position,
 						);
 
 					$html .= '</div>';
@@ -549,10 +552,11 @@ class Forminator_Address extends Forminator_Field {
 	 * @param string $value Value.
 	 * @param string $description Description content.
 	 * @param bool   $required Is required.
+	 * @param string $descr_position Description position.
 	 *
 	 * @return mixed
 	 */
-	public static function create_country_select( $attr = array(), $label = '', $options = array(), $value = '', $description = '', $required = false ) {
+	public static function create_country_select( $attr = array(), $label = '', $options = array(), $value = '', $description = '', $required = false, $descr_position = 'above' ) {
 
 		$html = '';
 
@@ -574,6 +578,10 @@ class Forminator_Address extends Forminator_Field {
 
 		$html .= self::get_field_label( $label, $get_id, $required );
 
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $get_id, $descr_position );
+		}
+
 		$markup .= ' data-default-value="' . esc_attr( $value ) . '"';
 
 		$html .= sprintf( '<select %s>', $markup );
@@ -594,8 +602,8 @@ class Forminator_Address extends Forminator_Field {
 
 		$html .= '</select>';
 
-		if ( ! empty( $description ) ) {
-			$html .= self::get_description( $description, $get_id );
+		if ( 'above' !== $descr_position ) {
+			$html .= self::get_description( $description, $get_id, $descr_position );
 		}
 
 		return apply_filters( 'forminator_field_create_select', $html, $attr, $label, $options, $value, $description );

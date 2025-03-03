@@ -81,6 +81,10 @@ class AppointmentTimeUpdatedEventHandler
             ApplicationIntegrationService::TIME_UPDATED
         );
 
+        if ($reservationObject->getMicrosoftTeamsUrl() !== null) {
+            $appointment['microsoftTeamsUrl'] = $reservationObject->getMicrosoftTeamsUrl();
+        }
+
         $appointment['initialAppointmentDateTime'] = $commandResult->getData()['initialAppointmentDateTime'];
 
         $emailNotificationService->sendAppointmentRescheduleNotifications($appointment);

@@ -30,7 +30,8 @@ class MailerFactory
                 $settings['smtpPort'],
                 $settings['smtpSecure'],
                 $settings['smtpUsername'],
-                $settings['smtpPassword']
+                $settings['smtpPassword'],
+                $settings['replyTo']
             );
         }
 
@@ -40,20 +41,23 @@ class MailerFactory
                 $settings['senderName'],
                 $settings['mailgunApiKey'],
                 $settings['mailgunDomain'],
-                $settings['mailgunEndpoint']
+                $settings['mailgunEndpoint'],
+                $settings['replyTo']
             );
         }
 
         if ($settings['mailService'] === 'wp_mail') {
             return new WpMailService(
                 $settings['senderEmail'],
-                $settings['senderName']
+                $settings['senderName'],
+                $settings['replyTo']
             );
         }
 
         return new PHPMailService(
             $settings['senderEmail'],
-            $settings['senderName']
+            $settings['senderName'],
+            $settings['replyTo']
         );
     }
 }

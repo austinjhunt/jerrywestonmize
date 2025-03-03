@@ -22,9 +22,13 @@ $sections = apply_filters(
 		'captcha'            => __( 'CAPTCHA', 'forminator' ),
 		'import'             => __( 'Import', 'forminator' ),
 		'submissions'        => __( 'Submissions', 'forminator' ),
-		'payments'           => __( 'Payments', 'forminator' ),
 	)
 );
+
+// Show payment settings only if payments are enabled.
+if ( ! forminator_payments_disabled() ) {
+	$sections['payments'] = __( 'Payments', 'forminator' );
+}
 
 // Show Permission settings for admins only.
 if ( current_user_can( forminator_get_admin_cap() ) ) {
@@ -75,10 +79,13 @@ if ( current_user_can( forminator_get_admin_cap() ) ) {
 	<?php $this->template( 'settings/tab-appearance-presets' ); ?>
 	<?php $this->template( 'settings/tab-data' ); ?>
 	<?php $this->template( 'settings/tab-submissions' ); ?>
-	<?php $this->template( 'settings/tab-payments' ); ?>
 	<?php $this->template( 'settings/tab-accessibility' ); ?>
 	<?php $this->template( 'settings/tab-import' ); ?>
 	<?php
+	// Show payment settings only if payments are enabled.
+	if ( ! forminator_payments_disabled() ) {
+		$this->template( 'settings/tab-payments' );
+	}
 	// Show only for admins.
 	if ( current_user_can( forminator_get_admin_cap() ) ) {
 		$this->template( 'settings/tab-permissions' );

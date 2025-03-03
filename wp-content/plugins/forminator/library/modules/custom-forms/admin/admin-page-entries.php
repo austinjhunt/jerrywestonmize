@@ -291,7 +291,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 		);
 
 		foreach ( $fields as $field ) {
-			$mapper = self::build_field_mapper( $field );
+			$mapper = $this->build_field_mapper( $field );
 
 			if ( ! empty( $mapper ) ) {
 				$mappers[] = $mapper;

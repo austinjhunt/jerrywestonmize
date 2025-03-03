@@ -30,6 +30,7 @@ class SuccessfulBookingController extends Controller
         'customer',
         'paymentId',
         'packageCustomerId',
+        'packageBookingFromBackend',
     ];
 
     /**

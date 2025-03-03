@@ -263,7 +263,12 @@ class GetEntitiesCommandHandler extends CommandHandler
 
             /** @var Collection $testProviders */
             $providers = $providerRepository->getWithSchedule(
-                ['dates' => [DateTimeService::getNowDateTimeObject()->modify('-1 days')->format('Y-m-d H:i:s')]]
+                [
+                    'dates' => [
+                        DateTimeService::getNowDateTimeObject()->modify('-1 days')->format('Y-m-d H:i:s')
+                    ],
+                    'fetchCalendars' => $currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_ADMIN,
+                ]
             );
 
             /** @var Provider $provider */
@@ -581,7 +586,9 @@ class GetEntitiesCommandHandler extends CommandHandler
         }
 
         /** Lesson Spaces */
-        if (in_array('lessonSpace_spaces', $params['types'], true)) {
+        if (in_array('lessonSpace_spaces', $params['types'], true) ||
+            in_array('spaces', $params['types'], true)
+        ) {
             $lessonSpaceApiKey    = $settingsDS->getSetting('lessonSpace', 'apiKey');
             $lessonSpaceEnabled   = $settingsDS->getSetting('lessonSpace', 'enabled');
             $lessonSpaceCompanyId = $settingsDS->getSetting('lessonSpace', 'companyId');

@@ -143,7 +143,9 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 
 				$value     = new ForminatorGoogleAddon\Google\Service\Sheets\ExtendedValue();
 				$cell_data = new ForminatorGoogleAddon\Google\Service\Sheets\CellData();
-				if ( is_numeric( $form_value ) ) {
+
+				// Set as a number value only if it is numeric and does not start with 0.
+				if ( substr( $form_value, 0, 1 ) !== '0' && is_numeric( $form_value ) ) {
 					$value->setNumberValue( $form_value );
 				} else {
 					$value->setStringValue( $form_value );

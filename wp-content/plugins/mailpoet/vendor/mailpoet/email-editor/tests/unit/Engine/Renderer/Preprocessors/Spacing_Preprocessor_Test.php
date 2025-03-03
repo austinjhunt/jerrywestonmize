@@ -68,7 +68,7 @@ class Spacing_Preprocessor_Test extends \MailPoetUnitTest {
  $nested_column_second_item = $nested_column['innerBlocks'][1];
  // First elements should not have margin-top, but others should.
  $this->assertArrayNotHasKey( 'margin-top', $first_columns['email_attrs'] );
- $this->assertArrayNotHasKey( 'margin-top', $second_columns['email_attrs'] );
+ $this->assertEquals( '10px', $nested_column_second_item['email_attrs']['margin-top'] );
  $this->assertArrayNotHasKey( 'margin-top', $nested_column['email_attrs'] );
  $this->assertArrayNotHasKey( 'margin-top', $nested_column_first_item['email_attrs'] );
  $this->assertArrayHasKey( 'margin-top', $nested_column_second_item['email_attrs'] );

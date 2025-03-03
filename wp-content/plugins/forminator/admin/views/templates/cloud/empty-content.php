@@ -23,5 +23,12 @@
 			);
 			?>
 		</p>
+		<?php if ( ! FORMINATOR_PRO && Forminator_Hub_Connector::hub_connector_logged_in() ) : ?>
+		<div class="sui-message-footer" style="margin-top: 150px;">
+			<span class="sui-button sui-button-ghost" data-modal-open="forminator-disconnect-hub-modal">
+				<?php esc_html_e( 'Disconnect site', 'forminator' ); ?>
+			</span>
+		</div>
+		<?php endif; ?>
 	</div>
 </div>

@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 class ActionScheduler_CanceledSchedule extends ActionScheduler_SimpleSchedule {
- private $timestamp = NULL;
+ private $timestamp = null;
  public function calculate_next( DateTime $after ) {
  return null;
  }

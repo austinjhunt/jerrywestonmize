@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 abstract class ActionScheduler_Lock {
- private static $locker = NULL;
+ private static $locker = null;
  protected static $lock_duration = MINUTE_IN_SECONDS;
  public function is_locked( $lock_type ) {
  return ( $this->get_expiration( $lock_type ) >= time() );

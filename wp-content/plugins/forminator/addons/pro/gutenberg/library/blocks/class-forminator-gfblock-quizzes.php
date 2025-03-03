@@ -188,6 +188,8 @@ class Forminator_GFBlock_Quizzes extends Forminator_GFBlock_Abstract {
 			'rendering'        => esc_html__( 'Rendering...', 'forminator' ),
 			'quiz'             => esc_html__( 'Quiz', 'forminator' ),
 			'quiz_description' => esc_html__( 'Embed and display your Forminator quiz in this block', 'forminator' ),
+			'preview_image'    => forminator_plugin_url() . 'addons/pro/gutenberg/assets/quiz-preview-image.png',
+			'preview_alt'      => esc_html__( 'Preview', 'forminator' ),
 		);
 	}
 }

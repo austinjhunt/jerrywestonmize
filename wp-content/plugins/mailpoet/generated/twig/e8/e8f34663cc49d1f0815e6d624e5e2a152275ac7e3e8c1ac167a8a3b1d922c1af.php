@@ -65,7 +65,7 @@ class __TwigTemplate_040602ebc7669cdfb9da26116daadadf72855abd5f9690ec0e527b909dc
         yield "';
   var wizard_woocommerce_illustration_url = '";
         // line 6
-        yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/woocommerce.20200623.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("welcome-wizard/woocommerce.20241219.png");
         yield "';
   var wizard_MSS_pitch_illustration_url = '";
         // line 7

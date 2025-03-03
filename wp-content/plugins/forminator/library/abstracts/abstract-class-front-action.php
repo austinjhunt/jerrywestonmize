@@ -134,24 +134,6 @@ abstract class Forminator_Front_Action {
 	}
 
 	/**
-	 * Returns last
-	 *
-	 * @param int $form_id Form Id.
-	 *
-	 * @since 1.1
-	 */
-	public function get_last_entry( $form_id ) {
-
-		$entries = Forminator_Form_Entry_Model::get_entries( $form_id );
-
-		if ( 0 < count( $entries ) ) {
-			return $entries[0]->entry_id;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Maybe handle form submit
 	 *
 	 * @since 1.0

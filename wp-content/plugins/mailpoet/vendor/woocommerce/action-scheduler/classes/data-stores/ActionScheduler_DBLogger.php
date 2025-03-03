@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 class ActionScheduler_DBLogger extends ActionScheduler_Logger {
- public function log( $action_id, $message, DateTime $date = null ) {
+ public function log( $action_id, $message, ?DateTime $date = null ) {
  if ( empty( $date ) ) {
  $date = as_get_datetime_object();
  } else {

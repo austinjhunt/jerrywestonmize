@@ -47,6 +47,7 @@ class Forminator_Quiz_New_Knowledge extends Forminator_Admin_Page {
 				'wp-color-picker',
 				'react',
 				'react-dom',
+				'wp-element',
 			),
 			FORMINATOR_VERSION,
 			true

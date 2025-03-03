@@ -118,7 +118,7 @@ class Forminator_Hidden extends Forminator_Field {
 
 		$id    = self::get_property( 'element_id', $field );
 		$name  = $id;
-		$value = esc_html( $this->get_value( $field ) );
+		$value = esc_html( $this->get_value( $field, true ) );
 
 		return sprintf( '<input type="hidden" id="%s" name="%s" value="%s" />', $id . '_' . Forminator_CForm_Front::$uid, $name, $value );
 	}
@@ -128,11 +128,12 @@ class Forminator_Hidden extends Forminator_Field {
 	 *
 	 * @since 1.0
 	 * @since 1.5 add user_id value getter
-	 * @param array $field Field.
+	 * @param array   $field Field.
+	 * @param boolean $is_markup For front-end markup.
 	 *
 	 * @return mixed|string
 	 */
-	public function get_value( $field ) {
+	public function get_value( $field, $is_markup = false ) {
 		$value       = '';
 		$saved_value = self::get_property( 'default_value', $field );
 		$embed_url   = forminator_get_current_url();
@@ -163,7 +164,13 @@ class Forminator_Hidden extends Forminator_Field {
 				$value = isset( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) ) : '';
 				break;
 			case 'refer_url':
-				$value = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : $embed_url;
+				if ( true === $is_markup ) {
+					$value = forminator_get_referer_url( $embed_url );
+				} else {
+					$element_id = self::get_property( 'element_id', $field );
+					$post_value = self::get_post_data( $element_id );
+					$value      = empty( $post_value ) ? $embed_url : $this->sanitize( $field, $post_value );
+				}
 				break;
 			case 'submission_id':
 				$value = 'submission_id';

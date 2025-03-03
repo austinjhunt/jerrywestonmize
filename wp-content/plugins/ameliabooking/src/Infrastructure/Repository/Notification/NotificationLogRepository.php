@@ -234,6 +234,7 @@ class NotificationLogRepository extends AbstractRepository
                     a.zoomMeeting AS appointment_zoom_meeting,
                     a.lessonSpace AS appointment_lesson_space,
                     a.googleMeetUrl AS appointment_google_meet_url,
+                    a.microsoftTeamsUrl AS appointment_microsoft_teams_url,
                     
                     cb.id AS booking_id,
                     cb.customerId AS booking_customerId,
@@ -491,6 +492,7 @@ class NotificationLogRepository extends AbstractRepository
                     a.zoomMeeting AS appointment_zoom_meeting,
                     a.lessonSpace AS appointment_lesson_space,
                     a.googleMeetUrl AS appointment_google_meet_url,
+                    a.microsoftTeamsUrl AS appointment_microsoft_teams_url,
        
                     cb.id AS booking_id,
                     cb.customerId AS booking_customerId,
@@ -731,6 +733,7 @@ class NotificationLogRepository extends AbstractRepository
                     a.googleMeetUrl AS appointment_google_meet_url,
                     a.lessonSpace AS appointment_lesson_space,
                     a.zoomMeeting AS appointment_zoom_meeting,
+                    a.microsoftTeamsUrl AS appointment_microsoft_teams_url,
                     
                     cb.id AS booking_id,
                     cb.customerId AS booking_customerId,

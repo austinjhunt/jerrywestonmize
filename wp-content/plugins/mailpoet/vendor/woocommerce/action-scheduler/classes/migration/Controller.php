@@ -64,7 +64,7 @@ class Controller {
  $config->set_progress_bar( new ProgressBar( '', 0 ) );
  }
  }
- return apply_filters( 'action_scheduler/migration_config', $config );
+ return apply_filters( 'action_scheduler/migration_config', $config ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
  }
  public function hook_admin_notices() {
  if ( ! $this->allow_migration() || \ActionScheduler_DataController::is_migration_complete() ) {
@@ -80,7 +80,7 @@ class Controller {
  add_filter( 'action_scheduler_logger_class', array( $this, 'get_logger_class' ), 100, 1 );
  add_action( 'init', array( $this, 'maybe_hook_migration' ) );
  add_action( 'wp_loaded', array( $this, 'schedule_migration' ) );
- // Action Scheduler may be displayed as a Tools screen or WooCommerce > Status administration screen
+ // Action Scheduler may be displayed as a Tools screen or WooCommerce > Status administration screen.
  add_action( 'load-tools_page_action-scheduler', array( $this, 'hook_admin_notices' ), 10, 0 );
  add_action( 'load-woocommerce_page_wc-status', array( $this, 'hook_admin_notices' ), 10, 0 );
  }

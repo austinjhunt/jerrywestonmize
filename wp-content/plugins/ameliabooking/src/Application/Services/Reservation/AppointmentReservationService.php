@@ -377,7 +377,8 @@ class AppointmentReservationService extends AbstractReservationService
             ->getGeneralSettings()
             ->getDefaultAppointmentStatus();
 
-        $appointmentData['bookings'][0]['status'] = $bookingStatus;
+        $appointmentData['bookings'][0]['status'] = !empty($appointmentData['packageBookingFromBackend']) ?
+            $appointmentData['bookings'][0]['status'] : $bookingStatus;
 
         if (!empty($appointmentData['payment']['gateway']) && !empty($appointmentData['payment']['orderStatus'])) {
             $appointmentData['bookings'][0]['status'] = $this->getWcStatus(
@@ -785,8 +786,7 @@ class AppointmentReservationService extends AbstractReservationService
 
             /** @var CustomerBooking $customerBooking */
             foreach ($appointment->getBookings()->getItems() as $customerBooking) {
-                if (($customerBooking->getStatus()->getValue() === BookingStatus::APPROVED &&
-                    $appointment->getStatus()->getValue() === BookingStatus::PENDING) ||
+                if ($customerBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
                     $booking->getId()->getValue() === $customerBooking->getId()->getValue()
                 ) {
                     $customerBooking->setChangedStatus(new BooleanValueObject(true));
@@ -803,7 +803,16 @@ class AppointmentReservationService extends AbstractReservationService
             )
         ) {
             $booking->setChangedStatus(new BooleanValueObject(true));
+
+            /** @var CustomerBooking $customerBooking */
+            foreach ($appointment->getBookings()->getItems() as $customerBooking) {
+                if ($booking->getId()->getValue() === $customerBooking->getId()->getValue()) {
+                    $customerBooking->setChangedStatus(new BooleanValueObject(true));
+                }
+            }
         }
+
+        $appointment->setChangedStatus(new BooleanValueObject($appStatusChanged));
 
         $appointmentRepository->commit();
 

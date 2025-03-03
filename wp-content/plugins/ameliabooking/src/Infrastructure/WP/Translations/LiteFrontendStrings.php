@@ -77,6 +77,9 @@ class LiteFrontendStrings
     {
         return [
             'add_to_calendar'              => __('Add to Calendar', 'wpamelia'),
+            'amount'                       => __('Amount', 'wpamelia'),
+            'all_services'                 => __('All Services', 'wpamelia'),
+            'all_locations'                => __('All Locations', 'wpamelia'),
             'no_services_employees'        => __('It seems like there are no employees or services created, or no  employees are assigned to the service, at this moment.'),
             'add_services_employees'       => __('If you are the admin of this page, see how to'),
             'add_services_url'             => __('Add services'),
@@ -91,6 +94,7 @@ class LiteFrontendStrings
             'closed'                       => __('Closed', 'wpamelia'),
             'content_mode_tooltip'         => __('Don\'t use Text mode option if you already have HTML code in the description, since once this option is enabled the existing HTML tags could be lost.', 'wpamelia'),
             'enable_google_meet'           => __('Enable Google Meet', 'wpamelia'),
+            'enable_microsoft_teams'       => __('Enable Microsoft Teams', 'wpamelia'),
             'full'                         => __('Full', 'wpamelia'),
             'upcoming'                     => __('Upcoming', 'wpamelia'),
             'confirm'                      => __('Confirm', 'wpamelia'),
@@ -135,6 +139,7 @@ class LiteFrontendStrings
             'time_slot_unavailable'        => __('Time slot is unavailable', 'wpamelia'),
             'total_cost_colon'             => __('Total Cost:', 'wpamelia'),
             'total_number_of_persons'      => __('Total Number of People:', 'wpamelia'),
+            'view'                         => __('View', 'wpamelia'),
         ];
     }
 
@@ -267,6 +272,7 @@ class LiteFrontendStrings
             'available'                              => __('Available', 'wpamelia'),
             'booking_cancel_exception'               => __('Booking can\'t be canceled', 'wpamelia'),
             'no_results'                             => __('There are no results...', 'wpamelia'),
+            'select_customer'                        => __('Select Customer', 'wpamelia'),
             'select_service'                         => __('Select Service', 'wpamelia'),
             'subtotal'                               => __('Subtotal', 'wpamelia'),
         ];

@@ -137,6 +137,13 @@ abstract class Forminator_Field {
 	public $validation_message = array();
 
 	/**
+	 * Description position
+	 *
+	 * @var string
+	 */
+	public static $description_position = '';
+
+	/**
 	 * Activated Autofill Providers for this field based @see autofill_settings
 	 *
 	 * @since 1.0.5
@@ -300,6 +307,34 @@ abstract class Forminator_Field {
 	}
 
 	/**
+	 * Get description position
+	 *
+	 * @param array $field Field settings.
+	 * @param array $settings Form Settings.
+	 *
+	 * @return string
+	 */
+	public static function get_description_position( array $field, array $settings ): string {
+		$possible_values = array( 'above', 'below' );
+		$field_pos       = self::get_property( 'description-position', $field );
+		// Check field description position.
+		if ( in_array( $field_pos, $possible_values, true ) ) {
+			return $field_pos;
+		}
+		if ( ! empty( $field['type'] ) && 'group' === $field['type'] && empty( $field_pos ) ) {
+			return 'above';
+		}
+
+		// Check form description position.
+		if ( ! empty( $settings['description-position'] ) && in_array( $settings['description-position'], $possible_values, true ) ) {
+			return $settings['description-position'];
+		}
+
+		// For backward compatibility.
+		return 'below';
+	}
+
+	/**
 	 * Markup
 	 *
 	 * @since 1.0
@@ -334,10 +369,11 @@ abstract class Forminator_Field {
 	 *
 	 * @param string $description Description.
 	 * @param string $get_id Id.
+	 * @param string $descr_position Description position.
 	 *
 	 * @return string
 	 */
-	public static function get_description( $description, $get_id = '' ) {
+	public static function get_description( $description, $get_id = '', $descr_position = 'above' ) {
 		$html = '';
 		if ( ! empty( $description ) ) {
 			$html .= sprintf(
@@ -351,7 +387,8 @@ abstract class Forminator_Field {
 			'forminator_field_description',
 			$html,
 			$description,
-			$get_id
+			$get_id,
+			$descr_position
 		);
 	}
 
@@ -397,12 +434,12 @@ abstract class Forminator_Field {
 	 * @param string $label Label.
 	 * @param string $description Description.
 	 * @param bool   $required Required.
-	 * @param string $design Design.
+	 * @param string $descr_position Description position.
 	 * @param array  $wrapper_input Wrapper Input.
 	 *
 	 * @return mixed
 	 */
-	public static function create_input( $attr = array(), $label = '', $description = '', $required = false, $design = '', $wrapper_input = array() ) {
+	public static function create_input( $attr = array(), $label = '', $description = '', $required = false, $descr_position = 'above', $wrapper_input = array() ) {
 
 		$html = '';
 
@@ -426,15 +463,19 @@ abstract class Forminator_Field {
 
 		$html .= self::get_field_label( $label, $get_id, $required );
 
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $get_id, $descr_position );
+		}
+
 		if ( isset( $wrapper_input[0] ) ) {
 			$html .= $wrapper_input[0];
 		}
 
-		if ( isset( $wrapper_input[2] ) && ! empty( $wrapper_input[2] ) ) {
+		if ( ! empty( $wrapper_input[2] ) ) {
 			$html .= sprintf( '<span class="forminator-icon-%s" aria-hidden="true"></span>', $wrapper_input[2] );
 		}
 
-		if ( isset( $wrapper_input[3] ) && ! empty( $wrapper_input[3] ) ) {
+		if ( ! empty( $wrapper_input[3] ) ) {
 			$html .= sprintf( '<span class="forminator-prefix">%s</span>', $wrapper_input[3] );
 		}
 
@@ -444,8 +485,8 @@ abstract class Forminator_Field {
 			$html .= $wrapper_input[1];
 		}
 
-		if ( ! empty( $description ) ) {
-			$html .= self::get_description( $description, $get_id );
+		if ( 'above' !== $descr_position ) {
+			$html .= self::get_description( $description, $get_id, $descr_position );
 		}
 
 		return apply_filters( 'forminator_field_create_input', $html, $attr, $label, $description );
@@ -461,11 +502,11 @@ abstract class Forminator_Field {
 	 * @param string $label Field Label.
 	 * @param string $description Field Description.
 	 * @param bool   $required Required.
-	 * @param string $design Design.
+	 * @param string $description_position Description Position.
 	 *
 	 * @return mixed
 	 */
-	public static function create_textarea( $attr = array(), $label = '', $description = '', $required = false, $design = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public static function create_textarea( $attr = array(), $label = '', $description = '', $required = false, $description_position = 'above' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
 		$html    = '';
 		$content = isset( $attr['content'] ) ? $attr['content'] : '';
@@ -484,10 +525,14 @@ abstract class Forminator_Field {
 
 		$html .= self::get_field_label( $label, $attr['id'], $required );
 
+		if ( 'above' === $description_position ) {
+			$html .= self::get_description( $description, $attr['id'], $description_position );
+		}
+
 		$html .= sprintf( '<textarea %s >%s</textarea>', $markup, wp_kses_post( $content ) );
 
-		if ( ! empty( $description ) ) {
-			$html .= self::get_description( $description, $attr['id'] );
+		if ( 'above' !== $description_position ) {
+			$html .= self::get_description( $description, $attr['id'], $description_position );
 		}
 
 		return apply_filters( 'forminator_field_create_textarea', $html, $attr, $label, $description );
@@ -523,6 +568,10 @@ abstract class Forminator_Field {
 			$html .= '</div>';
 		}
 
+		if ( 'above' === self::$description_position ) {
+			$html .= self::get_description( $description, '', self::$description_position );
+		}
+
 		$wp_editor_class = isset( $attr['class'] ) ? $attr['class'] : '';
 
 		if ( $required ) {
@@ -546,8 +595,8 @@ abstract class Forminator_Field {
 
 		$html .= ob_get_clean();
 
-		if ( ! empty( $description ) ) {
-			$html .= self::get_description( $description );
+		if ( 'above' !== self::$description_position ) {
+			$html .= self::get_description( $description, '', self::$description_position );
 		}
 
 		return apply_filters( 'forminator_field_create_wp_editor', $html, $attr, $label, $description );
@@ -613,10 +662,11 @@ abstract class Forminator_Field {
 	 * @param string $value Field value.
 	 * @param string $description Field description.
 	 * @param bool   $required Required.
+	 * @param string $descr_position Description position.
 	 *
 	 * @return mixed
 	 */
-	public static function create_select( $attr = array(), $label = '', $options = array(), $value = '', $description = '', $required = false ) {
+	public static function create_select( $attr = array(), $label = '', $options = array(), $value = '', $description = '', $required = false, $descr_position = 'above' ) {
 
 		$html = '';
 
@@ -642,6 +692,10 @@ abstract class Forminator_Field {
 
 		$html .= self::get_field_label( $label, $get_id, $required );
 
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $get_id, $descr_position );
+		}
+
 		$markup .= ' data-default-value="' . esc_attr( $value ) . '"';
 
 		$html .= sprintf( '<select %s>', $markup );
@@ -650,8 +704,8 @@ abstract class Forminator_Field {
 
 		$html .= '</select>';
 
-		if ( ! empty( $description ) ) {
-			$html .= self::get_description( $description, $get_id );
+		if ( 'above' !== $descr_position ) {
+			$html .= self::get_description( $description, $get_id, $descr_position );
 		}
 
 		return apply_filters( 'forminator_field_create_select', $html, $attr, $label, $options, $value, $description );
@@ -769,6 +823,10 @@ abstract class Forminator_Field {
 
 		$upload_data = self::implode_attr( $upload_attr );
 
+		if ( 'above' === self::$description_position ) {
+			$html .= self::get_description( $description, $id, self::$description_position );
+		}
+
 		$html .= sprintf(
 			'<div class="%s %s" data-element="%s"%s>',
 			$mainclass,
@@ -836,8 +894,8 @@ abstract class Forminator_Field {
 		$html .= '</div>';
 
 		// Check if description is not empty and append it.
-		if ( ! empty( $description ) ) {
-			$html .= self::get_description( $description, $id );
+		if ( 'above' !== self::$description_position ) {
+			$html .= self::get_description( $description, $id, self::$description_position );
 		}
 
 		return apply_filters( 'forminator_field_create_file_upload', $html, $id, $name, $required );
@@ -1141,8 +1199,10 @@ abstract class Forminator_Field {
 	 */
 	public static function is_condition_fulfilled( $form_field_value, $condition, $form_id = null ) {
 		if ( is_array( $form_field_value ) ) {
+			$form_field_value = forminator_htmlspecialchars_decode_array( $form_field_value );
 			$form_field_value = forminator_trim_array( $form_field_value );
 		} else {
+			$form_field_value = htmlspecialchars_decode( $form_field_value );
 			$form_field_value = strtolower( trim( $form_field_value ) );
 		}
 
@@ -1155,6 +1215,23 @@ abstract class Forminator_Field {
 		// } else if ( is_string( $form_field_value ) ) {
 		// $form_field_value = strtolower( $form_field_value );
 		// }.
+
+		$element_id = $condition['element_id'];
+		if ( stripos( $element_id, 'upload-' ) !== false ) {
+			// Single file upload type.
+			if ( ! empty( $form_field_value['file']['name'] ) ) {
+				$form_field_value = $form_field_value['file']['name'];
+				// Multiple file upload type.
+			} elseif ( ! empty( $form_field_value['file'] ) && is_array( $form_field_value['file'] ) ) {
+				$file_names = array();
+				foreach ( $form_field_value['file'] as $file ) {
+					if ( ! empty( $file['file_name'] ) ) {
+						$file_names[] = $file['file_name'];
+					}
+				}
+				$form_field_value = $file_names;
+			}
+		}
 
 		if ( is_string( $condition_value ) ) {
 			$condition_value = strtolower( $condition_value );
@@ -1197,12 +1274,44 @@ abstract class Forminator_Field {
 
 				return $form_field_value < $condition_value;
 			case 'contains':
+				if ( is_array( $form_field_value ) ) {
+					foreach ( $form_field_value as $value ) {
+						if ( stripos( $value, $condition_value ) !== false ) {
+							return true;
+						}
+					}
+					return false;
+				}
 				return ( stripos( $form_field_value, $condition_value ) === false ? false : true );
 			case 'does_not_contain':
+				if ( is_array( $form_field_value ) ) {
+					foreach ( $form_field_value as $value ) {
+						if ( stripos( $value, $condition_value ) !== false ) {
+							return false;
+						}
+					}
+					return true;
+				}
 				return ! ( stripos( $form_field_value, $condition_value ) !== false );
 			case 'starts':
+				if ( is_array( $form_field_value ) ) {
+					foreach ( $form_field_value as $value ) {
+						if ( stripos( $value, $condition_value ) === 0 ) {
+							return true;
+						}
+					}
+					return false;
+				}
 				return ( stripos( $form_field_value, $condition_value ) === 0 ? true : false );
 			case 'ends':
+				if ( is_array( $form_field_value ) ) {
+					foreach ( $form_field_value as $value ) {
+						if ( substr( $value, - strlen( $condition_value ) ) === $condition_value ) {
+							return true;
+						}
+					}
+					return false;
+				}
 				return ( substr( $form_field_value, - strlen( $condition_value ) ) === $condition_value );
 
 			case 'day_is':
@@ -1958,7 +2067,7 @@ abstract class Forminator_Field {
 	 * Number separators
 	 *
 	 * @param string $separator Separator.
-	 * @param string $field Field.
+	 * @param array  $field Field.
 	 *
 	 * @return array
 	 */
@@ -2048,6 +2157,9 @@ abstract class Forminator_Field {
 	 */
 	public static function check_upload_root_index_file() {
 		$upload_root = forminator_upload_root();
+		if ( is_wp_error( $upload_root ) ) {
+			return;
+		}
 		// Make sure it was not called before WP init.
 		if ( ! file_exists( $upload_root . 'index.php' ) && function_exists( 'insert_with_markers' ) ) {
 			self::add_index_file( $upload_root );
@@ -2106,7 +2218,7 @@ abstract class Forminator_Field {
 		$form_id     = absint( $form_id );
 		$upload_root = forminator_upload_root();
 
-		if ( ! is_dir( $upload_root ) ) {
+		if ( is_wp_error( $upload_root ) || ! is_dir( $upload_root ) ) {
 			return;
 		}
 
@@ -2132,7 +2244,7 @@ abstract class Forminator_Field {
 
 		$upload_root = forminator_upload_root();
 
-		if ( ! is_dir( $upload_root ) ) {
+		if ( is_wp_error( $upload_root ) || ! is_dir( $upload_root ) ) {
 			return;
 		}
 

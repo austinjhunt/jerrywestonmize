@@ -138,6 +138,16 @@ class EventPlaceholderService extends PlaceholderService
                 '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['google_meet_join'] . '</a></li>' .
                 '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['google_meet_join'] . '</a></li>' .
                 '</ul>' : date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . ': ' . 'https://join_google_meet_link.com' ,
+            'microsoft_teams_url_date'        => $type === 'email' ?
+                '<ul>' .
+                '<li><a href="#">' . date_i18n($dateFormat, $periodStartDate) . ' ' . BackendStrings::getCommonStrings()['microsoft_teams_join'] .'</a></li>' .
+                '<li><a href="#">' . date_i18n($dateFormat, $periodEndDate) . ' ' . BackendStrings::getCommonStrings()['microsoft_teams_join'] . '</a></li>' .
+                '</ul>' : date_i18n($dateFormat, $periodStartDate) . ': ' . 'https://join_microsoft_teams_link.com',
+            'microsoft_teams_url_date_time'   => $type === 'email' ?
+                '<ul>' .
+                '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['microsoft_teams_join'] . '</a></li>' .
+                '<li><a href="#">' . date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . BackendStrings::getCommonStrings()['microsoft_teams_join'] . '</a></li>' .
+                '</ul>' : date_i18n($dateFormat . ' ' . $timeFormat, $timestamp) . ': ' . 'https://join_microsoft_teams_link.com' ,
             'lesson_space_url_date'        => $type === 'email' ?
                 '<ul>' .
                 '<li><a href="#">' . date_i18n($dateFormat, $periodStartDate) . ' ' . BackendStrings::getCommonStrings()['lesson_space_join'] .'</a></li>' .
@@ -411,7 +421,7 @@ class EventPlaceholderService extends PlaceholderService
                 $bookingKey !== null ? $locale : null,
                 $provider['translations'],
                 'description'
-            ) ?: $provider['description'];
+            ) ?: (!empty($provider['description']) ? $provider['description'] : '');
 
             $staff[] = [
                 'employee_first_name'       => $firstName,
@@ -428,7 +438,9 @@ class EventPlaceholderService extends PlaceholderService
                     (sizeof($event['providers']) > 1 ? $liEndTag : ''),
             ];
 
-            $timeZones[] = $provider['timeZone'];
+            if (!empty($provider['timeZone'])) {
+                $timeZones[] = $provider['timeZone'];
+            }
         }
 
         $timeZone = $providers && $timeZones && count(array_unique($timeZones)) === 1 ? array_unique($timeZones)[0] : null;
@@ -546,6 +558,8 @@ class EventPlaceholderService extends PlaceholderService
         $eventGoogleMeetDateTimeList  = [];
         $eventLessonSpaceDateList     = [];
         $eventLessonSpaceDateTimeList = [];
+        $eventMicrosoftTeamsDateList  = [];
+        $eventMicrosoftTeamsDateTimeList = [];
 
 
         foreach ($dateTimes as $key => $dateTime) {
@@ -602,6 +616,17 @@ class EventPlaceholderService extends PlaceholderService
                 $eventGoogleMeetDateTimeList[] = $type === 'email' ?
                     ($liStartTag . '<a href="' . $googleMeetUrl . '">' . $dateTimeString . ' ' . BackendStrings::getCommonStrings()['google_meet_join'] . '</a>' . $liEndTag)
                     : $dateTimeString . ': ' . $googleMeetUrl;
+            }
+
+            if ($event['periods'][$key]['microsoftTeamsUrl']) {
+                $microsoftTeamsUrl = $event['periods'][$key]['microsoftTeamsUrl'];
+
+                $eventMicrosoftTeamsDateList[] = $type === 'email' ?
+                    ($liStartTag . '<a href="' . $microsoftTeamsUrl . '">' . $dateString . ' ' . BackendStrings::getCommonStrings()['microsoft_teams_join'] . '</a>' . $liEndTag)
+                    : $dateString . ': ' . $microsoftTeamsUrl;
+                $eventMicrosoftTeamsDateTimeList[] = $type === 'email' ?
+                    ($liStartTag . '<a href="' . $microsoftTeamsUrl . '">' . $dateTimeString . ' ' . BackendStrings::getCommonStrings()['microsoft_teams_join'] . '</a>' . $liEndTag)
+                    : $dateTimeString . ': ' . $microsoftTeamsUrl;
             }
 
             if ($event['periods'][$key]['lessonSpace']) {
@@ -873,6 +898,10 @@ class EventPlaceholderService extends PlaceholderService
                 '' : $ulStartTag . implode('', $eventGoogleMeetDateList) . $ulEndTag,
             'google_meet_url_date_time' => count($eventGoogleMeetDateTimeList) === 0 ?
                 '' : $ulStartTag . implode('', $eventGoogleMeetDateTimeList) . $ulEndTag,
+            'microsoft_teams_url_date'  => count($eventMicrosoftTeamsDateList) === 0 ?
+                '' : $ulStartTag . implode('', $eventMicrosoftTeamsDateList) . $ulEndTag,
+            'microsoft_teams_url_date_time' => count($eventMicrosoftTeamsDateTimeList) === 0 ?
+                '' : $ulStartTag . implode('', $eventMicrosoftTeamsDateTimeList) . $ulEndTag,
             'zoom_host_url_date'       => count($eventZoomStartDateList) === 0 ?
                 '' : $ulStartTag . implode('', $eventZoomStartDateList) . $ulEndTag,
             'zoom_host_url_date_time'  => count($eventZoomStartDateTimeList) === 0 ?

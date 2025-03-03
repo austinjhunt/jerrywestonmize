@@ -7,13 +7,13 @@ class ActionScheduler_QueueRunner extends ActionScheduler_Abstract_QueueRunner {
  private static $runner = null;
  private $processed_actions_count = 0;
  public static function instance() {
- if ( empty(self::$runner) ) {
- $class = apply_filters('action_scheduler_queue_runner_class', 'ActionScheduler_QueueRunner');
+ if ( empty( self::$runner ) ) {
+ $class = apply_filters( 'action_scheduler_queue_runner_class', 'ActionScheduler_QueueRunner' );
  self::$runner = new $class();
  }
  return self::$runner;
  }
- public function __construct( ActionScheduler_Store $store = null, ActionScheduler_FatalErrorMonitor $monitor = null, ActionScheduler_QueueCleaner $cleaner = null, ActionScheduler_AsyncRequest_QueueRunner $async_request = null ) {
+ public function __construct( ?ActionScheduler_Store $store = null, ?ActionScheduler_FatalErrorMonitor $monitor = null, ?ActionScheduler_QueueCleaner $cleaner = null, ?ActionScheduler_AsyncRequest_QueueRunner $async_request = null ) {
  parent::__construct( $store, $monitor, $cleaner );
  if ( is_null( $async_request ) ) {
  $async_request = new ActionScheduler_AsyncRequest_QueueRunner( $this->store );
@@ -21,8 +21,8 @@ class ActionScheduler_QueueRunner extends ActionScheduler_Abstract_QueueRunner {
  $this->async_request = $async_request;
  }
  public function init() {
- add_filter( 'cron_schedules', array( self::instance(), 'add_wp_cron_schedule' ) );
- // Check for and remove any WP Cron hook scheduled by Action Scheduler < 3.0.0, which didn't include the $context param
+ add_filter( 'cron_schedules', array( self::instance(), 'add_wp_cron_schedule' ) ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+ // Check for and remove any WP Cron hook scheduled by Action Scheduler < 3.0.0, which didn't include the $context param.
  $next_timestamp = wp_next_scheduled( self::WP_CRON_HOOK );
  if ( $next_timestamp ) {
  wp_unschedule_event( $next_timestamp, self::WP_CRON_HOOK );
@@ -58,22 +58,22 @@ class ActionScheduler_QueueRunner extends ActionScheduler_Abstract_QueueRunner {
  $this->run_cleanup();
  $this->processed_actions_count = 0;
  if ( false === $this->has_maximum_concurrent_batches() ) {
- $batch_size = apply_filters( 'action_scheduler_queue_runner_batch_size', 25 );
  do {
+ $batch_size = apply_filters( 'action_scheduler_queue_runner_batch_size', 25 );
  $processed_actions_in_batch = $this->do_batch( $batch_size, $context );
  $this->processed_actions_count += $processed_actions_in_batch;
- } while ( $processed_actions_in_batch > 0 && ! $this->batch_limits_exceeded( $this->processed_actions_count ) ); // keep going until we run out of actions, time, or memory
+ } while ( $processed_actions_in_batch > 0 && ! $this->batch_limits_exceeded( $this->processed_actions_count ) ); // keep going until we run out of actions, time, or memory.
  }
  do_action( 'action_scheduler_after_process_queue' );
  return $this->processed_actions_count;
  }
  protected function do_batch( $size = 100, $context = '' ) {
- $claim = $this->store->stake_claim($size);
- $this->monitor->attach($claim);
+ $claim = $this->store->stake_claim( $size );
+ $this->monitor->attach( $claim );
  $processed_actions = 0;
  foreach ( $claim->get_actions() as $action_id ) {
- // bail if we lost the claim
- if ( ! in_array( $action_id, $this->store->find_actions_by_claim_id( $claim->get_id() ) ) ) {
+ // bail if we lost the claim.
+ if ( ! in_array( $action_id, $this->store->find_actions_by_claim_id( $claim->get_id() ), true ) ) {
  break;
  }
  $this->process_action( $action_id, $context );
@@ -82,7 +82,7 @@ class ActionScheduler_QueueRunner extends ActionScheduler_Abstract_QueueRunner {
  break;
  }
  }
- $this->store->release_claim($claim);
+ $this->store->release_claim( $claim );
  $this->monitor->detach();
  $this->clear_caches();
  return $processed_actions;
@@ -101,7 +101,7 @@ class ActionScheduler_QueueRunner extends ActionScheduler_Abstract_QueueRunner {
  }
  public function add_wp_cron_schedule( $schedules ) {
  $schedules['every_minute'] = array(
- 'interval' => 60, // in seconds
+ 'interval' => 60, // in seconds.
  'display' => __( 'Every minute', 'action-scheduler' ),
  );
  return $schedules;

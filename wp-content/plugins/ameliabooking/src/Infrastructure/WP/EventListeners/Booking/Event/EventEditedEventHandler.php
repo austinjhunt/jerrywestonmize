@@ -364,6 +364,8 @@ class EventEditedEventHandler
                                 $changedPeriod->setZoomMeeting(ZoomFactory::create([]));
                             }
                             $changedPeriod->setGoogleMeetUrl($eventPeriod['googleMeetUrl']);
+
+                            $changedPeriod->setMicrosoftTeamsUrl($eventPeriod['microsoftTeamsUrl']);
                         }
                     }
                 }

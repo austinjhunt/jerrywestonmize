@@ -416,21 +416,21 @@
 		return url(value, element) || url('http://' + value, element);
 	});
 	$.validator.addMethod("forminatorPhoneNational", function ( value, element ) {
-		var phone = intlTelInput.getInstance( element );
+		var iti = intlTelInput.getInstance( element );
 		var elem  = $( element );
-		if ( !elem.data('required') && value === '+' +phone.getSelectedCountryData().dialCode ) {
+		if ( !elem.data('required') && value === '+' +iti.getSelectedCountryData().dialCode ) {
 			return true;
 		}
 
 		if (
 			'undefined' !== typeof elem.data( 'country' ) &&
-			elem.data( 'country' ).toLowerCase() !== phone.getSelectedCountryData().iso2
+			elem.data( 'country' ).toLowerCase() !== iti.getSelectedCountryData().iso2
 		) {
 			return false;
 		}
 
 		// Uses intlTelInput to check if the number is valid.
-		return this.optional( element ) || phone.isValidNumber();
+		return this.optional( element ) || iti.isValidNumberPrecise();
 	});
 	$.validator.addMethod("forminatorPhoneInternational", function (value, element) {
 		const iti = intlTelInput.getInstance( element );
@@ -440,7 +440,7 @@
 		}
 
 		// Uses intlTelInput to check if the number is valid.
-		return this.optional(element) || iti.isValidNumber();
+		return this.optional(element) || iti.isValidNumberPrecise();
 	});
 	$.validator.addMethod("dateformat", function (value, element, param) {
 		// dateITA method from jQuery Validator additional. Date method is deprecated and doesn't work for all formats

@@ -545,6 +545,11 @@
 				is_material = form.is('.forminator-design--material'),
 				fields      = form.find('.forminator-field--phone');
 
+			if ( ! form.is('form') ) {
+				// For cloning phone fields inside group fields.
+				is_material = form.closest('form').is('.forminator-design--material');
+			}
+
 			fields.each(function () {
 
 				// Initialize intlTelInput plugin on each field with "format check" enabled and
@@ -552,18 +557,25 @@
 				var self              = this,
 					is_national_phone = $(this).data('national_mode'),
 					country           = $(this).data('country'),
-					validation        = $(this).data('validation');
+					validation        = $(this).data('validation'),
+					iti               = window.intlTelInput.getInstance(self);
 
 				if ('undefined' !== typeof (is_national_phone)) {
 
 					if (is_material) {
-						//$(this).unwrap('.forminator-input--wrap');
+						$(this).unwrap('.forminator-input--wrap');
+					}
+
+					// If it's already intialised then first destroy it and then reinit.
+					if ( iti ) {
+						iti.destroy();
 					}
 
 					var args = {
 						nationalMode: ('enabled' === is_national_phone) ? true : false,
 						initialCountry: 'undefined' !== typeof ( country ) ? country : 'us',
-						utilsScript: window.ForminatorFront.cform.intlTelInput_utils_script,
+						validationNumberTypes: null,
+						loadUtils: () => import(window.ForminatorFront.cform.intlTelInput_utils_script),
 						strictMode: true,
 					};
 
@@ -573,18 +585,10 @@
 					// stop from removing country code.
 					if ( 'undefined' !== typeof ( validation ) && 'international' === validation ) {
 						args.autoHideDialCode = false;
+						args.separateDialCode = true;
 					}
 
 					var iti = window.intlTelInput(self, args);
-					if ( 'undefined' !== typeof ( validation )
-						&& 'international' === validation ) {
-						var dial_code = iti.getSelectedCountryData().dialCode,
-							country_code = '+' + dial_code;
-						if ( country_code !== $(this).val() ) {
-							var phone_value = $(this).val().trim().replace( dial_code, '' ).replace( '+', '' );
-								$(this).val( country_code + phone_value );
-						}
-					}
 
 					if ( 'undefined' !== typeof ( validation ) && 'standard' === validation ) {
 						// Reset country to default if changed and invalid previously.
@@ -611,6 +615,11 @@
 					if (is_material) {
 						//$(this).closest('.intl-tel-input.allow-dropdown').addClass('forminator-phone-intl').removeClass('intl-tel-input');
 						//$(this).wrap('<div class="forminator-input--wrap"></div>');
+
+						// Wrap Element
+						if (!$(this).parent().hasClass('forminator-input--wrap')) {
+							$(this).wrap('<div class="forminator-input--wrap"></div>');
+						}
 					}
 				}
 			});
@@ -1265,6 +1274,8 @@
 				$input.val('');
 				$label.html( $label.data( 'empty-text' ) );
 				$self.hide();
+				// Reset related conditional fields.
+				$input.trigger( 'forminator.change', 'forminator_emulate_trigger' );
 
 			});
 

@@ -5,6 +5,7 @@ namespace MailPoet\Newsletter\ViewInBrowser;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\EmailEditor\Integrations\MailPoet\DependencyNotice;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Newsletter\Sending\SendingQueuesRepository;
@@ -31,12 +32,16 @@ class ViewInBrowserController {
   /** @var NewslettersRepository */
   private $newslettersRepository;
 
+  /** @var DependencyNotice */
+  private $dependencyNotice;
+
   public function __construct(
     LinkTokens $linkTokens,
     NewsletterUrl $newsletterUrl,
     NewslettersRepository $newslettersRepository,
     ViewInBrowserRenderer $viewInBrowserRenderer,
     SendingQueuesRepository $sendingQueuesRepository,
+    DependencyNotice $dependencyNotice,
     SubscribersRepository $subscribersRepository
   ) {
     $this->linkTokens = $linkTokens;
@@ -44,6 +49,7 @@ class ViewInBrowserController {
     $this->subscribersRepository = $subscribersRepository;
     $this->sendingQueuesRepository = $sendingQueuesRepository;
     $this->newsletterUrl = $newsletterUrl;
+    $this->dependencyNotice = $dependencyNotice;
     $this->newslettersRepository = $newslettersRepository;
   }
 
@@ -52,6 +58,9 @@ class ViewInBrowserController {
     $isPreview = !empty($data['preview']);
     $newsletter = $this->getNewsletter($data);
     $subscriber = $this->getSubscriber($data);
+    if ($newsletter->getWpPostId() && $this->dependencyNotice->checkDependenciesAndEventuallyShowNotice()) {
+      return '';
+    }
 
     // if queue and subscriber exist, subscriber must have received the newsletter
     $queue = isset($data['queue_id']) ? $this->sendingQueuesRepository->findOneById($data['queue_id']) : null;

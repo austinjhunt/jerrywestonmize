@@ -195,6 +195,8 @@ class Forminator_GFBlock_Forms extends Forminator_GFBlock_Abstract {
 			'rendering'        => esc_html__( 'Rendering...', 'forminator' ),
 			'form'             => esc_html__( 'Form', 'forminator' ),
 			'form_description' => esc_html__( 'Embed and display your custom Forminator forms in this block', 'forminator' ),
+			'preview_image'    => forminator_plugin_url() . 'addons/pro/gutenberg/assets/form-preview-image.png',
+			'preview_alt'      => esc_html__( 'Preview', 'forminator' ),
 		);
 	}
 }

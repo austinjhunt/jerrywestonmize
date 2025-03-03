@@ -92,7 +92,7 @@ class GetCustomersCommandHandler extends CommandHandler
         }
 
         $itemsPerPage = !empty($params['limit']) ?
-            $params['limit'] : $settingsService->getSetting('general', 'itemsPerPage');
+            $params['limit'] : $settingsService->getSetting('general', 'itemsPerPageBackEnd');
 
         $users = $customerRepository->getFiltered(
             array_merge($params, ['ignoredBookings' => empty($params['noShow'])]),

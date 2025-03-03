@@ -19,6 +19,7 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Report\ReportServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ExtraRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
@@ -59,6 +60,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
         $customFieldRepository = $this->container->get('domain.customField.repository');
         /** @var AbstractPackageApplicationService $packageAS */
         $packageAS = $this->container->get('application.bookable.package');
+        /** @var ExtraRepository $extraRepository */
+        $extraRepository = $this->container->get('domain.bookable.extra.repository');
 
         $result = new CommandResult();
 
@@ -117,6 +120,30 @@ class GetAppointmentsCommandHandler extends CommandHandler
             }
         }
 
+        $extras = [];
+
+        if (in_array('extras', $params['fields'], true)) {
+            foreach ((array)$appointmentsArray as $appointment) {
+                $extraIds = [];
+
+                foreach ((array)$appointment['bookings'] as $booking) {
+                    foreach ((array)$booking['extras'] as $extra) {
+                        if (!in_array($extra['extraId'], $extraIds) && !isset($extras[$extra['extraId']])) {
+                            $extraIds[] = $extra['extraId'];
+                        }
+                    }
+                }
+
+                if (!empty($extraIds)) {
+                    $items = $extraRepository->getByIds($extraIds);
+                    foreach ($items->getItems() as $item) {
+                        $extras[$item->getId()->getValue()] = $item->toArray();
+                    }
+                }
+
+            }
+        }
+
         foreach ((array)$appointmentsArray as $appointment) {
             $numberOfPersonsData = [
                 AbstractUser::USER_ROLE_PROVIDER => [
@@ -144,6 +171,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
             $customers = [];
             $rowCF     = [];
+            $rowExtras = [];
+            $extraInfo = [];
 
             if ($params['separate'] !== "true") {
                 foreach ((array)$appointment['bookings'] as $booking) {
@@ -179,6 +208,19 @@ class GetAppointmentsCommandHandler extends CommandHandler
                             $rowCF[$customFieldLabel] = $value;
                         }
                     }
+
+                    foreach ($booking['extras'] as $k => $extra) {
+                        if ($k > 0) {
+                            $extraInfo[$booking['id']] .=  ', ' . $extras[$extra['extraId']]['name'] . ' x ' . $extra['quantity'];
+                        } else {
+                            $extraInfo[$booking['id']] = $extras[$extra['extraId']]['name'] . ' x ' . $extra['quantity'];
+                        }
+
+                    }
+                }
+
+                if (in_array('extras', $params['fields'], true)) {
+                    $rowExtras[LiteBackendStrings::getCommonStrings()['extras']] =  implode('|', $extraInfo);
                 }
 
                 if (in_array('customers', $params['fields'], true)) {
@@ -187,7 +229,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
                 $this->getRowData($params, $row, $appointment, $dateFormat, $timeFormat, $numberOfPersons);
 
-                $mergedRow = apply_filters('amelia_before_csv_export_appointments', array_merge($row, $rowCF), $appointment, $params['separate'], null);
+                $mergedRow = apply_filters('amelia_before_csv_export_appointments', array_merge($row, $rowCF, $rowExtras), $appointment, $params['separate'], null);
 
                 $rows[] = $mergedRow;
             } else {
@@ -228,6 +270,15 @@ class GetAppointmentsCommandHandler extends CommandHandler
                             }
                             $row[$customFieldLabel] = $value;
                         }
+                    }
+
+                    if (in_array('extras', $params['fields'], true)) {
+                        $extraInfo = [];
+                        foreach ($booking['extras'] as $extra) {
+                            $extraInfo[] = $extras[$extra['extraId']]['name'] . ' x ' . $extra['quantity'];
+                        }
+
+                        $row[LiteBackendStrings::getCommonStrings()['extras']] =  implode(', ', $extraInfo);
                     }
 
                     $row = apply_filters('amelia_before_csv_export_appointments', $row, $appointment, $params['separate'], $booking);

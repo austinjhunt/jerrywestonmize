@@ -14,34 +14,40 @@ class BatchFetcher {
  return $action_ids;
  }
  }
- return [];
+ return array();
  }
  private function get_query_strategies( $count ) {
  $now = as_get_datetime_object();
- $args = [
+ $args = array(
  'date' => $now,
  'per_page' => $count,
  'offset' => 0,
  'orderby' => 'date',
  'order' => 'ASC',
- ];
- $priorities = [
+ );
+ $priorities = array(
  Store::STATUS_PENDING,
  Store::STATUS_FAILED,
  Store::STATUS_CANCELED,
  Store::STATUS_COMPLETE,
  Store::STATUS_RUNNING,
- '', // any other unanticipated status
- ];
+ '', // any other unanticipated status.
+ );
  foreach ( $priorities as $status ) {
- yield wp_parse_args( [
+ yield wp_parse_args(
+ array(
  'status' => $status,
  'date_compare' => '<=',
- ], $args );
- yield wp_parse_args( [
+ ),
+ $args
+ );
+ yield wp_parse_args(
+ array(
  'status' => $status,
  'date_compare' => '>=',
- ], $args );
+ ),
+ $args
+ );
  }
  }
 }

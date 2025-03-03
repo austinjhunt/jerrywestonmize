@@ -111,6 +111,9 @@ class Forminator_Rating extends Forminator_Field {
 		$size        = self::get_property( 'size', $field, 'md' );
 		$max_rating  = self::get_property( 'max_rating', $field, 5 );
 		$suffix      = self::get_property( 'suffix', $field, true );
+		$settings    = $views_obj->model->settings;
+
+		$descr_position = self::get_description_position( $field, $settings );
 
 		$value = 0;
 		if ( isset( $draft_value['value'] ) ) {
@@ -157,7 +160,8 @@ class Forminator_Rating extends Forminator_Field {
 			$options,
 			$value,
 			$description,
-			$required
+			$required,
+			$descr_position,
 		);
 
 		$html .= '</div>';

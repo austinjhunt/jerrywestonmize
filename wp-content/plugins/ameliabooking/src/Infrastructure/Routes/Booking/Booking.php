@@ -15,6 +15,7 @@ use AmeliaBooking\Application\Controller\Booking\Appointment\GetIcsController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\ReassignBookingController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\SuccessfulBookingController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\AddBookingController;
+use AmeliaBooking\Application\Controller\Booking\Appointment\UpdateBookingStatusController;
 use Slim\App;
 
 /**
@@ -38,6 +39,8 @@ class Booking
         $app->post('/bookings/delete/{id:[0-9]+}', DeleteBookingController::class);
 
         $app->post('/bookings/reassign/{id:[0-9]+}', ReassignBookingController::class);
+
+        $app->post('/bookings/status/{id:[0-9]+}', UpdateBookingStatusController::class);
 
         $app->post('/bookings', AddBookingController::class);
 

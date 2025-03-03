@@ -386,7 +386,7 @@ class SubmenuPageHandler
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/admin.9f932c8f.js',
+                AMELIA_URL . 'v3/public/assets/admin.cad9fcf5.js',
                 [],
                 AMELIA_VERSION,
                 true

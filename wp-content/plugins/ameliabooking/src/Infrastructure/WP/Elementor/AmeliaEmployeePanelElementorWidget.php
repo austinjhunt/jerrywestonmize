@@ -77,7 +77,18 @@ class AmeliaEmployeePanelElementorWidget extends Widget_Base
                 'label_off' => BackendStrings::getCommonStrings()['no'],
             ]
         );
-
+        $this->add_control(
+            'select_version',
+            [
+                'label' => BackendStrings::getWordPressStrings()['choose_panel_version'],
+                'type' => Controls_Manager::SELECT,
+                'options' => [
+                    '1' => BackendStrings::getWordPressStrings()['panel_version_old'],
+                    '2' => BackendStrings::getWordPressStrings()['panel_version_new']
+                ],
+                'default' => '2',
+            ]
+        );
         $this->add_control(
             'load_manually',
             [
@@ -98,8 +109,9 @@ class AmeliaEmployeePanelElementorWidget extends Widget_Base
         $appointments = $settings['appointments'] ? ' appointments=1' : '';
         $events       = $settings['events'] ? ' events=1' : '';
         $profile      = $settings['profile'] ? ' profile-hidden=1' : '';
+        $version      = $settings['select_version'] ? ' version=' . $settings['select_version'] : '';
         if ($settings['appointments'] || $settings['events'] || !$settings['profile']) {
-            echo esc_html('[ameliaemployeepanel' . $trigger . $appointments . $events . $profile . ']');
+            echo esc_html('[ameliaemployeepanel' . $version . $trigger . $appointments . $events . $profile . ']');
         } else {
             echo esc_html(BackendStrings::getWordPressStrings()['notice_panel']);
         }

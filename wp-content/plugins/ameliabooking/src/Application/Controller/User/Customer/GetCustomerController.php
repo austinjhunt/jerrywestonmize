@@ -29,6 +29,7 @@ class GetCustomerController extends Controller
         $command = new GetCustomerCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
+        $command->setToken($request);
 
         return $command;
     }

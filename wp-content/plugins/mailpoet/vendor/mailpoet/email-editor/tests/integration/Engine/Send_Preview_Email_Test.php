@@ -30,6 +30,9 @@ class Send_Preview_Email_Test extends \MailPoetTest {
  array(
  'renderer' => $this->renderer_mock,
  'send_email' => Expected::once( true ),
+ 'set_personalize_content' => function ( $param ) {
+ return $param;
+ },
  )
  );
  $email_post = $this->tester->create_post(
@@ -52,6 +55,9 @@ class Send_Preview_Email_Test extends \MailPoetTest {
  array(
  'renderer' => $this->renderer_mock,
  'send_email' => Expected::once( $mailing_status ),
+ 'set_personalize_content' => function ( $param ) {
+ return $param;
+ },
  )
  );
  $email_post = $this->tester->create_post(

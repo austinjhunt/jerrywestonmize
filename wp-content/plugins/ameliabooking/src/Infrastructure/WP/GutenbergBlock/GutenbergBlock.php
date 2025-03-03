@@ -192,7 +192,7 @@ class GutenbergBlock
             $providerAS = self::$container->get('application.user.provider.service');
 
             /** @var Collection $providers */
-            $providers = $providerRepository->getAllIndexedById();
+            $providers = $providerRepository->getByFieldValue('type', 'provider');
 
             $providerServicesData = $providerRepository->getProvidersServices();
 

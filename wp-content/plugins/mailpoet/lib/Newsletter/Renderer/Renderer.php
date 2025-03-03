@@ -9,7 +9,6 @@ use MailPoet\Config\Env;
 use MailPoet\EmailEditor\Engine\Renderer\Renderer as GuntenbergRenderer;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\SendingQueueEntity;
-use MailPoet\Features\FeaturesController;
 use MailPoet\Logging\LoggerFactory;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Newsletter\Renderer\EscapeHelper as EHelper;
@@ -48,9 +47,6 @@ class Renderer {
   /*** @var SendingQueuesRepository */
   private $sendingQueuesRepository;
 
-  /** @var FeaturesController */
-  private $featuresController;
-
   private CapabilitiesManager $capabilitiesManager;
 
   public function __construct(
@@ -62,7 +58,6 @@ class Renderer {
     LoggerFactory $loggerFactory,
     NewslettersRepository $newslettersRepository,
     SendingQueuesRepository $sendingQueuesRepository,
-    FeaturesController $featuresController,
     CapabilitiesManager $capabilitiesManager
   ) {
     $this->bodyRenderer = $bodyRenderer;
@@ -73,7 +68,6 @@ class Renderer {
     $this->loggerFactory = $loggerFactory;
     $this->newslettersRepository = $newslettersRepository;
     $this->sendingQueuesRepository = $sendingQueuesRepository;
-    $this->featuresController = $featuresController;
     $this->capabilitiesManager = $capabilitiesManager;
   }
 
@@ -91,7 +85,7 @@ class Renderer {
     $subject = $subject ?: $newsletter->getSubject();
     $wpPostEntity = $newsletter->getWpPost();
     $wpPost = $wpPostEntity ? $wpPostEntity->getWpPostInstance() : null;
-    if ($this->featuresController->isSupported(FeaturesController::GUTENBERG_EMAIL_EDITOR) && $wpPost instanceof \WP_Post) {
+    if ($wpPost instanceof \WP_Post) {
       $renderedNewsletter = $this->guntenbergRenderer->render($wpPost, $subject, $newsletter->getPreheader(), $language, $metaRobots);
     } else {
       $body = (is_array($newsletter->getBody()))
@@ -224,6 +218,15 @@ class Renderer {
     // replace spaces in image tag URLs
     foreach ($templateDom->query('img') as $image) {
       $image->src = str_replace(' ', '%20', $image->src);
+    }
+    foreach ($templateDom->query('a') as $anchor) {
+      // Fix for a TinyMCE bug in smart paste which encodes & as &amp; which is then additionally encoded to &amp;amp;
+      // when saving the text block content in the editor
+      $href = str_replace('&amp;amp;', '&amp;', $anchor->href);
+      // Replace &amp; with & in the href attributes of anchors. URLs are encoded when TinyMCE extracts Text block content via content.innerHTML.
+      // Links containing &amp; work when placed in an anchor tag in a browser, but they don't work when we redirect to them for example in tracking.
+      $href = str_replace('&amp;', '&', $href);
+      $anchor->href = $href;
     }
     $template = $templateDom->__toString();
     $template = $this->wp->applyFilters(

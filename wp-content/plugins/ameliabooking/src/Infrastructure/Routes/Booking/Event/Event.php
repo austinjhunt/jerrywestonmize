@@ -9,6 +9,7 @@ namespace AmeliaBooking\Infrastructure\Routes\Booking\Event;
 use AmeliaBooking\Application\Controller\Booking\Event\AddEventController;
 use AmeliaBooking\Application\Controller\Booking\Event\DeleteEventBookingController;
 use AmeliaBooking\Application\Controller\Booking\Event\DeleteEventController;
+use AmeliaBooking\Application\Controller\Booking\Event\GetEventBookingsController;
 use AmeliaBooking\Application\Controller\Booking\Event\GetEventController;
 use AmeliaBooking\Application\Controller\Booking\Event\GetEventDeleteEffectController;
 use AmeliaBooking\Application\Controller\Booking\Event\GetEventsController;
@@ -51,5 +52,7 @@ class Event
         $app->post('/events/status/{id:[0-9]+}', UpdateEventStatusController::class);
 
         $app->post('/events/calendar', GetCalendarEventsController::class);
+
+        $app->get('/bookings/events', GetEventBookingsController::class);
     }
 }

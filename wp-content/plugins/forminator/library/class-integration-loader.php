@@ -359,10 +359,10 @@ class Forminator_Integration_Loader {
 	 *
 	 * @param string $slug Slug.
 	 *
-	 * @return object
+	 * @return Forminator_Integration|null
 	 */
 	public function get_addon( $slug ) {
-		return $this->addons[ $slug ] ?? Forminator_Addon_Loader::get_instance()->get_addon( $slug );
+		return $this->addons[ $slug ];
 	}
 
 	/**
@@ -389,7 +389,7 @@ class Forminator_Integration_Loader {
 			return true;
 		}
 
-		return Forminator_Addon_Loader::get_instance()->addon_is_active( $slug );
+		return false;
 	}
 
 	/**

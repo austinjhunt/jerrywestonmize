@@ -176,7 +176,7 @@
             });
         }
 
-		newBlock.find( '.select2-container, .forminator-error-message' ).remove();
+		newBlock.find( '.select2-container, .forminator-error-message, .iti__country-container' ).remove();
 
 		// Cloning Rich-Text editors.
 		newBlock.find( '.wp-editor-wrap' ).each( function() {
@@ -184,6 +184,15 @@
 			textarea.css( 'display', 'block' );
 			$( this ).replaceWith( textarea );
 		} );
+
+		// Cloning Phone fields - material mode.
+		newBlock.find('.forminator-field-phone .forminator-input-with-phone').each(function() {
+			$(this).replaceWith($(this).contents().contents());
+		});
+		// Cloning Phone fields - other modes.
+		newBlock.find('.forminator-field-phone .forminator-phone').each(function() {
+			$(this).replaceWith($(this).contents());
+		});
 
 		// Cloning Singular File Upload.
 		newBlock.find( '.forminator-file-upload [data-empty-text]' ).each( function() {
@@ -213,7 +222,7 @@
 		const regexp = new RegExp( `(forminator-field-upload-)([^"]+?)(-${formId})`, 'g' );
 		newHtml = newHtml.replace( regexp, '$1$2-' + newSuffix + '$3' );
 
-		newHtml = newHtml.replace( /hasDatepicker|forminator-has_error/g, '' );
+		newHtml = newHtml.replace( /hasDatepicker|forminator-has_error|forminator-input-with-phone/g, '' );
 
 		newHtml = forminatorUpdateCalculationFormulas( newHtml, newSuffix, baseBlock );
 

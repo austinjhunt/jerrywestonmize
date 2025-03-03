@@ -156,6 +156,40 @@ class AbstractRepository
     }
 
     /**
+     * @return Collection
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public function getByFieldValue($field, $value)
+    {
+        $params = [
+            ":$field"  => $value,
+        ];
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT * FROM {$this->table} WHERE {$field} = :{$field}"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to find by field value in ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        $collection = new Collection();
+        foreach ($rows as $row) {
+            $collection->addItem(
+                call_user_func([static::FACTORY, 'create'], $row),
+                $row['id']
+            );
+        }
+
+        return $collection;
+    }
+
+    /**
      * @param int $id
      *
      * @return bool

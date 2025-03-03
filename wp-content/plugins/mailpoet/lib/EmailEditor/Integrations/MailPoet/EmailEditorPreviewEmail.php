@@ -38,7 +38,7 @@ class EmailEditorPreviewEmail {
   }
 
   private function validateData($data) {
-    if (empty($data['email']) || empty($data['postId']) || empty($data['newsletterId'])) {
+    if (empty($data['email']) || empty($data['postId'])) {
       throw new \InvalidArgumentException(esc_html__('Missing required data', 'mailpoet'));
     }
 
@@ -53,9 +53,9 @@ class EmailEditorPreviewEmail {
    * @throws \Exception
    */
   private function fetchNewsletter($postData): NewsletterEntity {
-    $newsletter = $this->newslettersRepository->findOneById((int)$postData['newsletterId']);
+    $newsletter = $this->newslettersRepository->findOneBy(['wpPost' => (int)$postData['postId']]);
 
-    if (!$newsletter) {
+    if (!$newsletter instanceof NewsletterEntity) {
       throw new \Exception(esc_html__('This email does not exist.', 'mailpoet'));
     }
 

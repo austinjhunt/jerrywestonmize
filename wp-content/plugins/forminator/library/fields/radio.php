@@ -159,12 +159,14 @@ class Forminator_Radio extends Forminator_Field {
 		$input_visibility = self::get_property( 'input_visibility', $field, 'true' );
 		$input_visibility = filter_var( $input_visibility, FILTER_VALIDATE_BOOLEAN );
 		$hidden_behavior  = self::get_property( 'hidden_behavior', $field );
+		$descr_position   = self::get_description_position( $field, $settings );
 
 		$prefil_valid = false;
 		$draft_valid  = false;
 		$post_valid   = false;
 		$default      = '';
 		$uniq_id      = Forminator_CForm_Front::$uid;
+		$descr_id     = 'forminator-radiogroup-' . $uniq_id;
 
 		if ( (bool) $required ) {
 			$ariareq = 'true';
@@ -196,6 +198,10 @@ class Forminator_Radio extends Forminator_Field {
 					$label
 				);
 			}
+		}
+
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $descr_id, $descr_position );
 		}
 
 		foreach ( $options as $option ) {
@@ -360,7 +366,9 @@ class Forminator_Radio extends Forminator_Field {
 
 		}
 
-			$html .= self::get_description( $description, 'forminator-radiogroup-' . $uniq_id );
+		if ( 'above' !== $descr_position ) {
+			$html .= self::get_description( $description, $descr_id, $descr_position );
+		}
 
 		$html .= '</div>';
 

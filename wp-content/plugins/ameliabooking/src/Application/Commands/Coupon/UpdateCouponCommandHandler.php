@@ -40,10 +40,7 @@ class UpdateCouponCommandHandler extends CommandHandler
         'discount',
         'deduction',
         'limit',
-        'status',
-        'services',
-        'events',
-        'packages'
+        'status'
     ];
 
     /**
@@ -89,9 +86,11 @@ class UpdateCouponCommandHandler extends CommandHandler
         /** @var Collection $services */
         $services = new Collection();
 
+        $couponServices = isset($command->getFields()['services']) ? $command->getFields()['services'] : $oldCoupon->getServiceList()->keys();
+
         /** @var Service $service */
         foreach ($allServices->getItems() as $service) {
-            if (in_array($service->getId()->getValue(), $command->getFields()['services'])) {
+            if (in_array($service->getId()->getValue(), $couponServices)) {
                 $services->addItem($service, $service->getId()->getValue());
             }
         }
@@ -102,9 +101,11 @@ class UpdateCouponCommandHandler extends CommandHandler
         /** @var Collection $events */
         $events = new Collection();
 
+        $couponEvents = isset($command->getFields()['events']) ? $command->getFields()['events'] : $oldCoupon->getEventList()->keys();
+
         /** @var Event $event */
         foreach ($allEvents->getItems() as $event) {
-            if (in_array($event->getId()->getValue(), $command->getFields()['events'])) {
+            if (in_array($event->getId()->getValue(), $couponEvents)) {
                 $events->addItem($event, $event->getId()->getValue());
             }
         }
@@ -115,9 +116,11 @@ class UpdateCouponCommandHandler extends CommandHandler
         /** @var Collection $packages */
         $packages = new Collection();
 
+        $couponPackages = isset($command->getFields()['packages']) ? $command->getFields()['packages'] : $oldCoupon->getPackageList()->keys();
+
         /** @var Package $package */
         foreach ($allPackages->getItems() as $package) {
-            if (in_array($package->getId()->getValue(), $command->getFields()['packages'])) {
+            if (in_array($package->getId()->getValue(), $couponPackages)) {
                 $packages->addItem($package, $package->getId()->getValue());
             }
         }

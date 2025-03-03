@@ -53,6 +53,7 @@ class AddCustomerController extends Controller
         $command = new AddCustomerCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
+        $command->setToken($request);
 
         return $command;
     }

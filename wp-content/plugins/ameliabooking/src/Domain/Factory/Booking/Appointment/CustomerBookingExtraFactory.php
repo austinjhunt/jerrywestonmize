@@ -30,9 +30,12 @@ class CustomerBookingExtraFactory
     public static function create($data)
     {
         $customerBookingExtra = new CustomerBookingExtra(
-            new Id($data['extraId']),
-            new PositiveInteger($data['quantity'])
+            new Id($data['extraId'])
         );
+
+        if (isset($data['quantity'])) {
+            $customerBookingExtra->setQuantity(new PositiveInteger($data['quantity']));
+        }
 
         if (isset($data['id'])) {
             $customerBookingExtra->setId(new Id($data['id']));

@@ -63,7 +63,7 @@ class Forminator_Admin_Addons_Page {
 								$html_addons = $this->addons_html( $pid );
 								wp_send_json_success(
 									array(
-										'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s add-on was successfully installed', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
+										'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s was successfully installed', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
 										'html'    => $html_addons,
 									)
 								);
@@ -101,7 +101,7 @@ class Forminator_Admin_Addons_Page {
 						$html_addons = $this->addons_html( $pid );
 						wp_send_json_success(
 							array(
-								'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s add-on was successfully activated', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
+								'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s was successfully activated', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
 								'html'    => $html_addons,
 							)
 						);
@@ -135,7 +135,7 @@ class Forminator_Admin_Addons_Page {
 					$html_addons = $this->addons_html( $pid );
 					wp_send_json_success(
 						array(
-							'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s add-on was successfully deactivated', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
+							'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s was successfully deactivated', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
 							'html'    => $html_addons,
 						)
 					);
@@ -147,7 +147,7 @@ class Forminator_Admin_Addons_Page {
 						$html_addons = $this->addons_html( $pid );
 						wp_send_json_success(
 							array(
-								'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s add-on was successfully deleted', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
+								'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s was successfully deleted', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
 								'html'    => $html_addons,
 							)
 						);
@@ -172,7 +172,7 @@ class Forminator_Admin_Addons_Page {
 					$html_addons = $this->addons_html( $pid );
 					wp_send_json_success(
 						array(
-							'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s add-on was successfully updated', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
+							'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s was successfully updated', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
 							'html'    => $html_addons,
 						)
 					);

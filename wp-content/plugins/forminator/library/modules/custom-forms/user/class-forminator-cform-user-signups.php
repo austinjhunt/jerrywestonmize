@@ -578,6 +578,11 @@ class Forminator_CForm_User_Signups {
 			$result['redirect_page'] = $signup->settings['confirmation-page'];
 		}
 
+		if ( ! empty( $signup->form->id ) ) {
+			// Delete the cache for the form entries query.
+			Forminator_Form_Entry_Model::delete_form_entries_query_cache( $signup->form->id );
+		}
+
 		return $result;
 	}
 

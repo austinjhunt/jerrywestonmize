@@ -51,6 +51,8 @@ use Microsoft\Graph\Model\Event;
 use Microsoft\Graph\Model\FreeBusyStatus;
 use Microsoft\Graph\Model\ItemBody;
 use Microsoft\Graph\Model\Location;
+use Microsoft\Graph\Model\OnlineMeetingProviderType;
+use Microsoft\Graph\Model\OutlookGeoCoordinates;
 use Microsoft\Graph\Model\PhysicalAddress;
 use Microsoft\Graph\Model\SingleValueLegacyExtendedProperty;
 use WP_Error;
@@ -566,6 +568,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                         try {
                             $this->authorizeProvider($provider);
                         } catch (Exception $e) {
+                            return;
                         }
 
 
@@ -611,7 +614,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                         if ($extendedProperties !== null) {
                             foreach ($extendedProperties as $extendedProperty) {
                                 if ($extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId') {
-                                    continue;
+                                    continue 2;
                                 }
                             }
                         }
@@ -640,7 +643,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
     /**
      * @param Appointment|\AmeliaBooking\Domain\Entity\Booking\Event\Event $appointment
-     * @param Provider    $provider
+     * @param Provider $provider
      * @param EventPeriod $period
      *
      * @return bool
@@ -648,23 +651,59 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws ContainerException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
+     * @throws NotFoundException
      */
-    private function insertEvent($appointment, $provider, $period = null)
+    private function insertEvent($appointment, $provider, $period = null, $newProviders = null, $removeProviders = null)
     {
-        $event = $this->createEvent($appointment, $provider, $period);
+        $event = $this->getEventPreview($appointment, $provider, $period);
+        $location = $event->getLocation();
+        if (!$location->getDisplayName()) {
+            $newLocation = [
+                'displayName' => $location->getDisplayName(),
+                'locationType' => 'default',
+                'uniqueIdType' => 'private'
+            ];
+            $event->setLocation($newLocation);
+        }
+
+        if (!$event) {
+            return false;
+        }
+
+        $type = $period ? Entities::EVENT : Entities::APPOINTMENT;
+        /** @var PlaceholderService $placeholderService */
+        $placeholderService = $this->container->get("application.placeholder.{$type}.service");
+        $appointmentArray           = $appointment->toArray();
+        $appointmentArray['sendCF'] = true;
+
+        $placeholderData = $placeholderService->getPlaceholdersData($appointmentArray);
+
+        $eventId = $event->getId();
+
+        $outlookAttendees = new Attendee($this->getAttendees($appointment, $newProviders, $removeProviders));
+        $event->setAttendees($outlookAttendees);
+
+        $body = $event->getBody();
+
+        $joinUrl = $event->getOnlineMeeting() ? $event->getOnlineMeeting()->getJoinUrl() : null;
+
+        $body->setContentType(new BodyType(BodyType::HTML));
+        $body->setContent($this->getDescriptionForInsert($placeholderService, $placeholderData, $period, $joinUrl));
 
         $event = apply_filters('amelia_before_outlook_calendar_event_added_filter', $event, $appointment->toArray(), $provider->toArray());
+        $event->setBody($body);
 
         do_action('amelia_before_outlook_calendar_event_added', $event, $appointment->toArray(), $provider->toArray());
 
         try {
             $event = $this->graph->createRequest(
-                'POST',
+                'PATCH',
                 sprintf(
-                    '/me/calendars/%s/events',
-                    $provider->getOutlookCalendar()->getCalendarId()->getValue()
+                    '/me/calendars/%s/events/%s',
+                    $provider->getOutlookCalendar()->getCalendarId()->getValue(),
+                    $eventId
                 )
-            )->attachBody($event)->setReturnType(get_class($event))->execute();
+            )->attachBody($event)->setReturnType(Event::class)->execute();
         } catch (GraphException $e) {
             return false;
         }
@@ -673,11 +712,14 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             /** @var EventPeriodsRepository $eventPeriodsRepository */
             $eventPeriodsRepository = $this->container->get('domain.booking.event.period.repository');
             $period->setOutlookCalendarEventId(new Label($event->getId()));
+            $period->setMicrosoftTeamsUrl($event->getOnlineMeeting() ? $event->getOnlineMeeting()->getJoinUrl() : null);
             $eventPeriodsRepository->updateFieldById($period->getId()->getValue(), $period->getOutlookCalendarEventId()->getValue(), 'outlookCalendarEventId');
+            $eventPeriodsRepository->updateFieldById($period->getId()->getValue(), $period->getMicrosoftTeamsUrl(), 'microsoftTeamsUrl');
         } else {
             /** @var AppointmentRepository $appointmentRepository */
             $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
             $appointment->setOutlookCalendarEventId(new Label($event->getId()));
+            $appointment->setMicrosoftTeamsUrl($event->getOnlineMeeting() ? $event->getOnlineMeeting()->getJoinUrl() : null);
             $appointmentRepository->update($appointment->getId()->getValue(), $appointment);
         }
 
@@ -705,6 +747,25 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         if ($entity->getOutlookCalendarEventId()) {
             $event = $this->createEvent($appointment, $provider, $period, $newProviders, $removeProviders);
 
+            $eventId = $entity->getOutlookCalendarEventId()->getValue();
+
+            $outlookAttendees = new Attendee($this->getAttendees($appointment, $newProviders, $removeProviders));
+            $event->setAttendees($outlookAttendees);
+
+            $type = $period ? Entities::EVENT : Entities::APPOINTMENT;
+            /** @var PlaceholderService $placeholderService */
+            $placeholderService = $this->container->get("application.placeholder.{$type}.service");
+            $appointmentArray           = $appointment->toArray();
+            $appointmentArray['sendCF'] = true;
+
+            $placeholderData = $placeholderService->getPlaceholdersData($appointmentArray);
+
+            $description = $this->getDescription($placeholderService, $placeholderData, $type);
+
+            $body = $this->getBodyForInsert($eventId, $description);
+
+            $event->setBody($body);
+
             $event = apply_filters('amelia_before_outlook_calendar_event_updated_filter', $event, $appointment->toArray(), $provider->toArray());
 
             do_action('amelia_before_outlook_calendar_event_updated', $event, $appointment->toArray(), $provider->toArray());
@@ -715,7 +776,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     sprintf(
                         '/me/calendars/%s/events/%s',
                         $provider->getOutlookCalendar()->getCalendarId()->getValue(),
-                        $entity->getOutlookCalendarEventId()->getValue()
+                        $eventId
                     )
                 )->attachBody($event)->setReturnType(get_class($event))->execute();
 
@@ -752,6 +813,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             )->execute();
 
             $appointment->setOutlookCalendarEventId(null);
+            $appointment->setMicrosoftTeamsUrl(null);
 
             /** @var AppointmentRepository $repository */
             $repository = $this->container->get('domain.booking.appointment.repository');
@@ -761,8 +823,62 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 $repository = $this->container->get('domain.booking.event.period.repository');
             }
             $repository->updateFieldById($appointment->getId()->getValue(), null, 'outlookCalendarEventId');
+            $repository->updateFieldById($appointment->getId()->getValue(), null, 'microsoftTeamsUrl');
 
             do_action('amelia_after_outlook_calendar_event_deleted', $appointment->toArray(), $provider->toArray());
+        }
+    }
+
+    /**
+     * @throws ContainerException
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     */
+    private function getEventPreview($appointment, $provider, $period = null) {
+        $event = $this->createEvent($appointment, $provider, $period);
+
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        $enabledForEntity = $settingsService
+            ->getEntitySettings($period ? $appointment->getSettings() : $appointment->getService()->getSettings())
+            ->getMicrosoftTeamsSettings()
+            ->getEnabled();
+
+        $type = $period ? Entities::EVENT : Entities::APPOINTMENT;
+        /** @var PlaceholderService $placeholderService */
+        $placeholderService = $this->container->get("application.placeholder.{$type}.service");
+        $appointmentArray           = $appointment->toArray();
+        $appointmentArray['sendCF'] = true;
+
+        $placeholderData = $placeholderService->getPlaceholdersData($appointmentArray);
+
+        $body = new ItemBody();
+        $body->setContentType(new BodyType(BodyType::HTML));
+
+        if ($enabledForEntity) {
+            $body->setContent('');
+            $event->setAttendees(new Attendee([]));
+            $event->setIsOnlineMeeting(true);
+            $event->setOnlineMeetingProvider(new OnlineMeetingProviderType('teamsForBusiness'));
+        }
+         if (!$enabledForEntity) {
+             $body->setContent($this->getDescriptionForInsert($placeholderService, $placeholderData, $period, null));
+         }
+        $event->setBody($body);
+
+        try {
+            $event = $this->graph->createRequest(
+                'POST',
+                sprintf(
+                    '/me/calendars/%s/events',
+                    $provider->getOutlookCalendar()->getCalendarId()->getValue()
+                )
+            )->attachBody($event)->setReturnType(get_class($event))->execute();
+            return $event;
+        } catch (GraphException $e) {
+            return null;
         }
     }
 
@@ -843,20 +959,15 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             )
         );
 
-        $description = $placeholderService->applyPlaceholders(
-            $period ? $this->settings['description']['event'] : $this->settings['description']['appointment'],
-            $placeholderData
-        );
-        $description = str_replace("\n", '<br>', $description);
-        $body        = new ItemBody();
-        $body->setContentType(new BodyType(BodyType::HTML))->setContent($description);
-        $event->setBody($body);
-
         if ($location || $address) {
             $outlookLocation = new Location();
             $outlookLocation->setDisplayName($address ?: $location->getName()->getValue());
             $outlookAddress = new PhysicalAddress();
-            $outlookAddress->setStreet($address ?: $location->getAddress()->getValue());
+            $outlookAddress->setStreet($address ?: ($location->getAddress() ? $location->getAddress()->getValue() : null));
+            $outlookCoordinates = new OutlookGeoCoordinates();
+            $outlookCoordinates->setLatitude($location->getCoordinates() ? $location->getCoordinates()->getLatitude() : null);
+            $outlookCoordinates->setLongitude($location->getCoordinates() ? $location->getCoordinates()->getLongitude() : null);
+            $outlookLocation->setCoordinates($outlookCoordinates);
             $outlookLocation->setAddress($outlookAddress);
             $event->setLocation($outlookLocation);
         }
@@ -866,9 +977,6 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             ->setId('Integer ' . self::GUID . ' Name appointmentId')
             ->setValue((string)$appointment->getId()->getValue());
         $event->setSingleValueExtendedProperties([$property]);
-
-        $outlookAttendees = new Attendee($this->getAttendees($appointment, $newProviders, $removeProviders));
-        $event->setAttendees($outlookAttendees);
 
         if ($period && $period->getPeriodStart()->getValue()->diff($period->getPeriodEnd()->getValue())->format('%a') !== '0') {
             $recData = [
@@ -887,6 +995,60 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         }
 
         return $event;
+    }
+
+    private function getDescription($placeholderService, $placeholderData, $type)
+    {
+        $description = $placeholderService->applyPlaceholders(
+            $type === 'event' ? $this->settings['description']['event'] : $this->settings['description']['appointment'],
+            $placeholderData
+        );
+        return str_replace("\n", '<br>', $description);
+    }
+
+    private function getDescriptionForInsert(
+        $placeholderService,
+        $placeholderData,
+        $period,
+        $joinUrl
+    ){
+        $type = $period ? Entities::EVENT : Entities::APPOINTMENT;
+        $description = $this->getDescription($placeholderService, $placeholderData, $type);
+
+        // include the joinUrl in the body content to ensure the Join button remains visible
+        return $joinUrl
+            ? '<a href="' . $joinUrl . '">Join Meeting</a><br><br>' . $description . '<br><br>'
+            : $description;
+    }
+
+    private function getBodyForInsert($eventId, $description) {
+        $event = $this->getEvent($eventId);
+        $body = $event->getBody();
+
+        $joinUrl = $event->getOnlineMeeting() ? $event->getOnlineMeeting()->getJoinUrl() : null;
+        $bodyContent = ($joinUrl)
+            ? '<a href="' . $joinUrl . '">Join Meeting</a><br><br>' .  $description . '<br><br>'
+            : $description;
+
+        $body->setContentType(new BodyType(BodyType::HTML));
+        $body->setContent($bodyContent);
+
+        return $body;
+    }
+
+    private function getEvent($eventId) {
+        try {
+            $event = $this->graph->createRequest(
+                'GET',
+                sprintf(
+                    '/me/events/%s/',
+                    $eventId
+                )
+            )->setReturnType(Event::class)->execute();
+            return $event;
+        } catch (GraphException $e) {
+            return null;
+        }
     }
 
     /**
@@ -1017,11 +1179,13 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         );
 
         if ($response instanceof WP_Error) {
-            return false;
+            throw new \Exception($response->get_error_message());
         }
 
         if ($response['response']['code'] !== 200) {
-            return false;
+            $responseBody = json_decode($response['body'], true);
+
+            throw new \Exception($responseBody['error_description']);
         }
 
         $decodedToken            = json_decode($response['body'], true);

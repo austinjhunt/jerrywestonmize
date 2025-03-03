@@ -22,7 +22,7 @@ class ProgressBar {
  }
  $this->progress_bar->tick();
  $this->total_ticks++;
- do_action( 'action_scheduler/progress_tick', $this->total_ticks );
+ do_action( 'action_scheduler/progress_tick', $this->total_ticks ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
  }
  public function current() {
  return $this->progress_bar ? $this->progress_bar->current() : 0;

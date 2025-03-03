@@ -36,15 +36,15 @@ class GetAppointmentsController extends Controller
 
         $this->setArrayParams($params);
 
-        if (isset($params['providers'])) {
+        if (!empty($params['providers'])) {
             $params['providers'] = array_map('intval', $params['providers']);
         }
 
-        if (isset($params['services'])) {
+        if (!empty($params['services'])) {
             $params['services'] = array_map('intval', $params['services']);
         }
 
-        if (isset($params['packages'])) {
+        if (!empty($params['packages'])) {
             $params['packages'] = array_map('intval', $params['packages']);
         }
 

@@ -41,10 +41,11 @@ class SMTPService extends AbstractMailService implements MailServiceInterface
      * @param string $secure
      * @param string $username
      * @param string $password
+     * @param        $replyTo
      */
-    public function __construct($from, $fromName, $host, $port, $secure, $username, $password)
+    public function __construct($from, $fromName, $host, $port, $secure, $username, $password, $replyTo)
     {
-        parent::__construct($from, $fromName);
+        parent::__construct($from, $fromName, $replyTo);
         $this->host = $host;
         $this->port = $port;
         $this->secure = $secure;
@@ -81,7 +82,7 @@ class SMTPService extends AbstractMailService implements MailServiceInterface
             //Recipients
             $mail->setFrom($this->from, $this->fromName);
             $mail->addAddress($to);
-            $mail->addReplyTo($this->from);
+            $mail->addReplyTo(!empty($this->replyTo) ? $this->replyTo : $this->from);
 
             foreach ($bccEmails as $bccEmail) {
                 $mail->addBCC($bccEmail);

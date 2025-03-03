@@ -438,6 +438,8 @@ class EventFactory
                         $row['event_googleMeetUrl'] : null,
                     'outlookCalendarEventId' => !empty($row['event_outlookCalendarEventId']) ?
                         $row['event_outlookCalendarEventId'] : null,
+                    'microsoftTeamsUrl'     => !empty($row['event_microsoftTeamsUrl']) ?
+                        $row['event_microsoftTeamsUrl'] : null,
                     'appleCalendarEventId'   => !empty($row['event_appleCalendarEventId']) ?
                         $row['event_appleCalendarEventId'] : null
                 ];

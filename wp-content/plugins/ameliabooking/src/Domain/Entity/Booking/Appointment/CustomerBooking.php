@@ -70,6 +70,9 @@ class CustomerBooking extends AbstractCustomerBooking
     private $actionsCompleted;
 
     /** @var  BooleanValueObject */
+    protected $isNew;
+
+    /** @var  BooleanValueObject */
     private $isUpdated;
 
     /** @var Json */
@@ -77,6 +80,9 @@ class CustomerBooking extends AbstractCustomerBooking
 
     /** @var Json */
     protected $info;
+
+    /** @var array */
+    protected $icsFiles;
 
     /**
      * @return Id
@@ -320,6 +326,22 @@ class CustomerBooking extends AbstractCustomerBooking
     }
 
     /**
+     * @return BooleanValueObject
+     */
+    public function isNew()
+    {
+        return $this->isNew;
+    }
+
+    /**
+     * @param BooleanValueObject $isNew
+     */
+    public function setNew(BooleanValueObject $isNew)
+    {
+        $this->isNew = $isNew;
+    }
+
+    /**
      * @return BooleanValueObject|null
      */
     public function isUpdated()
@@ -370,6 +392,22 @@ class CustomerBooking extends AbstractCustomerBooking
     /**
      * @return array
      */
+    public function getIcsFiles()
+    {
+        return $this->icsFiles;
+    }
+
+    /**
+     * @param array $icsFiles
+     */
+    public function setIcsFiles($icsFiles)
+    {
+        $this->icsFiles = $icsFiles;
+    }
+
+    /**
+     * @return array
+     */
     public function toArray()
     {
         return array_merge(
@@ -391,9 +429,11 @@ class CustomerBooking extends AbstractCustomerBooking
                 'duration'        => $this->getDuration() ? $this->getDuration()->getValue() : null,
                 'created'         => $this->getCreated() ? $this->getCreated()->getValue()->format('Y-m-d H:i:s') : null,
                 'actionsCompleted' => $this->getActionsCompleted() ? $this->getActionsCompleted()->getValue() : null,
+                'isNew'           => $this->isNew() ? $this->isNew()->getValue() : null,
                 'isUpdated'       => $this->isUpdated() ? $this->isUpdated()->getValue() : null,
                 'customFields'    => null !== $this->getCustomFields() ? $this->getCustomFields()->getValue() : null,
                 'info'            => null !== $this->getInfo() ? $this->getInfo()->getValue() : null,
+                'icsFiles'        => null !== $this->getIcsFiles() ? $this->getIcsFiles() : null,
             ]
         );
     }

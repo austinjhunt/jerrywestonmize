@@ -30,7 +30,18 @@ class Pages {
       'can_export' => false,
       'publicly_queryable' => true,
       'exclude_from_search' => true,
+      'capability_type' => 'page',
     ]);
+
+    WPFunctions::get()->addFilter('next_post_link', [$this, 'disableNavigationLinks']);
+    WPFunctions::get()->addFilter('previous_post_link', [$this, 'disableNavigationLinks']);
+  }
+
+  public function disableNavigationLinks($output) {
+    if (is_singular('mailpoet_page')) {
+      return ''; // Return an empty string to remove navigation links
+    }
+    return $output;
   }
 
   public static function createMailPoetPage($postName) {

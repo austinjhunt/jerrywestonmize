@@ -116,10 +116,31 @@ class NewslettersResponseBuilder {
     return $data;
   }
 
-  /**
-   * @param NewsletterEntity[] $newsletters
-   * @return mixed[]
-   */
+  private function processPersonalizationTags(?string $content): ?string {
+    if (is_null($content) || strlen($content) === 0) {
+      return $content;
+    }
+    if (strpos($content, '<!--') === false) {
+      // we don't need to parse anything if there are no personalization tags
+      return $content;
+    }
+    if (!class_exists('\MailPoet\EmailEditor\Engine\PersonalizationTags\HTML_Tag_Processor')) {
+      // editor is not active, we cannot process personalization tags
+      return $content;
+    }
+
+    $content_processor = new \MailPoet\EmailEditor\Engine\PersonalizationTags\HTML_Tag_Processor($content);
+    while ($content_processor->next_token()) {
+      $type = $content_processor->get_token_type();
+      if ($type === '#comment') {
+        $token = $content_processor->get_modifiable_text();
+        $content_processor->replace_token($token);
+      }
+    }
+    $content_processor->flush_updates();
+    return $content_processor->get_updated_html();
+  }
+
   public function buildForListing(array $newsletters): array {
     $statistics = $this->newslettersStatsRepository->getBatchStatistics($newsletters);
     $latestQueues = $this->getBatchLatestQueuesWithTasks($newsletters);
@@ -134,6 +155,12 @@ class NewslettersResponseBuilder {
     return $data;
   }
 
+  /**
+   * @param NewsletterEntity $newsletter
+   * @param NewsletterStatistics|null $statistics
+   * @param SendingQueueEntity|null $latestQueue
+   * @return array<string, mixed>
+   */
   private function buildListingItem(NewsletterEntity $newsletter, NewsletterStatistics $statistics = null, SendingQueueEntity $latestQueue = null): array {
     $couponBlockLogs = array_map(function ($item) {
       return "Coupon block: $item";
@@ -141,7 +168,7 @@ class NewslettersResponseBuilder {
     $data = [
       'id' => (string)$newsletter->getId(), // (string) for BC
       'hash' => $newsletter->getHash(),
-      'subject' => $newsletter->getSubject(),
+      'subject' => $this->processPersonalizationTags($newsletter->getSubject()),
       'type' => $newsletter->getType(),
       'status' => $newsletter->getStatus(),
       'sent_at' => ($sentAt = $newsletter->getSentAt()) ? $sentAt->format(self::DATE_FORMAT) : null,
@@ -257,7 +284,7 @@ class NewslettersResponseBuilder {
       'meta' => $queue->getMeta(),
       'task_id' => (string)$task->getId(), // (string) for BC
       'newsletter_id' => ($newsletter = $queue->getNewsletter()) ? (string)$newsletter->getId() : null, // (string) for BC
-      'newsletter_rendered_subject' => $queue->getNewsletterRenderedSubject(),
+      'newsletter_rendered_subject' => $this->processPersonalizationTags($queue->getNewsletterRenderedSubject()),
       'count_total' => (string)$queue->getCountTotal(), // (string) for BC
       'count_processed' => (string)$queue->getCountProcessed(), // (string) for BC
       'count_to_process' => (string)$queue->getCountToProcess(), // (string) for BC

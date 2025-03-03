@@ -47,6 +47,7 @@ class Forminator_CForm_New_Page extends Forminator_Admin_Page {
 				'wp-color-picker',
 				'react',
 				'react-dom',
+				'wp-element',
 			),
 			FORMINATOR_VERSION,
 			true

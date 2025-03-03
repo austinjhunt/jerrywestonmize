@@ -26,37 +26,52 @@ class CabinetEmployeeShortcodeService extends AmeliaShortcodeService
      */
     public static function shortcodeHandler($atts)
     {
-        $atts = shortcode_atts(
-            [
-                'trigger'        => '',
-                'counter'        => self::$counter,
-                'appointments'   => null,
-                'events'         => null,
-                'profile-hidden' => null
-            ],
-            $atts
-        );
-
-        self::prepareScriptsAndStyles();
-
-        // Enqueue Styles
-        wp_enqueue_style(
-            'amelia_booking_styles_quill',
-            AMELIA_URL . 'public/css/frontend/quill.css',
-            [],
-            AMELIA_VERSION
-        );
-
-        $settingsService = new SettingsService(new SettingsStorage());
-
-        $wcSettings = $settingsService->getSetting('payments', 'wc');
-
-        if ($wcSettings['enabled'] && WooCommerceService::isEnabled()) {
-            wp_localize_script(
-                'amelia_booking_scripts',
-                'wpAmeliaWcProducts',
-                WooCommerceService::getInitialProducts()
+        if (empty($atts['version']) || $atts['version'] === '1') {
+            $atts = shortcode_atts(
+                [
+                    'trigger'        => '',
+                    'counter'        => self::$counter,
+                    'appointments'   => null,
+                    'events'         => null,
+                    'profile-hidden' => null
+                ],
+                $atts
             );
+            AmeliaShortcodeService::prepareScriptsAndStyles();
+
+            // Enqueue Styles
+            wp_enqueue_style(
+                'amelia_booking_styles_quill',
+                AMELIA_URL . 'public/css/frontend/quill.css',
+                [],
+                AMELIA_VERSION
+            );
+
+            $settingsService = new SettingsService(new SettingsStorage());
+
+            $wcSettings = $settingsService->getSetting('payments', 'wc');
+
+            if ($wcSettings['enabled'] && WooCommerceService::isEnabled()) {
+                wp_localize_script(
+                    'amelia_booking_scripts',
+                    'wpAmeliaWcProducts',
+                    WooCommerceService::getInitialProducts()
+                );
+            }
+        } else {
+            $atts = shortcode_atts(
+                [
+                    'trigger'        => '',
+                    'counter'        => AmeliaBookingShortcodeService::$counter,
+                    'appointments'   => null,
+                    'events'         => null,
+                    'profile-hidden' => null,
+                    'version'        => null,
+                ],
+                $atts
+            );
+
+            AmeliaBookingShortcodeService::prepareScriptsAndStyles(true);
         }
 
         ob_start();

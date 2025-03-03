@@ -10,16 +10,15 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
-use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
-use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
-use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
+use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
 use AmeliaBooking\Application\Services\WebHook\AbstractWebHookApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
+use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
-use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
@@ -38,6 +37,21 @@ class BookingReassignedEventHandler
     /** @var string */
     const TIME_UPDATED = 'bookingTimeUpdated';
 
+    /** @var string */
+    const ZOOM_USER_CHANGED = 'zoomUserChanged';
+
+    /** @var string */
+    const ZOOM_LICENCED_USER_CHANGED = 'zoomLicencedUserChanged';
+
+    /** @var string */
+    const APPOINTMENT_STATUS_AND_ZOOM_LICENCED_USER_CHANGED = 'appointmentStatusAndZoomLicencedUserChanged';
+
+    /** @var string */
+    const APPOINTMENT_STATUS_AND_TIME_UPDATED = 'appointmentStatusAndTimeUpdated';
+
+    /** @var string */
+    const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
+
     /**
      * @param CommandResult $commandResult
      * @param Container     $container
@@ -51,146 +65,172 @@ class BookingReassignedEventHandler
      */
     public static function handle($commandResult, $container)
     {
+        /** @var ApplicationNotificationService $applicationNotificationService */
+        $applicationNotificationService = $container->get('application.notification.service');
+
         /** @var ApplicationIntegrationService $applicationIntegrationService */
         $applicationIntegrationService = $container->get('application.integration.service');
-        /** @var EmailNotificationService $emailNotificationService */
-        $emailNotificationService = $container->get('application.emailNotification.service');
-        /** @var SMSNotificationService $smsNotificationService */
-        $smsNotificationService = $container->get('application.smsNotification.service');
-        /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
-        $whatsAppNotificationService = $container->get('application.whatsAppNotification.service');
-        /** @var SettingsService $settingsService */
-        $settingsService = $container->get('domain.settings.service');
+
         /** @var AbstractWebHookApplicationService $webHookService */
         $webHookService = $container->get('application.webHook.service');
+
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
+
         /** @var IcsApplicationService $icsService */
         $icsService = $container->get('application.ics.service');
 
-        $booking = $commandResult->getData()['booking'];
 
-        $booking['icsFiles'] = $icsService->getIcsData(
-            Entities::APPOINTMENT,
-            $booking['id'],
-            [],
-            true
-        );
+        $oldAppointmentStatus = $commandResult->getData()['oldAppointmentStatus'];
+
+        $oldAppointmentStatusChanged = $commandResult->getData()['oldAppointmentStatusChanged'];
+
+        $bookingEmployeeChanged = $commandResult->getData()['bookingEmployeeChanged'];
+
+        $bookingRescheduled = $commandResult->getData()['bookingRescheduled'];
+
+        $bookingZoomUserChanged = $commandResult->getData()['bookingZoomUserChanged'];
+
+        $bookingZoomUsersLicenced = $commandResult->getData()['bookingZoomUsersLicenced'];
+
+        $existingAppointmentStatusChanged = $commandResult->getData()['existingAppointmentStatusChanged'];
+
+
+        /** @var CustomerBooking $booking */
+        $booking = CustomerBookingFactory::create($commandResult->getData()['booking']);
 
         /** @var Collection $appointments */
         $appointments = new Collection();
 
+        /** @var Appointment $oldAppointment */
+        $oldAppointment = AppointmentFactory::create($commandResult->getData()['oldAppointment']);
 
-        $oldAppointment = $commandResult->getData()['oldAppointment'];
+        $oldAppointmentArray = [];
 
-        $oldAppointmentStatusChanged = $commandResult->getData()['oldAppointmentStatusChanged'];
+        $bookingApplicationService->setAppointmentEntities($oldAppointment, $appointments);
 
-        /** @var Appointment $oldAppointmentObject */
-        $oldAppointmentObject = AppointmentFactory::create($oldAppointment);
-
-        $bookingApplicationService->setAppointmentEntities($oldAppointmentObject, $appointments);
-
-        $appointments->addItem($oldAppointmentObject, $oldAppointmentObject->getId()->getValue(), true);
-
-        $oldAppointment = $oldAppointmentObject->toArray();
+        $appointments->addItem($oldAppointment, $oldAppointment->getId()->getValue(), true);
 
 
-        $newAppointment = $commandResult->getData()['newAppointment'];
+        // appointment have single booking
+        if ($commandResult->getData()['existingAppointment'] === null &&
+            $commandResult->getData()['newAppointment'] === null
+        ) {
+            $commandSlug = ApplicationIntegrationService::APPOINTMENT_EDITED;
 
-        /** @var Appointment $newAppointmentObject */
-        $newAppointmentObject = null;
-
-        if ($newAppointment !== null) {
-            $newAppointmentObject = AppointmentFactory::create($newAppointment);
-
-            $bookingApplicationService->setAppointmentEntities($newAppointmentObject, $appointments);
-
-            $appointments->addItem($newAppointmentObject, $newAppointmentObject->getId()->getValue(), true);
-
-            $newAppointment = $newAppointmentObject->toArray();
-        }
-
-
-        $existingAppointment = $commandResult->getData()['existingAppointment'];
-
-        $existingAppointmentStatusChanged = $commandResult->getData()['existingAppointmentStatusChanged'];
-
-        /** @var Appointment $existingAppointmentObject */
-        $existingAppointmentObject = null;
-
-        if ($existingAppointment !== null) {
-            $existingAppointmentObject = AppointmentFactory::create($existingAppointment);
-
-            $bookingApplicationService->setAppointmentEntities($existingAppointmentObject, $appointments);
-
-            $appointments->addItem($existingAppointmentObject, $existingAppointmentObject->getId()->getValue(), true);
-
-            $existingAppointment = $existingAppointmentObject->toArray();
-        }
-
-
-        // appointment is rescheduled
-        if ($existingAppointment === null && $newAppointment === null) {
-            foreach ($oldAppointment['bookings'] as $bookingKey => $bookingArray) {
-                if ($booking['id'] === $bookingArray['id'] && ($bookingArray['status'] === BookingStatus::APPROVED || $bookingArray['status'] === BookingStatus::PENDING)) {
-                    $oldAppointment['bookings'][$bookingKey]['icsFiles'] = $icsService->getIcsData(
-                        Entities::APPOINTMENT,
-                        $bookingArray['id'],
-                        [],
-                        true
-                    );
-                }
+            if ($bookingZoomUserChanged && $bookingZoomUsersLicenced && $oldAppointmentStatusChanged) {
+                $commandSlug = self::APPOINTMENT_STATUS_AND_ZOOM_LICENCED_USER_CHANGED;
+            } elseif ($bookingZoomUserChanged && $bookingZoomUsersLicenced) {
+                $commandSlug = self::ZOOM_LICENCED_USER_CHANGED;
+            } elseif ($bookingZoomUserChanged) {
+                $commandSlug = self::ZOOM_USER_CHANGED;
+            } elseif ($oldAppointmentStatusChanged && $bookingRescheduled) {
+                $commandSlug = self::APPOINTMENT_STATUS_AND_TIME_UPDATED;
+            } elseif ($oldAppointmentStatusChanged) {
+                $commandSlug = self::BOOKING_STATUS_UPDATED;
+            } elseif ($bookingRescheduled) {
+                $commandSlug = self::TIME_UPDATED;
             }
 
             $applicationIntegrationService->handleAppointment(
-                $oldAppointmentObject,
                 $oldAppointment,
-                ApplicationIntegrationService::TIME_UPDATED,
+                $oldAppointmentArray,
+                $commandSlug,
                 [
                     ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
                 ]
             );
 
-            $oldAppointment['initialAppointmentDateTime'] = $commandResult->getData()['initialAppointmentDateTime'];
-
-            $emailNotificationService->sendAppointmentRescheduleNotifications($oldAppointment);
-
-            if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
-                $smsNotificationService->sendAppointmentRescheduleNotifications($oldAppointment);
+            if ($oldAppointmentStatusChanged || $bookingEmployeeChanged) {
+                $applicationNotificationService->sendAppointmentProviderStatusNotifications(
+                    $oldAppointment
+                );
             }
 
-            if ($whatsAppNotificationService->checkRequiredFields()) {
-                $whatsAppNotificationService->sendAppointmentRescheduleNotifications($oldAppointment);
+            $applicationNotificationService->sendAppointmentCustomersStatusNotifications(
+                $oldAppointment,
+                $oldAppointment->getBookings(),
+                true,
+                true,
+                false
+            );
+
+            if ($bookingRescheduled &&
+                (
+                    $oldAppointment->getStatus()->getValue() === BookingStatus::APPROVED ||
+                    $oldAppointment->getStatus()->getValue() === BookingStatus::PENDING
+                )
+            ) {
+                /** @var CustomerBooking $customerBooking */
+                foreach ($oldAppointment->getBookings()->getItems() as $customerBooking) {
+                    $customerBooking->setIcsFiles(
+                        $icsService->getIcsData(Entities::APPOINTMENT, $customerBooking->getId()->getValue(), [], true)
+                    );
+                }
+
+                $applicationNotificationService->sendAppointmentRescheduleNotifications(
+                    $oldAppointment,
+                    !$bookingEmployeeChanged
+                );
             }
 
-            $webHookService->process(self::TIME_UPDATED, $oldAppointment, []);
+            if ($bookingEmployeeChanged &&
+                (
+                    $oldAppointment->getStatus()->getValue() === BookingStatus::APPROVED ||
+                    $oldAppointmentStatus === BookingStatus::APPROVED
+                )
+            ) {
+                $applicationNotificationService->sendAppointmentUpdatedNotifications(
+                    $oldAppointment,
+                    $bookingEmployeeChanged,
+                    $oldAppointmentStatus === BookingStatus::APPROVED,
+                    !$oldAppointmentStatusChanged && !$bookingRescheduled
+                );
+            }
+
+            if (!$oldAppointmentStatusChanged &&
+                !$bookingRescheduled &&
+                $oldAppointment->getStatus()->getValue() === BookingStatus::APPROVED
+            ) {
+                $applicationNotificationService->sendAppointmentUpdatedNotifications(
+                    $oldAppointment,
+                    null,
+                    !$bookingEmployeeChanged,
+                    !$bookingEmployeeChanged
+                );
+            }
+
+            if ($bookingRescheduled) {
+                $webHookService->process(self::TIME_UPDATED, $oldAppointment->toArray(), []);
+            }
+
+            return;
         }
 
-
-
-        // old appointment got status changed to Cancelled because booking is rescheduled to new OR existing appointment
-        if ($oldAppointmentObject->getStatus()->getValue() === BookingStatus::CANCELED) {
+        // appointment have other bookings
+        // old appointment is canceled OR it's status is changed
+        if ($oldAppointment->getStatus()->getValue() === BookingStatus::CANCELED) {
             $applicationIntegrationService->handleAppointment(
-                $oldAppointmentObject,
                 $oldAppointment,
+                $oldAppointmentArray,
                 ApplicationIntegrationService::APPOINTMENT_DELETED,
                 [
                     ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
                 ]
             );
-        }
 
-        // booking is rescheduled to new OR existing appointment
-        if (($newAppointment !== null || $existingAppointment !== null) &&
-            $oldAppointmentObject->getStatus()->getValue() !== BookingStatus::CANCELED
-        ) {
-            if ($oldAppointmentObject->getZoomMeeting()) {
-                $oldAppointment['zoomMeeting'] = $oldAppointmentObject->getZoomMeeting()->toArray();
+            if ($bookingEmployeeChanged) {
+                $applicationNotificationService->sendAppointmentUpdatedNotifications(
+                    $oldAppointment,
+                    $bookingEmployeeChanged,
+                    false,
+                    true
+                );
             }
-
+        } else {
             $applicationIntegrationService->handleAppointment(
-                $oldAppointmentObject,
                 $oldAppointment,
+                $oldAppointmentArray,
                 ApplicationIntegrationService::BOOKING_CANCELED,
                 [
                     ApplicationIntegrationService::SKIP_ZOOM_MEETING => true,
@@ -199,131 +239,123 @@ class BookingReassignedEventHandler
             );
 
             if ($oldAppointmentStatusChanged) {
-                foreach ($oldAppointment['bookings'] as $bookingKey => $bookingArray) {
-                    if ($bookingArray['status'] === BookingStatus::APPROVED || $bookingArray['status'] === BookingStatus::PENDING) {
-                        $oldAppointment['bookings'][$bookingKey]['isChangedStatus'] = true;
-
-                        if ($booking['id'] === $bookingArray['id']) {
-                            $oldAppointment['bookings'][$bookingKey]['icsFiles'] = $icsService->getIcsData(
-                                Entities::APPOINTMENT,
-                                $bookingArray['id'],
-                                [],
-                                true
-                            );
-                        }
-                    }
-                }
-
-                $emailNotificationService->sendAppointmentStatusNotifications($oldAppointment, true, true);
-
-                if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
-                    $smsNotificationService->sendAppointmentStatusNotifications($oldAppointment, true, true);
-                }
-
-                if ($whatsAppNotificationService->checkRequiredFields()) {
-                    $whatsAppNotificationService->sendAppointmentStatusNotifications($oldAppointment, true, true);
-                }
+                $applicationNotificationService->sendAppointmentProviderStatusNotifications(
+                    $oldAppointment
+                );
             }
+
+            $applicationNotificationService->sendAppointmentCustomersStatusNotifications(
+                $oldAppointment,
+                $oldAppointment->getBookings(),
+                true,
+                true,
+                false
+            );
         }
 
-        if ($newAppointment !== null) {
+        // new appointment is created with booking OR booking is reassigned to another appointment
+        if ($commandResult->getData()['newAppointment'] !== null) {
+            /** @var Appointment $newAppointment */
+            $newAppointment = AppointmentFactory::create($commandResult->getData()['newAppointment']);
+
+            $newAppointmentArray = [];
+
+            $bookingApplicationService->setAppointmentEntities($newAppointment, $appointments);
+
+            $appointments->addItem($newAppointment, $newAppointment->getId()->getValue(), true);
+
             $applicationIntegrationService->handleAppointment(
-                $newAppointmentObject,
                 $newAppointment,
+                $newAppointmentArray,
                 ApplicationIntegrationService::APPOINTMENT_ADDED,
                 [
                     ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
                 ]
             );
 
-            foreach ($newAppointment['bookings'] as $bookingKey => $bookingArray) {
-                if ($booking['id'] === $bookingArray['id'] && ($bookingArray['status'] === BookingStatus::APPROVED || $bookingArray['status'] === BookingStatus::PENDING)) {
-                    $newAppointment['bookings'][$bookingKey]['icsFiles'] = $icsService->getIcsData(
-                        Entities::APPOINTMENT,
-                        $bookingArray['id'],
-                        [],
-                        true
+            if ($bookingRescheduled) {
+                /** @var CustomerBooking $customerBooking */
+                foreach ($newAppointment->getBookings()->getItems() as $customerBooking) {
+                    $customerBooking->setIcsFiles(
+                        $icsService->getIcsData(Entities::APPOINTMENT, $customerBooking->getId()->getValue(), [], true)
                     );
                 }
+
+                $applicationNotificationService->sendAppointmentRescheduleNotifications(
+                    $newAppointment,
+                    true,
+                    true
+                );
+
+                $webHookService->process(self::TIME_UPDATED, $newAppointment->toArray(), []);
+            } else if ($bookingEmployeeChanged) {
+                $applicationNotificationService->sendAppointmentUpdatedNotifications(
+                    $newAppointment,
+                    $bookingEmployeeChanged,
+                    true,
+                    true
+                );
             }
 
-            $newAppointment['initialAppointmentDateTime'] = $commandResult->getData()['initialAppointmentDateTime'];
+            return;
+        }
 
-            $emailNotificationService->sendAppointmentRescheduleNotifications($newAppointment);
+        /** @var Appointment $existingAppointment */
+        $existingAppointment = AppointmentFactory::create($commandResult->getData()['existingAppointment']);
 
-            if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
-                $smsNotificationService->sendAppointmentRescheduleNotifications($newAppointment);
-            }
+        $existingAppointmentArray = [];
 
-            if ($whatsAppNotificationService->checkRequiredFields()) {
-                $whatsAppNotificationService->sendAppointmentRescheduleNotifications($newAppointment);
-            }
+        $bookingApplicationService->setAppointmentEntities($existingAppointment, $appointments);
 
-            $webHookService->process(self::TIME_UPDATED, $newAppointment, []);
-        } else if ($existingAppointment !== null) {
-            $applicationIntegrationService->handleAppointment(
-                $existingAppointmentObject,
-                $existingAppointment,
-                ApplicationIntegrationService::BOOKING_ADDED,
-                [
-                    ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
-                ]
+        $appointments->addItem($existingAppointment, $existingAppointment->getId()->getValue(), true);
+
+        $applicationIntegrationService->handleAppointment(
+            $existingAppointment,
+            $existingAppointmentArray,
+            ApplicationIntegrationService::BOOKING_ADDED,
+            [
+                ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+            ]
+        );
+
+        if ($existingAppointmentStatusChanged) {
+            $applicationNotificationService->sendAppointmentProviderStatusNotifications(
+                $existingAppointment
             );
+        }
 
-            $booking['icsFiles'] = $icsService->getIcsData(
-                Entities::APPOINTMENT,
-                $booking['id'],
-                [],
+        $applicationNotificationService->sendAppointmentCustomersStatusNotifications(
+            $existingAppointment,
+            $existingAppointment->getBookings(),
+            true,
+            true,
+            false
+        );
+
+        $existingAppointment->setBookings(new Collection());
+
+        $existingAppointment->getBookings()->addItem($booking);
+
+        if ($bookingRescheduled) {
+            /** @var CustomerBooking $customerBooking */
+            foreach ($existingAppointment->getBookings()->getItems() as $customerBooking) {
+                $booking->setIcsFiles(
+                    $icsService->getIcsData(Entities::APPOINTMENT, $customerBooking->getId()->getValue(), [], true)
+                );
+            }
+
+            $applicationNotificationService->sendAppointmentRescheduleNotifications(
+                $existingAppointment,
+                false,
                 true
             );
-
-            $existingAppointment['initialAppointmentDateTime'] = $commandResult->getData()['initialAppointmentDateTime'];
-
-            $emailNotificationService->sendAppointmentRescheduleNotifications(
-                array_merge(
-                    $existingAppointment,
-                    ['bookings' => [$booking]]
-                )
+        } else if ($bookingEmployeeChanged && !$existingAppointmentStatusChanged) {
+            $applicationNotificationService->sendAppointmentUpdatedNotifications(
+                $existingAppointment,
+                $bookingEmployeeChanged,
+                false,
+                $existingAppointmentStatusChanged
             );
-
-            if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
-                $smsNotificationService->sendAppointmentRescheduleNotifications(
-                    array_merge(
-                        $existingAppointment,
-                        ['bookings' => [$booking]]
-                    )
-                );
-            }
-
-            if ($whatsAppNotificationService->checkRequiredFields()) {
-                $whatsAppNotificationService->sendAppointmentRescheduleNotifications(
-                    array_merge(
-                        $existingAppointment,
-                        ['bookings' => [$booking]]
-                    )
-                );
-            }
-
-            if ($existingAppointmentStatusChanged) {
-                foreach ($existingAppointment['bookings'] as $bookingKey => $bookingArray) {
-                    if ($bookingArray['status'] === BookingStatus::APPROVED &&
-                        $existingAppointment['status'] === BookingStatus::APPROVED &&
-                        $bookingArray['id'] !== $booking['id']
-                    ) {
-                        $existingAppointment['bookings'][$bookingKey]['isChangedStatus'] = true;
-                    }
-                }
-
-                $emailNotificationService->sendAppointmentStatusNotifications($existingAppointment, true, true);
-
-                if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
-                    $smsNotificationService->sendAppointmentStatusNotifications($existingAppointment, true, true);
-                }
-
-                if ($whatsAppNotificationService->checkRequiredFields()) {
-                    $whatsAppNotificationService->sendAppointmentStatusNotifications($existingAppointment, true, true);
-                }
-            }
         }
     }
 }

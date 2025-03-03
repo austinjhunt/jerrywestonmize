@@ -299,6 +299,28 @@ $entries['application.location.service'] = function ($c) {
 };
 
 /**
+ * Notification Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Notification\ApplicationNotificationService
+ */
+$entries['application.notification.service'] = function ($c) {
+    return new AmeliaBooking\Application\Services\Notification\ApplicationNotificationService($c);
+};
+
+/**
+ * Appointment Notification Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Notification\AppointmentNotificationService
+ */
+$entries['application.notification.appointment.service'] = function ($c) {
+    return new AmeliaBooking\Application\Services\Notification\AppointmentNotificationService($c);
+};
+
+/**
  * Email Notification Service
  *
  * @param Container $c

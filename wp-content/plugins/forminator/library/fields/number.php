@@ -140,6 +140,7 @@ class Forminator_Number extends Forminator_Field {
 		$this->field         = $field;
 		$this->form_settings = $settings;
 		$hidden_behavior     = self::get_property( 'hidden_behavior', $field );
+		$descr_position      = self::get_description_position( $field, $settings );
 
 		$html        = '';
 		$min         = 0;
@@ -153,7 +154,6 @@ class Forminator_Number extends Forminator_Field {
 		$value       = esc_html( self::get_post_data( $name, self::get_property( 'default_value', $field ) ) );
 		$label       = esc_html( self::get_property( 'field_label', $field, '' ) );
 		$description = self::get_property( 'description', $field, '' ); // wp_kses_data already applied in get_description.
-		$design      = $this->get_form_style( $settings );
 		$min         = esc_html( self::get_property( 'limit_min', $field, false ) );
 		$max         = esc_html( self::get_property( 'limit_max', $field, false ) );
 		$precision   = self::get_calculable_precision( $field );
@@ -218,7 +218,7 @@ class Forminator_Number extends Forminator_Field {
 				$label,
 				$description,
 				$required,
-				$design
+				$descr_position,
 			);
 
 		$html .= '</div>';

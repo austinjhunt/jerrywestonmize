@@ -74,6 +74,10 @@ class EventPeriodFactory
             $eventPeriod->setOutlookCalendarEventId(new Label($data['outlookCalendarEventId']));
         }
 
+        if (!empty($data['microsoftTeamsUrl'])) {
+            $eventPeriod->setMicrosoftTeamsUrl($data['microsoftTeamsUrl']);
+        }
+
         if (!empty($data['appleCalendarEventId'])) {
             $eventPeriod->setAppleCalendarEventId(new Label($data['appleCalendarEventId']));
         }

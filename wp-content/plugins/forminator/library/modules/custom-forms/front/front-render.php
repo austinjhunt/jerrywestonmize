@@ -604,6 +604,12 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		if ( ! $is_ajax_load ) {
 			add_action( 'wp_footer', array( $this, 'forminator_render_front_scripts' ), 9999 );
 		}
+
+		// Render front end submission behavior scripts.
+		if ( ! $this->model->is_ajax_submit() ) {
+			add_action( 'wp_footer', array( $this, 'forminator_render_front_submission_behavior_scripts' ), 9999 );
+		}
+
 		add_action( 'admin_footer', array( $this, 'forminator_render_front_scripts' ), 9999 );
 	}
 
@@ -2547,6 +2553,20 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 						jQuery(forminatorFront.forminator_selector).find('.forminator-pagination-footer').hide();
 					}
 				}
+			});
+		</script>
+		<?php
+	}
+
+	/**
+	 * Render Front-end behavior Script
+	 *
+	 * @since 1.39
+	 */
+	public function forminator_render_front_submission_behavior_scripts() {
+		?>
+		<script type="text/javascript">
+			jQuery(function () {
 				if (typeof ForminatorFormNewTabRedirect !== 'undefined') {
 					var forminatorFront = ForminatorFormNewTabRedirect.url;
 					if (typeof forminatorFront !== 'undefined') {

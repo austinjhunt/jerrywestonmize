@@ -5,10 +5,13 @@ if (!defined('ABSPATH')) exit;
 use MailPoet\EmailEditor\Engine\Renderer\Renderer;
 class Send_Preview_Email {
  private Renderer $renderer;
+ private Personalizer $personalizer;
  public function __construct(
- Renderer $renderer
+ Renderer $renderer,
+ Personalizer $personalizer
  ) {
  $this->renderer = $renderer;
+ $this->personalizer = $personalizer;
  }
  public function send_preview_email( $data ): bool {
  if ( is_bool( $data ) ) {
@@ -20,6 +23,11 @@ class Send_Preview_Email {
  $post_id = $data['postId'];
  $post = $this->fetch_post( $post_id );
  $subject = $post->post_title;
+ $email_html_content = $this->render_html( $post );
+ return $this->send_email( $email, $subject, $email_html_content );
+ }
+ public function render_html( $post ): string {
+ $subject = $post->post_title;
  $language = get_bloginfo( 'language' );
  $rendered_data = $this->renderer->render(
  $post,
@@ -27,8 +35,18 @@ class Send_Preview_Email {
  __( 'Preview', 'mailpoet' ),
  $language
  );
- $email_html_content = $rendered_data['html'];
- return $this->send_email( $email, $subject, $email_html_content );
+ return $this->set_personalize_content( $rendered_data['html'] );
+ }
+ public function set_personalize_content( string $content ): string {
+ $current_user = wp_get_current_user();
+ $subscriber = ! empty( $current_user->ID ) ? $current_user : null;
+ $this->personalizer->set_context(
+ array(
+ 'recipient_email' => $subscriber ? $subscriber->user_email : null,
+ 'is_user_preview' => true,
+ )
+ );
+ return $this->personalizer->personalize_content( $content );
  }
  public function send_email( string $to, string $subject, string $body ): bool {
  add_filter( 'wp_mail_content_type', array( $this, 'set_mail_content_type' ) );

@@ -9,6 +9,7 @@ namespace AmeliaBooking\Domain\Factory\Settings;
 use AmeliaBooking\Domain\Entity\Settings\GeneralSettings;
 use AmeliaBooking\Domain\Entity\Settings\GoogleMeetSettings;
 use AmeliaBooking\Domain\Entity\Settings\LessonSpaceSettings;
+use AmeliaBooking\Domain\Entity\Settings\MicrosoftTeamsSettings;
 use AmeliaBooking\Domain\Entity\Settings\PaymentSettings;
 use AmeliaBooking\Domain\Entity\Settings\Settings;
 use AmeliaBooking\Domain\Entity\Settings\ZoomSettings;
@@ -35,6 +36,7 @@ class SettingsFactory
         $paymentSettings = new PaymentSettings();
         $lessonSpaceSetings = new LessonSpaceSettings();
         $googleMeetSettings = new GoogleMeetSettings();
+        $microsoftTeamsSettings = new MicrosoftTeamsSettings();
 
         $data = $entityJsonData ? json_decode($entityJsonData->getValue(), true) : [];
 
@@ -110,11 +112,17 @@ class SettingsFactory
             $googleMeetSettings->setEnabled($globalSettings['googleCalendar']['enableGoogleMeet']);
         }
 
+        if (isset($data['microsoftTeams']['enabled'])) {
+            $microsoftTeamsSettings->setEnabled($data['microsoftTeams']['enabled']);
+        } else {
+            $microsoftTeamsSettings->setEnabled($globalSettings['outlookCalendar']['enableMicrosoftTeams']);
+        }
 
         $entitySettings->setGeneralSettings($generalSettings);
         $entitySettings->setZoomSettings($zoomSettings);
         $entitySettings->setLessonSpaceSettings($lessonSpaceSetings);
         $entitySettings->setGoogleMeetSettings($googleMeetSettings);
+        $entitySettings->setMicrosoftTeamsSettings($microsoftTeamsSettings);
 
         return $entitySettings;
     }

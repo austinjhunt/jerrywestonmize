@@ -44,15 +44,11 @@ class CustomerBookingExtra
      * CustomerBookingExtra constructor.
      *
      * @param Id              $extraId
-     * @param PositiveInteger $quantity
      */
     public function __construct(
-        Id $extraId,
-        PositiveInteger $quantity
+        Id $extraId
     ) {
         $this->extraId = $extraId;
-
-        $this->quantity = $quantity;
     }
 
     /**

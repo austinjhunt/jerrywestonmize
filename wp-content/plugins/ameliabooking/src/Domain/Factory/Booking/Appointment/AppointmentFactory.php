@@ -90,6 +90,10 @@ class AppointmentFactory
             $appointment->setOutlookCalendarEventId(new Label($data['outlookCalendarEventId']));
         }
 
+        if (!empty($data['microsoftTeamsUrl'])) {
+            $appointment->setMicrosoftTeamsUrl($data['microsoftTeamsUrl']);
+        }
+
         if (!empty($data['appleCalendarEventId'])) {
             $appointment->setAppleCalendarEventId(new Label($data['appleCalendarEventId']));
         }
@@ -108,6 +112,26 @@ class AppointmentFactory
 
         if (isset($data['isRescheduled'])) {
             $appointment->setRescheduled(new BooleanValueObject($data['isRescheduled']));
+        }
+
+        if (array_key_exists('isChangedStatus', $data)) {
+            $appointment->setChangedStatus(new BooleanValueObject($data['isChangedStatus']));
+        }
+
+        if (!empty($data['initialAppointmentDateTime']['bookingStart'])) {
+            $appointment->setInitialBookingStart(
+                new DateTimeValue(
+                    DateTimeService::getCustomDateTimeObject($data['initialAppointmentDateTime']['bookingStart'])
+                )
+            );
+        }
+
+        if (!empty($data['initialAppointmentDateTime']['bookingEnd'])) {
+            $appointment->setInitialBookingEnd(
+                new DateTimeValue(
+                    DateTimeService::getCustomDateTimeObject($data['initialAppointmentDateTime']['bookingEnd'])
+                )
+            );
         }
 
         $bookings = new Collection();
@@ -176,6 +200,8 @@ class AppointmentFactory
                         $row['appointment_google_meet_url'] : null,
                     'outlookCalendarEventId' => isset($row['appointment_outlook_calendar_event_id']) ?
                         $row['appointment_outlook_calendar_event_id'] : null,
+                    'microsoftTeamsUrl'      => isset($row['appointment_microsoft_teams_url']) ?
+                        $row['appointment_microsoft_teams_url'] : null,
                     'appleCalendarEventId'   => isset($row['appointment_apple_calendar_event_id']) ?
                         $row['appointment_apple_calendar_event_id'] : null,
                     'zoomMeeting'            => [

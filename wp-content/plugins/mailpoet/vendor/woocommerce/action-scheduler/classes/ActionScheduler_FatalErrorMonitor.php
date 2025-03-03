@@ -1,8 +1,8 @@
 <?php
 if (!defined('ABSPATH')) exit;
 class ActionScheduler_FatalErrorMonitor {
- private $claim = NULL;
- private $store = NULL;
+ private $claim = null;
+ private $store = null;
  private $action_id = 0;
  public function __construct( ActionScheduler_Store $store ) {
  $this->store = $store;
@@ -16,7 +16,7 @@ class ActionScheduler_FatalErrorMonitor {
  add_action( 'action_scheduler_failed_execution', array( $this, 'untrack_action' ), 0, 0 );
  }
  public function detach() {
- $this->claim = NULL;
+ $this->claim = null;
  $this->untrack_action();
  remove_action( 'shutdown', array( $this, 'handle_unexpected_shutdown' ) );
  remove_action( 'action_scheduler_before_execute', array( $this, 'track_current_action' ), 0 );
@@ -31,9 +31,10 @@ class ActionScheduler_FatalErrorMonitor {
  $this->action_id = 0;
  }
  public function handle_unexpected_shutdown() {
- if ( $error = error_get_last() ) {
- if ( in_array( $error['type'], array( E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ) ) ) {
- if ( !empty($this->action_id) ) {
+ $error = error_get_last();
+ if ( $error ) {
+ if ( in_array( $error['type'], array( E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ), true ) ) {
+ if ( ! empty( $this->action_id ) ) {
  $this->store->mark_failure( $this->action_id );
  do_action( 'action_scheduler_unexpected_shutdown', $this->action_id, $error );
  }

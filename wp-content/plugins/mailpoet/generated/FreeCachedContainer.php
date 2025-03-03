@@ -195,6 +195,7 @@ class FreeCachedContainer extends Container
             'MailPoet\\Automation\\Integrations\\WooCommerce\\Triggers\\AbandonedCart\\AbandonedCartTrigger' => 'getAbandonedCartTriggerService',
             'MailPoet\\Automation\\Integrations\\WooCommerce\\Triggers\\BuysAProductTrigger' => 'getBuysAProductTriggerService',
             'MailPoet\\Automation\\Integrations\\WooCommerce\\Triggers\\BuysFromACategoryTrigger' => 'getBuysFromACategoryTriggerService',
+            'MailPoet\\Automation\\Integrations\\WooCommerce\\Triggers\\BuysFromATagTrigger' => 'getBuysFromATagTriggerService',
             'MailPoet\\Automation\\Integrations\\WooCommerce\\Triggers\\Orders\\OrderCancelledTrigger' => 'getOrderCancelledTriggerService',
             'MailPoet\\Automation\\Integrations\\WooCommerce\\Triggers\\Orders\\OrderCompletedTrigger' => 'getOrderCompletedTriggerService',
             'MailPoet\\Automation\\Integrations\\WooCommerce\\Triggers\\Orders\\OrderCreatedTrigger' => 'getOrderCreatedTriggerService',
@@ -217,6 +218,7 @@ class FreeCachedContainer extends Container
             'MailPoet\\Captcha\\CaptchaSession' => 'getCaptchaSessionService',
             'MailPoet\\Captcha\\CaptchaUrlFactory' => 'getCaptchaUrlFactoryService',
             'MailPoet\\Captcha\\PageRenderer' => 'getPageRenderer2Service',
+            'MailPoet\\Captcha\\ReCaptchaHooks' => 'getReCaptchaHooksService',
             'MailPoet\\Captcha\\ReCaptchaRenderer' => 'getReCaptchaRendererService',
             'MailPoet\\Captcha\\ReCaptchaValidator' => 'getReCaptchaValidatorService',
             'MailPoet\\Captcha\\Validator\\CaptchaValidator' => 'getCaptchaValidatorService',
@@ -226,7 +228,6 @@ class FreeCachedContainer extends Container
             'MailPoet\\Config\\AssetsLoader' => 'getAssetsLoaderService',
             'MailPoet\\Config\\Changelog' => 'getChangelogService',
             'MailPoet\\Config\\Hooks' => 'getHooks2Service',
-            'MailPoet\\Config\\HooksReCaptcha' => 'getHooksReCaptchaService',
             'MailPoet\\Config\\HooksWooCommerce' => 'getHooksWooCommerceService',
             'MailPoet\\Config\\Initializer' => 'getInitializerService',
             'MailPoet\\Config\\Menu' => 'getMenuService',
@@ -289,6 +290,7 @@ class FreeCachedContainer extends Container
             'MailPoet\\Doctrine\\EventListeners\\LastSubscribedAtListener' => 'getLastSubscribedAtListenerService',
             'MailPoet\\Doctrine\\EventListeners\\NewsletterListener' => 'getNewsletterListenerService',
             'MailPoet\\Doctrine\\EventListeners\\TimestampListener' => 'getTimestampListenerService',
+            'MailPoet\\EmailEditor\\Engine\\Dependency_Check' => 'getDependencyCheckService',
             'MailPoet\\EmailEditor\\Engine\\Email_Api_Controller' => 'getEmailApiControllerService',
             'MailPoet\\EmailEditor\\Engine\\Email_Editor' => 'getEmailEditorService',
             'MailPoet\\EmailEditor\\Engine\\Patterns\\Patterns' => 'getPatternsService',
@@ -303,24 +305,31 @@ class FreeCachedContainer extends Container
             'MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Preprocessors\\Spacing_Preprocessor' => 'getSpacingPreprocessorService',
             'MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Preprocessors\\Typography_Preprocessor' => 'getTypographyPreprocessorService',
             'MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Process_Manager' => 'getProcessManagerService',
+            'MailPoet\\EmailEditor\\Engine\\Renderer\\Css_Inliner' => 'getCssInlinerService',
             'MailPoet\\EmailEditor\\Engine\\Renderer\\Renderer' => 'getRenderer2Service',
             'MailPoet\\EmailEditor\\Engine\\Send_Preview_Email' => 'getSendPreviewEmailService',
             'MailPoet\\EmailEditor\\Engine\\Settings_Controller' => 'getSettingsControllerService',
             'MailPoet\\EmailEditor\\Engine\\Templates\\Templates' => 'getTemplatesService',
-            'MailPoet\\EmailEditor\\Engine\\Templates\\Utils' => 'getUtilsService',
+            'MailPoet\\EmailEditor\\Engine\\Templates\\Templates_Registry' => 'getTemplatesRegistryService',
             'MailPoet\\EmailEditor\\Engine\\Theme_Controller' => 'getThemeControllerService',
             'MailPoet\\EmailEditor\\Engine\\User_Theme' => 'getUserThemeService',
             'MailPoet\\EmailEditor\\Integrations\\Core\\Initializer' => 'getInitializer2Service',
             'MailPoet\\EmailEditor\\Integrations\\MailPoet\\Blocks\\BlockTypesController' => 'getBlockTypesControllerService',
             'MailPoet\\EmailEditor\\Integrations\\MailPoet\\Blocks\\BlockTypes\\PoweredByMailpoet' => 'getPoweredByMailpoetService',
             'MailPoet\\EmailEditor\\Integrations\\MailPoet\\Cli' => 'getCliService',
+            'MailPoet\\EmailEditor\\Integrations\\MailPoet\\DependencyNotice' => 'getDependencyNoticeService',
             'MailPoet\\EmailEditor\\Integrations\\MailPoet\\EditorPageRenderer' => 'getEditorPageRendererService',
             'MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailApiController' => 'getEmailApiController2Service',
             'MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailEditor' => 'getEmailEditor2Service',
             'MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailEditorPreviewEmail' => 'getEmailEditorPreviewEmailService',
+            'MailPoet\\EmailEditor\\Integrations\\MailPoet\\MailPoetCssInliner' => 'getMailPoetCssInlinerService',
             'MailPoet\\EmailEditor\\Integrations\\MailPoet\\Patterns\\PatternsController' => 'getPatternsControllerService',
             'MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTagManager' => 'getPersonalizationTagManagerService',
+            'MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\Link' => 'getLinkService',
+            'MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\LinksToShortcodesConvertor' => 'getLinksToShortcodesConvertorService',
+            'MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\Site' => 'getSiteService',
             'MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\Subscriber' => 'getSubscriberService',
+            'MailPoet\\EmailEditor\\Integrations\\MailPoet\\Templates\\TemplatesController' => 'getTemplatesControllerService',
             'MailPoet\\Features\\FeatureFlagsController' => 'getFeatureFlagsControllerService',
             'MailPoet\\Features\\FeatureFlagsRepository' => 'getFeatureFlagsRepositoryService',
             'MailPoet\\Features\\FeaturesController' => 'getFeaturesControllerService',
@@ -386,9 +395,9 @@ class FreeCachedContainer extends Container
             'MailPoet\\Newsletter\\Sending\\ScheduledTasksRepository' => 'getScheduledTasksRepositoryService',
             'MailPoet\\Newsletter\\Sending\\SendingQueuesRepository' => 'getSendingQueuesRepositoryService',
             'MailPoet\\Newsletter\\Shortcodes\\Categories\\Date' => 'getDate2Service',
-            'MailPoet\\Newsletter\\Shortcodes\\Categories\\Link' => 'getLinkService',
+            'MailPoet\\Newsletter\\Shortcodes\\Categories\\Link' => 'getLink2Service',
             'MailPoet\\Newsletter\\Shortcodes\\Categories\\Newsletter' => 'getNewsletterService',
-            'MailPoet\\Newsletter\\Shortcodes\\Categories\\Site' => 'getSiteService',
+            'MailPoet\\Newsletter\\Shortcodes\\Categories\\Site' => 'getSite2Service',
             'MailPoet\\Newsletter\\Shortcodes\\Categories\\Subscriber' => 'getSubscriber2Service',
             'MailPoet\\Newsletter\\Shortcodes\\Shortcodes' => 'getShortcodes2Service',
             'MailPoet\\Newsletter\\Shortcodes\\ShortcodesHelper' => 'getShortcodesHelperService',
@@ -1245,7 +1254,7 @@ class FreeCachedContainer extends Container
      */
     protected function getNewsletters2Service()
     {
-        return $this->services['MailPoet\\AdminPages\\Pages\\Newsletters'] = new \MailPoet\AdminPages\Pages\Newsletters(($this->services['MailPoet\\AdminPages\\PageRenderer'] ?? $this->getPageRendererService()), ($this->services['MailPoet\\Listing\\PageLimit'] ?? $this->getPageLimitService()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Settings\\SettingsController'] ?? $this->getSettingsController2Service()), ($this->services['MailPoet\\NewsletterTemplates\\NewsletterTemplatesRepository'] ?? $this->getNewsletterTemplatesRepositoryService()), ($this->services['MailPoet\\WP\\AutocompletePostListLoader'] ?? $this->getAutocompletePostListLoaderService()), ($this->services['MailPoet\\AutomaticEmails\\AutomaticEmails'] ?? $this->getAutomaticEmails2Service()), ($this->services['MailPoet\\Segments\\SegmentsSimpleListRepository'] ?? $this->getSegmentsSimpleListRepositoryService()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Services\\Bridge'] ?? $this->getBridgeService()), ($this->services['MailPoet\\Services\\AuthorizedSenderDomainController'] ?? $this->getAuthorizedSenderDomainControllerService()), ($this->services['MailPoet\\Services\\AuthorizedEmailsController'] ?? $this->getAuthorizedEmailsControllerService()), ($this->privates['MailPoet\\Settings\\UserFlagsController'] ?? $this->getUserFlagsControllerService()), ($this->services['MailPoet\\Segments\\WooCommerce'] ?? $this->getWooCommerce3Service()), ($this->services['MailPoet\\Util\\License\\Features\\CapabilitiesManager'] ?? $this->getCapabilitiesManagerService()));
+        return $this->services['MailPoet\\AdminPages\\Pages\\Newsletters'] = new \MailPoet\AdminPages\Pages\Newsletters(($this->services['MailPoet\\AdminPages\\PageRenderer'] ?? $this->getPageRendererService()), ($this->services['MailPoet\\Listing\\PageLimit'] ?? $this->getPageLimitService()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Settings\\SettingsController'] ?? $this->getSettingsController2Service()), ($this->services['MailPoet\\NewsletterTemplates\\NewsletterTemplatesRepository'] ?? $this->getNewsletterTemplatesRepositoryService()), ($this->services['MailPoet\\WP\\AutocompletePostListLoader'] ?? $this->getAutocompletePostListLoaderService()), ($this->services['MailPoet\\AutomaticEmails\\AutomaticEmails'] ?? $this->getAutomaticEmails2Service()), ($this->services['MailPoet\\Segments\\SegmentsSimpleListRepository'] ?? $this->getSegmentsSimpleListRepositoryService()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Services\\Bridge'] ?? $this->getBridgeService()), ($this->services['MailPoet\\Services\\AuthorizedSenderDomainController'] ?? $this->getAuthorizedSenderDomainControllerService()), ($this->services['MailPoet\\Services\\AuthorizedEmailsController'] ?? $this->getAuthorizedEmailsControllerService()), ($this->privates['MailPoet\\Settings\\UserFlagsController'] ?? $this->getUserFlagsControllerService()), ($this->services['MailPoet\\Segments\\WooCommerce'] ?? $this->getWooCommerce3Service()), ($this->services['MailPoet\\EmailEditor\\Engine\\Dependency_Check'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Dependency_Check'] = new \MailPoet\EmailEditor\Engine\Dependency_Check())), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\DependencyNotice'] ?? $this->getDependencyNoticeService()), ($this->services['MailPoet\\Util\\License\\Features\\CapabilitiesManager'] ?? $this->getCapabilitiesManagerService()));
     }
 
     /**
@@ -2414,6 +2423,20 @@ class FreeCachedContainer extends Container
     }
 
     /**
+     * Gets the public 'MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysFromATagTrigger' autowired service.
+     *
+     * @return \MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysFromATagTrigger
+     */
+    protected function getBuysFromATagTriggerService()
+    {
+        $this->factories['MailPoet\\Automation\\Integrations\\WooCommerce\\Triggers\\BuysFromATagTrigger'] = function () {
+            return new \MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysFromATagTrigger(($this->services['MailPoet\\Automation\\Engine\\WordPress'] ?? ($this->services['MailPoet\\Automation\\Engine\\WordPress'] = new \MailPoet\Automation\Engine\WordPress())), ($this->services['MailPoet\\WooCommerce\\Helper'] ?? $this->getHelperService()), ($this->services['MailPoet\\Automation\\Engine\\Storage\\AutomationRunStorage'] ?? ($this->services['MailPoet\\Automation\\Engine\\Storage\\AutomationRunStorage'] = new \MailPoet\Automation\Engine\Storage\AutomationRunStorage())), ($this->services['MailPoet\\Automation\\Engine\\Control\\FilterHandler'] ?? $this->getFilterHandlerService()));
+        };
+
+        return $this->factories['MailPoet\\Automation\\Integrations\\WooCommerce\\Triggers\\BuysFromATagTrigger']();
+    }
+
+    /**
      * Gets the public 'MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCancelledTrigger' autowired service.
      *
      * @return \MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCancelledTrigger
@@ -2492,7 +2515,7 @@ class FreeCachedContainer extends Container
         $d = ($this->services['MailPoet\\Automation\\Engine\\Storage\\AutomationRunStorage'] ?? ($this->services['MailPoet\\Automation\\Engine\\Storage\\AutomationRunStorage'] = new \MailPoet\Automation\Engine\Storage\AutomationRunStorage()));
         $e = ($this->services['MailPoet\\Automation\\Engine\\Control\\FilterHandler'] ?? $this->getFilterHandlerService());
 
-        return $this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\WooCommerceIntegration'] = new \MailPoet\Automation\Integrations\WooCommerce\WooCommerceIntegration(new \MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderStatusChangedTrigger($a, $b), new \MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCreatedTrigger($a), new \MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCompletedTrigger($a, $b), new \MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCancelledTrigger($a, $b), ($this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\Triggers\\AbandonedCart\\AbandonedCartTrigger'] ?? $this->getAbandonedCartTriggerService()), new \MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysAProductTrigger($a, $c, $d, $e), new \MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysFromACategoryTrigger($a, $c, $d, $e), new \MailPoet\Automation\Integrations\WooCommerce\Subjects\AbandonedCartSubject($b), new \MailPoet\Automation\Integrations\WooCommerce\Subjects\OrderStatusChangeSubject(), new \MailPoet\Automation\Integrations\WooCommerce\Subjects\OrderSubject(($this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\Fields\\OrderFieldsFactory'] ?? $this->getOrderFieldsFactoryService()), $b), new \MailPoet\Automation\Integrations\WooCommerce\Subjects\CustomerSubject(($this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\Fields\\CustomerFieldsFactory'] ?? $this->getCustomerFieldsFactoryService())), ($this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\ContextFactory'] ?? $this->getContextFactory2Service()), new \MailPoet\Automation\Integrations\WooCommerce\SubjectTransformers\WordPressUserSubjectToWooCommerceCustomerSubjectTransformer(), $b);
+        return $this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\WooCommerceIntegration'] = new \MailPoet\Automation\Integrations\WooCommerce\WooCommerceIntegration(new \MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderStatusChangedTrigger($a, $b), new \MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCreatedTrigger($a), new \MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCompletedTrigger($a, $b), new \MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCancelledTrigger($a, $b), ($this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\Triggers\\AbandonedCart\\AbandonedCartTrigger'] ?? $this->getAbandonedCartTriggerService()), new \MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysAProductTrigger($a, $c, $d, $e), new \MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysFromACategoryTrigger($a, $c, $d, $e), new \MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysFromATagTrigger($a, $c, $d, $e), new \MailPoet\Automation\Integrations\WooCommerce\Subjects\AbandonedCartSubject($b), new \MailPoet\Automation\Integrations\WooCommerce\Subjects\OrderStatusChangeSubject(), new \MailPoet\Automation\Integrations\WooCommerce\Subjects\OrderSubject(($this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\Fields\\OrderFieldsFactory'] ?? $this->getOrderFieldsFactoryService()), $b), new \MailPoet\Automation\Integrations\WooCommerce\Subjects\CustomerSubject(($this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\Fields\\CustomerFieldsFactory'] ?? $this->getCustomerFieldsFactoryService())), ($this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\ContextFactory'] ?? $this->getContextFactory2Service()), new \MailPoet\Automation\Integrations\WooCommerce\SubjectTransformers\WordPressUserSubjectToWooCommerceCustomerSubjectTransformer(), $b);
     }
 
     /**
@@ -2612,7 +2635,7 @@ class FreeCachedContainer extends Container
      */
     protected function getCaptchaHooksService()
     {
-        return $this->services['MailPoet\\Captcha\\CaptchaHooks'] = new \MailPoet\Captcha\CaptchaHooks(($this->services['MailPoet\\Settings\\SettingsController'] ?? $this->getSettingsController2Service()), ($this->services['MailPoet\\Captcha\\Validator\\CaptchaValidator'] ?? $this->getCaptchaValidatorService()));
+        return $this->services['MailPoet\\Captcha\\CaptchaHooks'] = new \MailPoet\Captcha\CaptchaHooks(($this->services['MailPoet\\Settings\\SettingsController'] ?? $this->getSettingsController2Service()), ($this->services['MailPoet\\Captcha\\Validator\\CaptchaValidator'] ?? $this->getCaptchaValidatorService()), ($this->services['MailPoet\\Captcha\\CaptchaRenderer'] ?? $this->getCaptchaRendererService()));
     }
 
     /**
@@ -2653,6 +2676,16 @@ class FreeCachedContainer extends Container
     protected function getPageRenderer2Service()
     {
         return $this->services['MailPoet\\Captcha\\PageRenderer'] = new \MailPoet\Captcha\PageRenderer(($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Captcha\\CaptchaFormRenderer'] ?? $this->getCaptchaFormRendererService()), ($this->services['MailPoet\\Form\\AssetsController'] ?? $this->getAssetsController2Service()));
+    }
+
+    /**
+     * Gets the public 'MailPoet\Captcha\ReCaptchaHooks' shared autowired service.
+     *
+     * @return \MailPoet\Captcha\ReCaptchaHooks
+     */
+    protected function getReCaptchaHooksService()
+    {
+        return $this->services['MailPoet\\Captcha\\ReCaptchaHooks'] = new \MailPoet\Captcha\ReCaptchaHooks(($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Config\\Renderer'] ?? $this->getRendererService()), ($this->services['MailPoet\\Settings\\SettingsController'] ?? $this->getSettingsController2Service()), ($this->services['MailPoet\\Captcha\\ReCaptchaValidator'] ?? $this->getReCaptchaValidatorService()), ($this->services['MailPoet\\Captcha\\ReCaptchaRenderer'] ?? $this->getReCaptchaRendererService()));
     }
 
     /**
@@ -2747,17 +2780,7 @@ class FreeCachedContainer extends Container
         $c = ($this->services['MailPoet\\Subscribers\\SubscribersRepository'] ?? $this->getSubscribersRepositoryService());
         $d = ($this->services['MailPoet\\WooCommerce\\Helper'] ?? $this->getHelperService());
 
-        return $this->services['MailPoet\\Config\\Hooks'] = new \MailPoet\Config\Hooks(($this->services['MailPoet\\Subscription\\Form'] ?? $this->getFormService()), ($this->services['MailPoet\\Subscription\\Comment'] ?? $this->getCommentService()), ($this->services['MailPoet\\Subscription\\Manage'] ?? $this->getManageService()), ($this->services['MailPoet\\Subscription\\Registration'] ?? $this->getRegistrationService()), $a, $b, ($this->services['MailPoet\\Newsletter\\Scheduler\\PostNotificationScheduler'] ?? $this->getPostNotificationSchedulerService()), new \MailPoet\Mailer\WordPress\WordpressMailerReplacer(($this->services['MailPoet\\Mailer\\MailerFactory'] ?? $this->getMailerFactoryService()), ($this->privates['MailPoet\\Mailer\\MetaInfo'] ?? ($this->privates['MailPoet\\Mailer\\MetaInfo'] = new \MailPoet\Mailer\MetaInfo())), $a, $c), new \MailPoet\Form\DisplayFormInWPContent($b, ($this->services['MailPoet\\Form\\FormsRepository'] ?? $this->getFormsRepositoryService()), ($this->services['MailPoet\\Form\\Renderer'] ?? $this->getRenderer3Service()), ($this->services['MailPoet\\Form\\AssetsController'] ?? $this->getAssetsController2Service()), ($this->services['MailPoet\\Config\\Renderer'] ?? $this->getRendererService()), ($this->services['MailPoet\\Subscribers\\SubscriberSubscribeController'] ?? $this->getSubscriberSubscribeControllerService()), $c, $d), ($this->services['MailPoet\\Config\\HooksWooCommerce'] ?? $this->getHooksWooCommerceService()), ($this->services['MailPoet\\Captcha\\CaptchaHooks'] ?? $this->getCaptchaHooksService()), ($this->services['MailPoet\\Config\\HooksReCaptcha'] ?? $this->getHooksReCaptchaService()), ($this->services['MailPoet\\Statistics\\Track\\SubscriberHandler'] ?? $this->getSubscriberHandlerService()), ($this->privates['MailPoet\\Config\\SubscriberChangesNotifier'] ?? $this->getSubscriberChangesNotifierService()), ($this->services['MailPoet\\Segments\\WP'] ?? $this->getWPService()), ($this->services['MailPoet\\WPCOM\\DotcomLicenseProvisioner'] ?? $this->getDotcomLicenseProvisionerService()), ($this->services['MailPoet\\WooCommerce\\Integrations\\AutomateWooHooks'] ?? $this->getAutomateWooHooksService()), ($this->services['MailPoet\\WooCommerce\\WooSystemInfoController'] ?? $this->getWooSystemInfoControllerService()), ($this->services['MailPoet\\Cron\\CronTrigger'] ?? $this->getCronTriggerService()), $d);
-    }
-
-    /**
-     * Gets the public 'MailPoet\Config\HooksReCaptcha' shared autowired service.
-     *
-     * @return \MailPoet\Config\HooksReCaptcha
-     */
-    protected function getHooksReCaptchaService()
-    {
-        return $this->services['MailPoet\\Config\\HooksReCaptcha'] = new \MailPoet\Config\HooksReCaptcha(($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Config\\Renderer'] ?? $this->getRendererService()), ($this->services['MailPoet\\Settings\\SettingsController'] ?? $this->getSettingsController2Service()), ($this->services['MailPoet\\Captcha\\ReCaptchaValidator'] ?? $this->getReCaptchaValidatorService()), ($this->services['MailPoet\\Captcha\\ReCaptchaRenderer'] ?? $this->getReCaptchaRendererService()));
+        return $this->services['MailPoet\\Config\\Hooks'] = new \MailPoet\Config\Hooks(($this->services['MailPoet\\Subscription\\Form'] ?? $this->getFormService()), ($this->services['MailPoet\\Subscription\\Comment'] ?? $this->getCommentService()), ($this->services['MailPoet\\Subscription\\Manage'] ?? $this->getManageService()), ($this->services['MailPoet\\Subscription\\Registration'] ?? $this->getRegistrationService()), $a, $b, ($this->services['MailPoet\\Newsletter\\Scheduler\\PostNotificationScheduler'] ?? $this->getPostNotificationSchedulerService()), new \MailPoet\Mailer\WordPress\WordpressMailerReplacer(($this->services['MailPoet\\Mailer\\MailerFactory'] ?? $this->getMailerFactoryService()), ($this->privates['MailPoet\\Mailer\\MetaInfo'] ?? ($this->privates['MailPoet\\Mailer\\MetaInfo'] = new \MailPoet\Mailer\MetaInfo())), $a, $c), new \MailPoet\Form\DisplayFormInWPContent($b, ($this->services['MailPoet\\Form\\FormsRepository'] ?? $this->getFormsRepositoryService()), ($this->services['MailPoet\\Form\\Renderer'] ?? $this->getRenderer3Service()), ($this->services['MailPoet\\Form\\AssetsController'] ?? $this->getAssetsController2Service()), ($this->services['MailPoet\\Config\\Renderer'] ?? $this->getRendererService()), ($this->services['MailPoet\\Subscribers\\SubscriberSubscribeController'] ?? $this->getSubscriberSubscribeControllerService()), $c, $d), ($this->services['MailPoet\\Config\\HooksWooCommerce'] ?? $this->getHooksWooCommerceService()), ($this->services['MailPoet\\Captcha\\CaptchaHooks'] ?? $this->getCaptchaHooksService()), ($this->services['MailPoet\\Captcha\\ReCaptchaHooks'] ?? $this->getReCaptchaHooksService()), ($this->services['MailPoet\\Statistics\\Track\\SubscriberHandler'] ?? $this->getSubscriberHandlerService()), ($this->privates['MailPoet\\Config\\SubscriberChangesNotifier'] ?? $this->getSubscriberChangesNotifierService()), ($this->services['MailPoet\\Segments\\WP'] ?? $this->getWPService()), ($this->services['MailPoet\\WPCOM\\DotcomLicenseProvisioner'] ?? $this->getDotcomLicenseProvisionerService()), ($this->services['MailPoet\\WooCommerce\\Integrations\\AutomateWooHooks'] ?? $this->getAutomateWooHooksService()), ($this->services['MailPoet\\WooCommerce\\WooSystemInfoController'] ?? $this->getWooSystemInfoControllerService()), ($this->services['MailPoet\\Cron\\CronTrigger'] ?? $this->getCronTriggerService()), $d);
     }
 
     /**
@@ -2786,7 +2809,7 @@ class FreeCachedContainer extends Container
         $g = ($this->services['MailPoet\\Config\\Renderer'] ?? $this->getRendererService());
         $h = ($this->services['MailPoet\\WooCommerce\\Helper'] ?? $this->getHelperService());
 
-        return $this->services['MailPoet\\Config\\Initializer'] = new \MailPoet\Config\Initializer(($this->services['MailPoet\\Config\\RendererFactory'] ?? ($this->services['MailPoet\\Config\\RendererFactory'] = new \MailPoet\Config\RendererFactory())), $a, ($this->services['MailPoet\\API\\JSON\\API'] ?? $this->getAPIService()), ($this->services['MailPoet\\API\\REST\\API'] ?? $this->getAPI3Service()), ($this->services['MailPoet\\Config\\Activator'] ?? $this->getActivatorService()), $b, ($this->services['MailPoet\\Migrator\\Cli'] ?? $this->getCli2Service()), new \MailPoet\Router\Router($a, ($this->services['MailPoet\\DI\\ContainerWrapper'] ?? $this->getContainerWrapperService())), ($this->services['MailPoet\\Config\\Hooks'] ?? $this->getHooks2Service()), ($this->services['MailPoet\\Config\\Changelog'] ?? $this->getChangelogService()), ($this->services['MailPoet\\Config\\Menu'] ?? $this->getMenuService()), ($this->services['MailPoet\\Cron\\CronTrigger'] ?? $this->getCronTriggerService()), new \MailPoet\Util\Notices\PermanentNotices($c, ($this->services['MailPoet\\Cron\\CronHelper'] ?? $this->getCronHelperService()), $d, $e, $f, $b, ($this->services['MailPoet\\Util\\License\\Features\\Subscribers'] ?? $this->getSubscribers4Service()), ($this->services['MailPoet\\Config\\ServicesChecker'] ?? ($this->services['MailPoet\\Config\\ServicesChecker'] = new \MailPoet\Config\ServicesChecker())), ($this->services['MailPoet\\Mailer\\MailerFactory'] ?? $this->getMailerFactoryService()), ($this->services['MailPoet\\Util\\Notices\\SenderDomainAuthenticationNotices'] ?? $this->getSenderDomainAuthenticationNoticesService())), new \MailPoet\Config\Shortcodes(new \MailPoet\Subscription\Pages(($this->services['MailPoet\\Subscribers\\NewSubscriberNotificationMailer'] ?? $this->getNewSubscriberNotificationMailerService()), $c, ($this->services['MailPoet\\Newsletter\\Scheduler\\WelcomeScheduler'] ?? $this->getWelcomeSchedulerService()), ($this->services['MailPoet\\Subscribers\\LinkTokens'] ?? $this->getLinkTokensService()), ($this->services['MailPoet\\Subscription\\SubscriptionUrlFactory'] ?? $this->getSubscriptionUrlFactoryService()), ($this->services['MailPoet\\Form\\AssetsController'] ?? $this->getAssetsController2Service()), $g, ($this->services['MailPoet\\Statistics\\Track\\Unsubscribes'] ?? $this->getUnsubscribesService()), ($this->services['MailPoet\\Subscription\\ManageSubscriptionFormRenderer'] ?? $this->getManageSubscriptionFormRendererService()), ($this->services['MailPoet\\Statistics\\Track\\SubscriberHandler'] ?? $this->getSubscriberHandlerService()), $f, $e, $d, ($this->services['MailPoet\\Subscribers\\SubscriberSaveController'] ?? $this->getSubscriberSaveControllerService()), ($this->services['MailPoet\\Subscribers\\SubscriberSegmentRepository'] ?? $this->getSubscriberSegmentRepositoryService()), ($this->services['MailPoet\\Cron\\Workers\\StatsNotifications\\NewsletterLinkRepository'] ?? $this->getNewsletterLinkRepositoryService()), ($this->services['MailPoet\\Statistics\\StatisticsClicksRepository'] ?? $this->getStatisticsClicksRepositoryService()), ($this->services['MailPoet\\Newsletter\\Sending\\SendingQueuesRepository'] ?? $this->getSendingQueuesRepositoryService())), $c, ($this->services['MailPoet\\Segments\\SegmentSubscribersRepository'] ?? $this->getSegmentSubscribersRepositoryService()), $f, ($this->services['MailPoet\\Newsletter\\Url'] ?? $this->getUrlService()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] ?? ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] = new \MailPoet\Newsletter\Shortcodes\Categories\Date())), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Link'] ?? $this->getLinkService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Newsletter'] ?? $this->getNewsletterService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Subscriber'] ?? $this->getSubscriber2Service()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Site'] ?? $this->getSiteService())), ($this->services['MailPoet\\WooCommerce\\TransactionalEmailHooks'] ?? $this->getTransactionalEmailHooksService()), new \MailPoet\PostEditorBlocks\PostEditorBlock($g, $c, new \MailPoet\PostEditorBlocks\SubscriptionFormBlock($c, ($this->services['MailPoet\\Form\\FormsRepository'] ?? $this->getFormsRepositoryService()))), new \MailPoet\PostEditorBlocks\WooCommerceBlocksIntegration($c, $b, ($this->services['MailPoet\\WooCommerce\\Subscription'] ?? $this->getSubscription2Service()), ($this->services['MailPoet\\Segments\\WooCommerce'] ?? $this->getWooCommerce3Service()), $f, $h), $h, ($this->privates['MailPoet\\Config\\Localizer'] ?? ($this->privates['MailPoet\\Config\\Localizer'] = new \MailPoet\Config\Localizer())), ($this->services['MailPoet\\AutomaticEmails\\AutomaticEmails'] ?? $this->getAutomaticEmails2Service()), ($this->services['MailPoet\\Statistics\\Track\\SubscriberActivityTracker'] ?? $this->getSubscriberActivityTrackerService()), $c, ($this->services['MailPoet\\Config\\AssetsLoader'] ?? $this->getAssetsLoaderService()), ($this->services['MailPoet\\Automation\\Engine\\Engine'] ?? $this->getEngineService()), ($this->services['MailPoet\\Automation\\Integrations\\MailPoet\\MailPoetIntegration'] ?? $this->getMailPoetIntegrationService()), ($this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\WooCommerceIntegration'] ?? $this->getWooCommerceIntegrationService()), ($this->services['MailPoet\\Config\\PersonalDataExporters'] ?? $this->getPersonalDataExportersService()), ($this->services['MailPoet\\Cron\\DaemonActionSchedulerRunner'] ?? $this->getDaemonActionSchedulerRunnerService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Email_Editor'] ?? $this->getEmailEditorService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\Blocks\\BlockTypesController'] ?? $this->getBlockTypesControllerService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailEditor'] ?? $this->getEmailEditor2Service()), ($this->services['MailPoet\\EmailEditor\\Integrations\\Core\\Initializer'] ?? ($this->services['MailPoet\\EmailEditor\\Integrations\\Core\\Initializer'] = new \MailPoet\EmailEditor\Integrations\Core\Initializer())), ($this->services['MailPoet\\Features\\FeaturesController'] ?? $this->getFeaturesControllerService()), ($this->services['MailPoet\\Util\\Url'] ?? $this->getUrl2Service()));
+        return $this->services['MailPoet\\Config\\Initializer'] = new \MailPoet\Config\Initializer(($this->services['MailPoet\\Config\\RendererFactory'] ?? ($this->services['MailPoet\\Config\\RendererFactory'] = new \MailPoet\Config\RendererFactory())), $a, ($this->services['MailPoet\\API\\JSON\\API'] ?? $this->getAPIService()), ($this->services['MailPoet\\API\\REST\\API'] ?? $this->getAPI3Service()), ($this->services['MailPoet\\Config\\Activator'] ?? $this->getActivatorService()), $b, ($this->services['MailPoet\\Migrator\\Cli'] ?? $this->getCli2Service()), new \MailPoet\Router\Router($a, ($this->services['MailPoet\\DI\\ContainerWrapper'] ?? $this->getContainerWrapperService())), ($this->services['MailPoet\\Config\\Hooks'] ?? $this->getHooks2Service()), ($this->services['MailPoet\\Config\\Changelog'] ?? $this->getChangelogService()), ($this->services['MailPoet\\Config\\Menu'] ?? $this->getMenuService()), ($this->services['MailPoet\\Cron\\CronTrigger'] ?? $this->getCronTriggerService()), new \MailPoet\Util\Notices\PermanentNotices($c, ($this->services['MailPoet\\Cron\\CronHelper'] ?? $this->getCronHelperService()), $d, $e, $f, $b, ($this->services['MailPoet\\Util\\License\\Features\\Subscribers'] ?? $this->getSubscribers4Service()), ($this->services['MailPoet\\Config\\ServicesChecker'] ?? ($this->services['MailPoet\\Config\\ServicesChecker'] = new \MailPoet\Config\ServicesChecker())), ($this->services['MailPoet\\Mailer\\MailerFactory'] ?? $this->getMailerFactoryService()), ($this->services['MailPoet\\Util\\Notices\\SenderDomainAuthenticationNotices'] ?? $this->getSenderDomainAuthenticationNoticesService())), new \MailPoet\Config\Shortcodes(new \MailPoet\Subscription\Pages(($this->services['MailPoet\\Subscribers\\NewSubscriberNotificationMailer'] ?? $this->getNewSubscriberNotificationMailerService()), $c, ($this->services['MailPoet\\Newsletter\\Scheduler\\WelcomeScheduler'] ?? $this->getWelcomeSchedulerService()), ($this->services['MailPoet\\Subscribers\\LinkTokens'] ?? $this->getLinkTokensService()), ($this->services['MailPoet\\Subscription\\SubscriptionUrlFactory'] ?? $this->getSubscriptionUrlFactoryService()), ($this->services['MailPoet\\Form\\AssetsController'] ?? $this->getAssetsController2Service()), $g, ($this->services['MailPoet\\Statistics\\Track\\Unsubscribes'] ?? $this->getUnsubscribesService()), ($this->services['MailPoet\\Subscription\\ManageSubscriptionFormRenderer'] ?? $this->getManageSubscriptionFormRendererService()), ($this->services['MailPoet\\Statistics\\Track\\SubscriberHandler'] ?? $this->getSubscriberHandlerService()), $f, $e, $d, ($this->services['MailPoet\\Subscribers\\SubscriberSaveController'] ?? $this->getSubscriberSaveControllerService()), ($this->services['MailPoet\\Subscribers\\SubscriberSegmentRepository'] ?? $this->getSubscriberSegmentRepositoryService()), ($this->services['MailPoet\\Cron\\Workers\\StatsNotifications\\NewsletterLinkRepository'] ?? $this->getNewsletterLinkRepositoryService()), ($this->services['MailPoet\\Statistics\\StatisticsClicksRepository'] ?? $this->getStatisticsClicksRepositoryService()), ($this->services['MailPoet\\Newsletter\\Sending\\SendingQueuesRepository'] ?? $this->getSendingQueuesRepositoryService())), $c, ($this->services['MailPoet\\Segments\\SegmentSubscribersRepository'] ?? $this->getSegmentSubscribersRepositoryService()), $f, ($this->services['MailPoet\\Newsletter\\Url'] ?? $this->getUrlService()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] ?? ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] = new \MailPoet\Newsletter\Shortcodes\Categories\Date())), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Link'] ?? $this->getLink2Service()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Newsletter'] ?? $this->getNewsletterService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Subscriber'] ?? $this->getSubscriber2Service()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Site'] ?? $this->getSite2Service())), ($this->services['MailPoet\\WooCommerce\\TransactionalEmailHooks'] ?? $this->getTransactionalEmailHooksService()), new \MailPoet\PostEditorBlocks\PostEditorBlock($g, $c, new \MailPoet\PostEditorBlocks\SubscriptionFormBlock($c, ($this->services['MailPoet\\Form\\FormsRepository'] ?? $this->getFormsRepositoryService()))), new \MailPoet\PostEditorBlocks\WooCommerceBlocksIntegration($c, $b, ($this->services['MailPoet\\WooCommerce\\Subscription'] ?? $this->getSubscription2Service()), ($this->services['MailPoet\\Segments\\WooCommerce'] ?? $this->getWooCommerce3Service()), $f, $h), $h, ($this->privates['MailPoet\\Config\\Localizer'] ?? ($this->privates['MailPoet\\Config\\Localizer'] = new \MailPoet\Config\Localizer())), ($this->services['MailPoet\\AutomaticEmails\\AutomaticEmails'] ?? $this->getAutomaticEmails2Service()), ($this->services['MailPoet\\Statistics\\Track\\SubscriberActivityTracker'] ?? $this->getSubscriberActivityTrackerService()), $c, ($this->services['MailPoet\\Config\\AssetsLoader'] ?? $this->getAssetsLoaderService()), ($this->services['MailPoet\\Automation\\Engine\\Engine'] ?? $this->getEngineService()), ($this->services['MailPoet\\Automation\\Integrations\\MailPoet\\MailPoetIntegration'] ?? $this->getMailPoetIntegrationService()), ($this->services['MailPoet\\Automation\\Integrations\\WooCommerce\\WooCommerceIntegration'] ?? $this->getWooCommerceIntegrationService()), ($this->services['MailPoet\\Config\\PersonalDataExporters'] ?? $this->getPersonalDataExportersService()), ($this->services['MailPoet\\Cron\\DaemonActionSchedulerRunner'] ?? $this->getDaemonActionSchedulerRunnerService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Email_Editor'] ?? $this->getEmailEditorService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\Blocks\\BlockTypesController'] ?? $this->getBlockTypesControllerService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailEditor'] ?? $this->getEmailEditor2Service()), ($this->services['MailPoet\\EmailEditor\\Integrations\\Core\\Initializer'] ?? ($this->services['MailPoet\\EmailEditor\\Integrations\\Core\\Initializer'] = new \MailPoet\EmailEditor\Integrations\Core\Initializer())), ($this->services['MailPoet\\Util\\Url'] ?? $this->getUrl2Service()));
     }
 
     /**
@@ -2873,7 +2896,7 @@ class FreeCachedContainer extends Container
             $a = ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions()));
             $b = ($this->services['MailPoet\\Subscribers\\SubscribersRepository'] ?? $this->getSubscribersRepositoryService());
 
-            return new \MailPoet\Config\Shortcodes(new \MailPoet\Subscription\Pages(($this->services['MailPoet\\Subscribers\\NewSubscriberNotificationMailer'] ?? $this->getNewSubscriberNotificationMailerService()), $a, ($this->services['MailPoet\\Newsletter\\Scheduler\\WelcomeScheduler'] ?? $this->getWelcomeSchedulerService()), ($this->services['MailPoet\\Subscribers\\LinkTokens'] ?? $this->getLinkTokensService()), ($this->services['MailPoet\\Subscription\\SubscriptionUrlFactory'] ?? $this->getSubscriptionUrlFactoryService()), ($this->services['MailPoet\\Form\\AssetsController'] ?? $this->getAssetsController2Service()), ($this->services['MailPoet\\Config\\Renderer'] ?? $this->getRendererService()), ($this->services['MailPoet\\Statistics\\Track\\Unsubscribes'] ?? $this->getUnsubscribesService()), ($this->services['MailPoet\\Subscription\\ManageSubscriptionFormRenderer'] ?? $this->getManageSubscriptionFormRendererService()), ($this->services['MailPoet\\Statistics\\Track\\SubscriberHandler'] ?? $this->getSubscriberHandlerService()), $b, ($this->services['MailPoet\\Settings\\TrackingConfig'] ?? $this->getTrackingConfigService()), ($this->services['MailPoetVendor\\Doctrine\\ORM\\EntityManager'] ?? $this->getEntityManagerService()), ($this->services['MailPoet\\Subscribers\\SubscriberSaveController'] ?? $this->getSubscriberSaveControllerService()), ($this->services['MailPoet\\Subscribers\\SubscriberSegmentRepository'] ?? $this->getSubscriberSegmentRepositoryService()), ($this->services['MailPoet\\Cron\\Workers\\StatsNotifications\\NewsletterLinkRepository'] ?? $this->getNewsletterLinkRepositoryService()), ($this->services['MailPoet\\Statistics\\StatisticsClicksRepository'] ?? $this->getStatisticsClicksRepositoryService()), ($this->services['MailPoet\\Newsletter\\Sending\\SendingQueuesRepository'] ?? $this->getSendingQueuesRepositoryService())), $a, ($this->services['MailPoet\\Segments\\SegmentSubscribersRepository'] ?? $this->getSegmentSubscribersRepositoryService()), $b, ($this->services['MailPoet\\Newsletter\\Url'] ?? $this->getUrlService()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] ?? ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] = new \MailPoet\Newsletter\Shortcodes\Categories\Date())), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Link'] ?? $this->getLinkService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Newsletter'] ?? $this->getNewsletterService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Subscriber'] ?? $this->getSubscriber2Service()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Site'] ?? $this->getSiteService()));
+            return new \MailPoet\Config\Shortcodes(new \MailPoet\Subscription\Pages(($this->services['MailPoet\\Subscribers\\NewSubscriberNotificationMailer'] ?? $this->getNewSubscriberNotificationMailerService()), $a, ($this->services['MailPoet\\Newsletter\\Scheduler\\WelcomeScheduler'] ?? $this->getWelcomeSchedulerService()), ($this->services['MailPoet\\Subscribers\\LinkTokens'] ?? $this->getLinkTokensService()), ($this->services['MailPoet\\Subscription\\SubscriptionUrlFactory'] ?? $this->getSubscriptionUrlFactoryService()), ($this->services['MailPoet\\Form\\AssetsController'] ?? $this->getAssetsController2Service()), ($this->services['MailPoet\\Config\\Renderer'] ?? $this->getRendererService()), ($this->services['MailPoet\\Statistics\\Track\\Unsubscribes'] ?? $this->getUnsubscribesService()), ($this->services['MailPoet\\Subscription\\ManageSubscriptionFormRenderer'] ?? $this->getManageSubscriptionFormRendererService()), ($this->services['MailPoet\\Statistics\\Track\\SubscriberHandler'] ?? $this->getSubscriberHandlerService()), $b, ($this->services['MailPoet\\Settings\\TrackingConfig'] ?? $this->getTrackingConfigService()), ($this->services['MailPoetVendor\\Doctrine\\ORM\\EntityManager'] ?? $this->getEntityManagerService()), ($this->services['MailPoet\\Subscribers\\SubscriberSaveController'] ?? $this->getSubscriberSaveControllerService()), ($this->services['MailPoet\\Subscribers\\SubscriberSegmentRepository'] ?? $this->getSubscriberSegmentRepositoryService()), ($this->services['MailPoet\\Cron\\Workers\\StatsNotifications\\NewsletterLinkRepository'] ?? $this->getNewsletterLinkRepositoryService()), ($this->services['MailPoet\\Statistics\\StatisticsClicksRepository'] ?? $this->getStatisticsClicksRepositoryService()), ($this->services['MailPoet\\Newsletter\\Sending\\SendingQueuesRepository'] ?? $this->getSendingQueuesRepositoryService())), $a, ($this->services['MailPoet\\Segments\\SegmentSubscribersRepository'] ?? $this->getSegmentSubscribersRepositoryService()), $b, ($this->services['MailPoet\\Newsletter\\Url'] ?? $this->getUrlService()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] ?? ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] = new \MailPoet\Newsletter\Shortcodes\Categories\Date())), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Link'] ?? $this->getLink2Service()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Newsletter'] ?? $this->getNewsletterService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Subscriber'] ?? $this->getSubscriber2Service()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Site'] ?? $this->getSite2Service()));
         };
 
         return $this->factories['MailPoet\\Config\\Shortcodes']();
@@ -3406,13 +3429,23 @@ class FreeCachedContainer extends Container
     }
 
     /**
+     * Gets the public 'MailPoet\EmailEditor\Engine\Dependency_Check' shared autowired service.
+     *
+     * @return \MailPoet\EmailEditor\Engine\Dependency_Check
+     */
+    protected function getDependencyCheckService()
+    {
+        return $this->services['MailPoet\\EmailEditor\\Engine\\Dependency_Check'] = new \MailPoet\EmailEditor\Engine\Dependency_Check();
+    }
+
+    /**
      * Gets the public 'MailPoet\EmailEditor\Engine\Email_Api_Controller' shared autowired service.
      *
      * @return \MailPoet\EmailEditor\Engine\Email_Api_Controller
      */
     protected function getEmailApiControllerService()
     {
-        return $this->services['MailPoet\\EmailEditor\\Engine\\Email_Api_Controller'] = new \MailPoet\EmailEditor\Engine\Email_Api_Controller();
+        return $this->services['MailPoet\\EmailEditor\\Engine\\Email_Api_Controller'] = new \MailPoet\EmailEditor\Engine\Email_Api_Controller(($this->services['MailPoet\\EmailEditor\\Engine\\PersonalizationTags\\Personalization_Tags_Registry'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\PersonalizationTags\\Personalization_Tags_Registry'] = new \MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry())));
     }
 
     /**
@@ -3422,7 +3455,7 @@ class FreeCachedContainer extends Container
      */
     protected function getEmailEditorService()
     {
-        return $this->services['MailPoet\\EmailEditor\\Engine\\Email_Editor'] = new \MailPoet\EmailEditor\Engine\Email_Editor(($this->services['MailPoet\\EmailEditor\\Engine\\Email_Api_Controller'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Email_Api_Controller'] = new \MailPoet\EmailEditor\Engine\Email_Api_Controller())), ($this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Templates'] ?? $this->getTemplatesService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Patterns\\Patterns'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Patterns\\Patterns'] = new \MailPoet\EmailEditor\Engine\Patterns\Patterns())), ($this->services['MailPoet\\EmailEditor\\Engine\\Settings_Controller'] ?? $this->getSettingsControllerService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Send_Preview_Email'] ?? $this->getSendPreviewEmailService()), ($this->services['MailPoet\\EmailEditor\\Engine\\PersonalizationTags\\Personalization_Tags_Registry'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\PersonalizationTags\\Personalization_Tags_Registry'] = new \MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry())));
+        return $this->services['MailPoet\\EmailEditor\\Engine\\Email_Editor'] = new \MailPoet\EmailEditor\Engine\Email_Editor(($this->services['MailPoet\\EmailEditor\\Engine\\Email_Api_Controller'] ?? $this->getEmailApiControllerService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Templates'] ?? $this->getTemplatesService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Patterns\\Patterns'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Patterns\\Patterns'] = new \MailPoet\EmailEditor\Engine\Patterns\Patterns())), ($this->services['MailPoet\\EmailEditor\\Engine\\Send_Preview_Email'] ?? $this->getSendPreviewEmailService()), ($this->services['MailPoet\\EmailEditor\\Engine\\PersonalizationTags\\Personalization_Tags_Registry'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\PersonalizationTags\\Personalization_Tags_Registry'] = new \MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry())));
     }
 
     /**
@@ -3472,7 +3505,7 @@ class FreeCachedContainer extends Container
      */
     protected function getContentRendererService()
     {
-        return $this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Content_Renderer'] = new \MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer(($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Process_Manager'] ?? $this->getProcessManagerService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Blocks_Registry'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Blocks_Registry'] = new \MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Blocks_Registry())), ($this->services['MailPoet\\EmailEditor\\Engine\\Settings_Controller'] ?? $this->getSettingsControllerService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] = new \MailPoet\EmailEditor\Engine\Theme_Controller())));
+        return $this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Content_Renderer'] = new \MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer(($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Process_Manager'] ?? $this->getProcessManagerService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Blocks_Registry'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Blocks_Registry'] = new \MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Blocks_Registry())), ($this->services['MailPoet\\EmailEditor\\Engine\\Settings_Controller'] ?? $this->getSettingsControllerService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\Css_Inliner'] ?? $this->getCssInlinerService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] = new \MailPoet\EmailEditor\Engine\Theme_Controller())));
     }
 
     /**
@@ -3546,13 +3579,23 @@ class FreeCachedContainer extends Container
     }
 
     /**
+     * Gets the public 'MailPoet\EmailEditor\Engine\Renderer\Css_Inliner' shared service.
+     *
+     * @return \MailPoet\EmailEditor\Engine\Renderer\Css_Inliner
+     */
+    protected function getCssInlinerService()
+    {
+        return $this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\Css_Inliner'] = \MailPoet\EmailEditor\Integrations\MailPoet\MailpoetCssInlinerFactory::create();
+    }
+
+    /**
      * Gets the public 'MailPoet\EmailEditor\Engine\Renderer\Renderer' shared autowired service.
      *
      * @return \MailPoet\EmailEditor\Engine\Renderer\Renderer
      */
     protected function getRenderer2Service()
     {
-        return $this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\Renderer'] = new \MailPoet\EmailEditor\Engine\Renderer\Renderer(($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Content_Renderer'] ?? $this->getContentRendererService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Templates'] ?? $this->getTemplatesService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] = new \MailPoet\EmailEditor\Engine\Theme_Controller())));
+        return $this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\Renderer'] = new \MailPoet\EmailEditor\Engine\Renderer\Renderer(($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\ContentRenderer\\Content_Renderer'] ?? $this->getContentRendererService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Templates'] ?? $this->getTemplatesService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\Css_Inliner'] ?? $this->getCssInlinerService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] = new \MailPoet\EmailEditor\Engine\Theme_Controller())));
     }
 
     /**
@@ -3562,7 +3605,7 @@ class FreeCachedContainer extends Container
      */
     protected function getSendPreviewEmailService()
     {
-        return $this->services['MailPoet\\EmailEditor\\Engine\\Send_Preview_Email'] = new \MailPoet\EmailEditor\Engine\Send_Preview_Email(($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\Renderer'] ?? $this->getRenderer2Service()));
+        return $this->services['MailPoet\\EmailEditor\\Engine\\Send_Preview_Email'] = new \MailPoet\EmailEditor\Engine\Send_Preview_Email(($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\Renderer'] ?? $this->getRenderer2Service()), ($this->services['MailPoet\\EmailEditor\\Engine\\Personalizer'] ?? $this->getPersonalizerService()));
     }
 
     /**
@@ -3582,17 +3625,17 @@ class FreeCachedContainer extends Container
      */
     protected function getTemplatesService()
     {
-        return $this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Templates'] = new \MailPoet\EmailEditor\Engine\Templates\Templates(($this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Utils'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Utils'] = new \MailPoet\EmailEditor\Engine\Templates\Utils())));
+        return $this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Templates'] = new \MailPoet\EmailEditor\Engine\Templates\Templates(($this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Templates_Registry'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Templates_Registry'] = new \MailPoet\EmailEditor\Engine\Templates\Templates_Registry())));
     }
 
     /**
-     * Gets the public 'MailPoet\EmailEditor\Engine\Templates\Utils' shared autowired service.
+     * Gets the public 'MailPoet\EmailEditor\Engine\Templates\Templates_Registry' shared autowired service.
      *
-     * @return \MailPoet\EmailEditor\Engine\Templates\Utils
+     * @return \MailPoet\EmailEditor\Engine\Templates\Templates_Registry
      */
-    protected function getUtilsService()
+    protected function getTemplatesRegistryService()
     {
-        return $this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Utils'] = new \MailPoet\EmailEditor\Engine\Templates\Utils();
+        return $this->services['MailPoet\\EmailEditor\\Engine\\Templates\\Templates_Registry'] = new \MailPoet\EmailEditor\Engine\Templates\Templates_Registry();
     }
 
     /**
@@ -3656,13 +3699,23 @@ class FreeCachedContainer extends Container
     }
 
     /**
+     * Gets the public 'MailPoet\EmailEditor\Integrations\MailPoet\DependencyNotice' shared autowired service.
+     *
+     * @return \MailPoet\EmailEditor\Integrations\MailPoet\DependencyNotice
+     */
+    protected function getDependencyNoticeService()
+    {
+        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\DependencyNotice'] = new \MailPoet\EmailEditor\Integrations\MailPoet\DependencyNotice(($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\EmailEditor\\Engine\\Dependency_Check'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Dependency_Check'] = new \MailPoet\EmailEditor\Engine\Dependency_Check())));
+    }
+
+    /**
      * Gets the public 'MailPoet\EmailEditor\Integrations\MailPoet\EditorPageRenderer' shared autowired service.
      *
      * @return \MailPoet\EmailEditor\Integrations\MailPoet\EditorPageRenderer
      */
     protected function getEditorPageRendererService()
     {
-        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EditorPageRenderer'] = new \MailPoet\EmailEditor\Integrations\MailPoet\EditorPageRenderer(($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\EmailEditor\\Engine\\Settings_Controller'] ?? $this->getSettingsControllerService()), ($this->services['MailPoet\\Util\\CdnAssetUrl'] ?? $this->getCdnAssetUrlService()), ($this->services['MailPoet\\Config\\ServicesChecker'] ?? ($this->services['MailPoet\\Config\\ServicesChecker'] = new \MailPoet\Config\ServicesChecker())), ($this->services['MailPoet\\Util\\License\\Features\\Subscribers'] ?? $this->getSubscribers4Service()), ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] = new \MailPoet\EmailEditor\Engine\Theme_Controller())), ($this->services['MailPoet\\EmailEditor\\Engine\\User_Theme'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\User_Theme'] = new \MailPoet\EmailEditor\Engine\User_Theme())), ($this->services['MailPoet\\Settings\\SettingsController'] ?? $this->getSettingsController2Service()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()));
+        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EditorPageRenderer'] = new \MailPoet\EmailEditor\Integrations\MailPoet\EditorPageRenderer(($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\EmailEditor\\Engine\\Settings_Controller'] ?? $this->getSettingsControllerService()), ($this->services['MailPoet\\Util\\CdnAssetUrl'] ?? $this->getCdnAssetUrlService()), ($this->services['MailPoet\\Config\\ServicesChecker'] ?? ($this->services['MailPoet\\Config\\ServicesChecker'] = new \MailPoet\Config\ServicesChecker())), ($this->services['MailPoet\\Util\\License\\Features\\Subscribers'] ?? $this->getSubscribers4Service()), ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\Theme_Controller'] = new \MailPoet\EmailEditor\Engine\Theme_Controller())), ($this->services['MailPoet\\EmailEditor\\Engine\\User_Theme'] ?? ($this->services['MailPoet\\EmailEditor\\Engine\\User_Theme'] = new \MailPoet\EmailEditor\Engine\User_Theme())), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\DependencyNotice'] ?? $this->getDependencyNoticeService()), ($this->services['MailPoet\\Settings\\SettingsController'] ?? $this->getSettingsController2Service()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->privates['MailPoet\\Settings\\UserFlagsController'] ?? $this->getUserFlagsControllerService()), ($this->services['MailPoet\\Analytics\\Analytics'] ?? $this->getAnalytics2Service()));
     }
 
     /**
@@ -3682,7 +3735,7 @@ class FreeCachedContainer extends Container
      */
     protected function getEmailEditor2Service()
     {
-        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailEditor'] = new \MailPoet\EmailEditor\Integrations\MailPoet\EmailEditor(($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Features\\FeaturesController'] ?? $this->getFeaturesControllerService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailApiController'] ?? $this->getEmailApiController2Service()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EditorPageRenderer'] ?? $this->getEditorPageRendererService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailEditorPreviewEmail'] ?? $this->getEmailEditorPreviewEmailService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\Patterns\\PatternsController'] ?? $this->getPatternsControllerService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\Cli'] ?? $this->getCliService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTagManager'] ?? $this->getPersonalizationTagManagerService()));
+        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailEditor'] = new \MailPoet\EmailEditor\Integrations\MailPoet\EmailEditor(($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailApiController'] ?? $this->getEmailApiController2Service()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EditorPageRenderer'] ?? $this->getEditorPageRendererService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailEditorPreviewEmail'] ?? $this->getEmailEditorPreviewEmailService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\Patterns\\PatternsController'] ?? $this->getPatternsControllerService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\Templates\\TemplatesController'] ?? $this->getTemplatesControllerService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\Cli'] ?? $this->getCliService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTagManager'] ?? $this->getPersonalizationTagManagerService()));
     }
 
     /**
@@ -3693,6 +3746,16 @@ class FreeCachedContainer extends Container
     protected function getEmailEditorPreviewEmailService()
     {
         return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\EmailEditorPreviewEmail'] = new \MailPoet\EmailEditor\Integrations\MailPoet\EmailEditorPreviewEmail(($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Newsletter\\Preview\\SendPreviewController'] ?? $this->getSendPreviewControllerService()));
+    }
+
+    /**
+     * Gets the public 'MailPoet\EmailEditor\Integrations\MailPoet\MailPoetCssInliner' shared autowired service.
+     *
+     * @return \MailPoet\EmailEditor\Integrations\MailPoet\MailPoetCssInliner
+     */
+    protected function getMailPoetCssInlinerService()
+    {
+        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\MailPoetCssInliner'] = new \MailPoet\EmailEditor\Integrations\MailPoet\MailPoetCssInliner();
     }
 
     /**
@@ -3712,7 +3775,37 @@ class FreeCachedContainer extends Container
      */
     protected function getPersonalizationTagManagerService()
     {
-        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTagManager'] = new \MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTagManager(($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\Subscriber'] ?? $this->getSubscriberService()));
+        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTagManager'] = new \MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTagManager(($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\Subscriber'] ?? $this->getSubscriberService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\Site'] ?? $this->getSiteService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\Link'] ?? $this->getLinkService()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\LinksToShortcodesConvertor'] ?? ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\LinksToShortcodesConvertor'] = new \MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\LinksToShortcodesConvertor())));
+    }
+
+    /**
+     * Gets the public 'MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Link' shared autowired service.
+     *
+     * @return \MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Link
+     */
+    protected function getLinkService()
+    {
+        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\Link'] = new \MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Link(($this->services['MailPoet\\Subscription\\SubscriptionUrlFactory'] ?? $this->getSubscriptionUrlFactoryService()), ($this->services['MailPoet\\Subscribers\\SubscribersRepository'] ?? $this->getSubscribersRepositoryService()), ($this->services['MailPoet\\Newsletter\\Sending\\SendingQueuesRepository'] ?? $this->getSendingQueuesRepositoryService()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Newsletter\\Url'] ?? $this->getUrlService()));
+    }
+
+    /**
+     * Gets the public 'MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\LinksToShortcodesConvertor' shared autowired service.
+     *
+     * @return \MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\LinksToShortcodesConvertor
+     */
+    protected function getLinksToShortcodesConvertorService()
+    {
+        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\LinksToShortcodesConvertor'] = new \MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\LinksToShortcodesConvertor();
+    }
+
+    /**
+     * Gets the public 'MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Site' shared autowired service.
+     *
+     * @return \MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Site
+     */
+    protected function getSiteService()
+    {
+        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\Site'] = new \MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Site(($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())));
     }
 
     /**
@@ -3723,6 +3816,16 @@ class FreeCachedContainer extends Container
     protected function getSubscriberService()
     {
         return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\Subscriber'] = new \MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Subscriber(($this->services['MailPoet\\Subscribers\\SubscribersRepository'] ?? $this->getSubscribersRepositoryService()));
+    }
+
+    /**
+     * Gets the public 'MailPoet\EmailEditor\Integrations\MailPoet\Templates\TemplatesController' shared autowired service.
+     *
+     * @return \MailPoet\EmailEditor\Integrations\MailPoet\Templates\TemplatesController
+     */
+    protected function getTemplatesControllerService()
+    {
+        return $this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\Templates\\TemplatesController'] = new \MailPoet\EmailEditor\Integrations\MailPoet\Templates\TemplatesController(($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Util\\CdnAssetUrl'] ?? $this->getCdnAssetUrlService()));
     }
 
     /**
@@ -4147,7 +4250,7 @@ class FreeCachedContainer extends Container
      */
     protected function getNewsletterValidatorService()
     {
-        return $this->services['MailPoet\\Newsletter\\NewsletterValidator'] = new \MailPoet\Newsletter\NewsletterValidator(($this->services['MailPoet\\Services\\Bridge'] ?? $this->getBridgeService()), ($this->services['MailPoet\\Settings\\TrackingConfig'] ?? $this->getTrackingConfigService()), ($this->services['MailPoet\\Features\\FeaturesController'] ?? $this->getFeaturesControllerService()));
+        return $this->services['MailPoet\\Newsletter\\NewsletterValidator'] = new \MailPoet\Newsletter\NewsletterValidator(($this->services['MailPoet\\Services\\Bridge'] ?? $this->getBridgeService()), ($this->services['MailPoet\\Settings\\TrackingConfig'] ?? $this->getTrackingConfigService()));
     }
 
     /**
@@ -4187,7 +4290,7 @@ class FreeCachedContainer extends Container
      */
     protected function getSendPreviewControllerService()
     {
-        return $this->services['MailPoet\\Newsletter\\Preview\\SendPreviewController'] = new \MailPoet\Newsletter\Preview\SendPreviewController(($this->services['MailPoet\\Mailer\\MailerFactory'] ?? $this->getMailerFactoryService()), ($this->privates['MailPoet\\Mailer\\MetaInfo'] ?? ($this->privates['MailPoet\\Mailer\\MetaInfo'] = new \MailPoet\Mailer\MetaInfo())), ($this->services['MailPoet\\Newsletter\\Renderer\\Renderer'] ?? $this->getRenderer6Service()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Subscribers\\SubscribersRepository'] ?? $this->getSubscribersRepositoryService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Shortcodes'] ?? $this->getShortcodes2Service()));
+        return $this->services['MailPoet\\Newsletter\\Preview\\SendPreviewController'] = new \MailPoet\Newsletter\Preview\SendPreviewController(($this->services['MailPoet\\Mailer\\MailerFactory'] ?? $this->getMailerFactoryService()), ($this->privates['MailPoet\\Mailer\\MetaInfo'] ?? ($this->privates['MailPoet\\Mailer\\MetaInfo'] = new \MailPoet\Mailer\MetaInfo())), ($this->services['MailPoet\\Newsletter\\Renderer\\Renderer'] ?? $this->getRenderer6Service()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Subscribers\\SubscribersRepository'] ?? $this->getSubscribersRepositoryService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Shortcodes'] ?? $this->getShortcodes2Service()), ($this->services['MailPoet\\EmailEditor\\Engine\\Personalizer'] ?? $this->getPersonalizerService()));
     }
 
     /**
@@ -4260,7 +4363,7 @@ class FreeCachedContainer extends Container
      */
     protected function getRenderer6Service()
     {
-        return $this->services['MailPoet\\Newsletter\\Renderer\\Renderer'] = new \MailPoet\Newsletter\Renderer\Renderer(($this->services['MailPoet\\Newsletter\\Renderer\\BodyRenderer'] ?? $this->getBodyRendererService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\Renderer'] ?? $this->getRenderer2Service()), ($this->services['MailPoet\\Newsletter\\Renderer\\Preprocessor'] ?? $this->getPreprocessorService()), ($this->services['MailPoetVendor\\CSS'] ?? ($this->services['MailPoetVendor\\CSS'] = new \MailPoetVendor\CSS())), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Logging\\LoggerFactory'] ?? $this->getLoggerFactoryService()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Newsletter\\Sending\\SendingQueuesRepository'] ?? $this->getSendingQueuesRepositoryService()), ($this->services['MailPoet\\Features\\FeaturesController'] ?? $this->getFeaturesControllerService()), ($this->services['MailPoet\\Util\\License\\Features\\CapabilitiesManager'] ?? $this->getCapabilitiesManagerService()));
+        return $this->services['MailPoet\\Newsletter\\Renderer\\Renderer'] = new \MailPoet\Newsletter\Renderer\Renderer(($this->services['MailPoet\\Newsletter\\Renderer\\BodyRenderer'] ?? $this->getBodyRendererService()), ($this->services['MailPoet\\EmailEditor\\Engine\\Renderer\\Renderer'] ?? $this->getRenderer2Service()), ($this->services['MailPoet\\Newsletter\\Renderer\\Preprocessor'] ?? $this->getPreprocessorService()), ($this->services['MailPoetVendor\\CSS'] ?? ($this->services['MailPoetVendor\\CSS'] = new \MailPoetVendor\CSS())), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Logging\\LoggerFactory'] ?? $this->getLoggerFactoryService()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Newsletter\\Sending\\SendingQueuesRepository'] ?? $this->getSendingQueuesRepositoryService()), ($this->services['MailPoet\\Util\\License\\Features\\CapabilitiesManager'] ?? $this->getCapabilitiesManagerService()));
     }
 
     /**
@@ -4388,7 +4491,7 @@ class FreeCachedContainer extends Container
      *
      * @return \MailPoet\Newsletter\Shortcodes\Categories\Link
      */
-    protected function getLinkService()
+    protected function getLink2Service()
     {
         return $this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Link'] = new \MailPoet\Newsletter\Shortcodes\Categories\Link(($this->services['MailPoet\\Settings\\SettingsController'] ?? $this->getSettingsController2Service()), ($this->services['MailPoet\\Newsletter\\Url'] ?? $this->getUrlService()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Settings\\TrackingConfig'] ?? $this->getTrackingConfigService()));
     }
@@ -4408,7 +4511,7 @@ class FreeCachedContainer extends Container
      *
      * @return \MailPoet\Newsletter\Shortcodes\Categories\Site
      */
-    protected function getSiteService()
+    protected function getSite2Service()
     {
         return $this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Site'] = new \MailPoet\Newsletter\Shortcodes\Categories\Site(($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())));
     }
@@ -4430,7 +4533,7 @@ class FreeCachedContainer extends Container
      */
     protected function getShortcodes2Service()
     {
-        return $this->services['MailPoet\\Newsletter\\Shortcodes\\Shortcodes'] = new \MailPoet\Newsletter\Shortcodes\Shortcodes(($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] ?? ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] = new \MailPoet\Newsletter\Shortcodes\Categories\Date())), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Link'] ?? $this->getLinkService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Newsletter'] ?? $this->getNewsletterService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Subscriber'] ?? $this->getSubscriber2Service()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Site'] ?? $this->getSiteService()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())));
+        return $this->services['MailPoet\\Newsletter\\Shortcodes\\Shortcodes'] = new \MailPoet\Newsletter\Shortcodes\Shortcodes(($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] ?? ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Date'] = new \MailPoet\Newsletter\Shortcodes\Categories\Date())), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Link'] ?? $this->getLink2Service()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Newsletter'] ?? $this->getNewsletterService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Subscriber'] ?? $this->getSubscriber2Service()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Site'] ?? $this->getSite2Service()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())));
     }
 
     /**
@@ -4470,7 +4573,7 @@ class FreeCachedContainer extends Container
      */
     protected function getViewInBrowserControllerService()
     {
-        return $this->services['MailPoet\\Newsletter\\ViewInBrowser\\ViewInBrowserController'] = new \MailPoet\Newsletter\ViewInBrowser\ViewInBrowserController(($this->services['MailPoet\\Subscribers\\LinkTokens'] ?? $this->getLinkTokensService()), ($this->services['MailPoet\\Newsletter\\Url'] ?? $this->getUrlService()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Newsletter\\ViewInBrowser\\ViewInBrowserRenderer'] ?? $this->getViewInBrowserRendererService()), ($this->services['MailPoet\\Newsletter\\Sending\\SendingQueuesRepository'] ?? $this->getSendingQueuesRepositoryService()), ($this->services['MailPoet\\Subscribers\\SubscribersRepository'] ?? $this->getSubscribersRepositoryService()));
+        return $this->services['MailPoet\\Newsletter\\ViewInBrowser\\ViewInBrowserController'] = new \MailPoet\Newsletter\ViewInBrowser\ViewInBrowserController(($this->services['MailPoet\\Subscribers\\LinkTokens'] ?? $this->getLinkTokensService()), ($this->services['MailPoet\\Newsletter\\Url'] ?? $this->getUrlService()), ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Newsletter\\ViewInBrowser\\ViewInBrowserRenderer'] ?? $this->getViewInBrowserRendererService()), ($this->services['MailPoet\\Newsletter\\Sending\\SendingQueuesRepository'] ?? $this->getSendingQueuesRepositoryService()), ($this->services['MailPoet\\EmailEditor\\Integrations\\MailPoet\\DependencyNotice'] ?? $this->getDependencyNoticeService()), ($this->services['MailPoet\\Subscribers\\SubscribersRepository'] ?? $this->getSubscribersRepositoryService()));
     }
 
     /**
@@ -4547,7 +4650,7 @@ class FreeCachedContainer extends Container
         $a = ($this->services['MailPoet\\Statistics\\Track\\Opens'] ?? $this->getOpensService());
         $b = ($this->services['MailPoet\\Subscribers\\SubscribersRepository'] ?? $this->getSubscribersRepositoryService());
 
-        return $this->services['MailPoet\\Router\\Endpoints\\Track'] = new \MailPoet\Router\Endpoints\Track(new \MailPoet\Statistics\Track\Clicks(($this->services['MailPoet\\Util\\Cookies'] ?? ($this->services['MailPoet\\Util\\Cookies'] = new \MailPoet\Util\Cookies())), ($this->services['MailPoet\\Statistics\\Track\\SubscriberCookie'] ?? $this->getSubscriberCookieService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Shortcodes'] ?? $this->getShortcodes2Service()), $a, ($this->services['MailPoet\\Statistics\\StatisticsClicksRepository'] ?? $this->getStatisticsClicksRepositoryService()), ($this->services['MailPoet\\Statistics\\UserAgentsRepository'] ?? $this->getUserAgentsRepositoryService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Link'] ?? $this->getLinkService()), $b, ($this->services['MailPoet\\Settings\\TrackingConfig'] ?? $this->getTrackingConfigService())), $a, ($this->services['MailPoet\\Newsletter\\Sending\\SendingQueuesRepository'] ?? $this->getSendingQueuesRepositoryService()), $b, ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Cron\\Workers\\StatsNotifications\\NewsletterLinkRepository'] ?? $this->getNewsletterLinkRepositoryService()), ($this->services['MailPoet\\Subscribers\\LinkTokens'] ?? $this->getLinkTokensService()), ($this->services['MailPoet\\Newsletter\\Links\\Links'] ?? $this->getLinks2Service()));
+        return $this->services['MailPoet\\Router\\Endpoints\\Track'] = new \MailPoet\Router\Endpoints\Track(new \MailPoet\Statistics\Track\Clicks(($this->services['MailPoet\\Util\\Cookies'] ?? ($this->services['MailPoet\\Util\\Cookies'] = new \MailPoet\Util\Cookies())), ($this->services['MailPoet\\Statistics\\Track\\SubscriberCookie'] ?? $this->getSubscriberCookieService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Shortcodes'] ?? $this->getShortcodes2Service()), $a, ($this->services['MailPoet\\Statistics\\StatisticsClicksRepository'] ?? $this->getStatisticsClicksRepositoryService()), ($this->services['MailPoet\\Statistics\\UserAgentsRepository'] ?? $this->getUserAgentsRepositoryService()), ($this->services['MailPoet\\Newsletter\\Shortcodes\\Categories\\Link'] ?? $this->getLink2Service()), $b, ($this->services['MailPoet\\Settings\\TrackingConfig'] ?? $this->getTrackingConfigService())), $a, ($this->services['MailPoet\\Newsletter\\Sending\\SendingQueuesRepository'] ?? $this->getSendingQueuesRepositoryService()), $b, ($this->services['MailPoet\\Newsletter\\NewslettersRepository'] ?? $this->getNewslettersRepositoryService()), ($this->services['MailPoet\\Cron\\Workers\\StatsNotifications\\NewsletterLinkRepository'] ?? $this->getNewsletterLinkRepositoryService()), ($this->services['MailPoet\\Subscribers\\LinkTokens'] ?? $this->getLinkTokensService()), ($this->services['MailPoet\\Newsletter\\Links\\Links'] ?? $this->getLinks2Service()));
     }
 
     /**
@@ -5641,7 +5744,7 @@ class FreeCachedContainer extends Container
      */
     protected function getSystemReportCollectorService()
     {
-        return $this->services['MailPoet\\SystemReport\\SystemReportCollector'] = new \MailPoet\SystemReport\SystemReportCollector(($this->services['MailPoet\\Settings\\SettingsController'] ?? $this->getSettingsController2Service()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Util\\License\\Features\\Subscribers'] ?? $this->getSubscribers4Service()), ($this->services['MailPoet\\WooCommerce\\Helper'] ?? $this->getHelperService()));
+        return $this->services['MailPoet\\SystemReport\\SystemReportCollector'] = new \MailPoet\SystemReport\SystemReportCollector(($this->services['MailPoet\\Settings\\SettingsController'] ?? $this->getSettingsController2Service()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Util\\License\\Features\\Subscribers'] ?? $this->getSubscribers4Service()), ($this->services['MailPoet\\WooCommerce\\Helper'] ?? $this->getHelperService()), ($this->services['MailPoet\\Util\\DataInconsistency\\DataInconsistencyController'] ?? $this->getDataInconsistencyControllerService()), ($this->services['MailPoet\\Services\\Bridge'] ?? $this->getBridgeService()), ($this->services['MailPoet\\Cron\\CronHelper'] ?? $this->getCronHelperService()));
     }
 
     /**

@@ -2,32 +2,34 @@
 declare(strict_types = 1);
 namespace MailPoet\EmailEditor\Engine\Renderer;
 if (!defined('ABSPATH')) exit;
+require_once __DIR__ . '/../../../vendor/autoload.php';
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer;
 use MailPoet\EmailEditor\Engine\Templates\Templates;
 use MailPoet\EmailEditor\Engine\Theme_Controller;
-use MailPoetVendor\Html2Text\Html2Text;
-use MailPoetVendor\Pelago\Emogrifier\CssInliner;
+use Soundasleep\Html2Text;
 use WP_Style_Engine;
-use WP_Theme_JSON;
 class Renderer {
  private Theme_Controller $theme_controller;
  private Content_Renderer $content_renderer;
  private Templates $templates;
+ private Css_Inliner $css_inliner;
  const TEMPLATE_FILE = 'template-canvas.php';
  const TEMPLATE_STYLES_FILE = 'template-canvas.css';
  public function __construct(
  Content_Renderer $content_renderer,
  Templates $templates,
+ Css_Inliner $css_inliner,
  Theme_Controller $theme_controller
  ) {
  $this->content_renderer = $content_renderer;
  $this->templates = $templates;
  $this->theme_controller = $theme_controller;
+ $this->css_inliner = $css_inliner;
  }
  public function render( \WP_Post $post, string $subject, string $pre_header, string $language, $meta_robots = '' ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
- $template_id = 'mailpoet/mailpoet//' . ( get_page_template_slug( $post ) ? get_page_template_slug( $post ) : 'email-general' );
+ $template_slug = get_page_template_slug( $post ) ? get_page_template_slug( $post ) : 'email-general';
  // phpcs:ignore Generic.Commenting.DocComment.MissingShort -- used for phpstan
- $template = $this->templates->get_block_template( $template_id );
+ $template = $this->templates->get_block_template( $template_slug );
  $email_styles = $this->theme_controller->get_styles();
  $template_html = $this->content_renderer->render( $post, $template );
  $layout = $this->theme_controller->get_layout_settings();
@@ -64,12 +66,12 @@ class Renderer {
  );
  }
  private function inline_css_styles( $template ) {
- return CssInliner::fromHtml( $template )->inlineCss()->render(); // TODO: Install CssInliner.
+ return $this->css_inliner->from_html( $template )->inline_css()->render();
  }
  private function render_text_version( $template ) {
  $template = ( mb_detect_encoding( $template, 'UTF-8', true ) ) ? $template : mb_convert_encoding( $template, 'UTF-8', mb_list_encodings() );
- $result = Html2Text::convert( $template ); // TODO: Install Html2Text.
- if ( false === $result ) {
+ $result = Html2Text::convert( $template );
+ if ( ! $result ) {
  return '';
  }
  return $result;

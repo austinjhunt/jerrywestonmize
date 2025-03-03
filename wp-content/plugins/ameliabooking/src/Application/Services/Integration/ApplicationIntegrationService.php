@@ -170,6 +170,10 @@ class ApplicationIntegrationService
             if ($appointment->getOutlookCalendarEventId() !== null) {
                 $appointmentArray['outlookCalendarEventId'] = $appointment->getOutlookCalendarEventId()->getValue();
             }
+
+            if ($appointment->getMicrosoftTeamsUrl() !== null) {
+                $appointmentArray['microsoftTeamsUrl'] = $appointment->getMicrosoftTeamsUrl();
+            }
         }
 
         if (empty($skippedIntegrations[self::SKIP_APPLE_CALENDAR])) {
@@ -245,6 +249,10 @@ class ApplicationIntegrationService
 
         if ($appointment->getOutlookCalendarEventId() !== null) {
             $appointmentArray['outlookCalendarEventId'] = $appointment->getOutlookCalendarEventId()->getValue();
+        }
+
+        if ($appointment->getMicrosoftTeamsUrl() !== null) {
+            $appointmentArray['microsoftTeamsUrl'] = $appointment->getMicrosoftTeamsUrl();
         }
 
         if ($appointment->getAppleCalendarEventId() !== null) {

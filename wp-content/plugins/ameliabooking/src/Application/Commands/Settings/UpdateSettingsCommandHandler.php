@@ -441,6 +441,17 @@ class UpdateSettingsCommandHandler extends CommandHandler
             }
         }
 
+        if (!empty($command->getField('customizedData'))) {
+            $passedCustomizedData = $command->getField('customizedData');
+            $customizedData = $settingsService->getCategorySettings('customizedData');
+
+            foreach ($passedCustomizedData as $key => $value) {
+                $customizedData[$key] = $value;
+            }
+
+            $settingsFields['customizedData'] = $customizedData;
+        }
+
         $settingsFields = apply_filters('amelia_before_settings_updated_filter', $settingsFields);
 
         do_action('amelia_before_settings_updated', $settingsFields);

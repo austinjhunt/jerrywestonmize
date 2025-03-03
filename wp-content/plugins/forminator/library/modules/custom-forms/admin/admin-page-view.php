@@ -62,6 +62,13 @@ class Forminator_CForm_Page extends Forminator_Admin_Module_Edit_Page {
 		$meta['fields'] = $fields;
 		update_post_meta( $form_id, Forminator_Base_Form_Model::META_KEY, $meta );
 
+		/**
+		 * Fires after stripe migrated to stripe-ocs
+		 *
+		 * @param int $form_id Form ID.
+		 */
+		do_action( 'forminator_after_stripe_migrated', $form_id );
+
 		return true;
 	}
 

@@ -136,6 +136,7 @@ class Forminator_Textarea extends Forminator_Field {
 		$use_ajax_load       = ! empty( $settings['use_ajax_load'] ) || ! empty( $field['parent_group'] );
 		$this->field         = $field;
 		$this->form_settings = $settings;
+		$descr_position      = self::get_description_position( $field, $settings );
 
 		$html           = '';
 		$name           = self::get_property( 'element_id', $field );
@@ -143,13 +144,14 @@ class Forminator_Textarea extends Forminator_Field {
 		$required       = self::get_property( 'required', $field, false, 'bool' );
 		$default        = esc_html( self::get_property( 'default', $field, false ) );
 		$placeholder    = $this->sanitize_value( self::get_property( 'placeholder', $field ) );
-		$design         = $this->get_form_style( $settings );
 		$label          = esc_html( self::get_property( 'field_label', $field, '' ) );
 		$description    = self::get_property( 'description', $field, '' );
 		$limit          = self::get_property( 'limit', $field, 0, 'num' );
 		$limit_type     = self::get_property( 'limit_type', $field, '', 'str' );
 		$editor_type    = self::get_property( 'editor-type', $field, false, 'bool' );
 		$default_height = self::get_property( 'default-height', $field, 140 );
+		$is_wp_editor   = true === $editor_type && ! $use_ajax_load;
+		$desc_id        = $is_wp_editor ? 'forminator-wp-editor-' . $id . '-description' : $id . '-description';
 
 		$autofill_markup = $this->get_element_autofill_markup_attr( self::get_property( 'element_id', $field ) );
 
@@ -194,13 +196,34 @@ class Forminator_Textarea extends Forminator_Field {
 
 		$textarea = array_merge( $textarea, $autofill_markup );
 
+		$description_block = '';
+		if ( ! empty( $description ) || ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
+			$description_block .= sprintf( '<span id="%s" class="forminator-description">', esc_attr( $desc_id ) );
+
+			if ( ! empty( $description ) ) {
+				$description_block .= self::esc_description( $description, $name );
+			}
+
+			// Counter.
+			if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
+				$description_block .= sprintf( '<span data-limit="%s" data-type="%s" data-editor="%s">0 / %s</span>', $limit, $limit_type, $editor_type, $limit );
+			}
+			$description_block .= '</span>';
+		}
+		$description_block = apply_filters( 'forminator_field_description', $description_block, $description, $id, $descr_position );
+
 		$html .= '<div class="forminator-field">';
-		if ( true === $editor_type && ! $use_ajax_load ) {
-			$html   .= self::create_wp_editor( $textarea, $label, '', $required, $default_height, $limit );
-			$desc_id = 'forminator-wp-editor-' . $id . '-description';
+
+		$html .= self::get_field_label( $label, $id, $required );
+
+		if ( 'above' === $descr_position ) {
+			$html .= $description_block;
+		}
+
+		if ( $is_wp_editor ) {
+			$html .= self::create_wp_editor( $textarea, '', '', $required, $default_height, $limit );
 		} else {
-			$html   .= self::create_textarea( $textarea, $label, '', $required, $design );
-			$desc_id = $id . '-description';
+			$html .= self::create_textarea( $textarea, '', '', $required );
 			if ( true === $editor_type && $use_ajax_load ) {
 				$args   = self::get_tinymce_args( $id );
 				$script = '<script>wp.editor.initialize("' . esc_attr( $id ) . '", ' . $args . ');</script>';
@@ -214,18 +237,9 @@ class Forminator_Textarea extends Forminator_Field {
 				Forminator_CForm_Front::$load_wp_enqueue_editor = true;
 			}
 		}
-		// Counter.
-		if ( ! empty( $description ) || ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
-			$html .= sprintf( '<span id="%s" class="forminator-description">', esc_attr( $desc_id ) );
 
-			if ( ! empty( $description ) ) {
-				$html .= self::esc_description( $description, $name );
-			}
-
-			if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
-				$html .= sprintf( '<span data-limit="%s" data-type="%s" data-editor="%s">0 / %s</span>', $limit, $limit_type, $editor_type, $limit );
-			}
-			$html .= '</span>';
+		if ( 'above' !== $descr_position ) {
+			$html .= $description_block;
 		}
 		$html .= '</div>';
 

@@ -5,8 +5,9 @@ namespace MailPoet\EmailEditor\Integrations\MailPoet\Patterns;
 if (!defined('ABSPATH')) exit;
 
 
-use MailPoet\EmailEditor\Integrations\MailPoet\Patterns\Library\DefaultContent;
-use MailPoet\EmailEditor\Integrations\MailPoet\Patterns\Library\DefaultContentFull;
+use MailPoet\EmailEditor\Integrations\MailPoet\Patterns\Library\OneColumn;
+use MailPoet\EmailEditor\Integrations\MailPoet\Patterns\Library\ThreeColumn;
+use MailPoet\EmailEditor\Integrations\MailPoet\Patterns\Library\TwoColumn;
 use MailPoet\Util\CdnAssetUrl;
 
 class PatternsController {
@@ -20,8 +21,9 @@ class PatternsController {
 
   public function registerPatterns(): void {
     $patterns = [];
-    $patterns[] = new DefaultContentFull($this->cdnAssetUrl);
-    $patterns[] = new DefaultContent($this->cdnAssetUrl);
+    $patterns[] = new OneColumn($this->cdnAssetUrl);
+    $patterns[] = new TwoColumn($this->cdnAssetUrl);
+    $patterns[] = new ThreeColumn($this->cdnAssetUrl);
     foreach ($patterns as $pattern) {
       register_block_pattern($pattern->get_namespace() . '/' . $pattern->get_name(), $pattern->get_properties());
     }

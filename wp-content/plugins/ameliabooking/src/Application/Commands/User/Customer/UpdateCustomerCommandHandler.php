@@ -55,19 +55,32 @@ class UpdateCustomerCommandHandler extends CommandHandler
 
         $userRepository->beginTransaction();
 
+        $customerData = $command->getFields();
+
         if (!$command->getPermissionService()->currentUserCanWrite(Entities::CUSTOMERS)) {
-            $oldUser = $userAS->getAuthenticatedUser($command->getToken(), false, 'customerCabinet');
+            if ($command->getToken()) {
+                /** @var AbstractUser $provider */
+                $provider = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
 
-            if ($oldUser === null || $oldUser->getId()->getValue() !== intval($command->getArg('id'))) {
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setMessage('Could not retrieve user');
-                $result->setData(
-                    [
-                        'reauthorize' => true
-                    ]
-                );
+                $oldUser = $provider === null
+                    ? $userAS->getAuthenticatedUser($command->getToken(), false, 'customerCabinet')
+                    : $userRepository->getById($customerData['id']);
 
-                return $result;
+                if ($provider === null &&
+                    ($oldUser === null || $oldUser->getId()->getValue() !== intval($command->getArg('id')))
+                ) {
+                    $result->setResult(CommandResult::RESULT_ERROR);
+                    $result->setMessage('Could not retrieve user');
+                    $result->setData(
+                        [
+                            'reauthorize' => true
+                        ]
+                    );
+
+                    return $result;
+                }
+            } else {
+                throw new AccessDeniedException('You are not allowed to perform this action!');
             }
         } else {
             $oldUser = $userRepository->getById($command->getArg('id'));
@@ -93,10 +106,9 @@ class UpdateCustomerCommandHandler extends CommandHandler
             return $result;
         }
 
-        $customerData = $command->getFields();
-
         if (!isset($customerData['password'])) {
             $customerData['translations'] = !empty($customerData['translations']) ? $customerData['translations'] : null;
+
             $customerData['birthday'] = !empty($customerData['birthday']) ? $customerData['birthday'] : null;
         }
 

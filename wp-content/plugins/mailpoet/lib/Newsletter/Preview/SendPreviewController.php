@@ -5,6 +5,7 @@ namespace MailPoet\Newsletter\Preview;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\EmailEditor\Engine\Personalizer;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Mailer\MailerFactory;
@@ -33,13 +34,17 @@ class SendPreviewController {
   /** @var SubscribersRepository */
   private $subscribersRepository;
 
+  /** @var Personalizer */
+  private $personalizer;
+
   public function __construct(
     MailerFactory $mailerFactory,
     MetaInfo $mailerMetaInfo,
     Renderer $renderer,
     WPFunctions $wp,
     SubscribersRepository $subscribersRepository,
-    Shortcodes $shortcodes
+    Shortcodes $shortcodes,
+    Personalizer $personalizer
   ) {
     $this->mailerFactory = $mailerFactory;
     $this->mailerMetaInfo = $mailerMetaInfo;
@@ -47,6 +52,7 @@ class SendPreviewController {
     $this->renderer = $renderer;
     $this->shortcodes = $shortcodes;
     $this->subscribersRepository = $subscribersRepository;
+    $this->personalizer = $personalizer;
   }
 
   public function sendPreview(NewsletterEntity $newsletter, string $emailAddress) {
@@ -71,6 +77,18 @@ class SendPreviewController {
       $renderedNewsletter['body']['html'],
       $renderedNewsletter['body']['text'],
     ] = explode($divider, $this->shortcodes->replace($body));
+
+    if ($newsletter->getWpPostId()) {
+      $this->personalizer->set_context([
+        'recipient_email' => $subscriber ? $subscriber->getEmail() : $emailAddress,
+        'newsletter_id' => $newsletter->getId(),
+        'is_preview' => true,
+      ]);
+      $renderedNewsletter['subject'] = $this->personalizer->personalize_content($renderedNewsletter['subject']);
+      $renderedNewsletter['body']['html'] = $this->personalizer->personalize_content($renderedNewsletter['body']['html']);
+      $renderedNewsletter['body']['text'] = $this->personalizer->personalize_content($renderedNewsletter['body']['text']);
+    }
+
     $renderedNewsletter['id'] = $newsletter->getId();
 
     $extraParams = [

@@ -164,10 +164,15 @@ class Forminator_Select extends Forminator_Field {
 
 		$hidden_behavior      = self::get_property( 'hidden_behavior', $field );
 		$checkbox_in_dropdown = self::get_property( 'checkbox_in_dropdown', $field, 'hide' );
+		$descr_position       = self::get_description_position( $field, $settings );
 
 		$html .= '<div class="forminator-field">';
 
 		$html .= self::get_field_label( $label, $id, $required );
+
+		if ( 'above' === $descr_position ) {
+			$html .= self::get_description( $description, $id, $descr_position );
+		}
 
 		if ( $required && empty( $placeholder ) ) {
 			$placeholder = esc_html__( 'Please select an option', 'forminator' );
@@ -221,11 +226,16 @@ class Forminator_Select extends Forminator_Field {
 
 			foreach ( $options as $key => $option ) {
 
-				$value             = $option['value'] ? esc_html( wp_strip_all_tags( $option['value'] ) ) : wp_kses_post( wp_strip_all_tags( $option['label'] ) );
+				$value             = $option['value'] ? esc_html( wp_strip_all_tags( $option['value'] ) ) : '';
 				$input_id          = $id . '-' . $i;
 				$option_default    = isset( $option['default'] ) ? filter_var( $option['default'], FILTER_VALIDATE_BOOLEAN ) : false;
 				$calculation_value = $calc_enabled && isset( $option['calculation'] ) ? $option['calculation'] : 0.0;
 				$selected          = false;
+
+				// Skip options with empty values.
+				if ( '' === $value ) {
+					continue;
+				}
 
 				if ( isset( $is_limit ) && 'enable' === $is_limit
 					&& Forminator_Form_Entry_Model::is_option_limit_reached( $form_id, $field_name, $field_type, $option ) ) {
@@ -360,6 +370,11 @@ class Forminator_Select extends Forminator_Field {
 				$calculation_value = $calc_enabled && isset( $option['calculation'] ) ? esc_html( $option['calculation'] ) : 0.0;
 				$option_selected   = false;
 
+				// Skip options with empty values.
+				if ( '' === $value ) {
+					continue;
+				}
+
 				if ( isset( $is_limit ) && 'enable' === $is_limit
 						&& Forminator_Form_Entry_Model::is_option_limit_reached( $form_id, $name, $field_type, $option ) ) {
 					continue;
@@ -436,7 +451,9 @@ class Forminator_Select extends Forminator_Field {
 			$html .= sprintf( '</select>' );
 		}
 
-		$html .= self::get_description( $description, $id );
+		if ( 'above' !== $descr_position ) {
+			$html .= self::get_description( $description, $id, $descr_position );
+		}
 
 		$html .= '</div>';
 

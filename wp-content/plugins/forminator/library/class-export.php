@@ -91,15 +91,7 @@ class Forminator_Export {
 	 * @since 1.27 Change from WP cron to Action Scheduler
 	 */
 	public function schedule_entries_exporter() {
-		// Clear old cron schedule.
-		if ( wp_next_scheduled( 'forminator_send_export' ) ) {
-			wp_clear_scheduled_hook( 'forminator_send_export' );
-		}
-
-		// Create new schedule using AS.
-		if ( false === as_has_scheduled_action( 'forminator_send_export' ) ) {
-			as_schedule_recurring_action( time() + 10, MINUTE_IN_SECONDS, 'forminator_send_export', array(), 'forminator', true );
-		}
+		forminator_set_recurring_action( 'forminator_send_export', MINUTE_IN_SECONDS );
 	}
 
 	/**
@@ -463,11 +455,11 @@ class Forminator_Export {
 
 				$export_result->model = $model;
 
-				$entries = Forminator_Form_Entry_Model::get_entries( $form_id );
-
 				if ( ! empty( $filter ) ) {
 					$filters = $export_result->request_filters();
-					$entries = Forminator_Form_Entry_Model::get_filter_entries( $form_id, $filters );
+					$entries = Forminator_Form_Entry_Model::get_all_entries( $form_id, $filters );
+				} else {
+					$entries = Forminator_Form_Entry_Model::get_all_entries( $form_id );
 				}
 
 				$headers = array(
@@ -608,7 +600,7 @@ class Forminator_Export {
 
 				$export_result->model = $model;
 
-				$entries = Forminator_Form_Entry_Model::get_entries( $form_id );
+				$entries = Forminator_Form_Entry_Model::get_all_entries( $form_id );
 
 				foreach ( $entries as $entry ) {
 					if ( $entry->entry_id > $latest_exported_entry_id ) {
@@ -659,9 +651,9 @@ class Forminator_Export {
 				}
 				if ( ! empty( $filter ) ) {
 					$filters = $export_result->request_filters();
-					$entries = Forminator_Form_Entry_Model::get_filter_entries( $form_id, $filters );
+					$entries = Forminator_Form_Entry_Model::get_all_entries( $form_id, $filters );
 				} else {
-					$entries = Forminator_Form_Entry_Model::get_entries( $form_id );
+					$entries = Forminator_Form_Entry_Model::get_all_entries( $form_id );
 				}
 				$mappers              = $this->get_custom_form_export_mappers( $model );
 				$addon_mappers        = $this->attach_form_addons_on_export_render_title_row( $form_id, $entries );

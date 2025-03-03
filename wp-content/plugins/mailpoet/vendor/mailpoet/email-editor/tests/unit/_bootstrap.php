@@ -3,6 +3,11 @@ declare(strict_types = 1);
 if (!defined('ABSPATH')) exit;
 require_once __DIR__ . '/../../vendor/autoload.php';
 $console = new \Codeception\Lib\Console\Output( array() );
+if ( ! function_exists( 'register_block_template' ) ) {
+ function register_block_template( $name, $attr ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+ return $name;
+ }
+}
 if ( ! function_exists( 'esc_attr' ) ) {
  function esc_attr( $attr ) {
  return $attr;

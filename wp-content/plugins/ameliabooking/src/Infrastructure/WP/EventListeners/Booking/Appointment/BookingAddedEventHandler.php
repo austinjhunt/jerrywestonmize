@@ -332,6 +332,10 @@ class BookingAddedEventHandler
             }
         }
 
+        if (!empty($commandResult->getData()['packageBookingFromBackend'])) {
+            $booking['packageBookingFromBackend'] = $commandResult->getData()['packageBookingFromBackend'];
+        }
+
         if ($appointmentStatusChanged !== true &&
             !$commandResult->getData()['packageId'] &&
             !$commandResult->getData()['isCart']

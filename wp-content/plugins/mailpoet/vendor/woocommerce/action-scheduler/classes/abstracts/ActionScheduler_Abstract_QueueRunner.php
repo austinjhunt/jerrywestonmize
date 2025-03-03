@@ -5,7 +5,7 @@ abstract class ActionScheduler_Abstract_QueueRunner extends ActionScheduler_Abst
  protected $monitor;
  protected $store;
  private $created_time;
- public function __construct( ActionScheduler_Store $store = null, ActionScheduler_FatalErrorMonitor $monitor = null, ActionScheduler_QueueCleaner $cleaner = null ) {
+ public function __construct( ?ActionScheduler_Store $store = null, ?ActionScheduler_FatalErrorMonitor $monitor = null, ?ActionScheduler_QueueCleaner $cleaner = null ) {
  $this->created_time = microtime( true );
  $this->store = $store ? $store : ActionScheduler_Store::instance();
  $this->monitor = $monitor ? $monitor : new ActionScheduler_FatalErrorMonitor( $this->store );
@@ -13,6 +13,7 @@ abstract class ActionScheduler_Abstract_QueueRunner extends ActionScheduler_Abst
  }
  public function process_action( $action_id, $context = '' ) {
  // Temporarily override the error handler while we process the current action.
+ // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_set_error_handler
  set_error_handler(
  function ( $type, $message ) {
  throw new Exception( $message );
@@ -84,7 +85,7 @@ abstract class ActionScheduler_Abstract_QueueRunner extends ActionScheduler_Abst
  'date' => date_create( 'now', timezone_open( 'UTC' ) )->format( 'Y-m-d H:i:s' ),
  'date_compare' => '<',
  'per_page' => 1,
- 'offset' => $consistent_failure_threshold - 1
+ 'offset' => $consistent_failure_threshold - 1,
  );
  $first_failing_action_id = $this->store->query_actions( $query_args );
  // If we didn't retrieve an action ID, then there haven't been enough failures for us to worry about.
@@ -111,7 +112,7 @@ abstract class ActionScheduler_Abstract_QueueRunner extends ActionScheduler_Abst
  }
  protected function get_time_limit() {
  $time_limit = 30;
- // Apply deprecated filter from deprecated get_maximum_execution_time() method
+ // Apply deprecated filter from deprecated get_maximum_execution_time() method.
  if ( has_filter( 'action_scheduler_maximum_execution_time' ) ) {
  _deprecated_function( 'action_scheduler_maximum_execution_time', '2.1.1', 'action_scheduler_queue_runner_time_limit' );
  $time_limit = apply_filters( 'action_scheduler_maximum_execution_time', $time_limit );
@@ -145,7 +146,7 @@ abstract class ActionScheduler_Abstract_QueueRunner extends ActionScheduler_Abst
  if ( function_exists( 'ini_get' ) ) {
  $memory_limit = ini_get( 'memory_limit' );
  } else {
- $memory_limit = '128M'; // Sensible default, and minimum required by WooCommerce
+ $memory_limit = '128M'; // Sensible default, and minimum required by WooCommerce.
  }
  if ( ! $memory_limit || -1 === $memory_limit || '-1' === $memory_limit ) {
  // Unlimited, set to 32GB.

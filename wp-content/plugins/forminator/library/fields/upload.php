@@ -138,6 +138,8 @@ class Forminator_Upload extends Forminator_Field {
 		$settings    = $views_obj->model->settings;
 		$this->field = $field;
 
+		self::$description_position = self::get_description_position( $field, $settings );
+
 		$html        = '';
 		$id          = self::get_property( 'element_id', $field );
 		$name        = $id;
@@ -391,10 +393,19 @@ class Forminator_Upload extends Forminator_Field {
 
 				$i                  = 1;
 				$original_file_name = $file_base_name;
-				while ( file_exists( forminator_upload_root_temp() . '/' . $file_base_name . '.' . $ext ) ) {
-					$file_base_name = (string) $original_file_name . $i;
-					$file_name      = $file_base_name . '.' . $ext;
-					++$i;
+				$upload_temp_path   = forminator_upload_root_temp();
+				if ( 'upload' === $upload_type && is_wp_error( $upload_temp_path ) ) {
+					return array(
+						'success' => false,
+						'message' => $upload_temp_path->get_error_message(),
+					);
+				}
+				if ( ! is_wp_error( $upload_temp_path ) ) {
+					while ( file_exists( $upload_temp_path . '/' . $file_base_name . '.' . $ext ) ) {
+						$file_base_name = (string) $original_file_name . $i;
+						$file_name      = $file_base_name . '.' . $ext;
+						++$i;
+					}
 				}
 
 				if ( false === $valid['ext'] ) {
@@ -436,7 +447,7 @@ class Forminator_Upload extends Forminator_Field {
 				}
 
 				$upload_dir       = wp_upload_dir(); // Set upload folder.
-				$file_path        = 'upload' === $upload_type ? forminator_upload_root_temp() : forminator_get_upload_path( $form_id, 'uploads' );
+				$file_path        = 'upload' === $upload_type ? $upload_temp_path : forminator_get_upload_path( $form_id, 'uploads' );
 				$file_url         = forminator_get_upload_url( $form_id, 'uploads' );
 				$unique_file_name = wp_unique_filename( $file_path, $file_name );
 				$exploded_name    = explode( '/', $unique_file_name );
@@ -619,9 +630,10 @@ class Forminator_Upload extends Forminator_Field {
 			self::forminator_upload_index_file( $form_id, $upload_path );
 
 			foreach ( $upload_data['file'] as $upload ) {
-				if ( ! empty( $upload ) ) {
+				$upload_temp_path = forminator_upload_root_temp();
+				if ( ! empty( $upload ) && ! is_wp_error( $upload_temp_path ) ) {
 					$file_name = trim( sanitize_file_name( $upload['file_name'] ) );
-					$temp_path = forminator_upload_root_temp() . '/' . $file_name;
+					$temp_path = $upload_temp_path . '/' . $file_name;
 
 					$unique_file_name = wp_unique_filename( $upload_path, $file_name );
 					$exploded_name    = explode( '/', $unique_file_name );
@@ -862,7 +874,6 @@ class Forminator_Upload extends Forminator_Field {
 	 */
 	public function move_upload( $upload, $upload_dir, $upload_path, $upload_url, $use_library, $file_type ) {
 		$file_name        = trim( sanitize_file_name( $upload['file_name'] ) );
-		$temp_path        = forminator_upload_root_temp() . '/' . $file_name;
 		$unique_file_name = wp_unique_filename( $upload_path, $file_name );
 		$exploded_name    = explode( '/', $unique_file_name );
 		$filename         = end( $exploded_name );
@@ -879,7 +890,11 @@ class Forminator_Upload extends Forminator_Field {
 			$file_url  = $upload_dir['baseurl'] . '/' . trim( sanitize_file_name( $filename ) );
 		}
 
-		if ( file_exists( $temp_path ) ) {
+		$temp_path = forminator_upload_root_temp();
+		if ( ! is_wp_error( $temp_path ) ) {
+			$temp_path = $temp_path . '/' . $file_name;
+		}
+		if ( ! is_wp_error( $temp_path ) && file_exists( $temp_path ) ) {
 			if ( $this->move_file( $temp_path, $file_path ) ) {
 				if ( $use_library && 'multiple' === $file_type ) {
 					$upload_id = wp_insert_attachment(

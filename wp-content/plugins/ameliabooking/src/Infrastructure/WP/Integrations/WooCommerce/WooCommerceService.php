@@ -400,7 +400,7 @@ class WooCommerceService
      */
     public static function getIdForExistingOrNewProduct($postId)
     {
-        if (!in_array($postId, array_column(self::getAllProducts([]), 'id'))) {
+        if (!$postId || !in_array($postId, array_column(self::getAllProducts(['include' => [$postId]]), 'id'))) {
             $params = [
                 'post_title'   => FrontendStrings::getCommonStrings()['wc_product_name'],
                 'post_content' => '',
@@ -3329,7 +3329,7 @@ class WooCommerceService
                                 break;
 
                             case (Entities::PACKAGE):
-                                self::bookingPackageUpdated($payment, 'rejected', false);
+                                self::bookingPackageUpdated($payment, 'canceled', false);
                                 break;
                         }
                     } catch (ContainerException $e) {

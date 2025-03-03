@@ -13,6 +13,14 @@
 		<?php } ?>
 	}
 
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input .iti__selected-dial-code {
+		<?php if ( forminator_array_value_exists( $properties, 'input-color' ) && !empty( $properties['input-color'] ) ) { ?>
+			color: <?php echo $properties['input-color'] ?>;
+		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
+			color: #000000;
+		<?php } ?>
+	}
+
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:disabled,
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-calculation:disabled {
 		<?php if ( forminator_array_value_exists( $properties, 'input-color' ) && !empty( $properties['input-color'] ) ) { ?>
@@ -23,7 +31,8 @@
 		opacity: 1;
 	}
 
-	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:hover {
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:hover,
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input:hover .iti__selected-dial-code {
 		<?php if ( forminator_array_value_exists( $properties, 'input-hover-color' ) && !empty( $properties['input-hover-color'] ) ) { ?>
 			color: <?php echo $properties['input-hover-color'] ?>;
 		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
@@ -32,7 +41,9 @@
 	}
 
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:focus,
-	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:active {
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:active,
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input:focus-within .iti__selected-dial-code,
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input:active .iti__selected-dial-code {
 		<?php if ( forminator_array_value_exists( $properties, 'input-active-color' ) && !empty( $properties['input-active-color'] ) ) { ?>
 			color: <?php echo $properties['input-active-color'] ?>;
 		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
@@ -143,6 +154,13 @@
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:focus,
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:active {
 		border-color: #777771;
+		color: #000000;
+	}
+
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input .iti__selected-dial-code,
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input:hover .iti__selected-dial-code,
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input:active .iti__selected-dial-code,
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-iti-input:focus-within .iti__selected-dial-code {
 		color: #000000;
 	}
 

@@ -3,7 +3,7 @@ Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
 Tested up to: 6.7
-Stable tag: 1.37.1
+Stable tag: 1.39.3
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -225,6 +225,94 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 9. Allow simple drag and drop multi-file uploads for users.
 
 == Changelog ==
+
+= 1.40.0 ( 2025-02-24 ) =
+
+- New: Ability to place field description text above or below field inputs
+- Enhancement: Cloud templates feature is now available for WPMU DEV Free Plan members
+- Enhancement: Stop creating the same Stripe payment intents each time when a form loads
+- Enhancement: Improve performance by caching DB query results for getting entries
+- Enhancement: Compatibility with OceanWP Theme
+- Enhancement: Only load Mixpanel classes if Usage Tracking is enabled
+- Fix: Stripe not assigning the customer when new Stripe field is used
+- Fix: Indian clients unable to receive Stripe payments due to missing Customer Name and Address
+- Fix: Avoiding conflicts with intl-tel-input library in 3rd-party plugins
+- Fix: Form disappears after PayPal payment for AJAX Submission Method
+- Fix: Incorrect order of Personalities when there is a tie in Personality Quiz results
+- Fix: Hidden field Values "HTTP Refer URL" and "Embed URL" are working in reverse
+- Fix: Submitted form data shows incomplete information in some cases
+- Fix: Remove .rar files from supported upload file types
+- Fix: Empty form with Post field can be submitted
+- Fix: Hide Select field options without values
+- Fix: Upload fields not working properly
+- Fix: Upload field with conditional visibility remains visible after form submission
+- Fix: Form Submission fails with PHP Fatal Error when Visibility Condition set to Contains for Upload field
+- Fix: Fatal Error when Google Sheet API token is invalid
+- Fix: Fatal Error when publishing or unpublishing a form with Stripe Field and invalid Stripe Key
+- Fix: Empty screen appears after entering name for existing Google sheet file and then clicking on "Enter" button
+
+
+= 1.39.3 ( 2025-02-24 ) =
+
+- Fix: Security improvements
+
+
+= 1.39.2 ( 2025-02-21 ) =
+
+- Fix: Security improvements
+
+
+= 1.39.1 ( 2025-01-28 ) =
+
+- Update readme information
+
+= 1.39.0 ( 2025-01-28 ) =
+
+- Enhancement: Phone field validation
+- Enhancement: Optimize DB queries and their execution frequency
+- Enhancement: Add block previews and update Forminator icon in Gutenberg editor
+- Enhancement: Migrate packages and build to support @wordpress/element and native React from WordPress
+- Enhancement: Remove deprecated classes from integrations
+- Enhancement: Improve method to fetch upload directory
+- New: Add submission date placeholder
+- New: Add filter to disable Cloud Template features
+- New: Add Filter to disable all payment-related features
+- Fix: Stripe Field doesn't load when Visibility Condition is set for Stripe Field with Live Mode
+- Fix: Link to Stripe Payment Methods goes to test dashboard
+- Fix: No error is displayed when Stripe Tax ID is invalid
+- Fix: Stripe field error in Course Enrollment Form
+- Fix: Incorrect country ordering if translation is applied
+- Fix: Certain long numbers are messed up when pushed to Google Sheet integration
+- Fix: When you input the form's name and hit the "Enter" button multiple times, it creates multiple forms
+- Fix: Phone field with international validation appears broken inside Group field
+- Fix: Form redirect behavior is not working properly
+- Fix: Modern multi-select style breaks other field Visibility Conditions
+- Fix: "Is before" and "Is after" conditions are not working as expected
+- Fix: Disable removal of dial code for International Validation
+- Fix: Double country flag when there is an error after form submission
+- Fix: Draft Submitted/Expired warning is not shown if form is loaded via Ajax
+- Fix: Import certain forms fails
+- Fix: iFrame is removed from HTML field
+- Fix: Country names don't appear properly in international phone field when using Colibri WP Theme
+- Fix: Signature field is not shown as full width when it is inserted after page break
+- Fix: Creating new form with Stripe field and without connecting it causes an error
+- Fix: Error Message for Password strength setting contains an HTML entity code
+- Fix: Select field options without value issue
+- Fix: Address label is not translated when {all_fields} is used in Email Notification
+- Fix: PHP notice on Submissions page
+- Fix: Fatal error when ActionScheduler tables are missing
+
+
+= 1.38.3 ( 2025-01-22 ) =
+
+- Fix: Security improvements
+
+
+= 1.38.2 ( 2025-01-13 ) =
+
+- Fix: Stripe field shows subscription terms on One Time plans
+- Fix: Phone field in Material Design has unnecessary space for the country flag
+
 
 = 1.38.1 ( 2024-12-24 ) =
 
