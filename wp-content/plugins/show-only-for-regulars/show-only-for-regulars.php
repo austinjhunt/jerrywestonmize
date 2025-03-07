@@ -70,8 +70,6 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 $atts
             );
 
-            error_log('attributes:');
-            error_log(print_r($attributes));
             $login_url = "https://jerrywestonmize.com/index.php/login/";
             $current_url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             $current_url = urlencode($current_url);
