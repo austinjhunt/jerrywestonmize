@@ -79,7 +79,8 @@ if (!class_exists('ShowOnlyForRegulars')) {
             // redirect unauthenticated users to home page
             if (!is_user_logged_in()) {
                 error_log('user is not logged in');
-                echo "<script>window.location = '" . $login_url . "';</script>";
+                // echo "<script>window.location = '" . $login_url . "';</script>";
+                echo "<script>setTimeout(function(){document.location.href = '" . $login_url . "';},250);</script>";
             }
 
             // split include_user_meta_attrs into array  
@@ -106,7 +107,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
                     error_log('B1');
                     $redirect = $attributes['newcomer_redirect_uri'];
                     $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $user_attr_query_params);
-                    echo "<script>window.location = '" . $redirect . "';</script>";
+                    echo "<script>setTimeout(function(){document.location.href = '" . $redirect . "';},250);</script>";
                 }
             } else if ($customer_status == "") {
                 error_log('C');
@@ -116,7 +117,7 @@ if (!class_exists('ShowOnlyForRegulars')) {
                     error_log('C1');
                     $redirect = $attributes['newcomer_redirect_uri'];
                     $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $user_attr_query_params);
-                    echo "<script>window.location = '" . $redirect . "';</script>";
+                    echo "<script>setTimeout(function(){document.location.href = '" . $redirect . "';},250);</script>";
                 } else {
                     error_log('C2');
                 }
