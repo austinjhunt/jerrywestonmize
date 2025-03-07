@@ -92,7 +92,6 @@ if (!class_exists('ShowOnlyForRegulars')) {
                 error_log('Customer status of user: ' . $customer_status);
                 $customer_status = trim($customer_status);
                 if ($customer_status == "regular") {
-                    error_log('A');
                     if ($attributes['content_is_shortcode'] == true) {
                         error_log('A1');
                         echo do_shortcode($content);
@@ -101,24 +100,18 @@ if (!class_exists('ShowOnlyForRegulars')) {
                         echo $content;
                     }
                 } else if ($customer_status == "newcomer") {
-                    error_log('B');
                     if (!empty($attributes['newcomer_redirect_uri'])) {
-                        error_log('B1');
                         $redirect = $attributes['newcomer_redirect_uri'];
                         $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $user_attr_query_params);
                         echo "<script>setTimeout(function(){document.location.href = '" . $redirect . "';},250);</script>";
                     }
                 } else if ($customer_status == "") {
-                    error_log('C');
                     // set customer status to newcomer
                     update_user_meta(user_id: get_current_user_id(), meta_key: 'customer_status', meta_value: 'newcomer: Newcomer');
                     if (!empty($attributes['newcomer_redirect_uri'])) {
-                        error_log('C1');
                         $redirect = $attributes['newcomer_redirect_uri'];
                         $redirect = $this->get_redirect_uri_with_user_meta_query_params($redirect, $user_attr_query_params);
                         echo "<script>setTimeout(function(){document.location.href = '" . $redirect . "';},250);</script>";
-                    } else {
-                        error_log('C2');
                     }
                 }
             }
