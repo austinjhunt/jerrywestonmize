@@ -104,7 +104,7 @@
 
 			// Listen for fields change to update ZIP mapping
 			this.$el.find(
-				'input.forminator-input, .forminator-field-textarea textarea, .forminator-checkbox input, .forminator-radio input, select.forminator-select2'
+				'input.forminator-input, .forminator-input input, .forminator-field-textarea textarea, .forminator-checkbox input, .forminator-radio input, select.forminator-select2'
 			).each(function () {
 				$( this ).on( 'change', function ( e, param1 ) {
 					if ( param1 !== 'forminator_emulate_trigger' ) {

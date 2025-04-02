@@ -1089,7 +1089,7 @@ class AppointmentPlaceholderService extends PlaceholderService
         $bookable = ServiceFactory::create(
             [
                 'price'           => $bookingArray['price'],
-                'aggregatedPrice' => !!$bookingArray['aggregatedPrice'],
+                'aggregatedPrice' => !empty($bookingArray['aggregatedPrice']),
                 'extras'          => $extras,
             ]
         );
@@ -1098,9 +1098,9 @@ class AppointmentPlaceholderService extends PlaceholderService
         $booking = CustomerBookingFactory::create(
             [
                 'persons' => $bookingArray['persons'],
-                'coupon'  => $bookingArray['coupon'],
+                'coupon'  => !empty($bookingArray['coupon']) ? $bookingArray['coupon'] : null,
                 'extras'  => $bookingArray['extras'],
-                'tax'     => $bookingArray['tax'],
+                'tax'     => !empty($bookingArray['tax']) ? $bookingArray['tax'] : null,
             ]
         );
 

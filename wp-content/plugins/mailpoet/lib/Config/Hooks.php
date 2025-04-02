@@ -402,7 +402,7 @@ class Hooks {
   }
 
   public function setupWooCommerceSettings() {
-    $this->wp->addAction('woocommerce_settings_start', [
+    $this->wp->addAction('woocommerce_settings_email_options_after', [
       $this->hooksWooCommerce,
       'disableWooCommerceSettings',
     ]);

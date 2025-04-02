@@ -22003,6 +22003,19 @@ html.sui-has-overlay {
   }
 }
 
+.sui-2-12-23 .sui-wrap .sui-accordion-block .forminator-notice-yellow {
+  box-shadow: inset 2px 0 0 0 #fecf2f;
+}
+
+.sui-2-12-23 .sui-wrap .sui-accordion-block .forminator-notice-yellow .forminator-accordion-notice-icon {
+  font-size: 15px;
+  width: 28px;
+}
+
+.sui-2-12-23 .sui-wrap .sui-accordion-block .forminator-notice-yellow .forminator-accordion-notice-icon::before {
+  color: #fecf2f;
+}
+
 .sui-2-12-23 .sui-wrap .sui-box-search .sui-search-left .sui-checkbox {
   display: inline-flex;
   margin-bottom: 0;

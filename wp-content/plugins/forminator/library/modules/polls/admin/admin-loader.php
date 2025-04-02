@@ -319,7 +319,7 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 			}
 		}
 
-		$model->name     = $name;
+		$model->name     = sanitize_title( $name );
 		$model->settings = self::validate_settings( $settings );
 		$model->status   = $status;
 

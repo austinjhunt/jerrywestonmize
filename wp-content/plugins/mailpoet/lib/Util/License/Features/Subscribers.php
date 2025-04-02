@@ -88,7 +88,7 @@ class Subscribers {
     return $count;
   }
 
-  public function isSubscribersCountEnoughForCache(int $count = null): bool {
+  public function isSubscribersCountEnoughForCache(?int $count = null): bool {
     if (is_null($count) && func_num_args() === 0) {
       $count = $this->getSubscribersCount();
     }

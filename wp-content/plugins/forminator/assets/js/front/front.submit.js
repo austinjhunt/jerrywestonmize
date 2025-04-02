@@ -792,6 +792,12 @@
 							}
 						}
 
+						// Ignore CAPTCHA validation after a PayPal payment.
+						if( 'forminator:submit:paypal' === submitter ) {
+							window.grecaptcha.reset(captcha_widget);
+							return true;
+						}
+
 						// reset after getResponse
 						if ( self.$el.hasClass( 'forminator_ajax' ) && 'forminator:preSubmit:paypal' !== e.type ) {
 							window.grecaptcha.reset(captcha_widget);
@@ -809,6 +815,12 @@
 							hcaptcha.execute( captcha_widget );
 							return false;
 						}
+					}
+
+					// Ignore CAPTCHA validation after a PayPal payment.
+					if( 'forminator:submit:paypal' === submitter ) {
+						hcaptcha.reset( captcha_widget );
+						return true;
 					}
 
 					// reset after getResponse

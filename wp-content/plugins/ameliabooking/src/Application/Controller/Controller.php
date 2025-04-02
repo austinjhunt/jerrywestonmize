@@ -244,7 +244,7 @@ abstract class Controller
             'dates',
             'types',
             'fields',
-            'status',
+            'statuses',
         ];
 
         foreach ($names as $name) {

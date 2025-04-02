@@ -243,7 +243,7 @@
 					var inputId = $input.attr('id');
 
 					if (cFields.indexOf(inputId) < 0) {
-						$input.on('change.forminatorFrontCalculate, blur', function () {
+						$input.on('change.forminatorFrontCalculate', function () {
 							var calcFields = $(this).data('calcFields');
 
 							if (calcFields !== undefined && calcFields.length > 0) {

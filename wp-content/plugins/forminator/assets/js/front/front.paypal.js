@@ -217,7 +217,7 @@
 						self.focus_to_element($target_message);
 					}
 
-					$form.trigger('submit.frontSubmit');
+					$form.trigger('submit.frontSubmit', 'forminator:submit:paypal' );
 				},
 
 				onCancel: function (data, actions) {

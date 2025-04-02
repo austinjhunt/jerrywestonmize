@@ -1126,10 +1126,6 @@ function forminator_addon_replace_custom_vars( $content, $submitted_data, Formin
  * @return string
  */
 function forminator_addon_integration_section_admin_url( $addon, $section, $with_nonce = true, $identifier = '' ) {
-	if ( ! class_exists( 'Forminator_Integrations_Page' ) ) {
-		return '';
-	}
-
 	$admin_url  = admin_url( 'admin.php' );
 	$query_args = array(
 		'page'    => 'forminator-integrations',
@@ -1145,6 +1141,9 @@ function forminator_addon_integration_section_admin_url( $addon, $section, $with
 	}
 
 	if ( $with_nonce ) {
+		if ( ! class_exists( 'Forminator_Integrations_Page' ) ) {
+			return '';
+		}
 		$nonce               = Forminator_Integrations_Page::get_addon_page_nonce();
 		$query_args['nonce'] = $nonce;
 	}

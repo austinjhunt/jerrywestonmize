@@ -71,7 +71,7 @@ class Renderer {
     $this->capabilitiesManager = $capabilitiesManager;
   }
 
-  public function render(NewsletterEntity $newsletter, SendingQueueEntity $sendingQueue = null, $type = false) {
+  public function render(NewsletterEntity $newsletter, ?SendingQueueEntity $sendingQueue = null, $type = false) {
     return $this->_render($newsletter, $sendingQueue, $type);
   }
 
@@ -79,7 +79,7 @@ class Renderer {
     return $this->_render($newsletter, null, $type, true, $subject);
   }
 
-  private function _render(NewsletterEntity $newsletter, SendingQueueEntity $sendingQueue = null, $type = false, $preview = false, $subject = null) {
+  private function _render(NewsletterEntity $newsletter, ?SendingQueueEntity $sendingQueue = null, $type = false, $preview = false, $subject = null) {
     $language = $this->wp->getBloginfo('language');
     $metaRobots = $preview ? '<meta name="robots" content="noindex, nofollow" />' : '';
     $subject = $subject ?: $newsletter->getSubject();
@@ -127,7 +127,7 @@ class Renderer {
         [
           $language,
           $metaRobots,
-          htmlspecialchars($subject),
+          htmlspecialchars($subject, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401),
           $renderedStyles,
           $customFontsLinks,
           EHelper::escapeHtmlText($newsletter->getPreheader()),

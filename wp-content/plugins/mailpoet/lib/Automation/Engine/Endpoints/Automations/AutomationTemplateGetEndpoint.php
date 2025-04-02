@@ -43,7 +43,7 @@ class AutomationTemplateGetEndpoint extends Endpoint {
       throw Exceptions::automationTemplateNotFound($slug);
     }
 
-    $automation = $template->createAutomation();
+    $automation = $template->createAutomation((bool)$request->getParam('preview'));
     $automation->setId(0);
     $this->automationValidator->validate($automation);
 
@@ -56,6 +56,7 @@ class AutomationTemplateGetEndpoint extends Endpoint {
   public static function getRequestSchema(): array {
     return [
       'slug' => Builder::string()->required(),
+      'preview' => Builder::boolean(),
     ];
   }
 }

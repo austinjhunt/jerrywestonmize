@@ -2,7 +2,7 @@
 /**
  * @license MIT
  *
- * Modified by code-atlantic on 18-August-2024 using {@see https://github.com/BrianHenryIE/strauss}.
+ * Modified by code-atlantic on 15-March-2025 using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 declare(strict_types=1);

@@ -213,7 +213,7 @@ class Forminator_MultiValue extends Forminator_Field {
 		}
 
 		foreach ( $options as $option ) {
-			$value             = $option['value'] ? esc_html( $option['value'] ) : esc_html( $option['label'] );
+			$value             = '' !== $option['value'] ? $option['value'] : $option['label'];
 			$input_id          = $id . '-' . $i . '-' . $uniq_id;
 			$option_default    = isset( $option['default'] ) ? filter_var( $option['default'], FILTER_VALIDATE_BOOLEAN ) : false;
 			$calculation_value = $calc_enabled && isset( $option['calculation'] ) ? $option['calculation'] : 0.0;
@@ -269,7 +269,7 @@ class Forminator_MultiValue extends Forminator_Field {
 				$html .= sprintf(
 					'<input type="checkbox" name="%s" value="%s" id="%s" aria-labelledby="%s" data-calculation="%s" %s %s%s/>',
 					$name,
-					$value,
+					esc_html( $value ),
 					$input_id,
 					$label_id,
 					$calculation_value,

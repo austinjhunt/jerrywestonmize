@@ -728,8 +728,13 @@ abstract class Forminator_Base_Form_Model {
 				foreach ( $maps as $map ) {
 					$attribute = $map['property'];
 					if ( 'post' === $map['type'] ) {
-						$att                  = $map['field'];
-						$object->{$attribute} = $post->{$att};
+						$att = $map['field'];
+						if ( 'pdf_form' === $post->post_status && 'name' === $attribute ) {
+							// To support non-English characters in the file name.
+							$object->{$attribute} = urldecode( $post->{$att} );
+						} else {
+							$object->{$attribute} = $post->{$att};
+						}
 					} elseif ( ! empty( $meta['fields'] ) && 'fields' === $map['field'] ) {
 							$meta['fields'] = forminator_decode_html_entity( $meta['fields'] );
 							$password_count = 0;

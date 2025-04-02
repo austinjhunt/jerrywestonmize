@@ -143,7 +143,7 @@ class Helper {
 
   public function getRawPrice($price, array $args = []) {
     $htmlPrice = $this->wcPrice($price, $args);
-    return html_entity_decode(strip_tags($htmlPrice));
+    return html_entity_decode(strip_tags($htmlPrice), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401);
   }
 
   public function getAllowedCountries(): array {
@@ -342,5 +342,17 @@ class Helper {
       && (strpos($requestUri, 'wc/store/checkout') !== false || strpos($requestUri, 'wc/store/v1/checkout') !== false);
 
     return $isRegularCheckout || $isBlockCheckout;
+  }
+
+  public function isWooCommerceEmailImprovementsEnabled(): bool {
+    if (!class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
+      return false;
+    }
+    // By this point, the feature should be enabled by default for everyone
+    $wcVersion = $this->getWooCommerceVersion();
+    if (version_compare($wcVersion, '10.0.0', '>')) {
+      return true;
+    }
+    return \Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled('email_improvements');
   }
 }

@@ -116,12 +116,20 @@ class Forminator_Slider extends Forminator_Field {
 	 * @return string
 	 */
 	private static function add_slider_value( string $slider, array $field ): string {
-		$name        = self::get_property( 'element_id', $field );
-		$value_block = self::get_value_block( $field );
-		$width       = self::get_property( 'slider_width', $field, 'full' );
-		$limit_block = self::get_limit_block( $field );
+		$name         = self::get_property( 'element_id', $field );
+		$value_block  = self::get_value_block( $field );
+		$width        = self::get_property( 'slider_width', $field, 'full' );
+		$limit_block  = self::get_limit_block( $field );
+		$slider_scale = self::get_property( 'slider_scale', $field, 'small' );
 
-		$html = '<div class="forminator-slider forminator-slider-' . esc_attr( $width ) . '">' .
+		// Build class attribute.
+		$classes = array(
+			'forminator-slider',
+			'forminator-slider-' . esc_attr( $width ),
+			'forminator-slider-size-' . esc_attr( $slider_scale ),
+		);
+
+		$html = '<div class="' . implode( ' ', $classes ) . '">' .
 			'<input type="text" id="' . esc_attr( self::get_field_id( $name ) ) . '" class="forminator-hidden-input" style="display:none;"/>' .
 			$slider . $limit_block . $value_block .
 		'</div>';
@@ -162,22 +170,27 @@ class Forminator_Slider extends Forminator_Field {
 		$name           = self::get_property( 'element_id', $field );
 		$is_range       = self::is_range_slider( $field );
 		$attrs          = ' type="hidden" value=""';
+		$display_value  = self::get_property( 'display_selected_value', $field, null );
 
 		$hidden_behavior = self::get_property( 'hidden_behavior', $field );
 		if ( 'zero' === $hidden_behavior ) {
 			$attrs .= ' data-hidden-behavior="' . esc_attr( $hidden_behavior ) . '"';
 		}
 
-		$html  = '<div class="forminator-slider-amount forminator-slider-amount-' . esc_attr( $position ) . '"'
+		$html = '<div class="forminator-slider-amount forminator-slider-amount-' . esc_attr( $position ) . '"'
 			. ' data-value-template="' . esc_attr( $value_template ) . '">';
-		$html .= '<span class="forminator-slider-value-min"></span>';
+		if ( is_null( $display_value ) || $display_value ) {
+			$html .= '<span class="forminator-slider-value-min"></span>';
+		}
 		$html .= '<input' . $attrs .
 			' id="' . esc_attr( self::get_field_id( $name . '-input' . ( $is_range ? '-min' : '' ) ) ) . '"' .
 			' name="' . esc_attr( $name ) . ( $is_range ? '-min' : '' ) . '"' .
 			' class="forminator-slider-hidden-min" />';
 		if ( $is_range ) {
-			$html .= '<span class="forminator-slider-separator">-</span>';
-			$html .= '<span class="forminator-slider-value-max"></span>';
+			if ( is_null( $display_value ) || $display_value ) {
+				$html .= '<span class="forminator-slider-separator">-</span>';
+				$html .= '<span class="forminator-slider-value-max"></span>';
+			}
 			$html .= '<input' . $attrs .
 				' id="' . esc_attr( self::get_field_id( $name . '-input-max' ) ) . '"' .
 				' name="' . esc_attr( $name ) . '-max"' .
@@ -195,20 +208,22 @@ class Forminator_Slider extends Forminator_Field {
 	 * @return string
 	 */
 	private static function get_limit_block( array $field ): string {
-		$min  = self::get_min_limit( $field );
-		$max  = self::get_max_limit( $field );
-		$show = self::get_property( 'slider_limits', $field );
+		$display_step_value = self::get_property( 'display_step_value', $field, null );
+		$display_step_type  = self::get_property( 'display_step_type', $field );
 
-		if ( 'hide' === $show ) {
+		// If $display_step_value is undefined, fall back to 'slider_limits'.
+		if ( is_null( $display_step_value ) || $display_step_value ) {
+			$display_step_value = 'hide' !== self::get_property( 'slider_limits', $field );
+		}
+
+		if ( ! $display_step_value ) {
 			return '';
 		}
 
-		$html  = '<div class="forminator-slider-limit">';
-		$html .= '<span class="forminator-slider-limit-min">' . esc_html( $min ) . '</span>';
-		$html .= '<span class="forminator-slider-limit-max">' . esc_html( $max ) . '</span>';
-		$html .= '</div>';
+		// Add data-step-type if $display_step_type is not empty.
+		$data_attr = ! empty( $display_step_type ) ? ' data-step-type="' . esc_attr( $display_step_type ) . '"' : '';
 
-		return $html;
+		return '<div class="forminator-slider-limit"' . $data_attr . '></div>';
 	}
 
 	/**
@@ -219,20 +234,29 @@ class Forminator_Slider extends Forminator_Field {
 	 * @return string
 	 */
 	private static function create_slider( array $field, $draft_value ): string {
-		$name     = self::get_property( 'element_id', $field );
-		$required = self::get_property( 'required', $field );
-		$min      = self::get_min_limit( $field );
-		$max      = self::get_max_limit( $field );
-		$step     = self::get_property( 'slider_step', $field, 1 );
-		$value    = self::get_property( 'slider_default', $field, $min );
-		$is_range = self::is_range_slider( $field );
+		$name          = self::get_property( 'element_id', $field );
+		$required      = self::get_property( 'required', $field );
+		$min           = self::get_min_limit( $field );
+		$max           = self::get_max_limit( $field );
+		$step          = self::get_property( 'slider_step', $field, 1 );
+		$value         = self::get_property( 'slider_default', $field, $min );
+		$is_range      = self::is_range_slider( $field );
+		$slider_handle = self::get_property( 'show_slider_handle', $field, true );
 
 		if ( isset( $draft_value['value'] ) && is_numeric( $draft_value['value'] ) ) {
 			$value = $draft_value['value'];
 		}
 
+		// Initialize class array.
+		$classes = array( 'forminator-slide' );
+
+		// Add forminator-slide-handle-icon if $slider_handle is true.
+		if ( 'false' !== $slider_handle ) {
+			$classes[] = 'forminator-slide-handle-icon';
+		}
+
 		$attr = array(
-			'class'         => 'forminator-slide',
+			'class'         => implode( ' ', $classes ),
 			'aria-required' => $required ? 'true' : 'false',
 			'data-is-range' => $is_range,
 			'data-min'      => $min,
@@ -254,11 +278,21 @@ class Forminator_Slider extends Forminator_Field {
 				$value_2 = $draft_value['value']['max'];
 			}
 
-			$attr['data-value-max'] = self::get_post_data( $name . '-max', $value_2 );
+			$value_2 = self::get_post_data( $name . '-max', $value_2 );
+			$value_2 = $value_2 > $max || $value_2 < $min ? $max : $value_2;
+
+			$attr['data-value-max'] = $value_2;
+
 		}
 
 		// Override value by the posted value.
-		$attr['data-value'] = self::get_post_data( $name, $value );
+		$value = self::get_post_data( $name, $value );
+		$value = $value > $max || $value < $min ? $min : $value;
+		if ( $is_range ) {
+			$value = $value > $value_2 ? $value_2 : $value;
+		}
+
+		$attr['data-value'] = $value;
 
 		$markup = self::implode_attr( $attr );
 		$slider = sprintf( '<div %s></div>', $markup );

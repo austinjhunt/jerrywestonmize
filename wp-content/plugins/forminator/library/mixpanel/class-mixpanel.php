@@ -59,7 +59,7 @@ class Forminator_Mixpanel {
 			$extra_options  = array(
 				'consumer' => 'socket',
 			);
-			$this->mixpanel = new WPMUDEV_Analytics( 'forminator', 'Forminator', 55, self::TOKEN, $extra_options );
+			$this->mixpanel = new WPMUDEV_Analytics_V4( 'forminator', 'Forminator', 55, self::TOKEN, $extra_options );
 
 			// Configure mixpanel.
 			$this->mixpanel->identify( $this->identity() );

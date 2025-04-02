@@ -53,11 +53,11 @@ class LogRepository extends Repository {
    * @return LogEntity[]
    */
   public function getLogs(
-    \DateTimeInterface $dateFrom = null,
-    \DateTimeInterface $dateTo = null,
-    string $search = null,
-    string $offset = null,
-    string $limit = null
+    ?\DateTimeInterface $dateFrom = null,
+    ?\DateTimeInterface $dateTo = null,
+    ?string $search = null,
+    ?string $offset = null,
+    ?string $limit = null
   ): array {
     $query = $this->doctrineRepository->createQueryBuilder('l')
       ->select('l');

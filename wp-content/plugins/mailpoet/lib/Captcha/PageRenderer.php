@@ -31,6 +31,7 @@ class PageRenderer {
     $this->wp->removeAction('wp_head', 'noindex', 1);
     $this->wp->addAction('wp_head', [$this, 'setMetaRobots'], 1);
     $this->wp->addFilter('the_title', [$this, 'setPageTitle']);
+    $this->wp->addFilter('single_post_title', [$this, 'setPageTitle']);
     $this->wp->addFilter('the_content', [$this, 'setPageContent']);
   }
 
@@ -42,18 +43,18 @@ class PageRenderer {
 
     if ($separatorLocation === 'right') {
       // first part
-      $titleParts[0] = $this->setPageTitle();
+      $titleParts[0] = $this->getPageTitle();
     } else {
       // last part
       $lastIndex = count($titleParts) - 1;
-      $titleParts[$lastIndex] = $this->setPageTitle();
+      $titleParts[$lastIndex] = $this->getPageTitle();
     }
 
     return implode(" $separator ", $titleParts);
   }
 
   public function setWindowTitleParts($meta = []) {
-    $meta['title'] = $this->setPageTitle();
+    $meta['title'] = $this->getPageTitle();
     return $meta;
   }
 
@@ -61,8 +62,11 @@ class PageRenderer {
     echo '<meta name="robots" content="noindex,nofollow">';
   }
 
-  public function setPageTitle() {
-    return __("Confirm you’re not a robot", 'mailpoet');
+  public function setPageTitle($title = '') {
+    if ($title === __('MailPoet Page', 'mailpoet')) {
+      return $this->getPageTitle();
+    }
+    return $title;
   }
 
   public function setPageContent($pageContent) {
@@ -74,5 +78,9 @@ class PageRenderer {
     }
 
     return str_replace('[mailpoet_page]', trim($content), $pageContent);
+  }
+
+  private function getPageTitle() {
+    return __('Confirm you’re not a robot', 'mailpoet');
   }
 }

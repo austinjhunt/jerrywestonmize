@@ -349,7 +349,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
 
             $invoiceItem['invoice_paid_amount'] = 0;
             $invoiceItem['invoice_method']  = '';
-            foreach ($appointment['bookings'][$bookingKey]['payments'] as $p) {
+            foreach (!empty($appointment['bookings'][$bookingKey]['payments']) ? $appointment['bookings'][$bookingKey]['payments'] : [] as $p) {
                 if ($p['status'] === PaymentStatus::PARTIALLY_PAID || $p['status'] === PaymentStatus::PAID) {
                     $invoiceItem['invoice_paid_amount'] += $p['amount'];
                     $invoiceItem['invoice_method'] = $p['gateway'];

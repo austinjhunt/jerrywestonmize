@@ -58,10 +58,9 @@ abstract class Forminator_GFBlock_Abstract {
 	 * @since 1.0 Gutenberg Integration
 	 */
 	public function register_block() {
-		global $pagenow;
-		if ( is_admin() && 'site-editor.php' === $pagenow ) {
+		if ( is_admin() ) {
 			// Load block scripts.
-			$this->load_assets();
+			add_action( 'enqueue_block_assets', array( $this, 'load_assets' ) );
 
 			register_block_type(
 				'forminator/' . $this->get_slug(),

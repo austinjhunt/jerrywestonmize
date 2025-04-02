@@ -98,7 +98,8 @@ class BookingAddedEventHandler
         $paymentId = $commandResult->getData()['paymentId'];
 
         $invoice = null;
-        if ($paymentId && $settingsService->getSetting('notifications', 'sendInvoice')) {
+        if ($paymentId && $settingsService->getSetting('notifications', 'sendInvoice') &&
+            $booking['status'] !== BookingStatus::WAITING) {
             $invoice = $invoiceService->generateInvoice($paymentId);
         }
 

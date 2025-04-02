@@ -68,8 +68,8 @@ class NewsletterStatisticsRepository extends Repository {
    */
   public function getBatchStatistics(
     array $newsletters,
-    \DateTimeImmutable $from = null,
-    \DateTimeImmutable $to = null,
+    ?\DateTimeImmutable $from = null,
+    ?\DateTimeImmutable $to = null,
     array $include = [
       'totals',
       StatisticsClickEntity::class,
@@ -136,8 +136,8 @@ class NewsletterStatisticsRepository extends Repository {
    */
   public function getAllForSubscriber(
     SubscriberEntity $subscriber,
-    int $limit = null,
-    int $offset = null
+    ?int $limit = null,
+    ?int $offset = null
   ): array {
     return $this->entityManager->createQueryBuilder()
       ->select('IDENTITY(statistics.newsletter) AS newsletter_id')
@@ -195,7 +195,7 @@ class NewsletterStatisticsRepository extends Repository {
     }
   }
 
-  private function getTotalSentCounts(array $newsletters, \DateTimeImmutable $from = null, \DateTimeImmutable $to = null): array {
+  private function getTotalSentCounts(array $newsletters, ?\DateTimeImmutable $from = null, ?\DateTimeImmutable $to = null): array {
     $query = $this->doctrineRepository
       ->createQueryBuilder('n')
       ->select('n.id, SUM(q.countProcessed) AS cnt')
@@ -229,7 +229,7 @@ class NewsletterStatisticsRepository extends Repository {
     return $counts;
   }
 
-  private function getStatisticCounts(string $statisticsEntityName, array $newsletters, \DateTimeImmutable $from = null, \DateTimeImmutable $to = null): array {
+  private function getStatisticCounts(string $statisticsEntityName, array $newsletters, ?\DateTimeImmutable $from = null, ?\DateTimeImmutable $to = null): array {
     $qb = $this->getStatisticsQuery($statisticsEntityName, $newsletters);
     if (
       $statisticsEntityName === StatisticsClickEntity::class
@@ -270,7 +270,7 @@ class NewsletterStatisticsRepository extends Repository {
       ->setParameter('newsletters', $newsletters);
   }
 
-  private function getWooCommerceRevenues(array $newsletters, \DateTimeImmutable $from = null, \DateTimeImmutable $to = null) {
+  private function getWooCommerceRevenues(array $newsletters, ?\DateTimeImmutable $from = null, ?\DateTimeImmutable $to = null) {
     if (!$this->wcHelper->isWooCommerceActive()) {
       return null;
     }

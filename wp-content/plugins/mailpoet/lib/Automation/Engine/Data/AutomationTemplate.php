@@ -22,7 +22,7 @@ class AutomationTemplate {
   /** @var string */
   private $description;
 
-  /** @var callable(): Automation */
+  /** @var callable(bool $preview=): Automation */
   private $automationFactory;
 
   /** @var array<string, int|bool> */
@@ -32,7 +32,7 @@ class AutomationTemplate {
   private $type;
 
   /**
-   * @param callable(): Automation $automationFactory
+   * @param callable(bool $preview=): Automation $automationFactory
    * @param array<string, int|bool> $requiredCapabilities
    */
   public function __construct(
@@ -78,8 +78,8 @@ class AutomationTemplate {
     return $this->requiredCapabilities;
   }
 
-  public function createAutomation(): Automation {
-    return ($this->automationFactory)();
+  public function createAutomation(bool $preview = false): Automation {
+    return ($this->automationFactory)($preview);
   }
 
   public function toArray(): array {

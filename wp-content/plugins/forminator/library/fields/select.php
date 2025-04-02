@@ -593,7 +593,7 @@ class Forminator_Select extends Forminator_Field {
 
 		if ( $this->is_required( $field ) ) {
 			if ( ! isset( $data ) ||
-				( 'single' === $select_type && ! strlen( $data ) ) ||
+				( 'single' === $select_type && $this->is_single_select_empty( $data ) ) ||
 				( 'multiselect' === $select_type && empty( $data ) )
 			) {
 				$required_message                = self::get_property( 'required_message', $field, esc_html__( 'This field is required. Please select a value.', 'forminator' ) );
@@ -605,6 +605,22 @@ class Forminator_Select extends Forminator_Field {
 				);
 			}
 		}
+	}
+
+	/**
+	 * Check is simple select empty.
+	 *
+	 * @param mixed $data Value.
+	 * @return bool
+	 */
+	private function is_single_select_empty( $data ) {
+		if ( is_array( $data ) ) {
+			$data = implode( '', $data );
+		}
+		if ( is_string( $data ) && ! strlen( $data ) ) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

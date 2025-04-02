@@ -40,47 +40,59 @@ class __TwigTemplate_c96deca159bff652d060c28604f142c91e89f1bcbd66cfad37714d1bb44
         // line 1
         yield "<style>
   /* Hide WooCommerce section with template styling */
+  .wc-settings-email-color-palette-header,
+  .wc-settings-email-color-palette-header + .form-table,
+  .wc-settings-email-color-palette-title,
+  .wc-settings-email-color-palette-buttons,
+  .wc-settings-email-color-palette-buttons + .form-table,
+  #email_template_options-description,
   #email_template_options-description + .form-table {
-    opacity: 0.2;
+    opacity: 0.1;
     pointer-events: none;
+  }
+
+  /* Used as an anchor for the overlay */
+  .mailpoet-woocommerce-email-overlay-container {
+    position: relative;
   }
 
   /* Position MailPoet buttons over hidden table */
   .mailpoet-woocommerce-email-overlay {
-    bottom: 320px;
     left: 0;
     max-width: 100%;
     text-align: left;
     position: absolute;
     text-align: center;
+    top: 200px;
     width: 640px;
     z-index: 1;
   }
 </style>
 
-<div class=\"mailpoet-woocommerce-email-overlay\">
-  <a class=\"button button-primary\"
-    href=\"?page=mailpoet-newsletter-editor&id=";
-        // line 23
+<div class=\"mailpoet-woocommerce-email-overlay-container\">
+  <div class=\"mailpoet-woocommerce-email-overlay\">
+    <a class=\"button button-primary\"
+      href=\"?page=mailpoet-newsletter-editor&id=";
+        // line 35
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["woocommerce_template_id"] ?? null), "html", null, true);
         yield "\"
-    data-automation-id=\"mailpoet_woocommerce_customize\"
-  >
-  \t";
-        // line 26
+      data-automation-id=\"mailpoet_woocommerce_customize\"
+    >
+      ";
+        // line 38
         yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Customize with MailPoet", "Button in WooCommerce settings page");
         yield "
-  </a>
-  <br>
-  <br>
-  <a href=\"?page=mailpoet-settings#woocommerce\" data-automation-id=\"mailpoet_woocommerce_disable\">
-    ";
-        // line 31
+    </a>
+    <br>
+    <br>
+    <a href=\"?page=mailpoet-settings#woocommerce\" data-automation-id=\"mailpoet_woocommerce_disable\">
+      ";
+        // line 43
         yield $this->extensions['MailPoet\Twig\I18n']->translateWithContext("Disable MailPoet customizer", "Link from WooCommerce plugin to MailPoet");
         yield "
-  </a>
-</div>
-";
+    </a>
+  </div>
+</div>";
         return; yield '';
     }
 
@@ -105,7 +117,7 @@ class __TwigTemplate_c96deca159bff652d060c28604f142c91e89f1bcbd66cfad37714d1bb44
      */
     public function getDebugInfo()
     {
-        return array (  76 => 31,  68 => 26,  62 => 23,  38 => 1,);
+        return array (  88 => 43,  80 => 38,  74 => 35,  38 => 1,);
     }
 
     public function getSourceContext()

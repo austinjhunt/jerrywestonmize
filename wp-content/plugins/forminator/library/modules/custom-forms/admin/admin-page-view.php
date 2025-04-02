@@ -116,6 +116,7 @@ class Forminator_CForm_Page extends Forminator_Admin_Module_Edit_Page {
 			'views'           => $views,
 			'date'            => $date,
 			'status'          => $status,
+			'model'           => $model,
 		);
 	}
 

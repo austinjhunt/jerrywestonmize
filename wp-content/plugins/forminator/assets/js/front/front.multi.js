@@ -940,7 +940,7 @@
 			var form = $( form_selector ),
 				submit_button = form.find('.forminator-button-submit');
 
-			form.find('.forminator-input, .forminator-textarea').each(function () {
+			form.find('.forminator-input, .forminator-input input, .forminator-textarea').each(function () {
 				var $input   = $(this),
 				    numwords = 0,
 				    count    = 0;
@@ -1061,10 +1061,6 @@
 				});
 			});
 
-			// Fixes the 2nd number input bug: https://incsub.atlassian.net/browse/FOR-3033
-			form.find( 'input[type=number]' ).on( 'mouseout', function() {
-				$( this ).trigger( 'blur' );
-			});
 		},
 
 		field_time: function () {

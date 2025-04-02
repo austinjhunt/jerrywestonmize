@@ -67,12 +67,13 @@ class BookingEditedEventHandler
         $appointment = $commandResult->getData()[$commandResult->getData()['type']];
         $booking     = $commandResult->getData()[Entities::BOOKING];
         $bookingStatusChanged = $commandResult->getData()['bookingStatusChanged'];
+        $sendInvoice = null;
 
         if ($bookingStatusChanged) {
             $reservationObject = $eventRepository->getById($appointment['id']);
+            $paymentId         = $booking['payments'][0]['id'];
 
             if ($commandResult->getData()['createPaymentLinks']) {
-                $paymentId    = $booking['payments'][0]['id'];
                 $paymentData  = [
                     'booking' => $booking,
                     'type' => Entities::EVENT,
@@ -106,7 +107,14 @@ class BookingEditedEventHandler
                 );
             }
 
-            $emailNotificationService->sendCustomerBookingNotification($appointment, $booking);
+            if (!empty($paymentId) && $booking['status'] === BookingStatus::APPROVED
+                && $settingsService->getSetting('notifications', 'sendInvoice')
+            ) {
+                $sendInvoice = true;
+            }
+
+
+            $emailNotificationService->sendCustomerBookingNotification($appointment, $booking, $sendInvoice);
             $emailNotificationService->sendProviderBookingNotification($appointment, $booking);
 
             if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {

@@ -45,7 +45,7 @@ class AutomationRun {
     int $versionId,
     string $triggerKey,
     array $subjects,
-    int $id = null
+    ?int $id = null
   ) {
     $this->automationId = $automationId;
     $this->versionId = $versionId;
@@ -94,7 +94,7 @@ class AutomationRun {
   }
 
   /** @return Subject[] */
-  public function getSubjects(string $key = null): array {
+  public function getSubjects(?string $key = null): array {
     if ($key) {
       return array_values(
         array_filter($this->subjects, function (Subject $subject) use ($key) {

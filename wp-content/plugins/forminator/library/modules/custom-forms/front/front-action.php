@@ -311,11 +311,12 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	 * @throws Exception When there is an error.
 	 */
 	private static function check_captcha() {
-		// Ignore captcha re-check if we have Stripe field.
+		// Ignore captcha re-check if we have Stripe/PayPal field.
 		if (
 			self::$is_draft ||
 			! empty( self::$info['stripe_field'] ) ||
-			self::is_in_hidden_fields( 'stripe-' )
+			self::is_in_hidden_fields( 'stripe-' ) ||
+			! empty( self::$info['paypal_field'] )
 		) {
 			return;
 		}

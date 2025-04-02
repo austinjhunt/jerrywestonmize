@@ -3,7 +3,7 @@ Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
 Tested up to: 6.7
-Stable tag: 1.39.3
+Stable tag: 1.41.1
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -225,6 +225,36 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 9. Allow simple drag and drop multi-file uploads for users.
 
 == Changelog ==
+
+= 1.41.2 ( 2025-03-24 ) =
+
+- Fix: Visual editor scrolling issue
+
+
+= 1.41.1 ( 2025-03-11 ) =
+
+- Fix: Appearance Presets get reset to default values after update
+
+
+= 1.41.0 ( 2025-03-10 ) =
+
+- Enhancement: Slider Field update
+- Enhancement: Caching DB query results to improve efficiency
+- Enhancement: Improve compatibility with PHP 8.4
+- Enhancement: Improve compatibility with WordPress 6.8
+- Enhancement: Remove unused code
+- Enhancement: Highlighting forms with uncompleted configuration
+- Fix: Calculation field with Prefix is not triggered on initial form load
+- Fix: PayPal payment fails due to expired reCAPTCHA
+- Fix: Google Sheets integration works only initially if Page Reload submission is enabled
+- Fix: HubSpot integration issue with their consent field
+- Fix: Submission fails when Checkbox option with value of 0 is selected
+- Fix: Error message is not visible in some cases
+- Fix: PDF filename issues when using Cyrillic characters
+- Fix: Translations don't work on Appearance Presets section under Settings page
+- Fix: Number field gets out of focus when hovering away from the field
+- Fix: Ampersand (&) is not supported in form names
+- Fix: Issue with Select field validation
 
 = 1.40.0 ( 2025-02-24 ) =
 

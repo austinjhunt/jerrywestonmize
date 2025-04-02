@@ -368,7 +368,7 @@
 			if ( ! this.intent ) {
 				$target_message.removeAttr("aria-hidden")
 					.prop("tabindex", "-1")
-					.removeClass('forminator-loading')
+					.removeClass('forminator-loading forminator-accessible')
 					.addClass('forminator-error forminator-show');
 				this.focus_to_element($target_message);
 

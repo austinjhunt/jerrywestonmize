@@ -30,7 +30,7 @@ class DaemonHttpRunner {
   private $wordpressTrigger;
 
   public function __construct(
-    Daemon $daemon = null,
+    ?Daemon $daemon,
     CronHelper $cronHelper,
     SettingsController $settings,
     WordPress $wordpressTrigger
@@ -143,7 +143,7 @@ class DaemonHttpRunner {
    *
    * @return bool
    */
-  private function shouldTerminateExecution(array $settingsDaemonData = null) {
+  private function shouldTerminateExecution(?array $settingsDaemonData = null) {
     return !$settingsDaemonData ||
        $settingsDaemonData['token'] !== $this->token ||
        (isset($settingsDaemonData['status']) && $settingsDaemonData['status'] !== CronHelper::DAEMON_STATUS_ACTIVE);

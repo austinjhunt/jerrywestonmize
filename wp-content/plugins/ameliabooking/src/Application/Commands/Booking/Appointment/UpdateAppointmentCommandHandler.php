@@ -324,9 +324,13 @@ class UpdateAppointmentCommandHandler extends CommandHandler
             $appointment->setRescheduled(new BooleanValueObject(true));
 
             foreach ($appointment->getBookings()->getItems() as $booking) {
+                $bookingStartInUtc = DateTimeService::getCustomDateTimeObjectInUtc(
+                    $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s')
+                )->format('Y-m-d H:i:s');
+
                 $paymentAS->updateBookingPaymentDate(
                     $booking,
-                    $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s')
+                    $bookingStartInUtc
                 );
             }
 

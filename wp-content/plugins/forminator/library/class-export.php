@@ -151,7 +151,7 @@ class Forminator_Export {
 		ob_start();
 		foreach ( $data as $fields ) {
 			$fields = self::get_formatted_csv_fields( $fields );
-			fputcsv( $fp, $fields );
+			fputcsv( $fp, $fields, ',', '"', '\\' );
 		}
 		$filename = sanitize_title( esc_html__( 'forminator', 'forminator' ) ) . '-' . sanitize_title( $model->name ) . '-' . gmdate( 'ymdHis' ) . '.csv';
 
@@ -870,7 +870,7 @@ class Forminator_Export {
 
 			$value = self::get_formatted_csv_fields( $value );
 
-			$put = fputcsv( $f, $value );
+			$put = fputcsv( $f, $value, ',', '"', '\\' );
 
 			if ( false === $put ) {
 				return false;

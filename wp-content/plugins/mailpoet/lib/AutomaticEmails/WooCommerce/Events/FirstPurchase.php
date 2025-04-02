@@ -39,7 +39,7 @@ class FirstPurchase {
   private $subscribersRepository;
 
   public function __construct(
-    WCHelper $helper = null
+    ?WCHelper $helper = null
   ) {
     if ($helper === null) {
       $helper = ContainerWrapper::getInstance()->get(WCHelper::class);

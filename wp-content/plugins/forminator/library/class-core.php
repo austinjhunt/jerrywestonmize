@@ -223,12 +223,16 @@ class Forminator_Core {
 		if ( ( ! self::is_tracking_active() && ! $force ) || ! is_admin() ) {
 			return;
 		}
-		$autoload = plugin_dir_path( __FILE__ ) . 'lib/analytics/autoload.php';
-		if ( ! file_exists( $autoload ) ) {
-			return;
+
+		if ( ! class_exists( 'WPMUDEV_Analytics_V4' ) ) {
+			$autoload = plugin_dir_path( __FILE__ ) . 'lib/analytics/autoload.php';
+			if ( ! file_exists( $autoload ) ) {
+				return;
+			}
+			// Prefixed vendor autoload.
+			include_once $autoload;
 		}
-		// Prefixed vendor autoload.
-		include_once $autoload;
+
 		include_once plugin_dir_path( __FILE__ ) . 'mixpanel/class-mixpanel.php';
 
 		Forminator_Mixpanel::get_instance();

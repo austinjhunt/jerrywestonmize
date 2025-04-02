@@ -299,7 +299,7 @@ class Functions {
     return get_post_type($post);
   }
 
-  public function getPosts(array $args = null) {
+  public function getPosts(?array $args = null) {
     return get_posts($args);
   }
 
@@ -864,7 +864,7 @@ class Functions {
   }
 
   /** @param string[]|null $protocols */
-  public function escUrlRaw(string $url, array $protocols = null): string {
+  public function escUrlRaw(string $url, ?array $protocols = null): string {
     return esc_url_raw($url, $protocols);
   }
 

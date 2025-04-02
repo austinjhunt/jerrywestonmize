@@ -1328,7 +1328,7 @@ class Forminator_Admin {
 	 *
 	 * @param int|null $post_id Post ID.
 	 */
-	public static function clear_pages_cache( int $post_id = null ) {
+	public static function clear_pages_cache( ?int $post_id = null ) {
 		if ( ! is_null( $post_id ) && 'page' === get_post_type( $post_id ) ) {
 			wp_cache_delete( 'forminator_cached_pages', 'forminator-cache' );
 		}

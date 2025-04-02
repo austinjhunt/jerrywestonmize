@@ -429,56 +429,76 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         yield "
   ";
         // line 304
-        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_woocommerce_content_widget", "newsletter/templates/blocks/woocommerceContent/widget.hbs");
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_woocommerce_new_account_content_improved", "newsletter/templates/blocks/woocommerceContentImproved/new_account.hbs");
         // line 307
         yield "
   ";
         // line 308
-        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_woocommerce_heading_block", "newsletter/templates/blocks/woocommerceHeading/block.hbs");
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_woocommerce_processing_order_content_improved", "newsletter/templates/blocks/woocommerceContentImproved/processing_order.hbs");
         // line 311
         yield "
   ";
         // line 312
-        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_woocommerce_heading_widget", "newsletter/templates/blocks/woocommerceHeading/widget.hbs");
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_woocommerce_completed_order_content_improved", "newsletter/templates/blocks/woocommerceContentImproved/completed_order.hbs");
         // line 315
         yield "
   ";
         // line 316
-        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_unknown_block_fallback_block", "newsletter/templates/blocks/unknownBlockFallback/block.hbs");
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_woocommerce_customer_note_content_improved", "newsletter/templates/blocks/woocommerceContentImproved/customer_note.hbs");
         // line 319
         yield "
   ";
         // line 320
-        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_unknown_block_fallback_widget", "newsletter/templates/blocks/unknownBlockFallback/widget.hbs");
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_woocommerce_content_widget", "newsletter/templates/blocks/woocommerceContent/widget.hbs");
         // line 323
         yield "
   ";
         // line 324
-        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_coupon_block", "newsletter/templates/blocks/coupon/block.hbs");
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_woocommerce_heading_block", "newsletter/templates/blocks/woocommerceHeading/block.hbs");
         // line 327
         yield "
   ";
         // line 328
-        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_coupon_widget", "newsletter/templates/blocks/coupon/widget.hbs");
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_woocommerce_heading_widget", "newsletter/templates/blocks/woocommerceHeading/widget.hbs");
         // line 331
         yield "
   ";
         // line 332
-        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_coupon_settings", "newsletter/templates/blocks/coupon/settings.hbs");
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_unknown_block_fallback_block", "newsletter/templates/blocks/unknownBlockFallback/block.hbs");
         // line 335
+        yield "
+  ";
+        // line 336
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_unknown_block_fallback_widget", "newsletter/templates/blocks/unknownBlockFallback/widget.hbs");
+        // line 339
+        yield "
+  ";
+        // line 340
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_coupon_block", "newsletter/templates/blocks/coupon/block.hbs");
+        // line 343
+        yield "
+  ";
+        // line 344
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_coupon_widget", "newsletter/templates/blocks/coupon/widget.hbs");
+        // line 347
+        yield "
+  ";
+        // line 348
+        yield $this->extensions['MailPoet\Twig\Handlebars']->generatePartial($this->env, $context, "newsletter_editor_template_coupon_settings", "newsletter/templates/blocks/coupon/settings.hbs");
+        // line 351
         yield "
 ";
         return; yield '';
     }
 
-    // line 338
+    // line 354
     public function block_content($context, array $blocks = [])
     {
         $macros = $this->macros;
-        // line 339
+        // line 355
         yield "<!-- Hidden heading for notices to appear under -->
 <h1 style=\"display:none\">";
-        // line 340
+        // line 356
         yield $this->extensions['MailPoet\Twig\I18n']->translate("Newsletter Editor");
         yield "</h1>
 <div id=\"mailpoet_editor\">
@@ -508,23 +528,23 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
 
 <script type=\"text/javascript\">
   var mailpoet_email_editor_tutorial_seen  = '";
-        // line 367
+        // line 383
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["editor_tutorial_seen"] ?? null), "html", null, true);
         yield "';
   var mailpoet_email_editor_tutorial_url = '";
-        // line 368
+        // line 384
         yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("newsletter-editor/editor-drag-demo.20190226-1505.mp4");
         yield "';
   var mailpoet_installed_at = '";
-        // line 369
-        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, ($context["settings"] ?? null), "installed_at", [], "any", false, false, false, 369), "html", null, true);
+        // line 385
+        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, ($context["settings"] ?? null), "installed_at", [], "any", false, false, false, 385), "html", null, true);
         yield "';
 </script>
 
 ";
-        // line 372
-        if (CoreExtension::getAttribute($this->env, $this->source, ($context["brand_styles"] ?? null), "available", [], "any", false, false, false, 372)) {
-            // line 373
+        // line 388
+        if (CoreExtension::getAttribute($this->env, $this->source, ($context["brand_styles"] ?? null), "available", [], "any", false, false, false, 388)) {
+            // line 389
             yield "<script type=\"text/javascript\">
   var mailpoet_brand_styles = {
     available: true
@@ -532,20 +552,20 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
 </script>
 ";
         }
-        // line 379
+        // line 395
         yield "
 ";
         return; yield '';
     }
 
-    // line 382
+    // line 398
     public function block_after_javascript($context, array $blocks = [])
     {
         $macros = $this->macros;
-        // line 383
+        // line 399
         yield "
   ";
-        // line 384
+        // line 400
         yield do_action("mailpoet_newsletter_editor_after_javascript");
         yield "
 
@@ -812,6 +832,19 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         jQuery('#newsletter_editor_template_woocommerce_content_widget').html()
       ),
 
+      woocommerceNewAccountImproved: Handlebars.compile(
+        jQuery('#newsletter_editor_template_woocommerce_new_account_content_improved').html()
+      ),
+      woocommerceProcessingOrderImproved: Handlebars.compile(
+        jQuery('#newsletter_editor_template_woocommerce_processing_order_content_improved').html()
+      ),
+      woocommerceCompletedOrderImproved: Handlebars.compile(
+        jQuery('#newsletter_editor_template_woocommerce_completed_order_content_improved').html()
+      ),
+      woocommerceCustomerNoteImproved: Handlebars.compile(
+        jQuery('#newsletter_editor_template_woocommerce_customer_note_content_improved').html()
+      ),
+
       woocommerceHeadingBlock: Handlebars.compile(
         jQuery('#newsletter_editor_template_woocommerce_heading_block').html()
       ),
@@ -837,19 +870,19 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
     };
 
     var currentUserEmail = '";
-        // line 673
-        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, ($context["current_wp_user"] ?? null), "user_email", [], "any", false, false, false, 673), "html", null, true);
+        // line 702
+        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, ($context["current_wp_user"] ?? null), "user_email", [], "any", false, false, false, 702), "html", null, true);
         yield "';
     var mailpoet_product_categories = ";
-        // line 674
+        // line 703
         yield json_encode(($context["product_categories"] ?? null));
         yield ";
     var mailpoet_products = ";
-        // line 675
+        // line 704
         yield json_encode(($context["products"] ?? null));
         yield ";
     var mailpoet_original_template_body = ";
-        // line 676
+        // line 705
         yield json_encode(($context["original_template_body"] ?? null));
         yield ";
 
@@ -883,9 +916,9 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
             'Trebuchet MS',
             'Verdana'
             ";
-        // line 707
+        // line 736
         if (($context["customFontsEnabled"] ?? null)) {
-            // line 708
+            // line 737
             yield "          ],
           custom: [
             'Arvo',
@@ -904,58 +937,11 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
             'Pacifico',
             ";
         }
-        // line 725
+        // line 754
         yield "          ]
         },
         socialIconSets: {
           'default': {
-            'custom': '";
-        // line 729
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/custom.png");
-        // line 731
-        yield "',
-            'facebook': '";
-        // line 732
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Facebook.png");
-        // line 734
-        yield "',
-            'twitter': '";
-        // line 735
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Twitter.png");
-        // line 737
-        yield "',
-            'youtube': '";
-        // line 738
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Youtube.png");
-        // line 740
-        yield "',
-            'website': '";
-        // line 741
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Website.png");
-        // line 743
-        yield "',
-            'email': '";
-        // line 744
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Email.png");
-        // line 746
-        yield "',
-            'instagram': '";
-        // line 747
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Instagram.png");
-        // line 749
-        yield "',
-            'pinterest': '";
-        // line 750
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Pinterest.png");
-        // line 752
-        yield "',
-            'linkedin': '";
-        // line 753
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/LinkedIn.png");
-        // line 755
-        yield "'
-          },
-          'grey': {
             'custom': '";
         // line 758
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/custom.png");
@@ -963,93 +949,93 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         yield "',
             'facebook': '";
         // line 761
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Facebook.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Facebook.png");
         // line 763
         yield "',
             'twitter': '";
         // line 764
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Twitter.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Twitter.png");
         // line 766
         yield "',
             'youtube': '";
         // line 767
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Youtube.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Youtube.png");
         // line 769
         yield "',
             'website': '";
         // line 770
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Website.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Website.png");
         // line 772
         yield "',
             'email': '";
         // line 773
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Email.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Email.png");
         // line 775
         yield "',
             'instagram': '";
         // line 776
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Instagram.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Instagram.png");
         // line 778
         yield "',
             'pinterest': '";
         // line 779
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Pinterest.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Pinterest.png");
         // line 781
         yield "',
             'linkedin': '";
         // line 782
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/LinkedIn.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/LinkedIn.png");
         // line 784
-        yield "',
+        yield "'
           },
-          'white': {
-              'custom': '";
+          'grey': {
+            'custom': '";
         // line 787
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/custom.png");
         // line 789
         yield "',
-              'facebook': '";
+            'facebook': '";
         // line 790
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Facebook.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Facebook.png");
         // line 792
         yield "',
-              'twitter': '";
+            'twitter': '";
         // line 793
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Twitter.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Twitter.png");
         // line 795
         yield "',
-              'youtube': '";
+            'youtube': '";
         // line 796
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Youtube.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Youtube.png");
         // line 798
         yield "',
-              'website': '";
+            'website': '";
         // line 799
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Website.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Website.png");
         // line 801
         yield "',
-              'email': '";
+            'email': '";
         // line 802
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Email.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Email.png");
         // line 804
         yield "',
-              'instagram': '";
+            'instagram': '";
         // line 805
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Instagram.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Instagram.png");
         // line 807
         yield "',
-              'pinterest': '";
+            'pinterest': '";
         // line 808
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Pinterest.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/Pinterest.png");
         // line 810
         yield "',
-              'linkedin': '";
+            'linkedin': '";
         // line 811
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/LinkedIn.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/02-grey/LinkedIn.png");
         // line 813
         yield "',
           },
-          'black': {
+          'white': {
               'custom': '";
         // line 816
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/custom.png");
@@ -1057,93 +1043,93 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         yield "',
               'facebook': '";
         // line 819
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Facebook.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Facebook.png");
         // line 821
         yield "',
               'twitter': '";
         // line 822
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Twitter.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Twitter.png");
         // line 824
         yield "',
               'youtube': '";
         // line 825
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Youtube.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Youtube.png");
         // line 827
         yield "',
               'website': '";
         // line 828
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Website.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Website.png");
         // line 830
         yield "',
               'email': '";
         // line 831
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Email.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Email.png");
         // line 833
         yield "',
               'instagram': '";
         // line 834
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Instagram.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Instagram.png");
         // line 836
         yield "',
               'pinterest': '";
         // line 837
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Pinterest.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/Pinterest.png");
         // line 839
         yield "',
               'linkedin': '";
         // line 840
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/LinkedIn.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/09-white/LinkedIn.png");
         // line 842
         yield "',
           },
-          'circles': {
-            'custom': '";
+          'black': {
+              'custom': '";
         // line 845
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/custom.png");
         // line 847
         yield "',
-            'facebook': '";
+              'facebook': '";
         // line 848
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Facebook.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Facebook.png");
         // line 850
         yield "',
-            'twitter': '";
+              'twitter': '";
         // line 851
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Twitter.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Twitter.png");
         // line 853
         yield "',
-            'youtube': '";
+              'youtube': '";
         // line 854
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Youtube.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Youtube.png");
         // line 856
         yield "',
-            'website': '";
+              'website': '";
         // line 857
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Website.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Website.png");
         // line 859
         yield "',
-            'email': '";
+              'email': '";
         // line 860
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Email.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Email.png");
         // line 862
         yield "',
-            'instagram': '";
+              'instagram': '";
         // line 863
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Instagram.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Instagram.png");
         // line 865
         yield "',
-            'pinterest': '";
+              'pinterest': '";
         // line 866
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Pinterest.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/Pinterest.png");
         // line 868
         yield "',
-            'linkedin': '";
+              'linkedin': '";
         // line 869
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/LinkedIn.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/10-black/LinkedIn.png");
         // line 871
         yield "',
           },
-          'full-flat-roundrect': {
+          'circles': {
             'custom': '";
         // line 874
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/custom.png");
@@ -1151,46 +1137,46 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         yield "',
             'facebook': '";
         // line 877
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Facebook.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Facebook.png");
         // line 879
         yield "',
             'twitter': '";
         // line 880
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Twitter.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Twitter.png");
         // line 882
         yield "',
             'youtube': '";
         // line 883
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Youtube.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Youtube.png");
         // line 885
         yield "',
             'website': '";
         // line 886
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Website.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Website.png");
         // line 888
         yield "',
             'email': '";
         // line 889
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Email.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Email.png");
         // line 891
         yield "',
             'instagram': '";
         // line 892
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Instagram.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Instagram.png");
         // line 894
         yield "',
             'pinterest': '";
         // line 895
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Pinterest.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/Pinterest.png");
         // line 897
         yield "',
             'linkedin': '";
         // line 898
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/LinkedIn.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/03-circles/LinkedIn.png");
         // line 900
         yield "',
           },
-          'full-gradient-square': {
+          'full-flat-roundrect': {
             'custom': '";
         // line 903
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/custom.png");
@@ -1198,46 +1184,46 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         yield "',
             'facebook': '";
         // line 906
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Facebook.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Facebook.png");
         // line 908
         yield "',
             'twitter': '";
         // line 909
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Twitter.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Twitter.png");
         // line 911
         yield "',
             'youtube': '";
         // line 912
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Youtube.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Youtube.png");
         // line 914
         yield "',
             'website': '";
         // line 915
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Website.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Website.png");
         // line 917
         yield "',
             'email': '";
         // line 918
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Email.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Email.png");
         // line 920
         yield "',
             'instagram': '";
         // line 921
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Instagram.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Instagram.png");
         // line 923
         yield "',
             'pinterest': '";
         // line 924
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Pinterest.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/Pinterest.png");
         // line 926
         yield "',
             'linkedin': '";
         // line 927
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/LinkedIn.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/04-full-flat-roundrect/LinkedIn.png");
         // line 929
         yield "',
           },
-          'full-symbol-color': {
+          'full-gradient-square': {
             'custom': '";
         // line 932
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/custom.png");
@@ -1245,46 +1231,46 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         yield "',
             'facebook': '";
         // line 935
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Facebook.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Facebook.png");
         // line 937
         yield "',
             'twitter': '";
         // line 938
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Twitter.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Twitter.png");
         // line 940
         yield "',
             'youtube': '";
         // line 941
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Youtube.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Youtube.png");
         // line 943
         yield "',
             'website': '";
         // line 944
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Website.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Website.png");
         // line 946
         yield "',
             'email': '";
         // line 947
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Email.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Email.png");
         // line 949
         yield "',
             'instagram': '";
         // line 950
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Instagram.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Instagram.png");
         // line 952
         yield "',
             'pinterest': '";
         // line 953
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Pinterest.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/Pinterest.png");
         // line 955
         yield "',
             'linkedin': '";
         // line 956
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/LinkedIn.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/05-full-gradient-square/LinkedIn.png");
         // line 958
         yield "',
           },
-          'full-symbol-black': {
+          'full-symbol-color': {
             'custom': '";
         // line 961
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/custom.png");
@@ -1292,46 +1278,46 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         yield "',
             'facebook': '";
         // line 964
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Facebook.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Facebook.png");
         // line 966
         yield "',
             'twitter': '";
         // line 967
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Twitter.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Twitter.png");
         // line 969
         yield "',
             'youtube': '";
         // line 970
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Youtube.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Youtube.png");
         // line 972
         yield "',
             'website': '";
         // line 973
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Website.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Website.png");
         // line 975
         yield "',
             'email': '";
         // line 976
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Email.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Email.png");
         // line 978
         yield "',
             'instagram': '";
         // line 979
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Instagram.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Instagram.png");
         // line 981
         yield "',
             'pinterest': '";
         // line 982
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Pinterest.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/Pinterest.png");
         // line 984
         yield "',
             'linkedin': '";
         // line 985
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/LinkedIn.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/06-full-symbol-color/LinkedIn.png");
         // line 987
         yield "',
           },
-          'full-symbol-grey': {
+          'full-symbol-black': {
             'custom': '";
         // line 990
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/custom.png");
@@ -1339,43 +1325,90 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         yield "',
             'facebook': '";
         // line 993
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Facebook.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Facebook.png");
         // line 995
         yield "',
             'twitter': '";
         // line 996
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Twitter.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Twitter.png");
         // line 998
         yield "',
             'youtube': '";
         // line 999
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Youtube.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Youtube.png");
         // line 1001
         yield "',
             'website': '";
         // line 1002
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Website.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Website.png");
         // line 1004
         yield "',
             'email': '";
         // line 1005
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Email.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Email.png");
         // line 1007
         yield "',
             'instagram': '";
         // line 1008
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Instagram.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Instagram.png");
         // line 1010
         yield "',
             'pinterest': '";
         // line 1011
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Pinterest.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/Pinterest.png");
         // line 1013
         yield "',
             'linkedin': '";
         // line 1014
-        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/LinkedIn.png");
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/07-full-symbol-black/LinkedIn.png");
         // line 1016
+        yield "',
+          },
+          'full-symbol-grey': {
+            'custom': '";
+        // line 1019
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/custom.png");
+        // line 1021
+        yield "',
+            'facebook': '";
+        // line 1022
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Facebook.png");
+        // line 1024
+        yield "',
+            'twitter': '";
+        // line 1025
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Twitter.png");
+        // line 1027
+        yield "',
+            'youtube': '";
+        // line 1028
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Youtube.png");
+        // line 1030
+        yield "',
+            'website': '";
+        // line 1031
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Website.png");
+        // line 1033
+        yield "',
+            'email': '";
+        // line 1034
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Email.png");
+        // line 1036
+        yield "',
+            'instagram': '";
+        // line 1037
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Instagram.png");
+        // line 1039
+        yield "',
+            'pinterest': '";
+        // line 1040
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/Pinterest.png");
+        // line 1042
+        yield "',
+            'linkedin': '";
+        // line 1043
+        yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/08-full-symbol-grey/LinkedIn.png");
+        // line 1045
         yield "',
           },
         },
@@ -1393,7 +1426,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         'facebook': {
           title: 'Facebook',
           linkFieldName: '";
-        // line 1032
+        // line 1061
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Link"), "js"), "html", null, true);
         yield "',
           defaultLink: 'https://www.facebook.com/',
@@ -1401,7 +1434,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         'twitter': {
           title: 'Twitter / X',
           linkFieldName: '";
-        // line 1037
+        // line 1066
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Link"), "js"), "html", null, true);
         yield "',
           defaultLink: 'https://x.com/',
@@ -1409,29 +1442,29 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         'youtube': {
           title: 'YouTube',
           linkFieldName: '";
-        // line 1042
+        // line 1071
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Link"), "js"), "html", null, true);
         yield "',
           defaultLink: 'https://www.youtube.com/',
         },
         'website': {
           title: '";
-        // line 1046
+        // line 1075
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Website"), "js"), "html", null, true);
         yield "',
           linkFieldName: '";
-        // line 1047
+        // line 1076
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Link"), "js"), "html", null, true);
         yield "',
           defaultLink: '',
         },
         'email': {
           title: '";
-        // line 1051
+        // line 1080
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Email"), "js"), "html", null, true);
         yield "',
           linkFieldName: '";
-        // line 1052
+        // line 1081
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Email"), "js"), "html", null, true);
         yield "',
           defaultLink: '',
@@ -1439,7 +1472,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         'instagram': {
           title: 'Instagram',
           linkFieldName: '";
-        // line 1057
+        // line 1086
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Link"), "js"), "html", null, true);
         yield "',
           defaultLink: 'https://www.instagram.com/',
@@ -1447,7 +1480,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         'pinterest': {
           title: 'Pinterest',
           linkFieldName: '";
-        // line 1062
+        // line 1091
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Link"), "js"), "html", null, true);
         yield "',
           defaultLink: 'https://www.pinterest.com/',
@@ -1455,18 +1488,18 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         'linkedin': {
           title: 'LinkedIn',
           linkFieldName: '";
-        // line 1067
+        // line 1096
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Link"), "js"), "html", null, true);
         yield "',
           defaultLink: 'https://www.linkedin.com/',
         },
         'custom': {
           title: '";
-        // line 1071
+        // line 1100
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Custom"), "js"), "html", null, true);
         yield "',
           linkFieldName: '";
-        // line 1072
+        // line 1101
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Link"), "js"), "html", null, true);
         yield "',
           defaultLink: '',
@@ -1519,22 +1552,22 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
           featuredImagePosition: 'belowTitle', // 'belowTitle'|'aboveTitle'|'none',
           showAuthor: 'no', // 'no'|'aboveText'|'belowText'
           authorPrecededBy: '";
-        // line 1122
+        // line 1151
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Author:"), "js"), "html", null, true);
         yield "',
           showCategories: 'no', // 'no'|'aboveText'|'belowText'
           categoriesPrecededBy: '";
-        // line 1124
+        // line 1153
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Categories:"), "js"), "html", null, true);
         yield "',
           readMoreType: 'button', // 'link'|'button'
           readMoreText: '";
-        // line 1126
+        // line 1155
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Read more"), "js"), "html", null, true);
         yield "',
           readMoreButton: {
             text: '";
-        // line 1128
+        // line 1157
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Read more"), "js"), "html", null, true);
         yield "',
             url: '[postLink]',
@@ -1586,22 +1619,22 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
           featuredImagePosition: 'alternate', // 'centered'|'left'|'right'|'alternate'|'none',
           showAuthor: 'no', // 'no'|'aboveText'|'belowText'
           authorPrecededBy: '";
-        // line 1177
+        // line 1206
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Author:"), "js"), "html", null, true);
         yield "',
           showCategories: 'no', // 'no'|'aboveText'|'belowText'
           categoriesPrecededBy: '";
-        // line 1179
+        // line 1208
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Categories:"), "js"), "html", null, true);
         yield "',
           readMoreType: 'button', // 'link'|'button'
           readMoreText: '";
-        // line 1181
+        // line 1210
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Read more"), "js"), "html", null, true);
         yield "',
           readMoreButton: {
             text: '";
-        // line 1183
+        // line 1212
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Read more"), "js"), "html", null, true);
         yield "',
             url: '[postLink]',
@@ -1642,7 +1675,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         },
         button: {
           text: '";
-        // line 1221
+        // line 1250
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Button"), "js"), "html", null, true);
         yield "',
           url: '',
@@ -1687,7 +1720,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         },
         footer: {
           text: '<p><a href=\"[link:subscription_unsubscribe_url]\">";
-        // line 1263
+        // line 1292
         yield $this->extensions['MailPoet\Twig\I18n']->translate("Unsubscribe");
         yield "</a> | <a href=\"[link:subscription_manage_url]\">";
         yield $this->extensions['MailPoet\Twig\I18n']->translate("Manage subscription");
@@ -1714,7 +1747,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
           link: '',
           src: '',
           alt: '";
-        // line 1283
+        // line 1312
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("An image of..."), "js"), "html", null, true);
         yield "',
           fullWidth: false,
@@ -1740,22 +1773,22 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
           featuredImagePosition: 'alternate', // 'centered'|'left'|'right'|'alternate'|'none',
           showAuthor: 'no', // 'no'|'aboveText'|'belowText'
           authorPrecededBy: '";
-        // line 1306
+        // line 1335
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Author:"), "js"), "html", null, true);
         yield "',
           showCategories: 'no', // 'no'|'aboveText'|'belowText'
           categoriesPrecededBy: '";
-        // line 1308
+        // line 1337
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Categories:"), "js"), "html", null, true);
         yield "',
           readMoreType: 'link', // 'link'|'button'
           readMoreText: '";
-        // line 1310
+        // line 1339
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Read more"), "js"), "html", null, true);
         yield "',
           readMoreButton: {
             text: '";
-        // line 1312
+        // line 1341
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Read more"), "js"), "html", null, true);
         yield "',
             url: '[postLink]',
@@ -1809,12 +1842,12 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
           pricePosition: 'below', // 'hidden'|'above'|'below'
           readMoreType: 'link', // 'link'|'button'
           readMoreText: '";
-        // line 1363
+        // line 1392
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translateWithContext("Buy now", "Text of a button which links to an ecommerce product page"), "js"), "html", null, true);
         yield "',
           readMoreButton: {
             text: '";
-        // line 1365
+        // line 1394
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translateWithContext("Buy now", "Text of a button which links to an ecommerce product page"), "js"), "html", null, true);
         yield "',
             url: '[postLink]',
@@ -1866,14 +1899,14 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
             iconType: 'facebook',
             link: 'http://www.facebook.com',
             image: '";
-        // line 1414
+        // line 1443
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Facebook.png");
-        // line 1416
+        // line 1445
         yield "',
             height: '32px',
             width: '32px',
             text: '";
-        // line 1419
+        // line 1448
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Facebook"), "js"), "html", null, true);
         yield "',
           },
@@ -1882,14 +1915,14 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
             iconType: 'twitter',
             link: 'http://www.twitter.com',
             image: '";
-        // line 1425
+        // line 1454
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/social-icons/01-social/Twitter.png");
-        // line 1427
+        // line 1456
         yield "',
             height: '32px',
             width: '32px',
             text: '";
-        // line 1430
+        // line 1459
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Twitter"), "js"), "html", null, true);
         yield "',
           },
@@ -1905,13 +1938,13 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         },
         text: {
           text: '";
-        // line 1443
+        // line 1472
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Edit this to insert text."), "js"), "html", null, true);
         yield "',
         },
         header: {
           text: '<a href=\"[link:newsletter_view_in_browser_url]\">";
-        // line 1446
+        // line 1475
         yield $this->extensions['MailPoet\Twig\I18n']->translate("View this in your browser.");
         yield "</a>',
           styles: {
@@ -1932,23 +1965,23 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         },
         woocommerceHeading: {
           contents: ";
-        // line 1464
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "email_headings", [], "any", false, false, false, 1464));
+        // line 1493
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "email_headings", [], "any", false, false, false, 1493));
         yield ",
         },
         coupon: {
             type: 'coupon',
             discountType: ";
-        // line 1468
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1468), "defaults", [], "any", false, false, false, 1468), "discountType", [], "any", false, false, false, 1468));
+        // line 1497
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1497), "defaults", [], "any", false, false, false, 1497), "discountType", [], "any", false, false, false, 1497));
         yield ",
             code: ";
-        // line 1469
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1469), "defaults", [], "any", false, false, false, 1469), "code", [], "any", false, false, false, 1469));
+        // line 1498
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1498), "defaults", [], "any", false, false, false, 1498), "code", [], "any", false, false, false, 1498));
         yield ",
             amountMax: ";
-        // line 1470
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1470), "defaults", [], "any", false, false, false, 1470), "amountMax", [], "any", false, false, false, 1470));
+        // line 1499
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1499), "defaults", [], "any", false, false, false, 1499), "amountMax", [], "any", false, false, false, 1499));
         yield ",
             amount: 10,
             expiryDay: 10,
@@ -1971,7 +2004,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         },
       },
       shortcodes: ";
-        // line 1491
+        // line 1520
         yield json_encode(($context["shortcodes"] ?? null));
         yield ",
       sidepanelWidth: '331px',
@@ -1982,100 +2015,100 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
       },
       validation: {
         validateUnsubscribeLinkPresent: ";
-        // line 1499
+        // line 1528
         yield ((((($context["mss_active"] ?? null) && (($context["is_wc_transactional_email"] ?? null) != true)) && (($context["is_confirmation_email_template"] ?? null) != true))) ? ("true") : ("false"));
         yield ",
         validateReEngageLinkPresent: ";
-        // line 1500
+        // line 1529
         yield ((((($context["mss_active"] ?? null) && (($context["is_wc_transactional_email"] ?? null) != true)) && (($context["is_confirmation_email_template"] ?? null) != true))) ? ("true") : ("false"));
         yield ",
         validateActivationLinkIsPresent: ";
-        // line 1501
+        // line 1530
         yield ((($context["is_confirmation_email_template"] ?? null)) ? ("true") : ("false"));
         yield ",
       },
       urls: {
         send: '";
-        // line 1504
+        // line 1533
         yield admin_url(("admin.php?page=mailpoet-newsletters#/send/" . intval($this->extensions['MailPoet\Twig\Functions']->params("id"))));
         yield "',
         imageMissing: '";
-        // line 1505
+        // line 1534
         yield $this->extensions['MailPoet\Twig\Assets']->generateImageUrl("newsletter_editor/image-missing.svg");
-        // line 1507
+        // line 1536
         yield "',
       },
       currentUserId: '";
-        // line 1509
-        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, ($context["current_wp_user"] ?? null), "wp_user_id", [], "any", false, false, false, 1509), "html", null, true);
+        // line 1538
+        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, ($context["current_wp_user"] ?? null), "wp_user_id", [], "any", false, false, false, 1538), "html", null, true);
         yield "',
       mtaMethod: '";
-        // line 1510
+        // line 1539
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape((($__internal_compile_0 = (($__internal_compile_1 = ($context["settings"] ?? null)) && is_array($__internal_compile_1) || $__internal_compile_1 instanceof ArrayAccess ? ($__internal_compile_1["mta"] ?? null) : null)) && is_array($__internal_compile_0) || $__internal_compile_0 instanceof ArrayAccess ? ($__internal_compile_0["method"] ?? null) : null), "html", null, true);
         yield "',
       woocommerceCustomizerEnabled: ";
-        // line 1511
-        yield ((CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "customizer_enabled", [], "any", false, false, false, 1511)) ? ("true") : ("false"));
+        // line 1540
+        yield ((CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "customizer_enabled", [], "any", false, false, false, 1540)) ? ("true") : ("false"));
         yield ",
       confirmationEmailCustomizerEnabled: ";
-        // line 1512
+        // line 1541
         yield ((($context["is_confirmation_email_customizer_enabled"] ?? null)) ? ("true") : ("false"));
         yield ",
       ";
-        // line 1513
+        // line 1542
         if (($context["is_wc_transactional_email"] ?? null)) {
-            // line 1514
+            // line 1543
             yield "      overrideGlobalStyles: {
         text: {
           fontColor: ";
-            // line 1516
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "text_color", [], "any", false, false, false, 1516));
+            // line 1545
+            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "text_color", [], "any", false, false, false, 1545));
             yield ",
         },
         h1: {
           fontColor: ";
-            // line 1519
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1519));
+            // line 1548
+            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1548));
             yield ",
         },
         h2: {
           fontColor: ";
-            // line 1522
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1522));
+            // line 1551
+            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1551));
             yield ",
         },
         h3: {
           fontColor: ";
-            // line 1525
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1525));
+            // line 1554
+            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1554));
             yield ",
         },
         link: {
           fontColor: ";
-            // line 1528
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "link_color", [], "any", false, false, false, 1528));
+            // line 1557
+            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "link_color", [], "any", false, false, false, 1557));
             yield ",
         },
         wrapper: {
           backgroundColor: ";
-            // line 1531
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "body_background_color", [], "any", false, false, false, 1531));
+            // line 1560
+            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "body_background_color", [], "any", false, false, false, 1560));
             yield ",
         },
         body: {
           backgroundColor: ";
-            // line 1534
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "background_color", [], "any", false, false, false, 1534));
+            // line 1563
+            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "background_color", [], "any", false, false, false, 1563));
             yield ",
         },
         woocommerce: {
           brandingColor: ";
-            // line 1537
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1537));
+            // line 1566
+            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1566));
             yield ",
           headingFontColor: ";
-            // line 1538
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_text_color", [], "any", false, false, false, 1538));
+            // line 1567
+            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_text_color", [], "any", false, false, false, 1567));
             yield ",
           isSavedWithUpdatedStyles: true,
         },
@@ -2083,16 +2116,16 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
       hiddenWidgets: ['automatedLatestContentLayout', 'header', 'footer', 'posts', 'products'],
       ";
         }
-        // line 1544
+        // line 1573
         yield "      ";
         if (($context["is_confirmation_email_template"] ?? null)) {
-            // line 1545
+            // line 1574
             yield "      hiddenWidgets: ['automatedLatestContentLayout', 'coupon', 'header', 'footer', 'posts', 'products'],
       ";
         }
-        // line 1547
+        // line 1576
         yield "      coupon: ";
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1547), "config", [], "any", false, false, false, 1547));
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1576), "config", [], "any", false, false, false, 1576));
         yield ",
     };
 
@@ -2124,7 +2157,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
      */
     public function getDebugInfo()
     {
-        return array (  2091 => 1547,  2087 => 1545,  2084 => 1544,  2075 => 1538,  2071 => 1537,  2065 => 1534,  2059 => 1531,  2053 => 1528,  2047 => 1525,  2041 => 1522,  2035 => 1519,  2029 => 1516,  2025 => 1514,  2023 => 1513,  2019 => 1512,  2015 => 1511,  2011 => 1510,  2007 => 1509,  2003 => 1507,  2001 => 1505,  1997 => 1504,  1991 => 1501,  1987 => 1500,  1983 => 1499,  1972 => 1491,  1948 => 1470,  1944 => 1469,  1940 => 1468,  1933 => 1464,  1912 => 1446,  1906 => 1443,  1890 => 1430,  1885 => 1427,  1883 => 1425,  1874 => 1419,  1869 => 1416,  1867 => 1414,  1815 => 1365,  1810 => 1363,  1756 => 1312,  1751 => 1310,  1746 => 1308,  1741 => 1306,  1715 => 1283,  1688 => 1263,  1643 => 1221,  1602 => 1183,  1597 => 1181,  1592 => 1179,  1587 => 1177,  1535 => 1128,  1530 => 1126,  1525 => 1124,  1520 => 1122,  1467 => 1072,  1463 => 1071,  1456 => 1067,  1448 => 1062,  1440 => 1057,  1432 => 1052,  1428 => 1051,  1421 => 1047,  1417 => 1046,  1410 => 1042,  1402 => 1037,  1394 => 1032,  1376 => 1016,  1374 => 1014,  1371 => 1013,  1369 => 1011,  1366 => 1010,  1364 => 1008,  1361 => 1007,  1359 => 1005,  1356 => 1004,  1354 => 1002,  1351 => 1001,  1349 => 999,  1346 => 998,  1344 => 996,  1341 => 995,  1339 => 993,  1336 => 992,  1334 => 990,  1329 => 987,  1327 => 985,  1324 => 984,  1322 => 982,  1319 => 981,  1317 => 979,  1314 => 978,  1312 => 976,  1309 => 975,  1307 => 973,  1304 => 972,  1302 => 970,  1299 => 969,  1297 => 967,  1294 => 966,  1292 => 964,  1289 => 963,  1287 => 961,  1282 => 958,  1280 => 956,  1277 => 955,  1275 => 953,  1272 => 952,  1270 => 950,  1267 => 949,  1265 => 947,  1262 => 946,  1260 => 944,  1257 => 943,  1255 => 941,  1252 => 940,  1250 => 938,  1247 => 937,  1245 => 935,  1242 => 934,  1240 => 932,  1235 => 929,  1233 => 927,  1230 => 926,  1228 => 924,  1225 => 923,  1223 => 921,  1220 => 920,  1218 => 918,  1215 => 917,  1213 => 915,  1210 => 914,  1208 => 912,  1205 => 911,  1203 => 909,  1200 => 908,  1198 => 906,  1195 => 905,  1193 => 903,  1188 => 900,  1186 => 898,  1183 => 897,  1181 => 895,  1178 => 894,  1176 => 892,  1173 => 891,  1171 => 889,  1168 => 888,  1166 => 886,  1163 => 885,  1161 => 883,  1158 => 882,  1156 => 880,  1153 => 879,  1151 => 877,  1148 => 876,  1146 => 874,  1141 => 871,  1139 => 869,  1136 => 868,  1134 => 866,  1131 => 865,  1129 => 863,  1126 => 862,  1124 => 860,  1121 => 859,  1119 => 857,  1116 => 856,  1114 => 854,  1111 => 853,  1109 => 851,  1106 => 850,  1104 => 848,  1101 => 847,  1099 => 845,  1094 => 842,  1092 => 840,  1089 => 839,  1087 => 837,  1084 => 836,  1082 => 834,  1079 => 833,  1077 => 831,  1074 => 830,  1072 => 828,  1069 => 827,  1067 => 825,  1064 => 824,  1062 => 822,  1059 => 821,  1057 => 819,  1054 => 818,  1052 => 816,  1047 => 813,  1045 => 811,  1042 => 810,  1040 => 808,  1037 => 807,  1035 => 805,  1032 => 804,  1030 => 802,  1027 => 801,  1025 => 799,  1022 => 798,  1020 => 796,  1017 => 795,  1015 => 793,  1012 => 792,  1010 => 790,  1007 => 789,  1005 => 787,  1000 => 784,  998 => 782,  995 => 781,  993 => 779,  990 => 778,  988 => 776,  985 => 775,  983 => 773,  980 => 772,  978 => 770,  975 => 769,  973 => 767,  970 => 766,  968 => 764,  965 => 763,  963 => 761,  960 => 760,  958 => 758,  953 => 755,  951 => 753,  948 => 752,  946 => 750,  943 => 749,  941 => 747,  938 => 746,  936 => 744,  933 => 743,  931 => 741,  928 => 740,  926 => 738,  923 => 737,  921 => 735,  918 => 734,  916 => 732,  913 => 731,  911 => 729,  905 => 725,  886 => 708,  884 => 707,  850 => 676,  846 => 675,  842 => 674,  838 => 673,  546 => 384,  543 => 383,  539 => 382,  533 => 379,  525 => 373,  523 => 372,  517 => 369,  513 => 368,  509 => 367,  479 => 340,  476 => 339,  472 => 338,  466 => 335,  464 => 332,  461 => 331,  459 => 328,  456 => 327,  454 => 324,  451 => 323,  449 => 320,  446 => 319,  444 => 316,  441 => 315,  439 => 312,  436 => 311,  434 => 308,  431 => 307,  429 => 304,  426 => 303,  424 => 300,  421 => 299,  419 => 296,  416 => 295,  414 => 292,  411 => 291,  409 => 288,  406 => 287,  404 => 284,  401 => 283,  399 => 280,  396 => 279,  394 => 276,  391 => 275,  389 => 272,  386 => 271,  384 => 268,  381 => 267,  379 => 264,  376 => 263,  374 => 260,  371 => 259,  369 => 256,  366 => 255,  364 => 252,  361 => 251,  359 => 248,  356 => 247,  354 => 244,  351 => 243,  349 => 240,  346 => 239,  344 => 236,  341 => 235,  339 => 232,  336 => 231,  334 => 228,  331 => 227,  329 => 224,  326 => 223,  324 => 220,  321 => 219,  319 => 216,  316 => 215,  314 => 212,  311 => 211,  309 => 208,  306 => 207,  304 => 204,  301 => 203,  299 => 200,  296 => 199,  294 => 196,  291 => 195,  289 => 192,  286 => 191,  284 => 188,  281 => 187,  279 => 184,  276 => 183,  274 => 180,  271 => 179,  269 => 176,  266 => 175,  264 => 172,  261 => 171,  259 => 168,  256 => 167,  254 => 164,  251 => 163,  249 => 160,  246 => 159,  244 => 156,  241 => 155,  239 => 152,  236 => 151,  234 => 148,  231 => 147,  229 => 144,  226 => 143,  224 => 140,  221 => 139,  219 => 136,  216 => 135,  214 => 132,  211 => 131,  209 => 128,  206 => 127,  204 => 124,  201 => 123,  199 => 120,  196 => 119,  194 => 116,  191 => 115,  189 => 112,  186 => 111,  184 => 108,  181 => 107,  179 => 104,  176 => 103,  174 => 100,  171 => 99,  169 => 96,  166 => 95,  164 => 92,  161 => 91,  159 => 88,  156 => 87,  154 => 84,  151 => 83,  149 => 80,  146 => 79,  144 => 76,  141 => 75,  139 => 72,  136 => 71,  134 => 68,  131 => 67,  129 => 64,  126 => 63,  124 => 60,  121 => 59,  119 => 56,  116 => 55,  114 => 52,  111 => 51,  109 => 48,  106 => 47,  104 => 44,  101 => 43,  99 => 40,  96 => 39,  94 => 36,  91 => 35,  89 => 32,  86 => 31,  84 => 28,  81 => 27,  79 => 24,  76 => 23,  74 => 20,  71 => 19,  69 => 16,  66 => 15,  64 => 12,  61 => 11,  59 => 8,  56 => 7,  53 => 4,  49 => 3,  38 => 1,);
+        return array (  2124 => 1576,  2120 => 1574,  2117 => 1573,  2108 => 1567,  2104 => 1566,  2098 => 1563,  2092 => 1560,  2086 => 1557,  2080 => 1554,  2074 => 1551,  2068 => 1548,  2062 => 1545,  2058 => 1543,  2056 => 1542,  2052 => 1541,  2048 => 1540,  2044 => 1539,  2040 => 1538,  2036 => 1536,  2034 => 1534,  2030 => 1533,  2024 => 1530,  2020 => 1529,  2016 => 1528,  2005 => 1520,  1981 => 1499,  1977 => 1498,  1973 => 1497,  1966 => 1493,  1945 => 1475,  1939 => 1472,  1923 => 1459,  1918 => 1456,  1916 => 1454,  1907 => 1448,  1902 => 1445,  1900 => 1443,  1848 => 1394,  1843 => 1392,  1789 => 1341,  1784 => 1339,  1779 => 1337,  1774 => 1335,  1748 => 1312,  1721 => 1292,  1676 => 1250,  1635 => 1212,  1630 => 1210,  1625 => 1208,  1620 => 1206,  1568 => 1157,  1563 => 1155,  1558 => 1153,  1553 => 1151,  1500 => 1101,  1496 => 1100,  1489 => 1096,  1481 => 1091,  1473 => 1086,  1465 => 1081,  1461 => 1080,  1454 => 1076,  1450 => 1075,  1443 => 1071,  1435 => 1066,  1427 => 1061,  1409 => 1045,  1407 => 1043,  1404 => 1042,  1402 => 1040,  1399 => 1039,  1397 => 1037,  1394 => 1036,  1392 => 1034,  1389 => 1033,  1387 => 1031,  1384 => 1030,  1382 => 1028,  1379 => 1027,  1377 => 1025,  1374 => 1024,  1372 => 1022,  1369 => 1021,  1367 => 1019,  1362 => 1016,  1360 => 1014,  1357 => 1013,  1355 => 1011,  1352 => 1010,  1350 => 1008,  1347 => 1007,  1345 => 1005,  1342 => 1004,  1340 => 1002,  1337 => 1001,  1335 => 999,  1332 => 998,  1330 => 996,  1327 => 995,  1325 => 993,  1322 => 992,  1320 => 990,  1315 => 987,  1313 => 985,  1310 => 984,  1308 => 982,  1305 => 981,  1303 => 979,  1300 => 978,  1298 => 976,  1295 => 975,  1293 => 973,  1290 => 972,  1288 => 970,  1285 => 969,  1283 => 967,  1280 => 966,  1278 => 964,  1275 => 963,  1273 => 961,  1268 => 958,  1266 => 956,  1263 => 955,  1261 => 953,  1258 => 952,  1256 => 950,  1253 => 949,  1251 => 947,  1248 => 946,  1246 => 944,  1243 => 943,  1241 => 941,  1238 => 940,  1236 => 938,  1233 => 937,  1231 => 935,  1228 => 934,  1226 => 932,  1221 => 929,  1219 => 927,  1216 => 926,  1214 => 924,  1211 => 923,  1209 => 921,  1206 => 920,  1204 => 918,  1201 => 917,  1199 => 915,  1196 => 914,  1194 => 912,  1191 => 911,  1189 => 909,  1186 => 908,  1184 => 906,  1181 => 905,  1179 => 903,  1174 => 900,  1172 => 898,  1169 => 897,  1167 => 895,  1164 => 894,  1162 => 892,  1159 => 891,  1157 => 889,  1154 => 888,  1152 => 886,  1149 => 885,  1147 => 883,  1144 => 882,  1142 => 880,  1139 => 879,  1137 => 877,  1134 => 876,  1132 => 874,  1127 => 871,  1125 => 869,  1122 => 868,  1120 => 866,  1117 => 865,  1115 => 863,  1112 => 862,  1110 => 860,  1107 => 859,  1105 => 857,  1102 => 856,  1100 => 854,  1097 => 853,  1095 => 851,  1092 => 850,  1090 => 848,  1087 => 847,  1085 => 845,  1080 => 842,  1078 => 840,  1075 => 839,  1073 => 837,  1070 => 836,  1068 => 834,  1065 => 833,  1063 => 831,  1060 => 830,  1058 => 828,  1055 => 827,  1053 => 825,  1050 => 824,  1048 => 822,  1045 => 821,  1043 => 819,  1040 => 818,  1038 => 816,  1033 => 813,  1031 => 811,  1028 => 810,  1026 => 808,  1023 => 807,  1021 => 805,  1018 => 804,  1016 => 802,  1013 => 801,  1011 => 799,  1008 => 798,  1006 => 796,  1003 => 795,  1001 => 793,  998 => 792,  996 => 790,  993 => 789,  991 => 787,  986 => 784,  984 => 782,  981 => 781,  979 => 779,  976 => 778,  974 => 776,  971 => 775,  969 => 773,  966 => 772,  964 => 770,  961 => 769,  959 => 767,  956 => 766,  954 => 764,  951 => 763,  949 => 761,  946 => 760,  944 => 758,  938 => 754,  919 => 737,  917 => 736,  883 => 705,  879 => 704,  875 => 703,  871 => 702,  566 => 400,  563 => 399,  559 => 398,  553 => 395,  545 => 389,  543 => 388,  537 => 385,  533 => 384,  529 => 383,  499 => 356,  496 => 355,  492 => 354,  486 => 351,  484 => 348,  481 => 347,  479 => 344,  476 => 343,  474 => 340,  471 => 339,  469 => 336,  466 => 335,  464 => 332,  461 => 331,  459 => 328,  456 => 327,  454 => 324,  451 => 323,  449 => 320,  446 => 319,  444 => 316,  441 => 315,  439 => 312,  436 => 311,  434 => 308,  431 => 307,  429 => 304,  426 => 303,  424 => 300,  421 => 299,  419 => 296,  416 => 295,  414 => 292,  411 => 291,  409 => 288,  406 => 287,  404 => 284,  401 => 283,  399 => 280,  396 => 279,  394 => 276,  391 => 275,  389 => 272,  386 => 271,  384 => 268,  381 => 267,  379 => 264,  376 => 263,  374 => 260,  371 => 259,  369 => 256,  366 => 255,  364 => 252,  361 => 251,  359 => 248,  356 => 247,  354 => 244,  351 => 243,  349 => 240,  346 => 239,  344 => 236,  341 => 235,  339 => 232,  336 => 231,  334 => 228,  331 => 227,  329 => 224,  326 => 223,  324 => 220,  321 => 219,  319 => 216,  316 => 215,  314 => 212,  311 => 211,  309 => 208,  306 => 207,  304 => 204,  301 => 203,  299 => 200,  296 => 199,  294 => 196,  291 => 195,  289 => 192,  286 => 191,  284 => 188,  281 => 187,  279 => 184,  276 => 183,  274 => 180,  271 => 179,  269 => 176,  266 => 175,  264 => 172,  261 => 171,  259 => 168,  256 => 167,  254 => 164,  251 => 163,  249 => 160,  246 => 159,  244 => 156,  241 => 155,  239 => 152,  236 => 151,  234 => 148,  231 => 147,  229 => 144,  226 => 143,  224 => 140,  221 => 139,  219 => 136,  216 => 135,  214 => 132,  211 => 131,  209 => 128,  206 => 127,  204 => 124,  201 => 123,  199 => 120,  196 => 119,  194 => 116,  191 => 115,  189 => 112,  186 => 111,  184 => 108,  181 => 107,  179 => 104,  176 => 103,  174 => 100,  171 => 99,  169 => 96,  166 => 95,  164 => 92,  161 => 91,  159 => 88,  156 => 87,  154 => 84,  151 => 83,  149 => 80,  146 => 79,  144 => 76,  141 => 75,  139 => 72,  136 => 71,  134 => 68,  131 => 67,  129 => 64,  126 => 63,  124 => 60,  121 => 59,  119 => 56,  116 => 55,  114 => 52,  111 => 51,  109 => 48,  106 => 47,  104 => 44,  101 => 43,  99 => 40,  96 => 39,  94 => 36,  91 => 35,  89 => 32,  86 => 31,  84 => 28,  81 => 27,  79 => 24,  76 => 23,  74 => 20,  71 => 19,  69 => 16,  66 => 15,  64 => 12,  61 => 11,  59 => 8,  56 => 7,  53 => 4,  49 => 3,  38 => 1,);
     }
 
     public function getSourceContext()

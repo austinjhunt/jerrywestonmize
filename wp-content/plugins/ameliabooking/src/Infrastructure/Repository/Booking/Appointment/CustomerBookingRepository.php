@@ -792,10 +792,10 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             $joins .= "LEFT JOIN {$eventProvidersTable} epr ON epr.eventId = e.id";
         }
 
-        if (!empty($criteria['status'])) {
+        if (!empty($criteria['statuses'])) {
             $queryIds = [];
 
-            foreach ($criteria['status'] as $index => $value) {
+            foreach ($criteria['statuses'] as $index => $value) {
                 $param = ':status' . $index;
 
                 $queryIds[] = $param;

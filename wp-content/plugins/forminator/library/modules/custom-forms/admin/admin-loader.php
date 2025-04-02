@@ -575,7 +575,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			$settings = self::get_default_settings( $name, array() );
 		}
 
-		$model->name          = $name;
+		$model->name          = sanitize_title( $name );
 		$model->notifications = $notifications;
 
 		$model->settings = self::validate_settings( $settings );

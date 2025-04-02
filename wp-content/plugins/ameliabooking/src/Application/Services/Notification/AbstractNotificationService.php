@@ -498,7 +498,7 @@ abstract class AbstractNotificationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendCustomerBookingNotification($appointmentArray, $bookingArray)
+    public function sendCustomerBookingNotification($appointmentArray, $bookingArray, $sendInvoice = false)
     {
         // Notify customers
         if ($appointmentArray['notifyParticipants']) {
@@ -517,11 +517,22 @@ abstract class AbstractNotificationService
                         true
                     );
 
+                    $invoice = null;
+
+                    if ($sendInvoice) {
+                        /** @var AbstractInvoiceApplicationService $invoiceService */
+                        $invoiceService = $this->container->get('application.invoice.service');
+
+                        $invoice = $invoiceService->generateInvoice($appointmentArray['bookings'][$bookingKey]['payments'][0]['id']);
+                    }
+
                     $this->sendNotification(
                         $appointmentArray,
                         $customerNotification,
                         true,
-                        $bookingKey
+                        $bookingKey,
+                        null,
+                        $invoice
                     );
                 }
             }
@@ -1107,7 +1118,7 @@ abstract class AbstractNotificationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendCartNotifications($data, $logNotification, $notifyCustomers = true)
+    public function sendCartNotifications($data, $logNotification, $notifyCustomers = true, $invoice = null)
     {
         /** @var Collection $customerNotifications */
         $customerNotifications = $this->getByNameAndType(
@@ -1122,7 +1133,10 @@ abstract class AbstractNotificationService
                 $this->sendNotification(
                     $data,
                     $customerNotification,
-                    $logNotification
+                    $logNotification,
+                    null,
+                    null,
+                    $invoice
                 );
             }
         }

@@ -56,8 +56,8 @@ class Automation {
     string $name,
     array $steps,
     \WP_User $author,
-    int $id = null,
-    int $versionId = null
+    ?int $id = null,
+    ?int $versionId = null
   ) {
     $this->name = $name;
     $this->steps = $steps;

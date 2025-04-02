@@ -51,7 +51,7 @@ class Preprocessor {
    * @param NewsletterEntity $newsletter
    * @return array
    */
-  public function process(NewsletterEntity $newsletter, $content, bool $preview = false, SendingQueueEntity $sendingQueue = null) {
+  public function process(NewsletterEntity $newsletter, $content, bool $preview = false, ?SendingQueueEntity $sendingQueue = null) {
     if (!array_key_exists('blocks', $content)) {
       return $content;
     }
@@ -77,7 +77,7 @@ class Preprocessor {
     return $containerBlocks;
   }
 
-  public function processBlock(NewsletterEntity $newsletter, array $block, bool $preview = false, SendingQueueEntity $sendingQueue = null): array {
+  public function processBlock(NewsletterEntity $newsletter, array $block, bool $preview = false, ?SendingQueueEntity $sendingQueue = null): array {
     switch ($block['type']) {
       case 'abandonedCartContent':
         return $this->abandonedCartContent->render($newsletter, $block, $preview, $sendingQueue);

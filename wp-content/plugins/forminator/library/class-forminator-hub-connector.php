@@ -160,7 +160,7 @@ class Forminator_Hub_Connector {
 			if ( $page && false !== strpos( $page, 'forminator-cform-wizard' ) ) {
 				$utm_campaign = 'forminator_form-builder-wizard_hub-connector_cloud-templates';
 			} elseif ( $page && false !== strpos( $page, 'forminator-templates' ) ) {
-				$utm_campaign = 'forminator_template-page_cloud-templates_connector';
+				$utm_campaign = 'forminator_template-page_cloud-templates_hub-connector';
 			} else {
 				$utm_campaign = 'forminator_form-builder_hub-connector_cloud-templates_connector';
 			}

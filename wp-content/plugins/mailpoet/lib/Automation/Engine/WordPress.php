@@ -71,7 +71,7 @@ class WordPress {
   }
 
   /** @return WP_Post[]|int[] */
-  public function getPosts(array $args = null): array {
+  public function getPosts(?array $args = null): array {
     return get_posts($args);
   }
 
@@ -123,6 +123,15 @@ class WordPress {
    */
   public function getOption(string $optionName, $default = false) {
     return get_option($optionName, $default);
+  }
+
+  /**
+   * @param int|\WP_Post $post
+   * @param bool $leavename
+   * @return string|false
+   */
+  public function getPermalink($post, bool $leavename = false) {
+    return get_permalink($post, $leavename);
   }
 
   /**
@@ -211,5 +220,9 @@ class WordPress {
 
   public function humanTimeDiff(int $from, int $to = 0): string {
     return human_time_diff($from, $to);
+  }
+
+  public function sanitizeFileName(string $filename): string {
+    return sanitize_file_name($filename);
   }
 }

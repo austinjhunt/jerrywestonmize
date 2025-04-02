@@ -82,10 +82,10 @@ class Newsletter {
   private $personalizer;
 
   public function __construct(
-    WPFunctions $wp = null,
-    PostsTask $postsTask = null,
-    GATracking $gaTracking = null,
-    Emoji $emoji = null
+    ?WPFunctions $wp = null,
+    ?PostsTask $postsTask = null,
+    ?GATracking $gaTracking = null,
+    ?Emoji $emoji = null
   ) {
     $trackingConfig = ContainerWrapper::getInstance()->get(TrackingConfig::class);
     $this->trackingEnabled = $trackingConfig->isEmailTrackingEnabled();

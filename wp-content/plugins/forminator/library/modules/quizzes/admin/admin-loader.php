@@ -796,7 +796,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 			? $template->results : array();
 		$model->questions = ! empty( $template->questions )
 			? $template->questions : array();
-		$model->name      = $name;
+		$model->name      = sanitize_title( $name );
 		$model->status    = $status;
 
 		if ( ! empty( $template->settings ) ) {

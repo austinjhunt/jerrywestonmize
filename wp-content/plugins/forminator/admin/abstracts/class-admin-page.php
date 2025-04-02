@@ -463,14 +463,12 @@ abstract class Forminator_Admin_Page {
 
 		$screen = get_current_screen();
 
-		$classes = '';
-
 		// Do nothing if not a forminator page.
 		if ( strpos( $screen->base, '_page_forminator' ) === false ) {
 			return $classes;
 		}
 
-		$classes .= $this->get_sui_body_class();
+		$classes = $this->get_sui_body_class();
 
 		// if accessibility enabled add sui select accessible class.
 		if ( get_option( 'forminator_enable_accessibility', false ) ) {

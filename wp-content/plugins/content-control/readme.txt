@@ -5,8 +5,8 @@ Author URI: https://contentcontrolplugin.com/?utm_campaign=plugin-info&utm_sourc
 Donate link: https://code-atlantic.com/donate/?utm_campaign=donations&utm_source=readme-header&utm_medium=plugin-ui&utm_content=donate-link
 Tags: membership, access control, members only, content restriction, maintenance mode
 Requires at least: 6.2
-Tested up to: 6.6.1
-Stable tag: 2.5.0
+Tested up to: 6.7.2
+Stable tag: 2.6.1
 Requires PHP: 7.4
 License: GPLv3 (or later)
 
@@ -23,6 +23,7 @@ Content Control is intuitive and powerful, designed for all users—whether logg
 Discover what Content Control brings to your table:
 
 - Full control over your site's content, restrict user access with ease!.
+- Create a **Paid Membership** sites using your favorite or existing ecommerce plugins.
 - Set up a seamless paywall for your content, providing teasers for users and prompting them to purchase access.
 - Per block controls for Gutenberg and Full Site Editor, including user roles, device type, and more.
   - Responsive block controls with customizable breakpoints.
@@ -46,12 +47,12 @@ Discover what Content Control brings to your table:
 
 [Content Control Documentation](https://contentcontrolplugin.com/docs/?utm_campaign=plugin-info&utm_source=readme-description&utm_medium=wordpress&utm_content=documentation-link)
 
-= Pro Features = 
+= Pro Features =
 
 Content Control Pro, with advanced features like:
 
 - Content Teasers for Paywalls, giving your users a sneak peek, leaving them wanting more.
-- Optimize your WooCommerce & Easy Digital Downloads (EDD) experiences with advanced rules.
+- Optimize your WooCommerce & Easy Digital Downloads (EDD) & Paid Memberships Pro experiences with advanced rules.
 - Schedule blocks, controlling content visibility timings using customizable scheduling rules.
 - Dive deeper with advanced block rules and a boolean editor.
 - Customize login, registration & recovery page urls. Custom login urls give a more personalized user experience.
@@ -84,6 +85,10 @@ If you need help getting started with Content Control please see [FAQs][faq page
 
 == Frequently Asked Questions ==
 
+= Can I offer paid memberships with Content Control? =
+
+Currently this is available in our Pro version when coupled with your favorite ecommerce plugins such as WooCommerce, Easy Digital Downloads & Paid Memberships Pro.
+
 = Where can I get support? =
 
 If you get stuck, you can ask for help in the [Content Control Plugin Forum](http://wordpress.org/support/plugin/content-control).
@@ -104,6 +109,24 @@ Bugs can be reported either in our support forum or we are happy to accept PRs o
 8. Restrict widgets as well.
 
 == Changelog ==
+
+= v2.6.1 - 03/15/2025 =
+
+* Improvement: Only fetch titles & ids when loading posts/taxonomy for the Restriction Editor. Reducing request overhead.
+* Improvement: Ensure taxonomies are also removed from search appropriately.
+* Improvement: Reduce memory footprint of overloaded object handling.
+* Tweak: Adjust rest intent when using search endpoint or arg for better detection.
+* Fix: Prevent undefined post type or taxonomy `public` arg from generating warning notices.
+* Fix: Prvent warnings due to translations being loaded too early.
+
+= v2.6.0 - 03/11/2025 =
+
+* Feature: Added new setting to control restricted content visibility in search results
+  * Site owners can now choose to completely hide restricted content from search results
+  * Includes detailed security guidance when enabling search visibility
+  * Helps prevent unintended exposure of sensitive information through search
+  * Resolves concerns addressed in CVE-2024-11153 by default, now requiring explicit admin consent to show items in search results.
+* Performance: Improved asset minification.
 
 = v2.5.0 - Restriction Check Improvements - 08/18/2024 =
 

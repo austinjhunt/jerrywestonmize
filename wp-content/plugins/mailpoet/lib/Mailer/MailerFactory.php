@@ -48,7 +48,7 @@ class MailerFactory {
     return $this->defaultMailer;
   }
 
-  public function buildMailer(array $mailerConfig = null, array $sender = null, array $replyTo = null, string $returnPath = null): Mailer {
+  public function buildMailer(?array $mailerConfig = null, ?array $sender = null, ?array $replyTo = null, ?string $returnPath = null): Mailer {
     $sender = $this->getSenderNameAndAddress($sender);
     $replyTo = $this->getReplyToNameAndAddress($sender, $replyTo);
     $mailerConfig = $mailerConfig ?? $this->getMailerConfig();
@@ -123,7 +123,7 @@ class MailerFactory {
     return $config;
   }
 
-  private function getSenderNameAndAddress(array $sender = null): array {
+  private function getSenderNameAndAddress(?array $sender = null): array {
     if (empty($sender)) {
       $sender = $this->settings->get('sender', []);
       if (empty($sender['address'])) throw new InvalidStateException(__('Sender name and email are not configured.', 'mailpoet'));
@@ -136,7 +136,7 @@ class MailerFactory {
     ];
   }
 
-  private function getReplyToNameAndAddress(array $sender, array $replyTo = null): array {
+  private function getReplyToNameAndAddress(array $sender, ?array $replyTo = null): array {
     if (!$replyTo) {
       $replyTo = $this->settings->get('reply_to');
       $replyTo['name'] = (!empty($replyTo['name'])) ?

@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Forminator
- * Version: 1.40.0
+ * Version: 1.41.2
  * Plugin URI:  https://wpmudev.com/project/forminator/
  * Description: Capture user information (as detailed as you like), engage users with interactive polls that show real-time results and graphs, “no wrong answer” Facebook-style quizzes and knowledge tests.
  * Author: WPMU DEV
@@ -511,11 +511,11 @@ if ( ! class_exists( 'Forminator' ) ) {
 // Functions.
 require_once plugin_dir_path( __FILE__ ) . 'functions.php';
 
-if ( file_exists( forminator_plugin_dir() . 'library/external/src/Forminator/woocommerce/action-scheduler/action-scheduler.php' ) ) {
+if ( file_exists( forminator_plugin_dir() . 'library/lib/action-scheduler/action-scheduler.php' ) ) {
 	add_action(
 		'plugins_loaded',
 		function () {
-			require_once forminator_plugin_dir() . 'library/external/src/Forminator/woocommerce/action-scheduler/action-scheduler.php';
+			require_once forminator_plugin_dir() . 'library/lib/action-scheduler/action-scheduler.php';
 		},
 		-10 // Don't change.
 	);

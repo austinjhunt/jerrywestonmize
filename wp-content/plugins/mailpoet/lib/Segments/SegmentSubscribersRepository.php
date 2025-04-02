@@ -41,7 +41,7 @@ class SegmentSubscribersRepository {
     $this->segmentsRepository = $segmentsRepository;
   }
 
-  public function findSubscribersIdsInSegment(int $segmentId, array $candidateIds = null): array {
+  public function findSubscribersIdsInSegment(int $segmentId, ?array $candidateIds = null): array {
     return $this->loadSubscriberIdsInSegment($segmentId, $candidateIds);
   }
 
@@ -49,13 +49,13 @@ class SegmentSubscribersRepository {
     return $this->loadSubscriberIdsInSegment($segmentId);
   }
 
-  public function getSubscribersCount(int $segmentId, string $status = null): int {
+  public function getSubscribersCount(int $segmentId, ?string $status = null): int {
     $segment = $this->getSegment($segmentId);
     $result = $this->getSubscribersStatisticsCount($segment);
     return (int)$result[$status ?: 'all'];
   }
 
-  public function getSubscribersCountBySegmentIds(array $segmentIds, string $status = null, ?int $filterSegmentId = null): int {
+  public function getSubscribersCountBySegmentIds(array $segmentIds, ?string $status = null, ?int $filterSegmentId = null): int {
     $segmentRepository = $this->entityManager->getRepository(SegmentEntity::class);
     $segments = $segmentRepository->findBy(['id' => $segmentIds]);
     $subscribersTable = $this->entityManager->getClassMetadata(SubscriberEntity::class)->getTableName();
@@ -372,7 +372,7 @@ class SegmentSubscribersRepository {
       ->setParameter('statusSubscribed', SubscriberEntity::STATUS_SUBSCRIBED);
   }
 
-  private function loadSubscriberIdsInSegment(int $segmentId, array $candidateIds = null): array {
+  private function loadSubscriberIdsInSegment(int $segmentId, ?array $candidateIds = null): array {
     $segment = $this->getSegment($segmentId);
     $subscribersTable = $this->entityManager->getClassMetadata(SubscriberEntity::class)->getTableName();
     $queryBuilder = $this->entityManager
@@ -400,7 +400,7 @@ class SegmentSubscribersRepository {
   private function filterSubscribersInStaticSegment(
     QueryBuilder $queryBuilder,
     SegmentEntity $segment,
-    string $status = null
+    ?string $status = null
   ): QueryBuilder {
     $subscribersSegmentsTable = $this->entityManager->getClassMetadata(SubscriberSegmentEntity::class)->getTableName();
     $subscribersTable = $this->entityManager->getClassMetadata(SubscriberEntity::class)->getTableName();
@@ -423,7 +423,7 @@ class SegmentSubscribersRepository {
   private function filterSubscribersInDynamicSegment(
     QueryBuilder $queryBuilder,
     SegmentEntity $segment,
-    string $status = null
+    ?string $status = null
   ): QueryBuilder {
     $filters = [];
     $dynamicFilters = $segment->getDynamicFilters();

@@ -561,7 +561,7 @@ function forminator_clear_field_id( $field_id ) {
  * @param bool                             $is_pdf Is PDF.
  * @return mixed
  */
-function forminator_replace_form_data( $content, Forminator_Form_Model $custom_form = null, Forminator_Form_Entry_Model $entry = null, $get_labels = false, $urlencode = false, $user_meta = false, $is_pdf = false ) {
+function forminator_replace_form_data( $content, ?Forminator_Form_Model $custom_form = null, ?Forminator_Form_Entry_Model $entry = null, $get_labels = false, $urlencode = false, $user_meta = false, $is_pdf = false ) {
 	if ( is_null( $content ) ) {
 		$content = '';
 	}
@@ -2371,7 +2371,7 @@ function forminator_get_quiz_vars() {
  *
  * @return mixed
  */
-function forminator_replace_form_payment_data( $content, Forminator_Form_Model $custom_form = null, Forminator_Form_Entry_Model $entry = null ) {
+function forminator_replace_form_payment_data( $content, ?Forminator_Form_Model $custom_form = null, ?Forminator_Form_Entry_Model $entry = null ) {
 	if ( empty( $custom_form ) ) {
 		return $content;
 	}
@@ -2680,7 +2680,7 @@ function forminator_get_upload_url( $form_id, $dir = '' ) {
  *
  * @return string
  */
-function forminator_replace_lead_form_data( $content, $quiz_settings, Forminator_Form_Entry_Model $entry = null ) {
+function forminator_replace_lead_form_data( $content, $quiz_settings, ?Forminator_Form_Entry_Model $entry = null ) {
 
 	if ( isset( $quiz_settings['hasLeads'] ) && $quiz_settings['hasLeads'] ) {
 		$lead_id           = isset( $quiz_settings['leadsId'] ) ? $quiz_settings['leadsId'] : 0;

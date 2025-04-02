@@ -389,6 +389,24 @@ class Forminator_Form_Model extends Forminator_Base_Form_Model {
 	}
 
 	/**
+	 * Check if Custom form has paypal field
+	 *
+	 * @since 1.41
+	 * @return object|false
+	 */
+	public function has_paypal_field() {
+		$fields = $this->get_real_fields();
+		foreach ( $fields as $field ) {
+			$field_array = $field->to_formatted_array();
+			if ( isset( $field_array['type'] ) && 'paypal' === $field_array['type'] ) {
+				return $field;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Check if form has stripe or paypal field
 	 *
 	 * @since 1.9.3

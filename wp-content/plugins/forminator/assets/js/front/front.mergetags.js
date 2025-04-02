@@ -101,7 +101,7 @@
 			var self = this;
 
 			this.$el.find(
-				'.forminator-textarea, input.forminator-input, .forminator-checkbox, .forminator-radio, .forminator-input-file, select.forminator-select2, .forminator-multiselect input'
+				'.forminator-textarea, input.forminator-input, .forminator-input input, .forminator-checkbox, .forminator-radio, .forminator-input-file, select.forminator-select2, .forminator-multiselect input'
 				+ ', input.forminator-slider-hidden, input.forminator-slider-hidden-min, input.forminator-slider-hidden-max, select.forminator-rating'
 			).each(function () {
 				$(this).on('change', function () {

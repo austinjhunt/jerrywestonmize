@@ -38,7 +38,7 @@ class Step {
     string $key,
     array $args,
     array $nextSteps,
-    Filters $filters = null
+    ?Filters $filters = null
   ) {
     $this->id = $id;
     $this->type = $type;

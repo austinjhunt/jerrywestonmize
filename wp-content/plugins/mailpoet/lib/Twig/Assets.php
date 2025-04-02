@@ -24,7 +24,7 @@ class Assets extends AbstractExtension {
   public function __construct(
     array $globals,
     WPFunctions $wp,
-    CdnAssetUrl $cdnAssetsUrl = null
+    ?CdnAssetUrl $cdnAssetsUrl = null
   ) {
     $this->globals = $globals;
     $this->wp = $wp;

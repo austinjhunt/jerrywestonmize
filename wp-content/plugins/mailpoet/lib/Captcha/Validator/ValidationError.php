@@ -13,7 +13,7 @@ class ValidationError extends \RuntimeException {
     $message = "",
     array $meta = [],
     $code = 0,
-    \Throwable $previous = null
+    ?\Throwable $previous = null
   ) {
     $this->meta = $meta;
     $this->meta['error'] = $message;

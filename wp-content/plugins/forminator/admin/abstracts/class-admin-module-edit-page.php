@@ -175,6 +175,40 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 	}
 
 	/**
+	 * Has error on payment field
+	 *
+	 * @param mixed $module Module.
+	 * @param bool  $is_stripe_connected Is stripe connected.
+	 * @return bool
+	 */
+	public static function has_payment_field_error( $module, $is_stripe_connected ) {
+		if ( ! empty( $module['model'] ) && method_exists( $module['model'], 'has_stripe_field' ) ) {
+			$stripe_field = $module['model']->has_stripe_field();
+			if ( ! empty( $stripe_field ) ) {
+				if ( false === $is_stripe_connected ) {
+					return true;
+				}
+				$stripe_field->mode;
+				$plan_id_key = 'live' === $stripe_field->mode ? 'live_plan_id' : 'test_plan_id';
+				foreach ( $stripe_field->payments as $plan ) {
+					if ( 'subscription' === $plan['payment_method'] && empty( $plan[ $plan_id_key ] ) ) {
+						return true;
+					}
+				}
+			}
+		}
+		if ( ! empty( $module['model'] ) && method_exists( $module['model'], 'has_paypal_field' ) ) {
+			$paypal_field = $module['model']->has_paypal_field();
+			if ( ! empty( $paypal_field ) ) {
+				if ( false === forminator_has_paypal_settings() ) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Show the modules
 	 *
 	 * @param array  $modules Modules.
@@ -198,9 +232,11 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			require_once forminator_plugin_dir() . 'admin/views/common/list/empty_content.php';
 		}
 
-		$page = $module_slug;
+		$is_stripe_connected = false;
+		$page                = $module_slug;
 		if ( 'form' === $page ) {
-			$page = 'cform';
+			$page                = 'cform';
+			$is_stripe_connected = forminator_has_stripe_connected();
 		}
 
 		foreach ( $modules as $module ) {
@@ -222,6 +258,10 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 				$opened_class = ' sui-accordion-item--open forminator-scroll-to';
 				$opened_chart = ' sui-chartjs-loaded';
 			}
+			$display_warning_icon = self::has_payment_field_error( $module, $is_stripe_connected );
+			if ( true === $display_warning_icon ) {
+				$opened_class .= ' forminator-notice-yellow';
+			}
 			?>
 
 			<div class="sui-accordion-item<?php echo esc_attr( $opened_class ); ?>">
@@ -235,6 +275,10 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 							<span aria-hidden="true"></span>
 							<span class="sui-screen-reader-text"><?php esc_html_e( 'Select this module', 'forminator' ); ?></span>
 						</label>
+
+						<?php if ( true === $display_warning_icon ) { ?>
+							<span class="sui-notice-icon sui-icon-info forminator-accordion-notice-icon" aria-hidden="true"></span>
+						<?php } ?>
 
 						<span class="sui-trim-text"><?php echo esc_html( htmlspecialchars( forminator_get_form_name( $module['id'] ) ) ); ?></span>
 
