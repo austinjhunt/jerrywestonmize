@@ -50,7 +50,7 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 									if ( $max_fields === $sub_key && $max_fields < count( $sub_entries ) ) {
 
-										echo '<th></th>';
+										echo '<th aria-label="' . esc_attr__( 'Other fields', 'forminator' ) . '"></th>';
 
 									} elseif ( $sub_key === $end ) {
 

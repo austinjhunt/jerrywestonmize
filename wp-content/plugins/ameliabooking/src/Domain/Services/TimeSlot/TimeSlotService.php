@@ -691,9 +691,21 @@ class TimeSlotService
 
         $appCount = [];
 
+        $isContinuousTime = false;
+
+        $continuousTimeSlot = null;
+
         foreach ($freeIntervals as $dateKey => $dateProviders) {
             foreach ((array)$dateProviders as $providerKey => $provider) {
                 foreach ((array)$provider['intervals'] as $timePeriod) {
+                    $moveStart = false;
+
+                    if ($timePeriod[0] === 0 && $isContinuousTime && $continuousTimeSlot !== null) {
+                        $isContinuousTime = false;
+
+                        $moveStart = true;
+                    }
+
                     if ($timePeriod[1] === 86400) {
                         $nextDateString = DateTimeService::getDateTimeObjectInTimeZone(
                             $dateKey . ' 00:00:00',
@@ -703,21 +715,34 @@ class TimeSlotService
                         if (isset($freeIntervals[$nextDateString][$providerKey]['intervals'][0]) &&
                             $freeIntervals[$nextDateString][$providerKey]['intervals'][0][0] === 0
                         ) {
+                            $isContinuousTime = true;
+
                             $nextDayInterval = $freeIntervals[$nextDateString][$providerKey]['intervals'][0][1];
 
-                            $timePeriod[1] += ($realRequiredTime <= $nextDayInterval ? $realRequiredTime : $nextDayInterval);
+                            $timePeriod[1] += (
+                            $realRequiredTime + $service->getTimeAfter()->getValue() <= $nextDayInterval
+                                ? $realRequiredTime + $service->getTimeAfter()->getValue()
+                                : $nextDayInterval);
                         }
                     }
 
-                    if (!$bufferTimeInSlot && $serviceDurationAsSlot) {
+                    if ($serviceDurationAsSlot && !$bufferTimeInSlot) {
                         $timePeriod[1] = $timePeriod[1] - $service->getTimeAfter()->getValue();
                     }
 
-                    $customerTimeStart = $timePeriod[0] + $service->getTimeBefore()->getValue();
+                    $customerTimeStart = $timePeriod[0] + (!$moveStart ? $service->getTimeBefore()->getValue() : 0);
 
-                    $providerTimeStart = $customerTimeStart - $service->getTimeBefore()->getValue();
+                    $providerTimeStart = $customerTimeStart - (!$moveStart ? $service->getTimeBefore()->getValue() : 0);
 
-                    $numberOfSlots = (int)(floor(($timePeriod[1] - $providerTimeStart - $requiredTime) / $bookingLength) + 1);
+                    $numberOfSlots = (int)(
+                        floor(
+                            (
+                                $timePeriod[1] -
+                                $providerTimeStart -
+                                ($requiredTime - ($moveStart ? $service->getTimeBefore()->getValue() : 0))
+                            ) / $bookingLength
+                        ) + 1
+                    );
 
                     $inspectResourceIndexes = [];
 
@@ -735,6 +760,18 @@ class TimeSlotService
                     $providerPeriodSlots = [];
 
                     $achievedLength = 0;
+
+                    if ($moveStart && $continuousTimeSlot !== 86400) {
+                        $customerTimeStart += $bookingLength - (86400 - $continuousTimeSlot);
+
+                        $providerTimeStart += $bookingLength - (86400 - $continuousTimeSlot);
+
+                        $numberOfSlots = (int)(floor(($timePeriod[1] - $providerTimeStart - $requiredTime) / $bookingLength) + 1);
+                    }
+
+                    if ($moveStart) {
+                        $continuousTimeSlot = null;
+                    }
 
                     for ($i = 0; $i < $numberOfSlots; $i++) {
                         $achievedLength += $bookingLength;
@@ -813,7 +850,13 @@ class TimeSlotService
                         $time = sprintf('%02d', floor($timeSlot / 3600)) . ':'
                             . sprintf('%02d', floor(($timeSlot / 60) % 60));
 
-                        $availableResult[$dateKey][$time] = $data;
+                        if ($time !== '24:00') {
+                            $availableResult[$dateKey][$time] = $data;
+
+                            if ($isContinuousTime) {
+                                $continuousTimeSlot = $timeSlot;
+                            }
+                        }
                     }
                 }
 

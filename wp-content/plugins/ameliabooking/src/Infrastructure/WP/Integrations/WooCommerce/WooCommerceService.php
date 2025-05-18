@@ -596,6 +596,7 @@ class WooCommerceService
                         'deposit'          => $event->getDeposit()->getValue(),
                         'depositPerPerson' => $event->getDepositPerPerson()->getValue(),
                         'customTickets'    => [],
+                        'customPricing'    => $event->getCustomPricing() ? $event->getCustomPricing()->getValue() : false,
                     ],
                     'coupons'   => []
                 ];
@@ -1448,7 +1449,9 @@ class WooCommerceService
 
                 $reservationData = [];
 
-                $wc_item[self::AMELIA]['bookings'][0]['couponId'] = $wc_item[self::AMELIA]['couponId'];
+                $wc_item[self::AMELIA]['bookings'][0]['couponId'] = !empty($wc_item[self::AMELIA]['couponId'])
+                    ? $wc_item[self::AMELIA]['couponId']
+                    : null;
 
                 if ($wc_item[self::AMELIA]['type'] === Entities::APPOINTMENT ||
                     $wc_item[self::AMELIA]['type'] === Entities::EVENT
@@ -1823,7 +1826,7 @@ class WooCommerceService
                 break;
 
             case (Entities::EVENT):
-                $customTickets = !empty($bookableData['bookable']['customTickets'])
+                $customTickets = !empty($bookableData['bookable']['customTickets']) && !empty($bookableData['bookable']['customPricing'])
                     ? $bookableData['bookable']['customTickets']
                     : [];
 
@@ -1926,10 +1929,10 @@ class WooCommerceService
         switch ($wcItemAmeliaCache['type']) {
             case (Entities::APPOINTMENT):
             case (Entities::EVENT):
-                return $wcItemAmeliaCache['bookings'][0]['deposit'];
+                return !empty($wcItemAmeliaCache['bookings'][0]['deposit']);
 
             case (Entities::PACKAGE):
-                return $wcItemAmeliaCache['deposit'];
+                return !empty($wcItemAmeliaCache['deposit']);
         }
 
         return false;
@@ -2037,10 +2040,11 @@ class WooCommerceService
      * Update Order Item Meta data.
      *
      * @param int   $orderId
+     * @param int   $orderItemId
      * @param array $reservation
      * @throws ContainerException
      */
-    public static function updateItemMetaData($orderId, $reservation)
+    public static function updateItemMetaData($orderId, $orderItemId, $reservation)
     {
         $order = wc_get_order($orderId);
 
@@ -2048,7 +2052,7 @@ class WooCommerceService
             foreach ($order->get_items() as $itemId => $orderItem) {
                 $data = wc_get_order_item_meta($itemId, 'ameliabooking');
 
-                if ($data && is_array($data)) {
+                if ($data && is_array($data) && (!$orderItemId || $orderItemId === $itemId)) {
                     wc_update_order_item_meta(
                         $itemId,
                         self::AMELIA,
@@ -3321,11 +3325,11 @@ class WooCommerceService
                     try {
                         switch ($data['type']) {
                             case (Entities::APPOINTMENT):
-                                self::bookingAppointmentUpdated($payment, 'rejected', false);
+                                self::bookingAppointmentUpdated($payment, 'canceled', false);
                                 break;
 
                             case (Entities::EVENT):
-                                self::bookingEventUpdated($payment, 'rejected', false);
+                                self::bookingEventUpdated($payment, 'canceled', false);
                                 break;
 
                             case (Entities::PACKAGE):

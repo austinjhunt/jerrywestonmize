@@ -70,6 +70,12 @@
 					return;
 				}
 
+				// Handle the email field when email confirmation is enabled.
+				if ( $element.is( 'input[type="email"]' ) && element_id === undefined &&
+					$element.attr( 'id' ).startsWith( 'forminator-field-email-' ) ) {
+					element_id = $element.closest( '.forminator-row-with-confirmation-email' ).parent( '.forminator-col' ).attr( 'id' );
+				}
+
 				if (typeof element_id === 'undefined' || 0 === element_id.indexOf( 'slider-' ) ) {
                     /*
                      * data-multi attribute was added to Name field - multiple

@@ -216,6 +216,8 @@ class DataModifier
 
         $data['timeZone'] = null;
 
+        $data['employeeAppleCalendar'] = null;
+
         if (!empty($data['serviceList'])) {
             foreach ($data['serviceList'] as $key => $value) {
                 $data['serviceList'][$key]['customPricing'] = null;

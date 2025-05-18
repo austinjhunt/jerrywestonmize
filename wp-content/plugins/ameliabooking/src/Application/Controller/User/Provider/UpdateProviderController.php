@@ -26,6 +26,7 @@ class UpdateProviderController extends Controller
         'lastName',
         'birthday',
         'email',
+        'employeeAppleCalendar',
         'externalId',
         'locationId',
         'avatar',
@@ -51,7 +52,7 @@ class UpdateProviderController extends Controller
         'translations',
         'timeZone',
         'badgeId',
-        'stripeConnect',
+        'stripeConnect'
     ];
 
     /**

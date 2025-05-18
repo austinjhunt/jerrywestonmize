@@ -123,6 +123,7 @@ class Forminator_Admin_Data {
 			'hasV2InvisibleCaptcha'          => forminator_has_v2_invisible_captcha_settings(),
 			'hasV3Captcha'                   => forminator_has_v3_captcha_settings(),
 			'hasHCaptcha'                    => forminator_has_hcaptcha_settings(),
+			'hasTurnstile'                   => forminator_has_turnstile_settings(),
 			'loadCaptcha'                    => wp_create_nonce( 'forminator_load_captcha_settings' ),
 			'hasStripe'                      => forminator_has_stripe_connected(),
 			'formNonce'                      => $this->get_nonce(),

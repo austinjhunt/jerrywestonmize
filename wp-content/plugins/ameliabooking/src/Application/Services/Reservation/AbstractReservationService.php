@@ -375,7 +375,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             );
         }
 
-        if ($user->getStatus() && $user->getStatus()->getValue() === Status::BLOCKED) {
+        if (!isset($appointmentData['isBackendOrCabinet']) && $user && $user->getStatus() && $user->getStatus()->getValue() === Status::BLOCKED) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage(FrontendStrings::getCommonStrings()['customer_blocked']);
             $result->setData(['customerBlocked' => true]);

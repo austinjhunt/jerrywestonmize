@@ -13,7 +13,8 @@
 		<?php } ?>
 	}
 
-	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-multiselect .forminator-option:hover {
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-multiselect .forminator-option:hover,
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-multiselect .forminator-option:focus-within {
 		<?php if ( forminator_array_value_exists( $properties, 'multiselect-border-hover' ) && !empty( $properties['multiselect-border-hover'] ) ) { ?>
 			border-color: <?php echo $properties['multiselect-border-hover'] ?>;
 		<?php } else { ?>
@@ -80,7 +81,8 @@
 		color: #777771;
 	}
 
-	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-multiselect .forminator-option:hover {
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-multiselect .forminator-option:hover,
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-multiselect .forminator-option:focus-within {
 		border-color: #000000;
 		color: #000000;
 	}
@@ -133,6 +135,14 @@
 		<?php } ?>
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select .selection:focus-within .select2-selection--multiple[role="combobox"]:before {
+		<?php if ( forminator_array_value_exists( $properties, 'select-border-active' ) && !empty( $properties['select-border-active'] ) ) { ?>
+			background-color: <?php echo $properties['select-border-active'] ?>;
+		<?php } else { ?>
+			background-color: #17A8E3;
+		<?php } ?>
+	}
+
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select .selection .select2-selection--multiple[role="combobox"] .select2-selection__arrow {
 		<?php if ( forminator_array_value_exists( $properties, 'select-icon-static' ) && !empty( $properties['select-icon-static'] ) ) { ?>
 			color: <?php echo $properties['select-icon-static'] ?>;
@@ -165,6 +175,7 @@
 		<?php } ?>
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select .selection .select2-selection--multiple[role="combobox"]:focus,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select.select2-container--open .selection .select2-selection--multiple[role="combobox"] .select2-selection__rendered {
 		<?php if ( forminator_array_value_exists( $properties, 'select-value-active' ) && !empty( $properties['select-value-active'] ) ) { ?>
 			color: <?php echo $properties['select-value-active'] ?>;
@@ -173,6 +184,7 @@
 		<?php } ?>
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select .selection .select2-selection--multiple[role="combobox"]:focus .select2-selection__arrow,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select.select2-container--open .selection .select2-selection--multiple[role="combobox"] .select2-selection__arrow {
 		<?php if ( forminator_array_value_exists( $properties, 'select-icon-active' ) && !empty( $properties['select-icon-active'] ) ) { ?>
 			color: <?php echo $properties['select-icon-active'] ?>;
@@ -199,6 +211,7 @@
 		color: #000000;
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select .selection:focus-within .select2-selection--multiple[role="combobox"]:before,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select .selection .select2-selection--multiple[role="combobox"]:before {
 		background-color: #17A8E3;
 	}
@@ -219,10 +232,12 @@
 		border-color: #17A8E3;
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select .selection .select2-selection--multiple[role="combobox"]:focus,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select.select2-container--open .selection .select2-selection--multiple[role="combobox"] .select2-selection__rendered {
 		color: #000000;
 	}
 
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select .selection .select2-selection--multiple[role="combobox"]:focus .select2-selection__arrow
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select.select2-container--open .selection .select2-selection--multiple[role="combobox"] .select2-selection__arrow {
 		color: #17A8E3;
 	}
@@ -232,3 +247,8 @@
 	}
 
 <?php } ?>
+
+.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-select2 + .forminator-select .selection .select2-selection--multiple[role="combobox"]:focus::before {
+	right: 0;
+	left: 0;
+}

@@ -510,6 +510,7 @@
 							.find('.forminator-button--text')
 							.html('')
 							.html(submit_button_text).data('loading', loadingText);
+							self.$el.trigger( 'forminator.front.pagination.buttons.updated' );
 						},
 						20
 					);
@@ -522,6 +523,7 @@
 							nextBtn
 							.addClass( 'forminator-button-submit ' + submitButtonClass )
 							.html( submit_button_text ).data('loading', loadingText);
+							self.$el.trigger( 'forminator.front.pagination.buttons.updated' );
 						},
 						20
 					);
@@ -601,6 +603,7 @@
 				if ( this.step === this.totalSteps && this.finished ) {
 					this.$el.find('.forminator-button-next, .forminator-button-back').addClass( 'forminator-hidden' );
 				}
+				this.$el.trigger( 'forminator.front.pagination.buttons.updated' );
 			}
 			// Reset the conditions to check if submit/paypal buttons should be visible
 			this.$el.trigger( 'forminator.front.condition.restart' );

@@ -166,9 +166,9 @@ try {
 
 			<div class="sui-form-field">
 
-				<label for="forminator-stripe-currency" class="sui-settings-label"><?php esc_html_e( 'Default charge currency', 'forminator' ); ?></label>
+				<label for="forminator-paypal-currency" class="sui-settings-label"><?php esc_html_e( 'Default charge currency', 'forminator' ); ?></label>
 
-				<span class="sui-description" aria-describedby="forminator-stripe-currency"><?php esc_html_e( 'Choose the default charge currency for your PayPal payments. You can override this while setting up the PayPal field in your forms.', 'forminator' ); ?></span>
+				<span class="sui-description" aria-describedby="forminator-paypal-currency"><?php esc_html_e( 'Choose the default charge currency for your PayPal payments. You can override this while setting up the PayPal field in your forms.', 'forminator' ); ?></span>
 
 				<div style="max-width: 240px; display: block; margin-top: 10px;">
 

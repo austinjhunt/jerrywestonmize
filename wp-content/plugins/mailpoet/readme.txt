@@ -1,9 +1,9 @@
 === MailPoet - Newsletters, Email Marketing, and Automation ===
 Contributors: mailpoet, woocommerce, automattic
 Tags: email marketing, post notification, woocommerce emails, email automation, newsletter
-Requires at least: 6.6
-Tested up to: 6.7
-Stable tag: 5.10.0
+Requires at least: 6.7
+Tested up to: 6.8
+Stable tag: 5.12.2
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -222,7 +222,7 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 
 == Changelog ==
 
-= 5.10.0 - 2025-03-18 =
-* Added: "created via" field to order-based automations.
+= 5.12.2 - 2025-05-12 =
+* Fixed: incorrect number in success message when bulk removing subscribers from all lists.
 
 [See the changelog for all versions.](https://github.com/mailpoet/mailpoet/blob/trunk/mailpoet/changelog.txt)

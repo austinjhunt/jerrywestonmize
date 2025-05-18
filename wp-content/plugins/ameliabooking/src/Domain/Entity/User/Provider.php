@@ -55,6 +55,9 @@ class Provider extends AbstractUser
     /** @var StripeConnect */
     private $stripeConnect;
 
+    /** @var AppleCalendarEmployeeConnect */
+    private $employeeAppleCalendar;
+
     /**
      * @param Name       $firstName
      * @param Name       $lastName
@@ -286,6 +289,22 @@ class Provider extends AbstractUser
         $this->stripeConnect = $stripeConnect;
     }
 
+    /**
+     * @return AppleCalendarEmployeeConnect
+     */
+    public function getEmployeeAppleCalendar()
+    {
+        return $this->employeeAppleCalendar;
+    }
+
+    /**
+     * @param AppleCalendarEmployeeConnect $employeeAppleCalendar
+     */
+    public function setEmployeeAppleCalendar($employeeAppleCalendar)
+    {
+        $this->employeeAppleCalendar = $employeeAppleCalendar;
+    }
+
 
     /**
      * Returns the Provider entity fields in an array form
@@ -295,18 +314,19 @@ class Provider extends AbstractUser
         return array_merge(
             parent::toArray(),
             [
-                'phone'           => $this->phone->getValue(),
-                'weekDayList'     => $this->weekDayList->toArray(),
-                'serviceList'     => $this->serviceList->toArray(),
-                'dayOffList'      => $this->dayOffList->toArray(),
-                'specialDayList'  => $this->specialDayList->toArray(),
-                'locationId'      => $this->getLocationId() ? $this->getLocationId()->getValue() : null,
-                'googleCalendar'  => $this->getGoogleCalendar() ? $this->getGoogleCalendar()->toArray() : null,
-                'outlookCalendar' => $this->getOutlookCalendar() ? $this->getOutlookCalendar()->toArray() : null,
-                'timeZone'        => $this->getTimeZone() ? $this->getTimeZone()->getValue() : null,
-                'description'     => $this->getDescription() ? $this->getDescription()->getValue() : null,
-                'badgeId'         => $this->getBadgeId() ? $this->getBadgeId()->getValue() : null,
-                'stripeConnect'   => $this->getStripeConnect() ? $this->getStripeConnect()->toArray() : null,
+                'phone'                 => $this->phone->getValue(),
+                'weekDayList'           => $this->weekDayList->toArray(),
+                'serviceList'           => $this->serviceList->toArray(),
+                'dayOffList'            => $this->dayOffList->toArray(),
+                'specialDayList'        => $this->specialDayList->toArray(),
+                'locationId'            => $this->getLocationId() ? $this->getLocationId()->getValue() : null,
+                'googleCalendar'        => $this->getGoogleCalendar() ? $this->getGoogleCalendar()->toArray() : null,
+                'outlookCalendar'       => $this->getOutlookCalendar() ? $this->getOutlookCalendar()->toArray() : null,
+                'timeZone'              => $this->getTimeZone() ? $this->getTimeZone()->getValue() : null,
+                'description'           => $this->getDescription() ? $this->getDescription()->getValue() : null,
+                'badgeId'               => $this->getBadgeId() ? $this->getBadgeId()->getValue() : null,
+                'stripeConnect'         => $this->getStripeConnect() ? $this->getStripeConnect()->toArray() : null,
+                'employeeAppleCalendar' => $this->getEmployeeAppleCalendar() ? $this->getEmployeeAppleCalendar()->toArray() : null,
             ]
         );
     }

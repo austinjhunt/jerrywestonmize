@@ -7,6 +7,7 @@ use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Entity\User\Manager;
 use AmeliaBooking\Domain\Entity\User\Admin;
 use AmeliaBooking\Domain\Entity\User\Provider;
+use AmeliaBooking\Domain\Factory\Apple\AppleCalendarFactory;
 use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
 use AmeliaBooking\Domain\Factory\Google\GoogleCalendarFactory;
 use AmeliaBooking\Domain\Factory\Outlook\OutlookCalendarFactory;
@@ -219,6 +220,10 @@ class UserFactory
 
                 if (!empty($data['appleCalendarId'])) {
                     $user->setAppleCalendarId(new Name($data['appleCalendarId']));
+                }
+
+                if (!empty($data['employeeAppleCalendar'])) {
+                    $user->setEmployeeAppleCalendar(AppleCalendarFactory::create($data['employeeAppleCalendar']));
                 }
 
                 break;

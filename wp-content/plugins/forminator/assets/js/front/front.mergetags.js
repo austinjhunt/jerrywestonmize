@@ -241,6 +241,10 @@
 							value += ', ';
 						}
 
+						if ( undefined !== $(this).attr('id') && $(this).attr('id').indexOf('forminator-field-consent') > -1 ) {
+							value += $(this).val();
+						}
+
 						var multiselect = !! $(this).closest('.forminator-multiselect').length;
 
 						if ( self.settings.print_value ) {

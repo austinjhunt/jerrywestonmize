@@ -289,7 +289,7 @@ abstract class Forminator_Admin_Page {
 				</a></li>
 				<li><a href="https://twitter.com/wpmudev" target="_blank">
 					<i class="sui-icon-social-twitter" aria-hidden="true"></i>
-					<span class="sui-screen-reader-text"><?php esc_html_e( 'Twitter', 'forminator' ); ?></span>
+					<span class="sui-screen-reader-text"><?php esc_html_e( 'X', 'forminator' ); ?></span>
 				</a></li>
 				<li><a href="https://www.instagram.com/wpmu_dev/" target="_blank">
 					<i class="sui-icon-instagram" aria-hidden="true"></i>

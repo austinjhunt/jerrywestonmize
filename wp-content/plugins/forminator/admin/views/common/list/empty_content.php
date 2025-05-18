@@ -50,7 +50,7 @@ $search_empty2x = forminator_plugin_url() . 'assets/images/forminator-no-result@
 			<?php if ( Forminator::is_import_export_feature_enabled() ) : ?>
 
 				<p>
-					<button class="sui-button sui-button-blue wpmudev-button-open-modal" data-modal="<?php echo esc_attr( $create_dialog ); ?>"><i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Create', 'forminator' ); ?></button>
+					<button class="sui-button sui-button-blue wpmudev-button-open-modal" data-modal="<?php echo esc_attr( $create_dialog ); ?>"><i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Add New', 'forminator' ); ?></button>
 
 					<a href="#"
 						class="sui-button wpmudev-open-modal"
@@ -64,7 +64,7 @@ $search_empty2x = forminator_plugin_url() . 'assets/images/forminator-no-result@
 			<?php else : ?>
 
 				<p><button class="sui-button sui-button-blue wpmudev-button-open-modal" data-modal="<?php echo esc_attr( $create_dialog ); ?>">
-					<i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Create', 'forminator' ); ?>
+					<i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Add New', 'forminator' ); ?>
 				</button></p>
 
 			<?php endif; ?>

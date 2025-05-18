@@ -23,7 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Modified by code-atlantic on 15-March-2025 using {@see https://github.com/BrianHenryIE/strauss}.
+ * Modified by code-atlantic on 09-May-2025 using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace ContentControl\Vendor\Pimple\Tests\Fixtures;

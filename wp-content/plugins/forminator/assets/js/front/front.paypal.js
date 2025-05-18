@@ -98,6 +98,10 @@
 			if( paypalData.layout !== 'vertical' ) {
 				style_data.tagline =  paypalData.tagline;
 			}
+			// Handle the case when PayPal is loaded in an iframe (e.g., in the theme editor).
+			if ( window.parent !== window && window.parent.paypal ) {
+				window.paypal = window.parent.paypal;
+			}
 
 			this.paypalButton = paypal.Buttons({
 				onInit: function(data, actions) {

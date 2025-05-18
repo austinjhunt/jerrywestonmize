@@ -151,6 +151,10 @@ class Forminator_Core {
 		// Post meta box.
 		add_action( 'init', array( &$this, 'post_field_meta_box' ) );
 
+		if ( ! FORMINATOR_PRO ) {
+			add_action( 'init', array( __CLASS__, 'load_cross_sell_module' ) );
+		}
+
 		// Clean up Action Scheduler.
 		add_action( 'init', array( $this, 'schedule_action_scheduler_cleanup' ), 999 );
 		add_action( 'forminator_action_scheduler_cleanup', array( &$this, 'action_scheduler_cleanup' ) );
@@ -404,6 +408,33 @@ class Forminator_Core {
 	}
 
 	/**
+	 * Sets the Plugins Cross Sell submodule.
+	 */
+	public static function load_cross_sell_module() {
+		$cross_sell_path = forminator_plugin_dir() . 'library/lib/plugins-cross-sell-page/plugin-cross-sell.php';
+		if ( ! file_exists( $cross_sell_path ) ) {
+			return;
+		}
+
+		static $cross_sell = null;
+
+		if ( is_null( $cross_sell ) ) {
+			if ( ! class_exists( '\WPMUDEV\Modules\Plugin_Cross_Sell' ) ) {
+				require_once $cross_sell_path;
+			}
+
+			$submenu_params = array(
+				'slug'        => 'forminator',
+				'parent_slug' => 'forminator',
+				'menu_slug'   => 'forminator_cross_sell',
+				'position'    => 17,
+			);
+
+			$cross_sell = new \WPMUDEV\Modules\Plugin_Cross_Sell( $submenu_params );
+		}
+	}
+
+	/**
 	 * Start creating meta box for the posts
 	 *
 	 * @since 1.0
@@ -552,6 +583,7 @@ class Forminator_Core {
 			'payee_info',
 			'payer_info',
 			'payment_note',
+			'product_value',
 		);
 
 		$allow_iframe = array( 'variations' );

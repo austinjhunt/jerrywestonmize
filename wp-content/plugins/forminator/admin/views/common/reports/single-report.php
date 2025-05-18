@@ -90,8 +90,10 @@
 				</td>
 				<td>
 					<div class="fui-table-title"><?php esc_html_e( 'previous period', 'forminator' ); ?>
+						<?php $tooltip_text = esc_html__( 'Displays the statistics for the same previous period you selected.', 'forminator' ); ?>
 						<button class="sui-button-icon sui-tooltip sui-tooltip-top-center sui-tooltip-constrained sui-tooltip-top-right-mobile"
-								data-tooltip="<?php esc_html_e( 'Displays the statistics for the same previous period you selected.', 'forminator' ); ?>">
+								data-tooltip="<?php echo esc_attr( $tooltip_text ); ?>"
+								aria-label="<?php echo esc_attr( $tooltip_text ); ?>">
 							<span class="sui-icon-info" aria-hidden="true"></span>
 						</button>
 					</div>

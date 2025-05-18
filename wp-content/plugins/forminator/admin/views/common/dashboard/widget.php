@@ -49,7 +49,7 @@ $modules = Forminator_API::$method( null, 1, $num_recent, $statuses );
 
 			<p><button class="sui-button sui-button-blue wpmudev-open-modal"
 				data-modal="<?php echo esc_attr( $create_dialog ); ?>">
-				<i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Create', 'forminator' ); ?>
+				<i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Add New', 'forminator' ); ?>
 			</button></p>
 
 		<?php } ?>
@@ -218,7 +218,7 @@ $modules = Forminator_API::$method( null, 1, $num_recent, $statuses );
 
 			<button class="sui-button sui-button-blue wpmudev-open-modal forminator-create-<?php echo esc_attr( $module_slug ); ?>"
 				data-modal="<?php echo esc_attr( $create_dialog ); ?>">
-				<i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Create', 'forminator' ); ?>
+				<i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Add New', 'forminator' ); ?>
 			</button>
 
 			<div class="sui-actions-right">

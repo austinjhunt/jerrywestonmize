@@ -676,6 +676,22 @@ function forminator_has_hcaptcha_settings() {
 }
 
 /**
+ * Return if Cloudflare Turnstile keys are filled
+ *
+ * @return bool
+ */
+function forminator_has_turnstile_settings(): bool {
+	$key    = get_option( 'forminator_turnstile_key', false );
+	$secret = get_option( 'forminator_turnstile_secret', false );
+
+	if ( empty( $key ) || empty( $secret ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
  * Return if Stripe is is_connected
  *
  * @since 1.7
@@ -1981,12 +1997,14 @@ function forminator_validate_registration_form_settings( $settings ) {
 		}
 		$roles = forminator_get_accessible_user_roles();
 		if ( isset( $settings['registration-user-role'] ) && 'fixed' === $settings['registration-user-role'] ) {
-			if ( isset( $settings['registration-role-field'] ) && ! isset( $roles[ $settings['registration-role-field'] ] ) ) {
+			if ( isset( $settings['registration-role-field'] ) && ! isset( $roles[ $settings['registration-role-field'] ] )
+				&& 'notCreate' !== $settings['registration-role-field'] ) { // Respect the "Don't create a user in the network's main site" option.
 				return new WP_Error( 'invalid_user_role', $error_message );
 			}
 		} elseif ( ! empty( $settings['user_role'] ) && is_array( $settings['user_role'] ) ) {
 			foreach ( $settings['user_role'] as $user_role ) {
-				if ( isset( $user_role['role'] ) && ! isset( $roles[ $user_role['role'] ] ) ) {
+				if ( isset( $user_role['role'] ) && ! isset( $roles[ $user_role['role'] ] )
+					&& 'notCreate' !== $user_role['role'] ) { // Respect the "Don't create a user in the network's main site" option.
 					return new WP_Error( 'invalid_user_role', $error_message );
 				}
 			}

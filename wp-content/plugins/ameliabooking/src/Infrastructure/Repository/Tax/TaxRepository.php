@@ -8,12 +8,15 @@ namespace AmeliaBooking\Infrastructure\Repository\Tax;
 
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Tax\Tax;
+use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Factory\Tax\TaxFactory;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Connection;
 use AmeliaBooking\Infrastructure\Repository\AbstractStatusRepository;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Tax\TaxesToEntitiesTable;
 
 /**
@@ -133,6 +136,7 @@ class TaxRepository extends AbstractStatusRepository
      * @return Tax
      * @throws QueryExecutionException
      * @throws NotFoundException
+     * @throws InvalidArgumentException
      */
     public function getById($id)
     {
@@ -148,7 +152,7 @@ class TaxRepository extends AbstractStatusRepository
                     te.entityType AS tax_entityType
                 FROM {$this->table} t
                 LEFT JOIN {$this->taxesToEntitiesTable} te ON te.taxId = t.id
-                WHERE t.id = :taxId"
+                WHERE t.id = :taxId AND te.entityType != 'event'"
             );
 
             $statement->bindParam(':taxId', $id);
@@ -164,7 +168,33 @@ class TaxRepository extends AbstractStatusRepository
             throw new NotFoundException('Data not found in ' . __CLASS__);
         }
 
-        return call_user_func([static::FACTORY, 'createCollection'], $rows)->getItem($id);
+        $eventsTable = EventsTable::getTableName();
+
+        /** @var Tax $tax */
+        $tax = call_user_func([static::FACTORY, 'createCollection'], $rows)->getItem($id);
+
+        $statement = $this->connection->prepare(
+            "SELECT
+                   e.id AS id,
+                   e.name AS name
+                FROM {$eventsTable} e
+                INNER JOIN {$this->taxesToEntitiesTable} te ON te.entityId = e.id AND te.entityType = 'event'
+                WHERE te.taxId = :taxId"
+        );
+
+        $statement->bindParam(':taxId', $id);
+
+        $statement->execute();
+
+        $rows = $statement->fetchAll();
+
+        $tax->setEventList(new Collection());
+
+        foreach ($rows as $row) {
+            $tax->getEventList()->addItem(EventFactory::create($row));
+        }
+
+        return $tax;
     }
 
     /**
@@ -172,6 +202,7 @@ class TaxRepository extends AbstractStatusRepository
      *
      * @return Collection
      * @throws QueryExecutionException
+     * @throws InvalidArgumentException
      */
     public function getWithEntities($criteria)
     {
@@ -200,7 +231,51 @@ class TaxRepository extends AbstractStatusRepository
             throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
         }
 
-        return call_user_func([static::FACTORY, 'createCollection'], $rows);
+        /** @var Collection $taxes */
+        $taxes = call_user_func([static::FACTORY, 'createCollection'], $rows);
+
+        $taxesIds = array_column($taxes->toArray(), 'id');
+
+        if ($taxesIds && !empty($criteria['events'])) {
+            $eventsTable = EventsTable::getTableName();
+
+            $statement = $this->connection->prepare(
+                "SELECT
+                    e.id AS id,
+                    e.name AS name
+                FROM {$this->taxesToEntitiesTable} te
+                INNER JOIN {$eventsTable} e ON te.entityId = e.id AND te.entityType = 'event'
+                WHERE te.taxId IN (" . implode(', ', $taxesIds) . ")"
+            );
+
+            $statement->execute();
+
+            $rows = $statement->fetchAll();
+
+            /** @var Collection $events */
+            $events = new Collection();
+
+            foreach ($rows as $row) {
+                if (!$events->keyExists($row['id'])) {
+                    $events->addItem(EventFactory::create($row), $row['id']);
+                }
+            }
+
+            /** @var Tax $tax */
+            foreach ($taxes->getItems() as $tax) {
+                /** @var Tax $taxEvent */
+                foreach ($tax->getEventList()->getItems() as $taxEvent) {
+                    if ($events->keyExists($taxEvent->getId()->getValue())) {
+                        /** @var Event $event */
+                        $event = $events->getItem($taxEvent->getId()->getValue());
+
+                        $taxEvent->setName($event->getName());
+                    }
+                }
+            }
+        }
+
+        return $taxes;
     }
 
     /**

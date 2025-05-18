@@ -1244,7 +1244,7 @@ abstract class Forminator_Field {
 					return in_array( $condition_value, $form_field_value ); //phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 				}
 				if ( is_numeric( $condition_value ) ) {
-					return ( (int) $form_field_value === (int) $condition_value );
+					return ( (float) $form_field_value === (float) $condition_value );
 				}
 
 				return ( $form_field_value === $condition_value );
@@ -1252,6 +1252,10 @@ abstract class Forminator_Field {
 				if ( is_array( $form_field_value ) ) {
 					// possible input is "1" to be compared with 1.
 					return ! in_array( $condition_value, $form_field_value ); //phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+				}
+
+				if ( is_numeric( $condition_value ) ) {
+					return ( (float) $form_field_value !== (float) $condition_value );
 				}
 
 				return ( $form_field_value !== $condition_value );

@@ -139,29 +139,11 @@ class Forminator_Hidden extends Forminator_Field {
 		$embed_url   = forminator_get_current_url();
 
 		switch ( $saved_value ) {
-			case 'user_ip':
-				$value = Forminator_Geo::get_user_ip();
-				break;
-			case 'date_mdy':
-				$value = date_i18n( 'm/d/Y', forminator_local_timestamp(), true );
-				break;
-			case 'date_dmy':
-				$value = date_i18n( 'd/m/Y', forminator_local_timestamp(), true );
-				break;
 			case 'embed_id':
 				$value = forminator_get_post_data( 'ID' );
 				break;
 			case 'embed_title':
 				$value = forminator_get_post_data( 'post_title' );
-				break;
-			case 'embed_url':
-				$value = $embed_url;
-				break;
-			case 'login_url':
-				$value = forminator_get_login_url( $embed_url );
-				break;
-			case 'user_agent':
-				$value = isset( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) ) : '';
 				break;
 			case 'refer_url':
 				if ( true === $is_markup ) {
@@ -175,18 +157,6 @@ class Forminator_Hidden extends Forminator_Field {
 			case 'submission_id':
 				$value = 'submission_id';
 				break;
-			case 'user_id':
-				$value = forminator_get_user_data( 'ID' );
-				break;
-			case 'user_name':
-				$value = forminator_get_user_data( 'display_name' );
-				break;
-			case 'user_email':
-				$value = forminator_get_user_data( 'user_email' );
-				break;
-			case 'user_login':
-				$value = forminator_get_user_data( 'user_login' );
-				break;
 			case 'custom_value':
 				$value = self::get_property( 'custom_value', $field );
 				break;
@@ -194,6 +164,11 @@ class Forminator_Hidden extends Forminator_Field {
 				$value = $this->replace_prefill( $field );
 				break;
 			default:
+				$placeholder       = '{' . $saved_value . '}';
+				$placeholder_value = forminator_replace_variables( $placeholder );
+				if ( $placeholder_value !== $placeholder ) {
+					$value = $placeholder_value;
+				}
 				break;
 		}
 

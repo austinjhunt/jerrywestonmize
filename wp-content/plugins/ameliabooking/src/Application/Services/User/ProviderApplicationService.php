@@ -45,6 +45,7 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ResourceEntitiesRep
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventProvidersRepository;
+use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Google\GoogleCalendarRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\ProviderLocationRepository;
 use AmeliaBooking\Infrastructure\Repository\Outlook\OutlookCalendarRepository;
@@ -1430,6 +1431,9 @@ class ProviderApplicationService
         /** @var AppointmentRepository $appointmentRepository */
         $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
 
+        /** @var EventRepository $eventRepository */
+        $eventRepository = $this->container->get('domain.booking.event.repository');
+
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
 
@@ -1498,6 +1502,7 @@ class ProviderApplicationService
             $googleCalendarRepository->deleteByEntityId($provider->getId()->getValue(), 'userId') &&
             $outlookCalendarRepository->deleteByEntityId($provider->getId()->getValue(), 'userId') &&
             $eventProvidersRepository->deleteByEntityId($provider->getId()->getValue(), 'userId') &&
+            $eventRepository->updateByEntityId($provider->getId()->getValue(), null, 'organizerId') &&
             $packageServiceProviderRepository->deleteByEntityId($provider->getId()->getValue(), 'userId') &&
             $packageCustomerServiceRepository->updateByEntityId($provider->getId()->getValue(), null, 'providerId') &&
             $providerRepository->deleteViewStats($provider->getId()->getValue()) &&

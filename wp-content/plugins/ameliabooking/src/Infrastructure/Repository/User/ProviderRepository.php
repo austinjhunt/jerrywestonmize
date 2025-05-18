@@ -181,6 +181,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.pictureThumbPath AS picture_thumb_path,
                     u.zoomUserId AS user_zoom_user_id,
                     u.appleCalendarId as user_apple_calendar_id,
+                    u.employeeAppleCalendar as user_employee_apple_calendar,
                     u.stripeConnect AS user_stripeConnect,
                     u.translations AS user_translations,
                     u.timeZone AS user_timeZone,
@@ -480,6 +481,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.email AS user_email,
                     u.zoomUserId AS user_zoom_user_id,
                     u.appleCalendarId AS user_apple_calendar_id,
+                    u.employeeAppleCalendar AS user_employee_apple_calendar,
                     u.stripeConnect AS user_stripeConnect,
                     u.countryPhoneIso AS user_countryPhoneIso,
                     u.note AS note,
@@ -1351,7 +1353,8 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 'serviceList'      => [],
                 'timeZone'         => isset($row['user_timeZone']) ? $row['user_timeZone'] : null,
                 'badgeId'          => isset($row['badge_id']) ? $row['badge_id'] : null,
-                'appleCalendarId'  => isset($row['user_apple_calendar_id']) ? $row['user_apple_calendar_id'] : null
+                'appleCalendarId'  => isset($row['user_apple_calendar_id']) ? $row['user_apple_calendar_id'] : null,
+                'employeeAppleCalendar' => isset($row['user_employee_apple_calendar']) ? $row['user_employee_apple_calendar'] : null,
             ];
         }
 

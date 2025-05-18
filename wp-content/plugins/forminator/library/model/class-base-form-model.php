@@ -724,6 +724,24 @@ abstract class Forminator_Base_Form_Model {
 				$form_settings['cform-section-border-color'] = $meta['settings']['cform-section-border-color'];
 			}
 
+			// Decode HTML entities.
+			$decode_html_keys = array( 'notifications', 'behaviors', 'integration_conditions' );
+			foreach ( $decode_html_keys as $decode_html_key ) {
+				if ( ! empty( $meta[ $decode_html_key ] ) ) {
+					foreach ( $meta[ $decode_html_key ] as $key => $meta_data ) {
+						if ( ! empty( $meta_data['conditions'] ) ) {
+							$meta[ $decode_html_key ][ $key ]['conditions'] = forminator_decode_html_entity( $meta_data['conditions'] );
+						}
+						if ( 'notifications' === $decode_html_key && ! empty( $meta_data['routing'] ) ) {
+							$meta[ $decode_html_key ][ $key ]['routing'] = forminator_decode_html_entity( $meta_data['routing'] );
+						}
+					}
+				}
+			}
+			if ( ! empty( $meta['settings']['user_role'] ) ) {
+				$meta['settings']['user_role'] = forminator_decode_html_entity( $meta['settings']['user_role'] );
+			}
+
 			if ( ! empty( $maps ) ) {
 				foreach ( $maps as $map ) {
 					$attribute = $map['property'];

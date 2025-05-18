@@ -85,6 +85,7 @@ class Forminator_Time extends Forminator_Field {
 			'hh_placeholder' => esc_html__( 'E.g. 08', 'forminator' ),
 			'mm_label'       => esc_html__( 'Minutes', 'forminator' ),
 			'mm_placeholder' => esc_html__( 'E.g. 00', 'forminator' ),
+			'am_pm_label'    => esc_html__( 'AM/PM', 'forminator' ),
 		);
 	}
 
@@ -405,7 +406,7 @@ class Forminator_Time extends Forminator_Field {
 
 							$html .= self::create_select(
 								$ampm,
-								'',
+								self::get_property( 'am_pm_label', $field ),
 								$options,
 								$ampm_value
 							);

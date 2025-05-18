@@ -333,9 +333,10 @@ class AppleCalendarService extends AbstractAppleCalendarService
         $appleCalendarId = $provider->getAppleCalendarId()->getValue();
 
         if ($appleCalendarId) {
+            $employeeAppleCalendar = $provider && $provider->getEmployeeAppleCalendar() ? $provider->getEmployeeAppleCalendar()->toArray() : null;
 
-            $appleId = $this->settings['clientID'];
-            $appSpecificPassword = $this->settings['clientSecret'];
+            $appleId = $employeeAppleCalendar && $employeeAppleCalendar['iCloudId'] ? $employeeAppleCalendar['iCloudId'] : $this->settings['clientID'];
+            $appSpecificPassword = $employeeAppleCalendar && $employeeAppleCalendar['appSpecificPassword'] ? $employeeAppleCalendar['appSpecificPassword'] : $this->settings['clientSecret'];
 
             $events = $this->getCalendarEvents(
                 $appleId,
@@ -583,8 +584,10 @@ class AppleCalendarService extends AbstractAppleCalendarService
             'ameliaAppointmentEvent_' . UUIDUtil::getUUID() :
             'ameliaEventEvent_'  . UUIDUtil::getUUID();
 
-        $appleId = $this->settings['clientID'];
-        $appSpecificPassword = $this->settings['clientSecret'];
+        $employeeAppleCalendar = $provider && $provider->getEmployeeAppleCalendar() ? $provider->getEmployeeAppleCalendar()->toArray() : null;
+
+        $appleId = $employeeAppleCalendar && $employeeAppleCalendar['iCloudId'] ? $employeeAppleCalendar['iCloudId'] : $this->settings['clientID'];
+        $appSpecificPassword = $employeeAppleCalendar && $employeeAppleCalendar['appSpecificPassword'] ? $employeeAppleCalendar['appSpecificPassword'] : $this->settings['clientSecret'];
 
         $eventUrl = $this->getAddEventUrl($eventId, $appleId, $appSpecificPassword, $provider);
 
@@ -824,8 +827,15 @@ class AppleCalendarService extends AbstractAppleCalendarService
         if ($appointment->getAppleCalendarEventId()) {
             do_action('amelia_before_apple_calendar_event_deleted', $appointment->toArray(), $provider->toArray());
 
-            $appleId = $this->settings['clientID'];
-            $appSpecificPassword = $this->settings['clientSecret'];
+            $employeeAppleCalendar = $provider && $provider->getEmployeeAppleCalendar() ? $provider->getEmployeeAppleCalendar()->toArray() : null;
+
+            $appleCalendarId = $provider && $provider->getAppleCalendarId() ? $provider->getAppleCalendarId()->getValue() : null;
+
+            /** @var AbstractAppleCalendarService $appleCalendarService */
+            $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
+
+            $appleId = $employeeAppleCalendar && $employeeAppleCalendar['iCloudId'] ? $employeeAppleCalendar['iCloudId'] : $this->settings['clientID'];
+            $appSpecificPassword = $employeeAppleCalendar && $employeeAppleCalendar['appSpecificPassword'] ? $employeeAppleCalendar['appSpecificPassword'] : $this->settings['clientSecret'];
 
             $eventId = $appointment->getAppleCalendarEventId();
             $calendarId = $provider->getAppleCalendarId()->getValue();
@@ -868,10 +878,15 @@ class AppleCalendarService extends AbstractAppleCalendarService
 
             do_action('amelia_before_apple_calendar_event_updated', $event, $period->toArray(), $provider->toArray());
 
-            $appleId = $this->settings['clientID'];
-            $appSpecificPassword = $this->settings['clientSecret'];
+            $employeeAppleCalendar = $provider && $provider->getEmployeeAppleCalendar() ? $provider->getEmployeeAppleCalendar()->toArray() : null;
 
-            $calendarId = $provider->getAppleCalendarId()->getValue();
+            $calendarId = $provider && $provider->getAppleCalendarId() ? $provider->getAppleCalendarId()->getValue() : null;
+
+            /** @var AbstractAppleCalendarService $appleCalendarService */
+            $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
+
+            $appleId = $employeeAppleCalendar && $employeeAppleCalendar['iCloudId'] ? $employeeAppleCalendar['iCloudId'] : $this->settings['clientID'];
+            $appSpecificPassword = $employeeAppleCalendar && $employeeAppleCalendar['appSpecificPassword'] ? $employeeAppleCalendar['appSpecificPassword'] : $this->settings['clientSecret'];
 
             $calendarsUrl = $this->getCalendarsUrl(
                 $appleId,

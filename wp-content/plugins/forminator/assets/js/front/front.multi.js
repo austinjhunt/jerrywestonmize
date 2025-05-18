@@ -962,7 +962,8 @@
 					;
 
 					if ($limit.length) {
-						if ($limit.data('limit')) {
+						var textLimit = parseInt( $limit.data('limit') );
+						if (textLimit) {
 							if ($limit.data('type') !== "words") {
 								if ( $limit.data( 'editor' ) === 1 ) {
 									const content = $( this )
@@ -980,7 +981,7 @@
 										) !== -1;
 									// Allow to delete and backspace when limit is reached.
 									if (
-										count >= $limit.data( 'limit' ) &&
+										count >= textLimit &&
 										! isCtrlPressed &&
 										! isSpecialKey
 									) {
@@ -996,14 +997,14 @@
 
 								// Prevent additional words from being added when limit is reached.
 								numwords = field_value.trim().split(/\s+/).length;
-								if ( numwords >= $limit.data( 'limit' ) ) {
+								if ( numwords >= textLimit ) {
 									// Allow to delete and backspace when limit is reached.
 									if( e.which === 32 ) {
 										e.preventDefault();
 									}
 								}
 							}
-							$limit.html(count + ' / ' + $limit.data('limit'));
+							$limit.text(count + ' / ' + textLimit);
 						}
 					}
 				});
@@ -1405,6 +1406,29 @@
 			}
 		},
 
+		renderTurnstileCaptcha: function ( captcha_field ) {
+			var self = this;
+			//render captcha only if not rendered
+			if (typeof $( captcha_field ).data( 'forminator-turnstile-widget' ) === 'undefined') {
+				var sitekey = $( captcha_field ).data( 'sitekey' ),
+					data = {
+						'response-field-name': 'forminator-turnstile-response',
+						callback: function (token, data, test) {
+							$( captcha_field ).parent( '.forminator-col' )
+								.removeClass( 'forminator-has_error' )
+								.remove( '.forminator-error-message' );
+						}
+					};
+
+				if ( sitekey !== "" ) {
+					// noinspection Annotator
+					var widgetId = turnstile.render( captcha_field, data );
+					// mark as rendered
+					$( captcha_field ).data( 'forminator-turnstile-widget', widgetId );
+				}
+			}
+		},
+
 		addCaptchaAria: function ( captcha_field ) {
 			var gRecaptchaResponse = $( captcha_field ).find( '.g-recaptcha-response' ),
 				gRecaptcha = $( captcha_field ).find( '>div' );
@@ -1664,9 +1688,9 @@
 				limit = field.find( '.forminator-description span' ),
 				content = editor.getContent().replace( /<[^>]*>/g, '' );
 			if ( limit.length ) {
-				if ( limit.data( 'limit' ) ) {
+				const maxLength = parseInt( limit.data( 'limit' ) );
+				if ( maxLength ) {
 					content = $( '<div/>' ).html( content ).text();
-					const maxLength = limit.data( 'limit' );
 					const isCtrlPressed = e.ctrlKey || e.metaKey; // Handle macOS Command key (metaKey).
 					const isSpecialKey =
 						[ 37, 38, 39, 40, 8, 46 ].indexOf( e.keyCode ) !== -1;
@@ -1764,10 +1788,17 @@
 	focus_to_nearest_input();
 	$( document ).on( 'after.load.forminator', focus_to_nearest_input );
 
+	$( document ).on( 'after.load.forminator', () => {
+		forminator_render_captcha();
+		forminator_render_hcaptcha();
+		forminator_render_turnstile();
+	} );
+
 	// Elementor Popup show event
 	jQuery( document ).on( 'elementor/popup/show', () => {
 		forminator_render_captcha();
 		forminator_render_hcaptcha();
+		forminator_render_turnstile();
 	} );
 
 	/**
@@ -1785,6 +1816,24 @@
 	}
 
 })(jQuery, window, document);
+
+// noinspection JSUnusedGlobalSymbols
+var forminator_render_turnstile = function () {
+	jQuery('.forminator-turnstile').each(function () {
+		// find closest form.
+		var thisCaptcha = jQuery(this),
+			form 		= thisCaptcha.closest('form');
+
+		if ( form.length > 0 && '' === thisCaptcha.html() ) {
+			window.setTimeout( function() {
+				var forminatorFront = form.data( 'forminatorFront' );
+				if ( typeof forminatorFront !== 'undefined' ) {
+					forminatorFront.renderTurnstileCaptcha( thisCaptcha[0] );
+				}
+			}, 100 );
+		}
+	});
+};
 
 // noinspection JSUnusedGlobalSymbols
 var forminator_render_captcha = function () {

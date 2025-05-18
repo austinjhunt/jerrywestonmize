@@ -16,7 +16,9 @@
 
 	// Create the defaults once
 	var pluginName = "forminatorFrontMultiFile",
-		defaults = {};
+		defaults = {},
+		uploadRequests = [],
+		uploadCompleted = [];
 
 	// The actual plugin constructor
 	function ForminatorFrontMultiFile(element, options) {
@@ -47,6 +49,8 @@
 			if (this.form.find('input[name=form_id]').length > 0) {
 				this.form_id = this.form.find('input[name=form_id]').val();
 			}
+			uploadRequests[this.form_id] = uploadRequests[this.form_id] || 0;
+			uploadCompleted[this.form_id] = uploadCompleted[this.form_id] || 0;
 
 			this.uploader.on("drag dragstart dragend dragover dragenter dragleave drop", function(e) {
 				e.preventDefault();
@@ -81,6 +85,16 @@
 			this.form.on("forminator:form:submit:success", function(e) {
 				fileList = [];
 			});
+
+			this.form.on('forminator.front.pagination.buttons.updated', function (e) {
+				// Disable the submit button if there are files being uploaded.
+				if ( self.form.find( '.forminator-button-submit' ).length > 0 && uploadRequests[self.form_id] !== uploadCompleted[self.form_id]) {
+					self.form.find('.forminator-button-submit').attr( 'disabled', true ).attr( 'data-uploading', true );
+				} else if ( self.form.find( '.forminator-button-next' ).length > 0 && self.form.find( '.forminator-button-next' ).attr('data-uploading') === 'true' ) {
+					self.form.find('.forminator-button-next').attr( 'disabled', false ).removeAttr( 'data-uploading' );
+				}
+			});
+
 			this.form.find( '.forminator-field-' + self.element + '-' + self.form_id ).on("change", function(e) {
 				if( ! self.uploadingFile ){
 					self.uploadingFile = 1;
@@ -123,7 +137,6 @@
 		 */
 		handleChangeCallback: function ( param, $this, ajax_request ) {
 			var self = this,
-				ajax_inc = 0,
 				uploadData = new FormData,
 				nonce = this.form.find('input[name="forminator_nonce"]').val(),
 				method = $this.data('method'),
@@ -177,8 +190,9 @@
 						contentType: false,
 						processData: false,
 						beforeSend: function () {
-							self.form.find('.forminator-button-submit').attr( 'disabled', true );
+							self.form.find('.forminator-button-submit').attr( 'disabled', true ).attr( 'data-uploading', true );
 							self.$el.trigger('before:forminator:multiple:upload', uploadData);
+							uploadRequests[self.form_id]++;
 						},
 						success: function (data) {
 							var element = self.element,
@@ -202,9 +216,9 @@
 							}
 						},
 						complete: function (xhr, status) {
-							ajax_inc++;
-							if ( param.length === ajax_inc ) {
-								self.form.find('.forminator-button-submit').attr( 'disabled', false );
+							uploadCompleted[self.form_id]++;
+							if ( uploadRequests[self.form_id] === uploadCompleted[self.form_id] ) {
+								self.form.find('.forminator-button-submit').attr( 'disabled', false ).removeAttr( 'data-uploading' );
 							}
 							self.$el.trigger('complete:forminator:multiple:upload', uploadData);
 						},

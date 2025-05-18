@@ -120,6 +120,14 @@
 					if ( $( element ).hasClass('hasDatepicker') === false ) {
 						$( element ).valid();
 					}
+					//validate Confirm email.
+					if ( $( element ).hasClass( 'forminator-email--field' ) ) {
+						let name = $( element ).attr( 'name' ),
+							confirmEmail = $( 'input[name="confirm_' + name + '"]' );
+						if ( confirmEmail.length && confirmEmail.val() ) {
+							confirmEmail.valid();
+						}
+					}
 					$( element ).trigger('validation:focusout');
 				},
 
@@ -370,9 +378,8 @@
 			});
 
 			$form.off('forminator.validate.signature').on('forminator.validate.signature', function () {
-				//validator.element( $( this ).find( "input[id$='_data']" ) );
 				var validator = $( this ).validate();
-				validator.form();
+				validator.element( $( this ).find( "input[id$='_data']" ) );
 			});
 
 			// Inline validation for upload field.
@@ -509,6 +516,32 @@
 	$.validator.addMethod("trim", function( value, element, param ) {
 		return true === this.optional( element ) || 0 !== value.trim().length;
 	});
+	$.validator.addMethod("equalToClosestEmail", function (value, element, param) {
+		let target = $(element).closest('.forminator-row-with-confirmation-email').find('input[type="email"]').first();
+		return target.length && value === target.val();
+	} );
+	$.validator.addMethod("emailFilter", function (email, element, param) {
+		if ( ! email )	{
+			return true;
+		}
+		const emailList = param.email_list.split('|'),
+			isDeny = 'deny' === param.filter_type;
+
+		for (let item of emailList) {
+			// Remove spaces in email addresses.
+			item = item.replace(/[\s\n\r\t]/g, '');
+			// Escape special characters.
+			item = item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+			// Support * as wildcard.
+			item = item.replace(/\\\*/g, '.*');
+			// Add end delimiter.
+			const regex = new RegExp(item + '$');
+			if (regex.test(email)) {
+				return ! isDeny;
+			}
+		}
+		return isDeny;
+	} );
 	$.validator.addMethod("emailWP", function (value, element, param) {
 		if (this.optional(element)) {
 			return true;

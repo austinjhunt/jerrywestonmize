@@ -912,7 +912,7 @@ class EventReservationService extends AbstractReservationService
 
         return $dateTime > $bookingOpens &&
             $dateTime < $bookingCloses &&
-            ($hasCapacity || $hasWaitingList) &&
+            ($hasCapacity || ($hasWaitingList && $newBooking && $newBooking->getStatus()->getValue() === BookingStatus::WAITING)) &&
             in_array($reservation->getStatus()->getValue(), [BookingStatus::APPROVED, BookingStatus::PENDING], true);
     }
 

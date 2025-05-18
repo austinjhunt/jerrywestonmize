@@ -32,6 +32,7 @@ class UpdatePaymentController extends Controller
         'data',
         'amount',
         'transactionId',
+        'wcOrderId',
     ];
 
     /**

@@ -2,9 +2,9 @@
 
 Contributors:      google
 Requires at least: 5.2
-Tested up to:      6.7
+Tested up to:      6.8
 Requires PHP:      7.4
-Stable tag:        1.149.1
+Stable tag:        1.152.1
 License:           Apache License 2.0
 License URI:       https://www.apache.org/licenses/LICENSE-2.0
 Tags:              google, search-console, analytics, adsense, pagespeed-insights
@@ -36,6 +36,7 @@ Site Kit shows key metrics and insights from different Google products:
 * **Tag Manager:** Use Site Kit to easily set up Tag Manager- no code editing required. Then, manage your tags in Tag Manager.
 
 == Installation ==
+
 **Note**: Make sure that your website is live. If your website isn't live yet, Site Kit can't show you any data.
 However, if you have a staging environment in addition to your production site, Site Kit can display data from your production site in the staging environment. Learn how to use [Site Kit with a staging environment](https://sitekit.withgoogle.com/documentation/using-site-kit/staging/).
 
@@ -45,7 +46,6 @@ However, if you have a staging environment in addition to your production site, 
 2. Search for **Site Kit by Google**.
 3. Install and activate the Site Kit by Google plugin.
 4. Connect Site Kit to your Google account. If there are multiple WordPress admins, keep in mind that each admin must connect their own Google account in order to access the plugin.
-
 
 = Manual installation =
 
@@ -109,10 +109,35 @@ Please create a new topic on our [WordPress.org support forum](https://wordpress
 
 == Changelog ==
 
-= 1.149.1 =
+= 1.152.1 =
 
 **Fixed**
 
-* Fix js error that appears on the dashboard when metric values are missing in report results. See [#10520](https://github.com/google/site-kit-wp/issues/10520).
+* Published a new plugin version after issues with WordPress.org plugin updates not appearing for users.
+
+= 1.152.0 =
+
+**Enhanced**
+
+* Update the setup success notification copy to consistently refer to "visitor groups" instead of "audiences" in Audience Segmentation settings. See [#10554](https://github.com/google/site-kit-wp/issues/10554).
+* Improve the naming of the available audience selectors. See [#10449](https://github.com/google/site-kit-wp/issues/10449).
+* Add new components for notices. See [#10429](https://github.com/google/site-kit-wp/issues/10429).
+* Refactor `DashboardPageSpeed` component to reduce cyclomatic complexity and remove the ESLint override. See [#10362](https://github.com/google/site-kit-wp/issues/10362).
+* Refactor the `Footer` component in `SettingsActiveModule` to reduce cyclomatic complexity and remove the ESLint override. See [#10353](https://github.com/google/site-kit-wp/issues/10353).
+* Remove the ESLint complexity override from the dashboard sharing settings' `Module` component. See [#10350](https://github.com/google/site-kit-wp/issues/10350).
+* Fix minor visual issues when the Dashbaord Sharing modal is being closed. See [#9138](https://github.com/google/site-kit-wp/issues/9138).
+* Fix bug that could cause an erroneous module link to appear when a module isn't connected. See [#7698](https://github.com/google/site-kit-wp/issues/7698).
+
+**Changed**
+
+* Remove GM3 assets from the codebase. See [#10604](https://github.com/google/site-kit-wp/issues/10604).
+
+**Fixed**
+
+* Fix the `&amp;` occurrences issue in KMW widgets. See [#10622](https://github.com/google/site-kit-wp/issues/10622).
+* Fix bug that can occur when AAA Option Optimizer plugin is installed. Props tacoverdo. See [#10573](https://github.com/google/site-kit-wp/issues/10573).
+* Restore loading state for Google tag mismatch notification when actioning. See [#10489](https://github.com/google/site-kit-wp/issues/10489).
+* Fix glitches when closing various modal dialogs. See [#9137](https://github.com/google/site-kit-wp/issues/9137).
+* Update the Ad Blocking Recovery notification to remain visible after clicking on the CTA button. See [#7908](https://github.com/google/site-kit-wp/issues/7908).
 
 [See changelog for all versions](https://raw.githubusercontent.com/google/site-kit-wp/main/changelog.txt).

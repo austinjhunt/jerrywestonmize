@@ -166,7 +166,7 @@ class Forminator_Radio extends Forminator_Field {
 		$post_valid   = false;
 		$default      = '';
 		$uniq_id      = Forminator_CForm_Front::$uid;
-		$descr_id     = 'forminator-radiogroup-' . $uniq_id;
+		$descr_id     = 'forminator-radiogroup-' . $name . '-' . $uniq_id;
 
 		if ( (bool) $required ) {
 			$ariareq = 'true';
@@ -179,22 +179,22 @@ class Forminator_Radio extends Forminator_Field {
 
 		$html .= sprintf(
 			'<div role="radiogroup" class="forminator-field" aria-labelledby="%s"%s>',
-			esc_attr( 'forminator-radiogroup-' . $uniq_id . '-label' ),
-			( ! empty( $description ) ? ' aria-describedby="' . esc_attr( 'forminator-radiogroup-' . $uniq_id . '-description' ) . '"' : '' )
+			esc_attr( $descr_id . '-label' ),
+			( ! empty( $description ) ? ' aria-describedby="' . esc_attr( $descr_id . '-description' ) . '"' : '' )
 		);
 
 		if ( $label ) {
 			if ( $required ) {
 				$html .= sprintf(
 					'<span id="%s" class="forminator-label">%s %s</span>',
-					'forminator-radiogroup-' . $uniq_id . '-label',
+					$descr_id . '-label',
 					$label,
 					forminator_get_required_icon()
 				);
 			} else {
 				$html .= sprintf(
 					'<span id="%s" class="forminator-label">%s</span>',
-					'forminator-radiogroup-' . $uniq_id . '-label',
+					$descr_id . '-label',
 					$label
 				);
 			}

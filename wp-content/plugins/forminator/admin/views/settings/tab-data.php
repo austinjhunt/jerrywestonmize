@@ -109,12 +109,13 @@ $upload_root              = ! empty( $upload_root ) ? basename( $upload_root ) :
 
 							<div data-tab-content="forminator-custom_upload-true" class="sui-tab-content sui-tab-boxed<?php echo( $forminator_custom_upload ? ' active' : '' ); ?>">
 								<div class="sui-form-field">
-									<span class="sui-field-prefix">
+									<label for="forminator-field-custom_upload_root" class="sui-field-prefix">
 										<?php esc_html_e( 'Enter a custom directory to store uploaded files', 'forminator' ); ?>
-									</span>
+									</label>
 									<div class="sui-control-with-icon">
 										<span class="sui-icon-folder" aria-hidden="true"></span>
 										<input type="text"
+											id="forminator-field-custom_upload_root"
 											name="custom_upload_root"
 											value="<?php echo esc_html( $upload_root ); ?>"
 											class="sui-form-control forminator-custom-directory-value"

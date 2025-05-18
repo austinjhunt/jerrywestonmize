@@ -17,6 +17,7 @@ use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\Recurring;
 use AmeliaBooking\Domain\ValueObjects\String\Cycle;
+use \DateTime as DateTime;
 
 /**
  * Class EventDomainService
@@ -25,6 +26,19 @@ use AmeliaBooking\Domain\ValueObjects\String\Cycle;
  */
 class EventDomainService
 {
+    /**
+     * @param DateTime $periodStart
+     * @param DateTime $periodEnd
+     *
+     * @return void
+     */
+    public function fixPeriod($periodStart, $periodEnd)
+    {
+        if ($periodStart->format('Y-m-d H:i') === $periodEnd->format('Y-m-d H:i')) {
+            $periodEnd->modify('60 minutes');
+        }
+    }
+
     /**
      * @param Recurring  $recurring
      * @param Collection $eventPeriods

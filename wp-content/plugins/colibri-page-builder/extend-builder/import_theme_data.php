@@ -143,7 +143,12 @@ class ColibriThemeDataImporter {
 
 		foreach ( $data as $key => $value ) {
 			switch ( $key ) {
-
+				case 'hero.props.useWhiteText':
+					if ( $value === true ) {
+						$data[ 'title.style.color' ] = 'rgb(255,255,255)';
+						$data[ 'subtitle.style.color' ] = "rgb(255,255,255)";
+					}
+					break;
 
 				case 'logo.props.layoutType':
 					$data[ $key ] = $this->current_data["header_front_page"]["logo"]["props"]["layoutType"];

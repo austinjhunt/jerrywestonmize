@@ -48,7 +48,7 @@
 		<div class="sui-box">
 			<div class="sui-box-body">
 				<h3><?php esc_html_e( 'SmartCrawl Search Engine Optimization', 'forminator' ); ?></h3>
-				<p><?php esc_html_e( 'Customize Titles & Meta Data, OpenGraph, Twitter & Pinterest Support, Auto-Keyword Linking, SEO & Readability Analysis, Sitemaps, URL Crawler & more.', 'forminator' ); ?></p>
+				<p><?php esc_html_e( 'Customize Titles & Meta Data, OpenGraph, X & Pinterest Support, Auto-Keyword Linking, SEO & Readability Analysis, Sitemaps, URL Crawler & more.', 'forminator' ); ?></p>
 				<a href="https://wordpress.org/plugins/smartcrawl-seo/"
 					target="_blank"
 					class="sui-button sui-button-ghost">

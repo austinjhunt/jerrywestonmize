@@ -170,14 +170,14 @@ class Forminator_MultiValue extends Forminator_Field {
 		$html .= sprintf(
 			'<div role="group" class="%s" aria-labelledby="%s">',
 			esc_attr( $required ? 'forminator-field required' : 'forminator-field' ),
-			esc_attr( 'forminator-checkbox-group-' . $uniq_id . '-label' )
+			esc_attr( 'forminator-checkbox-group-' . $id . '-' . $uniq_id . '-label' )
 		);
 
 		if ( $label ) {
 			$label .= $required ? ' ' . forminator_get_required_icon() : '';
 			$html  .= sprintf(
 				'<span id="%s" class="forminator-label">%s</span>',
-				'forminator-checkbox-group-' . $uniq_id . '-label',
+				'forminator-checkbox-group-' . $id . '-' . $uniq_id . '-label',
 				$label
 			);
 		}

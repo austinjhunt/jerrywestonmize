@@ -349,7 +349,7 @@ class Forminator_QForm_Front extends Forminator_Render_Form {
 					$answer_id     = $field_slug . '-' . $k . $uniq_id;
 					$label         = isset( $answer['title'] ) ? $answer['title'] : '';
 					$image         = isset( $answer['image'] ) ? $answer['image'] : '';
-					$image_alt     = '';
+					$image_alt     = isset( $answer['image_filename'] ) ? $answer['image_filename'] : '';
 					$has_label     = isset( $label ) && '' !== $label;
 					$has_image     = ( isset( $image ) && ! empty( $image ) );
 					$has_image_alt = ( isset( $image_alt ) && ! empty( $image_alt ) );
@@ -788,8 +788,8 @@ class Forminator_QForm_Front extends Forminator_Render_Form {
 			$html    .= self::pagination_content_start( $form_id, self::$steps_count, false );
 		}
 		$html .= '<div class="forminator-quiz--result">';
+		$label = esc_html( $submit_data['label'] );
 		if ( 'knowledge' === $this->model->quiz_type && $this->has_lead() && 'end' === $lead_result ) {
-			$label = esc_html__( 'View Results', 'forminator' );
 
 			if ( 'material' === $this->get_quiz_theme() ) {
 
@@ -811,7 +811,6 @@ class Forminator_QForm_Front extends Forminator_Render_Form {
 				);
 			}
 		} elseif ( 'nowrong' === $this->model->quiz_type || 'end' === $result_behav ) {
-			$label = $submit_data['label'];
 
 			if ( 'material' === $this->get_quiz_theme() ) {
 

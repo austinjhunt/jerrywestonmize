@@ -16,6 +16,7 @@ use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use Exception;
@@ -127,10 +128,20 @@ class UpdateEventCommandHandler extends CommandHandler
             return $result;
         }
 
+        /** @var DateTimeValue $newUntil */
+        $newUntil = $event->getRecurring()
+            ? $event->getRecurring()->getUntil()->getValue()->setTime(0, 0, 0)
+            : null;
+
+        /** @var DateTimeValue $oldUntil */
+        $oldUntil = $oldEvent->getRecurring()
+            ? $oldEvent->getRecurring()->getUntil()->getValue()->setTime(0, 0, 0)
+            : null;
+
         if ($oldEvent->getRecurring() &&
             $event->getRecurring() &&
             (
-                $event->getRecurring()->getUntil()->getValue() < $oldEvent->getRecurring()->getUntil()->getValue() ||
+                $newUntil < $oldUntil ||
                 $event->getRecurring()->getCycle()->getValue() !== $oldEvent->getRecurring()->getCycle()->getValue()
             )
         ) {

@@ -4012,7 +4012,9 @@ hr {
   z-index: 1; }
 
 .shape-layer {
-  z-index: 2; }
+  z-index: 2;
+  background-repeat: no-repeat;
+  background-size: cover; }
 
 .overlay-image-layer {
   z-index: 1; }
@@ -22616,6 +22618,8 @@ hr {
 }
 .shape-layer {
   z-index: 2;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .overlay-image-layer {
   z-index: 1;

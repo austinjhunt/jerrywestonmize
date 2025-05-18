@@ -73,9 +73,10 @@ if ( ! empty( $template_vars['has_deprecated_secret_key'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['test_key_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Test Publishable Key', 'forminator' ); ?></label>
+		<label for="forminator-field-stripe-test-key" class="sui-label"><?php esc_html_e( 'Test Publishable Key', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-stripe-test-key"
 			class="sui-form-control"
 			name="test_key" placeholder="<?php echo esc_attr__( 'Enter your test publishable key', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['test_key'] ); ?>"
@@ -88,9 +89,10 @@ if ( ! empty( $template_vars['has_deprecated_secret_key'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['test_secret_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Test Restricted API Key', 'forminator' ); ?></label>
+		<label for="forminator-field-stripe-test-secret-key" class="sui-label"><?php esc_html_e( 'Test Restricted API Key', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-stripe-test-secret-key"
 			class="sui-form-control"
 			name="test_secret" placeholder="<?php echo esc_attr__( 'Enter your test restricted API key', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['test_secret'] ); ?>"
@@ -104,9 +106,10 @@ if ( ! empty( $template_vars['has_deprecated_secret_key'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['live_key_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Live Publishable Key', 'forminator' ); ?></label>
+		<label for="forminator-field-stripe-live-key" class="sui-label"><?php esc_html_e( 'Live Publishable Key', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-stripe-live-key"
 			class="sui-form-control"
 			name="live_key" placeholder="<?php echo esc_attr__( 'Enter your live publishable key', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['live_key'] ); ?>"
@@ -120,9 +123,10 @@ if ( ! empty( $template_vars['has_deprecated_secret_key'] ) ) {
 
 	<div class="sui-form-field <?php echo esc_attr( ! empty( $vars['live_secret_error'] ) ? 'sui-form-field-error' : '' ); ?>">
 
-		<label class="sui-label"><?php esc_html_e( 'Live Restricted API Key', 'forminator' ); ?></label>
+		<label for="forminator-field-stripe-live-secret-key" class="sui-label"><?php esc_html_e( 'Live Restricted API Key', 'forminator' ); ?></label>
 
 		<input
+			id="forminator-field-stripe-live-secret-key"
 			class="sui-form-control"
 			name="live_secret" placeholder="<?php echo esc_attr__( 'Enter your live restricted API key', 'forminator' ); ?>"
 			value="<?php echo esc_attr( $vars['live_secret'] ); ?>"

@@ -97,7 +97,7 @@ defined( 'W3TC' ) || die();
 							sprintf(
 								// translators: 1 opening HTML em tag, 2 closing HTML em tag.
 								__(
-									'Enabling this option will increase load on server on certain actions but will guarantee that the Object Cache is always clean and contains latest changes. %1$sEnable if you are experiencing issues with options displaying wrong value/state (checkboxes etc).%2$2',
+									'Enabling this option will increase load on server on certain actions but will guarantee that the Object Cache is always clean and contains latest changes. %1$sEnable if you are experiencing issues with options displaying wrong value/state (checkboxes etc).%2$s',
 									'w3-total-cache'
 								),
 								'<em>',
@@ -187,11 +187,11 @@ defined( 'W3TC' ) || die();
 
 			$time_options = array();
 			for ( $hour = 0; $hour < 24; $hour++ ) {
-				foreach ( array('00', '30') as $minute ) {
-					$time_value                = $hour * 60 + intval( $minute );
-					$scheduled_time            = new \DateTime( "{$hour}:{$minute}", wp_timezone() );
-					$time_label                = $scheduled_time->format( 'g:i a' );
-					$time_options[$time_value] = $time_label;
+				foreach ( array( '00', '30' ) as $minute ) {
+					$time_value                  = $hour * 60 + intval( $minute );
+					$scheduled_time              = new \DateTime( "{$hour}:{$minute}", wp_timezone() );
+					$time_label                  = $scheduled_time->format( 'g:i a' );
+					$time_options[ $time_value ] = $time_label;
 				}
 			}
 

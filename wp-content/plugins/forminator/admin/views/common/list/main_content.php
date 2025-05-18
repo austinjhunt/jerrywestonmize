@@ -46,10 +46,10 @@
 					<?php endforeach; ?>
 				</select>
 
-				<button class="sui-button"><?php esc_html_e( 'Apply', 'forminator' ); ?></button>
+				<button id="forminator_bulk_apply_button" class="sui-button"><?php esc_html_e( 'Apply', 'forminator' ); ?></button>
 
 				<?php if ( 'forminator_forms' === $forminator_post_type ) { ?>
-				<button id="forminator_bulk_apply_preset" data-modal="apply_preset" class="sui-hidden wpmudev-open-modal"></button>
+				<button id="forminator_bulk_apply_preset" data-modal="apply_preset" class="sui-hidden wpmudev-open-modal" aria-labelledby="forminator_bulk_apply_button"></button>
 				<?php } ?>
 
 			</form>

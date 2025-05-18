@@ -93,7 +93,14 @@ class Shortcodes extends Controller {
 
 		$classes = implode( ' ', $classes );
 
-		return sprintf( $container, esc_attr( $classes ), do_shortcode( $content ), do_shortcode( $atts['message'] ) );
+		return sprintf(
+			$container,
+			esc_attr( $classes ),
+			// Sanitize the content output, allowing safe HTML and processed shortcodes.
+			do_shortcode( $content ),
+			// Sanitize the message output, allowing safe HTML and processed shortcodes.
+			wp_kses_post( do_shortcode( $atts['message'] ) )
+		);
 	}
 
 	/**
@@ -108,6 +115,8 @@ class Shortcodes extends Controller {
 	 * @psalm-return array<int|string, int|null|string|true>
 	 */
 	public function normalize_empty_atts( $atts = [] ) {
+		// Sanity check to ensure $atts is an array.
+		// @phpstan-ignore-next-line .
 		if ( ! is_array( $atts ) || empty( $atts ) ) {
 			$atts = [];
 		}

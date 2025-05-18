@@ -640,7 +640,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			if ( $fields_left > 0 ) {
 				?>
 
-				<th data-num-hidden-fields="<?php echo esc_attr( $fields_left ); ?>"></th>
+				<th data-num-hidden-fields="<?php echo esc_attr( $fields_left ); ?>" aria-label="<?php esc_attr_e( 'Other fields', 'forminator' ); ?>"></th>
 
 			<?php } ?>
 

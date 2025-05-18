@@ -29,7 +29,7 @@ $url       = add_query_arg(
 		aria-labelledby="forminator-new-feature__title"
 	>
 
-		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1400" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
+		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1420" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
 
 			<div class="sui-box-header sui-flatten sui-content-center">
 
@@ -47,31 +47,73 @@ $url       = add_query_arg(
 				</button>
 
 				<h3 class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: initial;">
-					<?php esc_html_e( 'Cloud Templates Are Now FREE!', 'forminator' ); ?>
+					<?php esc_html_e( 'New: Additional Spam Protection Features', 'forminator' ); ?>
 				</h3>
 
 				<p class="sui-description">
 					<?php
 					printf(
 						/* translators: 1. Admin name */
-						esc_html__( 'Hey %s, big news! The Cloud Templates feature is now FREE for all Hub users! Instantly access your custom form templates across all sites connected to your Hub. No more tedious imports and exports—save forms as templates in one click, reuse them anywhere, and streamline your workflow.', 'forminator' ),
+						esc_html__( 'Hey %s, we’ve added new anti-spam tools to help you block spam submissions and keep your forms secure and clean. These updates make it easier to manage submissions and ensure genuine engagement.', 'forminator' ),
 						esc_html( ucfirst( $user->display_name ) ),
 					);
 					?>
 				</p>
-				<p></p>
-				<p class="sui-description">
-					<?php
-						esc_html_e( 'Connect your site now to unlock this feature and enjoy even more free perks!', 'forminator' );
-					?>
-				</p>
+
+				<div class="sui-modal-list" style="text-align: left; background-color: #F8F8F8; padding: 15px; border-radius: 5px;">
+					<h4><?php esc_html_e( 'What\'s New?', 'forminator' ); ?></h4>
+					<ul>
+
+						<li>
+							<h3 style="margin-bottom: 0;">
+								<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
+								&nbsp;&nbsp;
+								<?php esc_html_e( 'Cloudflare Turnstile CAPTCHA', 'forminator' ); ?></h3>
+							<p class="sui-description" style="margin: 5px 0 20px 25px;">
+								<?php esc_html_e( 'Stop bots with Cloudflare’s Turnstile CAPTCHA.', 'forminator' ); ?>
+								<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/cloudflare-turnstile-field" target="_blank" class="sui-link">
+									<?php esc_html_e( 'Learn more', 'forminator' ); ?>
+								</a>
+							</p>
+						</li>
+
+						<li>
+							<h3 style="margin-bottom: 0;">
+								<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
+								&nbsp;&nbsp;
+								<?php esc_html_e( 'Email Input Filtering', 'forminator' ); ?>
+							</h3>
+							<p class="sui-description" style="margin: 5px 0 20px 25px;">
+								<?php esc_html_e( 'Allow or block specific email addresses or domains from submitting your forms.', 'forminator' ); ?>
+								<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#email-settings" target="_blank" class="sui-link">
+									<?php esc_html_e( 'Learn more', 'forminator' ); ?>
+								</a>
+							</p>
+						</li>
+
+						<li>
+							<h3 style="margin-bottom: 0;">
+								<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
+								&nbsp;&nbsp;
+								<?php esc_html_e( 'Email Confirmation', 'forminator' ); ?>
+							</h3>
+							<p class="sui-description" style="margin: 5px 0 0 25px;">
+								<?php esc_html_e( 'Ask users to confirm their email before submitting.', 'forminator' ); ?>
+								<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#email-lables" target="_blank" class="sui-link">
+									<?php esc_html_e( 'Learn more', 'forminator' ); ?>
+								</a>
+							</p>
+						</li>
+
+					</ul>
+				</div>
 
 			</div>
 
 			<div class="sui-box-footer sui-flatten sui-content-center">
 
-				<button data-link="<?php echo esc_url( $url ); ?>" class="sui-button sui-button-blue forminator-dismiss-new-feature" data-modal-close>
-					<?php esc_html_e( 'Connect Site', 'forminator' ); ?>
+				<button class="sui-button forminator-dismiss-new-feature" data-modal-close>
+					<?php esc_html_e( 'Got it', 'forminator' ); ?>
 				</button>
 
 			</div>

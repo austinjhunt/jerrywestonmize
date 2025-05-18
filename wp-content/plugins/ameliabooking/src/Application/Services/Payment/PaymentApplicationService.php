@@ -1866,6 +1866,10 @@ class PaymentApplicationService
                         'status'
                     );
 
+                    $event->setBookings(new Collection());
+
+                    $event->getBookings()->addItem($booking);
+
 
                     $result->setData(
                         [

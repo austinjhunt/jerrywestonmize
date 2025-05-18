@@ -98,6 +98,22 @@ class PostContent extends Controller {
 			return $content;
 		}
 
+		/**
+		 * Prevent the default restriction message from being shown by returning a custom
+		 * message or content.
+		 *
+		 * @param null|string $pre_restrict_content The content to display.
+		 * @param string $content   The content.
+		 * @param \ContentControl\Models\Restriction    $restriction    The restriction.
+		 *
+		 * @return string
+		 */
+		$pre_restrict_content = apply_filters( 'content_control/pre_restrict_content', null, $content, $restriction );
+
+		if ( null !== $pre_restrict_content ) {
+			return $pre_restrict_content;
+		}
+
 		$message = \ContentControl\get_default_denial_message();
 
 		/**
@@ -118,8 +134,8 @@ class PostContent extends Controller {
 		/**
 		 * Filter the message to display when a post is restricted.
 		 *
-		 * @param string $message     Message to display.
-		 * @param object $restriction Restriction object.
+		 * @param string                             $message     Message to display.
+		 * @param \ContentControl\Models\Restriction $restriction The restriction.
 		 *
 		 * @return string
 		 */
@@ -155,23 +171,56 @@ class PostContent extends Controller {
 			return $post_excerpt;
 		}
 
-		$restriction = get_applicable_restriction();
+		$restriction = get_applicable_restriction( $post->ID );
 
 		if ( false === $restriction ) {
 			return $post_excerpt;
 		}
 
 		/**
-		 * Filter the excerpt to display when a post is restricted.
+		 * Filter to bypass the default restriction message for excerpts.
 		 *
-		 * @param string $message     Message to display.
-		 * @param object $restriction Restriction object.
+		 * @since 2.6.2
+		 *
+		 * @param null|string                        $pre_excerpt      Return a non-null value to bypass.
+		 * @param string                             $post_excerpt     The original excerpt.
+		 * @param \ContentControl\Models\Restriction $restriction    The restriction object.
+		 */
+		$pre_restrict_excerpt = apply_filters( 'content_control/pre_restrict_excerpt', null, $post_excerpt, $restriction );
+
+		if ( null !== $pre_restrict_excerpt ) {
+			return $pre_restrict_excerpt;
+		}
+
+		$message = \ContentControl\get_default_denial_message();
+
+		/**
+		 * If the restriction has a custom message, use it.
+		 *
+		 * We could check $restriction->replacement_type, but we need a safe default for
+		 * all cases. Further we do content filtering for all sub queries and currently
+		 * don't offer a way to override the message for those.
+		 *
+		 * In this way currently users can change to content replacement, set the override
+		 * message, then change back to page replacement and the override message will still
+		 * be used for the post in sub queries.
+		 */
+		if ( $restriction->get_setting( 'overrideMessage' ) ) {
+			$message = $restriction->get_message();
+		}
+
+		/**
+		 * Filter the excerpt message to display when a post is restricted.
+		 *
+		 * @param string                             $message     Message to display.
+		 * @param \ContentControl\Models\Restriction $restriction The restriction.
 		 *
 		 * @return string
 		 */
 		return apply_filters(
 			$filter_name,
-			$restriction->get_message(),
+			// If the default message is empty, show a generic message.
+			! empty( $message ) ? $message : __( 'This content is restricted.', 'content-control' ),
 			$restriction
 		);
 	}

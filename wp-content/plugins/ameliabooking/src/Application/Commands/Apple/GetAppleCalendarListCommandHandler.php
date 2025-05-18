@@ -63,13 +63,15 @@ class GetAppleCalendarListCommandHandler extends CommandHandler
         /** @var Provider $provider */
         $provider = $providerRepository->getById($command->getArg('id'));
 
+        $employeeAppleCalendar = $provider && $provider->getEmployeeAppleCalendar() ? $provider->getEmployeeAppleCalendar()->toArray() : null;
+
         $appleCalendarId = $provider && $provider->getAppleCalendarId() ? $provider->getAppleCalendarId()->getValue() : null;
 
         /** @var AbstractAppleCalendarService $appleCalendarService */
         $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
 
-        $appleId = $appleCalendarSettings['clientID'];
-        $applePassword = $appleCalendarSettings['clientSecret'];
+        $appleId = $employeeAppleCalendar && $employeeAppleCalendar['iCloudId'] ? $employeeAppleCalendar['iCloudId'] : $appleCalendarSettings['clientID'];
+        $applePassword = $employeeAppleCalendar && $employeeAppleCalendar['appSpecificPassword'] ? $employeeAppleCalendar['appSpecificPassword'] : $appleCalendarSettings['clientSecret'];
 
         $credentials = $appleCalendarService->handleAppleCredentials($appleId, $applePassword);
         $calendarList = [];
@@ -89,12 +91,20 @@ class GetAppleCalendarListCommandHandler extends CommandHandler
                     }
                 }
             }
-
+            if (!$appleCalendarId && $provider && $employeeAppleCalendar) {
+                $providerRepository->updateFieldById($provider->getId()->getValue(), $calendarList[0]['id'], 'appleCalendarId');
+            }
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully retrieved calendar list.');
             $result->setData(
                 [
                     'calendarList' => $calendarList,
+                    'appleCalendarId' => ($provider && $provider->getAppleCalendarId())
+                        ? $provider->getAppleCalendarId()->getValue()
+                        : (($employeeAppleCalendar === null)
+                            ? null
+                            : $calendarList[0]['id']),
+                    'isEmployeeConnectedToPersonalAppleCalendar' => (bool)$employeeAppleCalendar,
                 ]
             );
 
@@ -111,8 +121,8 @@ class GetAppleCalendarListCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      */
     private function filterCalendars(
-        array $calendars,
-        string $appleCalendarId,
+        $calendars,
+        $appleCalendarId,
         Provider $provider,
         ProviderRepository $providerRepository
     ) {

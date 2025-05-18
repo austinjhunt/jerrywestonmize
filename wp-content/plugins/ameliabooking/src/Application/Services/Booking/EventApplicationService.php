@@ -318,6 +318,7 @@ class EventApplicationService
                     'fetchEventsImages'    => true,
                     'fetchBookings'        => true,
                     'fetchBookingsUsers'   => true,
+                    'ordered'              => true,
                 ],
                 0
             );
@@ -358,6 +359,7 @@ class EventApplicationService
                     'fetchEventsImages'    => true,
                     'fetchBookings'        => true,
                     'fetchBookingsUsers'   => true,
+                    'ordered'              => true,
                 ],
                 0
             );
@@ -417,6 +419,16 @@ class EventApplicationService
                 }
             }
 
+            /** @var EventPeriod $lastPeriod */
+            $lastPeriod = null;
+
+            /** @var Event $followingEvent */
+            foreach ($followingEvents->getItems() as $key => $followingEvent) {
+                if ($newEvent->getId()->getValue() < $followingEvent->getId()->getValue()) {
+                    $lastPeriod = $this->getLastPeriod($followingEvent);
+                }
+            }
+
             /** @var Event $followingEvent */
             foreach ($followingEvents->getItems() as $key => $followingEvent) {
                 if (!$clonedEvents->keyExists($followingEvent->getId()->getValue())) {
@@ -428,9 +440,9 @@ class EventApplicationService
 
                 if ($followingEvent->getId()->getValue() < $newEvent->getId()->getValue()) {
                     $followingEvent->getRecurring()->setUntil(
-                        $isNewRecurring ?
-                            $newEvent->getPeriods()->getItem(0)->getPeriodStart() :
-                            $newEvent->getRecurring()->getUntil()
+                        $isNewRecurring && $lastPeriod
+                            ? $lastPeriod->getPeriodStart()
+                            : $newEvent->getRecurring()->getUntil()
                     );
 
                     $this->updateSingle($followingEvent, $followingEvent, true);
@@ -449,10 +461,17 @@ class EventApplicationService
                                 'monthlyRepeat' => $newEvent->getRecurring()->getMonthlyRepeat(),
                                 'monthlyOnRepeat' => $newEvent->getRecurring()->getMonthlyOnRepeat(),
                                 'monthlyOnDay'  => $newEvent->getRecurring()->getMonthlyOnDay(),
-                                'monthDate'  => $newEvent->getRecurring()->getMonthDate() ? $newEvent->getRecurring()->getMonthDate()->getValue()->format('Y-m-d H:i:s') : null,
+                                'monthDate'  => $newEvent->getRecurring()->getMonthDate()
+                                    ? $newEvent->getRecurring()->getMonthDate()->getValue()->format('Y-m-d H:i:s')
+                                    : null,
                                 'until' => $newEvent->getRecurring()->getUntil()->getValue()->format('Y-m-d H:i:s'),
-                                'order' => $followingEvent->getRecurring() && $followingEvent->getRecurring()->getOrder() && $followingEvent->getRecurring()->getOrder()->getValue() ?
-                                    $followingEvent->getRecurring()->getOrder()->getValue() : ++$followingRecurringOrder
+                                'order' =>
+                                    !$isNewRecurring &&
+                                    $followingEvent->getRecurring() &&
+                                    $followingEvent->getRecurring()->getOrder() &&
+                                    $followingEvent->getRecurring()->getOrder()->getValue()
+                                        ? $followingEvent->getRecurring()->getOrder()->getValue()
+                                        : ++$followingRecurringOrder
                             ]
                         )
                     );
@@ -474,78 +493,68 @@ class EventApplicationService
                         $rescheduledEvents->addItem($followingEvent, $followingEvent->getId()->getValue());
                     }
 
-                    /** @var EventPeriod $firstPeriod */
-                    $firstPeriod = $followingEvent->getPeriods()->getItem(0);
-
-                    if ($firstPeriod->getPeriodStart()->getValue() <=
-                        $newEvent->getRecurring()->getUntil()->getValue()
-                    ) {
-                        if ($isNewRecurring) {
-                            $followingEvent->setParentId($newEvent->getId());
-                        }
-
-                        $followingEventClone = EventFactory::create($followingEvent->toArray());
-
-                        $followingEventClone->setPeriods($clonedFollowingEventPeriods);
-
-                        $followingEventClone->setCustomTickets($clonedFollowingEventTickets);
-
-                        $periodStart = $followingEvent->getPeriods()->getItem(0)->getPeriodStart()->getValue()->format('Y-m-d H:i:s');
-
-                        if (!$bookingOpensSame) {
-                            if (isset($eventDateDiff)) {
-                                $periodStartOpen = DateTimeService::getCustomDateTimeObject($periodStart)->sub($eventDateDiff);
-                                $followingEvent->setBookingOpens(new DateTimeValue($periodStartOpen));
-                            } else {
-                                $followingEvent->setBookingOpens($eventEnds ? new DateTimeValue($eventEnds) : null);
-                                if ($eventEnds) {
-                                    $lastIndex = $followingEvent->getPeriods()->length() - 1;
-                                    $eventEnds = $followingEvent->getPeriods()->getItem($lastIndex)->getPeriodEnd()->getValue();
-                                }
-                            }
-                        }
-
-                        if (!$bookingClosesSame) {
-                            $periodStartClose = DateTimeService::getCustomDateTimeObject($periodStart);
-                            if (isset($eventDateDiffCloses)) {
-                                $periodStartClose = $periodStartClose->sub($eventDateDiffCloses);
-                            }
-                            $followingEvent->setBookingCloses(new DateTimeValue($periodStartClose));
-                        }
-
-                        if (!$ticketRangeSame) {
-                            $index = 0;
-
-                            /** @var EventTicket $ticket */
-                            foreach ($followingEvent->getCustomTickets()->getItems() as $ticketIndex => $ticket) {
-                                $ticketDates = json_decode($ticket->getDateRanges()->getValue(), true);
-
-                                foreach ($ticketDates as $dateIndex => &$ticketDate) {
-                                    $ticketDate = array_merge(
-                                        $ticketDate,
-                                        [
-                                            'startDate' => DateTimeService::getCustomDateTimeObject(
-                                                $periodStart
-                                            )->sub($allTicketDiff[$index][$dateIndex]['startDiff'])->format('Y-m-d'),
-                                            'endDate'   => DateTimeService::getCustomDateTimeObject(
-                                                $periodStart
-                                            )->sub($allTicketDiff[$index][$dateIndex]['endDiff'])->format('Y-m-d'),
-                                        ]
-                                    );
-                                }
-
-                                $index++;
-
-                                $ticket->setDateRanges(new Json(json_encode($ticketDates)));
-                            }
-                        }
-
-                        $this->updateSingle($followingEventClone, $followingEvent, false);
-                    } else {
-                        $this->deleteEvent($followingEvent);
-
-                        $deletedEvents->addItem($followingEvent, $followingEvent->getId()->getValue());
+                    if ($isNewRecurring) {
+                        $followingEvent->setParentId($newEvent->getId());
                     }
+
+                    /** @var Event $followingEventClone */
+                    $followingEventClone = EventFactory::create($followingEvent->toArray());
+
+                    $followingEventClone->setPeriods($clonedFollowingEventPeriods);
+
+                    $followingEventClone->setCustomTickets($clonedFollowingEventTickets);
+
+                    $periodStart = $followingEvent->getPeriods()->getItem(0)->getPeriodStart()->getValue()->format('Y-m-d H:i:s');
+
+                    if (!$bookingOpensSame) {
+                        if (isset($eventDateDiff)) {
+                            $periodStartOpen = DateTimeService::getCustomDateTimeObject($periodStart)->sub($eventDateDiff);
+                            $followingEvent->setBookingOpens(new DateTimeValue($periodStartOpen));
+                        } else {
+                            $followingEvent->setBookingOpens($eventEnds ? new DateTimeValue($eventEnds) : null);
+                            if ($eventEnds) {
+                                $lastIndex = $followingEvent->getPeriods()->length() - 1;
+                                $eventEnds = $followingEvent->getPeriods()->getItem($lastIndex)->getPeriodEnd()->getValue();
+                            }
+                        }
+                    }
+
+                    if (!$bookingClosesSame) {
+                        $periodStartClose = DateTimeService::getCustomDateTimeObject($periodStart);
+                        if (isset($eventDateDiffCloses)) {
+                            $periodStartClose = $periodStartClose->sub($eventDateDiffCloses);
+                        }
+                        $followingEvent->setBookingCloses(new DateTimeValue($periodStartClose));
+                    }
+
+                    if (!$ticketRangeSame) {
+                        $index = 0;
+
+                        /** @var EventTicket $ticket */
+                        foreach ($followingEvent->getCustomTickets()->getItems() as $ticketIndex => $ticket) {
+                            $ticketDates = json_decode($ticket->getDateRanges()->getValue(), true);
+
+                            foreach ($ticketDates as $dateIndex => &$ticketDate) {
+                                $ticketDate = array_merge(
+                                    $ticketDate,
+                                    [
+                                        'startDate' => DateTimeService::getCustomDateTimeObject(
+                                            $periodStart
+                                        )->sub($allTicketDiff[$index][$dateIndex]['startDiff'])->format('Y-m-d'),
+                                        'endDate'   => DateTimeService::getCustomDateTimeObject(
+                                            $periodStart
+                                        )->sub($allTicketDiff[$index][$dateIndex]['endDiff'])->format('Y-m-d'),
+                                    ]
+                                );
+                            }
+
+                            $index++;
+
+                            $ticket->setDateRanges(new Json(json_encode($ticketDates)));
+                        }
+                    }
+
+                    $this->updateSingle($followingEventClone, $followingEvent, false);
                 }
             }
 
@@ -669,7 +678,6 @@ class EventApplicationService
                             $periodStartClose = $periodStartClose->sub($eventDateDiffCloses);
                         }
                         $lastEvent->setBookingCloses(new DateTimeValue($periodStartClose));
-
                     }
 
                     if (!$ticketRangeSame) {
@@ -704,6 +712,26 @@ class EventApplicationService
                     $addedEvents->addItem($lastEvent, $lastEvent->getId()->getValue());
                 }
             }
+
+            if ($isNewRecurring) {
+                /** @var EventPeriod $lastPeriod */
+                $lastPeriod = $this->getLastPeriod($lastEvent);
+
+                if ($lastPeriod->getPeriodStart()->getValue() > $newEvent->getRecurring()->getUntil()->getValue()) {
+                    $eventRepository->updateFieldByColumn(
+                        'recurringUntil',
+                        $lastPeriod->getPeriodStart()->getValue()->format('Y-m-d') . ' 00:00:00',
+                        'parentId',
+                        $newEvent->getId()->getValue()
+                    );
+
+                    $eventRepository->updateFieldById(
+                        $newEvent->getId()->getValue(),
+                        $lastPeriod->getPeriodStart()->getValue()->format('Y-m-d') . ' 00:00:00',
+                        'recurringUntil'
+                    );
+                }
+            }
         }
 
         $clonedEditedEvents = $this->getEditedEvents($clonedEvents, $newEvent, $updateFollowing, $followingEvents);
@@ -735,6 +763,28 @@ class EventApplicationService
             'cloned'      => $clonedEvents->toArray(),
             'edited'      => $clonedEditedEvents
         ];
+    }
+
+    /**
+     * @param Event $lastEvent
+     *
+     * @return EventPeriod
+     */
+    public function getLastPeriod($lastEvent)
+    {
+        /** @var EventPeriod $latestPeriod **/
+        $latestPeriod = null;
+
+        /** @var EventPeriod $period **/
+        foreach ($lastEvent->getPeriods()->getItems() as $period) {
+            if ($latestPeriod === null ||
+                $period->getPeriodStart()->getValue() > $latestPeriod->getPeriodStart()->getValue()
+            ) {
+                $latestPeriod = $period;
+            }
+        }
+
+        return $latestPeriod;
     }
 
     /**
@@ -981,6 +1031,9 @@ class EventApplicationService
         /** @var GalleryApplicationService $galleryService */
         $galleryService = $this->container->get('application.gallery.service');
 
+        /** @var EventDomainService $eventDomainService */
+        $eventDomainService = $this->container->get('domain.booking.event.service');
+
         $event->setStatus(new BookingStatus(BookingStatus::APPROVED));
         $event->setNotifyParticipants(1);
         $event->setCreated(new DateTimeValue(DateTimeService::getNowDateTimeObject()));
@@ -991,6 +1044,11 @@ class EventApplicationService
 
         /** @var EventPeriod $eventPeriod */
         foreach ($event->getPeriods()->getItems() as $eventPeriod) {
+            $eventDomainService->fixPeriod(
+                $eventPeriod->getPeriodStart()->getValue(),
+                $eventPeriod->getPeriodEnd()->getValue()
+            );
+
             $eventPeriod->setEventId(new Id($eventId));
 
             $eventPeriodId = $eventPeriodsRepository->add($eventPeriod);
@@ -1052,6 +1110,9 @@ class EventApplicationService
         /** @var GalleryApplicationService $galleryService */
         $galleryService = $this->container->get('application.gallery.service');
 
+        /** @var EventDomainService $eventDomainService */
+        $eventDomainService = $this->container->get('domain.booking.event.service');
+
         $eventId = $newEvent->getId()->getValue();
 
         if (!$isPreviousEvent) {
@@ -1091,6 +1152,11 @@ class EventApplicationService
 
         /** @var EventPeriod $eventPeriod */
         foreach ($newEvent->getPeriods()->getItems() as $eventPeriod) {
+            $eventDomainService->fixPeriod(
+                $eventPeriod->getPeriodStart()->getValue(),
+                $eventPeriod->getPeriodEnd()->getValue()
+            );
+
             if ($eventPeriod->getId()) {
                 $newPeriodsIds[] = $eventPeriod->getId()->getValue();
 
@@ -1469,6 +1535,8 @@ class EventApplicationService
                     $criteria['fetchEventsProviders'] : false,
                 'fetchEventsImages'    => !empty($criteria['fetchEventsImages']) ?
                     $criteria['fetchEventsImages'] : false,
+                'ordered'              => !empty($criteria['ordered']) ?
+                    $criteria['ordered'] : false,
             ]
         );
 

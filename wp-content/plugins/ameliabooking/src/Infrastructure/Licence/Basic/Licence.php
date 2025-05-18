@@ -73,6 +73,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 // Apple
                 Commands\Apple\GetAppleCalendarListCommand::class                  => new Commands\Apple\GetAppleCalendarListCommandHandler($c),
                 Commands\Apple\DisconnectFromAppleCalendarCommand::class           => new Commands\Apple\DisconnectFromAppleCalendarCommandHandler($c),
+                Commands\Apple\ConnectEmployeeToPersonalAppleCalendarCommand::class => new Commands\Apple\ConnectEmployeeToPersonalAppleCalendarCommandHandler($c),
+                Commands\Apple\DisconnectEmployeeFromAppleCalendarCommand::class    => new Commands\Apple\DisconnectEmployeeFromAppleCalendarCommandHandler($c),
             ]
         );
     }

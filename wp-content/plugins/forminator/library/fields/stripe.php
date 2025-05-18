@@ -1016,7 +1016,7 @@ class Forminator_Stripe extends Forminator_Field {
 	 *
 	 * @param array $field Field.
 	 *
-	 * @return array
+	 * @return array|WP_Error
 	 * @throws Exception When there is an error.
 	 */
 	public function process_to_entry_data( $field ) {
@@ -1049,6 +1049,13 @@ class Forminator_Stripe extends Forminator_Field {
 			// Check if the PaymentIntent is set or empty.
 			if ( empty( $intent->id ) ) {
 				throw new Exception( esc_html__( 'Payment Intent ID is not valid!', 'forminator' ) );
+			}
+			// Check if the PaymentIntent is valid.
+			if ( ! self::is_valid_payment_intent( $intent->id ) ) {
+				return new WP_Error(
+					'forminator_stripe_payment_intent_already_handled',
+					esc_html__( 'Payment Intent ID is not valid', 'forminator' )
+				);
 			}
 
 			$charge_amount = $this->get_payment_amount( $field );
@@ -1084,6 +1091,37 @@ class Forminator_Stripe extends Forminator_Field {
 		$entry_data = apply_filters( 'forminator_field_stripe_process_to_entry_data', $entry_data, $field, Forminator_Front_Action::$module_object, Forminator_CForm_Front_Action::$prepared_data, Forminator_CForm_Front_Action::$info['field_data_array'] );
 
 		return $entry_data;
+	}
+
+	/**
+	 * Check if payment intent is valid
+	 *
+	 * @param string $intent_id Payment Intent ID.
+	 *
+	 * @return bool
+	 */
+	private static function is_valid_payment_intent( $intent_id ): bool {
+		if ( empty( Forminator_CForm_Front_Action::$info['stripe_field']['type'] )
+				|| 'stripe-ocs' !== Forminator_CForm_Front_Action::$info['stripe_field']['type'] ) {
+			return true;
+		}
+		$payment_intents = get_option( 'forminator_stripe_payment_intents', array() );
+
+		if ( is_array( $payment_intents ) && in_array( $intent_id, $payment_intents, true ) ) {
+			// Remove payment intent after handling it.
+			add_action(
+				'forminator_custom_form_mail_before_send_mail',
+				function () use ( $intent_id ) {
+					$option_key      = 'forminator_stripe_payment_intents';
+					$payment_intents = get_option( $option_key, array() );
+					$payment_intents = array_diff( $payment_intents, array( $intent_id ) );
+					update_option( $option_key, $payment_intents );
+				}
+			);
+
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -1285,6 +1323,8 @@ class Forminator_Stripe extends Forminator_Field {
 	private static function get_conditions_dependent_fields( $field_settings ) {
 		$depend_field = array();
 
+		$all_conditions = self::get_property( 'conditions', $field_settings, array() );
+
 		$payments = self::get_property( 'payments', $field_settings, array() );
 
 		foreach ( $payments as $payment ) {
@@ -1292,10 +1332,12 @@ class Forminator_Stripe extends Forminator_Field {
 			if ( empty( $conditions ) || ! is_array( $conditions ) ) {
 				continue;
 			}
-			foreach ( $conditions as $condition ) {
-				if ( ! empty( $condition['element_id'] ) ) {
-					$depend_field[] = $condition['element_id'];
-				}
+			$all_conditions = array_merge( $all_conditions, $conditions );
+		}
+
+		foreach ( $all_conditions as $condition ) {
+			if ( ! empty( $condition['element_id'] ) ) {
+				$depend_field[] = $condition['element_id'];
 			}
 		}
 

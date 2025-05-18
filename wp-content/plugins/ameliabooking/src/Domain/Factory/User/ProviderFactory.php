@@ -30,6 +30,10 @@ class ProviderFactory extends UserFactory
                 $providerArray['stripeConnect'] = json_decode($providerArray['stripeConnect'], true);
             }
 
+            if (!empty($providerArray['employeeAppleCalendar']) && !is_array($providerArray['employeeAppleCalendar'])) {
+                $providerArray['employeeAppleCalendar'] = json_decode($providerArray['employeeAppleCalendar'], true);
+            }
+
             $providersCollection->addItem(
                 self::create($providerArray),
                 $providerKey

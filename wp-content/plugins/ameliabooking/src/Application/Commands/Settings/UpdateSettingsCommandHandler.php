@@ -7,6 +7,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Location\AbstractCurrentLocation;
 use AmeliaBooking\Application\Services\Stash\StashApplicationService;
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Api\BasicApiService;
@@ -438,6 +439,18 @@ class UpdateSettingsCommandHandler extends CommandHandler
                 $result->setMessage('Make sure you are using the correct iCloud email address and app-specific password.');
 
                 return $result;
+            }
+        }
+
+        if ($command->getField('appleCalendar') &&
+            empty($command->getField('appleCalendar')['clientID']) &&
+            empty($command->getField('appleCalendar')['clientSecret'])) {
+            $providerRepository = $this->container->get('domain.users.providers.repository');
+            /** @var Collection $providers */
+            $providers = $providerRepository->getAll();
+            foreach ($providers->getItems() as $provider) {
+                $providerRepository->updateFieldById($provider->getId()->getValue(), null, 'employeeAppleCalendar');
+                $providerRepository->updateFieldById($provider->getId()->getValue(), null, 'appleCalendarId');
             }
         }
 

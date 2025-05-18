@@ -255,7 +255,7 @@ class Forminator_Admin {
 	 * @since 1.0
 	 */
 	public function init_templates_page() {
-		$section_name = esc_html__( 'Templates', 'forminator' ) . ' <span class="menu-new-tag">' . esc_html__( 'New', 'forminator' ) . '</span>';
+		$section_name = esc_html__( 'Templates', 'forminator' );
 
 		$this->pages['forminator-templates'] = new Forminator_Templates_Page( 'forminator-templates', 'templates', $section_name, $section_name, 'forminator' );
 	}

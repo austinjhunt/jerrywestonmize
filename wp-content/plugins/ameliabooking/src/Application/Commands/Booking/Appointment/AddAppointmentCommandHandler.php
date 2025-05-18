@@ -17,6 +17,7 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -176,7 +177,7 @@ class AddAppointmentCommandHandler extends CommandHandler
                 $appointment,
                 $existingAppointment,
                 $service,
-                $appointmentData['bookings'],
+                $appointmentData,
                 $paymentData
             );
         } catch (CustomerBookedException $e) {
@@ -203,6 +204,26 @@ class AddAppointmentCommandHandler extends CommandHandler
             );
 
             return $result;
+        }
+
+        foreach ($appointmentData['bookings'] as $bookingData) {
+            $paymentData['customerPaymentParentId'][(int)$bookingData['customerId']] = null;
+        }
+
+        /** @var CustomerBooking $booking */
+        foreach ($appointment->getBookings()->getItems() as $booking) {
+            if ($booking->getCustomerId() &&
+                $booking->getCustomerId()->getValue() &&
+                array_key_exists($booking->getCustomerId()->getValue(), $paymentData['customerPaymentParentId']) &&
+                $booking->getPayments() &&
+                $booking->getPayments()->keyExists(0)
+            ) {
+                /** @var Payment $payment */
+                $payment = $booking->getPayments()->getItem(0);
+
+                $paymentData['customerPaymentParentId'][$booking->getCustomerId()->getValue()]
+                    = $payment->getId()->getValue();
+            }
         }
 
         if ($existingAppointment !== null) {
@@ -232,15 +253,6 @@ class AddAppointmentCommandHandler extends CommandHandler
                     'parentId'     => $appointment->getId()->getValue()
                 ]
             );
-
-            if ($appointment->getBookings() &&
-                $appointment->getBookings()->keyExists(0) &&
-                $appointment->getBookings()->getItem(0)->getPayments() &&
-                $appointment->getBookings()->getItem(0)->getPayments()->keyExists(0)
-            ) {
-                $paymentData['parentId'] =
-                    $appointment->getBookings()->getItem(0)->getPayments()->getItem(0)->getId()->getValue();
-            }
 
             $appointmentAS->convertTime($recurringAppointmentData);
 
@@ -279,7 +291,7 @@ class AddAppointmentCommandHandler extends CommandHandler
                     $recurringAppointment,
                     $existingRecurringAppointment,
                     $service,
-                    $recurringAppointmentData['bookings'],
+                    $recurringAppointmentData,
                     $paymentData
                 );
             } catch (CustomerBookedException $e) {

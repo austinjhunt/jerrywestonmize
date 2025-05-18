@@ -23512,6 +23512,17 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   margin-bottom: 10px;
 }
 
+.sui-2-12-23 .sui-wrap.sui-color-accessible .sui-toggle input[type=checkbox]:not(:checked)+.sui-toggle-slider {
+  background-color: unset;
+  border: 1px solid #000;
+}
+
+.sui-2-12-23 .sui-wrap.sui-color-accessible .sui-toggle input[type=checkbox]:not(:checked)+.sui-toggle-slider:before {
+  background-color: #000;
+  width: 12px;
+  height: 12px;
+}
+
 .sui-2-12-23 .sui-wrap .fui-recipient {
   display: flex;
   flex-direction: row;

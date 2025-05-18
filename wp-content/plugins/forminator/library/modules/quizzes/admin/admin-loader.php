@@ -648,7 +648,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 			'wrong_answer'                 => esc_html__( 'Wrong answer', 'forminator' ),
 			'wrong_answer_desc'            => esc_html__( 'Customize appearance for wrong answers.', 'forminator' ),
 			'facebook'                     => esc_html__( 'Facebook', 'forminator' ),
-			'twitter'                      => esc_html__( 'Twitter', 'forminator' ),
+			'twitter'                      => esc_html__( 'X', 'forminator' ),
 			'google'                       => esc_html__( 'Google', 'forminator' ),
 			'linkedin'                     => esc_html__( 'LinkedIn', 'forminator' ),
 			'title_styles'                 => esc_html__( 'Title Appearance', 'forminator' ),

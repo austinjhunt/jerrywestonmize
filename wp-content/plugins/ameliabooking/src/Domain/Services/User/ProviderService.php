@@ -76,6 +76,8 @@ class ProviderService
             }
         }
 
+        $day->setPeriodList(new Collection());
+
         $day->getPeriodList()->addItem(
             PeriodFactory::create(
                 [
@@ -105,6 +107,15 @@ class ProviderService
                 $providerWeekDayIndexes[] = $weekDay->getDayIndex()->getValue();
             }
 
+            /** @var WeekDay $weekDay */
+            foreach ($provider->getWeekDayList()->getItems() as $index => $weekDay) {
+                $weekDay->getStartTime()->getValue()->setTime(0, 0);
+                $weekDay->getEndTime()->getValue()->modify('+1 day');
+                $weekDay->getEndTime()->getValue()->setTime(0, 0);
+
+                $this->makePeriodsAvailable($weekDay, true);
+            }
+
             for ($i = 1; $i <= 7; $i++) {
                 if (!in_array($i, $providerWeekDayIndexes)) {
                     $provider->getWeekDayList()->addItem(
@@ -125,11 +136,6 @@ class ProviderService
                         )
                     );
                 }
-            }
-
-            /** @var WeekDay $weekDay */
-            foreach ($provider->getWeekDayList()->getItems() as $index => $weekDay) {
-                $this->makePeriodsAvailable($weekDay, true);
             }
 
             /** @var SpecialDay $specialDay */

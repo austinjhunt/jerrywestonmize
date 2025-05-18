@@ -4,9 +4,9 @@ Donate link: https://yoa.st/1up
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: SEO, XML sitemap, Content analysis, Readability, Schema
-Tested up to: 6.7
-Stable tag: 24.8.1
-Requires PHP: 7.2.5
+Tested up to: 6.8
+Stable tag: 25.1
+Requires PHP: 7.4
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
 
@@ -274,47 +274,35 @@ Your question has most likely been answered on our help center: [yoast.com/help/
 
 == Changelog ==
 
-= 24.8.1 =
+= 25.1 =
 
-Release date: 2025-04-02
+Release date: 2025-05-13
 
-#### Bugfixes
-
-* Fixes a potential fatal error on the dashboard page.
-
-= 24.8 =
-
-Release date: 2025-04-01
-
-Yoast SEO 24.8 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
+Yoast SEO 25.1 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
 
 #### Enhancements
 
-* Adds _pregnant women_ to the potentially non-inclusive phrases targeted by the inclusive language analysis.
-* Improves the inclusive language analysis feedback for the potentially non-inclusive word _exotic_, and prevents the feedback from appearing when _exotic_ is followed by words common in scientific contexts.
+* Adds more phrases regarding disability to the _inclusive language assessment_.
+* Improves the feedback for \"lame\" in the _inclusive language assessment_.
+* Makes the following SEO assessments available in the analysis by default, even when no content has been added: _keyphrase in introduction_, _keyphrase in meta description_, _keyphrase in SEO title_, _keyphrase in slug_ and _previously used keyphrase_.
+* Optimizes the function used to fetch post IDs which share the same focus keyphrase. Props to [dilipbheda](https://github.com/dilipbheda).
 
-#### Other
+= 25.0 =
 
-* Removes the Yoast AI Optimize modals from the Yoast admin pages.
+Release date: 2025-04-29
 
-= 24.7 =
-
-Release date: 2025-03-18
-
-Yoast SEO 24.7 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
+Yoast SEO 25.0 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
 
 #### Enhancements
 
-* Improves the accuracy of assessments measuring character count for Japanese texts by removing common punctuation from the count.
-
-#### Bugfixes
-
-* Fixes a bug where the help beacon would be displayed over table pagination on the bulk editor page.
+* Optimizes the `wp yoast cleanup` CLI command  `update_indexables_author_to_reassigned` step, which can become very slow for very large data sets. Props to [eddiesshop](https://github.com/eddiesshop).
+* Improves the feedback texts for the _passive voice_ and _consecutive sentences_ assessments in case there is nothing to report.
+* Makes the _images_, _internal links_, and _external links_ assessments available when no content has been added.
 
 #### Other
 
-* Improves the feedback strings of the _subheading distribution_ assessment for better translatability.
-* Removes extra span tags in the Post/Page overview. Props to [dilipbheda](https://github.com/dilipbheda).
+* Drops compatibility with PHP 7.2 and 7.3.
+* Improves the translatability of feedback strings for the keyphrase length assessment.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/yoast-seo-changelog).

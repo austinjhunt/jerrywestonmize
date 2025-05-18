@@ -70,9 +70,11 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 'payment_method'       => $paymentMethodId,
                 'amount'               => $data['amount'],
                 'currency'             => $this->settingsService->getCategorySettings('payments')['currency'],
-                'confirmation_method'  => 'manual',
                 'confirm'              => true,
-                'payment_method_types' => ['card'],
+                'automatic_payment_methods' => [
+                    'enabled'         => 'true',
+                    'allow_redirects' => 'never'
+                ]
             ];
 
             if ($stripeSettings['returnUrl']) {
@@ -126,28 +128,16 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             if ($data['metaData']) {
                 $stripeData['metadata'] = $data['metaData'];
             }
- 
 
-            // BEGIN MODS
-
-            if ($data['metaData']['Customer Email']) {
-                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
-            }
-            // also added a fallback description since that was appearing as null on the Stripe side
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
-            } else {
-                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
-            // END MODS
 
             $customerId = $this->createCustomer($data, $additionalStripeData);
 
             if ($customerId) {
                 $stripeData = array_merge($stripeData, ['customer' => $customerId]);
             }
-
-            
 
             $stripeData = apply_filters(
                 'amelia_before_stripe_payment',
@@ -193,7 +183,9 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 $data['paymentIntentId']
             );
 
-            $intent->confirm();
+            if ($intent->status !== 'succeeded') {
+                $intent->confirm();
+            }
         }
 
         if ($intent && ($intent->status === 'requires_action' || $intent->status === 'requires_source_action') && $intent->next_action->type === 'use_stripe_sdk') {

@@ -209,7 +209,7 @@ class AppointmentApplicationService
      * @param Appointment $appointment
      * @param Appointment $oldAppointment
      * @param Service     $service
-     * @param array       $newBookingsArray
+     * @param array       $appointmentData
      * @param array       $paymentData
      *
      * @return void
@@ -223,7 +223,7 @@ class AppointmentApplicationService
         $appointment,
         $oldAppointment,
         $service,
-        $newBookingsArray,
+        $appointmentData,
         $paymentData
     ) {
         /** @var BookingApplicationService $bookingAS */
@@ -235,7 +235,24 @@ class AppointmentApplicationService
             /** @var AppointmentDomainService $appointmentDS */
             $appointmentDS = $this->container->get('domain.booking.appointment.service');
 
-            foreach ($newBookingsArray as $bookingArray) {
+            if ($appointmentData['locationId']) {
+                $resetLocation = true;
+
+                /** @var CustomerBooking $booking */
+                foreach ($oldAppointment->getBookings()->getItems() as $booking) {
+                    if ($bookingAS->isBookingApprovedOrPending($booking->getStatus()->getValue())) {
+                        $resetLocation = false;
+
+                        break;
+                    }
+                }
+
+                if ($resetLocation) {
+                    $appointment->setLocationId(new Id($appointmentData['locationId']));
+                }
+            }
+
+            foreach ($appointmentData['bookings'] as $bookingArray) {
                 /** @var CustomerBooking $newBooking */
                 $newBooking = CustomerBookingFactory::create($bookingArray);
 
@@ -469,6 +486,13 @@ class AppointmentApplicationService
                     $paymentAmount = $paymentDeposit;
                 }
 
+                if ($customerBooking->getCustomerId() &&
+                    !empty($paymentData['customerPaymentParentId'][$customerBooking->getCustomerId()->getValue()])
+                ) {
+                    $paymentData['parentId'] =
+                        $paymentData['customerPaymentParentId'][$customerBooking->getCustomerId()->getValue()];
+                }
+
                 /** @var Payment $payment */
                 $payment = $reservationService->addPayment(
                     !$customerBooking->getPackageCustomerService() ?
@@ -579,6 +603,13 @@ class AppointmentApplicationService
                         $paymentData['deposit'] = $paymentAmount !== $paymentDeposit;
 
                         $paymentAmount = $paymentDeposit;
+                    }
+
+                    if ($newBooking->getCustomerId() &&
+                        !empty($paymentData['customerPaymentParentId'][$newBooking->getCustomerId()->getValue()])
+                    ) {
+                        $paymentData['parentId'] =
+                            $paymentData['customerPaymentParentId'][$newBooking->getCustomerId()->getValue()];
                     }
 
                     /** @var Payment $payment */

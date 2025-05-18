@@ -289,7 +289,9 @@ abstract class Forminator_Admin_Module {
 			array_walk_recursive(
 				$import_data,
 				function ( &$item ) {
-					$item = html_entity_decode( $item, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+					if ( isset( $item ) ) {
+						$item = html_entity_decode( $item, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+					}
 				}
 			);
 		}
@@ -367,12 +369,16 @@ abstract class Forminator_Admin_Module {
 					$data['data']['settings']['admin-email-bcc-address'] = self::apply_user_email( $data['data']['settings']['admin-email-bcc-address'], $current_user_email );
 				}
 			} elseif ( ! empty( $data['data']['notifications'] ) ) {
-
+				$email_fields_to_update = array(
+					'recipients',
+					'bcc-email',
+					'cc-email',
+				);
 				foreach ( $data['data']['notifications'] as $notif_key => $notif ) {
-					// Modify the recipients.
-					if ( ! empty( $notif['recipients'] ) ) {
-						$recipients = self::apply_user_email( $notif['recipients'], $current_user_email );
-						$data['data']['notifications'][ $notif_key ]['recipients'] = $recipients;
+					foreach ( $email_fields_to_update as $key ) {
+						if ( ! empty( $notif[ $key ] ) ) {
+							$data['data']['notifications'][ $notif_key ][ $key ] = self::apply_user_email( $notif[ $key ], $current_user_email );
+						}
 					}
 
 					// Modify the routing recipients.
@@ -388,7 +394,6 @@ abstract class Forminator_Admin_Module {
 				}
 			}
 		}
-
 		return $data;
 	}
 

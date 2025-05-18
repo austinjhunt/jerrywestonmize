@@ -317,6 +317,7 @@ abstract class Forminator_Admin_View_Page extends Forminator_Admin_Page {
 			class="sui-select sui-select-sm sui-select-inline"
 			data-width="200px"
 			data-placeholder="<?php esc_html_e( 'Bulk Actions', 'forminator' ); ?>"
+			aria-label="<?php esc_attr_e( 'Bulk Actions', 'forminator' ); ?>"
 		>
 			<option></option>
 			<?php if ( $is_registration ) { ?>

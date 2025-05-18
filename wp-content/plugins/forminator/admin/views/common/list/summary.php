@@ -52,8 +52,19 @@ if ( $count > 0 || $is_search ) {
 							<div class="sui-form-field">
 
 								<div class="sui-control-with-icon">
-									<button class="forminator-search-submit"><i class="sui-icon-magnifying-glass-search"></i></button>
-									<input type="text" name="search" value="<?php echo esc_attr( $search_keyword ); ?>" placeholder="<?php /* translators: %s: Module slug */ printf( esc_html__( 'Search %s...', 'forminator' ), esc_html__( static::$module_slug, 'forminator' ) );/* phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText */ ?>" id="forminator-module-search" class="sui-form-control">
+									<button class="forminator-search-submit" aria-label="<?php esc_attr_e( 'Search', 'forminator' ); ?>"><i class="sui-icon-magnifying-glass-search"></i></button>
+									<?php
+									if ( 'form' === static::$module_slug ) {
+										$module_name = esc_html__( 'form', 'forminator' );
+									} elseif ( 'poll' === static::$module_slug ) {
+										$module_name = esc_html__( 'poll', 'forminator' );
+									} else {
+										$module_name = esc_html__( 'quiz', 'forminator' );
+									}
+									/* translators: %s: Module slug */
+									$placeholder_text = sprintf( esc_html__( 'Search %s...', 'forminator' ), $module_name );
+									?>
+									<input type="text" name="search" value="<?php echo esc_attr( $search_keyword ); ?>" aria-label="<?php echo esc_attr( $placeholder_text ); ?>" placeholder="<?php echo esc_attr( $placeholder_text ); ?>" id="forminator-module-search" class="sui-form-control">
 								</div>
 								<button role="button" class="search-reset sui-button-icon" title="<?php esc_attr_e( 'Reset search', 'forminator' ); ?>">
 									<span class="sui-icon-cross-close" aria-hidden="true"></span>

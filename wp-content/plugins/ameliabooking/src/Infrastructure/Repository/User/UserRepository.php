@@ -39,24 +39,25 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
         $data = $entity->toArray();
 
         $params = [
-            ':type'             => $data['type'],
-            ':status'           => $data['status'] ?: 'visible',
-            ':externalId'       => $data['externalId'] ?: null,
-            ':firstName'        => $data['firstName'],
-            ':lastName'         => $data['lastName'],
-            ':email'            => $data['email'],
-            ':note'             => isset($data['note']) ? $data['note'] : null,
-            ':description'      => isset($data['description']) ? $data['description'] : null,
-            ':phone'            => isset($data['phone']) ? $data['phone'] : null,
-            ':gender'           => isset($data['gender']) ? $data['gender'] : null,
-            ':birthday'         => $data['birthday'] ? $data['birthday']->format('Y-m-d') : null,
-            ':pictureFullPath'  => $data['pictureFullPath'],
-            ':pictureThumbPath' => $data['pictureThumbPath'],
-            ':password'         => isset($data['password']) ? $data['password'] : null,
-            ':usedTokens'       => isset($data['usedTokens']) ? $data['usedTokens'] : null,
-            ':countryPhoneIso'  => isset($data['countryPhoneIso']) ? $data['countryPhoneIso'] : null,
-            ':stripeConnect'    => !empty($data['stripeConnect']) ? json_encode($data['stripeConnect']) : null,
-            ':error'            => '',
+            ':type'                  => $data['type'],
+            ':status'                => $data['status'] ?: 'visible',
+            ':externalId'            => $data['externalId'] ?: null,
+            ':firstName'             => $data['firstName'],
+            ':lastName'              => $data['lastName'],
+            ':email'                 => $data['email'],
+            ':note'                  => isset($data['note']) ? $data['note'] : null,
+            ':description'           => isset($data['description']) ? $data['description'] : null,
+            ':phone'                 => isset($data['phone']) ? $data['phone'] : null,
+            ':gender'                => isset($data['gender']) ? $data['gender'] : null,
+            ':birthday'              => $data['birthday'] ? $data['birthday']->format('Y-m-d') : null,
+            ':pictureFullPath'       => $data['pictureFullPath'],
+            ':pictureThumbPath'      => $data['pictureThumbPath'],
+            ':password'              => isset($data['password']) ? $data['password'] : null,
+            ':usedTokens'            => isset($data['usedTokens']) ? $data['usedTokens'] : null,
+            ':countryPhoneIso'       => isset($data['countryPhoneIso']) ? $data['countryPhoneIso'] : null,
+            ':stripeConnect'         => !empty($data['stripeConnect']) ? json_encode($data['stripeConnect']) : null,
+            ':employeeAppleCalendar' => !empty($data['employeeAppleCalendar']) ? json_encode($data['employeeAppleCalendar']) : null,
+            ':error'                 => '',
         ];
 
         $additionalData = Licence\DataModifier::getUserRepositoryData($data);
@@ -83,6 +84,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 `countryPhoneIso`,
                 `usedTokens`,
                 `stripeConnect`,
+                `employeeAppleCalendar`,   
                 `password`,
                 `error`
                 ) VALUES (
@@ -103,6 +105,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 :countryPhoneIso,
                 :usedTokens,
                 :stripeConnect,
+                :employeeAppleCalendar,
                 :password,
                 :error
                 )"
@@ -150,6 +153,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             ':countryPhoneIso'  => isset($data['countryPhoneIso']) ? $data['countryPhoneIso'] : null,
             ':password'         => isset($data['password']) ? $data['password'] : null,
             ':stripeConnect'    => !empty($data['stripeConnect']) ? json_encode($data['stripeConnect']) : null,
+            ':employeeAppleCalendar' => !empty($data['employeeAppleCalendar']) ? json_encode($data['employeeAppleCalendar']) : null,
             ':id'               => $id,
         ];
 
@@ -175,6 +179,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 `pictureFullPath` = :pictureFullPath,
                 `pictureThumbPath` = :pictureThumbPath,
                 `stripeConnect` = :stripeConnect,
+                `employeeAppleCalendar` = :employeeAppleCalendar,
                 `password` = IFNULL(:password, `password`)
                 WHERE 
                 id = :id"

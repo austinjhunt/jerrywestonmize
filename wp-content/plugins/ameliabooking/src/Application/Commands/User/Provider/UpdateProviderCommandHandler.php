@@ -17,6 +17,7 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\Password;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
+use AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -92,6 +93,22 @@ class UpdateProviderCommandHandler extends CommandHandler
 
         if (!isset($providerData['stripeConnect'])) {
             $providerData['stripeConnect'] = null;
+        }
+
+        if (!isset($providerData['employeeAppleCalendar'])) {
+            $providerData['employeeAppleCalendar'] = null;
+        } else {
+            /** @var AbstractAppleCalendarService $appleCalendarService */
+            $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
+
+            $appleId = $providerData['employeeAppleCalendar'] ['iCloudId'];
+            $applePassword = $providerData['employeeAppleCalendar'] ['appSpecificPassword'];
+
+            $credentials = $appleCalendarService->handleAppleCredentials($appleId, $applePassword);
+
+            if (!$credentials) {
+                $providerData['employeeAppleCalendar'] = null;
+            }
         }
 
         /** @var EntityApplicationService $entityService */

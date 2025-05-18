@@ -354,6 +354,36 @@ class AppointmentPlaceholderService extends PlaceholderService
                 DateTimeService::getCustomDateTimeInUtc($appointment['initialAppointmentDateTime']['bookingEnd']),
                 $appointment['bookings'][$bookingKey]['utcOffset']
             ) : '';
+
+            if (!empty($appointment['initialAppointmentDateTime']) && $timeZone) {
+                $bookingStart = DateTimeService::getDateTimeObjectInTimeZone(
+                    DateTimeService::getCustomDateTimeObject(
+                        $appointment['bookingStart']
+                    )->setTimezone(new \DateTimeZone($timeZone))->format('Y-m-d H:i:s'),
+                    'UTC'
+                );
+
+                $bookingEnd = DateTimeService::getDateTimeObjectInTimeZone(
+                    DateTimeService::getCustomDateTimeObject(
+                        $appointment['bookingEnd']
+                    )->setTimezone(new \DateTimeZone($timeZone))->format('Y-m-d H:i:s'),
+                    'UTC'
+                );
+
+                $oldBookingStart = DateTimeService::getDateTimeObjectInTimeZone(
+                    DateTimeService::getCustomDateTimeObject(
+                        $appointment['initialAppointmentDateTime']['bookingStart']
+                    )->setTimezone(new \DateTimeZone($timeZone))->format('Y-m-d H:i:s'),
+                    'UTC'
+                );
+
+                $oldBookingEnd = DateTimeService::getDateTimeObjectInTimeZone(
+                    DateTimeService::getCustomDateTimeObject(
+                        $appointment['initialAppointmentDateTime']['bookingEnd']
+                    )->setTimezone(new \DateTimeZone($timeZone))->format('Y-m-d H:i:s'),
+                    'UTC'
+                );
+            }
         } else if ($bookingKey === null && !empty($appointment['provider']['timeZone'])) {
             $timeZone = $appointment['provider']['timeZone'];
 

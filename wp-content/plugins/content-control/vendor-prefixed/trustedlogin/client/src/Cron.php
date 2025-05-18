@@ -5,7 +5,7 @@
  * @package ContentControl\Vendor\TrustedLogin\Client
  *
  * @license GPL-2.0-or-later
- * Modified by code-atlantic on 15-March-2025 using {@see https://github.com/BrianHenryIE/strauss}.
+ * Modified by code-atlantic on 09-May-2025 using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace ContentControl\Vendor\TrustedLogin;

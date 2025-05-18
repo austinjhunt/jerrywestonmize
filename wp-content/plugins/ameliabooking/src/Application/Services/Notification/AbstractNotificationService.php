@@ -434,6 +434,10 @@ abstract class AbstractNotificationService
             $defaultStatus = ($service->getSettings() && !empty(json_decode($service->getSettings()->getValue(), true)['general']['defaultAppointmentStatus'])) ?
                 json_decode($service->getSettings()->getValue(), true)['general']['defaultAppointmentStatus'] :
                 $settingsService->getSetting('general', 'defaultAppointmentStatus');
+        } elseif ($appointmentArray['type'] === Entities::EVENT &&
+            $settingsService->getSetting('general', 'defaultEventStatus') === BookingStatus::PENDING
+        ) {
+            $defaultStatus = $bookingArray['status'];
         }
 
         $customerNotifications = $this->getByNameAndType(

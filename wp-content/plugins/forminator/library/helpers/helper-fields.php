@@ -391,11 +391,11 @@ function forminator_post_categories( $type = '' ) {
  * @since 1.0
  * @since 1.5 add `user_id`
  *
- * @param bool $add_query Add query.   @since 1.15.6.
+ * @param bool $for_hidden_field For hidden field.   @since 1.15.6.
  *
  * @return mixed
  */
-function forminator_get_vars( $add_query = false ) {
+function forminator_get_vars( $for_hidden_field = false ) {
 	$vars_list = array(
 		'user_ip'             => esc_html__( 'User IP Address', 'forminator' ),
 		'date_mdy'            => esc_html__( 'Date (mm/dd/yyyy)', 'forminator' ),
@@ -415,11 +415,11 @@ function forminator_get_vars( $add_query = false ) {
 		'user_name'           => esc_html__( 'User Display Name', 'forminator' ),
 		'user_email'          => esc_html__( 'User Email', 'forminator' ),
 		'user_login'          => esc_html__( 'User Login', 'forminator' ),
-		'custom_value'        => esc_html__( 'Custom Value', 'forminator' ),
 	);
 
-	if ( $add_query ) {
-		$vars_list['query'] = esc_html__( 'Query Parameter', 'forminator' );
+	if ( $for_hidden_field ) {
+		$vars_list['custom_value'] = esc_html__( 'Custom Value', 'forminator' );
+		$vars_list['query']        = esc_html__( 'Query Parameter', 'forminator' );
 	}
 
 	/**
@@ -610,7 +610,9 @@ function forminator_replace_form_data( $content, ?Forminator_Form_Model $custom_
 				}
 			} elseif ( isset( $data[ $element_id ] ) ) {
 
-				if ( strpos( $element_id, 'number' ) !== false ) {
+				if ( strpos( $element_id, 'number' ) !== false
+					|| strpos( $element_id, 'currency' ) !== false
+					|| strpos( $element_id, 'calculation' ) !== false ) {
 					$field = $custom_form->get_field( $element_id, true );
 					$value = Forminator_Field::forminator_number_formatting( $field, $data[ $element_id ] );
 				} elseif (
@@ -618,9 +620,6 @@ function forminator_replace_form_data( $content, ?Forminator_Form_Model $custom_
 					( false !== stripos( $element_id, '-hours' ) || false !== stripos( $element_id, '-minutes' ) )
 				) {
 					$value = str_pad( $data[ $element_id ], 2, '0', STR_PAD_LEFT );
-				} elseif ( strpos( $element_id, 'calculation' ) !== false ) {
-					$calc_field = $custom_form->get_field( $element_id, true );
-					$value      = Forminator_Field::forminator_number_formatting( $calc_field, $data[ $element_id ] );
 				} else {
 					$value = $data[ $element_id ];
 				}
@@ -894,7 +893,13 @@ function forminator_prepare_formatted_form_entry(
 				$html .= '<li>';
 				$label = $form_field->get_label_for_entry();
 
-				if ( ! empty( $label ) && $show_label ) {
+				$display_label = $show_label;
+				// Hide label for multiple name field.
+				if ( 'name' === $field_type && ! empty( $field_array['multiple_name'] ) && 'true' === $field_array['multiple_name'] ) {
+					$display_label = false;
+				}
+
+				if ( ! empty( $label ) && $display_label ) {
 					$html .= '<b>' . $label . '</b><br/>';
 				}
 				if ( isset( $value ) && '' !== $value ) {
@@ -1199,19 +1204,22 @@ function forminator_replace_variables( $content, $id = false, $entry = null ) {
 			'{user_email}'          => forminator_get_user_data( 'user_email' ),
 			// Handle User Login variable.
 			'{user_login}'          => forminator_get_user_data( 'user_login' ),
-			// Handle Submissions number.
-			'{submissions_number}'  => Forminator_Form_Entry_Model::count_entries( $id ),
 			// Handle site title variable.
 			'{site_title}'          => get_bloginfo( 'name' ),
 		);
-		// Handle form_name data.
-		if ( strpos( $content, '{form_name}' ) !== false ) {
-			$variables['{form_name}'] = ( false !== $id ) ? esc_html( forminator_get_form_name( $id ) ) : '';
-		}
-
-		// handle form_id.
 		if ( $id ) {
+			// Handle form_name data.
+			if ( strpos( $content, '{form_name}' ) !== false ) {
+				$variables['{form_name}'] = esc_html( forminator_get_form_name( $id ) );
+			}
+			// handle form_id.
 			$variables['{form_id}'] = $id;
+			// Handle Submissions number.
+			$variables['{submissions_number}'] = Forminator_Form_Entry_Model::count_entries( $id );
+		} else {
+			$variables['{form_name}']          = '';
+			$variables['{form_id}']            = '';
+			$variables['{submissions_number}'] = '';
 		}
 
 		$content = str_replace( array_keys( $variables ), array_values( $variables ), $content );
@@ -1971,7 +1979,7 @@ function forminator_get_ext_types() {
 			// Audio formats.
 			'mp3|m4a|m4b' => 'audio/mpeg',
 			'ra|ram'      => 'audio/x-realaudio',
-			'wav'         => 'audio/wav',
+			'wav|x-wav'   => 'audio/wav',
 			'ogg|oga'     => 'audio/ogg',
 			'mid|midi'    => 'audio/midi',
 			'wma'         => 'audio/x-ms-wma',

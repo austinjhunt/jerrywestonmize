@@ -2,8 +2,8 @@
 Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
-Tested up to: 6.7
-Stable tag: 1.41.1
+Tested up to: 6.8
+Stable tag: 1.43.0
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -22,8 +22,6 @@ Forminator’s drag and drop visual builder makes it easy to setup and add forms
 
 Level up immediately with exclusive Pro features like Stripe subscription forms, dynamic PDF generation, and easy geolocation & autocomplete. [Learn more about Pro](https://wpmudev.com/project/forminator-pro/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=forminator-readme-above-the-fold&utm_content=forminator_pro).
 
-[youtube https://www.youtube.com/watch?v=q2oBKNWTu5s&feature=youtu.be]
-
 ### Forminator Forms, Surveys, Quizzes, Polls, Calculations and More...
 - Forms - Custom forms for all your needs with as many fields as you like.
 - Polls - Interactive polls to collect users opinions, with lots of dynamic options and settings.
@@ -41,13 +39,15 @@ Level up immediately with exclusive Pro features like Stripe subscription forms,
 
 ### Accept Payments With Stripe and PayPal
 
-Start taking payments with Forminator. No Pro upgrade required! SCA compliant Stripe and PayPal come included. Just enter your publish keys to activate the Forminator payment module for both fixed and variable payments. Check out how it works in the video below:
-
-[youtube https://www.youtube.com/watch?v=hha0W-A1Kq8&feature=youtu.be]
+Start taking payments with Forminator. No Pro upgrade required! SCA compliant Stripe and PayPal come included. Just enter your publish keys to activate the Forminator payment module for both fixed and variable payments.
 
 ### Stripe Verified Partner
 
 Forminator is also proud to be a Stripe Verified Partner. This partnership allows us to help you get the most out of our Stripe integration thanks to additional resources, e.g. the ability to escalate support questions, or request custom pricing reviews.
+
+### Stripe Dynamic Payments
+
+Offer 40+ payment methods with Stripe’s Dynamic Payment Element, including Apple Pay, Google Pay, Klarna, and more. Easily manage which payment options are available to your users.
 
 ### Calculations are a Lead Magnet
 
@@ -94,9 +94,7 @@ Who hasn't been roped into taking “IQ tests” and “figure out which Star Wa
 
 ### Collect Leads With Your Quizzes
 
-Looking to use your quizzes for more than just entertainment and a way to engage your audience? Forminator also allows you to collect participants' details (e.g., name, email, etc.) by integrating a lead generation form in your quiz. See how it works below:
-
-[youtube https://www.youtube.com/watch?v=17uR2HdDsKw&feature=youtu.be]
+Looking to use your quizzes for more than just entertainment and a way to engage your audience? Forminator also allows you to collect participants' details (e.g., name, email, etc.) by integrating a lead generation form in your quiz.
 
 ### Gutenberg Block
 
@@ -113,6 +111,14 @@ Want to let your visitors share a post submission without needing access to the 
 
 You don’t want your inbox flooded with a bunch of form spam. Google ReCAPTCHA is free with Forminator. Now you can stop the crazy bots without making it hard on your visitors. No more hard to read random phrases.
 
+### Antispam Features
+
+Protect your forms with built-in antispam tools like reCAPTCHA, hCaptcha, and Cloudflare Turnstile. You can also allow or block specific email addresses, domains, or TLDs using customizable email filters.
+
+### Cloud and Preset Templates
+
+Jumpstart form creation with free and premium Preset Templates, or save time by reusing your own custom forms across sites using Cloud Templates synced through the HUB.
+
 ### Collect, Track and GDPR Ready
 
 Forminator stores and organizes submissions so you can sort, analyze and manage responses – of course, all while making it super easy to comply with the GDPR and other legal privacy policies.
@@ -123,9 +129,7 @@ Looking to move existing forms over from CF7? Forminator’s Import Wizard allow
 
 ### Custom Login and Registration Forms
 
-Create and embed custom login and registration forms for your sites (or multisites!). Take L&R forms to the next level: choose from a range of form fields, and customize settings, style, and behavior. Learn more in the video below:
-
-[youtube https://www.youtube.com/watch?v=UdgSb-GwpSU&feature=youtu.be]
+Create and embed custom login and registration forms for your sites (or multisites!). Take L&R forms to the next level: choose from a range of form fields, and customize settings, style, and behavior.
 
 ### Multi-file Upload Field
 
@@ -188,13 +192,17 @@ It sure does. Forminator is built to work in both the Gutenberg and ClassicPress
 
 Forminator makes it easy for you to comply with the GDPR and other local privacy regulations...all the tools are included but ultimately it is up to you to implement healthy privacy and data protection on your site. Do the right thing y'all.
 
-= Can you take payments with Forminator? =
+= Can I accept payments with Forminator? =
 
-Forminator currently includes integration with the Stripe payment gateway and PayPal...both included completely free.
+Yes! Forminator includes free integrations with Stripe and PayPal. Stripe’s Dynamic Payment Element supports 40+ options—including Apple Pay, Google Pay, Amazon Pay, and Klarna.
 
 = Are Forminator payment options SCA compliant? =
 
 Yes! Forminator is not managing the payment processing. We worked with Stripe and PayPal to ensure the built-in integrations follow the EU's Strong Customer Authentication regulations (PSD2).
+
+= Can Forminator help prevent spam submissions? =
+
+Forminator includes built-in antispam tools like Captcha integrations from multiple providers, honeypot Fields, email filters, and support for third-party services like Akismet.
 
 = How do I create a contact form in WordPress with Forminator? =
 
@@ -214,17 +222,86 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 
 == Screenshots ==
 
-1. Setup WordPress contact forms in seconds.
-2. Add lead generating calculators to your site.
-3. Take payments with Stripe or PayPal.
-4. Forminator includes its own Gutenberg block.
-5. All your favorite integrations built-in.
-6. Who doesn't love a good no wrong answer buzzfeed-style quiz?
-7. Publish polls with real-time stats and graphs.
-8. Customize the available dates shown on your date field calendar.
-9. Allow simple drag and drop multi-file uploads for users.
+1. Create a Blank Form or Select a Template 
+2. Manage Complex Calculations
+3. Accept Stripe and PayPal Payments
+4. Integrate with 1000+ Apps
+5. Build Engagements with Quizzes
+6. Publish Polls with Real-time Stats
 
 == Changelog ==
+
+= 1.43.1 ( 2025-05-12 ) =
+
+- Fix: Incorrect 1.43.0-free version label causing update loop
+
+
+= 1.43.0 ( 2025-04-30 ) =
+
+- Enhancement: Numerous accessibility improvements
+- Enhancement: Add label for AM/PM selectbox
+- Enhancement: Update Toggle colors in High Contrast Mode to make them more visible
+- Enhancement: Prevent modal from closing when clicking outside it while adding forms
+- Enhancement: Add placeholder for date and time in Email Notification subject
+- Enhancement: CC and BCC fields are now also replaced when importing forms
+- Fix: “Invalid user role” error on multisite Registration form
+- Fix: Condition is not working properly for decimal numbers
+- Fix: Currency field formatting issue in email notifications
+- Fix: File was not uploaded if the form was submitted before the upload completed
+- Fix: Post Data Field labels are not translatable
+- Fix: PayPal Field is not rendering in Gutenberg editor
+- Fix: Visibility rules based on Email field don't work when Confirm Email field is enabled
+- Fix: Prevent creating duplicate Stripe payment intents on form load for subscriptions
+- Fix: Validation issue caused by Signature Field
+- Fix: Captcha field compatibility issue with Elementor popup
+- Fix: Submission error caused by "is not" condition in PayPal field
+- Fix: Email notifications fail if routing is based on field values containing spaces or special characters
+- Fix: Consent Field placeholder is not working inside HTML field
+- Fix: "Go back" behaves incorrectly after previewing form templates
+- Fix: PHP deprecated error on PHP 8.2 during import forms
+- Fix: PHP deprecated errors while connecting Slack integration with any form
+- Fix: Quiz submit button custom text doesn't update when Leads option is enabled
+- Fix: Missing text format in PDF Payment field
+- Fix: Paginated form reloads to first page before redirecting in the same tab
+- Fix: Additional CSS classes on PDF page header and footer not working properly
+- Fix: PDF CSS selectors do not work in Custom CSS option
+- Fix: Select field was displaying HTML entity &#039; instead of the correct character (') in placeholder
+
+
+= 1.42.2 ( 2025-04-21 ) =
+
+- Enhancement: Add a new menu item to help you discover other free plugins by WPMU DEV and more
+
+
+= 1.42.1 ( 2025-04-16 ) =
+
+- Fix: Security improvements
+
+
+= 1.42.0 ( 2025-04-08 ) =
+
+- Enhancement: Add Cloudflare Turnstile Integration
+- Enhancement: Add the ability to allow or block specific emails or domains in the Email field
+- Enhancement: Add Email Confirmation Field
+- Enhancement: Add PDF template based on DIV tags
+- Enhancement: Add ability to hide empty fields in the generated PDF
+- Enhancement: Twitter rebranding
+- Fix: Apple Pay amount defaults to $1 when using Stripe dynamic payment methods
+- Fix: Stripe field displays a note about future charges even for one-time payments
+- Fix: Form fails to submit when using Indian Stripe accounts with restricted keys using dynamic payment methods
+- Fix: Incorrect Google address in Autocomplete for certain countries
+- Fix: Visibility Conditions in Field Groups cause calculation errors
+- Fix: Draft does not load if the Select field mode was changed
+- Fix: Images added to quiz answers don't have alt attributes
+- Fix: Fatal error when submitting expired Draft forms
+- Fix: Fatal error on free version when Signature field is added to the form
+- Fix: Label is added twice for the Name field with Multiple options
+- Fix: Textarea field does not preserve formatting for the default value
+- Fix: Slider field handle overlaps the calendar when the Date Picker field is clicked
+- Fix: Issue with replacing spaces with dashes in PDF names
+- Fix: Slider custom colors revert to default after closing form preview
+- Fix: Hidden field with Submission Date as default returns empty value
+
 
 = 1.41.2 ( 2025-03-24 ) =
 

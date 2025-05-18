@@ -291,7 +291,26 @@
 
 			// Check if script is already loaded or not.
 			if ( 0 === $( 'script[src="' + script.src + '"]' ).length ) {
-				body.appendChild(script);
+				if( window.parent !== window && script_props.src.includes( "paypal.com" ) ) {
+					// Handle the case when PayPal is loaded in an iframe (e.g., in the theme editor).
+					var parentScript = window.parent.document.createElement('script');
+						parentScript.type = 'text/javascript';
+						parentScript.src = script_props.src;
+						parentScript.async = script_props.async;
+						parentScript.defer = true;
+						parentScript.onload = function () {
+							self.script_on_load();
+						};
+
+						// Check if script is already loaded in the parent document.
+						if ( 0 === $(window.parent.document).find('script[src="' + parentScript.src + '"]').length ) {
+							window.parent.document.body.appendChild(parentScript);
+						} else {
+							self.script_on_load();
+						}
+				} else {
+					body.appendChild(script);
+				}
 			} else {
 				self.script_on_load();
 			}

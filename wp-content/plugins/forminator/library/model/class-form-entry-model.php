@@ -2810,7 +2810,9 @@ class Forminator_Form_Entry_Model {
 	public function delete_previous_draft( $previous_draft ) {
 		if ( ! is_null( $previous_draft ) ) {
 			$entry_id = $this->get_entry_id_by_draft_id( $previous_draft );
-			self::delete_by_entry( $entry_id );
+			if ( ! empty( $entry_id ) ) {
+				self::delete_by_entry( $entry_id );
+			}
 		}
 	}
 

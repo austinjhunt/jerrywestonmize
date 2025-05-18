@@ -263,8 +263,8 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
     }
 
     /**
-     * @param int $id
-     * @param int $parentId
+     * @param int      $id
+     * @param int|null $parentId
      *
      * @return mixed
      * @throws QueryExecutionException
@@ -1453,7 +1453,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 INNER JOIN {$eventsPeriodsTable} ep ON ep.eventId = e.id
             ";
 
-            $orderBy = 'ORDER BY ep.periodStart';
+            $orderBy = !empty($criteria['ordered']) ? 'ORDER BY e.id, ep.periodStart' : 'ORDER BY ep.periodStart';
         }
 
         if (!empty($criteria['fetchEventsCoupons'])) {

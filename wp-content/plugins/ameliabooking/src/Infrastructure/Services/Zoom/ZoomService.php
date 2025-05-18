@@ -205,16 +205,10 @@ class ZoomService extends AbstractZoomService
      */
     public function getUsers()
     {
-        $zoomSettings = $this->settingsService->getCategorySettings('zoom');
-
-        $pagesCount = $zoomSettings['maxUsersCount'] > 300 ? (int)ceil($zoomSettings['maxUsersCount'] / 300) : 1;
-
-        $response = [];
-
         $users = [];
 
-        for ($i = 1; $i <= $pagesCount; $i++) {
-            $urlParams = 'page_size=300' . ($pagesCount > 1 ? '&page_number=' . $i : '');
+        for ($i = 1; $i <= 5; $i++) {
+            $urlParams = 'page_size=2000' . '&page_number=' . $i;
 
             $response = $this->execute("https://api.zoom.us/v2/users?$urlParams", null, 'GET');
 
@@ -224,7 +218,7 @@ class ZoomService extends AbstractZoomService
 
             $users = array_merge($users, $response['users']);
 
-            if (sizeof($response['users']) < 300) {
+            if (sizeof($response['users']) < 2000) {
                 break;
             }
         }

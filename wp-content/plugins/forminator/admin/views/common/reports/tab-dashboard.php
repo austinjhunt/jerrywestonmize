@@ -42,7 +42,7 @@ $reports = Forminator_Admin_Report_Page::get_instance()->forminator_report_data(
 
 				<div class="sui-actions-right">
 					<div class="sui-form-field">
-						<label for="unique-id" id="unique-id--label"
+						<label for="forminator-forms-filter--by-date" id="unique-id--label"
 								class="sui-label"><?php esc_html_e( 'Date range', 'forminator' ); ?></label>
 
 						<div class="sui-control-with-icon">

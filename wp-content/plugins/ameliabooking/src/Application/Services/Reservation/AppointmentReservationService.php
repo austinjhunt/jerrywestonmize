@@ -1172,6 +1172,7 @@ class AppointmentReservationService extends AbstractReservationService
                 if (WooCommerceService::isEnabled()) {
                     WooCommerceService::updateItemMetaData(
                         $payment->getWcOrderId()->getValue(),
+                        $payment->getWcOrderItemId() ? $payment->getWcOrderItemId()->getValue() : null,
                         $appointmentArrayModified
                     );
                 }

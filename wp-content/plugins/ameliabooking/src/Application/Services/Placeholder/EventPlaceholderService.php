@@ -687,6 +687,7 @@ class EventPlaceholderService extends PlaceholderService
             /** @var EventApplicationService $eventApplicationService */
             $eventApplicationService = $this->container->get('application.booking.event.service');
             $ticketsPriceByDateRange = $eventApplicationService->getTicketsPriceByDateRange($event['customTickets']);
+            $ticketsPriceByDateRange = $ticketsPriceByDateRange->length() ? $ticketsPriceByDateRange : null;
         }
 
 
@@ -1064,6 +1065,7 @@ class EventPlaceholderService extends PlaceholderService
             /** @var EventApplicationService $eventApplicationService */
             $eventApplicationService = $this->container->get('application.booking.event.service');
             $ticketsPriceByDateRange = $eventApplicationService->getTicketsPriceByDateRange($entity['customTickets']);
+            $ticketsPriceByDateRange = $ticketsPriceByDateRange->length() ? $ticketsPriceByDateRange : null;
         }
 
         $eventCustomPricing = [];

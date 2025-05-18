@@ -160,6 +160,7 @@ class SettingsStorage implements SettingsStorageInterface
                 'eventsPerPage'                          => $this->getSetting('general', 'eventsPerPage'),
                 'servicesPerPage'                        => $this->getSetting('general', 'servicesPerPage'),
                 'customersFilterLimit'                   => $this->getSetting('general', 'customersFilterLimit'),
+                'eventsFilterLimit'                      => $this->getSetting('general', 'eventsFilterLimit') ?: 1000,
                 'calendarEmployeesPreselected'           => $this->getSetting('general', 'calendarEmployeesPreselected'),
                 'phoneDefaultCountryCode'                => $phoneCountryCode === 'auto' ?
                     $this->locationService->getCurrentLocationCountryIso($ipLocateApyKey) : $phoneCountryCode,

@@ -113,6 +113,7 @@ class ActivationSettingsHook
             'serviceDurationAsSlot'                  => false,
             'bufferTimeInSlot'                       => true,
             'defaultAppointmentStatus'               => 'approved',
+            'defaultEventStatus'                     => 'approved',
             'minimumTimeRequirementPriorToBooking'   => 0,
             'minimumTimeRequirementPriorToCanceling' => 0,
             'minimumTimeRequirementPriorToRescheduling' =>
@@ -132,6 +133,7 @@ class ActivationSettingsHook
             'eventsPerPage'                          => 100,
             'servicesPerPage'                        => 100,
             'customersFilterLimit'                   => 100,
+            'eventsFilterLimit'                      => 1000,
             'calendarEmployeesPreselected'           => 0,
             'gMapApiKey'                             => '',
             'addToCalendar'                          => true,
@@ -487,7 +489,6 @@ This message does not have an option for responding. If you need additional info
             'meetingTitle'                => '%reservation_name%',
             'meetingAgenda'               => '%reservation_description%',
             'pendingAppointmentsMeetings' => false,
-            'maxUsersCount'               => 300,
             's2sEnabled'                  => true,
             'accountId'                   => '',
             'clientId'                    => '',

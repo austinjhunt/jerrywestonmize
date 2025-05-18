@@ -33,6 +33,7 @@ class Forminator_Admin_AJAX {
 		// Handle load reCaptcha preview.
 		add_action( 'wp_ajax_forminator_load_recaptcha_preview', array( $this, 'load_recaptcha_preview' ) );
 		add_action( 'wp_ajax_forminator_load_hcaptcha_preview', array( $this, 'load_hcaptcha_preview' ) );
+		add_action( 'wp_ajax_forminator_load_turnstile_preview', array( $this, 'load_turnstile_preview' ) );
 
 		// Handle save settings.
 		add_action( 'wp_ajax_forminator_save_builder', array( $this, 'save_builder' ) );
@@ -382,7 +383,7 @@ class Forminator_Admin_AJAX {
 			if ( empty( $pdf_data['pdf_id'] ) || ! is_numeric( $pdf_data['pdf_id'] ) ) {
 				throw new Exception( esc_html__( 'Failed to create PDF. Please try again.', 'forminator' ) );
 			}
-
+			$pdf_data['pdf_filename'] = urldecode( sanitize_title( $submitted_data['pdf_filename'] ?? 'noname' ) );
 			wp_send_json_success( $pdf_data );
 
 		} catch ( Exception $e ) {
@@ -855,25 +856,12 @@ class Forminator_Admin_AJAX {
 		update_option( 'forminator_v3_captcha_key', Forminator_Core::sanitize_text_field( 'v3_captcha_key' ) );
 		update_option( 'forminator_v3_captcha_secret', Forminator_Core::sanitize_text_field( 'v3_captcha_secret' ) );
 
-		$hcaptcha_key = '';
-		if ( isset( $_POST['hcaptcha_key'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified in forminator_validate_ajax.
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified in forminator_validate_ajax.
-			$hcaptcha_key = sanitize_text_field( wp_unslash( $_POST['hcaptcha_key'] ) );
-		}
-		$hcaptcha_secret = '';
-		if ( isset( $_POST['hcaptcha_secret'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified in forminator_validate_ajax.
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified in forminator_validate_ajax.
-			$hcaptcha_secret = sanitize_text_field( wp_unslash( $_POST['hcaptcha_secret'] ) );
-		}
-		$captcha_tab_saved = '';
-		if ( isset( $_POST['captcha_tab_saved'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified in forminator_validate_ajax.
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified in forminator_validate_ajax.
-			$captcha_tab_saved = sanitize_text_field( wp_unslash( $_POST['captcha_tab_saved'] ) );
-		}
+		update_option( 'forminator_turnstile_key', Forminator_Core::sanitize_text_field( 'turnstile_key' ) );
+		update_option( 'forminator_turnstile_secret', Forminator_Core::sanitize_text_field( 'turnstile_secret' ) );
 
-		update_option( 'forminator_hcaptcha_key', $hcaptcha_key );
-		update_option( 'forminator_hcaptcha_secret', $hcaptcha_secret );
-		update_option( 'forminator_captcha_tab_saved', $captcha_tab_saved );
+		update_option( 'forminator_hcaptcha_key', Forminator_Core::sanitize_text_field( 'hcaptcha_key' ) );
+		update_option( 'forminator_hcaptcha_secret', Forminator_Core::sanitize_text_field( 'hcaptcha_secret' ) );
+		update_option( 'forminator_captcha_tab_saved', Forminator_Core::sanitize_text_field( 'captcha_tab_saved' ) );
 
 		update_option( 'forminator_captcha_language', Forminator_Core::sanitize_text_field( 'captcha_language' ) );
 
@@ -993,7 +981,52 @@ class Forminator_Admin_AJAX {
 			$html  = '<script src="https://js.hcaptcha.com/1/api.js?hl=' . $language . '&onload=' . $onload . '&render=explicit&recaptchacompat=off" async defer></script>';
 			$html .= '<div class="forminator-hcaptcha h-captcha" data-sitekey="' . esc_attr( $hcaptcha_key ) . '"></div>';
 		} else {
-			$html = '<div class="sui-notice" style="margin: 10px 0;"><p>' . esc_html__( 'Save your API keys to load the hCAPTCHA preview.', 'forminator' ) . '</p></div>';
+
+			$html  = '<div role="alert" class="sui-notice sui-active" style="display: block; text-align: left;" aria-live="assertive">';
+			$html .= '<div class="sui-notice-content">';
+			$html .= '<div class="sui-notice-message">';
+			$html .= '<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>';
+			$html .= '<p>' . esc_html__( 'Save your API keys to load the hCAPTCHA preview.', 'forminator' ) . '</p>';
+			$html .= '</div>';
+			$html .= '</div>';
+			$html .= '</div>';
+		}
+
+		wp_send_json_success( $html );
+	}
+
+	/**
+	 * Load Cloudflare Turnstile preview
+	 */
+	public function load_turnstile_preview() {
+
+		forminator_validate_ajax( 'forminator_load_captcha_settings', false, 'forminator-settings' );
+
+		$site_language    = get_locale();
+		$language         = get_option( 'forminator_captcha_language', '' );
+		$language         = ! empty( $language ) ? $language : $site_language;
+		$language         = strtolower( str_replace( '_', '-', $language ) );
+		$turnstile_key    = get_option( 'forminator_turnstile_key', '' );
+		$turnstile_secret = get_option( 'forminator_turnstile_secret', '' );
+		$html             = '';
+
+		if ( ! empty( $turnstile_key ) && ! empty( $turnstile_secret ) ) {
+			// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
+			$html .= '<script src="' . esc_url( 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=forminator_render_admin_turnstile' ) . '" async defer></script>';
+			$html .= '<div class="forminator-turnstile"
+					data-sitekey="' . esc_attr( $turnstile_key ) . '"
+					data-language="' . esc_attr( $language ) . '"
+					></div>';
+
+		} else {
+			$html .= '<div role="alert" class="sui-notice sui-active" style="display: block; text-align: left;" aria-live="assertive">';
+			$html .= '<div class="sui-notice-content">';
+			$html .= '<div class="sui-notice-message">';
+			$html .= '<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>';
+			$html .= '<p>' . esc_html__( 'Save your API keys to load the Turnstile preview.', 'forminator' ) . '</p>';
+			$html .= '</div>';
+			$html .= '</div>';
+			$html .= '</div>';
 		}
 
 		wp_send_json_success( $html );

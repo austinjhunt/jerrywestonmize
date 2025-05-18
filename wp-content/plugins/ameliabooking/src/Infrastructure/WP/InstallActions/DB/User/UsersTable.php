@@ -59,6 +59,7 @@ class UsersTable extends AbstractDatabaseTable
                   `translations` TEXT NULL DEFAULT NULL,
                   `timeZone` varchar({$name}) DEFAULT NULL,
                   `appleCalendarId` varchar({$name}) DEFAULT NULL,
+                  `employeeAppleCalendar` TEXT NULL DEFAULT NULL,
                   `badgeId` int(11) DEFAULT NULL,
                   `error` TEXT({$description}) DEFAULT NULL,
                   PRIMARY KEY (`id`),

@@ -377,19 +377,22 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 
 		// Load reCaptcha scripts.
 		if ( $this->has_captcha() ) {
-			$first_captcha    = $this->find_first_captcha();
-			$site_language    = get_locale();
-			$captcha_language = get_option( 'forminator_captcha_language', '' );
-			$global_language  = ! empty( $captcha_language ) ? $captcha_language : $site_language;
-			$language         = Forminator_Field::get_property( 'language', $first_captcha, $global_language );
-			$language         = ! empty( $language ) ? $language : $global_language;
+			$first_captcha = $this->find_first_captcha();
+			$language      = Forminator_Captcha::get_captcha_language( $first_captcha );
+			$ver           = FORMINATOR_VERSION;
 
-			// Check whether provider is reCaptcha or hCaptcha.
+			// Check captcha provider.
 			if ( $this->is_recaptcha() ) {
 				$method_onload = 'forminator_render_captcha';
 				$src           = 'https://www.google.com/recaptcha/api.js?hl=' . $language . '&onload=' . $method_onload . '&render=explicit';
 				$script_tag    = 'forminator-google-recaptcha';
 				$script_load   = 'grecaptcha';
+			} elseif ( $this->is_turnstile() ) {
+				$method_onload = 'forminator_render_turnstile';
+				$src           = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=' . $method_onload . '&render=explicit';
+				$script_tag    = 'forminator-turnstile';
+				$script_load   = 'turnstile';
+				$ver           = null;
 			} else {
 				$method_onload = 'forminator_render_hcaptcha';
 				$src           = 'https://js.hcaptcha.com/1/api.js?hl=' . $language . '&onload=' . $method_onload . '&render=explicit&recaptchacompat=off';
@@ -402,7 +405,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 					$script_tag,
 					$src,
 					array( 'jquery' ),
-					FORMINATOR_VERSION,
+					$ver,
 					true
 				);
 			} else {
@@ -1717,6 +1720,25 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		if ( ! empty( $fields ) ) {
 			foreach ( $fields as $field ) {
 				if ( 'captcha' === $field['type'] && 'recaptcha' === $field['captcha_provider'] ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if form has Cloudflare turnstile captcha.
+	 *
+	 * @return bool
+	 */
+	public function is_turnstile() {
+		$fields = $this->get_fields();
+
+		if ( ! empty( $fields ) ) {
+			foreach ( $fields as $field ) {
+				if ( 'captcha' === $field['type'] && 'turnstile' === $field['captcha_provider'] ) {
 					return true;
 				}
 			}
