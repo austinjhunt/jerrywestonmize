@@ -307,6 +307,17 @@ class UpdateSettingsCommandHandler extends CommandHandler
             unset($settingsFields['sendAllCF']);
         }
 
+        if ($command->getField('outlookCalendar') !== null) {
+            $outlookSettings = $command->getField('outlookCalendar');
+
+            unset($outlookSettings['token']);
+
+            $settingsFields['outlookCalendar'] = array_merge(
+                $settingsService->getCategorySettings('outlookCalendar'),
+                $outlookSettings
+            );
+        }
+
         if ($command->getField('providerBadges') !== null) {
             $rolesSettings = $settingsService->getCategorySettings('roles');
 

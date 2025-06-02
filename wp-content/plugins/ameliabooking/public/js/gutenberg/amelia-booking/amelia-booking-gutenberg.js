@@ -116,7 +116,8 @@
     ],
     supports: {
       customClassName: false,
-      html: false
+      html: false,
+      inserter: false
     },
     attributes: {
       short_code: {

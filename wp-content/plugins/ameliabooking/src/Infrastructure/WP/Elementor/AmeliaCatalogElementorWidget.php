@@ -22,17 +22,6 @@ class AmeliaCatalogElementorWidget extends Widget_Base
         return 'ameliacatalog';
     }
 
-    public function get_title() {
-        return BackendStrings::getWordPressStrings()['catalog_gutenberg_block']['title'];
-    }
-
-    public function get_icon() {
-        return 'amelia-logo-outdated';
-    }
-
-    public function get_categories() {
-        return [ 'amelia-elementor' ];
-    }
     protected function register_controls() {
 
         $controls_data = self::amelia_elementor_get_data();

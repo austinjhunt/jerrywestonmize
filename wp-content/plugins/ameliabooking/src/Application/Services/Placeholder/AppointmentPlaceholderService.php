@@ -156,7 +156,10 @@ class AppointmentPlaceholderService extends PlaceholderService
         $data = array_merge($data, $this->getEmployeeData($appointment, $bookingKey));
         $data = array_merge($data, $this->getBookingData($appointment, $type, $bookingKey, $token, $data['deposit'], null, $invoice));
         $data = array_merge($data, $this->getCustomFieldsData($appointment, $type, $bookingKey));
-        $data = array_merge($data, $notificationType ? $this->getCouponsData($appointment, $type, $bookingKey) : []);
+
+        if ($notificationType === 'customer_appointment_approved') {
+            $data = array_merge($data, $this->getCouponsData($appointment, $type, $bookingKey));
+        }
 
         return $data;
     }
@@ -277,9 +280,9 @@ class AppointmentPlaceholderService extends PlaceholderService
                 $index = $extraItem['item_index'];
                 if (!empty($data['items'][$index])) {
                     $data['items'][$index]['invoice_qty']      += $extraItem['invoice_qty'];
-                    $data['items'][$index]['invoice_subtotal'] += $extraItems['invoice_subtotal'];
-                    $data['items'][$index]['invoice_tax']      += $extraItems['invoice_tax']['amount'];
-                    $data['items'][$index]['invoice_tax_rate'] += $extraItems['invoice_tax']['rate'];
+                    $data['items'][$index]['invoice_subtotal'] += $extraItem['invoice_subtotal'];
+                    $data['items'][$index]['invoice_tax']      += $extraItem['invoice_tax']['amount'];
+                    $data['items'][$index]['invoice_tax_rate'] += $extraItem['invoice_tax']['rate'];
                 } else {
                     $data['items'][$index] = array_merge(
                         $extraItem,

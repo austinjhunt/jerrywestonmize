@@ -60,7 +60,9 @@ class UpdateCustomerCommandHandler extends CommandHandler
         if (!$command->getPermissionService()->currentUserCanWrite(Entities::CUSTOMERS)) {
             if ($command->getToken()) {
                 /** @var AbstractUser $provider */
-                $provider = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
+                $provider = $command->getCabinetType() === 'provider'
+                    ? $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet')
+                    : null;
 
                 $oldUser = $provider === null
                     ? $userAS->getAuthenticatedUser($command->getToken(), false, 'customerCabinet')
@@ -119,15 +121,7 @@ class UpdateCustomerCommandHandler extends CommandHandler
         /** @var Customer $newUser */
         $newUser = UserFactory::create($newUserData);
 
-        if (!($newUser instanceof AbstractUser)) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage('Could not update user.');
-
-            return $result;
-        }
-
-        if ($oldUser &&
-            $userRepository->getByEmail($newUser->getEmail()->getValue()) &&
+        if ($userRepository->getByEmail($newUser->getEmail()->getValue()) &&
             $oldUser->getEmail()->getValue() !== $newUser->getEmail()->getValue()
         ) {
             $result->setResult(CommandResult::RESULT_CONFLICT);

@@ -138,4 +138,13 @@ class InfrastructureService
             )
         );
     }
+
+    /**
+     * @param $c
+     * @return InfrastructureServices\Authentication\AbstractSocialAuthenticationService
+     */
+    public static function getSocialAuthenticationService($c)
+    {
+        return new InfrastructureServices\Authentication\StarterSocialAuthenticationService($c);
+    }
 }

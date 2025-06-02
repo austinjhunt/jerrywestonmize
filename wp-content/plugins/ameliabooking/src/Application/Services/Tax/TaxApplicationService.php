@@ -45,6 +45,12 @@ class TaxApplicationService extends AbstractTaxApplicationService
      */
     public function setTaxEntities($tax, $entitiesIds)
     {
+        /** @var TaxRepository $taxRepository */
+        $taxRepository = $this->container->get('domain.tax.repository');
+
+        /** @var TaxEntityRepository $taxEntityRepository */
+        $taxEntityRepository = $this->container->get('domain.tax.entity.repository');
+
         /** @var ServiceRepository $serviceRepository */
         $serviceRepository = $this->container->get('domain.bookable.service.repository');
 
@@ -57,27 +63,55 @@ class TaxApplicationService extends AbstractTaxApplicationService
         /** @var ExtraRepository $extraRepository */
         $extraRepository = $this->container->get('domain.bookable.extra.repository');
 
+        if ($tax->getAllServices() && $tax->getAllServices()->getValue()) {
+            $taxEntityRepository->deleteAllForEntities('service', new Collection());
+
+            $taxRepository->updateFieldByColumn('allServices', 0, 'allServices', 1);
+        }
+
         /** @var Collection $services */
-        $services = !empty($entitiesIds['services']) ?
-            $serviceRepository->getByIds($entitiesIds['services']) : new Collection();
+        $services = !empty($entitiesIds['services']) && !($tax->getAllServices() && $tax->getAllServices()->getValue())
+            ? $serviceRepository->getByIds($entitiesIds['services'])
+            : new Collection();
 
         $tax->setServiceList($services);
 
+        if ($tax->getAllEvents() && $tax->getAllEvents()->getValue()) {
+            $taxEntityRepository->deleteAllForEntities('event', new Collection());
+
+            $taxRepository->updateFieldByColumn('allEvents', 0, 'allEvents', 1);
+        }
+
         /** @var Collection $events */
-        $events = !empty($entitiesIds['events']) ?
-            $eventRepository->getByIds($entitiesIds['events']) : new Collection();
+        $events = !empty($entitiesIds['events']) && !($tax->getAllEvents() && $tax->getAllEvents()->getValue())
+            ? $eventRepository->getByIds($entitiesIds['events'])
+            : new Collection();
 
         $tax->setEventList($events);
 
+        if ($tax->getAllPackages() && $tax->getAllPackages()->getValue()) {
+            $taxEntityRepository->deleteAllForEntities('package', new Collection());
+
+            $taxRepository->updateFieldByColumn('allPackages', 0, 'allPackages', 1);
+        }
+
         /** @var Collection $packages */
-        $packages = !empty($entitiesIds['packages']) ?
-            $packageRepository->getByIds($entitiesIds['packages']) : new Collection();
+        $packages = !empty($entitiesIds['packages']) && !($tax->getAllPackages() && $tax->getAllPackages()->getValue())
+            ? $packageRepository->getByIds($entitiesIds['packages'])
+            : new Collection();
 
         $tax->setPackageList($packages);
 
+        if ($tax->getAllExtras() && $tax->getAllExtras()->getValue()) {
+            $taxEntityRepository->deleteAllForEntities('extra', new Collection());
+
+            $taxRepository->updateFieldByColumn('allExtras', 0, 'allExtras', 1);
+        }
+
         /** @var Collection $extras */
-        $extras = !empty($entitiesIds['extras']) ?
-            $extraRepository->getByIds($entitiesIds['extras']) : new Collection();
+        $extras = !empty($entitiesIds['extras']) && !($tax->getAllExtras() && $tax->getAllExtras()->getValue())
+            ? $extraRepository->getByIds($entitiesIds['extras'])
+            : new Collection();
 
         $tax->setExtraList($extras);
     }
@@ -237,10 +271,34 @@ class TaxApplicationService extends AbstractTaxApplicationService
         foreach ($taxes->getItems() as $tax) {
             if ($tax->getStatus()->getValue() === Status::VISIBLE &&
                 (
-                    ($type === Entities::SERVICE && $tax->getServiceList()->keyExists($id)) ||
-                    ($type === Entities::EXTRA && $tax->getExtraList()->keyExists($id)) ||
-                    ($type === Entities::PACKAGE && $tax->getPackageList()->keyExists($id)) ||
-                    ($type === Entities::EVENT && $tax->getEventList()->keyExists($id))
+                    (
+                        $type === Entities::SERVICE &&
+                        (
+                            $tax->getServiceList()->keyExists($id) ||
+                            ($tax->getAllServices() && $tax->getAllServices()->getValue())
+                        )
+                    ) ||
+                    (
+                        $type === Entities::EXTRA &&
+                        (
+                            $tax->getExtraList()->keyExists($id) ||
+                            ($tax->getAllExtras() && $tax->getAllExtras()->getValue())
+                        )
+                    ) ||
+                    (
+                        $type === Entities::PACKAGE &&
+                        (
+                            $tax->getPackageList()->keyExists($id) ||
+                            ($tax->getAllPackages() && $tax->getAllPackages()->getValue())
+                        )
+                    ) ||
+                    (
+                        $type === Entities::EVENT &&
+                        (
+                            $tax->getEventList()->keyExists($id) ||
+                            ($tax->getAllEvents() && $tax->getAllEvents()->getValue())
+                        )
+                    )
                 )
             ) {
                 $taxData[] = [

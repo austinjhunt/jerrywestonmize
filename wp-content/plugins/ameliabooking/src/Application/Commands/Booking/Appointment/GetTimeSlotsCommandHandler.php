@@ -405,7 +405,8 @@ class GetTimeSlotsCommandHandler extends CommandHandler
             )->format('Y-m-d H:i') : $maximumDateTime->format('Y-m-d H:i'),
           'busyness' => $busyness,
           'lastBookedProviderId' => $lastBookedProviderId,
-          'appCount' => $freeSlots['appCount']
+          'appCount' => $freeSlots['appCount'],
+          'duration' => $freeSlots['duration'],
         ];
 
 
@@ -424,7 +425,8 @@ class GetTimeSlotsCommandHandler extends CommandHandler
                 'occupied'  => $resultData['occupied'],
                 'busyness'  => $resultData['busyness'],
                 'lastProvider' => $resultData['lastBookedProviderId'],
-                'appCount' => $resultData['appCount']
+                'appCount' => $resultData['appCount'],
+                'duration' => $resultData['duration'],
             ]
         );
 

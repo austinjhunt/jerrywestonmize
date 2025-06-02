@@ -135,6 +135,7 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
                 u.translations as translations,
                 IF(u.birthday IS NOT NULL, u.birthday , '') as birthday,
                 u.note as note,
+                u.customFields as customFields,
                 {$statsFields}
                 IF(wpu.display_name IS NOT NULL, wpu.display_name , '') as wpName
                 FROM {$this->table} as u

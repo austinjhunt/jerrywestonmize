@@ -2,7 +2,8 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Notification;
 
-use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\Common\Container;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 
 /**
  * Class MailerFactory
@@ -14,13 +15,17 @@ class MailerFactory
     /**
      * Mailer constructor.
      *
-     * @param SettingsService $settingsService
+     * @param Container $container
      *
-     * @return MailgunService|PHPMailService|SMTPService|WpMailService
+     * @return MailgunService|PHPMailService|SMTPService|WpMailService|OutlookService
      */
-    public static function create(SettingsService $settingsService)
+    public static function create(Container $container)
     {
+        $settingsService = $container->get('domain.settings.service');
+
         $settings = $settingsService->getCategorySettings('notifications');
+
+        $outlookSettings = $settingsService->getCategorySettings('outlookCalendar');
 
         if ($settings['mailService'] === 'smtp') {
             return new SMTPService(
@@ -48,6 +53,18 @@ class MailerFactory
 
         if ($settings['mailService'] === 'wp_mail') {
             return new WpMailService(
+                $settings['senderEmail'],
+                $settings['senderName'],
+                $settings['replyTo']
+            );
+        }
+
+        if ($settings['mailService'] === 'outlook' && $outlookSettings['mailEnabled']) {
+            /** @var AbstractOutlookCalendarService $outlookCalendarService */
+            $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
+
+            return new OutlookService(
+                $outlookCalendarService,
                 $settings['senderEmail'],
                 $settings['senderName'],
                 $settings['replyTo']

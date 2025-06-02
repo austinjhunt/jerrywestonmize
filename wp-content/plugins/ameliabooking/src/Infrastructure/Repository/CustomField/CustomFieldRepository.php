@@ -77,12 +77,14 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
         $data = $entity->toArray();
 
         $params = [
-            ':label'        => isset($data['label']) ? $data['label'] : '',
-            ':type'         => $data['type'],
-            ':required'     => $data['required'] ? 1 : 0,
-            ':position'     => $data['position'],
-            ':translations' => $data['translations'],
-            ':width'        => $data['width'],
+            ':label'           => isset($data['label']) ? $data['label'] : '',
+            ':type'            => $data['type'],
+            ':saveType'        => $data['saveType'],
+            ':required'        => $data['required'] ? 1 : 0,
+            ':position'        => $data['position'],
+            ':translations'    => $data['translations'],
+            ':width'           => $data['width'],
+            ':saveFirstChoice' => $data['saveFirstChoice'] ? 1 : 0,
         ];
 
         try {
@@ -90,9 +92,9 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                 "INSERT INTO
                 {$this->table}
                 (
-                `label`, `type`, `required`, `position`, `translations`, `width`
+                `label`, `type`, `saveType`, `required`, `position`, `translations`, `width`, `saveFirstChoice`
                 ) VALUES (
-                :label, :type, :required, :position, :translations, :width
+                :label, :type, :saveType, :required, :position, :translations, :width, :saveFirstChoice
                 )"
             );
 
@@ -121,15 +123,16 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
         $data = $entity->toArray();
 
         $params = [
-            ':label'         => $data['label'],
-            ':required'      => $data['required'] ? 1 : 0,
-            ':position'      => $data['position'],
-            ':translations'  => $data['translations'],
-            ':allServices'   => $data['allServices'] ? 1 : 0,
-            ':allEvents'     => $data['allEvents'] ? 1 : 0,
-            ':useAsLocation' => $data['useAsLocation'] ? 1 : 0,
-            ':width'         => $data['width'] ? : 50,
-            ':id'            => $id,
+            ':label'           => $data['label'],
+            ':required'        => $data['required'] ? 1 : 0,
+            ':position'        => $data['position'],
+            ':translations'    => $data['translations'],
+            ':allServices'     => $data['allServices'] ? 1 : 0,
+            ':allEvents'       => $data['allEvents'] ? 1 : 0,
+            ':useAsLocation'   => $data['useAsLocation'] ? 1 : 0,
+            ':saveFirstChoice' => $data['saveFirstChoice'] ? 1 : 0,
+            ':width'           => $data['width'] ? : 50,
+            ':id'              => $id,
         ];
 
         try {
@@ -143,6 +146,7 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                 `allServices` = :allServices,
                 `allEvents` = :allEvents,
                 `useAsLocation` = :useAsLocation,
+                `saveFirstChoice` = :saveFirstChoice,
                 `width` = :width
                 WHERE
                 id = :id"
@@ -184,6 +188,7 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                     cf.id AS cf_id,
                     cf.label AS cf_label,
                     cf.type AS cf_type,
+                    cf.saveType AS cf_saveType,
                     cf.required AS cf_required,
                     cf.position AS cf_position,
                     cf.translations AS cf_translations,
@@ -191,6 +196,7 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                     cf.allEvents AS cf_allEvents,
                     cf.useAsLocation AS cf_useAsLocation,
                     cf.width AS cf_width,
+                    cf.saveFirstChoice AS cf_saveFirstChoice,
                     cfo.id AS cfo_id,
                     cfo.customFieldId AS cfo_custom_field_id,
                     cfo.label AS cfo_label,

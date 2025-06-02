@@ -74,6 +74,9 @@ abstract class AbstractUser
     /** @var  Json */
     protected $translations;
 
+    /** @var  Json */
+    protected $customFields;
+
     /** @var Name */
     private $appleCalendarId;
 
@@ -366,6 +369,22 @@ abstract class AbstractUser
         $this->translations = $translations;
     }
 
+    /**
+     * @return Json
+     */
+    public function getCustomFields()
+    {
+        return $this->customFields;
+    }
+
+    /**
+     * @param Json $customFields
+     */
+    public function setCustomFields(Json $customFields)
+    {
+        $this->customFields = $customFields;
+    }
+
 
     /**
      * @return Name
@@ -404,6 +423,7 @@ abstract class AbstractUser
             'pictureFullPath'  => null !== $this->getPicture() ? $this->getPicture()->getFullPath() : null,
             'pictureThumbPath' => null !== $this->getPicture() ? $this->getPicture()->getThumbPath() : null,
             'translations'     => $this->getTranslations() ? $this->getTranslations()->getValue() : null,
+            'customFields'     => $this->getCustomFields() ? $this->getCustomFields()->getValue() : null,
             'appleCalendarId'  => null !== $this->getAppleCalendarId() ? $this->getAppleCalendarId()->getValue() : null,
 //            'password'         => null !== $this->getPassword() ? $this->getPassword()->getValue() : null
         ];

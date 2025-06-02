@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Infrastructure\Repository\Bookable\Service;
 
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
 use AmeliaBooking\Domain\Factory\Bookable\Service\PackageCustomerFactory;
@@ -131,7 +132,7 @@ class PackageCustomerRepository extends AbstractRepository
     /**
      * @param array $criteria
      *
-     * @return array
+     * @return Collection
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
@@ -152,6 +153,20 @@ class PackageCustomerRepository extends AbstractRepository
             $params[':bookingStatus'] = $criteria['bookingStatus'];
         }
 
+        if (!empty($criteria['packages'])) {
+            $queryPackages = [];
+
+            foreach ($criteria['packages'] as $index => $value) {
+                $param = ':package' . $index;
+
+                $queryPackages[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = 'pc.packageId IN (' . implode(', ', $queryPackages) . ')';
+        }
+
         if (isset($criteria['couponId'])) {
             $where[] = "pc.couponId = {$criteria['couponId']}";
         }
@@ -161,19 +176,28 @@ class PackageCustomerRepository extends AbstractRepository
         try {
             $statement = $this->connection->prepare(
                 "SELECT 
-                pc.customerId
+                    pc.id AS id
                 FROM {$this->table} pc
-                $where"
+                {$where}"
             );
 
             $statement->execute($params);
 
             $rows = $statement->fetchAll();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
         }
 
-        return $rows;
+        $entities = new Collection();
+
+        foreach ($rows as $row) {
+            $entities->addItem(
+                call_user_func([static::FACTORY, 'create'], $row),
+                $row['id']
+            );
+        }
+
+        return $entities;
     }
 
     /**
@@ -189,7 +213,7 @@ class PackageCustomerRepository extends AbstractRepository
         $params = [];
 
         if (!empty($criteria['purchased'])) {
-            $where[] = "(DATE_FORMAT(pc.purchased, '%Y-%m-%d %H:%i:%s') BETWEEN :purchasedFrom AND :purchasedTo)";
+            $where[] = "(pc.purchased BETWEEN :purchasedFrom AND :purchasedTo)";
 
             $params[':purchasedFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['purchased'][0]);
 
@@ -286,7 +310,7 @@ class PackageCustomerRepository extends AbstractRepository
         $where = [];
 
         if (!empty($criteria['purchased'])) {
-            $where[] = "(DATE_FORMAT(pc.purchased, '%Y-%m-%d %H:%i:%s') BETWEEN :purchasedFrom AND :purchasedTo)";
+            $where[] = "(pc.purchased BETWEEN :purchasedFrom AND :purchasedTo)";
 
             $params[':purchasedFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['purchased'][0]);
 

@@ -248,6 +248,10 @@ class UserFactory
                     $user->setTranslations(new Json($data['translations']));
                 }
 
+                if (!empty($data['customFields'])) {
+                    $user->setCustomFields(new Json($data['customFields']));
+                }
+
                 break;
         }
 

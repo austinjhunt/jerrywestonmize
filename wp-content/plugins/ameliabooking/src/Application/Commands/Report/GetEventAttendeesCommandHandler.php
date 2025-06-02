@@ -22,7 +22,6 @@ use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Report\ReportServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
-use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\CustomerBookingEventTicketRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventTicketRepository;
@@ -68,7 +67,7 @@ class GetEventAttendeesCommandHandler extends CommandHandler
         $eventRepository = $this->container->get('domain.booking.event.repository');
 
         /** @var Event $event */
-        $event = $eventRepository->getById((int)$params['id']);
+        $event = $eventRepository->getById((int)$params['id'], ['fetchBookingsTickets' => true]);
 
         /** @var ReportServiceInterface $reportService */
         $reportService = $this->container->get('infrastructure.report.csv.service');

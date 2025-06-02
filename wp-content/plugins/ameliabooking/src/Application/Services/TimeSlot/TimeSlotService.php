@@ -381,6 +381,9 @@ class TimeSlotService
             'allowAdminBookAtAnyTime'    => isset($customSettings['allowAdminBookAtAnyTime']) ? filter_var($customSettings['allowAdminBookAtAnyTime'], FILTER_VALIDATE_BOOLEAN) :
                 (!$isFrontEndBooking &&
                 $userApplicationService->isAdminAndAllowedToBookAtAnyTime()),
+            'allowAdminBookOverApp'      => isset($customSettings['allowAdminBookOverApp']) ? filter_var($customSettings['allowAdminBookOverApp'], FILTER_VALIDATE_BOOLEAN) :
+                (!$isFrontEndBooking &&
+                $userApplicationService->isAdminAndAllowedToBookOver()),
             'isGloballyBusySlot'         =>
                 $settingsDomainService->getSetting('appointments', 'isGloballyBusySlot') &&
                 !$slotsEntities->getResources()->length(),
@@ -477,6 +480,14 @@ class TimeSlotService
     {
         /** @var DomainTimeSlotService $timeSlotService */
         $timeSlotService = $this->container->get('domain.timeSlot.service');
+
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        $settings['defaultAppointmentStatus'] = $settingsService
+            ->getEntitySettings($slotsEntities->getServices()->getItem($props['serviceId'])->getSettings())
+            ->getGeneralSettings()
+            ->getDefaultAppointmentStatus();
 
         /** @var Provider $provider */
         foreach ($slotsEntities->getProviders()->getItems() as $provider) {

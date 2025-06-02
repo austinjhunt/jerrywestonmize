@@ -114,4 +114,14 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
             )
         );
     }
+
+    /**
+     * @param Container $c
+     *
+     * @return InfrastructureServices\Authentication\AbstractSocialAuthenticationService
+     */
+    public static function getSocialAuthenticationService($c)
+    {
+        return new InfrastructureServices\Authentication\SocialAuthenticationService($c);
+    }
 }

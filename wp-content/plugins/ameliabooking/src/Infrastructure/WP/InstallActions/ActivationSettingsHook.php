@@ -70,6 +70,8 @@ class ActivationSettingsHook
         self::initGoogleTagSettings();
 
         self::initAppleCalendarSettings();
+
+        self::initSocialLoginSettings();
     }
 
     /**
@@ -403,6 +405,7 @@ This message does not have an option for responding. If you need additional info
                     $savedSettings['eventDescription'] : '',
                 'event' => ''
             ],
+            'calendarEnabled'                  => !empty($savedSettings['clientID']) && !empty($savedSettings['clientSecret']),
         ];
 
         self::initSettings('googleCalendar', $settings);
@@ -440,6 +443,9 @@ This message does not have an option for responding. If you need additional info
                     $savedSettings['eventDescription'] : '',
                 'event' => ''
             ],
+            'calendarEnabled'                  => !empty($savedSettings['clientID']) && !empty($savedSettings['clientSecret']),
+            'mailEnabled'                      => false,
+            'token'                            => null,
         ];
 
         self::initSettings('outlookCalendar', $settings);
@@ -675,10 +681,11 @@ This message does not have an option for responding. If you need additional info
                 'manualCapture'   => false,
                 'returnUrl'       => '',
                 'connect'         => [
-                    'enabled' => false,
-                    'method'  => 'transfer',
-                    'amount'  => 0,
-                    'type'    => 'percentage',
+                    'enabled'      => false,
+                    'method'       => 'transfer',
+                    'amount'       => 0,
+                    'type'         => 'percentage',
+                    'capabilities' => ['card_payments', 'transfers'],
                 ],
             ],
             'wc'                         => [
@@ -859,6 +866,7 @@ This message does not have an option for responding. If you need additional info
             'payments',
             [
                 ['stripe', 'connect'],
+                ['stripe', 'connect', 'capabilities'],
                 ['stripe', 'description'],
                 ['stripe', 'description', 'package'],
                 ['stripe', 'description', 'cart'],
@@ -1518,6 +1526,7 @@ This message does not have an option for responding. If you need additional info
             'allowCustomerDeleteProfile'  => false,
             'allowWriteEvents'            => false,
             'allowAdminBookAtAnyTime'     => false,
+            'allowAdminBookOverApp'       => false,
             'adminServiceDurationAsSlot'  => false,
             'enabledHttpAuthorization'    => true,
             'enableNoShowTag'             => true,
@@ -1766,12 +1775,27 @@ This message does not have an option for responding. If you need additional info
 
                 $current = &$current[$key];
 
-                $currentInit = &$initSettings[$key];
+                $currentInit = &$currentInit[$key];
             }
         }
 
         if ($setSettings) {
             self::initSettings($category, $savedSettings, true);
         }
+    }
+
+    /**
+     * Init Social Login Settings
+     */
+    private static function initSocialLoginSettings()
+    {
+        $settings = [
+            'enableGoogleLogin'   => false,
+            'enableFacebookLogin' => false,
+            'facebookAppId'       => '',
+            'facebookAppSecret'   => '',
+        ];
+
+        self::initSettings('socialLogin', $settings);
     }
 }

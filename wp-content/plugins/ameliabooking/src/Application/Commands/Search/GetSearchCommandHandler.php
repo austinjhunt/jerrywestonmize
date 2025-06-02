@@ -92,7 +92,7 @@ class GetSearchCommandHandler extends CommandHandler
         $slotsEntities = $applicationTimeSlotService->getSlotsEntities(
             [
                 'isFrontEndBooking' => true,
-                'providerIds'       => $params['providers'],
+                'providerIds'       => !empty($params['providers']) ? $params['providers'] : [],
                 'serviceCriteria'   => [
                     'sort' => !empty($params['sort']) ? $params['sort'] : null,
                 ],
@@ -181,6 +181,11 @@ class GetSearchCommandHandler extends CommandHandler
             if ($maxEndDateTime < $endDateTime) {
                 continue;
             }
+
+            $settings['defaultAppointmentStatus'] = $settingsDS
+                ->getEntitySettings($slotsEntities->getServices()->getItem($serviceId)->getSettings())
+                ->getGeneralSettings()
+                ->getDefaultAppointmentStatus();
 
             $freeSlots = $timeSlotService->getSlots(
                 $settings,

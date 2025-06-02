@@ -209,7 +209,7 @@ class AppointmentEditedEventHandler
             $removedBookings,
             true,
             true,
-            !empty($settingsService->getSetting('notifications', 'sendInvoice'))
+            false
         );
 
         if ($appointmentRescheduled &&

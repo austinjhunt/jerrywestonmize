@@ -42,21 +42,11 @@ abstract class AbstractOutlookCalendarService
     /**
      * @param $authCode
      * @param $redirectUri
+     * @param $providerId
      *
      * @return array
      */
-    abstract public function fetchAccessTokenWithAuthCode($authCode, $redirectUri);
-
-    /**
-     * @param Provider $provider
-     *
-     * @return void
-     * @throws ContainerException
-     * @throws InvalidArgumentException
-     * @throws QueryExecutionException
-     * @throws Exception
-     */
-    abstract public function authorizeProvider($provider);
+    abstract public function fetchAccessTokenWithAuthCode($authCode, $redirectUri, $providerId);
 
     /**
      * @param Provider $provider
@@ -144,5 +134,31 @@ abstract class AbstractOutlookCalendarService
         $excludeAppointmentId,
         $startDateTime,
         $endDateTime
+    );
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param string $from
+     * @param string $fromName
+     * @param string $replyTo
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @param array  $bccEmails
+     * @param array  $attachments
+     *
+     * @return void
+     *
+     * @throws ContainerException
+     */
+    abstract public function sendEmail(
+        $from,
+        $fromName,
+        $replyTo,
+        $to,
+        $subject,
+        $body,
+        $bccEmails = [],
+        $attachments = []
     );
 }

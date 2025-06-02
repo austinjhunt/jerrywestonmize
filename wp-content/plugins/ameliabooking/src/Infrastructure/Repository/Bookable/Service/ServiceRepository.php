@@ -853,7 +853,7 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
         $where = [];
 
         if ($criteria['dates']) {
-            $where[] = "(DATE_FORMAT(a.bookingStart, '%Y-%m-%d %H:%i:%s') BETWEEN :bookingFrom AND :bookingTo)";
+            $where[] = "(a.bookingStart BETWEEN :bookingFrom AND :bookingTo)";
             $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             $params[':bookingTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
         }
@@ -903,16 +903,20 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
     public function getAllNumberOfViews($criteria)
     {
         $params = [];
+
         $where = [];
 
         if ($criteria['dates']) {
-            $where[] = "(DATE_FORMAT(sv.date, '%Y-%m-%d %H:%i:%s') BETWEEN :bookingFrom AND :bookingTo)";
-            $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-            $params[':bookingTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+            $where[] = "(sv.date BETWEEN :bookingFrom AND :bookingTo)";
+
+            $params[':bookingFrom'] = explode(' ', $criteria['dates'][0])[0];
+
+            $params[':bookingTo'] = explode(' ', $criteria['dates'][1])[0];
         }
 
         if (isset($criteria['status'])) {
             $where[] = 's.status = :status';
+
             $params[':status'] = $criteria['status'];
         }
 

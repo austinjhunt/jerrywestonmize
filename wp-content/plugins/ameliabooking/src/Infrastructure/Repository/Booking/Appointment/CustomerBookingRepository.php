@@ -42,6 +42,11 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
     {
         $data = $entity->toArray();
 
+        $couponId = !empty($data['coupon']) ? $data['coupon']['id'] : null;
+        if (!$couponId && !empty($data['couponId'])) {
+            $couponId = $data['couponId'];
+        }
+
         $params = [
             ':appointmentId'   => $data['appointmentId'],
             ':customerId'      => $data['customerId'],
@@ -49,7 +54,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             ':price'           => $data['price'],
             ':tax'             => !empty($data['tax']) ? json_encode($data['tax']) : null,
             ':persons'         => $data['persons'],
-            ':couponId'        => !empty($data['coupon']) ? $data['coupon']['id'] : null,
+            ':couponId'        => $couponId,
             ':token'           => $data['token'],
             ':customFields'    => $data['customFields'] && json_decode($data['customFields']) !== false ?
                 $data['customFields'] : null,
@@ -316,7 +321,8 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
         $where = [];
 
         if ($criteria['dates']) {
-            $where[] = "(DATE_FORMAT(a.bookingStart, '%Y-%m-%d') < :bookingFrom)";
+            $where[] = "(a.bookingStart < :bookingFrom)";
+
             $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
         }
 
@@ -361,7 +367,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
         $where = [];
 
         if ($criteria['dates']) {
-            $where[] = "(DATE_FORMAT(a.bookingStart, '%Y-%m-%d') BETWEEN :bookingFrom AND :bookingTo)";
+            $where[] = "(a.bookingStart BETWEEN :bookingFrom AND :bookingTo)";
 
             $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
 
@@ -760,7 +766,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
 
         if (!empty($criteria['dates'])) {
             if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom AND :eventTo)";
+                $where[] = "(ep.periodStart BETWEEN :eventFrom AND :eventTo)";
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
                 $params[':eventTo']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             }
@@ -894,7 +900,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
 
         if (!empty($criteria['dates'])) {
             if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom AND :eventTo)";
+                $where[] = "(ep.periodStart BETWEEN :eventFrom AND :eventTo)";
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
                 $params[':eventTo']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             }

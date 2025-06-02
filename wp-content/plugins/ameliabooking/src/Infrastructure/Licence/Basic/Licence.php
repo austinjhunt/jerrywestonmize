@@ -75,6 +75,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\Apple\DisconnectFromAppleCalendarCommand::class           => new Commands\Apple\DisconnectFromAppleCalendarCommandHandler($c),
                 Commands\Apple\ConnectEmployeeToPersonalAppleCalendarCommand::class => new Commands\Apple\ConnectEmployeeToPersonalAppleCalendarCommandHandler($c),
                 Commands\Apple\DisconnectEmployeeFromAppleCalendarCommand::class    => new Commands\Apple\DisconnectEmployeeFromAppleCalendarCommandHandler($c),
+                // User
+                Commands\User\SocialLoginCommand::class                            => new Commands\User\SocialLoginCommandHandler($c),
             ]
         );
     }
@@ -106,5 +108,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
         Routes\Zoom\Zoom::routes($app);
 
         Routes\Apple\Apple::routes($app);
+
+        Routes\SocialLogin\SocialLogin::routes($app);
     }
 }

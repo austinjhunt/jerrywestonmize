@@ -9,10 +9,11 @@ namespace AmeliaBooking\Domain\ValueObjects\Number\Integer;
  */
 final class LoginType
 {
-    const WP_CREDENTIALS     = 1;
-    const WP_USER            = 2;
-    const AMELIA_CREDENTIALS = 3;
-    const AMELIA_URL_TOKEN   = 4;
+    const WP_CREDENTIALS      = 1;
+    const WP_USER             = 2;
+    const AMELIA_CREDENTIALS  = 3;
+    const AMELIA_URL_TOKEN    = 4;
+    const AMELIA_SOCIAL_LOGIN = 5;
 
     /**
      * @var int

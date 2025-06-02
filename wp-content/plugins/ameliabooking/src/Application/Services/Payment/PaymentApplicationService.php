@@ -121,14 +121,46 @@ class PaymentApplicationService
 
         $paymentsTypesIds = $paymentRepository->getFilteredIds($params, $itemsPerPage, $isInvoicePage);
 
-        if (empty($paymentsTypesIds['appointment']) &&
-            empty($paymentsTypesIds['event']) &&
-            empty($paymentsTypesIds['package'])
+        $groupedPaymentsTypesIds = [];
+
+        foreach ($paymentsTypesIds as $id => $type) {
+            $groupedPaymentsTypesIds[$type][] = $id;
+        }
+
+        if (empty($groupedPaymentsTypesIds['appointment']) &&
+            empty($groupedPaymentsTypesIds['event']) &&
+            empty($groupedPaymentsTypesIds['package'])
         ) {
             return [];
         }
 
-        $paymentsData = $paymentRepository->getFiltered($paymentsTypesIds, $isInvoicePage);
+        $paymentsData = [];
+
+        $appointmentsPaymentsData = !empty($groupedPaymentsTypesIds['appointment'])
+            ? $paymentRepository->getAppointmentsPaymentsByIds($groupedPaymentsTypesIds['appointment'])
+            : [];
+
+        $eventsPaymentsData = !empty($groupedPaymentsTypesIds['event'])
+            ? $paymentRepository->getEventsPaymentsByIds($groupedPaymentsTypesIds['event'])
+            : [];
+
+        $packagesPaymentsData = !empty($groupedPaymentsTypesIds['package'])
+            ? $paymentRepository->getPackagesPaymentsByIds($groupedPaymentsTypesIds['package'])
+            : [];
+
+        foreach ($paymentsTypesIds as $id => $type) {
+            if (!empty($appointmentsPaymentsData[$id])) {
+                $paymentsData[$id] = $appointmentsPaymentsData[$id];
+            }
+
+            if (!empty($eventsPaymentsData[$id])) {
+                $paymentsData[$id] = $eventsPaymentsData[$id];
+            }
+
+            if (!empty($packagesPaymentsData[$id])) {
+                $paymentsData[$id] = $packagesPaymentsData[$id];
+            }
+        }
 
         $eventBookingIds = [];
 
@@ -145,19 +177,49 @@ class PaymentApplicationService
 
         $secondaryPaymentsIds = $paymentRepository->getSecondaryPaymentIds($secondaryPaymentsData, $isInvoicePage);
 
-        if (empty($secondaryPaymentsIds['appointment']) &&
-            empty($secondaryPaymentsIds['event']) &&
-            empty($secondaryPaymentsIds['package'])
+        $groupedSecondaryPaymentsTypesIds = [];
+
+        foreach ($secondaryPaymentsIds as $id => $type) {
+            $groupedSecondaryPaymentsTypesIds[$type][] = $id;
+        }
+
+        $secondaryPayments = [];
+
+        if (!empty($groupedSecondaryPaymentsTypesIds['appointment']) ||
+            !empty($groupedSecondaryPaymentsTypesIds['event']) ||
+            !empty($groupedSecondaryPaymentsTypesIds['package'])
         ) {
-            $secondaryPaymentsData = [];
-        } else {
-            $secondaryPaymentsData = $paymentRepository->getFiltered($secondaryPaymentsIds, $isInvoicePage);
+            $appointmentsSecondaryPaymentsData = !empty($groupedSecondaryPaymentsTypesIds['appointment'])
+                ? $paymentRepository->getAppointmentsPaymentsByIds($groupedSecondaryPaymentsTypesIds['appointment'])
+                : [];
+
+            $eventsSecondaryPaymentsData = !empty($groupedSecondaryPaymentsTypesIds['event'])
+                ? $paymentRepository->getEventsPaymentsByIds($groupedSecondaryPaymentsTypesIds['event'])
+                : [];
+
+            $packagesSecondaryPaymentsData = !empty($groupedSecondaryPaymentsTypesIds['package'])
+                ? $paymentRepository->getPackagesPaymentsByIds($groupedSecondaryPaymentsTypesIds['package'])
+                : [];
+
+            foreach ($secondaryPaymentsIds as $id => $type) {
+                if (!empty($appointmentsSecondaryPaymentsData[$id])) {
+                    $secondaryPayments[$id] = $appointmentsSecondaryPaymentsData[$id];
+                }
+
+                if (!empty($eventsSecondaryPaymentsData[$id])) {
+                    $secondaryPayments[$id] = $eventsSecondaryPaymentsData[$id];
+                }
+
+                if (!empty($packagesSecondaryPaymentsData[$id])) {
+                    $secondaryPayments[$id] = $packagesSecondaryPaymentsData[$id];
+                }
+            }
         }
 
         foreach ($paymentsData as &$paymentData) {
             $paymentData['secondaryPayments'] = [];
 
-            foreach ($secondaryPaymentsData as $secondaryPayment) {
+            foreach ($secondaryPayments as $secondaryPayment) {
                 if ($paymentData['id'] !== $secondaryPayment['id'] &&
                 (
                    (
@@ -187,7 +249,7 @@ class PaymentApplicationService
         }
 
         /** @var Collection $events */
-        $events = !empty($paymentsTypesIds['event']) ? $eventAS->getEventsByCriteria(
+        $events = !empty($groupedPaymentsTypesIds['event']) ? $eventAS->getEventsByCriteria(
             [
                 'customerBookingsIds' => $eventBookingIds,
             ],
@@ -248,7 +310,7 @@ class PaymentApplicationService
             }
         }
 
-        if (!empty($paymentsTypesIds['package'])) {
+        if (!empty($groupedPaymentsTypesIds['package'])) {
             $packageApplicationService->setPaymentData($paymentsData);
         }
 

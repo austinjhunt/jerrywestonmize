@@ -391,6 +391,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
         /** @var PackageCustomerRepository $packageCustomerRepository */
         $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
 
+        /** @var Collection $customerPackageReservations */
         $customerPackageReservations = $packageCustomerRepository->getFiltered(
             [
                 'customerId'      => $userId,
@@ -399,7 +400,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
             ]
         );
 
-        return $customerAppointmentReservations->length() + sizeof($eventsIds) + count($customerPackageReservations);
+        return $customerAppointmentReservations->length() + sizeof($eventsIds) + $customerPackageReservations->length();
     }
 
     /**
@@ -451,15 +452,6 @@ class CouponApplicationService extends AbstractCouponApplicationService
     {
         /** @var CouponRepository $couponRepository */
         $couponRepository = $this->container->get('domain.coupon.repository');
-
-        /** @var ServiceRepository $serviceRepository */
-        $serviceRepository = $this->container->get('domain.bookable.service.repository');
-
-        /** @var EventRepository $eventRepository */
-        $eventRepository = $this->container->get('domain.booking.event.repository');
-
-        /** @var PackageRepository $packageRepository */
-        $packageRepository = $this->container->get('domain.bookable.package.repository');
 
         /** @var Collection $coupons */
         $coupons = $couponRepository->getAllByCriteria(
@@ -529,7 +521,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
             $couponsServicesIds = [];
 
             if ($fetchAllServices) {
-                foreach ($serviceRepository->getIds() as $id) {
+                foreach ($criteria['entityIds'] as $id) {
                     $allServices->addItem(ServiceFactory::create(['id' => $id]), $id);
                 }
             } else {
@@ -570,7 +562,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
             $couponsEventsIds = [];
 
             if ($fetchAllEvents) {
-                foreach ($eventRepository->getIds() as $id) {
+                foreach ($criteria['entityIds'] as $id) {
                     $allEvents->addItem(EventFactory::create(['id' => $id]), $id);
                 }
             } else {
@@ -611,7 +603,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
             $couponsPackagesIds = [];
 
             if ($fetchAllPackages) {
-                foreach ($packageRepository->getIds() as $id) {
+                foreach ($criteria['entityIds'] as $id) {
                     $allPackages->addItem(PackageFactory::create(['id' => $id]), $id);
                 }
             } else {

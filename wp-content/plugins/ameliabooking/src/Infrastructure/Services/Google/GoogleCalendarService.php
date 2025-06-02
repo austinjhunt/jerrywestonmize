@@ -87,6 +87,14 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
     }
 
     /**
+     * @return bool
+     */
+    private function isCalendarEnabled()
+    {
+        return !array_key_exists('calendarEnabled', $this->settings) || $this->settings['calendarEnabled'];
+    }
+
+    /**
      * Create a URL to obtain user authorization.
      *
      * @param $providerId
@@ -138,7 +146,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
     {
         $calendars = [];
 
-        if ($provider && $provider->getGoogleCalendar()) {
+        if ($provider && $provider->getGoogleCalendar() && $this->isCalendarEnabled()) {
             $this->authorizeProvider($provider);
 
             $calendarList = $this->service->calendarList->listCalendarList(['minAccessRole' => 'writer']);
@@ -168,6 +176,10 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     public function getProviderGoogleCalendarId($provider)
     {
+        if (!$this->isCalendarEnabled()) {
+            return null;
+        }
+
         // If Google Calendar ID is not set, take the primary calendar and save it as Provider's Google Calendar ID
         if ($provider && $provider->getGoogleCalendar() && empty($provider->getGoogleCalendar()->getCalendarId()->getValue())) {
             $calendarList = $this->listCalendarList($provider);
@@ -202,6 +214,10 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     public function handleEvent($appointment, $commandSlug)
     {
+        if (!$this->isCalendarEnabled()) {
+            return;
+        }
+
         try {
             $this->handleEventAction($appointment, $commandSlug);
         } catch (Exception $e) {
@@ -226,6 +242,10 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     public function handleEventPeriodsChange($event, $commandSlug, $periods, $providers = null, $providersRemove = null)
     {
+        if (!$this->isCalendarEnabled()) {
+            return;
+        }
+
         try {
             $this->handleEventPeriodsChangeAction($event, $commandSlug, $periods, $providers, $providersRemove);
         } catch (Exception $e) {
@@ -250,6 +270,10 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     private function handleEventAction($appointment, $commandSlug)
     {
+        if (!$this->isCalendarEnabled()) {
+            return;
+        }
+
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
 
@@ -318,6 +342,10 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     private function handleEventPeriodsChangeAction($event, $commandSlug, $periods, $providers = null, $providersRemove = null)
     {
+        if (!$this->isCalendarEnabled()) {
+            return;
+        }
+
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
 
@@ -383,6 +411,10 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     public function getEvents($providerArr, $dateStart, $dateStartEnd, $dateEnd, $eventIds)
     {
+        if (!$this->isCalendarEnabled()) {
+            return [];
+        }
+
         $finalEvents = [];
         $provider    = ProviderFactory::create($providerArr);
         if ($provider && $provider->getGoogleCalendar() && $provider->getGoogleCalendar()->getToken()) {
@@ -454,6 +486,10 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
         $startDateTime,
         $endDateTime
     ) {
+        if (!$this->isCalendarEnabled()) {
+            return;
+        }
+
         if ($this->settings['removeGoogleCalendarBusySlots'] === true) {
             foreach ($providers->keys() as $providerKey) {
                 /** @var Provider $provider */

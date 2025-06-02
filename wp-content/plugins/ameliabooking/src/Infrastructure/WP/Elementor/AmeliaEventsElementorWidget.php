@@ -22,17 +22,6 @@ class AmeliaEventsElementorWidget extends Widget_Base
         return 'ameliaevents';
     }
 
-    public function get_title() {
-        return BackendStrings::getWordPressStrings()['events_gutenberg_block']['title'];
-    }
-
-    public function get_icon() {
-        return 'amelia-logo-outdated';
-    }
-
-    public function get_categories() {
-        return [ 'amelia-elementor' ];
-    }
     protected function register_controls() {
 
         $isLite = !Licence\Licence::$premium;

@@ -62,6 +62,10 @@ class TaxFactory
             $tax->setExcluded(new BooleanValueObject($data['excluded']));
         }
 
+        if (isset($data['allServices'])) {
+            $tax->setAllServices(new BooleanValueObject($data['allServices']));
+        }
+
         $serviceList = new Collection();
 
         if (isset($data['serviceList'])) {
@@ -71,6 +75,10 @@ class TaxFactory
                     $key
                 );
             }
+        }
+
+        if (isset($data['allEvents'])) {
+            $tax->setAllEvents(new BooleanValueObject($data['allEvents']));
         }
 
         $eventList = new Collection();
@@ -84,6 +92,10 @@ class TaxFactory
             }
         }
 
+        if (isset($data['allPackages'])) {
+            $tax->setAllPackages(new BooleanValueObject($data['allPackages']));
+        }
+
         $packageList = new Collection();
 
         if (isset($data['packageList'])) {
@@ -93,6 +105,10 @@ class TaxFactory
                     $key
                 );
             }
+        }
+
+        if (isset($data['allExtras'])) {
+            $tax->setAllExtras(new BooleanValueObject($data['allExtras']));
         }
 
         $extraList = new Collection();
@@ -134,6 +150,10 @@ class TaxFactory
                     'amount'      => $row['tax_amount'],
                     'type'        => $row['tax_type'],
                     'status'      => $row['tax_status'],
+                    'allServices' => $row['tax_allServices'],
+                    'allEvents'   => $row['tax_allEvents'],
+                    'allPackages' => $row['tax_allPackages'],
+                    'allExtras'   => $row['tax_allExtras'],
                     'serviceList' => [],
                     'eventList'   => [],
                     'packageList' => [],

@@ -36,7 +36,8 @@ class UpdateCustomerController extends Controller
         'countryPhoneIso',
         'pictureFullPath',
         'pictureThumbPath',
-        'translations'
+        'translations',
+        'customFields'
     ];
 
     /**
@@ -51,11 +52,18 @@ class UpdateCustomerController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new UpdateCustomerCommand($args);
+
         $requestBody = $request->getParsedBody();
 
         $this->setCommandFields($command, $requestBody);
         $command->setField('id', $args['id']);
         $command->setToken($request);
+
+        $params = $request->getQueryParams();
+
+        if (isset($params['source'])) {
+            $command->setPage($params['source']);
+        }
 
         return $command;
     }

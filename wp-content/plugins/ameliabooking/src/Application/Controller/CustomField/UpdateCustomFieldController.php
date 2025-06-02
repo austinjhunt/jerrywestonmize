@@ -35,7 +35,9 @@ class UpdateCustomFieldController extends Controller
         'allServices',
         'allEvents',
         'useAsLocation',
-        'width'
+        'width',
+        'saveType',
+        'saveFirstChoice'
     ];
 
     /**

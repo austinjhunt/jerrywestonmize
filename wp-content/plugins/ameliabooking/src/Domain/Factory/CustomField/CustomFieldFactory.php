@@ -12,6 +12,7 @@ use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\String\CustomFieldType;
+use AmeliaBooking\Domain\ValueObjects\String\CustomFieldSaveType;
 use AmeliaBooking\Domain\ValueObjects\String\Label;
 
 /**
@@ -34,7 +35,8 @@ class CustomFieldFactory
             new CustomFieldType($data['type']),
             new BooleanValueObject($data['required']),
             new IntegerValue($data['position']),
-            new IntegerValue($data['width'])
+            new IntegerValue($data['width']),
+            new CustomFieldSaveType($data['saveType'])
         );
 
         if (isset($data['id'])) {
@@ -94,6 +96,10 @@ class CustomFieldFactory
             $customField->setUseAsLocation(new BooleanValueObject($data['useAsLocation']));
         }
 
+        if (isset($data['saveFirstChoice'])) {
+            $customField->setSaveFirstChoice(new BooleanValueObject($data['saveFirstChoice']));
+        }
+
         return $customField;
     }
 
@@ -117,6 +123,7 @@ class CustomFieldFactory
             $customFields[$customFieldId]['id'] = $row['cf_id'];
             $customFields[$customFieldId]['label'] = $row['cf_label'];
             $customFields[$customFieldId]['type'] = $row['cf_type'];
+            $customFields[$customFieldId]['saveType'] = $row['cf_saveType'];
             $customFields[$customFieldId]['required'] = $row['cf_required'];
             $customFields[$customFieldId]['position'] = $row['cf_position'];
             $customFields[$customFieldId]['translations'] = $row['cf_translations'];
@@ -124,6 +131,7 @@ class CustomFieldFactory
             $customFields[$customFieldId]['allEvents'] = $row['cf_allEvents'];
             $customFields[$customFieldId]['useAsLocation'] = $row['cf_useAsLocation'];
             $customFields[$customFieldId]['width'] = $row['cf_width'];
+            $customFields[$customFieldId]['saveFirstChoice'] = $row['cf_saveFirstChoice'];
 
 
             if ($optionId) {

@@ -97,16 +97,19 @@ class AppointmentReservationService extends AbstractReservationService
      */
     public function book($appointmentData, $reservation, $save)
     {
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
         /** @var CustomFieldRepository $customFieldRepository */
         $customFieldRepository = $this->container->get('domain.customField.repository');
 
         $this->manageTaxes($appointmentData);
 
         /** @var Collection $customFieldsCollection */
-        $customFieldsCollection = $appointmentData['bookings'][0]['customFields'] ?
+        $customFieldsCollection = isset($appointmentData['bookings'][0]['customFields']) ?
             $customFieldRepository->getAll() : new Collection();
 
-        $clonedCustomFieldsData = $appointmentData['bookings'][0]['customFields'] ?
+        $clonedCustomFieldsData = isset($appointmentData['bookings'][0]['customFields']) ?
             json_decode($appointmentData['bookings'][0]['customFields'], true) : null;
 
         /** @var CouponApplicationService $couponAS */
@@ -287,6 +290,7 @@ class AppointmentReservationService extends AbstractReservationService
         }
 
         if ($reservation->hasAvailabilityValidation()->getValue() &&
+            !$settingsDS->getSetting('roles', 'allowAdminBookOverApp') &&
             $this->hasDoubleBookings($reservation, $recurringReservations)
         ) {
             throw new BookingUnavailableException(
@@ -360,16 +364,11 @@ class AppointmentReservationService extends AbstractReservationService
             );
         }
 
-        /** @var Collection $existingAppointments */
-        $existingAppointments = $appointmentRepo->getFiltered(
-            [
-                'dates'         => [$appointmentData['bookingStart'], $appointmentData['bookingStart']],
-                'services'      => [$appointmentData['serviceId']],
-                'providers'     => [$appointmentData['providerId']],
-                'skipServices'  => true,
-                'skipProviders' => true,
-                'skipCustomers' => true,
-            ]
+        /** @var Appointment $existingAppointment */
+        $existingAppointment = $appointmentAS->getAlreadyBookedAppointment(
+            $appointmentData,
+            empty($appointmentData['packageBookingFromBackend']),
+            $service
         );
 
         $bookingStatus = $settingsDS
@@ -388,10 +387,6 @@ class AppointmentReservationService extends AbstractReservationService
                 false
             ) ?: $bookingStatus;
         }
-
-        /** @var Appointment $existingAppointment */
-        $existingAppointment = $existingAppointments->length() ?
-            $existingAppointments->getItem($existingAppointments->keys()[0]) : null;
 
         if ((
             (!empty($appointmentData['payment']['gateway']) &&
@@ -1019,6 +1014,8 @@ class AppointmentReservationService extends AbstractReservationService
                         'phone'           => $customer->getPhone()->getValue(),
                         'countryPhoneIso' => $customer->getCountryPhoneIso() ?
                             $customer->getCountryPhoneIso()->getValue() : null,
+                        'customFields'    => $customer->getCustomFields() ?
+                            json_decode($customer->getCustomFields()->getValue(), true) : null,
                     ],
                     'info'         => $booking->getInfo()->getValue(),
                     'persons'      => $booking->getPersons()->getValue(),

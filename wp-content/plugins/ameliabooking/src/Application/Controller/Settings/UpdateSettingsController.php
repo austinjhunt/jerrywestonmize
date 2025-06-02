@@ -44,7 +44,8 @@ class UpdateSettingsController extends Controller
         'usedLanguages',
         'ics',
         'apiKeys',
-        'providerBadges'
+        'providerBadges',
+        'socialLogin',
     ];
 
     /**

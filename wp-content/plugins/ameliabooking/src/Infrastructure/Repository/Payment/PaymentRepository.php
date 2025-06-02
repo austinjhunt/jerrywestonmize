@@ -306,371 +306,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
     }
 
     /**
-     * @param array $ids
-     * @param boolean $invoice
-     *
-     * @return array
-     * @throws QueryExecutionException
-     * @throws InvalidArgumentException
-     */
-    public function getFiltered($ids, $invoice = false)
-    {
-        $params = [];
-        $appointmentParams1 = [];
-        $appointmentParams2 = [];
-        $eventParams = [];
-        $whereAppointment1 = [];
-        $whereAppointment2 = [];
-        $whereEvent = [];
-
-        $basedOnDate = $invoice ? 'created' : 'dateTime';
-
-        if (!empty($ids['appointment'])) {
-            $appointment1PaymentsIds = [];
-
-            foreach ($ids['appointment'] as $index => $value) {
-                $param = ':sId' . $index;
-
-                $appointment1PaymentsIds[] = $param;
-
-                $params[$param] = $value;
-            }
-
-            $whereAppointment1[] = 'p.id IN (' . implode(', ', $appointment1PaymentsIds) . ')';
-        }
-
-        if (!empty($ids['package'])) {
-            $appointment2PaymentsIds = [];
-
-            foreach ($ids['package'] as $index => $value) {
-                $param = ':pId' . $index;
-
-                $appointment2PaymentsIds[] = $param;
-
-                $params[$param] = $value;
-            }
-
-            $whereAppointment2[] = 'p.id IN (' . implode(', ', $appointment2PaymentsIds) . ')';
-        }
-
-        if (!empty($ids['event'])) {
-            $eventsIds = [];
-
-            foreach ($ids['event'] as $index => $value) {
-                $param = ':eId' . $index;
-
-                $eventsIds[] = $param;
-
-                $params[$param] = $value;
-            }
-
-            $whereEvent[] = 'p.id IN (' . implode(', ', $eventsIds) . ')';
-        }
-
-        $whereAppointment1 = $whereAppointment1 ? ' AND ' . implode(' AND ', $whereAppointment1) : '';
-        $whereAppointment2 = $whereAppointment2 ? ' AND ' . implode(' AND ', $whereAppointment2) : '';
-        $whereEvent = $whereEvent ? ' AND ' . implode(' AND ', $whereEvent) : '';
-
-        $customerBookingsExtrasTable = CustomerBookingsToExtrasTable::getTableName();
-        $couponsTable = CouponsTable::getTableName();
-        $locationsTable = LocationsTable::getTableName();
-
-        $appointmentQuery1 = "SELECT
-                p.id AS id,
-                p.customerBookingId AS customerBookingId,
-                NULL AS packageCustomerId,
-                p.amount AS amount,
-                p.invoiceNumber AS invoiceNumber,
-                p.dateTime AS dateTime,
-                p.created AS created,
-                p.status AS status,
-                p.wcOrderId AS wcOrderId,
-                p.wcOrderItemId AS wcOrderItemId,
-                p.gateway AS gateway,
-                p.gatewayTitle AS gatewayTitle,
-                p.transactionId AS transactionId,
-                p.parentId AS parentId,
-                p.entity AS type,
-                
-                NULL AS packageId,
-                cb.id AS bookingId,
-                cb.price AS bookedPrice,
-                cb.tax AS bookedTax,
-                a.providerId AS providerId,
-                cb.customerId AS customerId,
-                cb.persons AS persons,
-                cb.aggregatedPrice AS aggregatedPrice,
-                cb.info AS info,
-
-                cbe.id AS bookingExtra_id,
-                cbe.quantity AS bookingExtra_quantity,
-                cbe.price AS bookingExtra_price,
-                cbe.aggregatedPrice AS bookingExtra_aggregatedPrice,
-                cbe.tax AS bookingExtra_tax,
-        
-                c.id AS coupon_id,
-                c.discount AS coupon_discount,
-                c.deduction AS coupon_deduction,
-                c.code AS coupon_code,
-       
-                a.serviceId AS serviceId,
-                a.id AS appointmentId,
-                a.bookingStart AS bookingStart,
-                s.name AS bookableName,
-                cu.firstName AS customerFirstName,
-                cu.lastName AS customerLastName,
-                cu.email AS customerEmail,
-                cu.status AS customerStatus,
-                pu.firstName AS providerFirstName,
-                pu.lastName AS providerLastName,
-                pu.email AS providerEmail,
-                l.id AS locationId,
-                l.name AS location_name,
-                l.address AS location_address
-            FROM {$this->table} p
-            INNER JOIN {$this->bookingsTable} cb ON cb.id = p.customerBookingId
-            LEFT JOIN {$customerBookingsExtrasTable} cbe ON cbe.customerBookingId = cb.id
-            LEFT JOIN {$couponsTable} c ON c.id = cb.couponId
-            INNER JOIN {$this->appointmentsTable} a ON a.id = cb.appointmentId
-            INNER JOIN {$this->servicesTable} s ON s.id = a.serviceId
-            INNER JOIN {$this->usersTable} cu ON cu.id = cb.customerId
-            INNER JOIN {$this->usersTable} pu ON pu.id = a.providerId
-            LEFT JOIN {$locationsTable} l ON l.id = a.locationId
-            WHERE 1=1 {$whereAppointment1} GROUP BY p.customerBookingId ORDER BY p.id ASC";
-
-        $appointmentQuery2 = "SELECT
-                p.id AS id,
-                NULL AS customerBookingId,
-                p.packageCustomerId AS packageCustomerId,
-                p.amount AS amount,
-                p.invoiceNumber AS invoiceNumber,
-                p.dateTime AS dateTime,
-                p.created AS created,
-                p.status AS status,
-                p.wcOrderId AS wcOrderId,
-                p.wcOrderItemId AS wcOrderItemId,
-                p.gateway AS gateway,
-                p.gatewayTitle AS gatewayTitle,
-                p.transactionId AS transactionId,
-                p.parentId AS parentId,
-                p.entity AS type,
-                
-                pc.packageId AS packageId,
-                pc.id AS bookingId,
-                pc.price AS bookedPrice,
-                pc.tax AS bookedTax,
-                NULL AS providerId,
-                pc.customerId AS customerId,
-                NULL AS persons,
-                NULL AS aggregatedPrice,
-                cb.info AS info,  
-                
-                NULL AS bookingExtra_id,
-                NULL AS bookingExtra_quantity,
-                NULL AS bookingExtra_price,
-                NULL AS bookingExtra_aggregatedPrice,
-                NULL AS bookingExtra_tax,
-       
-                c.id AS coupon_id,
-                c.discount AS coupon_discount,
-                c.deduction AS coupon_deduction,
-                c.code AS coupon_code,
-       
-                NULL AS serviceId,
-                NULL AS appointmentId,
-                NULL AS bookingStart,
-                pa.name AS bookableName,
-                cu.firstName AS customerFirstName,
-                cu.lastName AS customerLastName,
-                cu.email AS customerEmail,
-                cu.status AS customerStatus,
-                '' AS providerFirstName,
-                '' AS providerLastName,
-                '' AS providerEmail,
-                '' AS locationId,
-                '' AS location_name,
-                '' AS location_address
-            FROM {$this->table} p
-            INNER JOIN {$this->packagesCustomersTable} pc ON p.packageCustomerId = pc.id
-            INNER JOIN {$this->usersTable} cu ON cu.id = pc.customerId
-            LEFT JOIN {$couponsTable} c ON c.id = pc.couponId
-            INNER JOIN {$this->packagesTable} pa ON pa.id = pc.packageId
-            INNER JOIN {$this->packagesCustomersServiceTable} pcs ON pc.id = pcs.packageCustomerId
-            LEFT JOIN {$this->bookingsTable} cb ON cb.packageCustomerServiceId = pcs.id
-            LEFT JOIN {$this->appointmentsTable} a ON a.id = cb.appointmentId
-            WHERE 1=1 {$whereAppointment2} ORDER BY p.id ASC";
-
-        $eventQuery = "SELECT
-                p.id AS id,
-                p.customerBookingId AS customerBookingId,
-                NULL AS packageCustomerId,
-                p.amount AS amount,
-                p.invoiceNumber AS invoiceNumber,
-                p.dateTime AS dateTime,
-                p.created AS created,
-                p.status AS status,
-                p.wcOrderId AS wcOrderId,
-                p.wcOrderItemId AS wcOrderItemId,
-                p.gateway AS gateway,
-                p.gatewayTitle AS gatewayTitle,
-                p.transactionId AS transactionId,
-                p.parentId AS parentId,
-                p.entity AS type,
-                
-                NULL AS packageId,
-                cb.id AS bookingId,
-                cb.price AS bookedPrice,
-                cb.tax AS bookedTax,
-                NULL AS providerId,
-                cb.customerId AS customerId,
-                cb.persons AS persons,
-                cb.aggregatedPrice AS aggregatedPrice,
-                cb.info AS info,
-                
-                NULL AS bookingExtra_id,
-                NULL AS bookingExtra_quantity,
-                NULL AS bookingExtra_price,
-                NULL AS bookingExtra_aggregatedPrice,
-                NULL AS bookingExtra_tax,
-       
-                c.id AS coupon_id,
-                c.discount AS coupon_discount,
-                c.deduction AS coupon_deduction,
-                c.code AS coupon_code,
-       
-                NULL AS serviceId,
-                NULL AS appointmentId,
-                NULL AS bookingStart,
-                NULL AS bookableName,
-                cu.firstName AS customerFirstName,
-                cu.lastName AS customerLastName,
-                cu.email AS customerEmail,
-                cu.status AS customerStatus,
-                NULL AS providerFirstName,
-                NULL AS providerLastName,
-                NULL AS providerEmail,
-                l.id AS locationId,
-                l.name AS location_name,
-                (CASE WHEN e.customlocation IS NOT NULL THEN e.customlocation ELSE l.address END) AS location_address
-            FROM {$this->table} p
-            INNER JOIN {$this->bookingsTable} cb ON cb.id = p.customerBookingId
-            LEFT JOIN {$couponsTable} c ON c.id = cb.couponId
-            INNER JOIN {$this->usersTable} cu ON cu.id = cb.customerId
-            INNER JOIN {$this->customerBookingsToEventsPeriodsTable} cbe ON cbe.customerBookingId = cb.id
-            INNER JOIN {$this->eventsPeriodsTable} ep ON ep.id = cbe.eventPeriodId
-            INNER JOIN {$this->eventsTable} e ON e.id = ep.eventId
-            LEFT JOIN {$this->eventsProvidersTable} epu ON epu.eventId = ep.eventId
-            LEFT JOIN {$locationsTable} l ON l.id = e.locationId
-            WHERE 1=1 {$whereEvent} ORDER BY p.id ASC";
-
-        $paymentQuery = '';
-
-        if (!empty($ids['appointment'])) {
-            $paymentQuery = "({$appointmentQuery1})";
-
-            $params = array_merge($params, $appointmentParams1);
-        }
-
-        if (!empty($ids['package'])) {
-            $paymentQuery = $paymentQuery ? $paymentQuery . " UNION ALL ({$appointmentQuery2})" : "({$appointmentQuery2})";
-
-            $params = array_merge($params, $appointmentParams2);
-        }
-
-        if (!empty($ids['event'])) {
-            $paymentQuery = $paymentQuery ? $paymentQuery . " UNION ALL ({$eventQuery})" : "({$eventQuery})";
-
-            $params = array_merge($params, $eventParams);
-        }
-
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT * FROM ({$paymentQuery}) payments
-                ORDER BY {$basedOnDate}, id"
-            );
-
-            $statement->execute($params);
-
-            $rows = $statement->fetchAll();
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
-        }
-
-        $result = [];
-
-        foreach ($rows as &$row) {
-            $customerInfo = $row['info'] ? json_decode($row['info'], true) : null;
-
-            $result[(int)$row['id']] = [
-                'id' =>  (int)$row['id'],
-                'dateTime' =>  DateTimeService::getCustomDateTimeFromUtc($row['dateTime']),
-                'created'  =>  DateTimeService::getCustomDateTimeFromUtc($row['created']),
-                'bookingStart' =>  $row['bookingStart'] ?
-                    DateTimeService::getCustomDateTimeFromUtc($row['bookingStart']) : null,
-                'status' =>  $row['status'],
-                'parentId' =>  $row['parentId'],
-                'wcOrderId' =>  $row['wcOrderId'],
-                'wcOrderItemId' =>  $row['wcOrderItemId'],
-                'gateway' =>  $row['gateway'],
-                'gatewayTitle' =>  $row['gatewayTitle'],
-                'transactionId' =>  $row['transactionId'],
-                'type' => $row['type'],
-                'name' => $row['bookableName'],
-                'customerBookingId' =>  (int)$row['customerBookingId'] ? (int)$row['customerBookingId'] : null,
-                'packageCustomerId' =>  (int)$row['packageCustomerId'] ? (int)$row['packageCustomerId'] : null,
-                'amount' =>  (float)$row['amount'],
-                'invoiceNumber' => $row['invoiceNumber'],
-                'providers' =>  (int)$row['providerId'] ? [
-                    [
-                        'id' => (int)$row['providerId'],
-                        'fullName' => $row['providerFirstName'] . ' ' . $row['providerLastName'],
-                        'email' => $row['providerEmail'],
-                    ]
-                ] : [],
-                'location' => (int)$row['locationId'] || $row['location_address'] ?
-                    [
-                        'id' => (int)$row['locationId'],
-                        'location_name' => $row['location_name'],
-                        'location_address' => $row['location_address'],
-                    ]
-                 : null,
-                'customerId' =>  (int)$row['customerId'],
-                'serviceId' =>  (int)$row['serviceId'] ? (int)$row['serviceId'] : null,
-                'appointmentId' =>  (int)$row['appointmentId'] ? (int)$row['appointmentId'] : null,
-                'packageId' =>  (int)$row['packageId'] ? (int)$row['packageId'] : null,
-                'bookedPrice' =>  $row['bookedPrice'] ? $row['bookedPrice'] : null,
-                'bookedTax' =>  $row['bookedTax'] ? $row['bookedTax'] : null,
-                'bookingId' => !empty($row['bookingId']) ? (int)$row['bookingId'] : null,
-                'bookableName' => $row['bookableName'],
-                'customerFirstName' => $customerInfo ? $customerInfo['firstName'] : $row['customerFirstName'],
-                'customerLastName' => $customerInfo ? $customerInfo['lastName'] : $row['customerLastName'],
-                'info' => $row['info'],
-                'customerEmail' => $row['customerEmail'],
-                'customerStatus' => $row['customerStatus'],
-                'coupon' => !empty($row['coupon_id']) ? [
-                    'id' => $row['coupon_id'],
-                    'discount' => $row['coupon_discount'],
-                    'deduction' => $row['coupon_deduction'],
-                    'code' => $row['coupon_code']
-                ] : null,
-                'persons' => $row['persons'],
-                'aggregatedPrice' => $row['aggregatedPrice'],
-                'extras' =>  (int)$row['bookingExtra_id'] ? [
-                    [
-                        'id' => (int)$row['bookingExtra_id'],
-                        'quantity' => $row['bookingExtra_quantity'],
-                        'price' =>$row['bookingExtra_price'],
-                        'aggregatedPrice' => $row['bookingExtra_aggregatedPrice'],
-                        'tax' => $row['bookingExtra_tax'] ?: null
-                    ]
-                ] : [],
-            ];
-        }
-
-        return $result;
-    }
-
-    /**
      * @param array $criteria
      * @param int   $itemsPerPage
      * @param boolean $invoice
@@ -691,14 +326,14 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
         $basedOnDate = $invoice ? 'created' : 'dateTime';
 
         if (!empty($criteria['dates'])) {
-            $whereAppointment1[] = "(DATE_FORMAT(p.{$basedOnDate}, '%Y-%m-%d %H:%i:%s') BETWEEN :paymentAppointmentFrom1 AND :paymentAppointmentTo1)";
-            $whereAppointment2[] = "(DATE_FORMAT(p.{$basedOnDate}, '%Y-%m-%d %H:%i:%s') BETWEEN :paymentAppointmentFrom2 AND :paymentAppointmentTo2)";
+            $whereAppointment1[] = "(p.{$basedOnDate} BETWEEN :paymentAppointmentFrom1 AND :paymentAppointmentTo1)";
+            $whereAppointment2[] = "(p.{$basedOnDate} BETWEEN :paymentAppointmentFrom2 AND :paymentAppointmentTo2)";
             $appointmentParams1[':paymentAppointmentFrom1'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             $appointmentParams2[':paymentAppointmentFrom2'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             $appointmentParams1[':paymentAppointmentTo1'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             $appointmentParams2[':paymentAppointmentTo2'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
 
-            $whereEvent[] = "(DATE_FORMAT(p.{$basedOnDate}, '%Y-%m-%d %H:%i:%s') BETWEEN :paymentEventFrom AND :paymentEventTo)";
+            $whereEvent[] = "(p.{$basedOnDate} BETWEEN :paymentEventFrom AND :paymentEventTo)";
             $eventParams[':paymentEventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             $eventParams[':paymentEventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
         }
@@ -840,11 +475,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             {$eventsProvidersJoin}
             WHERE 1=1 {$whereEvent} GROUP BY p.customerBookingId ORDER BY p.id ASC";
 
-        $result = [
-            'appointment' => [],
-            'event'       => [],
-            'package'     => [],
-        ];
+        $result = [];
 
         if (isset($criteria['events'], $criteria['services'])) {
             return $result;
@@ -883,7 +514,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
         }
 
         foreach ($rows as $row) {
-            $result[$row['type']][] = (int)$row['id'];
+            $result[(int)$row['id']] = $row['type'];
         }
 
         return $result;
@@ -909,14 +540,14 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
         $basedOnDate = $invoice ? 'created' : 'dateTime';
 
         if (!empty($criteria['dates'])) {
-            $whereAppointment1[] = "(DATE_FORMAT(p.{$basedOnDate}, '%Y-%m-%d %H:%i:%s') BETWEEN :paymentAppointmentFrom1 AND :paymentAppointmentTo1)";
-            $whereAppointment2[] = "(DATE_FORMAT(p.{$basedOnDate}, '%Y-%m-%d %H:%i:%s') BETWEEN :paymentAppointmentFrom2 AND :paymentAppointmentTo2)";
+            $whereAppointment1[] = "(p.{$basedOnDate} BETWEEN :paymentAppointmentFrom1 AND :paymentAppointmentTo1)";
+            $whereAppointment2[] = "(p.{$basedOnDate} BETWEEN :paymentAppointmentFrom2 AND :paymentAppointmentTo2)";
             $appointmentParams1[':paymentAppointmentFrom1'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             $appointmentParams2[':paymentAppointmentFrom2'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             $appointmentParams1[':paymentAppointmentTo1'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             $appointmentParams2[':paymentAppointmentTo2'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
 
-            $whereEvent[] = "(DATE_FORMAT(p.{$basedOnDate}, '%Y-%m-%d %H:%i:%s') BETWEEN :paymentEventFrom AND :paymentEventTo)";
+            $whereEvent[] = "(p.{$basedOnDate} BETWEEN :paymentEventFrom AND :paymentEventTo)";
             $eventParams[':paymentEventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             $eventParams[':paymentEventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
         }
@@ -1170,8 +801,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
      */
     public function getSecondaryPaymentIds($data, $invoice)
     {
-        $rows = [];
-
         $params = [];
 
         $where = [];
@@ -1222,14 +851,10 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
         }
 
-        $result = [
-            'appointment' => [],
-            'event' => [],
-            'package' => []
-        ];
+        $result = [];
 
         foreach ($rows as $row) {
-            $result[$row['entity']][] = (int)$row['id'];
+            $result[(int)$row['id']] = $row['entity'];
         }
 
         return $result;
@@ -1306,5 +931,404 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
         }
 
         return $response;
+    }
+
+    /**
+     * @param array $rows
+     *
+     * @return array
+     */
+    private function getEntitiesPaymentsResult($rows)
+    {
+        $result = [];
+
+        foreach ($rows as &$row) {
+            $customerInfo = $row['info'] ? json_decode($row['info'], true) : null;
+
+            if (empty($result[(int)$row['id']])) {
+                $result[(int)$row['id']] = [
+                    'id' =>  (int)$row['id'],
+                    'dateTime' =>  DateTimeService::getCustomDateTimeFromUtc($row['dateTime']),
+                    'created'  =>  DateTimeService::getCustomDateTimeFromUtc($row['created']),
+                    'bookingStart' =>  $row['bookingStart'] ?
+                        DateTimeService::getCustomDateTimeFromUtc($row['bookingStart']) : null,
+                    'status' =>  $row['status'],
+                    'parentId' =>  $row['parentId'],
+                    'wcOrderId' =>  $row['wcOrderId'],
+                    'wcOrderItemId' =>  $row['wcOrderItemId'],
+                    'gateway' =>  $row['gateway'],
+                    'gatewayTitle' =>  $row['gatewayTitle'],
+                    'transactionId' =>  $row['transactionId'],
+                    'type' => $row['type'],
+                    'name' => $row['bookableName'],
+                    'customerBookingId' =>  (int)$row['customerBookingId'] ?: null,
+                    'packageCustomerId' =>  (int)$row['packageCustomerId'] ?: null,
+                    'amount' =>  (float)$row['amount'],
+                    'invoiceNumber' => $row['invoiceNumber'],
+                    'providers' =>  (int)$row['providerId'] ? [
+                        [
+                            'id' => (int)$row['providerId'],
+                            'fullName' => $row['providerFirstName'] . ' ' . $row['providerLastName'],
+                            'email' => $row['providerEmail'],
+                        ]
+                    ] : [],
+                    'location' => (int)$row['locationId'] || $row['location_address'] ?
+                        [
+                            'id' => (int)$row['locationId'],
+                            'location_name' => $row['location_name'],
+                            'location_address' => $row['location_address'],
+                        ]
+                        : null,
+                    'customerId' =>  (int)$row['customerId'],
+                    'serviceId' =>  (int)$row['serviceId'] ?: null,
+                    'appointmentId' =>  (int)$row['appointmentId'] ?: null,
+                    'packageId' =>  (int)$row['packageId'] ?: null,
+                    'bookedPrice' =>  (float)$row['bookedPrice'] ?: null,
+                    'bookedTax' =>  $row['bookedTax'] ? : null,
+                    'bookingId' => !empty($row['bookingId']) ? (int)$row['bookingId'] : null,
+                    'bookableName' => $row['bookableName'],
+                    'customerFirstName' => $customerInfo ? $customerInfo['firstName'] : $row['customerFirstName'],
+                    'customerLastName' => $customerInfo ? $customerInfo['lastName'] : $row['customerLastName'],
+                    'info' => $row['info'],
+                    'customerEmail' => $row['customerEmail'],
+                    'customerStatus' => $row['customerStatus'],
+                    'coupon' => !empty($row['coupon_id']) ? [
+                        'id' => (int)$row['coupon_id'],
+                        'discount' => (float)$row['coupon_discount'],
+                        'deduction' => (float)$row['coupon_deduction'],
+                        'code' => $row['coupon_code']
+                    ] : null,
+                    'persons' => (int)$row['persons'],
+                    'aggregatedPrice' => (bool)$row['aggregatedPrice'],
+                    'extras' => [],
+                ];
+            }
+
+            if ($result[(int)$row['id']] && $row['bookingExtra_id']) {
+                $result[(int)$row['id']]['extras'][] = [
+                    'id' => (int)$row['bookingExtra_id'],
+                    'quantity' => (int)$row['bookingExtra_quantity'],
+                    'price' => (float)$row['bookingExtra_price'],
+                    'aggregatedPrice' => (bool)$row['bookingExtra_aggregatedPrice'],
+                    'tax' => $row['bookingExtra_tax'] ?: null
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return array
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function getAppointmentsPaymentsByIds($ids)
+    {
+        $params = [];
+
+        $where = [];
+
+        if (!empty($ids)) {
+            foreach ($ids as $index => $value) {
+                $param = ':sId' . $index;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = 'p.id IN (' . implode(', ', array_keys($params)) . ')';
+        }
+
+        $where = $where ? ' AND ' . implode(' AND ', $where) : '';
+
+        $customerBookingsExtrasTable = CustomerBookingsToExtrasTable::getTableName();
+
+        $couponsTable = CouponsTable::getTableName();
+
+        $locationsTable = LocationsTable::getTableName();
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT
+                    p.id AS id,
+                    p.customerBookingId AS customerBookingId,
+                    NULL AS packageCustomerId,
+                    p.amount AS amount,
+                    p.invoiceNumber AS invoiceNumber,
+                    p.dateTime AS dateTime,
+                    p.created AS created,
+                    p.status AS status,
+                    p.wcOrderId AS wcOrderId,
+                    p.wcOrderItemId AS wcOrderItemId,
+                    p.gateway AS gateway,
+                    p.gatewayTitle AS gatewayTitle,
+                    p.transactionId AS transactionId,
+                    p.parentId AS parentId,
+                    p.entity AS type,
+                    
+                    NULL AS packageId,
+                    cb.id AS bookingId,
+                    cb.price AS bookedPrice,
+                    cb.tax AS bookedTax,
+                    a.providerId AS providerId,
+                    cb.customerId AS customerId,
+                    cb.persons AS persons,
+                    cb.aggregatedPrice AS aggregatedPrice,
+                    cb.info AS info,
+    
+                    cbe.id AS bookingExtra_id,
+                    cbe.quantity AS bookingExtra_quantity,
+                    cbe.price AS bookingExtra_price,
+                    cbe.aggregatedPrice AS bookingExtra_aggregatedPrice,
+                    cbe.tax AS bookingExtra_tax,
+            
+                    c.id AS coupon_id,
+                    c.discount AS coupon_discount,
+                    c.deduction AS coupon_deduction,
+                    c.code AS coupon_code,
+           
+                    a.serviceId AS serviceId,
+                    a.id AS appointmentId,
+                    a.bookingStart AS bookingStart,
+                    s.name AS bookableName,
+                    cu.firstName AS customerFirstName,
+                    cu.lastName AS customerLastName,
+                    cu.email AS customerEmail,
+                    cu.status AS customerStatus,
+                    pu.firstName AS providerFirstName,
+                    pu.lastName AS providerLastName,
+                    pu.email AS providerEmail,
+                    l.id AS locationId,
+                    l.name AS location_name,
+                    l.address AS location_address
+                FROM {$this->table} p
+                INNER JOIN {$this->bookingsTable} cb ON cb.id = p.customerBookingId
+                LEFT JOIN {$customerBookingsExtrasTable} cbe ON cbe.customerBookingId = cb.id
+                LEFT JOIN {$couponsTable} c ON c.id = cb.couponId
+                INNER JOIN {$this->appointmentsTable} a ON a.id = cb.appointmentId
+                INNER JOIN {$this->servicesTable} s ON s.id = a.serviceId
+                INNER JOIN {$this->usersTable} cu ON cu.id = cb.customerId
+                INNER JOIN {$this->usersTable} pu ON pu.id = a.providerId
+                LEFT JOIN {$locationsTable} l ON l.id = a.locationId
+                WHERE 1=1 {$where}"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        return $this->getEntitiesPaymentsResult($rows);
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return array
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function getEventsPaymentsByIds($ids)
+    {
+        $params = [];
+
+        $where = [];
+
+        if (!empty($ids)) {
+            foreach ($ids as $index => $value) {
+                $param = ':eId' . $index;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = 'p.id IN (' . implode(', ', array_keys($params)) . ')';
+        }
+
+        $where = $where ? ' AND ' . implode(' AND ', $where) : '';
+
+        $couponsTable = CouponsTable::getTableName();
+
+        $locationsTable = LocationsTable::getTableName();
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT
+                    p.id AS id,
+                    p.customerBookingId AS customerBookingId,
+                    NULL AS packageCustomerId,
+                    p.amount AS amount,
+                    p.invoiceNumber AS invoiceNumber,
+                    p.dateTime AS dateTime,
+                    p.created AS created,
+                    p.status AS status,
+                    p.wcOrderId AS wcOrderId,
+                    p.wcOrderItemId AS wcOrderItemId,
+                    p.gateway AS gateway,
+                    p.gatewayTitle AS gatewayTitle,
+                    p.transactionId AS transactionId,
+                    p.parentId AS parentId,
+                    p.entity AS type,
+                    
+                    NULL AS packageId,
+                    cb.id AS bookingId,
+                    cb.price AS bookedPrice,
+                    cb.tax AS bookedTax,
+                    NULL AS providerId,
+                    cb.customerId AS customerId,
+                    cb.persons AS persons,
+                    cb.aggregatedPrice AS aggregatedPrice,
+                    cb.info AS info,
+                    
+                    NULL AS bookingExtra_id,
+                    NULL AS bookingExtra_quantity,
+                    NULL AS bookingExtra_price,
+                    NULL AS bookingExtra_aggregatedPrice,
+                    NULL AS bookingExtra_tax,
+           
+                    c.id AS coupon_id,
+                    c.discount AS coupon_discount,
+                    c.deduction AS coupon_deduction,
+                    c.code AS coupon_code,
+           
+                    NULL AS serviceId,
+                    NULL AS appointmentId,
+                    NULL AS bookingStart,
+                    NULL AS bookableName,
+                    cu.firstName AS customerFirstName,
+                    cu.lastName AS customerLastName,
+                    cu.email AS customerEmail,
+                    cu.status AS customerStatus,
+                    NULL AS providerFirstName,
+                    NULL AS providerLastName,
+                    NULL AS providerEmail,
+                    l.id AS locationId,
+                    l.name AS location_name,
+                    (CASE WHEN e.customlocation IS NOT NULL THEN e.customlocation ELSE l.address END) AS location_address
+                FROM {$this->table} p
+                INNER JOIN {$this->bookingsTable} cb ON cb.id = p.customerBookingId
+                LEFT JOIN {$couponsTable} c ON c.id = cb.couponId
+                INNER JOIN {$this->usersTable} cu ON cu.id = cb.customerId
+                INNER JOIN {$this->customerBookingsToEventsPeriodsTable} cbe ON cbe.customerBookingId = cb.id
+                INNER JOIN {$this->eventsPeriodsTable} ep ON ep.id = cbe.eventPeriodId
+                INNER JOIN {$this->eventsTable} e ON e.id = ep.eventId
+                LEFT JOIN {$this->eventsProvidersTable} epu ON epu.eventId = ep.eventId
+                LEFT JOIN {$locationsTable} l ON l.id = e.locationId
+                WHERE 1=1 {$where}"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        return $this->getEntitiesPaymentsResult($rows);
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return array
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function getPackagesPaymentsByIds($ids)
+    {
+        $params = [];
+
+        $where = [];
+
+        if (!empty($ids)) {
+            foreach ($ids as $index => $value) {
+                $param = ':pId' . $index;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = 'p.id IN (' . implode(', ', array_keys($params)) . ')';
+        }
+
+        $where = $where ? ' AND ' . implode(' AND ', $where) : '';
+
+        $couponsTable = CouponsTable::getTableName();
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT
+                    p.id AS id,
+                    NULL AS customerBookingId,
+                    p.packageCustomerId AS packageCustomerId,
+                    p.amount AS amount,
+                    p.invoiceNumber AS invoiceNumber,
+                    p.dateTime AS dateTime,
+                    p.created AS created,
+                    p.status AS status,
+                    p.wcOrderId AS wcOrderId,
+                    p.wcOrderItemId AS wcOrderItemId,
+                    p.gateway AS gateway,
+                    p.gatewayTitle AS gatewayTitle,
+                    p.transactionId AS transactionId,
+                    p.parentId AS parentId,
+                    p.entity AS type,
+                    
+                    pc.packageId AS packageId,
+                    pc.id AS bookingId,
+                    pc.price AS bookedPrice,
+                    pc.tax AS bookedTax,
+                    NULL AS providerId,
+                    pc.customerId AS customerId,
+                    NULL AS persons,
+                    NULL AS aggregatedPrice,
+                    cb.info AS info,  
+                    
+                    NULL AS bookingExtra_id,
+                    NULL AS bookingExtra_quantity,
+                    NULL AS bookingExtra_price,
+                    NULL AS bookingExtra_aggregatedPrice,
+                    NULL AS bookingExtra_tax,
+           
+                    c.id AS coupon_id,
+                    c.discount AS coupon_discount,
+                    c.deduction AS coupon_deduction,
+                    c.code AS coupon_code,
+           
+                    NULL AS serviceId,
+                    NULL AS appointmentId,
+                    NULL AS bookingStart,
+                    pa.name AS bookableName,
+                    cu.firstName AS customerFirstName,
+                    cu.lastName AS customerLastName,
+                    cu.email AS customerEmail,
+                    cu.status AS customerStatus,
+                    '' AS providerFirstName,
+                    '' AS providerLastName,
+                    '' AS providerEmail,
+                    '' AS locationId,
+                    '' AS location_name,
+                    '' AS location_address
+                FROM {$this->table} p
+                INNER JOIN {$this->packagesCustomersTable} pc ON p.packageCustomerId = pc.id
+                INNER JOIN {$this->usersTable} cu ON cu.id = pc.customerId
+                LEFT JOIN {$couponsTable} c ON c.id = pc.couponId
+                INNER JOIN {$this->packagesTable} pa ON pa.id = pc.packageId
+                INNER JOIN {$this->packagesCustomersServiceTable} pcs ON pc.id = pcs.packageCustomerId
+                LEFT JOIN {$this->bookingsTable} cb ON cb.packageCustomerServiceId = pcs.id
+                LEFT JOIN {$this->appointmentsTable} a ON a.id = cb.appointmentId
+                WHERE 1=1 {$where} ORDER BY p.id ASC"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        return $this->getEntitiesPaymentsResult($rows);
     }
 }

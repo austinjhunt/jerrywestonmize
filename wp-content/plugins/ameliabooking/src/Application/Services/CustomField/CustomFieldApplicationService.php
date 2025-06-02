@@ -145,7 +145,7 @@ class CustomFieldApplicationService extends AbstractCustomFieldApplicationServic
             }
         }
 
-        foreach ($uploadedCustomFieldFilesNames as $customFieldId => $customField) {
+        foreach ($uploadedCustomFieldFilesNames ?: [] as $customFieldId => $customField) {
             foreach ((array)$uploadedCustomFieldFilesNames[$customFieldId]['value'] as $index => $data) {
                 $fileExtension = pathinfo($data['fileName'], PATHINFO_EXTENSION);
 

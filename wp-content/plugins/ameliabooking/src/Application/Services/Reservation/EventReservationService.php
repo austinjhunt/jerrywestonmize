@@ -1015,6 +1015,12 @@ class EventReservationService extends AbstractReservationService
 
         $price = (float)max(round($price, 2), 0);
 
+        if (!$price) {
+            foreach ($ticketsTax as $ticketId => $ticketTax) {
+                $ticketsTax[$ticketId] = 0;
+            }
+        }
+
         return [
             'price'        => apply_filters('amelia_modify_payment_amount', $price, $booking),
             'discount'     => $reductionAmount['discount'],
@@ -1022,12 +1028,12 @@ class EventReservationService extends AbstractReservationService
             'unit_price'   => $unitPrice,
             'qty'          => $persons,
             'subtotal'     => $unitPrice * ($this->isAggregatedPrice($bookable) ? $persons : 1),
-            'tax'          => !empty($ticketsTax) ? null : $taxAmount,
-            'tax_rate'     => $eventTax ? $this->getTaxRate($eventTax) : '',
-            'tax_type'     => $eventTax ? $eventTax->getType()->getValue() : '',
-            'tax_excluded' => $eventTax ? $eventTax->getExcluded()->getValue() : false,
+            'tax'          => !empty($ticketsTax) || !$unitPrice ? null : $taxAmount,
+            'tax_rate'     => $eventTax && $unitPrice ? $this->getTaxRate($eventTax) : '',
+            'tax_type'     => $eventTax && $unitPrice ? $eventTax->getType()->getValue() : '',
+            'tax_excluded' => $eventTax && $unitPrice ? $eventTax->getExcluded()->getValue() : false,
             'tickets_tax'  => $ticketsTax,
-            'full_discount' => $this->getCouponDiscountAmount($booking->getCoupon(), $unitPrice) + ($booking->getCoupon() && $booking->getCoupon()->getDeduction() ? $booking->getCoupon()->getDeduction()->getValue() : 0)
+            'full_discount' => $reductionAmount['discount'] + $reductionAmount['deduction']
         ];
     }
 

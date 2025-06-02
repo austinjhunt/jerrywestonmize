@@ -20,6 +20,8 @@ use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
+use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
+use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 
 /**
  * Class GetCustomFieldFileCommandHandler
@@ -82,18 +84,34 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
         $customFieldService = $this->container->get('application.customField.service');
 
         if ($currentUser === null ||
-            ($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_CUSTOMER)
+            ($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_CUSTOMER && !$isCabinetPage)
         ) {
             throw new AccessDeniedException('You are not allowed to read file.');
         }
 
-        /** @var CustomerBookingRepository $customerBookingRepository */
-        $customerBookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+        $customer = null;
 
-        /** @var CustomerBooking $customerBooking */
-        $customerBooking = $customerBookingRepository->getById($command->getArg('bookingId'));
+        $customerBooking = null;
 
-        if ($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER) {
+        /** @var CustomFieldRepository $customFieldRepository */
+        $customFieldRepository = $this->container->get('domain.customField.repository');
+
+        $customField = $customFieldRepository->getById($command->getArg('id'));
+
+        if ($customField && $customField->getSaveType() && $customField->getSaveType()->getValue() === 'customer') {
+            /** @var CustomerRepository $customerRepository */
+            $customerRepository = $this->container->get('domain.users.customers.repository');
+
+            $customer = $customerRepository->getById($command->getArg('bookingId'));
+        } else {
+            /** @var CustomerBookingRepository $customerBookingRepository */
+            $customerBookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+            /** @var CustomerBooking $customerBooking */
+            $customerBooking = $customerBookingRepository->getById($command->getArg('bookingId'));
+        }
+
+        if (!$customer && $currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER) {
             $allowedReading = false;
 
             if ($customerBooking->getAppointmentId()) {
@@ -131,7 +149,9 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
             }
         }
 
-        $customFields = json_decode($customerBooking->getCustomFields()->getValue(), true);
+        $customFields = $customerBooking ?
+            json_decode($customerBooking->getCustomFields()->getValue(), true) :
+            json_decode($customer->getCustomFields()->getValue(), true);
 
         if (!isset($customFields[$command->getArg('id')]['value'][$command->getArg('index')])) {
             $result->setResult(CommandResult::RESULT_ERROR);

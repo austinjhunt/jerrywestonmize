@@ -57,10 +57,14 @@ class TaxRepository extends AbstractStatusRepository
         $data = $entity->toArray();
 
         $params = [
-            ':name'   => $data['name'],
-            ':amount' => $data['amount'],
-            ':type'   => $data['type'],
-            ':status' => $data['status'],
+            ':name'        => $data['name'],
+            ':amount'      => $data['amount'],
+            ':type'        => $data['type'],
+            ':status'      => $data['status'],
+            ':allServices' => !empty($data['allServices']) ? 1 : 0,
+            ':allEvents'   => !empty($data['allEvents']) ? 1 : 0,
+            ':allPackages' => !empty($data['allPackages']) ? 1 : 0,
+            ':allExtras'   => !empty($data['allExtras']) ? 1 : 0,
         ];
 
         try {
@@ -68,9 +72,9 @@ class TaxRepository extends AbstractStatusRepository
                 "INSERT INTO
                 {$this->table} 
                 (
-                `name`, `amount`, `type`, `status`  
+                `name`, `amount`, `type`, `status`, `allServices`, `allEvents`, `allPackages`, `allExtras`
                 ) VALUES (
-                :name, :amount, :type, :status  
+                :name, :amount, :type, :status, :allServices, :allEvents, :allPackages, :allExtras
                 )"
             );
 
@@ -99,21 +103,29 @@ class TaxRepository extends AbstractStatusRepository
         $data = $entity->toArray();
 
         $params = [
-            ':name'   => $data['name'],
-            ':amount' => $data['amount'],
-            ':type'   => $data['type'],
-            ':status' => $data['status'],
-            ':id'     => $id,
+            ':name'        => $data['name'],
+            ':amount'      => $data['amount'],
+            ':type'        => $data['type'],
+            ':status'      => $data['status'],
+            ':allServices' => !empty($data['allServices']) ? 1 : 0,
+            ':allEvents'   => !empty($data['allEvents']) ? 1 : 0,
+            ':allPackages' => !empty($data['allPackages']) ? 1 : 0,
+            ':allExtras'   => !empty($data['allExtras']) ? 1 : 0,
+            ':id'          => $id,
         ];
 
         try {
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
                 SET
-                `name`   = :name,
+                `name` = :name,
                 `amount` = :amount,
-                `type`   = :type,
-                `status` = :status
+                `type` = :type,
+                `status` = :status,
+                `allServices` = :allServices,
+                `allEvents` = :allEvents,
+                `allPackages` = :allPackages,
+                `allExtras` = :allExtras
                 WHERE
                 id = :id"
             );
@@ -148,11 +160,15 @@ class TaxRepository extends AbstractStatusRepository
                     t.amount AS tax_amount,
                     t.type AS tax_type,
                     t.status AS tax_status,
+                    t.allServices AS tax_allServices,
+                    t.allEvents AS tax_allEvents,
+                    t.allPackages AS tax_allPackages,
+                    t.allExtras AS tax_allExtras,
                     te.entityId AS tax_entityId,
                     te.entityType AS tax_entityType
                 FROM {$this->table} t
-                LEFT JOIN {$this->taxesToEntitiesTable} te ON te.taxId = t.id
-                WHERE t.id = :taxId AND te.entityType != 'event'"
+                LEFT JOIN {$this->taxesToEntitiesTable} te ON te.taxId = t.id AND te.entityType != 'event'
+                WHERE t.id = :taxId"
             );
 
             $statement->bindParam(':taxId', $id);
@@ -216,6 +232,10 @@ class TaxRepository extends AbstractStatusRepository
                     t.amount AS tax_amount,
                     t.type AS tax_type,
                     t.status AS tax_status,
+                    t.allServices AS tax_allServices,
+                    t.allEvents AS tax_allEvents,
+                    t.allPackages AS tax_allPackages,
+                    t.allExtras AS tax_allExtras,
                     te.entityId AS tax_entityId,
                     te.entityType AS tax_entityType
                     FROM {$this->table} t
@@ -376,11 +396,15 @@ class TaxRepository extends AbstractStatusRepository
         try {
             $statement = $this->connection->prepare(
                 "SELECT
-                t.id AS tax_id,
-                t.name AS tax_name,
-                t.amount AS tax_amount,
-                t.type AS tax_type,
-                t.status AS tax_status
+                    t.id AS tax_id,
+                    t.name AS tax_name,
+                    t.amount AS tax_amount,
+                    t.type AS tax_type,
+                    t.status AS tax_status,
+                    t.allServices AS tax_allServices,
+                    t.allEvents AS tax_allEvents,
+                    t.allPackages AS tax_allPackages,
+                    t.allExtras AS tax_allExtras
                 FROM {$this->table} t
                 {$where}
                 {$limit}"

@@ -7,7 +7,7 @@
 ?>
 
 <script>
-  if (typeof hasAmeliaEntitiesApiCall === 'undefined' && ('<?php echo esc_js($params['trigger']); ?>' === '' || '<?php echo esc_js($params['in_dialog']); ?>' === '1')) {
+  if (typeof hasAmeliaEntitiesApiCall === 'undefined' && ('<?php echo esc_js($params['trigger']); ?>' === '' && '<?php echo esc_js($params['in_dialog']); ?>' !== '1')) {
     var hasAmeliaEntitiesApiCall = true;
   }
   var ameliaShortcodeData = (typeof ameliaShortcodeData === 'undefined') ? [] : ameliaShortcodeData;

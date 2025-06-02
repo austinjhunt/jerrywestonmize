@@ -57,6 +57,7 @@ class UsersTable extends AbstractDatabaseTable
                   `stripeConnect` varchar({$name}) DEFAULT NULL,
                   `countryPhoneIso` varchar(2) DEFAULT NULL,
                   `translations` TEXT NULL DEFAULT NULL,
+                  `customFields` TEXT NULL DEFAULT NULL,
                   `timeZone` varchar({$name}) DEFAULT NULL,
                   `appleCalendarId` varchar({$name}) DEFAULT NULL,
                   `employeeAppleCalendar` TEXT NULL DEFAULT NULL,

@@ -10,6 +10,7 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
+use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Notification\Notification;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
@@ -46,7 +47,7 @@ class AbstractRepository
     /**
      * @param int $id
      *
-     * @return Payment|Coupon|Service|Notification|AbstractUser|Location
+     * @return Payment|Coupon|Service|Notification|AbstractUser|Location|CustomField
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
@@ -359,16 +360,16 @@ class AbstractRepository
     public function updateFieldByColumn($fieldName, $fieldValue, $columnName, $columnValue)
     {
         $params = [
-            ":$fieldName"  => $fieldValue,
-            ":$columnName" => $columnValue,
+            ':first'  => $fieldValue,
+            ':second' => $columnValue,
         ];
 
         try {
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
                 SET
-                `$fieldName` = :$fieldName
-                WHERE $columnName = :$columnName"
+                `$fieldName` = :first
+                WHERE $columnName = :second"
             );
 
             $res = $statement->execute($params);

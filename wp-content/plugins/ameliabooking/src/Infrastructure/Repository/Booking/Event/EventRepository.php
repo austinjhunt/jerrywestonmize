@@ -314,23 +314,23 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
         if (!empty($criteria['dates'])) {
             if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                $whereStart = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom AND :eventTo)";
+                $whereStart = "(ep.periodStart BETWEEN :eventFrom AND :eventTo)";
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
                 $params[':eventTo']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
 
-                $whereEnd = "(DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s') BETWEEN :bookingFrom2 AND :bookingTo2)";
+                $whereEnd = "(ep.periodEnd BETWEEN :bookingFrom2 AND :bookingTo2)";
                 $params[':bookingFrom2'] = $params[':eventFrom'];
                 $params[':bookingTo2']   = $params[':eventTo'];
 
                 $where[] = "({$whereStart} OR {$whereEnd})";
             } elseif (isset($criteria['dates'][0])) {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') >= :eventFrom)";
+                $where[] = "(ep.periodStart >= :eventFrom)";
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             } elseif (isset($criteria['dates'][1])) {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') <= :eventTo)";
+                $where[] = "(ep.periodStart <= :eventTo)";
                 $params[':eventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             } else {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') > :eventFrom)";
+                $where[] = "(ep.periodStart > :eventFrom)";
                 $params[':eventFrom'] = DateTimeService::getNowDateTimeInUtc();
             }
         }
@@ -469,22 +469,23 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
         if (!empty($criteria['dates'])) {
             if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                $where[] = "((DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom1 AND :eventTo1)
-                OR (DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom2 AND :eventTo2)
-                OR (:eventFrom3 BETWEEN DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s'))
-                OR (:eventTo3  BETWEEN DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s')))";
+                $where[] = "((ep.periodStart BETWEEN :eventFrom1 AND :eventTo1)
+                OR (ep.periodEnd BETWEEN :eventFrom2 AND :eventTo2)
+                OR (:eventFrom3 BETWEEN ep.periodStart AND ep.periodEnd)
+                OR (:eventTo3  BETWEEN ep.periodStart AND ep.periodEnd))";
 
                 $params[':eventFrom1'] = $params[':eventFrom2'] = $params[':eventFrom3'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
                 $params[':eventTo1']   = $params[':eventTo2']   = $params[':eventTo3']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             } elseif (isset($criteria['dates'][0])) {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') >= :eventFrom OR (DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s') >= :eventTo))";
+                $where[] = "(ep.periodStart >= :eventFrom OR (ep.periodEnd >= :eventTo))";
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
                 $params[':eventTo']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             } elseif (isset($criteria['dates'][1])) {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') <= :eventTo)";
+                $where[] = "(ep.periodStart <= :eventTo)";
+
                 $params[':eventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             } else {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') > :eventFrom)";
+                $where[] = "(ep.periodStart > :eventFrom)";
                 $params[':eventFrom'] = DateTimeService::getNowDateTimeInUtc();
             }
         }
@@ -520,10 +521,10 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     $params[':rec4' . $param] = (int)$value;
 
                     $whereOr[] = "((e.id = :rec1id" . $index . " AND e.parentId IS NULL) OR 
-                    (e.parentId IN (SELECT parentId FROM {$this->table} WHERE parentId = :rec2id" . $index . ")) OR
+                    (e.parentId IN (SELECT parentId FROM {$this->table} WHERE parentId IS NOT NULL AND parentId = :rec2id" . $index . ")) OR
                     (e.id >= :rec3id" . $index . "  AND e.parentId IN (SELECT parentId FROM {$this->table} WHERE id = :rec4id" . $index . ")))";
                 }
-                $where[] = implode(' OR ', $whereOr);
+                $where[] = '(' . implode(' OR ', $whereOr) . ')';
             } else {
                 $queryIds = [];
 
@@ -697,22 +698,26 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
         if (!empty($criteria['dates'])) {
             if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                $where[] = "((DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom1 AND :eventTo1)
-                OR (DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s') BETWEEN :eventFrom2 AND :eventTo2)
-                OR (:eventFrom3 BETWEEN DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s'))
-                OR (:eventTo3  BETWEEN DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s')))";
+                $where[] = "((ep.periodStart BETWEEN :eventFrom1 AND :eventTo1)
+                OR (ep.periodEnd BETWEEN :eventFrom2 AND :eventTo2)
+                OR (:eventFrom3 BETWEEN ep.periodStart AND ep.periodEnd)
+                OR (:eventTo3  BETWEEN ep.periodStart AND ep.periodEnd))";
 
                 $params[':eventFrom1'] = $params[':eventFrom2'] = $params[':eventFrom3'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
                 $params[':eventTo1']   = $params[':eventTo2']   = $params[':eventTo3']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             } elseif (isset($criteria['dates'][0])) {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') >= :eventFrom OR (DATE_FORMAT(ep.periodEnd, '%Y-%m-%d %H:%i:%s') >= :eventTo))";
+                $where[] = "(ep.periodStart >= :eventFrom OR (ep.periodEnd >= :eventTo))";
+
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
+
                 $params[':eventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             } elseif (isset($criteria['dates'][1])) {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') <= :eventTo)";
+                $where[] = "(ep.periodStart <= :eventTo)";
+
                 $params[':eventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             } else {
-                $where[] = "(DATE_FORMAT(ep.periodStart, '%Y-%m-%d %H:%i:%s') > :eventFrom)";
+                $where[] = "(ep.periodStart > :eventFrom)";
+
                 $params[':eventFrom'] = DateTimeService::getNowDateTimeInUtc();
             }
         }
@@ -767,10 +772,10 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     $params[':rec4' . $param] = (int)$value;
 
                     $whereOr[] = "((e.id = :rec1id" . $index . " AND e.parentId IS NULL) OR 
-                    (e.parentId IN (SELECT parentId FROM {$this->table} WHERE parentId = :rec2id" . $index . ")) OR
+                    (e.parentId IN (SELECT parentId FROM {$this->table} WHERE parentId IS NOT NULL AND parentId = :rec2id" . $index . ")) OR
                     (e.id >= :rec3id" . $index . "  AND e.parentId IN (SELECT parentId FROM {$this->table} WHERE id = :rec4id" . $index . ")))";
                 }
-                $where[] = implode(' OR ', $whereOr);
+                $where[] = '(' . implode(' OR ', $whereOr) . ')';
             } else {
                 $queryIds = [];
 
@@ -888,7 +893,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function getById($id)
+    public function getById($id, $criteria = [])
     {
         $eventsPeriodsTable = EventsPeriodsTable::getTableName();
         $eventsTagsTable = EventsTagsTable::getTableName();
@@ -902,10 +907,36 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         $eventsProvidersTable = EventsProvidersTable::getTableName();
         $couponsTable = CouponsTable::getTableName();
 
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT
-                    e.id AS event_id,
+        $fields = '';
+
+        $joins = "INNER JOIN {$eventsPeriodsTable} ep ON ep.eventId = e.id
+                LEFT JOIN {$eventsTagsTable} et ON et.eventId = e.id
+                LEFT JOIN {$customerBookingsEventsPeriods} cbe ON cbe.eventPeriodId = ep.id
+                LEFT JOIN {$customerBookingsTable} cb ON cb.id = cbe.customerBookingId
+                LEFT JOIN {$usersTable} cu ON cu.id = cb.customerId
+                LEFT JOIN {$eventsProvidersTable} epr ON epr.eventId = e.id
+                LEFT JOIN {$usersTable} pu ON pu.id = epr.userId
+                LEFT JOIN {$paymentsTable} p ON p.customerBookingId = cb.id
+                LEFT JOIN {$galleriesTable} g ON g.entityId = e.id AND g.entityType = 'event'
+                LEFT JOIN {$couponsTable} c ON c.id = cb.couponId
+                LEFT JOIN {$eventsTicketTable} t ON t.eventId = e.id";
+
+        if (!empty($criteria['fetchBookingsTickets'])) {
+            $bookingsTicketsTable = CustomerBookingToEventsTicketsTable::getTableName();
+
+            $fields .= '
+                cbt.id AS booking_ticket_id,
+                cbt.eventTicketId AS booking_ticket_eventTicketId,
+                cbt.price AS booking_ticket_price,
+                cbt.persons AS booking_ticket_persons,
+            ';
+
+            $joins .= "
+                LEFT JOIN {$bookingsTicketsTable} cbt ON cbt.customerBookingId = cb.id
+            ";
+        }
+
+        $fields .= 'e.id AS event_id,
                     e.name AS event_name,
                     e.status AS event_status,
                     e.bookingOpens AS event_bookingOpens,
@@ -1024,20 +1055,14 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     t.spots AS ticket_spots,
                     t.waitingListSpots AS ticket_waiting_list_spots,
                     t.dateRanges AS ticket_dateRanges,
-                    t.translations AS ticket_translations
+                    t.translations AS ticket_translations';
 
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT
+                    {$fields}
                 FROM {$this->table} e
-                INNER JOIN {$eventsPeriodsTable} ep ON ep.eventId = e.id
-                LEFT JOIN {$eventsTagsTable} et ON et.eventId = e.id
-                LEFT JOIN {$customerBookingsEventsPeriods} cbe ON cbe.eventPeriodId = ep.id
-                LEFT JOIN {$customerBookingsTable} cb ON cb.id = cbe.customerBookingId
-                LEFT JOIN {$usersTable} cu ON cu.id = cb.customerId
-                LEFT JOIN {$eventsProvidersTable} epr ON epr.eventId = e.id
-                LEFT JOIN {$usersTable} pu ON pu.id = epr.userId
-                LEFT JOIN {$paymentsTable} p ON p.customerBookingId = cb.id
-                LEFT JOIN {$galleriesTable} g ON g.entityId = e.id AND g.entityType = 'event'
-                LEFT JOIN {$couponsTable} c ON c.id = cb.couponId
-                LEFT JOIN {$eventsTicketTable} t ON t.eventId = e.id
+                {$joins}
                 
                 WHERE e.id = :eventId"
             );
@@ -1653,6 +1678,18 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
         if (!empty($criteria['fetchApprovedBookings'])) {
             $where[] = "cb.status = 'approved'";
+        }
+
+        if (!empty($criteria['customerId'])) {
+            $params[':customerId'] = $criteria['customerId'];
+
+            $where[] = 'cb.customerId = :customerId';
+        }
+
+        if (!empty($criteria['customerBookingStatus'])) {
+            $params[':customerBookingStatus'] = $criteria['customerBookingStatus'];
+
+            $where[] = 'cb.status = :customerBookingStatus';
         }
 
         if (!empty($criteria['customerBookingId'])) {

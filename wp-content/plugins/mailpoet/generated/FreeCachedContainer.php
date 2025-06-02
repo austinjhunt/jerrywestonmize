@@ -1329,7 +1329,7 @@ class FreeCachedContainer extends Container
      */
     protected function getUpgradeService()
     {
-        return $this->services['MailPoet\\AdminPages\\Pages\\Upgrade'] = new \MailPoet\AdminPages\Pages\Upgrade(($this->services['MailPoet\\AdminPages\\PageRenderer'] ?? $this->getPageRendererService()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())), ($this->services['MailPoet\\Util\\License\\Features\\CapabilitiesManager'] ?? $this->getCapabilitiesManagerService()));
+        return $this->services['MailPoet\\AdminPages\\Pages\\Upgrade'] = new \MailPoet\AdminPages\Pages\Upgrade(($this->services['MailPoet\\AdminPages\\PageRenderer'] ?? $this->getPageRendererService()), ($this->services['MailPoet\\WP\\Functions'] ?? ($this->services['MailPoet\\WP\\Functions'] = new \MailPoet\WP\Functions())));
     }
 
     /**

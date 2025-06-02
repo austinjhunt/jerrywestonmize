@@ -305,47 +305,6 @@ class PackageApplicationService extends AbstractPackageApplicationService
     }
 
     /**
-     * @param Collection $appointments
-     * @param Collection $packageCustomerServices
-     * @param bool       $getAll
-     *
-     * @return array
-     *
-     * @throws InvalidArgumentException
-     */
-    private function getAvailablePackageBookingsData($appointments, $packageCustomerServices, $getAll)
-    {
-        $availablePackageBookings = $this->getPackageUnusedBookingsCount(
-            $packageCustomerServices,
-            $appointments
-        );
-
-        $result = [];
-
-        foreach ($availablePackageBookings as $customerData) {
-            $packageAvailable = $getAll;
-
-            foreach ($customerData['packages'] as $packageData) {
-                foreach ($packageData['services'] as $serviceData) {
-                    foreach ($serviceData['bookings'] as $bookingData) {
-                        if ($bookingData['count'] > 0) {
-                            $packageAvailable = true;
-
-                            continue 3;
-                        }
-                    }
-                }
-            }
-
-            if ($packageAvailable) {
-                $result[] = $customerData;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
      * @param int  $packageCustomerServiceId
      * @param int  $customerId
      * @param bool $isCabinetBooking
@@ -403,10 +362,9 @@ class PackageApplicationService extends AbstractPackageApplicationService
         );
 
         $availablePackageBookings = $packageCustomerServices->length() ?
-            $this->getAvailablePackageBookingsData(
-                $appointments,
+            $this->getPackageUnusedBookingsCount(
                 $packageCustomerServices,
-                true
+                $appointments
             ) : [];
 
         foreach ($availablePackageBookings as $customerData) {
@@ -629,10 +587,9 @@ class PackageApplicationService extends AbstractPackageApplicationService
         }
 
         return $packageCustomerServices->length() ?
-            $this->getAvailablePackageBookingsData(
-                $appointments,
+            $this->getPackageUnusedBookingsCount(
                 $packageCustomerServices,
-                !empty($params['packageId'])
+                $appointments
             ) : [];
     }
 

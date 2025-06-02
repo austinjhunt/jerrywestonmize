@@ -680,6 +680,8 @@ class PackageReservationService extends AppointmentReservationService
 
         $price = (float)max(round($price, 2), 0);
 
+        $taxCalculated = $packageTax && $price;
+
         return [
             'price' => apply_filters('amelia_modify_payment_amount', $price, $booking),
             'discount' => $reductionAmount['discount'],
@@ -687,10 +689,10 @@ class PackageReservationService extends AppointmentReservationService
             'unit_price' => $bookingPrice,
             'qty'        => 1,
             'subtotal'   => $bookingPrice,
-            'tax'        => $packageTax ? $this->getTaxAmount($packageTax, $bookingPrice) : 0,
-            'tax_rate'   => $packageTax ? $this->getTaxRate($packageTax) : '',
-            'tax_type'   => $packageTax ? $packageTax->getType()->getValue() : '',
-            'tax_excluded' => $packageTax ? $packageTax->getExcluded()->getValue() : false,
+            'tax'        => $taxCalculated ? $this->getTaxAmount($packageTax, $bookingPrice) : 0,
+            'tax_rate'   => $taxCalculated ? $this->getTaxRate($packageTax) : '',
+            'tax_type'   => $taxCalculated ? $packageTax->getType()->getValue() : '',
+            'tax_excluded' => $taxCalculated ? $packageTax->getExcluded()->getValue() : false,
             'full_discount' => $booking ? $this->getCouponDiscountAmount($booking->getCoupon(), $bookingPrice) + ($booking->getCoupon() && $booking->getCoupon()->getDeduction() ? $booking->getCoupon()->getDeduction()->getValue() : 0) : null
         ];
     }

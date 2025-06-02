@@ -24,6 +24,7 @@ use AmeliaBooking\Infrastructure\Repository\Notification\NotificationLogReposito
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Services\Notification\MailgunService;
+use AmeliaBooking\Infrastructure\Services\Notification\OutlookService;
 use AmeliaBooking\Infrastructure\Services\Notification\PHPMailService;
 use AmeliaBooking\Infrastructure\Services\Notification\SMTPService;
 use AmeliaBooking\Domain\ValueObjects\String\Email;
@@ -66,7 +67,7 @@ class EmailNotificationService extends AbstractNotificationService
         /** @var UserRepository $userRepository */
         $userRepository = $this->container->get('domain.users.repository');
 
-        /** @var PHPMailService|SMTPService|MailgunService $mailService */
+        /** @var PHPMailService|SMTPService|MailgunService|OutlookService $mailService */
         $mailService = $this->container->get('infrastructure.mail.service');
 
         /** @var PlaceholderService $placeholderService */
@@ -299,7 +300,7 @@ class EmailNotificationService extends AbstractNotificationService
         /** @var Collection $undeliveredNotifications */
         $undeliveredNotifications = $notificationLogRepo->getUndeliveredNotifications('email');
 
-        /** @var PHPMailService|SMTPService|MailgunService $mailService */
+        /** @var PHPMailService|SMTPService|MailgunService|OutlookService $mailService */
         $mailService = $this->container->get('infrastructure.mail.service');
 
         /** @var SettingsService $settingsAS */
@@ -405,7 +406,7 @@ class EmailNotificationService extends AbstractNotificationService
                 /** @var NotificationLogRepository $notificationLogRepo */
                 $notificationLogRepo = $this->container->get('domain.notificationLog.repository');
 
-                /** @var PHPMailService|SMTPService|MailgunService $mailService */
+                /** @var PHPMailService|SMTPService|MailgunService|OutlookService $mailService */
                 $mailService = $this->container->get('infrastructure.mail.service');
 
                 /** @var PlaceholderService $placeholderService */
@@ -493,7 +494,7 @@ class EmailNotificationService extends AbstractNotificationService
             $this->getByNameAndType('provider_panel_recovery', 'email');
 
 
-        /** @var PHPMailService|SMTPService|MailgunService $mailService */
+        /** @var PHPMailService|SMTPService|MailgunService|OutlookService $mailService */
         $mailService = $this->container->get('infrastructure.mail.service');
 
         /** @var PlaceholderService $placeholderService */
@@ -601,7 +602,7 @@ class EmailNotificationService extends AbstractNotificationService
         /** @var Collection $notifications */
         $notifications = $this->getByNameAndType('provider_panel_access', 'email');
 
-        /** @var PHPMailService|SMTPService|MailgunService $mailService */
+        /** @var PHPMailService|SMTPService|MailgunService|OutlookService $mailService */
         $mailService = $this->container->get('infrastructure.mail.service');
 
         /** @var PlaceholderService $placeholderService */
@@ -773,7 +774,7 @@ class EmailNotificationService extends AbstractNotificationService
      */
     public function sendSmsBalanceLowEmail($to)
     {
-        /** @var PHPMailService|SMTPService|MailgunService $mailService */
+        /** @var PHPMailService|SMTPService|MailgunService|OutlookService $mailService */
         $mailService = $this->container->get('infrastructure.mail.service');
 
         $subject = 'Low SMS Balance Alert';
@@ -800,7 +801,7 @@ class EmailNotificationService extends AbstractNotificationService
      */
     public function sendPreparedNotifications()
     {
-        /** @var PHPMailService|SMTPService|MailgunService $mailService */
+        /** @var PHPMailService|SMTPService|MailgunService|OutlookService $mailService */
         $mailService = $this->container->get('infrastructure.mail.service');
 
         /** @var NotificationLogRepository $notificationLogRepo */

@@ -5,7 +5,9 @@ namespace AmeliaBooking\Application\Commands\Outlook;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar;
 use AmeliaBooking\Domain\Factory\Outlook\OutlookCalendarFactory;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
@@ -48,12 +50,20 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
         try {
             $token = $outlookCalendarService->fetchAccessTokenWithAuthCode(
                 $command->getField('authCode'),
-                $command->getField('redirectUri')
+                $command->getField('redirectUri'),
+                $providerId
             );
         } catch (\Exception $e) {
             /** @var ProviderRepository $providerRepository */
             $providerRepository = $this->container->get('domain.users.providers.repository');
+
             $providerRepository->updateErrorColumn($providerId, $e->getMessage());
+
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setData([]);
+            $result->setMessage($e->getMessage());
+
+            return $result;
         }
 
         if (!$token['outcome']) {
@@ -64,8 +74,25 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
             return $result;
         }
 
+        if (!$providerId) {
+            /** @var SettingsService $settingsService */
+            $settingsService = $this->getContainer()->get('domain.settings.service');
+
+            $settings = $settingsService->getAllSettingsCategorized();
+
+            $settings['outlookCalendar']['token'] = json_decode($token['result'], true);
+
+            $settingsService->setAllSettings($settings);
+
+            $result->setResult(CommandResult::RESULT_SUCCESS);
+            $result->setMessage('Successfully fetched access token');
+
+            return $result;
+        }
+
         $token = apply_filters('amelia_before_outlook_calendar_added_filter', $token, $command->getField('userId'));
 
+        /** @var OutlookCalendar $outlookCalendar */
         $outlookCalendar = OutlookCalendarFactory::create(['token' => $token['result']]);
 
         $outlookCalendarRepository->beginTransaction();

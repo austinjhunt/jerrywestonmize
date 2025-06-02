@@ -409,6 +409,14 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
         $params[':type'] = AbstractUser::USER_ROLE_PROVIDER;
 
         $queryProviders = [];
+        
+        if (!empty($criteria['dates'][0])) {
+            $criteria['dates'][0] = explode(' ', $criteria['dates'][0])[0];
+        }
+
+        if (!empty($criteria['dates'][1])) {
+            $criteria['dates'][1] = explode(' ', $criteria['dates'][1])[0];
+        }
 
         if (!empty($criteria['providerStatus'])) {
             $params[':providerStatus'] = $criteria['providerStatus'];
@@ -454,16 +462,16 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
 
         if (isset($criteria['dates'][0], $criteria['dates'][1])) {
             $dotJoinQuery = "AND (dot.repeat = 1 OR (
-              DATE_FORMAT(dot.startDate, '%Y-%m-%d %H:%i:%s') BETWEEN :from1 AND :to1 OR
-              DATE_FORMAT(dot.endDate, '%Y-%m-%d %H:%i:%s') BETWEEN :from2 AND :to2 OR
-              (DATE_FORMAT(dot.startDate, '%Y-%m-%d %H:%i:%s') <= :from3 AND DATE_FORMAT(dot.endDate, '%Y-%m-%d %H:%i:%s') >= :to3)
+              dot.startDate BETWEEN :from1 AND :to1 OR
+              dot.endDate BETWEEN :from2 AND :to2 OR
+              (dot.startDate <= :from3 AND dot.endDate >= :to3)
             ))";
 
             $userParams[':from1'] = $userParams[':from2'] = $userParams[':from3'] = $criteria['dates'][0];
 
             $userParams[':to1'] = $userParams[':to2'] = $userParams[':to3'] = $criteria['dates'][1];
         } elseif (isset($criteria['dates'][0])) {
-            $dotJoinQuery = "AND (dot.repeat = 1 OR DATE_FORMAT(dot.startDate, '%Y-%m-%d %H:%i:%s') >= :from1 OR DATE_FORMAT(dot.endDate, '%Y-%m-%d %H:%i:%s') >= :from2)";
+            $dotJoinQuery = "AND (dot.repeat = 1 OR dot.startDate >= :from1 OR dot.endDate >= :from2)";
 
             $userParams[':from1'] = $userParams[':from2'] = $criteria['dates'][0];
         }
@@ -593,9 +601,9 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
 
         if (isset($criteria['dates'][0], $criteria['dates'][1])) {
             $where[] = "(
-              DATE_FORMAT(sdt.startDate, '%Y-%m-%d %H:%i:%s') BETWEEN :from1 AND :to1 OR
-              DATE_FORMAT(sdt.endDate, '%Y-%m-%d %H:%i:%s') BETWEEN :from2 AND :to2 OR
-              (DATE_FORMAT(sdt.startDate, '%Y-%m-%d %H:%i:%s') <= :from3 AND DATE_FORMAT(sdt.endDate, '%Y-%m-%d %H:%i:%s') >= :to3)
+              sdt.startDate BETWEEN :from1 AND :to1 OR
+              sdt.endDate BETWEEN :from2 AND :to2 OR
+              (sdt.startDate <= :from3 AND sdt.endDate >= :to3)
             )";
 
             $sdtParams[':from1'] = $sdtParams[':from2'] = $sdtParams[':from3'] = $criteria['dates'][0];
@@ -603,8 +611,8 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             $sdtParams[':to1'] = $sdtParams[':to2'] = $sdtParams[':to3'] = $criteria['dates'][1];
         } elseif (isset($criteria['dates'][0])) {
             $where[] = "(
-              DATE_FORMAT(sdt.startDate, '%Y-%m-%d %H:%i:%s') >= :from1 OR
-              DATE_FORMAT(sdt.endDate, '%Y-%m-%d %H:%i:%s') >= :from2
+              sdt.startDate >= :from1 OR
+              sdt.endDate >= :from2
             )";
 
             $sdtParams[':from1'] = $sdtParams[':from2'] = $criteria['dates'][0];
@@ -950,10 +958,10 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 sdpt.startTime AS sdp_startTime,
                 sdpt.endTime AS sdp_endTime,
                 IF (
-                    {$currentDateTime} >= STR_TO_DATE(CONCAT(DATE_FORMAT(sdt.startDate, '%Y-%m-%d'), ' 00:00:00'), '%Y-%m-%d %H:%i:%s') AND
-                    {$currentDateTime} <= DATE_ADD(STR_TO_DATE(CONCAT(DATE_FORMAT(sdt.endDate, '%Y-%m-%d'), ' 00:00:00'), '%Y-%m-%d %H:%i:%s'), INTERVAL 1 DAY) AND
-                    {$currentDateTime} >= STR_TO_DATE(CONCAT('{$currentDateString}', ' ', DATE_FORMAT(sdpt.startTime, '%H:%i:%s')), '%Y-%m-%d %H:%i:%s') AND
-                    {$currentDateTime} <= STR_TO_DATE(CONCAT('{$currentDateString}', ' ', DATE_FORMAT(sdpt.endTime, '%H:%i:%s')), '%Y-%m-%d %H:%i:%s'),
+                    {$currentDateTime} >= STR_TO_DATE(CONCAT(sdt.startDate, ' 00:00:00'), '%Y-%m-%d %H:%i:%s') AND
+                    {$currentDateTime} <= DATE_ADD(STR_TO_DATE(CONCAT(sdt.endDate, ' 00:00:00'), '%Y-%m-%d %H:%i:%s'), INTERVAL 1 DAY) AND
+                    {$currentDateTime} >= STR_TO_DATE(CONCAT('{$currentDateString}', ' ', sdpt.startTime), '%Y-%m-%d %H:%i:%s') AND
+                    {$currentDateTime} <= STR_TO_DATE(CONCAT('{$currentDateString}', ' ', sdpt.endTime), '%Y-%m-%d %H:%i:%s'),
                     1,
                     0
                 ) AS available
@@ -1043,7 +1051,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
      */
     public function getOnVacation()
     {
-        $currentDateTime = "STR_TO_DATE('" . DateTimeService::getNowDateTime() . "', '%Y-%m-%d %H:%i:%s')";
+        $currentDateTime = explode(' ', DateTimeService::getNowDateTime())[0];
 
         $params = [
             ':type' => AbstractUser::USER_ROLE_PROVIDER
@@ -1060,7 +1068,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
               FROM {$this->table} u
               LEFT JOIN {$this->providerDayOffTable} dot ON dot.userId = u.id
               WHERE u.type = :type AND
-              DATE_FORMAT({$currentDateTime}, '%Y-%m-%d') BETWEEN dot.startDate AND dot.endDate");
+              $currentDateTime BETWEEN dot.startDate AND dot.endDate");
 
             $statement->execute($params);
 
@@ -1093,16 +1101,20 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
         $appointmentTable = AppointmentsTable::getTableName();
 
         $params = [];
+
         $where = [];
 
         if ($criteria['dates']) {
-            $where[] = "(DATE_FORMAT(a.bookingStart, '%Y-%m-%d') BETWEEN :bookingFrom AND :bookingTo)";
+            $where[] = "(a.bookingStart BETWEEN :bookingFrom AND :bookingTo)";
+
             $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
+
             $params[':bookingTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
         }
 
         if (isset($criteria['status'])) {
             $where[] = 'u.status = :status';
+
             $params[':status'] = $criteria['status'];
         }
 
@@ -1146,16 +1158,20 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
     public function getAllNumberOfViews($criteria)
     {
         $params = [];
+
         $where = [];
 
         if ($criteria['dates']) {
-            $where[] = "(DATE_FORMAT(pv.date, '%Y-%m-%d') BETWEEN :bookingFrom AND :bookingTo)";
-            $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-            $params[':bookingTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+            $where[] = "(pv.date BETWEEN :bookingFrom AND :bookingTo)";
+
+            $params[':bookingFrom'] = explode(' ', $criteria['dates'][0])[0];
+
+            $params[':bookingTo'] = explode(' ', $criteria['dates'][1])[0];
         }
 
         if (isset($criteria['status'])) {
             $where[] = 'u.status = :status';
+
             $params[':status'] = $criteria['status'];
         }
 

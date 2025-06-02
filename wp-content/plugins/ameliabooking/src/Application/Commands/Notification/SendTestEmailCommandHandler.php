@@ -14,6 +14,7 @@ use AmeliaBooking\Application\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\NotificationSendTo;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Services\Notification\MailgunService;
+use AmeliaBooking\Infrastructure\Services\Notification\OutlookService;
 use AmeliaBooking\Infrastructure\Services\Notification\PHPMailService;
 use AmeliaBooking\Infrastructure\Services\Notification\SMTPService;
 use Exception;
@@ -55,7 +56,7 @@ class SendTestEmailCommandHandler extends CommandHandler
 
         $type = $command->getField('type');
 
-        /** @var PHPMailService|SMTPService|MailgunService $mailService */
+        /** @var PHPMailService|SMTPService|MailgunService|OutlookService $mailService */
         $mailService = $this->getContainer()->get('infrastructure.mail.service');
         /** @var EmailNotificationService $notificationService */
         $notificationService = $this->getContainer()->get('application.emailNotification.service');

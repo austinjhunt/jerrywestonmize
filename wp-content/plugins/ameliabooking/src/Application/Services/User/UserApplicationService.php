@@ -549,6 +549,19 @@ class UserApplicationService
     }
 
     /**
+     * @return boolean
+     */
+    public function isAdminAndAllowedToBookOver()
+    {
+        /** @var SettingsService $settingsDomainService */
+        $settingsDomainService = $this->container->get('domain.settings.service');
+
+        return $settingsDomainService->getSetting('roles', 'allowAdminBookOverApp') &&
+            ($loggedInUser = $this->container->get('logged.in.user')) &&
+            $loggedInUser->getType() === AbstractUser::USER_ROLE_ADMIN;
+    }
+
+    /**
      * @param CustomerBooking $booking
      * @param AbstractUser    $user
      * @param string          $bookingToken

@@ -4,6 +4,7 @@ namespace AmeliaBooking\Application\Commands\Outlook;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Interop\Container\Exception\ContainerException;
@@ -20,6 +21,7 @@ class GetOutlookAuthURLCommandHandler extends CommandHandler
      *
      * @return CommandResult
      * @throws ContainerException
+     * @throws QueryExecutionException
      */
     public function handle(GetOutlookAuthURLCommand $command)
     {
@@ -36,6 +38,16 @@ class GetOutlookAuthURLCommandHandler extends CommandHandler
             /** @var ProviderRepository $providerRepository */
             $providerRepository = $this->container->get('domain.users.providers.repository');
             $providerRepository->updateErrorColumn($providerId, $e->getMessage());
+
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Error retrieved outlook authorization URL');
+            $result->setData(
+                [
+                    'authUrl' => ''
+                ]
+            );
+
+            return $result;
         }
 
 

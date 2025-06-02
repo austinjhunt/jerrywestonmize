@@ -210,7 +210,10 @@ class EventPlaceholderService extends PlaceholderService
         $data = array_merge($data, $this->getEventData($event, $bookingKey, $token, $type));
         $data = array_merge($data, $this->getBookingData($event, $type, $bookingKey, $token, null, null, $invoice));
         $data = array_merge($data, $this->getCustomFieldsData($event, $type, $bookingKey));
-        $data = array_merge($data, $notificationType ? $this->getCouponsData($event, $type, $bookingKey) : []);
+
+        if ($notificationType === 'customer_event_approved') {
+            $data = array_merge($data, $this->getCouponsData($event, $type, $bookingKey));
+        }
 
         return $data;
     }

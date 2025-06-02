@@ -11,6 +11,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Outlook\OutlookCalendarRepository;
@@ -68,14 +69,24 @@ class DisconnectFromOutlookAccountCommandHandler extends CommandHandler
         /** @var OutlookCalendarRepository $outlookCalendarRepository */
         $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
 
-        $outlookCalendar = $outlookCalendarRepository->getByProviderId($command->getArg('id'));
+        if (!$command->getArg('id')) {
+            /** @var SettingsService $settingsService */
+            $settingsService = $this->getContainer()->get('domain.settings.service');
 
-        if (!$outlookCalendar instanceof OutlookCalendar) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage('Unable to delete outlook calendar.');
+            $settings = $settingsService->getAllSettingsCategorized();
+
+            $settings['outlookCalendar']['token'] = null;
+
+            $settingsService->setAllSettings($settings);
+
+            $result->setResult(CommandResult::RESULT_SUCCESS);
+            $result->setMessage('Outlook calendar successfully deleted.');
 
             return $result;
         }
+
+        /** @var OutlookCalendar $outlookCalendar */
+        $outlookCalendar = $outlookCalendarRepository->getByProviderId($command->getArg('id'));
 
         do_action('amelia_before_outlook_calendar_deleted', $outlookCalendar ? $outlookCalendar->toArray() : null, $command->getArg('id'));
 

@@ -20,7 +20,6 @@ use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
-use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -657,6 +656,20 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
 
                 $bookingCustomFields = !empty($booking['customFields']) ? json_decode($booking['customFields'], true) : null;
 
+                if ($booking['customerId'] && !isset($booking['customer'])) {
+                    /** @var UserRepository $userRepository */
+                    $userRepository = $this->container->get('domain.users.repository');
+
+                    $booking['customer'] = $userRepository->getById($booking['customerId'])->toArray();
+                }
+
+                $customerCustomFields = !empty($booking['customer']['customFields']) ? json_decode($booking['customer']['customFields'], true) : null;
+
+                if ($customerCustomFields) {
+                    $bookingCustomFields =  $bookingCustomFields ? ($bookingCustomFields + $customerCustomFields) : $customerCustomFields;
+                }
+
+
                 if ($bookingCustomFields) {
                     foreach ($bookingCustomFields as $bookingCustomFieldKey => $bookingCustomField) {
                         if (!empty($bookingCustomField['value']) && !empty($bookingCustomField['type'])) {
@@ -687,9 +700,15 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                                 $files = '';
 
                                 if ($bookingCustomField['value']) {
+                                    $entityId = $booking['id'];
+
+                                    if ($customerCustomFields && array_key_exists($bookingCustomFieldKey, $customerCustomFields)) {
+                                        $entityId = $booking['customerId'];
+                                    }
+
                                     foreach ($bookingCustomField['value'] as $index => $file) {
                                         $files .= '<a href="'
-                                            . AMELIA_ACTION_URL . '/fields/' . $bookingCustomFieldKey . '/' . $booking['id'] . '/' . $index . '&token=' . $token
+                                            . AMELIA_ACTION_URL . '/fields/' . $bookingCustomFieldKey . '/' . $entityId . '/' . $index . '&token=' . $token
                                             . '">' . $file['name'] . '</a>';
                                     }
 
@@ -733,6 +752,21 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     json_decode($appointment['bookings'][$bookingKey]['customFields'], true) : $appointment['bookings'][$bookingKey]['customFields'];
             } else {
                 $bookingCustomFields = [];
+            }
+
+            if ($appointment['bookings'][$bookingKey]['customerId'] && !isset($appointment['bookings'][$bookingKey]['customer'])) {
+                /** @var UserRepository $userRepository */
+                $userRepository = $this->container->get('domain.users.repository');
+
+                $appointment['bookings'][$bookingKey]['customer'] = $userRepository->getById($appointment['bookings'][$bookingKey]['customerId'])->toArray();
+            }
+
+            if ($appointment['bookings'][$bookingKey]['customer']['customFields']) {
+                $customerCustomFields = !is_array($appointment['bookings'][$bookingKey]['customer']['customFields']) ?
+                    json_decode($appointment['bookings'][$bookingKey]['customer']['customFields'], true) :
+                    $appointment['bookings'][$bookingKey]['customer']['customFields'];
+
+                $bookingCustomFields += $customerCustomFields;
             }
 
             if ($bookingCustomFields) {
@@ -911,19 +945,28 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     /** @var EventRepository $eventRepository */
                     $eventRepository = $this->container->get('domain.booking.event.repository');
 
-                    $eventsIds = $eventRepository->getFilteredIds(
+                    /** @var Collection $eventsBookings */
+                    $eventsBookings = $eventRepository->getBookingsByCriteria(
                         [
+                            'ids'                   => [$appointment['id']],
                             'customerId'            => $customerId,
                             'customerBookingStatus' => BookingStatus::APPROVED,
-                        ],
-                        0
+                            'fetchBookings'         => false,
+                            'fetchBookingsTickets'  => false,
+                            'fetchBookingsUsers'    => false,
+                            'fetchBookingsPayments' => false,
+                        ]
                     );
 
                     /** @var Collection $customerReservations */
                     $customerReservations = new Collection();
 
-                    foreach ($eventsIds as $eventId) {
-                        $customerReservations->addItem(EventFactory::create(['id' => $eventId]), $eventId);
+                    /** @var Collection $eventBookings */
+                    foreach ($eventsBookings->getItems() as $eventBookings) {
+                        /** @var Collection $booking */
+                        foreach ($eventBookings->getItems() as $bookingId => $booking) {
+                            $customerReservations->addItem($booking, $bookingId);
+                        }
                     }
 
                     break;
@@ -932,7 +975,13 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     /** @var PackageCustomerRepository $packageCustomerRepository */
                     $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
 
-                    $customerReservations = $packageCustomerRepository->getByEntityId($customerId, 'customerId');
+                    $customerReservations = $packageCustomerRepository->getFiltered(
+                        [
+                            'packages'      => [$appointment['id']],
+                            'customerId'    => $customerId,
+                            'bookingStatus' => BookingStatus::APPROVED,
+                        ]
+                    );
 
                     break;
             }
@@ -943,33 +992,14 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
 
             /** @var Coupon $coupon */
             foreach ($entityCoupons->getItems() as $coupon) {
-                /** @var Collection $reservationsForCheck */
-                $reservationsForCheck = new Collection();
-
-                switch ($type) {
-                    case Entities::PACKAGE:
-                    case Entities::APPOINTMENT:
-                        $reservationsForCheck = $customerReservations;
-
-                        break;
-
-                    case Entities::EVENT:
-                        /** @var Event $reservation */
-                        foreach ($customerReservations->getItems() as $reservation) {
-                            if ($coupon->getEventList()->keyExists($reservation->getId()->getValue())) {
-                                $reservationsForCheck->addItem($reservation, $reservation->getId()->getValue());
-                            }
-                        }
-
-                        break;
-                }
-
                 $sendCoupon = (
+                        $customerReservations->length() &&
                         !$coupon->getNotificationRecurring()->getValue() &&
-                        $reservationsForCheck->length() === $coupon->getNotificationInterval()->getValue()
+                        $customerReservations->length() === $coupon->getNotificationInterval()->getValue()
                     ) || (
+                        $customerReservations->length() &&
                         $coupon->getNotificationRecurring()->getValue() &&
-                        $reservationsForCheck->length() % $coupon->getNotificationInterval()->getValue() === 0
+                        $customerReservations->length() % $coupon->getNotificationInterval()->getValue() === 0
                     );
 
                 try {

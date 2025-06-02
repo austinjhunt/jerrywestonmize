@@ -136,7 +136,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             [
                 'icsFiles' => !empty($package['icsFiles']) ? $package['icsFiles'] : []
             ],
-            $notificationType ? $this->getCouponsData($package, $type, 0) : []
+            $notificationType === 'customer_package_purchased' ? $this->getCouponsData($package, $type, 0) : []
         );
     }
 

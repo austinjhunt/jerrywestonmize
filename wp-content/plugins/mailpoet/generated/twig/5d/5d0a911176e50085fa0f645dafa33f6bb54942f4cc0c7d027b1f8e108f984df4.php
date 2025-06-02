@@ -367,41 +367,130 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         // line 173
         if ((($context["display_docsbot_widget"] ?? null) &&  !$this->extensions['MailPoet\Twig\Functions']->isDotcomEcommercePlan())) {
             // line 174
-            yield "  <script type=\"text/javascript\">window.DocsBotAI=window.DocsBotAI||{},DocsBotAI.init=function(c){return new Promise(function(e,o){var t=document.createElement(\"script\");t.type=\"text/javascript\",t.async=!0,t.src=\"https://widget.docsbot.ai/chat.js\";var n=document.getElementsByTagName(\"script\")[0];n.parentNode.insertBefore(t,n),t.addEventListener(\"load\",function(){window.DocsBotAI.mount({id:c.id,supportCallback:c.supportCallback,identify:c.identify,options:c.options});var t;t=function(n){return new Promise(function(e){if(document.querySelector(n))return e(document.querySelector(n));var o=new MutationObserver(function(t){document.querySelector(n)&&(e(document.querySelector(n)),o.disconnect())});o.observe(document.body,{childList:!0,subtree:!0})})},t&&t(\"#docsbotai-root\").then(e).catch(o)}),t.addEventListener(\"error\",function(t){o(t.message)})})};</script>
-  <script type=\"text/javascript\">
-    DocsBotAI.init({
-      id: \"TqTdebbGjJeUjrmBIFjh/kzFE5FBebBJiSJ2Tm0nR\",
-      options: {
-        ";
-            // line 179
-            if (($context["has_premium_support"] ?? null)) {
-                // line 180
-                yield "          supportLink: 'https://www.mailpoet.com/support/premium/',
-        ";
-            } else {
-                // line 182
-                yield "          supportLink: 'https://wordpress.org/support/plugin/mailpoet/',
-          labels: {
-            getSupport: \"";
-                // line 184
-                yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Get help in the forum", "mailpoet"), "js"), "html", null, true);
+            yield "  ";
+            if (CoreExtension::getAttribute($this->env, $this->source, ($context["feature_flags"] ?? null), "odie_chatbot", [], "any", false, false, false, 174)) {
+                // line 175
+                yield "    <script type=\"text/javascript\" src=\"";
+                yield $this->extensions['MailPoet\Twig\Assets']->getJavascriptScriptUrl("haw.js");
+                yield "\"></script>
+    <chat-widget
+      id=\"chat\"
+      bot=\"mailpoet-chat-support\"
+      avatar=\"";
+                // line 179
+                yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("chat-avatar.png");
                 yield "\"
-          }
+      title=\"";
+                // line 180
+                yield $this->extensions['MailPoet\Twig\I18n']->translate("MailPoet support", "mailpoet");
+                yield "\"
+      subtitle=\"";
+                // line 181
+                yield $this->extensions['MailPoet\Twig\I18n']->translate("Chat with our AI assistant", "mailpoet");
+                yield "\"
+      first-message=\"";
+                // line 182
+                yield $this->extensions['MailPoet\Twig\I18n']->translate("How can I help you today?", "mailpoet");
+                yield "\"
+    >
+      ";
+                // line 184
+                $context["support_form_url"] = ((($context["has_premium_support"] ?? null)) ? ("https://www.mailpoet.com/support/support-form/") : ("https://wordpress.org/support/plugin/mailpoet/"));
+                // line 185
+                yield "      <a slot=\"support-link\"
+          href=\"";
+                // line 186
+                yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["support_form_url"] ?? null), "html", null, true);
+                yield "\"
+          id=\"mailpoet-support-link\"
+          style=\"display:none\"
+          target=\"_blank\"
+      >
         ";
+                // line 191
+                yield $this->extensions['MailPoet\Twig\I18n']->translate("Contact support", "mailpoet");
+                yield "
+      </a>
+    </chat-widget>
+    <script>
+      const getChatId = () => localStorage.getItem('ai-widget-mailpoet-chat-support-chat-id');
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const supportLink = document.getElementById('mailpoet-support-link');
+        if (supportLink) {
+          ";
+                // line 200
+                if (($context["has_premium_support"] ?? null)) {
+                    // line 201
+                    yield "            supportLink.addEventListener('click', function(e) {
+              const chatId = getChatId();
+              if (chatId) {
+                e.preventDefault();
+                window.open(`";
+                    // line 205
+                    yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["support_form_url"] ?? null), "html", null, true);
+                    yield "?chatId=\${chatId}`, '_blank');
+              }
+            });
+          ";
+                }
+                // line 209
+                yield "
+          // Only show the support link once the chat has begun
+          const checkChatId = setInterval(function() {
+            const chatId = getChatId();
+            if (chatId) {
+              supportLink.style.display = 'block';
+              clearInterval(checkChatId);
             }
-            // line 187
-            yield "      },
-    }).then(() => {
-        // stopping propagation to avoid conflicts with other keydown events form WP.com
-      function writingFixer (e) {
-        e.stopPropagation();
-      }
-      document.getElementById('docsbotai-root').addEventListener(\"keydown\", writingFixer);
-    })
-  </script>
-";
+          }, 2000);
         }
-        // line 197
+        // Prevent conflicts with other keydown events on Dotcom
+        function writingFixer (e) {
+            e.stopPropagation();
+        }
+        document.getElementById('chat').addEventListener('keydown', writingFixer);
+      });
+    </script>
+  ";
+            } else {
+                // line 227
+                yield "    <script type=\"text/javascript\">window.DocsBotAI=window.DocsBotAI||{},DocsBotAI.init=function(c){return new Promise(function(e,o){var t=document.createElement(\"script\");t.type=\"text/javascript\",t.async=!0,t.src=\"https://widget.docsbot.ai/chat.js\";var n=document.getElementsByTagName(\"script\")[0];n.parentNode.insertBefore(t,n),t.addEventListener(\"load\",function(){window.DocsBotAI.mount({id:c.id,supportCallback:c.supportCallback,identify:c.identify,options:c.options});var t;t=function(n){return new Promise(function(e){if(document.querySelector(n))return e(document.querySelector(n));var o=new MutationObserver(function(t){document.querySelector(n)&&(e(document.querySelector(n)),o.disconnect())});o.observe(document.body,{childList:!0,subtree:!0})})},t&&t(\"#docsbotai-root\").then(e).catch(o)}),t.addEventListener(\"error\",function(t){o(t.message)})})};</script>
+    <script type=\"text/javascript\">
+      DocsBotAI.init({
+        id: \"TqTdebbGjJeUjrmBIFjh/kzFE5FBebBJiSJ2Tm0nR\",
+        options: {
+          ";
+                // line 232
+                if (($context["has_premium_support"] ?? null)) {
+                    // line 233
+                    yield "            supportLink: 'https://www.mailpoet.com/support/premium/',
+          ";
+                } else {
+                    // line 235
+                    yield "            supportLink: 'https://wordpress.org/support/plugin/mailpoet/',
+            labels: {
+              getSupport: \"";
+                    // line 237
+                    yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Get help in the forum", "mailpoet"), "js"), "html", null, true);
+                    yield "\"
+            }
+          ";
+                }
+                // line 240
+                yield "        },
+      }).then(() => {
+        // Prevent conflicts with other keydown events on Dotcom
+        function writingFixer (e) {
+          e.stopPropagation();
+        }
+        document.getElementById('docsbotai-root').addEventListener(\"keydown\", writingFixer);
+      })
+    </script>
+  ";
+            }
+        }
+        // line 251
         yield "
 <div id=\"mailpoet-modal\"></div>
 ";
@@ -491,7 +580,7 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
      */
     public function getDebugInfo()
     {
-        return array (  464 => 167,  457 => 32,  450 => 30,  444 => 33,  442 => 32,  439 => 31,  437 => 30,  420 => 15,  416 => 14,  409 => 11,  402 => 197,  390 => 187,  384 => 184,  380 => 182,  376 => 180,  374 => 179,  367 => 174,  365 => 173,  362 => 172,  358 => 170,  356 => 169,  353 => 168,  351 => 167,  347 => 165,  345 => 113,  341 => 111,  335 => 109,  333 => 108,  328 => 106,  324 => 105,  320 => 104,  316 => 103,  312 => 102,  308 => 101,  304 => 100,  300 => 99,  296 => 98,  292 => 97,  288 => 96,  284 => 95,  280 => 94,  276 => 93,  272 => 92,  268 => 91,  264 => 90,  260 => 89,  256 => 88,  252 => 87,  248 => 86,  244 => 85,  240 => 84,  236 => 83,  232 => 82,  226 => 79,  222 => 78,  218 => 77,  213 => 75,  209 => 74,  205 => 73,  201 => 72,  197 => 71,  193 => 70,  189 => 69,  185 => 68,  181 => 67,  177 => 66,  173 => 65,  169 => 64,  165 => 63,  161 => 62,  157 => 61,  153 => 60,  149 => 59,  143 => 56,  139 => 55,  135 => 54,  131 => 53,  127 => 52,  123 => 51,  119 => 50,  115 => 49,  111 => 48,  107 => 47,  103 => 46,  99 => 45,  95 => 44,  91 => 43,  87 => 42,  83 => 41,  79 => 40,  75 => 39,  71 => 38,  67 => 37,  63 => 35,  61 => 14,  57 => 12,  55 => 11,  43 => 1,);
+        return array (  553 => 167,  546 => 32,  539 => 30,  533 => 33,  531 => 32,  528 => 31,  526 => 30,  509 => 15,  505 => 14,  498 => 11,  491 => 251,  478 => 240,  472 => 237,  468 => 235,  464 => 233,  462 => 232,  455 => 227,  435 => 209,  428 => 205,  422 => 201,  420 => 200,  408 => 191,  400 => 186,  397 => 185,  395 => 184,  390 => 182,  386 => 181,  382 => 180,  378 => 179,  370 => 175,  367 => 174,  365 => 173,  362 => 172,  358 => 170,  356 => 169,  353 => 168,  351 => 167,  347 => 165,  345 => 113,  341 => 111,  335 => 109,  333 => 108,  328 => 106,  324 => 105,  320 => 104,  316 => 103,  312 => 102,  308 => 101,  304 => 100,  300 => 99,  296 => 98,  292 => 97,  288 => 96,  284 => 95,  280 => 94,  276 => 93,  272 => 92,  268 => 91,  264 => 90,  260 => 89,  256 => 88,  252 => 87,  248 => 86,  244 => 85,  240 => 84,  236 => 83,  232 => 82,  226 => 79,  222 => 78,  218 => 77,  213 => 75,  209 => 74,  205 => 73,  201 => 72,  197 => 71,  193 => 70,  189 => 69,  185 => 68,  181 => 67,  177 => 66,  173 => 65,  169 => 64,  165 => 63,  161 => 62,  157 => 61,  153 => 60,  149 => 59,  143 => 56,  139 => 55,  135 => 54,  131 => 53,  127 => 52,  123 => 51,  119 => 50,  115 => 49,  111 => 48,  107 => 47,  103 => 46,  99 => 45,  95 => 44,  91 => 43,  87 => 42,  83 => 41,  79 => 40,  75 => 39,  71 => 38,  67 => 37,  63 => 35,  61 => 14,  57 => 12,  55 => 11,  43 => 1,);
     }
 
     public function getSourceContext()

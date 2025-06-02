@@ -173,7 +173,7 @@ class NotificationSMSHistoryRepository extends AbstractRepository
             $where = [];
 
             if (!empty($criteria['dates'])) {
-                $where[] = "(DATE_FORMAT(h.dateTime, '%Y-%m-%d %H:%i:%s') BETWEEN :dateFrom AND :dateTo)";
+                $where[] = "(h.dateTime BETWEEN :dateFrom AND :dateTo)";
                 $params[':dateFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
                 $params[':dateTo'] = DateTimeService::getCustomDateTimeObjectInUtc(
                     $criteria['dates'][1]
@@ -225,7 +225,7 @@ class NotificationSMSHistoryRepository extends AbstractRepository
             $where = [];
 
             if (!empty($criteria['dates'])) {
-                $where[] = "(DATE_FORMAT(h.dateTime, '%Y-%m-%d %H:%i:%s') BETWEEN :dateFrom AND :dateTo)";
+                $where[] = "(h.dateTime BETWEEN :dateFrom AND :dateTo)";
                 $params[':dateFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
                 $params[':dateTo'] = DateTimeService::getCustomDateTimeObjectInUtc(
                     $criteria['dates'][1]

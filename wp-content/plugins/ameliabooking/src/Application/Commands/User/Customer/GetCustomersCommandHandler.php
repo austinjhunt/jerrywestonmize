@@ -82,7 +82,9 @@ class GetCustomersCommandHandler extends CommandHandler
 
         $countParams = [];
 
-        if (!$command->getPermissionService()->currentUserCanReadOthers(Entities::CUSTOMERS)) {
+        if (empty($params['customers']) &&
+            !$command->getPermissionService()->currentUserCanReadOthers(Entities::CUSTOMERS)
+        ) {
             /** @var Collection $providerCustomers */
             $providerCustomers = $providerAS->getAllowedCustomers($currentUser);
 

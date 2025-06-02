@@ -36,7 +36,8 @@ class AddCustomerController extends Controller
         'externalId',
         'pictureFullPath',
         'pictureThumbPath',
-        'translations'
+        'translations',
+        'customFields'
     ];
 
     /**

@@ -49,21 +49,13 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
     /**
      * @param $authCode
      * @param $redirectUri
+     * @param $providerId
      *
      * @return array
      */
-    public function fetchAccessTokenWithAuthCode($authCode, $redirectUri)
+    public function fetchAccessTokenWithAuthCode($authCode, $redirectUri, $providerId)
     {
         return ['outcome' => true, 'result' => []];
-    }
-
-    /**
-     * @param Provider $provider
-     *
-     * @return void
-     */
-    public function authorizeProvider($provider)
-    {
     }
 
     /**
@@ -142,6 +134,33 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
         $excludeAppointmentId,
         $startDateTime,
         $endDateTime
+    ) {
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param string $from
+     * @param string $fromName
+     * @param string $replyTo
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @param array  $bccEmails
+     * @param array  $attachments
+     *
+     * @return void
+     *
+     * @throws ContainerException
+     */
+    public function sendEmail(
+        $from,
+        $fromName,
+        $replyTo,
+        $to,
+        $subject,
+        $body,
+        $bccEmails = [],
+        $attachments = []
     ) {
     }
 }

@@ -9,7 +9,7 @@
   if (typeof hasAmeliaEvent === 'undefined') {
     var hasAmeliaEvent = true;
   }
-  if (typeof hasEventApiCall === 'undefined' && ('<?php echo esc_js($params['trigger']); ?>' === '' || '<?php echo esc_js($params['in_dialog']); ?>' === '1')) {
+  if (typeof hasEventApiCall === 'undefined' && ('<?php echo esc_js($params['trigger']); ?>' === '' && '<?php echo esc_js($params['in_dialog']); ?>' !== '1')) {
     var hasEventApiCall = true;
   }
   var hasEventShortcode = (typeof hasEventShortcode === 'undefined') ? false : true;

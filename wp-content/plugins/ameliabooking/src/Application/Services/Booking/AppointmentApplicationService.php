@@ -158,17 +158,31 @@ class AppointmentApplicationService
     }
 
     /**
-     * @param array $appointmentData
-     * @param array $statuses
+     * @param array   $appointmentData
+     * @param bool    $isFrontEndBooking
+     * @param Service $service
      *
      * @return Appointment|null
      * @throws QueryExecutionException
-     * @throws InvalidArgumentException
      */
-    public function getAlreadyBookedAppointment($appointmentData, $statuses)
+    public function getAlreadyBookedAppointment($appointmentData, $isFrontEndBooking, $service)
     {
         /** @var AppointmentRepository $appointmentRepo */
         $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
+
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        /** @var BookingApplicationService $bookingAS */
+        $bookingAS = $this->container->get('application.booking.booking.service');
+
+        $bookIfPending = $isFrontEndBooking && $settingsDS->getSetting('appointments', 'allowBookingIfPending');
+
+        $personsCount = 0;
+
+        foreach ($appointmentData['bookings'] as $bookingData) {
+            $personsCount += $bookingData['persons'];
+        }
 
         /** @var Collection $existingAppointments */
         $existingAppointments = $appointmentRepo->getFiltered(
@@ -183,22 +197,38 @@ class AppointmentApplicationService
         );
 
         if ($existingAppointments->length()) {
-            $freeAppointmentId = null;
-
             /** @var Appointment $existingAppointment */
             foreach ($existingAppointments->getItems() as $existingAppointment) {
-                $freeAppointmentId = $existingAppointment->getId()->getValue();
+                $persons = 0;
 
-                /** @var CustomerBooking $existingAppointmentBooking */
-                foreach ($existingAppointment->getBookings()->getItems() as $existingAppointmentBooking) {
-                    if (in_array($existingAppointmentBooking->getStatus()->getValue(), $statuses)) {
-                        return null;
-                    }
+                /** @var CustomerBooking $booking */
+                foreach ($existingAppointment->getBookings()->getItems() as $booking) {
+                    $persons += $bookingAS->isBookingApprovedOrPending($booking->getStatus()->getValue())
+                        ? $booking->getPersons()->getValue()
+                        : 0;
                 }
-            }
 
-            if ($freeAppointmentId) {
-                return $existingAppointments->getItem($freeAppointmentId);
+                $status = $existingAppointment->getStatus()->getValue();
+
+                $hasLocation = true;
+
+                if (!empty($appointmentData['locationId']) &&
+                    $existingAppointment->getLocationId() &&
+                    $existingAppointment->getLocationId()->getValue() !== $appointmentData['locationId']
+                ) {
+                    $hasLocation = false;
+                }
+
+                $hasCapacity =
+                    ($persons + $personsCount) <= $service->getMaxCapacity()->getValue() &&
+                    !($existingAppointment->isFull() ? $existingAppointment->isFull()->getValue() : false);
+
+                if (($status === BookingStatus::APPROVED && $hasCapacity && $hasLocation) ||
+                    ($status === BookingStatus::PENDING && ($bookIfPending || $hasCapacity) && $hasLocation) ||
+                    ($status === BookingStatus::CANCELED || $status === BookingStatus::REJECTED || $status === BookingStatus::NO_SHOW)
+                ) {
+                    return $existingAppointment;
+                }
             }
         }
 

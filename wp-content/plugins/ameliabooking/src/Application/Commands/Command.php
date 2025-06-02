@@ -29,6 +29,7 @@ use AmeliaBooking\Application\Commands\Stats\AddStatsCommand;
 use AmeliaBooking\Application\Commands\User\Customer\ReauthorizeCommand;
 use AmeliaBooking\Application\Commands\User\LoginCabinetCommand;
 use AmeliaBooking\Application\Commands\User\LogoutCabinetCommand;
+use AmeliaBooking\Application\Commands\User\SocialLoginCommand;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Services\Permissions\PermissionsService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -224,6 +225,7 @@ abstract class Command
             !($this instanceof WhatsAppWebhookRegisterCommand) &&
             !($this instanceof WhatsAppWebhookCommand) &&
             !($this instanceof PaymentLinkCommand) &&
+            !($this instanceof SocialLoginCommand) &&
             !($this instanceof GetSMSNotificationsHistoryCommand) &&
             !($this instanceof UpdateSMSNotificationHistoryCommand)
         ) {

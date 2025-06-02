@@ -68,10 +68,18 @@ class ProviderService
 
         /** @var Period $period */
         foreach ($day->getPeriodList()->getItems() as $period) {
+            if ($period->getLocationId() && empty($locations[$period->getLocationId()->getValue()])) {
+                $locations[$period->getLocationId()->getValue()] = PeriodLocationFactory::create(
+                    ['locationId' => $period->getLocationId()->getValue()]
+                );
+            }
+
             /** @var PeriodLocation $periodLocation */
             foreach ($period->getPeriodLocationList()->getItems() as $periodLocation) {
                 if (empty($locations[$periodLocation->getLocationId()->getValue()])) {
-                    $locations[$periodLocation->getLocationId()->getValue()] = PeriodLocationFactory::create(['locationId' => $periodLocation->getLocationId()->getValue()]);
+                    $locations[$periodLocation->getLocationId()->getValue()] = PeriodLocationFactory::create(
+                        ['locationId' => $periodLocation->getLocationId()->getValue()]
+                    );
                 }
             }
         }
@@ -83,8 +91,9 @@ class ProviderService
                 [
                     'startTime'          => '00:00:00',
                     'endTime'            => '24:00:00',
+                    'locationId'         => sizeof($locations) === 1 ? array_keys($locations)[0] : null,
                     'periodServiceList'  => [],
-                    'periodLocationList' => array_values($locations),
+                    'periodLocationList' => sizeof($locations) > 1 ? array_values($locations) : [],
                 ]
             )
         );
@@ -284,89 +293,11 @@ class ProviderService
      */
     public function addAppointmentsToAppointmentList($providers, $appointments, $isGloballyBusySlot)
     {
-        $appointmentsDateData = [];
-
-        $appointmentsIdOrder = [];
-
         /** @var Appointment $appointment */
-        foreach ($appointments->getItems() as $appointmentId => $appointment) {
-            $providerId = $appointment->getProviderId()->getValue();
-
-            $appointmentStart = $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s');
-
-            $appointmentEnd = $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s');
-
-            if (!array_key_exists($providerId, $appointmentsDateData)) {
-                $appointmentsDateData[$providerId] = [
-                ];
-            }
-
-            $appointmentsIdOrder[] = $appointmentId;
-
-            $lastIndex = sizeof($appointmentsIdOrder) - 1;
-
-            if (!array_key_exists($appointmentStart, $appointmentsDateData[$providerId])) {
-                $appointmentsDateData[$providerId][$appointmentStart] = [
-                    'id'    => $appointmentId,
-                    'end'   => $appointmentEnd,
-                    'index' => $lastIndex
-                ];
-            } else if ($appointmentsDateData[$providerId][$appointmentStart]['end'] !== $appointmentEnd &&
-                DateTimeService::getCustomDateTimeObject($appointmentEnd) >
-                DateTimeService::getCustomDateTimeObject($appointmentsDateData[$providerId][$appointmentStart]['end'])
-            ) {
-                $appointmentsIdOrder[$appointmentsDateData[$providerId][$appointmentStart]['index']] = $appointmentId;
-
-                $appointmentsIdOrder[$lastIndex] = $appointmentsDateData[$providerId][$appointmentStart]['id'];
-            }
-        }
-
-        $providerStarts = [];
-
-        foreach ($appointmentsIdOrder as $index) {
-            /** @var Appointment $appointment */
-            $appointment = $appointments->getItem($index);
-
-            /** @var Provider $provider */
-            foreach ($providers->getItems() as $provider) {
-                if (!array_key_exists($provider->getId()->getValue(), $providerStarts)) {
-                    $providerStarts[$provider->getId()->getValue()] = [];
-                }
-
-                $appointmentStartString = $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s');
-
-                if ($appointment->getProviderId()->getValue() === $provider->getId()->getValue() &&
-                    array_key_exists($appointmentStartString, $providerStarts[$provider->getId()->getValue()])
-                ) {
-                    /** @var Appointment $duplicatedAppointment */
-                    foreach ($provider->getAppointmentList()->getItems() as $duplicatedAppointment) {
-                        if ($duplicatedAppointment->getId() &&
-                            in_array(
-                                $duplicatedAppointment->getId()->getValue(),
-                                $providerStarts[$provider->getId()->getValue()][$appointmentStartString]
-                            )
-                        ) {
-                            /** @var CustomerBooking $booking */
-                            foreach ($appointment->getBookings()->getItems() as $booking) {
-                                $duplicatedAppointment->getBookings()->addItem($booking, $booking->getId()->getValue());
-                            }
-                        }
-                    }
-
-                    continue;
-                }
-
-                if ($appointment->getProviderId()->getValue() === $provider->getId()->getValue()) {
-                    $providerStarts[$provider->getId()->getValue()][$appointmentStartString][] = $appointment->getId()->getValue();
-
-                    $provider->getAppointmentList()->addItem($appointment);
-
-                    if (!$isGloballyBusySlot) {
-                        break;
-                    }
-                } else if ($isGloballyBusySlot) {
-                    $providerStarts[$provider->getId()->getValue()][$appointmentStartString][] = $appointment->getId()->getValue();
-
+        foreach ($appointments->getItems() as $appointment) {
+            if ($isGloballyBusySlot) {
+                /** @var Provider $provider */
+                foreach ($providers->getItems() as $provider) {
                     /** @var Appointment $fakeAppointment */
                     $fakeAppointment = AppointmentFactory::create(
                         array_merge(
@@ -385,6 +316,11 @@ class ProviderService
 
                     $provider->getAppointmentList()->addItem($fakeAppointment);
                 }
+            } else if ($providers->keyExists($appointment->getProviderId()->getValue())) {
+                /** @var Provider $provider */
+                $provider = $providers->getItem($appointment->getProviderId()->getValue());
+
+                $provider->getAppointmentList()->addItem($appointment);
             }
         }
     }

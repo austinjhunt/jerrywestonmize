@@ -7,6 +7,7 @@
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Services\Notification\MailerFactory;
 use AmeliaBooking\Infrastructure\Services\Notification\MailgunService;
+use AmeliaBooking\Infrastructure\Services\Notification\OutlookService;
 use AmeliaBooking\Infrastructure\Services\Notification\PHPMailService;
 use AmeliaBooking\Infrastructure\Services\Notification\SMTPService;
 use AmeliaBooking\Infrastructure\Services\Notification\WpMailService;
@@ -18,10 +19,10 @@ defined('ABSPATH') or die('No script kiddies please!');
  *
  * @param Container $c
  *
- * @return MailgunService|PHPMailService|SMTPService|WpMailService
+ * @return MailgunService|PHPMailService|SMTPService|WpMailService|OutlookService
  */
 $entries['infrastructure.mail.service'] = function ($c) {
-    return MailerFactory::create($c->get('domain.settings.service'));
+    return MailerFactory::create($c);
 };
 
 /**
@@ -186,4 +187,16 @@ $entries['infrastructure.recaptcha.service'] = function ($c) {
 
 $entries['infrastructure.apple.calendar.service'] = function ($c) {
     return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getAppleCalendarService($c);
+};
+
+/**
+ * Social Authentication Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Infrastructure\Services\Authentication\AbstractSocialAuthenticationService
+ */
+
+$entries['infrastructure.social.authentication.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getSocialAuthenticationService($c);
 };

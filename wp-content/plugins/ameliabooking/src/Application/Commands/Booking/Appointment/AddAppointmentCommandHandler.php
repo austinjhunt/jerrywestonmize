@@ -143,7 +143,7 @@ class AddAppointmentCommandHandler extends CommandHandler
         $ignoredData = [];
 
         /** @var Appointment $existingAppointment */
-        $existingAppointment = $appointmentAS->getAlreadyBookedAppointment($appointmentData, []);
+        $existingAppointment = $appointmentAS->getAlreadyBookedAppointment($appointmentData, false, $service);
 
         /** @var Appointment $appointment */
         $appointment = $appointmentAS->build(
@@ -257,7 +257,11 @@ class AddAppointmentCommandHandler extends CommandHandler
             $appointmentAS->convertTime($recurringAppointmentData);
 
             /** @var Appointment $existingRecurringAppointment */
-            $existingRecurringAppointment = $appointmentAS->getAlreadyBookedAppointment($recurringAppointmentData, []);
+            $existingRecurringAppointment = $appointmentAS->getAlreadyBookedAppointment(
+                $recurringAppointmentData,
+                false,
+                $service
+            );
 
             /** @var Appointment $recurringAppointment */
             $recurringAppointment = $appointmentAS->build(

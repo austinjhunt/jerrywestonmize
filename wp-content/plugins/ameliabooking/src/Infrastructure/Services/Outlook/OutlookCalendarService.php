@@ -48,7 +48,9 @@ use Microsoft\Graph\Model\BodyType;
 use Microsoft\Graph\Model\Calendar;
 use Microsoft\Graph\Model\DateTimeTimeZone;
 use Microsoft\Graph\Model\Event;
+use Microsoft\Graph\Model\FileAttachment;
 use Microsoft\Graph\Model\FreeBusyStatus;
+use Microsoft\Graph\Model\Message;
 use Microsoft\Graph\Model\ItemBody;
 use Microsoft\Graph\Model\Location;
 use Microsoft\Graph\Model\OnlineMeetingProviderType;
@@ -113,7 +115,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     'redirect_uri'  => !AMELIA_DEV
                         ? str_replace('http://', 'https://', $outlookSettings['redirectURI'])
                         : $outlookSettings['redirectURI'],
-                'scope'         => 'offline_access calendars.readwrite',
+                'scope'         => $providerId
+                    ? 'offline_access calendars.readwrite'
+                    : 'offline_access calendars.readwrite mail.send',
                 'response_mode' => 'query',
                 'state'         => 'amelia-outlook-calendar-auth-' . $providerId,
                 ]
@@ -128,6 +132,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     public static function handleCallback()
     {
         if (isset($_REQUEST['code'], $_REQUEST['state']) && !isset($_REQUEST['scope']) && !isset($_REQUEST['type']) && !isset($_REQUEST['response_type'])) {
+            $id = (int)substr($_REQUEST['state'], strrpos($_REQUEST['state'], '-') + 1);
+
             wp_redirect(
                 add_query_arg(
                     urlencode_deep(
@@ -137,7 +143,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                         'type'  => 'outlook'
                         ]
                     ),
-                    admin_url('admin.php?page=wpamelia-employees')
+                    admin_url($id ? 'admin.php?page=wpamelia-employees' : 'admin.php?page=wpamelia-settings')
                 )
             );
         }
@@ -146,10 +152,11 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     /**
      * @param $authCode
      * @param $redirectUri
+     * @param $providerId
      *
      * @return array
      */
-    public function fetchAccessTokenWithAuthCode($authCode, $redirectUri)
+    public function fetchAccessTokenWithAuthCode($authCode, $redirectUri, $providerId)
     {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
@@ -171,7 +178,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     'redirect_uri'  => !AMELIA_DEV
                         ? str_replace('http://', 'https://', $redirectUrl)
                         : $redirectUrl,
-                    'scope'         => 'offline_access calendars.readwrite',
+                    'scope'         => $providerId
+                        ? 'offline_access calendars.readwrite'
+                        : 'offline_access calendars.readwrite mail.send',
                 ]
             ]
         );
@@ -196,25 +205,72 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     }
 
     /**
-     * @param Provider $provider
+     * @param string $token
      *
-     * @return void
+     * @return string
      * @throws ContainerException
-     * @throws InvalidArgumentException
-     * @throws QueryExecutionException
      * @throws Exception
      */
-    public function authorizeProvider($provider)
+    private function authorize($token)
     {
-        $token = $provider->getOutlookCalendar()->getToken()->getValue();
-
-        if ($this->isAccessTokenExpired($token)) {
-            $token = $this->refreshToken($provider, $token);
+        if ($expiredToken = $this->isAccessTokenExpired($token)) {
+            $token = $this->refreshToken($token);
         }
 
         $tokenArray = json_decode($token, true);
 
         $this->graph->setAccessToken($tokenArray['access_token']);
+
+        return $expiredToken ? $token : '';
+    }
+
+    /**
+     * @return void
+     * @throws ContainerException
+     * @throws Exception
+     */
+    private function authorizeAdmin()
+    {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        /** @var array $outlookSettings */
+        $outlookSettings = $settingsService->getCategorySettings('outlookCalendar');
+
+        if ($token = $this->authorize(json_encode($outlookSettings['token']))) {
+            $settings = $settingsService->getAllSettingsCategorized();
+
+            $settings['outlookCalendar']['token'] = json_decode($token, true);
+
+            $settingsService->setAllSettings($settings);
+        }
+    }
+
+    /**
+     * @param Provider $provider
+     *
+     * @return void
+     * @throws ContainerException
+     * @throws Exception
+     */
+    private function authorizeProvider($provider)
+    {
+        if ($token = $this->authorize($provider->getOutlookCalendar()->getToken()->getValue())) {
+            /** @var ProviderApplicationService $providerApplicationService */
+            $providerApplicationService = $this->container->get('application.user.provider.service');
+
+            $provider->setOutlookCalendar(
+                OutlookCalendarFactory::create(
+                    [
+                        'id'         => $provider->getOutlookCalendar()->getId()->getValue(),
+                        'token'      => $token,
+                        'calendarId' => $provider->getOutlookCalendar()->getCalendarId()->getValue()
+                    ]
+                )
+            );
+
+            $providerApplicationService->updateProviderOutlookCalendar($provider);
+        }
     }
 
     /**
@@ -230,7 +286,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     {
         $calendars = [];
 
-        if ($provider && $provider->getOutlookCalendar()) {
+        if ($provider && $provider->getOutlookCalendar() && $this->isCalendarEnabled()) {
             $this->authorizeProvider($provider);
 
             $outlookCalendars = $this->graph
@@ -264,6 +320,10 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      */
     public function getProviderOutlookCalendarId($provider)
     {
+        if (!$this->isCalendarEnabled()) {
+            return null;
+        }
+
         // If Outlook Calendar ID is not set, take the primary calendar and save it as Provider's Outlook Calendar ID
         if ($provider && $provider->getOutlookCalendar() && $provider->getOutlookCalendar()->getCalendarId()->getValue() === null) {
             $calendarList = $this->listCalendarList($provider);
@@ -299,6 +359,10 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      */
     public function handleEvent($appointment, $commandSlug, $oldStatus = null)
     {
+        if (!$this->isCalendarEnabled()) {
+            return;
+        }
+
         try {
             $this->handleEventAction($appointment, $commandSlug);
         } catch (Exception $e) {
@@ -324,6 +388,10 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      */
     public function handleEventPeriod($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null)
     {
+        if (!$this->isCalendarEnabled()) {
+            return;
+        }
+
         try {
             $this->handleEventPeriodAction($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null);
         } catch (Exception $e) {
@@ -484,7 +552,11 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     {
         $finalEvents = [];
         $provider    = ProviderFactory::create($providerArr);
-        if ($provider && $provider->getOutlookCalendar() && $provider->getOutlookCalendar()->getToken()) {
+        if ($provider &&
+            $provider->getOutlookCalendar() &&
+            $provider->getOutlookCalendar()->getToken() &&
+            $this->isCalendarEnabled()
+        ) {
             $this->authorizeProvider($provider);
             $startDate    = DateTimeService::getCustomDateTimeObject($dateStart);
             $startDateEnd = DateTimeService::getCustomDateTimeObject($dateStartEnd);
@@ -558,7 +630,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $startDateTime,
         $endDateTime
     ) {
-        if ($this->settings['removeOutlookCalendarBusySlots'] === true) {
+        if ($this->settings['removeOutlookCalendarBusySlots'] === true && $this->isCalendarEnabled()) {
             foreach ($providers->keys() as $providerKey) {
                 /** @var Provider $provider */
                 $provider = $providers->getItem($providerKey);
@@ -1137,22 +1209,17 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     }
 
     /**
-     * Refresh Provider's Token if it is expired and update it in database.
+     * Refresh Token if it is expired
      *
-     * @param Provider $provider
-     * @param          $token
+     * @param String $token
      *
-     * @return bool
+     * @return string
      *
      * @throws ContainerException
-     * @throws InvalidArgumentException
-     * @throws QueryExecutionException
+     * @throws Exception
      */
-    private function refreshToken($provider, $token)
+    private function refreshToken($token)
     {
-        /** @var ProviderApplicationService $providerApplicationService */
-        $providerApplicationService = $this->container->get('application.user.provider.service');
-
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
@@ -1191,21 +1258,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $decodedToken            = json_decode($response['body'], true);
         $decodedToken['created'] = time();
 
-        $encodedToken = json_encode($decodedToken);
-
-        $provider->setOutlookCalendar(
-            OutlookCalendarFactory::create(
-                [
-                'id'         => $provider->getOutlookCalendar()->getId()->getValue(),
-                'token'      => $encodedToken,
-                'calendarId' => $provider->getOutlookCalendar()->getCalendarId()->getValue()
-                ]
-            )
-        );
-
-        $providerApplicationService->updateProviderOutlookCalendar($provider);
-
-        return $encodedToken;
+        return json_encode($decodedToken);
     }
 
     /**
@@ -1263,5 +1316,110 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         }
 
         return $timesToRemove;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isCalendarEnabled()
+    {
+        return !array_key_exists('calendarEnabled', $this->settings) || $this->settings['calendarEnabled'];
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param string $from
+     * @param string $fromName
+     * @param string $replyTo
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @param array  $bccEmails
+     * @param array  $attachments
+     *
+     * @return void
+     *
+     * @throws ContainerException
+     * @throws GraphException
+     */
+    public function sendEmail(
+        $from,
+        $fromName,
+        $replyTo,
+        $to,
+        $subject,
+        $body,
+        $bccEmails = [],
+        $attachments = []
+    ) {
+        $this->authorizeAdmin();
+
+        $attachmentList = [];
+
+        foreach ($attachments as $attachment) {
+            $attachmentObject = new FileAttachment();
+
+            $attachmentObject->setODataType("#microsoft.graph.fileAttachment");
+            $attachmentObject->setName($attachment['fileName']);
+            $attachmentObject->setContentType(mime_content_type($attachment['filePath']));
+            $attachmentObject->setContentBytes(base64_encode(file_get_contents($attachment['filePath'])));
+            $attachmentObject->setIsInline(false);
+
+            $attachmentList[] = $attachmentObject;
+        }
+
+        $bccList = [];
+
+        foreach ($bccEmails as $bcc) {
+            $bccList[] = [
+                'emailAddress' => [
+                    'address' => $bcc,
+                ]
+            ];
+        }
+
+        $message = new Message(
+            [
+                'from'          => [
+                    'emailAddress' => [
+                        'name' => mb_convert_encoding($fromName, 'UTF-8'),
+                    ]
+                ],
+                'subject'       => mb_convert_encoding($subject, 'UTF-8'),
+                'body'          => [
+                    'contentType' => 'HTML',
+                    'content'     => mb_convert_encoding($body, 'UTF-8'),
+                ],
+                'toRecipients'  => [
+                    [
+                        'emailAddress' => [
+                            'address' => $to,
+                        ],
+                    ]
+                ],
+                'replyTo'       => $replyTo ? [
+                    [
+                        'emailAddress' => [
+                            'address' => $replyTo,
+                        ],
+                    ]
+                ] : [],
+                'bccRecipients' => $bccList,
+                'attachments'   => $attachmentList,
+            ]
+        );
+
+        try {
+            $this->graph
+                ->createRequest('POST', '/me/sendMail')
+                ->attachBody(
+                    [
+                        'message'         => $message,
+                        'saveToSentItems' => true
+                    ]
+                )
+                ->execute();
+        } catch (\Exception $e) {
+        }
     }
 }

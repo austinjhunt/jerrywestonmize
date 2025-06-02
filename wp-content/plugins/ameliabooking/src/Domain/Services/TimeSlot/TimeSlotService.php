@@ -140,6 +140,7 @@ class TimeSlotService
      * @param int        $locationId
      * @param int        $personsCount
      * @param boolean    $bookIfPending
+     * @param boolean    $bookOverApp
      * @param array      $weekDaysIntervals
      * @param array      $specialDaysIntervals
      * @return array
@@ -152,6 +153,7 @@ class TimeSlotService
         $locationId,
         $personsCount,
         $bookIfPending,
+        $bookOverApp,
         &$weekDaysIntervals,
         &$specialDaysIntervals
     ) {
@@ -189,7 +191,9 @@ class TimeSlotService
 
             $occupiedSecondsEnd = $this->intervalService->getSeconds($occupiedEnd->format('H:i:s'));
 
-            if ($occupiedDateStart === $occupiedEnd->format('Y-m-d')) {
+            if ($occupiedDateStart === $occupiedEnd->format('Y-m-d') &&
+                (!$bookOverApp || !$app->getServiceId()->getValue())
+            ) {
                 $intervals[$occupiedDateStart]['occupied'][$occupiedSecondsStart] = [
                     $occupiedSecondsStart,
                     $this->getModifiedEndInterval(
@@ -200,7 +204,7 @@ class TimeSlotService
                         $occupiedSecondsEnd
                     )
                 ];
-            } else {
+            } else if (!$bookOverApp || !$app->getServiceId()->getValue()) {
                 $dates = $this->getPeriodDates($occupiedStart, $occupiedEnd);
 
                 $datesCount = sizeof($dates);
@@ -263,6 +267,8 @@ class TimeSlotService
                     (!$appLocationId && $providerLocationId &&
                         $locations->getItem($providerLocationId)->getStatus()->getValue() === Status::VISIBLE);
 
+                $duration = $app->getBookingStart()->getValue()->diff($app->getBookingEnd()->getValue());
+
                 if (($hasLocation && $status === BookingStatus::APPROVED && $hasCapacity) ||
                     ($hasLocation && $status === BookingStatus::PENDING && ($bookIfPending || $hasCapacity))
                 ) {
@@ -278,6 +284,7 @@ class TimeSlotService
                             'endDate'    => $endDateTimeParts[0],
                             'endTime'    => $endDateTimeParts[1],
                             'serviceId'  => $serviceId,
+                            'duration'   => ($duration->days * 24 * 60) + ($duration->h * 60) + $duration->i,
                         ];
                 } else {
                     $intervals[$occupiedDateStart]['full'][$app->getBookingStart()->getValue()->format('H:i')] =
@@ -287,9 +294,12 @@ class TimeSlotService
                             'places'     => $app->getService()->getMaxCapacity()->getValue() - $persons,
                             'end'        => $app->getBookingEnd()->getValue()->format('Y-m-d H:i:s'),
                             'serviceId'  => $app->getServiceId()->getValue(),
+                            'duration'   => ($duration->days * 24 * 60) + ($duration->h * 60) + $duration->i,
                         ];
                 }
             } elseif ($app->getServiceId()->getValue()) {
+                $duration = $app->getBookingStart()->getValue()->diff($app->getBookingEnd()->getValue());
+
                 $intervals[$occupiedDateStart]['full'][$app->getBookingStart()->getValue()->format('H:i')] =
                     [
                         'locationId' => $app->getLocationId() ?
@@ -297,6 +307,7 @@ class TimeSlotService
                         'places'     => 0,
                         'end'        => $app->getBookingEnd()->getValue()->format('Y-m-d H:i:s'),
                         'serviceId'  => $app->getServiceId()->getValue(),
+                        'duration'   => ($duration->days * 24 * 60) + ($duration->h * 60) + $duration->i,
                     ];
             }
         }
@@ -433,6 +444,7 @@ class TimeSlotService
      * @param boolean    $bookIfPending
      * @param boolean    $bookIfNotMin
      * @param boolean    $bookAfterMin
+     * @param boolean    $bookOverApp
      * @param array      $appointmentsCount
      *
      * @return array
@@ -450,6 +462,7 @@ class TimeSlotService
         $bookIfPending,
         $bookIfNotMin,
         $bookAfterMin,
+        $bookOverApp,
         $appointmentsCount
     ) {
 
@@ -498,6 +511,7 @@ class TimeSlotService
                 $locationId,
                 $personsCount,
                 $bookIfPending,
+                $bookOverApp,
                 $weekDayIntervals[$providerId],
                 $specialDayIntervals[$providerId]
             );
@@ -522,16 +536,16 @@ class TimeSlotService
                     // get free intervals if it is special day
                     $freeDateIntervals[$providerKey][$dateKey] = $this->getAvailableIntervals(
                         $specialDayIntervals[$providerKey][$specialDayDateKey]['intervals']['free'],
-                        $dateIntervals['occupied']
+                        !empty($dateIntervals['occupied']) ? $dateIntervals['occupied'] : []
                     );
                 } elseif (isset($weekDayIntervals[$providerKey][$dayIndex]['free']) && !isset($specialDayIntervals[$providerKey][$specialDayDateKey]['intervals'])) {
                     // get free intervals if it is working day
                     $unavailableIntervals =
-                        $weekDayIntervals[$providerKey][$dayIndex]['busy'] + $dateIntervals['occupied'];
+                        $weekDayIntervals[$providerKey][$dayIndex]['busy'] + (!empty($dateIntervals['occupied']) ? $dateIntervals['occupied'] : []);
 
                     $intersectedTimes = array_intersect(
                         array_keys($weekDayIntervals[$providerKey][$dayIndex]['busy']),
-                        array_keys($dateIntervals['occupied'])
+                        array_keys(!empty($dateIntervals['occupied']) ? $dateIntervals['occupied'] : [])
                     );
 
                     foreach ($intersectedTimes as $time) {
@@ -544,7 +558,7 @@ class TimeSlotService
 
                     $freeDateIntervals[$providerKey][$dateKey] = $this->getAvailableIntervals(
                         $weekDayIntervals[$providerKey][$dayIndex]['free'],
-                        $unavailableIntervals
+                        $unavailableIntervals ?: []
                     );
                 }
             }
@@ -761,7 +775,7 @@ class TimeSlotService
 
                     $achievedLength = 0;
 
-                    if ($moveStart && $continuousTimeSlot !== 86400) {
+                    if ($moveStart && $continuousTimeSlot !== 86400 && ($bookingLength - (86400 - $continuousTimeSlot)) >= 0) {
                         $customerTimeStart += $bookingLength - (86400 - $continuousTimeSlot);
 
                         $providerTimeStart += $bookingLength - (86400 - $continuousTimeSlot);
@@ -931,11 +945,14 @@ class TimeSlotService
                         }
                     }
 
-                    $availableResult[$dateKey][$appointmentTime][] = [
-                        $providerKey,
-                        $appointmentData['locationId'],
-                        $appointmentData['places'],
-                        $appointmentData['serviceId']
+                    $availableResult[$dateKey][$appointmentTime] = [
+                        [
+                            $providerKey,
+                            $appointmentData['locationId'],
+                            $appointmentData['places'],
+                            $appointmentData['serviceId'],
+                            $appointmentData['duration'],
+                        ]
                     ];
                 }
 
@@ -944,7 +961,8 @@ class TimeSlotService
                         $providerKey,
                         $appointmentData['locationId'],
                         $appointmentData['places'],
-                        $appointmentData['serviceId']
+                        $appointmentData['serviceId'],
+                        $appointmentData['duration'],
                     ];
                 }
 
@@ -1115,7 +1133,7 @@ class TimeSlotService
             if ($provider->getTimeZone()) {
                 $this->providerService->modifyProviderTimeZone(
                     $provider,
-                    $settings['globalDaysOff'],
+                    $settings['allowAdminBookAtAnyTime'] ? [] : $settings['globalDaysOff'],
                     $startDateTime,
                     $endDateTime
                 );
@@ -1148,9 +1166,10 @@ class TimeSlotService
                 $start,
                 $end,
                 $props['personsCount'],
-                $settings['allowBookingIfPending'],
+                $props['isFrontEndBooking'] && $settings['allowBookingIfPending'] && $settings['defaultAppointmentStatus'] === BookingStatus::PENDING,
                 $settings['allowBookingIfNotMin'],
                 $props['isFrontEndBooking'] ? $settings['openedBookingAfterMin'] : false,
+                !empty($settings['allowAdminBookOverApp']),
                 ['limitCount' => $limitPerEmployee, 'appCount' => $appointmentsCount]
             );
 
@@ -1175,7 +1194,8 @@ class TimeSlotService
             'available'               => [],
             'occupied'                => [],
             'continuousAppointments'  => $continuousAppointments[0],
-            'appCount'                => []
+            'appCount'                => [],
+            'duration'                => $requiredTime / 60,
         ];
 
         foreach ($freeProvidersSlots as $providerKey => $providerSlots) {

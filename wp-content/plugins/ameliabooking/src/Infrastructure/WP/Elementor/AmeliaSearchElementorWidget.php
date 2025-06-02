@@ -20,17 +20,6 @@ class AmeliaSearchElementorWidget extends Widget_Base
         return 'ameliasearch';
     }
 
-    public function get_title() {
-        return BackendStrings::getWordPressStrings()['search_gutenberg_block']['title'];
-    }
-
-    public function get_icon() {
-        return 'amelia-logo-outdated';
-    }
-
-    public function get_categories() {
-        return [ 'amelia-elementor' ];
-    }
     protected function register_controls() {
         $controls_data = self::amelia_elementor_get_data();
 

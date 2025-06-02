@@ -88,6 +88,13 @@ class WooCommercePaymentCommandHandler extends CommandHandler
             false
         );
 
+        $uploadedCustomerCustomFieldFilesNames = $customFieldService->saveUploadedFiles(
+            0,
+            $reservation->getUploadedCustomerCustomFieldFilesInfo(),
+            '/tmp',
+            false
+        );
+
         $appointmentData = $reservationService->getWooCommerceData(
             $reservation,
             $data['payment']['gateway'],
@@ -95,6 +102,8 @@ class WooCommercePaymentCommandHandler extends CommandHandler
         );
 
         $appointmentData['uploadedCustomFieldFilesInfo'] = $uploadedCustomFieldFilesNames;
+
+        $appointmentData['uploadedCustomerCustomFieldFilesNames'] = $uploadedCustomerCustomFieldFilesNames;
 
         $appointmentData['returnUrl'] = $command->getField('returnUrl');
 

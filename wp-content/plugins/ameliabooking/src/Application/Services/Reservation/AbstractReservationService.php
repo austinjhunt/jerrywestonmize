@@ -301,7 +301,9 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             $appointmentData['bookings'][0]['customer'] = array_merge(
                 $appointmentData['bookings'][0]['customer'],
                 empty($appointmentData['bookings'][0]['customer']['translations']) ?
-                    ['translations' => json_encode(array('defaultLanguage' => isset($appointmentData['locale']) ? $appointmentData['locale'] : ''))] : []
+                    ['translations' => json_encode(array('defaultLanguage' => isset($appointmentData['locale']) ? $appointmentData['locale'] : ''))] : [],
+                !empty($appointmentData['bookings'][0]['customer']['customFields']) ?
+                    ['customFields' => json_encode($appointmentData['bookings'][0]['customer']['customFields'])] : []
             );
         }
 
@@ -383,20 +385,39 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             return null;
         }
 
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
+        $customFieldService = $this->container->get('application.customField.service');
+
         if ($reservation->hasCustomFieldsValidation()->getValue()) {
-            /** @var AbstractCustomFieldApplicationService $customFieldService */
-            $customFieldService = $this->container->get('application.customField.service');
 
             $appointmentData['uploadedCustomFieldFilesInfo'] = [];
 
-            if ($appointmentData['bookings'][0]['customFields']) {
+            if (isset($appointmentData['bookings'][0]['customFields'])) {
                 $appointmentData['uploadedCustomFieldFilesInfo'] = $customFieldService->processCustomFields(
                     $appointmentData['bookings'][0]['customFields']
                 );
             }
         }
 
-        if ($appointmentData['bookings'][0]['customFields'] &&
+        if (!empty($appointmentData['bookings'][0]['customer']) &&
+            !empty($appointmentData['bookings'][0]['customer']['customFields'])
+        ) {
+            $customerCustomFields = json_decode($appointmentData['bookings'][0]['customer']['customFields'], true);
+
+            $appointmentData['uploadedCustomerCustomFieldFilesInfo'] = $customFieldService->processCustomFields(
+                $customerCustomFields
+            );
+
+            if (isset($appointmentData['bookings'][0]['customer']['id'])) {
+                $userRepository->updateFieldById(
+                    $appointmentData['bookings'][0]['customer']['id'],
+                    json_encode($customerCustomFields),
+                    'customFields',
+                );
+            }
+        }
+
+        if (isset($appointmentData['bookings'][0]['customFields']) &&
             is_array($appointmentData['bookings'][0]['customFields'])
         ) {
             $appointmentData['bookings'][0]['customFields'] = json_encode(
@@ -432,6 +453,10 @@ abstract class AbstractReservationService implements ReservationServiceInterface
 
         if (array_key_exists('uploadedCustomFieldFilesInfo', $appointmentData)) {
             $reservation->setUploadedCustomFieldFilesInfo($appointmentData['uploadedCustomFieldFilesInfo']);
+        }
+
+        if (array_key_exists('uploadedCustomerCustomFieldFilesInfo', $appointmentData)) {
+            $reservation->setUploadedCustomerCustomFieldFilesInfo($appointmentData['uploadedCustomerCustomFieldFilesInfo']);
         }
     }
 
@@ -552,6 +577,15 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 $reservation->getUploadedCustomFieldFilesInfo(),
                 '',
                 $reservation->getRecurring() && $reservation->getRecurring()->length()
+            );
+        }
+
+        if ($reservation->getCustomer()) {
+            $customFieldService->saveUploadedFiles(
+                $reservation->getCustomer()->getId()->getValue(),
+                $reservation->getUploadedCustomerCustomFieldFilesInfo(),
+                '',
+                false
             );
         }
 
