@@ -33,7 +33,7 @@ class UpdateNotificationStatusController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdateNotificationStatusCommand($args);
+        $command     = new UpdateNotificationStatusCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

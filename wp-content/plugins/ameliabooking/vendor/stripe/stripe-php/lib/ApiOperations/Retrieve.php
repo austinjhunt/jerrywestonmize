@@ -15,9 +15,9 @@ trait Retrieve
      *     or an options array containing an `id` key
      * @param null|array|string $opts
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
-     *
      * @return static
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {

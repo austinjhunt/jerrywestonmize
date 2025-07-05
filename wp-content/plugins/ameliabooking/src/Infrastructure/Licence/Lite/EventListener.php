@@ -139,7 +139,7 @@ class EventListener
             case 'BookingDeleted':
                 if ($param->getData()['appointmentDeleted']) {
                     AppointmentDeletedEventHandler::handle($param, $container);
-                } else if ($param->getData()['bookingDeleted']) {
+                } elseif ($param->getData()['bookingDeleted']) {
                     AppointmentEditedEventHandler::handle($param, $container);
                 }
                 break;

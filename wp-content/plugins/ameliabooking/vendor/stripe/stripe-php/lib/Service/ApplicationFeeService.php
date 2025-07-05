@@ -4,18 +4,23 @@
 
 namespace AmeliaStripe\Service;
 
-class ApplicationFeeService extends \AmeliaStripe\Service\AbstractService
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
+class ApplicationFeeService extends AbstractService
 {
     /**
      * Returns a list of application fees you’ve previously collected. The application
      * fees are returned in sorted order, with the most recent fees appearing first.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{charge?: string, created?: array|int, ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Collection<\AmeliaStripe\ApplicationFee>
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -30,12 +35,12 @@ class ApplicationFeeService extends \AmeliaStripe\Service\AbstractService
      * page through additional refunds.
      *
      * @param string $parentId
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Collection<\AmeliaStripe\ApplicationFeeRefund>
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function allRefunds($parentId, $params = null, $opts = null)
     {
@@ -55,12 +60,12 @@ class ApplicationFeeService extends \AmeliaStripe\Service\AbstractService
      * trying to refund more money than is left on an application fee.
      *
      * @param string $parentId
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{amount?: int, expand?: string[], metadata?: array<string, string>} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\ApplicationFeeRefund
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function createRefund($parentId, $params = null, $opts = null)
     {
@@ -72,12 +77,12 @@ class ApplicationFeeService extends \AmeliaStripe\Service\AbstractService
      * same information is returned when refunding the application fee.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\ApplicationFee
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -91,12 +96,12 @@ class ApplicationFeeService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $parentId
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\ApplicationFeeRefund
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function retrieveRefund($parentId, $id, $params = null, $opts = null)
     {
@@ -111,12 +116,12 @@ class ApplicationFeeService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $parentId
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[], metadata?: null|array<string, string>} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\ApplicationFeeRefund
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function updateRefund($parentId, $id, $params = null, $opts = null)
     {

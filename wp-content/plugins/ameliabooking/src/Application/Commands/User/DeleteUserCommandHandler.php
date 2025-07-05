@@ -41,7 +41,8 @@ class DeleteUserCommandHandler extends CommandHandler
      */
     public function handle(DeleteUserCommand $command)
     {
-        if (!$command->getPermissionService()->currentUserCanDelete(Entities::EMPLOYEES) &&
+        if (
+            !$command->getPermissionService()->currentUserCanDelete(Entities::EMPLOYEES) &&
             !$command->getPermissionService()->currentUserCanDelete(Entities::CUSTOMERS)
         ) {
             throw new AccessDeniedException('You are not allowed to read user');
@@ -91,7 +92,8 @@ class DeleteUserCommandHandler extends CommandHandler
             }
         }
 
-        if ($user->getType() === AbstractUser::USER_ROLE_CUSTOMER ||
+        if (
+            $user->getType() === AbstractUser::USER_ROLE_CUSTOMER ||
             $user->getType() === AbstractUser::USER_ROLE_ADMIN
         ) {
             /** @var CustomerApplicationService $customerApplicationService */

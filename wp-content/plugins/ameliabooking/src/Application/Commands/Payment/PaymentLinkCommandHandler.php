@@ -16,7 +16,6 @@ use Slim\Exception\ContainerException;
  */
 class PaymentLinkCommandHandler extends CommandHandler
 {
-
     /**
      * @param PaymentLinkCommand $command
      *

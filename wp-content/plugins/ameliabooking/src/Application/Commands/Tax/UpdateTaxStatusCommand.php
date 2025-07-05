@@ -11,7 +11,6 @@ use AmeliaBooking\Application\Commands\Command;
  */
 class UpdateTaxStatusCommand extends Command
 {
-
     /**
      * UpdateTaxStatusCommand constructor.
      *

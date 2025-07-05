@@ -38,7 +38,11 @@ class ProviderUpdatedEventHandler
                 $commandResult->getData()['password']
             );
 
-            if (!empty($commandResult->getData()['user']) && $whatsAppNotificationService->checkRequiredFields() && !empty($commandResult->getData()['user']['phone'])) {
+            if (
+                !empty($commandResult->getData()['user']) &&
+                $whatsAppNotificationService->checkRequiredFields() &&
+                !empty($commandResult->getData()['user']['phone'])
+            ) {
                 $whatsAppNotificationService->sendEmployeePanelAccess(
                     $commandResult->getData()['user'],
                     $commandResult->getData()['password']

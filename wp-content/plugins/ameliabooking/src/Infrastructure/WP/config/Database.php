@@ -11,7 +11,6 @@ use InvalidArgumentException;
  */
 class Database
 {
-
     private $database;
     private $username;
     private $password;
@@ -28,9 +27,9 @@ class Database
         $this->database = DB_NAME;
         $this->username = DB_USER;
         $this->password = DB_PASSWORD;
-        $this->host = defined('DB_HOST') && DB_HOST ? DB_HOST : 'localhost';
-        $this->charset = defined('DB_CHARSET') ? DB_CHARSET : '';
-        $this->collate = defined('DB_COLLATE') && DB_COLLATE ? DB_COLLATE : '';
+        $this->host     = defined('DB_HOST') && DB_HOST ? DB_HOST : 'localhost';
+        $this->charset  = defined('DB_CHARSET') ? DB_CHARSET : '';
+        $this->collate  = defined('DB_COLLATE') && DB_COLLATE ? DB_COLLATE : '';
     }
 
     /**\

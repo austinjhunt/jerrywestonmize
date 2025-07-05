@@ -12,7 +12,6 @@ use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
  */
 class ProviderLocationFactory
 {
-
     /**
      * @param $data
      *

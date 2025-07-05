@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -91,7 +92,7 @@ class EmailNotificationService extends AbstractNotificationService
         $isCustomerPackage = isset($appointmentArray['isForCustomer']) && $appointmentArray['isForCustomer'];
         $isBackend         = isset($appointmentArray['isBackend']) && $appointmentArray['isBackend'];
 
-        /** @var  $customer */
+        /** @var AbstractUser $customer */
         $customer = (
             $appointmentArray['type'] !== Entities::PACKAGE &&
             $appointmentArray['type'] !== Entities::APPOINTMENTS &&
@@ -110,9 +111,15 @@ class EmailNotificationService extends AbstractNotificationService
         }
 
         if ($userLanguage) {
-            $customerDefaultLanguage = $customer && $customer->getTranslations() ? json_decode($customer->getTranslations()->getValue(), true)['defaultLanguage'] : null;
+            $customerDefaultLanguage =
+                $customer && $customer->getTranslations() ?
+                    json_decode($customer->getTranslations()->getValue(), true)['defaultLanguage'] :
+                    null;
         } else {
-            $customerDefaultLanguage = ($isCustomerPackage && isset($appointmentArray['customer']['translations'])) ? json_decode($appointmentArray['customer']['translations'], true)['defaultLanguage'] : null;
+            $customerDefaultLanguage =
+                ($isCustomerPackage && isset($appointmentArray['customer']['translations'])) ?
+                    json_decode($appointmentArray['customer']['translations'], true)['defaultLanguage'] :
+                    null;
         }
 
         // set customer email if WP user is connected and ameliaCustomer doesn't have email
@@ -268,7 +275,7 @@ class EmailNotificationService extends AbstractNotificationService
                             $emailData['bcc'],
                             array_merge($emailData['attachments'], [$invoice])
                         );
-                    } else if (empty($emailData['skipSending'])) {
+                    } elseif (empty($emailData['skipSending'])) {
                         $this->addPreparedNotificationData(
                             array_merge($emailData, ['logNotificationId' => $logNotificationId])
                         );
@@ -346,7 +353,8 @@ class EmailNotificationService extends AbstractNotificationService
 
         foreach ($notifications->getItems() as $notification) {
             // Check if notification is enabled and it is time to send notification
-            if ($notification->getStatus()->getValue() === NotificationStatus::ENABLED &&
+            if (
+                $notification->getStatus()->getValue() === NotificationStatus::ENABLED &&
                 $notification->getTime() &&
                 DateTimeService::getNowDateTimeObject() >=
                 DateTimeService::getCustomDateTimeObject($notification->getTime()->getValue())
@@ -555,7 +563,10 @@ class EmailNotificationService extends AbstractNotificationService
                 $notificationContent = $notification->getContent()->getValue();
                 $notificationSubject = $notification->getSubject()->getValue();
 
-                $customerDefaultLanguage = $cabinetType === 'customer' && $customer->getTranslations() ? json_decode($customer->getTranslations()->getValue(), true)['defaultLanguage'] : null;
+                $customerDefaultLanguage =
+                    $cabinetType === 'customer' && $customer->getTranslations() ?
+                        json_decode($customer->getTranslations()->getValue(), true)['defaultLanguage'] :
+                        null;
 
                 if (!empty($customerDefaultLanguage)) {
                     $notificationSubject = $helperService->getBookingTranslation(
@@ -582,7 +593,13 @@ class EmailNotificationService extends AbstractNotificationService
                 );
 
                 try {
-                    $mailService->send($cabinetType === 'customer' ? $data['customer_email'] : $data['employee_email'], $subject, $this->getParsedBody($body), []);
+                    $mailService->send(
+                        $cabinetType === 'customer' ?
+                            $data['customer_email'] :
+                            $data['employee_email'],
+                        $subject,
+                        $this->getParsedBody($body)
+                    );
                 } catch (Exception $e) {
                 }
             }
@@ -786,8 +803,8 @@ class EmailNotificationService extends AbstractNotificationService
                   <li>Log in to your account.</li>
                   <li>Go to the "Notifications" and in "SMS Notification" section go to “Recharge Balance”</li>
              </ol>
-            Need assistance? Contact our <a href="https://tmsplugins.ticksy.com/submit/#100012870">support team</a>.<br><br>
-            Thank you for your attention. Replenish your SMS balance to ensure uninterrupted communication.<br><br>
+            Need assistance? Contact our <a href="https://store.tms-plugins.com/?ameliaGleap=1">support team</a>.<br><br>
+            Thank you for your attention.<br><br>
             Best regards,<br>
             Team Amelia
             ';

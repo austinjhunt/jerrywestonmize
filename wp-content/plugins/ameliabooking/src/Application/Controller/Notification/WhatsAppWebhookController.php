@@ -14,7 +14,6 @@ use Slim\Http\Request;
  */
 class WhatsAppWebhookController extends Controller
 {
-
     protected $allowedFields = [
         'entry'
     ];
@@ -30,7 +29,7 @@ class WhatsAppWebhookController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new WhatsAppWebhookCommand($args);
+        $command     = new WhatsAppWebhookCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

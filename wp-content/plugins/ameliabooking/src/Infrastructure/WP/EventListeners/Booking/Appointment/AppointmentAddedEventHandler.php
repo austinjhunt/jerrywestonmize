@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -36,10 +37,10 @@ use Interop\Container\Exception\ContainerException;
 class AppointmentAddedEventHandler
 {
     /** @var string */
-    const APPOINTMENT_ADDED = 'appointmentAdded';
+    public const APPOINTMENT_ADDED = 'appointmentAdded';
 
     /** @var string */
-    const BOOKING_ADDED = 'bookingAdded';
+    public const BOOKING_ADDED = 'bookingAdded';
 
     /**
      * @param CommandResult $commandResult
@@ -147,7 +148,13 @@ class AppointmentAddedEventHandler
                 }
             }
 
-            $emailNotificationService->sendAppointmentStatusNotifications($appointment, false, true, true, !empty($settingsService->getSetting('notifications', 'sendInvoice')));
+            $emailNotificationService->sendAppointmentStatusNotifications(
+                $appointment,
+                false,
+                true,
+                true,
+                !empty($settingsService->getSetting('notifications', 'sendInvoice'))
+            );
 
             if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
                 $smsNotificationService->sendAppointmentStatusNotifications($appointment, false, true);

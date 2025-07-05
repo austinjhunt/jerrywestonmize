@@ -22,7 +22,6 @@ use AmeliaBooking\Domain\ValueObjects\String\Url;
  */
 class LocationFactory
 {
-
     /**
      * @param $data
      *

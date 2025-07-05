@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -56,7 +57,8 @@ class DeleteResourceCommandHandler extends CommandHandler
 
         do_action('amelia_before_resource_deleted', $resourceId);
 
-        if (!$resourceEntitiesRepository->deleteByEntityId($resourceId, 'resourceId') ||
+        if (
+            !$resourceEntitiesRepository->deleteByEntityId($resourceId, 'resourceId') ||
             !$resourceRepository->delete($resourceId)
         ) {
             $resourceRepository->rollback();

@@ -37,7 +37,7 @@ class SendTestWhatsAppController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new SendTestWhatsAppCommand($args);
+        $command     = new SendTestWhatsAppCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

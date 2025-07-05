@@ -16,6 +16,7 @@ use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookableType;
@@ -83,7 +84,7 @@ class GetEventBookingsCommandHandler extends CommandHandler
             $params['providers'] = [$user->getId()->getValue()];
         }
 
-        $providerTimeZoneSet = $user && $user->getType() === AbstractUser::USER_ROLE_PROVIDER && $user->getTimeZone() && $user->getTimeZone()->getValue();
+        $providerTimeZoneSet = ($user instanceof Provider) && $user->getTimeZone() && $user->getTimeZone()->getValue();
 
         if (isset($params['dates'][0])) {
             $params['dates'][0] ? $params['dates'][0] .= ' 00:00:00' : null;
@@ -114,7 +115,8 @@ class GetEventBookingsCommandHandler extends CommandHandler
         if ($event->getCustomPricing()->getValue()) {
             /** @var CustomerBooking $customerBooking */
             foreach ($event->getBookings()->getItems() as $customerBooking) {
-                if ($customerBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
+                if (
+                    $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
                     $customerBooking->getStatus()->getValue() === BookingStatus::PENDING
                 ) {
                     /** @var CustomerBookingEventTicket $bookingToEventTicket */
@@ -140,7 +142,8 @@ class GetEventBookingsCommandHandler extends CommandHandler
 
             /** @var CustomerBooking $customerBooking */
             foreach ($event->getBookings()->getItems() as $customerBooking) {
-                if ($customerBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
+                if (
+                    $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
                     $customerBooking->getStatus()->getValue() === BookingStatus::PENDING
                 ) {
                     $attendeeCount += $customerBooking->getPersons()->getValue();
@@ -230,7 +233,8 @@ class GetEventBookingsCommandHandler extends CommandHandler
             foreach ($booking['eventPeriods'] as &$period) {
                 $period['periodStart'] = DateTimeService::getCustomDateTimeFromUtc($period['periodStart']);
                 if ($providerTimeZoneSet) {
-                    $period['periodStart'] = DateTimeService::getCustomDateTimeObjectInTimeZone($period['periodStart'], $user->getTimeZone()->getValue())->format('Y-m-d H:i:s');
+                    $period['periodStart'] =
+                        DateTimeService::getCustomDateTimeObjectInTimeZone($period['periodStart'], $user->getTimeZone()->getValue())->format('Y-m-d H:i:s');
                 }
             }
 
@@ -313,7 +317,7 @@ class GetEventBookingsCommandHandler extends CommandHandler
                 Entities::BOOKINGS => $eventBookings,
                 'totalCount'       => sizeof($bookingRepository->getEventBookingIdsByCriteria()),
                 'filteredCount'    => sizeof(
-                    $bookingRepository->getEventBookingIdsByCriteria($params, 0)
+                    $bookingRepository->getEventBookingIdsByCriteria($params)
                 ),
                 'attendeeCount'    => $attendeeCount,
                 'waitingCount'     => $waitingCount,

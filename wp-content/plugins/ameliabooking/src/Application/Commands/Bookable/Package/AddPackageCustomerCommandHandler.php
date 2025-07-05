@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -59,9 +60,6 @@ class AddPackageCustomerCommandHandler extends CommandHandler
 
         /** @var UserApplicationService $userAS */
         $userAS = $this->getContainer()->get('application.user.service');
-
-        /** @var AbstractUser $user */
-        $user = null;
 
         if (!$command->getPermissionService()->currentUserCanWrite(Entities::PACKAGES)) {
             /** @var AbstractUser $user */

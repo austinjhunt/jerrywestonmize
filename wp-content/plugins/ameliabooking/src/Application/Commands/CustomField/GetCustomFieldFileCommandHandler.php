@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -83,7 +84,8 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
         /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
 
-        if ($currentUser === null ||
+        if (
+            $currentUser === null ||
             ($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_CUSTOMER && !$isCabinetPage)
         ) {
             throw new AccessDeniedException('You are not allowed to read file.');
@@ -164,7 +166,8 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
 
         $fileInfo = $customFields[$command->getArg('id')]['value'][$command->getArg('index')];
 
-        $result->setFile([
+        $result->setFile(
+            [
             'name'     => $fileInfo['name'],
             'type'     => AbstractCustomFieldApplicationService::$allowedUploadedFileExtensions[
                 '.' . strtolower(pathinfo($fileInfo['fileName'], PATHINFO_EXTENSION))
@@ -175,7 +178,8 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
             'size'     => filesize(
                 $customFieldService->getUploadsPath() . $command->getArg('bookingId') . '_' . $fileInfo['fileName']
             )
-        ]);
+            ]
+        );
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
 

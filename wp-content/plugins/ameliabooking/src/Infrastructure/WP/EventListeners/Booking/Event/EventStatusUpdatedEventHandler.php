@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -27,7 +28,7 @@ use Microsoft\Graph\Exception\GraphException;
 class EventStatusUpdatedEventHandler
 {
     /** @var string */
-    const EVENT_STATUS_UPDATED = 'eventStatusUpdated';
+    public const EVENT_STATUS_UPDATED = 'eventStatusUpdated';
 
     /**
      * @param CommandResult $commandResult

@@ -166,7 +166,8 @@ class WooCommercePaymentCommandHandler extends CommandHandler
                         $componentProps['state']['customerInfo']['translations'] = null;
                     }
 
-                    if (!empty($componentProps['state']['tickets']['tickets']) &&
+                    if (
+                        !empty($componentProps['state']['tickets']['tickets']) &&
                         is_array($componentProps['state']['tickets']['tickets'])
                     ) {
                         foreach ($componentProps['state']['tickets']['tickets'] as $key => $ticket) {

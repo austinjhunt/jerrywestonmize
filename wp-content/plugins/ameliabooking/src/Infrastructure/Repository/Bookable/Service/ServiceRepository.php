@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -25,8 +26,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\AppointmentsTable;
  */
 class ServiceRepository extends AbstractRepository implements ServiceRepositoryInterface
 {
-
-    const FACTORY = ServiceFactory::class;
+    public const FACTORY = ServiceFactory::class;
 
     /** @var string */
     protected $providerServicesTable;
@@ -58,9 +58,9 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
     ) {
         parent::__construct($connection, $table);
         $this->providerServicesTable = $providerServicesTable;
-        $this->extrasTable = $extrasTable;
-        $this->serviceViewsTable = $serviceViewsTable;
-        $this->galleriesTable = $galleriesTable;
+        $this->extrasTable           = $extrasTable;
+        $this->serviceViewsTable     = $serviceViewsTable;
+        $this->galleriesTable        = $galleriesTable;
     }
 
     /**
@@ -70,7 +70,8 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
     public function getAllArrayIndexedById()
     {
         try {
-            $statement = $this->connection->query("SELECT
+            $statement = $this->connection->query(
+                "SELECT
                 s.id AS service_id,
                 s.name AS service_name,
                 s.description AS service_description,
@@ -121,8 +122,9 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
               FROM {$this->table} s
               LEFT JOIN {$this->extrasTable} e ON e.serviceId = s.id
               LEFT JOIN {$this->galleriesTable} g ON g.entityId = s.id AND g.entityType = 'service'
-              ORDER BY s.position, s.name ASC, e.position ASC, g.position ASC");
-            $rows = $statement->fetchAll();
+              ORDER BY s.position, s.name ASC, e.position ASC, g.position ASC"
+            );
+            $rows      = $statement->fetchAll();
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
         }
@@ -167,7 +169,7 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
             ':pictureThumbPath' => $data['pictureThumbPath'],
             ':position'         => $data['position'],
             ':mandatoryExtra'   => $data['mandatoryExtra'] ? 1 : 0,
-            ':minSelectedExtras'=> $data['minSelectedExtras'],
+            ':minSelectedExtras' => $data['minSelectedExtras'],
         ];
 
         $additionalData = Licence\DataModifier::getServiceRepositoryData($data);
@@ -257,7 +259,7 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
             ':pictureThumbPath' => $data['pictureThumbPath'],
             ':position'         => $data['position'],
             ':mandatoryExtra'   => $data['mandatoryExtra'] ? 1 : 0,
-            ':minSelectedExtras'=> $data['minSelectedExtras'],
+            ':minSelectedExtras' => $data['minSelectedExtras'],
             ':id'               => $id
         ];
 
@@ -446,7 +448,8 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
     public function getProviderServicesWithExtras($serviceId, $userId)
     {
         try {
-            $statement = $this->connection->prepare("SELECT
+            $statement = $this->connection->prepare(
+                "SELECT
                 s.id AS service_id,
                 s.name AS service_name,
                 s.description AS service_description,
@@ -485,7 +488,8 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
               FROM {$this->table} s
               INNER JOIN {$this->providerServicesTable} ps ON s.id = ps.serviceId
               LEFT JOIN {$this->extrasTable} e ON e.serviceId = s.id
-              WHERE ps.userId = :userId AND ps.serviceId = :serviceId");
+              WHERE ps.userId = :userId AND ps.serviceId = :serviceId"
+            );
 
             $statement->bindParam(':userId', $userId);
             $statement->bindParam(':serviceId', $serviceId);
@@ -509,16 +513,16 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
     public function getByCriteria($criteria)
     {
         $params = [];
-        $where = [];
+        $where  = [];
 
         $order = 'ORDER BY s.name ASC';
         if (isset($criteria['sort'])) {
             if ($criteria['sort'] === '') {
                 $order = 'ORDER BY s.position';
             } else {
-                $orderColumn = strpos($criteria['sort'], 'name') !== false ? 's.name' : 's.price';
+                $orderColumn    = strpos($criteria['sort'], 'name') !== false ? 's.name' : 's.price';
                 $orderDirection = $criteria['sort'][0] === '-' ? 'DESC' : 'ASC';
-                $order = "ORDER BY {$orderColumn} {$orderDirection}";
+                $order          = "ORDER BY {$orderColumn} {$orderDirection}";
             }
         }
 
@@ -532,9 +536,9 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
             $queryServices = [];
 
             foreach ((array)$criteria['services'] as $index => $value) {
-                $param = ':service' . $index;
+                $param           = ':service' . $index;
                 $queryServices[] = $param;
-                $params[$param] = $value;
+                $params[$param]  = $value;
             }
 
             $where[] = 's.id IN (' . implode(', ', $queryServices) . ')';
@@ -546,7 +550,7 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
             foreach ((array)$criteria['categories'] as $index => $value) {
                 $param = ':category' . $index;
                 $queryCategories[] = $param;
-                $params[$param] = $value;
+                $params[$param]    = $value;
             }
 
             $where[] = 's.categoryId IN (' . implode(', ', $queryCategories) . ')';
@@ -556,9 +560,9 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
             $queryProviders = [];
 
             foreach ((array)$criteria['providers'] as $index => $value) {
-                $param = ':provider' . $index;
+                $param            = ':provider' . $index;
                 $queryProviders[] = $param;
-                $params[$param] = $value;
+                $params[$param]   = $value;
             }
 
             $where[] = 'ps.userId IN (' . implode(', ', $queryProviders) . ')';
@@ -850,30 +854,32 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
         $appointmentTable = AppointmentsTable::getTableName();
 
         $params = [];
-        $where = [];
+        $where  = [];
 
         if ($criteria['dates']) {
             $where[] = "(a.bookingStart BETWEEN :bookingFrom AND :bookingTo)";
             $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-            $params[':bookingTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+            $params[':bookingTo']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
         }
 
         if (isset($criteria['status'])) {
-            $where[] = 's.status = :status';
+            $where[]           = 's.status = :status';
             $params[':status'] = $criteria['status'];
         }
 
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         try {
-            $statement = $this->connection->prepare("SELECT
+            $statement = $this->connection->prepare(
+                "SELECT
                 s.id,
                 s.name,
                 COUNT(a.providerId) AS appointments
             FROM {$this->table} s
             INNER JOIN {$appointmentTable} a ON s.id = a.serviceId
             $where
-            GROUP BY serviceId");
+            GROUP BY serviceId"
+            );
 
             $statement->execute($params);
 
@@ -923,14 +929,16 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         try {
-            $statement = $this->connection->prepare("SELECT
+            $statement = $this->connection->prepare(
+                "SELECT
             s.id,
             s.name,
             SUM(sv.views) AS views
             FROM {$this->table} s
             INNER JOIN {$this->serviceViewsTable} sv ON sv.serviceId = s.id 
             $where
-            GROUP BY s.id");
+            GROUP BY s.id"
+            );
 
             $statement->execute($params);
 

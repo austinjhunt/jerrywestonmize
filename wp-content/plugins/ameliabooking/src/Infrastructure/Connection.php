@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Slavko Babic
  * @date   2017-08-21
@@ -7,7 +8,7 @@
 namespace AmeliaBooking\Infrastructure;
 
 use mysqli;
-use \PDO;
+use PDO;
 
 /**
  * Class Connection
@@ -64,9 +65,9 @@ abstract class Connection
         $this->database = (string)$database;
         $this->username = (string)$username;
         $this->password = (string)$password;
-        $this->host = $this->socket = (string)$host;
-        $this->port = (int)$port;
-        $this->charset = (string)$charset;
+        $this->host     = $this->socket = (string)$host;
+        $this->port     = (int)$port;
+        $this->charset  = (string)$charset;
     }
 
     /**
@@ -100,7 +101,7 @@ abstract class Connection
             if ($position === 0) {
                 $this->socketPath = $data[1];
             } else {
-                $this->port = substr($data[1], 0, $position);
+                $this->port       = substr($data[1], 0, $position);
                 $this->socketPath = substr($data[1], $position);
             }
         } elseif (isset($data[1]) && (int)$data[1]) {

@@ -16,7 +16,7 @@ use Exception;
  */
 class OutlookCalendarRepository extends AbstractRepository
 {
-    const FACTORY = OutlookCalendarFactory::class;
+    public const FACTORY = OutlookCalendarFactory::class;
 
     /**
      * @param OutlookCalendar $outlookCalendar

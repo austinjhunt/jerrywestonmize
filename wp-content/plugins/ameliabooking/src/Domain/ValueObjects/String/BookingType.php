@@ -1,10 +1,12 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
 namespace AmeliaBooking\Domain\ValueObjects\String;
+
 use AmeliaBooking\Domain\Entity\Entities;
 
 /**
@@ -14,8 +16,8 @@ use AmeliaBooking\Domain\Entity\Entities;
  */
 final class BookingType
 {
-    const APPOINTMENT = Entities::APPOINTMENT;
-    const EVENT = Entities::EVENT;
+    public const APPOINTMENT = Entities::APPOINTMENT;
+    public const EVENT       = Entities::EVENT;
 
     /**
      * @var string

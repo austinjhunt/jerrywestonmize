@@ -13,8 +13,7 @@ use AmeliaBooking\Infrastructure\WP\Translations\NotificationsStrings;
  */
 class NotificationsTableInsertRows extends AbstractDatabaseTable
 {
-
-    const TABLE = 'notifications';
+    public const TABLE = 'notifications';
 
     /**
      * @return array

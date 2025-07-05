@@ -21,7 +21,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingsTa
  */
 class PackageCustomerRepository extends AbstractRepository
 {
-    const FACTORY = PackageCustomerFactory::class;
+    public const FACTORY = PackageCustomerFactory::class;
 
     /** @var string */
     protected $packagesCustomersServicesTable;
@@ -34,7 +34,7 @@ class PackageCustomerRepository extends AbstractRepository
      */
     public function __construct(
         Connection $connection,
-                   $table
+        $table
     ) {
         parent::__construct($connection, $table);
 
@@ -385,5 +385,4 @@ class PackageCustomerRepository extends AbstractRepository
 
         return $rows;
     }
-
 }

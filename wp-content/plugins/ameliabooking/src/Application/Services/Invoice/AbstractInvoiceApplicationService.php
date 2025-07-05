@@ -16,7 +16,6 @@ use Dompdf\Dompdf;
  */
 abstract class AbstractInvoiceApplicationService
 {
-
     protected $container;
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -34,9 +35,8 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class PackageCustomerAddedEventHandler
 {
-
     /** @var string */
-    const PACKAGE_PURCHASED = 'packagePurchased';
+    public const PACKAGE_PURCHASED = 'packagePurchased';
 
     /**
      * @param CommandResult $commandResult

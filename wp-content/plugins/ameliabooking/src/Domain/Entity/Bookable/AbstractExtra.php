@@ -5,6 +5,7 @@ namespace AmeliaBooking\Domain\Entity\Bookable;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\PositiveInteger;
+use AmeliaBooking\Domain\ValueObjects\String\BookableType;
 use AmeliaBooking\Domain\ValueObjects\String\Description;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 
@@ -128,6 +129,11 @@ abstract class AbstractExtra
     {
         $this->position = $position;
     }
+
+    /**
+     * @return BookableType
+     */
+    abstract public function getType();
 
     /**
      * @return array

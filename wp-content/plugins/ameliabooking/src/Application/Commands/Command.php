@@ -143,13 +143,14 @@ abstract class Command
         /** @var SettingsService $settingsService */
         $settingsService = new SettingsService(new SettingsStorage());
 
-        if (isset($headers['HTTP_AUTHORIZATION'][0]) &&
+        if (
+            isset($headers['HTTP_AUTHORIZATION'][0]) &&
             ($values = explode(' ', $request->getHeaders()['HTTP_AUTHORIZATION'][0])) &&
             sizeof($values) === 2 &&
             $settingsService->getSetting('roles', 'enabledHttpAuthorization')
         ) {
             $token = $values[1];
-        } else if (isset($headers['HTTP_COOKIE'][0])) {
+        } elseif (isset($headers['HTTP_COOKIE'][0])) {
             foreach (explode('; ', $headers['HTTP_COOKIE'][0]) as $cookie) {
                 if (($ameliaTokenCookie = explode('=', $cookie)) && $ameliaTokenCookie[0] === 'ameliaToken') {
                     $token = $ameliaTokenCookie[1];
@@ -198,7 +199,8 @@ abstract class Command
      */
     public function validateNonce($request)
     {
-        if ($request->getMethod() === 'POST' &&
+        if (
+            $request->getMethod() === 'POST' &&
             !self::getToken() &&
             !($this instanceof CalculatePaymentAmountCommand) &&
             !($this instanceof ReauthorizeCommand) &&

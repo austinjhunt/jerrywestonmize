@@ -11,16 +11,6 @@ use AmeliaBooking\Infrastructure\Common\Container;
 class LiteLessonSpaceService extends AbstractLessonSpaceService
 {
     /**
-     * LiteLessonSpaceService constructor.
-     *
-     * @param Container $container
-     * @param SettingsService $settingsService
-     */
-    public function __construct(Container $container, SettingsService $settingsService)
-    {
-    }
-
-    /**
      * @param Appointment|Event $appointment
      * @param int $entity
      * @param Collection $periods

@@ -36,12 +36,12 @@ class AddCategoryController extends Controller
      * @param Request $request
      * @param         $args
      *
-     * @return AddCategoryCommand.
+     * @return AddCategoryCommand
      * @throws \RuntimeException
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new AddCategoryCommand($args);
+        $command     = new AddCategoryCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

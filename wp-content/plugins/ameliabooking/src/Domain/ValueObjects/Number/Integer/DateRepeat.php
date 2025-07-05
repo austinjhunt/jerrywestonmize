@@ -9,8 +9,8 @@ namespace AmeliaBooking\Domain\ValueObjects\Number\Integer;
  */
 final class DateRepeat
 {
-    const ON = 1;
-    const OFF = 0;
+    public const ON  = 1;
+    public const OFF = 0;
     /**
      * @var int
      */

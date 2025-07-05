@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -29,7 +30,6 @@ use AmeliaBooking\Domain\ValueObjects\String\Token;
  */
 class AppointmentFactory
 {
-
     /**
      * @param $data
      *
@@ -161,15 +161,15 @@ class AppointmentFactory
         $appointments = [];
 
         foreach ($rows as $row) {
-            $appointmentId = $row['appointment_id'];
-            $bookingId = isset($row['booking_id']) ? $row['booking_id'] : null;
+            $appointmentId  = $row['appointment_id'];
+            $bookingId      = isset($row['booking_id']) ? $row['booking_id'] : null;
             $bookingExtraId = isset($row['bookingExtra_id']) ? $row['bookingExtra_id'] : null;
-            $paymentId = isset($row['payment_id']) ? $row['payment_id'] : null;
-            $couponId = isset($row['coupon_id']) ? $row['coupon_id'] : null;
-            $customerId = isset($row['customer_id']) ? $row['customer_id'] : null;
-            $providerId = isset($row['provider_id']) ? $row['provider_id'] : null;
-            $locationId = isset($row['location_id']) ? $row['location_id'] : null;
-            $serviceId = isset($row['service_id']) ? $row['service_id'] : null;
+            $paymentId      = isset($row['payment_id']) ? $row['payment_id'] : null;
+            $couponId       = isset($row['coupon_id']) ? $row['coupon_id'] : null;
+            $customerId     = isset($row['customer_id']) ? $row['customer_id'] : null;
+            $providerId     = isset($row['provider_id']) ? $row['provider_id'] : null;
+            $locationId     = isset($row['location_id']) ? $row['location_id'] : null;
+            $serviceId      = isset($row['service_id']) ? $row['service_id'] : null;
 
             if (!array_key_exists($appointmentId, $appointments)) {
                 $zoomMeetingJson = !empty($row['appointment_zoom_meeting']) ?
@@ -288,13 +288,13 @@ class AppointmentFactory
             }
 
             if ($bookingId && $couponId) {
-                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['id'] = $couponId;
-                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['code'] = $row['coupon_code'];
-                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['discount'] = $row['coupon_discount'];
-                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['deduction'] = $row['coupon_deduction'];
-                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['limit'] = $row['coupon_limit'];
+                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['id']            = $couponId;
+                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['code']          = $row['coupon_code'];
+                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['discount']      = $row['coupon_discount'];
+                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['deduction']     = $row['coupon_deduction'];
+                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['limit']         = $row['coupon_limit'];
                 $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['customerLimit'] = $row['coupon_customerLimit'];
-                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['status'] = $row['coupon_status'];
+                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['status']        = $row['coupon_status'];
                 $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['expirationDate'] = $row['coupon_expirationDate'];
             }
 
@@ -348,23 +348,23 @@ class AppointmentFactory
             }
 
             if ($serviceId) {
-                $appointments[$appointmentId]['service']['id'] = $row['service_id'];
-                $appointments[$appointmentId]['service']['name'] = $row['service_name'];
+                $appointments[$appointmentId]['service']['id']          = $row['service_id'];
+                $appointments[$appointmentId]['service']['name']        = $row['service_name'];
                 $appointments[$appointmentId]['service']['description'] = $row['service_description'];
-                $appointments[$appointmentId]['service']['color'] = $row['service_color'];
-                $appointments[$appointmentId]['service']['price'] = $row['service_price'];
-                $appointments[$appointmentId]['service']['status'] = $row['service_status'];
-                $appointments[$appointmentId]['service']['categoryId'] = $row['service_categoryId'];
+                $appointments[$appointmentId]['service']['color']       = $row['service_color'];
+                $appointments[$appointmentId]['service']['price']       = $row['service_price'];
+                $appointments[$appointmentId]['service']['status']      = $row['service_status'];
+                $appointments[$appointmentId]['service']['categoryId']  = $row['service_categoryId'];
                 $appointments[$appointmentId]['service']['minCapacity'] = $row['service_minCapacity'];
                 $appointments[$appointmentId]['service']['maxCapacity'] = $row['service_maxCapacity'];
-                $appointments[$appointmentId]['service']['duration'] = $row['service_duration'];
-                $appointments[$appointmentId]['service']['timeBefore'] = isset($row['service_timeBefore'])
+                $appointments[$appointmentId]['service']['duration']    = $row['service_duration'];
+                $appointments[$appointmentId]['service']['timeBefore']  = isset($row['service_timeBefore'])
                     ? $row['service_timeBefore'] : null;
-                $appointments[$appointmentId]['service']['timeAfter'] = isset($row['service_timeAfter'])
+                $appointments[$appointmentId]['service']['timeAfter']   = isset($row['service_timeAfter'])
                     ? $row['service_timeAfter'] : null;
                 $appointments[$appointmentId]['service']['aggregatedPrice'] = isset($row['service_aggregatedPrice'])
                     ? $row['service_aggregatedPrice'] : null;
-                $appointments[$appointmentId]['service']['settings'] = isset($row['service_settings'])
+                $appointments[$appointmentId]['service']['settings']        = isset($row['service_settings'])
                     ? $row['service_settings'] : null;
             }
         }

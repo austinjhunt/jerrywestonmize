@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AmeliaBooking\Application\Controller\Notification;
 
 use AmeliaBooking\Application\Commands\Command;
@@ -57,7 +56,7 @@ class AddNotificationController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new AddNotificationCommand($args);
+        $command     = new AddNotificationCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

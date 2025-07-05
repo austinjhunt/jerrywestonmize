@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -121,7 +122,8 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         $notification,
         $logNotification,
         $bookingKey = null,
-        $allBookings = null
+        $allBookings = null,
+        $invoice = []
     ) {
         /** @var \AmeliaBooking\Application\Services\Settings\SettingsService $settingsAS */
         $settingsAS = $this->container->get('application.settings.service');
@@ -233,7 +235,13 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
                 /** @var AbstractUser $user */
                 $user = $userRepository->getById($undeliveredNotification->getUserId()->getValue());
                 $data = json_decode($undeliveredNotification->getData()->getValue(), true);
-                $this->sendAndUpdate($user->getPhone()->getValue(), $data['template'], $data['components'], $data['language'], $undeliveredNotification->getId()->getValue());
+                $this->sendAndUpdate(
+                    $user->getPhone()->getValue(),
+                    $data['template'],
+                    $data['components'],
+                    $data['language'],
+                    $undeliveredNotification->getId()->getValue()
+                );
             } catch (\Exception $e) {
             }
         }
@@ -249,7 +257,7 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         /** @var Collection $notifications */
         $notifications = $this->getByNameAndType('customer_birthday_greeting', $this->type);
 
-        if (empty($notifications) || $notifications->length() === 0) {
+        if (!$notifications || $notifications->length() === 0) {
             return;
         }
 
@@ -261,7 +269,8 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         }
 
         // Check if notification is enabled and it is time to send notification
-        if ($notification->getStatus()->getValue() === NotificationStatus::ENABLED &&
+        if (
+            $notification->getStatus()->getValue() === NotificationStatus::ENABLED &&
             $notification->getTime() &&
             DateTimeService::getNowDateTimeObject() >=
             DateTimeService::getCustomDateTimeObject($notification->getTime()->getValue())
@@ -406,7 +415,7 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
             if ($logNotificationId) {
                 $notificationsLogRepository->updateFieldById((int)$logNotificationId, 1, 'sent');
             }
-        } else if ($apiResponse['error']) {
+        } elseif ($apiResponse['error']) {
             // requested language doesn't exist for this template, try with default language
             if ($apiResponse['error']['code'] === 132001 && !empty($language)) {
                 $apiResponse = $whatsAppService->send(
@@ -479,12 +488,14 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         }
         $isImageHeader = !$isLocationHeader && $isHeader && !empty($content) && $content[0] !== '%';
         $parameters    = explode('%', $content);
-        $parameters    = array_values(array_filter(
-            $parameters,
-            function ($parameter) {
-                return !empty($parameter) && !empty(trim($parameter));
-            }
-        ));
+        $parameters    = array_values(
+            array_filter(
+                $parameters,
+                function ($parameter) {
+                    return !empty($parameter) && !empty(trim($parameter));
+                }
+            )
+        );
         $placeholders  = [];
         foreach ($parameters as $parameter) {
             $parameter = trim($parameter);
@@ -496,7 +507,7 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
                             'link' => $parameter
                         ]
                     ];
-                } else if ($isLocationHeader) {
+                } elseif ($isLocationHeader) {
                     $placeholders[] = [
                         'type'  =>  'location',
                         'location' => [
@@ -552,7 +563,9 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
                     $sendTo . '_email'      => $customer->getEmail() ? $customer->getEmail()->getValue() : '',
                     $sendTo . '_first_name' => $customer->getFirstName()->getValue(),
                     $sendTo . '_last_name'  => $customer->getLastName() ? $customer->getLastName()->getValue() : '',
-                    $sendTo . '_full_name'  => $customer->getFirstName()->getValue() . ' ' . ($customer->getLastName() ? $customer->getLastName()->getValue() : ''),
+                    $sendTo . '_full_name'  =>
+                        $customer->getFirstName()->getValue() . ' ' .
+                        ($customer->getLastName() ? $customer->getLastName()->getValue() : ''),
                     $sendTo . '_phone'      => $customer->getPhone() ? $customer->getPhone()->getValue() : '',
                     $sendTo . '_panel_url'  => $cabinetType === 'customer' ? $helperService->getCustomerCabinetUrl(
                         $customer->getEmail()->getValue(),
@@ -574,7 +587,9 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
                 $components = $this->getComponentData($notification, $data);
                 $phone      = $sendTo . '_phone';
                 try {
-                    $customerDefaultLanguage = $cabinetType === 'customer' && $customer->getTranslations() ? json_decode($customer->getTranslations()->getValue(), true)['defaultLanguage'] : null;
+                    $customerDefaultLanguage = $cabinetType === 'customer' && $customer->getTranslations() ?
+                        json_decode($customer->getTranslations()->getValue(), true)['defaultLanguage'] :
+                        null;
 
                     $this->sendAndUpdate($data[$phone], $notification->getWhatsAppTemplate(), $components, $customerDefaultLanguage);
                 } catch (QueryExecutionException $e) {
@@ -701,8 +716,8 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
             'customer_panel_url'  => $helperService->getCustomerCabinetUrl(
                 $customers[0]['email'],
                 'whatsapp',
-                !empty($appointment['bookingStart']) ? explode(' ', $appointment['bookingStart'])[0] : null,
-                !empty($appointment['bookingEnd']) ? explode(' ', $appointment['bookingEnd'])[0] : null,
+                null,
+                null,
                 null
             )
         ];

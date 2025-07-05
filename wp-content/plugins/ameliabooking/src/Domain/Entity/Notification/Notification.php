@@ -93,11 +93,11 @@ class Notification
         Name $subject,
         Html $content
     ) {
-        $this->name = $name;
-        $this->status = $status;
-        $this->type = $type;
-        $this->entity = $entity;
-        $this->sendTo = $sendTo;
+        $this->name    = $name;
+        $this->status  = $status;
+        $this->type    = $type;
+        $this->entity  = $entity;
+        $this->sendTo  = $sendTo;
         $this->subject = $subject;
         $this->content = $content;
     }

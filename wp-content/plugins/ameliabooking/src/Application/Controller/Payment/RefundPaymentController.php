@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -19,7 +20,6 @@ use Slim\Http\Request;
  */
 class RefundPaymentController extends Controller
 {
-
     /**
      * Instantiates the Refund Payment command to hand it over to the Command Handler
      *
@@ -31,7 +31,7 @@ class RefundPaymentController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new RefundPaymentCommand($args);
+        $command     = new RefundPaymentCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

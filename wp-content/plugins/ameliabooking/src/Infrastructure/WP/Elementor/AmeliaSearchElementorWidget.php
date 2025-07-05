@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -16,11 +17,13 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
  */
 class AmeliaSearchElementorWidget extends Widget_Base
 {
-    public function get_name() {
+    public function get_name()
+    {
         return 'ameliasearch';
     }
 
-    protected function register_controls() {
+    protected function register_controls()
+    {
         $controls_data = self::amelia_elementor_get_data();
 
         $this->start_controls_section(
@@ -70,9 +73,10 @@ class AmeliaSearchElementorWidget extends Widget_Base
         $this->end_controls_section();
     }
 
-    protected function render() {
-        $settings = $this->get_settings_for_display();
-        $trigger = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
+    protected function render()
+    {
+        $settings        = $this->get_settings_for_display();
+        $trigger         = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
         $preselect_today = $settings['search-preselect-today'] ? '  today=1' : '';
 
         $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
@@ -80,8 +84,9 @@ class AmeliaSearchElementorWidget extends Widget_Base
         echo esc_html('[ameliasearch' . $trigger . $show . $preselect_today . ']');
     }
 
-    public static function amelia_elementor_get_data() {
-        $data = GutenbergBlock::getEntitiesData()['data'];
+    public static function amelia_elementor_get_data()
+    {
+        $data          = GutenbergBlock::getEntitiesData()['data'];
         $elementorData = [];
 
         $elementorData['show'] = $data['packages'] ? [

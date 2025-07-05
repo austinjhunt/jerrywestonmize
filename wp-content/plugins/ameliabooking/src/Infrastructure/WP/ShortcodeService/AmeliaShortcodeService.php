@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -86,7 +87,8 @@ class AmeliaShortcodeService
 
         $customUrl = $settingsService->getSetting('activation', 'customUrl');
 
-        if ($settingsService->getSetting('customization', 'useGenerated') === null ||
+        if (
+            $settingsService->getSetting('customization', 'useGenerated') === null ||
             $settingsService->getSetting('customization', 'useGenerated')
         ) {
             wp_enqueue_style(

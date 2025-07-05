@@ -15,8 +15,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class EventTicketRepository extends AbstractRepository implements EventRepositoryInterface
 {
-
-    const FACTORY = EventTicketFactory::class;
+    public const FACTORY = EventTicketFactory::class;
 
     /**
      * @param EventTicket $entity
@@ -123,23 +122,6 @@ class EventTicketRepository extends AbstractRepository implements EventRepositor
             return $res;
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
-        }
-    }
-
-    /**
-     * @param int eventId
-     *
-     * @return bool
-     * @throws QueryExecutionException
-     */
-    public function deleteByEventId($eventId)
-    {
-        try {
-            $statement = $this->connection->prepare("DELETE FROM {$this->table} WHERE eventId = :eventId");
-            $statement->bindParam(':eventId', $eventId);
-            return $statement->execute();
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__, $e->getCode(), $e);
         }
     }
 }

@@ -11,6 +11,7 @@ use MailPoet\WP\Functions as WPFunctions;
 class Pages {
   const PAGE_SUBSCRIPTIONS = 'subscriptions';
   const PAGE_CAPTCHA = 'captcha';
+  const PAGE_TITLE = 'MailPoet Page';
 
   public function __construct() {
   }
@@ -18,8 +19,8 @@ class Pages {
   public function init() {
     WPFunctions::get()->registerPostType('mailpoet_page', [
       'labels' => [
-        'name' => __('MailPoet Page', 'mailpoet'),
-        'singular_name' => __('MailPoet Page', 'mailpoet'),
+        'name' => self::PAGE_TITLE,
+        'singular_name' => self::PAGE_TITLE,
       ],
       'public' => true,
       'has_archive' => false,
@@ -54,7 +55,7 @@ class Pages {
       'post_type' => 'mailpoet_page',
       'post_author' => 1,
       'post_content' => '[mailpoet_page]',
-      'post_title' => __('MailPoet Page', 'mailpoet'),
+      'post_title' => self::PAGE_TITLE,
       'post_name' => $postName,
     ]);
 

@@ -14,7 +14,6 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ResourceRepository;
  */
 class ResourceApplicationService extends AbstractResourceApplicationService
 {
-
     /**
      * @param array $criteria
      *

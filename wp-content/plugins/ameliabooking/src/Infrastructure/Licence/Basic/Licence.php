@@ -44,7 +44,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 // Outlook
                 Commands\Outlook\DisconnectFromOutlookAccountCommand::class        => new Commands\Outlook\DisconnectFromOutlookAccountCommandHandler($c),
                 Commands\Outlook\GetOutlookAuthURLCommand::class                   => new Commands\Outlook\GetOutlookAuthURLCommandHandler($c),
-                Commands\Outlook\FetchAccessTokenWithAuthCodeOutlookCommand::class => new Commands\Outlook\FetchAccessTokenWithAuthCodeOutlookCommandHandler($c),
+                Commands\Outlook\FetchAccessTokenWithAuthCodeOutlookCommand::class =>
+                    new Commands\Outlook\FetchAccessTokenWithAuthCodeOutlookCommandHandler($c),
                 // Notification
                 Commands\Notification\AddNotificationCommand::class                => new Commands\Notification\AddNotificationCommandHandler($c),
                 Commands\Notification\DeleteNotificationCommand::class             => new Commands\Notification\DeleteNotificationCommandHandler($c),
@@ -73,7 +74,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 // Apple
                 Commands\Apple\GetAppleCalendarListCommand::class                  => new Commands\Apple\GetAppleCalendarListCommandHandler($c),
                 Commands\Apple\DisconnectFromAppleCalendarCommand::class           => new Commands\Apple\DisconnectFromAppleCalendarCommandHandler($c),
-                Commands\Apple\ConnectEmployeeToPersonalAppleCalendarCommand::class => new Commands\Apple\ConnectEmployeeToPersonalAppleCalendarCommandHandler($c),
+                Commands\Apple\ConnectEmployeeToPersonalAppleCalendarCommand::class =>
+                    new Commands\Apple\ConnectEmployeeToPersonalAppleCalendarCommandHandler($c),
                 Commands\Apple\DisconnectEmployeeFromAppleCalendarCommand::class    => new Commands\Apple\DisconnectEmployeeFromAppleCalendarCommandHandler($c),
                 // User
                 Commands\User\SocialLoginCommand::class                            => new Commands\User\SocialLoginCommandHandler($c),

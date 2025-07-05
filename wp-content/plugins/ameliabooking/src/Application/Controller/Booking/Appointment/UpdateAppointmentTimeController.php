@@ -37,7 +37,7 @@ class UpdateAppointmentTimeController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdateAppointmentTimeCommand($args);
+        $command     = new UpdateAppointmentTimeCommand($args);
         $requestBody = $request->getParsedBody();
 
         $this->setCommandFields($command, $requestBody);

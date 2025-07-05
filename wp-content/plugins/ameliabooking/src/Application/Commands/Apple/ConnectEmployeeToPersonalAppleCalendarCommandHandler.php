@@ -56,7 +56,7 @@ class ConnectEmployeeToPersonalAppleCalendarCommandHandler extends CommandHandle
         /** @var AbstractAppleCalendarService $appleCalendarService */
         $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
 
-        $appleId = $employeeAppleCalendar['iCloudId'];
+        $appleId       = $employeeAppleCalendar['iCloudId'];
         $applePassword = $employeeAppleCalendar['appSpecificPassword'];
 
         $credentials = $appleCalendarService->handleAppleCredentials($appleId, $applePassword);

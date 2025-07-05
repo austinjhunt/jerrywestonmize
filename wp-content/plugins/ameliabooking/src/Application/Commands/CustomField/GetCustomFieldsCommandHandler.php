@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -55,9 +56,11 @@ class GetCustomFieldsCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved custom fields.');
-        $result->setData([
+        $result->setData(
+            [
             'customFields' => $customFieldsArray,
-        ]);
+            ]
+        );
 
         return $result;
     }

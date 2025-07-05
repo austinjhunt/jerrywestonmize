@@ -34,7 +34,7 @@ class SendAmeliaSmsApiRequestController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new SendAmeliaSmsApiRequestCommand($args);
+        $command     = new SendAmeliaSmsApiRequestCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

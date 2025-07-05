@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -47,10 +48,10 @@ class DayOff
         DateTimeValue $endDate,
         DateRepeat $repeat
     ) {
-        $this->name = $name;
+        $this->name      = $name;
         $this->startDate = $startDate;
-        $this->endDate = $endDate;
-        $this->repeat = $repeat;
+        $this->endDate   = $endDate;
+        $this->repeat    = $repeat;
     }
 
     /**

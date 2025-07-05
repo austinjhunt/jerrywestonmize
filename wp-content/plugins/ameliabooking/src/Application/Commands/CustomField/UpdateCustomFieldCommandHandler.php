@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -156,7 +157,8 @@ class UpdateCustomFieldCommandHandler extends CommandHandler
                 $customField->getOptions()->deleteItem($customFieldOptionKey);
             }
 
-            if ($customFieldOptionArray['edited'] &&
+            if (
+                $customFieldOptionArray['edited'] &&
                 !$customFieldOptionArray['deleted'] &&
                 !$customFieldOptionArray['new']
             ) {

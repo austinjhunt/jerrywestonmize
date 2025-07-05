@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -26,8 +27,9 @@ class LiteCurrentLocation extends AbstractCurrentLocation
     {
         try {
             $response = wp_remote_get(
-                'https://www.iplocate.io/api/lookup/' . $_SERVER['REMOTE_ADDR'] . ($ipLocateApyKey ? ('?apikey=' . $ipLocateApyKey): ''),
-                []);
+                'https://www.iplocate.io/api/lookup/' . $_SERVER['REMOTE_ADDR'] . ($ipLocateApyKey ? ('?apikey=' . $ipLocateApyKey) : ''),
+                []
+            );
 
             if (is_array($response) && isset($response['body'])) {
                 $result = json_decode($response['body']);

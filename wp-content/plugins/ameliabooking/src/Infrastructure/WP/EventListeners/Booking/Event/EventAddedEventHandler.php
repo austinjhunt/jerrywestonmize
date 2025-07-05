@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -28,7 +29,7 @@ use Slim\Exception\ContainerValueNotFoundException;
 class EventAddedEventHandler
 {
     /** @var string */
-    const EVENT_ADDED = 'eventAdded';
+    public const EVENT_ADDED = 'eventAdded';
 
     /**
      * @param CommandResult $commandResult

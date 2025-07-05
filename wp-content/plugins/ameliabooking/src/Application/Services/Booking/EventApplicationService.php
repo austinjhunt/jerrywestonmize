@@ -138,6 +138,7 @@ class EventApplicationService
         $event->setParentId(new Id($event->getId()->getValue()));
 
         $eventStarts = $event->getPeriods()->getItem(0)->getPeriodStart()->getValue();
+        $eventEnds   = null;
         if (!$bookingOpensSame) {
             if ($event->getBookingOpens()) {
                 $eventDateDiff = $event->getBookingOpens()->getValue()->diff($eventStarts);
@@ -192,7 +193,7 @@ class EventApplicationService
 
                 $periodStart = $event->getPeriods()->getItem(0)->getPeriodStart()->getValue()->format('Y-m-d H:i:s');
                 if (!$bookingOpensSame) {
-                    if (isset($eventDateDiff)) {
+                    if ($eventDateDiff) {
                         $periodStartOpen = DateTimeService::getCustomDateTimeObject($periodStart)->sub($eventDateDiff);
                         $event->setBookingOpens(new DateTimeValue($periodStartOpen));
                     } else {
@@ -292,7 +293,7 @@ class EventApplicationService
 
         if ($isRescheduled) {
             $newEvent->setInitialEventStart($oldEvent->getPeriods()->getItem(0)->getPeriodStart());
-            $newEvent->setInitialEventEnd($oldEvent->getPeriods()->getItem($oldEvent->getPeriods()->length()-1)->getPeriodEnd());
+            $newEvent->setInitialEventEnd($oldEvent->getPeriods()->getItem($oldEvent->getPeriods()->length() - 1)->getPeriodEnd());
             $rescheduledEvents->addItem($newEvent, $newEvent->getId()->getValue());
         }
 
@@ -419,7 +420,7 @@ class EventApplicationService
                 }
             }
 
-            /** @var EventPeriod $lastPeriod */
+            /** @var EventPeriod|null $lastPeriod */
             $lastPeriod = null;
 
             /** @var Event $followingEvent */
@@ -488,7 +489,7 @@ class EventApplicationService
 
                     if ($isRescheduled && $followingEvent->getStatus()->getValue() === BookingStatus::APPROVED) {
                         $followingEvent->setInitialEventStart($clonedFollowingEventPeriods->getItem(0)->getPeriodStart());
-                        $followingEvent->setInitialEventEnd($clonedFollowingEventPeriods->getItem($clonedFollowingEventPeriods->length()-1)->getPeriodEnd());
+                        $followingEvent->setInitialEventEnd($clonedFollowingEventPeriods->getItem($clonedFollowingEventPeriods->length() - 1)->getPeriodEnd());
 
                         $rescheduledEvents->addItem($followingEvent, $followingEvent->getId()->getValue());
                     }
@@ -507,7 +508,7 @@ class EventApplicationService
                     $periodStart = $followingEvent->getPeriods()->getItem(0)->getPeriodStart()->getValue()->format('Y-m-d H:i:s');
 
                     if (!$bookingOpensSame) {
-                        if (isset($eventDateDiff)) {
+                        if ($eventDateDiff) {
                             $periodStartOpen = DateTimeService::getCustomDateTimeObject($periodStart)->sub($eventDateDiff);
                             $followingEvent->setBookingOpens(new DateTimeValue($periodStartOpen));
                         } else {
@@ -521,7 +522,7 @@ class EventApplicationService
 
                     if (!$bookingClosesSame) {
                         $periodStartClose = DateTimeService::getCustomDateTimeObject($periodStart);
-                        if (isset($eventDateDiffCloses)) {
+                        if ($eventDateDiffCloses) {
                             $periodStartClose = $periodStartClose->sub($eventDateDiffCloses);
                         }
                         $followingEvent->setBookingCloses(new DateTimeValue($periodStartClose));
@@ -580,7 +581,8 @@ class EventApplicationService
                 }
             }
 
-            while ($lastEvent->getPeriods()->getItem(0)->getPeriodStart()->getValue() <=
+            while (
+                $lastEvent->getPeriods()->getItem(0)->getPeriodStart()->getValue() <=
                 $newEvent->getRecurring()->getUntil()->getValue()
             ) {
                 /** @var Event $lastEvent **/
@@ -599,7 +601,10 @@ class EventApplicationService
                             'monthlyRepeat' => $newEvent->getRecurring()->getMonthlyRepeat(),
                             'monthlyOnRepeat' => $newEvent->getRecurring()->getMonthlyOnRepeat(),
                             'monthlyOnDay'  => $newEvent->getRecurring()->getMonthlyOnDay(),
-                            'monthDate'  => $newEvent->getRecurring()->getMonthDate() ? $newEvent->getRecurring()->getMonthDate()->getValue()->format('Y-m-d H:i:s') : null,
+                            'monthDate'  =>
+                                $newEvent->getRecurring()->getMonthDate() ?
+                                    $newEvent->getRecurring()->getMonthDate()->getValue()->format('Y-m-d H:i:s') :
+                                    null,
                             'until' => $newEvent->getRecurring()->getUntil()->getValue()->format('Y-m-d H:i:s'),
                             'order' => ++$lastRecurringOrder
                         ]
@@ -643,7 +648,8 @@ class EventApplicationService
 
                 $lastEvent->setCustomTickets($lastEventTickets);
 
-                if ($lastEvent->getPeriods()->getItem(0)->getPeriodStart()->getValue() <=
+                if (
+                    $lastEvent->getPeriods()->getItem(0)->getPeriodStart()->getValue() <=
                     $newEvent->getRecurring()->getUntil()->getValue()
                 ) {
                     /** @var EventPeriod $eventPeriod **/
@@ -661,7 +667,7 @@ class EventApplicationService
 
                     $periodStart = $lastEvent->getPeriods()->getItem(0)->getPeriodStart()->getValue()->format('Y-m-d H:i:s');
                     if (!$bookingOpensSame) {
-                        if (isset($eventDateDiff)) {
+                        if ($eventDateDiff) {
                             $periodStartOpen = DateTimeService::getCustomDateTimeObject($periodStart)->sub($eventDateDiff);
                             $lastEvent->setBookingOpens(new DateTimeValue($periodStartOpen));
                         } else {
@@ -743,7 +749,8 @@ class EventApplicationService
             }
         }
 
-        if ($newEvent->getDescription() &&
+        if (
+            $newEvent->getDescription() &&
             (
                 ($newEvent->getDescription() ? $newEvent->getDescription()->getValue() : null) !==
                 ($oldEvent->getDescription() ? $oldEvent->getDescription()->getValue() : null) ||
@@ -772,12 +779,13 @@ class EventApplicationService
      */
     public function getLastPeriod($lastEvent)
     {
-        /** @var EventPeriod $latestPeriod **/
+        /** @var EventPeriod|null $latestPeriod **/
         $latestPeriod = null;
 
         /** @var EventPeriod $period **/
         foreach ($lastEvent->getPeriods()->getItems() as $period) {
-            if ($latestPeriod === null ||
+            if (
+                $latestPeriod === null ||
                 $period->getPeriodStart()->getValue() > $latestPeriod->getPeriodStart()->getValue()
             ) {
                 $latestPeriod = $period;
@@ -823,13 +831,15 @@ class EventApplicationService
 
             /** @var CustomerBooking $booking */
             foreach ($event->getBookings()->getItems() as $booking) {
-                if ($status === BookingStatus::REJECTED &&
+                if (
+                    $status === BookingStatus::REJECTED &&
                     $booking->getStatus()->getValue() === BookingStatus::APPROVED
                 ) {
                     $booking->setChangedStatus(new BooleanValueObject(true));
                 }
 
-                if ($status === BookingStatus::APPROVED &&
+                if (
+                    $status === BookingStatus::APPROVED &&
                     $booking->getStatus()->getValue() === BookingStatus::APPROVED
                 ) {
                     $booking->setChangedStatus(new BooleanValueObject(true));
@@ -861,12 +871,14 @@ class EventApplicationService
                 if ($followingEvent->getId()->getValue() > $event->getId()->getValue()) {
                     $followingEventStatus = $followingEvent->getStatus()->getValue();
 
-                    if (($status === BookingStatus::APPROVED && $followingEventStatus === BookingStatus::REJECTED) ||
+                    if (
+                        ($status === BookingStatus::APPROVED && $followingEventStatus === BookingStatus::REJECTED) ||
                         ($status === BookingStatus::REJECTED && $followingEventStatus === BookingStatus::APPROVED)
                     ) {
                         /** @var CustomerBooking $booking */
                         foreach ($followingEvent->getBookings()->getItems() as $booking) {
-                            if ($status === BookingStatus::REJECTED &&
+                            if (
+                                $status === BookingStatus::REJECTED &&
                                 $booking->getStatus()->getValue() === BookingStatus::APPROVED
                             ) {
                                 $bookingRepository->updateStatusById(
@@ -931,7 +943,7 @@ class EventApplicationService
         );
 
         $deletedEvents = new Collection();
-        /** @var Event $newOriginRecurringEvent **/
+        /** @var Event|null $newOriginRecurringEvent **/
         $newOriginRecurringEvent = null;
 
         $hasRecurringApprovedEvents = false;
@@ -974,7 +986,6 @@ class EventApplicationService
                         );
 
                         $notificationEntitiesRepo->updateByEntityId($event->getId()->getValue(), $newOriginRecurringEvent->getId()->getValue(), 'entityId');
-
                     }
                 }
             }
@@ -1496,7 +1507,6 @@ class EventApplicationService
 
         $eventsIds = $eventRepository->getFilteredIds($params, $limit);
 
-        /** @var Collection $events */
         return $eventsIds ? $this->getEventsByIds(
             $eventsIds,
             $criteria
@@ -1652,8 +1662,10 @@ class EventApplicationService
     private function getEditedEvents($clonedEvents, $newEvent, $updateFollowing, $followingEvents)
     {
         $clonedEditedEvents = [];
-        if ($clonedEvents->keyExists($newEvent->getId()->getValue()) &&
-            $this->eventDetailsUpdated($clonedEvents->getItem($newEvent->getId()->getValue()), $newEvent)) {
+        if (
+            $clonedEvents->keyExists($newEvent->getId()->getValue()) &&
+            $this->eventDetailsUpdated($clonedEvents->getItem($newEvent->getId()->getValue()), $newEvent)
+        ) {
             $clonedEditedEvents[$newEvent->getId()->getValue()] = clone $newEvent;
         }
         if ($updateFollowing && $followingEvents) {
@@ -1661,7 +1673,8 @@ class EventApplicationService
             foreach ($clonedEvents->getItems() as $id => $event) {
                 /** @var Event $changedEvent **/
                 $changedEvent = $followingEvents->keyExists($id) ? $followingEvents->getItem($id) : null;
-                if ($changedEvent && $event->getId()->getValue() > $newEvent->getId()->getValue() &&
+                if (
+                    $changedEvent && $event->getId()->getValue() > $newEvent->getId()->getValue() &&
                     $this->eventDetailsUpdated($event, $changedEvent)
                 ) {
                     $clonedEditedEvents[$event->getId()->getValue()] = $changedEvent;
@@ -1682,11 +1695,16 @@ class EventApplicationService
     private function eventDetailsUpdated($event, $newEvent)
     {
         return
-            ($newEvent->getZoomUserId() ? $newEvent->getZoomUserId()->getValue() : null) !== ($event->getZoomUserId() ? $event->getZoomUserId()->getValue() : null) ||
-            ($newEvent->getDescription() ? $newEvent->getDescription()->getValue() : null) !== ($event->getDescription() ? $event->getDescription()->getValue() : null) ||
+            ($newEvent->getZoomUserId() ? $newEvent->getZoomUserId()->getValue() : null) !==
+            ($event->getZoomUserId() ? $event->getZoomUserId()->getValue() : null) ||
+            ($newEvent->getDescription() ? $newEvent->getDescription()->getValue() : null) !==
+            ($event->getDescription() ? $event->getDescription()->getValue() : null) ||
             $newEvent->getName()->getValue() !== $event->getName()->getValue() ||
-            ($newEvent->getLocationId() ? $newEvent->getLocationId()->getValue() : null) !== ($event->getLocationId() ? $event->getLocationId()->getValue() : null) ||
-            ($newEvent->getCustomLocation() ? $newEvent->getCustomLocation()->getValue() : null) !== ($event->getCustomLocation() ? $event->getCustomLocation()->getValue() : null) ||
-            ($newEvent->getOrganizerId() ? $newEvent->getOrganizerId()->getValue() : null) !== ($event->getOrganizerId() ? $event->getOrganizerId()->getValue() : null);
+            ($newEvent->getLocationId() ? $newEvent->getLocationId()->getValue() : null) !==
+            ($event->getLocationId() ? $event->getLocationId()->getValue() : null) ||
+            ($newEvent->getCustomLocation() ? $newEvent->getCustomLocation()->getValue() : null) !==
+            ($event->getCustomLocation() ? $event->getCustomLocation()->getValue() : null) ||
+            ($newEvent->getOrganizerId() ? $newEvent->getOrganizerId()->getValue() : null) !==
+            ($event->getOrganizerId() ? $event->getOrganizerId()->getValue() : null);
     }
 }

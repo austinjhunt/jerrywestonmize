@@ -32,8 +32,8 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
     public function getFiltered($criteria, $itemsPerPage = null)
     {
         try {
-            $wpUserTable = WPUsersTable::getTableName();
-            $bookingsTable = CustomerBookingsTable::getTableName();
+            $wpUserTable       = WPUsersTable::getTableName();
+            $bookingsTable     = CustomerBookingsTable::getTableName();
             $appointmentsTable = AppointmentsTable::getTableName();
 
             $params = [
@@ -49,10 +49,10 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
 
             $order = '';
             if (!empty($criteria['sort'])) {
-                $column = $criteria['sort'][0] === '-' ? substr($criteria['sort'], 1) : $criteria['sort'];
-                $orderColumn = $column === 'customer' ? 'CONCAT(u.firstName, " ", u.lastName)' : 'lastAppointment';
+                $column         = $criteria['sort'][0] === '-' ? substr($criteria['sort'], 1) : $criteria['sort'];
+                $orderColumn    = $column === 'customer' ? 'CONCAT(u.firstName, " ", u.lastName)' : 'lastAppointment';
                 $orderDirection = $criteria['sort'][0] === '-' ? 'DESC' : 'ASC';
-                $order = "ORDER BY {$orderColumn} {$orderDirection}";
+                $order          = "ORDER BY {$orderColumn} {$orderDirection}";
 
                 $joinWithBookings = $column !== 'customer' || $joinWithBookings;
             }
@@ -73,7 +73,7 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
 
                 foreach ((array)$criteria['customers'] as $key => $customerId) {
                     $params[":customerId$key"] = $customerId;
-                    $customersCriteria[] = ":customerId$key";
+                    $customersCriteria[]       = ":customerId$key";
                 }
 
                 $where[] = 'u.id IN (' . implode(', ', $customersCriteria) . ')';
@@ -157,7 +157,7 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
 
         $items = [];
         foreach ($rows as $row) {
-            $row['id'] = (int)$row['id'];
+            $row['id']         = (int)$row['id'];
             $row['externalId'] = $row['externalId'] === null ? $row['externalId'] : (int)$row['externalId'];
             $row['lastAppointment'] = $row['lastAppointment'] ?
                 DateTimeService::getCustomDateTimeFromUtc($row['lastAppointment']) : $row['lastAppointment'];
@@ -203,7 +203,7 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
 
             foreach ((array)$criteria['customers'] as $key => $customerId) {
                 $params[":customerId$key"] = $customerId;
-                $customersCriteria[] = ":customerId$key";
+                $customersCriteria[]       = ":customerId$key";
             }
 
             $where[] = 'u.id IN (' . implode(', ', $customersCriteria) . ')';
@@ -214,7 +214,9 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
 
             $params[':noShow'] = $criteria['noShow'];
 
-            $where[] = "(SELECT COUNT(*) FROM {$bookingsTable} cb WHERE cb.status='no-show' AND cb.customerId=u.id)" . ($criteria['noShow'] === "3" ? '>=' : '=') . " :noShow";
+            $where[] =
+                "(SELECT COUNT(*) FROM {$bookingsTable} cb WHERE cb.status='no-show' AND cb.customerId=u.id)" .
+                ($criteria['noShow'] === "3" ? '>=' : '=') . " :noShow";
         }
 
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';

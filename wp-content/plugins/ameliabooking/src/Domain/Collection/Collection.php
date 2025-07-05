@@ -9,5 +9,4 @@ namespace AmeliaBooking\Domain\Collection;
  */
 class Collection extends AbstractCollection
 {
-
 }

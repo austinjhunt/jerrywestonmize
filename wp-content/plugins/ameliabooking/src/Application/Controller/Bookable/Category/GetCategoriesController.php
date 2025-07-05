@@ -24,7 +24,7 @@ class GetCategoriesController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GetCategoriesCommand($args);
+        $command     = new GetCategoriesCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -30,68 +31,27 @@ use Microsoft\Graph\Exception\GraphException;
  */
 class ApplicationIntegrationService
 {
-    /** @var string */
-    const SKIP_GOOGLE_CALENDAR = 'skipGoogleCalendar';
-
-    /** @var string */
-    const SKIP_OUTLOOK_CALENDAR = 'skipOutlookCalendar';
-
-    /** @var string */
-    const SKIP_APPLE_CALENDAR = 'skipAppleCalendar';
-
-    /** @var string */
-    const SKIP_ZOOM_MEETING = 'skipZoomMeeting';
-
-    /** @var string */
-    const SKIP_LESSON_SPACE = 'skipLessonSpace';
-    
-    /** @var string */
-    const APPOINTMENT_ADDED = 'appointmentAdded';
-
-    /** @var string */
-    const APPOINTMENT_EDITED = 'appointmentEdited';
-
-    /** @var string */
-    const APPOINTMENT_DELETED = 'appointmentDeleted';
-
-    /** @var string */
-    const APPOINTMENT_STATUS_UPDATED = 'appointmentStatusUpdated';
-
-    /** @var string */
-    const BOOKING_ADDED = 'bookingAdded';
-
-    /** @var string */
-    const BOOKING_APPROVED = 'bookingApproved';
-
-    /** @var string */
-    const BOOKING_CANCELED = 'bookingCanceled';
-
-    /** @var string */
-    const BOOKING_REJECTED = 'bookingRejected';
-
-    /** @var string */
-    const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
-
-    /** @var string */
-    const TIME_UPDATED = 'bookingTimeUpdated';
-
-    /** @var string */
-    const EVENT_ADDED = 'eventAdded';
-
-    /** @var string */
-    const EVENT_DELETED = 'eventDeleted';
-
-    /** @var string */
-    const EVENT_PERIOD_ADDED = 'eventPeriodAdded';
-
-    /** @var string */
-    const EVENT_PERIOD_DELETED = 'eventPeriodDeleted';
-
-    /** @var string */
-    const EVENT_STATUS_UPDATED = 'eventStatusUpdated';
-
-    /** @var string */
-    const PROVIDER_CHANGED = 'providerChanged';
+    public const SKIP_GOOGLE_CALENDAR = 'skipGoogleCalendar';
+    public const SKIP_OUTLOOK_CALENDAR = 'skipOutlookCalendar';
+    public const SKIP_APPLE_CALENDAR = 'skipAppleCalendar';
+    public const SKIP_ZOOM_MEETING = 'skipZoomMeeting';
+    public const SKIP_LESSON_SPACE = 'skipLessonSpace';
+    public const APPOINTMENT_ADDED = 'appointmentAdded';
+    public const APPOINTMENT_EDITED = 'appointmentEdited';
+    public const APPOINTMENT_DELETED = 'appointmentDeleted';
+    public const APPOINTMENT_STATUS_UPDATED = 'appointmentStatusUpdated';
+    public const BOOKING_ADDED = 'bookingAdded';
+    public const BOOKING_APPROVED = 'bookingApproved';
+    public const BOOKING_CANCELED = 'bookingCanceled';
+    public const BOOKING_REJECTED = 'bookingRejected';
+    public const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
+    public const TIME_UPDATED = 'bookingTimeUpdated';
+    public const EVENT_ADDED = 'eventAdded';
+    public const EVENT_DELETED = 'eventDeleted';
+    public const EVENT_PERIOD_ADDED = 'eventPeriodAdded';
+    public const EVENT_PERIOD_DELETED = 'eventPeriodDeleted';
+    public const EVENT_STATUS_UPDATED = 'eventStatusUpdated';
+    public const PROVIDER_CHANGED = 'providerChanged';
 
     /** @var Container $container */
     protected $container;

@@ -8,6 +8,7 @@ namespace AmeliaBooking\Infrastructure\WP\Translations;
  * @package AmeliaBooking\Infrastructure\WP\Translations
  *
  * @SuppressWarnings(ExcessiveMethodLength)
+ * phpcs:disable Generic.Files.LineLength
  */
 class NotificationsStrings
 {

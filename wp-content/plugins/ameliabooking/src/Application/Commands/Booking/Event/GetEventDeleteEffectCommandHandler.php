@@ -46,10 +46,12 @@ class GetEventDeleteEffectCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved message.');
-        $result->setData([
+        $result->setData(
+            [
             'valid'   => $event->getStatus()->getValue() === BookingStatus::REJECTED,
             'message' => $event->getStatus()->getValue() === BookingStatus::REJECTED ? '' : BackendStrings::getEventStrings()['event_cancel_before_delete']
-        ]);
+            ]
+        );
 
         return $result;
     }

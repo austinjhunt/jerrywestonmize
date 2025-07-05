@@ -82,9 +82,11 @@ class GetCategoryCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved category.');
-        $result->setData([
+        $result->setData(
+            [
             Entities::CATEGORY => $categoryArray
-        ]);
+            ]
+        );
 
         return $result;
     }

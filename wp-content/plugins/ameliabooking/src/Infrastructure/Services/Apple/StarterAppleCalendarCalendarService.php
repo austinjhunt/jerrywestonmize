@@ -21,6 +21,7 @@ class StarterAppleCalendarCalendarService extends AbstractAppleCalendarService
      */
     public function __construct(Container $container)
     {
+        $this->container = $container;
     }
 
     /**
@@ -100,7 +101,7 @@ class StarterAppleCalendarCalendarService extends AbstractAppleCalendarService
         $startDateTime,
         $endDateTime,
         $provider
-    ){
+    ) {
         return [];
     }
 
@@ -130,7 +131,7 @@ class StarterAppleCalendarCalendarService extends AbstractAppleCalendarService
         $appleId,
         $appSpecificPassword,
         Provider $provider
-    ){
+    ) {
         return '';
     }
 
@@ -150,6 +151,5 @@ class StarterAppleCalendarCalendarService extends AbstractAppleCalendarService
         $newProviders = null,
         $removeProviders = null
     ) {
-
     }
 }

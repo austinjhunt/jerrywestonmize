@@ -5,8 +5,11 @@ namespace AmeliaBooking\Application\Services\Bookable;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
+use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
+use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
 use Exception;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -28,6 +31,44 @@ abstract class AbstractPackageApplicationService
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param Package $package
+     * @param int     $customerId
+     * @param Coupon  $coupon
+     * @param bool    $save
+     *
+     * @return PackageCustomer|null
+     *
+     * @throws ContainerValueNotFoundException
+     */
+    abstract public function addPackageCustomer($package, $customerId, $coupon, $save);
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param Package         $package
+     * @param PackageCustomer $packageCustomer
+     * @param array           $packageRules
+     * @param bool            $save
+     *
+     * @return Collection
+     *
+     * @throws ContainerValueNotFoundException
+     */
+    abstract public function addPackageCustomerServices($package, $packageCustomer, $packageRules, $save);
+
+
+
+    /**
+     * @param array $params
+     *
+     * @return Collection
+     */
+    public function getEmptyPackages($params)
+    {
+        return new Collection();
     }
 
     /**

@@ -24,7 +24,7 @@ class GetLocationDeleteEffectController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GetLocationDeleteEffectCommand($args);
+        $command     = new GetLocationDeleteEffectCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

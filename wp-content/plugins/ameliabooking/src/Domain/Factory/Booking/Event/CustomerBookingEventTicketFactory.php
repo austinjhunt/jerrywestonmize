@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -19,7 +20,6 @@ use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
  */
 class CustomerBookingEventTicketFactory
 {
-
     /**
      * @param $data
      *

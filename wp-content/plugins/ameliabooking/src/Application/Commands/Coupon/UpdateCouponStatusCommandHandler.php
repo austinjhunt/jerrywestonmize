@@ -9,6 +9,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Domain\Repository\Coupon\CouponRepositoryInterface;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 
 /**
  * Class UpdateCouponStatusCommandHandler
@@ -17,7 +18,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
  */
 class UpdateCouponStatusCommandHandler extends CommandHandler
 {
-
     /**
      * @var array
      */
@@ -45,7 +45,7 @@ class UpdateCouponStatusCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
-        /** @var CouponRepositoryInterface $couponRepository */
+        /** @var CouponRepository $couponRepository */
         $couponRepository = $this->getContainer()->get('domain.coupon.repository');
 
         $status = $command->getField('status');

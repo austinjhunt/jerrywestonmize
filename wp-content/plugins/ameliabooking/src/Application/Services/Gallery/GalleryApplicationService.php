@@ -16,7 +16,6 @@ use AmeliaBooking\Infrastructure\Repository\Gallery\GalleryRepository;
  */
 class GalleryApplicationService
 {
-
     private $container;
 
     /**
@@ -77,11 +76,13 @@ class GalleryApplicationService
             }
         }
 
-        if (!$galleryRepository->deleteAllNotInImagesArray(
-            $imagesIds,
-            $entityId,
-            $entityType
-        )) {
+        if (
+            !$galleryRepository->deleteAllNotInImagesArray(
+                $imagesIds,
+                $entityId,
+                $entityType
+            )
+        ) {
             $galleryRepository->rollback();
         }
 

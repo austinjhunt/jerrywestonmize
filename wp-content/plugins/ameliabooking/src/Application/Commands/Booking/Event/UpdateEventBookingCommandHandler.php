@@ -98,7 +98,8 @@ class UpdateEventBookingCommandHandler extends CommandHandler
 
         do_action('amelia_before_event_booking_updated', $customerBooking ? $customerBooking->toArray() : null, $bookingData);
 
-        if ($user &&
+        if (
+            $user &&
             $userAS->isProvider($user) &&
             (
                 !$settingsDS->getSetting('roles', 'allowWriteEvents') ||
@@ -131,7 +132,8 @@ class UpdateEventBookingCommandHandler extends CommandHandler
         $bookingEventTicketRepository =
             $this->container->get('domain.booking.customerBookingEventTicket.repository');
 
-        if ($event->getCustomPricing() &&
+        if (
+            $event->getCustomPricing() &&
             $event->getCustomPricing()->getValue() &&
             $event->getCustomTickets() &&
             $event->getCustomTickets()->length()
@@ -163,11 +165,12 @@ class UpdateEventBookingCommandHandler extends CommandHandler
                             $bookingEventTicket->setId(new Id($newTicketBookingId));
                             $customerBooking->getTicketsBooking()->addItem($bookingEventTicket);
                         }
-                    } else if ($ticketBooking['id'] && $ticketBooking['persons']) {
+                    } elseif ($ticketBooking['id'] && $ticketBooking['persons']) {
                         $bookingEventTicketRepository->update($ticketBooking['id'], $ticketBooking);
 
                         foreach ($customerBooking->getTicketsBooking()->getItems() as $item) {
-                            if ($item->getEventTicketId()->getValue() === $ticketBooking['eventTicketId'] &&
+                            if (
+                                $item->getEventTicketId()->getValue() === $ticketBooking['eventTicketId'] &&
                                 $item->getPersons()->getValue() < $ticketBooking['persons'] &&
                                 $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED
                             ) {
@@ -175,7 +178,7 @@ class UpdateEventBookingCommandHandler extends CommandHandler
                                 $item->setPersons(new IntegerValue($ticketBooking['persons']));
                             }
                         }
-                    } else if ($ticketBooking['id'] && !$ticketBooking['persons']) {
+                    } elseif ($ticketBooking['id'] && !$ticketBooking['persons']) {
                         $bookingEventTicketRepository->delete($ticketBooking['id']);
 
                         foreach ($customerBooking->getTicketsBooking()->getItems() as $key => $item) {
@@ -191,20 +194,23 @@ class UpdateEventBookingCommandHandler extends CommandHandler
                     }
                 }
             }
-        } else if (!empty($bookingData['persons'])) {
-            if ($customerBooking->getStatus()->getValue() === BookingStatus::APPROVED &&
+        } elseif (!empty($bookingData['persons'])) {
+            if (
+                $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED &&
                 $customerBooking->getPersons()->getValue() < $bookingData['persons']
             ) {
                 $isBookingStatusChanged = true;
                 $customerBooking->setPersons(new IntegerValue($bookingData['persons']));
-            } elseif ($customerBooking->getStatus()->getValue() === BookingStatus::APPROVED &&
+            } elseif (
+                $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED &&
                 $customerBooking->getPersons()->getValue() > $bookingData['persons']
             ) {
                 $customerBooking->setPersons(new IntegerValue($bookingData['persons']));
             }
         }
 
-        if ($customerBooking->getStatus()->getValue() === BookingStatus::APPROVED &&
+        if (
+            $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED &&
             $customerBooking->getCustomFields() &&
             !empty($bookingData['customFields']) &&
             $customerBooking->getCustomFields()->getValue() !== json_encode($bookingData['customFields'])
@@ -218,7 +224,8 @@ class UpdateEventBookingCommandHandler extends CommandHandler
 
         /** @var Payment $payment */
         foreach ($customerBooking->getPayments()->getItems() as $payment) {
-            if ($payment->getWcOrderId() &&
+            if (
+                $payment->getWcOrderId() &&
                 $payment->getWcOrderId()->getValue()
             ) {
                 $eventArray = $event->toArray();
@@ -270,7 +277,10 @@ class UpdateEventBookingCommandHandler extends CommandHandler
                 Entities::BOOKING          => $customerBooking->toArray(),
                 'appointmentStatusChanged' => false,
                 'bookingStatusChanged'     => $isBookingStatusChanged,
-                'paymentId'                => $customerBooking->getPayments()->length() > 0 ? $customerBooking->getPayments()->getItem($customerBooking->getPayments()->keys()[0])->getId()->getValue() : null,
+                'paymentId'                =>
+                    $customerBooking->getPayments()->length() > 0 ?
+                        $customerBooking->getPayments()->getItem($customerBooking->getPayments()->keys()[0])->getId()->getValue() :
+                        null,
                 'createPaymentLinks'       => $command->getField('createPaymentLinks')
             ]
         );

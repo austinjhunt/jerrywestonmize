@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -18,12 +19,13 @@ class AmeliaCatalogElementorWidget extends Widget_Base
 {
     protected $controls_data;
 
-    public function get_name() {
+    public function get_name()
+    {
         return 'ameliacatalog';
     }
 
-    protected function register_controls() {
-
+    protected function register_controls()
+    {
         $controls_data = self::amelia_elementor_get_data();
 
         $this->start_controls_section(
@@ -158,7 +160,8 @@ class AmeliaCatalogElementorWidget extends Widget_Base
         $this->end_controls_section();
     }
 
-    protected function render() {
+    protected function render()
+    {
         $settings = $this->get_settings_for_display();
 
         if ($settings['select_catalog'] === 'show_service' || $settings['select_catalog'] === 'show_package') {
@@ -173,16 +176,13 @@ class AmeliaCatalogElementorWidget extends Widget_Base
             $category_service = '';
 
             $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
-        }
-        elseif ($settings['select_catalog'] === 'show_category') {
+        } elseif ($settings['select_catalog'] === 'show_category') {
             $category_service = ' category=' . $settings['select_category'];
 
             $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
-        }
-        elseif ($settings['select_catalog'] === 'show_service') {
+        } elseif ($settings['select_catalog'] === 'show_service') {
             $category_service = ' service=' . $settings['select_service'];
-        }
-        elseif ($settings['select_catalog'] === 'show_package') {
+        } elseif ($settings['select_catalog'] === 'show_package') {
             $category_service = ' package=' . $settings['select_package'];
         } else {
             $category_service = '';
@@ -191,18 +191,18 @@ class AmeliaCatalogElementorWidget extends Widget_Base
         if ($settings['preselect']) {
             $employee = $settings['select_employee'] === '0' ? '' : ' employee=' . $settings['select_employee'];
             $location = $settings['select_location'] === '0' ? '' : ' location=' . $settings['select_location'];
-        }
-        else {
+        } else {
             $employee = '';
             $location = '';
-            $trigger = '';
+            $trigger  = '';
         }
         echo esc_html('[ameliacatalog' . $show . $trigger . $category_service . $employee . $location . ']');
     }
 
 
-    public static function amelia_elementor_get_data() {
-        $data = GutenbergBlock::getEntitiesData()['data'];
+    public static function amelia_elementor_get_data()
+    {
+        $data          = GutenbergBlock::getEntitiesData()['data'];
         $elementorData = [];
 
         $elementorData['categories'] = [];
@@ -225,14 +225,14 @@ class AmeliaCatalogElementorWidget extends Widget_Base
             $elementorData['packages'][$package['id']] = $package['name'] . ' (id: ' . $package['id'] . ')';
         }
 
-        $elementorData['employees'] = [];
+        $elementorData['employees']    = [];
         $elementorData['employees'][0] = BackendStrings::getWordPressStrings()['show_all_employees'];
 
         foreach ($data['employees'] as $provider) {
             $elementorData['employees'][$provider['id']] = $provider['firstName'] . $provider['lastName'] . ' (id: ' . $provider['id'] . ')';
         }
 
-        $elementorData['locations'] = [];
+        $elementorData['locations']    = [];
         $elementorData['locations'][0] = BackendStrings::getWordPressStrings()['show_all_locations'];
 
         foreach ($data['locations'] as $location) {

@@ -14,7 +14,6 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class CouponPackageRepository extends AbstractRepository
 {
-
     /**
      * @param Coupon $coupon
      * @param Package  $package
@@ -24,7 +23,7 @@ class CouponPackageRepository extends AbstractRepository
      */
     public function add($coupon, $package)
     {
-        $couponData = $coupon->toArray();
+        $couponData  = $coupon->toArray();
         $packageData = $package->toArray();
 
         $params = [

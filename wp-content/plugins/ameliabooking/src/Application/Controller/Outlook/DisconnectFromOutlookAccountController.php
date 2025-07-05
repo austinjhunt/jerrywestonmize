@@ -21,7 +21,7 @@ class DisconnectFromOutlookAccountController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new DisconnectFromOutlookAccountCommand($args);
+        $command     = new DisconnectFromOutlookAccountCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
         $command->setToken($request);

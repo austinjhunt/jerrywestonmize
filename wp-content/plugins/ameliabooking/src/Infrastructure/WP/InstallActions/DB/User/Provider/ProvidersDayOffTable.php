@@ -13,8 +13,7 @@ use AmeliaBooking\Domain\ValueObjects\String\Name;
  */
 class ProvidersDayOffTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'providers_to_daysoff';
+    public const TABLE = 'providers_to_daysoff';
 
     /**
      * @return string

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -483,7 +484,7 @@ class Service extends AbstractBookable
                 'recurringSub'     => $this->getRecurringSub() ? $this->getRecurringSub()->getValue() : null,
                 'recurringPayment' => $this->getRecurringPayment() ? $this->getRecurringPayment()->getValue() : null,
                 'translations'     => $this->getTranslations() ? $this->getTranslations()->getValue() : null,
-                'minSelectedExtras'=> $this->getMinSelectedExtras() ? $this->getMinSelectedExtras()->getValue() : null,
+                'minSelectedExtras' => $this->getMinSelectedExtras() ? $this->getMinSelectedExtras()->getValue() : null,
                 'mandatoryExtra'   => $this->getMandatoryExtra() ? $this->getMandatoryExtra()->getValue() : null,
                 'customPricing'    => $this->getCustomPricing() ? $this->getCustomPricing()->getValue() : null,
                 'maxExtraPeople'   => $this->getMaxExtraPeople() ? $this->getMaxExtraPeople()->getValue() : null,

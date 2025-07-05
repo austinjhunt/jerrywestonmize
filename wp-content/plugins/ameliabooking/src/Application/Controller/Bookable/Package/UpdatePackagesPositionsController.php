@@ -32,7 +32,7 @@ class UpdatePackagesPositionsController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdatePackagesPositionsCommand($args);
+        $command     = new UpdatePackagesPositionsCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

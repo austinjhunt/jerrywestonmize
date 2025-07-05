@@ -15,7 +15,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class PackageServiceProviderRepository extends AbstractRepository
 {
-    const FACTORY = PackageServiceFactory::class;
+    public const FACTORY = PackageServiceFactory::class;
 
     /**
      * @param Provider $entity

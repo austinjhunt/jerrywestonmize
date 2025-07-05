@@ -33,7 +33,7 @@ class Statement
     {
         $this->mysqli = $mysqli;
         $this->result = $result;
-        $this->query = $query;
+        $this->query  = $query;
     }
 
     /**
@@ -78,21 +78,24 @@ class Statement
     {
         $this->params = array_merge($this->params, $params);
 
-        $paramsKeys = [];
+        $paramsKeys   = [];
         $paramsValues = [];
-        $paramsTypes = [];
+        $paramsTypes  = [];
 
         foreach ($this->params as $key => $value) {
             $index = strpos($this->query->getValue(), $key);
 
-            $paramsKeys[$index] = $key;
+            $paramsKeys[$index]   = $key;
             $paramsValues[$index] = $value;
-            $paramsTypes[$index] = gettype($this->params[$key])[0];
+            $paramsTypes[$index]  = gettype($this->params[$key])[0];
         }
 
-        usort($paramsKeys, function ($a, $b) {
-            return strlen($b) - strlen($a);
-        });
+        usort(
+            $paramsKeys,
+            function ($a, $b) {
+                return strlen($b) - strlen($a);
+            }
+        );
 
         ksort($paramsValues);
         ksort($paramsTypes);

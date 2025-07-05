@@ -24,7 +24,7 @@ class GetExtrasController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GetExtrasCommand($args);
+        $command     = new GetExtrasCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

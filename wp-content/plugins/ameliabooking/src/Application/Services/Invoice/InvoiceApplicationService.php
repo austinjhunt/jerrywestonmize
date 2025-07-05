@@ -20,7 +20,6 @@ use Slim\Exception\ContainerException;
  */
 class InvoiceApplicationService extends AbstractInvoiceApplicationService
 {
-
     /**
      * @param int $paymentId
      *
@@ -45,7 +44,9 @@ class InvoiceApplicationService extends AbstractInvoiceApplicationService
                 'paymentId'   => $paymentId,
                 'parentId'    => $payment->getParentId() ? $payment->getParentId()->getValue() : null,
                 'columnName'  => $payment->getPackageCustomerId() ? 'packageCustomerId' : 'customerBookingId',
-                'columnValue' => $payment->getPackageCustomerId() ? $payment->getPackageCustomerId()->getValue() : $payment->getCustomerBookingId()->getValue(),
+                'columnValue' => $payment->getPackageCustomerId()
+                    ? $payment->getPackageCustomerId()->getValue()
+                    : $payment->getCustomerBookingId()->getValue(),
             ];
             $paymentRepository->setInvoiceNumber($data);
         }

@@ -21,8 +21,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Location\LocationsTable;
  */
 class AppointmentRepository extends AbstractRepository implements AppointmentRepositoryInterface
 {
-
-    const FACTORY = AppointmentFactory::class;
+    public const FACTORY = AppointmentFactory::class;
 
     /** @var string */
     protected $servicesTable;
@@ -186,7 +185,10 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 INNER JOIN {$this->bookingsTable} cb ON cb.appointmentId = a.id
                 LEFT JOIN {$this->packagesCustomersServicesTable} pcs ON pcs.id = cb.packageCustomerServiceId
                 LEFT JOIN {$this->packagesCustomersTable} pc ON pcs.packageCustomerId = pc.id
-                LEFT JOIN {$this->paymentsTable} p ON ((p.customerBookingId = cb.id AND cb.packageCustomerServiceId IS NULL) OR (p.packageCustomerId = pc.id AND cb.packageCustomerServiceId IS NOT NULL AND cb.packageCustomerServiceId = pcs.id))
+                LEFT JOIN {$this->paymentsTable} p ON (
+                    (p.customerBookingId = cb.id AND cb.packageCustomerServiceId IS NULL) OR 
+                    (p.packageCustomerId = pc.id AND cb.packageCustomerServiceId IS NOT NULL AND cb.packageCustomerServiceId = pcs.id)
+                    )
                 LEFT JOIN {$this->customerBookingsExtrasTable} cbe ON cbe.customerBookingId = cb.id
                 LEFT JOIN {$this->couponsTable} c ON (pc.couponId IS NOT NULL AND c.id = pc.couponId) OR (c.id = cb.couponId)
                 WHERE a.id = :appointmentId
@@ -281,7 +283,10 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 INNER JOIN {$this->bookingsTable} cb ON cb.appointmentId = a.id
                 LEFT JOIN {$this->packagesCustomersTable} pc ON pc.customerId = cb.customerId
                 LEFT JOIN {$this->packagesCustomersServicesTable} pcs ON pcs.id = cb.packageCustomerServiceId
-                LEFT JOIN {$this->paymentsTable} p ON ((p.customerBookingId = cb.id AND cb.packageCustomerServiceId IS NULL) OR (p.packageCustomerId = pc.id AND cb.packageCustomerServiceId IS NOT NULL AND cb.packageCustomerServiceId = pcs.id))
+                LEFT JOIN {$this->paymentsTable} p ON (
+                    (p.customerBookingId = cb.id AND cb.packageCustomerServiceId IS NULL) OR
+                    (p.packageCustomerId = pc.id AND cb.packageCustomerServiceId IS NOT NULL AND cb.packageCustomerServiceId = pcs.id)
+                    )
                 LEFT JOIN {$this->customerBookingsExtrasTable} cbe ON cbe.customerBookingId = cb.id
                 LEFT JOIN {$this->couponsTable} c ON c.id = cb.couponId
                 WHERE a.id = (
@@ -381,7 +386,10 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 INNER JOIN {$this->bookingsTable} cb ON cb.appointmentId = a.id
                 LEFT JOIN {$this->packagesCustomersTable} pc ON pc.customerId = cb.customerId
                 LEFT JOIN {$this->packagesCustomersServicesTable} pcs ON pcs.id = cb.packageCustomerServiceId
-                LEFT JOIN {$this->paymentsTable} p ON ((p.customerBookingId = cb.id AND cb.packageCustomerServiceId IS NULL) OR (p.packageCustomerId = pc.id AND cb.packageCustomerServiceId IS NOT NULL AND cb.packageCustomerServiceId = pcs.id))
+                LEFT JOIN {$this->paymentsTable} p ON (
+                    (p.customerBookingId = cb.id AND cb.packageCustomerServiceId IS NULL) OR
+                    (p.packageCustomerId = pc.id AND cb.packageCustomerServiceId IS NOT NULL AND cb.packageCustomerServiceId = pcs.id)
+                    )
                 LEFT JOIN {$this->customerBookingsExtrasTable} cbe ON cbe.customerBookingId = cb.id
                 LEFT JOIN {$this->couponsTable} c ON c.id = cb.couponId
                 WHERE a.id IN (
@@ -1630,7 +1638,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
 
         $where = "(STR_TO_DATE('" . $appointmentStart . "', '%Y-%m-%d %H:%i:%s') BETWEEN " .
             "(" . $compareToDate . " - " . $intervalString . " + interval 1 second)"
-            . " AND (".
+            . " AND (" .
             $compareToDate . " + " . $intervalString . " - interval 1 second))";  //+ interval 2 day
 
         if ($serviceSpecific) {
@@ -1650,7 +1658,11 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     INNER JOIN {$this->bookingsTable} cb 
                     ON cb.appointmentId = a.id 
                     {$paymentTableJoin}
-                    WHERE cb.customerId = :customerId AND {$where} AND (a.status = 'approved' OR a.status = 'pending') AND (cb.status = 'approved' OR cb.status = 'pending')
+                    WHERE 
+                        cb.customerId = :customerId 
+                        AND {$where} 
+                        AND (a.status = 'approved' OR a.status = 'pending') 
+                        AND (cb.status = 'approved' OR cb.status = 'pending')
                 "
             );
 

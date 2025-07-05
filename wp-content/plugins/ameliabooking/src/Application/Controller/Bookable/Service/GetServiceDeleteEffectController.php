@@ -24,7 +24,7 @@ class GetServiceDeleteEffectController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GetServiceDeleteEffectCommand($args);
+        $command     = new GetServiceDeleteEffectCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

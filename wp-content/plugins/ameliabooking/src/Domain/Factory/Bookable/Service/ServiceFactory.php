@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -240,74 +241,74 @@ class ServiceFactory
 
         foreach ($rows as $row) {
             $serviceId = $row['service_id'];
-            $extraId = $row['extra_id'];
+            $extraId   = $row['extra_id'];
             $galleryId = isset($row['gallery_id']) ? $row['gallery_id'] : null;
 
-            $services[$serviceId]['id'] = $row['service_id'];
-            $services[$serviceId]['name'] = $row['service_name'];
+            $services[$serviceId]['id']          = $row['service_id'];
+            $services[$serviceId]['name']        = $row['service_name'];
             $services[$serviceId]['description'] = $row['service_description'];
-            $services[$serviceId]['color'] = $row['service_color'];
-            $services[$serviceId]['price'] = $row['service_price'];
-            $services[$serviceId]['status'] = $row['service_status'];
-            $services[$serviceId]['categoryId'] = $row['service_categoryId'];
+            $services[$serviceId]['color']       = $row['service_color'];
+            $services[$serviceId]['price']       = $row['service_price'];
+            $services[$serviceId]['status']      = $row['service_status'];
+            $services[$serviceId]['categoryId']  = $row['service_categoryId'];
             $services[$serviceId]['minCapacity'] = $row['service_minCapacity'];
             $services[$serviceId]['maxCapacity'] = $row['service_maxCapacity'];
-            $services[$serviceId]['maxExtraPeople'] = isset($row['service_maxExtraPeople'])
+            $services[$serviceId]['maxExtraPeople']   = isset($row['service_maxExtraPeople'])
                 ? $row['service_maxExtraPeople'] : null;
-            $services[$serviceId]['duration'] = $row['service_duration'];
-            $services[$serviceId]['timeAfter'] = $row['service_timeAfter'];
-            $services[$serviceId]['timeBefore'] = $row['service_timeBefore'];
-            $services[$serviceId]['bringingAnyone'] = $row['service_bringingAnyone'];
-            $services[$serviceId]['pictureFullPath'] = $row['service_picture_full'];
+            $services[$serviceId]['duration']         = $row['service_duration'];
+            $services[$serviceId]['timeAfter']        = $row['service_timeAfter'];
+            $services[$serviceId]['timeBefore']       = $row['service_timeBefore'];
+            $services[$serviceId]['bringingAnyone']   = $row['service_bringingAnyone'];
+            $services[$serviceId]['pictureFullPath']  = $row['service_picture_full'];
             $services[$serviceId]['pictureThumbPath'] = $row['service_picture_thumb'];
-            $services[$serviceId]['position'] = isset($row['service_position']) ? $row['service_position'] : 0;
-            $services[$serviceId]['show'] = isset($row['service_show']) ? $row['service_show'] : 0;
+            $services[$serviceId]['position']         = isset($row['service_position']) ? $row['service_position'] : 0;
+            $services[$serviceId]['show']            = isset($row['service_show']) ? $row['service_show'] : 0;
             $services[$serviceId]['aggregatedPrice'] = isset($row['service_aggregatedPrice']) ?
                 $row['service_aggregatedPrice'] : 0;
-            $services[$serviceId]['settings'] = isset($row['service_settings']) ?
+            $services[$serviceId]['settings']        = isset($row['service_settings']) ?
                 $row['service_settings'] : null;
-            $services[$serviceId]['recurringCycle'] = isset($row['service_recurringCycle']) ?
+            $services[$serviceId]['recurringCycle']  = isset($row['service_recurringCycle']) ?
                 $row['service_recurringCycle'] : null;
-            $services[$serviceId]['recurringSub'] = isset($row['service_recurringSub']) ?
+            $services[$serviceId]['recurringSub']    = isset($row['service_recurringSub']) ?
                 $row['service_recurringSub'] : null;
-            $services[$serviceId]['recurringPayment'] = isset($row['service_recurringPayment']) ?
+            $services[$serviceId]['recurringPayment']  = isset($row['service_recurringPayment']) ?
                 $row['service_recurringPayment'] : null;
-            $services[$serviceId]['translations'] = isset($row['service_translations']) ?
+            $services[$serviceId]['translations']      = isset($row['service_translations']) ?
                 $row['service_translations'] : null;
-            $services[$serviceId]['customPricing'] = isset($row['service_customPricing']) ?
+            $services[$serviceId]['customPricing']     = isset($row['service_customPricing']) ?
                 $row['service_customPricing'] : null;
-            $services[$serviceId]['limitPerCustomer'] = isset($row['service_limitPerCustomer']) ?
+            $services[$serviceId]['limitPerCustomer']  = isset($row['service_limitPerCustomer']) ?
                 $row['service_limitPerCustomer'] : null;
-            $services[$serviceId]['deposit'] = isset($row['service_deposit']) ? $row['service_deposit'] : 0;
-            $services[$serviceId]['depositPayment'] = isset($row['service_depositPayment']) ?
+            $services[$serviceId]['deposit']           = isset($row['service_deposit']) ? $row['service_deposit'] : 0;
+            $services[$serviceId]['depositPayment']    = isset($row['service_depositPayment']) ?
                 $row['service_depositPayment'] : 'disabled';
-            $services[$serviceId]['depositPerPerson'] = isset($row['service_depositPerPerson']) ?
+            $services[$serviceId]['depositPerPerson']  = isset($row['service_depositPerPerson']) ?
                 $row['service_depositPerPerson'] : 1;
-            $services[$serviceId]['mandatoryExtra'] = isset($row['service_mandatoryExtra']) ?
+            $services[$serviceId]['mandatoryExtra']    = isset($row['service_mandatoryExtra']) ?
                 $row['service_mandatoryExtra'] : null;
             $services[$serviceId]['minSelectedExtras'] = isset($row['service_minSelectedExtras']) ?
                 $row['service_minSelectedExtras'] : null;
-            $services[$serviceId]['fullPayment'] = isset($row['service_fullPayment']) ?
+            $services[$serviceId]['fullPayment']       = isset($row['service_fullPayment']) ?
                 $row['service_fullPayment'] : null;
 
             if ($extraId) {
-                $services[$serviceId]['extras'][$extraId]['id'] = $row['extra_id'];
-                $services[$serviceId]['extras'][$extraId]['name'] = $row['extra_name'];
+                $services[$serviceId]['extras'][$extraId]['id']          = $row['extra_id'];
+                $services[$serviceId]['extras'][$extraId]['name']        = $row['extra_name'];
                 $services[$serviceId]['extras'][$extraId]['description'] = isset($row['extra_description']) ?
                     $row['extra_description'] : null;
-                $services[$serviceId]['extras'][$extraId]['price'] = $row['extra_price'];
+                $services[$serviceId]['extras'][$extraId]['price']       = $row['extra_price'];
                 $services[$serviceId]['extras'][$extraId]['maxQuantity'] = $row['extra_maxQuantity'];
-                $services[$serviceId]['extras'][$extraId]['duration'] = $row['extra_duration'];
-                $services[$serviceId]['extras'][$extraId]['position'] = $row['extra_position'];
+                $services[$serviceId]['extras'][$extraId]['duration']    = $row['extra_duration'];
+                $services[$serviceId]['extras'][$extraId]['position']    = $row['extra_position'];
                 $services[$serviceId]['extras'][$extraId]['aggregatedPrice'] = $row['extra_aggregatedPrice'];
-                $services[$serviceId]['extras'][$extraId]['translations'] = $row['extra_translations'];
+                $services[$serviceId]['extras'][$extraId]['translations']    = $row['extra_translations'];
             }
 
             if ($galleryId) {
                 $services[$serviceId]['gallery'][$galleryId]['id'] = $row['gallery_id'];
-                $services[$serviceId]['gallery'][$galleryId]['pictureFullPath'] = $row['gallery_picture_full'];
+                $services[$serviceId]['gallery'][$galleryId]['pictureFullPath']  = $row['gallery_picture_full'];
                 $services[$serviceId]['gallery'][$galleryId]['pictureThumbPath'] = $row['gallery_picture_thumb'];
-                $services[$serviceId]['gallery'][$galleryId]['position'] = $row['gallery_position'];
+                $services[$serviceId]['gallery'][$galleryId]['position']         = $row['gallery_position'];
             }
         }
 

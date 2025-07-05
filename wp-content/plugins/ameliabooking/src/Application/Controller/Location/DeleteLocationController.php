@@ -26,7 +26,7 @@ class DeleteLocationController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new DeleteLocationCommand($args);
+        $command     = new DeleteLocationCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

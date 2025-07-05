@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -28,7 +29,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
  */
 class PackageRepository extends AbstractRepository
 {
-    const FACTORY = PackageFactory::class;
+    public const FACTORY = PackageFactory::class;
 
     /**
      * @param Connection $connection
@@ -264,9 +265,9 @@ class PackageRepository extends AbstractRepository
             $queryPackages = [];
 
             foreach ((array)$criteria['packages'] as $index => $value) {
-                $param = ':package' . $index;
+                $param           = ':package' . $index;
                 $queryPackages[] = $param;
-                $params[$param] = $value;
+                $params[$param]  = $value;
             }
 
             $where[] = 'p.id IN (' . implode(', ', $queryPackages) . ')';

@@ -6,6 +6,7 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\User\Provider;
+use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use DateTime;
 use Exception;
@@ -20,6 +21,9 @@ use WP_Error;
  */
 abstract class AbstractOutlookCalendarService
 {
+    /** @var Container $container */
+    protected $container;
+
     public static $providersOutlookEvents = [];
 
     /**

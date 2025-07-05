@@ -12,8 +12,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class ProvidersTimeOutTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'providers_to_timeouts';
+    public const TABLE = 'providers_to_timeouts';
 
     /**
      * @return string

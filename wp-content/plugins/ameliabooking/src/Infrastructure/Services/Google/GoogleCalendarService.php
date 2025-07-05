@@ -53,10 +53,6 @@ use Interop\Container\Exception\ContainerException;
  */
 class GoogleCalendarService extends AbstractGoogleCalendarService
 {
-
-    /** @var Container $container */
-    private $container;
-
     /** @var \AmeliaGoogle_Client $client */
     private $client;
 
@@ -91,7 +87,9 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     private function isCalendarEnabled()
     {
-        return !array_key_exists('calendarEnabled', $this->settings) || $this->settings['calendarEnabled'];
+        return (!array_key_exists('calendarEnabled', $this->settings) || $this->settings['calendarEnabled']) &&
+            $this->settings['clientID'] &&
+            $this->settings['clientSecret'];
     }
 
     /**
@@ -305,7 +303,8 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                 case BookingCanceledEventHandler::BOOKING_CANCELED:
                 case BookingApprovedEventHandler::BOOKING_APPROVED:
                 case BookingRejectedEventHandler::BOOKING_REJECTED:
-                    if ($appointmentStatus === 'canceled' || $appointmentStatus === 'rejected' ||
+                    if (
+                        $appointmentStatus === 'canceled' || $appointmentStatus === 'rejected' ||
                         ($appointmentStatus === 'pending' && $this->settings['insertPendingAppointments'] === false)
                     ) {
                         $this->deleteEvent($appointment, $provider);
@@ -380,7 +379,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                             if ($event->getStatus()->getValue() === 'rejected') {
                                 $this->deleteEvent($period, $provider);
                                 $this->deleteEventPeriodEvent($period);
-                            } else if ($event->getStatus()->getValue() === 'approved') {
+                            } elseif ($event->getStatus()->getValue() === 'approved') {
                                 $this->insertEvent($event, $provider, $period);
                             }
 
@@ -439,7 +438,8 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                     $extendedProperties = $event->getExtendedProperties();
                     if ($extendedProperties !== null) {
                         $shared = $extendedProperties->shared;
-                        if (is_array($shared) &&
+                        if (
+                            is_array($shared) &&
                             array_key_exists('ameliaEvent', $shared) &&
                             $eventIds !== null &&
                             array_key_exists('ameliaAppointmentId', $shared) &&
@@ -539,7 +539,8 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                         $extendedProperties = $event->getExtendedProperties();
                         if ($extendedProperties !== null) {
                             $shared = $extendedProperties->shared;
-                            if (is_array($shared) &&
+                            if (
+                                is_array($shared) &&
                                 array_key_exists('ameliaEvent', $shared) &&
                                 $excludeAppointmentId !== null &&
                                 array_key_exists('ameliaAppointmentId', $shared) &&
@@ -615,7 +616,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
         $queryParams = ['sendNotifications' => $this->settings['sendEventInvitationEmail']];
 
         /** @var SettingsService $settingsService */
-        $settingsService = $this->container->get('domain.settings.service');
+        $settingsService  = $this->container->get('domain.settings.service');
         $enabledForEntity = $settingsService
             ->getEntitySettings($period ? $appointment->getSettings() : $appointment->getService()->getSettings())
             ->getGoogleMeetSettings()
@@ -707,8 +708,8 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     private function patchEvent($appointment, $provider, $period = null)
     {
-        $event            = $this->createEvent($appointment, $provider, $period);
-        $event->attendees = $this->getAttendees($appointment, $period);
+        $event = $this->createEvent($appointment, $provider, $period);
+        $event->setAttendees($this->getAttendees($appointment, $period));
 
         $entity = $period ?: $appointment;
         if ($entity->getGoogleCalendarEventId()) {
@@ -796,7 +797,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
         $start = $period ? clone $period->getPeriodStart()->getValue() : clone $appointment->getBookingStart()->getValue();
 
         if ($period) {
-            $time = (int)$period->getPeriodEnd()->getValue()->format('H')*60 + (int)$period->getPeriodEnd()->getValue()->format('i');
+            $time = (int)$period->getPeriodEnd()->getValue()->format('H') * 60 + (int)$period->getPeriodEnd()->getValue()->format('i');
 
             $end = DateTimeService::getCustomDateTimeObject(
                 $start->format('Y-m-d')
@@ -847,7 +848,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
         ];
 
         /** @var SettingsService $settingsService */
-        $settingsService = $this->container->get('domain.settings.service');
+        $settingsService  = $this->container->get('domain.settings.service');
         $enabledForEntity = $settingsService
             ->getEntitySettings($period ? $appointment->getSettings() : $appointment->getService()->getSettings())
             ->getGoogleMeetSettings()
@@ -894,7 +895,10 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
             /** @var ProviderRepository $providerRepository */
             $providerRepository = $this->container->get('domain.users.providers.repository');
 
-            $provider = $period ? $providerRepository->getById($appointment->getOrganizerId()->getValue()) : $providerRepository->getById($appointment->getProviderId()->getValue());
+            $provider =
+                $period ?
+                    $providerRepository->getById($appointment->getOrganizerId()->getValue()) :
+                    $providerRepository->getById($appointment->getProviderId()->getValue());
 
             if ($provider && $provider->getGoogleCalendar()) {
                 $attendees[] = [
@@ -925,7 +929,10 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                     if (empty($providersRemoveIds) || !in_array($provider->getId()->getValue(), $providersRemoveIds)) {
                         $attendees[] = [
                             'displayName'    => $provider->getFirstName()->getValue() . ' ' . $provider->getLastName()->getValue(),
-                            'email'          => $provider && $provider->getGoogleCalendar() ? $provider->getGoogleCalendar()->getCalendarId()->getValue() : $provider->getEmail()->getValue(),
+                            'email'          =>
+                                $provider && $provider->getGoogleCalendar() ?
+                                    $provider->getGoogleCalendar()->getCalendarId()->getValue() :
+                                    $provider->getEmail()->getValue(),
                             'responseStatus' => 'accepted'
                         ];
                     }
@@ -941,7 +948,8 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
             foreach ($bookings as $booking) {
                 $bookingStatus = $booking->getStatus()->getValue();
 
-                if ($bookingStatus === 'approved' ||
+                if (
+                    $bookingStatus === 'approved' ||
                     ($bookingStatus === 'pending' && $this->settings['insertPendingAppointments'] === true)
                 ) {
                     $customer = $customerRepository->getById($booking->getCustomerId()->getValue());

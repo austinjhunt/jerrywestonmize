@@ -17,7 +17,6 @@ use AmeliaBooking\Infrastructure\Repository\Tax\TaxRepository;
  */
 class UpdateTaxStatusCommandHandler extends CommandHandler
 {
-
     /**
      * @var array
      */

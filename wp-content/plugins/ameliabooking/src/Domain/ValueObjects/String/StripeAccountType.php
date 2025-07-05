@@ -9,9 +9,9 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class StripeAccountType
 {
-    const STANDARD = 'standard';
+    public const STANDARD = 'standard';
 
-    const EXPRESS = 'express';
+    public const EXPRESS = 'express';
 
     /**
      * @var string

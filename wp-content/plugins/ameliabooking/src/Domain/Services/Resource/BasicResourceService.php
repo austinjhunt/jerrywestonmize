@@ -5,6 +5,8 @@ namespace AmeliaBooking\Domain\Services\Resource;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
+use AmeliaBooking\Domain\Services\Interval\IntervalService;
+use AmeliaBooking\Domain\Services\Schedule\ScheduleService;
 
 /**
  * Class BasicResourceService
@@ -13,6 +15,20 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
  */
 class BasicResourceService extends AbstractResourceService
 {
+    /**
+     * BasicResourceService constructor.
+     *
+     * @param IntervalService $intervalService
+     * @param ScheduleService $scheduleService
+     */
+    public function __construct(
+        $intervalService,
+        $scheduleService
+    ) {
+        $this->intervalService = $intervalService;
+
+        $this->scheduleService = $scheduleService;
+    }
 
     /**
      * set substitute resources instead of resources that are not shred between services/locations

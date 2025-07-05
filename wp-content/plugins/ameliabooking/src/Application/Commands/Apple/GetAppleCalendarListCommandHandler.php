@@ -70,10 +70,16 @@ class GetAppleCalendarListCommandHandler extends CommandHandler
         /** @var AbstractAppleCalendarService $appleCalendarService */
         $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
 
-        $appleId = $employeeAppleCalendar && $employeeAppleCalendar['iCloudId'] ? $employeeAppleCalendar['iCloudId'] : $appleCalendarSettings['clientID'];
-        $applePassword = $employeeAppleCalendar && $employeeAppleCalendar['appSpecificPassword'] ? $employeeAppleCalendar['appSpecificPassword'] : $appleCalendarSettings['clientSecret'];
+        $appleId       =
+            $employeeAppleCalendar && $employeeAppleCalendar['iCloudId'] ?
+            $employeeAppleCalendar['iCloudId'] :
+            $appleCalendarSettings['clientID'];
+        $applePassword =
+            $employeeAppleCalendar && $employeeAppleCalendar['appSpecificPassword'] ?
+                $employeeAppleCalendar['appSpecificPassword'] :
+                $appleCalendarSettings['clientSecret'];
 
-        $credentials = $appleCalendarService->handleAppleCredentials($appleId, $applePassword);
+        $credentials  = $appleCalendarService->handleAppleCredentials($appleId, $applePassword);
         $calendarList = [];
         if ($credentials) {
             $calendarsUrl = $appleCalendarService->getCalendarsUrl($appleId, $applePassword);

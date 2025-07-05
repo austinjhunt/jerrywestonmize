@@ -47,7 +47,8 @@ class UpdateServicesPositionsCommandHandler extends CommandHandler
 
         $servicesArray = $services->toArray();
 
-        if ($command->getFields()['sorting'] === 'custom' &&
+        if (
+            $command->getFields()['sorting'] === 'custom' &&
             $customSortedServicesArray = $command->getFields()['services']
         ) {
             $customSortedServicesIds = array_column($customSortedServicesArray, 'id');

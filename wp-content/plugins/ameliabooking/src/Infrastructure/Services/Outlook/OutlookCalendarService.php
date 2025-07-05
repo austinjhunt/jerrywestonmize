@@ -66,16 +66,13 @@ use WP_Error;
  */
 class OutlookCalendarService extends AbstractOutlookCalendarService
 {
-    /** @var Container $container */
-    private $container;
-
     /** @var Graph */
     private $graph;
 
     /** @var SettingsService */
     private $settings;
 
-    const GUID = '{66f5a359-4659-4830-9070-00049ec6ac6e}';
+    public const GUID = '{66f5a359-4659-4830-9070-00049ec6ac6e}';
 
     /**
      * OutlookCalendarService constructor.
@@ -295,7 +292,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 ->setPageSize(100)
                 ->getPage();
 
-            /** @var Calendar $calendar */
+            /** @var Calendar $outlookCalendar */
             foreach ($outlookCalendars as $outlookCalendar) {
                 if ($outlookCalendar->getCanEdit()) {
                     $calendars[] = [
@@ -380,7 +377,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @param \AmeliaBooking\Domain\Entity\Booking\Event\Event $event
      * @param string $commandSlug
      * @param Collection $periods
-     * @param array $providers
+     * @param array $newProviders
+     * @param array $removeProviders
      *
      * @return void
      * @throws QueryExecutionException
@@ -393,7 +391,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         }
 
         try {
-            $this->handleEventPeriodAction($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null);
+            $this->handleEventPeriodAction($event, $commandSlug, $periods, $newProviders, $removeProviders);
         } catch (Exception $e) {
             /** @var EventRepository $eventRepository */
             $eventRepository = $this->container->get('domain.booking.event.repository');
@@ -446,14 +444,16 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 case BookingCanceledEventHandler::BOOKING_CANCELED:
                 case BookingApprovedEventHandler::BOOKING_APPROVED:
                 case BookingRejectedEventHandler::BOOKING_REJECTED:
-                    if ($appointmentStatus === 'canceled' || $appointmentStatus === 'rejected' ||
+                    if (
+                        $appointmentStatus === 'canceled' || $appointmentStatus === 'rejected' ||
                         ($appointmentStatus === 'pending' && $this->settings['insertPendingAppointments'] === false)
                     ) {
                         $this->deleteEvent($appointment, $provider);
                         break;
                     }
 
-                    if ($appointmentStatus === 'approved' && $oldStatus && $oldStatus !== 'approved' &&
+                    if (
+                        $appointmentStatus === 'approved' && $oldStatus && $oldStatus !== 'approved' &&
                         $this->settings['insertPendingAppointments'] === false
                     ) {
                         $this->insertEvent($appointment, $provider);
@@ -519,7 +519,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                         case EventStatusUpdatedEventHandler::EVENT_STATUS_UPDATED:
                             if ($event->getStatus()->getValue() === 'rejected') {
                                 $this->deleteEvent($period, $provider);
-                            } else if ($event->getStatus()->getValue() === 'approved') {
+                            } elseif ($event->getStatus()->getValue() === 'approved') {
                                 $this->insertEvent($event, $provider, $period);
                             }
                             break;
@@ -552,7 +552,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     {
         $finalEvents = [];
         $provider    = ProviderFactory::create($providerArr);
-        if ($provider &&
+        if (
+            $provider &&
             $provider->getOutlookCalendar() &&
             $provider->getOutlookCalendar()->getToken() &&
             $this->isCalendarEnabled()
@@ -589,7 +590,10 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 $extendedProperties = $event->getSingleValueExtendedProperties();
                 if ($extendedProperties !== null) {
                     foreach ($extendedProperties as $extendedProperty) {
-                        if ($extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId' && in_array((int)$extendedProperty['value'], $eventIds)) {
+                        if (
+                            $extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId' &&
+                            in_array((int)$extendedProperty['value'], $eventIds)
+                        ) {
                             continue 2;
                         }
                     }
@@ -727,7 +731,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      */
     private function insertEvent($appointment, $provider, $period = null, $newProviders = null, $removeProviders = null)
     {
-        $event = $this->getEventPreview($appointment, $provider, $period);
+        $event    = $this->getEventPreview($appointment, $provider, $period);
         $location = $event->getLocation();
         if (!$location->getDisplayName()) {
             $newLocation = [
@@ -744,7 +748,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
         $type = $period ? Entities::EVENT : Entities::APPOINTMENT;
         /** @var PlaceholderService $placeholderService */
-        $placeholderService = $this->container->get("application.placeholder.{$type}.service");
+        $placeholderService         = $this->container->get("application.placeholder.{$type}.service");
         $appointmentArray           = $appointment->toArray();
         $appointmentArray['sendCF'] = true;
 
@@ -817,7 +821,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     {
         $entity = $period ?: $appointment;
         if ($entity->getOutlookCalendarEventId()) {
-            $event = $this->createEvent($appointment, $provider, $period, $newProviders, $removeProviders);
+            $event = $this->createEvent($appointment, $provider, $period);
 
             $eventId = $entity->getOutlookCalendarEventId()->getValue();
 
@@ -826,7 +830,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
             $type = $period ? Entities::EVENT : Entities::APPOINTMENT;
             /** @var PlaceholderService $placeholderService */
-            $placeholderService = $this->container->get("application.placeholder.{$type}.service");
+            $placeholderService         = $this->container->get("application.placeholder.{$type}.service");
             $appointmentArray           = $appointment->toArray();
             $appointmentArray['sendCF'] = true;
 
@@ -907,7 +911,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
-    private function getEventPreview($appointment, $provider, $period = null) {
+    private function getEventPreview($appointment, $provider, $period = null)
+    {
         $event = $this->createEvent($appointment, $provider, $period);
 
         /** @var SettingsService $settingsService */
@@ -920,7 +925,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
         $type = $period ? Entities::EVENT : Entities::APPOINTMENT;
         /** @var PlaceholderService $placeholderService */
-        $placeholderService = $this->container->get("application.placeholder.{$type}.service");
+        $placeholderService         = $this->container->get("application.placeholder.{$type}.service");
         $appointmentArray           = $appointment->toArray();
         $appointmentArray['sendCF'] = true;
 
@@ -935,9 +940,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             $event->setIsOnlineMeeting(true);
             $event->setOnlineMeetingProvider(new OnlineMeetingProviderType('teamsForBusiness'));
         }
-         if (!$enabledForEntity) {
-             $body->setContent($this->getDescriptionForInsert($placeholderService, $placeholderData, $period, null));
-         }
+        if (!$enabledForEntity) {
+            $body->setContent($this->getDescriptionForInsert($placeholderService, $placeholderData, $period, null));
+        }
         $event->setBody($body);
 
         try {
@@ -967,7 +972,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws ContainerException
      * @throws Exception
      */
-    private function createEvent($appointment, $provider, $period = null, $newProviders = null, $removeProviders = null)
+    private function createEvent($appointment, $provider, $period = null)
     {
         /** @var LocationRepository $locationRepository */
         $locationRepository = $this->container->get('domain.locations.repository');
@@ -997,7 +1002,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $start = $period ?  clone $period->getPeriodStart()->getValue() : clone $appointment->getBookingStart()->getValue();
 
         if ($period) {
-            $time = (int)$period->getPeriodEnd()->getValue()->format('H')*60 + (int)$period->getPeriodEnd()->getValue()->format('i');
+            $time = (int)$period->getPeriodEnd()->getValue()->format('H') * 60 + (int)$period->getPeriodEnd()->getValue()->format('i');
             $end  = DateTimeService::getCustomDateTimeObject(
                 $start->format('Y-m-d')
             )->add(new \DateInterval('PT' . $time . 'M'));
@@ -1037,17 +1042,17 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             $outlookAddress = new PhysicalAddress();
             $outlookAddress->setStreet($address ?: ($location->getAddress() ? $location->getAddress()->getValue() : null));
             $outlookCoordinates = new OutlookGeoCoordinates();
-            $outlookCoordinates->setLatitude($location->getCoordinates() ? $location->getCoordinates()->getLatitude() : null);
-            $outlookCoordinates->setLongitude($location->getCoordinates() ? $location->getCoordinates()->getLongitude() : null);
+            $outlookCoordinates->setLatitude($location && $location->getCoordinates() ? $location->getCoordinates()->getLatitude() : null);
+            $outlookCoordinates->setLongitude($location && $location->getCoordinates() ? $location->getCoordinates()->getLongitude() : null);
             $outlookLocation->setCoordinates($outlookCoordinates);
             $outlookLocation->setAddress($outlookAddress);
             $event->setLocation($outlookLocation);
         }
 
         $property = new SingleValueLegacyExtendedProperty();
-        $property
-            ->setId('Integer ' . self::GUID . ' Name appointmentId')
-            ->setValue((string)$appointment->getId()->getValue());
+        $property->setId('Integer ' . self::GUID . ' Name appointmentId');
+        $property->setValue((string)$appointment->getId()->getValue());
+
         $event->setSingleValueExtendedProperties([$property]);
 
         if ($period && $period->getPeriodStart()->getValue()->diff($period->getPeriodEnd()->getValue())->format('%a') !== '0') {
@@ -1083,8 +1088,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $placeholderData,
         $period,
         $joinUrl
-    ){
-        $type = $period ? Entities::EVENT : Entities::APPOINTMENT;
+    ) {
+        $type        = $period ? Entities::EVENT : Entities::APPOINTMENT;
         $description = $this->getDescription($placeholderService, $placeholderData, $type);
 
         // include the joinUrl in the body content to ensure the Join button remains visible
@@ -1093,11 +1098,12 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             : $description;
     }
 
-    private function getBodyForInsert($eventId, $description) {
+    private function getBodyForInsert($eventId, $description)
+    {
         $event = $this->getEvent($eventId);
-        $body = $event->getBody();
+        $body  = $event->getBody();
 
-        $joinUrl = $event->getOnlineMeeting() ? $event->getOnlineMeeting()->getJoinUrl() : null;
+        $joinUrl     = $event->getOnlineMeeting() ? $event->getOnlineMeeting()->getJoinUrl() : null;
         $bodyContent = ($joinUrl)
             ? '<a href="' . $joinUrl . '">Join Meeting</a><br><br>' .  $description . '<br><br>'
             : $description;
@@ -1108,7 +1114,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         return $body;
     }
 
-    private function getEvent($eventId) {
+    private function getEvent($eventId)
+    {
         try {
             $event = $this->graph->createRequest(
                 'GET',
@@ -1143,7 +1150,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             /** @var ProviderRepository $providerRepository */
             $providerRepository = $this->container->get('domain.users.providers.repository');
 
-            $providers = is_a($appointment, Appointment::class) ? [$providerRepository->getById($appointment->getProviderId()->getValue())] : $appointment->getProviders()->getItems();
+            $providers = is_a($appointment, Appointment::class) ?
+                [$providerRepository->getById($appointment->getProviderId()->getValue())] :
+                $appointment->getProviders()->getItems();
 
             if ($newProviders) {
                 $providers = array_merge($providers, $newProviders);
@@ -1182,7 +1191,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             foreach ($bookings as $booking) {
                 $bookingStatus = $booking->getStatus()->getValue();
 
-                if ($bookingStatus === 'approved' ||
+                if (
+                    $bookingStatus === 'approved' ||
                     ($bookingStatus === 'pending' && $this->settings['insertPendingAppointments'] === true)
                 ) {
                     $customer = $customerRepository->getById($booking->getCustomerId()->getValue());
@@ -1323,7 +1333,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      */
     private function isCalendarEnabled()
     {
-        return !array_key_exists('calendarEnabled', $this->settings) || $this->settings['calendarEnabled'];
+        return (!array_key_exists('calendarEnabled', $this->settings) || $this->settings['calendarEnabled']) &&
+            $this->settings['clientID'] &&
+            $this->settings['clientSecret'];
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */

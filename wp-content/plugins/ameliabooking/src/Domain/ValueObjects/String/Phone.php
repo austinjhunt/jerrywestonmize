@@ -11,7 +11,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  */
 final class Phone
 {
-    const MAX_LENGTH = 63;
+    public const MAX_LENGTH = 63;
     /**
      * @var string
      */

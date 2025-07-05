@@ -17,7 +17,6 @@ use AmeliaBooking\Domain\ValueObjects\String\BookableType;
  */
 class Extra extends AbstractExtra
 {
-
     /** @var Duration */
     private $duration;
 

@@ -26,7 +26,6 @@ use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
  */
 class AddLocationCommandHandler extends CommandHandler
 {
-
     /**
      * @var array
      */

@@ -2,12 +2,12 @@
 
 namespace AmeliaStripe\Service;
 
-class OAuthService extends \AmeliaStripe\Service\AbstractService
+class OAuthService extends AbstractService
 {
     /**
      * Sends a request to Stripe's Connect API.
      *
-     * @param string $method the HTTP method
+     * @param 'delete'|'get'|'post' $method the HTTP method
      * @param string $path the path of the request
      * @param array $params the parameters of the request
      * @param array|\AmeliaStripe\Util\RequestOptions $opts the special modifiers of the request
@@ -53,9 +53,9 @@ class OAuthService extends \AmeliaStripe\Service\AbstractService
      * @param null|array $params
      * @param null|array $opts
      *
-     * @throws \AmeliaStripe\Exception\OAuth\OAuthErrorException if the request fails
-     *
      * @return \AmeliaStripe\StripeObject object containing the response from the API
+     *
+     * @throws \AmeliaStripe\Exception\OAuth\OAuthErrorException if the request fails
      */
     public function token($params = null, $opts = null)
     {
@@ -71,9 +71,9 @@ class OAuthService extends \AmeliaStripe\Service\AbstractService
      * @param null|array $params
      * @param null|array $opts
      *
-     * @throws \AmeliaStripe\Exception\OAuth\OAuthErrorException if the request fails
-     *
      * @return \AmeliaStripe\StripeObject object containing the response from the API
+     *
+     * @throws \AmeliaStripe\Exception\OAuth\OAuthErrorException if the request fails
      */
     public function deauthorize($params = null, $opts = null)
     {
@@ -118,9 +118,9 @@ class OAuthService extends \AmeliaStripe\Service\AbstractService
     /**
      * @param array|\AmeliaStripe\Util\RequestOptions $opts the special modifiers of the request
      *
-     * @throws \AmeliaStripe\Exception\InvalidArgumentException
-     *
      * @return \AmeliaStripe\Util\RequestOptions
+     *
+     * @throws \AmeliaStripe\Exception\InvalidArgumentException
      */
     private function _parseOpts($opts)
     {
@@ -143,8 +143,8 @@ class OAuthService extends \AmeliaStripe\Service\AbstractService
      */
     private function _getBase($opts)
     {
-        return isset($opts->apiBase) ?
-          $opts->apiBase :
-          $this->client->getConnectBase();
+        return isset($opts->apiBase)
+          ? $opts->apiBase
+          : $this->client->getConnectBase();
     }
 }

@@ -9,7 +9,7 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class Token
 {
-    const MAX_LENGTH = 10;
+    public const MAX_LENGTH = 10;
 
     /**
      * @var string

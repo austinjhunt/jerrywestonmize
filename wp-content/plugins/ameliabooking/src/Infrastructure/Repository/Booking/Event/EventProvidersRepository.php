@@ -14,7 +14,6 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class EventProvidersRepository extends AbstractRepository
 {
-
     /**
      * @param Event    $event
      * @param Provider $provider
@@ -24,7 +23,7 @@ class EventProvidersRepository extends AbstractRepository
      */
     public function add($event, $provider)
     {
-        $eventData = $event->toArray();
+        $eventData    = $event->toArray();
         $providerData = $provider->toArray();
 
         $params = [
@@ -58,7 +57,7 @@ class EventProvidersRepository extends AbstractRepository
     }
 
     /**
-     * @param int eventId
+     * @param int $eventId
      *
      * @return bool
      * @throws QueryExecutionException

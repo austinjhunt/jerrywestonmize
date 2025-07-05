@@ -4,6 +4,11 @@
 
 namespace AmeliaStripe\Service\Issuing;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
 class TransactionService extends \AmeliaStripe\Service\AbstractService
 {
     /**
@@ -11,12 +16,12 @@ class TransactionService extends \AmeliaStripe\Service\AbstractService
      * sorted in descending order by creation date, with the most recently created
      * object appearing first.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{card?: string, cardholder?: string, created?: array|int, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, type?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Collection<\AmeliaStripe\Issuing\Transaction>
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -27,12 +32,12 @@ class TransactionService extends \AmeliaStripe\Service\AbstractService
      * Retrieves an Issuing <code>Transaction</code> object.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Issuing\Transaction
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -45,12 +50,12 @@ class TransactionService extends \AmeliaStripe\Service\AbstractService
      * unchanged.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[], metadata?: null|array<string, string>} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Issuing\Transaction
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function update($id, $params = null, $opts = null)
     {

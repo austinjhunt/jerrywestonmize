@@ -11,7 +11,7 @@ use AmeliaBooking\Domain\Entity\Entities;
  */
 final class EntityType
 {
-    const SERVICE = Entities::SERVICE;
+    public const SERVICE = Entities::SERVICE;
 
     /**
      * @var string

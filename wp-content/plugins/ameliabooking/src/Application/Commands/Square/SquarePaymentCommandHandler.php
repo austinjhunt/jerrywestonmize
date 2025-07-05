@@ -152,7 +152,6 @@ class SquarePaymentCommandHandler extends CommandHandler
                 ],
                 $transfers
             );
-
         } catch (Exception $e) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage(FrontendStrings::getCommonStrings()['payment_error']);

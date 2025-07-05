@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -13,9 +14,9 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class NotificationType
 {
-    const EMAIL    = 'email';
-    const SMS      = 'sms';
-    const WHATSAPP = 'whatsapp';
+    public const EMAIL    = 'email';
+    public const SMS      = 'sms';
+    public const WHATSAPP = 'whatsapp';
 
     /**
      * @var string

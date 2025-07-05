@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\Form\AssetsController;
+use MailPoet\Settings\Pages;
 use MailPoet\WP\Functions as WPFunction;
 
 class PageRenderer {
@@ -63,7 +64,7 @@ class PageRenderer {
   }
 
   public function setPageTitle($title = '') {
-    if ($title === __('MailPoet Page', 'mailpoet')) {
+    if ($title === Pages::PAGE_TITLE) {
       return $this->getPageTitle();
     }
     return $title;

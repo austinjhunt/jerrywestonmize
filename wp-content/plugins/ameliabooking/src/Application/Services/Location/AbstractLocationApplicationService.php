@@ -26,7 +26,6 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 abstract class AbstractLocationApplicationService
 {
-
     protected $container;
 
     /**

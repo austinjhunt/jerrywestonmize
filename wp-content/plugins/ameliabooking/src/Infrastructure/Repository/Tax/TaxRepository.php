@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -26,8 +27,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Tax\TaxesToEntitiesTable;
  */
 class TaxRepository extends AbstractStatusRepository
 {
-
-    const FACTORY = TaxFactory::class;
+    public const FACTORY = TaxFactory::class;
 
     /** @var string */
     protected $taxesToEntitiesTable;

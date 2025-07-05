@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -16,23 +17,27 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
  */
 class AmeliaEventsCalendarBookingElementorWidget extends Widget_Base
 {
-
-    public function get_name() {
+    public function get_name()
+    {
         return 'ameliaeventscalendarbooking';
     }
 
-    public function get_title() {
+    public function get_title()
+    {
         return BackendStrings::getWordPressStrings()['events_calendar_booking_gutenberg_block']['title'];
     }
 
-    public function get_icon() {
+    public function get_icon()
+    {
         return 'amelia-logo';
     }
 
-    public function get_categories() {
+    public function get_categories()
+    {
         return [ 'amelia-elementor' ];
     }
-    protected function register_controls() {
+    protected function register_controls()
+    {
 
         $this->start_controls_section(
             'amelia_events_section',
@@ -147,14 +152,15 @@ class AmeliaEventsCalendarBookingElementorWidget extends Widget_Base
         $this->end_controls_section();
     }
 
-    protected function render() {
+    protected function render()
+    {
 
         $settings = $this->get_settings_for_display();
 
         if ($settings['preselect']) {
-            $trigger = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
+            $trigger      = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
             $trigger_type = $settings['load_manually'] && $settings['trigger_type'] !== '' ? ' trigger_type=' . $settings['trigger_type'] : '';
-            $in_dialog = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
+            $in_dialog    = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
 
             $selected_event = empty($settings['select_event']) ? '' : ' event=' . (is_array($settings['select_event']) ?
                     implode(',', $settings['select_event']) : $settings['select_event']);
@@ -177,7 +183,14 @@ class AmeliaEventsCalendarBookingElementorWidget extends Widget_Base
                 $selected_tag .= '"';
             }
 
-            echo '[ameliaeventscalendarbooking' . $trigger . $trigger_type . $in_dialog . $selected_event . $selected_location . $selected_tag . $show_recurring . ']';
+            echo '[ameliaeventscalendarbooking' .
+                $trigger .
+                $trigger_type .
+                $in_dialog .
+                $selected_event .
+                $selected_location .
+                $selected_tag .
+                $show_recurring . ']';
         } else {
             echo '[ameliaeventscalendarbooking]';
         }

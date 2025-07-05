@@ -14,7 +14,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class TimeOutRepository extends AbstractRepository
 {
-    const FACTORY = TimeOutFactory::class;
+    public const FACTORY = TimeOutFactory::class;
 
     /**
      * @param TimeOut $entity

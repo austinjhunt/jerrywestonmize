@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -53,7 +54,7 @@ class AddCouponController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new AddCouponCommand($args);
+        $command     = new AddCouponCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

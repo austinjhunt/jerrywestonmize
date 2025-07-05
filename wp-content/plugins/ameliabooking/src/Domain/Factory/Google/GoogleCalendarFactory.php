@@ -15,7 +15,6 @@ use AmeliaBooking\Domain\ValueObjects\String\Token;
  */
 class GoogleCalendarFactory
 {
-
     /**
      * @param $data
      *

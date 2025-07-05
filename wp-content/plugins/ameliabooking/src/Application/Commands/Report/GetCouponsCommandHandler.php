@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -126,7 +127,7 @@ class GetCouponsCommandHandler extends CommandHandler
 
         $rows = [];
 
-        $fields = $command->getField('params')['fields'];
+        $fields    = $command->getField('params')['fields'];
         $delimiter = $command->getField('params')['delimiter'];
 
         foreach ((array)$coupons->toArray() as $coupon) {

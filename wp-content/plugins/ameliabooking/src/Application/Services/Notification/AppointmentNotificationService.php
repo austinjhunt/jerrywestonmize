@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -62,7 +63,8 @@ class AppointmentNotificationService
 
         /** @var Notification $providerNotification */
         foreach ($providerNotifications->getItems() as $providerNotification) {
-            if ($providerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
+            if (
+                $providerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
                 $notificationService->checkCustom($providerNotification, $appointment->toArray(), $sendDefault)
             ) {
                 $notificationService->sendNotification(
@@ -93,7 +95,8 @@ class AppointmentNotificationService
         $bookings,
         $logNotification = true,
         $isBackend = true,
-        $sendInvoice = false
+        $sendInvoice = false,
+        $notifyCustomers = true
     ) {
         /** @var AbstractInvoiceApplicationService $invoiceService */
         $invoiceService = $this->container->get('application.invoice.service');
@@ -129,12 +132,13 @@ class AppointmentNotificationService
 
                 /** @var Notification $customerNotification */
                 foreach ($customerNotifications->getItems() as $customerNotification) {
-                    if ($customerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
+                    if (
+                        $customerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
                         $notificationService->checkCustom(
                             $customerNotification,
                             $appointment->toArray(),
                             $sendDefault
-                        )
+                        ) && $notifyCustomers
                     ) {
                         $notificationService->sendNotification(
                             array_merge(
@@ -190,7 +194,8 @@ class AppointmentNotificationService
 
             /** @var Notification $providerNotification */
             foreach ($providerNotifications->getItems() as $providerNotification) {
-                if ($providerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
+                if (
+                    $providerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
                     $notificationService->checkCustom($providerNotification, $appointment->toArray(), $sendDefault)
                 ) {
                     $notificationService->sendNotification(
@@ -213,12 +218,14 @@ class AppointmentNotificationService
 
             /** @var Notification $customerNotification */
             foreach ($customerNotifications->getItems() as $customerNotification) {
-                if ($customerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
+                if (
+                    $customerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
                     $notificationService->checkCustom($customerNotification, $appointment->toArray(), $sendDefault)
                 ) {
                     /** @var CustomerBooking $booking */
                     foreach ($appointment->getBookings()->getItems() as $bookingKey => $booking) {
-                        if ((!$booking->isNew() || !$booking->isNew()->getValue()) &&
+                        if (
+                            (!$booking->isNew() || !$booking->isNew()->getValue()) &&
                             (
                                 $booking->getStatus()->getValue() === BookingStatus::APPROVED ||
                                 $booking->getStatus()->getValue() === BookingStatus::PENDING
@@ -263,7 +270,8 @@ class AppointmentNotificationService
 
             /** @var Notification $providerNotification */
             foreach ($providerNotifications->getItems() as $providerNotification) {
-                if ($providerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
+                if (
+                    $providerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
                     $notificationService->checkCustom($providerNotification, $appointment->toArray(), $sendDefault)
                 ) {
                     $notificationService->sendNotification(
@@ -286,12 +294,14 @@ class AppointmentNotificationService
 
             /** @var Notification $customerNotification */
             foreach ($customerNotifications->getItems() as $customerNotification) {
-                if ($customerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
+                if (
+                    $customerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
                     $notificationService->checkCustom($customerNotification, $appointment->toArray(), $sendDefault)
                 ) {
                     /** @var CustomerBooking $booking */
                     foreach ($appointment->getBookings()->getItems() as $bookingKey => $booking) {
-                        if ($booking->getStatus()->getValue() === BookingStatus::APPROVED &&
+                        if (
+                            $booking->getStatus()->getValue() === BookingStatus::APPROVED &&
                             (!$booking->isNew() || !$booking->isNew()->getValue()) &&
                             $booking->isUpdated() &&
                             $booking->isUpdated()->getValue()

@@ -712,7 +712,7 @@ class Minimal {
                               1 =>
                                  [
                                   'type' => 'social',
-                                  'iconSet' => 'full-symbol-color',
+                                  'iconSet' => 'official',
                                   'icons' =>
                                      [
                                       0 =>
@@ -720,7 +720,7 @@ class Minimal {
                                           'type' => 'socialIcon',
                                           'iconType' => 'facebook',
                                           'link' => 'http://www.facebook.com',
-                                          'image' => $this->social_icon_url . '/06-full-symbol-color/Facebook.png',
+                                          'image' => $this->social_icon_url . '/11-official/Facebook.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'Facebook',
@@ -730,7 +730,7 @@ class Minimal {
                                           'type' => 'socialIcon',
                                           'iconType' => 'twitter',
                                           'link' => 'http://www.twitter.com',
-                                          'image' => $this->social_icon_url . '/06-full-symbol-color/Twitter.png',
+                                          'image' => $this->social_icon_url . '/11-official/X.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'Twitter',
@@ -740,7 +740,7 @@ class Minimal {
                                           'type' => 'socialIcon',
                                           'iconType' => 'instagram',
                                           'link' => 'http://instagram.com',
-                                          'image' => $this->social_icon_url . '/06-full-symbol-color/Instagram.png',
+                                          'image' => $this->social_icon_url . '/11-official/Instagram.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'Instagram',
@@ -1154,7 +1154,7 @@ class Minimal {
              ],
           'social' =>
              [
-              'iconSet' => 'default',
+              'iconSet' => 'official',
               'icons' =>
                  [
                   0 =>
@@ -1162,7 +1162,7 @@ class Minimal {
                       'type' => 'socialIcon',
                       'iconType' => 'facebook',
                       'link' => 'http://www.facebook.com',
-                      'image' => $this->social_icon_url . '/01-social/Facebook.png',
+                      'image' => $this->social_icon_url . '/11-official/Facebook.png',
                       'height' => '32px',
                       'width' => '32px',
                       'text' => 'Facebook',
@@ -1172,7 +1172,7 @@ class Minimal {
                       'type' => 'socialIcon',
                       'iconType' => 'twitter',
                       'link' => 'http://www.twitter.com',
-                      'image' => $this->social_icon_url . '/01-social/Twitter.png',
+                      'image' => $this->social_icon_url . '/11-official/X.png',
                       'height' => '32px',
                       'width' => '32px',
                       'text' => 'Twitter',

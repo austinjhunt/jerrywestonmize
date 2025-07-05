@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -12,6 +13,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Interop\Container\Exception\ContainerException;
@@ -57,10 +59,19 @@ class AmeliaBookingShortcodeService
         $gmapApiKey = $settingsService->getSetting('general', 'gMapApiKey');
 
         if ($gmapApiKey) {
-            wp_enqueue_script(
-                'amelia_google_maps_api',
-                "https://maps.googleapis.com/maps/api/js?key={$gmapApiKey}&libraries=places&loading=async"
-            );
+            $container = $container ?: require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+
+            /** @var CustomFieldRepository $customFieldRepository */
+            $customFieldRepository = $container->get('domain.customField.repository');
+
+            $addressCustomFields = $customFieldRepository->getByFieldValue('type', 'address');
+
+            if (count($addressCustomFields->getItems())) {
+                wp_enqueue_script(
+                    'amelia_google_maps_api',
+                    "https://maps.googleapis.com/maps/api/js?key={$gmapApiKey}&libraries=places&loading=async"
+                );
+            }
         }
 
         $scriptId = AMELIA_DEV ? 'amelia_booking_scripts_dev_vite' : 'amelia_booking_script_index';
@@ -84,7 +95,7 @@ class AmeliaBookingShortcodeService
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/public.ed3b1e1c.js',
+                AMELIA_URL . 'v3/public/assets/public.68f1cfe8.js',
                 [],
                 AMELIA_VERSION,
                 true
@@ -126,7 +137,7 @@ class AmeliaBookingShortcodeService
             $ameliaUrl = substr($ameliaUrl, strpos(substr($ameliaUrl, 7), '/') + 7);
 
             $ameliaActionUrl = substr($ameliaActionUrl, strpos(substr($ameliaActionUrl, 7), '/') + 7);
-        } else if (strpos($ameliaUrl, 'https://') === 0) {
+        } elseif (strpos($ameliaUrl, 'https://') === 0) {
             $ameliaUrl = substr($ameliaUrl, strpos(substr($ameliaUrl, 8), '/') + 8);
 
             $ameliaActionUrl = substr($ameliaActionUrl, strpos(substr($ameliaActionUrl, 8), '/') + 8);
@@ -200,9 +211,9 @@ class AmeliaBookingShortcodeService
                     if ($position !== false) {
                         $src = substr($src, $position);
                     }
-                } else if (strpos($src, 'http://') === 0) {
+                } elseif (strpos($src, 'http://') === 0) {
                     $src = substr($src, strpos(substr($src, 7), '/') + 7);
-                } else if (strpos($src, 'https://') === 0) {
+                } elseif (strpos($src, 'https://') === 0) {
                     $src = substr($src, strpos(substr($src, 8), '/') + 8);
                 }
 

@@ -9,8 +9,8 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class CustomFieldSaveType
 {
-    const BOOKINGS = 'bookings';
-    const CUSTOMER = 'customer';
+    public const BOOKINGS = 'bookings';
+    public const CUSTOMER = 'customer';
 
     /**
      * @var string

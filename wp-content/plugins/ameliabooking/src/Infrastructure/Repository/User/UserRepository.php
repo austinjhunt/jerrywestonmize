@@ -25,8 +25,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingsTa
  */
 class UserRepository extends AbstractRepository implements UserRepositoryInterface
 {
-
-    const FACTORY = UserFactory::class;
+    public const FACTORY = UserFactory::class;
 
     /**
      * @param AbstractUser $entity
@@ -440,7 +439,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     {
         try {
             $params[':type'] = $type;
-            $statement = $this->connection->prepare(
+            $statement       = $this->connection->prepare(
                 "
                 SELECT DISTINCT 
                     u.email AS email

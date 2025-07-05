@@ -30,6 +30,7 @@ class LiteBackendStrings
             'approved'                  => __('Approved', 'wpamelia'),
             'attendee'                  => __('Attendee', 'wpamelia'),
             'booked'                    => __('Booked', 'wpamelia'),
+            'bookings'                  => __('Bookings', 'wpamelia'),
             'cancel'                    => __('Cancel', 'wpamelia'),
             'canceled'                  => __('Canceled', 'wpamelia'),
             'capacity'                  => __('Spots', 'wpamelia'),
@@ -477,6 +478,7 @@ class LiteBackendStrings
             'custom_fields_upload_path'              => __('Attachment upload path', 'wpamelia'),
             'custom_fields_upload_path_tooltip'      => __('If you leave this field empty, all attachments will be uploaded into the Wordpress uploads folder.', 'wpamelia'),
             'view_activation_settings'               => __('View Activation Settings', 'wpamelia'),
+            'vat_number'                             => __('VAT number', 'wpamelia'),
             'view_appointments_and_events_settings'  => __('View Appointments and Events Settings', 'wpamelia'),
             'view_company_settings'                  => __('View Company Settings', 'wpamelia'),
             'view_general_settings'                  => __('View General Settings', 'wpamelia'),
@@ -583,6 +585,7 @@ class LiteBackendStrings
             'ph_company_phone'                       => __('Company phone', 'wpamelia'),
             'ph_company_website'                     => __('Company website', 'wpamelia'),
             'ph_company_email'                       => __('Company email', 'wpamelia'),
+            'ph_company_vat_number'                  => __('Company VAT number', 'wpamelia'),
             'ph_customer_email'                      => __('Customer email', 'wpamelia'),
             'ph_customer_first_name'                 => __('Customer first name', 'wpamelia'),
             'ph_customer_full_name'                  => __('Customer full name', 'wpamelia'),
@@ -1088,6 +1091,8 @@ class LiteBackendStrings
             'service_price'            => __('Service Price', 'wpamelia'),
             'subtotal'                 => __('Subtotal', 'wpamelia'),
             'total_price'              => __('Total Price', 'wpamelia'),
+            'bookings_price'           => __('Bookings Price', 'wpamelia'),
+            'event_price'              => __('Event Price', 'wpamelia'),
         ];
     }
 

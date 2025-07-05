@@ -4,17 +4,22 @@
 
 namespace AmeliaStripe\Service\Reporting;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
 class ReportTypeService extends \AmeliaStripe\Service\AbstractService
 {
     /**
      * Returns a full list of Report Types.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Collection<\AmeliaStripe\Reporting\ReportType>
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -26,12 +31,12 @@ class ReportTypeService extends \AmeliaStripe\Service\AbstractService
      * href="https://stripe.com/docs/keys#test-live-modes">live-mode API key</a>.).
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Reporting\ReportType
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

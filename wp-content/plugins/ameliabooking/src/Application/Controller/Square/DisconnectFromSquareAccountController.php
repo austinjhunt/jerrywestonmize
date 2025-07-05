@@ -31,7 +31,7 @@ class DisconnectFromSquareAccountController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new DisconnectFromSquareAccountCommand($args);
+        $command     = new DisconnectFromSquareAccountCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
         $command->setToken($request);

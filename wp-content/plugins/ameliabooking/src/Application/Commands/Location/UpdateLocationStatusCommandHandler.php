@@ -21,7 +21,6 @@ use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
  */
 class UpdateLocationStatusCommandHandler extends CommandHandler
 {
-
     /**
      * @var array
      */
@@ -73,10 +72,12 @@ class UpdateLocationStatusCommandHandler extends CommandHandler
             /** @var Provider $provider */
             foreach ($providerRepository->getAll()->getItems() as $provider) {
                 if (!$provider->getLocationId()) {
-                    $providerLocation = ProviderLocationFactory::create([
+                    $providerLocation = ProviderLocationFactory::create(
+                        [
                         'userId'     => $provider->getId()->getValue(),
                         'locationId' => $command->getArg('id')
-                    ]);
+                        ]
+                    );
 
                     $providerLocationRepo->add($providerLocation);
                 }

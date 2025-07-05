@@ -5,12 +5,9 @@
 namespace AmeliaStripe\Radar;
 
 /**
- * Value list items allow you to add specific values to a given Radar value list,
- * which can then be used in rules.
+ * Value list items allow you to add specific values to a given Radar value list, which can then be used in rules.
  *
- * Related guide: <a
- * href="https://stripe.com/docs/radar/lists#managing-list-items">Managing List
- * Items</a>.
+ * Related guide: <a href="https://stripe.com/docs/radar/lists#managing-list-items">Managing list items</a>
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
@@ -24,8 +21,86 @@ class ValueListItem extends \AmeliaStripe\ApiResource
 {
     const OBJECT_NAME = 'radar.value_list_item';
 
-    use \AmeliaStripe\ApiOperations\All;
-    use \AmeliaStripe\ApiOperations\Create;
-    use \AmeliaStripe\ApiOperations\Delete;
-    use \AmeliaStripe\ApiOperations\Retrieve;
+    /**
+     * Creates a new <code>ValueListItem</code> object, which is added to the specified
+     * parent value list.
+     *
+     * @param null|array{expand?: string[], value: string, value_list: string} $params
+     * @param null|array|string $options
+     *
+     * @return ValueListItem the created resource
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     */
+    public static function create($params = null, $options = null)
+    {
+        self::_validateParams($params);
+        $url = static::classUrl();
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
+        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    /**
+     * Deletes a <code>ValueListItem</code> object, removing it from its parent value
+     * list.
+     *
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @return ValueListItem the deleted resource
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     */
+    public function delete($params = null, $opts = null)
+    {
+        self::_validateParams($params);
+
+        $url = $this->instanceUrl();
+        list($response, $opts) = $this->_request('delete', $url, $params, $opts);
+        $this->refreshFrom($response, $opts);
+
+        return $this;
+    }
+
+    /**
+     * Returns a list of <code>ValueListItem</code> objects. The objects are sorted in
+     * descending order by creation date, with the most recently created object
+     * appearing first.
+     *
+     * @param null|array{created?: array|int, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, value?: string, value_list: string} $params
+     * @param null|array|string $opts
+     *
+     * @return \AmeliaStripe\Collection<ValueListItem> of ApiResources
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     */
+    public static function all($params = null, $opts = null)
+    {
+        $url = static::classUrl();
+
+        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+    }
+
+    /**
+     * Retrieves a <code>ValueListItem</code> object.
+     *
+     * @param array|string $id the ID of the API resource to retrieve, or an options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @return ValueListItem
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     */
+    public static function retrieve($id, $opts = null)
+    {
+        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $instance = new static($id, $opts);
+        $instance->refresh();
+
+        return $instance;
+    }
 }

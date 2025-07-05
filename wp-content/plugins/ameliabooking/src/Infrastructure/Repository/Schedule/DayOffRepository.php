@@ -14,7 +14,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class DayOffRepository extends AbstractRepository
 {
-    const FACTORY = DayOffFactory::class;
+    public const FACTORY = DayOffFactory::class;
 
     /**
      * @param DayOff $entity

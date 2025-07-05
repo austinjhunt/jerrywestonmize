@@ -33,7 +33,7 @@ class UpdateProviderStatusController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdateProviderStatusCommand($args);
+        $command     = new UpdateProviderStatusCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

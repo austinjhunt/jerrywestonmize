@@ -2,6 +2,8 @@
 
 namespace AmeliaBooking\Infrastructure\WP\UserService;
 
+use WP_Error;
+
 /**
  * Class CreateWPUser
  *
@@ -26,7 +28,7 @@ class CreateWPUser
                 return $user->ID;
             }
             return null;
-        } else if (email_exists($email)) {
+        } elseif (email_exists($email)) {
             $user = get_user_by('email', $email);
             if ($user) {
                 $user->add_role($role);
@@ -37,11 +39,13 @@ class CreateWPUser
 
         $userId = wp_create_user($email, wp_generate_password(), $email);
 
-        wp_update_user([
+        wp_update_user(
+            [
             'ID'         => $userId,
             'first_name' => $firstName,
             'last_name'  => $lastName,
-        ]);
+            ]
+        );
 
         if ($userId instanceof WP_Error) {
             return null;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -25,7 +26,7 @@ class DateTimeService
             if ($settings['timeZoneString']) {
                 self::$timeZone = new \DateTimeZone($settings['timeZoneString']);
             } elseif ($settings['gmtOffset']) {
-                $hours = (int)$settings['gmtOffset'];
+                $hours   = (int)$settings['gmtOffset'];
                 $minutes = ($settings['gmtOffset'] - floor($settings['gmtOffset'])) * 60;
 
                 self::$timeZone = new \DateTimeZone(sprintf('%+03d:%02d', $hours, $minutes));

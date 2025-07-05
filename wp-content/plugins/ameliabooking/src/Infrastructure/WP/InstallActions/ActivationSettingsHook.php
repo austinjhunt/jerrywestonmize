@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Settings hook for activation
  */
@@ -231,6 +232,7 @@ class ActivationSettingsHook
             'name'             => '',
             'address'          => '',
             'phone'            => '',
+            'vat'              => '',
             'countryPhoneIso'  => '',
             'website'          => '',
             'translations'     => '',
@@ -1057,30 +1059,30 @@ This message does not have an option for responding. If you need additional info
         }
 
         if (empty($settings['primaryColor'])) {
-            $settings['primaryColor']= 'rgba(255,255,255,0)';
-            $settings['globalColors']['primaryColor'] = 'rgba(255,255,255,0)';
+            $settings['primaryColor'] = 'rgba(255,255,255,0)';
+            $settings['globalColors']['primaryColor']   = 'rgba(255,255,255,0)';
             $settings['globalColors']['formImageColor'] = 'rgba(255,255,255,0)';
         }
 
         if (empty($settings['primaryGradient1'])) {
-            $settings['primaryGradient1']= 'rgba(255,255,255,0)';
+            $settings['primaryGradient1'] = 'rgba(255,255,255,0)';
             $settings['globalColors']['formGradientColor1'] = 'rgba(255,255,255,0)';
         }
 
         if (empty($settings['primaryGradient2'])) {
-            $settings['primaryGradient2']= 'rgba(255,255,255,0)';
+            $settings['primaryGradient2'] = 'rgba(255,255,255,0)';
             $settings['globalColors']['formGradientColor2'] = 'rgba(255,255,255,0)';
         }
 
         if (empty($settings['textColor'])) {
-            $settings['textColor']= 'rgba(255,255,255,0)';
-            $settings['globalColors']['formTextColor'] = 'rgba(255,255,255,0)';
-            $settings['globalColors']['formInputTextColor'] = 'rgba(255,255,255,0)';
+            $settings['textColor'] = 'rgba(255,255,255,0)';
+            $settings['globalColors']['formTextColor']         = 'rgba(255,255,255,0)';
+            $settings['globalColors']['formInputTextColor']    = 'rgba(255,255,255,0)';
             $settings['globalColors']['formDropdownTextColor'] = 'rgba(255,255,255,0)';
         }
 
         if (empty($settings['textColorOnBackground'])) {
-            $settings['textColorOnBackground']= 'rgba(255,255,255,0)';
+            $settings['textColorOnBackground'] = 'rgba(255,255,255,0)';
             $settings['globalColors']['textColorOnBackground'] = 'rgba(255,255,255,0)';
         }
 
@@ -1100,12 +1102,12 @@ This message does not have an option for responding. If you need additional info
             $colorSbsPsf  = $settings['forms']['stepByStepForm']['packageSetupForm']['globalSettings'];
             $colorSbsPlf  = $settings['forms']['stepByStepForm']['packageListForm']['globalSettings'];
             $colorSbsCpf  = $settings['forms']['stepByStepForm']['confirmBookingForm']['package']['globalSettings'];
-            $colorSbsCoa = $settings['forms']['stepByStepForm']['congratulationsForm']['appointment']['globalSettings'];
+            $colorSbsCoa  = $settings['forms']['stepByStepForm']['congratulationsForm']['appointment']['globalSettings'];
             $colorSbsCop  = $settings['forms']['stepByStepForm']['congratulationsForm']['package']['globalSettings'];
             $settingsForm = array_merge(
                 $settingsForm,
                 [
-                    'sbs-ssf-bgr-color'           => $useGlobalSbs ? $globalColors['formBackgroundColor'] :$colorSbsSsf['formBackgroundColor'],
+                    'sbs-ssf-bgr-color'           => $useGlobalSbs ? $globalColors['formBackgroundColor'] : $colorSbsSsf['formBackgroundColor'],
                     'sbs-ssf-text-color'          => $useGlobalSbs ? $globalColors['formTextColor'] : $colorSbsSsf['formTextColor'],
                     'sbs-ssf-input-color'         => $useGlobalSbs ? $globalColors['formInputColor'] : $colorSbsSsf['formInputColor'],
                     'sbs-ssf-input-text-color'    => $useGlobalSbs ? $globalColors['formInputTextColor'] : $colorSbsSsf['formInputTextColor'],
@@ -1113,11 +1115,11 @@ This message does not have an option for responding. If you need additional info
                     'sbs-ssf-dropdown-text-color' => $useGlobalSbs ? $globalColors['formDropdownTextColor'] : $colorSbsSsf['formDropdownTextColor'],
                     'sbs-cf-gradient1'            => $useGlobalSbs ? $globalColors['formGradientColor1'] : $colorSbsCf['formGradientColor1'],
                     'sbs-cf-gradient2'            => $useGlobalSbs ? $globalColors['formGradientColor2'] : $colorSbsCf['formGradientColor2'],
-                    'sbs-cf-gradient-angle'       => $useGlobalSbs ? $globalColors['formGradientAngle'].'deg' : $colorSbsCf['formGradientAngle'].'deg',
+                    'sbs-cf-gradient-angle'       => $useGlobalSbs ? $globalColors['formGradientAngle'] . 'deg' : $colorSbsCf['formGradientAngle'] . 'deg',
                     'sbs-cf-text-color'           => $useGlobalSbs ? $globalColors['textColorOnBackground'] : $colorSbsCf['formTextColor'],
                     'sbs-rsf-gradient1'           => $useGlobalSbs ? $globalColors['formGradientColor1'] : $colorSbsRsf['formGradientColor1'],
                     'sbs-rsf-gradient2'           => $useGlobalSbs ? $globalColors['formGradientColor2'] : $colorSbsRsf['formGradientColor2'],
-                    'sbs-rsf-gradient-angle'      => $useGlobalSbs ? $globalColors['formGradientAngle'].'deg' : $colorSbsRsf['formGradientAngle'].'deg',
+                    'sbs-rsf-gradient-angle'      => $useGlobalSbs ? $globalColors['formGradientAngle'] . 'deg' : $colorSbsRsf['formGradientAngle'] . 'deg',
                     'sbs-rsf-text-color'          => $useGlobalSbs ? $globalColors['textColorOnBackground'] : $colorSbsRsf['formTextColor'],
                     'sbs-rsf-input-color'         => $useGlobalSbs ? $globalColors['formInputColor'] : $colorSbsRsf['formInputColor'],
                     'sbs-rsf-input-text-color'    => $useGlobalSbs ? $globalColors['formInputTextColor'] : $colorSbsRsf['formInputTextColor'],
@@ -1145,7 +1147,7 @@ This message does not have an option for responding. If you need additional info
                     'sbs-pif-text-color'          => $useGlobalSbs ? $globalColors['formTextColor'] : $colorSbsPif['formTextColor'],
                     'sbs-psf-gradient1'           => $useGlobalSbs ? $globalColors['formGradientColor1'] : $colorSbsPsf['formGradientColor1'],
                     'sbs-psf-gradient2'           => $useGlobalSbs ? $globalColors['formGradientColor2'] : $colorSbsPsf['formGradientColor2'],
-                    'sbs-psf-gradient-angle'      => $useGlobalSbs ? $globalColors['formGradientAngle'].'deg' : $colorSbsPsf['formGradientAngle'].'deg',
+                    'sbs-psf-gradient-angle'      => $useGlobalSbs ? $globalColors['formGradientAngle'] . 'deg' : $colorSbsPsf['formGradientAngle'] . 'deg',
                     'sbs-psf-text-color'          => $useGlobalSbs ? $globalColors['textColorOnBackground'] : $colorSbsPsf['formTextColor'],
                     'sbs-psf-input-color'         => $useGlobalSbs ? $globalColors['formInputColor'] : $colorSbsPsf['formInputColor'],
                     'sbs-psf-input-text-color'    => $useGlobalSbs ? $globalColors['formInputTextColor'] : $colorSbsPsf['formInputTextColor'],
@@ -1185,11 +1187,11 @@ This message does not have an option for responding. If you need additional info
                     'sbs-ssf-dropdown-text-color' => $globalColors['formDropdownTextColor'],
                     'sbs-cf-gradient1'            => $globalColors['formGradientColor1'],
                     'sbs-cf-gradient2'            => $globalColors['formGradientColor2'],
-                    'sbs-cf-gradient-angle'       => $globalColors['formGradientAngle'].'deg',
+                    'sbs-cf-gradient-angle'       => $globalColors['formGradientAngle'] . 'deg',
                     'sbs-cf-text-color'           => $globalColors['textColorOnBackground'],
                     'sbs-rsf-gradient1'           => $globalColors['formGradientColor1'],
                     'sbs-rsf-gradient2'           => $globalColors['formGradientColor2'],
-                    'sbs-rsf-gradient-angle'      => $globalColors['formGradientAngle'].'deg',
+                    'sbs-rsf-gradient-angle'      => $globalColors['formGradientAngle'] . 'deg',
                     'sbs-rsf-text-color'          => $globalColors['textColorOnBackground'],
                     'sbs-rsf-input-color'         => $globalColors['formInputColor'],
                     'sbs-rsf-input-text-color'    => $globalColors['formInputTextColor'],
@@ -1217,7 +1219,7 @@ This message does not have an option for responding. If you need additional info
                     'sbs-pif-text-color'          => $globalColors['formTextColor'],
                     'sbs-psf-gradient1'           => $globalColors['formGradientColor1'],
                     'sbs-psf-gradient2'           => $globalColors['formGradientColor2'],
-                    'sbs-psf-gradient-angle'      => $globalColors['formGradientAngle'].'deg',
+                    'sbs-psf-gradient-angle'      => $globalColors['formGradientAngle'] . 'deg',
                     'sbs-psf-text-color'          => $globalColors['textColorOnBackground'],
                     'sbs-psf-input-color'         => $globalColors['formInputColor'],
                     'sbs-psf-input-text-color'    => $globalColors['formInputTextColor'],
@@ -1248,17 +1250,17 @@ This message does not have an option for responding. If you need additional info
         }
 
         if (isset($settings['forms']['catalogForm'])) {
-            $useGlobalCf = $settings['useGlobalColors']['catalogForm'];
-            $colorCfSsf  = $settings['forms']['catalogForm']['selectServiceForm']['globalSettings'];
-            $colorCfCf   = $settings['forms']['catalogForm']['calendarDateTimeForm']['globalSettings'];
-            $colorCfRsf  = $settings['forms']['catalogForm']['recurringSetupForm']['globalSettings'];
-            $colorCfRdf  = $settings['forms']['catalogForm']['recurringDatesForm']['globalSettings'];
-            $colorCfCaf  = $settings['forms']['catalogForm']['confirmBookingForm']['appointment']['globalSettings'];
-            $colorCfPsf  = $settings['forms']['catalogForm']['packageSetupForm']['globalSettings'];
-            $colorCfPlf  = $settings['forms']['catalogForm']['packageListForm']['globalSettings'];
-            $colorCfCpf  = $settings['forms']['catalogForm']['confirmBookingForm']['package']['globalSettings'];
-            $colorCfCoa  = $settings['forms']['catalogForm']['congratulationsForm']['appointment']['globalSettings'];
-            $colorCfCop  = $settings['forms']['catalogForm']['congratulationsForm']['package']['globalSettings'];
+            $useGlobalCf  = $settings['useGlobalColors']['catalogForm'];
+            $colorCfSsf   = $settings['forms']['catalogForm']['selectServiceForm']['globalSettings'];
+            $colorCfCf    = $settings['forms']['catalogForm']['calendarDateTimeForm']['globalSettings'];
+            $colorCfRsf   = $settings['forms']['catalogForm']['recurringSetupForm']['globalSettings'];
+            $colorCfRdf   = $settings['forms']['catalogForm']['recurringDatesForm']['globalSettings'];
+            $colorCfCaf   = $settings['forms']['catalogForm']['confirmBookingForm']['appointment']['globalSettings'];
+            $colorCfPsf   = $settings['forms']['catalogForm']['packageSetupForm']['globalSettings'];
+            $colorCfPlf   = $settings['forms']['catalogForm']['packageListForm']['globalSettings'];
+            $colorCfCpf   = $settings['forms']['catalogForm']['confirmBookingForm']['package']['globalSettings'];
+            $colorCfCoa   = $settings['forms']['catalogForm']['congratulationsForm']['appointment']['globalSettings'];
+            $colorCfCop   = $settings['forms']['catalogForm']['congratulationsForm']['package']['globalSettings'];
             $settingsForm = array_merge(
                 $settingsForm,
                 [
@@ -1270,11 +1272,11 @@ This message does not have an option for responding. If you need additional info
                     'cf-ssf-dropdown-text-color'  => $useGlobalCf ? $globalColors['formDropdownTextColor'] : $colorCfSsf['formDropdownTextColor'],
                     'cf-cf-gradient1'             => $useGlobalCf ? $globalColors['formGradientColor1'] : $colorCfCf['formGradientColor1'],
                     'cf-cf-gradient2'             => $useGlobalCf ? $globalColors['formGradientColor2'] : $colorCfCf['formGradientColor2'],
-                    'cf-cf-gradient-angle'        => $useGlobalCf ? $globalColors['formGradientAngle'].'deg' : $colorCfCf['formGradientAngle'].'deg',
+                    'cf-cf-gradient-angle'        => $useGlobalCf ? $globalColors['formGradientAngle'] . 'deg' : $colorCfCf['formGradientAngle'] . 'deg',
                     'cf-cf-text-color'            => $useGlobalCf ? $globalColors['textColorOnBackground'] : $colorCfCf['formTextColor'],
                     'cf-rsf-gradient1'            => $useGlobalCf ? $globalColors['formGradientColor1'] : $colorCfRsf['formGradientColor1'],
                     'cf-rsf-gradient2'            => $useGlobalCf ? $globalColors['formGradientColor2'] : $colorCfRsf['formGradientColor2'],
-                    'cf-rsf-gradient-angle'       => $useGlobalCf ? $globalColors['formGradientAngle'].'deg' : $colorCfRsf['formGradientAngle'].'deg',
+                    'cf-rsf-gradient-angle'       => $useGlobalCf ? $globalColors['formGradientAngle'] . 'deg' : $colorCfRsf['formGradientAngle'] . 'deg',
                     'cf-rsf-text-color'           => $useGlobalCf ? $globalColors['formTextColor'] : $colorCfRsf['formTextColor'],
                     'cf-rsf-input-color'          => $useGlobalCf ? $globalColors['formInputColor'] : $colorCfRsf['formInputColor'],
                     'cf-rsf-input-text-color'     => $useGlobalCf ? $globalColors['formInputTextColor'] : $colorCfRsf['formInputTextColor'],
@@ -1294,7 +1296,7 @@ This message does not have an option for responding. If you need additional info
                     'cf-caf-dropdown-text-color'  => $useGlobalCf ? $globalColors['formDropdownTextColor'] : $colorCfCaf['formDropdownTextColor'],
                     'cf-psf-gradient1'            => $useGlobalCf ? $globalColors['formGradientColor1'] : $colorCfPsf['formGradientColor1'],
                     'cf-psf-gradient2'            => $useGlobalCf ? $globalColors['formGradientColor2'] : $colorCfPsf['formGradientColor2'],
-                    'cf-psf-gradient-angle'       => $useGlobalCf ? $globalColors['formGradientAngle'].'deg' : $colorCfPsf['formGradientAngle'].'deg',
+                    'cf-psf-gradient-angle'       => $useGlobalCf ? $globalColors['formGradientAngle'] . 'deg' : $colorCfPsf['formGradientAngle'] . 'deg',
                     'cf-psf-text-color'           => $useGlobalCf ? $globalColors['textColorOnBackground'] : $colorCfPsf['formTextColor'],
                     'cf-psf-input-color'          => $useGlobalCf ? $globalColors['formInputColor'] : $colorCfPsf['formInputColor'],
                     'cf-psf-input-text-color'     => $useGlobalCf ? $globalColors['formInputTextColor'] : $colorCfPsf['formInputTextColor'],
@@ -1334,11 +1336,11 @@ This message does not have an option for responding. If you need additional info
                     'cf-ssf-dropdown-text-color'  => $globalColors['formDropdownTextColor'],
                     'cf-cf-gradient1'             => $globalColors['formGradientColor1'],
                     'cf-cf-gradient2'             => $globalColors['formGradientColor2'],
-                    'cf-cf-gradient-angle'        => $globalColors['formGradientAngle'].'deg',
+                    'cf-cf-gradient-angle'        => $globalColors['formGradientAngle'] . 'deg',
                     'cf-cf-text-color'            => $globalColors['textColorOnBackground'],
                     'cf-rsf-gradient1'            => $globalColors['formGradientColor1'],
                     'cf-rsf-gradient2'            => $globalColors['formGradientColor2'],
-                    'cf-rsf-gradient-angle'       => $globalColors['formGradientAngle'].'deg',
+                    'cf-rsf-gradient-angle'       => $globalColors['formGradientAngle'] . 'deg',
                     'cf-rsf-text-color'           => $globalColors['textColorOnBackground'],
                     'cf-rsf-input-color'          => $globalColors['formInputColor'],
                     'cf-rsf-input-text-color'     => $globalColors['formInputTextColor'],
@@ -1358,7 +1360,7 @@ This message does not have an option for responding. If you need additional info
                     'cf-caf-dropdown-text-color'  => $globalColors['formDropdownTextColor'],
                     'cf-psf-gradient1'            => $globalColors['formGradientColor1'],
                     'cf-psf-gradient2'            => $globalColors['formGradientColor2'],
-                    'cf-psf-gradient-angle'       => $globalColors['formGradientAngle'].'deg',
+                    'cf-psf-gradient-angle'       => $globalColors['formGradientAngle'] . 'deg',
                     'cf-psf-text-color'           => $globalColors['textColorOnBackground'],
                     'cf-psf-input-color'          => $globalColors['formInputColor'],
                     'cf-psf-input-text-color'     => $globalColors['formInputTextColor'],
@@ -1389,8 +1391,8 @@ This message does not have an option for responding. If you need additional info
         }
 
         if (isset($settings['forms']['eventListForm'])) {
-            $useGlobaElf  = $settings['useGlobalColors']['eventListForm'];
-            $colorElf     = $settings['forms']['eventListForm']['globalSettings'];
+            $useGlobaElf = $settings['useGlobalColors']['eventListForm'];
+            $colorElf    = $settings['forms']['eventListForm']['globalSettings'];
 
             $settingsForm = array_merge(
                 $settingsForm,

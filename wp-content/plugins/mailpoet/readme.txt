@@ -3,7 +3,7 @@ Contributors: mailpoet, woocommerce, automattic
 Tags: email marketing, post notification, woocommerce emails, email automation, newsletter
 Requires at least: 6.7
 Tested up to: 6.8
-Stable tag: 5.12.4
+Stable tag: 5.12.9
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -34,8 +34,11 @@ Trusted by 600,000 WordPress websites since 2011.
 * Behavior and interest-based subscriber segmentation options
 * Pre-built and customizable email and subscription form templates
 * Multiple subscription form placements: below pages, fixed bar, popup, slide-in, shortcode, on exit intent
-* WooCommerce emails: abandoned cart, first purchase, specific product, product category
+* WooCommerce emails: abandoned cart, first purchase, specific product, product category, order status change, review added
 * Customize WooCommerce transactional emails
+* Automate subscriber management (add/remove from list, add/remove tags, update subscriber data) (paid plan required)
+* Create custom automation triggers and actions (paid plan required)
+* Branch your automations with if/else conditions to improve engagement (paid plan required)
 * Reliable email delivery with MailPoet Sending Service (available for free – plan required)
 * Basic engagement statistics (available for free) and detailed engagement statistics (paid plan required)
 * Multi-condition segmentation (paid plan required)
@@ -61,9 +64,11 @@ Use the automated email options to:
 
 * Welcome your new customers when they make their first purchase
 * Upsell by sending emails to customers who purchased a specific product or from a specific product category
-* Convert more customers by sending a series of abandoned cart emails.
+* Convert more customers by sending a series of abandoned cart emails
+* Re-engage customers who haven't made a purchase in a while with personalized offers (paid plan required)
+* Follow up with customers who left a review to encourage more engagement (paid plan required).
 
-And with WooCommerce-specific segmentation options, you’ll be able to send targeted emails to your customers based on criteria such as their country, the number of orders they’ve placed, how much they’ve spent, and if they have an active product subscription (powered by WooCommerce Subscriptions) or membership (powered by WooCommerce Memberships).
+And with WooCommerce-specific segmentation options, you’ll be able to send targeted emails to your customers based on criteria such as their country, the number of orders they’ve placed, how much they’ve spent, and if they have an active product subscription (powered by **WooCommerce Subscriptions**) or membership (powered by **WooCommerce Memberships**).
 
 In addition, you’ll also be able to increase brand recognition by customizing your WooCommerce transactional emails. Create a unified brand experience by changing the layout, colors, and fonts used in your emails, as well as adding any images or additional information to them.
 
@@ -152,7 +157,7 @@ To improve user experience, MailPoet may use the following 3rd party libraries i
 
 * [Google Fonts](https://fonts.google.com/) - used in Form Editor which you can use to customize your forms, and in the Email Editor to style emails. This can be individually [disabled by a filter](https://kb.mailpoet.com/article/332-how-to-disable-google-fonts). [TOS](https://policies.google.com/terms?hl=en) and [Privacy Policy](https://policies.google.com/privacy?hl=en)
 
-* [DocsBot](https://docsbot.ai) - used for searching in Knowledge Base with the help of AI. This functionality may load scripts from [https://widget.docsbot.ai/chat.js](https://widget.docsbot.ai/chat.js). [TOS and Privacy Policy](https://docsbot.ai/legal)
+* [WordPress.com](https://public-api.wordpress.com/) - used for searching in Knowledge Base with the help of AI.
 
 * [Mixpanel](https://mixpanel.com/) - used to send data about the usage of the MailPoet plugin when you [agree with sharing usage data with us](https://kb.mailpoet.com/article/130-sharing-your-data-with-us). [TOS](https://mixpanel.com/legal/terms-of-use/) and [Privacy Policy](https://mixpanel.com/legal/privacy-policy/)
 
@@ -222,7 +227,13 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 
 == Changelog ==
 
-= 5.12.4 - 2025-05-26 =
-* Improved: minor changes and fixes.
+= 5.12.9 - 2025-06-30 =
+* Improved: handling of MailPoet Page title when switching website languages;
+* Improved: add default re-engagement emails trigger value when "Inactive subscribers" feature is turned off;
+* Improved: when choosing an email type, show loading animation only on the selected one;
+* Changed: replaced DocsBot with WordPress.com chatbot when searching MailPoet Knowledge Base;
+* Fixed: rendering submit button when font size is changed;
+* Fixed: fatal error in ACF and SCF when working with post templates in location rules;
+* Fixed: apply the latest changes in the form editor in the preview.
 
 [See the changelog for all versions.](https://github.com/mailpoet/mailpoet/blob/trunk/mailpoet/changelog.txt)

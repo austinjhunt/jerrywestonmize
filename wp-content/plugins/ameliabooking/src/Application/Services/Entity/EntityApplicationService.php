@@ -181,7 +181,8 @@ class EntityApplicationService
 
 
         foreach ($data['entityIds'] as $index => $id) {
-            if (($data['entity'] === 'appointment' && !in_array((int)$id, $existingServicesIds)) ||
+            if (
+                ($data['entity'] === 'appointment' && !in_array((int)$id, $existingServicesIds)) ||
                 ($data['entity'] === 'event' && !in_array((int)$id, $existingEventsIds))
             ) {
                 unset($data['entityIds'][$index]);

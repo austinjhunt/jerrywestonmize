@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Subscribe to domain events
  */

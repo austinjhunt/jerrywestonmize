@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -18,23 +19,28 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
 {
     protected $controls_data;
 
-    public function get_name() {
+    public function get_name()
+    {
         return 'stepbooking';
     }
 
-    public function get_title() {
+    public function get_title()
+    {
         return BackendStrings::getWordPressStrings()['step_booking_gutenberg_block']['title'];
     }
 
-    public function get_icon() {
+    public function get_icon()
+    {
         return 'amelia-logo';
     }
 
-    public function get_categories() {
+    public function get_categories()
+    {
         return [ 'amelia-elementor' ];
     }
 
-    protected function register_controls() {
+    protected function register_controls()
+    {
 
         $controls_data = self::amelia_elementor_get_data();
 
@@ -178,7 +184,8 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
 
         $this->end_controls_section();
     }
-    protected function render() {
+    protected function render()
+    {
         $settings = $this->get_settings_for_display();
 
         $trigger      = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
@@ -210,8 +217,9 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
     }
 
 
-    public static function amelia_elementor_get_data() {
-        $data = GutenbergBlock::getEntitiesData()['data'];
+    public static function amelia_elementor_get_data()
+    {
+        $data          = GutenbergBlock::getEntitiesData()['data'];
         $elementorData = [];
 
         $elementorData['categories'] = [];

@@ -20,7 +20,7 @@ $entries['notAllowedHandler'] = function () {
 
 // Handle the errors
 $entries['errorHandler'] = function (Container $c) {
-    return function ($request, \Slim\Http\Response $response, $exception) use ($c) {
+    return function ($request, \Slim\Http\Response $response, $exception) {
         /** @var Exception $exception */
 
         switch (get_class($exception)) {

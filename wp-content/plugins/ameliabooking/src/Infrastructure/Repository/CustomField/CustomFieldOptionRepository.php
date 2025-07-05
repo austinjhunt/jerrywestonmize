@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -19,8 +20,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
  */
 class CustomFieldOptionRepository extends AbstractRepository implements CustomFieldOptionRepositoryInterface
 {
-
-    const FACTORY = CustomFieldOptionFactory::class;
+    public const FACTORY = CustomFieldOptionFactory::class;
 
     /**
      * @param CustomFieldOption $entity

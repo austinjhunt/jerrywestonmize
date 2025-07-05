@@ -11,7 +11,6 @@ use AmeliaBooking\Application\Commands\Command;
  */
 class UpdateProviderCommand extends Command
 {
-
     /**
      * UpdateProviderCommand constructor.
      *

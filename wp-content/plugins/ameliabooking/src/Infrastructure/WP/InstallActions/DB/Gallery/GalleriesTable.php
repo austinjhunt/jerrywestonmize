@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -17,8 +18,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class GalleriesTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'galleries';
+    public const TABLE = 'galleries';
 
     /**
      * @return string

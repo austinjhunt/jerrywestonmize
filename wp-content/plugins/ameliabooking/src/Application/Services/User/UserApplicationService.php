@@ -359,13 +359,14 @@ class UserApplicationService
             'is_wp_user'   => $loginType === LoginType::WP_USER
         ];
 
-        if (($loginType === LoginType::AMELIA_URL_TOKEN || $loginType === LoginType::AMELIA_CREDENTIALS) &&
+        if (
+            ($loginType === LoginType::AMELIA_URL_TOKEN || $loginType === LoginType::AMELIA_CREDENTIALS) &&
             $checkIfSavedPassword &&
             $cabinetSettings['loginEnabled']
         ) {
             if ($user->getPassword() === null || $user->getPassword()->getValue() === null) {
                 $responseData['set_password'] = true;
-            } else if ($changePass) {
+            } elseif ($changePass) {
                 $responseData['change_password'] = true;
             }
         }
@@ -435,7 +436,8 @@ class UserApplicationService
             $usedTokens = $user->getUsedTokens() && $user->getUsedTokens()->getValue() ?
                 json_decode($user->getUsedTokens()->getValue(), true) : [];
 
-            if (in_array($token, $usedTokens, true) &&
+            if (
+                in_array($token, $usedTokens, true) &&
                 ($usedTokensCount = array_count_values($usedTokens)) &&
                 $usedTokensCount[$token] > 4
             ) {
@@ -504,7 +506,8 @@ class UserApplicationService
         $userType = $user->getType();
 
         // check if user is not logged in as Word Press User and password is required and password is not created
-        if (!$isAmeliaWPUser &&
+        if (
+            !$isAmeliaWPUser &&
             $userType !== AbstractUser::USER_ROLE_ADMIN &&
             $userType !== AbstractUser::USER_ROLE_MANAGER &&
             $cabinetSettings['loginEnabled'] &&

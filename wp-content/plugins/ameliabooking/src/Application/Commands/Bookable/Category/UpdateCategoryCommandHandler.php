@@ -61,9 +61,11 @@ class UpdateCategoryCommandHandler extends CommandHandler
 
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully updated bookable category.');
-            $result->setData([
+            $result->setData(
+                [
                 Entities::CATEGORY => $category->toArray()
-            ]);
+                ]
+            );
         }
 
         return $result;

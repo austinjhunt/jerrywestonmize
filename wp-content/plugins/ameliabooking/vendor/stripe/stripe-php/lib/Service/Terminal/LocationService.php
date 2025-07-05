@@ -4,17 +4,22 @@
 
 namespace AmeliaStripe\Service\Terminal;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
 class LocationService extends \AmeliaStripe\Service\AbstractService
 {
     /**
      * Returns a list of <code>Location</code> objects.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Collection<\AmeliaStripe\Terminal\Location>
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -26,12 +31,12 @@ class LocationService extends \AmeliaStripe\Service\AbstractService
      * address fields are required in each country, see the <a
      * href="/docs/terminal/fleet/locations">Manage locations</a> guide.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{address: array{city?: string, country: string, line1?: string, line2?: string, postal_code?: string, state?: string}, configuration_overrides?: string, display_name: string, expand?: string[], metadata?: null|array<string, string>} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Location
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -43,11 +48,11 @@ class LocationService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Location
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function delete($id, $params = null, $opts = null)
     {
@@ -58,12 +63,12 @@ class LocationService extends \AmeliaStripe\Service\AbstractService
      * Retrieves a <code>Location</code> object.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Location
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -75,12 +80,12 @@ class LocationService extends \AmeliaStripe\Service\AbstractService
      * passed. Any parameters not provided will be left unchanged.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{address?: array{city?: string, country?: string, line1?: string, line2?: string, postal_code?: string, state?: string}, configuration_overrides?: null|string, display_name?: string, expand?: string[], metadata?: null|array<string, string>} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Location
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function update($id, $params = null, $opts = null)
     {

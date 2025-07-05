@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -51,6 +52,7 @@ class GetWhatsNewCommandHandler extends CommandHandler
 
         $blogPostsElements = $blogPageContent->query('//article[contains(@class, "post-list-post")]');
 
+        /** @var \DOMElement $blogPostElement */
         foreach ($blogPostsElements as $blogPostElement) {
             $post = new stdClass();
 

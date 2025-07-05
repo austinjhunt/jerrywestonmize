@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class for standardizing command results
  */
@@ -12,9 +13,9 @@ namespace AmeliaBooking\Application\Commands;
  */
 class CommandResult
 {
-    const RESULT_SUCCESS = 'success';
-    const RESULT_ERROR = 'error';
-    const RESULT_CONFLICT = 'conflict';
+    public const RESULT_SUCCESS  = 'success';
+    public const RESULT_ERROR    = 'error';
+    public const RESULT_CONFLICT = 'conflict';
 
     private $data;
     private $message;
@@ -22,7 +23,7 @@ class CommandResult
     private $result = self::RESULT_SUCCESS;
 
     private $attachment = false;
-    private $file = null;
+    private $file       = null;
     private $url;
     private $dataInResponse = true;
 

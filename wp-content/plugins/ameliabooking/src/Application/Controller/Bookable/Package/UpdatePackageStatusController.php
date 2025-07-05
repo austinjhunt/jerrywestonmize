@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -37,7 +38,7 @@ class UpdatePackageStatusController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdatePackageStatusCommand($args);
+        $command     = new UpdatePackageStatusCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

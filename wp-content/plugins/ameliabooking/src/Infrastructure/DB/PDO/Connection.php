@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Slavko Babic
  * @date   2017-08-21
@@ -8,7 +9,7 @@ namespace AmeliaBooking\Infrastructure\DB\PDO;
 
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
-use \PDO;
+use PDO;
 
 /**
  * Class Connection

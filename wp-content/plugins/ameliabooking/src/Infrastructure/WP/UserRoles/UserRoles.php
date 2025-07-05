@@ -26,7 +26,7 @@ class UserRoles
      * Return the current user amelia role
      *
      * @param $wpUser
-     * @return bool|null
+     * @return string|null
      */
     public static function getUserAmeliaRole($wpUser)
     {

@@ -23,6 +23,7 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
      */
     public function __construct(Container $container)
     {
+        $this->container = $container;
     }
 
     /**

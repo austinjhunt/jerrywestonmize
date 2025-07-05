@@ -40,16 +40,18 @@ class GetLocationDeleteEffectCommandHandler extends CommandHandler
         $locationRepository = $this->getContainer()->get('domain.locations.repository');
 
         /** @var Collection $services */
-        $services = $locationRepository->getServicesById($command->getArg('id'));
+        $services      = $locationRepository->getServicesById($command->getArg('id'));
         $serviceString = $services->length() === 1 ? Entities::SERVICE : Entities::SERVICES;
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved message.');
-        $result->setData([
+        $result->setData(
+            [
             'valid'   => true,
             'message' => $services->length() ?
                 "This location has {$services->length()} {$serviceString} connected to it." : ''
-        ]);
+            ]
+        );
 
         return $result;
     }

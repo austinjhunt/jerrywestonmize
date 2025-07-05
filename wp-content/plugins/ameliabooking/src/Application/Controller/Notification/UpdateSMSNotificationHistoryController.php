@@ -31,7 +31,7 @@ class UpdateSMSNotificationHistoryController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdateSMSNotificationHistoryCommand($args);
+        $command     = new UpdateSMSNotificationHistoryCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

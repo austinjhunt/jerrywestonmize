@@ -18,6 +18,7 @@ use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventPeriodFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -63,7 +64,7 @@ class GetEventsCommandHandler extends CommandHandler
 
         $params = $command->getField('params');
 
-        /** @var AbstractUser $user */
+        /** @var AbstractUser|null $user */
         $user = null;
 
         $isFrontEnd = isset($params['page']) && empty($params['group']);
@@ -210,15 +211,18 @@ class GetEventsCommandHandler extends CommandHandler
                 }
             }
 
-            if (($isFrontEnd && $settingsDS->getSetting('general', 'showClientTimeZone')) ||
+            if (
+                ($isFrontEnd && $settingsDS->getSetting('general', 'showClientTimeZone')) ||
                 $isCabinetPage || ($user && $user->getType() === AbstractUser::USER_ROLE_PROVIDER)
             ) {
                 $timeZone = 'UTC';
 
                 if (!empty($params['timeZone'])) {
                     $timeZone = $params['timeZone'];
-                } elseif ($user && $user->getType() === AbstractUser::USER_ROLE_PROVIDER &&
-                    empty($user->getTimeZone()) && !empty(get_option('timezone_string'))) {
+                } elseif (
+                    $user instanceof Provider &&
+                    empty($user->getTimeZone()) && !empty(get_option('timezone_string'))
+                ) {
                     $timeZone = get_option('timezone_string');
                 }
 
@@ -273,7 +277,12 @@ class GetEventsCommandHandler extends CommandHandler
 
             $eventsInfo = [
                 'bookable'   => $reservationService->isBookable($event, null, $currentDateTime) && !$minimumReached,
-                'cancelable' => $currentDateTime <= $minimumCancelTime && ($event->getStatus()->getValue() === BookingStatus::APPROVED || $event->getStatus()->getValue() === BookingStatus::PENDING),
+                'cancelable' =>
+                    $currentDateTime <= $minimumCancelTime &&
+                    (
+                        $event->getStatus()->getValue() === BookingStatus::APPROVED ||
+                        $event->getStatus()->getValue() === BookingStatus::PENDING
+                    ),
                 'opened'     => ($currentDateTime > $bookingOpens) && ($currentDateTime < $bookingCloses),
                 'closed'     => $currentDateTime > $bookingCloses || $minimumReached,
                 'places'     => $event->getMaxCapacity()->getValue() - $persons,

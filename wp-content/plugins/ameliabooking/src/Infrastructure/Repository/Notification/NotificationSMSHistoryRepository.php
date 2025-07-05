@@ -170,12 +170,12 @@ class NotificationSMSHistoryRepository extends AbstractRepository
     {
         try {
             $params = [];
-            $where = [];
+            $where  = [];
 
             if (!empty($criteria['dates'])) {
                 $where[] = "(h.dateTime BETWEEN :dateFrom AND :dateTo)";
                 $params[':dateFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-                $params[':dateTo'] = DateTimeService::getCustomDateTimeObjectInUtc(
+                $params[':dateTo']   = DateTimeService::getCustomDateTimeObjectInUtc(
                     $criteria['dates'][1]
                 )->modify('+1 day')->format('Y-m-d H:i:s');
             }
@@ -222,12 +222,12 @@ class NotificationSMSHistoryRepository extends AbstractRepository
     {
         try {
             $params = [];
-            $where = [];
+            $where  = [];
 
             if (!empty($criteria['dates'])) {
                 $where[] = "(h.dateTime BETWEEN :dateFrom AND :dateTo)";
                 $params[':dateFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-                $params[':dateTo'] = DateTimeService::getCustomDateTimeObjectInUtc(
+                $params[':dateTo']   = DateTimeService::getCustomDateTimeObjectInUtc(
                     $criteria['dates'][1]
                 )->modify('+1 day')->format('Y-m-d H:i:s');
             }
@@ -243,7 +243,6 @@ class NotificationSMSHistoryRepository extends AbstractRepository
             $statement->execute($params);
 
             $row = $statement->fetch()['count'];
-
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
         }

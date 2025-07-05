@@ -13,7 +13,7 @@ use AmeliaBooking\Domain\ValueObjects\Json;
  */
 class SettingsService
 {
-    const NUMBER_OF_DAYS_AVAILABLE_FOR_BOOKING = 365;
+    public const NUMBER_OF_DAYS_AVAILABLE_FOR_BOOKING = 365;
 
     /** @var SettingsStorageInterface */
     private $settingsStorage;
@@ -177,7 +177,8 @@ class SettingsService
                     foreach ($form['confirmBookingForm'] as $entityName => &$entity) {
                         if (isset($entity['itemsStatic']['paymentMethodFormField']['switchPaymentMethodViewOptions'])) {
                             array_splice(
-                                $settings['forms'][$formName]['confirmBookingForm'][$entityName]['itemsStatic']['paymentMethodFormField']['switchPaymentMethodViewOptions'],
+                                $settings['forms'][$formName]['confirmBookingForm'][$entityName]['itemsStatic']
+                                ['paymentMethodFormField']['switchPaymentMethodViewOptions'],
                                 2
                             );
                         }

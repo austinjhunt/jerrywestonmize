@@ -53,10 +53,12 @@ class GetSMSNotificationsHistoryCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved notifications.');
-        $result->setData([
+        $result->setData(
+            [
             Entities::NOTIFICATIONS => $notifications,
             'countFiltered'         => (int)$notificationsSMSHistoryRepo->getCount($params)
-        ]);
+            ]
+        );
 
         return $result;
     }

@@ -14,7 +14,7 @@ use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
  */
 class LiteFrontendStrings
 {
-    /** @var array */
+    /** @var SettingsService $settings */
     private static $settings;
 
     /**

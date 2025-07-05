@@ -5,6 +5,8 @@ namespace AmeliaBooking\Domain\Services\Resource;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
+use AmeliaBooking\Domain\Services\Interval\IntervalService;
+use AmeliaBooking\Domain\Services\Schedule\ScheduleService;
 
 /**
  * Class AbstractResourceService
@@ -13,6 +15,11 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
  */
 abstract class AbstractResourceService
 {
+    /** @var IntervalService */
+    protected $intervalService;
+
+    /** @var ScheduleService */
+    protected $scheduleService;
 
     /**
      * set substitute resources instead of resources that are not shred between services/locations

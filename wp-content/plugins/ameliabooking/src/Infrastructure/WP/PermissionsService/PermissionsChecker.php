@@ -1,4 +1,5 @@
 <?php
+
 /**
  * WP Infrastructure layer implementation of the permissions service.
  */
@@ -16,7 +17,6 @@ use AmeliaBooking\Domain\Services\Permissions\PermissionsCheckerInterface;
  */
 class PermissionsChecker implements PermissionsCheckerInterface
 {
-
     /**
      * @param AbstractUser $user
      * @param string       $object

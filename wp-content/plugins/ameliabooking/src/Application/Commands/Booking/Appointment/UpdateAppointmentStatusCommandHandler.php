@@ -93,7 +93,7 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
                     $pcId = $booking->getPackageCustomerService() ?
                         $booking->getPackageCustomerService()->getPackageCustomer()->getId() : null;
 
-                    return isset($pcId) && $pcId->getValue() === $packageCustomerId;
+                    return $pcId && $pcId->getValue() === $packageCustomerId;
                 }
             );
 
@@ -102,7 +102,8 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
 
         $oldStatus = $appointment->getStatus()->getValue();
 
-        if ($bookingAS->isBookingApprovedOrPending($requestedStatus) &&
+        if (
+            $bookingAS->isBookingApprovedOrPending($requestedStatus) &&
             $bookingAS->isBookingCanceledOrRejectedOrNoShow($appointment->getStatus()->getValue())
         ) {
             /** @var AbstractUser $user */
@@ -135,7 +136,8 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
             $appointment->getProviderId()->getValue()
         );
 
-        if ($requestedStatus === BookingStatus::APPROVED &&
+        if (
+            $requestedStatus === BookingStatus::APPROVED &&
             (
                 (
                     $service->getMaxCapacity()->getValue() === 1 &&
@@ -175,7 +177,13 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
             )
         );
 
-        $appointmentRepo->updateFieldById($appointmentId, DateTimeService::getCustomDateTimeObjectInUtc($appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s'))->format('Y-m-d H:i:s'), 'bookingEnd');
+        $appointmentRepo->updateFieldById(
+            $appointmentId,
+            DateTimeService::getCustomDateTimeObjectInUtc(
+                $appointment->getBookingEnd()->getValue()->format('Y-m-d H:i:s')
+            )->format('Y-m-d H:i:s'),
+            'bookingEnd'
+        );
 
 
         if ($packageCustomerId) {
@@ -198,7 +206,8 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
 
         /** @var CustomerBooking $booking */
         foreach ($appointment->getBookings()->getItems() as $booking) {
-            if ($booking->getStatus()->getValue() === BookingStatus::APPROVED &&
+            if (
+                $booking->getStatus()->getValue() === BookingStatus::APPROVED &&
                 ($appointment->getStatus()->getValue() === BookingStatus::PENDING || $appointment->getStatus()->getValue() === BookingStatus::APPROVED)
             ) {
                 $booking->setChangedStatus(new BooleanValueObject(true));

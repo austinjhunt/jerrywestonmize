@@ -50,8 +50,10 @@ class DisconnectFromSquareAccountCommandHandler extends CommandHandler
 
         $result = new CommandResult();
 
-        if (!empty($settingsService->getCategorySettings('payments')['square']['accessToken']) &&
-            !$squareService->disconnectAccount(!empty($command->getField('data')))) {
+        if (
+            !empty($settingsService->getCategorySettings('payments')['square']['accessToken']) &&
+            !$squareService->disconnectAccount(!empty($command->getField('data')))
+        ) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Unable to disconnect from Square account.');
             $result->setData(['success' => false]);

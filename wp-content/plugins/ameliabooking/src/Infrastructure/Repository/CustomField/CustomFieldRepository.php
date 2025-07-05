@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -21,8 +22,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
  */
 class CustomFieldRepository extends AbstractRepository implements CustomFieldRepositoryInterface
 {
-
-    const FACTORY = CustomFieldFactory::class;
+    public const FACTORY = CustomFieldFactory::class;
 
     /** @var string */
     private $customFieldsOptionsTable;
@@ -59,9 +59,9 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
         $eventTable
     ) {
         parent::__construct($connection, $table);
-        $this->customFieldsOptionsTable = $customFieldsOptionsTable;
+        $this->customFieldsOptionsTable  = $customFieldsOptionsTable;
         $this->customFieldsServicesTable = $customFieldsServicesTable;
-        $this->servicesTable = $serviceTable;
+        $this->servicesTable           = $serviceTable;
         $this->customFieldsEventsTable = $customFieldsEventsTable;
         $this->eventsTable = $eventTable;
     }

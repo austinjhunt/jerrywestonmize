@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -11,7 +12,6 @@ namespace AmeliaBooking\Infrastructure\Services\Payment;
  */
 class SquareMiddlewareService
 {
-
     /**
      *
      * @return boolean
@@ -39,7 +39,11 @@ class SquareMiddlewareService
 
         if ($response && curl_getinfo($ch, CURLINFO_HTTP_CODE) === 200) {
             $response = json_decode($response, true);
-            set_transient('amelia_square_access_token', ['access_token' => $response['result']['access_token'], 'refresh_token' => $response['result']['refresh_token']], 604800);
+            set_transient(
+                'amelia_square_access_token',
+                ['access_token' => $response['result']['access_token'], 'refresh_token' => $response['result']['refresh_token']],
+                604800
+            );
         } else {
             $response = null;
         }
@@ -98,8 +102,8 @@ class SquareMiddlewareService
 
     /**
      *
-     * @param string $authCode
-     * @param string $state
+     * @param string $savedAccessToken
+     * @param bool $testMode
      *
      * @return boolean
      *

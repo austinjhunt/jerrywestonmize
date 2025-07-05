@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -293,4 +294,29 @@ interface ReservationServiceInterface
      * @return mixed
      */
     public function getWcStatus($type, $orderStatus, $statusTarget, $isUpdate);
+
+    /**
+     * @param Reservation  $reservation
+     *
+     * @return float
+     *
+     * @throws InvalidArgumentException
+     */
+    public function getReservationPaymentAmount($reservation);
+
+    /**
+     * @param Reservation $reservation
+     * @param bool        $usePayment
+     *
+     * @return array
+     */
+    public function getProvidersPaymentAmount($reservation, $usePayment = true);
+
+    /**
+     * @param array $data
+     *
+     * @return void
+     * @throws QueryExecutionException
+     */
+    public function manageTaxes(&$data);
 }

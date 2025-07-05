@@ -78,9 +78,11 @@ class AddCustomFieldCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully added new custom field.');
-        $result->setData([
+        $result->setData(
+            [
             'customField' => $customField->toArray()
-        ]);
+            ]
+        );
 
         return $result;
     }

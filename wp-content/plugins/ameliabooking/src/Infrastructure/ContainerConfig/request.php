@@ -45,12 +45,12 @@ $entries['request'] = function (AmeliaBooking\Infrastructure\Common\Container $c
         strpos($newRoute, '&') + 1
     ) : '';
 
-   $request = Request::createFromEnvironment($c->get('environment'))
-       ->withUri(
-           $curUri
+    $request = Request::createFromEnvironment($c->get('environment'))
+    ->withUri(
+        $curUri
                ->withPath($newPath)
                ->withQuery($newQuery)
-       );
+    );
 
     if (method_exists($request, 'getParam') && $request->getParam('showAmeliaErrors')) {
         ini_set('display_errors', 1);

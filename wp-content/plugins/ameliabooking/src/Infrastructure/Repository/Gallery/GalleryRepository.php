@@ -14,7 +14,6 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class GalleryRepository extends AbstractRepository implements GalleryRepositoryInterface
 {
-
     /**
      * @param GalleryImage $entity
      *
@@ -128,7 +127,7 @@ class GalleryRepository extends AbstractRepository implements GalleryRepositoryI
         }
 
         $params[':entityType'] = $entityType;
-        $params[':entityId'] = $entityId;
+        $params[':entityId']   = $entityId;
 
         try {
             $statement = $this->connection->prepare(

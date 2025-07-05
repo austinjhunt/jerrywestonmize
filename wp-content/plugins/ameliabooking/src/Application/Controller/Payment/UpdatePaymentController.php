@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -47,7 +48,7 @@ class UpdatePaymentController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $addPaymentCommand = new UpdatePaymentCommand($args);
-        $requestBody = $request->getParsedBody();
+        $requestBody       = $request->getParsedBody();
         $this->setCommandFields($addPaymentCommand, $requestBody);
 
         return $addPaymentCommand;

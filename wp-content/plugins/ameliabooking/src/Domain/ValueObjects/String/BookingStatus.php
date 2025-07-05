@@ -9,12 +9,12 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class BookingStatus
 {
-    const CANCELED = 'canceled';
-    const APPROVED = 'approved';
-    const PENDING  = 'pending';
-    const REJECTED = 'rejected';
-    const NO_SHOW  = 'no-show';
-    const WAITING  = 'waiting';
+    public const CANCELED = 'canceled';
+    public const APPROVED = 'approved';
+    public const PENDING  = 'pending';
+    public const REJECTED = 'rejected';
+    public const NO_SHOW  = 'no-show';
+    public const WAITING  = 'waiting';
 
     /**
      * @var string

@@ -56,9 +56,11 @@ class GetLocationCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved location.');
-        $result->setData([
+        $result->setData(
+            [
             Entities::LOCATION => $locationArray
-        ]);
+            ]
+        );
 
         return $result;
     }

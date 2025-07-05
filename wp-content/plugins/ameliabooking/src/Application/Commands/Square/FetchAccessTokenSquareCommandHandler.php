@@ -56,7 +56,14 @@ class FetchAccessTokenSquareCommandHandler extends CommandHandler
             return $result;
         }
 
-        set_transient('amelia_square_access_token', ['access_token' => $accessToken['decrypted_access_token'], 'refresh_token' => $accessToken['decrypted_refresh_token']], 604800);
+        set_transient(
+            'amelia_square_access_token',
+            [
+                'access_token' => $accessToken['decrypted_access_token'],
+                'refresh_token' => $accessToken['decrypted_refresh_token']
+            ],
+            604800
+        );
 
         unset($accessToken['decrypted_access_token']);
         unset($accessToken['decrypted_refresh_token']);

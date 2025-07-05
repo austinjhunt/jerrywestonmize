@@ -55,7 +55,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
         $couponRepository = $this->container->get('domain.coupon.repository');
 
         /** @var CouponServiceRepository $couponServiceRepository */
-        $couponServiceRepo = $this->container->get('domain.coupon.service.repository');
+        $couponServiceRepository = $this->container->get('domain.coupon.service.repository');
 
         /** @var CouponEventRepository $couponEventRepo */
         $couponEventRepo = $this->container->get('domain.coupon.event.repository');
@@ -69,7 +69,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
 
         /** @var Service $service */
         foreach ($coupon->getServiceList()->getItems() as $service) {
-            $couponServiceRepo->add($coupon, $service);
+            $couponServiceRepository->add($coupon, $service);
         }
 
         /** @var Event $event */
@@ -321,7 +321,8 @@ class CouponApplicationService extends AbstractCouponApplicationService
      */
     public function inspectCoupon($coupon, $userId, $inspectCoupon)
     {
-        if ($inspectCoupon &&
+        if (
+            $inspectCoupon &&
             (
                 $coupon->getStatus()->getValue() === 'hidden' ||
                 $coupon->getUsed()->getValue() >= $coupon->getLimit()->getValue()
@@ -330,7 +331,8 @@ class CouponApplicationService extends AbstractCouponApplicationService
             throw new CouponInvalidException(FrontendStrings::getCommonStrings()['coupon_invalid']);
         }
 
-        if ($inspectCoupon && $userId && $coupon->getCustomerLimit()->getValue() > 0 &&
+        if (
+            $inspectCoupon && $userId && $coupon->getCustomerLimit()->getValue() > 0 &&
             $this->getCustomerCouponUsedCount($coupon->getId()->getValue(), $userId) >=
             $coupon->getCustomerLimit()->getValue()
         ) {
@@ -555,7 +557,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
                     }
                 }
             }
-        } else if (!empty($criteria['entityType']) && $criteria['entityType'] === Entities::EVENT) {
+        } elseif (!empty($criteria['entityType']) && $criteria['entityType'] === Entities::EVENT) {
             /** @var Collection $allEvents */
             $allEvents = new Collection();
 
@@ -596,7 +598,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
                     }
                 }
             }
-        } else if (!empty($criteria['entityType']) && $criteria['entityType'] === Entities::PACKAGE) {
+        } elseif (!empty($criteria['entityType']) && $criteria['entityType'] === Entities::PACKAGE) {
             /** @var Collection $allPackages */
             $allPackages = new Collection();
 

@@ -19,7 +19,6 @@ use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
  */
 class GetLocationsCommandHandler extends CommandHandler
 {
-
     /**
      * @param GetLocationsCommand $command
      *
@@ -40,7 +39,7 @@ class GetLocationsCommandHandler extends CommandHandler
 
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
-        $itemsPerPage = $settingsService->getSetting('general', 'itemsPerPage');
+        $itemsPerPage    = $settingsService->getSetting('general', 'itemsPerPage');
 
         /** @var LocationRepository $locationRepository */
         $locationRepository = $this->getContainer()->get('domain.locations.repository');
@@ -62,11 +61,13 @@ class GetLocationsCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved locations.');
-        $result->setData([
+        $result->setData(
+            [
             Entities::LOCATIONS => $locationsArray,
             'countFiltered'     => (int)$locationRepository->getCount($command->getField('params')),
             'countTotal'        => (int)$locationRepository->getCount([])
-        ]);
+            ]
+        );
 
         return $result;
     }

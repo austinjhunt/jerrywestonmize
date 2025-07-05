@@ -36,7 +36,7 @@ class UpdateEventStatusController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdateEventStatusCommand($args);
+        $command     = new UpdateEventStatusCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

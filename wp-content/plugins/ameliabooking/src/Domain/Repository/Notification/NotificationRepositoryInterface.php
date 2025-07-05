@@ -11,5 +11,4 @@ use AmeliaBooking\Domain\Repository\BaseRepositoryInterface;
  */
 interface NotificationRepositoryInterface extends BaseRepositoryInterface
 {
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -38,21 +39,21 @@ use Slim\Exception\ContainerValueNotFoundException;
 class AppointmentEditedEventHandler
 {
     /** @var string */
-    const APPOINTMENT_EDITED = 'appointmentEdited';
+    public const APPOINTMENT_EDITED = 'appointmentEdited';
     /** @var string */
-    const APPOINTMENT_STATUS_AND_TIME_UPDATED = 'appointmentStatusAndTimeUpdated';
+    public const APPOINTMENT_STATUS_AND_TIME_UPDATED = 'appointmentStatusAndTimeUpdated';
     /** @var string */
-    const TIME_UPDATED = 'bookingTimeUpdated';
+    public const TIME_UPDATED = 'bookingTimeUpdated';
     /** @var string */
-    const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
+    public const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
     /** @var string */
-    const ZOOM_USER_CHANGED = 'zoomUserChanged';
+    public const ZOOM_USER_CHANGED = 'zoomUserChanged';
     /** @var string */
-    const ZOOM_LICENCED_USER_CHANGED = 'zoomLicencedUserChanged';
+    public const ZOOM_LICENCED_USER_CHANGED = 'zoomLicencedUserChanged';
     /** @var string */
-    const APPOINTMENT_STATUS_AND_ZOOM_LICENCED_USER_CHANGED = 'appointmentStatusAndZoomLicencedUserChanged';
+    public const APPOINTMENT_STATUS_AND_ZOOM_LICENCED_USER_CHANGED = 'appointmentStatusAndZoomLicencedUserChanged';
     /** @var string */
-    const BOOKING_ADDED = 'bookingAdded';
+    public const BOOKING_ADDED = 'bookingAdded';
 
     /**
      * @param CommandResult $commandResult
@@ -118,7 +119,8 @@ class AppointmentEditedEventHandler
 
         /** @var CustomerBooking $customerBooking */
         foreach ($reservationObject->getBookings()->getItems() as $index => $customerBooking) {
-            if ((($customerBooking->isNew() && $customerBooking->isNew()->getValue()) || $appointmentRescheduled) && (
+            if (
+                (($customerBooking->isNew() && $customerBooking->isNew()->getValue()) || $appointmentRescheduled) && (
                     $customerBooking->getStatus()->getValue() === BookingStatus::PENDING ||
                     $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED
                 ) && (
@@ -201,7 +203,8 @@ class AppointmentEditedEventHandler
             $reservationObject->getBookings(),
             true,
             true,
-            !empty($settingsService->getSetting('notifications', 'sendInvoice'))
+            !empty($settingsService->getSetting('notifications', 'sendInvoice')),
+            $reservationObject->isNotifyParticipants()
         );
 
         $applicationNotificationService->sendAppointmentCustomersStatusNotifications(
@@ -209,10 +212,12 @@ class AppointmentEditedEventHandler
             $removedBookings,
             true,
             true,
-            false
+            false,
+            $reservationObject->isNotifyParticipants()
         );
 
-        if ($appointmentRescheduled &&
+        if (
+            $appointmentRescheduled &&
             (
                 $reservationObject->getStatus()->getValue() === BookingStatus::APPROVED ||
                 $reservationObject->getStatus()->getValue() === BookingStatus::PENDING
@@ -224,7 +229,8 @@ class AppointmentEditedEventHandler
             );
         }
 
-        if ($appointmentEmployeeChanged &&
+        if (
+            $appointmentEmployeeChanged &&
             (
                 $reservationObject->getStatus()->getValue() === BookingStatus::APPROVED ||
                 $oldAppointmentStatus === BookingStatus::APPROVED
@@ -238,7 +244,8 @@ class AppointmentEditedEventHandler
             );
         }
 
-        if (!$appointmentStatusChanged &&
+        if (
+            !$appointmentStatusChanged &&
             !$appointmentRescheduled &&
             $reservationObject->getStatus()->getValue() === BookingStatus::APPROVED
         ) {

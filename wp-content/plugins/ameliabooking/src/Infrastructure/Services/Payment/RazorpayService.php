@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -78,7 +79,8 @@ class RazorpayService extends AbstractPaymentService implements PaymentServiceIn
     {
         $payment = $this->getApi()->payment->fetch($paymentId);
 
-        if ($payment &&
+        if (
+            $payment &&
             ($paymentData = $payment->toArray()) &&
             !empty($paymentData['status']) &&
             $paymentData['status'] === 'captured'
@@ -150,6 +152,6 @@ class RazorpayService extends AbstractPaymentService implements PaymentServiceIn
     public function getTransactionAmount($id, $transfers)
     {
         $payment = $this->getApi()->payment->fetch($id);
-        return $payment ? intval($payment->amount/100) : null;
+        return $payment ? intval($payment->amount / 100) : null;
     }
 }

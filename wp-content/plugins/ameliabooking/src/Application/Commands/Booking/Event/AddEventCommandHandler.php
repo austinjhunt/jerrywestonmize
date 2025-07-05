@@ -80,7 +80,8 @@ class AddEventCommandHandler extends CommandHandler
             return $result;
         }
 
-        if ($userAS->isCustomer($user) ||
+        if (
+            $userAS->isCustomer($user) ||
             ($userAS->isProvider($user) && !$settingsDS->getSetting('roles', 'allowWriteEvents'))
         ) {
             throw new AccessDeniedException('You are not allowed to add an event');

@@ -20,7 +20,6 @@ use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
  */
 class UpdateLocationCommandHandler extends CommandHandler
 {
-
     /**
      * @var array
      */
@@ -75,9 +74,11 @@ class UpdateLocationCommandHandler extends CommandHandler
 
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully updated location.');
-            $result->setData([
+            $result->setData(
+                [
                 Entities::LOCATION => $location->toArray()
-            ]);
+                ]
+            );
         }
 
         return $result;

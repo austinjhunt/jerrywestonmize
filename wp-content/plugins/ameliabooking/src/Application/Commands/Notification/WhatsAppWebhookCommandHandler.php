@@ -17,7 +17,6 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class WhatsAppWebhookCommandHandler extends CommandHandler
 {
-
     /**
      * @param WhatsAppWebhookCommand $command
      *

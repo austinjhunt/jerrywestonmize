@@ -28,7 +28,7 @@ class ProviderLocation
         Id $userId,
         Id $locationId
     ) {
-        $this->userId = $userId;
+        $this->userId     = $userId;
         $this->locationId = $locationId;
     }
 

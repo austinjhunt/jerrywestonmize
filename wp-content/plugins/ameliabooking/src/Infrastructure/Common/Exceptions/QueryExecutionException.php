@@ -22,7 +22,7 @@ class QueryExecutionException extends \Exception
     {
         if (!is_int($code)) {
             $message .= $previous ? ' ' . $previous->getMessage() : '';
-            $code = 0;
+            $code     = 0;
         }
 
         parent::__construct($message, $code, $previous);

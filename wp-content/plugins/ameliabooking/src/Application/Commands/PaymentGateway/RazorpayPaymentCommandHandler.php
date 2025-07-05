@@ -13,6 +13,7 @@ use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Services\Payment\RazorpayService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -57,7 +58,7 @@ class RazorpayPaymentCommandHandler extends CommandHandler
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
 
-        /** @var PaymentServiceInterface $paymentService */
+        /** @var RazorpayService $paymentService */
         $paymentService = $this->container->get('infrastructure.payment.razorpay.service');
 
 

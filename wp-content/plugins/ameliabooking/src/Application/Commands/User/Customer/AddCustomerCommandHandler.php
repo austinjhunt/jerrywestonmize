@@ -17,7 +17,6 @@ use AmeliaBooking\Application\Commands\CommandHandler;
  */
 class AddCustomerCommandHandler extends CommandHandler
 {
-
     public $mandatoryFields = [
         'firstName',
         'lastName',
@@ -79,7 +78,7 @@ class AddCustomerCommandHandler extends CommandHandler
 
         $response = $customerAS->createCustomer($userData);
 
-        do_action('amelia_after_customer_added', $response? $response->getData() : null);
+        do_action('amelia_after_customer_added', $response ? $response->getData() : null);
 
         return $response;
     }

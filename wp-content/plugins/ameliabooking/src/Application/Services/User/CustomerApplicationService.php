@@ -187,7 +187,8 @@ class CustomerApplicationService extends UserApplicationService
 
             // If email already exists, check if First Name and Last Name from request are same with the First Name
             // and Last Name from $userWithSameMail. If these are not same return error message.
-            if ($settingsService->getSetting('roles', 'inspectCustomerInfo') &&
+            if (
+                $settingsService->getSetting('roles', 'inspectCustomerInfo') &&
                 $validateUserName &&
                 (strtolower(trim($userWithSameValue->getFirstName()->getValue())) !==
                     strtolower(trim($user->getFirstName()->getValue())) ||
@@ -220,7 +221,8 @@ class CustomerApplicationService extends UserApplicationService
         foreach ($reservations->getItems() as $reservation) {
             /** @var CustomerBooking $booking */
             foreach ($reservation->getBookings()->getItems() as $key => $booking) {
-                if ($isCustomer &&
+                if (
+                    $isCustomer &&
                     (!$user || ($user && $user->getId()->getValue() !== $booking->getCustomerId()->getValue()))
                 ) {
                     $reservation->getBookings()->deleteItem($key);
@@ -334,7 +336,8 @@ class CustomerApplicationService extends UserApplicationService
                     }
                 }
 
-                if (!$customerBookingExtraRepository->deleteByEntityId($bookingId, 'customerBookingId') ||
+                if (
+                    !$customerBookingExtraRepository->deleteByEntityId($bookingId, 'customerBookingId') ||
                     !$bookingRepository->delete($bookingId)
                 ) {
                     return false;
@@ -363,10 +366,11 @@ class CustomerApplicationService extends UserApplicationService
                 }
             }
 
-            if (!$packageCustomerServiceRepository->deleteByEntityId(
-                $packageCustomer->getId()->getValue(),
-                'packageCustomerId'
-            ) || !$packageCustomerRepository->delete($packageCustomer->getId()->getValue())
+            if (
+                !$packageCustomerServiceRepository->deleteByEntityId(
+                    $packageCustomer->getId()->getValue(),
+                    'packageCustomerId'
+                ) || !$packageCustomerRepository->delete($packageCustomer->getId()->getValue())
             ) {
                 return false;
             }
@@ -401,7 +405,8 @@ class CustomerApplicationService extends UserApplicationService
                     }
                 }
 
-                if (!$bookingEventPeriodRepository->deleteByEntityId($bookingId, 'customerBookingId') ||
+                if (
+                    !$bookingEventPeriodRepository->deleteByEntityId($bookingId, 'customerBookingId') ||
                     !$bookingRepository->delete($bookingId)
                 ) {
                     return false;

@@ -4,18 +4,23 @@
 
 namespace AmeliaStripe\Service;
 
-class ExchangeRateService extends \AmeliaStripe\Service\AbstractService
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
+class ExchangeRateService extends AbstractService
 {
     /**
      * Returns a list of objects that contain the rates at which foreign currencies are
      * converted to one another. Only shows the currencies for which Stripe supports.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Collection<\AmeliaStripe\ExchangeRate>
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -27,12 +32,12 @@ class ExchangeRateService extends \AmeliaStripe\Service\AbstractService
      * currency.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\ExchangeRate
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AmeliaBooking\Application\Controller\Notification;
 
 use AmeliaBooking\Application\Commands\Command;
@@ -19,7 +18,6 @@ use Slim\Http\Request;
  */
 class DeleteNotificationController extends Controller
 {
-
     /**
      * Instantiates the Add Notification command to hand it over to the Command Handler
      *
@@ -31,7 +29,7 @@ class DeleteNotificationController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new DeleteNotificationCommand($args);
+        $command     = new DeleteNotificationCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

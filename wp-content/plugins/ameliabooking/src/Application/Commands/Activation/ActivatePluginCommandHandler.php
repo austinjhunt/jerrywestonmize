@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -50,7 +51,7 @@ class ActivatePluginCommandHandler extends CommandHandler
         );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, apply_filters( 'amelia/curlopt_ssl_verifypeer', 1 ));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, apply_filters('amelia/curlopt_ssl_verifypeer', 1));
 
         // Response from the TMS Store
         $response = json_decode(curl_exec($ch));
@@ -66,10 +67,12 @@ class ActivatePluginCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully checked purchase code');
-        $result->setData([
+        $result->setData(
+            [
             'valid'            => $response->valid,
             'domainRegistered' => $response->domainRegistered,
-        ]);
+            ]
+        );
 
         return $result;
     }

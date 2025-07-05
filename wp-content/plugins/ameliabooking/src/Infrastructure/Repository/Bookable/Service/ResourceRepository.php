@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -22,7 +23,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\ResourcesToEntiti
  */
 class ResourceRepository extends AbstractRepository
 {
-    const FACTORY = ResourceFactory::class;
+    public const FACTORY = ResourceFactory::class;
 
     /**
      * @param Connection $connection

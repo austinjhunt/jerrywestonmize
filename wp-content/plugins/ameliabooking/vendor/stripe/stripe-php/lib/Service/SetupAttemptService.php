@@ -4,17 +4,22 @@
 
 namespace AmeliaStripe\Service;
 
-class SetupAttemptService extends \AmeliaStripe\Service\AbstractService
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
+class SetupAttemptService extends AbstractService
 {
     /**
-     * Returns a list of SetupAttempts associated with a provided SetupIntent.
+     * Returns a list of SetupAttempts that associate with a provided SetupIntent.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{created?: array|int, ending_before?: string, expand?: string[], limit?: int, setup_intent: string, starting_after?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Collection<\AmeliaStripe\SetupAttempt>
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -18,12 +19,13 @@ class AmeliaBookingElementorWidget extends Widget_Base
 {
     protected $controls_data;
 
-    public function get_name() {
+    public function get_name()
+    {
         return 'ameliabooking';
     }
 
-    protected function register_controls() {
-
+    protected function register_controls()
+    {
         $controls_data = self::amelia_elementor_get_data();
 
         $this->start_controls_section(
@@ -121,17 +123,18 @@ class AmeliaBookingElementorWidget extends Widget_Base
 
         $this->end_controls_section();
     }
-    protected function render() {
+    protected function render()
+    {
         $settings = $this->get_settings_for_display();
 
         $trigger = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
 
-        $category = $settings['select_category'] === '0' ? '' : ' category=' . $settings['select_category'];
-        $service = $settings['select_service'] === '0' ? '' : ' service=' . $settings['select_service'];
+        $category         = $settings['select_category'] === '0' ? '' : ' category=' . $settings['select_category'];
+        $service          = $settings['select_service'] === '0' ? '' : ' service=' . $settings['select_service'];
         $category_service = $settings['select_service'] === '0' ? $category : $service;
 
-        $employee = $settings['select_employee'] === '0' ? '' : ' employee=' . $settings['select_employee'];
-        $location = $settings['select_location'] === '0' ? '' : ' location=' . $settings['select_location'];
+        $employee          = $settings['select_employee'] === '0' ? '' : ' employee=' . $settings['select_employee'];
+        $location          = $settings['select_location'] === '0' ? '' : ' location=' . $settings['select_location'];
         $employee_location = $settings['select_employee'] === '0' ? $location : $employee;
 
         $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
@@ -144,18 +147,19 @@ class AmeliaBookingElementorWidget extends Widget_Base
     }
 
 
-    public static function amelia_elementor_get_data() {
-        $data = GutenbergBlock::getEntitiesData()['data'];
+    public static function amelia_elementor_get_data()
+    {
+        $data          = GutenbergBlock::getEntitiesData()['data'];
         $elementorData = [];
 
-        $elementorData['categories'] = [];
+        $elementorData['categories']    = [];
         $elementorData['categories'][0] = BackendStrings::getWordPressStrings()['show_all_categories'];
 
         foreach ($data['categories'] as $category) {
             $elementorData['categories'][$category['id']] = $category['name'] . ' (id: ' . $category['id'] . ')';
         }
 
-        $elementorData['services'] = [];
+        $elementorData['services']    = [];
         $elementorData['services'][0] = BackendStrings::getWordPressStrings()['show_all_services'];
 
         foreach ($data['servicesList'] as $service) {
@@ -164,14 +168,14 @@ class AmeliaBookingElementorWidget extends Widget_Base
             }
         }
 
-        $elementorData['employees'] = [];
+        $elementorData['employees']    = [];
         $elementorData['employees'][0] = BackendStrings::getWordPressStrings()['show_all_employees'];
 
         foreach ($data['employees'] as $provider) {
             $elementorData['employees'][$provider['id']] = $provider['firstName'] . $provider['lastName'] . ' (id: ' . $provider['id'] . ')';
         }
 
-        $elementorData['locations'] = [];
+        $elementorData['locations']    = [];
         $elementorData['locations'][0] = BackendStrings::getWordPressStrings()['show_all_locations'];
 
         foreach ($data['locations'] as $location) {

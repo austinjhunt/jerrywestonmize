@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -33,7 +34,6 @@ use Square\SquareClient;
  */
 class SquareService extends AbstractPaymentService implements PaymentServiceInterface
 {
-
     /**
      * @var SquareMiddlewareService $middlewareService
      */
@@ -62,7 +62,13 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
     {
         $squareSettings = $this->settingsService->getCategorySettings('payments')['square'];
         $accessToken    = $this->middlewareService->getAccessToken($squareSettings['accessToken']);
-        return new SquareClient(['accessToken' => $accessToken['access_token'], 'environment' => $squareSettings['testMode'] ? Environment::SANDBOX : Environment::PRODUCTION]);
+
+        return new SquareClient(
+            [
+                'accessToken' => $accessToken['access_token'],
+                'environment' => $squareSettings['testMode'] ? Environment::SANDBOX : Environment::PRODUCTION
+            ]
+        );
     }
 
     /**
@@ -114,7 +120,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
         // This amount is in cents
         // Set currency to the currency for the location
         $location = $this->getLocation();
-        if (empty($location)) {
+        if (!$location) {
             return null;
         }
         $currency = $location->getCurrency();
@@ -173,7 +179,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      */
     public function updatePaymentLink($paymentLink, $redirectUrl, $paymentId)
     {
-        if (empty($paymentLink)) {
+        if (!$paymentLink) {
             return null;
         }
 
@@ -204,7 +210,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
 
         $apiResponse = $this->execute($data, $transfers);
 
-        if (!empty($apiResponse) && $apiResponse->isSuccess() && $apiResponse->getResult() && $apiResponse->getResult()->getPaymentLink()) {
+        if ($apiResponse && $apiResponse->isSuccess() && $apiResponse->getResult() && $apiResponse->getResult()->getPaymentLink()) {
             /**@var PaymentLink $paymentLink */
             $paymentLink = $apiResponse->getResult()->getPaymentLink();
 
@@ -294,8 +300,6 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
 
     /**
      *
-     * @param string $authCode
-     * @param string $state
      *
      * @return array
      *
@@ -327,7 +331,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
         $apiResponse = $this->getApiResponse('getPaymentsApi', 'getPayment', [$id]);
 
         if ($apiResponse->isSuccess() && $apiResponse->getResult()) {
-            return $apiResponse->getResult()->getPayment()->getAmountMoney()->getAmount()/100;
+            return $apiResponse->getResult()->getPayment()->getAmountMoney()->getAmount() / 100;
         }
 
         return null;
@@ -362,8 +366,6 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
 
     /**
      *
-     * @param string $authCode
-     * @param string $state
      *
      * @return boolean
      *
@@ -382,7 +384,14 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
         if ($response) {
             $accessToken = $response['result'];
 
-            set_transient('amelia_square_access_token', ['access_token' => $accessToken['decrypted_access_token'], 'refresh_token' => $accessToken['decrypted_refresh_token']], 604800);
+            set_transient(
+                'amelia_square_access_token',
+                [
+                    'access_token' => $accessToken['decrypted_access_token'],
+                    'refresh_token' => $accessToken['decrypted_refresh_token']
+                ],
+                604800
+            );
 
             unset($accessToken['decrypted_access_token']);
             unset($accessToken['decrypted_refresh_token']);

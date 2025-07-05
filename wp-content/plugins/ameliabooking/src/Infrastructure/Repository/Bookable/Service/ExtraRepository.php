@@ -15,8 +15,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class ExtraRepository extends AbstractRepository implements ExtraRepositoryInterface
 {
-
-    const FACTORY = ExtraFactory::class;
+    public const FACTORY = ExtraFactory::class;
 
     /**
      * @param Extra $entity

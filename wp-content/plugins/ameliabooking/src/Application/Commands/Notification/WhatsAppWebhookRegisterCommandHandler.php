@@ -16,7 +16,6 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class WhatsAppWebhookRegisterCommandHandler extends CommandHandler
 {
-
     /**
      * @param WhatsAppWebhookRegisterCommand $command
      *
@@ -34,7 +33,8 @@ class WhatsAppWebhookRegisterCommandHandler extends CommandHandler
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
 
-        if ($params['hub_mode'] == 'subscribe' &&
+        if (
+            $params['hub_mode'] == 'subscribe' &&
             $params['hub_verify_token'] == $settingsDS->getSetting('notifications', 'whatsAppReplyToken')
         ) {
             $result->setResult(CommandResult::RESULT_SUCCESS);

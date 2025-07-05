@@ -22,7 +22,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
  */
 class PackageCustomerServiceRepository extends AbstractRepository
 {
-    const FACTORY = PackageCustomerServiceFactory::class;
+    public const FACTORY = PackageCustomerServiceFactory::class;
 
     /** @var string */
     protected $packagesCustomersTable;

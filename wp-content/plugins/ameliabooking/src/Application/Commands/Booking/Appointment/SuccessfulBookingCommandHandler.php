@@ -4,6 +4,7 @@ namespace AmeliaBooking\Application\Commands\Booking\Appointment;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Services\Reservation\AbstractReservationService;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
@@ -41,7 +42,7 @@ class SuccessfulBookingCommandHandler extends CommandHandler
         $type = $command->getField('type') === Entities::CART ?
             Entities::APPOINTMENT : $command->getField('type');
 
-        /** @var ReservationServiceInterface $reservationService */
+        /** @var AbstractReservationService $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get($type);
 
         /** @var PaymentRepository $paymentRepository */

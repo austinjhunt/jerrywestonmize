@@ -17,8 +17,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class CategoryRepository extends AbstractRepository implements CategoryRepositoryInterface
 {
-
-    const FACTORY = CategoryFactory::class;
+    public const FACTORY = CategoryFactory::class;
 
     /**
      * @param Category $entity
@@ -84,7 +83,14 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
         try {
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
-                SET `status` = :status, `name` = :name, `position` = :position, `translations` = :translations, `color` = :color, `pictureFullPath` = :pictureFullPath, `pictureThumbPath` = :pictureThumbPath
+                SET 
+                    `status` = :status,
+                    `name` = :name,
+                    `position` = :position,
+                    `translations` = :translations,
+                    `color` = :color,
+                    `pictureFullPath` = :pictureFullPath,
+                    `pictureThumbPath` = :pictureThumbPath
                 WHERE id = :id"
             );
 
@@ -109,7 +115,7 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
     {
         try {
             $statement = $this->connection->query($this->selectQuery() . ' ORDER BY position ASC');
-            $rows = $statement->fetchAll();
+            $rows      = $statement->fetchAll();
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
         }

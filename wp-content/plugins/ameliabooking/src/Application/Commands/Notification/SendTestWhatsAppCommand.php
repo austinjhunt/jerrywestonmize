@@ -11,5 +11,4 @@ use AmeliaBooking\Application\Commands\Command;
  */
 class SendTestWhatsAppCommand extends Command
 {
-
 }

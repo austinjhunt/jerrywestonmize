@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -25,13 +26,12 @@ use Elementor\Plugin;
  */
 class ElementorBlock
 {
-
     protected static $instance;
 
     public static function get_instance()
     {
         if (!isset(static::$instance)) {
-            static::$instance = new static;
+            static::$instance = new static();
         }
 
         return static::$instance;
@@ -87,7 +87,8 @@ class ElementorBlock
             [
                 'title' => 'Amelia',
                 'icon' => 'amelia-logo',
-            ], 1);
+            ],
+            1
+        );
     }
-
 }

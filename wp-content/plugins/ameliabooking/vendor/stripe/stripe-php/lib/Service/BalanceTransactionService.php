@@ -4,7 +4,12 @@
 
 namespace AmeliaStripe\Service;
 
-class BalanceTransactionService extends \AmeliaStripe\Service\AbstractService
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
+class BalanceTransactionService extends AbstractService
 {
     /**
      * Returns a list of transactions that have contributed to the Stripe account
@@ -14,12 +19,12 @@ class BalanceTransactionService extends \AmeliaStripe\Service\AbstractService
      * Note that this endpoint was previously called “Balance history” and used the
      * path <code>/v1/balance/history</code>.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{created?: array|int, currency?: string, ending_before?: string, expand?: string[], limit?: int, payout?: string, source?: string, starting_after?: string, type?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Collection<\AmeliaStripe\BalanceTransaction>
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -33,12 +38,12 @@ class BalanceTransactionService extends \AmeliaStripe\Service\AbstractService
      * <code>/v1/balance/history/:id</code>.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\BalanceTransaction
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

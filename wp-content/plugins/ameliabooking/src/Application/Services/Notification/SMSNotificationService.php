@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -31,7 +32,6 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class SMSNotificationService extends AbstractNotificationService
 {
-
     /** @var bool */
     private $sentSmsLowEmail = false;
 
@@ -52,7 +52,8 @@ class SMSNotificationService extends AbstractNotificationService
         $notification,
         $logNotification,
         $bookingKey = null,
-        $allBookings = null
+        $allBookings = null,
+        $invoice = []
     ) {
         /** @var \AmeliaBooking\Application\Services\Settings\SettingsService $settingsAS */
         $settingsAS = $this->container->get('application.settings.service');
@@ -167,7 +168,12 @@ class SMSNotificationService extends AbstractNotificationService
         if ($smsLowEmail && $smsLowEmail['enabled']) {
             try {
                 $userResponse = $smsApiService->getUserInfo();
-                if (!empty($userResponse) && $userResponse->status === 'OK' && !empty($userResponse->user) && $userResponse->user->balance <= $smsLowEmail['minimum']) {
+                if (
+                    !empty($userResponse) &&
+                    $userResponse->status === 'OK' &&
+                    !empty($userResponse->user) &&
+                    $userResponse->user->balance <= $smsLowEmail['minimum']
+                ) {
                     /** @var EmailNotificationService $notificationService */
                     $notificationService = $this->container->get('application.emailNotification.service');
                     $notificationService->sendSmsBalanceLowEmail($smsLowEmail['email']);
@@ -239,7 +245,8 @@ class SMSNotificationService extends AbstractNotificationService
         $notification = $notifications->getItem($notifications->keys()[0]);
 
         // Check if notification is enabled and it is time to send notification
-        if ($notification->getStatus()->getValue() === NotificationStatus::ENABLED &&
+        if (
+            $notification->getStatus()->getValue() === NotificationStatus::ENABLED &&
             $notification->getTime() &&
             DateTimeService::getNowDateTimeObject() >=
             DateTimeService::getCustomDateTimeObject($notification->getTime()->getValue())

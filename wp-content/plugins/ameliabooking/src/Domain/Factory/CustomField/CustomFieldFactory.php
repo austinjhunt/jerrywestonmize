@@ -116,49 +116,49 @@ class CustomFieldFactory
 
         foreach ($rows as $row) {
             $customFieldId = $row['cf_id'];
-            $optionId = $row['cfo_id'];
-            $serviceId = $row['s_id'];
-            $eventId = $row['e_id'];
+            $optionId      = $row['cfo_id'];
+            $serviceId     = $row['s_id'];
+            $eventId       = $row['e_id'];
 
-            $customFields[$customFieldId]['id'] = $row['cf_id'];
-            $customFields[$customFieldId]['label'] = $row['cf_label'];
-            $customFields[$customFieldId]['type'] = $row['cf_type'];
-            $customFields[$customFieldId]['saveType'] = $row['cf_saveType'];
-            $customFields[$customFieldId]['required'] = $row['cf_required'];
-            $customFields[$customFieldId]['position'] = $row['cf_position'];
-            $customFields[$customFieldId]['translations'] = $row['cf_translations'];
-            $customFields[$customFieldId]['allServices'] = $row['cf_allServices'];
-            $customFields[$customFieldId]['allEvents'] = $row['cf_allEvents'];
-            $customFields[$customFieldId]['useAsLocation'] = $row['cf_useAsLocation'];
-            $customFields[$customFieldId]['width'] = $row['cf_width'];
+            $customFields[$customFieldId]['id']              = $row['cf_id'];
+            $customFields[$customFieldId]['label']           = $row['cf_label'];
+            $customFields[$customFieldId]['type']            = $row['cf_type'];
+            $customFields[$customFieldId]['saveType']        = $row['cf_saveType'];
+            $customFields[$customFieldId]['required']        = $row['cf_required'];
+            $customFields[$customFieldId]['position']        = $row['cf_position'];
+            $customFields[$customFieldId]['translations']    = $row['cf_translations'];
+            $customFields[$customFieldId]['allServices']     = $row['cf_allServices'];
+            $customFields[$customFieldId]['allEvents']       = $row['cf_allEvents'];
+            $customFields[$customFieldId]['useAsLocation']   = $row['cf_useAsLocation'];
+            $customFields[$customFieldId]['width']           = $row['cf_width'];
             $customFields[$customFieldId]['saveFirstChoice'] = $row['cf_saveFirstChoice'];
 
 
             if ($optionId) {
-                $customFields[$customFieldId]['options'][$optionId]['id'] = $row['cfo_id'];
+                $customFields[$customFieldId]['options'][$optionId]['id']            = $row['cfo_id'];
                 $customFields[$customFieldId]['options'][$optionId]['customFieldId'] = $row['cfo_custom_field_id'];
-                $customFields[$customFieldId]['options'][$optionId]['label'] = $row['cfo_label'];
-                $customFields[$customFieldId]['options'][$optionId]['position'] = $row['cfo_position'];
-                $customFields[$customFieldId]['options'][$optionId]['translations'] = $row['cfo_translations'];
+                $customFields[$customFieldId]['options'][$optionId]['label']         = $row['cfo_label'];
+                $customFields[$customFieldId]['options'][$optionId]['position']      = $row['cfo_position'];
+                $customFields[$customFieldId]['options'][$optionId]['translations']  = $row['cfo_translations'];
             }
 
             if ($serviceId) {
-                $customFields[$customFieldId]['services'][$serviceId]['id'] = $row['s_id'];
-                $customFields[$customFieldId]['services'][$serviceId]['name'] = $row['s_name'];
+                $customFields[$customFieldId]['services'][$serviceId]['id']          = $row['s_id'];
+                $customFields[$customFieldId]['services'][$serviceId]['name']        = $row['s_name'];
                 $customFields[$customFieldId]['services'][$serviceId]['description'] = $row['s_description'];
-                $customFields[$customFieldId]['services'][$serviceId]['color'] = $row['s_color'];
-                $customFields[$customFieldId]['services'][$serviceId]['price'] = $row['s_price'];
-                $customFields[$customFieldId]['services'][$serviceId]['status'] = $row['s_status'];
-                $customFields[$customFieldId]['services'][$serviceId]['categoryId'] = $row['s_categoryId'];
+                $customFields[$customFieldId]['services'][$serviceId]['color']       = $row['s_color'];
+                $customFields[$customFieldId]['services'][$serviceId]['price']       = $row['s_price'];
+                $customFields[$customFieldId]['services'][$serviceId]['status']      = $row['s_status'];
+                $customFields[$customFieldId]['services'][$serviceId]['categoryId']  = $row['s_categoryId'];
                 $customFields[$customFieldId]['services'][$serviceId]['minCapacity'] = $row['s_minCapacity'];
                 $customFields[$customFieldId]['services'][$serviceId]['maxCapacity'] = $row['s_maxCapacity'];
-                $customFields[$customFieldId]['services'][$serviceId]['duration'] = $row['s_duration'];
+                $customFields[$customFieldId]['services'][$serviceId]['duration']    = $row['s_duration'];
             }
 
             if ($eventId) {
-                $customFields[$customFieldId]['events'][$eventId]['id'] = $row['e_id'];
-                $customFields[$customFieldId]['events'][$eventId]['name'] = $row['e_name'];
-                $customFields[$customFieldId]['events'][$eventId]['price'] = $row['e_price'];
+                $customFields[$customFieldId]['events'][$eventId]['id']       = $row['e_id'];
+                $customFields[$customFieldId]['events'][$eventId]['name']     = $row['e_name'];
+                $customFields[$customFieldId]['events'][$eventId]['price']    = $row['e_price'];
                 $customFields[$customFieldId]['events'][$eventId]['parentId'] = $row['e_parentId'];
             }
         }

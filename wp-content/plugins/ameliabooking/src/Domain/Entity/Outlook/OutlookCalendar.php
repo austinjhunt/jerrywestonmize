@@ -33,7 +33,7 @@ class OutlookCalendar
         Token $token,
         Label $calendarId
     ) {
-        $this->token = $token;
+        $this->token      = $token;
         $this->calendarId = $calendarId;
     }
 

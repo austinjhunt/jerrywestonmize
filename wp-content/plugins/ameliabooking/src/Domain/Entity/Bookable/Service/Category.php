@@ -11,5 +11,4 @@ use AmeliaBooking\Domain\Entity\Bookable\AbstractCategory;
  */
 class Category extends AbstractCategory
 {
-
 }

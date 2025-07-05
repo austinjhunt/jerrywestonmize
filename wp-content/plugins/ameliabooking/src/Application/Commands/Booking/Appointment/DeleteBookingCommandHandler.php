@@ -84,7 +84,7 @@ class DeleteBookingCommandHandler extends CommandHandler
             if (!$bookingApplicationService->delete($removedBooking)) {
                 $isSuccess = false;
             }
-        } else if (!$appointmentApplicationService->delete($appointment)) {
+        } elseif (!$appointmentApplicationService->delete($appointment)) {
             $isSuccess = false;
         }
 

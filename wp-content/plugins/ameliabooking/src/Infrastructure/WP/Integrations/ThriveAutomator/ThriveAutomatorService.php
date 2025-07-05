@@ -152,7 +152,8 @@ class ThriveAutomatorService
         thrive_automator_register_data_field(BookingExtras::class);
         thrive_automator_register_data_field(BookingTickets::class);
 
-        if (isset($_SERVER['REQUEST_URI']) &&
+        if (
+            isset($_SERVER['REQUEST_URI']) &&
             strpos($_SERVER['REQUEST_URI'], '/tap/') !== false &&
             (
                 strpos($_SERVER['REQUEST_URI'], '/automation') !== false ||

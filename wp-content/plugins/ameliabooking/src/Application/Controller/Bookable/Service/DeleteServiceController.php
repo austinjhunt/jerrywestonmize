@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -30,7 +31,7 @@ class DeleteServiceController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new DeleteServiceCommand($args);
+        $command     = new DeleteServiceCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace AmeliaBooking\Application\Services\Notification;
-
 
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\Common\Container;

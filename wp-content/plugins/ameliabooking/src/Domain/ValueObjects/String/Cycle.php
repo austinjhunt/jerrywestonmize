@@ -9,10 +9,10 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class Cycle
 {
-    const DAILY = 'daily';
-    const WEEKLY = 'weekly';
-    const MONTHLY = 'monthly';
-    const YEARLY = 'yearly';
+    public const DAILY   = 'daily';
+    public const WEEKLY  = 'weekly';
+    public const MONTHLY = 'monthly';
+    public const YEARLY  = 'yearly';
     /**
      * @var string
      */

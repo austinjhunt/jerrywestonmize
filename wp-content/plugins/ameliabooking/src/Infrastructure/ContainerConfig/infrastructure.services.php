@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Assembling infrastructure services:
  * Instantiating infrastructure services

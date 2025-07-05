@@ -15,7 +15,7 @@ use AmeliaBooking\Infrastructure\Licence;
  */
 class FrontendStrings
 {
-    /** @var array */
+    /** @var SettingsService */
     private static $settings;
 
     /**

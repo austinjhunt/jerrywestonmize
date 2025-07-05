@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Â© TMS-Plugins. All rights reserved.
  * @licence   See COPYING.md for license details.

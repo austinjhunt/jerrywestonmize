@@ -109,7 +109,8 @@ class PackageReservationService extends AppointmentReservationService
 
             /** @var PackageService $bookable */
             foreach ($package->getBookable()->getItems() as $bookable) {
-                if (!empty($appCount[$bookable->getService()->getId()->getValue()]) &&
+                if (
+                    !empty($appCount[$bookable->getService()->getId()->getValue()]) &&
                     $appCount[$bookable->getService()->getId()->getValue()] > $bookable->getQuantity()->getValue()
                 ) {
                     throw new PackageBookingUnavailableException(
@@ -196,7 +197,8 @@ class PackageReservationService extends AppointmentReservationService
 
         /** @var PackageCustomerService $packageCustomerService */
         foreach ($packageCustomerServices->getItems() as $packageCustomerService) {
-            if (!empty($appointmentData['serviceId']) &&
+            if (
+                !empty($appointmentData['serviceId']) &&
                 (int)$appointmentData['serviceId'] === $packageCustomerService->getServiceId()->getValue()
             ) {
                 $appointmentData['bookings'][0]['packageCustomerService'] = $packageCustomerService->toArray();
@@ -242,7 +244,9 @@ class PackageReservationService extends AppointmentReservationService
                     'recurring'          => [],
                     'package'            => [],
                     'payment'            => null,
-                    'isMollie'           => !empty($appointmentData['payment']['gateway']) ? $appointmentData['payment']['gateway'] === PaymentType::MOLLIE : false
+                    'isMollie'           =>
+                        !empty($appointmentData['payment']['gateway']) &&
+                        $appointmentData['payment']['gateway'] === PaymentType::MOLLIE
                 ]
             );
 
@@ -342,7 +346,8 @@ class PackageReservationService extends AppointmentReservationService
             do_action('amelia_after_package_booked_frontend', $packageCustomer->toArray());
         }
 
-        if ($reservation->hasAvailabilityValidation()->getValue() &&
+        if (
+            $reservation->hasAvailabilityValidation()->getValue() &&
             $this->hasDoubleBookings(null, $packageReservations)
         ) {
             throw new BookingUnavailableException(
@@ -589,11 +594,12 @@ class PackageReservationService extends AppointmentReservationService
 
     /**
      * @param Reservation $reservation
+     * @param bool        $usePayment
      *
      * @return array
      * @throws InvalidArgumentException
      */
-    public function getProvidersPaymentAmount($reservation)
+    public function getProvidersPaymentAmount($reservation, $usePayment = true)
     {
         $amountData = [];
 
@@ -603,20 +609,21 @@ class PackageReservationService extends AppointmentReservationService
         /** @var PackageCustomerService $packageCustomerService */
         foreach ($reservation->getPackageCustomerServices()->getItems() as $packageCustomerService) {
             /** @var Payment $payment */
-            $payment = $packageCustomerService->getPackageCustomer()->getPayments()->getItem(
+            $payment = $usePayment ? $packageCustomerService->getPackageCustomer()->getPayments()->getItem(
                 $packageCustomerService->getPackageCustomer()->getPayments()->keys()[0]
-            );
+            ) : null;
 
             /** @var PackageService $packageService */
             foreach ($bookable->getBookable()->getItems() as $packageService) {
                 /** @var Provider $provider */
                 foreach ($packageService->getProviders()->getItems() as $provider) {
-                    if ($provider->getStripeConnect() &&
+                    if (
+                        $provider->getStripeConnect() &&
                         $provider->getStripeConnect()->getId() &&
                         $provider->getStripeConnect()->getId()->getValue()
                     ) {
                         $amountData[$provider->getId()->getValue()][0] = [
-                            'paymentId' => $payment->getId()->getValue(),
+                            'paymentId' => $payment ? $payment->getId()->getValue() : null,
                             'amount'    => $this->getReservationPaymentAmount($reservation),
                         ];
                     }
@@ -630,7 +637,7 @@ class PackageReservationService extends AppointmentReservationService
     /**
      * @param PackageCustomer|null $booking
      * @param Package              $bookable
-     * @param string|null          $reduction
+     * @param bool                 $invoice
      *
      * @return array
      * @throws InvalidArgumentException
@@ -646,7 +653,7 @@ class PackageReservationService extends AppointmentReservationService
         $price = $bookable->getPrice()->getValue();
 
         if (!$bookable->getCalculatedPrice()->getValue() && $bookable->getDiscount()->getValue()) {
-            $subtraction = $price / 100 * ($bookable->getDiscount()->getValue() ?: 0);
+            $subtraction = $price / 100 * ((float)$bookable->getDiscount()->getValue() ?: 0);
 
             $price = $bookable->getPrice()->getValue() - $subtraction;
         }
@@ -693,7 +700,11 @@ class PackageReservationService extends AppointmentReservationService
             'tax_rate'   => $taxCalculated ? $this->getTaxRate($packageTax) : '',
             'tax_type'   => $taxCalculated ? $packageTax->getType()->getValue() : '',
             'tax_excluded' => $taxCalculated ? $packageTax->getExcluded()->getValue() : false,
-            'full_discount' => $booking ? $this->getCouponDiscountAmount($booking->getCoupon(), $bookingPrice) + ($booking->getCoupon() && $booking->getCoupon()->getDeduction() ? $booking->getCoupon()->getDeduction()->getValue() : 0) : null
+            'full_discount' =>
+                $booking ?
+                    $this->getCouponDiscountAmount($booking->getCoupon(), $bookingPrice) +
+                    ($booking->getCoupon() && $booking->getCoupon()->getDeduction() ? (float)$booking->getCoupon()->getDeduction()->getValue() : 0) :
+                    null
         ];
     }
 
@@ -776,7 +787,8 @@ class PackageReservationService extends AppointmentReservationService
 
             /** @var CustomerBooking $packageBooking */
             foreach ($packageAppointment->getBookings()->getItems() as $packageBooking) {
-                if ($packageBooking->getPackageCustomerService() &&
+                if (
+                    $packageBooking->getPackageCustomerService() &&
                     in_array(
                         $packageBooking->getPackageCustomerService()->getId()->getValue(),
                         $packageCustomerServices->keys()

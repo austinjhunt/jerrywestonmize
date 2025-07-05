@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -30,8 +31,8 @@ class AbstractMailService
      */
     public function __construct($from, $fromName, $replyTo)
     {
-        $this->from = $from;
+        $this->from     = $from;
         $this->fromName = $fromName;
-        $this->replyTo = $replyTo;
+        $this->replyTo  = $replyTo;
     }
 }

@@ -173,7 +173,8 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         foreach ($appointment->getBookings()->getItems() as $newBooking) {
             /** @var CustomerBooking $oldBooking */
             foreach ($oldAppointment->getBookings()->getItems() as $oldBooking) {
-                if ($newBooking->getId() &&
+                if (
+                    $newBooking->getId() &&
                     $newBooking->getId()->getValue() === $oldBooking->getId()->getValue()
                 ) {
                     if ($oldBooking->getUtcOffset()) {
@@ -191,7 +192,8 @@ class UpdateAppointmentCommandHandler extends CommandHandler
                     if ($oldBooking->getStatus()->getValue() === $newBooking->getStatus()->getValue()) {
                         $newBooking->setUpdated(
                             new BooleanValueObject(
-                                $appointmentAS->appointmentDetailsChanged($appointment, $oldAppointment) || $appointmentAS->bookingDetailsChanged($newBooking, $oldBooking)
+                                $appointmentAS->appointmentDetailsChanged($appointment, $oldAppointment) ||
+                                $appointmentAS->bookingDetailsChanged($newBooking, $oldBooking)
                             )
                         );
                     }
@@ -216,7 +218,8 @@ class UpdateAppointmentCommandHandler extends CommandHandler
             $appointment->setZoomMeeting($oldAppointment->getZoomMeeting());
         }
 
-        if ($bookingAS->isBookingApprovedOrPending($appointment->getStatus()->getValue()) &&
+        if (
+            $bookingAS->isBookingApprovedOrPending($appointment->getStatus()->getValue()) &&
             $bookingAS->isBookingCanceledOrRejectedOrNoShow($oldAppointment->getStatus()->getValue())
         ) {
             /** @var AbstractUser $user */
@@ -250,13 +253,14 @@ class UpdateAppointmentCommandHandler extends CommandHandler
             $removedBookings->addItem(CustomerBookingFactory::create($removedBookingData), $removedBookingData['id']);
         }
 
-        $paymentData = null;
+        $paymentData = [];
 
         $bookingAdded = $bookingAS->isBookingAdded($appointment->getBookings());
 
-        /** @var CustomerBooking $booking */
+        /** @var CustomerBooking $oldBooking */
         foreach ($oldAppointment->getBookings()->getItems() as $oldBooking) {
-            if ($appointment->getServiceId()->getValue() !== $oldAppointment->getServiceId()->getValue() &&
+            if (
+                $appointment->getServiceId()->getValue() !== $oldAppointment->getServiceId()->getValue() &&
                 !$appointmentAS->processPackageAppointmentBooking(
                     $oldBooking,
                     $removedBookings,
@@ -354,7 +358,8 @@ class UpdateAppointmentCommandHandler extends CommandHandler
 
             /** @var CustomerBooking $booking */
             foreach ($appointment->getBookings()->getItems() as $booking) {
-                if ($booking->getStatus()->getValue() === BookingStatus::APPROVED &&
+                if (
+                    $booking->getStatus()->getValue() === BookingStatus::APPROVED &&
                     ($appointmentStatus === BookingStatus::PENDING || $appointmentStatus === BookingStatus::APPROVED)
                 ) {
                     $booking->setChangedStatus(new BooleanValueObject(true));

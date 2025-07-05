@@ -154,7 +154,7 @@ class ProviderService
 
             $provider->setDayOffList(new Collection());
 
-            /** @var Collection $sortedPeriods */
+            /** @var Collection $sortedWeekDays */
             $sortedWeekDays = new Collection();
 
             $allWeekDaysIndexes = [];
@@ -196,7 +196,8 @@ class ProviderService
         if ($period->getPeriodLocationList()->length()) {
             /** @var PeriodLocation|SpecialDayPeriodLocation $periodLocation */
             foreach ($period->getPeriodLocationList()->getItems() as $periodLocation) {
-                if ($providerLocation &&
+                if (
+                    $providerLocation &&
                     $periodLocation->getLocationId()->getValue() === $providerLocation->getId()->getValue() &&
                     ($hasVisibleLocations ? $providerLocation->getStatus()->getValue() === Status::VISIBLE : true)
                 ) {
@@ -210,7 +211,8 @@ class ProviderService
                 $availableLocation = $locations->keyExists($periodLocation->getLocationId()->getValue()) ?
                     $locations->getItem($periodLocation->getLocationId()->getValue()) : null;
 
-                if ($availableLocation &&
+                if (
+                    $availableLocation &&
                     (
                     $providerLocation ?
                         $periodLocation->getLocationId()->getValue() !== $providerLocation->getId()->getValue() : true
@@ -225,12 +227,14 @@ class ProviderService
             $availableLocation = $locations->keyExists($period->getLocationId()->getValue()) ?
                 $locations->getItem($period->getLocationId()->getValue()) : null;
 
-            if ($availableLocation &&
+            if (
+                $availableLocation &&
                 ($hasVisibleLocations ? $availableLocation->getStatus()->getValue() === Status::VISIBLE : true)
             ) {
                 $availablePeriodLocations->addItem($availableLocation, $availableLocation->getId()->getValue());
             }
-        } elseif ($providerLocation &&
+        } elseif (
+            $providerLocation &&
             ($hasVisibleLocations ? $providerLocation->getStatus()->getValue() === Status::VISIBLE : true)
         ) {
             $availablePeriodLocations->addItem($providerLocation, $providerLocation->getId()->getValue());
@@ -316,7 +320,7 @@ class ProviderService
 
                     $provider->getAppointmentList()->addItem($fakeAppointment);
                 }
-            } else if ($providers->keyExists($appointment->getProviderId()->getValue())) {
+            } elseif ($providers->keyExists($appointment->getProviderId()->getValue())) {
                 /** @var Provider $provider */
                 $provider = $providers->getItem($appointment->getProviderId()->getValue());
 

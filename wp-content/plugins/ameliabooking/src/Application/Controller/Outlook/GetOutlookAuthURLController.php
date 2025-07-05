@@ -23,7 +23,7 @@ class GetOutlookAuthURLController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GetOutlookAuthURLCommand($args);
+        $command     = new GetOutlookAuthURLCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

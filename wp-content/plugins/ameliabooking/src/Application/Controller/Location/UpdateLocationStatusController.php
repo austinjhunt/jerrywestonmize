@@ -35,7 +35,7 @@ class UpdateLocationStatusController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdateLocationStatusCommand($args);
+        $command     = new UpdateLocationStatusCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

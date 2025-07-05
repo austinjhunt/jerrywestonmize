@@ -93,7 +93,8 @@ class BookingApplicationService
             }
         }
 
-        if (!$customerBookingExtraRepository->deleteByEntityId($booking->getId()->getValue(), 'customerBookingId') ||
+        if (
+            !$customerBookingExtraRepository->deleteByEntityId($booking->getId()->getValue(), 'customerBookingId') ||
             !$bookingRepository->delete($booking->getId()->getValue())
         ) {
             return false;
@@ -349,10 +350,12 @@ class BookingApplicationService
                     }
                 }
 
-                if (in_array(
-                    $customField['type'],
-                    ['text-area', 'file', 'text', 'select', 'checkbox', 'radio', 'datepicker', 'address']
-                )) {
+                if (
+                    in_array(
+                        $customField['type'],
+                        ['text-area', 'file', 'text', 'select', 'checkbox', 'radio', 'datepicker', 'address']
+                    )
+                ) {
                     if ($customField['type'] === 'file') {
                         if (!empty($customField['value'])) {
                             foreach ($customFields[$customFieldId]['value'] as $index => $value) {
@@ -405,7 +408,8 @@ class BookingApplicationService
 
         if (isset($data['recurring'])) {
             foreach ($data['recurring'] as $key => $recurringData) {
-                if (isset($data['recurring'][$key]['locationId']) &&
+                if (
+                    isset($data['recurring'][$key]['locationId']) &&
                     $data['recurring'][$key]['locationId'] === ''
                 ) {
                     $data['recurring'][$key]['locationId'] = null;
@@ -415,7 +419,8 @@ class BookingApplicationService
 
         if (isset($data['package'])) {
             foreach ($data['package'] as $key => $recurringData) {
-                if (isset($data['package'][$key]['locationId']) &&
+                if (
+                    isset($data['package'][$key]['locationId']) &&
                     $data['package'][$key]['locationId'] === ''
                 ) {
                     $data['package'][$key]['locationId'] = null;
@@ -428,7 +433,8 @@ class BookingApplicationService
         }
 
         // Convert UTC slot to slot in TimeZone based on Settings
-        if ((isset($data['bookingStart']) &&
+        if (
+            (isset($data['bookingStart']) &&
             $data['bookings'][0]['utcOffset'] !== null &&
             $settingsService->getSetting('general', 'showClientTimeZone')) ||
             (isset($data['utc']) ? (isset($data['bookingStart']) && $data['utc'] === true) : false)
@@ -451,7 +457,8 @@ class BookingApplicationService
             )->setTimezone(DateTimeService::getTimeZone())->format('Y-m-d H:i:s');
         }
 
-        if ($settingsService->getSetting('general', 'showClientTimeZone') &&
+        if (
+            $settingsService->getSetting('general', 'showClientTimeZone') &&
             !empty($data['package'])
         ) {
             foreach ($data['package'] as $key => $recurringData) {
@@ -476,7 +483,7 @@ class BookingApplicationService
      */
     public function getReservationEntity($data)
     {
-        /** @var Appointment|Event $reservation */
+        /** @var Appointment|Event|null $reservation */
         $reservation = null;
 
         switch ($data['type']) {
@@ -557,7 +564,8 @@ class BookingApplicationService
                     $reservation->setProvider($provider);
                 }
 
-                if ($reservation->getLocation() === null &&
+                if (
+                    $reservation->getLocation() === null &&
                     $reservation->getLocationId() === null &&
                     $reservation->getProvider() !== null &&
                     $reservation->getProvider()->getLocationId() !== null
@@ -687,7 +695,8 @@ class BookingApplicationService
                     }
                 }
 
-                if ($reservation->getLocation() === null &&
+                if (
+                    $reservation->getLocation() === null &&
                     $reservation->getLocationId() === null &&
                     $reservation->getProvider() !== null &&
                     $reservation->getProvider()->getLocationId() !== null
@@ -714,7 +723,9 @@ class BookingApplicationService
     public function isBookingAdded($bookings)
     {
         foreach ($bookings->getItems() as $booking) {
-            if (!$booking->getId() || $booking->getId()->getValue() === 0) return true;
+            if (!$booking->getId() || $booking->getId()->getValue() === 0) {
+                return true;
+            }
         }
         return false;
     }
@@ -743,7 +754,8 @@ class BookingApplicationService
                 $appointment->setLocation($filledAppointment->getLocation());
             }
 
-            if ($appointment->getServiceId() &&
+            if (
+                $appointment->getServiceId() &&
                 $appointment->getProviderId() &&
                 !$appointment->getService() &&
                 $filledAppointment->getService() &&
@@ -764,7 +776,8 @@ class BookingApplicationService
 
         /** @var CustomerBooking $booking */
         foreach ($appointment->getBookings()->getItems() as $booking) {
-            if (!$booking->getCustomer() &&
+            if (
+                !$booking->getCustomer() &&
                 $booking->getCustomerId() &&
                 $customers->keyExists($booking->getCustomerId()->getValue())
             ) {
@@ -831,7 +844,7 @@ class BookingApplicationService
             /** @var ProviderRepository $providerRepository */
             $providerRepository = $this->container->get('domain.users.providers.repository');
 
-            /** @var Provider $providers */
+            /** @var Provider $provider */
             $provider = $providerRepository->getById($appointment->getProviderId()->getValue());
 
             $appointment->setProvider($provider);
@@ -840,7 +853,8 @@ class BookingApplicationService
         $locationId = $appointment->getLocation() === null && $appointment->getLocationId() !== null ?
             $appointment->getLocationId()->getValue() : null;
 
-        if ($appointment->getLocation() === null &&
+        if (
+            $appointment->getLocation() === null &&
             $appointment->getLocationId() === null &&
             $appointment->getProvider() !== null &&
             $appointment->getProvider()->getLocationId() !== null

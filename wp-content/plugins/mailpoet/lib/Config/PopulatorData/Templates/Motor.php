@@ -159,7 +159,7 @@ class Motor {
                   1 =>
                    [
                     'type' => 'social',
-                    'iconSet' => 'full-symbol-color',
+                    'iconSet' => 'official',
                     'styles' =>
                      [
                       'block' =>
@@ -174,7 +174,7 @@ class Motor {
                         'type' => 'socialIcon',
                         'iconType' => 'facebook',
                         'link' => 'http://www.facebook.com',
-                        'image' => $this->social_icon_url . '/06-full-symbol-color/Facebook.png',
+                        'image' => $this->social_icon_url . '/11-official/Facebook.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Facebook',
@@ -184,7 +184,7 @@ class Motor {
                         'type' => 'socialIcon',
                         'iconType' => 'twitter',
                         'link' => 'http://www.twitter.com',
-                        'image' => $this->social_icon_url . '/06-full-symbol-color/Twitter.png',
+                        'image' => $this->social_icon_url . '/11-official/X.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Twitter',
@@ -194,7 +194,7 @@ class Motor {
                         'type' => 'socialIcon',
                         'iconType' => 'youtube',
                         'link' => 'http://www.youtube.com',
-                        'image' => $this->social_icon_url . '/06-full-symbol-color/Youtube.png',
+                        'image' => $this->social_icon_url . '/11-official/Youtube.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Youtube',
@@ -276,7 +276,7 @@ class Motor {
                   1 =>
                    [
                     'type' => 'social',
-                    'iconSet' => 'full-symbol-color',
+                    'iconSet' => 'official',
                     'styles' =>
                      [
                       'block' =>
@@ -291,7 +291,7 @@ class Motor {
                         'type' => 'socialIcon',
                         'iconType' => 'instagram',
                         'link' => 'http://instagram.com',
-                        'image' => $this->social_icon_url . '/06-full-symbol-color/Instagram.png',
+                        'image' => $this->social_icon_url . '/11-official/Instagram.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Instagram',
@@ -301,7 +301,7 @@ class Motor {
                         'type' => 'socialIcon',
                         'iconType' => 'email',
                         'link' => '',
-                        'image' => $this->social_icon_url . '/06-full-symbol-color/Email.png',
+                        'image' => $this->social_icon_url . '/11-official/Email.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Email',
@@ -311,7 +311,7 @@ class Motor {
                         'type' => 'socialIcon',
                         'iconType' => 'website',
                         'link' => '',
-                        'image' => $this->social_icon_url . '/06-full-symbol-color/Website.png',
+                        'image' => $this->social_icon_url . '/11-official/Website.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Website',
@@ -1138,7 +1138,7 @@ class Motor {
          ],
         'social' =>
          [
-          'iconSet' => 'full-symbol-color',
+          'iconSet' => 'official',
           'icons' =>
            [
             0 =>
@@ -1146,7 +1146,7 @@ class Motor {
               'type' => 'socialIcon',
               'iconType' => 'instagram',
               'link' => 'http://instagram.com',
-              'image' => $this->social_icon_url . '/06-full-symbol-color/Instagram.png',
+              'image' => $this->social_icon_url . '/11-official/Instagram.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Instagram',
@@ -1156,7 +1156,7 @@ class Motor {
               'type' => 'socialIcon',
               'iconType' => 'email',
               'link' => '',
-              'image' => $this->social_icon_url . '/06-full-symbol-color/Email.png',
+              'image' => $this->social_icon_url . '/11-official/Email.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Email',
@@ -1166,7 +1166,7 @@ class Motor {
               'type' => 'socialIcon',
               'iconType' => 'website',
               'link' => '',
-              'image' => $this->social_icon_url . '/06-full-symbol-color/Website.png',
+              'image' => $this->social_icon_url . '/11-official/Website.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Website',

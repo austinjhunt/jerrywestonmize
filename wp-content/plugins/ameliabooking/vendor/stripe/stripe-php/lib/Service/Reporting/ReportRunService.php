@@ -4,17 +4,22 @@
 
 namespace AmeliaStripe\Service\Reporting;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
 class ReportRunService extends \AmeliaStripe\Service\AbstractService
 {
     /**
      * Returns a list of Report Runs, with the most recent appearing first.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{created?: array|int, ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Collection<\AmeliaStripe\Reporting\ReportRun>
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -25,12 +30,12 @@ class ReportRunService extends \AmeliaStripe\Service\AbstractService
      * Creates a new object and begin running the report. (Certain report types require
      * a <a href="https://stripe.com/docs/keys#test-live-modes">live-mode API key</a>.).
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[], parameters?: array{columns?: string[], connected_account?: string, currency?: string, interval_end?: int, interval_start?: int, payout?: string, reporting_category?: string, timezone?: string}, report_type: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Reporting\ReportRun
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -41,12 +46,12 @@ class ReportRunService extends \AmeliaStripe\Service\AbstractService
      * Retrieves the details of an existing Report Run.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Reporting\ReportRun
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

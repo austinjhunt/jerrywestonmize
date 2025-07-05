@@ -6,5 +6,5 @@ namespace AmeliaStripe\Util;
 
 class ApiVersion
 {
-    const CURRENT = '2022-08-01';
+    const CURRENT = '2025-04-30.basil';
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -17,7 +18,6 @@ use AmeliaBooking\Application\Services\Stats\StatsService;
  */
 class AddStatsCommandHandler extends CommandHandler
 {
-
     /**
      * @var array
      */

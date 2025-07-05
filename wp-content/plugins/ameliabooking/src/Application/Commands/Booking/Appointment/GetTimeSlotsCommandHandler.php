@@ -288,7 +288,8 @@ class GetTimeSlotsCommandHandler extends CommandHandler
 
                 $maximumDateTimeCopy = clone $maximumDateTime;
 
-                if ($endDateTimeCopy->format('Y-m-d H:i') === $maximumDateTimeCopy->format('Y-m-d H:i') ||
+                if (
+                    $endDateTimeCopy->format('Y-m-d H:i') === $maximumDateTimeCopy->format('Y-m-d H:i') ||
                     ($endDateTimeCopy->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i') ===
                         $maximumDateTimeCopy->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i')) ||
                     ($endDateTimeCopy > $maximumDateTimeCopy)
@@ -338,24 +339,12 @@ class GetTimeSlotsCommandHandler extends CommandHandler
         $busyness = [];
 
         foreach ($freeSlots['available'] as $slotDate => $slotTimes) {
-            if (!empty($freeSlots['continuousAppointments'][$slotDate]) && !empty($freeSlots['occupied'][$slotDate])) {
-                $freeSlots['occupied'][$slotDate] =
-                    array_merge(
-                        $freeSlots['occupied'][$slotDate],
-                        $freeSlots['continuousAppointments'][$slotDate]
-                    );
-
-                foreach ($freeSlots['occupied'][$slotDate] as $key => $timeKey) {
-                    $freeSlots['occupied'][$slotDate][$key] =
-                        [0 => reset($freeSlots['occupied'][$slotDate])[0]];
-                }
-            }
-
             $busyness[$slotDate] = round(
                 count(!empty($freeSlots['occupied'][$slotDate]) ? $freeSlots['occupied'][$slotDate] : []) /
                 (count(!empty($freeSlots['available'][$slotDate]) ? $freeSlots['available'][$slotDate] : []) +
                     count(!empty($freeSlots['occupied'][$slotDate]) ? $freeSlots['occupied'][$slotDate] : []))
-                * 100);
+                * 100
+            );
         }
 
         $converted = ['available' => [], 'occupied' => []];

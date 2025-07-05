@@ -97,10 +97,12 @@ class DeleteAppointmentCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted appointment');
-        $result->setData([
+        $result->setData(
+            [
             Entities::APPOINTMENT       => $appointment->toArray(),
             'bookingsWithChangedStatus' => $bookingsWithChangedStatus
-        ]);
+            ]
+        );
 
         do_action('amelia_after_appointment_deleted', $appointment->toArray());
 

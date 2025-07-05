@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -33,7 +34,6 @@ use AmeliaBooking\Domain\ValueObjects\String\Token;
  */
 class CustomerBookingFactory
 {
-
     /**
      * @param $data
      *
@@ -83,7 +83,7 @@ class CustomerBookingFactory
         if (isset($data['customFields'])) {
             if (is_string($data['customFields'])) {
                 $customerBooking->setCustomFields(new Json($data['customFields']));
-            } else if (json_encode($data['customFields']) !== false) {
+            } elseif (json_encode($data['customFields']) !== false) {
                 $customerBooking->setCustomFields(new Json(json_encode($data['customFields'])));
             }
         }
@@ -185,7 +185,7 @@ class CustomerBookingFactory
         if (!empty($data['tax'])) {
             if (is_string($data['tax'])) {
                 $customerBooking->setTax(new Json($data['tax']));
-            } else if (json_encode($data['tax']) !== false) {
+            } elseif (json_encode($data['tax']) !== false) {
                 $customerBooking->setTax(new Json(json_encode($data['tax'])));
             }
         }
@@ -311,7 +311,7 @@ class CustomerBookingFactory
                         'lastName'  => $row['provider_lastName'],
                         'picture'   => $row['provider_pictureThumbPath']
                     ];
-                } else if ($data[$id]['event']['organizerId'] !== $eventProviderId && empty($data[$id]['event']['providers'][$eventProviderId])) {
+                } elseif ($data[$id]['event']['organizerId'] !== $eventProviderId && empty($data[$id]['event']['providers'][$eventProviderId])) {
                     $data[$id]['event']['providers'][$eventProviderId] = [
                         'id'        => $eventProviderId,
                         'firstName' => $row['provider_firstName'],

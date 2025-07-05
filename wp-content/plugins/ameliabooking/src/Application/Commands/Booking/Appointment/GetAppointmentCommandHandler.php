@@ -133,7 +133,8 @@ class GetAppointmentCommandHandler extends CommandHandler
         foreach ($appointment->getBookings()->getItems() as $booking) {
             $customFields = [];
 
-            if ($booking->getCustomFields() &&
+            if (
+                $booking->getCustomFields() &&
                 ($customFields = json_decode($booking->getCustomFields()->getValue(), true)) === null
             ) {
                 $booking->setCustomFields(null);

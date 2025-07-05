@@ -32,7 +32,7 @@ class GoogleCalendar
         Token $token,
         Name $calendarId
     ) {
-        $this->token = $token;
+        $this->token      = $token;
         $this->calendarId = $calendarId;
     }
 

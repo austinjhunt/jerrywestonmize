@@ -13,8 +13,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class ProvidersOutlookCalendarTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'providers_to_outlook_calendar';
+    public const TABLE = 'providers_to_outlook_calendar';
 
     /**
      * @return string

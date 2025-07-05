@@ -273,13 +273,14 @@ if ($filename) {
                     <td class="invoice-header-table-company">
                         <?php if (!empty($data['company_address'])) : ?>
                             <span><?php echo $data['company_address']?></span>
-                        <?php endif; ?>
-                        <?php if (empty($data['company_address']) && (!empty($data['company_email']) || !empty($data['company_phone']))) : ?>
+                        <?php elseif (!empty($data['company_email']) || !empty($data['company_phone'])) : ?>
                             <?php echo !empty($data['company_email']) ? $data['company_email'] : ''?>
                             <?php if (!empty($data['company_email']) && !empty($data['company_phone'])) : ?>
                                 |
                             <?php endif; ?>
                             <?php echo !empty($data['company_phone']) ? $data['company_phone'] : ''?>
+                        <?php elseif (!empty($data['company_vat_number'])) : ?>
+                            <?php echo $data['company_vat_number'] ?>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -292,6 +293,14 @@ if ($filename) {
                                  |
                             <?php endif; ?>
                             <?php echo !empty($data['company_phone']) ? $data['company_phone'] : ''?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if (!empty($data['company_vat_number']) && (!empty($data['company_address']) || !empty($data['company_email']) || !empty($data['company_phone']))) : ?>
+                    <tr>
+                        <td></td>
+                        <td class="invoice-header-table-company">
+                            <?php echo $data['company_vat_number'] ?>
                         </td>
                     </tr>
                 <?php endif; ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -32,7 +33,7 @@ use Slim\Exception\ContainerValueNotFoundException;
 class BookingEditedEventHandler
 {
     /** @var string */
-    const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
+    public const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
 
     /**
      * @param CommandResult $commandResult
@@ -67,7 +68,7 @@ class BookingEditedEventHandler
         $appointment = $commandResult->getData()[$commandResult->getData()['type']];
         $booking     = $commandResult->getData()[Entities::BOOKING];
         $bookingStatusChanged = $commandResult->getData()['bookingStatusChanged'];
-        $sendInvoice = null;
+        $sendInvoice          = null;
 
         if ($bookingStatusChanged) {
             $reservationObject = $eventRepository->getById($appointment['id']);
@@ -89,7 +90,8 @@ class BookingEditedEventHandler
             }
 
 
-            if ($booking['status'] === BookingStatus::APPROVED ||
+            if (
+                $booking['status'] === BookingStatus::APPROVED ||
                 $booking['status'] === BookingStatus::CANCELED ||
                 $booking['status'] === BookingStatus::REJECTED
             ) {
@@ -107,7 +109,8 @@ class BookingEditedEventHandler
                 );
             }
 
-            if (!empty($paymentId) && $booking['status'] === BookingStatus::APPROVED
+            if (
+                !empty($paymentId) && $booking['status'] === BookingStatus::APPROVED
                 && $settingsService->getSetting('notifications', 'sendInvoice')
             ) {
                 $sendInvoice = true;

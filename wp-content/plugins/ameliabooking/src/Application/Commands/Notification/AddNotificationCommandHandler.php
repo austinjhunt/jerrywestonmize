@@ -17,7 +17,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationRepository;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationsToEntitiesRepository;
-use \Interop\Container\Exception\ContainerException;
+use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**

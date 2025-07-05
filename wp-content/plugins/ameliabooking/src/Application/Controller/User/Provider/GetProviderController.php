@@ -27,7 +27,7 @@ class GetProviderController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $getUserCommand = new GetProviderCommand($args);
-        $requestBody = $request->getParsedBody();
+        $requestBody    = $request->getParsedBody();
         $this->setCommandFields($getUserCommand, $requestBody);
 
         return $getUserCommand;

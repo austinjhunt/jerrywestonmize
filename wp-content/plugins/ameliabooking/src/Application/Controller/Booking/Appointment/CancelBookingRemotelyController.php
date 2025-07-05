@@ -38,7 +38,7 @@ class CancelBookingRemotelyController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new CancelBookingRemotelyCommand($args);
+        $command     = new CancelBookingRemotelyCommand($args);
         $requestBody = $request->getParsedBody();
         $command->setField('token', (string)$request->getQueryParam('token', ''));
         $command->setField('type', (string)$request->getQueryParam('type', ''));

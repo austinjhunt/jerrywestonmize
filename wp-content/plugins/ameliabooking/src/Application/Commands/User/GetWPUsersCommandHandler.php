@@ -57,9 +57,11 @@ class GetWPUsersCommandHandler extends CommandHandler
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved users.');
 
-        $result->setData([
+        $result->setData(
+            [
             Entities::USER . 's' => $wpUsers
-        ]);
+            ]
+        );
 
         return $result;
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -12,7 +13,6 @@ use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
-use AmeliaBooking\Domain\Repository\Payment\PaymentRepositoryInterface;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Connection;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\PackagesCustomersServicesTable;
@@ -25,7 +25,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Location\LocationsTable;
  *
  * @package AmeliaBooking\Infrastructure\Repository\Payment
  */
-class PaymentRepository extends AbstractRepository implements PaymentRepositoryInterface
+class PaymentRepository extends AbstractRepository
 {
     /** @var string */
     protected $appointmentsTable;
@@ -91,20 +91,20 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
     ) {
         parent::__construct($connection, $table);
 
-        $this->appointmentsTable = $appointmentsTable;
-        $this->bookingsTable = $bookingsTable;
-        $this->servicesTable = $servicesTable;
-        $this->usersTable = $usersTable;
-        $this->eventsTable = $eventsTable;
+        $this->appointmentsTable    = $appointmentsTable;
+        $this->bookingsTable        = $bookingsTable;
+        $this->servicesTable        = $servicesTable;
+        $this->usersTable           = $usersTable;
+        $this->eventsTable          = $eventsTable;
         $this->eventsProvidersTable = $eventsProvidersTable;
-        $this->eventsPeriodsTable = $eventsPeriodsTable;
+        $this->eventsPeriodsTable   = $eventsPeriodsTable;
         $this->customerBookingsToEventsPeriodsTable = $customerBookingsToEventsPeriodsTable;
-        $this->packagesTable = $packagesTable;
+        $this->packagesTable          = $packagesTable;
         $this->packagesCustomersTable = $packagesCustomersTable;
         $this->packagesCustomersServiceTable = PackagesCustomersServicesTable::getTableName();
     }
 
-    const FACTORY = PaymentFactory::class;
+    public const FACTORY = PaymentFactory::class;
 
     /**
      * @param Payment $entity
@@ -152,9 +152,38 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
                 "INSERT INTO
                 {$this->table} 
                 (
-                `customerBookingId`, `packageCustomerId`, `parentId`, `amount`, `dateTime`, `status`, `gateway`, `gatewayTitle`, `data`, `entity`, `actionsCompleted`, `created`, `wcOrderId`, `wcOrderItemId`, `transactionId`, `invoiceNumber`
+                 `customerBookingId`,
+                 `packageCustomerId`,
+                 `parentId`,
+                 `amount`,
+                 `dateTime`,
+                 `status`,
+                 `gateway`,
+                 `gatewayTitle`,
+                 `data`, `entity`,
+                 `actionsCompleted`,
+                 `created`,
+                 `wcOrderId`,
+                 `wcOrderItemId`,
+                 `transactionId`,
+                 `invoiceNumber`
                 ) VALUES (
-                :customerBookingId, :packageCustomerId, :parentId, :amount, :dateTime, :status, :gateway, :gatewayTitle, :data, :entity, :actionsCompleted, :created, :wcOrderId, :wcOrderItemId, :transactionId, {$invoiceNumberText}
+                  :customerBookingId,
+                  :packageCustomerId,
+                  :parentId,
+                  :amount,
+                  :dateTime,
+                  :status,
+                  :gateway,
+                  :gatewayTitle,
+                  :data,
+                  :entity,
+                  :actionsCompleted,
+                  :created,
+                  :wcOrderId,
+                  :wcOrderItemId,
+                  :transactionId,
+                  {$invoiceNumberText}
                 )"
             );
 
@@ -318,10 +347,10 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
         $params = [];
         $appointmentParams1 = [];
         $appointmentParams2 = [];
-        $eventParams = [];
-        $whereAppointment1 = [];
-        $whereAppointment2 = [];
-        $whereEvent = [];
+        $eventParams        = [];
+        $whereAppointment1  = [];
+        $whereAppointment2  = [];
+        $whereEvent         = [];
 
         $basedOnDate = $invoice ? 'created' : 'dateTime';
 
@@ -330,12 +359,12 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             $whereAppointment2[] = "(p.{$basedOnDate} BETWEEN :paymentAppointmentFrom2 AND :paymentAppointmentTo2)";
             $appointmentParams1[':paymentAppointmentFrom1'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             $appointmentParams2[':paymentAppointmentFrom2'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-            $appointmentParams1[':paymentAppointmentTo1'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
-            $appointmentParams2[':paymentAppointmentTo2'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+            $appointmentParams1[':paymentAppointmentTo1']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+            $appointmentParams2[':paymentAppointmentTo2']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
 
             $whereEvent[] = "(p.{$basedOnDate} BETWEEN :paymentEventFrom AND :paymentEventTo)";
             $eventParams[':paymentEventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-            $eventParams[':paymentEventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+            $eventParams[':paymentEventTo']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
         }
 
         if (!empty($criteria['customerId'])) {
@@ -370,8 +399,8 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             $queryServices2 = [];
 
             foreach ((array)$criteria['services'] as $index => $value) {
-                $param1 = ':service0' . $index;
-                $param2 = ':service1' . $index;
+                $param1           = ':service0' . $index;
+                $param2           = ':service1' . $index;
                 $queryServices1[] = $param1;
                 $queryServices2[] = $param2;
                 $appointmentParams1[$param1] = $value;
@@ -406,7 +435,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             $queryPackages = [];
 
             foreach ((array)$criteria['packages'] as $index => $value) {
-                $param = ':package' . $index;
+                $param           = ':package' . $index;
                 $queryPackages[] = $param;
                 $appointmentParams2[$param] = $value;
             }
@@ -420,7 +449,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             $queryEvents = [];
 
             foreach ((array)$criteria['events'] as $index => $value) {
-                $param = ':event' . $index;
+                $param         = ':event' . $index;
                 $queryEvents[] = $param;
                 $eventParams[$param] = $value;
             }
@@ -434,7 +463,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
 
         $whereAppointment1 = $whereAppointment1 ? ' AND ' . implode(' AND ', $whereAppointment1) : '';
         $whereAppointment2 = $whereAppointment2 ? ' AND ' . implode(' AND ', $whereAppointment2) : '';
-        $whereEvent = $whereEvent ? ' AND ' . implode(' AND ', $whereEvent) : '';
+        $whereEvent        = $whereEvent ? ' AND ' . implode(' AND ', $whereEvent) : '';
 
         $groupBy = '';
         if ($invoice) {
@@ -481,16 +510,16 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             return $result;
         } elseif (isset($criteria['services'])) {
             $paymentQuery = "({$appointmentQuery1}) UNION ALL ({$appointmentQuery2})";
-            $params = array_merge($params, $appointmentParams1, $appointmentParams2);
+            $params       = array_merge($params, $appointmentParams1, $appointmentParams2);
         } elseif (isset($criteria['events'])) {
             $paymentQuery = "({$eventQuery})";
-            $params = array_merge($params, $eventParams);
+            $params       = array_merge($params, $eventParams);
         } elseif (isset($criteria['packages'])) {
             $paymentQuery = "({$appointmentQuery2})";
-            $params = array_merge($params, $appointmentParams2);
+            $params       = array_merge($params, $appointmentParams2);
         } else {
             $paymentQuery = "({$appointmentQuery1}) UNION ALL ({$appointmentQuery2}) UNION ALL ({$eventQuery})";
-            $params = array_merge($params, $appointmentParams1, $appointmentParams2, $eventParams);
+            $params       = array_merge($params, $appointmentParams1, $appointmentParams2, $eventParams);
         }
 
         $limit = $this->getLimit(
@@ -532,10 +561,10 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
         $params = [];
         $appointmentParams1 = [];
         $appointmentParams2 = [];
-        $eventParams = [];
-        $whereAppointment1 = [];
-        $whereAppointment2 = [];
-        $whereEvent = [];
+        $eventParams        = [];
+        $whereAppointment1  = [];
+        $whereAppointment2  = [];
+        $whereEvent         = [];
 
         $basedOnDate = $invoice ? 'created' : 'dateTime';
 
@@ -544,12 +573,12 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             $whereAppointment2[] = "(p.{$basedOnDate} BETWEEN :paymentAppointmentFrom2 AND :paymentAppointmentTo2)";
             $appointmentParams1[':paymentAppointmentFrom1'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             $appointmentParams2[':paymentAppointmentFrom2'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-            $appointmentParams1[':paymentAppointmentTo1'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
-            $appointmentParams2[':paymentAppointmentTo2'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+            $appointmentParams1[':paymentAppointmentTo1']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+            $appointmentParams2[':paymentAppointmentTo2']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
 
             $whereEvent[] = "(p.{$basedOnDate} BETWEEN :paymentEventFrom AND :paymentEventTo)";
             $eventParams[':paymentEventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-            $eventParams[':paymentEventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+            $eventParams[':paymentEventTo']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
         }
 
         if (!empty($criteria['customerId'])) {
@@ -584,8 +613,8 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             $queryServices2 = [];
 
             foreach ((array)$criteria['services'] as $index => $value) {
-                $param1 = ':service0' . $index;
-                $param2 = ':service1' . $index;
+                $param1           = ':service0' . $index;
+                $param2           = ':service1' . $index;
                 $queryServices1[] = $param1;
                 $queryServices2[] = $param2;
                 $appointmentParams1[$param1] = $value;
@@ -620,7 +649,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             $queryEvents = [];
 
             foreach ((array)$criteria['events'] as $index => $value) {
-                $param = ':event' . $index;
+                $param         = ':event' . $index;
                 $queryEvents[] = $param;
                 $eventParams[$param] = $value;
             }
@@ -636,7 +665,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             $queryPackages = [];
 
             foreach ((array)$criteria['packages'] as $index => $value) {
-                $param = ':package' . $index;
+                $param           = ':package' . $index;
                 $queryPackages[] = $param;
                 $appointmentParams2[$param] = $value;
             }
@@ -648,7 +677,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
 
         $whereAppointment1 = $whereAppointment1 ? ' AND ' . implode(' AND ', $whereAppointment1) : '';
         $whereAppointment2 = $whereAppointment2 ? ' AND ' . implode(' AND ', $whereAppointment2) : '';
-        $whereEvent = $whereEvent ? ' AND ' . implode(' AND ', $whereEvent) : '';
+        $whereEvent        = $whereEvent ? ' AND ' . implode(' AND ', $whereEvent) : '';
 
         $groupBy = '';
         if ($invoice) {
@@ -700,16 +729,16 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             return [];
         } elseif (isset($criteria['services'])) {
             $paymentQuery = "({$appointmentQuery1}) UNION ALL ({$appointmentQuery2})";
-            $params = array_merge($params, $appointmentParams1, $appointmentParams2);
+            $params       = array_merge($params, $appointmentParams1, $appointmentParams2);
         } elseif (isset($criteria['events'])) {
             $paymentQuery = "({$eventQuery})";
-            $params = array_merge($params, $eventParams);
+            $params       = array_merge($params, $eventParams);
         } elseif (isset($criteria['packages'])) {
             $paymentQuery = "({$appointmentQuery2})";
-            $params = array_merge($params, $appointmentParams2);
+            $params       = array_merge($params, $appointmentParams2);
         } else {
             $paymentQuery = "({$appointmentQuery1}) UNION ALL ({$appointmentQuery2}) UNION ALL ({$eventQuery})";
-            $params = array_merge($params, $appointmentParams1, $appointmentParams2, $eventParams);
+            $params       = array_merge($params, $appointmentParams1, $appointmentParams2, $eventParams);
         }
 
         try {
@@ -785,14 +814,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
     }
 
     /**
-     * @param int $status
-     */
-    public function findByStatus($status)
-    {
-        // TODO: Implement findByStatus() method.
-    }
-
-    /**
      * @param array $data
      * @param boolean $invoice
      *
@@ -805,18 +826,22 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
 
         $where = [];
 
+        $parentIdParam1  = null;
+        $parentIdParam2  = null;
+        $paymentIdParam2 = null;
+
         foreach ($data as $index => $item) {
-            $paymentIdParam1 = ':paymentId1' . $index;
+            $paymentIdParam1          = ':paymentId1' . $index;
             $params[$paymentIdParam1] = $item['paymentId'];
 
             if ($invoice) {
                 if (!empty($item['parentId'])) {
-                    $parentIdParam1 = ':parentId1' . $index;
+                    $parentIdParam1          = ':parentId1' . $index;
                     $params[$parentIdParam1] = $item['parentId'];
-                    $parentIdParam2 = ':parentId2' . $index;
+                    $parentIdParam2          = ':parentId2' . $index;
                     $params[$parentIdParam2] = $item['parentId'];
                 }
-                $paymentIdParam2 = ':paymentId2' . $index;
+                $paymentIdParam2          = ':paymentId2' . $index;
                 $params[$paymentIdParam2] = $item['paymentId'];
             }
 
@@ -827,7 +852,10 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             // change in the future to simply retrieve by invoiceNumber when on invoice page since all the related payments will have the same invoiceNumber
             // cannot be done immediately since invoiceNumber is NULL for existing payments
             if ($invoice) {
-                $where[] = "((id <> $paymentIdParam1 AND " . $item['columnName'] . " = $relationParam) OR parentId = $paymentIdParam2" . (!empty($item['parentId']) ? " OR id = $parentIdParam1 OR parentId = $parentIdParam2)" : ")");
+                $where[] =
+                    "((id <> $paymentIdParam1 AND " .
+                    $item['columnName'] . " = $relationParam) OR parentId = $paymentIdParam2" .
+                    (!empty($item['parentId']) ? " OR id = $parentIdParam1 OR parentId = $parentIdParam2)" : ")");
             } else {
                 $where[] = "(id <> $paymentIdParam1 AND " . $item['columnName'] . " = $relationParam)";
             }

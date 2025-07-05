@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -35,7 +36,7 @@ class GenerateInvoiceController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GenerateInvoiceCommand($args);
+        $command     = new GenerateInvoiceCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

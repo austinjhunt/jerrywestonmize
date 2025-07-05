@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -23,7 +24,7 @@ use Interop\Container\Exception\ContainerException;
 class SMSAPIService
 {
     /** @var string */
-    const STATUS_STRING_OK = 'OK';
+    public const STATUS_STRING_OK = 'OK';
 
     /** @var Container */
     private $container;

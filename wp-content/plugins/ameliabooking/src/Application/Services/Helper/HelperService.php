@@ -180,7 +180,7 @@ class HelperService
      * @param string $type
      * @param string $dateStartString
      * @param string $dateEndString
-     * @param string $locale
+     * @param bool $changePass
      *
      * @return string
      *

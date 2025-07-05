@@ -71,9 +71,11 @@ class GetCurrentUserCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved current user');
-        $result->setData([
+        $result->setData(
+            [
             Entities::USER => $userArray
-        ]);
+            ]
+        );
 
         return $result;
     }

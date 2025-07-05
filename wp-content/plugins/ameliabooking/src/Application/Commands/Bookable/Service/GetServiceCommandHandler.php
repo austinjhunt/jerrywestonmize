@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -50,7 +51,8 @@ class GetServiceCommandHandler extends CommandHandler
         )->getItem($command->getArg('id'));
 
         // fix for wrongly saved JSON
-        if ($service->getSettings() &&
+        if (
+            $service->getSettings() &&
             json_decode($service->getSettings()->getValue(), true) === null
         ) {
             $service->setSettings(null);

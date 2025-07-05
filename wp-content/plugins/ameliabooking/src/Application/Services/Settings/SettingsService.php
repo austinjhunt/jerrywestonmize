@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -57,10 +58,10 @@ class SettingsService
             /** @var \DateTime $dayOffDate */
             foreach ($dayOffPeriod as $dayOffDate) {
                 if ($settingsDayOff['repeat']) {
-                    $dayOffDateFormatted = $dayOffDate->format('m-d');
+                    $dayOffDateFormatted           = $dayOffDate->format('m-d');
                     $daysOff[$dayOffDateFormatted] = $dayOffDateFormatted;
                 } else {
-                    $dayOffDateFormatted = $dayOffDate->format('Y-m-d');
+                    $dayOffDateFormatted           = $dayOffDate->format('Y-m-d');
                     $daysOff[$dayOffDateFormatted] = $dayOffDateFormatted;
                 }
             }

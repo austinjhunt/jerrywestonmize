@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -30,12 +31,12 @@ class SettingsFactory
      */
     public static function create($entityJsonData, $globalSettings)
     {
-        $entitySettings = new Settings();
-        $generalSettings = new GeneralSettings();
-        $zoomSettings = new ZoomSettings();
-        $paymentSettings = new PaymentSettings();
-        $lessonSpaceSetings = new LessonSpaceSettings();
-        $googleMeetSettings = new GoogleMeetSettings();
+        $entitySettings         = new Settings();
+        $generalSettings        = new GeneralSettings();
+        $zoomSettings           = new ZoomSettings();
+        $paymentSettings        = new PaymentSettings();
+        $lessonSpaceSetings     = new LessonSpaceSettings();
+        $googleMeetSettings     = new GoogleMeetSettings();
         $microsoftTeamsSettings = new MicrosoftTeamsSettings();
 
         $data = $entityJsonData ? json_decode($entityJsonData->getValue(), true) : [];

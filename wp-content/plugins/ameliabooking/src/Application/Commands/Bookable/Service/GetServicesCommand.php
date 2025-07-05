@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -15,5 +16,4 @@ use AmeliaBooking\Application\Commands\Command;
  */
 class GetServicesCommand extends Command
 {
-
 }

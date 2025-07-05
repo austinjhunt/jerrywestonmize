@@ -106,7 +106,8 @@ class CancelBookingCommandHandler extends CommandHandler
                 'type'    => $type,
                 'status'  => BookingStatus::CANCELED,
                 'message' =>
-                    BackendStrings::getAppointmentStrings()['appointment_status_changed'] . strtolower(BackendStrings::getCommonStrings()[BookingStatus::CANCELED])
+                    BackendStrings::getAppointmentStrings()['appointment_status_changed'] .
+                    strtolower(BackendStrings::getCommonStrings()[BookingStatus::CANCELED])
                 ]
             )
         );

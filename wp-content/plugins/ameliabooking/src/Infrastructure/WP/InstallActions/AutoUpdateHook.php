@@ -105,7 +105,6 @@ class AutoUpdateHook
         /** @var string $url */
         $url = AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings&activeSetting=activation';
 
-        /** @var string $redirect */
         $redirect = '<a href="' . $url . '" target="_blank">' . $settingsStrings['settings_lower'] . '</a>';
 
         if (!$activated) {
@@ -129,10 +128,8 @@ class AutoUpdateHook
         /** @var array $settingsStrings */
         $settingsStrings = BackendStrings::getSettingsStrings();
 
-        /** @var string $url */
         $url = AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings&activeSetting=activation';
 
-        /** @var string $redirect */
         $redirect = '<a href="' . $url . '" target="_blank">' . $settingsStrings['settings_lower'] . '</a>';
 
         if (!$package) {
@@ -190,17 +187,17 @@ class AutoUpdateHook
      */
     public static function extractDomain($domain)
     {
-        $topLevelDomainsJSON = require( AMELIA_PATH . '/view/backend/top-level-domains.php');
-        $topLevelDomains =  json_decode($topLevelDomainsJSON, true) ;
-        $tempDomain= '';
+        $topLevelDomainsJSON = require(AMELIA_PATH . '/view/backend/top-level-domains.php');
+        $topLevelDomains     =  json_decode($topLevelDomainsJSON, true);
+        $tempDomain          = '';
 
         $extractDomainArray = explode('.', $domain);
         for ($i = 0; $i <= count($extractDomainArray); $i++) {
-            $slicedDomainArray = array_slice($extractDomainArray, $i);
+            $slicedDomainArray  = array_slice($extractDomainArray, $i);
             $slicedDomainString = implode('.', $slicedDomainArray);
 
             if (in_array($slicedDomainString, $topLevelDomains)) {
-                $tempDomain = array_slice($extractDomainArray, $i-1);
+                $tempDomain = array_slice($extractDomainArray, $i - 1);
                 break;
             }
         }
@@ -208,7 +205,7 @@ class AutoUpdateHook
             $tempDomain = $extractDomainArray;
         }
 
-        return implode( '.', $tempDomain);
+        return implode('.', $tempDomain);
     }
 
     /**
@@ -218,10 +215,10 @@ class AutoUpdateHook
      */
     public static function extractSubdomain($domain)
     {
-        $host = explode('.', $domain);
+        $host   = explode('.', $domain);
         $domain = self::extractDomain($domain);
         $domain = explode('.', $domain);
-        return implode( '.', array_diff($host, $domain));
+        return implode('.', array_diff($host, $domain));
     }
 
     /**
@@ -230,11 +227,15 @@ class AutoUpdateHook
      * @param $domain
      *
      * @return boolean
+     * phpcs:disable Generic.Files.LineLength
      */
     public static function isIP($domain)
     {
-        if (preg_match("/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/", $domain) ||
-            preg_match("/^((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4}))*::((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4}))*|((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4})){7}$/", $domain)) {
+
+        if (
+            preg_match("/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/", $domain) ||
+            preg_match("/^((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4}))*::((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4}))*|((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4})){7}$/", $domain)
+        ) {
             return true;
         } else {
             return false;
@@ -250,9 +251,9 @@ class AutoUpdateHook
      */
     public static function removeWWW($url)
     {
-        if (in_array(substr( $url, 0, 5 ),['www1.','www2.','www3.','www4.'])) {
-            return substr_replace ($url,"", 0,5 );
-        } else if (substr( $url, 0, 4 ) ==='www.') {
+        if (in_array(substr($url, 0, 5), ['www1.','www2.','www3.','www4.'])) {
+            return substr_replace($url, "", 0, 5);
+        } elseif (substr($url, 0, 4) === 'www.') {
             return substr_replace($url, "", 0, 4);
         }
         return $url;
@@ -267,7 +268,7 @@ class AutoUpdateHook
      */
     public static function getDomain($domain)
     {
-        $domain = self::isIP($domain) ? $domain : self::extractDomain( self::removeWWW($domain) );
+        $domain = self::isIP($domain) ? $domain : self::extractDomain(self::removeWWW($domain));
         return $domain;
     }
     /**
@@ -279,7 +280,7 @@ class AutoUpdateHook
      */
     public static function getSubDomain($subdomain)
     {
-        $subdomain = self::isIP($subdomain) ? '' : self::extractSubdomain( self::removeWWW($subdomain) );
+        $subdomain = self::isIP($subdomain) ? '' : self::extractSubdomain(self::removeWWW($subdomain));
         return $subdomain;
     }
 }

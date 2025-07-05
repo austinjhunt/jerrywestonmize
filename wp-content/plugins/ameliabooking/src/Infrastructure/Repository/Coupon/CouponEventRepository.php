@@ -14,7 +14,6 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class CouponEventRepository extends AbstractRepository
 {
-
     /**
      * @param Coupon $coupon
      * @param Event  $event
@@ -25,7 +24,7 @@ class CouponEventRepository extends AbstractRepository
     public function add($coupon, $event)
     {
         $couponData = $coupon->toArray();
-        $eventData = $event->toArray();
+        $eventData  = $event->toArray();
 
         $params = [
             ':couponId' => $couponData['id'],

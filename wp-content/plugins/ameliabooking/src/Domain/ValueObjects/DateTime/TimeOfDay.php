@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -27,8 +28,8 @@ final class TimeOfDay
      */
     public function __construct($value)
     {
-        $time = strtotime($value);
-        $hour = (int)date('H', $time);
+        $time   = strtotime($value);
+        $hour   = (int)date('H', $time);
         $minute = (int)date('i', $time);
         $second = (int)date('s', $time);
 

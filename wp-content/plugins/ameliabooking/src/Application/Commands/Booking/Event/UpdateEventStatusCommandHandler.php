@@ -84,11 +84,13 @@ class UpdateEventStatusCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated event status');
-        $result->setData([
+        $result->setData(
+            [
             'status'         => $requestedStatus,
             'message'        => BackendStrings::getEventStrings()['event_status_changed'] . $requestedStatus,
             Entities::EVENTS => $updatedEvents->toArray(),
-        ]);
+            ]
+        );
 
         return $result;
     }

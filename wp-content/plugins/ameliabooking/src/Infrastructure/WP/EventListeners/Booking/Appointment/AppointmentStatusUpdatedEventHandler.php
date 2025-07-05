@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -39,10 +40,10 @@ use Slim\Exception\ContainerValueNotFoundException;
 class AppointmentStatusUpdatedEventHandler
 {
     /** @var string */
-    const APPOINTMENT_STATUS_UPDATED = 'appointmentStatusUpdated';
+    public const APPOINTMENT_STATUS_UPDATED = 'appointmentStatusUpdated';
 
     /** @var string */
-    const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
+    public const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
 
     /**
      * @param CommandResult $commandResult

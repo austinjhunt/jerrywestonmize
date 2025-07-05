@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -123,10 +124,10 @@ class Event extends AbstractBookable
     /** @var IntegerValue */
     private $maxExtraPeople;
 
-    /** @var DateTimeValue */
+    /** @var DateTimeValue|null */
     private $initialEventStart;
 
-    /** @var DateTimeValue */
+    /** @var DateTimeValue|null */
     private $initialEventEnd;
 
     /**
@@ -637,7 +638,7 @@ class Event extends AbstractBookable
     /**
      * @param DateTimeValue|null $initialEventStart
      */
-    public function setInitialEventStart(DateTimeValue $initialEventStart)
+    public function setInitialEventStart($initialEventStart)
     {
         $this->initialEventStart = $initialEventStart;
     }
@@ -653,7 +654,7 @@ class Event extends AbstractBookable
     /**
      * @param DateTimeValue|null $initialEventEnd
      */
-    public function setInitialEventEnd(DateTimeValue $initialEventEnd)
+    public function setInitialEventEnd($initialEventEnd)
     {
         $this->initialEventEnd = $initialEventEnd;
     }

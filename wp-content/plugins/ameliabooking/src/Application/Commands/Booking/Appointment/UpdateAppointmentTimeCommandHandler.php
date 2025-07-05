@@ -112,7 +112,8 @@ class UpdateAppointmentTimeCommandHandler extends CommandHandler
 
         /** @var CustomerBooking $booking */
         foreach ($appointment->getBookings()->getItems() as $booking) {
-            if ($userAS->isAmeliaUser($user) &&
+            if (
+                $userAS->isAmeliaUser($user) &&
                 $userAS->isCustomer($user) &&
                 $bookingAS->isBookingApprovedOrPending($booking->getStatus()->getValue()) &&
                 ($service->getMinCapacity()->getValue() !== 1 || $service->getMaxCapacity()->getValue() !== 1) &&

@@ -52,9 +52,11 @@ class GetExtrasCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved extras.');
-        $result->setData([
+        $result->setData(
+            [
             Entities::EXTRAS => $extras->toArray()
-        ]);
+            ]
+        );
 
         return $result;
     }

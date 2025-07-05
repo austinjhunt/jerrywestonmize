@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -33,27 +34,27 @@ use AmeliaBooking\Infrastructure\Common\Container;
 class EventEditedEventHandler
 {
     /** @var string */
-    const TIME_UPDATED = 'bookingTimeUpdated';
+    public const TIME_UPDATED = 'bookingTimeUpdated';
 
     /** @var string */
-    const EVENT_DELETED = 'eventDeleted';
+    public const EVENT_DELETED = 'eventDeleted';
 
     /** @var string */
-    const EVENT_ADDED = 'eventAdded';
+    public const EVENT_ADDED = 'eventAdded';
 
     /** @var string */
-    const EVENT_PERIOD_DELETED = 'eventPeriodDeleted';
+    public const EVENT_PERIOD_DELETED = 'eventPeriodDeleted';
 
     /** @var string */
-    const EVENT_PERIOD_ADDED = 'eventPeriodAdded';
+    public const EVENT_PERIOD_ADDED = 'eventPeriodAdded';
 
     /** @var string */
-    const ZOOM_USER_CHANGED = 'zoomUserChanged';
+    public const ZOOM_USER_CHANGED = 'zoomUserChanged';
     /** @var string */
-    const ZOOM_LICENCED_USER_CHANGED = 'zoomLicencedUserChanged';
+    public const ZOOM_LICENCED_USER_CHANGED = 'zoomLicencedUserChanged';
 
     /** @var string */
-    const PROVIDER_CHANGED = 'providerChanged';
+    public const PROVIDER_CHANGED = 'providerChanged';
 
     /**
      * @param CommandResult $commandResult
@@ -354,8 +355,13 @@ class EventEditedEventHandler
                     if (!empty($eventsData['edited'][$event->getId()->getValue()])) {
                         /** @var EventPeriod $changedPeriod */
                         $changedPeriod = $eventsData['edited'][$event->getId()->getValue()]->getPeriods()->getItem($index);
-                        if (!empty($changedPeriod)) {
-                            if (!empty($eventPeriod['zoomMeeting']) && !empty($eventPeriod['zoomMeeting']['id']) && !empty($eventPeriod['zoomMeeting']['joinUrl']) && !empty($eventPeriod['zoomMeeting']['startUrl'])) {
+                        if ($changedPeriod) {
+                            if (
+                                !empty($eventPeriod['zoomMeeting']) &&
+                                !empty($eventPeriod['zoomMeeting']['id']) &&
+                                !empty($eventPeriod['zoomMeeting']['joinUrl']) &&
+                                !empty($eventPeriod['zoomMeeting']['startUrl'])
+                            ) {
                                 $zoomMeeting = ZoomFactory::create(
                                     $eventPeriod['zoomMeeting']
                                 );

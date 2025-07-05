@@ -1,10 +1,13 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
 namespace AmeliaBooking\Infrastructure\Services\Zoom;
+
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 
 /**
  * Class AbstractZoomService
@@ -13,6 +16,11 @@ namespace AmeliaBooking\Infrastructure\Services\Zoom;
  */
 abstract class AbstractZoomService
 {
+    /**
+     * @var SettingsService $settingsService
+     */
+    protected $settingsService;
+
     /**
      * @param string     $requestUrl
      * @param array|null $data

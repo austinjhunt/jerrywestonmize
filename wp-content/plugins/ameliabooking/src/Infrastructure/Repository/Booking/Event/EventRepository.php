@@ -9,7 +9,6 @@ use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Repository\Booking\Event\EventRepositoryInterface;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
-use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Licence;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
@@ -21,11 +20,8 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsProvidersTab
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTagsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTicketsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsTable;
-use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsToEventsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Gallery\GalleriesTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Payment\PaymentsTable;
-use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\Provider\ProvidersGoogleCalendarTable;
-use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\Provider\ProvidersOutlookCalendarTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
 
 /**
@@ -35,8 +31,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
  */
 class EventRepository extends AbstractRepository implements EventRepositoryInterface
 {
-
-    const FACTORY = EventFactory::class;
+    public const FACTORY = EventFactory::class;
 
     /**
      * @param Event $entity
@@ -305,16 +300,16 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
      */
     public function getProvidersEvents($criteria)
     {
-        $eventsPeriodsTable = EventsPeriodsTable::getTableName();
+        $eventsPeriodsTable   = EventsPeriodsTable::getTableName();
         $eventsProvidersTable = EventsProvidersTable::getTableName();
-        $usersTable = UsersTable::getTableName();
+        $usersTable           = UsersTable::getTableName();
 
         $params = [];
-        $where = [];
+        $where  = [];
 
         if (!empty($criteria['dates'])) {
             if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                $whereStart = "(ep.periodStart BETWEEN :eventFrom AND :eventTo)";
+                $whereStart           = "(ep.periodStart BETWEEN :eventFrom AND :eventTo)";
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
                 $params[':eventTo']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
 
@@ -327,7 +322,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 $where[] = "(ep.periodStart >= :eventFrom)";
                 $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
             } elseif (isset($criteria['dates'][1])) {
-                $where[] = "(ep.periodStart <= :eventTo)";
+                $where[]            = "(ep.periodStart <= :eventTo)";
                 $params[':eventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
             } else {
                 $where[] = "(ep.periodStart > :eventFrom)";
@@ -339,9 +334,9 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             $queryProviders = [];
 
             foreach ((array)$criteria['providers'] as $index => $value) {
-                $param = ':provider' . $index;
+                $param            = ':provider' . $index;
                 $queryProviders[] = $param;
-                $params[$param] = $value;
+                $params[$param]   = $value;
             }
 
             $where[] = 'epr.userId IN (' . implode(', ', $queryProviders) . ')';
@@ -436,11 +431,11 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
      */
     public function getFilteredIds($criteria, $itemsPerPage)
     {
-        $eventsPeriodsTable = EventsPeriodsTable::getTableName();
-        $eventsTagsTable = EventsTagsTable::getTableName();
+        $eventsPeriodsTable    = EventsPeriodsTable::getTableName();
+        $eventsTagsTable       = EventsTagsTable::getTableName();
         $customerBookingsTable = CustomerBookingsTable::getTableName();
         $customerBookingsEventsPeriods = CustomerBookingsToEventsPeriodsTable::getTableName();
-        $eventsProvidersTable = EventsProvidersTable::getTableName();
+        $eventsProvidersTable          = EventsProvidersTable::getTableName();
         $usersTable = UsersTable::getTableName();
 
         $params = [];
@@ -587,10 +582,12 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         }
 
         if (!empty($criteria['locations'])) {
+            $queryLocations = [];
+
             foreach ((array)$criteria['locations'] as $index => $value) {
-                $param = ':location' . $index;
+                $param            = ':location' . $index;
                 $queryLocations[] = $param;
-                $params[$param] = $value;
+                $params[$param]   = $value;
             }
 
             $where3 = 'e.locationId IN (' . implode(', ', $queryLocations) . ')';
@@ -601,30 +598,29 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         $providerJoin = '';
 
         if (!empty($criteria['providers'])) {
-            $providerJoin = "
+            $providerJoin   = "
             LEFT JOIN {$eventsProvidersTable} epr ON epr.eventId = e.id
             INNER JOIN {$usersTable} pu ON pu.id = epr.userId OR pu.id = e.organizerId";
             $queryProviders = [];
 
             foreach ((array)$criteria['providers'] as $index => $value) {
-                $param = ':provider' . $index;
+                $param            = ':provider' . $index;
                 $queryProviders[] = $param;
-                $params[$param] = $value;
+                $params[$param]   = $value;
             }
 
             $where1 = 'epr.userId IN (' . implode(', ', $queryProviders) . ')';
 
             $queryProviders = [];
             foreach ((array)$criteria['providers'] as $index => $value) {
-                $param = ':organizer' . $index;
+                $param            = ':organizer' . $index;
                 $queryProviders[] = $param;
-                $params[$param] = $value;
+                $params[$param]   = $value;
             }
 
             $where2 = 'e.organizerId IN (' . implode(', ', $queryProviders) . ')';
 
             $where[] = '(' . $where1 . ' OR ' . $where2 . ')';
-
         }
 
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
@@ -668,14 +664,14 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
      */
     public function getFilteredIdsCount($criteria)
     {
-        $eventsPeriodsTable = EventsPeriodsTable::getTableName();
-        $eventsTagsTable = EventsTagsTable::getTableName();
+        $eventsPeriodsTable   = EventsPeriodsTable::getTableName();
+        $eventsTagsTable      = EventsTagsTable::getTableName();
         $eventsProvidersTable = EventsProvidersTable::getTableName();
-        $usersTable = UsersTable::getTableName();
+        $usersTable           = UsersTable::getTableName();
 
 
         $params = [];
-        $where = [];
+        $where  = [];
 
         if (isset($criteria['parentId'])) {
             $params[':parentId'] = $criteria['parentId'];
@@ -729,10 +725,12 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         }
 
         if (!empty($criteria['locations'])) {
+            $queryLocations = [];
+
             foreach ((array)$criteria['locations'] as $index => $value) {
-                $param = ':location' . $index;
+                $param            = ':location' . $index;
                 $queryLocations[] = $param;
-                $params[$param] = $value;
+                $params[$param]   = $value;
             }
 
             $where3 = 'e.locationId IN (' . implode(', ', $queryLocations) . ')';
@@ -801,17 +799,17 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             $queryProviders = [];
 
             foreach ((array)$criteria['providers'] as $index => $value) {
-                $param = ':provider' . $index;
+                $param            = ':provider' . $index;
                 $queryProviders[] = $param;
-                $params[$param] = $value;
+                $params[$param]   = $value;
             }
             $where1 = 'epr.userId IN (' . implode(', ', $queryProviders) . ')';
 
             $queryProviders = [];
             foreach ((array)$criteria['providers'] as $index => $value) {
-                $param = ':organizer' . $index;
+                $param            = ':organizer' . $index;
                 $queryProviders[] = $param;
-                $params[$param] = $value;
+                $params[$param]   = $value;
             }
             $where2 = 'e.organizerId IN (' . implode(', ', $queryProviders) . ')';
 
@@ -820,7 +818,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
         $customerJoin = '';
 
-        $customerBookingsTable = CustomerBookingsTable::getTableName();
+        $customerBookingsTable         = CustomerBookingsTable::getTableName();
         $customerBookingsEventsPeriods = CustomerBookingsToEventsPeriodsTable::getTableName();
 
         if (!empty($criteria['customerId']) || !empty($criteria['customerBookingsIds'])) {
@@ -896,16 +894,16 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
     public function getById($id, $criteria = [])
     {
         $eventsPeriodsTable = EventsPeriodsTable::getTableName();
-        $eventsTagsTable = EventsTagsTable::getTableName();
-        $eventsTicketTable = EventsTicketsTable::getTableName();
+        $eventsTagsTable    = EventsTagsTable::getTableName();
+        $eventsTicketTable  = EventsTicketsTable::getTableName();
 
         $customerBookingsTable = CustomerBookingsTable::getTableName();
-        $paymentsTable = PaymentsTable::getTableName();
-        $usersTable = UsersTable::getTableName();
+        $paymentsTable         = PaymentsTable::getTableName();
+        $usersTable            = UsersTable::getTableName();
         $customerBookingsEventsPeriods = CustomerBookingsToEventsPeriodsTable::getTableName();
-        $galleriesTable = GalleriesTable::getTableName();
+        $galleriesTable       = GalleriesTable::getTableName();
         $eventsProvidersTable = EventsProvidersTable::getTableName();
-        $couponsTable = CouponsTable::getTableName();
+        $couponsTable         = CouponsTable::getTableName();
 
         $fields = '';
 
@@ -1139,119 +1137,6 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to find event by id in ' . __CLASS__, $e->getCode(), $e);
         }
-    }
-
-    /**
-     * @param      $criteria
-     *
-     * @return Collection
-     * @throws InvalidArgumentException
-     * @throws QueryExecutionException
-     * @throws InvalidArgumentException
-     */
-    public function getWithCoupons($criteria)
-    {
-        $couponToEventsTable = CouponsToEventsTable::getTableName();
-        $couponsTable = CouponsTable::getTableName();
-        $eventsProvidersTable = EventsProvidersTable::getTableName();
-        $usersTable = UsersTable::getTableName();
-        $eventsTicketTable = EventsTicketsTable::getTableName();
-
-        $params = [];
-
-        $where = [];
-
-        foreach ((array)$criteria as $index => $value) {
-            $params[':event' . $index] = $value['eventId'];
-
-            if ($value['couponId']) {
-                $params[':coupon' . $index] = $value['couponId'];
-                $params[':couponStatus' . $index] = Status::VISIBLE;
-            }
-
-            $where[] = "(e.id = :event$index"
-                . ($value['couponId'] ? " AND c.id = :coupon$index AND c.status = :couponStatus$index" : '') . ')';
-        }
-
-        $where = $where ? 'WHERE ' . implode(' OR ', $where) : '';
-
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT
-                    e.id AS event_id,
-                    e.name AS event_name,
-                    e.status AS event_status,
-                    e.bookingOpens AS event_bookingOpens,
-                    e.bookingCloses AS event_bookingCloses,
-                    e.recurringCycle AS event_recurringCycle,
-                    e.recurringOrder AS event_recurringOrder,
-                    e.recurringInterval AS event_recurringInterval,
-                    e.recurringUntil AS event_recurringUntil,
-                    e.bringingAnyone AS event_bringingAnyone,
-                    e.bookMultipleTimes AS event_bookMultipleTimes,
-                    e.maxCapacity AS event_maxCapacity,
-                    e.maxCustomCapacity AS event_maxCustomCapacity,
-                    e.maxExtraPeople AS event_maxExtraPeople,
-                    e.price AS event_price,
-                    e.description AS event_description,
-                    e.color AS event_color,
-                    e.show AS event_show,
-                    e.notifyParticipants AS event_notifyParticipants,
-                    e.locationId AS event_locationId,
-                    e.customLocation AS event_customLocation,
-                    e.parentId AS event_parentId,
-                    e.created AS event_created,
-                    e.translations AS event_translations,
-                    e.deposit AS event_deposit,
-                    e.depositPayment AS event_depositPayment,
-                    e.depositPerPerson AS event_depositPerPerson,
-                    e.fullPayment AS event_fullPayment,
-                    e.customPricing AS event_customPricing,
-                    e.aggregatedPrice AS event_aggregatedPrice,
-                    
-                    pu.id AS provider_id,
-                    pu.firstName AS provider_firstName,
-                    pu.lastName AS provider_lastName,
-                    pu.email AS provider_email,
-                    pu.note AS provider_note,
-                    pu.description AS provider_description,
-                    pu.phone AS provider_phone,
-                    pu.gender AS provider_gender,
-                    pu.translations AS provider_translations,
-       
-                    t.id AS ticket_id,
-                    t.name AS ticket_name,
-                    t.enabled AS ticket_enabled,
-                    t.price AS ticket_price,
-                    t.spots AS ticket_spots,
-                    t.waitingListSpots AS ticket_waiting_list_spots,
-                    t.dateRanges AS ticket_dateRanges,
-                    t.translations AS ticket_translations,
-
-                    c.id AS coupon_id,
-                    c.code AS coupon_code,
-                    c.discount AS coupon_discount,
-                    c.deduction AS coupon_deduction,
-                    c.limit AS coupon_limit,
-                    c.customerLimit AS coupon_customerLimit,
-                    c.status AS coupon_status
-                FROM {$this->table} e
-                LEFT JOIN {$couponToEventsTable} ce ON ce.eventId = e.id
-                LEFT JOIN {$couponsTable} c ON c.id = ce.couponId
-                LEFT JOIN {$eventsProvidersTable} epr ON epr.eventId = e.id
-                LEFT JOIN {$usersTable} pu ON pu.id = epr.userId
-                LEFT JOIN {$eventsTicketTable} t ON t.eventId = e.id
-                {$where}"
-            );
-
-            $statement->execute($params);
-
-            $rows = $statement->fetchAll();
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
-        }
-
-        return call_user_func([static::FACTORY, 'createCollection'], $rows);
     }
 
     /**
@@ -1879,7 +1764,8 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         $compareToDate    = 'ep.periodStart';
 
         if ($limitPerCustomer['from'] === 'bookingDate') {
-            $eventStartDate = (clone $event->getPeriods()->getItems()[0]->getPeriodStart()->getValue())->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i');
+            $eventStartDate =
+                (clone $event->getPeriods()->getItems()[0]->getPeriodStart()->getValue())->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i');
         } else {
             $paymentTableJoin = 'INNER JOIN ' . PaymentsTable::getTableName() . ' p ON p.customerBookingId = cb.id';
             $eventStartDate   = DateTimeService::getNowDateTimeObject()->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i');
@@ -1888,9 +1774,9 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
         $intervalString = "interval " . $limitPerCustomer['period'] . " " . $limitPerCustomer['timeFrame'];
 
-        $where = "(STR_TO_DATE('". $eventStartDate ."', '%Y-%m-%d %H:%i:%s') BETWEEN " .
+        $where = "(STR_TO_DATE('" . $eventStartDate . "', '%Y-%m-%d %H:%i:%s') BETWEEN " .
             "(" . $compareToDate . " - " . $intervalString . " + interval 1 second)" .
-            " AND (".
+            " AND (" .
             $compareToDate . " + " . $intervalString . " - interval 1 second))";
 
         try {

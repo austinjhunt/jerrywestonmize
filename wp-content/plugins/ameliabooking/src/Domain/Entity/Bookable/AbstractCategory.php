@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -60,10 +61,10 @@ abstract class AbstractCategory
         PositiveInteger $position,
         Color $color
     ) {
-        $this->status = $status;
-        $this->name = $name;
+        $this->status   = $status;
+        $this->name     = $name;
         $this->position = $position;
-        $this->color = $color;
+        $this->color    = $color;
     }
 
     /**

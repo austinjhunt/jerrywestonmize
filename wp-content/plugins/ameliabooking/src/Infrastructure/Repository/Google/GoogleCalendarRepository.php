@@ -15,7 +15,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class GoogleCalendarRepository extends AbstractRepository
 {
-    const FACTORY = GoogleCalendarFactory::class;
+    public const FACTORY = GoogleCalendarFactory::class;
 
     /**
      * @param GoogleCalendar $googleCalendar

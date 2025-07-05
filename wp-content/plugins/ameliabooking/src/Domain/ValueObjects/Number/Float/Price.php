@@ -29,7 +29,8 @@ final class Price
             throw new InvalidArgumentException('Price can\'t be empty');
         }
 
-        if (filter_var($price, FILTER_VALIDATE_FLOAT) === false &&
+        if (
+            filter_var($price, FILTER_VALIDATE_FLOAT) === false &&
             filter_var(str_replace(',', '.', (string)$price), FILTER_VALIDATE_FLOAT) === false
         ) {
             throw new InvalidArgumentException("Price \"{$price}\" must be float");

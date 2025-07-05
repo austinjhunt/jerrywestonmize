@@ -87,7 +87,8 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             return $result;
         }
 
-        if ($userAS->isCustomer($user) ||
+        if (
+            $userAS->isCustomer($user) ||
             (
                 $userAS->isProvider($user) && !$settingsDS->getSetting('roles', 'allowWriteEvents')
             )

@@ -41,7 +41,7 @@ class UpdateCategoryController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdateCategoryCommand($args);
+        $command     = new UpdateCategoryCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

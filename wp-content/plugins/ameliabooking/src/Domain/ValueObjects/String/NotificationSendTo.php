@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -13,8 +14,8 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class NotificationSendTo
 {
-    const CUSTOMER = 'customer';
-    const PROVIDER = 'provider';
+    public const CUSTOMER = 'customer';
+    public const PROVIDER = 'provider';
 
     /**
      * @var string

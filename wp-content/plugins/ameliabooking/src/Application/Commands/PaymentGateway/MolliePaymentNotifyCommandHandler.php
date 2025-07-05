@@ -9,6 +9,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Cache\Cache;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
+use AmeliaBooking\Infrastructure\Services\Payment\MollieService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -36,7 +37,7 @@ class MolliePaymentNotifyCommandHandler extends CommandHandler
     {
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
-        /** @var PaymentServiceInterface $paymentService */
+        /** @var MollieService $paymentService */
         $paymentService = $this->container->get('infrastructure.payment.mollie.service');
         /** @var CacheRepository $cacheRepository */
         $cacheRepository = $this->container->get('domain.cache.repository');

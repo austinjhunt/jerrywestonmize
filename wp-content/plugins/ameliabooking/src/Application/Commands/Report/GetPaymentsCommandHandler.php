@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -99,15 +100,23 @@ class GetPaymentsCommandHandler extends CommandHandler
             if (in_array('location', $params['fields'], true)) {
                 $row[BackendStrings::getCommonStrings()['location']] =
                     isset($payment['location']) ?
-                        (!empty($payment['location']['location_address']) ? $payment['location']['location_address'] : $payment['location']['location_name']) : '';
+                        (!empty($payment['location']['location_address']) ?
+                            $payment['location']['location_address'] :
+                            $payment['location']['location_name']) : '';
             }
 
             if (in_array('amount', $params['fields'], true)) {
-                $row[BackendStrings::getFinanceStrings()['amount']] = $payment['amount'] . (!empty($payment['secondaryPayments']) ? ', ' . implode(', ', array_column($payment['secondaryPayments'], 'amount')) : '');
+                $row[BackendStrings::getFinanceStrings()['amount']] =
+                    $payment['amount'] . (!empty($payment['secondaryPayments']) ?
+                        ', ' . implode(', ', array_column($payment['secondaryPayments'], 'amount')) :
+                        '');
             }
 
             if (in_array('type', $params['fields'], true)) {
-                $row[BackendStrings::getFinanceStrings()['method']] = $payment['gateway'] . (!empty($payment['secondaryPayments']) ? ', ' . implode(', ', array_column($payment['secondaryPayments'], 'gateway')) : '');
+                $row[BackendStrings::getFinanceStrings()['method']] =
+                    $payment['gateway'] . (!empty($payment['secondaryPayments']) ?
+                        ', ' . implode(', ', array_column($payment['secondaryPayments'], 'gateway')) :
+                        '');
             }
 
             if (in_array('status', $params['fields'], true)) {
@@ -142,7 +151,8 @@ class GetPaymentsCommandHandler extends CommandHandler
 
             if (in_array('wcOrderId', $params['fields'], true)) {
                 $secondaryOrderIds = !empty($payment['secondaryPayments']) ? array_filter(array_column($payment['secondaryPayments'], 'wcOrderId')) : null;
-                $row[BackendStrings::getCommonStrings()['wc_order_id_export']] = $payment['wcOrderId']. (!empty($secondaryOrderIds) ? ', ' . implode(', ', $secondaryOrderIds) : '');
+                $row[BackendStrings::getCommonStrings()['wc_order_id_export']] =
+                    $payment['wcOrderId'] . (!empty($secondaryOrderIds) ? ', ' . implode(', ', $secondaryOrderIds) : '');
             }
 
             if (in_array('couponCode', $params['fields'], true)) {

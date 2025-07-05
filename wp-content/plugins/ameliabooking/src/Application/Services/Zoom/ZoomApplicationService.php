@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -33,7 +34,7 @@ use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\Appointme
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingCanceledEventHandler;
 use AmeliaBooking\Infrastructure\Services\Zoom\AbstractZoomService;
-use \DateTimeZone;
+use DateTimeZone;
 
 /**
  * Class ZoomApplicationService
@@ -42,9 +43,9 @@ use \DateTimeZone;
  */
 class ZoomApplicationService extends AbstractZoomApplicationService
 {
-    const SCHEDULED_MEETING = 2;
+    public const SCHEDULED_MEETING = 2;
 
-    const RECURRING_WITH_FIXED_TIME_MEETING = 8;
+    public const RECURRING_WITH_FIXED_TIME_MEETING = 8;
 
     /**
      * @param Appointment $reservation
@@ -127,7 +128,8 @@ class ZoomApplicationService extends AbstractZoomApplicationService
                 $zoomSettings['pendingAppointmentsMeetings']
             );
 
-        if ($zoomSettings['accountId'] && $zoomSettings['clientId'] && $zoomSettings['clientSecret'] &&
+        if (
+            $zoomSettings['accountId'] && $zoomSettings['clientId'] && $zoomSettings['clientSecret'] &&
             $reservation->getProvider()->getZoomUserId() &&
             $zoomEnabled
         ) {
@@ -183,7 +185,8 @@ class ZoomApplicationService extends AbstractZoomApplicationService
                     break;
             }
 
-            if ($reservation->getZoomMeeting() &&
+            if (
+                $reservation->getZoomMeeting() &&
                 $reservation->getZoomMeeting()->getId() &&
                 (!$reservation->getZoomMeeting()->getStartUrl() || !$reservation->getZoomMeeting()->getStartUrl())
             ) {
@@ -234,7 +237,8 @@ class ZoomApplicationService extends AbstractZoomApplicationService
                 case EventStatusUpdatedEventHandler::EVENT_STATUS_UPDATED:
                     if ($reservation->getStatus()->getValue() === BookingStatus::APPROVED) {
                         $this->createOrEditEventMeeting($reservation, $periods);
-                    } elseif ($reservation->getStatus()->getValue() === BookingStatus::CANCELED ||
+                    } elseif (
+                        $reservation->getStatus()->getValue() === BookingStatus::CANCELED ||
                         $reservation->getStatus()->getValue() === BookingStatus::REJECTED
                     ) {
                         /** @var EventPeriod $period */
@@ -272,7 +276,8 @@ class ZoomApplicationService extends AbstractZoomApplicationService
 
             /** @var EventPeriod $period */
             foreach ($periods->getItems() as $period) {
-                if ($period->getZoomMeeting() &&
+                if (
+                    $period->getZoomMeeting() &&
                     $period->getZoomMeeting()->getId() &&
                     (!$period->getZoomMeeting()->getStartUrl() || !$period->getZoomMeeting()->getStartUrl())
                 ) {

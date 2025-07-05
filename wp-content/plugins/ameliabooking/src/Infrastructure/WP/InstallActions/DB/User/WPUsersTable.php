@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -17,9 +18,9 @@ use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
  */
 class WPUsersTable extends AbstractDatabaseTable
 {
-    const TABLE = 'users';
+    public const TABLE = 'users';
 
-    const META_TABLE = 'usermeta';
+    public const META_TABLE = 'usermeta';
 
     /**
      * @return string

@@ -339,7 +339,7 @@ class HealthyFoodBlog {
                   1 =>
                    [
                     'type' => 'social',
-                    'iconSet' => 'circles',
+                    'iconSet' => 'official',
                     'icons' =>
                      [
                       0 =>
@@ -347,7 +347,7 @@ class HealthyFoodBlog {
                         'type' => 'socialIcon',
                         'iconType' => 'facebook',
                         'link' => 'http://www.facebook.com',
-                        'image' => $this->social_icon_url . '/03-circles/Facebook.png',
+                        'image' => $this->social_icon_url . '/11-official/Facebook.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Facebook',
@@ -357,7 +357,7 @@ class HealthyFoodBlog {
                         'type' => 'socialIcon',
                         'iconType' => 'twitter',
                         'link' => 'http://www.twitter.com',
-                        'image' => $this->social_icon_url . '/03-circles/Twitter.png',
+                        'image' => $this->social_icon_url . '/11-official/X.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Twitter',
@@ -367,7 +367,7 @@ class HealthyFoodBlog {
                         'type' => 'socialIcon',
                         'iconType' => 'instagram',
                         'link' => 'http://instagram.com',
-                        'image' => $this->social_icon_url . '/03-circles/Instagram.png',
+                        'image' => $this->social_icon_url . '/11-official/Instagram.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Instagram',
@@ -377,7 +377,7 @@ class HealthyFoodBlog {
                         'type' => 'socialIcon',
                         'iconType' => 'youtube',
                         'link' => 'http://www.youtube.com',
-                        'image' => $this->social_icon_url . '/03-circles/Youtube.png',
+                        'image' => $this->social_icon_url . '/11-official/Youtube.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Youtube',
@@ -1818,7 +1818,7 @@ class HealthyFoodBlog {
                   1 =>
                    [
                     'type' => 'social',
-                    'iconSet' => 'circles',
+                    'iconSet' => 'official',
                     'icons' =>
                      [
                       0 =>
@@ -1826,7 +1826,7 @@ class HealthyFoodBlog {
                         'type' => 'socialIcon',
                         'iconType' => 'facebook',
                         'link' => 'http://www.facebook.com',
-                        'image' => $this->social_icon_url . '/03-circles/Facebook.png',
+                        'image' => $this->social_icon_url . '/11-official/Facebook.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Facebook',
@@ -1836,7 +1836,7 @@ class HealthyFoodBlog {
                         'type' => 'socialIcon',
                         'iconType' => 'twitter',
                         'link' => 'http://www.twitter.com',
-                        'image' => $this->social_icon_url . '/03-circles/Twitter.png',
+                        'image' => $this->social_icon_url . '/11-official/X.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Twitter',
@@ -1846,7 +1846,7 @@ class HealthyFoodBlog {
                         'type' => 'socialIcon',
                         'iconType' => 'instagram',
                         'link' => 'http://instagram.com',
-                        'image' => $this->social_icon_url . '/03-circles/Instagram.png',
+                        'image' => $this->social_icon_url . '/11-official/Instagram.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Instagram',
@@ -1856,7 +1856,7 @@ class HealthyFoodBlog {
                         'type' => 'socialIcon',
                         'iconType' => 'youtube',
                         'link' => 'http://www.youtube.com',
-                        'image' => $this->social_icon_url . '/03-circles/Youtube.png',
+                        'image' => $this->social_icon_url . '/11-official/Youtube.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Youtube',
@@ -2390,7 +2390,7 @@ class HealthyFoodBlog {
          ],
         'social' =>
          [
-          'iconSet' => 'circles',
+          'iconSet' => 'official',
           'icons' =>
            [
             0 =>
@@ -2398,7 +2398,7 @@ class HealthyFoodBlog {
               'type' => 'socialIcon',
               'iconType' => 'facebook',
               'link' => 'http://www.facebook.com',
-              'image' => $this->social_icon_url . '/03-circles/Facebook.png',
+              'image' => $this->social_icon_url . '/11-official/Facebook.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Facebook',
@@ -2408,7 +2408,7 @@ class HealthyFoodBlog {
               'type' => 'socialIcon',
               'iconType' => 'twitter',
               'link' => 'http://www.twitter.com',
-              'image' => $this->social_icon_url . '/03-circles/Twitter.png',
+              'image' => $this->social_icon_url . '/11-official/X.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Twitter',
@@ -2418,7 +2418,7 @@ class HealthyFoodBlog {
               'type' => 'socialIcon',
               'iconType' => 'instagram',
               'link' => 'http://instagram.com',
-              'image' => $this->social_icon_url . '/03-circles/Instagram.png',
+              'image' => $this->social_icon_url . '/11-official/Instagram.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Instagram',
@@ -2428,7 +2428,7 @@ class HealthyFoodBlog {
               'type' => 'socialIcon',
               'iconType' => 'youtube',
               'link' => 'http://www.youtube.com',
-              'image' => $this->social_icon_url . '/03-circles/Youtube.png',
+              'image' => $this->social_icon_url . '/11-official/Youtube.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Youtube',

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitec6c0b186cc99b03c11ddca7b132b955
+class ComposerStaticInit12777ad1eeef94fd5eb15a7698616ac6
 {
     public static $files = array (
         '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
@@ -55,6 +55,7 @@ class ComposerStaticInitec6c0b186cc99b03c11ddca7b132b955
             'Symfony\\Component\\OptionsResolver\\' => 34,
             'Symfony\\Component\\HttpFoundation\\' => 33,
             'Svg\\' => 4,
+            'AmeliaStripe\\' => 7,
             'Square\\' => 7,
             'Slim\\' => 5,
             'Sabre\\Xml\\' => 10,
@@ -185,6 +186,10 @@ class ComposerStaticInitec6c0b186cc99b03c11ddca7b132b955
         'Svg\\' => 
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-svg-lib/src/Svg',
+        ),
+        'AmeliaStripe\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
         ),
         'Square\\' => 
         array (
@@ -317,7 +322,6 @@ class ComposerStaticInitec6c0b186cc99b03c11ddca7b132b955
         'AmeliaStripe\\' => 
         array (
             0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
-            1 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
         ),
         'AmeliaPHPMailer\\' => 
         array (
@@ -453,10 +457,10 @@ class ComposerStaticInitec6c0b186cc99b03c11ddca7b132b955
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitec6c0b186cc99b03c11ddca7b132b955::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitec6c0b186cc99b03c11ddca7b132b955::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitec6c0b186cc99b03c11ddca7b132b955::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitec6c0b186cc99b03c11ddca7b132b955::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit12777ad1eeef94fd5eb15a7698616ac6::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit12777ad1eeef94fd5eb15a7698616ac6::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit12777ad1eeef94fd5eb15a7698616ac6::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit12777ad1eeef94fd5eb15a7698616ac6::$classMap;
 
         }, null, ClassLoader::class);
     }

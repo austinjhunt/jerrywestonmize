@@ -6,5 +6,4 @@ use AmeliaBooking\Application\Commands\Command;
 
 class SocialLoginCommand extends Command
 {
-
 }

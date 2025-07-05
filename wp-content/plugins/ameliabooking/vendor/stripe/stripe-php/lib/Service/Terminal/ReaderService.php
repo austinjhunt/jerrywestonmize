@@ -4,17 +4,22 @@
 
 namespace AmeliaStripe\Service\Terminal;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
 class ReaderService extends \AmeliaStripe\Service\AbstractService
 {
     /**
      * Returns a list of <code>Reader</code> objects.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{device_type?: string, ending_before?: string, expand?: string[], limit?: int, location?: string, serial_number?: string, starting_after?: string, status?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Collection<\AmeliaStripe\Terminal\Reader>
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -25,12 +30,12 @@ class ReaderService extends \AmeliaStripe\Service\AbstractService
      * Cancels the current reader action.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Reader
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function cancelAction($id, $params = null, $opts = null)
     {
@@ -40,12 +45,12 @@ class ReaderService extends \AmeliaStripe\Service\AbstractService
     /**
      * Creates a new <code>Reader</code> object.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[], label?: string, location?: string, metadata?: null|array<string, string>, registration_code: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Reader
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -57,11 +62,11 @@ class ReaderService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Reader
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function delete($id, $params = null, $opts = null)
     {
@@ -72,12 +77,12 @@ class ReaderService extends \AmeliaStripe\Service\AbstractService
      * Initiates a payment flow on a Reader.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[], payment_intent: string, process_config?: array{allow_redisplay?: string, enable_customer_cancellation?: bool, skip_tipping?: bool, tipping?: array{amount_eligible?: int}}} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Reader
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function processPaymentIntent($id, $params = null, $opts = null)
     {
@@ -88,12 +93,12 @@ class ReaderService extends \AmeliaStripe\Service\AbstractService
      * Initiates a setup intent flow on a Reader.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{allow_redisplay: string, expand?: string[], process_config?: array{enable_customer_cancellation?: bool}, setup_intent: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Reader
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function processSetupIntent($id, $params = null, $opts = null)
     {
@@ -101,15 +106,31 @@ class ReaderService extends \AmeliaStripe\Service\AbstractService
     }
 
     /**
+     * Initiates a refund on a Reader.
+     *
+     * @param string $id
+     * @param null|array{amount?: int, charge?: string, expand?: string[], metadata?: array<string, string>, payment_intent?: string, refund_application_fee?: bool, refund_payment_config?: array{enable_customer_cancellation?: bool}, reverse_transfer?: bool} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     *
+     * @return \AmeliaStripe\Terminal\Reader
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     */
+    public function refundPayment($id, $params = null, $opts = null)
+    {
+        return $this->request('post', $this->buildPath('/v1/terminal/readers/%s/refund_payment', $id), $params, $opts);
+    }
+
+    /**
      * Retrieves a <code>Reader</code> object.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Reader
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -120,12 +141,12 @@ class ReaderService extends \AmeliaStripe\Service\AbstractService
      * Sets reader display to show cart details.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{cart?: array{currency: string, line_items: array{amount: int, description: string, quantity: int}[], tax?: int, total: int}, expand?: string[], type: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Reader
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function setReaderDisplay($id, $params = null, $opts = null)
     {
@@ -137,12 +158,12 @@ class ReaderService extends \AmeliaStripe\Service\AbstractService
      * passed. Any parameters not provided will be left unchanged.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[], label?: null|string, metadata?: null|array<string, string>} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Reader
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function update($id, $params = null, $opts = null)
     {

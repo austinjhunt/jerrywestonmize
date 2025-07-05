@@ -9,6 +9,7 @@ namespace AmeliaStripe\Service\FinancialConnections;
  *
  * @property AccountService $accounts
  * @property SessionService $sessions
+ * @property TransactionService $transactions
  */
 class FinancialConnectionsServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
 {
@@ -18,6 +19,7 @@ class FinancialConnectionsServiceFactory extends \AmeliaStripe\Service\AbstractS
     private static $classMap = [
         'accounts' => AccountService::class,
         'sessions' => SessionService::class,
+        'transactions' => TransactionService::class,
     ];
 
     protected function getServiceClass($name)

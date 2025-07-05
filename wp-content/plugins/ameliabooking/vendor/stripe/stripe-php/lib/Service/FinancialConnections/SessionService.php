@@ -4,6 +4,11 @@
 
 namespace AmeliaStripe\Service\FinancialConnections;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
 class SessionService extends \AmeliaStripe\Service\AbstractService
 {
     /**
@@ -11,12 +16,12 @@ class SessionService extends \AmeliaStripe\Service\AbstractService
      * <code>Session</code>. The session’s <code>client_secret</code> can be used to
      * launch the flow using Stripe.js.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{account_holder: array{account?: string, customer?: string, type: string}, expand?: string[], filters?: array{account_subcategories?: string[], countries?: string[]}, permissions: string[], prefetch?: string[], return_url?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\FinancialConnections\Session
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -27,12 +32,12 @@ class SessionService extends \AmeliaStripe\Service\AbstractService
      * Retrieves the details of a Financial Connections <code>Session</code>.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\FinancialConnections\Session
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

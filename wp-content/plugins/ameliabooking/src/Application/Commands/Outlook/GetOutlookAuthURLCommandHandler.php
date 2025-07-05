@@ -32,6 +32,7 @@ class GetOutlookAuthURLCommandHandler extends CommandHandler
 
         $providerId = (int)$command->getField('id');
 
+        $authUrl = null;
         try {
             $authUrl = $outlookCalendarService->createAuthUrl($providerId);
         } catch (\Exception $e) {

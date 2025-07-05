@@ -269,7 +269,8 @@ class TaxApplicationService extends AbstractTaxApplicationService
 
         /** @var Tax $tax */
         foreach ($taxes->getItems() as $tax) {
-            if ($tax->getStatus()->getValue() === Status::VISIBLE &&
+            if (
+                $tax->getStatus()->getValue() === Status::VISIBLE &&
                 (
                     (
                         $type === Entities::SERVICE &&
@@ -323,9 +324,9 @@ class TaxApplicationService extends AbstractTaxApplicationService
     {
         switch ($tax->getType()->getValue()) {
             case ('percentage'):
-                return $value / (1 + $tax->getAmount()->getValue() / 100);
+                return $value / (1 + (float)$tax->getAmount()->getValue() / 100);
             case ('fixed'):
-                return $value - $tax->getAmount()->getValue();
+                return $value - (float)$tax->getAmount()->getValue();
         }
 
         return 0;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -117,4 +118,3 @@ class AmeliaEmployeePanelElementorWidget extends Widget_Base
         }
     }
 }
-

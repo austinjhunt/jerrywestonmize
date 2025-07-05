@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -36,8 +37,8 @@ class MailgunService extends AbstractMailService implements MailServiceInterface
     public function __construct($from, $fromName, $apiKey, $domain, $endpoint, $replyTo)
     {
         parent::__construct($from, $fromName, $replyTo);
-        $this->apiKey = $apiKey;
-        $this->domain = $domain;
+        $this->apiKey   = $apiKey;
+        $this->domain   = $domain;
         $this->endpoint = $endpoint;
     }
 
@@ -77,9 +78,11 @@ class MailgunService extends AbstractMailService implements MailServiceInterface
                 } else {
                     $tmpFile = tempnam(sys_get_temp_dir(), 'cal_');
                 }
-                if ($tmpFile &&
+                if (
+                    $tmpFile &&
                     file_put_contents($tmpFile, $attachment['content']) !== false &&
-                    @rename($tmpFile, $tmpFile .= ($isInvoice ? '.pdf' : '.ics')) !== false) {
+                    @rename($tmpFile, $tmpFile .= ($isInvoice ? '.pdf' : '.ics')) !== false
+                ) {
                     $mgArgs['attachment'][] = ['filePath' => $tmpFile, 'filename' => $tmpFile];
                 }
             }

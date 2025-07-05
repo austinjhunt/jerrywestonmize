@@ -12,8 +12,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class ResourcesToEntitiesTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'resources_to_entities';
+    public const TABLE = 'resources_to_entities';
 
     /**
      * @return string

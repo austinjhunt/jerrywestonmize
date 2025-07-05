@@ -9,8 +9,8 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class NotificationStatus
 {
-    const ENABLED = 'enabled';
-    const DISABLED = 'disabled';
+    public const ENABLED  = 'enabled';
+    public const DISABLED = 'disabled';
 
     /**
      * @var string

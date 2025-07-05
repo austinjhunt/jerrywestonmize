@@ -574,7 +574,10 @@ class ProviderApplicationService
                             $periodService->setId(new Id($periodServiceId));
                         }
 
-                        $existingPeriodServicesIds[$newWeekDay->getId()->getValue()][$newPeriod->getId()->getValue()][$periodService->getId()->getValue()] = true;
+                        $existingPeriodServicesIds
+                            [$newWeekDay->getId()->getValue()]
+                            [$newPeriod->getId()->getValue()]
+                            [$periodService->getId()->getValue()] = true;
                     }
 
                     $existingPeriodLocationsIds[$newWeekDay->getId()->getValue()][$newPeriod->getId()->getValue()] = [];
@@ -592,7 +595,10 @@ class ProviderApplicationService
                             $periodLocation->setId(new Id($periodLocationId));
                         }
 
-                        $existingPeriodLocationsIds[$newWeekDay->getId()->getValue()][$newPeriod->getId()->getValue()][$periodLocation->getId()->getValue()] = true;
+                        $existingPeriodLocationsIds
+                            [$newWeekDay->getId()->getValue()]
+                            [$newPeriod->getId()->getValue()]
+                            [$periodLocation->getId()->getValue()] = true;
                     }
                 }
 
@@ -887,7 +893,7 @@ class ProviderApplicationService
             /** @var AppointmentRepository $appointmentRepo */
             $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
 
-            $providerTimeZones = [];
+            $providerTimeZones  = [];
             $availableProviders = [];
 
             $WPtimeZone = DateTimeService::getTimeZone()->getName();
@@ -900,9 +906,9 @@ class ProviderApplicationService
                 $availableProviders += $providerRepository->getAvailable((int)date('w'), $providerTimeZone);
             }
 
-            $onBreakProviders = $providerRepository->getOnBreak((int)date('w'));
+            $onBreakProviders    = $providerRepository->getOnBreak((int)date('w'));
             $onVacationProviders = $providerRepository->getOnVacation();
-            $busyProviders = $appointmentRepo->getCurrentAppointments();
+            $busyProviders       = $appointmentRepo->getCurrentAppointments();
             $specialDayProviders = $providerRepository->getOnSpecialDay();
 
             foreach ($providers as &$provider) {
@@ -948,8 +954,10 @@ class ProviderApplicationService
 
         $dayOff = false;
         foreach ((array)$companyDaysOff as $companyDayOff) {
-            if ($currentDate >= DateTimeService::getCustomDateTimeObject($companyDayOff['startDate']) &&
-                $currentDate <= DateTimeService::getCustomDateTimeObject($companyDayOff['endDate'])) {
+            if (
+                $currentDate >= DateTimeService::getCustomDateTimeObject($companyDayOff['startDate']) &&
+                $currentDate <= DateTimeService::getCustomDateTimeObject($companyDayOff['endDate'])
+            ) {
                 $dayOff = true;
                 break;
             }
@@ -967,7 +975,8 @@ class ProviderApplicationService
      */
     public function removeAllExceptUser($providers, $currentUser)
     {
-        if ($currentUser !== null &&
+        if (
+            $currentUser !== null &&
             $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER &&
             !$this->container->getPermissionsService()->currentUserCanReadOthers(Entities::APPOINTMENTS)
         ) {
@@ -1035,17 +1044,21 @@ class ProviderApplicationService
         $providerLocationRepo = $this->container->get('domain.bookable.service.providerLocation.repository');
 
         if ($oldUser->getLocationId() && $newUser->getLocationId()) {
-            $providerLocation = ProviderLocationFactory::create([
+            $providerLocation = ProviderLocationFactory::create(
+                [
                 'userId'     => $newUser->getId()->getValue(),
                 'locationId' => $newUser->getLocationId()->getValue()
-            ]);
+                ]
+            );
 
             $providerLocationRepo->update($providerLocation);
         } elseif ($newUser->getLocationId()) {
-            $providerLocation = ProviderLocationFactory::create([
+            $providerLocation = ProviderLocationFactory::create(
+                [
                 'userId'     => $newUser->getId()->getValue(),
                 'locationId' => $newUser->getLocationId()->getValue()
-            ]);
+                ]
+            );
 
             $providerLocationRepo->add($providerLocation);
         } elseif ($oldUser->getLocationId()) {
@@ -1405,7 +1418,8 @@ class ProviderApplicationService
 
         foreach ($data as $serviceId => $serviceLocations) {
             /** @var Service $service */
-            if ($services->keyExists($serviceId) &&
+            if (
+                $services->keyExists($serviceId) &&
                 ($service = $services->getItem($serviceId)) &&
                 $service->getStatus()->getValue() === Status::VISIBLE
             ) {
@@ -1529,7 +1543,8 @@ class ProviderApplicationService
         $customers = $userRepository->getAllWithAllowedBooking();
 
         // user_can added here, because currentUser is null in logged.in.user service for cabinet
-        if (!$this->container->getPermissionsService()->currentUserCanReadOthers(Entities::CUSTOMERS) &&
+        if (
+            !$this->container->getPermissionsService()->currentUserCanReadOthers(Entities::CUSTOMERS) &&
             !(
                 $currentUser !== null && $currentUser->getExternalId() !== null &&
                 user_can($currentUser->getExternalId()->getValue(), 'amelia_read_others_customers')

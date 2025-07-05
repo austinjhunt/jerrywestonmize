@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -40,6 +41,7 @@ class UpdateTaxController extends Controller
         'events',
         'packages',
     ];
+
 
     /**
      * Instantiates the Update Tax command to hand it over to the Command Handler

@@ -83,8 +83,8 @@ class SendTestEmailCommandHandler extends CommandHandler
 
         $dummyData = $placeholderService->getPlaceholdersDummyData('email');
 
-        $isForCustomer = $notification->getSendTo()->getValue() === NotificationSendTo::CUSTOMER;
-        $placeholderStringRec = 'recurring' . 'Placeholders' . ($isForCustomer ? 'Customer' : '');
+        $isForCustomer         = $notification->getSendTo()->getValue() === NotificationSendTo::CUSTOMER;
+        $placeholderStringRec  = 'recurring' . 'Placeholders' . ($isForCustomer ? 'Customer' : '');
         $placeholderStringPack = 'package' . 'Placeholders' . ($isForCustomer ? 'Customer' : '');
 
         $dummyData['recurring_appointments_details'] = $placeholderService->applyPlaceholders($appointmentsSettings[$placeholderStringRec], $dummyData);

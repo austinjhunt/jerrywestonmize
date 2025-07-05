@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -85,11 +86,11 @@ class CustomField
         IntegerValue $width,
         CustomFieldSaveType $saveType
     ) {
-        $this->label = $label;
-        $this->type = $type;
+        $this->label    = $label;
+        $this->type     = $type;
         $this->required = $required;
         $this->position = $position;
-        $this->width = $width;
+        $this->width    = $width;
         $this->saveType = $saveType;
     }
 

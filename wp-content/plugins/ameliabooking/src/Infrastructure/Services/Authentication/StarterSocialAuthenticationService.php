@@ -14,6 +14,7 @@ class StarterSocialAuthenticationService extends AbstractSocialAuthenticationSer
     public function __construct(
         Container $container
     ) {
+        $this->container = $container;
     }
 
     /**

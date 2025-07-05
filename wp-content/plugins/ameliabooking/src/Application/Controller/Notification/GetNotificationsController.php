@@ -24,7 +24,7 @@ class GetNotificationsController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GetNotificationsCommand($args);
+        $command     = new GetNotificationsCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

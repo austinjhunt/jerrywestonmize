@@ -11,8 +11,8 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  */
 final class Gender
 {
-    const GENDER_MALE = 'male';
-    const GENDER_FEMALE = 'female';
+    public const GENDER_MALE   = 'male';
+    public const GENDER_FEMALE = 'female';
 
     /**
      * @var string

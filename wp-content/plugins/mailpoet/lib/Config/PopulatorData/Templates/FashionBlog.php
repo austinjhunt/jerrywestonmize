@@ -594,7 +594,7 @@ class FashionBlog {
                   1 =>
                    [
                     'type' => 'social',
-                    'iconSet' => 'full-symbol-black',
+                    'iconSet' => 'official',
                     'styles' =>
                      [
                       'block' =>
@@ -609,7 +609,7 @@ class FashionBlog {
                         'type' => 'socialIcon',
                         'iconType' => 'facebook',
                         'link' => 'http://www.facebook.com',
-                        'image' => $this->social_icon_url . '/07-full-symbol-black/Facebook.png',
+                        'image' => $this->social_icon_url . '/11-official/Facebook.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Facebook',
@@ -619,7 +619,7 @@ class FashionBlog {
                         'type' => 'socialIcon',
                         'iconType' => 'twitter',
                         'link' => 'http://www.twitter.com',
-                        'image' => $this->social_icon_url . '/07-full-symbol-black/Twitter.png',
+                        'image' => $this->social_icon_url . '/11-official/X.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Twitter',
@@ -629,7 +629,7 @@ class FashionBlog {
                         'type' => 'socialIcon',
                         'iconType' => 'instagram',
                         'link' => 'http://instagram.com',
-                        'image' => $this->social_icon_url . '/07-full-symbol-black/Instagram.png',
+                        'image' => $this->social_icon_url . '/11-official/Instagram.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Instagram',
@@ -1030,7 +1030,7 @@ class FashionBlog {
          ],
         'social' =>
          [
-          'iconSet' => 'full-symbol-black',
+          'iconSet' => 'official',
           'icons' =>
            [
             0 =>
@@ -1038,7 +1038,7 @@ class FashionBlog {
               'type' => 'socialIcon',
               'iconType' => 'facebook',
               'link' => 'http://www.facebook.com',
-              'image' => $this->social_icon_url . '/07-full-symbol-black/Facebook.png',
+              'image' => $this->social_icon_url . '/11-official/Facebook.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Facebook',
@@ -1048,7 +1048,7 @@ class FashionBlog {
               'type' => 'socialIcon',
               'iconType' => 'twitter',
               'link' => 'http://www.twitter.com',
-              'image' => $this->social_icon_url . '/07-full-symbol-black/Twitter.png',
+              'image' => $this->social_icon_url . '/11-official/X.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Twitter',
@@ -1058,7 +1058,7 @@ class FashionBlog {
               'type' => 'socialIcon',
               'iconType' => 'instagram',
               'link' => 'http://instagram.com',
-              'image' => $this->social_icon_url . '/07-full-symbol-black/Instagram.png',
+              'image' => $this->social_icon_url . '/11-official/Instagram.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Instagram',

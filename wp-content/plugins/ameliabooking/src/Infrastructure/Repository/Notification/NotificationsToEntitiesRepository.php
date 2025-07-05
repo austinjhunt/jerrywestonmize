@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AmeliaBooking\Infrastructure\Repository\Notification;
 
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -32,7 +31,6 @@ class NotificationsToEntitiesRepository extends AbstractRepository
             $statement->execute($params);
 
             $entityRows = $statement->fetchAll();
-
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to get entities in ' . __CLASS__, $e->getCode(), $e);
         }
@@ -132,5 +130,4 @@ class NotificationsToEntitiesRepository extends AbstractRepository
             throw new QueryExecutionException('Unable to add data from ' . __CLASS__, $e->getCode(), $e);
         }
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -35,22 +36,22 @@ use Slim\Exception\ContainerValueNotFoundException;
 class BookingReassignedEventHandler
 {
     /** @var string */
-    const TIME_UPDATED = 'bookingTimeUpdated';
+    public const TIME_UPDATED = 'bookingTimeUpdated';
 
     /** @var string */
-    const ZOOM_USER_CHANGED = 'zoomUserChanged';
+    public const ZOOM_USER_CHANGED = 'zoomUserChanged';
 
     /** @var string */
-    const ZOOM_LICENCED_USER_CHANGED = 'zoomLicencedUserChanged';
+    public const ZOOM_LICENCED_USER_CHANGED = 'zoomLicencedUserChanged';
 
     /** @var string */
-    const APPOINTMENT_STATUS_AND_ZOOM_LICENCED_USER_CHANGED = 'appointmentStatusAndZoomLicencedUserChanged';
+    public const APPOINTMENT_STATUS_AND_ZOOM_LICENCED_USER_CHANGED = 'appointmentStatusAndZoomLicencedUserChanged';
 
     /** @var string */
-    const APPOINTMENT_STATUS_AND_TIME_UPDATED = 'appointmentStatusAndTimeUpdated';
+    public const APPOINTMENT_STATUS_AND_TIME_UPDATED = 'appointmentStatusAndTimeUpdated';
 
     /** @var string */
-    const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
+    public const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
 
     /**
      * @param CommandResult $commandResult
@@ -113,7 +114,8 @@ class BookingReassignedEventHandler
 
 
         // appointment have single booking
-        if ($commandResult->getData()['existingAppointment'] === null &&
+        if (
+            $commandResult->getData()['existingAppointment'] === null &&
             $commandResult->getData()['newAppointment'] === null
         ) {
             $commandSlug = ApplicationIntegrationService::APPOINTMENT_EDITED;
@@ -155,7 +157,8 @@ class BookingReassignedEventHandler
                 false
             );
 
-            if ($bookingRescheduled &&
+            if (
+                $bookingRescheduled &&
                 (
                     $oldAppointment->getStatus()->getValue() === BookingStatus::APPROVED ||
                     $oldAppointment->getStatus()->getValue() === BookingStatus::PENDING
@@ -174,7 +177,8 @@ class BookingReassignedEventHandler
                 );
             }
 
-            if ($bookingEmployeeChanged &&
+            if (
+                $bookingEmployeeChanged &&
                 (
                     $oldAppointment->getStatus()->getValue() === BookingStatus::APPROVED ||
                     $oldAppointmentStatus === BookingStatus::APPROVED
@@ -188,7 +192,8 @@ class BookingReassignedEventHandler
                 );
             }
 
-            if (!$oldAppointmentStatusChanged &&
+            if (
+                !$oldAppointmentStatusChanged &&
                 !$bookingRescheduled &&
                 $oldAppointment->getStatus()->getValue() === BookingStatus::APPROVED
             ) {
@@ -288,7 +293,7 @@ class BookingReassignedEventHandler
                 );
 
                 $webHookService->process(self::TIME_UPDATED, $newAppointment->toArray(), []);
-            } else if ($bookingEmployeeChanged) {
+            } elseif ($bookingEmployeeChanged) {
                 $applicationNotificationService->sendAppointmentUpdatedNotifications(
                     $newAppointment,
                     $bookingEmployeeChanged,
@@ -349,7 +354,7 @@ class BookingReassignedEventHandler
                 false,
                 true
             );
-        } else if ($bookingEmployeeChanged && !$existingAppointmentStatusChanged) {
+        } elseif ($bookingEmployeeChanged && !$existingAppointmentStatusChanged) {
             $applicationNotificationService->sendAppointmentUpdatedNotifications(
                 $existingAppointment,
                 $bookingEmployeeChanged,

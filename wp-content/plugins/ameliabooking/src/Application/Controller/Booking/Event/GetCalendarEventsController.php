@@ -51,5 +51,4 @@ class GetCalendarEventsController extends Controller
 
         return $command;
     }
-
 }

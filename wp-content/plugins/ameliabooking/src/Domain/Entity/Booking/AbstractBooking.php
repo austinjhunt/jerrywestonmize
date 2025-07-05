@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -38,7 +39,8 @@ abstract class AbstractBooking
      *
      * @param boolean       $notifyParticipants
      */
-    public function __construct($notifyParticipants) {
+    public function __construct($notifyParticipants)
+    {
         $this->notifyParticipants = $notifyParticipants;
     }
 

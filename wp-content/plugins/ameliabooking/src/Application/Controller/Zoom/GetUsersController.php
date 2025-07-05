@@ -24,7 +24,7 @@ class GetUsersController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new GetUsersCommand($args);
-        $params = (array)$request->getQueryParams();
+        $params  = (array)$request->getQueryParams();
 
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);

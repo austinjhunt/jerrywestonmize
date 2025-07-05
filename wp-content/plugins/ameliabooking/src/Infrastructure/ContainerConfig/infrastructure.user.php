@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Assembling domain services:
  * Returning the current user entity based on WP user
  */
+
 defined('ABSPATH') or die('No script kiddies please!');
 
 /**

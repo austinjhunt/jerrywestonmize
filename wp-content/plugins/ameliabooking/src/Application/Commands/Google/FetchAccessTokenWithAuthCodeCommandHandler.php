@@ -44,6 +44,7 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
 
         $providerId = $command->getField('userId');
 
+        $accessToken = null;
         try {
             $accessToken = $googleCalService->fetchAccessTokenWithAuthCode(
                 $command->getField('authCode'),

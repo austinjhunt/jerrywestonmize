@@ -545,7 +545,7 @@ class RetroComputingMagazine {
                               2 =>
                                  [
                                   'type' => 'social',
-                                  'iconSet' => 'grey',
+                                  'iconSet' => 'official',
                                   'icons' =>
                                      [
                                       0 =>
@@ -553,7 +553,7 @@ class RetroComputingMagazine {
                                           'type' => 'socialIcon',
                                           'iconType' => 'facebook',
                                           'link' => 'http://www.facebook.com',
-                                          'image' => $this->social_icon_url . '/02-grey/Facebook.png',
+                                          'image' => $this->social_icon_url . '/11-official/Facebook.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'Facebook',
@@ -563,7 +563,7 @@ class RetroComputingMagazine {
                                           'type' => 'socialIcon',
                                           'iconType' => 'twitter',
                                           'link' => 'http://www.twitter.com',
-                                          'image' => $this->social_icon_url . '/02-grey/Twitter.png',
+                                          'image' => $this->social_icon_url . '/11-official/X.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'Twitter',
@@ -573,7 +573,7 @@ class RetroComputingMagazine {
                                           'type' => 'socialIcon',
                                           'iconType' => 'youtube',
                                           'link' => 'http://www.youtube.com',
-                                          'image' => $this->social_icon_url . '/02-grey/Youtube.png',
+                                          'image' => $this->social_icon_url . '/11-official/Youtube.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'Youtube',
@@ -583,7 +583,7 @@ class RetroComputingMagazine {
                                           'type' => 'socialIcon',
                                           'iconType' => 'email',
                                           'link' => '',
-                                          'image' => $this->social_icon_url . '/02-grey/Email.png',
+                                          'image' => $this->social_icon_url . '/11-official/Email.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'Email',

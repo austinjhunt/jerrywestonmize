@@ -36,7 +36,7 @@ class ApproveBookingRemotelyController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new ApproveBookingRemotelyCommand($args);
+        $command     = new ApproveBookingRemotelyCommand($args);
         $requestBody = $request->getParsedBody();
         $command->setField('token', (string)$request->getQueryParam('token', ''));
         $this->setCommandFields($command, $requestBody);

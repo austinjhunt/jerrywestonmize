@@ -15,8 +15,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class CategoriesTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'categories';
+    public const TABLE = 'categories';
 
     /**
      * @return string
@@ -26,8 +25,8 @@ class CategoriesTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
-        $name = Name::MAX_LENGTH;
-        $color = Color::MAX_LENGTH;
+        $name    = Name::MAX_LENGTH;
+        $color   = Color::MAX_LENGTH;
         $picture = Picture::MAX_LENGTH;
 
         return "CREATE TABLE {$table} (

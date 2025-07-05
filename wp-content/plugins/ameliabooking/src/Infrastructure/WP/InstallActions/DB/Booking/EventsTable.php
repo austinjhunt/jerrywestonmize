@@ -15,8 +15,7 @@ use AmeliaBooking\Domain\ValueObjects\String\Description;
  */
 class EventsTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'events';
+    public const TABLE = 'events';
 
     /**
      * @return string
@@ -26,9 +25,9 @@ class EventsTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
-        $name = Name::MAX_LENGTH;
+        $name        = Name::MAX_LENGTH;
         $description = Description::MAX_LENGTH;
-        $color = Color::MAX_LENGTH;
+        $color       = Color::MAX_LENGTH;
 
         return "CREATE TABLE {$table} (
                    `id` INT(11) NOT NULL AUTO_INCREMENT,

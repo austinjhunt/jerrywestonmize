@@ -11,7 +11,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  */
 final class Picture
 {
-    const MAX_LENGTH = 767;
+    public const MAX_LENGTH = 767;
 
     /**
      * @var string
@@ -53,7 +53,7 @@ final class Picture
             );
         }
 
-        $this->pathToFull = $pathToFull;
+        $this->pathToFull  = $pathToFull;
         $this->pathToThumb = $pathToThumb;
     }
 

@@ -12,8 +12,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class NotificationsToEntitiesTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'notifications_to_entities';
+    public const TABLE = 'notifications_to_entities';
 
     /**
      * @return string

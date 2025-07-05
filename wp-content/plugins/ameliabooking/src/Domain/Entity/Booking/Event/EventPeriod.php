@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -261,7 +262,7 @@ class EventPeriod
             'zoomMeeting'            => $this->getZoomMeeting() ? $this->getZoomMeeting()->toArray() : null,
             'lessonSpace'            => $this->getLessonSpace() ?: null,
             'bookings'               => $this->getBookings() ? $this->getBookings()->toArray() : [],
-            'googleCalendarEventId'  => $this->getGoogleCalendarEventId() ? $this->getGoogleCalendarEventId()->getValue(): null,
+            'googleCalendarEventId'  => $this->getGoogleCalendarEventId() ? $this->getGoogleCalendarEventId()->getValue() : null,
             'googleMeetUrl'          => $this->getGoogleMeetUrl(),
             'outlookCalendarEventId' => $this->getOutlookCalendarEventId() ? $this->getOutlookCalendarEventId()->getValue() : null,
             'microsoftTeamsUrl'      => $this->getMicrosoftTeamsUrl(),

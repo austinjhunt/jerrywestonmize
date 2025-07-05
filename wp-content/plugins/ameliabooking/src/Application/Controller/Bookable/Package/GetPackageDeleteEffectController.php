@@ -24,7 +24,7 @@ class GetPackageDeleteEffectController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GetPackageDeleteEffectCommand($args);
+        $command     = new GetPackageDeleteEffectCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -29,15 +30,17 @@ class ParseDomainCommandHandler extends CommandHandler
 
         $fields = $command->getFields();
 
-        $domain = AutoUpdateHook::getDomain($fields['domain']);
+        $domain    = AutoUpdateHook::getDomain($fields['domain']);
         $subdomain = AutoUpdateHook::getSubDomain($fields['subdomain']);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully parsed domain');
-        $result->setData([
+        $result->setData(
+            [
             'domain'    => $domain,
             'subdomain' => $subdomain
-        ]);
+            ]
+        );
 
         return $result;
     }

@@ -24,7 +24,7 @@ class GetEventDeleteEffectController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GetEventDeleteEffectCommand($args);
+        $command     = new GetEventDeleteEffectCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

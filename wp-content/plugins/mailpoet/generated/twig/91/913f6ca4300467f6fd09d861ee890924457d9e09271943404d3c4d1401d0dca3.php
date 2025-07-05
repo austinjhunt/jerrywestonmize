@@ -85,7 +85,14 @@ class __TwigTemplate_a6bc3737d02c4217a15108cd3f8addf2e33ea8546e47c75fe38c1b5ca5b
     <div class=\"mailpoet_social_icon_settings_row\">
         <label>
         <div class=\"mailpoet_social_icon_settings_label\">
-            {{ currentType.linkFieldName }}
+            {{#if currentType.linkFieldName}}
+                {{ currentType.linkFieldName }}
+            {{else}}
+                ";
+        // line 42
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Link");
+        yield "
+            {{/if}}
         </div>
         <div class=\"mailpoet_social_icon_settings_form_element\">
             {{#ifCond iconType '==' 'email'}}
@@ -102,7 +109,7 @@ class __TwigTemplate_a6bc3737d02c4217a15108cd3f8addf2e33ea8546e47c75fe38c1b5ca5b
         <label>
         <div class=\"mailpoet_social_icon_settings_label\">
             ";
-        // line 55
+        // line 59
         yield $this->extensions['MailPoet\Twig\I18n']->translate("Text");
         yield "
         </div>
@@ -138,7 +145,7 @@ class __TwigTemplate_a6bc3737d02c4217a15108cd3f8addf2e33ea8546e47c75fe38c1b5ca5b
      */
     public function getDebugInfo()
     {
-        return array (  103 => 55,  72 => 27,  48 => 6,  42 => 3,  38 => 1,);
+        return array (  110 => 59,  90 => 42,  72 => 27,  48 => 6,  42 => 3,  38 => 1,);
     }
 
     public function getSourceContext()

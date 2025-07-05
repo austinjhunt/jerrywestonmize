@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -59,7 +60,8 @@ class GetSearchCommandHandler extends CommandHandler
         /** @var ApplicationTimeSlotService $applicationTimeSlotService */
         $applicationTimeSlotService = $this->container->get('application.timeSlot.service');
 
-        if (isset($params['startOffset'], $params['endOffset'])
+        if (
+            isset($params['startOffset'], $params['endOffset'])
             && $settingsDS->getSetting('general', 'showClientTimeZone')
         ) {
             $searchStartDateTimeString = DateTimeService::getCustomDateTimeFromUtc(
@@ -209,7 +211,8 @@ class GetSearchCommandHandler extends CommandHandler
                 $freeSlots = $this->filterByTimeTo($searchEndDateString, $searchTimeTo, $freeSlots);
             }
 
-            if (!array_key_exists($searchStartDateString, $freeSlots) &&
+            if (
+                !array_key_exists($searchStartDateString, $freeSlots) &&
                 !array_key_exists($searchEndDateString, $freeSlots)
             ) {
                 continue;
@@ -291,8 +294,10 @@ class GetSearchCommandHandler extends CommandHandler
     private function filterByTimeFrom($date, $time, $freeSlots)
     {
         foreach (array_keys($freeSlots[$date]) as $freeSlotKey) {
-            if (DateTimeService::getCustomDateTimeObject($date . ' ' . $freeSlotKey) >=
-                DateTimeService::getCustomDateTimeObject($date . ' ' . $time)) {
+            if (
+                DateTimeService::getCustomDateTimeObject($date . ' ' . $freeSlotKey) >=
+                DateTimeService::getCustomDateTimeObject($date . ' ' . $time)
+            ) {
                 break;
             }
 
@@ -318,8 +323,10 @@ class GetSearchCommandHandler extends CommandHandler
     private function filterByTimeTo($date, $time, $freeSlots)
     {
         foreach (array_reverse(array_keys($freeSlots[$date])) as $freeSlotKey) {
-            if (DateTimeService::getCustomDateTimeObject($date . ' ' . $freeSlotKey) <=
-                DateTimeService::getCustomDateTimeObject($date . ' ' . $time)) {
+            if (
+                DateTimeService::getCustomDateTimeObject($date . ' ' . $freeSlotKey) <=
+                DateTimeService::getCustomDateTimeObject($date . ' ' . $time)
+            ) {
                 break;
             }
 

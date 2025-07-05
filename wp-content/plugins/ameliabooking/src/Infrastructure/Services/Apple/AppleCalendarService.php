@@ -51,10 +51,7 @@ use WP_Error;
 
 class AppleCalendarService extends AbstractAppleCalendarService
 {
-    const ICLOUD_URL = 'https://caldav.icloud.com';
-
-    /** @var Container $container */
-    private $container;
+    public const ICLOUD_URL = 'https://caldav.icloud.com';
 
     /**
      * @var SettingsService
@@ -68,9 +65,10 @@ class AppleCalendarService extends AbstractAppleCalendarService
      */
     public function __construct(
         Container $container
-    ){
+    ) {
         $this->container = $container;
-        $this->settings = $this->container->get('domain.settings.service')->getCategorySettings('appleCalendar');;
+        $this->settings  = $this->container->get('domain.settings.service')->getCategorySettings('appleCalendar');
+        ;
     }
 
     /**
@@ -123,7 +121,7 @@ class AppleCalendarService extends AbstractAppleCalendarService
     public function getCalendarsUrl($appleId, $password)
     {
         $principalUrl = $this->handleAppleCredentials($appleId, $password);
-        $url = self::ICLOUD_URL . $principalUrl;
+        $url          = self::ICLOUD_URL . $principalUrl;
 
         $args = [
             'method' => 'PROPFIND',
@@ -172,8 +170,8 @@ class AppleCalendarService extends AbstractAppleCalendarService
             'method' => 'PROPFIND',
             'headers' => [
                 'Authorization' => 'Basic ' . base64_encode(
-                        $appleId . ':' . $appSpecificPassword
-                    ),
+                    $appleId . ':' . $appSpecificPassword
+                ),
                 'Depth' => '1',
                 'Content-Type' => "text/calendar; charset='UTF-8'",
             ],
@@ -208,7 +206,7 @@ class AppleCalendarService extends AbstractAppleCalendarService
         foreach ($result->response as $cal) {
             $calendarId = explode('/', $cal->href->__toString());
             $privileges = $cal->propstat[0]->prop[0]->{'current-user-privilege-set'}->privilege;
-            $entry = ['privilege' => 'write'];
+            $entry      = ['privilege' => 'write'];
 
             if ($cal->propstat[0]->prop[0]->resourcetype[0]->shared) {
                 foreach ($privileges as $privilege) {
@@ -218,12 +216,12 @@ class AppleCalendarService extends AbstractAppleCalendarService
                 }
             }
 
-            $entry['id'] = $calendarId[3];
+            $entry['id']   = $calendarId[3];
             $entry['name'] = isset($cal->propstat[0]->prop[0]->{'displayname'})
                 ? $cal->propstat[0]->prop[0]->{'displayname'}->__toString()
                 : '';
 
-            if ($entry['id'] && $entry['name'] && !str_contains($entry['name'],'Reminders')) {
+            if ($entry['id'] && $entry['name'] && strpos($entry['name'], 'Reminders') === false) {
                 $calendars[] = $entry;
             }
         }
@@ -280,9 +278,9 @@ class AppleCalendarService extends AbstractAppleCalendarService
                     }
 
                     foreach ($events as $event) {
-                        $data = Reader::read($event);
+                        $data          = Reader::read($event);
                         $startDateTime = $data->VFREEBUSY->DTSTART->getDateTime();
-                        $endDateTime = $data->VFREEBUSY->DTEND->getDateTime();
+                        $endDateTime   = $data->VFREEBUSY->DTEND->getDateTime();
 
                         $eventStartString = DateTimeService::getCustomDateTimeFromUtc(
                             $startDateTime->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s')
@@ -336,7 +334,11 @@ class AppleCalendarService extends AbstractAppleCalendarService
             $employeeAppleCalendar = $provider && $provider->getEmployeeAppleCalendar() ? $provider->getEmployeeAppleCalendar()->toArray() : null;
 
             $appleId = $employeeAppleCalendar && $employeeAppleCalendar['iCloudId'] ? $employeeAppleCalendar['iCloudId'] : $this->settings['clientID'];
-            $appSpecificPassword = $employeeAppleCalendar && $employeeAppleCalendar['appSpecificPassword'] ? $employeeAppleCalendar['appSpecificPassword'] : $this->settings['clientSecret'];
+            $appSpecificPassword =
+                $employeeAppleCalendar &&
+                $employeeAppleCalendar['appSpecificPassword'] ?
+                    $employeeAppleCalendar['appSpecificPassword'] :
+                    $this->settings['clientSecret'];
 
             $events = $this->getCalendarEvents(
                 $appleId,
@@ -377,8 +379,8 @@ class AppleCalendarService extends AbstractAppleCalendarService
         $startDateTime,
         $endDateTime,
         $provider
-    ){
-        $calendarsUrl = $this->getCalendarsUrl(
+    ) {
+        $calendarsUrl        = $this->getCalendarsUrl(
             $appleId,
             $appSpecificPassword
         );
@@ -392,13 +394,13 @@ class AppleCalendarService extends AbstractAppleCalendarService
         <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
           <D:prop>
              <C:calendar-data>
-               <C:expand start=' . '"' . $startDateTimeString . '"' . ' end=' . '"' . $endDateTimeString . '"' .'/>
+               <C:expand start=' . '"' . $startDateTimeString . '"' . ' end=' . '"' . $endDateTimeString . '"' . '/>
              </C:calendar-data>
           </D:prop>
           <C:filter>
             <C:comp-filter name="VCALENDAR">
               <C:comp-filter name="VEVENT">
-                <C:time-range start=' . '"' . $startDateTimeString . '"' . ' end=' . '"' . $endDateTimeString . '"' .'/>
+                <C:time-range start=' . '"' . $startDateTimeString . '"' . ' end=' . '"' . $endDateTimeString . '"' . '/>
                 <C:prop-filter name="ATTENDEE"/>
               </C:comp-filter>
             </C:comp-filter>
@@ -409,8 +411,8 @@ class AppleCalendarService extends AbstractAppleCalendarService
             'method' => 'REPORT',
             'headers' => [
                 'Authorization' => 'Basic ' . base64_encode(
-                        $appleId . ':' . $appSpecificPassword
-                    ),
+                    $appleId . ':' . $appSpecificPassword
+                ),
                 'Depth' => '1',
                 'Content-Type' => 'application/xml; charset=utf-8',
             ],
@@ -418,15 +420,15 @@ class AppleCalendarService extends AbstractAppleCalendarService
         ];
 
         $response = wp_remote_request($url, $args);
-        $body = wp_remote_retrieve_body($response);
-        $result = simplexml_load_string($body, null, LIBXML_NOCDATA);
+        $body     = wp_remote_retrieve_body($response);
+        $result   = simplexml_load_string($body, null, LIBXML_NOCDATA);
 
         if (!$result) {
             return [];
         }
 
         $contents = [];
-        $entry = [];
+        $entry    = [];
 
         foreach ($result as $item) {
             $entry['calendarData'] = $item->propstat->prop->{'calendar-data'};
@@ -435,13 +437,14 @@ class AppleCalendarService extends AbstractAppleCalendarService
             foreach ($calendar->getComponents() as $component) {
                 if ($component->name === 'VEVENT') {
                     $icsFileName = explode('/', $item->href->__toString());
-                    $organizer = $component->ORGANIZER ? $component->ORGANIZER->getValue() : null;
+                    $organizer   = $component->ORGANIZER ? $component->ORGANIZER->getValue() : null;
 
-                    if (str_contains($icsFileName[4], 'ameliaAppointmentEvent_') &&
+                    if (
+                        strpos($icsFileName[4], 'ameliaAppointmentEvent_') !== false &&
                         $excludeAppointmentId !== null &&
                         $organizer !== null &&
                         $excludeAppointmentId !== 0 &&
-                        $organizer === 'mailto:'.$provider->getEmail()->getValue()
+                        $organizer === 'mailto:' . $provider->getEmail()->getValue()
                     ) {
                         continue;
                     }
@@ -520,8 +523,7 @@ class AppleCalendarService extends AbstractAppleCalendarService
 
                     if (!$appointment->getAppleCalendarEventId()) {
                         $this->insertEvent($appointment, $provider);
-                    }
-                    else {
+                    } else {
                         $this->deleteEvent($appointment, $provider);
                         $this->insertEvent($appointment, $provider);
                     }
@@ -533,33 +535,34 @@ class AppleCalendarService extends AbstractAppleCalendarService
                 case BookingCanceledEventHandler::BOOKING_CANCELED:
                 case BookingApprovedEventHandler::BOOKING_APPROVED:
                 case BookingRejectedEventHandler::BOOKING_REJECTED:
+                    if (
+                        $appointmentStatus === 'canceled' || $appointmentStatus === 'rejected' ||
+                        ($appointmentStatus === 'pending' && $this->settings['insertPendingAppointments'] === false)
+                    ) {
+                        $this->deleteEvent($appointment, $provider);
+                        break;
+                    }
 
-                if ($appointmentStatus === 'canceled' || $appointmentStatus === 'rejected' ||
-                    ($appointmentStatus === 'pending' && $this->settings['insertPendingAppointments'] === false)
-                ) {
+                    if (
+                        $appointmentStatus === 'approved' && $oldStatus && $oldStatus !== 'approved' &&
+                        $this->settings['insertPendingAppointments'] === false
+                    ) {
+                        $this->insertEvent($appointment, $provider);
+                        break;
+                    }
+
+                    if (!$appointment->getAppleCalendarEventId()) {
+                        $this->insertEvent($appointment, $provider);
+                        break;
+                    }
+
+                    $this->deleteEvent($appointment, $provider);
+                    $this->insertEvent($appointment, $provider);
+                    break;
+
+                case AppointmentDeletedEventHandler::APPOINTMENT_DELETED:
                     $this->deleteEvent($appointment, $provider);
                     break;
-                }
-
-                if ($appointmentStatus === 'approved' && $oldStatus && $oldStatus !== 'approved' &&
-                    $this->settings['insertPendingAppointments'] === false
-                ) {
-                    $this->insertEvent($appointment, $provider);
-                    break;
-                }
-
-                if (!$appointment->getAppleCalendarEventId()) {
-                    $this->insertEvent($appointment, $provider);
-                    break;
-                }
-
-                $this->deleteEvent($appointment, $provider);
-                $this->insertEvent($appointment, $provider);
-                break;
-
-            case AppointmentDeletedEventHandler::APPOINTMENT_DELETED:
-                $this->deleteEvent($appointment, $provider);
-                break;
             }
         }
     }
@@ -587,7 +590,11 @@ class AppleCalendarService extends AbstractAppleCalendarService
         $employeeAppleCalendar = $provider && $provider->getEmployeeAppleCalendar() ? $provider->getEmployeeAppleCalendar()->toArray() : null;
 
         $appleId = $employeeAppleCalendar && $employeeAppleCalendar['iCloudId'] ? $employeeAppleCalendar['iCloudId'] : $this->settings['clientID'];
-        $appSpecificPassword = $employeeAppleCalendar && $employeeAppleCalendar['appSpecificPassword'] ? $employeeAppleCalendar['appSpecificPassword'] : $this->settings['clientSecret'];
+        $appSpecificPassword =
+            $employeeAppleCalendar &&
+            $employeeAppleCalendar['appSpecificPassword'] ?
+                $employeeAppleCalendar['appSpecificPassword'] :
+                $this->settings['clientSecret'];
 
         $eventUrl = $this->getAddEventUrl($eventId, $appleId, $appSpecificPassword, $provider);
 
@@ -702,20 +709,13 @@ class AppleCalendarService extends AbstractAppleCalendarService
 
         $placeholderData = $placeholderService->getPlaceholdersData($appointmentArray);
 
-        $start = $period ?  clone $period->getPeriodStart()->getValue() : clone $appointment->getBookingStart()->getValue();
+        $start    = $period ?  clone $period->getPeriodStart()->getValue() : clone $appointment->getBookingStart()->getValue();
         $timezone = $start->getTimezone()->getName();
         if ($period) {
-            $time = (int)$period->getPeriodEnd()->getValue()->format('H')*60 + (int)$period->getPeriodEnd()->getValue()->format('i');
+            $time = (int)$period->getPeriodEnd()->getValue()->format('H') * 60 + (int)$period->getPeriodEnd()->getValue()->format('i');
             $end  = DateTimeService::getCustomDateTimeObject(
                 $start->format('Y-m-d')
             )->add(new DateInterval('PT' . $time . 'M'));
-            $eventEventId = $period->getEventId()->getValue();
-            /** @var EventRepository $eventRepository */
-            $eventRepository = $this->container->get('domain.booking.event.repository');
-            /** @var Event $event */
-            $event = $eventRepository->getById($eventEventId);
-            $eventLocationId = $event->getLocationId() ? $event->getLocationId()->getValue() : null;
-            $eventLocation = $eventLocationId ? $locationRepository->getById($eventLocationId) : null;
         } else {
             $end = clone $appointment->getBookingEnd()->getValue();
         }
@@ -744,43 +744,45 @@ class AppleCalendarService extends AbstractAppleCalendarService
         $providerEmail = $provider->getEmail()->getValue();
 
         $startDateTime = $start->setTimezone(new DateTimeZone($timezone));
-        $endDateTime = $end->setTimezone(new DateTimeZone($timezone));
+        $endDateTime   = $end->setTimezone(new DateTimeZone($timezone));
 
         $calendar = new VCalendar();
 
-        $event = $calendar->add('VEVENT', [
+        $event = $calendar->add(
+            'VEVENT',
+            [
             'UID' => $eventId,
             'SUMMARY' => $subject,
             'DESCRIPTION' => $description,
-        ]);
+            ]
+        );
 
         if ($period && $period->getPeriodStart()->getValue()->diff($period->getPeriodEnd()->getValue())->format('%a') !== '0') {
             $periodStart = $period->getPeriodStart()->getValue();
-            $periodEnd = $period->getPeriodEnd()->getValue();
+            $periodEnd   = $period->getPeriodEnd()->getValue();
             $event->add('DTSTART', $periodStart);
             $event->add('DTEND', $endDateTime);
-            $event->add('RRULE', 'FREQ=DAILY;INTERVAL=1;UNTIL='. $periodEnd->format('Ymd\THis'));
+            $event->add('RRULE', 'FREQ=DAILY;INTERVAL=1;UNTIL=' . $periodEnd->format('Ymd\THis'));
         } else {
             $event->add('DTSTART', $startDateTime);
             $event->add('DTEND', $endDateTime);
         }
 
         if ($location) {
-            $event->add('LOCATION', $address
+            $event->add(
+                'LOCATION',
+                $address
                 ? $address
                 : ($location->getAddress() && $location->getAddress()->getValue()
                     ? $location->getAddress()->getValue()
-                    : $location->getName()->getValue()));
-        } else {
-            if ($eventLocationId) {
-                $event->add('LOCATION', $address ? $address :
-                    ($eventLocation->getAddress() ? $eventLocation->getAddress()->getValue() : $eventLocation->getName()->getValue()));
-            }
+                : $location->getName()->getValue())
+            );
         }
+
         $calendar->PRODID = '-//AMELIA//EN';
-        $event->add('ORGANIZER','mailto:'.$providerEmail);
+        $event->add('ORGANIZER', 'mailto:' . $providerEmail);
         foreach ($attendees as $attendee) {
-            $event->add('ATTENDEE','mailto:'.$attendee['emailAddress']);
+            $event->add('ATTENDEE', 'mailto:' . $attendee['emailAddress']);
         }
 
         $calendar->validate();
@@ -804,7 +806,8 @@ class AppleCalendarService extends AbstractAppleCalendarService
             foreach ($bookings as $booking) {
                 $bookingStatus = $booking->getStatus()->getValue();
 
-                if ($bookingStatus === 'approved' ||
+                if (
+                    $bookingStatus === 'approved' ||
                     ($bookingStatus === 'pending' && $this->settings['insertPendingAppointments'] === true)
                 ) {
                     $customer = $customerRepository->getById($booking->getCustomerId()->getValue());
@@ -835,9 +838,13 @@ class AppleCalendarService extends AbstractAppleCalendarService
             $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
 
             $appleId = $employeeAppleCalendar && $employeeAppleCalendar['iCloudId'] ? $employeeAppleCalendar['iCloudId'] : $this->settings['clientID'];
-            $appSpecificPassword = $employeeAppleCalendar && $employeeAppleCalendar['appSpecificPassword'] ? $employeeAppleCalendar['appSpecificPassword'] : $this->settings['clientSecret'];
+            $appSpecificPassword =
+                $employeeAppleCalendar &&
+                $employeeAppleCalendar['appSpecificPassword'] ?
+                    $employeeAppleCalendar['appSpecificPassword'] :
+                    $this->settings['clientSecret'];
 
-            $eventId = $appointment->getAppleCalendarEventId();
+            $eventId    = $appointment->getAppleCalendarEventId();
             $calendarId = $provider->getAppleCalendarId()->getValue();
 
             $calendarsUrl = $this->getCalendarsUrl(
@@ -851,8 +858,8 @@ class AppleCalendarService extends AbstractAppleCalendarService
                 'method' => 'DELETE',
                 'headers' => [
                     'Authorization' => 'Basic ' . base64_encode(
-                            $appleId . ':' . $appSpecificPassword
-                        ),
+                        $appleId . ':' . $appSpecificPassword
+                    ),
                     'Content-Type' => 'text/calendar; charset=utf-8',
                 ],
             ];
@@ -869,7 +876,7 @@ class AppleCalendarService extends AbstractAppleCalendarService
      */
     private function updateEvent($appointment, $period, $provider)
     {
-        $entity = $period ?: $appointment;
+        $entity  = $period ?: $appointment;
         $eventId = $entity->getAppleCalendarEventId();
         if ($entity->getAppleCalendarEventId()) {
             $event = $this->createEvent($eventId->getValue(), $appointment, $provider, $period);
@@ -886,14 +893,18 @@ class AppleCalendarService extends AbstractAppleCalendarService
             $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
 
             $appleId = $employeeAppleCalendar && $employeeAppleCalendar['iCloudId'] ? $employeeAppleCalendar['iCloudId'] : $this->settings['clientID'];
-            $appSpecificPassword = $employeeAppleCalendar && $employeeAppleCalendar['appSpecificPassword'] ? $employeeAppleCalendar['appSpecificPassword'] : $this->settings['clientSecret'];
+            $appSpecificPassword =
+                $employeeAppleCalendar &&
+                $employeeAppleCalendar['appSpecificPassword'] ?
+                    $employeeAppleCalendar['appSpecificPassword'] :
+                    $this->settings['clientSecret'];
 
             $calendarsUrl = $this->getCalendarsUrl(
                 $appleId,
                 $appSpecificPassword
             );
 
-            $url = $calendarsUrl . $calendarId . '/' . $eventId->getValue() . '.ics';
+            $url  = $calendarsUrl . $calendarId . '/' . $eventId->getValue() . '.ics';
             $args = [
                 'method' => 'PUT',
                 'headers' => [
@@ -915,7 +926,7 @@ class AppleCalendarService extends AbstractAppleCalendarService
         $removeProviders = null
     ) {
         try {
-            $this->handleEventPeriodAction($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null);
+            $this->handleEventPeriodAction($event, $commandSlug, $periods);
         } catch (Exception $e) {
             /** @var EventRepository $eventRepository */
             $eventRepository = $this->container->get('domain.booking.event.repository');
@@ -967,7 +978,7 @@ class AppleCalendarService extends AbstractAppleCalendarService
                         case EventStatusUpdatedEventHandler::EVENT_STATUS_UPDATED:
                             if ($event->getStatus()->getValue() === 'rejected') {
                                 $this->deleteEvent($period, $provider);
-                            } else if ($event->getStatus()->getValue() === 'approved') {
+                            } elseif ($event->getStatus()->getValue() === 'approved') {
                                 $this->insertEvent($event, $provider, $period);
                             }
                             break;

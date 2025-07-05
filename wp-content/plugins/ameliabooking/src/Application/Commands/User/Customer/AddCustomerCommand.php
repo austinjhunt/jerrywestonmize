@@ -11,7 +11,6 @@ use AmeliaBooking\Application\Commands\Command;
  */
 class AddCustomerCommand extends Command
 {
-
     /**
      * AddCustomerCommand constructor.
      *

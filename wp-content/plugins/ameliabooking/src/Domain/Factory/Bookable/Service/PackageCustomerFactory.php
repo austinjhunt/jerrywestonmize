@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -108,7 +109,7 @@ class PackageCustomerFactory
         if (!empty($data['tax'])) {
             if (is_string($data['tax'])) {
                 $packageCustomer->setTax(new Json($data['tax']));
-            } else if (json_encode($data['tax']) !== false) {
+            } elseif (json_encode($data['tax']) !== false) {
                 $packageCustomer->setTax(new Json(json_encode($data['tax'])));
             }
         }

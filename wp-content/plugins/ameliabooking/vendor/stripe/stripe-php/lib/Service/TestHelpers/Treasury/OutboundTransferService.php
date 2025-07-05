@@ -4,6 +4,11 @@
 
 namespace AmeliaStripe\Service\TestHelpers\Treasury;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
 class OutboundTransferService extends \AmeliaStripe\Service\AbstractService
 {
     /**
@@ -12,12 +17,12 @@ class OutboundTransferService extends \AmeliaStripe\Service\AbstractService
      * state.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Treasury\OutboundTransfer
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function fail($id, $params = null, $opts = null)
     {
@@ -30,12 +35,12 @@ class OutboundTransferService extends \AmeliaStripe\Service\AbstractService
      * state.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Treasury\OutboundTransfer
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function post($id, $params = null, $opts = null)
     {
@@ -48,15 +53,33 @@ class OutboundTransferService extends \AmeliaStripe\Service\AbstractService
      * state.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[], returned_details?: array{code?: string}} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Treasury\OutboundTransfer
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function returnOutboundTransfer($id, $params = null, $opts = null)
     {
         return $this->request('post', $this->buildPath('/v1/test_helpers/treasury/outbound_transfers/%s/return', $id), $params, $opts);
+    }
+
+    /**
+     * Updates a test mode created OutboundTransfer with tracking details. The
+     * OutboundTransfer must not be cancelable, and cannot be in the
+     * <code>canceled</code> or <code>failed</code> states.
+     *
+     * @param string $id
+     * @param null|array{expand?: string[], tracking_details: array{ach?: array{trace_id: string}, type: string, us_domestic_wire?: array{chips?: string, imad?: string, omad?: string}}} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     *
+     * @return \AmeliaStripe\Treasury\OutboundTransfer
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     */
+    public function update($id, $params = null, $opts = null)
+    {
+        return $this->request('post', $this->buildPath('/v1/test_helpers/treasury/outbound_transfers/%s', $id), $params, $opts);
     }
 }

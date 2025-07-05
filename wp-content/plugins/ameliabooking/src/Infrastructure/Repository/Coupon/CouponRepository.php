@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -26,8 +27,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
  */
 class CouponRepository extends AbstractRepository implements CouponRepositoryInterface
 {
-
-    const FACTORY = CouponFactory::class;
+    public const FACTORY = CouponFactory::class;
 
     /** @var string */
     protected $servicesTable;
@@ -74,13 +74,13 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
     ) {
         parent::__construct($connection, $table);
 
-        $this->servicesTable = $servicesTable;
+        $this->servicesTable         = $servicesTable;
         $this->couponToServicesTable = $couponToServicesTable;
-        $this->eventsTable = $eventsTable;
-        $this->couponToEventsTable = $couponToEventsTable;
-        $this->packagesTable = $packagesTable;
+        $this->eventsTable           = $eventsTable;
+        $this->couponToEventsTable   = $couponToEventsTable;
+        $this->packagesTable         = $packagesTable;
         $this->couponToPackagesTable = $couponToPackagesTable;
-        $this->bookingsTable = $bookingsTable;
+        $this->bookingsTable         = $bookingsTable;
     }
 
     /**
@@ -113,9 +113,31 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 "INSERT INTO
                 {$this->table} 
                 (
-                `code`, `discount`, `deduction`, `limit`, `customerLimit`, `status`, `notificationInterval`, `notificationRecurring`, `expirationDate`, `allServices`, `allEvents`, `allPackages`  
+                 `code`,
+                 `discount`,
+                 `deduction`,
+                 `limit`,
+                 `customerLimit`,
+                 `status`,
+                 `notificationInterval`,
+                 `notificationRecurring`,
+                 `expirationDate`,
+                 `allServices`,
+                 `allEvents`,
+                 `allPackages`  
                 ) VALUES (
-                :code, :discount, :deduction, :limit, :customerLimit, :status, :notificationInterval, :notificationRecurring, :expirationDate, :allServices, :allEvents, :allPackages
+                  :code, 
+                  :discount, 
+                  :deduction,
+                  :limit,
+                  :customerLimit,
+                  :status,
+                  :notificationInterval,
+                  :notificationRecurring,
+                  :expirationDate,
+                  :allServices,
+                  :allEvents,
+                  :allPackages
                 )"
             );
 
@@ -282,8 +304,8 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 $queryIds = [];
 
                 foreach ((array)$criteria['ids'] as $index => $value) {
-                    $param = ':id' . $index;
-                    $queryIds[] = $param;
+                    $param          = ':id' . $index;
+                    $queryIds[]     = $param;
                     $params[$param] = $value;
                 }
 
@@ -294,9 +316,9 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 $queryServices = [];
 
                 foreach ((array)$criteria['services'] as $index => $value) {
-                    $param = ':service' . $index;
+                    $param           = ':service' . $index;
                     $queryServices[] = $param;
-                    $params[$param] = $value;
+                    $params[$param]  = $value;
                 }
 
                 $where[] = "c.id IN (
@@ -309,8 +331,8 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 $queryEvents = [];
 
                 foreach ((array)$criteria['events'] as $index => $value) {
-                    $param = ':event' . $index;
-                    $queryEvents[] = $param;
+                    $param          = ':event' . $index;
+                    $queryEvents[]  = $param;
                     $params[$param] = $value;
                 }
 
@@ -324,9 +346,9 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 $queryPackages = [];
 
                 foreach ((array)$criteria['packages'] as $index => $value) {
-                    $param = ':package' . $index;
+                    $param           = ':package' . $index;
                     $queryPackages[] = $param;
-                    $params[$param] = $value;
+                    $params[$param]  = $value;
                 }
 
                 $where[] = "c.id IN (
@@ -396,9 +418,9 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 $queryServices = [];
 
                 foreach ((array)$criteria['services'] as $index => $value) {
-                    $param = ':service' . $index;
+                    $param           = ':service' . $index;
                     $queryServices[] = $param;
-                    $params[$param] = $value;
+                    $params[$param]  = $value;
                 }
 
                 $where[] = "c.id IN (SELECT couponId FROM {$this->couponToServicesTable}

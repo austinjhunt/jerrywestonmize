@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -35,7 +36,7 @@ use Slim\Exception\ContainerValueNotFoundException;
 class AppointmentTimeUpdatedEventHandler
 {
     /** @var string */
-    const TIME_UPDATED = 'bookingTimeUpdated';
+    public const TIME_UPDATED = 'bookingTimeUpdated';
 
     /**
      * @param CommandResult $commandResult

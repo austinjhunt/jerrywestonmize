@@ -16,8 +16,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class ServicesTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'services';
+    public const TABLE = 'services';
 
     /**
      * @return string
@@ -27,10 +26,10 @@ class ServicesTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
-        $name = Name::MAX_LENGTH;
+        $name        = Name::MAX_LENGTH;
         $description = Description::MAX_LENGTH;
-        $color = Color::MAX_LENGTH;
-        $picture = Picture::MAX_LENGTH;
+        $color       = Color::MAX_LENGTH;
+        $picture     = Picture::MAX_LENGTH;
 
         return "CREATE TABLE {$table} (
                    `id` int(11) NOT NULL AUTO_INCREMENT,

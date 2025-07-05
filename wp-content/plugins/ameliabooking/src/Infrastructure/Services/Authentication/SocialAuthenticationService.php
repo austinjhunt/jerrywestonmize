@@ -7,9 +7,6 @@ use AmeliaBooking\Infrastructure\Common\Container;
 
 class SocialAuthenticationService extends AbstractSocialAuthenticationService
 {
-    /** @var Container $container */
-    private $container;
-
     /**
      * @var SettingsService $settings
      */

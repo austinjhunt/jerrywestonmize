@@ -32,7 +32,7 @@ class UpdateServicesPositionsController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdateServicesPositionsCommand($args);
+        $command     = new UpdateServicesPositionsCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

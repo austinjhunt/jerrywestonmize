@@ -9,7 +9,6 @@ namespace AmeliaBooking\Infrastructure\WP\WPMenu;
  */
 class Submenu
 {
-
     /** @var SubmenuPageHandler $submenuHandler */
     private $submenuHandler;
 

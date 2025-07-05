@@ -13,8 +13,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class ProvidersGoogleCalendarTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'providers_to_google_calendar';
+    public const TABLE = 'providers_to_google_calendar';
 
     /**
      * @return string

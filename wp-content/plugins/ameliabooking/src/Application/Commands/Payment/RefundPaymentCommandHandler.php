@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -62,7 +63,8 @@ class RefundPaymentCommandHandler extends CommandHandler
         /** @var Payment $payment */
         $payment = $paymentRepository->getById($paymentId);
 
-        if ($payment->getAmount()->getValue() === 0.0 ||
+        if (
+            $payment->getAmount()->getValue() === 0.0 ||
             $payment->getGateway()->getName()->getValue() === PaymentType::ON_SITE ||
             $payment->getStatus()->getValue() === PaymentStatus::REFUNDED
         ) {
@@ -77,7 +79,11 @@ class RefundPaymentCommandHandler extends CommandHandler
             return $result;
         }
 
-        $amount = $paymentAS->hasRelatedRefundablePayment($payment) || $payment->getGateway()->getName()->getValue() === PaymentType::SQUARE ? $payment->getAmount()->getValue() : null;
+        $amount =
+            $paymentAS->hasRelatedRefundablePayment($payment) ||
+            $payment->getGateway()->getName()->getValue() === PaymentType::SQUARE ?
+                $payment->getAmount()->getValue() :
+                null;
 
         do_action('amelia_before_payment_refunded', $payment->toArray(), $amount);
 

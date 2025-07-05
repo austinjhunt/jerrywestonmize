@@ -4,18 +4,23 @@
 
 namespace AmeliaStripe\Service;
 
-class EphemeralKeyService extends \AmeliaStripe\Service\AbstractService
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
+class EphemeralKeyService extends AbstractService
 {
     /**
      * Invalidates a short-lived API key for a given resource.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\EphemeralKey
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function delete($id, $params = null, $opts = null)
     {
@@ -28,9 +33,9 @@ class EphemeralKeyService extends \AmeliaStripe\Service\AbstractService
      * @param null|array $params
      * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
-     *
      * @return \AmeliaStripe\EphemeralKey
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {

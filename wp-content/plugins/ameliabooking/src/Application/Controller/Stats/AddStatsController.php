@@ -35,7 +35,7 @@ class AddStatsController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new AddStatsCommand($args);
+        $command     = new AddStatsCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

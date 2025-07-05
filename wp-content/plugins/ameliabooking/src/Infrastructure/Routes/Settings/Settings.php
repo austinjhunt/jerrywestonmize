@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See COPYING.md for license details.
@@ -25,7 +26,5 @@ class Settings
         $app->get('/settings', GetSettingsController::class);
 
         $app->post('/settings', UpdateSettingsController::class);
-
-
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -26,7 +27,7 @@ use AmeliaBooking\Infrastructure\Connection;
  */
 class AbstractRepository
 {
-    const FACTORY = '';
+    public const FACTORY = '';
 
     /** @var \PDO */
     protected $connection;
@@ -41,7 +42,7 @@ class AbstractRepository
     public function __construct(Connection $connection, $table)
     {
         $this->connection = $connection();
-        $this->table = $table;
+        $this->table      = $table;
     }
 
     /**
@@ -118,7 +119,7 @@ class AbstractRepository
     {
         try {
             $statement = $this->connection->query($this->selectQuery());
-            $rows = $statement->fetchAll();
+            $rows      = $statement->fetchAll();
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
         }
@@ -140,7 +141,7 @@ class AbstractRepository
     {
         try {
             $statement = $this->connection->query($this->selectQuery());
-            $rows = $statement->fetchAll();
+            $rows      = $statement->fetchAll();
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
         }
@@ -526,7 +527,11 @@ class AbstractRepository
 
             $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add error "' . $errorMessage . '" to ' . $this->table . ' with id ' . $entityId . ' in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException(
+                'Unable to add error "' . $errorMessage . '" to ' . $this->table . ' with id ' . $entityId . ' in ' . __CLASS__,
+                $e->getCode(),
+                $e
+            );
         }
     }
 }

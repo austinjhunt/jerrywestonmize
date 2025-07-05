@@ -17,6 +17,7 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
@@ -121,7 +122,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         $appointmentsIds = [];
 
-        if (!empty($params['search']) &&
+        if (
+            !empty($params['search']) &&
             !$entitiesIds['customers'] &&
             !$entitiesIds['services'] &&
             !$entitiesIds['providers']
@@ -229,7 +231,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
             /** @var CustomerBooking $booking */
             foreach ($appointment->getBookings()->getItems() as $booking) {
                 // fix for wrongly saved JSON
-                if ($booking->getCustomFields() &&
+                if (
+                    $booking->getCustomFields() &&
                     json_decode($booking->getCustomFields()->getValue(), true) === null
                 ) {
                     $booking->setCustomFields(null);
@@ -256,7 +259,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         /** @var CustomerBooking $otherBooking */
                         $otherBooking = $appointment->getBookings()->getItem($bookingKey);
 
-                        if ($otherBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
+                        if (
+                            $otherBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
                             $otherBooking->getStatus()->getValue() === BookingStatus::PENDING
                         ) {
                             $isGroup = true;
@@ -293,7 +297,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
             }
 
             // skip appointments for other providers if user is provider
-            if ((!$readOthers || $isCabinetPage) &&
+            if (
+                (!$readOthers || $isCabinetPage) &&
                 $user->getType() === Entities::PROVIDER &&
                 $user->getId()->getValue() !== $providerId
             ) {
@@ -332,8 +337,10 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
                 if (!empty($params['timeZone'])) {
                     $timeZone = $params['timeZone'];
-                } elseif (($user && $user->getType() === Entities::PROVIDER) &&
-                    empty($user->getTimeZone()) && !empty(get_option('timezone_string'))) {
+                } elseif (
+                    ($user instanceof Provider) &&
+                    empty($user->getTimeZone()) && !empty(get_option('timezone_string'))
+                ) {
                     $timeZone = get_option('timezone_string');
                 }
 
@@ -373,7 +380,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         $emptyBookedPackages = null;
 
-        if (!empty($params['packageId']) &&
+        if (
+            !empty($params['packageId']) &&
             empty($params['services']) &&
             empty($params['providers']) &&
             empty($params['locations'])
@@ -398,7 +406,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
         $periodsAppointmentsPendingCount = 0;
 
         if (!empty($countParams['page']) || (!$isCabinetPackageRequest && !$isCabinetPage && !$isCalendarPage)) {
-            if ((!$readOthers) &&
+            if (
+                (!$readOthers) &&
                 $user->getType() === Entities::PROVIDER
             ) {
                 $countParams['providerId'] = $user->getId()->getValue();
@@ -442,7 +451,10 @@ class GetAppointmentsCommandHandler extends CommandHandler
         $result->setMessage('Successfully retrieved appointments');
         $result->setData(
             [
-                Entities::APPOINTMENTS     => !empty($params['asArray']) && filter_var($params['asArray'], FILTER_VALIDATE_BOOLEAN) ? $appointments->toArray() : $groupedAppointments,
+                Entities::APPOINTMENTS     =>
+                    !empty($params['asArray']) && filter_var($params['asArray'], FILTER_VALIDATE_BOOLEAN) ?
+                        $appointments->toArray() :
+                        $groupedAppointments,
                 'availablePackageBookings' => $availablePackageBookings,
                 'emptyPackageBookings'     => !empty($emptyBookedPackages) ? $emptyBookedPackages->toArray() : [],
                 'occupied'                 => $occupiedTimes,

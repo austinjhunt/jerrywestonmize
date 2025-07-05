@@ -9,19 +9,19 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class PaymentType
 {
-    const PAY_PAL = 'payPal';
+    public const PAY_PAL = 'payPal';
 
-    const STRIPE = 'stripe';
+    public const STRIPE = 'stripe';
 
-    const ON_SITE = 'onSite';
+    public const ON_SITE = 'onSite';
 
-    const WC = 'wc';
+    public const WC = 'wc';
 
-    const MOLLIE = 'mollie';
+    public const MOLLIE = 'mollie';
 
-    const RAZORPAY = 'razorpay';
+    public const RAZORPAY = 'razorpay';
 
-    const SQUARE = 'square';
+    public const SQUARE = 'square';
 
     /**
      * @var string

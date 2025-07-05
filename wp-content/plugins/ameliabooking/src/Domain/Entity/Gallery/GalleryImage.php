@@ -42,8 +42,8 @@ class GalleryImage
         PositiveInteger $position
     ) {
         $this->entityType = $entityType;
-        $this->picture = $picture;
-        $this->position = $position;
+        $this->picture    = $picture;
+        $this->position   = $position;
     }
 
     /**

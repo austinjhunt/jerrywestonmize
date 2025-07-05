@@ -49,7 +49,7 @@ class UpdateNotificationController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdateNotificationCommand($args);
+        $command     = new UpdateNotificationCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

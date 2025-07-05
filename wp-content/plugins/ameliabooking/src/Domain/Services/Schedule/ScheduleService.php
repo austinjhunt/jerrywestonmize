@@ -34,7 +34,7 @@ class ScheduleService
     /** @var ProviderService */
     private $providerService;
 
-    /** @var ProviderService */
+    /** @var LocationService */
     private $locationService;
 
     /**
@@ -110,7 +110,8 @@ class ScheduleService
                     $hasVisibleLocations
                 );
 
-                if (($hasVisibleLocations && !$availablePeriodLocations->length()) ||
+                if (
+                    ($hasVisibleLocations && !$availablePeriodLocations->length()) ||
                     ($hasVisibleLocations && $locationId && !$availablePeriodLocations->keyExists($locationId))
                 ) {
                     continue;
@@ -198,7 +199,8 @@ class ScheduleService
                     $hasVisibleLocations
                 );
 
-                if (($hasVisibleLocations && !$availablePeriodLocations->length()) ||
+                if (
+                    ($hasVisibleLocations && !$availablePeriodLocations->length()) ||
                     ($hasVisibleLocations && $locationId && !$availablePeriodLocations->keyExists($locationId))
                 ) {
                     continue;

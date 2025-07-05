@@ -68,9 +68,11 @@ class DeleteExtraCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully deleted bookable extra.');
-        $result->setData([
+        $result->setData(
+            [
             Entities::EXTRA => $extra->toArray()
-        ]);
+            ]
+        );
 
         return $result;
     }

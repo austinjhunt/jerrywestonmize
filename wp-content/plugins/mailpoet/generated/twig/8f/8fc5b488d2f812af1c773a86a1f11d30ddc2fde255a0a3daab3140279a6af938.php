@@ -39,7 +39,9 @@ class __TwigTemplate_a23278e043e57c5a5a159f68109eef0e57fbdd4a848470bd2254637ae95
         $macros = $this->macros;
         yield "{{#each availableSets}}
     <div class=\"mailpoet_social_icon_set{{#ifCond ../activeSet '==' this }} mailpoet_active_icon_set{{/ifCond}}\" data-setName=\"{{ this }}\">
-    {{#each ../availableSocialIcons}}<img src=\"{{lookup (lookup ../../socialIconSets ../this) this}}\" />{{/each}}
+      {{#each ../availableSocialIcons}}
+        <img src=\"{{#if (lookup (lookup ../../socialIconSets ../this) this)}}{{lookup (lookup ../../socialIconSets ../this) this}}{{else}}{{../../imageMissingSrc}}{{/if}}\" />
+      {{/each}}
     </div>
 {{/each}}
 ";

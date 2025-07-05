@@ -1254,19 +1254,41 @@ class Forminator_Form_Entry_Model {
 			$submission_file = isset( $settings['submission-file'] ) ? $settings['submission-file'] : 'delete';
 		}
 		if ( 'delete' === $submission_file ) {
-			foreach ( $entry_model->meta_data as $meta_data ) {
+			$upload_root = wp_upload_dir();
+			if ( empty( $upload_root['basedir'] ) ) {
+				return;
+			}
+			$upload_root = $upload_root['basedir'];
+			foreach ( $entry_model->meta_data as $slug => $meta_data ) {
 				$meta_value = $meta_data['value'];
-				if ( is_array( $meta_value ) && isset( $meta_value['file'] ) ) {
+				$field_type = Forminator_Core::get_field_type( $slug );
+				if ( in_array( $field_type, array( 'upload', 'signature' ), true )
+						&& is_array( $meta_value ) && isset( $meta_value['file'] ) ) {
 					$file_path = is_array( $meta_value['file']['file_path'] ) ? $meta_value['file']['file_path'] : array( $meta_value['file']['file_path'] );
 					if ( ! empty( $file_path ) ) {
 						foreach ( $file_path as $key => $path ) {
-							if ( ! empty( $path ) && file_exists( $path ) ) {
-								wp_delete_file( $path );
-								if ( isset( $meta_value['file']['file_url'][ $key ] ) ) {
-									$attachment_id = attachment_url_to_postid( $meta_value['file']['file_url'][ $key ] );
-									if ( $attachment_id ) {
-										wp_delete_attachment( $attachment_id );
-									}
+							$path = realpath( $path );
+							if ( ! $path || ! file_exists( $path ) ) {
+								continue;
+							}
+
+							$basename  = wp_basename( $path );
+							$sanitized = sanitize_file_name( $basename );
+							if ( $basename !== $sanitized ) {
+								continue;
+							}
+
+							$normalized_upload_root = wp_normalize_path( $upload_root );
+							$normalized_path        = wp_normalize_path( $path );
+							if ( ! empty( $normalized_upload_root ) && 0 !== strpos( $normalized_path, $normalized_upload_root ) ) {
+								continue;
+							}
+
+							wp_delete_file( $path );
+							if ( isset( $meta_value['file']['file_url'][ $key ] ) ) {
+								$attachment_id = attachment_url_to_postid( $meta_value['file']['file_url'][ $key ] );
+								if ( $attachment_id ) {
+									wp_delete_attachment( $attachment_id );
 								}
 							}
 						}

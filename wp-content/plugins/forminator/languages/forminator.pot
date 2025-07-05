@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Forminator package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Forminator 1.44.1\n"
+"Project-Id-Version: Forminator 1.44.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/build\n"
-"POT-Creation-Date: 2025-05-20 17:28:20+00:00\n"
+"POT-Creation-Date: 2025-06-30 09:45:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -938,7 +938,7 @@ msgid ""
 msgstr ""
 
 #: addons/pro/e-signature/e-signature.php:107
-#: library/model/class-form-entry-model.php:1386
+#: library/model/class-form-entry-model.php:1408
 msgid "(no filename)"
 msgstr ""
 
@@ -2353,7 +2353,7 @@ msgstr ""
 #: addons/pro/trello/class-forminator-addon-trello-form-hooks.php:271
 #: addons/pro/trello/class-forminator-addon-trello-form-hooks.php:286
 #: library/helpers/helper-fields.php:1316
-#: library/model/class-form-entry-model.php:1647
+#: library/model/class-form-entry-model.php:1669
 msgid "Edit Post"
 msgstr ""
 
@@ -4585,7 +4585,7 @@ msgstr ""
 #: admin/classes/class-admin-l10n.php:317 admin/locale.php:717
 #: library/field-autofill-providers/class-wp-post.php:59
 #: library/helpers/helper-fields.php:1315
-#: library/model/class-form-entry-model.php:1640
+#: library/model/class-form-entry-model.php:1662
 #: library/modules/polls/admin/admin-loader.php:195
 #: library/modules/quizzes/admin/admin-loader.php:577
 #: library/render/class-widget.php:127
@@ -8583,13 +8583,13 @@ msgid "Characters"
 msgstr ""
 
 #: admin/locale.php:718 library/helpers/helper-fields.php:1325
-#: library/model/class-form-entry-model.php:1673
+#: library/model/class-form-entry-model.php:1695
 #: library/modules/quizzes/admin/admin-loader.php:659
 msgid "Content"
 msgstr ""
 
 #: admin/locale.php:719 library/helpers/helper-fields.php:1334
-#: library/model/class-form-entry-model.php:1703
+#: library/model/class-form-entry-model.php:1725
 msgid "Excerpt"
 msgstr ""
 
@@ -18331,8 +18331,8 @@ msgid "Post Excerpt"
 msgstr ""
 
 #: library/fields/postdata.php:109 library/helpers/helper-fields.php:1354
-#: library/model/class-form-entry-model.php:1734
-#: library/model/class-form-entry-model.php:1751
+#: library/model/class-form-entry-model.php:1756
+#: library/model/class-form-entry-model.php:1773
 #: library/modules/custom-forms/form-templates/template-post.php:57
 msgid "Category"
 msgstr ""
@@ -18994,29 +18994,29 @@ msgid "here"
 msgstr ""
 
 #: library/helpers/helper-fields.php:1295
-#: library/model/class-form-entry-model.php:1397
+#: library/model/class-form-entry-model.php:1419
 msgid "View File"
 msgstr ""
 
 #: library/helpers/helper-fields.php:1310
-#: library/model/class-form-entry-model.php:1638
+#: library/model/class-form-entry-model.php:1660
 msgid "(no title)"
 msgstr ""
 
 #: library/helpers/helper-fields.php:1379
-#: library/model/class-form-entry-model.php:1858
+#: library/model/class-form-entry-model.php:1880
 msgid "Tag"
 msgstr ""
 
 #: library/helpers/helper-fields.php:1393
-#: library/model/class-form-entry-model.php:1887
+#: library/model/class-form-entry-model.php:1909
 #: library/modules/quizzes/admin/admin-loader.php:583
 #: library/modules/quizzes/admin/admin-loader.php:672
 msgid "Featured image"
 msgstr ""
 
 #: library/helpers/helper-fields.php:1402
-#: library/model/class-form-entry-model.php:1918
+#: library/model/class-form-entry-model.php:1940
 msgid "Custom fields"
 msgstr ""
 
@@ -23084,11 +23084,11 @@ msgstr ""
 msgid "Product Quantity"
 msgstr ""
 
-#: library/model/class-form-entry-model.php:1341
+#: library/model/class-form-entry-model.php:1363
 msgid "Send Email"
 msgstr ""
 
-#: library/model/class-form-entry-model.php:1362
+#: library/model/class-form-entry-model.php:1384
 msgid "View Website"
 msgstr ""
 

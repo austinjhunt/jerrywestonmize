@@ -19,9 +19,11 @@ use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
+use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
@@ -160,7 +162,8 @@ class GetEntitiesCommandHandler extends CommandHandler
             $resultData['tags'] = $eventsTags->toArray();
         }
 
-        if (in_array(Entities::LOCATIONS, $params['types'], true) ||
+        if (
+            in_array(Entities::LOCATIONS, $params['types'], true) ||
             in_array(Entities::EMPLOYEES, $params['types'], true)
         ) {
             /** @var Collection $locations */
@@ -172,7 +175,8 @@ class GetEntitiesCommandHandler extends CommandHandler
             $resultData['locations'] = $locations->toArray();
         }
 
-        if (in_array(Entities::CATEGORIES, $params['types'], true) ||
+        if (
+            in_array(Entities::CATEGORIES, $params['types'], true) ||
             in_array(Entities::EMPLOYEES, $params['types'], true) ||
             in_array(Entities::COUPONS, $params['types'], true)
         ) {
@@ -188,7 +192,8 @@ class GetEntitiesCommandHandler extends CommandHandler
 
             /** @var Service $service */
             foreach ($allServices->getItems() as $service) {
-                if ($service->getStatus()->getValue() === Status::VISIBLE ||
+                if (
+                    $service->getStatus()->getValue() === Status::VISIBLE ||
                     Licence::$premium ||
                     ($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_ADMIN)
                 ) {
@@ -248,7 +253,12 @@ class GetEntitiesCommandHandler extends CommandHandler
                 /** @var CustomerBookingRepository $bookingRepository */
                 $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
-                $usersIds = array_map(function ($user) { return $user['id']; }, $resultData['customers']);
+                $usersIds = array_map(
+                    function ($user) {
+                        return $user['id'];
+                    },
+                    $resultData['customers']
+                );
 
                 $customersNoShowCount =  $bookingRepository->countByNoShowStatus($usersIds);
 
@@ -263,7 +273,7 @@ class GetEntitiesCommandHandler extends CommandHandler
             /** @var ProviderRepository $providerRepository */
             $providerRepository = $this->container->get('domain.users.providers.repository');
 
-            /** @var Collection $testProviders */
+            /** @var Collection $providers */
             $providers = $providerRepository->getWithSchedule(
                 [
                     'dates' => [
@@ -278,7 +288,8 @@ class GetEntitiesCommandHandler extends CommandHandler
                 $providerService->setProviderServices($provider, $services, true);
             }
 
-            if (array_key_exists('page', $params) &&
+            if (
+                array_key_exists('page', $params) &&
                 in_array($params['page'], [Entities::CALENDAR, Entities::APPOINTMENTS]) &&
                 $userAS->isAdminAndAllowedToBookAtAnyTime()
             ) {
@@ -301,7 +312,8 @@ class GetEntitiesCommandHandler extends CommandHandler
                     null : $currentUser
             );
 
-            if ($currentUser === null ||
+            if (
+                $currentUser === null ||
                 $currentUser->getType() === AbstractUser::USER_ROLE_CUSTOMER ||
                 !$command->getPermissionService()->currentUserCanRead(Entities::EMPLOYEES)
             ) {
@@ -360,7 +372,8 @@ class GetEntitiesCommandHandler extends CommandHandler
         }
 
         /** Custom Fields */
-        if (in_array(Entities::CUSTOM_FIELDS, $params['types'], true) ||
+        if (
+            in_array(Entities::CUSTOM_FIELDS, $params['types'], true) ||
             in_array('customFields', $params['types'], true)
         ) {
             /** @var Collection $customFields */
@@ -401,7 +414,8 @@ class GetEntitiesCommandHandler extends CommandHandler
         }
 
         /** Coupons */
-        if (in_array(Entities::COUPONS, $params['types'], true) &&
+        if (
+            in_array(Entities::COUPONS, $params['types'], true) &&
             $this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::COUPONS)
         ) {
             /** @var Collection $coupons */
@@ -537,8 +551,10 @@ class GetEntitiesCommandHandler extends CommandHandler
             $daysOff = $settingsAS->getDaysOff();
 
             $squareLocations = [];
-            if (!empty($settingsDS->getSetting('payments', 'square')['accessToken']['access_token'])
-                && in_array('squareLocations', $params['types'])) {
+            if (
+                !empty($settingsDS->getSetting('payments', 'square')['accessToken']['access_token'])
+                && in_array('squareLocations', $params['types'])
+            ) {
                 /** @var SquareService $squareService */
                 $squareService = $this->container->get('infrastructure.payment.square.service');
 
@@ -589,7 +605,8 @@ class GetEntitiesCommandHandler extends CommandHandler
         }
 
         /** Lesson Spaces */
-        if (in_array('lessonSpace_spaces', $params['types'], true) ||
+        if (
+            in_array('lessonSpace_spaces', $params['types'], true) ||
             in_array('spaces', $params['types'], true)
         ) {
             $lessonSpaceApiKey    = $settingsDS->getSetting('lessonSpace', 'apiKey');

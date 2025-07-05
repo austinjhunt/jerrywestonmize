@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -18,23 +19,28 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
 {
     protected $controls_data;
 
-    public function get_name() {
+    public function get_name()
+    {
         return 'catalogbooking';
     }
 
-    public function get_title() {
+    public function get_title()
+    {
         return BackendStrings::getWordPressStrings()['catalog_booking_gutenberg_block']['title'];
     }
 
-    public function get_icon() {
+    public function get_icon()
+    {
         return 'amelia-logo';
     }
 
-    public function get_categories() {
+    public function get_categories()
+    {
         return [ 'amelia-elementor' ];
     }
 
-    protected function _register_controls() {
+    protected function register_controls()
+    {
 
         $controls_data = self::amelia_elementor_get_data();
 
@@ -59,7 +65,8 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             $options['show_package'] = BackendStrings::getWordPressStrings()['show_packages'];
         }
 
-        if ($controls_data['categories'] && sizeof($controls_data['locations']) > 1) {}
+        if ($controls_data['categories'] && sizeof($controls_data['locations']) > 1) {
+        }
 
         $this->add_control(
             'select_catalog',
@@ -210,7 +217,8 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
         $this->end_controls_section();
     }
 
-    protected function render() {
+    protected function render()
+    {
         $settings = $this->get_settings_for_display();
 
         if ($settings['select_catalog'] === 'show_package') {
@@ -219,9 +227,9 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
 
         $skip_categories = $settings['skip_categories'] === 'yes' ? ' categories_hidden=1' : '';
 
-        $trigger = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
+        $trigger      = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
         $trigger_type = $settings['load_manually'] && $settings['trigger_type'] !== '' ? ' trigger_type=' . $settings['trigger_type'] : '';
-        $in_dialog = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
+        $in_dialog    = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
 
         $show = '';
 
@@ -255,11 +263,20 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             $employee = '';
             $location = '';
         }
-        echo esc_html('[ameliacatalogbooking' . $show . $trigger . $trigger_type . $in_dialog . $category_service . $employee . $location . $skip_categories . ']');
+        echo esc_html('[ameliacatalogbooking' .
+            $show .
+            $trigger .
+            $trigger_type .
+            $in_dialog .
+            $category_service .
+            $employee .
+            $location .
+            $skip_categories . ']');
     }
 
-    public static function amelia_elementor_get_data() {
-        $data = GutenbergBlock::getEntitiesData()['data'];
+    public static function amelia_elementor_get_data()
+    {
+        $data          = GutenbergBlock::getEntitiesData()['data'];
         $elementorData = [];
 
         $elementorData['categories'] = [];

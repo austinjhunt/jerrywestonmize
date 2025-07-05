@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -103,7 +104,8 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
 
         $curl = curl_init();
 
-        curl_setopt_array($curl,
+        curl_setopt_array(
+            $curl,
             array(
             CURLOPT_URL => 'https://api.mollie.com/v2/payment-links',
             CURLOPT_RETURNTRANSFER => true,
@@ -153,7 +155,9 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
+        curl_setopt_array(
+            $curl,
+            array(
             CURLOPT_URL => 'https://api.mollie.com/v2/payment-links/' . $id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -163,9 +167,10 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer '.$apiKey
+                'Authorization: Bearer ' . $apiKey
             ),
-        ));
+            )
+        );
 
         $response = curl_exec($curl);
 

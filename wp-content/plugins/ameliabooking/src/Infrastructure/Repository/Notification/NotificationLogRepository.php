@@ -31,7 +31,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Payment\PaymentsTable;
  */
 class NotificationLogRepository extends AbstractRepository
 {
-    const FACTORY = NotificationLogFactory::class;
+    public const FACTORY = NotificationLogFactory::class;
 
     /** @var string */
     protected $notificationsTable;
@@ -65,9 +65,9 @@ class NotificationLogRepository extends AbstractRepository
     ) {
         parent::__construct($connection, $table);
         $this->notificationsTable = $notificationsTable;
-        $this->appointmentsTable = $appointmentsTable;
-        $this->bookingsTable = $bookingsTable;
-        $this->usersTable = $usersTable;
+        $this->appointmentsTable  = $appointmentsTable;
+        $this->bookingsTable      = $bookingsTable;
+        $this->usersTable         = $usersTable;
     }
 
     /**
@@ -307,9 +307,9 @@ class NotificationLogRepository extends AbstractRepository
      */
     public function getCustomersNextDayEvents($notificationId, $nextDay = true)
     {
-        $couponsTable = CouponsTable::getTableName();
+        $couponsTable  = CouponsTable::getTableName();
         $paymentsTable = PaymentsTable::getTableName();
-        $eventsTable = EventsTable::getTableName();
+        $eventsTable   = EventsTable::getTableName();
 
         $eventsPeriodsTable = EventsPeriodsTable::getTableName();
 
@@ -561,11 +561,11 @@ class NotificationLogRepository extends AbstractRepository
      */
     public function getProvidersNextDayEvents($notificationId, $nextDay)
     {
-        $couponsTable = CouponsTable::getTableName();
-        $eventsTable = EventsTable::getTableName();
+        $couponsTable       = CouponsTable::getTableName();
+        $eventsTable        = EventsTable::getTableName();
         $eventsPeriodsTable = EventsPeriodsTable::getTableName();
         $customerBookingsEventsPeriods = CustomerBookingsToEventsPeriodsTable::getTableName();
-        $eventsProvidersTable = EventsProvidersTable::getTableName();
+        $eventsProvidersTable          = EventsProvidersTable::getTableName();
         $paymentsTable = PaymentsTable::getTableName();
 
         $startDate = DateTimeService::getCustomDateTimeObjectInUtc(
@@ -701,13 +701,27 @@ class NotificationLogRepository extends AbstractRepository
 
             $where = '';
             if ($notification->getTimeAfter()) {
-                $timeAfter = apply_filters('amelia_modify_scheduled_notification_time_after', $notification->getTimeAfter()->getValue(), $notification->toArray());
+                $timeAfter =
+                    apply_filters(
+                        'amelia_modify_scheduled_notification_time_after',
+                        $notification->getTimeAfter()->getValue(),
+                        $notification->toArray()
+                    );
                 $lastTime  = apply_filters('amelia_modify_scheduled_notification_last_time', $timeAfter + 259200, $notification->toArray());
 
-                $where = "{$currentDateTime} BETWEEN DATE_ADD(a.bookingEnd, INTERVAL {$timeAfter} SECOND) AND DATE_ADD(a.bookingEnd, INTERVAL {$lastTime} SECOND)";
-            } else if ($notification->getTimeBefore()) {
-                $timeBefore = apply_filters('amelia_modify_scheduled_notification_time_before', $notification->getTimeBefore()->getValue(), $notification->toArray());
-                $where      = "({$currentDateTime} BETWEEN DATE_SUB(a.bookingStart, INTERVAL {$timeBefore} SECOND) AND a.bookingStart) AND (a.bookingStart >= DATE_ADD(cb.created, INTERVAL {$timeBefore} SECOND))";
+                $where =
+                    "{$currentDateTime} BETWEEN DATE_ADD(a.bookingEnd, INTERVAL {$timeAfter} SECOND) AND DATE_ADD(a.bookingEnd, INTERVAL {$lastTime} SECOND)";
+            } elseif ($notification->getTimeBefore()) {
+                $timeBefore =
+                    apply_filters(
+                        'amelia_modify_scheduled_notification_time_before',
+                        $notification->getTimeBefore()->getValue(),
+                        $notification->toArray()
+                    );
+                $where      =
+                    "({$currentDateTime} BETWEEN
+                     DATE_SUB(a.bookingStart, INTERVAL {$timeBefore} SECOND) AND a.bookingStart) AND
+                      (a.bookingStart >= DATE_ADD(cb.created, INTERVAL {$timeBefore} SECOND))";
             }
 
             $whereStatuses = [];
@@ -829,11 +843,15 @@ class NotificationLogRepository extends AbstractRepository
 
             $lastTime = $timeAfter + 432000;
 
-            $where .= " AND {$currentDateTime} BETWEEN DATE_ADD(ep.periodEnd, INTERVAL {$timeAfter} SECOND) AND DATE_ADD(ep.periodEnd, INTERVAL {$lastTime} SECOND)";
-        } else if ($notification->getTimeBefore()) {
+            $where .=
+                " AND {$currentDateTime} BETWEEN DATE_ADD(ep.periodEnd, INTERVAL {$timeAfter} SECOND) 
+                AND DATE_ADD(ep.periodEnd, INTERVAL {$lastTime} SECOND)";
+        } elseif ($notification->getTimeBefore()) {
             $timeBefore = $notification->getTimeBefore()->getValue();
 
-            $where .= " AND ({$currentDateTime} BETWEEN DATE_SUB(ep.periodStart, INTERVAL {$timeBefore} SECOND) AND ep.periodStart) AND (ep.periodStart >= DATE_ADD(p.created, INTERVAL {$timeBefore} SECOND))";
+            $where .=
+                " AND ({$currentDateTime} BETWEEN DATE_SUB(ep.periodStart, INTERVAL {$timeBefore} SECOND) AND ep.periodStart)
+                 AND (ep.periodStart >= DATE_ADD(p.created, INTERVAL {$timeBefore} SECOND))";
         }
 
         try {
@@ -1039,7 +1057,9 @@ class NotificationLogRepository extends AbstractRepository
         try {
             $statement = $this->connection->prepare(
                 "SELECT * FROM {$this->table} nl
-                WHERE nl.userId = :userId AND {$entityColumn} = :entityId AND nl.notificationId IN (SELECT id FROM {$this->notificationsTable} WHERE type = :type)
+                WHERE nl.userId = :userId 
+                  AND {$entityColumn} = :entityId
+                  AND nl.notificationId IN (SELECT id FROM {$this->notificationsTable} WHERE type = :type)
                 ORDER BY nl.sentDateTime DESC"
             );
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -63,9 +64,11 @@ class DeactivatePluginEnvatoCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully checked purchase code');
-        $result->setData([
+        $result->setData(
+            [
             'deactivated' => $response->deactivated,
-        ]);
+            ]
+        );
 
         return $result;
     }

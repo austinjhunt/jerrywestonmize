@@ -58,7 +58,8 @@ class UpdateProviderCommandHandler extends CommandHandler
         /** @var UserApplicationService $userAS */
         $userAS = $this->getContainer()->get('application.user.service');
 
-        if (!$command->getPermissionService()->currentUserCanWrite(Entities::EMPLOYEES) ||
+        if (
+            !$command->getPermissionService()->currentUserCanWrite(Entities::EMPLOYEES) ||
             (
                 !$command->getPermissionService()->currentUserCanWriteOthers(Entities::EMPLOYEES) &&
                 (
@@ -66,7 +67,6 @@ class UpdateProviderCommandHandler extends CommandHandler
                     $currentUser->getId()->getValue() !== $userId
                 )
             )
-
         ) {
             $oldUser = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
 
@@ -101,7 +101,7 @@ class UpdateProviderCommandHandler extends CommandHandler
             /** @var AbstractAppleCalendarService $appleCalendarService */
             $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
 
-            $appleId = $providerData['employeeAppleCalendar'] ['iCloudId'];
+            $appleId       = $providerData['employeeAppleCalendar'] ['iCloudId'];
             $applePassword = $providerData['employeeAppleCalendar'] ['appSpecificPassword'];
 
             $credentials = $appleCalendarService->handleAppleCredentials($appleId, $applePassword);
@@ -159,8 +159,10 @@ class UpdateProviderCommandHandler extends CommandHandler
 
         $providerRepository->beginTransaction();
 
-        if ($providerRepository->getByEmail($newUser->getEmail()->getValue()) &&
-            $oldUser->getEmail()->getValue() !== $newUser->getEmail()->getValue()) {
+        if (
+            $providerRepository->getByEmail($newUser->getEmail()->getValue()) &&
+            $oldUser->getEmail()->getValue() !== $newUser->getEmail()->getValue()
+        ) {
             $result->setResult(CommandResult::RESULT_CONFLICT);
             $result->setMessage('Email already exist.');
             $result->setData('This email is already in use.');
@@ -193,7 +195,7 @@ class UpdateProviderCommandHandler extends CommandHandler
                 $userAS = $this->getContainer()->get('application.user.service');
 
                 $userAS->setWpUserIdForNewUser($userId, $newUser, $command->getField('password'));
-            } else if ($newUser->getExternalId() && $newUser->getExternalId()->getValue()) {
+            } elseif ($newUser->getExternalId() && $newUser->getExternalId()->getValue()) {
                 add_filter('amelia_user_profile_updated', '__return_true');
                 wp_update_user(
                     [

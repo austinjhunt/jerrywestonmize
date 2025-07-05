@@ -158,8 +158,12 @@ class MolliePaymentCommandHandler extends CommandHandler
         try {
             $response = $paymentService->execute(
                 [
-                    'returnUrl'   => $returnUrl[0] . (strpos($returnUrl[0], '?') ? '&' : '?') . 'ameliaCache=' . $identifier . (!empty($returnUrl[1]) ? '#' . $returnUrl[1] : ''),
-                    'notifyUrl'   => (AMELIA_DEV ? str_replace('localhost', AMELIA_NGROK_URL, AMELIA_ACTION_URL) : AMELIA_ACTION_URL) . '/payment/mollie/notify&name=' . $identifier,
+                    'returnUrl'   =>
+                        $returnUrl[0] . (strpos($returnUrl[0], '?') ? '&' : '?') . 'ameliaCache=' . $identifier .
+                        (!empty($returnUrl[1]) ? '#' . $returnUrl[1] : ''),
+                    'notifyUrl'   =>
+                        (AMELIA_DEV ? str_replace('localhost', AMELIA_NGROK_URL, AMELIA_ACTION_URL) : AMELIA_ACTION_URL) .
+                        '/payment/mollie/notify&name=' . $identifier,
                     'amount'      => $paymentAmount,
                     'locale'      => str_replace('-', '_', $reservation->getLocale()->getValue()),
                     'description' => $additionalInformation['description'] ?:
@@ -206,7 +210,7 @@ class MolliePaymentCommandHandler extends CommandHandler
         $result->setMessage(FrontendStrings::getCommonStrings()['payment_error']);
         $result->setData(
             [
-                'message' => $response->getMessage() && json_decode($response->getMessage(), true) !== false?
+                'message' => $response->getMessage() && json_decode($response->getMessage(), true) !== false ?
                     json_decode($response->getMessage(), true)['detail'] : '',
                 'paymentSuccessful' => false,
             ]

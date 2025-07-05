@@ -7,5 +7,5 @@
  */
 
 return array(
-	'features' => array( 'adsPax','firstPartyMode','privacySandboxModule','rrmModule' ),
+	'features' => array( 'adsPax','ecEuID','firstPartyMode','privacySandboxModule' ),
 );

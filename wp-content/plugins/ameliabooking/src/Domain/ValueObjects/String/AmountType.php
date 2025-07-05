@@ -9,9 +9,9 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class AmountType
 {
-    const FIXED = 'fixed';
+    public const FIXED = 'fixed';
 
-    const PERCENTAGE = 'percentage';
+    public const PERCENTAGE = 'percentage';
     /**
      * @var string
      */

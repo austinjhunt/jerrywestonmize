@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Handle WP part of appointment-related events
  */

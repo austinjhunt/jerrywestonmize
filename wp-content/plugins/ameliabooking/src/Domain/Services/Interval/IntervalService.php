@@ -18,7 +18,7 @@ class IntervalService
     {
         $timeParts = explode(':', $time);
 
-        return $timeParts[0] * 60 * 60 + $timeParts[1] * 60 + $timeParts[2];
+        return (int)$timeParts[0] * 60 * 60 + (int)$timeParts[1] * 60 + (int)$timeParts[2];
     }
 
     /**
@@ -67,14 +67,22 @@ class IntervalService
                     } elseif ($unavailable[0] <= $lastAvailablePeriod[0] && $unavailable[1] >= $lastAvailablePeriod[1]) {
                         // available interval is inside unavailable interval
                         array_pop($parsedAvailablePeriod);
-                    } elseif ($unavailable[0] <= $lastAvailablePeriod[0] && $unavailable[1] >= $lastAvailablePeriod[0] && $unavailable[1] <= $lastAvailablePeriod[1]) {
+                    } elseif (
+                        $unavailable[0] <= $lastAvailablePeriod[0] &&
+                        $unavailable[1] >= $lastAvailablePeriod[0] &&
+                        $unavailable[1] <= $lastAvailablePeriod[1]
+                    ) {
                         // unavailable interval intersect start of available interval
                         $fixedPeriod = array_pop($parsedAvailablePeriod);
 
                         if ($unavailable[1] !== $fixedPeriod[1]) {
                             $parsedAvailablePeriod[] = [$unavailable[1], $fixedPeriod[1], $fixedPeriod[2]];
                         }
-                    } elseif ($unavailable[0] >= $lastAvailablePeriod[0] && $unavailable[0] <= $lastAvailablePeriod[1] && $unavailable[1] >= $lastAvailablePeriod[1]) {
+                    } elseif (
+                        $unavailable[0] >= $lastAvailablePeriod[0] &&
+                        $unavailable[0] <= $lastAvailablePeriod[1] &&
+                        $unavailable[1] >= $lastAvailablePeriod[1]
+                    ) {
                         // unavailable interval intersect end of available interval
                         $fixedPeriod = array_pop($parsedAvailablePeriod);
 

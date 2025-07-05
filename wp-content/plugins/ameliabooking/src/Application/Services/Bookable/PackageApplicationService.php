@@ -42,7 +42,6 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class PackageApplicationService extends AbstractPackageApplicationService
 {
-
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Package     $package
@@ -218,7 +217,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
                 }
             }
 
-            if ($packageCustomerServiceRepository->deleteByEntityId($id, 'packageCustomerId') &&
+            if (
+                $packageCustomerServiceRepository->deleteByEntityId($id, 'packageCustomerId') &&
                 $packageCustomerRepository->delete($id)
             ) {
                 return true;
@@ -249,7 +249,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
         foreach ($appointments->getItems() as $appointment) {
             /** @var CustomerBooking $customerBooking */
             foreach ($appointment->getBookings()->getItems() as $customerBooking) {
-                if ($customerBooking->getPackageCustomerService() &&
+                if (
+                    $customerBooking->getPackageCustomerService() &&
                     $customerBooking->getPackageCustomerService()->getId()
                 ) {
                     $packageCustomerServiceIds[] =
@@ -269,7 +270,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
             foreach ($appointments->getItems() as $appointment) {
                 /** @var CustomerBooking $customerBooking */
                 foreach ($appointment->getBookings()->getItems() as $customerBooking) {
-                    if ($customerBooking->getPackageCustomerService() &&
+                    if (
+                        $customerBooking->getPackageCustomerService() &&
                         $customerBooking->getPackageCustomerService()->getId() &&
                         $packageCustomerServices->keyExists($customerBooking->getPackageCustomerService()->getId()->getValue())
                     ) {
@@ -342,7 +344,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
                 $packageCustomerServices->deleteItem($key);
             }
 
-            if ($packageCustomerService->getPackageCustomer() &&
+            if (
+                $packageCustomerService->getPackageCustomer() &&
                 $packageCustomerService->getPackageCustomer()->getId() &&
                 (
                     $isCabinetBooking &&
@@ -665,7 +668,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
                 if (sizeof($bookable['providers']) === 1) {
                     if ($provider === null) {
                         $provider = $bookable['providers'][0];
-                    } else if ($provider['id'] !== $bookable['providers'][0]['id']) {
+                    } elseif ($provider['id'] !== $bookable['providers'][0]['id']) {
                         return null;
                     }
                 } else {
@@ -678,7 +681,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
                 } else {
                     if ($provider === null) {
                         $provider = $results->toArray()[0];
-                    } else if ($provider['id'] !== $results->toArray()[0]['id']) {
+                    } elseif ($provider['id'] !== $results->toArray()[0]['id']) {
                         return null;
                     }
                 }
@@ -785,7 +788,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
 
                 /** @var CustomerBooking $customerBooking */
                 foreach ($appointment->getBookings()->getItems() as $customerBooking) {
-                    if ($customerBooking->getPackageCustomerService() &&
+                    if (
+                        $customerBooking->getPackageCustomerService() &&
                         $packageCustomerServices->keyExists(
                             $customerBooking->getPackageCustomerService()->getId()->getValue()
                         )
@@ -801,7 +805,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
 
                         $customerId = $customerBooking->getCustomerId()->getValue();
 
-                        if (!empty($packageData[$customerId][$serviceId][$packageId][$id]) &&
+                        if (
+                            !empty($packageData[$customerId][$serviceId][$packageId][$id]) &&
                             !$packageCustomerService->getPackageCustomer()->getStatus()
                         ) {
                             if ($packageData[$customerId][$serviceId][$packageId][$id]['available'] > 0) {
@@ -903,9 +908,14 @@ class PackageApplicationService extends AbstractPackageApplicationService
             $id = $packageCustomerService->getId()->getValue();
 
             $sharedPackageCustomerServices = $packageCustomer->getBookingsCount() && $packageCustomer->getBookingsCount()->getValue() ?
-                array_filter($packageCustomerServices->toArray(), function($element) use ($packageCustomer, $packageCustomerService) {
-                return $element['packageCustomer']['id'] === $packageCustomer->getId()->getValue() && $element['id'] !== $packageCustomerService->getId()->getValue();
-            }) : [];
+                array_filter(
+                    $packageCustomerServices->toArray(),
+                    function ($element) use ($packageCustomer, $packageCustomerService) {
+                        return
+                            $element['packageCustomer']['id'] === $packageCustomer->getId()->getValue() &&
+                            $element['id'] !== $packageCustomerService->getId()->getValue();
+                    }
+                ) : [];
 
             /** @var Id  $couponId */
             $couponId = $packageCustomer->getCouponId() ? $packageCustomer->getCouponId()->getValue() : null;
@@ -913,7 +923,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
             /** @var Coupon $coupon */
             $coupon = $couponId && $coupons->keyExists($couponId) ? $coupons->getItem($couponId) : null;
 
-            if (($packageCustomer->getEnd() ?
+            if (
+                ($packageCustomer->getEnd() ?
                     $packageCustomer->getEnd()->getValue() > DateTimeService::getNowDateTimeObject() : true) &&
                 !isset($packageData[$customerId][$serviceId][$packageId][$id])
             ) {
@@ -965,7 +976,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
 
                 /** @var CustomerBooking $customerBooking */
                 foreach ($appointment->getBookings()->getItems() as $customerBooking) {
-                    if ($customerBooking->getPackageCustomerService() &&
+                    if (
+                        $customerBooking->getPackageCustomerService() &&
                         $packageCustomerServices->keyExists(
                             $customerBooking->getPackageCustomerService()->getId()->getValue()
                         ) &&

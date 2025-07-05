@@ -14,7 +14,7 @@ class StarterWooCommerceService
     /** @var SettingsService $settingsService */
     public static $settingsService;
 
-    const AMELIA = 'ameliabooking';
+    public const AMELIA = 'ameliabooking';
 
     public static function init($settingsService)
     {

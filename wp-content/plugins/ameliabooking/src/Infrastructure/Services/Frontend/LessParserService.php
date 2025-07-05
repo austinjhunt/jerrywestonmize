@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -34,8 +35,8 @@ class LessParserService
      */
     public function __construct($inputCssScript, $outputPath, $settingsService)
     {
-        $this->inputCssScript = $inputCssScript;
-        $this->outputPath = $outputPath;
+        $this->inputCssScript  = $inputCssScript;
+        $this->outputPath      = $outputPath;
         $this->settingsService = $settingsService;
     }
 

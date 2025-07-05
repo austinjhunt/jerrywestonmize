@@ -63,7 +63,8 @@ class AddBookingCommandHandler extends CommandHandler
 
         $validateCoupon = true;
 
-        if ($command->getField('validateCoupon') === false &&
+        if (
+            $command->getField('validateCoupon') === false &&
             $this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::COUPONS)
         ) {
             $validateCoupon = false;
@@ -79,7 +80,8 @@ class AddBookingCommandHandler extends CommandHandler
         /** @var UserApplicationService $userAS */
         $userAS = $this->container->get('application.user.service');
 
-        if ($command->getToken() &&
+        if (
+            $command->getToken() &&
             $command->getPage() === 'cabinet' &&
             $command->getCabinetType() === Entities::PROVIDER
         ) {

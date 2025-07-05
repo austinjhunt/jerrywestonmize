@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Handle WP part of user-related events
  */

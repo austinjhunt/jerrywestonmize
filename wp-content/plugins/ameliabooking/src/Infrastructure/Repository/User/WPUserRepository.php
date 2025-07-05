@@ -36,9 +36,9 @@ class WPUserRepository
     public function __construct(Connection $connection, $table, $metaTable, $prefix)
     {
         $this->connection = $connection();
-        $this->table = $table;
-        $this->metaTable = $metaTable;
-        $this->prefix = $prefix;
+        $this->table      = $table;
+        $this->metaTable  = $metaTable;
+        $this->prefix     = $prefix;
     }
 
     /**
@@ -97,7 +97,7 @@ class WPUserRepository
         $items = [];
         foreach ($rows as $row) {
             $row['value'] = (int)$row['value'];
-            $items[] = $row;
+            $items[]      = $row;
         }
 
         return $items;

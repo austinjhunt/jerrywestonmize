@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -12,6 +13,7 @@ use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
+use AmeliaBooking\Application\Services\Invoice\AbstractInvoiceApplicationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -47,10 +49,10 @@ use Slim\Exception\ContainerValueNotFoundException;
 class BookingAddedEventHandler
 {
     /** @var string */
-    const BOOKING_ADDED = 'bookingAdded';
+    public const BOOKING_ADDED = 'bookingAdded';
 
     /** @var string */
-    const PACKAGE_PURCHASED = 'packagePurchased';
+    public const PACKAGE_PURCHASED = 'packagePurchased';
 
     /**
      * @param CommandResult $commandResult
@@ -87,7 +89,7 @@ class BookingAddedEventHandler
         $paymentAS = $container->get('application.payment.service');
         /** @var AbstractPackageApplicationService $packageApplicationService */
         $packageApplicationService = $container->get('application.bookable.package');
-        /** @var InvoiceApplicationService $invoiceService */
+        /** @var AbstractInvoiceApplicationService $invoiceService */
         $invoiceService = $container->get('application.invoice.service');
 
         $type = $commandResult->getData()['type'];
@@ -98,8 +100,10 @@ class BookingAddedEventHandler
         $paymentId = $commandResult->getData()['paymentId'];
 
         $invoice = null;
-        if ($paymentId && $settingsService->getSetting('notifications', 'sendInvoice') &&
-            $booking['status'] !== BookingStatus::WAITING) {
+        if (
+            $paymentId && $settingsService->getSetting('notifications', 'sendInvoice') &&
+            $booking['status'] !== BookingStatus::WAITING
+        ) {
             $invoice = $invoiceService->generateInvoice($paymentId);
         }
 
@@ -137,11 +141,11 @@ class BookingAddedEventHandler
             );
 
             if (!empty($paymentId) && empty($commandResult->getData()['fromLink'])) {
-                $data = $commandResult->getData();
+                $data            = $commandResult->getData();
                 $data['booking'] = $booking;
-                $data['type'] = Entities::PACKAGE;
+                $data['type']    = Entities::PACKAGE;
                 $data['package'] = $package->toArray();
-                $data['bookable'] = $package->toArray();
+                $data['bookable']            = $package->toArray();
                 $data['packageReservations'] = $booking === null ? [] : array_merge([$data['appointment']], array_column($data['recurring'], 'appointment'));
                 $packageReservation['paymentLinks'] = $paymentAS->createPaymentLink($data);
             }
@@ -182,7 +186,7 @@ class BookingAddedEventHandler
 
         $booking['isLastBooking'] = true;
 
-        /** @var Appointment|Event $reservationObject */
+        /** @var Appointment|Event|null $reservationObject */
         $reservationObject = null;
 
         if ($type === Entities::APPOINTMENT) {
@@ -199,7 +203,7 @@ class BookingAddedEventHandler
         $reservation['isRetry'] = !empty($commandResult->getData()['isRetry']) ?
             $commandResult->getData()['isRetry'] : false;
 
-        $data = $commandResult->getData();
+        $data            = $commandResult->getData();
         $data['booking'] = $booking;
         if ($type === Entities::APPOINTMENT) {
             $bookingApplicationService->setReservationEntities($reservationObject);
@@ -273,7 +277,8 @@ class BookingAddedEventHandler
                 $dataRecurring['bookable']  = $recurringReservationObject->toArray()['service'];
                 $dataRecurring['customer']  = $data['customer'];
                 $dataRecurring['recurring'] = array_column($recurringData, 'appointment');
-                $recurringData[$key][$type]['bookings'][$currentBookingIndex]['payments'][0]['paymentLinks'] = $paymentAS->createPaymentLink($dataRecurring, $currentBookingIndex, $key);
+                $recurringData[$key][$type]['bookings'][$currentBookingIndex]['payments'][0]['paymentLinks'] =
+                    $paymentAS->createPaymentLink($dataRecurring, $currentBookingIndex, $key);
             }
         }
 
@@ -289,8 +294,10 @@ class BookingAddedEventHandler
         }
 
         foreach ($reservation['bookings'] as $index => $reservationBooking) {
-            if ($reservationBooking['id'] === $booking['id'] &&
-                ($booking['status'] === BookingStatus::APPROVED || $booking['status'] === BookingStatus::PENDING)) {
+            if (
+                $reservationBooking['id'] === $booking['id'] &&
+                ($booking['status'] === BookingStatus::APPROVED || $booking['status'] === BookingStatus::PENDING)
+            ) {
                 $icsFiles = $icsService->getIcsData(
                     $type,
                     $booking['id'],
@@ -304,12 +311,14 @@ class BookingAddedEventHandler
 
         $reservation['recurring'] = $recurringData;
 
-        if ($appointmentStatusChanged === true &&
+        if (
+            $appointmentStatusChanged === true &&
             !$commandResult->getData()['packageId'] &&
             !$commandResult->getData()['isCart']
         ) {
             foreach ($reservation['bookings'] as $bookingKey => $bookingArray) {
-                if ($bookingArray['id'] !== $booking['id'] &&
+                if (
+                    $bookingArray['id'] !== $booking['id'] &&
                     $bookingArray['status'] === BookingStatus::APPROVED &&
                     $reservation['status'] === BookingStatus::APPROVED
                 ) {
@@ -318,11 +327,18 @@ class BookingAddedEventHandler
             }
         }
 
-        if ($appointmentStatusChanged === true &&
+        if (
+            $appointmentStatusChanged === true &&
             !$commandResult->getData()['packageId'] &&
             !$commandResult->getData()['isCart']
         ) {
-            $emailNotificationService->sendAppointmentStatusNotifications($reservation, empty($commandResult->getData()['fromLink']), true, false, !empty($invoice));
+            $emailNotificationService->sendAppointmentStatusNotifications(
+                $reservation,
+                empty($commandResult->getData()['fromLink']),
+                true,
+                false,
+                !empty($invoice)
+            );
 
             if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
                 $smsNotificationService->sendAppointmentStatusNotifications($reservation, empty($commandResult->getData()['fromLink']), true);
@@ -337,7 +353,8 @@ class BookingAddedEventHandler
             $booking['packageBookingFromBackend'] = $commandResult->getData()['packageBookingFromBackend'];
         }
 
-        if ($appointmentStatusChanged !== true &&
+        if (
+            $appointmentStatusChanged !== true &&
             !$commandResult->getData()['packageId'] &&
             !$commandResult->getData()['isCart']
         ) {
@@ -421,7 +438,8 @@ class BookingAddedEventHandler
                         $recurringData[$key][$type]['bookings'][$bookingKey]['skipNotification'] = true;
                     }
 
-                    if ($recurringReservationBooking['id'] !== $booking['id'] &&
+                    if (
+                        $recurringReservationBooking['id'] !== $booking['id'] &&
                         $recurringReservationBooking['status'] === BookingStatus::APPROVED &&
                         $recurringData[$key][$type]['status'] === BookingStatus::APPROVED
                     ) {

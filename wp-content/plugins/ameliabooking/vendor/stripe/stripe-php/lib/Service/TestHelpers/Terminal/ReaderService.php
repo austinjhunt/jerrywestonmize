@@ -4,6 +4,11 @@
 
 namespace AmeliaStripe\Service\TestHelpers\Terminal;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
 class ReaderService extends \AmeliaStripe\Service\AbstractService
 {
     /**
@@ -11,12 +16,12 @@ class ReaderService extends \AmeliaStripe\Service\AbstractService
      * accepting a payment, saving a card or refunding a transaction.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{amount_tip?: int, card_present?: array{number?: string}, expand?: string[], interac_present?: array{number?: string}, type?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\Reader
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function presentPaymentMethod($id, $params = null, $opts = null)
     {

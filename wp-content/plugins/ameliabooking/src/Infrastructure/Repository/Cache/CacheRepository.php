@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -30,7 +31,7 @@ class CacheRepository extends AbstractRepository
         parent::__construct($connection, $table);
     }
 
-    const FACTORY = CacheFactory::class;
+    public const FACTORY = CacheFactory::class;
 
     /**
      * @param Cache $entity

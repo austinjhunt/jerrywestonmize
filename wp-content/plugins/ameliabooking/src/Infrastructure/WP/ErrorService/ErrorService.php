@@ -18,17 +18,20 @@ class ErrorService
     {
         // Add notice if database prefix is too long
         if (!AbstractDatabaseTable::isValidTablePrefix()) {
-            add_action('admin_notices', function () {
-                $class = 'notice notice-error is-dismissible';
-                $message = '<h3>Amelia</h3>
+            add_action(
+                'admin_notices',
+                function () {
+                    $class   = 'notice notice-error is-dismissible';
+                    $message = '<h3>Amelia</h3>
                     <p>Maximum allowed database prefix is 16 characters.</p>
                     <p>Please change the database prefix, deactivate and activate plugin again.</p>
                     <button type="button" class="notice-dismiss">
                         <span class="screen-reader-text">Dismiss this notice.</span>
                     </button>';
 
-                printf('<div class="%1$s">%2$s</div>', $class, $message);
-            });
+                    printf('<div class="%1$s">%2$s</div>', $class, $message);
+                }
+            );
         }
     }
 }

@@ -8,8 +8,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
 
 class ResourcesTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'resources';
+    public const TABLE = 'resources';
 
     /**
      * @return string

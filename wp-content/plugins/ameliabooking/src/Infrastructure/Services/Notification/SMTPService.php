@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -46,9 +47,9 @@ class SMTPService extends AbstractMailService implements MailServiceInterface
     public function __construct($from, $fromName, $host, $port, $secure, $username, $password, $replyTo)
     {
         parent::__construct($from, $fromName, $replyTo);
-        $this->host = $host;
-        $this->port = $port;
-        $this->secure = $secure;
+        $this->host     = $host;
+        $this->port     = $port;
+        $this->secure   = $secure;
         $this->username = $username;
         $this->password = $password;
     }
@@ -72,12 +73,12 @@ class SMTPService extends AbstractMailService implements MailServiceInterface
         try {
             //Server settings
             $mail->isSMTP();
-            $mail->SMTPAuth = true;
+            $mail->SMTPAuth   = true;
             $mail->SMTPSecure = $this->secure;
-            $mail->Host = $this->host;
-            $mail->Port = $this->port;
-            $mail->Username = $this->username;
-            $mail->Password = $this->password;
+            $mail->Host       = $this->host;
+            $mail->Port       = $this->port;
+            $mail->Username   = $this->username;
+            $mail->Password   = $this->password;
 
             //Recipients
             $mail->setFrom($this->from, $this->fromName);
@@ -98,7 +99,7 @@ class SMTPService extends AbstractMailService implements MailServiceInterface
             $mail->CharSet = 'UTF-8';
             $mail->isHTML();
             $mail->Subject = $subject;
-            $mail->Body = $body;
+            $mail->Body    = $body;
 
             $mail->send();
         } catch (Exception $e) {

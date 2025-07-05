@@ -13,8 +13,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Location\LocationsTable;
  */
 class ProvidersPeriodTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'providers_to_periods';
+    public const TABLE = 'providers_to_periods';
 
     /**
      * @return string

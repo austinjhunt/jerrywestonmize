@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -17,13 +18,13 @@ use AmeliaBooking\Infrastructure\Licence;
  */
 class AmeliaEventsElementorWidget extends Widget_Base
 {
-
-    public function get_name() {
+    public function get_name()
+    {
         return 'ameliaevents';
     }
 
-    protected function register_controls() {
-
+    protected function register_controls()
+    {
         $isLite = !Licence\Licence::$premium;
 
         $this->start_controls_section(
@@ -114,7 +115,8 @@ class AmeliaEventsElementorWidget extends Widget_Base
         $this->end_controls_section();
     }
 
-    protected function render() {
+    protected function render()
+    {
 
         $settings = $this->get_settings_for_display();
 

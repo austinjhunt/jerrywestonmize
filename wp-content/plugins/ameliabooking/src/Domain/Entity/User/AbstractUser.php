@@ -21,10 +21,10 @@ use AmeliaBooking\Domain\ValueObjects\String\Status;
  */
 abstract class AbstractUser
 {
-    const USER_ROLE_ADMIN = 'admin';
-    const USER_ROLE_PROVIDER = 'provider';
-    const USER_ROLE_MANAGER = 'manager';
-    const USER_ROLE_CUSTOMER = 'customer';
+    public const USER_ROLE_ADMIN    = 'admin';
+    public const USER_ROLE_PROVIDER = 'provider';
+    public const USER_ROLE_MANAGER  = 'manager';
+    public const USER_ROLE_CUSTOMER = 'customer';
 
     /** @var Description */
     private $note;
@@ -93,8 +93,8 @@ abstract class AbstractUser
         Email $email
     ) {
         $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->email = $email;
+        $this->lastName  = $lastName;
+        $this->email     = $email;
     }
 
     /**

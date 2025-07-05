@@ -13,7 +13,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class ProviderLocationRepository extends AbstractRepository
 {
-    const FACTORY = ProviderLocationRepository::class;
+    public const FACTORY = ProviderLocationRepository::class;
 
     /**
      * @param ProviderLocation $entity

@@ -37,7 +37,7 @@ class Customer extends AbstractUser
         Gender $gender
     ) {
         parent::__construct($firstName, $lastName, $email);
-        $this->phone = $phone;
+        $this->phone  = $phone;
         $this->gender = $gender;
     }
 

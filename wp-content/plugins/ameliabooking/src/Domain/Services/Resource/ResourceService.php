@@ -26,12 +26,6 @@ use Exception;
  */
 class ResourceService extends AbstractResourceService
 {
-    /** @var IntervalService */
-    private $intervalService;
-
-    /** @var ScheduleService */
-    private $scheduleService;
-
     /**
      * ResourceService constructor.
      *
@@ -99,7 +93,7 @@ class ResourceService extends AbstractResourceService
 
                 $resources->deleteItem($resourceIndex);
 
-                /** @var $substituteResource */
+                /** @var Resource $substituteResource */
                 foreach ($substituteResources->getItems() as $substituteResource) {
                     $resources->addItem($substituteResource);
                 }
@@ -311,17 +305,19 @@ class ResourceService extends AbstractResourceService
                     }
                 }
 
-                if (($entityInspect['service'] ? $entityResourced['service'] : true) &&
+                if (
+                    ($entityInspect['service'] ? $entityResourced['service'] : true) &&
                     ($entityInspect['employee'] ? $entityResourced['employee'] : true) &&
                     ($entityInspect['location'] ? $entityResourced['location'] : true)
                 ) {
                     $hasResource = true;
                 }
 
-                if ($hasResource &&
+                if (
+                    $hasResource &&
                     (!$excludeAppointmentId || $appointment->getId()->getValue() !== $excludeAppointmentId)
                 ) {
-                    /** @var Appointment $resourceAppointment */
+                    /** @var Appointment|null $resourceAppointment */
                     $resourceAppointment = null;
 
                     if ($resourcedAppointments->keyExists($appointment->getId()->getValue())) {
@@ -406,7 +402,8 @@ class ResourceService extends AbstractResourceService
                             $newAppointmentIntervals = [];
 
                             foreach ($appointmentIntervals as $interval) {
-                                if ($interval['start'] <= $comparableInterval['start'] &&
+                                if (
+                                    $interval['start'] <= $comparableInterval['start'] &&
                                     $interval['end'] > $comparableInterval['start'] &&
                                     $interval['end'] <= $comparableInterval['end']
                                 ) {
@@ -425,7 +422,8 @@ class ResourceService extends AbstractResourceService
                                         'count' => $interval['count'] + ($groupResource ? $comparableInterval['count'] : 1),
                                         'ids'   => array_merge($interval['ids'], $comparableInterval['ids'])
                                     ];
-                                } elseif ($interval['start'] >= $comparableInterval['start'] &&
+                                } elseif (
+                                    $interval['start'] >= $comparableInterval['start'] &&
                                     $interval['start'] < $comparableInterval['end'] &&
                                     $interval['end'] >= $comparableInterval['end']
                                 ) {
@@ -444,7 +442,8 @@ class ResourceService extends AbstractResourceService
                                             'ids'   => $interval['ids'],
                                         ];
                                     }
-                                } elseif ($interval['start'] <= $comparableInterval['start'] &&
+                                } elseif (
+                                    $interval['start'] <= $comparableInterval['start'] &&
                                     $interval['end'] >= $comparableInterval['end']
                                 ) {
                                     if ($interval['start'] !== $comparableInterval['start']) {
@@ -471,7 +470,8 @@ class ResourceService extends AbstractResourceService
                                             'ids'   => $interval['ids'],
                                         ];
                                     }
-                                } elseif ($interval['start'] >= $comparableInterval['start'] &&
+                                } elseif (
+                                    $interval['start'] >= $comparableInterval['start'] &&
                                     $interval['end'] <= $comparableInterval['end']
                                 ) {
                                     $newAppointmentIntervals[] = [
@@ -515,7 +515,8 @@ class ResourceService extends AbstractResourceService
             foreach ($resourceDates as $date => $resourceDate) {
                 foreach ($resourceDate as $intervals) {
                     foreach ($intervals as $interval) {
-                        if (!isset($occupiedIntervals[$resourceIndex][$date][$interval['start']]) &&
+                        if (
+                            !isset($occupiedIntervals[$resourceIndex][$date][$interval['start']]) &&
                             (
                                 $groupResource
                                 ? $resource->getQuantity()->getValue() < $interval['count'] + $personsCount
@@ -844,21 +845,25 @@ class ResourceService extends AbstractResourceService
         $intersectedIntervals = [];
 
         foreach ($busyIntervals as $start => $end) {
-            if ($end <= $freeInterval[0] &&
+            if (
+                $end <= $freeInterval[0] &&
                 $end > $freeInterval[0] &&
                 $end <= $freeInterval[1]
             ) {
                 $intersectedIntervals[$freeInterval[0]] = $end;
-            } elseif ($end >= $freeInterval[0] &&
+            } elseif (
+                $end >= $freeInterval[0] &&
                 $end < $freeInterval[1] &&
                 $end >= $freeInterval[1]
             ) {
                 $intersectedIntervals[$end] = $freeInterval[1];
-            } elseif ($end <= $freeInterval[0] &&
+            } elseif (
+                $end <= $freeInterval[0] &&
                 $end >= $freeInterval[1]
             ) {
                 $intersectedIntervals[$freeInterval[0]] = $freeInterval[1];
-            } elseif ($end >= $freeInterval[0] &&
+            } elseif (
+                $end >= $freeInterval[0] &&
                 $end <= $freeInterval[1]
             ) {
                 $intersectedIntervals[$end] = $end;

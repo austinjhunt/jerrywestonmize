@@ -30,4 +30,24 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 500
     )
   }
+
+  if ('ameliaNote' in window && window.ameliaNote.length) {
+    const injectCustomContent = () => {
+      document.querySelectorAll('.wc-block-components-product-details').forEach((el) => {
+        if (!el.querySelector('.amelia-custom-html')) {
+          console.log(window.ameliaNote[0])
+          const div = document.createElement('div');
+          div.className = 'amelia-custom-html';
+          div.innerHTML = '<div>' + window.ameliaNote[0] + '</div>';
+          el.appendChild(div);
+        }
+      });
+    };
+
+    injectCustomContent();
+
+    // Use MutationObserver to handle async block rendering
+    const observer = new MutationObserver(injectCustomContent);
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
 });

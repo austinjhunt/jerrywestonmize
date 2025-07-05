@@ -4,6 +4,11 @@
 
 namespace AmeliaStripe\Service\TestHelpers\Treasury;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
 class InboundTransferService extends \AmeliaStripe\Service\AbstractService
 {
     /**
@@ -12,12 +17,12 @@ class InboundTransferService extends \AmeliaStripe\Service\AbstractService
      * state.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[], failure_details?: array{code?: string}} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Treasury\InboundTransfer
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function fail($id, $params = null, $opts = null)
     {
@@ -30,12 +35,12 @@ class InboundTransferService extends \AmeliaStripe\Service\AbstractService
      * <code>succeeded</code> state.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Treasury\InboundTransfer
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function returnInboundTransfer($id, $params = null, $opts = null)
     {
@@ -48,12 +53,12 @@ class InboundTransferService extends \AmeliaStripe\Service\AbstractService
      * state.
      *
      * @param string $id
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[]} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Treasury\InboundTransfer
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function succeed($id, $params = null, $opts = null)
     {

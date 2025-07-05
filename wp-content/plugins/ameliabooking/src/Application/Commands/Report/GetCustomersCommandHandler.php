@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -63,7 +64,7 @@ class GetCustomersCommandHandler extends CommandHandler
             /** @var AbstractUser $currentUser */
             $currentUser = $this->container->get('logged.in.user');
 
-            /** @var Collection $customers */
+            /** @var Collection $providerCustomers */
             $providerCustomers = $providerAS->getAllowedCustomers($currentUser);
 
             $params['customers'] = array_column($providerCustomers->toArray(), 'id');
@@ -73,7 +74,7 @@ class GetCustomersCommandHandler extends CommandHandler
 
         $rows = [];
 
-        $fields = $command->getField('params')['fields'];
+        $fields    = $command->getField('params')['fields'];
         $delimiter = $command->getField('params')['delimiter'];
 
         $dateFormat = $settingsDS->getSetting('wordpress', 'dateFormat');

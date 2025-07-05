@@ -11,7 +11,6 @@ use AmeliaBooking\Domain\Collection\Collection;
  */
 class BasicResourceApplicationService extends AbstractResourceApplicationService
 {
-
     /**
      * @param array $criteria
      *

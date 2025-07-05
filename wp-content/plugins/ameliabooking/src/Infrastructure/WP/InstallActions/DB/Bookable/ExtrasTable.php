@@ -14,8 +14,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class ExtrasTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'extras';
+    public const TABLE = 'extras';
 
     /**
      * @return string
@@ -25,7 +24,7 @@ class ExtrasTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
-        $name = Name::MAX_LENGTH;
+        $name        = Name::MAX_LENGTH;
         $description = Description::MAX_LENGTH;
 
         return "CREATE TABLE {$table} (

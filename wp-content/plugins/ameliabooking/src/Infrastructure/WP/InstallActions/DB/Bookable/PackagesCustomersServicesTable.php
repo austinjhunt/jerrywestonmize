@@ -13,8 +13,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
  */
 class PackagesCustomersServicesTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'packages_customers_to_services';
+    public const TABLE = 'packages_customers_to_services';
 
     /**
      * @return string

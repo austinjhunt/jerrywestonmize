@@ -75,7 +75,6 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class BookableApplicationService
 {
-
     private $container;
 
     /**
@@ -430,7 +429,8 @@ class BookableApplicationService
 
                     $updateProviderService = false;
 
-                    if ((!$providerService->getCustomPricing() && $service->getCustomPricing()) ||
+                    if (
+                        (!$providerService->getCustomPricing() && $service->getCustomPricing()) ||
                         ($providerService->getCustomPricing() && !$service->getCustomPricing())
                     ) {
                         $updateProviderService = true;
@@ -851,10 +851,11 @@ class BookableApplicationService
             /** @var PackageService $packageService */
             foreach ($package->getBookable()->getItems() as $packageService) {
                 if ($packageService->getService()->getId()->getValue() === $service->getId()->getValue()) {
-                    if (!$packageServiceProviderRepository->deleteByEntityId(
-                        $packageService->getId()->getValue(),
-                        'packageServiceId'
-                    ) ||
+                    if (
+                        !$packageServiceProviderRepository->deleteByEntityId(
+                            $packageService->getId()->getValue(),
+                            'packageServiceId'
+                        ) ||
                         !$packageServiceLocationRepository->deleteByEntityId(
                             $packageService->getId()->getValue(),
                             'packageServiceId'
@@ -939,11 +940,13 @@ class BookableApplicationService
 
         /** @var PackageCustomerService $packageCustomerService */
         foreach ($packageCustomerServices->getItems() as $packageCustomerService) {
-            if (!$customerBookingRepository->updateByEntityId(
-                $packageCustomerService->getId()->getValue(),
-                null,
-                'packageCustomerServiceId'
-            )) {
+            if (
+                !$customerBookingRepository->updateByEntityId(
+                    $packageCustomerService->getId()->getValue(),
+                    null,
+                    'packageCustomerServiceId'
+                )
+            ) {
                 return false;
             }
         }
@@ -966,10 +969,11 @@ class BookableApplicationService
                 }
             }
 
-            if (!$packageCustomerServiceRepository->deleteByEntityId(
-                $packageCustomer->getId()->getValue(),
-                'packageCustomerId'
-            ) ||
+            if (
+                !$packageCustomerServiceRepository->deleteByEntityId(
+                    $packageCustomer->getId()->getValue(),
+                    'packageCustomerId'
+                ) ||
                 !$packageCustomerRepository->delete($packageCustomer->getId()->getValue())
             ) {
                 return false;
@@ -980,7 +984,8 @@ class BookableApplicationService
         foreach ($package->getBookable()->getItems() as $packageService) {
             $packageServiceId = $packageService->getId()->getValue();
 
-            if (!$packageServiceLocationRepository->deleteByEntityId($packageServiceId, 'packageServiceId') ||
+            if (
+                !$packageServiceLocationRepository->deleteByEntityId($packageServiceId, 'packageServiceId') ||
                 !$packageServiceProviderRepository->deleteByEntityId($packageServiceId, 'packageServiceId')
             ) {
                 return false;
@@ -1053,47 +1058,6 @@ class BookableApplicationService
 
             /** @var Appointment $appointment */
             foreach ($appointments->getItems() as $appointment) {
-                $serviceId = $appointment->getServiceId()->getValue();
-
-                /** @var CustomerBooking $customerBooking */
-                foreach ($appointment->getBookings()->getItems() as $customerBooking) {
-                    if ($customerBooking->getPackageCustomerService() &&
-                        $packageCustomerServices->keyExists(
-                            $customerBooking->getPackageCustomerService()->getId()->getValue()
-                        )
-                    ) {
-                        /** @var PackageCustomerService $packageCustomerService */
-                        $packageCustomerService = $packageCustomerServices->getItem(
-                            $customerBooking->getPackageCustomerService()->getId()->getValue()
-                        );
-
-                        $packageId = $packageCustomerService->getPackageCustomer()->getPackageId()->getValue();
-
-                        $id = $packageCustomerService->getId()->getValue();
-
-                        $customerId = $customerBooking->getCustomerId()->getValue();
-
-                        if (!empty($packageData[$customerId][$serviceId][$packageId][$id])) {
-                            if ($packageData[$customerId][$serviceId][$packageId][$id]['available'] > 0) {
-                                $packageData[$customerId][$serviceId][$packageId][$id]['available']--;
-                            } else {
-                                foreach ($packageData[$customerId][$serviceId][$packageId] as $pcsId => $value) {
-                                    if ($value['available'] > 0) {
-                                        $packageData[$customerId][$serviceId][$packageId][$pcsId]['available']--;
-
-                                        $customerBooking->getPackageCustomerService()->setId(new Id($pcsId));
-
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            /** @var Appointment $appointment */
-            foreach ($appointments->getItems() as $appointment) {
                 if ($appointment->getBookings()->length() === 1) {
                     if (!$appointmentApplicationService->delete($appointment)) {
                         return false;
@@ -1109,7 +1073,8 @@ class BookableApplicationService
 
                     /** @var CustomerBooking $customerBooking */
                     foreach ($appointment->getBookings()->getItems() as $customerBooking) {
-                        if ($customerBooking->getPackageCustomerService() &&
+                        if (
+                            $customerBooking->getPackageCustomerService() &&
                             in_array(
                                 $customerBooking->getPackageCustomerService()->getId()->getValue(),
                                 $packageCustomerServices->keys()
@@ -1154,11 +1119,12 @@ class BookableApplicationService
             }
         }
 
-        if (!$packageCustomerServiceRepository->deleteByEntityId(
-            $packageCustomer->getId()->getValue(),
-            'packageCustomerId'
-        ) ||
-        !$packageCustomerRepository->delete($packageCustomer->getId()->getValue())
+        if (
+            !$packageCustomerServiceRepository->deleteByEntityId(
+                $packageCustomer->getId()->getValue(),
+                'packageCustomerId'
+            ) ||
+            !$packageCustomerRepository->delete($packageCustomer->getId()->getValue())
         ) {
             return false;
         }

@@ -117,11 +117,11 @@ class SettingsStorage implements SettingsStorageInterface
         $phoneCountryCode = $this->getSetting('general', 'phoneDefaultCountryCode');
         $ipLocateApyKey   = $this->getSetting('general', 'ipLocateApiKey');
 
-        $capabilities = [];
+        $capabilities           = [];
         $additionalCapabilities = [];
         if (is_admin()) {
             $currentScreenId = get_current_screen()->id;
-            $currentScreen = substr($currentScreenId, strrpos($currentScreenId, '-') + 1);
+            $currentScreen   = substr($currentScreenId, strrpos($currentScreenId, '-') + 1);
 
             $capabilities = [
                 'canRead'        => current_user_can('amelia_read_' . $currentScreen),
@@ -304,7 +304,9 @@ class SettingsStorage implements SettingsStorageInterface
                 'square'                     => [
                     'enabled'        => $this->getSetting('payments', 'square')['enabled'],
                     'testMode'       => $this->getSetting('payments', 'square')['testMode'],
-                    'accessTokenSet' => !empty($this->getSetting('payments', 'square')['accessToken']) && !empty($this->getSetting('payments', 'square')['accessToken']['access_token']),
+                    'accessTokenSet' =>
+                        !empty($this->getSetting('payments', 'square')['accessToken']) &&
+                        !empty($this->getSetting('payments', 'square')['accessToken']['access_token']),
                     'locationId'     => $this->getSetting('payments', 'square')['locationId']
                 ],
                 'razorpay'                     => [
@@ -432,7 +434,7 @@ class SettingsStorage implements SettingsStorageInterface
         Licence\DataModifier::restoreSettings($settingsCopy, self::getSavedSettings());
 
         if (get_option('amelia_show_wpdt_promo') === false) {
-            update_option('amelia_show_wpdt_promo', 'yes' );
+            update_option('amelia_show_wpdt_promo', 'yes');
         }
 
         unset($settingsCopy['wordpress']);

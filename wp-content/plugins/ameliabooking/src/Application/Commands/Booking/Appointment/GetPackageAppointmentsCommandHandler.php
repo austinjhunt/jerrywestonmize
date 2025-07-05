@@ -99,7 +99,6 @@ class GetPackageAppointmentsCommandHandler extends CommandHandler
         $customerId = isset($params['customerId']) ? $params['customerId'] : null;
 
         if (!empty($params['packageStatus']) || !empty($params['page']) || !empty($params['bookingsCount'])) {
-
             $packageCustomerIds = $packageCustomerRepository->getIds(
                 [
                     'purchased'     => !empty($params['dates']) ? $params['dates'] : [],
@@ -173,7 +172,8 @@ class GetPackageAppointmentsCommandHandler extends CommandHandler
             /** @var CustomerBooking $booking */
             foreach ($appointment->getBookings()->getItems() as $booking) {
                 // fix for wrongly saved JSON
-                if ($booking->getCustomFields() &&
+                if (
+                    $booking->getCustomFields() &&
                     json_decode($booking->getCustomFields()->getValue(), true) === null
                 ) {
                     $booking->setCustomFields(null);
@@ -228,7 +228,8 @@ class GetPackageAppointmentsCommandHandler extends CommandHandler
 
         $emptyBookedPackages = null;
 
-        if (!empty($params['packageId']) &&
+        if (
+            !empty($params['packageId']) &&
             empty($params['services']) &&
             empty($params['providers']) &&
             empty($params['locations']) &&
@@ -262,7 +263,8 @@ class GetPackageAppointmentsCommandHandler extends CommandHandler
         $result->setMessage('Successfully retrieved appointments');
         $result->setData(
             [
-                Entities::APPOINTMENTS     => !empty($params['asArray']) && filter_var($params['asArray'], FILTER_VALIDATE_BOOLEAN) ? $appointments->toArray() : $groupedAppointments,
+                Entities::APPOINTMENTS     =>
+                    !empty($params['asArray']) && filter_var($params['asArray'], FILTER_VALIDATE_BOOLEAN) ? $appointments->toArray() : $groupedAppointments,
                 'availablePackageBookings' => $availablePackageBookings,
                 'emptyPackageBookings'     => !empty($emptyBookedPackages) ? $emptyBookedPackages->toArray() : [],
                 'occupied'                 => $occupiedTimes,

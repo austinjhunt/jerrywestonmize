@@ -1,85 +1,102 @@
 <?php
 
-// File generated from our OpenAPI spec
-
 namespace AmeliaStripe;
 
 /**
  * Client used to send requests to Stripe's API.
  *
- * @property \AmeliaStripe\Service\AccountLinkService $accountLinks
- * @property \AmeliaStripe\Service\AccountService $accounts
- * @property \AmeliaStripe\Service\ApplePayDomainService $applePayDomains
- * @property \AmeliaStripe\Service\ApplicationFeeService $applicationFees
- * @property \AmeliaStripe\Service\Apps\AppsServiceFactory $apps
- * @property \AmeliaStripe\Service\BalanceService $balance
- * @property \AmeliaStripe\Service\BalanceTransactionService $balanceTransactions
- * @property \AmeliaStripe\Service\BillingPortal\BillingPortalServiceFactory $billingPortal
- * @property \AmeliaStripe\Service\ChargeService $charges
- * @property \AmeliaStripe\Service\Checkout\CheckoutServiceFactory $checkout
- * @property \AmeliaStripe\Service\CountrySpecService $countrySpecs
- * @property \AmeliaStripe\Service\CouponService $coupons
- * @property \AmeliaStripe\Service\CreditNoteService $creditNotes
- * @property \AmeliaStripe\Service\CustomerService $customers
- * @property \AmeliaStripe\Service\DisputeService $disputes
- * @property \AmeliaStripe\Service\EphemeralKeyService $ephemeralKeys
- * @property \AmeliaStripe\Service\EventService $events
- * @property \AmeliaStripe\Service\ExchangeRateService $exchangeRates
- * @property \AmeliaStripe\Service\FileLinkService $fileLinks
- * @property \AmeliaStripe\Service\FileService $files
- * @property \AmeliaStripe\Service\FinancialConnections\FinancialConnectionsServiceFactory $financialConnections
- * @property \AmeliaStripe\Service\Identity\IdentityServiceFactory $identity
- * @property \AmeliaStripe\Service\InvoiceItemService $invoiceItems
- * @property \AmeliaStripe\Service\InvoiceService $invoices
- * @property \AmeliaStripe\Service\Issuing\IssuingServiceFactory $issuing
- * @property \AmeliaStripe\Service\MandateService $mandates
- * @property \AmeliaStripe\Service\OAuthService $oauth
- * @property \AmeliaStripe\Service\OrderService $orders
- * @property \AmeliaStripe\Service\PaymentIntentService $paymentIntents
- * @property \AmeliaStripe\Service\PaymentLinkService $paymentLinks
- * @property \AmeliaStripe\Service\PaymentMethodService $paymentMethods
- * @property \AmeliaStripe\Service\PayoutService $payouts
- * @property \AmeliaStripe\Service\PlanService $plans
- * @property \AmeliaStripe\Service\PriceService $prices
- * @property \AmeliaStripe\Service\ProductService $products
- * @property \AmeliaStripe\Service\PromotionCodeService $promotionCodes
- * @property \AmeliaStripe\Service\QuoteService $quotes
- * @property \AmeliaStripe\Service\Radar\RadarServiceFactory $radar
- * @property \AmeliaStripe\Service\RefundService $refunds
- * @property \AmeliaStripe\Service\Reporting\ReportingServiceFactory $reporting
- * @property \AmeliaStripe\Service\ReviewService $reviews
- * @property \AmeliaStripe\Service\SetupAttemptService $setupAttempts
- * @property \AmeliaStripe\Service\SetupIntentService $setupIntents
- * @property \AmeliaStripe\Service\ShippingRateService $shippingRates
- * @property \AmeliaStripe\Service\Sigma\SigmaServiceFactory $sigma
- * @property \AmeliaStripe\Service\SkuService $skus
- * @property \AmeliaStripe\Service\SourceService $sources
- * @property \AmeliaStripe\Service\SubscriptionItemService $subscriptionItems
- * @property \AmeliaStripe\Service\SubscriptionScheduleService $subscriptionSchedules
- * @property \AmeliaStripe\Service\SubscriptionService $subscriptions
- * @property \AmeliaStripe\Service\TaxCodeService $taxCodes
- * @property \AmeliaStripe\Service\TaxRateService $taxRates
- * @property \AmeliaStripe\Service\Terminal\TerminalServiceFactory $terminal
- * @property \AmeliaStripe\Service\TestHelpers\TestHelpersServiceFactory $testHelpers
- * @property \AmeliaStripe\Service\TokenService $tokens
- * @property \AmeliaStripe\Service\TopupService $topups
- * @property \AmeliaStripe\Service\TransferService $transfers
- * @property \AmeliaStripe\Service\Treasury\TreasuryServiceFactory $treasury
- * @property \AmeliaStripe\Service\WebhookEndpointService $webhookEndpoints
+ * @property Service\OAuthService $oauth
+ * // The beginning of the section generated from our OpenAPI spec
+ * @property Service\AccountLinkService $accountLinks
+ * @property Service\AccountService $accounts
+ * @property Service\AccountSessionService $accountSessions
+ * @property Service\ApplePayDomainService $applePayDomains
+ * @property Service\ApplicationFeeService $applicationFees
+ * @property Service\Apps\AppsServiceFactory $apps
+ * @property Service\BalanceService $balance
+ * @property Service\BalanceTransactionService $balanceTransactions
+ * @property Service\Billing\BillingServiceFactory $billing
+ * @property Service\BillingPortal\BillingPortalServiceFactory $billingPortal
+ * @property Service\ChargeService $charges
+ * @property Service\Checkout\CheckoutServiceFactory $checkout
+ * @property Service\Climate\ClimateServiceFactory $climate
+ * @property Service\ConfirmationTokenService $confirmationTokens
+ * @property Service\CountrySpecService $countrySpecs
+ * @property Service\CouponService $coupons
+ * @property Service\CreditNoteService $creditNotes
+ * @property Service\CustomerService $customers
+ * @property Service\CustomerSessionService $customerSessions
+ * @property Service\DisputeService $disputes
+ * @property Service\Entitlements\EntitlementsServiceFactory $entitlements
+ * @property Service\EphemeralKeyService $ephemeralKeys
+ * @property Service\EventService $events
+ * @property Service\ExchangeRateService $exchangeRates
+ * @property Service\FileLinkService $fileLinks
+ * @property Service\FileService $files
+ * @property Service\FinancialConnections\FinancialConnectionsServiceFactory $financialConnections
+ * @property Service\Forwarding\ForwardingServiceFactory $forwarding
+ * @property Service\Identity\IdentityServiceFactory $identity
+ * @property Service\InvoiceItemService $invoiceItems
+ * @property Service\InvoicePaymentService $invoicePayments
+ * @property Service\InvoiceRenderingTemplateService $invoiceRenderingTemplates
+ * @property Service\InvoiceService $invoices
+ * @property Service\Issuing\IssuingServiceFactory $issuing
+ * @property Service\MandateService $mandates
+ * @property Service\PaymentIntentService $paymentIntents
+ * @property Service\PaymentLinkService $paymentLinks
+ * @property Service\PaymentMethodConfigurationService $paymentMethodConfigurations
+ * @property Service\PaymentMethodDomainService $paymentMethodDomains
+ * @property Service\PaymentMethodService $paymentMethods
+ * @property Service\PayoutService $payouts
+ * @property Service\PlanService $plans
+ * @property Service\PriceService $prices
+ * @property Service\ProductService $products
+ * @property Service\PromotionCodeService $promotionCodes
+ * @property Service\QuoteService $quotes
+ * @property Service\Radar\RadarServiceFactory $radar
+ * @property Service\RefundService $refunds
+ * @property Service\Reporting\ReportingServiceFactory $reporting
+ * @property Service\ReviewService $reviews
+ * @property Service\SetupAttemptService $setupAttempts
+ * @property Service\SetupIntentService $setupIntents
+ * @property Service\ShippingRateService $shippingRates
+ * @property Service\Sigma\SigmaServiceFactory $sigma
+ * @property Service\SourceService $sources
+ * @property Service\SubscriptionItemService $subscriptionItems
+ * @property Service\SubscriptionService $subscriptions
+ * @property Service\SubscriptionScheduleService $subscriptionSchedules
+ * @property Service\Tax\TaxServiceFactory $tax
+ * @property Service\TaxCodeService $taxCodes
+ * @property Service\TaxIdService $taxIds
+ * @property Service\TaxRateService $taxRates
+ * @property Service\Terminal\TerminalServiceFactory $terminal
+ * @property Service\TestHelpers\TestHelpersServiceFactory $testHelpers
+ * @property Service\TokenService $tokens
+ * @property Service\TopupService $topups
+ * @property Service\TransferService $transfers
+ * @property Service\Treasury\TreasuryServiceFactory $treasury
+ * @property Service\V2\V2ServiceFactory $v2
+ * @property Service\WebhookEndpointService $webhookEndpoints
+ * // The end of the section generated from our OpenAPI spec
  */
 class StripeClient extends BaseStripeClient
 {
     /**
-     * @var \AmeliaStripe\Service\CoreServiceFactory
+     * @var Service\CoreServiceFactory
      */
     private $coreServiceFactory;
 
     public function __get($name)
     {
+        return $this->getService($name);
+    }
+
+    public function getService($name)
+    {
         if (null === $this->coreServiceFactory) {
-            $this->coreServiceFactory = new \AmeliaStripe\Service\CoreServiceFactory($this);
+            $this->coreServiceFactory = new Service\CoreServiceFactory($this);
         }
 
-        return $this->coreServiceFactory->__get($name);
+        return $this->coreServiceFactory->getService($name);
     }
 }

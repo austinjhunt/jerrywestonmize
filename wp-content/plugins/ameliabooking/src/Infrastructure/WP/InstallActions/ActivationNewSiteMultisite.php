@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Multisite hook on new site activation
  */
@@ -12,7 +13,6 @@ namespace AmeliaBooking\Infrastructure\WP\InstallActions;
  */
 class ActivationNewSiteMultisite
 {
-
     /**
      * Activate the plugin for every newly created site if the plugin is network activated
      *

@@ -51,7 +51,21 @@ class SubmenuPageHandler
             AMELIA_VERSION
         );
 
-        if (in_array($page, ['wpamelia-locations', 'wpamelia-settings', 'wpamelia-appointments', 'wpamelia-events', 'wpamelia-dashboard', 'wpamelia-calendar', 'wpamelia-services', 'wpamelia-customers'])) {
+        if (
+            in_array(
+                $page,
+                [
+                'wpamelia-locations',
+                'wpamelia-settings',
+                'wpamelia-appointments',
+                'wpamelia-events',
+                'wpamelia-dashboard',
+                'wpamelia-calendar',
+                'wpamelia-services',
+                'wpamelia-customers'
+                ]
+            )
+        ) {
             $gmapApiKey = $this->settingsService->getSetting('general', 'gMapApiKey');
 
             if ($gmapApiKey) {
@@ -388,7 +402,7 @@ class SubmenuPageHandler
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/admin.6f2fb9b0.js',
+                AMELIA_URL . 'v3/public/assets/admin.a3bdf7ff.js',
                 [],
                 AMELIA_VERSION,
                 true
@@ -449,5 +463,4 @@ class SubmenuPageHandler
 
         include AMELIA_PATH . '/view/backend/view-new.php';
     }
-
 }

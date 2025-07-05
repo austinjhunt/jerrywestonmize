@@ -26,7 +26,7 @@ class DeleteUserController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new DeleteUserCommand($args);
+        $command     = new DeleteUserCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

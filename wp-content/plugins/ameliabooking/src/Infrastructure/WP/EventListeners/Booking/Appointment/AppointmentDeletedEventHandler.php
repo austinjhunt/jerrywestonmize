@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -13,12 +14,16 @@ use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
 use AmeliaBooking\Application\Services\WebHook\AbstractWebHookApplicationService;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
+use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
+use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use Microsoft\Graph\Exception\GraphException;
 
 /**
  * Class AppointmentDeletedEventHandler
@@ -28,19 +33,20 @@ use AmeliaBooking\Infrastructure\Common\Container;
 class AppointmentDeletedEventHandler
 {
     /** @var string */
-    const APPOINTMENT_DELETED = 'appointmentDeleted';
+    public const APPOINTMENT_DELETED = 'appointmentDeleted';
 
     /** @var string */
-    const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
+    public const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
 
     /**
      * @param CommandResult $commandResult
-     * @param Container     $container
+     * @param Container $container
      *
-     * @throws /AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
-     * @throws /AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws /Interop\Container\Exception\ContainerException
-     * @throws /AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     * @throws \Interop\Container\Exception\ContainerException
+     * @throws GraphException
      */
     public static function handle($commandResult, $container)
     {

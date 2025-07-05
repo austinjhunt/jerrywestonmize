@@ -23,12 +23,12 @@ use Slim\Http\Response;
  */
 abstract class Controller
 {
-    const STATUS_OK = 200;
-    const STATUS_REDIRECT = 302;
-    const STATUS_FORBIDDEN = 403;
-    const STATUS_NOT_FOUNT = 404;
-    const STATUS_CONFLICT = 409;
-    const STATUS_INTERNAL_SERVER_ERROR = 500;
+    public const STATUS_OK        = 200;
+    public const STATUS_REDIRECT  = 302;
+    public const STATUS_FORBIDDEN = 403;
+    public const STATUS_NOT_FOUNT = 404;
+    public const STATUS_CONFLICT  = 409;
+    public const STATUS_INTERNAL_SERVER_ERROR = 500;
 
     /**
      * @var CommandBus
@@ -63,8 +63,8 @@ abstract class Controller
      */
     public function __construct(Container $container, $fromApi = false)
     {
-        $this->commandBus = $container->getCommandBus();
-        $this->eventBus = $container->getEventBus();
+        $this->commandBus         = $container->getCommandBus();
+        $this->eventBus           = $container->getEventBus();
         $this->permissionsService = $fromApi ? $container->getApiPermissionsService() : $container->getPermissionsService();
         $this->userApplicationService = $fromApi ? $container->getApiUserApplicationService() : $container->getUserApplicationService();
     }
@@ -133,15 +133,18 @@ abstract class Controller
             /** @var CommandResult $commandResult */
             $commandResult = $this->commandBus->handle($command);
         } catch (CustomException $e) {
-
             $response = $response->withHeader('Content-Type', 'application/json;charset=utf-8');
             $response = $response->withStatus(self::STATUS_INTERNAL_SERVER_ERROR);
 
-            $response =  $response->write(json_encode([
-                'data' => [
+            $response =  $response->write(
+                json_encode(
+                    [
+                    'data' => [
                     'message' => $e->getMessage()
-                ]
-            ]));
+                    ]
+                    ]
+                )
+            );
 
             return $response;
         }

@@ -31,7 +31,7 @@ class UpdateCategoriesPositionsController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new UpdateCategoriesPositionsCommand($args);
+        $command     = new UpdateCategoriesPositionsCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

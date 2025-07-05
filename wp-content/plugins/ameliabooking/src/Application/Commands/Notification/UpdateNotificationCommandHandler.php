@@ -17,7 +17,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationRepository;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationsToEntitiesRepository;
-use \Interop\Container\Exception\ContainerException;
+use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -93,11 +93,11 @@ class UpdateNotificationCommandHandler extends CommandHandler
 
         $isCustom = $command->getField('customName') !== null ;
 
-        $notificationData['id'] = $notificationId;
-        $notificationData['name'] = $isCustom ? $command->getField('name') : $currentNotification->getName()->getValue();
-        $notificationData['status'] = $command->getField('status') ?: $currentNotification->getStatus()->getValue();
-        $notificationData['type'] = $currentNotification->getType()->getValue();
-        $notificationData['sendTo'] = $currentNotification->getSendTo()->getValue();
+        $notificationData['id']      = $notificationId;
+        $notificationData['name']    = $isCustom ? $command->getField('name') : $currentNotification->getName()->getValue();
+        $notificationData['status']  = $command->getField('status') ?: $currentNotification->getStatus()->getValue();
+        $notificationData['type']    = $currentNotification->getType()->getValue();
+        $notificationData['sendTo']  = $currentNotification->getSendTo()->getValue();
         $notificationData['content'] = $content;
 
         $notificationData = apply_filters('amelia_before_notification_updated_filter', $notificationData);

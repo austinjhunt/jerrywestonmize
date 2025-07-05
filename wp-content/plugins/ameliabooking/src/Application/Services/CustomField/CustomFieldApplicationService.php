@@ -38,7 +38,7 @@ class CustomFieldApplicationService extends AbstractCustomFieldApplicationServic
      */
     public function delete($customField)
     {
-        /** @var CouponRepository $couponRepository */
+        /** @var CustomFieldRepository $customFieldRepository */
         $customFieldRepository = $this->container->get('domain.customField.repository');
 
         /** @var CustomFieldServiceRepository $customFieldServiceRepository */
@@ -99,7 +99,8 @@ class CustomFieldApplicationService extends AbstractCustomFieldApplicationServic
                 }
             }
 
-            if (!array_key_exists('value', $customFields[$customFieldId]) &&
+            if (
+                !array_key_exists('value', $customFields[$customFieldId]) &&
                 $customFields[$customFieldId]['type'] === 'checkbox'
             ) {
                 $customFields[$customFieldId]['value'] = [];
@@ -193,7 +194,8 @@ class CustomFieldApplicationService extends AbstractCustomFieldApplicationServic
                 $oldBookingCustomFields = json_decode($oldBooking->getCustomFields()->getValue(), true);
 
                 foreach ((array)$oldBookingCustomFields as $customField) {
-                    if ($customField && array_key_exists('value', $customField) &&
+                    if (
+                        $customField && array_key_exists('value', $customField) &&
                         array_key_exists('type', $customField) && $customField['type'] === 'file'
                     ) {
                         foreach ((array)$customField['value'] as $file) {
@@ -244,7 +246,8 @@ class CustomFieldApplicationService extends AbstractCustomFieldApplicationServic
                 $customFields = !empty($booking['customFields']) ? json_decode($booking['customFields'], true) : [];
                 foreach ($customFields as $customFieldId => $customField) {
                     if ($customField['type'] === 'address' && !empty($customField['value'])) {
-                        /** @var CustomField $customFieldObject */
+                        /** @var CustomField|null $customFieldObject */
+                        $customFieldObject = null;
                         try {
                             $customFieldObject = $customFieldRepository->getById($customFieldId);
                         } catch (NotFoundException $e) {

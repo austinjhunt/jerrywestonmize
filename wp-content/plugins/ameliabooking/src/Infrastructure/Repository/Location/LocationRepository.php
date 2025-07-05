@@ -26,9 +26,8 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
  */
 class LocationRepository extends AbstractRepository implements LocationRepositoryInterface
 {
-
-    const FACTORY = LocationFactory::class;
-    const SERVICE_FACTORY = ServiceFactory::class;
+    public const FACTORY         = LocationFactory::class;
+    public const SERVICE_FACTORY = ServiceFactory::class;
 
     /** @var string */
     protected $providerServicesTable;
@@ -62,8 +61,8 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
         $this->providerServicesTable = $providerServicesTable;
         $this->providerLocationTable = $providerLocationTable;
-        $this->servicesTable = $servicesTable;
-        $this->locationViewsTable = $locationViewsTable;
+        $this->servicesTable         = $servicesTable;
+        $this->locationViewsTable    = $locationViewsTable;
     }
 
     /**
@@ -252,9 +251,9 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
         $order = '';
         if (!empty($criteria['sort'])) {
-            $orderColumn = $criteria['sort'][0] === '-' ? substr($criteria['sort'], 1) : $criteria['sort'];
+            $orderColumn    = $criteria['sort'][0] === '-' ? substr($criteria['sort'], 1) : $criteria['sort'];
             $orderDirection = $criteria['sort'][0] === '-' ? 'DESC' : 'ASC';
-            $order = "ORDER BY {$orderColumn} {$orderDirection}";
+            $order          = "ORDER BY {$orderColumn} {$orderDirection}";
         }
 
         $search = '';
@@ -331,7 +330,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
     {
         $providerLocationTable = ProvidersLocationTable::getTableName();
         $providerServicesTable = ProvidersServiceTable::getTableName();
-        $servicesTable = ServicesTable::getTableName();
+        $servicesTable         = ServicesTable::getTableName();
 
         $params = [];
 
@@ -369,7 +368,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
             );
 
             $params[':visibleStatus'] = Status::VISIBLE;
-            $params[':hiddenStatus'] = Status::HIDDEN;
+            $params[':hiddenStatus']  = Status::HIDDEN;
 
             $statement->execute($params);
 
@@ -395,14 +394,16 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
         ];
 
         try {
-            $statement = $this->connection->prepare("
+            $statement = $this->connection->prepare(
+                "
               SELECT s.*
               FROM {$this->table} l
               INNER JOIN {$this->providerLocationTable} pl ON pl.locationId = l.id
               INNER JOIN {$this->providerServicesTable} ps ON ps.userId = pl.userId
               INNER JOIN {$this->servicesTable} s ON s.id = ps.serviceId
               WHERE l.id = :id
-              GROUP BY s.id");
+              GROUP BY s.id"
+            );
 
             $statement->execute($params);
 
@@ -431,27 +432,28 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
      */
     public function getAllNumberOfAppointments($criteria)
     {
-        $userTable = UsersTable::getTableName();
+        $userTable        = UsersTable::getTableName();
         $appointmentTable = AppointmentsTable::getTableName();
 
         $params = [];
-        $where = [];
+        $where  = [];
 
         if ($criteria['dates']) {
             $where[] = "(a.bookingStart BETWEEN :bookingFrom AND :bookingTo)";
             $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-            $params[':bookingTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
+            $params[':bookingTo']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
         }
 
         if (isset($criteria['status'])) {
-            $where[] = 'l.status = :status';
+            $where[]           = 'l.status = :status';
             $params[':status'] = $criteria['status'];
         }
 
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         try {
-            $statement = $this->connection->prepare("SELECT
+            $statement = $this->connection->prepare(
+                "SELECT
                 l.id,
                 l.name,
                 COUNT(l.id) AS appointments
@@ -460,7 +462,8 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
             INNER JOIN {$userTable} u ON u.id = pl.userId
             INNER JOIN {$appointmentTable} a ON u.id = a.providerId
             $where
-            GROUP BY l.id");
+            GROUP BY l.id"
+            );
 
             $statement->execute($params);
 
@@ -510,14 +513,16 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         try {
-            $statement = $this->connection->prepare("SELECT
+            $statement = $this->connection->prepare(
+                "SELECT
             l.id,
             l.name,
             SUM(lv.views) AS views
             FROM {$this->table} l
             INNER JOIN {$this->locationViewsTable} lv ON lv.locationId = l.id 
             $where
-            GROUP BY l.id");
+            GROUP BY l.id"
+            );
 
             $statement->execute($params);
 

@@ -19,10 +19,9 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Notification\Notifications
  */
 class NotificationRepository extends AbstractRepository implements NotificationRepositoryInterface
 {
+    public const FACTORY = NotificationFactory::class;
 
-    const FACTORY = NotificationFactory::class;
-
-    const CUSTOM = true;
+    public const CUSTOM = true;
 
     /**
      * @param Notification $entity
@@ -179,7 +178,6 @@ class NotificationRepository extends AbstractRepository implements NotificationR
             $statement->execute($params);
 
             $rows = $statement->fetchAll();
-
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to find by name and type in ' . __CLASS__, $e->getCode(), $e);
         }
@@ -222,6 +220,4 @@ class NotificationRepository extends AbstractRepository implements NotificationR
             throw new QueryExecutionException('Unable to delete data from ' . __CLASS__, $e->getCode(), $e);
         }
     }
-
-
 }

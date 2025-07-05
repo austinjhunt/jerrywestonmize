@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -17,7 +18,6 @@ class AmeliaSearchGutenbergBlock extends GutenbergBlock
      * Register Amelia Search block for gutenberg
      */
     public static function registerBlockType()
-
     {
         wp_enqueue_script(
             'amelia_search_gutenberg_block',
@@ -36,6 +36,5 @@ class AmeliaSearchGutenbergBlock extends GutenbergBlock
             'amelia/search-gutenberg-block',
             array('editor_script' => 'amelia_search_gutenberg_block')
         );
-
     }
 }

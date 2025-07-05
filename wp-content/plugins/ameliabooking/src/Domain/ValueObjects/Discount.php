@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -13,8 +14,8 @@ namespace AmeliaBooking\Domain\ValueObjects;
  */
 final class Discount
 {
-    const PERCENTAGE = 1;
-    const FIXED = 2;
+    public const PERCENTAGE = 1;
+    public const FIXED      = 2;
 
     /** @var int|null */
     private $id;
@@ -34,7 +35,7 @@ final class Discount
     public function __construct($amount, $type = self::PERCENTAGE)
     {
         $this->amount = $amount;
-        $this->type = (int)$type;
+        $this->type   = (int)$type;
     }
 
     /**

@@ -13,7 +13,6 @@ use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use Interop\Container\Exception\ContainerException;
-use mageekguy\atoum\asserters\boolean;
 
 /**
  * Class GetUsersCommandHandler
@@ -36,7 +35,7 @@ class GetUsersCommandHandler extends CommandHandler
         /** @var UserApplicationService $userAS */
         $userAS = $this->getContainer()->get('application.user.service');
 
-        /** @var boolean $isCabinetPage */
+        /** @var bool $isCabinetPage */
         $isCabinetPage = $command->getPage() === 'cabinet';
 
         $user = null;
@@ -73,7 +72,8 @@ class GetUsersCommandHandler extends CommandHandler
 
         $zoomResult = $zoomService->getUsers();
 
-        if ((isset($zoomResult['code']) && ($zoomResult['code'] === 124 || $zoomResult['code'] === 4711)) ||
+        if (
+            (isset($zoomResult['code']) && ($zoomResult['code'] === 124 || $zoomResult['code'] === 4711)) ||
             ($zoomResult['users'] === null && isset($zoomResult['message']))
         ) {
             $result->setResult(CommandResult::RESULT_ERROR);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -19,7 +20,7 @@ class WhatsAppService
     /** @var Container */
     private $container;
 
-    const URL = 'https://graph.facebook.com/v20.0/';
+    public const URL = 'https://graph.facebook.com/v20.0/';
 
     /**
      * WhatsAppService constructor.
@@ -126,7 +127,7 @@ class WhatsAppService
         $businessId      = $settingsService->getSetting('notifications', 'whatsAppBusinessID');
         $accessToken     = $settingsService->getSetting('notifications', 'whatsAppAccessToken');
 
-        $route = $url ?: (self::URL . $businessId . '/message_templates?access_token=' . $accessToken . ($name ? ('&name=' .$name) : ''));
+        $route = $url ?: (self::URL . $businessId . '/message_templates?access_token=' . $accessToken . ($name ? ('&name=' . $name) : ''));
 
         return $this->sendRequest($route, 'GET', null, false);
     }

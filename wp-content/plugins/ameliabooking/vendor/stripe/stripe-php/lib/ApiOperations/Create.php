@@ -13,9 +13,9 @@ trait Create
      * @param null|array $params
      * @param null|array|string $options
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
-     *
      * @return static the created resource
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {

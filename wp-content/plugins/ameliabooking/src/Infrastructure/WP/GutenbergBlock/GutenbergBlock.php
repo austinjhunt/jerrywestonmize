@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -43,16 +44,19 @@ class GutenbergBlock
     public static function init()
     {
         if (is_admin() && function_exists('register_block_type')) {
-            if (substr($_SERVER['PHP_SELF'], '-8') == 'post.php' ||
+            if (
+                substr($_SERVER['PHP_SELF'], '-8') == 'post.php' ||
                 substr($_SERVER['PHP_SELF'], '-12') == 'post-new.php'
             ) {
                 if (self::isGutenbergActive()) {
                     $class = get_called_class();
-                    add_action('enqueue_block_editor_assets', function () use ($class) {
-                        $class::registerBlockType();
-                    });
+                    add_action(
+                        'enqueue_block_editor_assets',
+                        function () use ($class) {
+                            $class::registerBlockType();
+                        }
+                    );
                 }
-
             }
         }
     }
@@ -62,7 +66,6 @@ class GutenbergBlock
      */
     public static function registerBlockType()
     {
-
     }
 
     /**
@@ -83,7 +86,7 @@ class GutenbergBlock
         }
 
         if (self::isClassicEditorPluginActive()) {
-            $editor_option = get_option('classic-editor-replace');
+            $editor_option       = get_option('classic-editor-replace');
             $block_editor_active = array('no-replace', 'block');
 
             return in_array($editor_option, $block_editor_active, true);
@@ -121,12 +124,10 @@ class GutenbergBlock
     {
 
         if (!function_exists('is_plugin_active')) {
-
             include_once ABSPATH . 'wp-admin/includes/plugin.php';
         }
 
         if (is_plugin_active('classic-editor/classic-editor.php')) {
-
             return true;
         }
 
@@ -148,7 +149,7 @@ class GutenbergBlock
      */
     public static function getEntitiesData()
     {
-        return (new self)->getAllEntitiesForGutenbergBlocks();
+        return (new self())->getAllEntitiesForGutenbergBlocks();
     }
 
     /**

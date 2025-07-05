@@ -16,7 +16,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
 class NotificationsSMSHistoryTable extends AbstractDatabaseTable
 {
 
-    const TABLE = 'notifications_sms_history';
+    public const TABLE = 'notifications_sms_history';
 
     /**
      * @return string

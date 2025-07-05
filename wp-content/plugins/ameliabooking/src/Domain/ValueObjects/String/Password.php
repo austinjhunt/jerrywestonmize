@@ -11,8 +11,8 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  */
 final class Password
 {
-    const MIN_LENGTH = 4;
-    const MAX_LENGTH = 128;
+    public const MIN_LENGTH = 4;
+    public const MAX_LENGTH = 128;
     /**
      * @var string
      */
@@ -43,7 +43,7 @@ final class Password
      */
     public static function createFromHashedPassword($password)
     {
-        $self = unserialize(sprintf('O:%u:"%s":0:{}', strlen(self::class), self::class));
+        $self           = unserialize(sprintf('O:%u:"%s":0:{}', strlen(self::class), self::class));
         $self->password = $password;
 
         return $self;

@@ -82,10 +82,17 @@ class __TwigTemplate_057d90fe2d8b70e6391f41de22f26510bd3c9fd07231d908f25ca03dea1
         // line 27
         yield $this->extensions['MailPoet\Twig\I18n']->translate("Styles");
         yield "</h3>
-<div id=\"mailpoet_social_icons_styles\"></div>
+<div class=\"mailpoet_social_icons_container\">
+  <input type=\"checkbox\" name=\"show_legacy_icons\" id=\"show_legacy_icons\" class=\"mailpoet_social_block_show_legacy_icons\" />
+  <label for=\"show_legacy_icons\">";
+        // line 30
+        yield $this->extensions['MailPoet\Twig\I18n']->translate("Show legacy icon sets");
+        yield "</label>
+  <div id=\"mailpoet_social_icons_styles\"></div>
+</div>
 <div class=\"mailpoet_form_field\">
   <input type=\"button\" class=\"button button-primary mailpoet_done_editing\" data-automation-id=\"social_done_button\" value=\"";
-        // line 30
+        // line 34
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape($this->extensions['MailPoet\Twig\I18n']->translate("Done"), "html_attr");
         yield "\" />
 </div>
@@ -114,7 +121,7 @@ class __TwigTemplate_057d90fe2d8b70e6391f41de22f26510bd3c9fd07231d908f25ca03dea1
      */
     public function getDebugInfo()
     {
-        return array (  86 => 30,  80 => 27,  69 => 19,  60 => 13,  51 => 7,  44 => 3,  38 => 1,);
+        return array (  93 => 34,  86 => 30,  80 => 27,  69 => 19,  60 => 13,  51 => 7,  44 => 3,  38 => 1,);
     }
 
     public function getSourceContext()

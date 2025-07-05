@@ -9,13 +9,13 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class CustomFieldType
 {
-    const TEXT = 'text';
-    const TEXTAREA = 'text-area';
-    const SELECT = 'select';
-    const CHECKBOX = 'checkbox';
-    const RADIO = 'radio';
-    const CONTENT = 'content';
-    const ADDRESS = 'address';
+    public const TEXT     = 'text';
+    public const TEXTAREA = 'text-area';
+    public const SELECT   = 'select';
+    public const CHECKBOX = 'checkbox';
+    public const RADIO    = 'radio';
+    public const CONTENT  = 'content';
+    public const ADDRESS  = 'address';
 
     /**
      * @var string

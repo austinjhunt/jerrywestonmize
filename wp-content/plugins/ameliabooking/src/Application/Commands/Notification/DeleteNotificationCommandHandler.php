@@ -17,7 +17,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationRepository;
 use DOMDocument;
 use DOMElement;
-use \Interop\Container\Exception\ContainerException;
+use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -94,5 +94,4 @@ class DeleteNotificationCommandHandler extends CommandHandler
 
         return $result;
     }
-
 }

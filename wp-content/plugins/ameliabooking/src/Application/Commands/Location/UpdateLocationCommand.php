@@ -11,7 +11,6 @@ use AmeliaBooking\Application\Commands\Command;
  */
 class UpdateLocationCommand extends Command
 {
-
     /**
      * UpdateLocationCommand constructor.
      *

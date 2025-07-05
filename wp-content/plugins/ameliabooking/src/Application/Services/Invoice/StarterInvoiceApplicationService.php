@@ -15,7 +15,6 @@ use Dompdf\Dompdf;
  */
 class StarterInvoiceApplicationService extends AbstractInvoiceApplicationService
 {
-
     /**
      * @param int $paymentId
      *

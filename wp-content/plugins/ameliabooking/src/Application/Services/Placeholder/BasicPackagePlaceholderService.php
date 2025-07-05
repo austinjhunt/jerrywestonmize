@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -51,7 +52,7 @@ class BasicPackagePlaceholderService extends AppointmentPlaceholderService
         $customer = null,
         $allBookings = null,
         $invoice = false,
-        $notificationType = false
+        $notificationType = null
     ) {
         return [];
     }

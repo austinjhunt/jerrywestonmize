@@ -24,7 +24,7 @@ class GetLocationController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GetLocationCommand($args);
+        $command     = new GetLocationCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

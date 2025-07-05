@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Alexander Gilmanov
  * Defining the user roles and capabilities
@@ -13,7 +14,6 @@ namespace AmeliaBooking\Infrastructure\WP\config;
  */
 class Roles
 {
-
     /**
      * Array of all Amelia roles capabilities
      *

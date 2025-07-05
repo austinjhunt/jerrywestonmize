@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -19,6 +20,7 @@ use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Report\ReportServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -93,7 +95,7 @@ class GetEventAttendeesCommandHandler extends CommandHandler
 
         /** @var CustomerBooking $booking */
         foreach ($event->getBookings()->getItems() as $index => $booking) {
-            /** @var AbstractUser $customer */
+            /** @var Customer $customer */
             $customer = $booking->getCustomer();
 
             if ($params['separate'] === 'true') {
@@ -113,11 +115,14 @@ class GetEventAttendeesCommandHandler extends CommandHandler
                     if ($item['type'] === 'file') {
                         $rowCF[$item['label']] = '';
                         foreach ($item['value'] as $cfIndex => $cfFile) {
-                            $rowCF[$item['label']] .= ($cfIndex === 0 ? '' : ' | ')  . (AMELIA_UPLOADS_FILES_PATH_USE ? AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking->getId()->getValue() . '/' . $cfIndex :
-                                AMELIA_UPLOADS_FILES_URL . $booking->getId()->getValue() . '_' . $item['value'][$cfIndex]['name']);
+                            $rowCF[$item['label']] .=
+                                ($cfIndex === 0 ? '' : ' | ')  .
+                                (AMELIA_UPLOADS_FILES_PATH_USE ?
+                                    AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking->getId()->getValue() . '/' . $cfIndex :
+                                    AMELIA_UPLOADS_FILES_URL . $booking->getId()->getValue() . '_' . $item['value'][$cfIndex]['name']);
                         }
                         $rowCF[$item['label']] .= $delimiterSeparate;
-                    } else if (is_array($item['value'])) {
+                    } elseif (is_array($item['value'])) {
                         $rowCF[$item['label']] .= implode('|', $item['value']) . $delimiterSeparate;
                     } else {
                         $rowCF[$item['label']] .= $item['value'] . $delimiterSeparate;
@@ -176,7 +181,12 @@ class GetEventAttendeesCommandHandler extends CommandHandler
                 /** @var PaymentApplicationService $paymentAS */
                 $paymentAS     = $this->container->get('application.payment.service');
                 $paymentStatus = $paymentAS->getFullStatus($booking->toArray(), Entities::EVENT);
-                $row[BackendStrings::getCommonStrings()['payment_status']] .= ($paymentStatus === 'partiallyPaid' ? BackendStrings::getCommonStrings()['partially_paid'] : BackendStrings::getCommonStrings()[$paymentStatus]) . $delimiterSeparate;
+                $row[BackendStrings::getCommonStrings()['payment_status']] .=
+                    (
+                        $paymentStatus === 'partiallyPaid' ?
+                        BackendStrings::getCommonStrings()['partially_paid'] :
+                        BackendStrings::getCommonStrings()[$paymentStatus]
+                    ) . $delimiterSeparate;
             }
 
             if (in_array('paymentMethod', $params['fields'], true)) {
@@ -192,11 +202,16 @@ class GetEventAttendeesCommandHandler extends CommandHandler
                     },
                     $payments
                 );
-                $row[BackendStrings::getCommonStrings()['payment_method']] .= (count(array_unique($methodsUsed)) === 1 ? $methodsUsed[0] : implode((empty($delimiterSeparate) ? ', ' : '/'), $methodsUsed)) . $delimiterSeparate;
+                $row[BackendStrings::getCommonStrings()['payment_method']] .=
+                    (
+                        count(array_unique($methodsUsed)) === 1 ?
+                        $methodsUsed[0] :
+                        implode((empty($delimiterSeparate) ? ', ' : '/'), $methodsUsed)
+                    ) . $delimiterSeparate;
             }
 
             if (in_array('wcOrderId', $params['fields'], true)) {
-                /** @var Payment $payment */
+                /** @var array|null $payments */
                 $payments  = $booking->getPayments() && $booking->getPayments()->length() > 0 ?
                     $booking->getPayments()->toArray() : null;
                 $wcOrderId = implode((empty($delimiterSeparate) ? ', ' : '/'), array_column($payments, 'wcOrderId'));
@@ -255,7 +270,8 @@ class GetEventAttendeesCommandHandler extends CommandHandler
             }
 
             if (in_array('couponCode', $fields, true)) {
-                $row[BackendStrings::getCommonStrings()['coupon_code']] .= ($booking->getCoupon() && $booking->getCoupon()->getCode() ? $booking->getCoupon()->getCode()->getValue() : '') . $delimiterSeparate;
+                $row[BackendStrings::getCommonStrings()['coupon_code']] .=
+                    ($booking->getCoupon() && $booking->getCoupon()->getCode() ? $booking->getCoupon()->getCode()->getValue() : '') . $delimiterSeparate;
             }
 
             $mergedRow = array_merge($row, in_array('customFields', $fields, true) ? $rowCF : []);
@@ -264,7 +280,7 @@ class GetEventAttendeesCommandHandler extends CommandHandler
 
             if ($params['separate'] === 'true') {
                 $rows[] = $mergedRow;
-            } else if ($index === $lastIndex) {
+            } elseif ($index === $lastIndex) {
                 $finalRow = $mergedRow;
                 $rows[]   = array_map(
                     function ($item) {

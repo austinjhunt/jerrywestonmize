@@ -170,7 +170,8 @@ class StatsService
         foreach ($appointments->getItems() as $appointment) {
             /** @var CustomerBooking $booking */
             foreach ($appointment->getBookings()->getItems() as $booking) {
-                if ($bookingsPayments->keyExists($booking->getId()->getValue()) &&
+                if (
+                    $bookingsPayments->keyExists($booking->getId()->getValue()) &&
                     $bookingsPayments->getItem($booking->getId()->getValue())
                 ) {
                     $booking->getPayments()->addItem($bookingsPayments->getItem($booking->getId()->getValue()));
@@ -423,7 +424,8 @@ class StatsService
 
             if (array_key_exists($dateKey, $appointmentDatesData)) {
                 foreach ($appointmentDatesData[$dateKey]['providers'] as $providerKey => $appointmentStatsData) {
-                    if (empty($stats[$dateKey]['providers']) ||
+                    if (
+                        empty($stats[$dateKey]['providers']) ||
                         !array_key_exists($providerKey, $stats[$dateKey]['providers'])
                     ) {
                         $stats[$dateKey]['providers'][$providerKey] = [
@@ -580,9 +582,8 @@ class StatsService
      */
     public function addLocationsViewsStats($locationId)
     {
-        /** @var LocationRepository $locationRepository */
-
         if ($locationId) {
+            /** @var LocationRepository $locationRepository */
             $locationRepository = $this->container->get('domain.locations.repository');
             $locationRepository->beginTransaction();
             if (!$locationRepository->addViewStats($locationId)) {

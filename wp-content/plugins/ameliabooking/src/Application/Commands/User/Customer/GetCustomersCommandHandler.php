@@ -45,7 +45,8 @@ class GetCustomersCommandHandler extends CommandHandler
         /** @var AbstractUser $currentUser */
         $currentUser = $this->container->get('logged.in.user');
 
-        if (!$command->getPermissionService()->currentUserCanRead(Entities::CUSTOMERS) &&
+        if (
+            !$command->getPermissionService()->currentUserCanRead(Entities::CUSTOMERS) &&
             !($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER)
         ) {
             if ($command->getToken()) {
@@ -82,7 +83,8 @@ class GetCustomersCommandHandler extends CommandHandler
 
         $countParams = [];
 
-        if (empty($params['customers']) &&
+        if (
+            empty($params['customers']) &&
             !$command->getPermissionService()->currentUserCanReadOthers(Entities::CUSTOMERS)
         ) {
             /** @var Collection $providerCustomers */
@@ -120,7 +122,12 @@ class GetCustomersCommandHandler extends CommandHandler
             /** @var CustomerBookingRepository $bookingRepository */
             $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
-            $usersIds = array_map(function ($user) { return $user['id']; }, $users);
+            $usersIds = array_map(
+                function ($user) {
+                    return $user['id'];
+                },
+                $users
+            );
 
             $customersNoShowCount =  $usersIds ? $bookingRepository->countByNoShowStatus($usersIds) : [];
         }

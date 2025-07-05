@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -14,7 +15,6 @@ use AmeliaBooking\Domain\Services\Notification\MailServiceInterface;
  */
 class WpMailService extends AbstractMailService implements MailServiceInterface
 {
-
     /**
      * WpMailService constructor.
      *
@@ -60,9 +60,11 @@ class WpMailService extends AbstractMailService implements MailServiceInterface
                 } else {
                     $tmpFile = tempnam(sys_get_temp_dir(), 'cal_');
                 }
-                if ($tmpFile &&
+                if (
+                    $tmpFile &&
                     file_put_contents($tmpFile, $attachment['content']) !== false &&
-                    @rename($tmpFile, $tmpFile .= ($isInvoice ? '.pdf' : '.ics')) !== false) {
+                    @rename($tmpFile, $tmpFile .= ($isInvoice ? '.pdf' : '.ics')) !== false
+                ) {
                     $attachmentsLocations[] = $tmpFile;
                 }
             }

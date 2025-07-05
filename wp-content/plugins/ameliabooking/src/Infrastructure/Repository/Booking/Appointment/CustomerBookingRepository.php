@@ -29,8 +29,7 @@ use Exception;
  */
 class CustomerBookingRepository extends AbstractRepository implements CustomerBookingRepositoryInterface
 {
-
-    const FACTORY = CustomerBookingFactory::class;
+    public const FACTORY = CustomerBookingFactory::class;
 
     /**
      * @param CustomerBooking $entity
@@ -730,7 +729,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
 
     /**
      * @param array $criteria
-     * @param array $itemsPerPageBackEnd
+     * @param int $itemsPerPageBackEnd
      *
      * @return array
      * @throws QueryExecutionException
@@ -738,9 +737,9 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
      */
     public function getEventBookingIdsByCriteria($criteria = [], $itemsPerPageBackEnd = 0)
     {
-        $eventsPeriodsTable = EventsPeriodsTable::getTableName();
+        $eventsPeriodsTable            = EventsPeriodsTable::getTableName();
         $customerBookingsEventsPeriods = CustomerBookingsToEventsPeriodsTable::getTableName();
-        $eventsTable = EventsTable::getTableName();
+        $eventsTable         = EventsTable::getTableName();
         $eventProvidersTable = EventsProvidersTable::getTableName();
 
         $params = [];
@@ -829,7 +828,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         $groupBy = 'GROUP BY cb.id';
-        $limit = $this->getLimit(
+        $limit   = $this->getLimit(
             !empty($criteria['page']) ? (int)$criteria['page'] : 0,
             $itemsPerPageBackEnd
         );
@@ -837,11 +836,11 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
         $orderBy = 'ORDER BY MIN(ep.periodStart), cb.id';
 
         if (!empty($criteria['sort'])) {
-            $column = $criteria['sort'][0] === '-' ? substr($criteria['sort'], 1) : $criteria['sort'];
+            $column      = $criteria['sort'][0] === '-' ? substr($criteria['sort'], 1) : $criteria['sort'];
             $orderColumn = '';
             if ($column === 'attendee') {
                 $orderColumn = ', CONCAT(cu.firstName, " ", cu.lastName)';
-            } else if ($column === 'event') {
+            } elseif ($column === 'event') {
                 $orderColumn = ', e.name';
             }
             $orderDir = $orderColumn ? ($criteria['sort'][0] === '-' ? 'DESC' : 'ASC') : '';
@@ -883,11 +882,11 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
      */
     public function getEventBookingsByIds($ids, $criteria)
     {
-        $eventsPeriodsTable = EventsPeriodsTable::getTableName();
+        $eventsPeriodsTable            = EventsPeriodsTable::getTableName();
         $customerBookingsEventsPeriods = CustomerBookingsToEventsPeriodsTable::getTableName();
-        $usersTable  = UsersTable::getTableName();
-        $eventsTable = EventsTable::getTableName();
-        $eventProvidersTable = EventsProvidersTable::getTableName();
+        $usersTable           = UsersTable::getTableName();
+        $eventsTable          = EventsTable::getTableName();
+        $eventProvidersTable  = EventsProvidersTable::getTableName();
         $bookingsTicketsTable = CustomerBookingToEventsTicketsTable::getTableName();
 
         $params = [];

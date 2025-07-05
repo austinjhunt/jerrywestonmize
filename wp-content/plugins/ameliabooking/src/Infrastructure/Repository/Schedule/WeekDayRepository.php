@@ -14,7 +14,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class WeekDayRepository extends AbstractRepository
 {
-    const FACTORY = WeekDayFactory::class;
+    public const FACTORY = WeekDayFactory::class;
 
     /**
      * @param WeekDay $entity

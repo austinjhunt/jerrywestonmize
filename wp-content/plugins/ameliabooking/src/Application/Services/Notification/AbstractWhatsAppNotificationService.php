@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -20,7 +21,6 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 abstract class AbstractWhatsAppNotificationService extends AbstractNotificationService
 {
-
     /**
      * @param array $appointmentArray
      * @param Notification $notification
@@ -29,7 +29,7 @@ abstract class AbstractWhatsAppNotificationService extends AbstractNotificationS
      *
      * @return mixed
      */
-    public function sendNotification($appointmentArray, $notification, $logNotification, $bookingKey = null, $allBookings = null)
+    public function sendNotification($appointmentArray, $notification, $logNotification, $bookingKey = null, $allBookings = null, $invoice = [])
     {
         return null;
     }
@@ -57,10 +57,11 @@ abstract class AbstractWhatsAppNotificationService extends AbstractNotificationS
      * @param $sendTo
      * @param Notification $notification
      * @param $dummyData
-     * @return void
+     * @return mixed
      */
     public function sendTestNotification($sendTo, $notification, $dummyData)
     {
+        return null;
     }
 
     /**
@@ -85,6 +86,17 @@ abstract class AbstractWhatsAppNotificationService extends AbstractNotificationS
      *
      */
     public function sendEmployeePanelAccess($provider, $plainPassword)
+    {
+    }
+
+    /**
+     * @param string $to
+     */
+    public function sendMessage($to)
+    {
+    }
+
+    public function sendUndeliveredNotifications()
     {
     }
 }

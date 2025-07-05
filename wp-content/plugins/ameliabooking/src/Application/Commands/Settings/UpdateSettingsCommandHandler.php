@@ -46,7 +46,8 @@ class UpdateSettingsCommandHandler extends CommandHandler
             /** @var AbstractUser $loggedInUser */
             $loggedInUser = $this->container->get('logged.in.user');
 
-            if (!$loggedInUser || !(
+            if (
+                !$loggedInUser || !(
                     $loggedInUser->getType() === AbstractUser::USER_ROLE_ADMIN ||
                     $loggedInUser->getType() === AbstractUser::USER_ROLE_MANAGER
                 )
@@ -77,7 +78,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
 
             //Sbs - Step by step
             $useGlobalSbs = $customizationData['useGlobalColors']['stepByStepForm'];
-            $colorSbsSsf = $customizationData['forms']['stepByStepForm']['selectServiceForm']['globalSettings'];
+            $colorSbsSsf  = $customizationData['forms']['stepByStepForm']['selectServiceForm']['globalSettings'];
             $colorSbsCf   = $customizationData['forms']['stepByStepForm']['calendarDateTimeForm']['globalSettings'];
             $colorSbsRsf  = $customizationData['forms']['stepByStepForm']['recurringSetupForm']['globalSettings'];
             $colorSbsRdf  = $customizationData['forms']['stepByStepForm']['recurringDatesForm']['globalSettings'];
@@ -91,17 +92,17 @@ class UpdateSettingsCommandHandler extends CommandHandler
             $colorSbsCop  = $customizationData['forms']['stepByStepForm']['congratulationsForm']['package']['globalSettings'];
 
             // Cf - Catalog form
-            $useGlobalCf  = $customizationData['useGlobalColors']['catalogForm'];
-            $colorCfSsf   = $customizationData['forms']['catalogForm']['selectServiceForm']['globalSettings'];
-            $colorCfCf    = $customizationData['forms']['catalogForm']['calendarDateTimeForm']['globalSettings'];
-            $colorCfRsf   = $customizationData['forms']['catalogForm']['recurringSetupForm']['globalSettings'];
-            $colorCfRdf   = $customizationData['forms']['catalogForm']['recurringDatesForm']['globalSettings'];
-            $colorCfCaf   = $customizationData['forms']['catalogForm']['confirmBookingForm']['appointment']['globalSettings'];
-            $colorCfCoa   = $customizationData['forms']['catalogForm']['congratulationsForm']['appointment']['globalSettings'];
-            $colorCfPsf   = $customizationData['forms']['catalogForm']['packageSetupForm']['globalSettings'];
-            $colorCfPlf   = $customizationData['forms']['catalogForm']['packageListForm']['globalSettings'];
-            $colorCfCpf   = $customizationData['forms']['catalogForm']['confirmBookingForm']['package']['globalSettings'];
-            $colorCfCop   = $customizationData['forms']['catalogForm']['congratulationsForm']['package']['globalSettings'];
+            $useGlobalCf = $customizationData['useGlobalColors']['catalogForm'];
+            $colorCfSsf  = $customizationData['forms']['catalogForm']['selectServiceForm']['globalSettings'];
+            $colorCfCf   = $customizationData['forms']['catalogForm']['calendarDateTimeForm']['globalSettings'];
+            $colorCfRsf  = $customizationData['forms']['catalogForm']['recurringSetupForm']['globalSettings'];
+            $colorCfRdf  = $customizationData['forms']['catalogForm']['recurringDatesForm']['globalSettings'];
+            $colorCfCaf  = $customizationData['forms']['catalogForm']['confirmBookingForm']['appointment']['globalSettings'];
+            $colorCfCoa  = $customizationData['forms']['catalogForm']['congratulationsForm']['appointment']['globalSettings'];
+            $colorCfPsf  = $customizationData['forms']['catalogForm']['packageSetupForm']['globalSettings'];
+            $colorCfPlf  = $customizationData['forms']['catalogForm']['packageListForm']['globalSettings'];
+            $colorCfCpf  = $customizationData['forms']['catalogForm']['confirmBookingForm']['package']['globalSettings'];
+            $colorCfCop  = $customizationData['forms']['catalogForm']['congratulationsForm']['package']['globalSettings'];
 
             // Elf - Event list form
             $useGlobalElf = $customizationData['useGlobalColors']['eventListForm'];
@@ -142,11 +143,11 @@ class UpdateSettingsCommandHandler extends CommandHandler
                     'sbs-ssf-dropdown-text-color' => $useGlobalSbs ? $globalColors['formDropdownTextColor'] : $colorSbsSsf['formDropdownTextColor'],
                     'sbs-cf-gradient1'            => $useGlobalSbs ? $globalColors['formGradientColor1'] : $colorSbsCf['formGradientColor1'],
                     'sbs-cf-gradient2'            => $useGlobalSbs ? $globalColors['formGradientColor2'] : $colorSbsCf['formGradientColor2'],
-                    'sbs-cf-gradient-angle'       => $useGlobalSbs ? $globalColors['formGradientAngle'].'deg' : $colorSbsCf['formGradientAngle'].'deg',
+                    'sbs-cf-gradient-angle'       => $useGlobalSbs ? $globalColors['formGradientAngle'] . 'deg' : $colorSbsCf['formGradientAngle'] . 'deg',
                     'sbs-cf-text-color'           => $useGlobalSbs ? $globalColors['textColorOnBackground'] : $colorSbsCf['formTextColor'],
                     'sbs-rsf-gradient1'           => $useGlobalSbs ? $globalColors['formGradientColor1'] : $colorSbsRsf['formGradientColor1'],
                     'sbs-rsf-gradient2'           => $useGlobalSbs ? $globalColors['formGradientColor2'] : $colorSbsRsf['formGradientColor2'],
-                    'sbs-rsf-gradient-angle'      => $useGlobalSbs ? $globalColors['formGradientAngle'].'deg' : $colorSbsRsf['formGradientAngle'].'deg',
+                    'sbs-rsf-gradient-angle'      => $useGlobalSbs ? $globalColors['formGradientAngle'] . 'deg' : $colorSbsRsf['formGradientAngle'] . 'deg',
                     'sbs-rsf-text-color'          => $useGlobalSbs ? $globalColors['textColorOnBackground'] : $colorSbsRsf['formTextColor'],
                     'sbs-rsf-input-color'         => $useGlobalSbs ? $globalColors['formInputColor'] : $colorSbsRsf['formInputColor'],
                     'sbs-rsf-input-text-color'    => $useGlobalSbs ? $globalColors['formInputTextColor'] : $colorSbsRsf['formInputTextColor'],
@@ -174,7 +175,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
                     'sbs-pif-text-color'          => $useGlobalSbs ? $globalColors['formTextColor'] : $colorSbsPif['formTextColor'],
                     'sbs-psf-gradient1'           => $useGlobalSbs ? $globalColors['formGradientColor1'] : $colorSbsPsf['formGradientColor1'],
                     'sbs-psf-gradient2'           => $useGlobalSbs ? $globalColors['formGradientColor2'] : $colorSbsPsf['formGradientColor2'],
-                    'sbs-psf-gradient-angle'      => $useGlobalSbs ? $globalColors['formGradientAngle'].'deg' : $colorSbsPsf['formGradientAngle'].'deg',
+                    'sbs-psf-gradient-angle'      => $useGlobalSbs ? $globalColors['formGradientAngle'] . 'deg' : $colorSbsPsf['formGradientAngle'] . 'deg',
                     'sbs-psf-text-color'          => $useGlobalSbs ? $globalColors['textColorOnBackground'] : $colorSbsPsf['formTextColor'],
                     'sbs-psf-input-color'         => $useGlobalSbs ? $globalColors['formInputColor'] : $colorSbsPsf['formInputColor'],
                     'sbs-psf-input-text-color'    => $useGlobalSbs ? $globalColors['formInputTextColor'] : $colorSbsPsf['formInputTextColor'],
@@ -209,11 +210,11 @@ class UpdateSettingsCommandHandler extends CommandHandler
                     'cf-ssf-dropdown-text-color'  => $useGlobalCf ? $globalColors['formDropdownTextColor'] : $colorCfSsf['formDropdownTextColor'],
                     'cf-cf-gradient1'             => $useGlobalCf ? $globalColors['formGradientColor1'] : $colorCfCf['formGradientColor1'],
                     'cf-cf-gradient2'             => $useGlobalCf ? $globalColors['formGradientColor2'] : $colorCfCf['formGradientColor2'],
-                    'cf-cf-gradient-angle'        => $useGlobalCf ? $globalColors['formGradientAngle'].'deg' : $colorCfCf['formGradientAngle'].'deg',
+                    'cf-cf-gradient-angle'        => $useGlobalCf ? $globalColors['formGradientAngle'] . 'deg' : $colorCfCf['formGradientAngle'] . 'deg',
                     'cf-cf-text-color'            => $useGlobalCf ? $globalColors['textColorOnBackground'] : $colorCfCf['formTextColor'],
                     'cf-rsf-gradient1'            => $useGlobalCf ? $globalColors['formGradientColor1'] : $colorCfRsf['formGradientColor1'],
                     'cf-rsf-gradient2'            => $useGlobalCf ? $globalColors['formGradientColor2'] : $colorCfRsf['formGradientColor2'],
-                    'cf-rsf-gradient-angle'       => $useGlobalCf ? $globalColors['formGradientAngle'].'deg' : $colorCfRsf['formGradientAngle'].'deg',
+                    'cf-rsf-gradient-angle'       => $useGlobalCf ? $globalColors['formGradientAngle'] . 'deg' : $colorCfRsf['formGradientAngle'] . 'deg',
                     'cf-rsf-text-color'           => $useGlobalCf ? $globalColors['textColorOnBackground'] : $colorCfRsf['formTextColor'],
                     'cf-rsf-input-color'          => $useGlobalCf ? $globalColors['formInputColor'] : $colorCfRsf['formInputColor'],
                     'cf-rsf-input-text-color'     => $useGlobalCf ? $globalColors['formInputTextColor'] : $colorCfRsf['formInputTextColor'],
@@ -233,7 +234,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
                     'cf-caf-dropdown-text-color'  => $useGlobalCf ? $globalColors['formDropdownTextColor'] : $colorCfCaf['formDropdownTextColor'],
                     'cf-psf-gradient1'            => $useGlobalCf ? $globalColors['formGradientColor1'] : $colorCfPsf['formGradientColor1'],
                     'cf-psf-gradient2'            => $useGlobalCf ? $globalColors['formGradientColor2'] : $colorCfPsf['formGradientColor2'],
-                    'cf-psf-gradient-angle'       => $useGlobalCf ? $globalColors['formGradientAngle'].'deg' : $colorCfPsf['formGradientAngle'].'deg',
+                    'cf-psf-gradient-angle'       => $useGlobalCf ? $globalColors['formGradientAngle'] . 'deg' : $colorCfPsf['formGradientAngle'] . 'deg',
                     'cf-psf-text-color'           => $useGlobalCf ? $globalColors['textColorOnBackground'] : $colorCfPsf['formTextColor'],
                     'cf-psf-input-color'          => $useGlobalCf ? $globalColors['formInputColor'] : $colorCfPsf['formInputColor'],
                     'cf-psf-input-text-color'     => $useGlobalCf ? $globalColors['formInputTextColor'] : $colorCfPsf['formInputTextColor'],
@@ -288,7 +289,8 @@ class UpdateSettingsCommandHandler extends CommandHandler
                 $customizationData['useGenerated'] : true;
         }
 
-        if (WooCommerceService::isEnabled() &&
+        if (
+            WooCommerceService::isEnabled() &&
             $command->getField('payments') &&
             $command->getField('payments')['wc']['enabled']
         ) {
@@ -307,10 +309,27 @@ class UpdateSettingsCommandHandler extends CommandHandler
             unset($settingsFields['sendAllCF']);
         }
 
+        if ($command->getField('googleCalendar') !== null) {
+            $googleSettings = $command->getField('googleCalendar');
+
+            if (!$googleSettings['clientID'] || !$googleSettings['clientSecret']) {
+                $googleSettings['calendarEnabled'] = false;
+            }
+
+            $settingsFields['googleCalendar'] = array_merge(
+                $settingsService->getCategorySettings('googleCalendar'),
+                $googleSettings
+            );
+        }
+
         if ($command->getField('outlookCalendar') !== null) {
             $outlookSettings = $command->getField('outlookCalendar');
 
             unset($outlookSettings['token']);
+
+            if (!$outlookSettings['clientID'] || !$outlookSettings['clientSecret']) {
+                $outlookSettings['calendarEnabled'] = false;
+            }
 
             $settingsFields['outlookCalendar'] = array_merge(
                 $settingsService->getCategorySettings('outlookCalendar'),
@@ -328,7 +347,8 @@ class UpdateSettingsCommandHandler extends CommandHandler
             unset($settingsFields['providerBadges']);
         }
 
-        if (!$settingsService->getCategorySettings('activation')['stash'] &&
+        if (
+            !$settingsService->getCategorySettings('activation')['stash'] &&
             !empty($settingsFields['activation']['stash'])
         ) {
             /** @var StashApplicationService $stashApplicationService */
@@ -337,7 +357,8 @@ class UpdateSettingsCommandHandler extends CommandHandler
             $stashApplicationService->setStash();
         }
 
-        if (isset($settingsFields['daysOff']) &&
+        if (
+            isset($settingsFields['daysOff']) &&
             $settingsService->getCategorySettings('activation')['stash'] &&
             $settingsService->getCategorySettings('daysOff') !== $settingsFields['daysOff'] &&
             $command->getField('daysOff') !== null
@@ -420,7 +441,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
             }
         }
 
-        if ($command->getField('payments') && !empty($command->getFields('payments')['square'])) {
+        if ($command->getField('payments') && !empty($command->getField('payments')['square'])) {
             $settingsFields['payments']['square']['accessToken'] = $settingsService->getCategorySettings('payments')['square']['accessToken'];
         }
 
@@ -439,7 +460,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
             /** @var AbstractAppleCalendarService $appleCalendarService */
             $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
 
-            $appleId = $command->getField('appleCalendar')['clientID'];
+            $appleId       = $command->getField('appleCalendar')['clientID'];
             $applePassword = $command->getField('appleCalendar')['clientSecret'];
 
             $credentials = $appleCalendarService->handleAppleCredentials($appleId, $applePassword);
@@ -453,9 +474,11 @@ class UpdateSettingsCommandHandler extends CommandHandler
             }
         }
 
-        if ($command->getField('appleCalendar') &&
+        if (
+            $command->getField('appleCalendar') &&
             empty($command->getField('appleCalendar')['clientID']) &&
-            empty($command->getField('appleCalendar')['clientSecret'])) {
+            empty($command->getField('appleCalendar')['clientSecret'])
+        ) {
             $providerRepository = $this->container->get('domain.users.providers.repository');
             /** @var Collection $providers */
             $providers = $providerRepository->getAll();
@@ -467,7 +490,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
 
         if (!empty($command->getField('customizedData'))) {
             $passedCustomizedData = $command->getField('customizedData');
-            $customizedData = $settingsService->getCategorySettings('customizedData');
+            $customizedData       = $settingsService->getCategorySettings('customizedData');
 
             foreach ($passedCustomizedData as $key => $value) {
                 $customizedData[$key] = $value;

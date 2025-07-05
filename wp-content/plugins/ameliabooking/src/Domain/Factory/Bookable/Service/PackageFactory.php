@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -182,78 +183,87 @@ class PackageFactory
         $packages = [];
 
         foreach ($rows as $row) {
-            $packageId = $row['package_id'];
+            $packageId  = $row['package_id'];
             $bookableId = $row['package_service_id'];
-            $galleryId = isset($row['gallery_id']) ? $row['gallery_id'] : null;
+            $galleryId  = isset($row['gallery_id']) ? $row['gallery_id'] : null;
             $providerId = isset($row['provider_id']) ? $row['provider_id'] : null;
             $locationId = isset($row['location_id']) ? $row['location_id'] : null;
 
-            $packages[$packageId]['id'] = $row['package_id'];
-            $packages[$packageId]['name'] = $row['package_name'];
+            $packages[$packageId]['id']          = $row['package_id'];
+            $packages[$packageId]['name']        = $row['package_name'];
             $packages[$packageId]['description'] = $row['package_description'];
-            $packages[$packageId]['color'] = $row['package_color'];
-            $packages[$packageId]['price'] = $row['package_price'];
-            $packages[$packageId]['status'] = $row['package_status'];
-            $packages[$packageId]['pictureFullPath'] = $row['package_picture_full'];
+            $packages[$packageId]['color']       = $row['package_color'];
+            $packages[$packageId]['price']       = $row['package_price'];
+            $packages[$packageId]['status']      = $row['package_status'];
+            $packages[$packageId]['pictureFullPath']  = $row['package_picture_full'];
             $packages[$packageId]['pictureThumbPath'] = $row['package_picture_thumb'];
-            $packages[$packageId]['position'] = isset($row['package_position']) ? $row['package_position'] : 0;
-            $packages[$packageId]['calculatedPrice'] = $row['package_calculated_price'];
-            $packages[$packageId]['sharedCapacity'] = isset($row['package_sharedCapacity']) ?
+            $packages[$packageId]['position']         = isset($row['package_position']) ? $row['package_position'] : 0;
+            $packages[$packageId]['calculatedPrice']  = $row['package_calculated_price'];
+            $packages[$packageId]['sharedCapacity']   = isset($row['package_sharedCapacity']) ?
                 $row['package_sharedCapacity'] : null;
-            $packages[$packageId]['quantity'] = isset($row['package_quantity']) ?
+            $packages[$packageId]['quantity']         = isset($row['package_quantity']) ?
                 $row['package_quantity'] : null;
-            $packages[$packageId]['discount'] = $row['package_discount'];
-            $packages[$packageId]['settings'] = $row['package_settings'];
-            $packages[$packageId]['endDate'] = $row['package_endDate'];
-            $packages[$packageId]['durationCount'] = $row['package_durationCount'];
-            $packages[$packageId]['durationType'] = $row['package_durationType'];
-            $packages[$packageId]['translations'] = $row['package_translations'];
-            $packages[$packageId]['deposit'] = isset($row['package_deposit']) ? $row['package_deposit'] : null;
-            $packages[$packageId]['depositPayment'] = isset($row['package_depositPayment']) ?
+            $packages[$packageId]['discount']         = $row['package_discount'];
+            $packages[$packageId]['settings']         = $row['package_settings'];
+            $packages[$packageId]['endDate']          = $row['package_endDate'];
+            $packages[$packageId]['durationCount']    = $row['package_durationCount'];
+            $packages[$packageId]['durationType']     = $row['package_durationType'];
+            $packages[$packageId]['translations']     = $row['package_translations'];
+            $packages[$packageId]['deposit']          = isset($row['package_deposit']) ? $row['package_deposit'] : null;
+            $packages[$packageId]['depositPayment']   = isset($row['package_depositPayment']) ?
                 $row['package_depositPayment'] : null;
-            $packages[$packageId]['fullPayment'] = isset($row['package_fullPayment']) ?
+            $packages[$packageId]['fullPayment']      = isset($row['package_fullPayment']) ?
                 $row['package_fullPayment'] : 0;
             $packages[$packageId]['limitPerCustomer'] = isset($row['package_limitPerCustomer']) ?
                 $row['package_limitPerCustomer'] : null;
 
             if ($bookableId) {
-                $packages[$packageId]['bookable'][$bookableId]['id'] = $bookableId;
+                $packages[$packageId]['bookable'][$bookableId]['id']            = $bookableId;
                 $packages[$packageId]['bookable'][$bookableId]['service']['id'] = $row['service_id'];
                 $packages[$packageId]['bookable'][$bookableId]['service']['name'] = $row['service_name'];
-                $packages[$packageId]['bookable'][$bookableId]['service']['description'] = !empty($row['service_description']) ? $row['service_description'] : null;
-                $packages[$packageId]['bookable'][$bookableId]['service']['status'] = $row['service_status'];
-                $packages[$packageId]['bookable'][$bookableId]['service']['categoryId'] = $row['service_categoryId'];
-                $packages[$packageId]['bookable'][$bookableId]['service']['duration'] = $row['service_duration'];
-                $packages[$packageId]['bookable'][$bookableId]['service']['timeBefore'] = $row['service_timeBefore'];
-                $packages[$packageId]['bookable'][$bookableId]['service']['timeAfter'] = $row['service_timeAfter'];
-                $packages[$packageId]['bookable'][$bookableId]['service']['price'] = $row['service_price'];
-                $packages[$packageId]['bookable'][$bookableId]['service']['minCapacity'] = $row['service_minCapacity'];
-                $packages[$packageId]['bookable'][$bookableId]['service']['maxCapacity'] = $row['service_maxCapacity'];
+                $packages[$packageId]['bookable'][$bookableId]['service']['description'] =
+                    !empty($row['service_description']) ?
+                        $row['service_description'] :
+                        null;
+                $packages[$packageId]['bookable'][$bookableId]['service']['status']          = $row['service_status'];
+                $packages[$packageId]['bookable'][$bookableId]['service']['categoryId']      = $row['service_categoryId'];
+                $packages[$packageId]['bookable'][$bookableId]['service']['duration']        = $row['service_duration'];
+                $packages[$packageId]['bookable'][$bookableId]['service']['timeBefore']      = $row['service_timeBefore'];
+                $packages[$packageId]['bookable'][$bookableId]['service']['timeAfter']       = $row['service_timeAfter'];
+                $packages[$packageId]['bookable'][$bookableId]['service']['price']           = $row['service_price'];
+                $packages[$packageId]['bookable'][$bookableId]['service']['minCapacity']     = $row['service_minCapacity'];
+                $packages[$packageId]['bookable'][$bookableId]['service']['maxCapacity']     = $row['service_maxCapacity'];
                 $packages[$packageId]['bookable'][$bookableId]['service']['pictureFullPath'] = $row['service_picture_full'];
                 $packages[$packageId]['bookable'][$bookableId]['service']['pictureThumbPath'] = $row['service_picture_thumb'];
-                $packages[$packageId]['bookable'][$bookableId]['service']['translations'] = !empty($row['service_translations']) ? $row['service_translations'] : null;
-                $packages[$packageId]['bookable'][$bookableId]['quantity'] = $row['package_service_quantity'];
+                $packages[$packageId]['bookable'][$bookableId]['service']['translations']     =
+                    !empty($row['service_translations']) ?
+                        $row['service_translations'] :
+                        null;
+                $packages[$packageId]['bookable'][$bookableId]['quantity']         = $row['package_service_quantity'];
                 $packages[$packageId]['bookable'][$bookableId]['minimumScheduled'] = $row['package_service_minimumScheduled'];
                 $packages[$packageId]['bookable'][$bookableId]['maximumScheduled'] = $row['package_service_maximumScheduled'];
                 $packages[$packageId]['bookable'][$bookableId]['allowProviderSelection'] = $row['package_service_allowProviderSelection'];
-                $packages[$packageId]['bookable'][$bookableId]['position'] = $row['package_service_position'];
+                $packages[$packageId]['bookable'][$bookableId]['position']        = $row['package_service_position'];
                 $packages[$packageId]['bookable'][$bookableId]['service']['show'] = !empty($row['service_show']) ? $row['service_show'] : null;
             }
 
             if ($galleryId) {
                 $packages[$packageId]['gallery'][$galleryId]['id'] = $row['gallery_id'];
-                $packages[$packageId]['gallery'][$galleryId]['pictureFullPath'] = $row['gallery_picture_full'];
+                $packages[$packageId]['gallery'][$galleryId]['pictureFullPath']  = $row['gallery_picture_full'];
                 $packages[$packageId]['gallery'][$galleryId]['pictureThumbPath'] = $row['gallery_picture_thumb'];
-                $packages[$packageId]['gallery'][$galleryId]['position'] = $row['gallery_position'];
+                $packages[$packageId]['gallery'][$galleryId]['position']         = $row['gallery_position'];
             }
 
             if ($providerId) {
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['id'] = $row['provider_id'];
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['firstName'] = $row['provider_firstName'];
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['lastName'] = $row['provider_lastName'];
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['email'] = $row['provider_email'];
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['status'] = !empty($row['provider_status']) ? $row['provider_status'] : Status::VISIBLE;
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['type'] = Entities::PROVIDER;
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['id']            = $row['provider_id'];
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['firstName']     = $row['provider_firstName'];
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['lastName']      = $row['provider_lastName'];
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['email']         = $row['provider_email'];
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['status']        =
+                    !empty($row['provider_status']) ?
+                        $row['provider_status'] :
+                        Status::VISIBLE;
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['type']          = Entities::PROVIDER;
                 $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['stripeConnect'] =
                     !empty($row['provider_stripeConnect'])
                         ? json_decode($row['provider_stripeConnect'], true)
@@ -261,11 +271,11 @@ class PackageFactory
             }
 
             if ($locationId) {
-                $packages[$packageId]['bookable'][$bookableId]['locations'][$locationId]['id'] = $row['location_id'];
-                $packages[$packageId]['bookable'][$bookableId]['locations'][$locationId]['name'] = $row['location_name'];
-                $packages[$packageId]['bookable'][$bookableId]['locations'][$locationId]['address'] = $row['location_address'];
-                $packages[$packageId]['bookable'][$bookableId]['locations'][$locationId]['phone'] = $row['location_phone'];
-                $packages[$packageId]['bookable'][$bookableId]['locations'][$locationId]['latitude'] = $row['location_latitude'];
+                $packages[$packageId]['bookable'][$bookableId]['locations'][$locationId]['id']        = $row['location_id'];
+                $packages[$packageId]['bookable'][$bookableId]['locations'][$locationId]['name']      = $row['location_name'];
+                $packages[$packageId]['bookable'][$bookableId]['locations'][$locationId]['address']   = $row['location_address'];
+                $packages[$packageId]['bookable'][$bookableId]['locations'][$locationId]['phone']     = $row['location_phone'];
+                $packages[$packageId]['bookable'][$bookableId]['locations'][$locationId]['latitude']  = $row['location_latitude'];
                 $packages[$packageId]['bookable'][$bookableId]['locations'][$locationId]['longitude'] = $row['location_longitude'];
             }
         }

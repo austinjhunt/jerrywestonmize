@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -43,8 +44,8 @@ class CustomFieldOption
     public function __construct(Id $customFieldId, Label $label, IntegerValue $position)
     {
         $this->customFieldId = $customFieldId;
-        $this->label = $label;
-        $this->position = $position;
+        $this->label         = $label;
+        $this->position      = $position;
     }
 
     /**

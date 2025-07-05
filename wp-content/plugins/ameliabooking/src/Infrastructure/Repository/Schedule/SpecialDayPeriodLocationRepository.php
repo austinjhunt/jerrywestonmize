@@ -14,7 +14,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class SpecialDayPeriodLocationRepository extends AbstractRepository
 {
-    const FACTORY = SpecialDayPeriodLocationFactory::class;
+    public const FACTORY = SpecialDayPeriodLocationFactory::class;
 
     /**
      * @param SpecialDayPeriodLocation $entity

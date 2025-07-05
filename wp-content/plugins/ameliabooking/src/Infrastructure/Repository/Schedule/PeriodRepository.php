@@ -15,7 +15,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class PeriodRepository extends AbstractRepository
 {
-    const FACTORY = PeriodFactory::class;
+    public const FACTORY = PeriodFactory::class;
 
     /**
      * @param Period $entity

@@ -21,7 +21,7 @@ class DeleteCustomFieldController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new DeleteCustomFieldCommand($args);
+        $command     = new DeleteCustomFieldCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

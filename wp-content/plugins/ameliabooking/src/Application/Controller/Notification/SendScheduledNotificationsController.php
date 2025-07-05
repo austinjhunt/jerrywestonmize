@@ -24,7 +24,7 @@ class SendScheduledNotificationsController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new SendScheduledNotificationsCommand($args);
+        $command     = new SendScheduledNotificationsCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

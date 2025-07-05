@@ -106,7 +106,8 @@ class LoginCabinetCommandHandler extends CommandHandler
         }
 
         // If user is retrieved by email and password is not set or it is not valid, check if it is WP login
-        if (!($user instanceof AbstractUser) ||
+        if (
+            !($user instanceof AbstractUser) ||
             !$user->getPassword() ||
             !$user->getPassword()->checkValidity($command->getField('password'))
         ) {

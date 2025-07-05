@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -16,8 +17,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class PaymentsTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'payments';
+    public const TABLE = 'payments';
 
     /**
      * @return string

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -50,9 +51,7 @@ class GetPaymentCommandHandler extends CommandHandler
         /** @var Payment $payment */
         $payment = $paymentRepository->getById($command->getArg('id'));
 
-        $paymentArray = $payment->toArray();
-
-        $paymentArray = apply_filters('amelia_get_payment_filter', $paymentArray);
+        $paymentArray = apply_filters('amelia_get_payment_filter', $payment->toArray());
 
         do_action('amelia_get_payment', $paymentArray);
 

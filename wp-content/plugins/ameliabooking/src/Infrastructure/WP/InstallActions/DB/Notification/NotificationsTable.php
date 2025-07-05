@@ -15,8 +15,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class NotificationsTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'notifications';
+    public const TABLE = 'notifications';
 
     /**
      * @return string
@@ -28,14 +27,15 @@ class NotificationsTable extends AbstractDatabaseTable
 
         $table = self::getTableName();
 
-        $name = Name::MAX_LENGTH;
-        $typeEmail = NotificationType::EMAIL;
-        $typeSms = NotificationType::SMS;
-        $typeWhatsApp = NotificationType::WHATSAPP;
+        $name           = Name::MAX_LENGTH;
+        $typeEmail      = NotificationType::EMAIL;
+        $typeSms        = NotificationType::SMS;
+        $typeWhatsApp   = NotificationType::WHATSAPP;
         $sendToCustomer = NotificationSendTo::CUSTOMER;
         $sendToProvider = NotificationSendTo::PROVIDER;
 
-        if ($wpdb->get_var("SHOW TABLES LIKE '{$table}'") === $table &&
+        if (
+            $wpdb->get_var("SHOW TABLES LIKE '{$table}'") === $table &&
             $wpdb->query("SHOW KEYS FROM {$table} WHERE Key_name = 'name'")
         ) {
             $wpdb->query("ALTER TABLE {$table} DROP INDEX name");

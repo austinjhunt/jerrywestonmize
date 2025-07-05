@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -38,9 +39,8 @@ use AmeliaBooking\Infrastructure\Licence;
  */
 class EventFactory
 {
-
     /**
-     * @param $data
+     * @param array $data
      *
      * @return Event
      * @throws InvalidArgumentException
@@ -305,17 +305,17 @@ class EventFactory
         $events = [];
 
         foreach ($rows as $row) {
-            $eventId = $row['event_id'];
-            $eventPeriodId = isset($row['event_periodId']) ? $row['event_periodId'] : null;
-            $galleryId = isset($row['gallery_id']) ? $row['gallery_id'] : null;
-            $customerId = isset($row['customer_id']) ? $row['customer_id'] : null;
-            $bookingId = isset($row['booking_id']) ? $row['booking_id'] : null;
+            $eventId         = $row['event_id'];
+            $eventPeriodId   = isset($row['event_periodId']) ? $row['event_periodId'] : null;
+            $galleryId       = isset($row['gallery_id']) ? $row['gallery_id'] : null;
+            $customerId      = isset($row['customer_id']) ? $row['customer_id'] : null;
+            $bookingId       = isset($row['booking_id']) ? $row['booking_id'] : null;
             $bookingTicketId = isset($row['booking_ticket_id']) ? $row['booking_ticket_id'] : null;
-            $paymentId = isset($row['payment_id']) ? $row['payment_id'] : null;
-            $tagId = isset($row['event_tagId']) ? $row['event_tagId'] : null;
-            $ticketId = isset($row['ticket_id']) ? $row['ticket_id'] : null;
-            $providerId = isset($row['provider_id']) ? $row['provider_id'] : null;
-            $couponId = isset($row['coupon_id']) ? $row['coupon_id'] : null;
+            $paymentId       = isset($row['payment_id']) ? $row['payment_id'] : null;
+            $tagId           = isset($row['event_tagId']) ? $row['event_tagId'] : null;
+            $ticketId        = isset($row['ticket_id']) ? $row['ticket_id'] : null;
+            $providerId      = isset($row['provider_id']) ? $row['provider_id'] : null;
+            $couponId        = isset($row['coupon_id']) ? $row['coupon_id'] : null;
 
             if (!array_key_exists($eventId, $events)) {
                 $events[$eventId] = [
@@ -379,9 +379,9 @@ class EventFactory
 
             if ($galleryId) {
                 $events[$eventId]['gallery'][$galleryId]['id'] = $row['gallery_id'];
-                $events[$eventId]['gallery'][$galleryId]['pictureFullPath'] = $row['gallery_picture_full'];
+                $events[$eventId]['gallery'][$galleryId]['pictureFullPath']  = $row['gallery_picture_full'];
                 $events[$eventId]['gallery'][$galleryId]['pictureThumbPath'] = $row['gallery_picture_thumb'];
-                $events[$eventId]['gallery'][$galleryId]['position'] = $row['gallery_position'];
+                $events[$eventId]['gallery'][$galleryId]['position']         = $row['gallery_position'];
             }
 
             if ($providerId) {
@@ -407,7 +407,7 @@ class EventFactory
                         'translations'     => $row['provider_translations'],
                         'timeZone'         => isset($row['provider_timeZone']) ? $row['provider_timeZone'] : null,
                         'outlookCalendar'  => [
-                            'id'         =>  isset($row['outlook_calendar_id']) ? $row['outlook_calendar_id']: null,
+                            'id'         =>  isset($row['outlook_calendar_id']) ? $row['outlook_calendar_id'] : null,
                             'token'      =>  isset($row['outlook_calendar_token']) ? $row['outlook_calendar_token'] : null,
                             'calendarId' =>  isset($row['outlook_calendar_calendar_id']) ? $row['outlook_calendar_calendar_id'] : null
                         ],
@@ -546,23 +546,23 @@ class EventFactory
             }
 
             if ($bookingId && $couponId) {
-                $events[$eventId]['bookings'][$bookingId]['coupon']['id'] = $couponId;
-                $events[$eventId]['bookings'][$bookingId]['coupon']['code'] = $row['coupon_code'];
-                $events[$eventId]['bookings'][$bookingId]['coupon']['discount'] = $row['coupon_discount'];
-                $events[$eventId]['bookings'][$bookingId]['coupon']['deduction'] = $row['coupon_deduction'];
-                $events[$eventId]['bookings'][$bookingId]['coupon']['limit'] = $row['coupon_limit'];
+                $events[$eventId]['bookings'][$bookingId]['coupon']['id']            = $couponId;
+                $events[$eventId]['bookings'][$bookingId]['coupon']['code']          = $row['coupon_code'];
+                $events[$eventId]['bookings'][$bookingId]['coupon']['discount']      = $row['coupon_discount'];
+                $events[$eventId]['bookings'][$bookingId]['coupon']['deduction']     = $row['coupon_deduction'];
+                $events[$eventId]['bookings'][$bookingId]['coupon']['limit']         = $row['coupon_limit'];
                 $events[$eventId]['bookings'][$bookingId]['coupon']['customerLimit'] = $row['coupon_customerLimit'];
-                $events[$eventId]['bookings'][$bookingId]['coupon']['status'] = $row['coupon_status'];
+                $events[$eventId]['bookings'][$bookingId]['coupon']['status']        = $row['coupon_status'];
             }
 
             if ($couponId) {
-                $events[$eventId]['coupons'][$couponId]['id'] = $couponId;
-                $events[$eventId]['coupons'][$couponId]['code'] = $row['coupon_code'];
-                $events[$eventId]['coupons'][$couponId]['discount'] = $row['coupon_discount'];
-                $events[$eventId]['coupons'][$couponId]['deduction'] = $row['coupon_deduction'];
-                $events[$eventId]['coupons'][$couponId]['limit'] = $row['coupon_limit'];
+                $events[$eventId]['coupons'][$couponId]['id']            = $couponId;
+                $events[$eventId]['coupons'][$couponId]['code']          = $row['coupon_code'];
+                $events[$eventId]['coupons'][$couponId]['discount']      = $row['coupon_discount'];
+                $events[$eventId]['coupons'][$couponId]['deduction']     = $row['coupon_deduction'];
+                $events[$eventId]['coupons'][$couponId]['limit']         = $row['coupon_limit'];
                 $events[$eventId]['coupons'][$couponId]['customerLimit'] = $row['coupon_customerLimit'];
-                $events[$eventId]['coupons'][$couponId]['status'] = $row['coupon_status'];
+                $events[$eventId]['coupons'][$couponId]['status']        = $row['coupon_status'];
             }
         }
 

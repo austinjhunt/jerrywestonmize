@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Assembling application services:
  * Instantiating application services and injecting the Infrastructure layer implementations
@@ -151,8 +152,8 @@ $entries['application.reservation.service'] = function ($c) {
  *
  * @return Reservation
  */
-$entries['application.reservation'] = function ($validate) {
-    return new AmeliaBooking\Domain\Entity\Booking\Reservation($validate);
+$entries['application.reservation'] = function () {
+    return new AmeliaBooking\Domain\Entity\Booking\Reservation();
 };
 
 /**

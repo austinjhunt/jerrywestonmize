@@ -81,11 +81,11 @@ class Provider extends AbstractUser
         Collection $appointmentList
     ) {
         parent::__construct($firstName, $lastName, $email);
-        $this->phone = $phone;
-        $this->weekDayList = $weekDayList;
-        $this->serviceList = $serviceList;
-        $this->dayOffList = $dayOffList;
-        $this->specialDayList = $specialDayList;
+        $this->phone           = $phone;
+        $this->weekDayList     = $weekDayList;
+        $this->serviceList     = $serviceList;
+        $this->dayOffList      = $dayOffList;
+        $this->specialDayList  = $specialDayList;
         $this->appointmentList = $appointmentList;
     }
 

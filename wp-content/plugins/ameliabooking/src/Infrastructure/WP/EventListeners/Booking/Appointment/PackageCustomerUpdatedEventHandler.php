@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -37,7 +38,7 @@ use Slim\Exception\ContainerValueNotFoundException;
 class PackageCustomerUpdatedEventHandler
 {
     /** @var string */
-    const PACKAGE_CANCELED = 'packageCanceled';
+    public const PACKAGE_CANCELED = 'packageCanceled';
 
     /**
      * @param CommandResult $commandResult
@@ -111,7 +112,8 @@ class PackageCustomerUpdatedEventHandler
             foreach ($appointments->getItems() as $appointment) {
                 /** @var CustomerBooking $customerBooking */
                 foreach ($appointment->getBookings()->getItems() as $customerBooking) {
-                    if ($customerBooking->getPackageCustomerService() &&
+                    if (
+                        $customerBooking->getPackageCustomerService() &&
                         in_array(
                             $customerBooking->getPackageCustomerService()->getId()->getValue(),
                             $packageCustomerServices->keys(),
@@ -156,7 +158,6 @@ class PackageCustomerUpdatedEventHandler
             }
 
             $webHookService->process(self::PACKAGE_CANCELED, $packageReservation, null);
-
         }
     }
 }

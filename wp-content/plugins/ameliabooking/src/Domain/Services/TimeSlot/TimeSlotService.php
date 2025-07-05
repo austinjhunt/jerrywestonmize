@@ -88,13 +88,15 @@ class TimeSlotService
     {
         $dayIndex = DateTimeService::getDayIndex($dateString);
 
-        if (isset($weekDaysIntervals[$dayIndex]['busy'][$start]) &&
+        if (
+            isset($weekDaysIntervals[$dayIndex]['busy'][$start]) &&
             $weekDaysIntervals[$dayIndex]['busy'][$start][1] > $end
         ) {
             $end = $weekDaysIntervals[$dayIndex]['busy'][$start][1];
         }
 
-        if (isset($intervals[$dateString]['occupied'][$start]) &&
+        if (
+            isset($intervals[$dateString]['occupied'][$start]) &&
             $intervals[$dateString]['occupied'][$start][1] > $end
         ) {
             $end = $intervals[$dateString]['occupied'][$start][1];
@@ -191,7 +193,8 @@ class TimeSlotService
 
             $occupiedSecondsEnd = $this->intervalService->getSeconds($occupiedEnd->format('H:i:s'));
 
-            if ($occupiedDateStart === $occupiedEnd->format('Y-m-d') &&
+            if (
+                $occupiedDateStart === $occupiedEnd->format('Y-m-d') &&
                 (!$bookOverApp || !$app->getServiceId()->getValue())
             ) {
                 $intervals[$occupiedDateStart]['occupied'][$occupiedSecondsStart] = [
@@ -204,7 +207,7 @@ class TimeSlotService
                         $occupiedSecondsEnd
                     )
                 ];
-            } else if (!$bookOverApp || !$app->getServiceId()->getValue()) {
+            } elseif (!$bookOverApp || !$app->getServiceId()->getValue()) {
                 $dates = $this->getPeriodDates($occupiedStart, $occupiedEnd);
 
                 $datesCount = sizeof($dates);
@@ -220,7 +223,9 @@ class TimeSlotService
                             $intervals[$date]['occupied'][$occupiedSecondsStart] = [$occupiedSecondsStart, 86400];
                         } elseif ($index === $datesCount - 1) {
                             $modifiedEnd = $this->getModifiedEndInterval(
-                                !array_key_exists($occupiedDateStart, $specialDays) ? $weekDaysIntervals : [],
+                                !array_key_exists($occupiedDateStart, $specialDays) ?
+                                    $weekDaysIntervals :
+                                    [],
                                 $intervals,
                                 $date,
                                 0,
@@ -269,7 +274,8 @@ class TimeSlotService
 
                 $duration = $app->getBookingStart()->getValue()->diff($app->getBookingEnd()->getValue());
 
-                if (($hasLocation && $status === BookingStatus::APPROVED && $hasCapacity) ||
+                if (
+                    ($hasLocation && $status === BookingStatus::APPROVED && $hasCapacity) ||
                     ($hasLocation && $status === BookingStatus::PENDING && ($bookIfPending || $hasCapacity))
                 ) {
                     $endDateTime = $app->getBookingEnd()->getValue()->format('Y-m-d H:i:s');
@@ -339,7 +345,9 @@ class TimeSlotService
 
             /** @var DateTime $date */
             foreach ($dayOffPeriod as $date) {
-                $dateFormatted = $dayOff->getRepeat()->getValue() ? $date->format('m-d') : $date->format('Y-m-d');
+                $dateFormatted = $dayOff->getRepeat()->getValue() ?
+                    $date->format('m-d') :
+                    $date->format('Y-m-d');
 
                 $dates[$dateFormatted] = $dateFormatted;
             }
@@ -381,17 +389,28 @@ class TimeSlotService
                         if ($unavailable[1] !== $fixedPeriod[1]) {
                             $parsedAvailablePeriod[] = [$unavailable[1], $fixedPeriod[1], $fixedPeriod[2]];
                         }
-                    } elseif ($unavailable[0] <= $lastAvailablePeriod[0] && $unavailable[1] >= $lastAvailablePeriod[1]) {
+                    } elseif (
+                        $unavailable[0] <= $lastAvailablePeriod[0] &&
+                        $unavailable[1] >= $lastAvailablePeriod[1]
+                    ) {
                         // available interval is inside unavailable interval
                         array_pop($parsedAvailablePeriod);
-                    } elseif ($unavailable[0] <= $lastAvailablePeriod[0] && $unavailable[1] >= $lastAvailablePeriod[0] && $unavailable[1] <= $lastAvailablePeriod[1]) {
+                    } elseif (
+                        $unavailable[0] <= $lastAvailablePeriod[0] &&
+                        $unavailable[1] >= $lastAvailablePeriod[0] &&
+                        $unavailable[1] <= $lastAvailablePeriod[1]
+                    ) {
                         // unavailable interval intersect start of available interval
                         $fixedPeriod = array_pop($parsedAvailablePeriod);
 
                         if ($unavailable[1] !== $fixedPeriod[1]) {
                             $parsedAvailablePeriod[] = [$unavailable[1], $fixedPeriod[1], $fixedPeriod[2]];
                         }
-                    } elseif ($unavailable[0] >= $lastAvailablePeriod[0] && $unavailable[0] <= $lastAvailablePeriod[1] && $unavailable[1] >= $lastAvailablePeriod[1]) {
+                    } elseif (
+                        $unavailable[0] >= $lastAvailablePeriod[0] &&
+                        $unavailable[0] <= $lastAvailablePeriod[1] &&
+                        $unavailable[1] >= $lastAvailablePeriod[1]
+                    ) {
                         // unavailable interval intersect end of available interval
                         $fixedPeriod = array_pop($parsedAvailablePeriod);
 
@@ -532,13 +551,19 @@ class TimeSlotService
                     }
                 }
 
-                if ($specialDayDateKey !== null && isset($specialDayIntervals[$providerKey][$specialDayDateKey]['intervals']['free'])) {
+                if (
+                    $specialDayDateKey !== null &&
+                    isset($specialDayIntervals[$providerKey][$specialDayDateKey]['intervals']['free'])
+                ) {
                     // get free intervals if it is special day
                     $freeDateIntervals[$providerKey][$dateKey] = $this->getAvailableIntervals(
                         $specialDayIntervals[$providerKey][$specialDayDateKey]['intervals']['free'],
                         !empty($dateIntervals['occupied']) ? $dateIntervals['occupied'] : []
                     );
-                } elseif (isset($weekDayIntervals[$providerKey][$dayIndex]['free']) && !isset($specialDayIntervals[$providerKey][$specialDayDateKey]['intervals'])) {
+                } elseif (
+                    isset($weekDayIntervals[$providerKey][$dayIndex]['free']) &&
+                    !isset($specialDayIntervals[$providerKey][$specialDayDateKey]['intervals'])
+                ) {
                     // get free intervals if it is working day
                     $unavailableIntervals =
                         $weekDayIntervals[$providerKey][$dayIndex]['busy'] + (!empty($dateIntervals['occupied']) ? $dateIntervals['occupied'] : []);
@@ -604,8 +629,11 @@ class TimeSlotService
                     }
 
                     if (!$isProviderDayOff) {
-                        if (!empty($appointmentsCount['limitCount']) && !empty($appointmentsCount['appCount'][$providerKey][$currentDate]) &&
-                            $appointmentsCount['appCount'][$providerKey][$currentDate] >= $appointmentsCount['limitCount']) {
+                        if (
+                            !empty($appointmentsCount['limitCount']) &&
+                            !empty($appointmentsCount['appCount'][$providerKey][$currentDate]) &&
+                            $appointmentsCount['appCount'][$providerKey][$currentDate] >= $appointmentsCount['limitCount']
+                        ) {
                             continue;
                         }
 
@@ -625,16 +653,27 @@ class TimeSlotService
                                 $calendar[$currentDate][$providerKey] = [
                                     'slots'     => [],
                                     'full'      => [],
-                                    'intervals' => $getOnlyAppointmentsSlots[$providerKey] ? [] : $specialDayIntervals[$providerKey][$specialDayDateKey]['intervals']['free'],
-                                    'count' => !empty($appointmentsCount[$providerKey][$currentDate]) ? $appointmentsCount[$providerKey][$currentDate] : 0
+                                    'intervals' => $getOnlyAppointmentsSlots[$providerKey] ?
+                                        [] :
+                                        $specialDayIntervals[$providerKey][$specialDayDateKey]['intervals']['free'],
+                                    'count' => !empty($appointmentsCount[$providerKey][$currentDate]) ?
+                                        $appointmentsCount[$providerKey][$currentDate] :
+                                        0
                                 ];
-                            } elseif (isset($weekDayIntervals[$providerKey][$dayIndex]) && !isset($specialDayIntervals[$providerKey][$specialDayDateKey]['intervals'])) {
+                            } elseif (
+                                isset($weekDayIntervals[$providerKey][$dayIndex]) &&
+                                !isset($specialDayIntervals[$providerKey][$specialDayDateKey]['intervals'])
+                            ) {
                                 // get date intervals if it is working day without appointments
                                 $calendar[$currentDate][$providerKey] = [
                                     'slots'     => [],
                                     'full'      => [],
-                                    'intervals' => $getOnlyAppointmentsSlots[$providerKey] ? [] : $weekDayIntervals[$providerKey][$dayIndex]['free'],
-                                    'count' => !empty($appointmentsCount[$providerKey][$currentDate]) ? $appointmentsCount[$providerKey][$currentDate] : 0
+                                    'intervals' => $getOnlyAppointmentsSlots[$providerKey] ?
+                                        [] :
+                                        $weekDayIntervals[$providerKey][$dayIndex]['free'],
+                                    'count' => !empty($appointmentsCount[$providerKey][$currentDate]) ?
+                                        $appointmentsCount[$providerKey][$currentDate] :
+                                        0
                                 ];
                             }
                         }
@@ -726,7 +765,8 @@ class TimeSlotService
                             $timeZone
                         )->modify('+1 days')->format('Y-m-d');
 
-                        if (isset($freeIntervals[$nextDateString][$providerKey]['intervals'][0]) &&
+                        if (
+                            isset($freeIntervals[$nextDateString][$providerKey]['intervals'][0]) &&
                             $freeIntervals[$nextDateString][$providerKey]['intervals'][0][0] === 0
                         ) {
                             $isContinuousTime = true;
@@ -762,10 +802,12 @@ class TimeSlotService
 
                     if (isset($resourcedIntervals[$dateKey])) {
                         foreach ($resourcedIntervals[$dateKey] as $resourceIndex => $resourceData) {
-                            if (array_intersect(
-                                $timePeriod[2],
-                                $resourcedIntervals[$dateKey][$resourceIndex]['locationsIds']
-                            )) {
+                            if (
+                                array_intersect(
+                                    $timePeriod[2],
+                                    $resourcedIntervals[$dateKey][$resourceIndex]['locationsIds']
+                                )
+                            ) {
                                 $inspectResourceIndexes[] = $resourceIndex;
                             }
                         }
@@ -792,9 +834,18 @@ class TimeSlotService
 
                         $timeSlot = $customerTimeStart + $i * $bookingLength;
 
-                        if (($startDateFormatted !== $dateKey && ($serviceDurationAsSlot && !$bufferTimeInSlot ? $timeSlot <= $timePeriod[1] - $requiredTime : true)) ||
+                        if (
+                            (
+                                $startDateFormatted !== $dateKey &&
+                                ($serviceDurationAsSlot &&
+                                !$bufferTimeInSlot ? $timeSlot <= $timePeriod[1] - $requiredTime : true)
+                            ) ||
                             ($startDateFormatted === $dateKey && $startTimeInSeconds < $timeSlot) ||
-                            ($startDateFormatted === $currentDateFormatted && $startDateFormatted === $dateKey && $startTimeInSeconds < $timeSlot && $currentTimeInSeconds < $timeSlot)
+                            ($startDateFormatted ===
+                                $currentDateFormatted &&
+                                $startDateFormatted === $dateKey &&
+                                $startTimeInSeconds < $timeSlot &&
+                                $currentTimeInSeconds < $timeSlot)
                         ) {
                             $timeSlotEnd = $timeSlot + $bookingLength;
 
@@ -802,7 +853,8 @@ class TimeSlotService
 
                             foreach ($inspectResourceIndexes as $resourceIndex) {
                                 foreach ($resourcedIntervals[$dateKey][$resourceIndex]['intervals'] as $start => $end) {
-                                    if (($start >= $timeSlot && $start < $timeSlotEnd) ||
+                                    if (
+                                        ($start >= $timeSlot && $start < $timeSlotEnd) ||
                                         ($end > $timeSlot && $end <= $timeSlotEnd) ||
                                         ($start <= $timeSlot && $end >= $timeSlotEnd) ||
                                         ($start >= $timeSlot && $start < $timeSlot + $requiredTime)
@@ -831,7 +883,8 @@ class TimeSlotService
                                             $parsedPeriodSlots = [];
 
                                             foreach ($providerPeriodSlots as $previousTimeSlot => $periodSlotData) {
-                                                if ($start >= $previousTimeSlot &&
+                                                if (
+                                                    $start >= $previousTimeSlot &&
                                                     $start < $previousTimeSlot + $requiredTime
                                                 ) {
                                                     foreach ($periodSlotData as $data) {
@@ -852,7 +905,7 @@ class TimeSlotService
 
                             if (!$timePeriod[2]) {
                                 $providerPeriodSlots[$timeSlot][] = [$providerKey, null];
-                            } else if ($filteredLocationsIds) {
+                            } elseif ($filteredLocationsIds) {
                                 foreach ($filteredLocationsIds as $locationId) {
                                     $providerPeriodSlots[$timeSlot][] = [$providerKey, $locationId];
                                 }
@@ -877,7 +930,8 @@ class TimeSlotService
                 foreach ($provider['slots'] as $appointmentTime => $appointmentData) {
                     $startInSeconds = $this->intervalService->getSeconds($appointmentTime . ':00');
 
-                    if ($currentDateString === $dateKey &&
+                    if (
+                        $currentDateString === $dateKey &&
                         ($currentTimeStringInSeconds > $startInSeconds || $startTimeInSeconds > $startInSeconds)
                     ) {
                         continue;
@@ -887,7 +941,8 @@ class TimeSlotService
 
                     $newEndInSeconds = $startInSeconds + $realRequiredTime;
 
-                    if ($newEndInSeconds !== 86400 &&
+                    if (
+                        $newEndInSeconds !== 86400 &&
                         ($newEndInSeconds > 86400 ? $newEndInSeconds - 86400 > $endInSeconds : $newEndInSeconds > $endInSeconds)
                     ) {
                         if ($dateKey !== $appointmentData['endDate']) {
@@ -896,7 +951,8 @@ class TimeSlotService
                                 $timeZone
                             )->modify('+1 days')->format('Y-m-d');
 
-                            if (!isset($freeIntervals[$nextDateString][$providerKey]['intervals'][0]) ||
+                            if (
+                                !isset($freeIntervals[$nextDateString][$providerKey]['intervals'][0]) ||
                                 $freeIntervals[$nextDateString][$providerKey]['intervals'][0][0] != $endInSeconds ||
                                 $freeIntervals[$nextDateString][$providerKey]['intervals'][0][1] < $newEndInSeconds - 86400
                             ) {
@@ -922,7 +978,8 @@ class TimeSlotService
                                 $timeZone
                             )->modify('+1 days')->format('Y-m-d');
 
-                            if (!isset($freeIntervals[$nextDateString][$providerKey]['intervals'][0]) ||
+                            if (
+                                !isset($freeIntervals[$nextDateString][$providerKey]['intervals'][0]) ||
                                 $freeIntervals[$nextDateString][$providerKey]['intervals'][0][0] != 0 ||
                                 $freeIntervals[$nextDateString][$providerKey]['intervals'][0][1] < $newEndInSeconds - 86400
                             ) {
@@ -1057,7 +1114,7 @@ class TimeSlotService
                 array_key_exists('totalPersons', $props) ? $props['totalPersons'] : $props['personsCount']
             ) : [];
 
-        $continuousAppointments = $this->entityService->filterSlotsAppointments($slotsEntities, $appointments, $props);
+        $this->entityService->filterSlotsAppointments($slotsEntities, $appointments, $props);
 
         $this->providerService->addAppointmentsToAppointmentList(
             $slotsEntities->getProviders(),
@@ -1070,7 +1127,6 @@ class TimeSlotService
             $props,
             $slotsEntities,
             $resourcedLocationsIntervals,
-            $continuousAppointments,
             $appointmentsCount
         );
     }
@@ -1081,8 +1137,7 @@ class TimeSlotService
      * @param array         $props
      * @param SlotsEntities $slotsEntities
      * @param array         $resourcedLocationsIntervals
-     * @param array $continuousAppointments
-     * @param array $appointmentsCount
+     * @param array         $appointmentsCount
      *
      * @return array
      * @throws Exception
@@ -1092,7 +1147,6 @@ class TimeSlotService
         $props,
         $slotsEntities,
         $resourcedLocationsIntervals,
-        $continuousAppointments,
         $appointmentsCount
     ) {
         $freeProvidersSlots = [];
@@ -1193,7 +1247,6 @@ class TimeSlotService
         $freeSlots = [
             'available'               => [],
             'occupied'                => [],
-            'continuousAppointments'  => $continuousAppointments[0],
             'appCount'                => [],
             'duration'                => $requiredTime / 60,
         ];

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -150,52 +151,52 @@ class CouponFactory
         $coupons = [];
 
         foreach ($rows as $row) {
-            $couponId = $row['coupon_id'];
+            $couponId  = $row['coupon_id'];
             $serviceId = isset($row['service_id']) ? $row['service_id'] : null;
-            $eventId = isset($row['event_id']) ? $row['event_id'] : null;
+            $eventId   = isset($row['event_id']) ? $row['event_id'] : null;
             $packageId = isset($row['package_id']) ? $row['package_id'] : null;
             $bookingId = isset($row['booking_id']) ? $row['booking_id'] : null;
 
-            $coupons[$couponId]['id'] = $couponId;
-            $coupons[$couponId]['code'] = $row['coupon_code'];
-            $coupons[$couponId]['discount'] = $row['coupon_discount'];
-            $coupons[$couponId]['deduction'] = $row['coupon_deduction'];
-            $coupons[$couponId]['limit'] = $row['coupon_limit'];
+            $coupons[$couponId]['id']            = $couponId;
+            $coupons[$couponId]['code']          = $row['coupon_code'];
+            $coupons[$couponId]['discount']      = $row['coupon_discount'];
+            $coupons[$couponId]['deduction']     = $row['coupon_deduction'];
+            $coupons[$couponId]['limit']         = $row['coupon_limit'];
             $coupons[$couponId]['customerLimit'] = $row['coupon_customerLimit'];
-            $coupons[$couponId]['notificationInterval'] = $row['coupon_notificationInterval'];
+            $coupons[$couponId]['notificationInterval']  = $row['coupon_notificationInterval'];
             $coupons[$couponId]['notificationRecurring'] = $row['coupon_notificationRecurring'];
-            $coupons[$couponId]['status'] = $row['coupon_status'];
+            $coupons[$couponId]['status']         = $row['coupon_status'];
             $coupons[$couponId]['expirationDate'] = $row['coupon_expirationDate'];
-            $coupons[$couponId]['allServices'] = $row['coupon_allServices'];
-            $coupons[$couponId]['allEvents'] = $row['coupon_allEvents'];
-            $coupons[$couponId]['allPackages'] = $row['coupon_allPackages'];
+            $coupons[$couponId]['allServices']    = $row['coupon_allServices'];
+            $coupons[$couponId]['allEvents']      = $row['coupon_allEvents'];
+            $coupons[$couponId]['allPackages']    = $row['coupon_allPackages'];
 
             if ($bookingId) {
                 $coupons[$couponId]['bookings'][$bookingId] = $bookingId;
             }
 
             if ($serviceId) {
-                $coupons[$couponId]['serviceList'][$serviceId]['id'] = $serviceId;
-                $coupons[$couponId]['serviceList'][$serviceId]['name'] = $row['service_name'];
+                $coupons[$couponId]['serviceList'][$serviceId]['id']          = $serviceId;
+                $coupons[$couponId]['serviceList'][$serviceId]['name']        = $row['service_name'];
                 $coupons[$couponId]['serviceList'][$serviceId]['description'] = $row['service_description'];
-                $coupons[$couponId]['serviceList'][$serviceId]['color'] = $row['service_color'];
-                $coupons[$couponId]['serviceList'][$serviceId]['status'] = $row['service_status'];
-                $coupons[$couponId]['serviceList'][$serviceId]['categoryId'] = $row['service_categoryId'];
-                $coupons[$couponId]['serviceList'][$serviceId]['duration'] = $row['service_duration'];
-                $coupons[$couponId]['serviceList'][$serviceId]['price'] = $row['service_price'];
+                $coupons[$couponId]['serviceList'][$serviceId]['color']       = $row['service_color'];
+                $coupons[$couponId]['serviceList'][$serviceId]['status']      = $row['service_status'];
+                $coupons[$couponId]['serviceList'][$serviceId]['categoryId']  = $row['service_categoryId'];
+                $coupons[$couponId]['serviceList'][$serviceId]['duration']    = $row['service_duration'];
+                $coupons[$couponId]['serviceList'][$serviceId]['price']       = $row['service_price'];
                 $coupons[$couponId]['serviceList'][$serviceId]['minCapacity'] = $row['service_minCapacity'];
                 $coupons[$couponId]['serviceList'][$serviceId]['maxCapacity'] = $row['service_maxCapacity'];
             }
 
             if ($eventId) {
-                $coupons[$couponId]['eventList'][$eventId]['id'] = $eventId;
-                $coupons[$couponId]['eventList'][$eventId]['name'] = $row['event_name'];
+                $coupons[$couponId]['eventList'][$eventId]['id']    = $eventId;
+                $coupons[$couponId]['eventList'][$eventId]['name']  = $row['event_name'];
                 $coupons[$couponId]['eventList'][$eventId]['price'] = $row['event_price'];
             }
 
             if ($packageId) {
-                $coupons[$couponId]['packageList'][$packageId]['id'] = $packageId;
-                $coupons[$couponId]['packageList'][$packageId]['name'] = $row['package_name'];
+                $coupons[$couponId]['packageList'][$packageId]['id']    = $packageId;
+                $coupons[$couponId]['packageList'][$packageId]['name']  = $row['package_name'];
                 $coupons[$couponId]['packageList'][$packageId]['price'] = $row['package_price'];
             }
         }
@@ -203,7 +204,6 @@ class CouponFactory
         $couponsCollection = new Collection();
 
         foreach ($coupons as $couponKey => $couponArray) {
-
             $couponArray['used'] = isset($couponArray['bookings']) ? sizeof($couponArray['bookings']) : 0;
 
             $couponsCollection->addItem(

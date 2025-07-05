@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AmeliaBooking\Infrastructure\Services\LessonSpace;
 
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
@@ -22,26 +21,6 @@ use Interop\Container\Exception\ContainerException;
 
 class LessonSpaceService extends AbstractLessonSpaceService
 {
-    /**
-     * @var SettingsService $settingsService
-     */
-    private $settingsService;
-
-    /** @var Container $container */
-    private $container;
-
-    /**
-     * LessonSpaceService constructor.
-     *
-     * @param Container $container
-     * @param SettingsService $settingsService
-     */
-    public function __construct(Container $container, SettingsService $settingsService)
-    {
-        $this->settingsService = $settingsService;
-        $this->container       = $container;
-    }
-
     /**
      * @param Appointment|Event $appointment
      * @param int $entity
@@ -149,7 +128,7 @@ class LessonSpaceService extends AbstractLessonSpaceService
                     );
                 }
             }
-        } else if ($entity === Entities::EVENT) {
+        } elseif ($entity === Entities::EVENT) {
             $lessonSpaceName = $this->settingsService->getSetting('lessonSpace', 'spaceNameEvents');
             $lessonSpaceName = $placeholderService->applyPlaceholders($lessonSpaceName, $placeholderData);
 
@@ -199,7 +178,10 @@ class LessonSpaceService extends AbstractLessonSpaceService
     public function getAllSpaces($apiKey, $companyId, $searchTerm = null)
     {
         if ($companyId) {
-            $requestUrl  = 'https://api.thelessonspace.com/v2/organisations/' . $companyId .'/spaces/?sort_by=new-old' . ($searchTerm ? '&search=' . $searchTerm : '');
+            $requestUrl  =
+                'https://api.thelessonspace.com/v2/organisations/' .
+                $companyId . '/spaces/?sort_by=new-old' .
+                ($searchTerm ? '&search=' . $searchTerm : '');
             $resultArray = $this->execute($apiKey, [], $requestUrl, 'GET');
             $allSpaces   = !empty($resultArray['results']) ? $resultArray['results'] : [];
 
@@ -224,7 +206,7 @@ class LessonSpaceService extends AbstractLessonSpaceService
      */
     public function getSpaceUsers($apiKey, $companyId, $spaceId)
     {
-        $requestUrl = 'https://api.thelessonspace.com/v2/organisations/' . $companyId . '/spaces/'. $spaceId . '/users/';
+        $requestUrl = 'https://api.thelessonspace.com/v2/organisations/' . $companyId . '/spaces/' . $spaceId . '/users/';
         return $this->execute($apiKey, [], $requestUrl, 'GET');
     }
 
@@ -237,7 +219,7 @@ class LessonSpaceService extends AbstractLessonSpaceService
      */
     public function getSpace($apiKey, $companyId, $spaceId)
     {
-        $requestUrl = 'https://api.thelessonspace.com/v2/organisations/' . $companyId . '/spaces/'. $spaceId;
+        $requestUrl = 'https://api.thelessonspace.com/v2/organisations/' . $companyId . '/spaces/' . $spaceId;
         return $this->execute($apiKey, [], $requestUrl, 'GET');
     }
 

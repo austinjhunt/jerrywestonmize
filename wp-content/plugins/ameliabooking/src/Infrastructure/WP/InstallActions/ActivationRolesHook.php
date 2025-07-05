@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Role hook for activation
  */
@@ -15,7 +16,6 @@ use AmeliaBooking\Infrastructure\WP\UserRoles\UserRoles;
  */
 class ActivationRolesHook
 {
-
     /**
      * Add new custom roles and add capabilities to administrator role
      */

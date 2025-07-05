@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Database hook for activation
  */
@@ -71,7 +72,6 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\Provider\ProvidersDay
  */
 class ActivationDatabaseHook
 {
-
     /**
      * Initialize the plugin
      */

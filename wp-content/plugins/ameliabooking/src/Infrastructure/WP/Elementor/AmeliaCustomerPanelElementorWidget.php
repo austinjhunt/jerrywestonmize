@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -15,22 +16,27 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
  */
 class AmeliaCustomerPanelElementorWidget extends Widget_Base
 {
-    public function get_name() {
+    public function get_name()
+    {
         return 'ameliacustomerpanel';
     }
 
-    public function get_title() {
+    public function get_title()
+    {
         return BackendStrings::getWordPressStrings()['customer_cabinet_gutenberg_block']['title'];
     }
 
-    public function get_icon() {
+    public function get_icon()
+    {
         return 'amelia-logo';
     }
 
-    public function get_categories() {
+    public function get_categories()
+    {
         return [ 'amelia-elementor' ];
     }
-    protected function register_controls() {
+    protected function register_controls()
+    {
 
         $this->start_controls_section(
             'amelia_customer_panel_section',
@@ -87,16 +93,16 @@ class AmeliaCustomerPanelElementorWidget extends Widget_Base
         $this->end_controls_section();
     }
 
-    protected function render() {
-        $settings = $this->get_settings_for_display();
+    protected function render()
+    {
+        $settings     = $this->get_settings_for_display();
         $appointments = $settings['appointments'] ? ' appointments=1' : '';
-        $trigger = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
-        $events = $settings['events'] ? ' events=1' : '';
-        $version = $settings['select_version'] ? ' version=' . $settings['select_version'] : '';
+        $trigger      = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
+        $events       = $settings['events'] ? ' events=1' : '';
+        $version      = $settings['select_version'] ? ' version=' . $settings['select_version'] : '';
         if ($settings['appointments'] || $settings['events']) {
             echo esc_html('[ameliacustomerpanel' . $version . $trigger . $appointments . $events . ']');
-        }
-        else {
+        } else {
             echo esc_html(BackendStrings::getWordPressStrings()['notice_panel']);
         }
     }

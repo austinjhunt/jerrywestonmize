@@ -152,7 +152,8 @@ class AddAppointmentCommandHandler extends CommandHandler
         );
 
         if ($existingAppointment && !empty($appointmentData['internalNotes'])) {
-            if ($existingAppointment->getInternalNotes() &&
+            if (
+                $existingAppointment->getInternalNotes() &&
                 $existingAppointment->getInternalNotes()->getValue()
             ) {
                 $appointment->setInternalNotes(
@@ -212,7 +213,8 @@ class AddAppointmentCommandHandler extends CommandHandler
 
         /** @var CustomerBooking $booking */
         foreach ($appointment->getBookings()->getItems() as $booking) {
-            if ($booking->getCustomerId() &&
+            if (
+                $booking->getCustomerId() &&
                 $booking->getCustomerId()->getValue() &&
                 array_key_exists($booking->getCustomerId()->getValue(), $paymentData['customerPaymentParentId']) &&
                 $booking->getPayments() &&
@@ -228,7 +230,7 @@ class AddAppointmentCommandHandler extends CommandHandler
 
         if ($existingAppointment !== null) {
             $existingAppointmentId = $existingAppointment->getId()->getValue();
-            
+
             $ignoredData[$existingAppointmentId] = [
                 'status'      => $existingAppointment->getStatus()->getValue(),
                 'bookingsIds' => [],
@@ -270,7 +272,8 @@ class AddAppointmentCommandHandler extends CommandHandler
             );
 
             if ($existingRecurringAppointment && $recurringAppointmentData['internalNotes']) {
-                if ($existingRecurringAppointment->getInternalNotes() &&
+                if (
+                    $existingRecurringAppointment->getInternalNotes() &&
                     $existingRecurringAppointment->getInternalNotes()->getValue()
                 ) {
                     $recurringAppointment->setInternalNotes(
@@ -327,7 +330,8 @@ class AddAppointmentCommandHandler extends CommandHandler
             if ($error) {
                 $appointmentAS->delete($appointment, $ignoredData);
 
-                if ($appointment->getId() &&
+                if (
+                    $appointment->getId() &&
                     $appointment->getId()->getValue() &&
                     !empty($ignoredData[$appointment->getId()->getValue()])
                 ) {
@@ -358,7 +362,7 @@ class AddAppointmentCommandHandler extends CommandHandler
 
             if ($existingRecurringAppointment !== null) {
                 $existingAppointmentId = $existingRecurringAppointment->getId()->getValue();
-                
+
                 $ignoredData[$existingAppointmentId] = [
                     'status'      => $existingRecurringAppointment->getStatus()->getValue(),
                     'bookingsIds' => [],

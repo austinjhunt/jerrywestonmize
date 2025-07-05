@@ -13,7 +13,6 @@ use Slim\Http\Request;
  */
 class WhatsAppWebhookRegisterController extends Controller
 {
-
     /**
      * Fields for notification that can be received from front-end
      *

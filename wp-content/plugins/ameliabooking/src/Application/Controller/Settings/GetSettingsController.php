@@ -21,7 +21,7 @@ class GetSettingsController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GetSettingsCommand($args);
+        $command     = new GetSettingsCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

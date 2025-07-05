@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -103,7 +104,8 @@ class ApplicationNotificationService
         $bookings,
         $logNotification = true,
         $isBackend = true,
-        $sendInvoice = false
+        $sendInvoice = false,
+        $notifyCustomers = true
     ) {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
@@ -126,7 +128,8 @@ class ApplicationNotificationService
             $bookings,
             $logNotification,
             $isBackend,
-            $sendInvoice
+            $sendInvoice,
+            $notifyCustomers
         );
 
         if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -16,11 +17,6 @@ use AmeliaFirebase\JWT\JWT;
  */
 class ZoomService extends AbstractZoomService
 {
-    /**
-     * @var SettingsService $settingsService
-     */
-    private $settingsService;
-
     /**
      * ZoomService constructor.
      *
@@ -171,7 +167,8 @@ class ZoomService extends AbstractZoomService
             $token
         );
 
-        if (!empty($resultArray['code']) &&
+        if (
+            !empty($resultArray['code']) &&
             ($resultArray['code'] === 401 || $resultArray['code'] === 4711)
         ) {
             $resultArray = $this->request(
@@ -186,7 +183,8 @@ class ZoomService extends AbstractZoomService
             );
         }
 
-        if (isset($resultArray['join_url']) &&
+        if (
+            isset($resultArray['join_url']) &&
             strpos($resultArray['join_url'], 'pwd=') === false &&
             isset($resultArray['encrypted_password'])
         ) {

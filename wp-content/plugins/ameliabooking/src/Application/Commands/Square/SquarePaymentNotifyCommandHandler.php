@@ -92,7 +92,7 @@ class SquarePaymentNotifyCommandHandler extends CommandHandler
 
         $result    = $paymentAS->updateAppointmentAndCache($data[2], $status, $cache, $paymentId);
         $returnUrl = urldecode($command->getField('returnUrl'));
-        $result->setUrl($returnUrl. (strpos($returnUrl, '?') ? '&' : '?') . 'ameliaCache=' . $name);
+        $result->setUrl($returnUrl . (strpos($returnUrl, '?') ? '&' : '?') . 'ameliaCache=' . $name);
         return $result;
     }
 }

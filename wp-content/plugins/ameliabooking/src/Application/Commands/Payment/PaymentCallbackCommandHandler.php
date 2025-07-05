@@ -12,6 +12,7 @@ use AmeliaBooking\Domain\Entity\Payment\PaymentGateway;
 use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Factory\Stripe\StripeFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -22,7 +23,11 @@ use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
+use AmeliaBooking\Infrastructure\Services\Payment\MollieService;
+use AmeliaBooking\Infrastructure\Services\Payment\PayPalService;
+use AmeliaBooking\Infrastructure\Services\Payment\RazorpayService;
 use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
+use AmeliaBooking\Infrastructure\Services\Payment\StripeService;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -32,7 +37,6 @@ use Interop\Container\Exception\ContainerException;
  */
 class PaymentCallbackCommandHandler extends CommandHandler
 {
-
     /**
      * @param PaymentCallbackCommand $command
      *
@@ -77,14 +81,16 @@ class PaymentCallbackCommandHandler extends CommandHandler
 
             $bookableSettings     = $data['bookable']['settings'];
             $entitySettings       = !empty($bookableSettings) && json_decode($bookableSettings, true) ? json_decode($bookableSettings, true) : null;
-            $paymentLinksSettings = !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ? $entitySettings['payments']['paymentLinks'] : null;
+            $paymentLinksSettings =
+                !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ? $entitySettings['payments']['paymentLinks'] : null;
             $redirectUrl          = $paymentLinksSettings && $paymentLinksSettings['redirectUrl'] ? $paymentLinksSettings['redirectUrl'] :
                 $settingsDS->getSetting('payments', 'paymentLinks')['redirectUrl'];
             $redirectLink         = empty($redirectUrl) ? AMELIA_SITE_URL : $redirectUrl;
-            $customerPanelUrl = $settingsDS->getSetting('roles', 'customerCabinet')['pageUrl'];
-            $redirectLink      = !empty($command->getField('fromPanel')) ? $customerPanelUrl : $redirectLink;
+            $customerPanelUrl     = $settingsDS->getSetting('roles', 'customerCabinet')['pageUrl'];
+            $redirectLink         = !empty($command->getField('fromPanel')) ? $customerPanelUrl : $redirectLink;
 
-            $changeBookingStatus  =  $paymentLinksSettings && $paymentLinksSettings['changeBookingStatus'] !== null ? $paymentLinksSettings['changeBookingStatus'] :
+            $changeBookingStatus =
+                $paymentLinksSettings && $paymentLinksSettings['changeBookingStatus'] !== null ? $paymentLinksSettings['changeBookingStatus'] :
                 $settingsDS->getSetting('payments', 'paymentLinks')['changeBookingStatus'];
 
 
@@ -96,9 +102,8 @@ class PaymentCallbackCommandHandler extends CommandHandler
             try {
                 $status = PaymentStatus::PAID;
                 if ($gateway) {
-
-                    /** @var PaymentServiceInterface $paymentService */
-                    $paymentService = $this->container->get('infrastructure.payment.'. $gateway .'.service');
+                    /** @var RazorpayService|MollieService|StripeService|PayPalService|SquareService $paymentService */
+                    $paymentService = $this->container->get('infrastructure.payment.' . $gateway . '.service');
 
                     switch ($gateway) {
                         case 'razorpay':
@@ -162,7 +167,11 @@ class PaymentCallbackCommandHandler extends CommandHandler
 
                                     $stripeConnect = StripeFactory::create(['id' => $paymentData['customer']]);
                                     if (empty($reservation->getData()['customer']['stripeConnect'])) {
-                                        $customerRepository->updateFieldById($reservation->getData()['customer']['id'], json_encode($stripeConnect->toArray()), 'stripeConnect');
+                                        $customerRepository->updateFieldById(
+                                            $reservation->getData()['customer']['id'],
+                                            json_encode($stripeConnect->toArray()),
+                                            'stripeConnect'
+                                        );
                                     }
                                 }
                             }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -71,7 +72,7 @@ class CabinetEmployeeShortcodeService extends AmeliaShortcodeService
                 $atts
             );
 
-            AmeliaBookingShortcodeService::prepareScriptsAndStyles(true);
+            AmeliaBookingShortcodeService::prepareScriptsAndStyles();
         }
 
         ob_start();

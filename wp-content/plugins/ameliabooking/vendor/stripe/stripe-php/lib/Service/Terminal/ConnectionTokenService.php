@@ -4,6 +4,11 @@
 
 namespace AmeliaStripe\Service\Terminal;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ *
+ * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ */
 class ConnectionTokenService extends \AmeliaStripe\Service\AbstractService
 {
     /**
@@ -11,12 +16,12 @@ class ConnectionTokenService extends \AmeliaStripe\Service\AbstractService
      * connection token from Stripe, proxied through your server. On your backend, add
      * an endpoint that creates and returns a connection token.
      *
-     * @param null|array $params
-     * @param null|array|\AmeliaStripe\Util\RequestOptions $opts
-     *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @param null|array{expand?: string[], location?: string} $params
+     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
      *
      * @return \AmeliaStripe\Terminal\ConnectionToken
+     *
+     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {

@@ -9,8 +9,8 @@ namespace AmeliaBooking\Domain\ValueObjects\Number\Integer;
  */
 final class Status
 {
-    const INVISIBLE = 0;
-    const VISIBLE = 1;
+    public const INVISIBLE = 0;
+    public const VISIBLE   = 1;
     /**
      * @var int
      */

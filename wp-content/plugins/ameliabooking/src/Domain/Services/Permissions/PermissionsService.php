@@ -13,14 +13,13 @@ use AmeliaBooking\Infrastructure\Common\Container;
  */
 class PermissionsService
 {
-
-    const READ_PERMISSIONS = 'read';
-    const READ_OTHERS_PERMISSIONS = 'read_others';
-    const WRITE_PERMISSIONS = 'write';
-    const DELETE_PERMISSIONS = 'delete';
-    const WRITE_STATUS_PERMISSIONS = 'write_status';
-    const WRITE_TIME_PERMISSIONS = 'write_time';
-    const WRITE_OTHERS_PERMISSIONS = 'write_others';
+    public const READ_PERMISSIONS         = 'read';
+    public const READ_OTHERS_PERMISSIONS  = 'read_others';
+    public const WRITE_PERMISSIONS        = 'write';
+    public const DELETE_PERMISSIONS       = 'delete';
+    public const WRITE_STATUS_PERMISSIONS = 'write_status';
+    public const WRITE_TIME_PERMISSIONS   = 'write_time';
+    public const WRITE_OTHERS_PERMISSIONS = 'write_others';
 
     /**
      * @var AbstractUser
@@ -49,7 +48,7 @@ class PermissionsService
             throw new \InvalidArgumentException('Permissions checker must implement PermissionsCheckerInterface!');
         }
         // Assign current user reference
-        $this->currentUser = $container->get('logged.in.user');
+        $this->currentUser        = $container->get('logged.in.user');
         $this->permissionsChecker = $permissionsChecker;
     }
 

@@ -26,7 +26,7 @@ class DeleteCategoryController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new DeleteCategoryCommand($args);
+        $command     = new DeleteCategoryCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

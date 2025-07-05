@@ -14,8 +14,7 @@ use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
  */
 class CustomerBookingEventPeriodRepository extends AbstractRepository implements EventRepositoryInterface
 {
-
-    const FACTORY = CustomerBookingEventPeriod::class;
+    public const FACTORY = CustomerBookingEventPeriod::class;
 
     /**
      * @param CustomerBookingEventPeriod $entity
@@ -94,5 +93,4 @@ class CustomerBookingEventPeriodRepository extends AbstractRepository implements
             throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
         }
     }
-
 }

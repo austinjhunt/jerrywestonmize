@@ -82,10 +82,10 @@ class WooCommerceService
     /** @var array $checkout_info */
     protected static $checkout_info = [];
 
-    /** @var boolean $processedAmeliaItems */
+    /** @var array $processedAmeliaItems */
     protected static $processedAmeliaItems = [];
 
-    const AMELIA = 'ameliabooking';
+    public const AMELIA = 'ameliabooking';
 
     /**
      * Init
@@ -109,7 +109,8 @@ class WooCommerceService
 
         $wcSettings = self::$settingsService->getCategorySettings('payments')['wc'];
 
-        if (empty($wcSettings['rules']['appointment']) &&
+        if (
+            empty($wcSettings['rules']['appointment']) &&
             empty($wcSettings['rules']['package']) &&
             empty($wcSettings['rules']['event'])
         ) {
@@ -130,7 +131,7 @@ class WooCommerceService
 
         add_action('woocommerce_before_checkout_process', [self::class, 'beforeCheckoutProcess'], 10, 1);
         add_action('woocommerce_checkout_create_order', [self::class, 'beforeCheckoutProcess'], 10, 2);
-        add_filter('woocommerce_before_calculate_totals', [self::class, 'beforeCalculateTotals'], 10, 3);
+        add_filter('woocommerce_before_calculate_totals', [self::class, 'beforeCalculateTotals'], 10);
 
         add_action('woocommerce_store_api_checkout_order_processed', [self::class, 'orderCreated'], 10, 1);
         add_action('woocommerce_checkout_order_created', [self::class, 'orderCreated'], 10, 1);
@@ -194,7 +195,8 @@ class WooCommerceService
                     ? filter_var($wc_item[self::AMELIA]['isCart'], FILTER_VALIDATE_BOOLEAN)
                     : !empty($wc_item[self::AMELIA]['isCart']);
 
-                if (!$isCart &&
+                if (
+                    !$isCart &&
                     $wc_item[self::AMELIA]['type'] !== 'event' &&
                     $wc_item[self::AMELIA]['type'] !== 'package' &&
                     isset($bookableData['bookable']['recurringPayment']) &&
@@ -237,7 +239,8 @@ class WooCommerceService
 
         switch (self::$settingsService->getCategorySettings('payments')['wc']['page']) {
             case 'checkout':
-                if (!empty($locale[0]) &&
+                if (
+                    !empty($locale[0]) &&
                     function_exists('icl_object_id') &&
                     ($url = apply_filters('wpml_permalink', get_permalink(get_option('woocommerce_checkout_page_id')), $locale[0], true))
                 ) {
@@ -248,7 +251,8 @@ class WooCommerceService
 
                 break;
             case 'cart':
-                if (!empty($locale[0]) &&
+                if (
+                    !empty($locale[0]) &&
                     function_exists('icl_object_id') &&
                     ($url = apply_filters('wpml_permalink', get_permalink(get_option('woocommerce_cart_page_id')), $locale[0], true))
                 ) {
@@ -261,7 +265,8 @@ class WooCommerceService
             default:
                 $locale = defined(AMELIA_LOCALE) ? explode('_', AMELIA_LOCALE) : null;
 
-                if (!empty($locale[0]) &&
+                if (
+                    !empty($locale[0]) &&
                     function_exists('icl_object_id') &&
                     ($url = apply_filters('wpml_permalink', get_permalink(get_option('woocommerce_cart_page_id')), $locale[0], true))
                 ) {
@@ -327,7 +332,6 @@ class WooCommerceService
 
                 $reservation = $reservationService->getNew(true, false, true);
 
-                /** @var AppointmentRepository $appointmentRepo */
                 $reservationService->processBooking($result, $data, $reservation, false);
 
                 if ($result->getResult() === CommandResult::RESULT_ERROR) {
@@ -336,6 +340,8 @@ class WooCommerceService
 
                 return '';
             }
+
+            return '';
         } catch (ContainerException $e) {
             return '';
         } catch (\Exception $e) {
@@ -568,76 +574,76 @@ class WooCommerceService
     private static function fetchEventEntities($ameliaEntitiesIds)
     {
         try {
-            /** @var EventRepository $eventRepository */
-            $eventRepository = self::$container->get('domain.booking.event.repository');
-
-            /** @var Collection $events */
-            $events = $eventRepository->getWithCoupons($ameliaEntitiesIds);
-
             $bookings = [];
 
-            foreach ((array)$events->keys() as $eventKey) {
-                /** @var Event $event */
-                $event = $events->getItem($eventKey);
+            /** @var EventApplicationService $eventApplicationService */
+            $eventApplicationService = self::$container->get('application.booking.event.service');
 
-                $bookings[$eventKey] = [
-                    'bookable'   => [
-                        'type'             => Entities::EVENT,
-                        'name'             => $event->getName()->getValue(),
-                        'translations'     => $event->getTranslations() ? $event->getTranslations()->getValue() : null,
-                        'description'      => $event->getDescription() ? $event->getDescription()->getValue() : null,
-                        'price'            => $event->getPrice()->getValue(),
-                        'aggregatedPrice'  => $event->getAggregatedPrice() ? $event->getAggregatedPrice()->getValue() : true,
-                        'recurringPayment' => 0,
-                        'locationId'       => $event->getLocationId() ? $event->getLocationId()->getValue() : null,
-                        'customLocation'   => $event->getCustomLocation() ? $event->getCustomLocation()->getValue() : null,
-                        'providers'        => $event->getProviders()->length() ? $event->getProviders()->toArray() : [],
-                        'depositPayment'   => $event->getDepositPayment()->getValue(),
-                        'deposit'          => $event->getDeposit()->getValue(),
-                        'depositPerPerson' => $event->getDepositPerPerson()->getValue(),
-                        'customTickets'    => [],
-                        'customPricing'    => $event->getCustomPricing() ? $event->getCustomPricing()->getValue() : false,
-                    ],
-                    'coupons'   => []
+            /** @var Event $event */
+            $event = $eventApplicationService->getEventById(
+                $ameliaEntitiesIds[0]['eventId'],
+                [
+                    'fetchEventsTickets'    => true,
+                    'fetchEventsProviders'  => true,
+                ]
+            );
+
+            $bookings[$event->getId()->getValue()] = [
+                'bookable'   => [
+                    'type'             => Entities::EVENT,
+                    'name'             => $event->getName()->getValue(),
+                    'translations'     => $event->getTranslations() ? $event->getTranslations()->getValue() : null,
+                    'description'      => $event->getDescription() ? $event->getDescription()->getValue() : null,
+                    'price'            => $event->getPrice()->getValue(),
+                    'aggregatedPrice'  => $event->getAggregatedPrice() ? $event->getAggregatedPrice()->getValue() : true,
+                    'recurringPayment' => 0,
+                    'locationId'       => $event->getLocationId() ? $event->getLocationId()->getValue() : null,
+                    'customLocation'   => $event->getCustomLocation() ? $event->getCustomLocation()->getValue() : null,
+                    'providers'        => $event->getProviders()->length() ? $event->getProviders()->toArray() : [],
+                    'depositPayment'   => $event->getDepositPayment()->getValue(),
+                    'deposit'          => $event->getDeposit()->getValue(),
+                    'depositPerPerson' => $event->getDepositPerPerson()->getValue(),
+                    'customTickets'    => [],
+                    'customPricing'    => $event->getCustomPricing() ? $event->getCustomPricing()->getValue() : false,
+                ],
+                'coupons'   => []
+            ];
+
+            /** @var EventApplicationService $eventApplicationService */
+            $eventAS = self::$container->get('application.booking.event.service');
+
+            if ($event->getCustomPricing()->getValue()) {
+                $event->setCustomTickets($eventAS->getTicketsPriceByDateRange($event->getCustomTickets()));
+            }
+
+            /** @var Collection $customTickets */
+            $customTickets = $event->getCustomTickets();
+
+            /** @var EventTicket $customTicket */
+            foreach ($customTickets->getItems() as $customTicket) {
+                $bookings[$event->getId()->getValue()]['bookable']['customTickets'][$customTicket->getId()->getValue()] = [
+                    'id'             => $customTicket->getId()->getValue(),
+                    'price'          => $customTicket->getPrice()->getValue(),
+                    'dateRangePrice' => $customTicket->getDateRangePrice() ?
+                        $customTicket->getDateRangePrice()->getValue() : null,
                 ];
+            }
 
-                /** @var Collection $coupons */
-                $coupons = $event->getCoupons();
+            if (!!$ameliaEntitiesIds[0]['couponId']) {
+                /** @var CouponRepository $couponRepository */
+                $couponRepository = self::$container->get('domain.coupon.repository');
 
-                foreach ((array)$coupons->keys() as $couponKey) {
-                    /** @var Coupon $coupon */
-                    $coupon = $coupons->getItem($couponKey);
+                /** @var Coupon $coupon */
+                $coupon = $couponRepository->getById($ameliaEntitiesIds[0]['couponId']);
 
-                    $bookings[$eventKey]['coupons'][$coupon->getId()->getValue()] = [
-                        'deduction' => $coupon->getDeduction()->getValue(),
-                        'discount'  => $coupon->getDiscount()->getValue(),
-                    ];
-                }
-
-                /** @var EventApplicationService $eventApplicationService */
-                $eventAS = self::$container->get('application.booking.event.service');
-
-                if ($event->getCustomPricing()->getValue()) {
-                    $event->setCustomTickets($eventAS->getTicketsPriceByDateRange($event->getCustomTickets()));
-                }
-
-                /** @var Collection $customTickets */
-                $customTickets = $event->getCustomTickets();
-
-                /** @var EventTicket $customTicket */
-                foreach ($customTickets->getItems() as $customTicket) {
-                    $bookings[$eventKey]['bookable']['customTickets'][$customTicket->getId()->getValue()] = [
-                        'id'             => $customTicket->getId()->getValue(),
-                        'price'          => $customTicket->getPrice()->getValue(),
-                        'dateRangePrice' => $customTicket->getDateRangePrice() ?
-                            $customTicket->getDateRangePrice()->getValue() : null,
-                    ];
-                }
+                $bookings[$event->getId()->getValue()]['coupons'][$coupon->getId()->getValue()] = [
+                    'deduction' => $coupon->getDeduction()->getValue(),
+                    'discount'  => $coupon->getDiscount()->getValue(),
+                ];
             }
 
             Cache::add(Entities::EVENT, $bookings);
         } catch (\Exception $e) {
-        } catch (ContainerException $e) {
         }
     }
 
@@ -652,6 +658,7 @@ class WooCommerceService
             /** @var PackageRepository $packageRepository */
             $packageRepository = self::$container->get('domain.bookable.package.repository');
 
+            /** @var Coupon|null $coupon */
             $coupon = null;
 
             if (!!$ameliaEntitiesIds[0]['couponId']) {
@@ -691,7 +698,6 @@ class WooCommerceService
 
             Cache::add(Entities::PACKAGE, $bookings);
         } catch (\Exception $e) {
-        } catch (ContainerException $e) {
         }
     }
 
@@ -708,7 +714,17 @@ class WooCommerceService
             $providerRepository = self::$container->get('domain.users.providers.repository');
 
             /** @var Collection $providers */
-            $providers = $providerRepository->getWithServicesAndExtrasAndCoupons($ameliaEntitiesIds);
+            $providers = $providerRepository->getWithServicesAndExtras($ameliaEntitiesIds);
+
+            /** @var Coupon|null $coupon */
+            $coupon = null;
+
+            if (!!$ameliaEntitiesIds[0]['couponId']) {
+                /** @var CouponRepository $couponRepository */
+                $couponRepository = self::$container->get('domain.coupon.repository');
+
+                $coupon = $couponRepository->getById($ameliaEntitiesIds[0]['couponId']);
+            }
 
             $bookings = [];
 
@@ -773,13 +789,7 @@ class WooCommerceService
                         ];
                     }
 
-                    /** @var Collection $coupons */
-                    $coupons = $service->getCoupons();
-
-                    foreach ((array)$coupons->keys() as $couponKey) {
-                        /** @var Coupon $coupon */
-                        $coupon = $coupons->getItem($couponKey);
-
+                    if ($coupon) {
                         $bookings[$providerKey][$serviceKey]['coupons'][$coupon->getId()->getValue()] = [
                             'deduction' => $coupon->getDeduction()->getValue(),
                             'discount'  => $coupon->getDiscount()->getValue(),
@@ -790,7 +800,6 @@ class WooCommerceService
 
             Cache::add(Entities::APPOINTMENT, $bookings);
         } catch (\Exception $e) {
-        } catch (ContainerException $e) {
         }
     }
 
@@ -818,7 +827,11 @@ class WooCommerceService
         if (!Cache::getAll()) {
             foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
                 if (isset($wc_item[self::AMELIA]) && is_array($wc_item[self::AMELIA])) {
-                    if ($inspectData && empty($wc_item[self::AMELIA]['payment']['fromLink']) && ($errorMessage = self::validateBooking($wc_item[self::AMELIA]))) {
+                    if (
+                        $inspectData &&
+                        empty($wc_item[self::AMELIA]['payment']['fromLink']) &&
+                        ($errorMessage = self::validateBooking($wc_item[self::AMELIA]))
+                    ) {
                         wc_add_notice(
                             $errorMessage . FrontendStrings::getCommonStrings()['wc_appointment_is_removed'],
                             'error'
@@ -858,7 +871,8 @@ class WooCommerceService
                         ? filter_var($wc_item[self::AMELIA]['isCart'], FILTER_VALIDATE_BOOLEAN)
                         : !empty($wc_item[self::AMELIA]['isCart']);
 
-                    if (!$isCart &&
+                    if (
+                        !$isCart &&
                         $wc_item[self::AMELIA]['type'] !== 'event' &&
                         $wc_item[self::AMELIA]['type'] !== 'package' &&
                         isset($bookableData['bookable']['recurringPayment']) &&
@@ -1065,7 +1079,6 @@ class WooCommerceService
         $cartInfo = [];
 
         foreach (array_merge([$data], $data['recurring']) as $bookingData) {
-            /** @var array $packageBooking */
             $booking = self::getEntity(
                 array_merge(['type' => Entities::APPOINTMENT], $bookingData)
             );
@@ -1098,7 +1111,11 @@ class WooCommerceService
             $cartInfo[$serviceId]['data'][] = $timeInfo[0];
         }
 
-        $result = ['<br>', "<hr style='margin-top: 16px; margin-bottom: 10px'>", '<p>' . '<strong>' . FrontendStrings::getAllStrings()['appointments'] . ':</strong> ' . '</p>'];
+        $result = [
+            '<br>',
+            "<hr style='margin-top: 16px; margin-bottom: 10px'>",
+            '<p>' . '<strong>' . FrontendStrings::getAllStrings()['appointments'] . ':</strong> ' . '</p>'
+        ];
 
         foreach ($cartInfo as $serviceData) {
             $result[] = $serviceData['name'];
@@ -1124,7 +1141,6 @@ class WooCommerceService
         $packageInfo = [];
 
         foreach ($data['package'] as $bookingData) {
-            /** @var array $packageBooking */
             $booking = self::getEntity(
                 array_merge(['type' => Entities::APPOINTMENT], $bookingData)
             );
@@ -1157,7 +1173,11 @@ class WooCommerceService
             $packageInfo[$serviceId]['data'][] = $timeInfo[0];
         }
 
-        $result = ['<br>', "<hr style='margin-top: 16px; margin-bottom: 10px'>", '<p>' . '<strong>' . FrontendStrings::getAllStrings()['package'] . ':</strong> ' . $data['name'] . '</p>'];
+        $result = [
+            '<br>',
+            "<hr style='margin-top: 16px; margin-bottom: 10px'>",
+            '<p>' . '<strong>' . FrontendStrings::getAllStrings()['package'] . ':</strong> ' . $data['name'] . '</p>'
+        ];
 
         foreach ($packageInfo as $serviceId => $serviceData) {
             $result[] = $serviceData['name'];
@@ -1253,10 +1273,11 @@ class WooCommerceService
      * Set checkout block
      *
      * @param array $wc_item
+     * @param array $metaData
      *
-     * @return void
+     * @return bool
      */
-    public static function addCheckoutBlockValues($wc_item)
+    public static function addCheckoutBlockValues($wc_item, $metaData)
     {
         if (is_checkout() && !is_wc_endpoint_url()) {
             $content = get_post(wc_get_page_id('checkout'))->post_content;
@@ -1287,8 +1308,18 @@ class WooCommerceService
                     'ameliaCustomer',
                     $checkoutData
                 );
+
+                wp_localize_script(
+                    'amelia_wc_checkout_block',
+                    'ameliaNote',
+                    [$metaData]
+                );
+
+                return true;
             }
         }
+
+        return false;
     }
 
     /**
@@ -1308,8 +1339,6 @@ class WooCommerceService
         }
 
         if (isset($wc_item[self::AMELIA]) && is_array($wc_item[self::AMELIA])) {
-            self::addCheckoutBlockValues($wc_item[self::AMELIA]);
-
             /** @var SettingsService $settingsService */
             $settingsService = self::$container->get('domain.settings.service');
 
@@ -1323,11 +1352,15 @@ class WooCommerceService
             $customFieldsInfo = [];
 
             if (!is_array($wc_item[self::AMELIA]['bookings'][0]['customFields'])) {
-                $wc_item[self::AMELIA]['bookings'][0]['customFields'] = !empty($wc_item[self::AMELIA]['bookings'][0]['customFields']) ? json_decode($wc_item[self::AMELIA]['bookings'][0]['customFields'], true) : null;
+                $wc_item[self::AMELIA]['bookings'][0]['customFields'] =
+                    !empty($wc_item[self::AMELIA]['bookings'][0]['customFields']) ?
+                    json_decode($wc_item[self::AMELIA]['bookings'][0]['customFields'], true) :
+                    null;
             }
 
             foreach ((array)$wc_item[self::AMELIA]['bookings'][0]['customFields'] as $customField) {
-                if (!array_key_exists('type', $customField) ||
+                if (
+                    !array_key_exists('type', $customField) ||
                     (array_key_exists('type', $customField) && $customField['type'] !== 'file')
                 ) {
                     if (isset($customField['value']) && is_array($customField['value'])) {
@@ -1441,10 +1474,7 @@ class WooCommerceService
             }
 
             if ($booking && $description) {
-                /** @var Appointment|Event $reservation */
-                $reservation = null;
-
-                /** @var PlaceholderService $placeholderService */
+                /** @var PlaceholderService|null $placeholderService */
                 $placeholderService = null;
 
                 $reservationData = [];
@@ -1453,7 +1483,8 @@ class WooCommerceService
                     ? $wc_item[self::AMELIA]['couponId']
                     : null;
 
-                if ($wc_item[self::AMELIA]['type'] === Entities::APPOINTMENT ||
+                if (
+                    $wc_item[self::AMELIA]['type'] === Entities::APPOINTMENT ||
                     $wc_item[self::AMELIA]['type'] === Entities::EVENT
                 ) {
                     $bookableData = self::getEntity($wc_item[self::AMELIA]);
@@ -1671,7 +1702,8 @@ class WooCommerceService
 
                         $id = substr($value, 0, strpos($value, '%'));
 
-                        if (isset($placeholderData['custom_field_' . $id]) &&
+                        if (
+                            isset($placeholderData['custom_field_' . $id]) &&
                             !$placeholderData['custom_field_' . $id]
                         ) {
                             $descriptionParts[$index] = ' class="am-cf-empty"' . $descriptionParts[$index];
@@ -1700,6 +1732,15 @@ class WooCommerceService
                     $description,
                     $placeholderData
                 );
+            }
+
+            if ($metaData && self::addCheckoutBlockValues($wc_item[self::AMELIA], [$metaData])) {
+                $other_data[] = [
+                    'name'  => '',
+                    'value' => '',
+                ];
+
+                return $other_data;
             }
 
             $other_data[] = [
@@ -1766,7 +1807,7 @@ class WooCommerceService
         /** @var Reservation $reservation */
         $reservation = new Reservation();
 
-        /** @var AbstractBookable $bookable */
+        /** @var AbstractBookable|null $bookable */
         $bookable = null;
 
         switch ($wcItemAmeliaCache['type']) {
@@ -2074,7 +2115,7 @@ class WooCommerceService
      * @param int $item_id
      * @throws ContainerException
      */
-    public static function orderItemMeta($item_id)
+    public static function orderItemMeta($item_id, $item, $order)
     {
         $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
@@ -2098,7 +2139,9 @@ class WooCommerceService
             $other_data = self::getItemData([], [self::AMELIA => array_merge($data, ['recurring'  => []])]);
 
             if (empty($data['payment']['fromLink'])) {
-                $labels = strpos($other_data[0]['value'], '<br>') !== false ? preg_replace("/\r|\n/", '<br>', $other_data[0]['value']) : $other_data[0]['value'];
+                $labels = strpos($other_data[0]['value'], '<br>') !== false ?
+                    preg_replace("/\r|\n/", '<br>', $other_data[0]['value']) :
+                    $other_data[0]['value'];
             } else {
                 $labels = str_replace("<br>", '', $other_data[0]['value']);
                 $labels = str_replace("\n\n<hr", '<hr', $labels);
@@ -2111,6 +2154,8 @@ class WooCommerceService
 
             return '<br/>' . $other_data[0]['name'] . '<br/>' . nl2br($labels);
         }
+
+        return '';
     }
 
     /**
@@ -2168,7 +2213,8 @@ class WooCommerceService
         ) ?: PaymentStatus::PAID;
 
         if ($paymentStatus !== false) {
-            if ($payment->getStatus()->getValue() === PaymentStatus::PARTIALLY_PAID &&
+            if (
+                $payment->getStatus()->getValue() === PaymentStatus::PARTIALLY_PAID &&
                 $paymentStatus === 'paid'
             ) {
                 $paymentStatus = PaymentStatus::PARTIALLY_PAID;
@@ -2330,7 +2376,7 @@ class WooCommerceService
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
-    public static function redirectAfterOrderReceived($orderId)
+    public static function redirectAfterOrderReceived($orderId, $order = null)
     {
         $order = new \WC_Order($orderId);
 
@@ -2348,7 +2394,8 @@ class WooCommerceService
                 $data = wc_get_order_item_meta($itemId, self::AMELIA);
 
                 // add created user to WooCommerce order if WooCommerce didn't create user but Amelia Customer has WordPress user
-                if (!$updatedOrder &&
+                if (
+                    !$updatedOrder &&
                     $data &&
                     is_array($data) &&
                     !empty($data['externalId']) &&
@@ -2365,7 +2412,8 @@ class WooCommerceService
 
                 $wcSettings = self::$settingsService->getSetting('payments', 'wc');
 
-                if ($data && is_array($data) &&
+                if (
+                    $data && is_array($data) &&
                     isset($data['processed'], $wcSettings['redirectPage']) &&
                     $wcSettings['redirectPage'] === 2
                 ) {
@@ -2461,7 +2509,8 @@ class WooCommerceService
                             $cacheData = json_decode($data['cacheData'], true);
 
 
-                            if (!empty($cacheData['request']['state']['appointment']['bookings'][0]['customer']) &&
+                            if (
+                                !empty($cacheData['request']['state']['appointment']['bookings'][0]['customer']) &&
                                 !empty($data['bookings'][0]['customer'])
                             ) {
                                 $cacheData['request']['state']['appointment']['bookings'][0]['customer'] =
@@ -2508,7 +2557,15 @@ class WooCommerceService
             $order    = wc_create_order(['customer_id' => $oldOrder->get_customer_id()]);
             $order->set_address($oldOrder->get_address(), 'billing');
 
-            $order->add_product(wc_get_product(!empty($appointmentData['wcProductId']) ? $appointmentData['wcProductId'] : self::getProductIdFromSettings()), 1, ['subtotal' => $price, 'total' => $price ]);
+            $order->add_product(
+                wc_get_product(
+                    !empty($appointmentData['wcProductId']) ?
+                        $appointmentData['wcProductId'] :
+                        self::getProductIdFromSettings()
+                ),
+                1,
+                ['subtotal' => $price, 'total' => $price ]
+            );
 
             foreach ($order->get_items() as $itemId => $orderItem) {
                 wc_add_order_item_meta($itemId, self::AMELIA, $appointmentData);
@@ -2519,7 +2576,8 @@ class WooCommerceService
             return self::getPaymentLink($order->get_id());
         } else {
             $link =  wc_get_checkout_url();
-            if (!empty($appointmentData['locale'][0]) &&
+            if (
+                !empty($appointmentData['locale'][0]) &&
                 function_exists('icl_object_id') &&
                 ($plink = apply_filters('wpml_permalink', get_permalink(get_option('woocommerce_checkout_page_id')), $appointmentData['locale'][0], true))
             ) {
@@ -2567,7 +2625,12 @@ class WooCommerceService
 
         $appointmentData = $cacheRepository->getByIdAndName($cacheId[0], $cacheId[1]);
 
-        if ($appointmentData && $appointmentData->getData() && $appointmentData->getData()->getValue() && json_decode($appointmentData->getData()->getValue(), true)) {
+        if (
+            $appointmentData &&
+            $appointmentData->getData() &&
+            $appointmentData->getData()->getValue() &&
+            json_decode($appointmentData->getData()->getValue(), true)
+        ) {
             self::addToCart(json_decode($appointmentData->getData()->getValue(), true));
         }
     }
@@ -2625,7 +2688,7 @@ class WooCommerceService
             )
         );
 
-        return  ['error' => (get_class($refund) === 'WP_Error' ? $refund->get_error_message() : false)];
+        return ['error' => (get_class($refund) === 'WP_Error' ? $refund->get_error_message() : false)];
     }
 
 
@@ -2698,7 +2761,8 @@ class WooCommerceService
      */
     public static function orderCreated($order)
     {
-        if (self::isAmeliaOrder($order) &&
+        if (
+            self::isAmeliaOrder($order) &&
             self::isAmeliaOrderValidForBooking($order) &&
             !self::isAmeliaOrderPrePaid() &&
             !self::isAmeliaOrderFromPaymentLink($order, false)
@@ -2723,10 +2787,10 @@ class WooCommerceService
         if (self::isAmeliaOrder($order)) {
             if (self::isAmeliaOrderProcessed($order)) {
                 self::manageOrderUpdateStatus($order);
-            } else if (self::isAmeliaOrderValidForBooking($order)) {
+            } elseif (self::isAmeliaOrderValidForBooking($order)) {
                 if (self::isAmeliaOrderFromPaymentLink($order, true)) {
                     self::managePaymentCreatedFromPaymentLink($order);
-                } else if (self::isAmeliaOrderPrePaid()) {
+                } elseif (self::isAmeliaOrderPrePaid()) {
                     self::createBookings($order, true, true);
                 } else {
                     self::completeBookings($order);
@@ -2789,7 +2853,8 @@ class WooCommerceService
         foreach ($order->get_items() as $item_id => $order_item) {
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
-            if ((!$inspectRules || self::isValid($order->get_status(), $data) !== false) &&
+            if (
+                (!$inspectRules || self::isValid($order->get_status(), $data) !== false) &&
                 !isset($data['processed']) &&
                 isset($data['payment']['fromLink']) &&
                 $data['payment']['fromLink']
@@ -2825,7 +2890,8 @@ class WooCommerceService
 
         $wcSettings = self::$settingsService->getSetting('payments', 'wc');
 
-        if ($settingsService->getSetting('general', 'runInstantPostBookingActions') ||
+        if (
+            $settingsService->getSetting('general', 'runInstantPostBookingActions') ||
             (isset($wcSettings['redirectPage']) && $wcSettings['redirectPage'] === 1) ||
             $trigger
         ) {
@@ -2956,7 +3022,8 @@ class WooCommerceService
         foreach ($order->get_items() as $item_id => $order_item) {
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
-            if ($data &&
+            if (
+                $data &&
                 is_array($data) &&
                 !isset($data['processed']) &&
                 !empty($data['type']) &&
@@ -3003,7 +3070,8 @@ class WooCommerceService
             $key = $data && is_array($data) && isset($data['wcItemHash']) ? $data['wcItemHash'] : 0;
 
             try {
-                if ((!$inspectRules || self::isValid($order->get_status(), $data) !== false) &&
+                if (
+                    (!$inspectRules || self::isValid($order->get_status(), $data) !== false) &&
                     !array_key_exists($key, self::$processedAmeliaItems) &&
                     !empty($data) &&
                     !isset($data['processed'])
@@ -3106,7 +3174,8 @@ class WooCommerceService
             $key = $data && is_array($data) && isset($data['wcItemHash']) ? $data['wcItemHash'] : 0;
 
             try {
-                if (self::isValid($order->get_status(), $data) !== false &&
+                if (
+                    self::isValid($order->get_status(), $data) !== false &&
                     !array_key_exists($key, self::$processedAmeliaItems) &&
                     !isset($data['processed']) &&
                     isset($data['payment']['fromLink']) &&
@@ -3121,7 +3190,11 @@ class WooCommerceService
                         $paymentAS = self::$container->get('application.payment.service');
 
                         $data['payment']['gateway'] = 'wc';
-                        $linkPayment = $paymentAS->insertPaymentFromLink($data['payment'], $order_item->get_total() + ($order_item->get_total_tax() ?: 0), $data['type']);
+                        $linkPayment     = $paymentAS->insertPaymentFromLink(
+                            $data['payment'],
+                            $order_item->get_total() + ($order_item->get_total_tax() ?: 0),
+                            $data['type']
+                        );
                         $data['payment'] = $linkPayment->toArray();
                     } else {
                         /** @var PaymentRepository $paymentRepository */
@@ -3129,10 +3202,14 @@ class WooCommerceService
 
                         $paymentRepository->updateFieldById($data['payment']['id'], $data['payment']['status'], 'status');
                         $paymentRepository->updateFieldById($data['payment']['id'], $data['payment']['gatewayTitle'], 'gatewayTitle');
-                        $paymentRepository->updateFieldById($data['payment']['id'], DateTimeService::getNowDateTimeObjectInUtc()->format('Y-m-d H:i:s'), 'dateTime');
+                        $paymentRepository->updateFieldById(
+                            $data['payment']['id'],
+                            DateTimeService::getNowDateTimeObjectInUtc()->format('Y-m-d H:i:s'),
+                            'dateTime'
+                        );
                         $paymentRepository->updateFieldById($data['payment']['id'], 'wc', 'gateway');
-                        $paymentRepository->updateFieldById($data['payment']['id'], $order_item->get_total() + ($order_item->get_total_tax() ?: 0) , 'amount');
-                        $paymentRepository->updateFieldById($data['payment']['id'], $data['payment']['wcOrderId'] , 'wcOrderId');
+                        $paymentRepository->updateFieldById($data['payment']['id'], $order_item->get_total() + ($order_item->get_total_tax() ?: 0), 'amount');
+                        $paymentRepository->updateFieldById($data['payment']['id'], $data['payment']['wcOrderId'], 'wcOrderId');
                     }
 
                     $cacheId = $_GET['amelia_cache_id'];
@@ -3158,7 +3235,7 @@ class WooCommerceService
                     );
                     if ($requestedStatus !== false) {
                         self::updateBookingStatus($payment, $data['payment']['entity'], $order);
-                    } else if ($data['payment']['entity'] === Entities::APPOINTMENT) {
+                    } elseif ($data['payment']['entity'] === Entities::APPOINTMENT) {
                         /** @var SettingsService $settingsDS */
                         $settingsDS = self::$container->get('domain.settings.service');
                         /** @var AppointmentApplicationService $appointmentAS */
@@ -3168,11 +3245,17 @@ class WooCommerceService
 
                         $data = $reservation->getData();
 
-                        $bookableSettings = $data['bookable']['settings'];
-                        $entitySettings = !empty($bookableSettings) && json_decode($bookableSettings, true) ? json_decode($bookableSettings, true) : null;
-                        $paymentLinksSettings = !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ? $entitySettings['payments']['paymentLinks'] : null;
-                        $changeBookingStatus =  $paymentLinksSettings && $paymentLinksSettings['changeBookingStatus'] !== null ? $paymentLinksSettings['changeBookingStatus'] :
-                            $settingsDS->getSetting('payments', 'paymentLinks')['changeBookingStatus'];
+                        $bookableSettings     = $data['bookable']['settings'];
+                        $entitySettings       = !empty($bookableSettings) && json_decode($bookableSettings, true) ? json_decode($bookableSettings, true) : null;
+                        $paymentLinksSettings =
+                            !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ?
+                                $entitySettings['payments']['paymentLinks'] :
+                                null;
+                        $changeBookingStatus  =
+                            $paymentLinksSettings &&
+                            $paymentLinksSettings['changeBookingStatus'] !== null ?
+                                $paymentLinksSettings['changeBookingStatus'] :
+                                $settingsDS->getSetting('payments', 'paymentLinks')['changeBookingStatus'];
 
                         //call woo (update or create?) rules here
                         if ($changeBookingStatus && $data['booking']['status'] !== BookingStatus::APPROVED) {
@@ -3204,7 +3287,8 @@ class WooCommerceService
         foreach ($order->get_items() as $item_id => $order_item) {
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
-            if (self::isValid($order->get_status(), $data) !== false &&
+            if (
+                self::isValid($order->get_status(), $data) !== false &&
                 isset($data['processed'], $data['payment']['wcOrderId'])
             ) {
                 /** @var Collection $payments */

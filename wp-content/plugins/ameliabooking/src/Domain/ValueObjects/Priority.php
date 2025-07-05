@@ -11,10 +11,10 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  */
 final class Priority
 {
-    const LEAST_EXPENSIVE = 'least_expensive';
-    const MOST_EXPENSIVE = 'most_expensive';
-    const LEAST_OCCUPIED = 'least_occupied';
-    const MOST_OCCUPIED = 'most_occupied';
+    public const LEAST_EXPENSIVE = 'least_expensive';
+    public const MOST_EXPENSIVE  = 'most_expensive';
+    public const LEAST_OCCUPIED  = 'least_occupied';
+    public const MOST_OCCUPIED   = 'most_occupied';
 
     /**
      * @var int
@@ -28,16 +28,18 @@ final class Priority
      */
     public function __construct($value)
     {
-        if (!in_array(
-            $value,
-            [
+        if (
+            !in_array(
+                $value,
+                [
                 self::LEAST_EXPENSIVE,
                 self::MOST_EXPENSIVE,
                 self::LEAST_OCCUPIED,
                 self::MOST_OCCUPIED
-            ],
-            false
-        )) {
+                ],
+                false
+            )
+        ) {
             throw new InvalidArgumentException('Not valid priority option');
         }
         $this->value = $value;

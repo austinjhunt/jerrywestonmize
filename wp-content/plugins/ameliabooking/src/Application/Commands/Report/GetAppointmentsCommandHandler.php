@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -140,7 +141,6 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         $extras[$item->getId()->getValue()] = $item->toArray();
                     }
                 }
-
             }
         }
 
@@ -182,7 +182,9 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
                     $phone = $booking['customer']['phone'] ?: '';
 
-                    $customers[] = $customerInfo['firstName'] . ' ' . $customerInfo['lastName'] . ' ' . ($booking['customer']['email'] ?: '') . ' ' . ($customerInfo['phone'] ?: $phone);
+                    $customers[] =
+                        $customerInfo['firstName'] . ' ' . $customerInfo['lastName'] . ' ' .
+                        ($booking['customer']['email'] ?: '') . ' ' . ($customerInfo['phone'] ?: $phone);
 
                     $customFieldsJson = json_decode($booking['customFields'], true);
                     foreach ($customFields as $customFieldId => $customFieldLabel) {
@@ -192,10 +194,13 @@ class GetAppointmentsCommandHandler extends CommandHandler
                                 if ($customFiled['type'] === 'file') {
                                     $value = '';
                                     foreach ($customFiled['value'] as $cfIndex => $cfFile) {
-                                        $value .= ($cfIndex === 0 ? '' : ' | ')  . (AMELIA_UPLOADS_FILES_PATH_USE ? AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking['id'] . '/' . $cfIndex :
-                                            AMELIA_UPLOADS_FILES_URL . $booking['id'] . '_' . $customFiled['value'][$cfIndex]['name']);
+                                        $value .=
+                                            ($cfIndex === 0 ? '' : ' | ')  .
+                                            (AMELIA_UPLOADS_FILES_PATH_USE ?
+                                                AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking['id'] . '/' . $cfIndex :
+                                                AMELIA_UPLOADS_FILES_URL . $booking['id'] . '_' . $customFiled['value'][$cfIndex]['name']);
                                     }
-                                } else if (is_array($customFiled['value'])) {
+                                } elseif (is_array($customFiled['value'])) {
                                     $value = implode('|', $customFiled['value']);
                                 } else {
                                     $value = $customFiled['value'];
@@ -215,7 +220,6 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         } else {
                             $extraInfo[$booking['id']] = $extras[$extra['extraId']]['name'] . ' x ' . $extra['quantity'];
                         }
-
                     }
                 }
 
@@ -229,7 +233,14 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
                 $this->getRowData($params, $row, $appointment, $dateFormat, $timeFormat, $numberOfPersons);
 
-                $mergedRow = apply_filters('amelia_before_csv_export_appointments', array_merge($row, $rowCF, $rowExtras), $appointment, $params['separate'], null);
+                $mergedRow =
+                    apply_filters(
+                        'amelia_before_csv_export_appointments',
+                        array_merge($row, $rowCF, $rowExtras),
+                        $appointment,
+                        $params['separate'],
+                        null
+                    );
 
                 $rows[] = $mergedRow;
             } else {
@@ -258,10 +269,13 @@ class GetAppointmentsCommandHandler extends CommandHandler
                                     if ($customFiled['type'] === 'file') {
                                         $value = '';
                                         foreach ($customFiled['value'] as $cfIndex => $cfFile) {
-                                            $value .= ($cfIndex === 0 ? '' : ' | ')  . (AMELIA_UPLOADS_FILES_PATH_USE ? AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking['id'] . '/' . $cfIndex :
-                                                AMELIA_UPLOADS_FILES_URL . $booking['id'] . '_' . $customFiled['value'][$cfIndex]['name']);
+                                            $value .=
+                                                ($cfIndex === 0 ? '' : ' | ')  .
+                                                (AMELIA_UPLOADS_FILES_PATH_USE ?
+                                                    AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking['id'] . '/' . $cfIndex :
+                                                    AMELIA_UPLOADS_FILES_URL . $booking['id'] . '_' . $customFiled['value'][$cfIndex]['name']);
                                         }
-                                    } else if (is_array($customFiled['value'])) {
+                                    } elseif (is_array($customFiled['value'])) {
                                         $value = implode('|', $customFiled['value']);
                                     } else {
                                         $value = $customFiled['value'];
@@ -331,11 +345,13 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         if (in_array('duration', $params['fields'], true)) {
             if ($booking) {
-                $row[LiteBackendStrings::getCommonStrings()['duration']] = $helperService->secondsToNiceDuration(!empty($booking['duration']) ? $booking['duration'] : $appointment['service']['duration']);
+                $row[LiteBackendStrings::getCommonStrings()['duration']] =
+                    $helperService->secondsToNiceDuration(!empty($booking['duration']) ? $booking['duration'] : $appointment['service']['duration']);
             } else {
                 $durations = [];
                 foreach ($appointment['bookings'] as $booking2) {
-                    $durations[] = $helperService->secondsToNiceDuration(!empty($booking2['duration']) ? $booking2['duration'] : $appointment['service']['duration']);
+                    $durations[] =
+                        $helperService->secondsToNiceDuration(!empty($booking2['duration']) ? $booking2['duration'] : $appointment['service']['duration']);
                 }
                 $row[LiteBackendStrings::getCommonStrings()['duration']] = count(array_unique($durations)) === 1 ? $durations[0] : implode(', ', $durations);
             }
@@ -394,13 +410,15 @@ class GetAppointmentsCommandHandler extends CommandHandler
             if ($booking) {
                 $status = $booking['payments'] && count($booking['payments']) > 0 ?
                     $paymentAS->getFullStatus($booking, Entities::APPOINTMENT) : 'pending';
-                $row[BackendStrings::getCommonStrings()['payment_status']] = $status === 'partiallyPaid' ? BackendStrings::getCommonStrings()['partially_paid'] : BackendStrings::getCommonStrings()[$status];
+                $row[BackendStrings::getCommonStrings()['payment_status']] =
+                    $status === 'partiallyPaid' ? BackendStrings::getCommonStrings()['partially_paid'] : BackendStrings::getCommonStrings()[$status];
             } else {
                 $statuses = [];
                 foreach ($appointment['bookings'] as $booking2) {
                     $status     = $booking2['payments'] && count($booking2['payments']) > 0 ?
                         $paymentAS->getFullStatus($booking2, Entities::APPOINTMENT) : 'pending';
-                    $statuses[] = $status === 'partiallyPaid' ? BackendStrings::getCommonStrings()['partially_paid'] : BackendStrings::getCommonStrings()[$status];
+                    $statuses[] =
+                        $status === 'partiallyPaid' ? BackendStrings::getCommonStrings()['partially_paid'] : BackendStrings::getCommonStrings()[$status];
                 }
                 $row[BackendStrings::getCommonStrings()['payment_status']] = implode(', ', $statuses);
             }
@@ -419,7 +437,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
                     $booking['payments']
                 );
 
-                $row[BackendStrings::getCommonStrings()['payment_method']] = count(array_unique($methodsUsed)) === 1 ? $methodsUsed[0] : implode(', ', $methodsUsed);
+                $row[BackendStrings::getCommonStrings()['payment_method']] =
+                    count(array_unique($methodsUsed)) === 1 ? $methodsUsed[0] : implode(', ', $methodsUsed);
             } else {
                 $methods = [];
                 foreach ($appointment['bookings'] as $booking2) {
@@ -429,7 +448,9 @@ class GetAppointmentsCommandHandler extends CommandHandler
                             if ($method === 'wc') {
                                 $method = 'wc_name';
                             }
-                            return !$method || $method === 'onSite' ? BackendStrings::getCommonStrings()['on_site'] : BackendStrings::getSettingsStrings()[$method];
+                            return !$method || $method === 'onSite' ?
+                                BackendStrings::getCommonStrings()['on_site'] :
+                                BackendStrings::getSettingsStrings()[$method];
                         },
                         $booking2['payments']
                     );

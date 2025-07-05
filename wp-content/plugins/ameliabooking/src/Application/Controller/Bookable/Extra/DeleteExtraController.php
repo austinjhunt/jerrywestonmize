@@ -26,7 +26,7 @@ class DeleteExtraController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new DeleteExtraCommand($args);
+        $command     = new DeleteExtraCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

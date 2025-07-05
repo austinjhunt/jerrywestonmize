@@ -30,6 +30,7 @@ class GetGoogleAuthURLCommandHandler extends CommandHandler
 
         $providerId = (int)$command->getField('id');
 
+        $authUrl = null;
         try {
             $authUrl = $googleCalendarService->createAuthUrl(
                 $providerId,

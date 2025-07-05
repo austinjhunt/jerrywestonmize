@@ -9,13 +9,13 @@ namespace AmeliaBooking\Domain\ValueObjects\String;
  */
 final class PaymentStatus
 {
-    const PAID = 'paid';
+    public const PAID = 'paid';
 
-    const PENDING = 'pending';
+    public const PENDING = 'pending';
 
-    const PARTIALLY_PAID = 'partiallyPaid';
+    public const PARTIALLY_PAID = 'partiallyPaid';
 
-    const REFUNDED = 'refunded';
+    public const REFUNDED = 'refunded';
 
     /**
      * @var string

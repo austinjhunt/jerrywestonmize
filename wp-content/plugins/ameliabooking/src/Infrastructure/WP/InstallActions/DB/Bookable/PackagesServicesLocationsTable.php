@@ -12,8 +12,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class PackagesServicesLocationsTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'packages_services_to_locations';
+    public const TABLE = 'packages_services_to_locations';
 
     /**
      * @return string

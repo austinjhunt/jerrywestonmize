@@ -211,7 +211,7 @@ class StashApplicationService
                 'id'     => $location->getId()->getValue(),
                 'name'   => $location->getName()->getValue(),
                 'status' => $location->getStatus()->getValue(),
-                'address'=> $location->getAddress()->getValue(),
+                'address' => $location->getAddress()->getValue(),
                 'translations' => $location->getTranslations() ? $location->getTranslations()->getValue() : null
             ];
         }

@@ -51,9 +51,11 @@ class GetExtraCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved extra');
-        $result->setData([
+        $result->setData(
+            [
             Entities::EXTRA => $extra->toArray()
-        ]);
+            ]
+        );
 
         return $result;
     }

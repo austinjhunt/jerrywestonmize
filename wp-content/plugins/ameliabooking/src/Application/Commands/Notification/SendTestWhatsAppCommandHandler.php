@@ -61,7 +61,7 @@ class SendTestWhatsAppCommandHandler extends CommandHandler
 
         $notification = $whatsAppNotificationService->getById($command->getField('notificationTemplate'));
 
-        if (!$whatsAppNotificationService->checkRequiredFields() || empty($notification)) {
+        if (!$whatsAppNotificationService->checkRequiredFields() || !$notification) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('WhatsApp not enabled or required fields not filled');
 

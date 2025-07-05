@@ -24,7 +24,7 @@ class GetCurrentUserController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new GetCurrentUserCommand($args);
+        $command     = new GetCurrentUserCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

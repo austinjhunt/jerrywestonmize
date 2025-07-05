@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -215,7 +216,7 @@ class AppointmentPlaceholderService extends PlaceholderService
         $data = array_merge($data, $this->getAppointmentPlaceholderData($appointment, $bookingKey, $type, $token, false, $notificationType));
         $data = array_merge($data, $this->getRecurringAppointmentsData($appointment, $bookingKey, $type, 'recurring', $bookingKeyForEmployee));
         if (empty($customer)) {
-            $data = array_merge($data, $this->getGroupedAppointmentData($appointment, $bookingKey, $type, $token));
+            $data = array_merge($data, $this->getGroupedAppointmentData($appointment, $bookingKey, $type));
         }
         $data = array_merge($data, $this->getCompanyData($bookingKey !== null ? $locale : null));
         $data = array_merge($data, $this->getCustomersData($appointment, $type, $bookingKey, $customer));
@@ -274,7 +275,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                 $data['items'][$index]['item_name'] = $placeholders['service_name'];
             }
 
-            $extraItems = $placeholders['invoice_items_extras'];
+            $extraItems      = $placeholders['invoice_items_extras'];
             $extraItemsTaxes = $invoiceItem['invoice_extras_tax'];
             foreach ($extraItems as $extraItem) {
                 $index = $extraItem['item_index'];
@@ -287,7 +288,12 @@ class AppointmentPlaceholderService extends PlaceholderService
                     $data['items'][$index] = array_merge(
                         $extraItem,
                         !empty($extraItemsTaxes[$extraItem['item_id']]) ?
-                            ['invoice_tax' => $extraItemsTaxes[$extraItem['item_id']]['amount'], 'invoice_tax_rate' => $extraItemsTaxes[$extraItem['item_id']]['rate'], 'invoice_tax_excluded' => $extraItemsTaxes[$extraItem['item_id']]['excluded']] :
+                            [
+                                'invoice_tax' =>
+                                $extraItemsTaxes[$extraItem['item_id']]['amount'],
+                                'invoice_tax_rate' => $extraItemsTaxes[$extraItem['item_id']]['rate'],
+                                'invoice_tax_excluded' => $extraItemsTaxes[$extraItem['item_id']]['excluded']
+                            ] :
                             []
                     );
                 }
@@ -329,7 +335,8 @@ class AppointmentPlaceholderService extends PlaceholderService
             $appointment['provider'] = $user->toArray();
         }
 
-        if ($bookingKey !== null && $appointment['bookings'][$bookingKey]['utcOffset'] !== null
+        if (
+            $bookingKey !== null && $appointment['bookings'][$bookingKey]['utcOffset'] !== null
             && $settingsService->getSetting('general', 'showClientTimeZone')
         ) {
             $info = !empty($appointment['bookings'][$bookingKey]['info'])
@@ -387,7 +394,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                     'UTC'
                 );
             }
-        } else if ($bookingKey === null && !empty($appointment['provider']['timeZone'])) {
+        } elseif ($bookingKey === null && !empty($appointment['provider']['timeZone'])) {
             $timeZone = $appointment['provider']['timeZone'];
 
             $bookingStart = DateTimeService::getDateTimeObjectInTimeZone(
@@ -591,9 +598,10 @@ class AppointmentPlaceholderService extends PlaceholderService
         $persons = 1;
 
         foreach ((array)$appointmentArray['bookings'] as $key => $booking) {
-            if (($bookingKey === null && ($booking['isChangedStatus'] || $booking['status'] === BookingStatus::APPROVED
+            if (
+                ($bookingKey === null && ($booking['isChangedStatus'] || $booking['status'] === BookingStatus::APPROVED
                     || $booking['status'] === BookingStatus::PENDING)) || $bookingKey === $key
-                ) {
+            ) {
                 foreach ((array)$booking['extras'] as $bookingExtra) {
                     $bookingExtras[$bookingExtra['extraId']] = [
                         'quantity' => $bookingExtra['quantity'],
@@ -637,7 +645,8 @@ class AppointmentPlaceholderService extends PlaceholderService
                         $extra->getDuration()->getValue() * $bookingExtra['quantity'] : 0;
                 }
 
-                if ($bookingDuration > $maxBookingDuration &&
+                if (
+                    $bookingDuration > $maxBookingDuration &&
                     ($booking['status'] === BookingStatus::APPROVED || $booking['status'] === BookingStatus::PENDING)
                 ) {
                     $maxBookingDuration = $bookingDuration;
@@ -668,7 +677,7 @@ class AppointmentPlaceholderService extends PlaceholderService
             }
         }
 
-        $allExtraNames = "";
+        $allExtraNames   = "";
         $allExtraDetails = "";
         $allExtraSum     = 0;
 
@@ -698,7 +707,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                 : $extra->getAggregatedPrice()->getValue()) && $persons !== 1;
 
             if (!empty($data["service_extra_{$extraId}_name"])) {
-                $allExtraNames .= $data["service_extra_{$extraId}_name"].', ';
+                $allExtraNames .= $data["service_extra_{$extraId}_name"] . ', ';
             }
 
             if (array_key_exists($extraId, $bookingExtras) && $bookingExtras[$extraId]['quantity'] !== 0) {
@@ -891,7 +900,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                         if ($recurringBooking['id'] === $recurringData['booking']['id']) {
                             $recurringBookingKey = $key;
                         }
-                    } else if ($recurringBooking['customerId'] === $appointment['bookings'][$bookingKey]['customerId']) {
+                    } elseif ($recurringBooking['customerId'] === $appointment['bookings'][$bookingKey]['customerId']) {
                         $recurringBookingKey = $key;
                     }
                 }
@@ -916,7 +925,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                 isset(
                     $recurringData['appointment']['bookings'][$recurringBookingKey],
                     $recurringData['appointment']['bookings'][$recurringBookingKey]['id']
-                ) ? $bookingRepository->getToken($recurringData['appointment']['bookings'][$recurringBookingKey]['id']) :(
+                ) ? $bookingRepository->getToken($recurringData['appointment']['bookings'][$recurringBookingKey]['id']) : (
                     $recurringBookingKeyForEmployee !== null &&
                     isset(
                         $recurringData['appointment']['bookings'][$recurringBookingKeyForEmployee],
@@ -983,7 +992,9 @@ class AppointmentPlaceholderService extends PlaceholderService
             $helperService = $this->container->get('application.helper.service');
 
             $content = $helperService->getBookingTranslation(
-                $recurringBookingKey !== null ? $helperService->getLocaleFromBooking($recurringData['appointment']['bookings'][$recurringBookingKey]['info']) : null,
+                $recurringBookingKey !== null ?
+                    $helperService->getLocaleFromBooking($recurringData['appointment']['bookings'][$recurringBookingKey]['info']) :
+                    null,
                 json_encode($appointmentsSettings['translations']),
                 $placeholderString
             ) ?: $appointmentsSettings[$placeholderString];
@@ -1039,7 +1050,11 @@ class AppointmentPlaceholderService extends PlaceholderService
         }
 
         foreach ($appointment['bookings'] as $bookingId => $booking) {
-            if ($booking['status'] === BookingStatus::CANCELED || $booking['status'] === BookingStatus::REJECTED || $booking['status'] === BookingStatus::NO_SHOW) {
+            if (
+                $booking['status'] === BookingStatus::CANCELED ||
+                $booking['status'] === BookingStatus::REJECTED ||
+                $booking['status'] === BookingStatus::NO_SHOW
+            ) {
                 continue;
             }
 
@@ -1066,7 +1081,7 @@ class AppointmentPlaceholderService extends PlaceholderService
             $content = $appointmentsSettings['groupAppointmentPlaceholder' . ($type === null || $type === 'email' ? '' : 'Sms')] ;
             if ($type === 'email') {
                 $content = str_replace(array("\n","\r"), '', $content);
-            } else if ($type === 'whatsapp') {
+            } elseif ($type === 'whatsapp') {
                 $content = str_replace(array("\n","\r"), '; ', $content);
                 $content = preg_replace('!\s+!', ' ', $content);
             }

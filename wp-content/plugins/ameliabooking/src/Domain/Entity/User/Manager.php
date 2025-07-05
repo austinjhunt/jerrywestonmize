@@ -9,7 +9,6 @@ namespace AmeliaBooking\Domain\Entity\User;
  */
 class Manager extends AbstractUser
 {
-
     /**
      * Get the user type in a string form
      */

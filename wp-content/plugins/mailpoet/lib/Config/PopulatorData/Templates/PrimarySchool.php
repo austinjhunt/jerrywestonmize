@@ -807,7 +807,7 @@ class PrimarySchool {
                   2 =>
                    [
                     'type' => 'social',
-                    'iconSet' => 'full-symbol-grey',
+                    'iconSet' => 'official-white',
                     'icons' =>
                      [
                       0 =>
@@ -815,7 +815,7 @@ class PrimarySchool {
                         'type' => 'socialIcon',
                         'iconType' => 'facebook',
                         'link' => 'http://www.facebook.com',
-                        'image' => $this->social_icon_url . '/08-full-symbol-grey/Facebook.png',
+                        'image' => $this->social_icon_url . '/12-official-white/Facebook.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Facebook',
@@ -825,7 +825,7 @@ class PrimarySchool {
                         'type' => 'socialIcon',
                         'iconType' => 'twitter',
                         'link' => 'http://www.twitter.com',
-                        'image' => $this->social_icon_url . '/08-full-symbol-grey/Twitter.png',
+                        'image' => $this->social_icon_url . '/12-official-white/X.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Twitter',
@@ -835,7 +835,7 @@ class PrimarySchool {
                         'type' => 'socialIcon',
                         'iconType' => 'youtube',
                         'link' => 'http://www.youtube.com',
-                        'image' => $this->social_icon_url . '/08-full-symbol-grey/Youtube.png',
+                        'image' => $this->social_icon_url . '/12-official-white/Youtube.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Youtube',
@@ -845,7 +845,7 @@ class PrimarySchool {
                         'type' => 'socialIcon',
                         'iconType' => 'website',
                         'link' => '',
-                        'image' => $this->social_icon_url . '/08-full-symbol-grey/Website.png',
+                        'image' => $this->social_icon_url . '/12-official-white/Website.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Website',
@@ -1280,7 +1280,7 @@ class PrimarySchool {
          ],
         'social' =>
          [
-          'iconSet' => 'full-symbol-grey',
+          'iconSet' => 'official-white',
           'icons' =>
            [
             0 =>
@@ -1288,7 +1288,7 @@ class PrimarySchool {
               'type' => 'socialIcon',
               'iconType' => 'facebook',
               'link' => 'http://www.facebook.com',
-              'image' => $this->social_icon_url . '/08-full-symbol-grey/Facebook.png',
+              'image' => $this->social_icon_url . '/12-official-white/Facebook.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Facebook',
@@ -1298,7 +1298,7 @@ class PrimarySchool {
               'type' => 'socialIcon',
               'iconType' => 'twitter',
               'link' => 'http://www.twitter.com',
-              'image' => $this->social_icon_url . '/08-full-symbol-grey/Twitter.png',
+              'image' => $this->social_icon_url . '/12-official-white/X.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Twitter',
@@ -1308,7 +1308,7 @@ class PrimarySchool {
               'type' => 'socialIcon',
               'iconType' => 'youtube',
               'link' => 'http://www.youtube.com',
-              'image' => $this->social_icon_url . '/08-full-symbol-grey/Youtube.png',
+              'image' => $this->social_icon_url . '/12-official-white/Youtube.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Youtube',
@@ -1318,7 +1318,7 @@ class PrimarySchool {
               'type' => 'socialIcon',
               'iconType' => 'website',
               'link' => '',
-              'image' => $this->social_icon_url . '/08-full-symbol-grey/Website.png',
+              'image' => $this->social_icon_url . '/12-official-white/Website.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Website',

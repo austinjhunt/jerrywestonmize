@@ -16,7 +16,7 @@ class DisconnectEmployeeFromAppleCalendarController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command = new DisconnectEmployeeFromAppleCalendarCommand($args);
+        $command     = new DisconnectEmployeeFromAppleCalendarCommand($args);
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
         $command->setToken($request);

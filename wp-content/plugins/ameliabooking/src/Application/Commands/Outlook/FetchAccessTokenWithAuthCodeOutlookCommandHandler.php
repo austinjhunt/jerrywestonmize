@@ -47,6 +47,7 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
 
         $providerId = $command->getField('userId');
 
+        $token = null;
         try {
             $token = $outlookCalendarService->fetchAccessTokenWithAuthCode(
                 $command->getField('authCode'),
@@ -66,7 +67,7 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
             return $result;
         }
 
-        if (!$token['outcome']) {
+        if (!$token || !$token['outcome']) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setData($token);
             $result->setMessage($token['result']);

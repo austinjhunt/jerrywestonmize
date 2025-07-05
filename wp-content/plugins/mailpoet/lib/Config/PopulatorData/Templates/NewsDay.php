@@ -619,7 +619,7 @@ class NewsDay {
                               1 =>
                                  [
                                   'type' => 'social',
-                                  'iconSet' => 'circles',
+                                  'iconSet' => 'official',
                                   'icons' =>
                                      [
                                       0 =>
@@ -627,7 +627,7 @@ class NewsDay {
                                           'type' => 'socialIcon',
                                           'iconType' => 'facebook',
                                           'link' => 'http://www.facebook.com',
-                                          'image' => $this->social_icon_url . '/03-circles/Facebook.png',
+                                          'image' => $this->social_icon_url . '/11-official/Facebook.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'Facebook',
@@ -637,7 +637,7 @@ class NewsDay {
                                           'type' => 'socialIcon',
                                           'iconType' => 'twitter',
                                           'link' => 'http://www.twitter.com',
-                                          'image' => $this->social_icon_url . '/03-circles/Twitter.png',
+                                          'image' => $this->social_icon_url . '/11-official/X.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'Twitter',
@@ -647,7 +647,7 @@ class NewsDay {
                                           'type' => 'socialIcon',
                                           'iconType' => 'youtube',
                                           'link' => 'http://www.youtube.com',
-                                          'image' => $this->social_icon_url . '/03-circles/Youtube.png',
+                                          'image' => $this->social_icon_url . '/11-official/Youtube.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'Youtube',
@@ -657,7 +657,7 @@ class NewsDay {
                                           'type' => 'socialIcon',
                                           'iconType' => 'instagram',
                                           'link' => 'http://instagram.com',
-                                          'image' => $this->social_icon_url . '/03-circles/Instagram.png',
+                                          'image' => $this->social_icon_url . '/11-official/Instagram.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'Instagram',
@@ -667,7 +667,7 @@ class NewsDay {
                                           'type' => 'socialIcon',
                                           'iconType' => 'linkedin',
                                           'link' => 'http://www.linkedin.com',
-                                          'image' => $this->social_icon_url . '/03-circles/LinkedIn.png',
+                                          'image' => $this->social_icon_url . '/11-official/Linkedin.png',
                                           'height' => '32px',
                                           'width' => '32px',
                                           'text' => 'LinkedIn',
@@ -1035,7 +1035,7 @@ class NewsDay {
              ],
           'social' =>
              [
-              'iconSet' => 'default',
+              'iconSet' => 'official',
               'icons' =>
                  [
                   0 =>
@@ -1043,7 +1043,7 @@ class NewsDay {
                       'type' => 'socialIcon',
                       'iconType' => 'facebook',
                       'link' => 'http://www.facebook.com',
-                      'image' => $this->social_icon_url . '/01-social/Facebook.png',
+                      'image' => $this->social_icon_url . '/11-official/Facebook.png',
                       'height' => '32px',
                       'width' => '32px',
                       'text' => 'Facebook',
@@ -1053,7 +1053,7 @@ class NewsDay {
                       'type' => 'socialIcon',
                       'iconType' => 'twitter',
                       'link' => 'http://www.twitter.com',
-                      'image' => $this->social_icon_url . '/01-social/Twitter.png',
+                      'image' => $this->social_icon_url . '/11-official/X.png',
                       'height' => '32px',
                       'width' => '32px',
                       'text' => 'Twitter',

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -51,7 +52,7 @@ class PHPMailService extends AbstractMailService implements MailServiceInterface
             $mail->CharSet = 'UTF-8';
             $mail->isHTML();
             $mail->Subject = $subject;
-            $mail->Body = $body;
+            $mail->Body    = $body;
 
             $mail->send();
         } catch (Exception $e) {

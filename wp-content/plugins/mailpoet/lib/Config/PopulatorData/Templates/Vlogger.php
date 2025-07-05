@@ -856,7 +856,7 @@ class Vlogger {
                   2 =>
                    [
                     'type' => 'social',
-                    'iconSet' => 'full-symbol-grey',
+                    'iconSet' => 'official-white',
                     'styles' =>
                      [
                       'block' =>
@@ -871,7 +871,7 @@ class Vlogger {
                         'type' => 'socialIcon',
                         'iconType' => 'youtube',
                         'link' => 'http://www.youtube.com',
-                        'image' => $this->social_icon_url . '/08-full-symbol-grey/Youtube.png',
+                        'image' => $this->social_icon_url . '/12-official-white/Youtube.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Youtube',
@@ -881,7 +881,7 @@ class Vlogger {
                         'type' => 'socialIcon',
                         'iconType' => 'instagram',
                         'link' => 'http://instagram.com',
-                        'image' => $this->social_icon_url . '/08-full-symbol-grey/Instagram.png',
+                        'image' => $this->social_icon_url . '/12-official-white/Instagram.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Instagram',
@@ -891,7 +891,7 @@ class Vlogger {
                         'type' => 'socialIcon',
                         'iconType' => 'twitter',
                         'link' => 'http://www.twitter.com',
-                        'image' => $this->social_icon_url . '/08-full-symbol-grey/Twitter.png',
+                        'image' => $this->social_icon_url . '/12-official-white/X.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Twitter',
@@ -901,7 +901,7 @@ class Vlogger {
                         'type' => 'socialIcon',
                         'iconType' => 'facebook',
                         'link' => 'http://www.facebook.com',
-                        'image' => $this->social_icon_url . '/08-full-symbol-grey/Facebook.png',
+                        'image' => $this->social_icon_url . '/12-official-white/Facebook.png',
                         'height' => '32px',
                         'width' => '32px',
                         'text' => 'Facebook',
@@ -1342,7 +1342,7 @@ class Vlogger {
          ],
         'social' =>
          [
-          'iconSet' => 'full-symbol-grey',
+          'iconSet' => 'official-white',
           'icons' =>
            [
             0 =>
@@ -1350,7 +1350,7 @@ class Vlogger {
               'type' => 'socialIcon',
               'iconType' => 'youtube',
               'link' => 'http://www.youtube.com',
-              'image' => $this->social_icon_url . '/08-full-symbol-grey/Youtube.png',
+              'image' => $this->social_icon_url . '/12-official-white/Youtube.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Youtube',
@@ -1360,7 +1360,7 @@ class Vlogger {
               'type' => 'socialIcon',
               'iconType' => 'instagram',
               'link' => 'http://instagram.com',
-              'image' => $this->social_icon_url . '/08-full-symbol-grey/Instagram.png',
+              'image' => $this->social_icon_url . '/12-official-white/Instagram.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Instagram',
@@ -1370,7 +1370,7 @@ class Vlogger {
               'type' => 'socialIcon',
               'iconType' => 'twitter',
               'link' => 'http://www.twitter.com',
-              'image' => $this->social_icon_url . '/08-full-symbol-grey/Twitter.png',
+              'image' => $this->social_icon_url . '/12-official-white/X.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Twitter',
@@ -1380,7 +1380,7 @@ class Vlogger {
               'type' => 'socialIcon',
               'iconType' => 'facebook',
               'link' => 'http://www.facebook.com',
-              'image' => $this->social_icon_url . '/08-full-symbol-grey/Facebook.png',
+              'image' => $this->social_icon_url . '/12-official-white/Facebook.png',
               'height' => '32px',
               'width' => '32px',
               'text' => 'Facebook',

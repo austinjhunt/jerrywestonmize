@@ -1,4 +1,5 @@
 <?php
+
 namespace AmeliaBooking\Application\Controller\Stripe;
 
 use AmeliaBooking\Application\Controller\Controller;

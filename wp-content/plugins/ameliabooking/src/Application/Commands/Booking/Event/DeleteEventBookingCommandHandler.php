@@ -107,7 +107,8 @@ class DeleteEventBookingCommandHandler extends CommandHandler
 
         $event->getBookings()->addItem($customerBooking, $customerBooking->getId()->getValue());
 
-        if ($user &&
+        if (
+            $user &&
             $userAS->isProvider($user) &&
             (
                 !$settingsDS->getSetting('roles', 'allowWriteEvents') ||

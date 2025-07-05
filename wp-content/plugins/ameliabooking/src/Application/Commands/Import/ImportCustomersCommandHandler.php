@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright © TMS-Plugins. All rights reserved.
  * @licence   See LICENCE.md for license details.
@@ -73,7 +74,6 @@ class ImportCustomersCommandHandler extends CommandHandler
 
         if ($overwriteUsers) {
             foreach ($overwriteUsers as $overwriteUser) {
-                /** @var Customer $newUser */
                 try {
                     if (!empty($overwriteUser['birthday']) && !empty($overwriteUser['birthday']['date'])) {
                         $overwriteUser['birthday'] = (new \DateTime($overwriteUser['birthday']['date']))->format('Y-m-d');
@@ -94,7 +94,7 @@ class ImportCustomersCommandHandler extends CommandHandler
                     $failedUsers[] = $overwriteUser;
                     continue;
                 }
-                $addedUsers[] = $newUser;
+                $addedUsers[] = $overwriteUser;
             }
             $userRepository->commit();
 
@@ -129,7 +129,10 @@ class ImportCustomersCommandHandler extends CommandHandler
                     $customerData['email'] = preg_replace('/\s+/', '', $customerData['email']);
                 }
 
-                if (in_array($customerData['email'], array_column($userExists, 'email')) || in_array($customerData['email'], array_column($addedUsers, 'email'))) {
+                if (
+                    in_array($customerData['email'], array_column($userExists, 'email')) ||
+                    in_array($customerData['email'], array_column($addedUsers, 'email'))
+                ) {
                     $failedUsers[] = array_merge($customerData, ['index' => $i]);
                     continue;
                 }

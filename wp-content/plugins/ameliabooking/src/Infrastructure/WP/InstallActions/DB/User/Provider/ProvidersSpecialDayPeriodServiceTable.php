@@ -12,8 +12,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
  */
 class ProvidersSpecialDayPeriodServiceTable extends AbstractDatabaseTable
 {
-
-    const TABLE = 'providers_to_specialdays_periods_services';
+    public const TABLE = 'providers_to_specialdays_periods_services';
 
     /**
      * @return string

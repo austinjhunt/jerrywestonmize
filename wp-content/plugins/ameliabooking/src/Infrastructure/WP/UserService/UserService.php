@@ -71,17 +71,19 @@ class UserService
 
             $firstName = $wpUser->get('first_name') !== '' ?
                 $wpUser->get('first_name') : $wpUser->get('user_nicename');
-            $lastName = $wpUser->get('last_name') !== '' ?
+            $lastName  = $wpUser->get('last_name') !== '' ?
                 $wpUser->get('last_name') : $wpUser->get('user_nicename');
-            $email = $wpUser->get('user_email');
+            $email     = $wpUser->get('user_email');
 
-            $currentUserEntity = UserFactory::create([
+            $currentUserEntity = UserFactory::create(
+                [
                 'type'       => $userType,
                 'firstName'  => $firstName,
                 'lastName'   => $lastName,
                 'email'      => $email ?: 'guest@example.com',
                 'externalId' => $wpUser->ID
-            ]);
+                ]
+            );
 
             return $currentUserEntity;
         }
@@ -209,8 +211,8 @@ class UserService
     public static function logoutAmeliaUser()
     {
         if (!empty($_COOKIE['ameliaToken'])) {
-            setcookie('ameliaToken', '', time()-3600, '/');
-            setcookie('ameliaUserEmail', '', time()-3600, '/');
+            setcookie('ameliaToken', '', time() - 3600, '/');
+            setcookie('ameliaUserEmail', '', time() - 3600, '/');
         }
     }
 
@@ -260,5 +262,22 @@ class UserService
 
             $userRepository->updateFieldById($ameliaUserArray['id'], $newPassword->getValue(), 'password');
         }
+    }
+
+    /**
+     * remove WP user connection to Amelia user
+     * @param int $id
+     *
+     * @throws QueryExecutionException
+     */
+    public static function removeWPUserConnection($id)
+    {
+        /** @var Container $container */
+        $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $container->get('domain.users.repository');
+
+        $userRepository->updateByEntityId($id, null, 'externalId');
     }
 }

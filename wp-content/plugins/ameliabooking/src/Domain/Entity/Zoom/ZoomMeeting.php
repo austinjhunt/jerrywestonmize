@@ -80,5 +80,4 @@ class ZoomMeeting
             'joinUrl'  => $this->getJoinUrl() ? $this->getJoinUrl()->getValue() : null,
         ];
     }
-
 }
