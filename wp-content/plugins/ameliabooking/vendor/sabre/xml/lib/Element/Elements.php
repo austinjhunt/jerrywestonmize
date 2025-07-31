@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Xml\Element;
+namespace AmeliaSabre\Xml\Element;
 
-use Sabre\Xml;
-use Sabre\Xml\Deserializer;
-use Sabre\Xml\Serializer;
+use AmeliaSabre\Xml;
+use AmeliaSabre\Xml\Deserializer;
+use AmeliaSabre\Xml\Serializer;
 
 /**
  * 'Elements' is a simple list of elements, without values or attributes.

@@ -176,6 +176,11 @@
             });
         }
 
+		// Remove slider custom labels in the cloned block.
+		newBlock.find('.forminator-slider').each(function () {
+			$(this).find('.forminator-slider-labels').remove();
+		});
+
 		newBlock.find( '.select2-container, .forminator-error-message, .iti__country-container' ).remove();
 
 		// Cloning Rich-Text editors.

@@ -1374,6 +1374,7 @@ function forminator_reset_settings() {
 	delete_option( 'forminator_stripe_payment_intents' );
 	delete_option( 'forminator_paypal_configuration' );
 	delete_option( 'forminator_usage_tracking' );
+	delete_option( 'forminator_auto_saving' );
 
 	/**
 	 * Forminator_delete_addon_options

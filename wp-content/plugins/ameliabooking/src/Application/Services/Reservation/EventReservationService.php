@@ -160,7 +160,7 @@ class EventReservationService extends AbstractReservationService
         $bookingStatus = empty($eventData['bookings'][0]['status']) ? BookingStatus::APPROVED : $eventData['bookings'][0]['status'];
 
         if (!empty($eventData['payment']['gateway'])) {
-            $bookingStatus = in_array($eventData['payment']['gateway'], [PaymentType::MOLLIE, PaymentType::SQUARE]) ?
+            $bookingStatus = in_array($eventData['payment']['gateway'], [PaymentType::MOLLIE]) ?
                 BookingStatus::PENDING : (empty($eventData['bookings'][0]['status']) ? BookingStatus::APPROVED : $eventData['bookings'][0]['status']);
 
             if (!empty($eventData['payment']['orderStatus'])) {

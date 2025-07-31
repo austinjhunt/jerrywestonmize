@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Uri;
+namespace AmeliaSabre\Uri;
 
 /**
  * Invalid Uri.
  *
- * This is thrown when an attempt was made to use Sabre\Uri parse a uri that
+ * This is thrown when an attempt was made to use AmeliaSabre\Uri parse a uri that
  * it could not.
  *
  * @copyright Copyright (C) fruux GmbH (https://fruux.com/)

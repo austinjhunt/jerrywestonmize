@@ -427,29 +427,23 @@ class Forminator_Admin {
 	public function promote_free_plan() {
 		// Show the notice only on WP Dashboard page.
 		$screen = get_current_screen();
-		if ( 'dashboard' !== $screen->id ) {
+		if ( 'dashboard' !== $screen->id || Forminator_Hub_Connector::hub_connector_connected() ) {
 			return;
 		}
-
-		$button_1 = '<a href="https://wpmudev.com/register/?free_hub&utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_wp_admin_free_plan_1" target="_blank" class="button button-primary">'
-				. esc_html__( 'Connect to Unlock Cloud Templates', 'forminator' )
+		$button_1 = '<a href="' . esc_url( Forminator_Hub_Connector::get_hub_connect_url( 'wp-dashboard-preset-template' ) ) . '" class="button button-primary">'
+				. esc_html__( 'Connect & Start Using Pro Templates', 'forminator' )
 				. '</a>';
 		$remind   = '<a style="margin-left:20px;text-decoration: none;" href="#" id="forminator-promote-remind-later" data-nonce="' . esc_attr( wp_create_nonce( 'forminator_promote_remind_later' ) ) . '">' . esc_html__( 'Remind me later', 'forminator' ) . '</a>';
 
 		$message  = '<p><strong>';
-		$message .= esc_html__( 'Free Cloud Templates—Build Forms Across All Your Sites in 1 Click!', 'forminator' );
+		$message .= esc_html__( 'Pro Form Templates—Now Free for Everyone!', 'forminator' );
 		$message .= '</strong></p>';
 		$message .= '<p>';
-		$message .= sprintf(
-			/* translators: %1$s - opening <b> tag, %2$s - closing </b> tag */
-			esc_html__( 'Say goodbye to manual exports! Now, %1$sForminator Hub%2$s users get FREE access to %1$sCloud Templates%2$s—instantly reuse your custom forms on any connected WordPress site.', 'forminator' ),
-			'<b>',
-			'</b>'
-		);
+		$message .= esc_html__( 'Build forms faster with professionally designed templates—now free in the Forminator plugin.', 'forminator' );
 		$message .= '</p>';
 		$message .= '<p>';
-		$message .= esc_html__( 'Plus, unlock WPMU DEV’s full suite of tools trusted by 50K+ developers.', 'forminator' );
-		$message .= ' <b>' . esc_html__( 'Completely free.', 'forminator' ) . '</b>';
+		$message .= esc_html__( 'Connect your site to access them instantly and unlock WPMU DEV’s full suite of tools—trusted by 50K+ developers.', 'forminator' );
+		$message .= ' <b>' . esc_html__( 'All completely free.', 'forminator' ) . '</b>';
 		$message .= '</p>';
 		$message .= '<p>' . $button_1 . '&nbsp;' . $remind . '</p>';
 

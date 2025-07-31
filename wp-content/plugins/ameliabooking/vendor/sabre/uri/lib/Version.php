@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Uri;
+namespace AmeliaSabre\Uri;
 
 /**
  * This class contains the version number for this package.

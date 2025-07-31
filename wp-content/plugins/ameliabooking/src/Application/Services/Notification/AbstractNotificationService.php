@@ -992,6 +992,7 @@ abstract class AbstractNotificationService
                     }
 
                     if (
+                        (!array_key_exists('createPaymentLinks', $appointmentArray) || !empty($appointmentArray['createPaymentLinks'])) &&
                         $notification->getContent() &&
                         $notification->getContent()->getValue() &&
                         strpos($notification->getContent()->getValue(), '%payment_link_') !== false

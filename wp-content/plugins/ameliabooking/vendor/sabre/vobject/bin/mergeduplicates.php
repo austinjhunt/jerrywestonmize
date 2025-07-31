@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-namespace Sabre\VObject;
+namespace AmeliaSabre\VObject;
 
 // This sucks.. we have to try to find the composer autoloader. But chances
 // are, we can't find it this way. So we'll do our bestest
@@ -17,7 +17,7 @@ foreach ($paths as $path) {
     }
 }
 
-if (!class_exists('Sabre\\VObject\\Version')) {
+if (!class_exists('AmeliaSabre\\VObject\\Version')) {
     fwrite(STDERR, "Composer autoloader could not be loaded.\n");
     exit(1);
 }

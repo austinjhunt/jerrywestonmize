@@ -1,6 +1,6 @@
 <?php
 
-namespace Sabre\VObject\Parser;
+namespace AmeliaSabre\VObject\Parser;
 
 /**
  * Abstract parser.

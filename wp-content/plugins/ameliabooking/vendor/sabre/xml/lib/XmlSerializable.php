@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Xml;
+namespace AmeliaSabre\Xml;
 
 /**
  * Objects implementing XmlSerializable can control how they are represented in

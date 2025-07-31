@@ -195,7 +195,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
                     if ($status === 'paid') {
                         $amount = $command->getField('chargedAmount');
 
-                        if ($payment->getStatus()->getValue() !== PaymentStatus::PENDING && $gateway !== PaymentType::SQUARE) {
+                        if ($payment->getStatus()->getValue() !== PaymentStatus::PENDING) {
                             $payment->setStatus(new PaymentStatus(PaymentStatus::PAID));
                             $payment->setGateway(new PaymentGateway(new Name($gateway)));
                             if ($transactionId) {

@@ -341,6 +341,7 @@ abstract class Forminator_Admin_Page {
 	 * Show modal when hub connected successfully
 	 */
 	public static function hub_connected_successfully_modal() {
+		$feature = filter_input( INPUT_GET, 'feature' );
 		?>
 		<div class="sui-modal sui-modal-sm">
 			<div
@@ -360,11 +361,17 @@ abstract class Forminator_Admin_Page {
 						</h3>
 						<p id="forminator-hub-connected-successfully-modal-description" class="sui-description">
 							<b><?php esc_html_e( 'Congratulations!', 'forminator' ); ?></b>
-							<?php esc_html_e( 'Your site is connected to the Hub. You can now save your forms to the Hub cloud.', 'forminator' ); ?>
+							<?php
+							if ( 'preset-template' === $feature ) {
+								esc_html_e( 'Your site is now connected to the Hub, and preset templates are unlocked. Start building forms faster with any of our ready-made templates.', 'forminator' );
+							} else {
+								esc_html_e( 'Your site is connected to the Hub. You can now save your forms to the Hub cloud.', 'forminator' );
+							}
+							?>
 						</p>
 					</div>
 					<div class="sui-box-footer sui-flatten sui-content-center">
-						<button class="sui-button sui-button-blue" data-modal-close>
+						<button class="sui-button sui-button-blue forminator-close-hub-connected-modal" data-feature="<?php echo esc_attr( $feature ); ?>" data-modal-close>
 							<?php esc_html_e( 'Close', 'forminator' ); ?>
 						</button>
 					</div>

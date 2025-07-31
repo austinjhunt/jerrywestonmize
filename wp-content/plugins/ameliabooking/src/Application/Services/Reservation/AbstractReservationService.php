@@ -825,7 +825,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             $paymentStatus = PaymentStatus::PARTIALLY_PAID;
         }
 
-        if (in_array($paymentData['gateway'], [PaymentType::MOLLIE, PaymentType::SQUARE])) {
+        if (in_array($paymentData['gateway'], [PaymentType::MOLLIE])) {
             $paymentStatus = PaymentStatus::PENDING;
         }
 

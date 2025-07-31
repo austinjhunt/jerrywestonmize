@@ -1,8 +1,8 @@
 <?php
 
-namespace Sabre\VObject;
+namespace AmeliaSabre\VObject;
 
-use Sabre\VObject\Component\VCalendar;
+use AmeliaSabre\VObject\Component\VCalendar;
 
 /**
  * This class generates birthday calendars.
@@ -67,14 +67,14 @@ class BirthdayCalendarGenerator
             if (is_string($object)) {
                 $vObj = Reader::read($object);
                 if (!$vObj instanceof Component\VCard) {
-                    throw new \InvalidArgumentException('String could not be parsed as \\Sabre\\VObject\\Component\\VCard by setObjects');
+                    throw new \InvalidArgumentException('String could not be parsed as \\AmeliaSabre\\VObject\\Component\\VCard by setObjects');
                 }
 
                 $this->objects[] = $vObj;
             } elseif ($object instanceof Component\VCard) {
                 $this->objects[] = $object;
             } else {
-                throw new \InvalidArgumentException('You can only pass strings or \\Sabre\\VObject\\Component\\VCard arguments to setObjects');
+                throw new \InvalidArgumentException('You can only pass strings or \\AmeliaSabre\\VObject\\Component\\VCard arguments to setObjects');
             }
         }
     }

@@ -64,7 +64,7 @@ class PageRenderer {
   }
 
   public function setPageTitle($title = '') {
-    if ($title === Pages::PAGE_TITLE) {
+    if ($title === Pages::PAGE_TITLE || $title === __('MailPoet Page', 'mailpoet')) {
       return $this->getPageTitle();
     }
     return $title;

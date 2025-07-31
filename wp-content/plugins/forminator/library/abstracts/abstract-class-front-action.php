@@ -539,7 +539,12 @@ abstract class Forminator_Front_Action {
 						<div class="forminator-row">
 							<div id="email-1" class="forminator-col forminator-col-12 ">
 								<div class="forminator-field">
-									<label for="forminator-field-email-1" class="forminator-label"><?php echo esc_html( $response['email_label'] ); ?></label>
+									<label for="forminator-field-email-1" class="forminator-label">
+										<?php
+										// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										echo Forminator_Field::convert_markdown( esc_html( $response['email_label'] ) );
+										?>
+									</label>
 									<input
 										type="email"
 										name="email-1"

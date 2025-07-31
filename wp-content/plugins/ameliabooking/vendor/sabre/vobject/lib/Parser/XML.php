@@ -1,13 +1,13 @@
 <?php
 
-namespace Sabre\VObject\Parser;
+namespace AmeliaSabre\VObject\Parser;
 
-use Sabre\VObject\Component;
-use Sabre\VObject\Component\VCalendar;
-use Sabre\VObject\Component\VCard;
-use Sabre\VObject\EofException;
-use Sabre\VObject\ParseException;
-use Sabre\Xml as SabreXml;
+use AmeliaSabre\VObject\Component;
+use AmeliaSabre\VObject\Component\VCalendar;
+use AmeliaSabre\VObject\Component\VCard;
+use AmeliaSabre\VObject\EofException;
+use AmeliaSabre\VObject\ParseException;
+use AmeliaSabre\Xml as SabreXml;
 
 /**
  * XML Parser.
@@ -40,7 +40,7 @@ class XML extends Parser
     /**
      * Document, root component.
      *
-     * @var \Sabre\VObject\Document
+     * @var \AmeliaSabre\VObject\Document
      */
     protected $root;
 
@@ -69,7 +69,7 @@ class XML extends Parser
      *
      * @throws \Exception
      *
-     * @return \Sabre\VObject\Document
+     * @return \AmeliaSabre\VObject\Document
      */
     public function parse($input = null, $options = 0)
     {

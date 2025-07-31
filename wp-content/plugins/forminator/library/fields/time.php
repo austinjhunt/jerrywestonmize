@@ -68,6 +68,9 @@ class Forminator_Time extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Timepicker', 'forminator' );
+		$required   = __( 'This field is required. Please input a valid hour.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -621,7 +624,9 @@ class Forminator_Time extends Forminator_Field {
 			// Hours validation.
 			$hours_message = apply_filters(
 				'forminator_time_field_hours_required_validation_message',
-				( ! empty( $required_message ) ? '<strong>' . forminator_addcslashes( $hours_label ) . '</strong>: ' . forminator_addcslashes( $required_message ) : esc_html__( 'This field is required. Please input a valid hour.', 'forminator' ) ),
+				( ! empty( $required_message )
+					? '<strong>' . forminator_addcslashes( $hours_label ) . '</strong>: ' . forminator_addcslashes( $required_message )
+					: forminator_addcslashes( self::$default_required_messages[ $this->type ] ) ),
 				$id,
 				$field
 			);
@@ -660,7 +665,9 @@ class Forminator_Time extends Forminator_Field {
 			// Minutes validation.
 			$minutes_message = apply_filters(
 				'forminator_time_field_minutes_required_validation_message',
-				( ! empty( $required_message ) ? '<strong>' . forminator_addcslashes( $minutes_label ) . '</strong>: ' . forminator_addcslashes( $required_message ) : esc_html__( 'This field is required. Please input a valid minute.', 'forminator' ) ),
+				( ! empty( $required_message )
+					? '<strong>' . forminator_addcslashes( $minutes_label ) . '</strong>: ' . forminator_addcslashes( $required_message )
+					: forminator_addcslashes( __( 'This field is required. Please input a valid minute.', 'forminator' ) ) ),
 				$id,
 				$field
 			);
@@ -774,7 +781,7 @@ class Forminator_Time extends Forminator_Field {
 				$is_valid                                   = false;
 				$this->validation_message[ $id . '-hours' ] = apply_filters(
 					'forminator_time_field_hours_required_validation_message',
-					( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please input a valid hour.', 'forminator' ) ),
+					( ! empty( $required_message ) ? $required_message : esc_html( self::$default_required_messages[ $this->type ] ) ),
 					$id,
 					$field
 				);

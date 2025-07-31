@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sabre\VObject\TimezoneGuesser;
+namespace AmeliaSabre\VObject\TimezoneGuesser;
 
 use DateTimeZone;
-use Sabre\VObject\Component\VTimeZone;
-use Sabre\VObject\TimeZoneUtil;
+use AmeliaSabre\VObject\Component\VTimeZone;
+use AmeliaSabre\VObject\TimeZoneUtil;
 
 /**
  * Some clients add 'X-LIC-LOCATION' with the olson name.

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sabre\VObject;
+namespace AmeliaSabre\VObject;
 
 /**
  * This class provides a list of global defaults for vobject.

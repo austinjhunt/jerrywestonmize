@@ -7,6 +7,7 @@
 
 namespace AmeliaBooking\Application\Services\Placeholder;
 
+use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -516,9 +517,14 @@ class AppointmentPlaceholderService extends PlaceholderService
         $helperService = $this->container->get('application.helper.service');
         /** @var AppointmentApplicationService $appointmentAS */
         $appointmentAS = $this->container->get('application.booking.appointment.service');
+        /** @var BookableApplicationService $bookableAS */
+        $bookableAS = $this->container->get('application.bookable.service');
 
         /** @var Service $service */
-        $service = $serviceRepository->getByIdWithExtras($appointmentArray['serviceId']);
+        $service = $appointmentArray['providerId']
+            ? $bookableAS->getAppointmentService($appointmentArray['serviceId'], $appointmentArray['providerId'])
+            : $serviceRepository->getByIdWithExtras($appointmentArray['serviceId']);
+
         /** @var Category $category */
         $category = $categoryRepository->getById($service->getCategoryId()->getValue());
 
@@ -554,9 +560,14 @@ class AppointmentPlaceholderService extends PlaceholderService
 
                 $duration = $booking['duration'] ? $booking['duration'] : $service->getDuration()->getValue();
 
-                $price = $appointmentAS->getBookingPriceForServiceDuration(
+                $price = $appointmentAS->getBookingPriceForService(
                     $service,
-                    $duration
+                    CustomerBookingFactory::create(
+                        [
+                            'duration' => $duration,
+                            'persons'  => $booking['persons'],
+                        ]
+                    )
                 );
 
                 $servicePrices[] = $helperService->getFormattedPrice($price);
@@ -567,9 +578,14 @@ class AppointmentPlaceholderService extends PlaceholderService
             $duration = !empty($appointmentArray['bookings'][$bookingKey]['duration'])
                 ? $appointmentArray['bookings'][$bookingKey]['duration'] : $service->getDuration()->getValue();
 
-            $price = $appointmentAS->getBookingPriceForServiceDuration(
+            $price = $appointmentAS->getBookingPriceForService(
                 $service,
-                $duration
+                CustomerBookingFactory::create(
+                    [
+                        'duration' => $duration,
+                        'persons'  => $appointmentArray['bookings'][$bookingKey]['persons'],
+                    ]
+                )
             );
 
             $servicePrices[] = $helperService->getFormattedPrice(

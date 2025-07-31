@@ -184,6 +184,9 @@ class GetAppointmentCommandHandler extends CommandHandler
         if (isset($appointmentArray['notifyParticipants'])) {
             $appointmentArray['notifyParticipants'] = intval($appointmentArray['notifyParticipants']);
         }
+        if (isset($appointmentArray['createPaymentLinks'])) {
+            $appointmentArray['createPaymentLinks'] = intval($appointmentArray['createPaymentLinks']);
+        }
 
         $appointmentArray = apply_filters('amelia_get_appointment_filter', $appointmentArray);
 

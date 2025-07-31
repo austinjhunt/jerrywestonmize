@@ -1,6 +1,6 @@
 <?php
 
-namespace Sabre\VObject;
+namespace AmeliaSabre\VObject;
 
 /**
  * Useful utilities for working with various strings.

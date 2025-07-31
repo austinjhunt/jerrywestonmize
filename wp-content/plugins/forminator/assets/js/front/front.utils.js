@@ -90,6 +90,34 @@ class forminatorFrontUtils {
 
 		return isNaN(value) ? 0 : value;
 	}
+
+	show_hide_custom_input( selector, field_type ) {
+		if( ! selector ) {
+			return;
+		}
+		let $elements = null;
+		if( field_type === 'select2' || field_type === 'select' ) {
+			$elements = jQuery( selector );
+		} else {
+			$elements = jQuery( selector ).closest( '.forminator-field' ).find( 'input[type="checkbox"]:checked, input[type="radio"]:checked' );
+		}
+
+		if( ! $elements.length ) {
+			// If no elements found, hide all custom inputs.
+			jQuery( selector ).closest( '.forminator-field' ).find( '.forminator-custom-input' ).hide();
+			return;
+		}
+
+		$elements.each( function() {
+			if( jQuery( this ).val() && jQuery( this ).val().includes( 'custom_option' ) ) {
+				// Display custom option input.
+				jQuery( this ).closest( '.forminator-field' ).find( '.forminator-custom-input' ).show();
+			} else {
+				// Hide custom option input.
+				jQuery( this ).closest( '.forminator-field' ).find( '.forminator-custom-input' ).hide();
+			}
+		});
+	}
 }
 
 if (window['forminatorUtils'] === undefined) {

@@ -48,6 +48,8 @@ class Forminator_Admin_Data {
 		$data['fields']    = forminator_get_fields_sorted( 'position', SORT_ASC );
 		$data['fieldsPro'] = forminator_get_pro_fields();
 
+		$data['default_required_messages'] = Forminator_Field::$default_required_messages;
+
 		return $data;
 	}
 
@@ -133,6 +135,8 @@ class Forminator_Admin_Data {
 			'searchNonce'                    => wp_create_nonce( 'forminator_search_emails' ),
 			'gFontNonce'                     => wp_create_nonce( 'forminator_load_google_fonts' ),
 			'dismissNonce'                   => wp_create_nonce( 'forminator_dismiss_notification' ),
+			'dismissNoticeNonce'             => wp_create_nonce( 'forminator_dismiss_notice' ),
+			'savedChangesDismissed'          => is_int( $id ) && Forminator_Admin::was_notification_dismissed( 'forminator_saved_changes_' . $id ),
 			'formProcessNonce'               => wp_create_nonce( 'forminator_form_request' ),
 			'formExportNonce'                => wp_create_nonce( 'forminator_popup_export_form' ),
 			'pollProcessNonce'               => wp_create_nonce( 'forminator_poll_request' ),
@@ -200,6 +204,9 @@ class Forminator_Admin_Data {
 			'manage_forminator_templates'    => forminator_is_user_allowed( 'forminator-templates' ),
 			'cloudDisabled'                  => forminator_cloud_templates_disabled(),
 			'globalTracking'                 => forminator_global_tracking(),
+			'hasSavedChanges'                => is_int( $id ) && Forminator_Base_Form_Model::get_temp_settings( $id ),
+			'saveDelay'                      => apply_filters( 'forminator_save_delay', 1500 ),
+			'autoSave'                       => get_option( 'forminator_auto_saving', true ),
 		);
 	}
 

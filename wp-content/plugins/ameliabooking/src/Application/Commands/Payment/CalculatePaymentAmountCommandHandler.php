@@ -64,6 +64,10 @@ class CalculatePaymentAmountCommandHandler extends CommandHandler
             false
         );
 
+        if ($result->getResult() === CommandResult::RESULT_ERROR) {
+            return $result;
+        }
+
         $transfers = [];
 
         $paymentAS->setTransfers(

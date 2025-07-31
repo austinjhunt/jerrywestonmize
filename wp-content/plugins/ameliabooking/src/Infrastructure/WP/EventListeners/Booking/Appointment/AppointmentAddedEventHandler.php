@@ -142,7 +142,7 @@ class AppointmentAddedEventHandler
                         'customer' => $booking['customer']
                     ];
 
-                    if (!empty($paymentId)) {
+                    if (!empty($paymentId) && !empty($appointment['createPaymentLinks'])) {
                         $appointment['bookings'][$index]['payments'][0]['paymentLinks'] = $paymentAS->createPaymentLink($data, $index);
                     }
                 }

@@ -30,7 +30,6 @@ class ReassignBookingController extends Controller
         'providerId',
         'locationId',
         'notifyParticipants',
-        'createPaymentLinks',
         'customFields',
         'internalNotes',
     ];

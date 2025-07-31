@@ -21,6 +21,8 @@ $nonce   = wp_create_nonce( 'forminator_save_dashboard_settings' );
 
 			<?php $this->template( 'settings/tab-dashboard' ); ?>
 
+			<?php $this->template( 'settings/tab-autosave' ); ?>
+
 			<?php $this->template( 'settings/tab-emails' ); ?>
 
 			<?php $this->template( 'settings/tab-pagination' ); ?>

@@ -311,7 +311,7 @@ if ($filename) {
 
     <div class="invoice-body">
         <div class="invoice-body-customer">
-            <div class="invoice-body-customer-to"><?php echo BackendStrings::getFinanceStrings()['invoice_to'] ?></div>
+            <div class="invoice-body-customer-to"><?php echo BackendStrings::getCommonStrings()['to_upper'] ?></div>
             <div class="invoice-body-customer-name"><?php echo $data['customer_full_name'] ?></div>
             <div class="invoice-body-customer-email"><?php echo !empty($data['customer_email']) ? $data['customer_email'] : '' ?></div>
             <div class="invoice-body-customer-phone"><?php echo !empty($data['customer_phone']) ? $data['customer_phone'] : '' ?></div>

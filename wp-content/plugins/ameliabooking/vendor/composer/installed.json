@@ -2920,7 +2920,7 @@
                     "lib/functions.php"
                 ],
                 "psr-4": {
-                    "Sabre\\Uri\\": "lib/"
+                    "AmeliaSabre\\Uri\\": "lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2992,7 +2992,7 @@
             "installation-source": "dist",
             "autoload": {
                 "psr-4": {
-                    "Sabre\\VObject\\": "lib/"
+                    "AmeliaSabre\\VObject\\": "lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3093,7 +3093,7 @@
                     "lib/Serializer/functions.php"
                 ],
                 "psr-4": {
-                    "Sabre\\Xml\\": "lib/"
+                    "AmeliaSabre\\Xml\\": "lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",

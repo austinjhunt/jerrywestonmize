@@ -65,9 +65,29 @@
 				var $element = $(this),
 					element_id = $element.closest('.forminator-col').attr('id')
 					;
+				if ( $element.is( 'input[type="radio"]' ) ) {
+					var $radioGroup = $element.closest( '.forminator-radio' );
+					forminatorUtils().show_hide_custom_input( $radioGroup, 'radio' );
+				}
+
 				if ( $element.is( 'input[type="radio"]' ) && 'input' === e.type ) {
 					// Skip input events for radio buttons, handle only change events for them.
 					return;
+				}
+
+				if ( $element.is( 'input[type="checkbox"]' ) ) {
+					var $checkboxGroup = $element.closest( '.forminator-checkbox' );
+					forminatorUtils().show_hide_custom_input( $checkboxGroup, 'checkbox' );
+				}
+
+				if ( $element.closest( '.forminator-select2' ) ) {
+					var $selectGroup = $element.closest( '.forminator-select2' );
+					forminatorUtils().show_hide_custom_input( $selectGroup, 'select' );
+				}
+
+				if ( $element.closest( '.forminator-multiselect' ) ) {
+					var $multiselectGroup = $element.closest( '.forminator-multiselect' );
+					forminatorUtils().show_hide_custom_input( $multiselectGroup, 'multiselect' );
 				}
 
 				// Handle the email field when email confirmation is enabled.

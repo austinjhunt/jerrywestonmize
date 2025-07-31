@@ -707,7 +707,20 @@ function forminator_replace_field_data( $custom_form, $element_id, $data, $quiz_
 		} else {
 			$selected_values = is_array( $field_value ) ? $field_value : array( $field_value );
 			$selected_values = array_map( 'htmlspecialchars_decode', $selected_values );
-			$value           = implode( ', ', array_keys( array_intersect( array_flip( $field_options ), array_map( 'stripslashes', $selected_values ) ) ) );
+
+			// Check if custom option is enabled for this field.
+			$field                = $custom_form->get_field( $element_id, true );
+			$enable_custom_option = Forminator_Field::get_property( 'enable_custom_option', $field, false );
+			if ( $enable_custom_option && ! empty( $selected_values ) ) {
+				if ( in_array( 'custom_option', $selected_values, true ) ) {
+					$custom_value = isset( $data[ 'custom-' . $element_id ] ) ? $data[ 'custom-' . $element_id ] : '';
+					// Append the custom input value for the "Other" option.
+					if ( '' !== $custom_value ) {
+						$field_options['custom_option'] = $field_options['custom_option'] . ': ' . $custom_value;
+					}
+				}
+			}
+			$value = implode( ', ', array_keys( array_intersect( array_flip( $field_options ), array_map( 'stripslashes', $selected_values ) ) ) );
 		}
 	}
 
@@ -849,7 +862,7 @@ function forminator_prepare_formatted_form_entry(
 			$content = forminator_replace_custom_form_data( $content, $custom_form, $entry );
 			$html   .= '</' . $list_tag . '>';
 			if ( ! empty( $label ) && $show_label ) {
-				$html .= '<h4><b>' . $label . '</b></h4>';
+				$html .= '<h4><b>' . Forminator_Field::convert_markdown( $label ) . '</b></h4>';
 			}
 			$html .= $content;
 			$html .= '<' . $list_tag . '>';
@@ -858,7 +871,7 @@ function forminator_prepare_formatted_form_entry(
 		} elseif ( 'group' === $field_type ) {
 			$label = $form_field->get_label_for_entry();
 			if ( ! empty( $label ) && $show_label ) {
-				$html .= '<b>' . $label . '</b><br/>';
+				$html .= '<b>' . Forminator_Field::convert_markdown( $label ) . '</b><br/>';
 			}
 
 			$group_fields = $custom_form->get_grouped_fields( $field_id );
@@ -900,7 +913,7 @@ function forminator_prepare_formatted_form_entry(
 				}
 
 				if ( ! empty( $label ) && $display_label ) {
-					$html .= '<b>' . $label . '</b><br/>';
+					$html .= '<b>' . Forminator_Field::convert_markdown( $label ) . '</b><br/>';
 				}
 				if ( isset( $value ) && '' !== $value ) {
 					$html .= $value . '<br/>';
@@ -1311,29 +1324,30 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 
 								$output .= '<ul>';
 
-									$output .= '<li>';
-									$output .= '<b>' . esc_html__( 'Title', 'forminator' ) . ':</b> ';
-									$output .= '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" title="' . esc_attr__( 'Edit Post', 'forminator' ) . '">'
-													. $title .
-												'</a>';
-									$output .= '</li>';
+								$title_label = $field['post_title_label'] ?? esc_html__( 'Title', 'forminator' );
+								$output     .= '<li>';
+								$output     .= '<b>' . Forminator_Field::convert_markdown( esc_html( $title_label ) ) . ':</b> ';
+								$output     .= '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" title="' . esc_attr__( 'Edit Post', 'forminator' ) . '">' . $title . '</a>';
+								$output     .= '</li>';
 
 									// Content.
 								if ( ! empty( $data['value']['post-content'] ) ) {
-									$post_content = $data['value']['post-content'];
-									$output      .= '<li>';
-									$output      .= '<b>' . esc_html__( 'Content', 'forminator' ) . ':</b>' . $separator;
-									$output      .= wp_kses( $post_content, 'post' );
-									$output      .= '</li>';
+									$post_content  = $data['value']['post-content'];
+									$content_label = $field['post_content_label'] ?? esc_html__( 'Content', 'forminator' );
+									$output       .= '<li>';
+									$output       .= '<b>' . Forminator_Field::convert_markdown( esc_html( $content_label ) ) . ':</b>' . $separator;
+									$output       .= wp_kses( $post_content, 'post' );
+									$output       .= '</li>';
 								}
 
 									// Excerpt.
 								if ( ! empty( $data['value']['post-excerpt'] ) ) {
-									$post_excerpt = $data['value']['post-excerpt'];
-									$output      .= '<li>';
-									$output      .= '<b>' . esc_html__( 'Excerpt', 'forminator' ) . ':</b>' . $separator;
-									$output      .= wp_strip_all_tags( $post_excerpt );
-									$output      .= '</li>';
+									$post_excerpt  = $data['value']['post-excerpt'];
+									$excerpt_label = $field['post_excerpt_label'] ?? esc_html__( 'Excerpt', 'forminator' );
+									$output       .= '<li>';
+									$output       .= '<b>' . Forminator_Field::convert_markdown( esc_html( $excerpt_label ) ) . ':</b>' . $separator;
+									$output       .= wp_strip_all_tags( $post_excerpt );
+									$output       .= '</li>';
 								}
 
 									// Category.
@@ -1350,12 +1364,10 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 									// In case of deleted categories.
 									if ( ! empty( $post_category ) ) {
 										$category_count = count( $post_category );
-										$label          = ( 1 === $category_count ) ?
-											esc_html__( 'Category', 'forminator' ) :
-											esc_html__( 'Categories', 'forminator' );
+										$label          = $field['category_label'] ?? ( ( 1 === $category_count ) ? esc_html__( 'Category', 'forminator' ) : esc_html__( 'Categories', 'forminator' ) );
 
 										$output .= '<li>';
-										$output .= '<b>' . $label . ':</b> ';
+										$output .= '<b>' . Forminator_Field::convert_markdown( esc_html( $label ) ) . ':</b> ';
 										$output .= implode( ',', $post_category );
 										$output .= '</li>';
 									}
@@ -1375,12 +1387,10 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 									// In case of deleted tags.
 									if ( ! empty( $term_query->terms ) ) {
 										$term_count = count( $term_query->terms );
-										$label      = ( 1 === $term_count ) ?
-											esc_html__( 'Tag', 'forminator' ) :
-											esc_html__( 'Tags', 'forminator' );
+										$label      = $field['post_tag_label'] ?? ( ( 1 === $term_count ) ? esc_html__( 'Tag', 'forminator' ) : esc_html__( 'Tags', 'forminator' ) );
 
 										$output .= '<li>';
-										$output .= '<b>' . $label . ':</b> ';
+										$output .= '<b>' . Forminator_Field::convert_markdown( esc_html( $label ) ) . ':</b> ';
 										$output .= implode( ',', $term_query->terms );
 										$output .= '</li>';
 									}
@@ -1389,8 +1399,9 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 									// Featured Image.
 								if ( ! empty( $data['value']['post-image'] ) && ! empty( $data['value']['post-image']['attachment_id'] ) ) {
 									$post_image_id = $data['value']['post-image']['attachment_id'];
+									$image_label   = $field['post_image_label'] ?? esc_html__( 'Featured image', 'forminator' );
 									$output       .= '<li>';
-									$output       .= '<b>' . esc_html__( 'Featured image', 'forminator' ) . ':</b>' . $separator;
+									$output       .= '<b>' . Forminator_Field::convert_markdown( esc_html( $image_label ) ) . ':</b>' . $separator;
 									$output       .= wp_get_attachment_image( $post_image_id, array( 100, 100 ) );
 									$output       .= '</li>';
 								}
@@ -1525,10 +1536,21 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 									}
 								}
 
+								// Date sub-field labels.
+								if ( 'day' === $key_slug && ! empty( $field['day_label'] ) ) {
+									$key = $field['day_label'];
+								}
+								if ( 'month' === $key_slug && ! empty( $field['month_label'] ) ) {
+									$key = $field['month_label'];
+								}
+								if ( 'year' === $key_slug && ! empty( $field['year_label'] ) ) {
+									$key = $field['year_label'];
+								}
+
 								if ( $remove_empty && empty( $value ) ) {
 									$output .= '';
 								} elseif ( $show_label ) {
-										$output .= sprintf( '<strong>%1$s : </strong> %2$s', esc_html( $key ), esc_html( $value ) ) . $separator;
+										$output .= sprintf( '<strong>%1$s : </strong> %2$s', Forminator_Field::convert_markdown( esc_html( $key ) ), esc_html( $value ) ) . $separator;
 								} else {
 									$output .= esc_html( $value ) . $separator;
 								}

@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const injectCustomContent = () => {
       document.querySelectorAll('.wc-block-components-product-details').forEach((el) => {
         if (!el.querySelector('.amelia-custom-html')) {
-          console.log(window.ameliaNote[0])
           const div = document.createElement('div');
           div.className = 'amelia-custom-html';
           div.innerHTML = '<div>' + window.ameliaNote[0] + '</div>';

@@ -47,7 +47,7 @@ $total_modules = forminator_total_forms();
 		</div>
 		<?php
 	}
-	$notice_dismissed = get_option( 'forminator_dismiss_feature_1420', false );
+	$notice_dismissed = get_option( 'forminator_dismiss_feature_1450', false );
 	$version_upgraded = get_option( 'forminator_version_upgraded', false );
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended

@@ -454,7 +454,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		if ( is_wp_error( $module_id ) ) {
 			return;
 		}
-		$wizard_url = admin_url( 'admin.php?page=forminator-cform-wizard&id=' . $module_id );
+		$wizard_url = admin_url( 'admin.php?page=forminator-cform-wizard&create-status=success&id=' . $module_id );
 
 		wp_safe_redirect( $wizard_url );
 	}
@@ -697,6 +697,9 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		if ( is_wp_error( $id ) ) {
 			return $id;
 		}
+
+		// Remove temporary settings.
+		Forminator_Base_Form_Model::remove_temp_settings( $id );
 
 		try {
 			/**

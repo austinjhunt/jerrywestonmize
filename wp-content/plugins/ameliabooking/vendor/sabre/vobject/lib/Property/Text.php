@@ -1,12 +1,12 @@
 <?php
 
-namespace Sabre\VObject\Property;
+namespace AmeliaSabre\VObject\Property;
 
-use Sabre\VObject\Component;
-use Sabre\VObject\Document;
-use Sabre\VObject\Parser\MimeDir;
-use Sabre\VObject\Property;
-use Sabre\Xml;
+use AmeliaSabre\VObject\Component;
+use AmeliaSabre\VObject\Document;
+use AmeliaSabre\VObject\Parser\MimeDir;
+use AmeliaSabre\VObject\Property;
+use AmeliaSabre\Xml;
 
 /**
  * Text property.

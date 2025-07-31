@@ -18,7 +18,9 @@ use Square\Http\ApiResponse;
 use Square\Models\Address;
 use Square\Models\CheckoutOptions;
 use Square\Models\CompletePaymentRequest;
+use Square\Models\CreateOrderRequest;
 use Square\Models\CreatePaymentLinkRequest;
+use Square\Models\CreatePaymentRequest;
 use Square\Models\Location;
 use Square\Models\Money;
 use Square\Models\Order;
@@ -50,7 +52,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
         CurrencyService $currencyService
     ) {
         parent::__construct($settingsService, $currencyService);
-        $this->middlewareService = new SquareMiddlewareService();
+        $this->middlewareService = new SquareMiddlewareService($settingsService);
     }
 
     /**
@@ -105,6 +107,73 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
         $apiResponse = $this->getApiResponse('getLocationsApi', 'retrieveLocation', [$locationId]);
 
         return $apiResponse->isSuccess() ? $apiResponse->getResult()->getLocation() : null;
+    }
+
+    public function preparePaymentRequest($data, $amount, $reservation, $additionalInformation)
+    {
+        $bookingId = $reservation->getBooking() && $reservation->getBooking()->getId() ?
+            $reservation->getBooking()->getId()->getValue() : '';
+
+        $customer = $reservation->getCustomer();
+        $customerEmail = '';
+        if ($customer && $customer->getEmail() && $customer->getEmail()->getValue()) {
+            $customerEmail = $customer->getEmail()->getValue();
+        }
+        $location = $this->getLocation();
+        if (!$location) {
+            return null;
+        }
+        $locationId = $location->getId();
+
+        $currency = $location->getCurrency();
+        $money = new Money();
+        $money->setCurrency($currency);
+        $money->setAmount((int)$amount);
+
+        $appointment = new OrderLineItem(1);
+        $appointment->setName(
+            $additionalInformation['description'] ?: $reservation->getBookable()->getName()->getValue()
+        );
+        $appointment->setBasePriceMoney($money);
+
+        $order = new Order($locationId);
+        $order->setReferenceId(" . $bookingId . ");
+        $order->setLineItems([$appointment]);
+
+        if (!empty($data['metaData'])) {
+            $order->setMetadata($data['metaData']);
+        }
+
+        $ordersApi = $this->getClient()->getOrdersApi();
+        $request = new CreateOrderRequest();
+        $request->setOrder($order);
+        $responseOrder = $ordersApi->createOrder($request);
+        $orderResponse = $responseOrder->getResult();
+
+        $address = new Address();
+        if ($customer->getFirstName() && $customer->getFirstName()->getValue()) {
+            $address->setFirstName($customer->getFirstName()->getValue());
+        }
+
+        if ($customer->getLastName() && $customer->getLastName()->getValue()) {
+            $address->setLastName($customer->getLastName()->getValue());
+        }
+
+        $client = $this->getClient();
+        $paymentsApi = $client->getPaymentsApi();
+        $paymentData = new CreatePaymentRequest($data['sourceId'], $data['idempotencyKey']);
+
+        $paymentData->setBillingAddress($address);
+        $paymentData->setBuyerEmailAddress($customerEmail);
+        $paymentData->setOrderId($orderResponse->getOrder()->getId());
+        $paymentData->setSourceId($data['sourceId']);
+        $paymentData->setIdempotencyKey($data['idempotencyKey']);
+        $paymentData->setAmountMoney($money);
+        $paymentData->setLocationId($locationId);
+        $paymentData->setAutocomplete(true);
+        $paymentData->setNote("Amelia - Booking " . $bookingId);
+
+        return $paymentsApi->createPayment($paymentData);
     }
 
     /**
@@ -310,12 +379,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
         $apiResponse = $this->getApiResponse('getLocationsApi', 'listLocations', []);
 
         $result = $apiResponse->isSuccess() ? $apiResponse->getResult() : null;
-        return $result ? array_filter(
-            $result->getLocations(),
-            function ($location) {
-                return $location->getStatus() === 'ACTIVE' && in_array('CREDIT_CARD_PROCESSING', $location->getCapabilities());
-            }
-        ) : [];
+        return $result ? $result->getLocations() : [];
     }
 
 

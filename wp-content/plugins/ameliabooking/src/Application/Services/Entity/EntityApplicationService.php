@@ -521,6 +521,9 @@ class EntityApplicationService
         $extrasIds = [];
 
         foreach ($data['bookings'] as $item) {
+            if (empty($item['extras'])) {
+                continue;
+            }
             $extrasIds = self::getUniqueIds(
                 $extrasIds,
                 array_column($item['extras'], 'extraId')
@@ -530,6 +533,9 @@ class EntityApplicationService
         $existingExtrasIds = $extrasIds ? $extraRepository->getIds(['id' => $extrasIds]) : [];
 
         foreach ($data['bookings'] as $bookingIndex => $bookingItem) {
+            if (empty($bookingItem['extras'])) {
+                continue;
+            }
             foreach ($bookingItem['extras'] as $extraIndex => $extraItem) {
                 if (!in_array((int)$extraItem['extraId'], $existingExtrasIds)) {
                     unset($data['bookings'][$bookingIndex]['extras'][$extraIndex]);
@@ -593,6 +599,9 @@ class EntityApplicationService
         $extrasIds = [];
 
         foreach ($data['bookings'] as $item) {
+            if (empty($item['extras'])) {
+                continue;
+            }
             $extrasIds = self::getUniqueIds(
                 $extrasIds,
                 array_column($item['extras'], 'extraId')
@@ -602,6 +611,9 @@ class EntityApplicationService
         $existingExtrasIds = $extrasIds ? $extraRepository->getIds(['id' => $extrasIds]) : [];
 
         foreach ($data['bookings'] as $bookingItem) {
+            if (empty($bookingItem['extras'])) {
+                continue;
+            }
             foreach ($bookingItem['extras'] as $extraItem) {
                 if (!in_array((int)$extraItem['extraId'], $existingExtrasIds)) {
                     return Entities::EXTRA;

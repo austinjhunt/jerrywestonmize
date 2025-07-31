@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Xml;
+namespace AmeliaSabre\Xml;
 
 /**
  * This is a base exception for any exception related to parsing xml files.

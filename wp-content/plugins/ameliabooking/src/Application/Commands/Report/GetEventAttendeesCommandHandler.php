@@ -111,24 +111,25 @@ class GetEventAttendeesCommandHandler extends CommandHandler
             foreach ($customFieldsList->getItems() as $customFieldId => $customFiled) {
                 /** @var CustomField $item **/
                 $item = $customFieldsJson && !empty($customFieldsJson[$customFieldId]) ? $customFieldsJson[$customFieldId] : null;
+                $label = $customFiled->getLabel()->getValue();
                 if ($item) {
                     if ($item['type'] === 'file') {
-                        $rowCF[$item['label']] = '';
+                        $rowCF[$label] = '';
                         foreach ($item['value'] as $cfIndex => $cfFile) {
-                            $rowCF[$item['label']] .=
+                            $rowCF[$label] .=
                                 ($cfIndex === 0 ? '' : ' | ')  .
                                 (AMELIA_UPLOADS_FILES_PATH_USE ?
                                     AMELIA_ACTION_URL . '/fields/' . $customFieldId . '/' . $booking->getId()->getValue() . '/' . $cfIndex :
                                     AMELIA_UPLOADS_FILES_URL . $booking->getId()->getValue() . '_' . $item['value'][$cfIndex]['name']);
                         }
-                        $rowCF[$item['label']] .= $delimiterSeparate;
+                        $rowCF[$label] .= $delimiterSeparate;
                     } elseif (is_array($item['value'])) {
-                        $rowCF[$item['label']] .= implode('|', $item['value']) . $delimiterSeparate;
+                        $rowCF[$label] .= implode('|', $item['value']) . $delimiterSeparate;
                     } else {
-                        $rowCF[$item['label']] .= $item['value'] . $delimiterSeparate;
+                        $rowCF[$label] .= $item['value'] . $delimiterSeparate;
                     }
                 } else {
-                    $rowCF[$customFiled->getLabel()->getValue()] .= ' ' . $delimiterSeparate;
+                    $rowCF[$label] .= ' ' . $delimiterSeparate;
                 }
             }
 

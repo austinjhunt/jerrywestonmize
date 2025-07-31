@@ -514,6 +514,9 @@
 												$value = parseInt($slide.data('value')) || $minRange,
 												$valueMax = parseInt($slide.data('value-max')) || $maxRange;
 
+											// Remove slider custom labels.
+											$element.find('.forminator-slider-labels').remove();
+
 											$slider.create();
 											if (true === $slider.range) {
 												$slide.slider('values', [$value, $valueMax]);

@@ -140,6 +140,7 @@ class FrontendStrings
             'discount_amount_colon'        => __('Discount', 'wpamelia'),
             'email_not_sent_error'         => __('Unfortunately a server error occurred and your email was not sent.', 'wpamelia'),
             'email_placeholder'            => __('example@mail.com', 'wpamelia'),
+            'email_required'               => __('Email field is required', 'wpamelia'),
             'employee'                     => __('employee', 'wpamelia'),
             'employees'                    => __('employees', 'wpamelia'),
             'event_booking_unavailable'    => __('Event booking is unavailable', 'wpamelia'),
@@ -249,7 +250,6 @@ class FrontendStrings
             'search'                  => __('Search...', 'wpamelia'),
             'search_filters'          => __('Search Filters', 'wpamelia'),
             'search_results'          => __('Search Results', 'wpamelia'),
-            'select'                  => __('Select', 'wpamelia'),
             'select_appointment_time' => __('Select the Appointment Time', 'wpamelia'),
             'select_extras'           => __('Select the Extras you\'d like', 'wpamelia'),
             'select_location'         => __('Select Location', 'wpamelia'),
@@ -373,6 +373,7 @@ class FrontendStrings
 
             'bringing_anyone'              => __('Bringing Anyone With You', 'wpamelia'),
             'bringing_anyone_title'        => __('Bringing anyone with you?', 'wpamelia'),
+            'bringing_price'               => __('Pricing by the number of people', 'wpamelia'),
             'bringing_people'              => __('Additional people', 'wpamelia'),
             'bringing_people_total'        => __('Total people', 'wpamelia'),
             'bringing_yes'                 => __('Yes', 'wpamelia'),

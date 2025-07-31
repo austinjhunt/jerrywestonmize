@@ -19549,6 +19549,18 @@ html.sui-has-overlay {
   }
 }
 
+@media (min-width: 783px) {
+  .sui-2-12-23 .sui-wrap .sui-row [class*=sui-col-].sui-padding-left-5 {
+    padding-left: 5px !important;
+  }
+}
+
+@media (min-width: 783px) {
+  .sui-2-12-23 .sui-wrap .sui-row [class*=sui-col-].sui-padding-right-5 {
+    padding-right: 5px !important;
+  }
+}
+
 .sui-2-12-23 .sui-wrap .sui-row.sui-align-bottom {
   align-items: flex-end;
 }
@@ -19702,6 +19714,48 @@ html.sui-has-overlay {
 .sui-2-12-23 .sui-wrap .fui-form-builder--dragging .ui-draggable-dragging .fui-builder-field-block .sui-button-icon:not(.sui-button).sui-button-red {
   pointer-events: none;
   color: #ddd;
+}
+
+.sui-2-12-23 .sui-wrap #forminator-builder-status #forminator-button-back-to-form {
+  margin-right: 20px;
+}
+
+.sui-2-12-23 .sui-wrap #forminator-builder-status #forminator-module-save,
+.sui-2-12-23 .sui-wrap #forminator-builder-status #forminator-module-revert {
+  border-color: rgba(0,0,0,0);
+  min-width: 0;
+  margin-left: 5px;
+  padding: 5px;
+}
+
+.sui-2-12-23 .sui-wrap #forminator-builder-status #forminator-module-save [class^=sui-icon-],
+.sui-2-12-23 .sui-wrap #forminator-builder-status #forminator-module-revert [class^=sui-icon-] {
+  margin: 0;
+}
+
+.sui-2-12-23 .sui-wrap #forminator-builder-status dfn {
+  cursor: help;
+  --tooltip-width: 177px;
+}
+
+.sui-2-12-23 .sui-wrap #forminator-builder-status .sui-dropdown {
+  margin: 0;
+}
+
+.sui-2-12-23 .sui-wrap #forminator-builder-status .sui-dropdown .sui-dropdown-anchor.sui-button-ghost {
+  min-width: 30px;
+  padding: 5px;
+}
+
+.sui-2-12-23 .sui-wrap #forminator-builder-status .sui-dropdown .sui-dropdown-anchor.sui-button-ghost i {
+  margin: 0;
+  width: 15px;
+}
+
+.sui-2-12-23 .sui-wrap #forminator-builder-status .sui-dropdown.open .sui-dropdown-anchor.sui-button-ghost:hover,
+.sui-2-12-23 .sui-wrap #forminator-builder-status .sui-dropdown.open .sui-dropdown-anchor.sui-button-ghost:focus {
+  background-color: #888;
+  color: #fff;
 }
 
 .sui-2-12-23 .sui-wrap .fui-builder-field-block {
@@ -21146,6 +21200,10 @@ html.sui-has-overlay {
   overflow: hidden;
 }
 
+.sui-2-12-23 .sui-wrap .multivalue-modal div[id^=forminator-modal-body-] .sui-tab-content.active.forminator-modal-body--scrollable {
+  overflow-y: auto;
+}
+
 .sui-2-12-23 .sui-wrap .multivalue-modal>.sui-modal-content>.sui-select-theme--vars.select2-container--open>.sui-select-dropdown {
   margin-left: 0;
   padding: 0;
@@ -21327,6 +21385,10 @@ html.sui-has-overlay {
   }
 }
 
+.sui-2-12-23 .sui-wrap .fui-multi-options.ui-sortable-disabled .fui-option {
+  cursor: default;
+}
+
 .sui-2-12-23 .sui-wrap .fui-multi-options:not(.fui-nobg) {
   background-color: #f8f8f8;
 }
@@ -21375,6 +21437,10 @@ html.sui-has-overlay {
   box-shadow: 0px -10px 10px 0px rgba(0,0,0,.05);
   -webkit-box-shadow: 0px -10px 10px 0px rgba(0,0,0,.05);
   -moz-box-shadow: 0px -10px 10px 0px rgba(0,0,0,.05);
+}
+
+.sui-2-12-23 .sui-wrap .fui-multi-options.custom-option .fui-option::before {
+  color: #ddd;
 }
 
 @media (max-width: 782px) {
@@ -22660,11 +22726,14 @@ html.sui-has-overlay {
 }
 
 .sui-2-12-23 .sui-wrap #modal-insert-fields input+span {
-  color: #333;
   font-size: 13px;
 }
 
-.sui-2-12-23 .sui-wrap #modal-insert-fields i:before {
+.sui-2-12-23 .sui-wrap #modal-insert-fields input:not(:checked)+span {
+  color: #333;
+}
+
+.sui-2-12-23 .sui-wrap #modal-insert-fields input:not(:checked)+span i:before {
   color: #888;
 }
 
@@ -22853,6 +22922,11 @@ html.sui-has-overlay {
   .sui-2-12-23 .sui-wrap .fui-table--apps tbody tr.fui-app--promote .fui-app--content .sui-modal .sui-description-alt.fui-app--description {
     margin-top: -10px;
   }
+}
+
+.sui-2-12-23 .sui-wrap .sui-modal .forminator-modal-body--scrollable {
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 .sui-2-12-23 .sui-wrap #forminator-stripe-sca .sui-box .sui-box-header .sui-dialog-close {
@@ -24625,8 +24699,25 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   right: 12px;
 }
 
+.sui-2-12-23 .forminator-card .sui-tag-free-plan {
+  background: #0059ff;
+  color: #fff;
+  padding: 3px 10px;
+  line-height: normal;
+  min-height: unset;
+}
+
 .sui-2-12-23 .forminator-card.forminator-blank-card {
   cursor: pointer;
+}
+
+.sui-2-12-23 .sui-wrap .sui-button.sui-button-bright-blue {
+  background-color: #0059ff;
+}
+
+.sui-2-12-23 .sui-wrap .sui-button.sui-button-bright-blue:hover,
+.sui-2-12-23 .sui-wrap .sui-button.sui-button-bright-blue:focus {
+  background-color: #0039a3;
 }
 
 .sui-2-12-23 .forminator-card-image img,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sabre\VObject;
+namespace AmeliaSabre\VObject;
 
 /**
  * PHPUnit Assertions.
@@ -19,7 +19,7 @@ trait PHPUnitAssertions
      * semantically identical.
      *
      * It supports objects being supplied as strings, streams or
-     * Sabre\VObject\Component instances.
+     * AmeliaSabre\VObject\Component instances.
      *
      * PRODID is removed from both objects as this is often changes and would
      * just get in the way.

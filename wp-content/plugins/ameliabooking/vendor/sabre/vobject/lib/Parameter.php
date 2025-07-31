@@ -1,9 +1,9 @@
 <?php
 
-namespace Sabre\VObject;
+namespace AmeliaSabre\VObject;
 
 use ArrayIterator;
-use Sabre\Xml;
+use AmeliaSabre\Xml;
 
 /**
  * VObject Parameter.

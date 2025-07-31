@@ -756,7 +756,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 			return;
 		}
 
-		$wizard_url = admin_url( 'admin.php?page=forminator-' . $quiz_type . '-wizard&id=' . $id );
+		$wizard_url = admin_url( 'admin.php?page=forminator-' . $quiz_type . '-wizard&create-status=success&id=' . $id );
 
 		wp_safe_redirect( $wizard_url );
 	}
@@ -964,6 +964,8 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 		if ( is_wp_error( $id ) ) {
 			return $id;
 		}
+		// Remove temporary settings.
+		Forminator_Base_Form_Model::remove_temp_settings( $id );
 
 		$type = $form_model->quiz_type;
 
@@ -1027,7 +1029,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 		$model->settings = $settings;
 
 		// status.
-		$model->status = 'leads';
+		$model->status = Forminator_Form_Model::STATUS_PUBLISH;
 
 		// Save data.
 		$id = $model->save();

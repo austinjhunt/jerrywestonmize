@@ -2610,31 +2610,40 @@ class Forminator_Form_Entry_Model {
 
 		// order.
 		$order_by = 'ORDER BY entries.entry_id';
+		$order    = 'DESC';
 		if ( isset( $args['order_by'] ) ) {
-			$order_by = 'ORDER BY ' . $args['order_by']; // unesacaped.
+			$valid_order_bys = array(
+				'entries.date_created',
+				'entries.entry_id',
+			);
+			if ( in_array( $args['order_by'], $valid_order_bys, true ) ) {
+				$order_by = 'ORDER BY ' . $args['order_by'];
+			}
+
+			/**
+			 * Filter ORDER BY query to be used on query-ing entries
+			 *
+			 * @param string $order_by
+			 * @param array $args
+			 *
+			 * @since 1.5.4
+			 */
+			$order_by = apply_filters( 'forminator_query_entries_order_by', $order_by, $args );
+
+			if ( isset( $args['order'] ) && in_array( strtoupper( $args['order'] ), array( 'DESC', 'ASC' ), true ) ) {
+				$order = $args['order'];
+			}
+
+			/**
+			 * Filter order (DESC/ASC) query to be used on query-ing entries
+			 *
+			 * @param string $order
+			 * @param array $args
+			 *
+			 * @since 1.5.4
+			 */
+			$order = apply_filters( 'forminator_query_entries_order', $order, $args );
 		}
-
-		/**
-		 * Filter ORDER BY query to be used on query-ing entries
-		 *
-		 * @param string $order_by
-		 * @param array $args
-		 *
-		 * @since 1.5.4
-		 */
-		$order_by = apply_filters( 'forminator_query_entries_order_by', $order_by, $args );
-
-		$order = $args['order'];
-
-		/**
-		 * Filter order (DESC/ASC) query to be used on query-ing entries
-		 *
-		 * @param string $order
-		 * @param array $args
-		 *
-		 * @since 1.5.4
-		 */
-		$order = apply_filters( 'forminator_query_entries_order', $order, $args );
 
 		// limit.
 		$limit = $wpdb->prepare( 'LIMIT %d, %d', esc_sql( $args['offset'] ), esc_sql( $args['per_page'] ) );
@@ -2642,7 +2651,7 @@ class Forminator_Form_Entry_Model {
 		/**
 		 * Filter LIMIT query to be used on query-ing entries
 		 *
-		 * @param string $order
+		 * @param string $limit
 		 * @param array $args
 		 *
 		 * @since 1.5.4

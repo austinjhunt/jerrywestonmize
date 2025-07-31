@@ -1,8 +1,8 @@
 <?php
 
-namespace Sabre\VObject\Parser\XML\Element;
+namespace AmeliaSabre\VObject\Parser\XML\Element;
 
-use Sabre\Xml as SabreXml;
+use AmeliaSabre\Xml as SabreXml;
 
 /**
  * Our own sabre/xml key-value element.

@@ -73,6 +73,9 @@ class Forminator_Email extends Forminator_Field {
 	public function __construct() {
 		parent::__construct();
 		$this->name = esc_html__( 'Email', 'forminator' );
+		$required   = __( 'This field is required. Please input a valid email.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -301,7 +304,7 @@ class Forminator_Email extends Forminator_Field {
 					$field,
 					'required_message',
 					'',
-					esc_html__( 'This field is required. Please input a valid email.', 'forminator' )
+					self::$default_required_messages[ $this->type ]
 				);
 			$messages                      .= '"required": "' . forminator_addcslashes( $default_required_error_message ) . '",' . "\n";
 		}
@@ -328,7 +331,7 @@ class Forminator_Email extends Forminator_Field {
 					$field
 				);
 
-				$messages .= '"required": "' . $required_error . '",' . "\n";
+				$messages .= '"required": "' . forminator_addcslashes( $required_error ) . '",' . "\n";
 			}
 
 			$validation_message_not_match = self::get_property( 'confirm-email-mismatch', $field );
@@ -375,7 +378,7 @@ class Forminator_Email extends Forminator_Field {
 					$field,
 					'required_message',
 					'',
-					esc_html__( 'This field is required. Please input a valid email.', 'forminator' )
+					esc_html( self::$default_required_messages[ $this->type ] )
 				);
 
 			if ( empty( $data ) ) {

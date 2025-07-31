@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Xml;
+namespace AmeliaSabre\Xml;
 
 /**
  * Implementing the XmlDeserializable interface allows you to use a class as a

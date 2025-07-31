@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Xml\Element;
+namespace AmeliaSabre\Xml\Element;
 
-use Sabre\Xml;
-use Sabre\Xml\Deserializer;
+use AmeliaSabre\Xml;
+use AmeliaSabre\Xml\Deserializer;
 
 /**
  * 'KeyValue' parses out all child elements from a single node, and outputs a

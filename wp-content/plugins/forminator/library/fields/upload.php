@@ -74,6 +74,9 @@ class Forminator_Upload extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'File Upload', 'forminator' );
+		$required   = __( 'This field is required. Please upload a file.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -242,11 +245,11 @@ class Forminator_Upload extends Forminator_Field {
 	public function validate( $field, $data ) {
 		if ( $this->is_required( $field ) ) {
 			$id               = self::get_property( 'element_id', $field );
-			$required_message = self::get_property( 'required_message', $field, '' );
+			$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 			if ( empty( $data ) ) {
 				$this->validation_message[ $id ] = apply_filters(
 					'forminator_upload_field_required_validation_message',
-					( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please upload a file.', 'forminator' ) ),
+					$required_message,
 					$id,
 					$field
 				);
@@ -305,10 +308,10 @@ class Forminator_Upload extends Forminator_Field {
 		$messages = '"' . $id . '": {' . "\n";
 
 		if ( $is_required ) {
-			$settings_required_message = self::get_property( 'required_message', $field, '' );
+			$settings_required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 			$required_message          = apply_filters(
 				'forminator_upload_field_required_validation_message',
-				( ! empty( $settings_required_message ) ? $settings_required_message : esc_html__( 'This field is required. Please upload a file.', 'forminator' ) ),
+				$settings_required_message,
 				$id,
 				$field
 			);

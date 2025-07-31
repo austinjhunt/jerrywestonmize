@@ -1,8 +1,8 @@
 <?php
 
-namespace Sabre\VObject\Property;
+namespace AmeliaSabre\VObject\Property;
 
-use Sabre\VObject\DateTimeParser;
+use AmeliaSabre\VObject\DateTimeParser;
 
 /**
  * Time property.

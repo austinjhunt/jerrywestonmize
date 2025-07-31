@@ -31,6 +31,7 @@ class AppointmentsTable extends AbstractDatabaseTable
                    `bookingStart` DATETIME NOT NULL,
                    `bookingEnd` DATETIME NOT NULL,
                    `notifyParticipants` TINYINT(1) NOT NULL,
+                   `createPaymentLinks` TINYINT(1) DEFAULT 1,
                    `serviceId` INT(11) NOT NULL,
                    `packageId` INT(11) DEFAULT NULL,
                    `providerId` INT(11) NOT NULL,

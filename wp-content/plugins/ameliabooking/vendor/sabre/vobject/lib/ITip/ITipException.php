@@ -1,6 +1,6 @@
 <?php
 
-namespace Sabre\VObject\ITip;
+namespace AmeliaSabre\VObject\ITip;
 
 use Exception;
 

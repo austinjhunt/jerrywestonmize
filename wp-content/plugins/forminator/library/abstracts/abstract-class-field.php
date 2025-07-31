@@ -177,6 +177,13 @@ abstract class Forminator_Field {
 	const FIELD_NOT_CALCULABLE = 'FIELD_NOT_CALCULABLE';
 
 	/**
+	 * Default error messages for required fields.
+	 *
+	 * @var array
+	 */
+	public static $default_required_messages = array();
+
+	/**
 	 * The Constructor
 	 */
 	public function __construct() {
@@ -301,6 +308,16 @@ abstract class Forminator_Field {
 
 		if ( ! empty( $field['options_order'] ) && 'random' === $field['options_order'] ) {
 			shuffle( $options );
+			if ( ! empty( $field['enable_custom_option'] ) ) {
+				// Move custom option to the end of the array.
+				$key = array_search( 'custom_option', array_column( $options, 'key' ), true );
+				if ( false !== $key ) {
+					$custom_option = $options[ $key ];
+					unset( $options[ $key ] );
+					$options[] = $custom_option;
+					$options   = array_values( $options );
+				}
+			}
 		}
 
 		return $options;
@@ -379,7 +396,7 @@ abstract class Forminator_Field {
 			$html .= sprintf(
 				'<span id="%s" class="forminator-description">%s</span>',
 				esc_attr( $get_id . '-description' ),
-				self::esc_description( $description, $get_id )
+				self::convert_markdown( self::esc_description( $description, $get_id ) )
 			);
 		}
 
@@ -564,7 +581,12 @@ abstract class Forminator_Field {
 		$editor_id = 'forminator-wp-editor-' . ( isset( $attr['id'] ) ? $attr['id'] : '' );
 		if ( $label ) {
 			$html .= '<div class="forminator-field--label">';
-			$html .= sprintf( '<label for="%s" id="forminator-label-%s" class="forminator-label">%s</label>', $editor_id, $attr['id'], esc_html( $label ) . ( $required ? ' ' . forminator_get_required_icon() : '' ) );
+			$html .= sprintf(
+				'<label for="%s" id="forminator-label-%s" class="forminator-label">%s</label>',
+				$editor_id,
+				$attr['id'],
+				self::convert_markdown( esc_html( $label ) ) . ( $required ? ' ' . forminator_get_required_icon() : '' )
+			);
 			$html .= '</div>';
 		}
 
@@ -635,10 +657,37 @@ abstract class Forminator_Field {
 				'<label for="%s" id="%s" class="forminator-label">%s</label>',
 				esc_attr( $id ),
 				esc_attr( $id . '-label' ),
-				esc_html( $label ) . ( $required ? ' ' . forminator_get_required_icon() : '' )
+				self::convert_markdown( esc_html( $label ) ) . ( $required ? ' ' . forminator_get_required_icon() : '' )
 			);
 		}
 		return $html;
+	}
+
+	/**
+	 * Convert markdown to HTML.
+	 *
+	 * @param string $original_string Original string.
+	 *
+	 * @return string
+	 */
+	public static function convert_markdown( string $original_string ): string {
+		$string = $original_string;
+
+		// Apply markdown replacements.
+		$patterns = array(
+			'/(?<=^|\s)`(\S(?:.*?\S)?)`(?=\s|$)/u'   => '<span class="forminator-monospace" style="font-family: monospace;">$1</span>',
+			'/(?<=^|\s)~(\S(?:.*?\S)?)~(?=\s|$)/u'   => '<del>$1</del>',
+			'/(?<=^|\s)_(\S(?:.*?\S)?)_(?=\s|$)/u'   => '<em>$1</em>',
+			'/(?<=^|\s)\*(\S(?:.*?\S)?)\*(?=\s|$)/u' => '<strong>$1</strong>',
+		);
+		foreach ( $patterns as $pattern => $replacement ) {
+			$string = preg_replace( $pattern, $replacement, $string );
+		}
+
+		/**
+		 * Filter for custom markdown.
+		 */
+		return apply_filters( 'forminator_markdown_result', $string, $original_string );
 	}
 
 	/**
@@ -2302,5 +2351,55 @@ abstract class Forminator_Field {
 
 		// Generate and save the attachment metas into the database.
 		wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file ) );
+	}
+
+	/**
+	 * Get required error message
+	 *
+	 * @return string
+	 */
+	protected function get_required_error_message() {
+		return self::$default_required_messages[ $this->type ];
+	}
+
+	/**
+	 * Maybe add custom option input.
+	 *
+	 * @param mixed $field Field.
+	 * @param mixed $options Field options.
+	 * @param mixed $attributes Input field attributes.
+	 * @param array $draft_value Draft value.
+	 * @return string
+	 */
+	public static function maybe_add_custom_option( $field, $options, $attributes = array(), $draft_value = null ) {
+		$enable_custom_option = self::get_property( 'enable_custom_option', $field, false );
+		$html                 = '';
+		if ( $enable_custom_option ) {
+			if ( ! isset( $attributes['class'] ) ) {
+				$attributes['class'] = 'forminator-input';
+			}
+			// Get placeholder from options if exists.
+			$key = array_search( 'custom_option', array_column( $options, 'key' ), true );
+			if ( false !== $key ) {
+				if ( ! empty( $options[ $key ]['placeholder'] ) ) {
+					$attributes['placeholder'] = $options[ $key ]['placeholder'];
+				}
+				if ( ! isset( $attributes['aria-labelledby'] ) && ! empty( $options[ $key ]['label'] ) ) {
+					$attributes['aria-label'] = $options[ $key ]['label'];
+				}
+			}
+			if ( isset( $draft_value['custom_value'] ) ) {
+				$attributes['value'] = isset( $draft_value['custom_value']['value'] ) ? $draft_value['custom_value']['value'] : '';
+			}
+			$html .= '<div class="forminator-field forminator-custom-input">';
+			$html .= self::create_input(
+				$attributes,
+				false,
+				'',
+				true,
+			);
+			$html .= '</div>';
+		}
+		return $html;
 	}
 }

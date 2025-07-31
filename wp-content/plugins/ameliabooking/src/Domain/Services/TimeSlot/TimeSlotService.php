@@ -465,6 +465,7 @@ class TimeSlotService
      * @param boolean    $bookAfterMin
      * @param boolean    $bookOverApp
      * @param array      $appointmentsCount
+     * @param boolean    $allowAdminBookAtAnytime
      *
      * @return array
      * @throws Exception
@@ -482,7 +483,8 @@ class TimeSlotService
         $bookIfNotMin,
         $bookAfterMin,
         $bookOverApp,
-        $appointmentsCount
+        $appointmentsCount,
+        $allowAdminBookAtAnytime
     ) {
 
         $weekDayIntervals = [];
@@ -629,7 +631,9 @@ class TimeSlotService
                     }
 
                     if (!$isProviderDayOff) {
+                        // daily limit per employee
                         if (
+                            !$allowAdminBookAtAnytime &&
                             !empty($appointmentsCount['limitCount']) &&
                             !empty($appointmentsCount['appCount'][$providerKey][$currentDate]) &&
                             $appointmentsCount['appCount'][$providerKey][$currentDate] >= $appointmentsCount['limitCount']
@@ -1224,7 +1228,8 @@ class TimeSlotService
                 $settings['allowBookingIfNotMin'],
                 $props['isFrontEndBooking'] ? $settings['openedBookingAfterMin'] : false,
                 !empty($settings['allowAdminBookOverApp']),
-                ['limitCount' => $limitPerEmployee, 'appCount' => $appointmentsCount]
+                ['limitCount' => $limitPerEmployee, 'appCount' => $appointmentsCount],
+                !empty($settings['allowAdminBookAtAnyTime']),
             );
 
             $freeProvidersSlots[$provider->getId()->getValue()] = $this->getAppointmentFreeSlots(

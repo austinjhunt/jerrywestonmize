@@ -1,8 +1,8 @@
 <?php
 
-namespace Sabre\VObject;
+namespace AmeliaSabre\VObject;
 
-use Sabre\Xml;
+use AmeliaSabre\Xml;
 
 /**
  * iCalendar/vCard/jCal/jCard/xCal/xCard writer object.

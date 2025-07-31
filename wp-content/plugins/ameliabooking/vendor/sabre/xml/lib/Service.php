@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Xml;
+namespace AmeliaSabre\Xml;
 
 /**
  * XML parsing and writing service.
@@ -21,7 +21,7 @@ class Service
      * This is the element map. It contains a list of XML elements (in clark
      * notation) as keys and PHP class names as values.
      *
-     * The PHP class names must implement Sabre\Xml\Element.
+     * The PHP class names must implement AmeliaSabre\Xml\Element.
      *
      * Values may also be a callable. In that case the function will be called
      * directly.
@@ -257,10 +257,10 @@ class Service
         list($namespace) = self::parseClarkNotation($elementName);
 
         $this->elementMap[$elementName] = function (Reader $reader) use ($className, $namespace) {
-            return \Sabre\Xml\Deserializer\valueObject($reader, $className, $namespace);
+            return \AmeliaSabre\Xml\Deserializer\valueObject($reader, $className, $namespace);
         };
         $this->classMap[$className] = function (Writer $writer, $valueObject) use ($namespace) {
-            \Sabre\Xml\Serializer\valueObject($writer, $valueObject, $namespace);
+            \AmeliaSabre\Xml\Serializer\valueObject($writer, $valueObject, $namespace);
         };
         $this->valueObjectMap[$className] = $elementName;
     }

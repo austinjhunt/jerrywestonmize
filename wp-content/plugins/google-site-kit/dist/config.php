@@ -7,5 +7,5 @@
  */
 
 return array(
-	'features' => array( 'adsPax','ecEuID','firstPartyMode','privacySandboxModule' ),
+	'features' => array( 'adsPax','gtagUserData','googleTagGateway','privacySandboxModule' ),
 );

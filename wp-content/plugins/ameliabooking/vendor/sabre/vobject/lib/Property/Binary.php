@@ -1,8 +1,8 @@
 <?php
 
-namespace Sabre\VObject\Property;
+namespace AmeliaSabre\VObject\Property;
 
-use Sabre\VObject\Property;
+use AmeliaSabre\VObject\Property;
 
 /**
  * BINARY property.

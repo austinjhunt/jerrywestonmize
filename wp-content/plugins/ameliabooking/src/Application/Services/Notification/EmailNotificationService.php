@@ -672,6 +672,28 @@ class EmailNotificationService extends AbstractNotificationService
 
     /**
      * @param string $body
+     */
+    private function replaceStyledTags($body)
+    {
+        return preg_replace_callback(
+            '#<p([^>]*)>(.*?)</p>#is',
+            function ($matches) {
+                $attrs = $matches[1];
+
+                $content = $matches[2];
+
+                if (preg_match('/style\s*=\s*["\'][^"\']*(text-align:\s*(center|right))[^"\']*["\']/i', $attrs)) {
+                    return "<div$attrs>$content</div>";
+                }
+
+                return $matches[0];
+            },
+            $body
+        );
+    }
+
+    /**
+     * @param string $body
      *
      * @return string
      */
@@ -778,9 +800,9 @@ class EmailNotificationService extends AbstractNotificationService
             str_replace(
                 $replaceSource,
                 $replaceTarget,
-                $body
+                $this->replaceStyledTags($body)
             ) :
-            str_replace('<p><br></p>', $breakReplacement, $body);
+            str_replace('<p><br></p>', $breakReplacement, $this->replaceStyledTags($body));
     }
 
 

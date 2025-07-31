@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Xml;
+namespace AmeliaSabre\Xml;
 
 use XMLReader;
 
@@ -293,7 +293,7 @@ class Reader extends \XMLReader
             if ('{}' == substr($name, 0, 2) && array_key_exists(substr($name, 2), $this->elementMap)) {
                 $name = substr($name, 2);
             } else {
-                return ['Sabre\\Xml\\Element\\Base', 'xmlDeserialize'];
+                return ['AmeliaSabre\\Xml\\Element\\Base', 'xmlDeserialize'];
             }
         }
 
@@ -302,7 +302,7 @@ class Reader extends \XMLReader
             return $deserializer;
         }
 
-        if (is_subclass_of($deserializer, 'Sabre\\Xml\\XmlDeserializable')) {
+        if (is_subclass_of($deserializer, 'AmeliaSabre\\Xml\\XmlDeserializable')) {
             return [$deserializer, 'xmlDeserialize'];
         }
 

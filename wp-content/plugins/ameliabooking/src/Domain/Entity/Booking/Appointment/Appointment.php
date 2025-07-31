@@ -94,6 +94,9 @@ class Appointment extends AbstractBooking
     /** @var  BooleanValueObject */
     protected $isFull;
 
+    /** @var  bool */
+    protected $createPaymentLinks;
+
     /**
      * Appointment constructor.
      *
@@ -483,6 +486,16 @@ class Appointment extends AbstractBooking
         $this->resources = $resources;
     }
 
+    public function isCreatePaymentLinks()
+    {
+        return $this->createPaymentLinks;
+    }
+
+    public function setCreatePaymentLinks($createPaymentLinks)
+    {
+        $this->createPaymentLinks = $createPaymentLinks;
+    }
+
     /**
      * @return array
      */
@@ -525,6 +538,7 @@ class Appointment extends AbstractBooking
                             : null
                     ]
                     : null,
+                'createPaymentLinks' => $this->isCreatePaymentLinks(),
             ]
         );
     }

@@ -600,8 +600,34 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			if ( $original_suffix ) {
 				$clonned_field['original_id'] = $element_id . '-' . $original_suffix;
 			}
+			self::maybe_handle_custom_option( $clonned_field );
 
 			self::set_field_data( $field_id, $clonned_field, $field_index );
+		}
+	}
+
+	/**
+	 * Set custom value for radio/select/checkbox fields
+	 *
+	 * @param mixed $field_array Field settings.
+	 * @return void
+	 */
+	private static function maybe_handle_custom_option( $field_array ) {
+		if ( self::$is_draft ) {
+			$field_type = $field_array['type'];
+			$element_id = $field_array['element_id'];
+			if ( in_array( $field_type, array( 'radio', 'select', 'checkbox' ), true ) && isset( self::$prepared_data[ $element_id ] ) ) {
+				$selected_values      = is_array( self::$prepared_data[ $element_id ] ) ? self::$prepared_data[ $element_id ] : array( self::$prepared_data[ $element_id ] );
+				$enable_custom_option = Forminator_Field::get_property( 'enable_custom_option', $field_array, false );
+				if ( $enable_custom_option && ! empty( $selected_values ) ) {
+					if ( in_array( 'custom_option', $selected_values, true ) ) {
+						self::$info['field_data_array'][] = array(
+							'name'  => 'custom-' . $element_id,
+							'value' => isset( self::$prepared_data[ 'custom-' . $element_id ] ) ? self::$prepared_data[ 'custom-' . $element_id ] : '',
+						);
+					}
+				}
+			}
 		}
 	}
 
@@ -1339,9 +1365,9 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		self::$response_attrs['draft_id']           = $entry->draft_id;
 		self::$response_attrs['page_id']            = self::$prepared_data['page_id'];
 		self::$response_attrs['enable_email_link']  = isset( $setting['sc_email_link'] ) ? filter_var( $setting['sc_email_link'], FILTER_VALIDATE_BOOLEAN ) : true;
-		self::$response_attrs['email_label']        = isset( $setting['sc_email_input_label'] ) ? $setting['sc_email_input_label'] : esc_html__( 'Send draft link to', 'forminator' );
-		self::$response_attrs['email_placeholder']  = isset( $setting['sc_email_placeholder'] ) ? $setting['sc_email_placeholder'] : esc_html__( 'E.g., johndoe@gmail.com', 'forminator' );
-		self::$response_attrs['email_button_label'] = isset( $setting['sc_email_button_label'] ) ? $setting['sc_email_button_label'] : esc_html__( 'Send draft link', 'forminator' );
+		self::$response_attrs['email_label']        = isset( $setting['sc_email_input_label'] ) ? $setting['sc_email_input_label'] : __( 'Send draft link to', 'forminator' );
+		self::$response_attrs['email_placeholder']  = isset( $setting['sc_email_placeholder'] ) ? $setting['sc_email_placeholder'] : __( 'E.g., johndoe@gmail.com', 'forminator' );
+		self::$response_attrs['email_button_label'] = isset( $setting['sc_email_button_label'] ) ? $setting['sc_email_button_label'] : __( 'Send draft link', 'forminator' );
 		self::$response_attrs['retention_period']   = isset( $setting['sc_draft_retention'] ) ? $setting['sc_draft_retention'] : 30;
 
 		return self::return_success( $setting['sc_message'] );

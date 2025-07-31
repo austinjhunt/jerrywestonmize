@@ -77,6 +77,21 @@ class AmeliaShortcodeService
             wp_enqueue_script('amelia_stripe_js', 'https://js.stripe.com/v3/');
         }
 
+        if ($settingsService->getSetting('payments', 'square')['enabled'] === true) {
+            if ($settingsService->getSetting('payments', 'square')['testMode'] === true) {
+                wp_enqueue_script('amelia_square_js', 'https://sandbox.web.squarecdn.com/v1/square.js');
+            } else {
+                wp_enqueue_script('amelia_square_js', 'https://web.squarecdn.com/v1/square.js');
+            }
+            wp_enqueue_style(
+                'amelia_google_button_style',
+                'https://developers.google.com/reference/sdks/web/static/styles/code-preview.css',
+                [],
+                null,
+                'all'
+            );
+        }
+
         // Enqueue Styles
         wp_enqueue_style(
             'amelia_booking_styles_vendor',

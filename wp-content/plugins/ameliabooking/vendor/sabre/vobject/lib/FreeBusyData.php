@@ -1,6 +1,6 @@
 <?php
 
-namespace Sabre\VObject;
+namespace AmeliaSabre\VObject;
 
 /**
  * FreeBusyData is a helper class that manages freebusy information.

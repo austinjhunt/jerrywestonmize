@@ -1,9 +1,9 @@
 <?php
 
-namespace Sabre\VObject\Splitter;
+namespace AmeliaSabre\VObject\Splitter;
 
-use Sabre\VObject;
-use Sabre\VObject\Parser\MimeDir;
+use AmeliaSabre\VObject;
+use AmeliaSabre\VObject\Parser\MimeDir;
 
 /**
  * Splitter.
@@ -55,7 +55,7 @@ class VCard implements SplitterInterface
      *
      * When the end is reached, null will be returned.
      *
-     * @return \Sabre\VObject\Component|null
+     * @return \AmeliaSabre\VObject\Component|null
      */
     public function getNext()
     {

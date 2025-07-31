@@ -101,8 +101,6 @@ class AppointmentEditedEventHandler
 
         $appointmentZoomUsersLicenced = $commandResult->getData()['appointmentZoomUsersLicenced'];
 
-        $createPaymentLinks = !empty($commandResult->getData()['createPaymentLinks']) ? $commandResult->getData()['createPaymentLinks'] : null;
-
         /** @var Appointment $reservationObject */
         $reservationObject = AppointmentFactory::create($appointment);
 
@@ -133,7 +131,7 @@ class AppointmentEditedEventHandler
                 );
             }
 
-            if ($createPaymentLinks || ($customerBooking->isNew() && $customerBooking->isNew()->getValue())) {
+            if (!empty($appointment['createPaymentLinks'])) {
                 /** @var Payment $payment */
                 $payment = $customerBooking->getPayments()->length()
                     ? $customerBooking->getPayments()->getItem(0)

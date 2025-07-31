@@ -116,6 +116,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     a.bookingStart AS appointment_bookingStart,
                     a.bookingEnd AS appointment_bookingEnd,
                     a.notifyParticipants AS appointment_notifyParticipants,
+                    a.createPaymentLinks AS appointment_createPaymentLinks,
                     a.internalNotes AS appointment_internalNotes,
                     a.status AS appointment_status,
                     a.serviceId AS appointment_serviceId,
@@ -430,6 +431,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
             ':bookingStart'       => DateTimeService::getCustomDateTimeInUtc($data['bookingStart']),
             ':bookingEnd'         => DateTimeService::getCustomDateTimeInUtc($data['bookingEnd']),
             ':notifyParticipants' => $data['notifyParticipants'],
+            ':createPaymentLinks' => $data['createPaymentLinks'],
             ':internalNotes'      => $data['internalNotes'] ?: '',
             ':status'             => $data['status'],
             ':serviceId'          => $data['serviceId'],
@@ -447,6 +449,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 `bookingStart`,
                 `bookingEnd`,
                 `notifyParticipants`,
+                `createPaymentLinks`,
                 `internalNotes`,
                 `status`,
                 `locationId`,
@@ -460,6 +463,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 :bookingStart,
                 :bookingEnd,
                 :notifyParticipants,
+                :createPaymentLinks,
                 :internalNotes,
                 :status,
                 :locationId,
@@ -499,6 +503,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
             ':bookingStart'           => DateTimeService::getCustomDateTimeInUtc($data['bookingStart']),
             ':bookingEnd'             => DateTimeService::getCustomDateTimeInUtc($data['bookingEnd']),
             ':notifyParticipants'     => $data['notifyParticipants'],
+            ':createPaymentLinks'     => $data['createPaymentLinks'],
             ':internalNotes'          => $data['internalNotes'],
             ':status'                 => $data['status'],
             ':locationId'             => $data['locationId'],
@@ -519,6 +524,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 `bookingStart` = :bookingStart,
                 `bookingEnd` = :bookingEnd, 
                 `notifyParticipants` = :notifyParticipants,
+                `createPaymentLinks` = :createPaymentLinks,
                 `internalNotes` = :internalNotes,
                 `status` = :status,
                 `locationId` = :locationId,
@@ -1470,7 +1476,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 {$bookingsJoin}
                 {$where}
                 GROUP BY a.id
-                ORDER BY a.bookingStart
+                ORDER BY a.bookingStart, a.id
                 {$limit}
                 "
             );

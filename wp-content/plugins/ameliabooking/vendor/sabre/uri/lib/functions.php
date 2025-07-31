@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Uri;
+namespace AmeliaSabre\Uri;
 
 /**
  * This file contains all the uri handling functions.

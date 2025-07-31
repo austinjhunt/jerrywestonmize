@@ -90,7 +90,7 @@ class CurlPromise implements Promise
      *
      * @return \AmeliaPsr\Http\Message\ResponseInterface|null Resolved value, null if $unwrap is set to false
      *
-     * @throws \Http\Client\Exception The rejection reason
+     * @throws \AmeliaHttp\Client\Exception The rejection reason
      */
     public function wait($unwrap = true)
     {

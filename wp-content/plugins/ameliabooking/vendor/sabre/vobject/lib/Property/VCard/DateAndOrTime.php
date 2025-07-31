@@ -1,14 +1,14 @@
 <?php
 
-namespace Sabre\VObject\Property\VCard;
+namespace AmeliaSabre\VObject\Property\VCard;
 
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Sabre\VObject\DateTimeParser;
-use Sabre\VObject\InvalidDataException;
-use Sabre\VObject\Property;
-use Sabre\Xml;
+use AmeliaSabre\VObject\DateTimeParser;
+use AmeliaSabre\VObject\InvalidDataException;
+use AmeliaSabre\VObject\Property;
+use AmeliaSabre\Xml;
 
 /**
  * DateAndOrTime property.

@@ -68,10 +68,15 @@ use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Services\Payment\CurrencyService;
+use AmeliaBooking\Infrastructure\Services\Payment\RazorpayService;
+use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use AmeliaBooking\Infrastructure\WP\HelperService\HelperService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
+use Money\Currencies\ISOCurrencies;
+use Money\Currency;
+use Money\Parser\DecimalMoneyParser;
 use Razorpay\Api\Errors\SignatureVerificationError;
 use Slim\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -383,7 +388,8 @@ class PaymentApplicationService
                 $paymentData['gateway'] === 'stripe' ||
                 $paymentData['gateway'] === 'payPal' ||
                 $paymentData['gateway'] === 'mollie' ||
-                $paymentData['gateway'] === 'razorpay'
+                $paymentData['gateway'] === 'razorpay' ||
+                $paymentData['gateway'] === 'square'
             )
         ) {
             $result->setResult(CommandResult::RESULT_ERROR);
@@ -537,6 +543,48 @@ class PaymentApplicationService
 
                 return true;
 
+            case ('square'):
+                /** @var SettingsService $settingsService */
+                $settingsService = $this->container->get('domain.settings.service');
+
+                $squareSettings = $settingsService->getSetting('payments', 'square');
+
+                /** @var SquareService $squareService */
+                $squareService = $this->container->get('infrastructure.payment.square.service');
+
+                if ($squareSettings['enabled']) {
+                    try {
+                        $paymentResponse = $this->createSquarePaymentIntent($paymentData, $paymentAmount, $reservation);
+                        if ($paymentResponse && $paymentResponse->isError()) {
+                            $errorMessage = $squareService->getErrorMessage($paymentResponse);
+                            $result->setResult(CommandResult::RESULT_ERROR);
+                            $result->setMessage(FrontendStrings::getCommonStrings()['payment_error']);
+                            $result->setData(
+                                [
+                                    'paymentSuccessful' => false,
+                                    'emailRequired' => $errorMessage === 'buyer_email_address  is not valid',
+                                ]
+                            );
+
+                            return false;
+                        }
+                        if ($paymentResponse && $paymentResponse->getResult()->getPayment() !== null) {
+                            $paymentTransactionId = $paymentResponse->getResult()->getPayment()->getId();
+
+                            return true;
+                        }
+                    } catch (Exception $e) {
+                        $result->setResult(CommandResult::RESULT_ERROR);
+                        $result->setMessage(FrontendStrings::getCommonStrings()['payment_error']);
+                        $result->setData(
+                            [
+                                'paymentSuccessful' => false
+                            ]
+                        );
+                    }
+                }
+                return false;
+
             case ('onSite'):
                 if (
                     $paymentAmount &&
@@ -552,7 +600,6 @@ class PaymentApplicationService
                 return true;
 
             case ('wc'):
-            case ('square'):
             case ('mollie'):
                 return true;
             case ('razorpay'):
@@ -955,17 +1002,6 @@ class PaymentApplicationService
                 json_decode($data['bookable']['settings'], true) ?
                     json_decode($data['bookable']['settings'], true) :
                     null;
-            $paymentLinksSettings =
-                !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ?
-                    $entitySettings['payments']['paymentLinks'] :
-                    null;
-            $paymentLinksEnabled  =
-                $paymentLinksSettings ?
-                    $paymentLinksSettings['enabled'] :
-                    $settingsService->getSetting('payments', 'paymentLinks')['enabled'];
-            if (!$paymentLinksEnabled) {
-                return null;
-            }
 
             $paymentLinksSettings = !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ?
                 $entitySettings['payments']['paymentLinks'] : null;
@@ -2460,5 +2496,35 @@ class PaymentApplicationService
         $cacheRepository->commit();
 
         return $result;
+    }
+
+    /**
+     * @throws \Interop\Container\Exception\ContainerException
+     * @throws InvalidArgumentException
+     */
+    private function createSquarePaymentIntent($paymentData, $paymentAmount, $reservation)
+    {
+        $additionalInformation = $this->getBookingInformationForPaymentSettings(
+            $reservation,
+            PaymentType::SQUARE
+        );
+
+        /** @var SquareService $squareService */
+        $squareService = $this->container->get('infrastructure.payment.square.service');
+
+        $amount = $this->prepareSquareAmount($paymentData, $paymentAmount);
+
+        return $squareService->preparePaymentRequest($paymentData['data'], $amount, $reservation, $additionalInformation);
+    }
+
+    private function prepareSquareAmount($paymentData, $amount)
+    {
+        $currencies = new ISOCurrencies();
+        $moneyParser = new DecimalMoneyParser($currencies);
+
+        return $moneyParser->parse(
+            (string)$amount,
+            new Currency($paymentData['currency'])
+        )->getAmount();
     }
 }

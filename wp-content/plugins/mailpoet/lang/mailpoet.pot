@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the MailPoet plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MailPoet 5.12.9\n"
+"Project-Id-Version: MailPoet 5.12.12\n"
 "Report-Msgid-Bugs-To: http://support.mailpoet.com/\n"
 "Last-Translator: MailPoet i18n (https://www.transifex.com/organization/wysija)\n"
 "Language-Team: MailPoet i18n <https://www.transifex.com/organization/wysija>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-30T12:34:02+00:00\n"
+"POT-Creation-Date: 2025-07-22T11:34:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -313,7 +313,7 @@ msgstr ""
 #: views/newsletter/templates/blocks/image/settings.hbs:87
 #: views/newsletter/templates/blocks/social/settings.hbs:34
 #: views/newsletter/templates/blocks/spacer/settings.hbs:10
-#: views/subscribers/importExport/import/step_data_manipulation.html:29
+#: views/subscribers/importExport/import/step_data_manipulation.html:33
 msgid "Done"
 msgstr ""
 
@@ -1602,7 +1602,7 @@ msgid "Cancel deletion"
 msgstr ""
 
 #: views/newsletter/templates/blocks/base/toolsGeneric.hbs:18
-#: views/subscribers/importExport/import/step_data_manipulation.html:28
+#: views/subscribers/importExport/import/step_data_manipulation.html:32
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/automation_editor.js:1
 #: assets/dist/js/commons.js:9
@@ -4559,11 +4559,11 @@ msgstr ""
 msgid "Unconfirmed (will receive a confirmation email)"
 msgstr ""
 
-#: views/subscription/confirm_unsubscribe.html:5
+#: views/subscription/confirm_unsubscribe.html:6
 msgid "Simply click on this link to stop receiving emails from us."
 msgstr ""
 
-#: views/subscription/confirm_unsubscribe.html:7
+#: views/subscription/confirm_unsubscribe.html:8
 msgctxt "Text in unsubscribe link"
 msgid "Yes, unsubscribe me"
 msgstr ""
@@ -8539,6 +8539,12 @@ msgid "Order created"
 msgstr ""
 
 #. translators: automation trigger title
+#: lib/Automation/Integrations/WooCommerce/Triggers/Orders/OrderNoteAddedTrigger.php:40
+#: assets/dist/js/commons.js:9
+msgid "Order note added"
+msgstr ""
+
+#. translators: automation trigger title
 #: lib/Automation/Integrations/WooCommerce/Triggers/Orders/OrderStatusChangedTrigger.php:41
 #: assets/dist/js/commons.js:9
 msgid "Order status changed"
@@ -8712,6 +8718,11 @@ msgstr ""
 
 #: lib/Captcha/CaptchaFormRenderer.php:227
 msgid "The characters you entered did not match the CAPTCHA image. Please try again with this new image."
+msgstr ""
+
+#: lib/Captcha/PageRenderer.php:64
+#: lib/Subscription/Pages.php:281
+msgid "MailPoet Page"
 msgstr ""
 
 #: lib/Captcha/PageRenderer.php:82
@@ -15135,6 +15146,34 @@ msgid "created"
 msgstr ""
 
 #: assets/dist/js/commons.js:9
+msgid "Note type"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "Note to customer"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "Private note"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "Note contains text"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "Only trigger this workflow if the order note contains the certain text. This field is optional."
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "Fires when any note is added to an order, can include both private notes and notes to the customer. These notes appear on the right of the order edit screen."
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "note"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
 msgid "Cart abandoned for"
 msgstr ""
 
@@ -15591,6 +15630,24 @@ msgid "Confirm"
 msgstr ""
 
 #: assets/dist/js/commons.js:9
+msgid "Hide input value"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "Show input value"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgctxt "verb"
+msgid "Hide"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgctxt "verb"
+msgid "Show"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
 msgid "Corrupt"
 msgstr ""
 
@@ -15644,16 +15701,6 @@ msgstr ""
 
 #: assets/dist/js/commons.js:9
 msgid "Please specify a license key before validating it."
-msgstr ""
-
-#: assets/dist/js/commons.js:9
-msgctxt "verb"
-msgid "Hide"
-msgstr ""
-
-#: assets/dist/js/commons.js:9
-msgctxt "verb"
-msgid "Show"
 msgstr ""
 
 #: assets/dist/js/commons.js:9

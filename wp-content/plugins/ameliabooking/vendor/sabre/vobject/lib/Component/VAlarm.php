@@ -1,11 +1,11 @@
 <?php
 
-namespace Sabre\VObject\Component;
+namespace AmeliaSabre\VObject\Component;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use Sabre\VObject;
-use Sabre\VObject\InvalidDataException;
+use AmeliaSabre\VObject;
+use AmeliaSabre\VObject\InvalidDataException;
 
 /**
  * VAlarm component.

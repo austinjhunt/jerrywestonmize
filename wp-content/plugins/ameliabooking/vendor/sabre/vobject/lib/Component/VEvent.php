@@ -1,11 +1,11 @@
 <?php
 
-namespace Sabre\VObject\Component;
+namespace AmeliaSabre\VObject\Component;
 
 use DateTimeInterface;
-use Sabre\VObject;
-use Sabre\VObject\Recur\EventIterator;
-use Sabre\VObject\Recur\NoInstancesException;
+use AmeliaSabre\VObject;
+use AmeliaSabre\VObject\Recur\EventIterator;
+use AmeliaSabre\VObject\Recur\NoInstancesException;
 
 /**
  * VEvent component.

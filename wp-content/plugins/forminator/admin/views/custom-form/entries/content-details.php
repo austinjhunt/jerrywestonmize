@@ -26,7 +26,12 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 					<div class=<?php echo 'group' === $detail_item['type'] ? 'sui-box-settings' : 'sui-box-settings-col-2'; ?>>
 
-					<span class="sui-settings-label sui-dark sui-sm"><?php echo esc_html( $detail_item['label'] ); ?></span>
+					<span class="sui-settings-label sui-dark sui-sm">
+					<?php
+						// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo Forminator_Field::convert_markdown( esc_html( $detail_item['label'] ) );
+					?>
+					</span>
 
 					<table id="fui-table-<?php echo esc_attr( $detail_item['type'] ); ?>" class="sui-table sui-accordion <?php echo 'group' === $detail_item['type'] ? 'fui-table-entries' : 'fui-table-details'; ?>">
 
@@ -52,13 +57,12 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 										echo '<th aria-label="' . esc_attr__( 'Other fields', 'forminator' ) . '"></th>';
 
-									} elseif ( $sub_key === $end ) {
-
-										echo '<th>' . esc_html( $sub_entry['label'] ) . '</th>';
-
 									} else {
 
-										echo '<th>' . esc_html( $sub_entry['label'] ) . '</th>';
+										echo '<th>' .
+											// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+											Forminator_Field::convert_markdown( esc_html( $sub_entry['label'] ) ) .
+										'</th>';
 
 									}
 								}
@@ -134,7 +138,9 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 													$html  = '';
 													$html .= '<div class="sui-box-settings-slim-row sui-sm">';
 													$html .= '<div class="sui-box-settings-col-1">';
-													$html .= '<span class="sui-settings-label sui-sm">' . esc_html( $sub_entry['label'] ) . '</span>';
+													$html .= '<span class="sui-settings-label sui-sm">' .
+														Forminator_Field::convert_markdown( esc_html( $sub_entry['label'] ) ) .
+													'</span>';
 													$html .= '</div>';
 													$html .= '<div class="sui-box-settings-col-2">';
 													$html .= '<span class="sui-description">' . $sub_entry['value'] . '</span>';
@@ -169,7 +175,12 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 			<?php if ( ! $inside_group ) { ?>
 			<div class="sui-box-settings-col-1">
-				<span class="sui-settings-label sui-sm"><?php echo esc_html( $detail_item['label'] ); ?></span>
+				<span class="sui-settings-label sui-sm">
+					<?php
+					// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo Forminator_Field::convert_markdown( esc_html( $detail_item['label'] ) )
+					?>
+				</span>
 			</div>
 			<?php } ?>
 
@@ -198,12 +209,19 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 
 				<?php } else { ?>
 
-					<?php foreach ( $sub_entries as $sub_entry ) { ?>
+					<?php
+					foreach ( $sub_entries as $sub_entry ) {
+						?>
 
 						<div class="sui-form-field">
 							<div class="sui-row">
 								<div class="sui-col-md-3">
-									<span class="sui-settings-label"><?php echo esc_html( $sub_entry['label'] ); ?></span>
+									<span class="sui-settings-label">
+									<?php
+										// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										echo Forminator_Field::convert_markdown( esc_html( $sub_entry['label'] ) );
+									?>
+									</span>
 								</div>
 								<div class="sui-col-md-9">
 									<span class="sui-description"><?php echo wp_kses_post( $sub_entry['value'] ); ?></span>

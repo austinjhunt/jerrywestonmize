@@ -30,6 +30,7 @@ class AddPackageCustomerController extends Controller
     protected $allowedFields = [
         'packageId',
         'customerId',
+        'couponId',
         'rules',
         'notify',
         'couponId',

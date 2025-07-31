@@ -52,6 +52,21 @@ class AmeliaBookingShortcodeService
             wp_enqueue_script('amelia_stripe_script', 'https://js.stripe.com/v3/');
         }
 
+        if ($settingsService->getSetting('payments', 'square')['enabled'] === true) {
+            if ($settingsService->getSetting('payments', 'square')['testMode'] === true) {
+                wp_enqueue_script('amelia_square_js', 'https://sandbox.web.squarecdn.com/v1/square.js');
+            } else {
+                wp_enqueue_script('amelia_square_js', 'https://web.squarecdn.com/v1/square.js');
+            }
+            wp_enqueue_style(
+                'amelia_google_button_style',
+                'https://developers.google.com/reference/sdks/web/static/styles/code-preview.css',
+                [],
+                null,
+                'all'
+            );
+        }
+
         if ($settingsService->getSetting('payments', 'razorpay')['enabled'] === true) {
             wp_enqueue_script('amelia_razorpay_script', 'https://checkout.razorpay.com/v1/checkout.js');
         }
@@ -95,7 +110,7 @@ class AmeliaBookingShortcodeService
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/public.68f1cfe8.js',
+                AMELIA_URL . 'v3/public/assets/public.f28b1aaf.js',
                 [],
                 AMELIA_VERSION,
                 true

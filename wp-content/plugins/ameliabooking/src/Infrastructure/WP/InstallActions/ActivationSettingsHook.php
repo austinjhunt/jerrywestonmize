@@ -828,11 +828,14 @@ This message does not have an option for responding. If you need additional info
                     'cart'          => '',
                 ],
             ],
-            'square'                     => [
+            'square'               => [
                 'enabled'            => false,
                 'locationId'         => '',
                 'accessToken'        => '',
-                'testMode'           => AMELIA_MIDDLEWARE_IS_SANDBOX,
+                'testMode'           => false,
+                'clientLiveId'       => 'sq0idp-TtDyGP_2RfKYpFzrDqs0lw',
+                'clientTestId'       => 'sandbox-sq0idb-Wxnxasx1NMG_ZyvM--JV4Q',
+                'countryCode'        => '',
                 'description'        => [
                     'enabled'     => false,
                     'appointment' => '',
@@ -911,6 +914,9 @@ This message does not have an option for responding. If you need additional info
                 ['square', 'locationId'],
                 ['square', 'accessToken'],
                 ['square', 'testMode'],
+                ['square', 'clientLiveId'],
+                ['square', 'clientTestId'],
+                ['square', 'countryCode'],
             ],
             $settings
         );

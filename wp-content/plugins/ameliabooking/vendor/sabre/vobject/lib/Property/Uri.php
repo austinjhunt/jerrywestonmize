@@ -1,9 +1,9 @@
 <?php
 
-namespace Sabre\VObject\Property;
+namespace AmeliaSabre\VObject\Property;
 
-use Sabre\VObject\Parameter;
-use Sabre\VObject\Property;
+use AmeliaSabre\VObject\Parameter;
+use AmeliaSabre\VObject\Property;
 
 /**
  * URI property.

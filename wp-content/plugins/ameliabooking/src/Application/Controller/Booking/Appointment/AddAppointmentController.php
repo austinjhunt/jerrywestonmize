@@ -25,6 +25,7 @@ class AddAppointmentController extends Controller
         'bookings',
         'bookingStart',
         'notifyParticipants',
+        'createPaymentLinks',
         'internalNotes',
         'serviceId',
         'providerId',

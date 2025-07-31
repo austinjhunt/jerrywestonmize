@@ -1,15 +1,15 @@
 <?php
 
-namespace Sabre\VObject\Component;
+namespace AmeliaSabre\VObject\Component;
 
 use DateTimeInterface;
 use DateTimeZone;
-use Sabre\VObject;
-use Sabre\VObject\Component;
-use Sabre\VObject\InvalidDataException;
-use Sabre\VObject\Property;
-use Sabre\VObject\Recur\EventIterator;
-use Sabre\VObject\Recur\NoInstancesException;
+use AmeliaSabre\VObject;
+use AmeliaSabre\VObject\Component;
+use AmeliaSabre\VObject\InvalidDataException;
+use AmeliaSabre\VObject\Property;
+use AmeliaSabre\VObject\Recur\EventIterator;
+use AmeliaSabre\VObject\Recur\NoInstancesException;
 
 /**
  * The VCalendar component.

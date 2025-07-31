@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Xml\Element;
+namespace AmeliaSabre\Xml\Element;
 
-use Sabre\Xml\Element;
-use Sabre\Xml\Reader;
-use Sabre\Xml\Writer;
+use AmeliaSabre\Xml\Element;
+use AmeliaSabre\Xml\Reader;
+use AmeliaSabre\Xml\Writer;
 
 /**
  * The XmlFragment element allows you to extract a portion of your xml tree,

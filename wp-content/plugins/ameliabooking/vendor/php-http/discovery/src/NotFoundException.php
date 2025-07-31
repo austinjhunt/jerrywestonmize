@@ -7,8 +7,8 @@ namespace AmeliaHttp\Discovery;
  *
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  *
- * @deprecated since since version 1.0, and will be removed in 2.0. Use {@link \Http\Discovery\Exception\NotFoundException} instead.
+ * @deprecated since since version 1.0, and will be removed in 2.0. Use {@link \AmeliaHttp\Discovery\Exception\NotFoundException} instead.
  */
-final class NotFoundException extends \Http\Discovery\Exception\NotFoundException
+final class NotFoundException extends \AmeliaHttp\Discovery\Exception\NotFoundException
 {
 }

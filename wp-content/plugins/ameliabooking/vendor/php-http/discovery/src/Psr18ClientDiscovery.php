@@ -24,7 +24,7 @@ final class Psr18ClientDiscovery extends ClassDiscovery
         try {
             $client = static::findOneByType(ClientInterface::class);
         } catch (DiscoveryFailedException $e) {
-            throw new \Http\Discovery\Exception\NotFoundException(
+            throw new \AmeliaHttp\Discovery\Exception\NotFoundException(
                 'No PSR-18 clients found. Make sure to install a package providing "psr/http-client-implementation". Example: "php-http/guzzle6-adapter".',
                 0,
                 $e

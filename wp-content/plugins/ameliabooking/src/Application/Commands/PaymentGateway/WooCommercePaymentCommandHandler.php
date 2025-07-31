@@ -190,6 +190,13 @@ class WooCommercePaymentCommandHandler extends CommandHandler
                 break;
         }
 
+        if (!empty($componentProps['state']['appointment']['bookings'][0]['customer']['customFields'])) {
+            $componentProps['state']['appointment']['bookings'][0]['customer']['customFields'] = null;
+        }
+
+        if (!empty($componentProps['state']['customerInfo']['customFields'])) {
+            $componentProps['state']['customerInfo']['customFields'] = null;
+        }
 
         $appointmentData['cacheData'] = json_encode(
             [

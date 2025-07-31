@@ -9,8 +9,11 @@ use MailPoet\Newsletter\Renderer\EscapeHelper as EHelper;
 
 class Renderer {
   public function render($contentBlock, $columnsData) {
-    if (is_null($contentBlock['blocks']) && isset($contentBlock['type'])) {
-      return "<!-- Skipped unsupported block type: {$contentBlock['type']} -->";
+    if (!isset($contentBlock['blocks']) || !is_countable($contentBlock['blocks']) || !is_iterable($contentBlock['blocks'])) {
+      if (isset($contentBlock['type'])) {
+        return "<!-- Skipped unsupported block type: {$contentBlock['type']} -->";
+      }
+      return "<!-- Skipped unsupported block -->";
     }
 
     $columnsCount = count($contentBlock['blocks']);

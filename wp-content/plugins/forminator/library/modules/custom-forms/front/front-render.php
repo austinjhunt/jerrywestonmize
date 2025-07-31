@@ -1427,6 +1427,13 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 		$draft_value = isset( $this->draft_data[ $field['element_id'] ] ) ? $this->draft_data[ $field['element_id'] ] : null;
 
+		// Add custom value for radio, select, or checkbox if applicable.
+		if ( null !== $draft_value && in_array( $type, array( 'radio', 'select', 'checkbox' ), true ) ) {
+			if ( isset( $this->draft_data[ 'custom-' . $field['element_id'] ] ) ) {
+				$draft_value['custom_value'] = $this->draft_data[ 'custom-' . $field['element_id'] ];
+			}
+		}
+
 		// Get field object.
 		/**
 		 * Forminator_Field
@@ -2194,7 +2201,10 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 				$html .= '<input type="hidden" name="payment_gateway_total" value="" />';
 				$html .= $this->get_paypal_button_markup( $form_id );
 			}
-			$html .= $this->get_button_markup();
+			$fields = $this->model->get_fields();
+			if ( count( $fields ) ) {
+				$html .= $this->get_button_markup();
+			}
 		}
 
 		$html .= $nonce;

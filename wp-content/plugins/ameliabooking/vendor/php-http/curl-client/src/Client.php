@@ -68,7 +68,7 @@ class Client implements HttpClient, HttpAsyncClient
      * @param StreamFactory|null  $streamFactory  HTTP Stream factory
      * @param array               $options        cURL options (see http://php.net/curl_setopt)
      *
-     * @throws \Http\Discovery\Exception\NotFoundException If factory discovery failed
+     * @throws \AmeliaHttp\Discovery\Exception\NotFoundException If factory discovery failed
      *
      * @since 1.0
      */
@@ -99,8 +99,8 @@ class Client implements HttpClient, HttpAsyncClient
      *
      * @return ResponseInterface
      *
-     * @throws \Http\Client\Exception\NetworkException In case of network problems
-     * @throws \Http\Client\Exception\RequestException On invalid request
+     * @throws \AmeliaHttp\Client\Exception\NetworkException In case of network problems
+     * @throws \AmeliaHttp\Client\Exception\RequestException On invalid request
      * @throws \InvalidArgumentException               For invalid header names or values
      * @throws \RuntimeException                       If creating the body stream fails
      *
@@ -150,7 +150,7 @@ class Client implements HttpClient, HttpAsyncClient
      *
      * @return Promise
      *
-     * @throws \Http\Client\Exception\RequestException On invalid request
+     * @throws \AmeliaHttp\Client\Exception\RequestException On invalid request
      * @throws \InvalidArgumentException               For invalid header names or values
      * @throws \RuntimeException                       If creating the body stream fails
      *
@@ -181,7 +181,7 @@ class Client implements HttpClient, HttpAsyncClient
      * @param RequestInterface $request
      * @param ResponseBuilder  $responseBuilder
      *
-     * @throws \Http\Client\Exception\RequestException On invalid request
+     * @throws \AmeliaHttp\Client\Exception\RequestException On invalid request
      * @throws \InvalidArgumentException               For invalid header names or values
      * @throws \RuntimeException                       if can not read body
      *

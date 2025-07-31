@@ -28,12 +28,12 @@
             "lib/functions.php"
         ],
         "psr-4" : {
-            "Sabre\\Uri\\" : "lib/"
+            "AmeliaSabre\\Uri\\" : "lib/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Sabre\\Uri\\": "tests/Uri"
+            "AmeliaSabre\\Uri\\": "tests/Uri"
         }
     },
     "require-dev": {

@@ -439,12 +439,29 @@ class BookableApplicationService
                     } elseif ($service->getCustomPricing() && $providerService->getCustomPricing()) {
                         $serviceCustomPricing = json_decode($service->getCustomPricing()->getValue(), true);
 
+                        if (empty($serviceCustomPricing['persons'])) {
+                            $serviceCustomPricing['persons'] = [];
+                        }
+
                         $providerCustomPricing = json_decode($providerService->getCustomPricing()->getValue(), true);
+
+                        if (empty($providerCustomPricing['persons'])) {
+                            $providerCustomPricing['persons'] = [];
+                        }
 
                         foreach ($serviceCustomPricing['durations'] as $duration => $durationData) {
                             if (array_key_exists($duration, $providerCustomPricing['durations'])) {
                                 $serviceCustomPricing['durations'][$duration] =
                                     $providerCustomPricing['durations'][$duration];
+                            } else {
+                                $updateProviderService = true;
+                            }
+                        }
+
+                        foreach ($serviceCustomPricing['persons'] as $range => $rangeData) {
+                            if (array_key_exists($range, $providerCustomPricing['persons'])) {
+                                $serviceCustomPricing['persons'][$range] =
+                                    $providerCustomPricing['persons'][$range];
                             } else {
                                 $updateProviderService = true;
                             }
@@ -459,6 +476,12 @@ class BookableApplicationService
                         if (!$updateProviderService) {
                             foreach ($providerCustomPricing['durations'] as $duration => $durationData) {
                                 if (!array_key_exists($duration, $serviceCustomPricing['durations'])) {
+                                    $updateProviderService = true;
+                                }
+                            }
+
+                            foreach ($providerCustomPricing['persons'] as $range => $rangeData) {
+                                if (!array_key_exists($range, $serviceCustomPricing['persons'])) {
                                     $updateProviderService = true;
                                 }
                             }
@@ -1152,32 +1175,5 @@ class BookableApplicationService
         return
             $customerBookingExtraRepository->deleteByEntityId($extra->getId()->getValue(), 'extraId') &&
             $extraRepository->delete($extra->getId()->getValue());
-    }
-
-    /**
-     *
-     * @param Service $service
-     * @param int     $duration
-     *
-     * @return boolean
-     *
-     * @throws ContainerValueNotFoundException
-     * @throws InvalidArgumentException
-     */
-    public function modifyServicePriceByDuration($service, $duration)
-    {
-        if ($duration) {
-            $customPricing = $service->getCustomPricing()
-                ? json_decode($service->getCustomPricing()->getValue(), true) : null;
-
-            if ($customPricing &&
-                $customPricing['enabled'] &&
-                array_key_exists($duration, $customPricing['durations'])
-            ) {
-                $service->setPrice(
-                    new Price($customPricing['durations'][$duration]['price'])
-                );
-            }
-        }
     }
 }

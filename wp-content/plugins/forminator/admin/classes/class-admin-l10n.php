@@ -509,6 +509,7 @@ class Forminator_Admin_L10n {
 				'loading_templates' => esc_html__( 'Loading templates...', 'forminator' ),
 				'load_categories'   => esc_html__( 'Loading categories...', 'forminator' ),
 				'upgrade'           => esc_html__( 'Upgrade', 'forminator' ),
+				'free_plan'         => esc_html__( 'Free Plan', 'forminator' ),
 			),
 		);
 

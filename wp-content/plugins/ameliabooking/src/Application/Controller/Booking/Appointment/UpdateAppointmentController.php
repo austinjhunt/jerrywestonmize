@@ -26,6 +26,7 @@ class UpdateAppointmentController extends Controller
         'removedBookings',
         'bookingStart',
         'notifyParticipants',
+        'createPaymentLinks',
         'internalNotes',
         'serviceId',
         'providerId',

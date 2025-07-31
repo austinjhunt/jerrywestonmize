@@ -871,6 +871,7 @@ class LiteBackendStrings
             'service_recurring_cycle'            => __('Set recurring appointment', 'wpamelia'),
             'service_recurring_cycle_tooltip'    => __('If this option is disabled, your customers won\'t be able to book recurring appointments at the same time.', 'wpamelia'),
             'service_provider_remove_fail'       => __('Provider has appointments for this service', 'wpamelia'),
+            'service_pricing_model'              => __('Pricing model', 'wpamelia'),
         ];
     }
 
@@ -1118,6 +1119,8 @@ class LiteBackendStrings
             'confirm_delete_appointment_plural' => __('Are you sure you want to delete these appointments?', 'wpamelia'),
             'confirm_duplicate_appointment'     => __('Are you sure you want to duplicate this appointment?', 'wpamelia'),
             'create_customer'                   => __('Create Customer', 'wpamelia'),
+            'generate_payment_links'            => __('Generate payment links', 'wpamelia'),
+            'generate_payment_links_tooltip'    => __('Check this box to generate a payment link.<br> To include it in the notification, add the payment link placeholder.', 'wpamelia'),
             'custom_fields'                     => __('Custom Fields', 'wpamelia'),
             'customer_email'                    => __('Customer Email', 'wpamelia'),
             'customer_phone'                    => __('Customer Phone', 'wpamelia'),
@@ -1162,9 +1165,12 @@ class LiteBackendStrings
     public static function getBookableStrings()
     {
         return [
+            'default_pricing'                    => __('Default Pricing', 'wpamelia'),
             'deposit_enabled'                    => __('Deposit Payment', 'wpamelia'),
             'custom_pricing_enabled'             => __('Custom Pricing', 'wpamelia'),
             'custom_duration_pricing_enabled'    => __('Custom Duration and Pricing', 'wpamelia'),
+            'custom_person_pricing_enabled'      => __('Pricing by the number of people', 'wpamelia'),
+            'custom_pricing'                     => __('Conditional Pricing', 'wpamelia'),
         ];
     }
 
@@ -1347,7 +1353,6 @@ class LiteBackendStrings
             'event_location'                     => __('Event Location', 'wpamelia'),
             'open'                               => __('Open', 'wpamelia'),
             'full'                               => __('Full', 'wpamelia'),
-            'from'                               => __('From', 'wpamelia'),
             'upcoming'                           => __('Upcoming', 'wpamelia'),
             'event_free'                         => __('Free', 'wpamelia'),
             'event_price'                        => __('Event Price', 'wpamelia'),

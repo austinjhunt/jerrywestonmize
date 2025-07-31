@@ -23,7 +23,8 @@ class SquarePaymentNotifyController extends Controller
         'name',
         'returnUrl',
         'orderId',
-        'squareOrderId'
+        'squareOrderId',
+        'fragment'
     ];
 
     /**

@@ -341,10 +341,16 @@
 					var errorId = holder.attr('id') + '-error';
 					var ariaDescribedby = holder.attr('aria-describedby');
 
+					// Check if the field contains custom input for the "Other" option and has an error.
+					var hasCustomOptionError = holder.closest( '.forminator-field-radio, .forminator-field-checkbox, .forminator-field-select' ).find('.forminator-custom-input.forminator-has_error').length > 0;
+
 					if ( holderDate.length > 0 ) {
 						holderError = holderDate.parent().find( '.forminator-error-message[data-error-field="' + holder.data( 'field' ) + '"]' );
 					} else if ( holderTime.length > 0 ) {
 						holderError = holderTime.parent().find( '.forminator-error-message[data-error-field="' + holder.data( 'field' ) + '"]' );
+					} else if ( hasCustomOptionError ) {
+						// If the "Other" option and has an error, don't remove the custom input error.
+						holderError = holder.closest( '.forminator-field-radio, .forminator-field-checkbox, .forminator-field-select' ).find( '#' + errorId );
 					} else {
 						holderError = holderField.find( '.forminator-error-message' );
 					}
@@ -711,6 +717,37 @@
 
 		// Check if chosenTime is not true, then compare if chosenTime in seconds is >= to the limit in seconds.
 		return true !== chosenTime ? comparison: true;
+	});
+
+	// Validate custom input for "Other" option.
+	$.validator.addMethod( 'customInputForOtherOption', function ( value, element, param ) {
+		let name = $( element ).attr( 'name' );
+		let optionName = name.replace( 'custom-', '' );
+		if( param === 'radio' || param === 'single-select' ) {
+			let optionValue = null;
+			if( param === 'radio' ) {
+				optionValue = $( element ).closest( '#' + optionName ).find( 'input[name="' + optionName + '"]:checked' ).val();
+			} else {
+				optionValue = $( element ).closest( '#' + optionName ).find( 'select[name="' + optionName + '"] option:selected' ).val();
+			}
+			if( optionValue === 'custom_option' ) {
+				return 0 !== value.trim().length;
+			}
+		} else if( param === 'checkbox' || param === 'multi-select' ) {
+			let checkedOptions = null;
+			if( param === 'checkbox' ) {
+				checkedOptions = $( element ).closest( '#' + optionName ).find( 'input[name="' + optionName + '[]"]:checked' );
+			} else {
+				checkedOptions = $( element ).closest( '#' + optionName ).find( 'select[name="' + optionName + '[]"] option:selected' );
+			}
+			let optionValues = checkedOptions.map(function () {
+				return this.value;
+			}).get();
+			if( optionValues.includes( 'custom_option' ) ) {
+				return 0 !== value.trim().length;
+			}
+		}
+		return true;
 	});
 
 	function parseFloatFromString( value ) {

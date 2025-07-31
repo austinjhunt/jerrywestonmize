@@ -3,7 +3,7 @@ Contributors: mailpoet, woocommerce, automattic
 Tags: email marketing, post notification, woocommerce emails, email automation, newsletter
 Requires at least: 6.7
 Tested up to: 6.8
-Stable tag: 5.12.9
+Stable tag: 5.12.12
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -18,7 +18,7 @@ Our newsletter builder integrates perfectly with WordPress so any website owner 
 
 Schedule your newsletters, send them right away, or set up new blog post notifications to send automatically, in just a few clicks.
 
-Trusted by 600,000 WordPress websites since 2011.
+Trusted by 500,000 WordPress websites since 2011.
 
 **With a free plan to get started, and scaling paid plans with enhanced functionality available, MailPoet is an email marketing solution suitable for both beginners and proficient email marketers.**
 
@@ -227,13 +227,8 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 
 == Changelog ==
 
-= 5.12.9 - 2025-06-30 =
-* Improved: handling of MailPoet Page title when switching website languages;
-* Improved: add default re-engagement emails trigger value when "Inactive subscribers" feature is turned off;
-* Improved: when choosing an email type, show loading animation only on the selected one;
-* Changed: replaced DocsBot with WordPress.com chatbot when searching MailPoet Knowledge Base;
-* Fixed: rendering submit button when font size is changed;
-* Fixed: fatal error in ACF and SCF when working with post templates in location rules;
-* Fixed: apply the latest changes in the form editor in the preview.
+= 5.12.12 - 2025-07-22 =
+* Added: A new Automation Trigger when a new WooCommerce order note is added;
+* Updated: minimum required WooCommerce version to 9.9 and tested up to version to 10.0.
 
 [See the changelog for all versions.](https://github.com/mailpoet/mailpoet/blob/trunk/mailpoet/changelog.txt)

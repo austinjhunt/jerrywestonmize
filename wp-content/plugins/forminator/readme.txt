@@ -3,7 +3,7 @@ Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
 Tested up to: 6.8
-Stable tag: 1.44.2
+Stable tag: 1.45
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -230,6 +230,24 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 6. Publish Polls with Real-time Stats
 
 == Changelog ==
+
+= 1.45.1 ( 2025-07-15 ) =
+
+- Fix: Security improvements
+
+
+= 1.45.0 ( 2025-07-08 ) =
+
+- Enhancement: Add Autosave option to prevent data loss during editing
+- Enhancement: Allow custom Markdown in field labels and descriptions
+- Enhancement: Include custom input option for Select, Checkbox, and Radio fields
+- Enhancement: Add Min and Max labels to Slider field
+- Enhancement: Make Preset Templates available via Hub Connector
+- Enhancement: Show default field error messages as placeholders
+- Enhancement: Show notification after creating a new form
+- Enhancement: Improve UI in various areas
+- Fix: Number and Currency field formatting is lost when using specific merge tags in PDFs
+
 
 = 1.44.3 ( 2025-06-30 ) =
 

@@ -1109,6 +1109,9 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
           // Generate slider labels.
           generateSliderLabels($sliderLimit, $minRange, $maxRange, $step);
 
+          // Add custom labels if available.
+          customSliderLabels($sliderLimit, $slide);
+
           // Create the UI with the formatted values.
           updateSliderValues($element, $formattedValue, $formattedValueMax, $value, $valueMax);
 
@@ -1214,6 +1217,22 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         });
         label.css('transform', 'translateX(-50%)');
         $sliderLimit.append(label);
+      }
+    }
+
+    // Function for custom slider labels
+    function customSliderLabels($sliderLimit, $slide) {
+      var minLabel = sanitize($slide.data('min-label') || '');
+      var maxLabel = sanitize($slide.data('max-label') || '');
+
+      // Safe: text() escapes potentially dangerous characters.
+      var $minLabelSpan = $('<span class="forminator-slider-label-min"></span>').text(minLabel);
+      var $maxLabelSpan = $('<span class="forminator-slider-label-max"></span>').text(maxLabel);
+      var $labelWrapper = $('<div class="forminator-slider-labels"></div>').append($minLabelSpan).append($maxLabelSpan);
+      if ($sliderLimit.length && $sliderLimit.prev('.forminator-slide').length) {
+        $sliderLimit.after($labelWrapper);
+      } else if ($sliderLimit.length && $sliderLimit.next('.forminator-slide').length) {
+        $sliderLimit.before($labelWrapper);
       }
     }
 

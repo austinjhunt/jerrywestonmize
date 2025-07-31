@@ -132,10 +132,10 @@ class SquarePaymentCommandHandler extends CommandHandler
 
         $identifier = $cacheId . '_' . $token->getValue() . '_' . $type;
 
-        $returnUrl = $command->getField('returnUrl');
+        $returnUrl = explode('#', $command->getField('returnUrl'));
         $bookings  = $command->getField('bookings');
 
-        $redirectUrl = AMELIA_ACTION_URL . '__payment__square__notify&name=' . $identifier . '&returnUrl=' . $returnUrl;
+        $redirectUrl = AMELIA_ACTION_URL . '__payment__square__notify&name=' . $identifier . '&returnUrl=' . $returnUrl[0];
 
         $response = null;
 
@@ -177,7 +177,11 @@ class SquarePaymentCommandHandler extends CommandHandler
 
             $result = $paymentAS->updateCache($result, $command->getFields(), $cache, $reservation, ['orderId' => $orderId]);
 
-            $paymentService->updatePaymentLink($paymentLink, $redirectUrl . '&squareOrderId=' . $orderId, $result->getData()['paymentId']);
+            $paymentService->updatePaymentLink(
+                $paymentLink,
+                $redirectUrl . '&squareOrderId=' . $orderId . (!empty($returnUrl[1]) ? '&fragment=' . $returnUrl[1] : ''),
+                $result->getData()['paymentId']
+            );
 
             if ($result->getResult() === CommandResult::RESULT_ERROR) {
                 return $result;

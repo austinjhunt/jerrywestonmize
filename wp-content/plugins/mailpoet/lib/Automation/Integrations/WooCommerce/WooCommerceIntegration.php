@@ -18,6 +18,7 @@ use MailPoet\Automation\Integrations\WooCommerce\Triggers\BuysFromATagTrigger;
 use MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCancelledTrigger;
 use MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCompletedTrigger;
 use MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderCreatedTrigger;
+use MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderNoteAddedTrigger;
 use MailPoet\Automation\Integrations\WooCommerce\Triggers\Orders\OrderStatusChangedTrigger;
 
 class WooCommerceIntegration {
@@ -32,6 +33,9 @@ class WooCommerceIntegration {
   private $orderCompletedTrigger;
 
   private $orderCancelledTrigger;
+
+  /** @var OrderNoteAddedTrigger */
+  private $orderNoteAddedTrigger;
 
   /** @var AbandonedCartTrigger  */
   private $abandonedCartTrigger;
@@ -71,6 +75,7 @@ class WooCommerceIntegration {
     OrderCreatedTrigger $orderCreatedTrigger,
     OrderCompletedTrigger $orderCompletedTrigger,
     OrderCancelledTrigger $orderCancelledTrigger,
+    OrderNoteAddedTrigger $orderNoteAddedTrigger,
     AbandonedCartTrigger $abandonedCartTrigger,
     BuysAProductTrigger $buysAProductTrigger,
     BuysFromACategoryTrigger $buysFromACategoryTrigger,
@@ -87,6 +92,7 @@ class WooCommerceIntegration {
     $this->orderCreatedTrigger = $orderCreatedTrigger;
     $this->orderCompletedTrigger = $orderCompletedTrigger;
     $this->orderCancelledTrigger = $orderCancelledTrigger;
+    $this->orderNoteAddedTrigger = $orderNoteAddedTrigger;
     $this->abandonedCartTrigger = $abandonedCartTrigger;
     $this->buysAProductTrigger = $buysAProductTrigger;
     $this->buysFromACategoryTrigger = $buysFromACategoryTrigger;
@@ -117,6 +123,7 @@ class WooCommerceIntegration {
     $registry->addTrigger($this->orderCreatedTrigger);
     $registry->addTrigger($this->orderCompletedTrigger);
     $registry->addTrigger($this->orderCancelledTrigger);
+    $registry->addTrigger($this->orderNoteAddedTrigger);
     $registry->addTrigger($this->abandonedCartTrigger);
     $registry->addTrigger($this->buysAProductTrigger);
     $registry->addTrigger($this->buysFromACategoryTrigger);

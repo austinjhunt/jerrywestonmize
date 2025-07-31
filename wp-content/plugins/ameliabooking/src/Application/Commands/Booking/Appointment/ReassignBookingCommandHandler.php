@@ -679,7 +679,6 @@ class ReassignBookingCommandHandler extends CommandHandler
                 'bookingZoomUsersLicenced'         => $userConnectionChanges['appointmentZoomUsersLicenced'],
                 'existingAppointment'              => $existingAppointment ? $existingAppointment->toArray() : null,
                 'existingAppointmentStatusChanged' => $existingAppointmentStatusChanged,
-                'createPaymentLinks'               => $command->getField('createPaymentLinks'),
             ]
         );
 

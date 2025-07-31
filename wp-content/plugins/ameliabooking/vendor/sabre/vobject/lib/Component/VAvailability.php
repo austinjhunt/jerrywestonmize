@@ -1,9 +1,9 @@
 <?php
 
-namespace Sabre\VObject\Component;
+namespace AmeliaSabre\VObject\Component;
 
 use DateTimeInterface;
-use Sabre\VObject;
+use AmeliaSabre\VObject;
 
 /**
  * The VAvailability component.

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sabre\VObject\TimezoneGuesser;
+namespace AmeliaSabre\VObject\TimezoneGuesser;
 
 use DateTimeZone;
 

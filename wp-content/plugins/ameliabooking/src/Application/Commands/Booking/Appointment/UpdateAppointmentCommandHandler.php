@@ -392,8 +392,7 @@ class UpdateAppointmentCommandHandler extends CommandHandler
                 'appointmentEmployeeChanged'   => $userConnectionChanges['appointmentEmployeeChanged'],
                 'appointmentZoomUserChanged'   => $userConnectionChanges['appointmentZoomUserChanged'],
                 'bookingAdded'                 => $bookingAdded,
-                'appointmentZoomUsersLicenced' => $userConnectionChanges['appointmentZoomUsersLicenced'],
-                'createPaymentLinks'           => $command->getField('createPaymentLinks')
+                'appointmentZoomUsersLicenced' => $userConnectionChanges['appointmentZoomUsersLicenced']
             ]
         );
 

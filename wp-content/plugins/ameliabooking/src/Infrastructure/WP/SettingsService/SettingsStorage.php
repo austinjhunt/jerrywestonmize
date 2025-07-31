@@ -303,6 +303,9 @@ class SettingsStorage implements SettingsStorageInterface
                 ],
                 'square'                     => [
                     'enabled'        => $this->getSetting('payments', 'square')['enabled'],
+                    'countryCode'    => $this->getSetting('payments', 'square')['countryCode'],
+                    'clientLiveId'   => $this->getSetting('payments', 'square')['clientLiveId'],
+                    'clientTestId'   => $this->getSetting('payments', 'square')['clientTestId'],
                     'testMode'       => $this->getSetting('payments', 'square')['testMode'],
                     'accessTokenSet' =>
                         !empty($this->getSetting('payments', 'square')['accessToken']) &&

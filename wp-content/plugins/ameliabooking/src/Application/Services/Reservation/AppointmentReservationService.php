@@ -402,7 +402,7 @@ class AppointmentReservationService extends AbstractReservationService
         if (
             (
             (!empty($appointmentData['payment']['gateway']) &&
-                in_array($appointmentData['payment']['gateway'], [PaymentType::MOLLIE, PaymentType::SQUARE])) || !empty($appointmentData['isMollie'])
+                in_array($appointmentData['payment']['gateway'], [PaymentType::MOLLIE])) || !empty($appointmentData['isMollie'])
             ) && !(
                 !empty($appointmentData['bookings'][0]['packageCustomerService']['id']) &&
                 $reservation->getLoggedInUser() &&
@@ -433,14 +433,7 @@ class AppointmentReservationService extends AbstractReservationService
             /** @var CustomerBooking $booking */
             $booking = CustomerBookingFactory::create($bookingArray);
             $booking->setAppointmentId($appointment->getId());
-            $booking->setPrice(
-                new Price(
-                    $appointmentAS->getBookingPriceForServiceDuration(
-                        $service,
-                        $booking->getDuration() ? $booking->getDuration()->getValue() : null
-                    )
-                )
-            );
+            $booking->setPrice(new Price($appointmentAS->getBookingPriceForService($service, $booking)));
             $booking->setAggregatedPrice($service->getAggregatedPrice());
 
             /** @var CustomerBookingExtra $bookingExtra */
@@ -493,8 +486,9 @@ class AppointmentReservationService extends AbstractReservationService
             }
         }
 
-
-        $bookableAS->modifyServicePriceByDuration($service, $service->getDuration()->getValue());
+        $service->setPrice(
+            new Price($appointmentAS->getBookingPriceForService($service, $booking))
+        );
 
         if ($inspectTimeSlot) {
             /** @var ApplicationTimeSlotService $applicationTimeSlotService */
@@ -645,12 +639,12 @@ class AppointmentReservationService extends AbstractReservationService
      */
     public function hasDoubleBookings($firstReservation, $followingReservations)
     {
-        $hasDoubledBooking = $firstReservation && $this->isDoubleBooking($firstReservation->getReservation());
+        $hasDoubledBooking = $firstReservation && $firstReservation->getReservation()->getId() && $this->isDoubleBooking($firstReservation->getReservation());
 
         if (!$hasDoubledBooking) {
             /** @var Reservation $followingReservation */
             foreach ($followingReservations->getItems() as $followingReservation) {
-                if ($this->isDoubleBooking($followingReservation->getReservation())) {
+                if ($followingReservation->getReservation()->getId() && $this->isDoubleBooking($followingReservation->getReservation())) {
                     $hasDoubledBooking = true;
 
                     break;
@@ -659,7 +653,9 @@ class AppointmentReservationService extends AbstractReservationService
         }
 
         if ($hasDoubledBooking) {
-            $this->deleteSingleReservation($firstReservation);
+            if ($firstReservation) {
+                $this->deleteSingleReservation($firstReservation);
+            }
 
             /** @var Reservation $followingReservation */
             foreach ($followingReservations->getItems() as $followingReservation) {

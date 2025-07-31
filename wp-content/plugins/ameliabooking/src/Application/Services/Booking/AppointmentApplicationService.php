@@ -140,14 +140,7 @@ class AppointmentApplicationService
                 );
             }
 
-            $customerBooking->setPrice(
-                new Price(
-                    $this->getBookingPriceForServiceDuration(
-                        $service,
-                        $customerBooking->getDuration() ? $customerBooking->getDuration()->getValue() : null
-                    )
-                )
-            );
+            $customerBooking->setPrice(new Price($this->getBookingPriceForService($service, $customerBooking)));
         }
 
         // Set appointment status based on booking statuses
@@ -219,7 +212,7 @@ class AppointmentApplicationService
                 if (
                     !empty($appointmentData['locationId']) &&
                     $existingAppointment->getLocationId() &&
-                    $existingAppointment->getLocationId()->getValue() !== $appointmentData['locationId']
+                    $existingAppointment->getLocationId()->getValue() !== (int)$appointmentData['locationId']
                 ) {
                     $hasLocation = false;
                 }
@@ -303,14 +296,7 @@ class AppointmentApplicationService
 
                 $newBooking->setAppointmentId($oldAppointment->getId());
 
-                $newBooking->setPrice(
-                    new Price(
-                        $this->getBookingPriceForServiceDuration(
-                            $service,
-                            $newBooking->getDuration() ? $newBooking->getDuration()->getValue() : null
-                        )
-                    )
-                );
+                $newBooking->setPrice(new Price($this->getBookingPriceForService($service, $newBooking)));
 
                 $newBooking->setAggregatedPrice($service->getAggregatedPrice());
 
@@ -610,10 +596,20 @@ class AppointmentApplicationService
                     /** @var CustomerBooking $oldBooking */
                     $oldBooking = $oldAppointment->getBookings()->getItem($newBooking->getId()->getValue());
 
-                    $oldDuration = $oldBooking->getDuration()
-                        ? $oldBooking->getDuration()->getValue() : $service->getDuration()->getValue();
+                    if ($this->isDurationPricingType($service) &&
+                        $newBooking->getDuration() &&
+                        $newBooking->getDuration()->getValue() !== (
+                            $oldBooking->getDuration()
+                                ? $oldBooking->getDuration()->getValue()
+                                : $service->getDuration()->getValue()
+                        )
+                    ) {
+                        $bookingRepository->updatePrice($newBooking->getId()->getValue(), $newBooking);
+                    }
 
-                    if ($newBooking->getDuration() && $newBooking->getDuration()->getValue() !== $oldDuration) {
+                    if ($this->isPersonPricingType($service) &&
+                        $newBooking->getPersons()->getValue() !== $oldBooking->getPersons()->getValue()
+                    ) {
                         $bookingRepository->updatePrice($newBooking->getId()->getValue(), $newBooking);
                     }
                 }
@@ -1460,22 +1456,93 @@ class AppointmentApplicationService
 
     /**
      * @param Service $service
-     * @param int     $duration
+     *
+     * @return bool
+     *
+     * @throws ContainerValueNotFoundException
+     */
+    public function isDurationPricingType($service)
+    {
+        if ($service->getCustomPricing()) {
+            $customPricing = json_decode($service->getCustomPricing()->getValue(), true);
+
+            if (
+                $customPricing !== null &&
+                ($customPricing['enabled'] === true || $customPricing['enabled'] === 'duration')
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Service $service
+     *
+     * @return bool
+     *
+     * @throws ContainerValueNotFoundException
+     */
+    public function isPersonPricingType($service)
+    {
+        if ($service->getCustomPricing()) {
+            $customPricing = json_decode($service->getCustomPricing()->getValue(), true);
+
+            if (
+                $customPricing !== null &&
+                $customPricing['enabled'] === 'person' &&
+                $customPricing['persons']
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Service         $service
+     * @param CustomerBooking $booking
      *
      * @return float
      *
      * @throws ContainerValueNotFoundException
      */
-    public function getBookingPriceForServiceDuration($service, $duration)
+    public function getBookingPriceForService($service, $booking)
     {
-        if ($duration && $service->getCustomPricing()) {
+        if ($service->getCustomPricing()) {
             $customPricing = json_decode($service->getCustomPricing()->getValue(), true);
 
-            if ($customPricing !== null &&
-                $customPricing['enabled'] &&
-                array_key_exists($duration, $customPricing['durations'])
+            if (
+                $customPricing !== null &&
+                $booking->getDuration() &&
+                $booking->getDuration()->getValue() &&
+                ($customPricing['enabled'] === true || $customPricing['enabled'] === 'duration') &&
+                array_key_exists($booking->getDuration()->getValue(), $customPricing['durations'])
             ) {
-                return $customPricing['durations'][$duration]['price'];
+                return $customPricing['durations'][$booking->getDuration()->getValue()]['price'];
+            } elseif (
+                $customPricing !== null &&
+                $customPricing['enabled'] === 'person' &&
+                $customPricing['persons'] &&
+                $booking->getPersons() &&
+                $booking->getPersons()->getValue()
+            ) {
+                ksort($customPricing['persons'], SORT_NUMERIC);
+
+                $filteredRanges = array_filter(
+                    array_keys($customPricing['persons']),
+                    function ($i) use ($booking) {
+                        return $booking->getPersons()->getValue() >= $i;
+                    }
+                );
+
+                $item = !$filteredRanges
+                    ? ['price' => $service->getPrice()->getValue()]
+                    : $customPricing['persons'][array_pop($filteredRanges)];
+
+                return $item['price'];
             }
         }
 

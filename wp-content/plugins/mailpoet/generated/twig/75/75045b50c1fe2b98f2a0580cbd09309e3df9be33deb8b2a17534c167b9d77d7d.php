@@ -76,13 +76,17 @@ class __TwigTemplate_1a7328011b0cf7158e35fc314e7b6993b8417919d1f5ef0a796941a8e33
         </div>
       </p>
 
+      <div class=\"mailpoet-notice-container\">
+        <div id=\"new_segment_error_message\"></div>
+      </div>
+
       <p class=\"mailpoet_align_right\">
         <input type=\"submit\" value=\"";
-        // line 28
+        // line 32
         yield $this->extensions['MailPoet\Twig\I18n']->translate("Cancel");
         yield "\" id=\"new_segment_cancel\" class=\"mailpoet-button button-secondary\"/>
         <input type=\"submit\" value=\"";
-        // line 29
+        // line 33
         yield $this->extensions['MailPoet\Twig\I18n']->translate("Done");
         yield "\" id=\"new_segment_process\" class=\"mailpoet-button button-primary\"/>
       </p>
@@ -92,9 +96,9 @@ class __TwigTemplate_1a7328011b0cf7158e35fc314e7b6993b8417919d1f5ef0a796941a8e33
 
     <!-- New custom field logic -->
     ";
-        // line 36
-        yield from         $this->loadTemplate("form/custom_fields_legacy.html", "subscribers/importExport/import/step_data_manipulation.html", 36)->unwrap()->yield($context);
-        // line 37
+        // line 40
+        yield from         $this->loadTemplate("form/custom_fields_legacy.html", "subscribers/importExport/import/step_data_manipulation.html", 40)->unwrap()->yield($context);
+        // line 41
         yield "  </div>
 </div>
 ";
@@ -122,7 +126,7 @@ class __TwigTemplate_1a7328011b0cf7158e35fc314e7b6993b8417919d1f5ef0a796941a8e33
      */
     public function getDebugInfo()
     {
-        return array (  95 => 37,  93 => 36,  83 => 29,  79 => 28,  68 => 20,  62 => 17,  56 => 14,  46 => 7,  38 => 1,);
+        return array (  99 => 41,  97 => 40,  87 => 33,  83 => 32,  68 => 20,  62 => 17,  56 => 14,  46 => 7,  38 => 1,);
     }
 
     public function getSourceContext()

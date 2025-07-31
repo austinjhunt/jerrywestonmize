@@ -66,6 +66,17 @@ class Forminator_Name extends Forminator_Field {
 	public function __construct() {
 		parent::__construct();
 		$this->name = esc_html__( 'Name', 'forminator' );
+
+		// Set default required error messages.
+		$required       = __( 'This field is required. Please input your name.', 'forminator' );
+		$fname_required = __( 'This field is required. Please input your first name.', 'forminator' );
+		$mname_required = __( 'This field is required. Please input your middle name.', 'forminator' );
+		$lname_required = __( 'This field is required. Please input your last name.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ]            = $required;
+		self::$default_required_messages[ 'fname_' . $this->type ] = $fname_required;
+		self::$default_required_messages[ 'mname_' . $this->type ] = $mname_required;
+		self::$default_required_messages[ 'lname_' . $this->type ] = $lname_required;
 	}
 
 	/**
@@ -76,21 +87,16 @@ class Forminator_Name extends Forminator_Field {
 	 */
 	public function defaults() {
 		return array(
-			'field_label'             => esc_html__( 'Name', 'forminator' ),
-			'prefix_label'            => esc_html__( 'Prefix', 'forminator' ),
-			'fname_label'             => esc_html__( 'First Name', 'forminator' ),
-			'mname_label'             => esc_html__( 'Middle Name', 'forminator' ),
-			'lname_label'             => esc_html__( 'Last Name', 'forminator' ),
-			'prefix'                  => 'true',
-			'fname'                   => 'true',
-			'mname'                   => 'true',
-			'lname'                   => 'true',
-			'required_message'        => esc_html__( 'Name is required.', 'forminator' ),
-			'prefix_required_message' => esc_html__( 'Prefix is required.', 'forminator' ),
-			'fname_required_message'  => esc_html__( 'First Name is required.', 'forminator' ),
-			'mname_required_message'  => esc_html__( 'Middle Name is required.', 'forminator' ),
-			'lname_required_message'  => esc_html__( 'Last Name is required.', 'forminator' ),
-			'layout_columns'          => '2',
+			'field_label'    => esc_html__( 'Name', 'forminator' ),
+			'prefix_label'   => esc_html__( 'Prefix', 'forminator' ),
+			'fname_label'    => esc_html__( 'First Name', 'forminator' ),
+			'mname_label'    => esc_html__( 'Middle Name', 'forminator' ),
+			'lname_label'    => esc_html__( 'Last Name', 'forminator' ),
+			'prefix'         => 'true',
+			'fname'          => 'true',
+			'mname'          => 'true',
+			'lname'          => 'true',
+			'layout_columns' => '2',
 		);
 	}
 
@@ -599,7 +605,7 @@ class Forminator_Name extends Forminator_Field {
 					$field,
 					'fname_required_message',
 					'first',
-					esc_html__( 'This field is required. Please input your first name.', 'forminator' )
+					self::$default_required_messages[ 'fname_' . $this->type ]
 				);
 				$messages        .= '"' . $this->get_id( $field ) . '-first-name": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 			}
@@ -610,7 +616,7 @@ class Forminator_Name extends Forminator_Field {
 					$field,
 					'mname_required_message',
 					'middle',
-					esc_html__( 'This field is required. Please input your middle name.', 'forminator' )
+					self::$default_required_messages[ 'mname_' . $this->type ]
 				);
 				$messages        .= '"' . $this->get_id( $field ) . '-middle-name": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 			}
@@ -621,17 +627,12 @@ class Forminator_Name extends Forminator_Field {
 					$field,
 					'lname_required_message',
 					'last',
-					esc_html__( 'This field is required. Please input your last name.', 'forminator' )
+					self::$default_required_messages[ 'lname_' . $this->type ]
 				);
 				$messages        .= '"' . $this->get_id( $field ) . '-last-name": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 			}
 		} elseif ( $required ) {
-				// backward compat.
-				$required_message = self::get_property( 'required_message', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST, 'string' );
-			if ( self::FIELD_PROPERTY_VALUE_NOT_EXIST === $required_message || empty( $required_message ) ) {
-				$required_message = esc_html__( 'This field is required. Please input your name.', 'forminator' );
-			}
-
+				$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ], 'string' );
 				$required_message = apply_filters( 'forminator_name_field_required_validation_message', $required_message, $id, $field );
 				$messages        .= '"' . $this->get_id( $field ) . '": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 		}
@@ -685,7 +686,7 @@ class Forminator_Name extends Forminator_Field {
 						$field,
 						'fname_required_message',
 						'first',
-						esc_html__( 'This field is required. Please input your first name.', 'forminator' )
+						esc_html( self::$default_required_messages[ 'fname_' . $this->type ] )
 					);
 				}
 
@@ -695,7 +696,7 @@ class Forminator_Name extends Forminator_Field {
 						$field,
 						'mname_required_message',
 						'middle',
-						esc_html__( 'This field is required. Please input your middle name.', 'forminator' )
+						esc_html( self::$default_required_messages[ 'mname_' . $this->type ] )
 					);
 				}
 
@@ -705,17 +706,13 @@ class Forminator_Name extends Forminator_Field {
 						$field,
 						'lname_required_message',
 						'last',
-						esc_html__( 'This field is required. Please input your last name.', 'forminator' )
+						esc_html( self::$default_required_messages[ 'lname_' . $this->type ] )
 					);
 				}
 			}
 		} elseif ( $required ) {
 			if ( empty( $data ) ) {
-				// backward compat.
-				$required_message = self::get_property( 'required_message', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST, 'string' );
-				if ( self::FIELD_PROPERTY_VALUE_NOT_EXIST === $required_message ) {
-					$required_message = esc_html__( 'This field is required. Please input your name.', 'forminator' );
-				}
+				$required_message = self::get_property( 'required_message', $field, esc_html( self::$default_required_messages[ $this->type ] ), 'string' );
 
 				$required_message                = apply_filters( 'forminator_name_field_required_validation_message', $required_message, $id, $field );
 				$this->validation_message[ $id ] = $required_message;

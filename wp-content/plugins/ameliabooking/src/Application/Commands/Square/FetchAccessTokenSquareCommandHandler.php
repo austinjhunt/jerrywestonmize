@@ -79,6 +79,7 @@ class FetchAccessTokenSquareCommandHandler extends CommandHandler
         if ($locations && sizeof($locations)) {
             $squareSettings = $settingsService->getCategorySettings('payments')['square'];
             $squareSettings['locationId'] = $locations[0]->getId();
+            $squareSettings['countryCode'] = $locations[0]->getCountry();
             $settingsService->setSetting('payments', 'square', $squareSettings);
         }
 

@@ -8,6 +8,7 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Location\AbstractCurrentLocation;
 use AmeliaBooking\Application\Services\Stash\StashApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\ForbiddenFileUploadException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Api\BasicApiService;
@@ -297,6 +298,24 @@ class UpdateSettingsCommandHandler extends CommandHandler
             $settingsFields['payments']['wc']['productId'] = WooCommerceService::getIdForExistingOrNewProduct(
                 $settingsService->getCategorySettings('payments')['wc']['productId']
             );
+        }
+
+
+        if ($command->getField('general') && $command->getField('general')['customFieldsUploadsPath']) {
+            $uploadPath = $command->getField('general')['customFieldsUploadsPath'];
+            if ($uploadPath[0] !== '/') {
+                throw new ForbiddenFileUploadException('Attachment upload path must be an absolute path, starting with a slash (/).');
+            }
+
+            !is_dir($uploadPath) && !mkdir($uploadPath, 0755, true);
+
+            if (!is_writable($uploadPath) || !is_dir($uploadPath)) {
+                throw new ForbiddenFileUploadException('Attachment upload path is not writable or does not exist.');
+            }
+
+            if (!file_exists("$uploadPath/index.html")) {
+                file_put_contents("$uploadPath/index.html", '');
+            }
         }
 
         if ($command->getField('sendAllCF') !== null) {

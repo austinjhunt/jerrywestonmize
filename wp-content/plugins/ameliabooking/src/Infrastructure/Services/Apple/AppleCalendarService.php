@@ -43,10 +43,10 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use Interop\Container\Exception\ContainerException;
-use Sabre\VObject\Component\VCalendar;
-use Sabre\VObject\FreeBusyGenerator;
-use Sabre\VObject\Reader;
-use Sabre\VObject\UUIDUtil;
+use AmeliaSabre\VObject\Component\VCalendar;
+use AmeliaSabre\VObject\FreeBusyGenerator;
+use AmeliaSabre\VObject\Reader;
+use AmeliaSabre\VObject\UUIDUtil;
 use WP_Error;
 
 class AppleCalendarService extends AbstractAppleCalendarService

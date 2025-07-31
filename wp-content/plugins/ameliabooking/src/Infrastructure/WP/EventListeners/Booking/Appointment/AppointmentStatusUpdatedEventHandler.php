@@ -108,30 +108,32 @@ class AppointmentStatusUpdatedEventHandler
                     );
                 }
 
-                $paymentId = !empty($booking['payments'][0]['id']) ? $booking['payments'][0]['id'] : null;
+                if (!empty($appointment['createPaymentLinks'])) {
+                    $paymentId = !empty($booking['payments'][0]['id']) ? $booking['payments'][0]['id'] : null;
 
-                if (!empty($paymentId)) {
-                    /** @var ServiceRepository $serviceRepository */
-                    $serviceRepository = $container->get('domain.bookable.service.repository');
+                    if (!empty($paymentId)) {
+                        /** @var ServiceRepository $serviceRepository */
+                        $serviceRepository = $container->get('domain.bookable.service.repository');
 
-                    /** @var CustomerRepository $customerRepository */
-                    $customerRepository = $container->get('domain.users.customers.repository');
+                        /** @var CustomerRepository $customerRepository */
+                        $customerRepository = $container->get('domain.users.customers.repository');
 
-                    $data = [
-                        'booking' => $booking,
-                        'type' => Entities::APPOINTMENT,
-                        'appointment' => $appointment,
-                        'paymentId' => $paymentId,
-                        'bookable' => $serviceRepository->getById($appointment['serviceId'])->toArray(),
-                        'customer' => !empty($booking['customer'])
-                            ? $booking['customer']
-                            : $customerRepository->getById($booking['customerId'])->toArray()
-                    ];
+                        $data = [
+                            'booking' => $booking,
+                            'type' => Entities::APPOINTMENT,
+                            'appointment' => $appointment,
+                            'paymentId' => $paymentId,
+                            'bookable' => $serviceRepository->getById($appointment['serviceId'])->toArray(),
+                            'customer' => !empty($booking['customer'])
+                                ? $booking['customer']
+                                : $customerRepository->getById($booking['customerId'])->toArray()
+                        ];
 
-                    /** @var PaymentApplicationService $paymentAS */
-                    $paymentAS = $container->get('application.payment.service');
+                        /** @var PaymentApplicationService $paymentAS */
+                        $paymentAS = $container->get('application.payment.service');
 
-                    $appointment['bookings'][$index]['payments'][0]['paymentLinks'] = $paymentAS->createPaymentLink($data, $index);
+                        $appointment['bookings'][$index]['payments'][0]['paymentLinks'] = $paymentAS->createPaymentLink($data, $index);
+                    }
                 }
             }
         }

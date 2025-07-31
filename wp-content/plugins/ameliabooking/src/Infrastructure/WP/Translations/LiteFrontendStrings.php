@@ -140,6 +140,7 @@ class LiteFrontendStrings
             'total_cost_colon'             => __('Total Cost:', 'wpamelia'),
             'total_number_of_persons'      => __('Total Number of People:', 'wpamelia'),
             'view'                         => __('View', 'wpamelia'),
+            'select'                       => __('Select', 'wpamelia'),
         ];
     }
 
@@ -271,6 +272,8 @@ class LiteFrontendStrings
         return [
             'available'                              => __('Available', 'wpamelia'),
             'booking_cancel_exception'               => __('Booking can\'t be canceled', 'wpamelia'),
+            'generate_payment_links'                 => __('Generate payment links', 'wpamelia'),
+            'generate_payment_links_tooltip'         => __('Check this box to generate a payment link.<br> To include it in the notification, add the payment link placeholder.', 'wpamelia'),
             'no_results'                             => __('There are no results...', 'wpamelia'),
             'select_customer'                        => __('Select Customer', 'wpamelia'),
             'select_service'                         => __('Select Service', 'wpamelia'),

@@ -1,8 +1,8 @@
 <?php
 
-namespace Sabre\VObject\Property\VCard;
+namespace AmeliaSabre\VObject\Property\VCard;
 
-use Sabre\VObject\Property;
+use AmeliaSabre\VObject\Property;
 
 /**
  * PhoneNumber property.

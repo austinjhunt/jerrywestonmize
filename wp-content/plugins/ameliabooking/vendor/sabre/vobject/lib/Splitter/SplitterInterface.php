@@ -1,6 +1,6 @@
 <?php
 
-namespace Sabre\VObject\Splitter;
+namespace AmeliaSabre\VObject\Splitter;
 
 /**
  * VObject splitter.
@@ -32,7 +32,7 @@ interface SplitterInterface
      *
      * When the end is reached, null will be returned.
      *
-     * @return \Sabre\VObject\Component|null
+     * @return \AmeliaSabre\VObject\Component|null
      */
     public function getNext();
 }

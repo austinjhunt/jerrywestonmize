@@ -925,6 +925,30 @@
   }
 }
 
+.am-custom-pricing {
+  padding: 10px;
+  border-radius: @padding-small/2;
+  border: 1px solid @color-divider-gray;
+  margin-bottom: 26px;
+
+  .am-custom-pricing-label {
+    font-weight: 600;
+    &-new {
+      color: #048A64;
+      background-color: fade(#06A11D, 10%);
+      border-radius: 16px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+
+  .am-setting-box {
+    margin-top: 24px;
+    margin-bottom: 0 !important;
+  }
+}
+
 .am-service-custom-duration {
   margin-top: 15px;
 
@@ -939,12 +963,12 @@
   }
 
   &-item {
-    margin: 6px 0;
+    margin-right: 5px !important;
     display: flex;
     align-items: center;
 
     & > div {
-      padding: 0 4px;
+      padding: 0 0 0 4px;
       height: 100%;
 
       input.el-input {

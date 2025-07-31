@@ -1,9 +1,9 @@
 <?php
 
-namespace Sabre\VObject\Property;
+namespace AmeliaSabre\VObject\Property;
 
-use Sabre\VObject\Property;
-use Sabre\Xml;
+use AmeliaSabre\VObject\Property;
+use AmeliaSabre\Xml;
 
 /**
  * Float property.

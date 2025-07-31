@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sabre\Xml\Element;
+namespace AmeliaSabre\Xml\Element;
 
-use Sabre\Xml;
+use AmeliaSabre\Xml;
 
-use function Sabre\Uri\resolve;
+use function AmeliaSabre\Uri\resolve;
 
 /**
  * Uri element.

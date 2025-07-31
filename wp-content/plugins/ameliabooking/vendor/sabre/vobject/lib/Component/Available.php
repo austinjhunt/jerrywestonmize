@@ -1,8 +1,8 @@
 <?php
 
-namespace Sabre\VObject\Component;
+namespace AmeliaSabre\VObject\Component;
 
-use Sabre\VObject;
+use AmeliaSabre\VObject;
 
 /**
  * The Available sub-component.

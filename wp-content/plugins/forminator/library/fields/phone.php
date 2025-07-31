@@ -81,6 +81,9 @@ class Forminator_Phone extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Phone', 'forminator' );
+		$required   = __( 'This field is required. Please input a phone number.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -197,7 +200,7 @@ class Forminator_Phone extends Forminator_Field {
 			$description_block .= sprintf( '<span id="' . esc_attr( $id . '-description' ) . '" class="forminator-description" id="%s">', $id . '-description' );
 
 			if ( ! empty( $description ) ) {
-				$description_block .= wp_kses_data( $description );
+				$description_block .= self::convert_markdown( wp_kses_data( $description ) );
 			}
 
 			if ( 'character_limit' === $format_check && 0 < $limit ) {
@@ -358,10 +361,7 @@ class Forminator_Phone extends Forminator_Field {
 		$messages           = '"' . $this->get_id( $field ) . '": {' . "\n";
 
 		if ( $this->is_required( $field ) ) {
-			$required_message = self::get_property( 'required_message', $field );
-			if ( empty( $required_message ) ) {
-				$required_message = esc_html__( 'This field is required. Please input a phone number.', 'forminator' );
-			}
+			$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 			$required_message = apply_filters(
 				'forminator_field_phone_required_validation_message',
 				$required_message,
@@ -441,7 +441,7 @@ class Forminator_Phone extends Forminator_Field {
 
 		if ( $this->is_required( $field ) ) {
 			if ( empty( $data ) ) {
-				$required_message                = self::get_property( 'required_message', $field, esc_html__( 'This field is required. Please input a phone number.', 'forminator' ) );
+				$required_message                = self::get_property( 'required_message', $field, esc_html( self::$default_required_messages[ $this->type ] ) );
 				$this->validation_message[ $id ] = apply_filters(
 					'forminator_field_phone_required_field_validation_message',
 					$required_message,

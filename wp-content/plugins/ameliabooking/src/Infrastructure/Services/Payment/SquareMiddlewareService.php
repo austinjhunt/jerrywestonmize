@@ -7,11 +7,30 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Payment;
 
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
+
 /**
  * Class SquareMiddlewareService
  */
 class SquareMiddlewareService
 {
+    /**
+     * @var string
+     */
+    private $middlewareApiUrl;
+
+    /**
+     * SquareMiddlewareService constructor.
+     *
+     * @param SettingsService $settingsService
+     */
+    public function __construct(SettingsService $settingsService)
+    {
+        $squareSettings         = $settingsService->getCategorySettings('payments')['square'];
+        $this->middlewareApiUrl = $squareSettings['testMode'] ?
+            'https://middleware-dev.wpamelia.com/' : 'https://middleware.wpamelia.com/';
+    }
+
     /**
      *
      * @return boolean
@@ -20,7 +39,7 @@ class SquareMiddlewareService
      */
     public function decrypt($savedAccessToken)
     {
-        $ch = curl_init(AMELIA_MIDDLEWARE_API_URL . 'square/decrypt');
+        $ch = curl_init($this->middlewareApiUrl . 'square/decrypt');
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -78,7 +97,7 @@ class SquareMiddlewareService
     {
         $accessToken = $this->getAccessToken($savedAccessToken);
 
-        $ch = curl_init(AMELIA_MIDDLEWARE_API_URL . 'square/revoke?testMode=' . $testMode);
+        $ch = curl_init($this->middlewareApiUrl . 'square/revoke?testMode=' . $testMode);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -113,7 +132,7 @@ class SquareMiddlewareService
     {
         $accessToken = $this->getAccessToken($savedAccessToken);
 
-        $ch = curl_init(AMELIA_MIDDLEWARE_API_URL . 'square/refresh?testMode=' . $testMode);
+        $ch = curl_init($this->middlewareApiUrl . 'square/refresh?testMode=' . $testMode);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -143,7 +162,7 @@ class SquareMiddlewareService
     public function getAuthUrl($testMode)
     {
         $ch = curl_init(
-            AMELIA_MIDDLEWARE_API_URL . 'square/authorization/url?testMode=' . $testMode . '&admin_ajax_url=' . urlencode(admin_url('admin-ajax.php', ''))
+            $this->middlewareApiUrl . 'square/authorization/url?testMode=' . $testMode . '&admin_ajax_url=' . urlencode(admin_url('admin-ajax.php', ''))
         );
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

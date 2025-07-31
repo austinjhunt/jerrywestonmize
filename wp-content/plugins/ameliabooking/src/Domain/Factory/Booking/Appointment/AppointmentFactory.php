@@ -46,6 +46,10 @@ class AppointmentFactory
             new Id($data['providerId'])
         );
 
+        if (isset($data['createPaymentLinks'])) {
+            $appointment->setCreatePaymentLinks($data['createPaymentLinks']);
+        }
+
         if (!empty($data['id'])) {
             $appointment->setId(new Id($data['id']));
         }
@@ -187,6 +191,8 @@ class AppointmentFactory
                     ),
                     'notifyParticipants'     => isset($row['appointment_notifyParticipants']) ?
                         $row['appointment_notifyParticipants'] : null,
+                    'createPaymentLinks'     => isset($row['appointment_createPaymentLinks']) ?
+                        $row['appointment_createPaymentLinks'] : null,
                     'serviceId'              => $row['appointment_serviceId'],
                     'providerId'             => $row['appointment_providerId'],
                     'locationId'             => isset($row['appointment_locationId']) ?
