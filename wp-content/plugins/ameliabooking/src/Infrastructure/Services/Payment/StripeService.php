@@ -114,9 +114,17 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 $stripeData['metadata'] = $data['metaData'];
             }
 
+            // BEGIN MODS 
+            if ($data['metaData']['Customer Email']) {
+                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
+            }
+            // also added a fallback description since that was appearing as null on the Stripe side
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
+            } else {
+                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
+            // END MODS
 
             $customerId = $this->createCustomer($data, $additionalStripeData);
 
