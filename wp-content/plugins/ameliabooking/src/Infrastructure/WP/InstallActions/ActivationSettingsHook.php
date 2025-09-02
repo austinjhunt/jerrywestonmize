@@ -70,6 +70,8 @@ class ActivationSettingsHook
 
         self::initGoogleTagSettings();
 
+        self::initMailchimpSettings();
+
         self::initAppleCalendarSettings();
 
         self::initSocialLoginSettings();
@@ -588,6 +590,22 @@ This message does not have an option for responding. If you need additional info
         self::initSettings('googleTag', $settings);
     }
 
+
+    /**
+     * Init Mailchimp Settings
+     */
+    private static function initMailchimpSettings()
+    {
+        $settings = [
+            'accessToken'      => null,
+            'server'           => null,
+            'list'             => null,
+            'checkedByDefault' => false
+        ];
+
+        self::initSettings('mailchimp', $settings);
+    }
+
     /**
      * Init Ics Settings
      */
@@ -714,8 +732,15 @@ This message does not have an option for responding. If you need additional info
                 'redirectPage' => 1,
                 'bookMultiple' => false,
                 'bookUnpaid'   => empty($savedSettings['wc']),
-                'rules'        => [
+                'rules'        =>
+                    isset($savedSettings['wc']['rules']) ? $savedSettings['wc']['rules'] : [
                     'appointment' => [
+                        [
+                            'order'   => 'pending',
+                            'booking' => 'pending',
+                            'payment' => 'pending',
+                            'update'  => false,
+                        ],
                         [
                             'order'   => 'on-hold',
                             'booking' => 'default',
@@ -732,6 +757,18 @@ This message does not have an option for responding. If you need additional info
                             'order'   => 'completed',
                             'booking' => 'default',
                             'payment' => 'paid',
+                            'update'  => false,
+                        ],
+                        [
+                            'order'   => 'cancelled',
+                            'booking' => 'canceled',
+                            'payment' => 'pending',
+                            'update'  => false,
+                        ],
+                        [
+                            'order'   => 'failed',
+                            'booking' => 'canceled',
+                            'payment' => 'pending',
                             'update'  => false,
                         ],
                     ],
@@ -754,8 +791,26 @@ This message does not have an option for responding. If you need additional info
                             'payment' => 'paid',
                             'update'  => false,
                         ],
+                        [
+                            'order'   => 'cancelled',
+                            'booking' => 'canceled',
+                            'payment' => 'pending',
+                            'update'  => false,
+                        ],
+                        [
+                            'order'   => 'failed',
+                            'booking' => 'canceled',
+                            'payment' => 'pending',
+                            'update'  => false,
+                        ],
                     ],
                     'event'       => [
+                        [
+                            'order'   => 'pending',
+                            'booking' => 'pending',
+                            'payment' => 'pending',
+                            'update'  => false,
+                        ],
                         [
                             'order'   => 'on-hold',
                             'booking' => 'approved',
@@ -772,6 +827,18 @@ This message does not have an option for responding. If you need additional info
                             'order'   => 'completed',
                             'booking' => 'approved',
                             'payment' => 'paid',
+                            'update'  => false,
+                        ],
+                        [
+                            'order'   => 'cancelled',
+                            'booking' => 'canceled',
+                            'payment' => 'pending',
+                            'update'  => false,
+                        ],
+                        [
+                            'order'   => 'failed',
+                            'booking' => 'canceled',
+                            'payment' => 'pending',
                             'update'  => false,
                         ],
                     ],
@@ -1547,6 +1614,7 @@ This message does not have an option for responding. If you need additional info
                 'loginEnabled'    => true,
                 'filterDate'      => false,
                 'translations'    => [],
+                'googleRecaptcha' => false,
             ],
             'providerCabinet'             => [
                 'enabled'         => true,
@@ -1556,6 +1624,7 @@ This message does not have an option for responding. If you need additional info
                 'pageUrl'         => '',
                 'loginEnabled'    => true,
                 'filterDate'      => false,
+                'googleRecaptcha' => false,
             ],
             'urlAttachment'       => [
                 'enabled'         => true,
@@ -1631,8 +1700,10 @@ This message does not have an option for responding. If you need additional info
                 ['customerCabinet', 'translations'],
                 ['customerCabinet', 'headerJwtSecret'],
                 ['customerCabinet', 'urlJwtSecret'],
+                ['customerCabinet', 'googleRecaptcha'],
                 ['providerCabinet', 'headerJwtSecret'],
                 ['providerCabinet', 'urlJwtSecret'],
+                ['providerCabinet', 'googleRecaptcha'],
                 ['urlAttachment', 'headerJwtSecret'],
                 ['urlAttachment', 'urlJwtSecret'],
             ],

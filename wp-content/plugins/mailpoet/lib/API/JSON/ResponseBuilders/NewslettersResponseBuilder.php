@@ -78,7 +78,7 @@ class NewslettersResponseBuilder {
       'body' => $newsletter->getBody(),
       'sent_at' => ($sentAt = $newsletter->getSentAt()) ? $sentAt->format(self::DATE_FORMAT) : null,
       'created_at' => ($createdAt = $newsletter->getCreatedAt()) ? $createdAt->format(self::DATE_FORMAT) : null,
-      'updated_at' => $newsletter->getUpdatedAt()->format(self::DATE_FORMAT),
+      'updated_at' => ($updatedAt = $newsletter->getUpdatedAt()) ? $updatedAt->format(self::DATE_FORMAT) : null,
       'deleted_at' => ($deletedAt = $newsletter->getDeletedAt()) ? $deletedAt->format(self::DATE_FORMAT) : null,
       'parent_id' => ($parent = $newsletter->getParent()) ? $parent->getId() : null,
       'unsubscribe_token' => $newsletter->getUnsubscribeToken(),
@@ -124,12 +124,12 @@ class NewslettersResponseBuilder {
       // we don't need to parse anything if there are no personalization tags
       return $content;
     }
-    if (!class_exists('\MailPoet\EmailEditor\Engine\PersonalizationTags\HTML_Tag_Processor')) {
+    if (!class_exists('\Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\HTML_Tag_Processor')) {
       // editor is not active, we cannot process personalization tags
       return $content;
     }
 
-    $content_processor = new \MailPoet\EmailEditor\Engine\PersonalizationTags\HTML_Tag_Processor($content);
+    $content_processor = new \Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\HTML_Tag_Processor($content);
     while ($content_processor->next_token()) {
       $type = $content_processor->get_token_type();
       if ($type === '#comment') {
@@ -172,7 +172,7 @@ class NewslettersResponseBuilder {
       'type' => $newsletter->getType(),
       'status' => $newsletter->getStatus(),
       'sent_at' => ($sentAt = $newsletter->getSentAt()) ? $sentAt->format(self::DATE_FORMAT) : null,
-      'updated_at' => $newsletter->getUpdatedAt()->format(self::DATE_FORMAT),
+      'updated_at' => ($updatedAt = $newsletter->getUpdatedAt()) ? $updatedAt->format(self::DATE_FORMAT) : null,
       'deleted_at' => ($deletedAt = $newsletter->getDeletedAt()) ? $deletedAt->format(self::DATE_FORMAT) : null,
       'segments' => [],
       'queue' => false,
@@ -261,7 +261,7 @@ class NewslettersResponseBuilder {
       }, $filters),
       'description' => $segment->getDescription(),
       'created_at' => ($createdAt = $segment->getCreatedAt()) ? $createdAt->format(self::DATE_FORMAT) : null,
-      'updated_at' => $segment->getUpdatedAt()->format(self::DATE_FORMAT),
+      'updated_at' => ($updatedAt = $segment->getUpdatedAt()) ? $updatedAt->format(self::DATE_FORMAT) : null,
       'deleted_at' => ($deletedAt = $segment->getDeletedAt()) ? $deletedAt->format(self::DATE_FORMAT) : null,
     ];
   }
@@ -279,7 +279,7 @@ class NewslettersResponseBuilder {
       'scheduled_at' => ($scheduledAt = $task->getScheduledAt()) ? $scheduledAt->format(self::DATE_FORMAT) : null,
       'processed_at' => ($processedAt = $task->getProcessedAt()) ? $processedAt->format(self::DATE_FORMAT) : null,
       'created_at' => ($createdAt = $queue->getCreatedAt()) ? $createdAt->format(self::DATE_FORMAT) : null,
-      'updated_at' => $queue->getUpdatedAt()->format(self::DATE_FORMAT),
+      'updated_at' => ($updatedAt = $queue->getUpdatedAt()) ? $updatedAt->format(self::DATE_FORMAT) : null,
       'deleted_at' => ($deletedAt = $queue->getDeletedAt()) ? $deletedAt->format(self::DATE_FORMAT) : null,
       'meta' => $queue->getMeta(),
       'task_id' => (string)$task->getId(), // (string) for BC

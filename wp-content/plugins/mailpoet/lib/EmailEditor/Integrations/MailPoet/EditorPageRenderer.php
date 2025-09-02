@@ -5,13 +5,14 @@ namespace MailPoet\EmailEditor\Integrations\MailPoet;
 if (!defined('ABSPATH')) exit;
 
 
+use Automattic\WooCommerce\EmailEditor\Email_Editor_Container;
+use Automattic\WooCommerce\EmailEditor\Engine\Settings_Controller;
+use Automattic\WooCommerce\EmailEditor\Engine\Theme_Controller;
+use Automattic\WooCommerce\EmailEditor\Engine\User_Theme;
 use MailPoet\Analytics\Analytics;
 use MailPoet\Config\Env;
 use MailPoet\Config\Installer;
 use MailPoet\Config\ServicesChecker;
-use MailPoet\EmailEditor\Engine\Settings_Controller;
-use MailPoet\EmailEditor\Engine\Theme_Controller;
-use MailPoet\EmailEditor\Engine\User_Theme;
 use MailPoet\EmailEditor\Integrations\MailPoet\EmailEditor as EditorInitController;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Newsletter\NewslettersRepository;
@@ -48,12 +49,9 @@ class EditorPageRenderer {
 
   public function __construct(
     WPFunctions $wp,
-    Settings_Controller $settingsController,
     CdnAssetUrl $cdnAssetUrl,
     ServicesChecker $servicesChecker,
     SubscribersFeature $subscribersFeature,
-    Theme_Controller $themeController,
-    User_Theme $userTheme,
     DependencyNotice $dependencyNotice,
     MailPoetSettings $mailpoetSettings,
     NewslettersRepository $newslettersRepository,
@@ -61,12 +59,12 @@ class EditorPageRenderer {
     Analytics $analytics
   ) {
     $this->wp = $wp;
-    $this->settingsController = $settingsController;
+    $this->settingsController = Email_Editor_Container::container()->get(Settings_Controller::class);
     $this->cdnAssetUrl = $cdnAssetUrl;
     $this->servicesChecker = $servicesChecker;
     $this->subscribersFeature = $subscribersFeature;
-    $this->themeController = $themeController;
-    $this->userTheme = $userTheme;
+    $this->themeController = Email_Editor_Container::container()->get(Theme_Controller::class);
+    $this->userTheme = Email_Editor_Container::container()->get(User_Theme::class);
     $this->dependencyNotice = $dependencyNotice;
     $this->mailpoetSettings = $mailpoetSettings;
     $this->newslettersRepository = $newslettersRepository;
@@ -111,47 +109,57 @@ class EditorPageRenderer {
 
     // Email editor rich text JS - Because we Personalization Tags depend on Gutenberg 19.8.0 and higher
     // the following code replaces used Rich Text for the version containing the necessary changes.
-    $assetsParams = require Env::$assetsPath . '/dist/js/email-editor/rich-text.asset.php';
+    $assetsParams = require Env::$assetsPath . '/dist/js/email-editor/assets/rich-text.asset.php';
     $this->wp->wpDeregisterScript('wp-rich-text');
     $this->wp->wpEnqueueScript(
       'wp-rich-text',
-      Env::$assetsUrl . '/dist/js/email-editor/rich-text.js',
+      Env::$assetsUrl . '/dist/js/email-editor/assets/rich-text.js',
       $assetsParams['dependencies'],
       $assetsParams['version'],
       true
     );
     // End of replacing Rich Text package.
-
-    $assetsParams = require Env::$assetsPath . '/dist/js/email-editor/email_editor.asset.php';
-
-    $this->wp->wpEnqueueScript(
-      'mailpoet_email_editor',
-      Env::$assetsUrl . '/dist/js/email-editor/email_editor.js',
-      $assetsParams['dependencies'],
-      $assetsParams['version'],
-      true
-    );
+    $styleParams = require Env::$assetsPath . '/dist/js/email-editor/style/style.asset.php';
     $this->wp->wpEnqueueStyle(
       'mailpoet_email_editor',
-      Env::$assetsUrl . '/dist/js/email-editor/email_editor.css',
+      Env::$assetsUrl . '/dist/js/email-editor/style/style.css',
       [],
-      $assetsParams['version']
+      $styleParams['version']
     );
+
+    // The email editor needs to load block categories to avoid warning and missing category names.
+    // See: https://github.com/WordPress/WordPress/blob/753817d462955eb4e40a89034b7b7c375a1e43f3/wp-admin/edit-form-blocks.php#L116-L120.
+    wp_add_inline_script(
+      'wp-blocks',
+      sprintf('wp.blocks.setCategories( %s );', wp_json_encode(get_block_categories($post))),
+      'after'
+    );
+
+    // Preload server-registered block schemas to avoid warning about missing block titles.
+    // See: https://github.com/WordPress/WordPress/blob/753817d462955eb4e40a89034b7b7c375a1e43f3/wp-admin/edit-form-blocks.php#L144C1-L148C3.
+    wp_add_inline_script(
+      'wp-blocks',
+      sprintf('wp.blocks.unstable__bootstrapServerSideBlockDefinitions( %s );', wp_json_encode(get_block_editor_server_block_settings()))
+    );
+
+    $editorSettings = $this->settingsController->get_settings();
+    $editorSettings['displaySendEmailButton'] = true;
 
     $currentUserEmail = $this->wp->wpGetCurrentUser()->user_email;
     $this->wp->wpLocalizeScript(
-      'mailpoet_email_editor',
-      'MailPoetEmailEditor',
+      'email_editor_integration',
+      'WooCommerceEmailEditor',
       [
         'current_post_type' => esc_js($currentPostType),
         'current_post_id' => $post->ID,
         'current_wp_user_email' => esc_js($currentUserEmail),
-        'editor_settings' => $this->settingsController->get_settings(),
+        'editor_settings' => $editorSettings,
         'editor_theme' => $this->themeController->get_base_theme()->get_raw_data(),
         'user_theme_post_id' => $this->userTheme->get_user_theme_post()->ID,
         'urls' => [
           'listings' => admin_url('admin.php?page=mailpoet-newsletters'),
           'send' => admin_url('admin.php?page=mailpoet-newsletters#/send/' . $newsletter->getId()),
+          'back' => admin_url('admin.php?page=mailpoet-newsletters'),
         ],
       ]
     );
@@ -187,7 +195,7 @@ class EditorPageRenderer {
       'mailpoet_review_request_illustration_url' => $this->cdnAssetUrl->generateCdnUrl('review-request/review-request-illustration.20190815-1427.svg'),
       'mailpoet_installed_days_ago' => (int)$installedAtDiff->format('%a'),
     ];
-    $this->wp->wpAddInlineScript('mailpoet_email_editor', implode('', array_map(function ($key) use ($inline_script_data) {
+    $this->wp->wpAddInlineScript('email_editor_integration', implode('', array_map(function ($key) use ($inline_script_data) {
       return sprintf("var %s=%s;", $key, wp_json_encode($inline_script_data[$key]));
     }, array_keys($inline_script_data))), 'before');
 

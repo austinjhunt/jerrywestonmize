@@ -524,6 +524,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                     cb.aggregatedPrice AS booking_aggregatedPrice,
                     cb.duration AS booking_duration,
                     cb.created AS booking_created,
+                    cb.token AS booking_token,
                     
                     cu.id AS customer_id,
                     cu.firstName AS customer_firstName,

@@ -143,6 +143,13 @@ abstract class Forminator_Front_Action {
 		if ( ! $action || 'forminator_submit_form_' . static::$entry_type !== $action ) {
 			return;
 		}
+		$form_id = Forminator_Core::sanitize_text_field( 'form_id' );
+		if ( $form_id ) {
+			$model = Forminator_Base_Form_Model::get_model( $form_id );
+			if ( $model && method_exists( $model, 'is_ajax_submit' ) && $model->is_ajax_submit() ) {
+				return;
+			}
+		}
 
 		if ( $this->is_force_validate_submissions_nonce() ) {
 			$forminator_nonce = Forminator_Core::sanitize_text_field( 'forminator_nonce' );

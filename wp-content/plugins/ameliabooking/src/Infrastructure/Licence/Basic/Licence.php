@@ -14,6 +14,8 @@ use Slim\App;
  */
 class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
 {
+    public static $licence = 'Basic';
+
     /**
      * @param Container $c
      */
@@ -22,6 +24,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
         return array_merge(
             parent::getCommands($c),
             [
+                // Booking
+                Commands\Booking\Appointment\DeleteBookingRemotelyCommand::class   => new Commands\Booking\Appointment\DeleteBookingRemotelyCommandHandler($c),
                 // Location
                 Commands\Location\AddLocationCommand::class                        => new Commands\Location\AddLocationCommandHandler($c),
                 Commands\Location\DeleteLocationCommand::class                     => new Commands\Location\DeleteLocationCommandHandler($c),
@@ -46,6 +50,10 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\Outlook\GetOutlookAuthURLCommand::class                   => new Commands\Outlook\GetOutlookAuthURLCommandHandler($c),
                 Commands\Outlook\FetchAccessTokenWithAuthCodeOutlookCommand::class =>
                     new Commands\Outlook\FetchAccessTokenWithAuthCodeOutlookCommandHandler($c),
+                // Mailchimp
+                Commands\Mailchimp\GetMailchimpAuthURLCommand::class               => new Commands\Mailchimp\GetMailchimpAuthURLCommandHandler($c),
+                Commands\Mailchimp\FetchAccessTokenMailchimpCommand::class         => new Commands\Mailchimp\FetchAccessTokenMailchimpCommandHandler($c),
+                Commands\Mailchimp\DisconnectFromMailchimpCommand::class           => new Commands\Mailchimp\DisconnectFromMailchimpCommandHandler($c),
                 // Notification
                 Commands\Notification\AddNotificationCommand::class                => new Commands\Notification\AddNotificationCommandHandler($c),
                 Commands\Notification\DeleteNotificationCommand::class             => new Commands\Notification\DeleteNotificationCommandHandler($c),
@@ -96,6 +104,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
         Routes\Google\Google::routes($app);
 
         Routes\Outlook\Outlook::routes($app);
+
+        Routes\Mailchimp\Mailchimp::routes($app);
 
         Routes\PaymentGateway\PaymentGateway::routes($app);
 

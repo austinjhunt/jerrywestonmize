@@ -135,6 +135,17 @@ $entries['infrastructure.google.calendar.service'] = function ($c) {
 };
 
 /**
+ * Mailchimp Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService
+ */
+$entries['infrastructure.mailchimp.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getMailchimpService($c);
+};
+
+/**
  * Zoom Service
  *
  * @param Container $c

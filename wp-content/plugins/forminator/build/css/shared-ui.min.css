@@ -20704,14 +20704,14 @@ html.sui-has-overlay {
 .sui-2-12-23 .sui-wrap .fui-demo--poll.fui-demo--flat label input:checked+span,
 .sui-2-12-23 .sui-wrap .fui-demo--poll.fui-demo--bold label input:checked+span,
 .sui-2-12-23 .sui-wrap .fui-demo--poll.fui-demo--material label input:checked+span {
-  border-color: #17a8e3;
+  border-color: #097baa;
 }
 
 .sui-2-12-23 .sui-wrap .fui-demo--poll.fui-demo--default label input:checked+span:before,
 .sui-2-12-23 .sui-wrap .fui-demo--poll.fui-demo--flat label input:checked+span:before,
 .sui-2-12-23 .sui-wrap .fui-demo--poll.fui-demo--bold label input:checked+span:before,
 .sui-2-12-23 .sui-wrap .fui-demo--poll.fui-demo--material label input:checked+span:before {
-  background-color: #17a8e3;
+  background-color: #097baa;
   opacity: 1;
 }
 
@@ -20725,7 +20725,7 @@ html.sui-has-overlay {
   padding: 10px;
   border: 0;
   border-radius: 0;
-  background-color: #17a8e3;
+  background-color: #097baa;
   color: #fff;
   font: 500 14px/20px "Roboto",Arial,sans-serif;
   letter-spacing: -0.25px;
@@ -20820,14 +20820,14 @@ html.sui-has-overlay {
 
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--default>label input:checked+span,
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--default>label input[checked]+span {
-  border-color: #17a8e3;
+  border-color: #097baa;
   background-color: #f3fbfe;
 }
 
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--default>label input:checked+span span[aria-hidden],
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--default>label input[checked]+span span[aria-hidden] {
-  border-color: #17a8e3;
-  background-color: #17a8e3;
+  border-color: #097baa;
+  background-color: #097baa;
 }
 
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--default>label input:checked+span span:not([aria-hidden]),
@@ -20878,7 +20878,7 @@ html.sui-has-overlay {
 
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--flat>label input:checked+span span[aria-hidden],
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--flat>label input[checked]+span span[aria-hidden] {
-  background-color: #17a8e3;
+  background-color: #097baa;
 }
 
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--flat>label input:checked+span span:not([aria-hidden]),
@@ -20915,14 +20915,14 @@ html.sui-has-overlay {
 
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--bold>label input:checked+span,
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--bold>label input[checked]+span {
-  border-color: #17a8e3;
+  border-color: #097baa;
   background-color: #f3fbfe;
 }
 
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--bold>label input:checked+span span[aria-hidden],
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--bold>label input[checked]+span span[aria-hidden] {
-  border-color: #17a8e3;
-  background-color: #17a8e3;
+  border-color: #097baa;
+  background-color: #097baa;
 }
 
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--bold>label input:checked+span span:not([aria-hidden]),
@@ -20966,7 +20966,7 @@ html.sui-has-overlay {
 
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--material>label input:checked+span span[aria-hidden],
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--material>label input[checked]+span span[aria-hidden] {
-  border-color: #17a8e3;
+  border-color: #097baa;
 }
 
 .sui-2-12-23 .sui-wrap .fui-demo--quiz.fui-demo--material>label input:checked+span span:not([aria-hidden]),
@@ -22955,9 +22955,14 @@ html.sui-has-overlay {
   }
 }
 
+.sui-2-12-23 .sui-wrap #forminator-modal .sui-box-header .fui-field--icon {
+  display: inline-block;
+}
+
 .sui-2-12-23 .sui-wrap #forminator-modal .sui-box-header .fui-field--icon i:before {
   font-size: 16px;
   color: #666;
+  vertical-align: text-top;
 }
 
 .sui-2-12-23 .sui-wrap #forminator-modal .sui-box-header .sui-box-title {
@@ -23633,6 +23638,10 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
 
 .sui-2-12-23 .forminator-icon-smile:before {
   content: "";
+}
+
+.sui-2-12-23.php-error form {
+  margin-bottom: 0;
 }
 
 .sui-2-12-23 .sui-wrap .sui-toggle.fui-highlighted-toggle {
@@ -24735,9 +24744,13 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   border-radius: 4px;
   background-color: #fff;
   box-shadow: 0 2px 0 0 #e6e6e6;
+  display: flex;
+  gap: 10px;
 }
 
 .sui-2-12-23 #forminator-templates .sui-tabs-menu .sui-tab-item {
+  margin-left: 0;
+  margin-right: 0;
   padding-top: 24px;
   padding-bottom: 22px;
   font-size: 12px;
@@ -25469,8 +25482,7 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
 .sui-box .forminator-dashboard-create-first-form,
 .sui-box .forminator-dashboard-other-form-types {
   margin: 0 auto;
-  width: 600px;
-  max-width: 100%;
+  max-width: 1000px;
   text-align: center;
 }
 
@@ -25485,10 +25497,9 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   margin-top: 10px;
 }
 
-.sui-box .forminator-dashboard-create-first-form button.sui-button {
+.sui-box .forminator-dashboard-create-first-form button#forminator_view_all_templates {
   padding: 10px 20px;
   font-size: 15px;
-  margin: 20px 0;
 }
 
 .sui-box .forminator-dashboard-no-form-block {
@@ -25509,54 +25520,24 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
 }
 
 .sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form {
-  display: flex;
   border: 1px solid #e6e6e6;
-  border-radius: 8px;
-  padding: 20px;
-  background-color: #fff;
-  width: 100%;
+  border-radius: 5px;
+  text-align: left;
+  box-shadow: unset;
 }
 
 .sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form:hover,
 .sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form:focus {
   border: 1px solid #aaa;
-  cursor: pointer;
 }
 
-.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form p {
-  margin: 0;
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form h3.sui-box-title [class*=sui-icon-] {
+  position: relative;
+  top: 4px;
 }
 
-.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-icon {
-  border-radius: 8px;
-  background-color: #e6e6e6;
-  align-content: center;
-  height: 50px;
-  width: 50px;
-  margin-right: 8px;
-}
-
-.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-icon [class*=sui-icon-] {
-  font-size: 20px;
-}
-
-.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-icon [class*=sui-icon-]:before {
-  color: #333;
-}
-
-.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-title {
-  text-align: left;
-}
-
-.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-title .sui-box-title {
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 30px;
-}
-
-.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-title p {
-  font-size: 12px;
-  line-height: 22px;
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .sui-box-header {
+  border: unset;
 }
 
 .sui-2-12-23 .sui-wrap #fui-stripe-plans .sui-accordion-item {
@@ -26024,6 +26005,10 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   border-radius: 4px;
 }
 
+.sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-preset-template {
+  box-shadow: unset;
+}
+
 .sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-preset-template.sui-hidden {
   display: none !important;
 }
@@ -26047,6 +26032,7 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   background: #fff;
   transition: ease all .3s;
   color: #666;
+  text-align: left;
 }
 
 .sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-preset-template .sui-box-selector:hover .forminator-template-name {
@@ -26064,6 +26050,10 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
 
 .sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-preset-template .sui-box-selector:hover .forminator-template-icon svg path {
   fill: #17a8e3;
+}
+
+.sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-preset-template .sui-box-selector:hover.forminator-dashboard-blank-template {
+  border: 1px solid #17a8e3;
 }
 
 .sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-preset-template .sui-box-selector .forminator-card-cta {

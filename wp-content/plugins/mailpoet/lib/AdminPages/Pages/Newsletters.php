@@ -5,11 +5,12 @@ namespace MailPoet\AdminPages\Pages;
 if (!defined('ABSPATH')) exit;
 
 
+use Automattic\WooCommerce\EmailEditor\Email_Editor_Container;
+use Automattic\WooCommerce\EmailEditor\Engine\Dependency_Check;
 use MailPoet\AdminPages\PageRenderer;
 use MailPoet\AutomaticEmails\AutomaticEmails;
 use MailPoet\Config\Env;
 use MailPoet\Config\Menu;
-use MailPoet\EmailEditor\Engine\Dependency_Check;
 use MailPoet\EmailEditor\Integrations\MailPoet\DependencyNotice;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\SegmentEntity;
@@ -79,7 +80,6 @@ class Newsletters {
     AuthorizedEmailsController $authorizedEmailsController,
     UserFlagsController $userFlagsController,
     WooCommerce $wooCommerceSegment,
-    Dependency_Check $dependencyCheck,
     DependencyNotice $dependencyNotice,
     CapabilitiesManager $capabilitiesManager
   ) {
@@ -97,7 +97,7 @@ class Newsletters {
     $this->authorizedEmailsController = $authorizedEmailsController;
     $this->userFlagsController = $userFlagsController;
     $this->wooCommerceSegment = $wooCommerceSegment;
-    $this->dependencyCheck = $dependencyCheck;
+    $this->dependencyCheck = Email_Editor_Container::container()->get(Dependency_Check::class);
     $this->dependencyNotice = $dependencyNotice;
     $this->capabilitiesManager = $capabilitiesManager;
   }

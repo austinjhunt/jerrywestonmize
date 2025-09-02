@@ -9,6 +9,7 @@ use MailPoet\Automation\Engine\Data\Automation;
 use MailPoet\Automation\Engine\Data\AutomationTemplate;
 use MailPoet\Automation\Engine\Templates\AutomationBuilder;
 use MailPoet\Automation\Integrations\WooCommerce\WooCommerce;
+use MailPoet\WooCommerce\WooCommerceSubscriptions\Helper as WooCommerceSubscriptions;
 
 class TemplatesFactory {
   /** @var AutomationBuilder */
@@ -17,6 +18,9 @@ class TemplatesFactory {
   /** @var WooCommerce */
   private $woocommerce;
 
+  /** @var WooCommerceSubscriptions */
+  private $woocommerceSubscriptions;
+
   /** @var EmailFactory */
   /** @phpstan-ignore-next-line Property is reserved for future use */
   private $emailFactory;
@@ -24,10 +28,12 @@ class TemplatesFactory {
   public function __construct(
     AutomationBuilder $builder,
     WooCommerce $woocommerce,
+    WooCommerceSubscriptions $woocommerceSubscriptions,
     EmailFactory $emailFactory
   ) {
     $this->builder = $builder;
     $this->woocommerce = $woocommerce;
+    $this->woocommerceSubscriptions = $woocommerceSubscriptions;
     $this->emailFactory = $emailFactory;
   }
 
@@ -48,6 +54,17 @@ class TemplatesFactory {
       $templates[] = $this->createPurchasedProductTemplate();
       $templates[] = $this->createPurchasedProductWithTagTemplate();
       $templates[] = $this->createPurchasedInCategoryTemplate();
+      $templates[] = $this->createAskForReviewTemplate();
+      $templates[] = $this->createFollowUpPositiveReviewTemplate();
+      $templates[] = $this->createFollowUpNegativeReviewTemplate();
+      if ($this->woocommerceSubscriptions->isWooCommerceSubscriptionsActive()) {
+        $templates[] = $this->createFollowUpAfterSubscriptionPurchaseTemplate();
+        $templates[] = $this->createFollowUpAfterSubscriptionRenewalTemplate();
+        $templates[] = $this->createFollowUpAfterFailedRenewalTemplate();
+        $templates[] = $this->createFollowUpOnChurnedSubscriptionTemplate();
+        $templates[] = $this->createFollowUpWhenTrialEndsTemplate();
+        $templates[] = $this->createWinBackChurnedSubscribersTemplate();
+      }
     }
 
     return $templates;
@@ -76,7 +93,7 @@ class TemplatesFactory {
         );
       },
       [
-        'automationSteps' => 1,
+        'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_DEFAULT
     );
@@ -105,7 +122,7 @@ class TemplatesFactory {
         );
       },
       [
-        'automationSteps' => 1,
+        'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_DEFAULT
     );
@@ -127,7 +144,7 @@ class TemplatesFactory {
         );
       },
       [
-        'automationSteps' => 2,
+        'automationSteps' => 2, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_PREMIUM
     );
@@ -149,7 +166,7 @@ class TemplatesFactory {
         );
       },
       [
-        'automationSteps' => 2,
+        'automationSteps' => 2, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_PREMIUM
     );
@@ -158,7 +175,7 @@ class TemplatesFactory {
   private function createFirstPurchaseTemplate(): AutomationTemplate {
     return new AutomationTemplate(
       'first-purchase',
-      'woocommerce',
+      'purchase',
       __('Celebrate first-time buyers', 'mailpoet'),
       __(
         'Welcome your first-time customers by sending an email with a special offer for their next purchase. Make them feel appreciated within your brand.',
@@ -196,7 +213,7 @@ class TemplatesFactory {
         );
       },
       [
-        'automationSteps' => 1,
+        'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_DEFAULT
     );
@@ -205,7 +222,7 @@ class TemplatesFactory {
   private function createThankLoyalCustomersTemplate(): AutomationTemplate {
     return new AutomationTemplate(
       'thank-loyal-customers',
-      'woocommerce',
+      'purchase',
       __('Thank loyal customers', 'mailpoet'),
       __(
         'These are your most important customers. Make them feel special by sending a thank you note for supporting your brand.',
@@ -218,7 +235,7 @@ class TemplatesFactory {
         );
       },
       [
-        'automationSteps' => 1,
+        'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_PREMIUM
     );
@@ -227,20 +244,20 @@ class TemplatesFactory {
   private function createWinBackCustomersTemplate(): AutomationTemplate {
     return new AutomationTemplate(
       'win-back-customers',
-      'woocommerce',
-      __('Win-back customers', 'mailpoet'),
+      'purchase',
+      __('Win back customers', 'mailpoet'),
       __(
         'Rekindle the relationship with past customers by reminding them of their favorite products and showcasing what’s new, encouraging a return to your brand.',
         'mailpoet'
       ),
       function (): Automation {
         return $this->builder->createFromSequence(
-          __('Win-back customers', 'mailpoet'),
+          __('Win back customers', 'mailpoet'),
           []
         );
       },
       [
-        'automationSteps' => 4,
+        'automationSteps' => 4, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_PREMIUM
     );
@@ -271,7 +288,7 @@ class TemplatesFactory {
         );
       },
       [
-        'automationSteps' => 1,
+        'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_DEFAULT
     );
@@ -293,7 +310,7 @@ class TemplatesFactory {
         );
       },
       [
-        'automationSteps' => 5,
+        'automationSteps' => 5, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_PREMIUM
     );
@@ -302,7 +319,7 @@ class TemplatesFactory {
   private function createPurchasedProductTemplate(): AutomationTemplate {
     return new AutomationTemplate(
       'purchased-product',
-      'woocommerce',
+      'purchase',
       __('Purchased a product', 'mailpoet'),
       __(
         'Share care instructions or simply thank the customer for making an order.',
@@ -326,7 +343,7 @@ class TemplatesFactory {
         );
       },
       [
-        'automationSteps' => 1,
+        'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_DEFAULT
     );
@@ -335,7 +352,7 @@ class TemplatesFactory {
   private function createPurchasedProductWithTagTemplate(): AutomationTemplate {
     return new AutomationTemplate(
       'purchased-product-with-tag',
-      'woocommerce',
+      'purchase',
       __('Purchased a product with a tag', 'mailpoet'),
       __(
         'Share care instructions or simply thank the customer for making an order.',
@@ -359,7 +376,7 @@ class TemplatesFactory {
         );
       },
       [
-        'automationSteps' => 1,
+        'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_DEFAULT
     );
@@ -368,7 +385,7 @@ class TemplatesFactory {
   private function createPurchasedInCategoryTemplate(): AutomationTemplate {
     return new AutomationTemplate(
       'purchased-in-category',
-      'woocommerce',
+      'purchase',
       __('Purchased in a category', 'mailpoet'),
       __(
         'Share care instructions or simply thank the customer for making an order.',
@@ -392,9 +409,207 @@ class TemplatesFactory {
         );
       },
       [
-        'automationSteps' => 1,
+        'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
       AutomationTemplate::TYPE_DEFAULT
+    );
+  }
+
+  private function createAskForReviewTemplate(): AutomationTemplate {
+    return new AutomationTemplate(
+      'ask-for-review',
+      'review',
+      __('Ask to leave a review post-purchase', 'mailpoet'),
+      __(
+        'Encourage your customers to leave a review a few days after their purchase. Show them their opinion matters.',
+        'mailpoet'
+      ),
+      function (): Automation {
+        return $this->builder->createFromSequence(
+          __('Ask to leave a review post-purchase', 'mailpoet'),
+          []
+        );
+      },
+      [
+        'automationSteps' => 2, // trigger and all delay steps are excluded
+      ],
+      AutomationTemplate::TYPE_PREMIUM
+    );
+  }
+
+  private function createFollowUpPositiveReviewTemplate(): AutomationTemplate {
+    return new AutomationTemplate(
+      'follow-up-positive-review',
+      'review',
+      __('Follow up on a positive review (4-5 stars)', 'mailpoet'),
+      __(
+        'Thank your happy customers for their feedback and let them know you appreciate their support.',
+        'mailpoet'
+      ),
+      function (): Automation {
+        return $this->builder->createFromSequence(
+          __('Follow up on a positive review (4-5 stars)', 'mailpoet'),
+          []
+        );
+      },
+      [
+        'automationSteps' => 1, // trigger and all delay steps are excluded
+      ],
+      AutomationTemplate::TYPE_PREMIUM
+    );
+  }
+
+  private function createFollowUpNegativeReviewTemplate(): AutomationTemplate {
+    return new AutomationTemplate(
+      'follow-up-negative-review',
+      'review',
+      __('Follow up on a negative review (1-2 stars)', 'mailpoet'),
+      __(
+        'Reach out to unhappy customers and show you care. Offer help or gather more feedback to improve.',
+        'mailpoet'
+      ),
+      function (): Automation {
+        return $this->builder->createFromSequence(
+          __('Follow up on a negative review (1-2 stars)', 'mailpoet'),
+          []
+        );
+      },
+      [
+        'automationSteps' => 1, // trigger and all delay steps are excluded
+      ],
+      AutomationTemplate::TYPE_PREMIUM
+    );
+  }
+
+  private function createFollowUpAfterSubscriptionPurchaseTemplate(): AutomationTemplate {
+    return new AutomationTemplate(
+      'follow-up-after-subscription-purchase',
+      'subscriptions',
+      __('Follow up after a subscription purchase', 'mailpoet'),
+      __(
+        'Thank new subscribers and let them know what to expect. A warm welcome goes a long way.',
+        'mailpoet'
+      ),
+      function (): Automation {
+        return $this->builder->createFromSequence(
+          __('Follow up after a subscription purchase', 'mailpoet'),
+          []
+        );
+      },
+      [
+        'automationSteps' => 1, // trigger and all delay steps are excluded
+      ],
+      AutomationTemplate::TYPE_PREMIUM
+    );
+  }
+
+  private function createFollowUpAfterSubscriptionRenewalTemplate(): AutomationTemplate {
+    return new AutomationTemplate(
+      'follow-up-after-subscription-renewal',
+      'subscriptions',
+      __('Follow up after a subscription renewal', 'mailpoet'),
+      __(
+        'Reinforce the value of your subscription by reminding customers what they’re getting after every renewal.',
+        'mailpoet'
+      ),
+      function (): Automation {
+        return $this->builder->createFromSequence(
+          __('Follow up after a subscription renewal', 'mailpoet'),
+          []
+        );
+      },
+      [
+        'automationSteps' => 1, // trigger and all delay steps are excluded
+      ],
+      AutomationTemplate::TYPE_PREMIUM
+    );
+  }
+
+  private function createFollowUpAfterFailedRenewalTemplate(): AutomationTemplate {
+    return new AutomationTemplate(
+      'follow-up-after-failed-renewal',
+      'subscriptions',
+      __('Follow up after failed renewal', 'mailpoet'),
+      __(
+        'Help customers fix failed payments and continue their subscription without disruption.',
+        'mailpoet'
+      ),
+      function (): Automation {
+        return $this->builder->createFromSequence(
+          __('Follow up after failed renewal', 'mailpoet'),
+          []
+        );
+      },
+      [
+        'automationSteps' => 1, // trigger and all delay steps are excluded
+      ],
+      AutomationTemplate::TYPE_PREMIUM
+    );
+  }
+
+  private function createFollowUpOnChurnedSubscriptionTemplate(): AutomationTemplate {
+    return new AutomationTemplate(
+      'follow-up-on-churned-subscription',
+      'subscriptions',
+      __('Follow up on churned subscription', 'mailpoet'),
+      __(
+        'Reach out to subscribers who canceled and ask for their feedback to help improve your service.',
+        'mailpoet'
+      ),
+      function (): Automation {
+        return $this->builder->createFromSequence(
+          __('Follow up on churned subscription', 'mailpoet'),
+          []
+        );
+      },
+      [
+        'automationSteps' => 1, // trigger and all delay steps are excluded
+      ],
+      AutomationTemplate::TYPE_PREMIUM
+    );
+  }
+
+  private function createFollowUpWhenTrialEndsTemplate(): AutomationTemplate {
+    return new AutomationTemplate(
+      'follow-up-when-trial-ends',
+      'subscriptions',
+      __('Follow up when trial ends', 'mailpoet'),
+      __(
+        'Check in with customers after their trial ends. Encourage them to keep enjoying the benefits of their subscription.',
+        'mailpoet'
+      ),
+      function (): Automation {
+        return $this->builder->createFromSequence(
+          __('Follow up when trial ends', 'mailpoet'),
+          []
+        );
+      },
+      [
+        'automationSteps' => 1, // trigger and all delay steps are excluded
+      ],
+      AutomationTemplate::TYPE_PREMIUM
+    );
+  }
+
+  private function createWinBackChurnedSubscribersTemplate(): AutomationTemplate {
+    return new AutomationTemplate(
+      'win-back-churned-subscribers',
+      'subscriptions',
+      __('Win back churned subscribers', 'mailpoet'),
+      __(
+        'Re-engage former subscribers by showing what’s new and why it’s worth coming back.',
+        'mailpoet'
+      ),
+      function (): Automation {
+        return $this->builder->createFromSequence(
+          __('Win back churned subscribers', 'mailpoet'),
+          []
+        );
+      },
+      [
+        'automationSteps' => 2, // trigger and all delay steps are excluded
+      ],
+      AutomationTemplate::TYPE_PREMIUM
     );
   }
 }

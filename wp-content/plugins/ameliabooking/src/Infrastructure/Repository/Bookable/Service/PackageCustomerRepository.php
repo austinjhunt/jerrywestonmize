@@ -61,14 +61,15 @@ class PackageCustomerRepository extends AbstractRepository
             ':purchased'        => $data['purchased'],
             ':bookingsCount'    => $data['bookingsCount'],
             ':couponId'         => $data['couponId'],
+            ':token'            => $data['token'] ?: null,
         ];
 
         try {
             $statement = $this->connection->prepare(
                 "INSERT INTO {$this->table}
-                (`packageId`, `customerId`, `price`, `tax`, `start`, `end`, `purchased`, `status`, `bookingsCount`, `couponId`)
+                (`packageId`, `customerId`, `price`, `tax`, `start`, `end`, `purchased`, `status`, `bookingsCount`, `couponId`, `token`)
                 VALUES
-                (:packageId, :customerId, :price, :tax, :start, :end, :purchased, 'approved', :bookingsCount, :couponId)"
+                (:packageId, :customerId, :price, :tax, :start, :end, :purchased, 'approved', :bookingsCount, :couponId, :token)"
             );
 
             $res = $statement->execute($params);

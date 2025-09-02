@@ -10,7 +10,11 @@ $total_modules = forminator_total_forms();
 <section class="wpmudev-dashboard-section">
 	<?php
 	if ( 0 === $total_modules ) {
-		$this->template( 'dashboard/widgets/widget-dashboard' );
+		$custom_form_instance = Forminator_Custom_Forms::get_instance();
+		$args                 = array(
+			'main_templates' => $custom_form_instance->get_main_templates(),
+		);
+		$this->template( 'dashboard/widgets/widget-dashboard', $args );
 	} else {
 		?>
 

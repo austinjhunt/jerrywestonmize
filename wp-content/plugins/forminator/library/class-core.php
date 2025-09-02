@@ -131,7 +131,10 @@ class Forminator_Core {
 				$this->admin->add_reports_page();
 			}
 			$this->admin->add_settings_page();
-			$this->admin->add_addons_page();
+
+			if ( ! forminator_addons_disabled() ) {
+				$this->admin->add_addons_page();
+			}
 
 			if ( ! FORMINATOR_PRO ) {
 				$this->admin->add_upgrade_page();
@@ -451,7 +454,7 @@ class Forminator_Core {
 	public function setup_post_meta_box() {
 		global $post;
 		if ( is_object( $post ) ) {
-			$is_forminator_meta = get_post_meta( $post->ID, '_has_forminator_meta' );
+			$is_forminator_meta = get_post_meta( $post->ID, '_has_forminator_meta', false );
 			if ( $is_forminator_meta ) {
 				add_meta_box(
 					'forminator-post-meta-box',

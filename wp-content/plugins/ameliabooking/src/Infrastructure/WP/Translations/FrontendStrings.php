@@ -97,6 +97,7 @@ class FrontendStrings
     public static function getCommonStrings()
     {
         $labels = Licence\Licence::$premium ? [
+            'no_results_found'             => __('No results found...', 'wpamelia'),
             'add_coupon'                   => __('Add Coupon', 'wpamelia'),
             'amount_fixed'                 => __('Fixed amount', 'wpamelia'),
             'amount_percentage'            => __('Percentage', 'wpamelia'),
@@ -143,6 +144,7 @@ class FrontendStrings
             'email_required'               => __('Email field is required', 'wpamelia'),
             'employee'                     => __('employee', 'wpamelia'),
             'employees'                    => __('employees', 'wpamelia'),
+            'locations'                    => __('locations', 'wpamelia'),
             'event_booking_unavailable'    => __('Event booking is unavailable', 'wpamelia'),
             'extras_costs_colon'           => __('Extras Cost:', 'wpamelia'),
             'file_upload'                  => __('Drop file here or click to upload', 'wpamelia'),
@@ -220,6 +222,8 @@ class FrontendStrings
             'year'                         => __('Year', 'wpamelia'),
             'years'                        => __('Years', 'wpamelia'),
             'free'                         => __('Free', 'wpamelia'),
+            'week_days'                    => __('Day of the Week', 'wpamelia'),
+            'custom_days'                  => __('Specific Date & Time', 'wpamelia'),
         ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getCommonStrings());
@@ -361,6 +365,7 @@ class FrontendStrings
             'repeat_appointment_quest'     => __('Do you want to repeat this appointment?', 'wpamelia'),
             'select_this_employee'         => __('Select this Employee', 'wpamelia'),
             'select_this_employee_package' => __('Select this Employee', 'wpamelia'),
+            'subscribe_to_mailing_list'    => __('Subscribe to our mailing list', 'wpamelia'),
             'upload_file_here'             => __('Upload file here', 'wpamelia'),
             'without_expiration'           => __('Without expiration', 'wpamelia'),
 
@@ -490,6 +495,9 @@ class FrontendStrings
             'whatsapp_opt_in_text'         => __('By entering your phone number you agree to receive messages via WhatsApp', 'wpamelia'),
             'total_tax_colon'              => __('VAT', 'wpamelia'),
             'incl_tax'                     => __('Incl. VAT', 'wpamelia'),
+
+            'location_information'         => __('Location information', 'wpamelia'),
+            'any_location'                 => __('Any Location', 'wpamelia'),
         ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getBookingStrings());
@@ -1090,6 +1098,7 @@ class FrontendStrings
             'end_time'                               => __('End Time', 'wpamelia'),
             'delete_period'                          => __('Delete Period', 'wpamelia'),
             'new_customer'                           => __('New Customer', 'wpamelia'),
+            'appointment_status_changed'             => __('Appointment status has been changed to ', 'wpamelia'),
         ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getCabinetStrings());

@@ -1385,7 +1385,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         foreach ($bccEmails as $bcc) {
             $bccList[] = [
                 'emailAddress' => [
-                    'address' => $bcc,
+                    'address' => trim($bcc),
                 ]
             ];
         }
@@ -1405,14 +1405,14 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 'toRecipients'  => [
                     [
                         'emailAddress' => [
-                            'address' => $to,
+                            'address' => trim($to),
                         ],
                     ]
                 ],
-                'replyTo'       => $replyTo ? [
+                'replyTo'       => trim($replyTo) ? [
                     [
                         'emailAddress' => [
-                            'address' => $replyTo,
+                            'address' => trim($replyTo),
                         ],
                     ]
                 ] : [],

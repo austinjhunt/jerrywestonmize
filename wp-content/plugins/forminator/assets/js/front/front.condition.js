@@ -65,6 +65,13 @@
 				var $element = $(this),
 					element_id = $element.closest('.forminator-col').attr('id')
 					;
+
+				if ( element_id && 0 === element_id.indexOf('group-') && $element.attr('id') ) {
+					// If the element is inside a group, it means that element doesn't have forminator-col wrap.
+					// Unset element_id to follow existing logic.
+					element_id = undefined;
+				}
+
 				if ( $element.is( 'input[type="radio"]' ) ) {
 					var $radioGroup = $element.closest( '.forminator-radio' );
 					forminatorUtils().show_hide_custom_input( $radioGroup, 'radio' );
@@ -197,7 +204,7 @@
 
 				conditions.forEach(function (condition) {
 					// If rule is applicable save in matches
-					if (self.is_applicable_rule(condition, action)) {
+					if (self.is_applicable_rule(condition)) {
 						matches++;
 					}
 				});
@@ -211,23 +218,10 @@
 						self.toggle_field(relation, 'show', "valid");
 					}
 					self.toggle_field(relation, action, "valid");
-					if (self.has_relations(relation)){
-						if(action === 'hide'){
-							self.hide_element(relation, e);
-						}else{
-							self.show_element(relation, e);
-						}
-					}
 				} else {
 					self.toggle_field(relation, action, "invalid");
-					if (self.has_relations(relation)){
-						if(action === 'show'){
-							self.hide_element(relation, e);
-						}else{
-							self.show_element(relation, e);
-						}
-					}
 				}
+				self.check_sub_relations(relation, e);
 			});
 		},
 
@@ -351,8 +345,22 @@
 			} else if ( this.field_is_rating( $element ) ) {
 				value = (typeof value === 'string' && value.split("/")[0]) || 0;
 				return value;
+			} else if ( this.field_is_upload( element_id ) ) {
+				var uploaded = $element.closest('.forminator-field-upload');
+				value = value.split("\\").pop();
+				if ( uploaded.length && $element.attr( "multiple" ) ) {
+					let $files = uploaded.find('.forminator-uploaded-file--title');
+					value = $files
+						.map(function () {
+							return $(this).text();
+						})
+						.get() // convert jQuery object to array
+						.join(',');
+				}
 			}
-			if (!value) return "";
+			if ( value === undefined || value === null || value === '' ) {
+				return '';
+			}
 
 			return value;
 		},
@@ -659,7 +667,7 @@
 
 		},
 
-		is_applicable_rule: function (condition, action) {
+		is_applicable_rule: function (condition) {
 			if (typeof condition === "undefined") return false;
 
 			if( this.is_date_rule( condition.operator ) ){
@@ -672,28 +680,9 @@
 				operator = condition.operator
 			;
 
-			if (action === "show") {
-				return this.is_matching(value1, value2, operator) && this.is_hidden(condition.field);
-			} else {
-				return this.is_matching(value1, value2, operator);
-			}
-		},
+			const $element_id = this.get_form_field(condition.field);
 
-		is_hidden: function (element_id) {
-			var $element_id = this.get_form_field(element_id),
-				$column_field = $element_id.closest('.forminator-col'),
-				$row_field = $column_field.closest('.forminator-row')
-			;
-
-			if ( $row_field.hasClass("forminator-hidden-option") ) {
-				return true;
-			}
-
-			if( $row_field.hasClass("forminator-hidden") ) {
-				return false;
-			}
-
-			return true;
+			return ! forminatorUtils().is_hidden($element_id) && this.is_matching(value1, value2, operator);
 		},
 
 		is_matching: function (value1, value2, operator) {
@@ -1103,32 +1092,14 @@
 			}
 		},
 
-		hide_element: function (relation, e){
-			var self = this,
-				sub_relations = self.get_relations(relation);
-
-			self.clear_value(relation, e);
-
-			sub_relations.forEach(function (sub_relation) {
-				// Do opposite action because condition is definitely not met because dependent field is hidden.
-				let logic = self.get_field_logic(sub_relation),
-					action = 'hide' === logic.action ? 'show' : 'hide';
-				self.toggle_field(sub_relation, action, "valid");
-
-				if (self.has_relations(sub_relation)) {
-					if ( 'hide' === action ) {
-						self.hide_element(sub_relation, e);
-					} else {
-						self.show_element(sub_relation, e);
-					}
-				}
-			});
-		},
-
-		show_element: function (relation, e){
+		check_sub_relations: function (relation, e){
 			var self          = this,
 				sub_relations = self.get_relations(relation)
             ;
+
+			if (!sub_relations.length){
+				return;
+			}
 
 			this.restore_value(relation, e);
 			this.textareaFix(this.$el, relation, e);
@@ -1143,7 +1114,7 @@
 
 				conditions.forEach(function (condition) {
 					// If rule is applicable save in matches
-					if (self.is_applicable_rule(condition, action)) {
+					if (self.is_applicable_rule(condition)) {
 						matches++;
 					}
 				});
@@ -1153,9 +1124,7 @@
 				}else{
 					self.toggle_field(sub_relation, action, "invalid");
 				}
-				if (self.has_relations(sub_relation)) {
-					sub_relations = self.show_element(sub_relation, e);
-				}
+				self.check_sub_relations(sub_relation, e);
 			});
 		},
 

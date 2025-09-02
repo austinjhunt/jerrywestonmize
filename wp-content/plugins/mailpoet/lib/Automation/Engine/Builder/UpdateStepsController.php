@@ -24,10 +24,40 @@ class UpdateStepsController {
     $steps = [];
     foreach ($data as $index => $stepData) {
       $step = $this->processStep($stepData, $automation->getStep($stepData['id']));
-      $steps[$index] = $step;
+      $updatedStep = $this->maybeRunOnDuplicate($step);
+      $steps[$index] = $updatedStep;
     }
     $automation->setSteps($steps);
     return $automation;
+  }
+
+  private function maybeRunOnDuplicate(Step $step): Step {
+    if ($step->getType() !== 'action') {
+      return $step;
+    }
+
+    $args = $step->getArgs();
+    if (empty($args['stepDuplicated'])) {
+      return $step;
+    }
+
+    $action = $this->registry->getAction($step->getKey());
+    if (!$action) {
+      return $step;
+    }
+
+    $duplicatedStep = $action->onDuplicate($step);
+    $dupArgs = $duplicatedStep->getArgs();
+    unset($dupArgs['stepDuplicated']);
+
+    return new Step(
+      $duplicatedStep->getId(),
+      $duplicatedStep->getType(),
+      $duplicatedStep->getKey(),
+      $dupArgs,
+      $duplicatedStep->getNextSteps(),
+      $duplicatedStep->getFilters()
+    );
   }
 
   private function processStep(array $data, ?Step $existingStep): Step {

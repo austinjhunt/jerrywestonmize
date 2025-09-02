@@ -1243,7 +1243,7 @@ class Forminator_QForm_Front extends Forminator_Render_Form {
 			$visual_style = isset( $form_settings['visual_style'] ) ? $form_settings['visual_style'] : 'list';
 
 			$wrapper = sprintf(
-				'<div id="forminator-quiz-leads-%s" class="forminator-ui forminator-quiz-leads forminator-quiz--%s" data-design="%s" %s %s>',
+				'<div id="forminator-quiz-leads-%s" class="forminator-ui forminator-quiz-leads forminator-quiz--%s" data-design="%s" data-color-option="default" %s %s>',
 				esc_attr( $form_settings['form_id'] ),
 				esc_attr( $visual_style ),
 				esc_attr( $this->get_quiz_theme() ),

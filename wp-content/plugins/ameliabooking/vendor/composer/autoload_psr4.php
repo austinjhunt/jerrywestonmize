@@ -38,6 +38,7 @@ return array(
     'Money\\' => array($vendorDir . '/moneyphp/money/src'),
     'Microsoft\\Graph\\' => array($vendorDir . '/microsoft/microsoft-graph/src'),
     'Masterminds\\' => array($vendorDir . '/masterminds/html5/src'),
+    'MailchimpMarketing\\' => array($vendorDir . '/mailchimp/marketing/lib'),
     'League\\Tactician\\' => array($vendorDir . '/league/tactician/src'),
     'League\\Event\\' => array($vendorDir . '/league/event/src'),
     'AmeliaGuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),

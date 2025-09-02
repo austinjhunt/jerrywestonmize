@@ -25,16 +25,17 @@ class StepBookingShortcodeService extends AmeliaBookingShortcodeService
     {
         $params = shortcode_atts(
             [
-                'trigger'  => '',
+                'trigger'      => '',
                 'trigger_type' => '',
-                'in_dialog' => '',
-                'show'     => '',
-                'category' => null,
-                'service'  => null,
-                'employee' => null,
-                'location' => null,
-                'package'  => null,
-                'counter'  => self::$counter
+                'in_dialog'    => '',
+                'layout'       => '',
+                'show'         => '',
+                'category'     => null,
+                'service'      => null,
+                'employee'     => null,
+                'location'     => null,
+                'package'      => null,
+                'counter'      => self::$counter
             ],
             $params
         );

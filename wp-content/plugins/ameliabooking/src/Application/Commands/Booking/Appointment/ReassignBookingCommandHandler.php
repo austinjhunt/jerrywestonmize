@@ -22,12 +22,14 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
+use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Json;
+use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
@@ -37,6 +39,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
+use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -82,6 +85,8 @@ class ReassignBookingCommandHandler extends CommandHandler
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
         /** @var CustomerRepository $customerRepository */
         $customerRepository = $this->container->get('domain.users.customers.repository');
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->getContainer()->get('domain.users.repository');
         /** @var AppointmentApplicationService $appointmentAS */
         $appointmentAS = $this->container->get('application.booking.appointment.service');
         /** @var BookableApplicationService $bookableAS */
@@ -659,6 +664,22 @@ class ReassignBookingCommandHandler extends CommandHandler
         }
 
         $bookingRepository->update($booking->getId()->getValue(), $booking);
+
+        if ($bookingRescheduled && $appointmentAS->isPeriodCustomPricing($requiredService)) {
+            /** @var Provider $provider */
+            $provider = $userRepository->getById($requiredProviderId);
+
+            $price = $appointmentAS->getBookingPriceForService(
+                $requiredService,
+                null,
+                $provider,
+                $bookingStart
+            );
+
+            $booking->setPrice(new Price($price));
+
+            $bookingRepository->updatePrice($booking->getId()->getValue(), $booking);
+        }
 
         $appointmentRepository->commit();
 

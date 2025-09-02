@@ -29,17 +29,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }, 500
     )
-  }
 
-  if ('ameliaNote' in window && window.ameliaNote.length) {
+    const injectItemContent = (block, index) => {
+      let el = block.querySelector('.wc-block-components-product-details');
+
+      if (el !== null && 'ameliaNote' + index in window && !el.querySelector('.amelia-custom-html')) {
+        const div = document.createElement('div');
+        div.className = 'amelia-custom-html';
+        div.innerHTML = '<div>' + window['ameliaNote' + index][0] + '</div>';
+        el.appendChild(div);
+      }
+    }
+
     const injectCustomContent = () => {
-      document.querySelectorAll('.wc-block-components-product-details').forEach((el) => {
-        if (!el.querySelector('.amelia-custom-html')) {
-          const div = document.createElement('div');
-          div.className = 'amelia-custom-html';
-          div.innerHTML = '<div>' + window.ameliaNote[0] + '</div>';
-          el.appendChild(div);
-        }
+      document.querySelectorAll('.wc-block-cart-items__row').forEach((block, index) => {
+        injectItemContent(block, index)
+      });
+
+      document.querySelectorAll('.wc-block-components-order-summary-item').forEach((block, index) => {
+        injectItemContent(block, index)
       });
     };
 
@@ -50,3 +58,13 @@ document.addEventListener('DOMContentLoaded', function() {
     observer.observe(document.body, { childList: true, subtree: true });
   }
 });
+
+const ameliaStyleTag = document.createElement('style');
+
+ameliaStyleTag.innerHTML = `
+    .wc-block-components-product-details__appointment-info {
+        display: none
+    }
+`;
+
+document.head.appendChild(ameliaStyleTag);

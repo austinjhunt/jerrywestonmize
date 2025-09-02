@@ -20,6 +20,7 @@ use AmeliaBooking\Domain\Factory\Bookable\Service\PackageFactory;
 use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -208,6 +209,8 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
 
         $invoiceItem = [];
 
+        $price = $package['price'];
+
         /** @var PackageCustomerService $packageCustomerService */
         foreach ($packageCustomerServices->getItems() as $packageCustomerService) {
             /** @var PackageCustomerRepository $packageCustomerRepository */
@@ -272,15 +275,6 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                         $invoiceItem['invoice_method'] = $payment->getGatewayTitle() ? $payment->getGatewayTitle()->getValue() : $method;
                     }
                 }
-
-                if (
-                    !empty($package['packageCustomerId']) &&
-                    $packageCustomerService->getPackageCustomer()->getId()->getValue() === $package['packageCustomerId']
-                ) {
-                    $price = $packageCustomerService->getPackageCustomer()->getPrice()->getValue();
-                    $invoiceItem['invoice_unit_price'] = $invoiceItem['invoice_subtotal'] = $price;
-                    $invoiceItem['invoice_qty']        = 1;
-                }
             }
 
             if ($coupon === null && $packageCustomerService->getPackageCustomer()->getCouponId()) {
@@ -309,7 +303,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
         /** @var Package $bookable */
         $bookable = PackageFactory::create(
             [
-                'price'           => $package['price'],
+                'price'           => $price,
                 'calculatedPrice' => $package['calculatedPrice'],
                 'discount'        => $package['discount'],
             ]
@@ -360,6 +354,9 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
         $invoiceItem['invoice_tax_rate']     = $amountData['tax_rate'];
         $invoiceItem['invoice_tax_excluded'] = $amountData['tax_excluded'];
         $invoiceItem['invoice_tax_type']     = $amountData['tax_type'];
+        $invoiceItem['invoice_unit_price']   = $amountData['unit_price'];
+        $invoiceItem['invoice_subtotal']     = $amountData['subtotal'];
+        $invoiceItem['invoice_qty']          = 1;
 
         $locale = !empty($package['isForCustomer']) && !empty($package['customer']['translations']) ?
             $helperService->getLocaleFromTranslations(
@@ -414,6 +411,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             'invoice_number'          => isset($invoiceItem['invoice_number']) ? $invoiceItem['invoice_number'] : '',
             'invoice_issued'          => isset($invoiceItem['invoice_issued']) ? $invoiceItem['invoice_issued'] : '',
             'invoice_method'          => isset($invoiceItem['invoice_method']) ? $invoiceItem['invoice_method'] : '',
+            'invoice_tax'             => isset($amountData['total_tax']) ? $amountData['total_tax'] : '',
         ];
     }
 

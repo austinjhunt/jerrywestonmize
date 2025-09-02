@@ -23,6 +23,7 @@ use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
+use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
@@ -104,6 +105,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
             do_action('amelia_before_package_customer_added', $packageCustomerArray);
 
             $packageCustomer = PackageCustomerFactory::create($packageCustomerArray);
+            $packageCustomer->setToken(new Token());
 
             $packageCustomerId = $packageCustomerRepository->add($packageCustomer);
 
@@ -983,7 +985,8 @@ class PackageApplicationService extends AbstractPackageApplicationService
                         $packageCustomerServices->keyExists(
                             $customerBooking->getPackageCustomerService()->getId()->getValue()
                         ) &&
-                        $customerBooking->getStatus()->getValue() !== BookingStatus::CANCELED
+                        $customerBooking->getStatus()->getValue() !== BookingStatus::CANCELED &&
+                        $customerBooking->getStatus()->getValue() !== BookingStatus::REJECTED
                     ) {
                         /** @var PackageCustomerService $packageCustomerService */
                         $packageCustomerService = $packageCustomerServices->getItem(

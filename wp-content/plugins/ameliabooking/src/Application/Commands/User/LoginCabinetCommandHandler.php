@@ -13,6 +13,7 @@ use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\LoginType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
+use AmeliaBooking\Infrastructure\Services\Recaptcha\AbstractRecaptchaService;
 use AmeliaBooking\Infrastructure\WP\UserService\UserService;
 use Interop\Container\Exception\ContainerException;
 
@@ -46,9 +47,26 @@ class LoginCabinetCommandHandler extends CommandHandler
         /** @var UserService $userService */
         $userService = $this->container->get('users.service');
 
+        /** @var AbstractRecaptchaService $recaptchaService */
+        $recaptchaService = $this->container->get('infrastructure.recaptcha.service');
 
         /** @var string $cabinetType */
         $cabinetType = $command->getField('cabinetType');
+
+        if (
+            $command->getField('email') &&
+            $command->getField('password') &&
+            !$recaptchaService->process(
+                $command->getField('recaptcha'),
+                $cabinetType
+            )
+        ) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Recaptcha verification failed');
+            $result->setData(['recaptcha_error' => true]);
+
+            return $result;
+        }
 
         // If logged in as WP user that is connected with Amelia user
         if ($user && $user->getId() !== null && $user->getType() === $cabinetType) {

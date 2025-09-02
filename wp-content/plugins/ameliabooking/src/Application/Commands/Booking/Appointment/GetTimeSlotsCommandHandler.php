@@ -66,6 +66,7 @@ class GetTimeSlotsCommandHandler extends CommandHandler
             'serviceId'            => $command->getField('serviceId'),
             'providerIds'          => $command->getField('providerIds'),
             'locationId'           => $command->getField('locationId'),
+            'locationIds'          => $command->getField('locationIds'),
             'extras'               => $command->getField('extras'),
             'excludeAppointmentId' => $command->getField('excludeAppointmentId'),
             'personsCount'         => $command->getField('group') ? $command->getField('persons') : null,
@@ -76,7 +77,8 @@ class GetTimeSlotsCommandHandler extends CommandHandler
             'startDateTime'        => $command->getField('startDateTime'),
             'endDateTime'          => $command->getField('endDateTime'),
             'queryTimeZone'        => $command->getField('queryTimeZone'),
-            'timeZone'             => $command->getField('timeZone')
+            'timeZone'             => $command->getField('timeZone'),
+            'structured'           => $command->getField('structured'),
 
         ];
 

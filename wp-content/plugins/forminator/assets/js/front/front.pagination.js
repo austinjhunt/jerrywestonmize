@@ -90,6 +90,13 @@
 				self.resetRichTextEditorHeight();
 			});
 
+			// Update progress bar percentage on form submit.
+			this.$el.on('before:forminator:form:submit', function( e, formData ) {
+				if( formData.get( 'save_draft' ) !== 'true' ) {
+					self.update_progress_bar_percentage( 100 );
+				}
+			});
+
 			this.$el.on('click', '.forminator-result--view-answers', function(e){
 				e.preventDefault();
 				$(this).trigger('forminator.front.pagination.move');
@@ -233,15 +240,29 @@
 		calculate_bar_percentage: function () {
 
 			var total     = this.totalSteps,
-				current   = this.step + 1,
-				$progress = this.$el
+				current   = this.step
 			;
-
-			if ( ! $progress.length ) return;
+			if ( this.custom_label['pagination-header'] === 'bar' && this.custom_label['progress-bar-type'] === 'page-number') {
+				current++;
+			}
 
 			var percentage = Math.round( (current / total) * 100 );
 
-			$progress.find( '.forminator-progress-label' ).html( percentage + '%' );
+			this.update_progress_bar_percentage( percentage );
+		},
+
+		update_progress_bar_percentage: function ( percentage ) {
+			const $progress = this.$el;
+			if ( ! $progress.length ) return;
+
+			if ( this.custom_label[ 'pagination-header' ] === 'bar' && this.custom_label[ 'progress-bar-type' ] === 'page-number' ) {
+				let text = this.custom_label[ 'page-number-text' ];
+				text = text.replace( '%1$s', this.step + 1 ).replace( '%2$s', this.totalSteps );
+				$progress.find( '.forminator-progress-label' ).html( text );
+			} else {
+				$progress.find( '.forminator-progress-label' ).html( percentage + '%' );
+			}
+
 			$progress.find( '.forminator-progress-bar span' ).css( 'width', percentage + '%' );
 
 		},
@@ -685,8 +706,6 @@
 					parent_selector = '.wph-modal';
 				}
 
-				$element.focus();
-
 				const minScrollHeight = $( window ).height() / 2;
 				let scrollTop =
 					$element.offset().top -
@@ -707,6 +726,7 @@
 					if (!$element.attr("tabindex")) {
 						$element.attr("tabindex", -1);
 					}
+					$element.focus();
 				});
 			}
 

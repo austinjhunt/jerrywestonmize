@@ -5,8 +5,8 @@ namespace MailPoet\EmailEditor\Integrations\MailPoet;
 if (!defined('ABSPATH')) exit;
 
 
-use MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tag;
-use MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry;
+use Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\Personalization_Tag;
+use Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry;
 use MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Link;
 use MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\LinksToShortcodesConvertor;
 use MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Site;
@@ -35,7 +35,7 @@ class PersonalizationTagManager {
   }
 
   public function initialize() {
-    $this->wp->addFilter('mailpoet_email_editor_register_personalization_tags', function( Personalization_Tags_Registry $registry ): Personalization_Tags_Registry {
+    $this->wp->addFilter('woocommerce_email_editor_register_personalization_tags', function( Personalization_Tags_Registry $registry ): Personalization_Tags_Registry {
       // Subscriber Personalization Tags
       $registry->register(new Personalization_Tag(
         __('First Name', 'mailpoet'),
@@ -43,6 +43,8 @@ class PersonalizationTagManager {
         __('Subscriber', 'mailpoet'),
         [$this->subscriber, 'getFirstName'],
         ['default' => __('subscriber', 'mailpoet')],
+        null,
+        [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
       ));
       $registry->register(new Personalization_Tag(
         __('Last Name', 'mailpoet'),
@@ -50,12 +52,17 @@ class PersonalizationTagManager {
         __('Subscriber', 'mailpoet'),
         [$this->subscriber, 'getLastName'],
         ['default' => __('subscriber', 'mailpoet')],
+        null,
+        [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
       ));
       $registry->register(new Personalization_Tag(
         __('Email', 'mailpoet'),
         'mailpoet/subscriber-email',
         __('Subscriber', 'mailpoet'),
         [$this->subscriber, 'getEmail'],
+        [],
+        null,
+        [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
       ));
 
       // Site Personalization Tags
@@ -64,12 +71,18 @@ class PersonalizationTagManager {
         'mailpoet/site-title',
         __('Site', 'mailpoet'),
         [$this->site, 'getTitle'],
+        [],
+        null,
+        [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
       ));
       $registry->register(new Personalization_Tag(
         __('Homepage URL', 'mailpoet'),
         'mailpoet/site-homepage-url',
         __('Site', 'mailpoet'),
         [$this->site, 'getHomepageURL'],
+        [],
+        null,
+        [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
       ));
 
       // Links registration
@@ -78,18 +91,27 @@ class PersonalizationTagManager {
         'mailpoet/subscription-unsubscribe-url',
         __('Link', 'mailpoet'),
         [$this->link, 'getSubscriptionUnsubscribeUrl'],
+        [],
+        null,
+        [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
       ));
       $registry->register(new Personalization_Tag(
         __('Manage subscription URL', 'mailpoet'),
         'mailpoet/subscription-manage-url',
         __('Link', 'mailpoet'),
         [$this->link, 'getSubscriptionManageUrl'],
+        [],
+        null,
+        [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
       ));
       $registry->register(new Personalization_Tag(
         __('View in browser URL', 'mailpoet'),
         'mailpoet/newsletter-view-in-browser-url',
         __('Link', 'mailpoet'),
         [$this->link, 'getNewsletterViewInBrowserUrl'],
+        [],
+        null,
+        [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
       ));
       return $registry;
     });

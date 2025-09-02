@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Application\Services\Reservation;
 
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
@@ -660,9 +661,22 @@ class PackageReservationService extends AppointmentReservationService
 
         $bookingPrice = $price;
 
-        if ($packageTax && !$packageTax->getExcluded()->getValue() && ($booking && $booking->getCoupon() || $invoice)) {
-            $price = $taxApplicationService->getBasePrice($price, $packageTax);
+        $hasIncludedTax = $packageTax && !$packageTax->getExcluded()->getValue();
+        $hasCoupon = $booking && $booking->getCoupon();
+
+        if ($hasIncludedTax) {
+            // Always calculate base price for invoiceSubtotal
+            $invoiceSubtotal = $taxApplicationService->getBasePrice($price, $packageTax);
+
+            // Only adjust $price if a coupon is applied
+            if ($hasCoupon) {
+                $price = $invoiceSubtotal;
+            }
+        } else {
+            $invoiceSubtotal = $price;
         }
+
+        $priceForTax = $invoiceSubtotal;
 
         $subtraction = 0;
 
@@ -679,15 +693,20 @@ class PackageReservationService extends AppointmentReservationService
             $subtraction = $reductionAmount['discount'] + $reductionAmount['deduction'];
 
             $price = max($price - $subtraction, 0);
+
+            $priceForTax = $price;
         }
 
-        if ($packageTax && ($packageTax->getExcluded()->getValue() || $subtraction || $invoice)) {
+        $invoiceTax = 0;
+        if ($packageTax) {
+            $invoiceTax = $this->getTaxAmount($packageTax, $priceForTax);
+        }
+
+        if ($packageTax && ($packageTax->getExcluded()->getValue() || $subtraction)) {
             $price += $this->getTaxAmount($packageTax, $price);
         }
 
         $price = (float)max(round($price, 2), 0);
-
-        $taxCalculated = $packageTax && $price;
 
         return [
             'price' => apply_filters('amelia_modify_payment_amount', $price, $booking),
@@ -695,16 +714,13 @@ class PackageReservationService extends AppointmentReservationService
             'deduction' => $reductionAmount['deduction'],
             'unit_price' => $bookingPrice,
             'qty'        => 1,
-            'subtotal'   => $bookingPrice,
-            'tax'        => $taxCalculated ? $this->getTaxAmount($packageTax, $bookingPrice) : 0,
-            'tax_rate'   => $taxCalculated ? $this->getTaxRate($packageTax) : '',
-            'tax_type'   => $taxCalculated ? $packageTax->getType()->getValue() : '',
-            'tax_excluded' => $taxCalculated ? $packageTax->getExcluded()->getValue() : false,
-            'full_discount' =>
-                $booking ?
-                    $this->getCouponDiscountAmount($booking->getCoupon(), $bookingPrice) +
-                    ($booking->getCoupon() && $booking->getCoupon()->getDeduction() ? (float)$booking->getCoupon()->getDeduction()->getValue() : 0) :
-                    null
+            'tax'        => $packageTax ? $this->getTaxAmount($packageTax, $invoiceSubtotal) : 0,
+            'subtotal'   => $invoiceSubtotal,
+            'total_tax'  => $invoiceTax,
+            'tax_rate'   => $packageTax ? $this->getTaxRate($packageTax) : '',
+            'tax_type'   => $packageTax ? $packageTax->getType()->getValue() : '',
+            'tax_excluded' => $packageTax ? $packageTax->getExcluded()->getValue() : false,
+            'full_discount' => $reductionAmount['discount'] + $reductionAmount['deduction']
         ];
     }
 
@@ -914,5 +930,49 @@ class PackageReservationService extends AppointmentReservationService
                 $taxAS->getAll()
             );
         }
+    }
+
+    /**
+     * @param int $bookingId
+     * @param string $token
+     *
+     * @return array
+     *
+     * @throws AccessDeniedException
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     * @throws NotFoundException
+     * @throws Exception
+     */
+    public function deleteBooking($bookingId, $token = null)
+    {
+        /** @var PackageCustomerRepository $packageCustomerRepository */
+        $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
+
+        /** @var BookableApplicationService $bookableApplicationService */
+        $bookableApplicationService = $this->container->get('application.bookable.service');
+
+        /** @var PackageCustomer $packageCustomer */
+        $packageCustomer = $packageCustomerRepository->getById($bookingId);
+
+        if (!$packageCustomer) {
+            throw new NotFoundException('Package customer not found.');
+        }
+
+        if ($token && (!$packageCustomer->getToken() || $packageCustomer->getToken()->getValue() !== $token)) {
+            throw new AccessDeniedException('Invalid token.');
+        }
+
+        $packageCustomerRepository->beginTransaction();
+
+        if (($resultData = $bookableApplicationService->deletePackageCustomer($packageCustomer)) === false) {
+            $packageCustomerRepository->rollback();
+
+            throw new \Exception('Could not delete package booking.');
+        }
+
+        $packageCustomerRepository->commit();
+
+        return $resultData;
     }
 }

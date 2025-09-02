@@ -62,6 +62,7 @@ class UsersTable extends AbstractDatabaseTable
                   `employeeAppleCalendar` TEXT NULL DEFAULT NULL,
                   `badgeId` int(11) DEFAULT NULL,
                   `error` TEXT({$description}) DEFAULT NULL,
+                  `show` TINYINT(1) DEFAULT 1,
                   PRIMARY KEY (`id`),
                   UNIQUE KEY `email` (`email`),
                   UNIQUE KEY `id` (`id`)

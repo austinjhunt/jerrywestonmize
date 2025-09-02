@@ -5,6 +5,7 @@ namespace MailPoet\EmailEditor\Integrations\MailPoet\Patterns\Library;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\EmailEditor\Integrations\MailPoet\EmailEditor;
 use MailPoet\EmailEditor\Integrations\MailPoet\Patterns\Pattern;
 
 class OneColumn extends Pattern {
@@ -12,6 +13,7 @@ class OneColumn extends Pattern {
   protected $block_types = []; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
   protected $template_types = ['email-template']; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
   protected $categories = ['email-contents'];
+  protected $post_types = [EmailEditor::MAILPOET_EMAIL_POST_TYPE]; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
   protected function get_content(): string { // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     return '

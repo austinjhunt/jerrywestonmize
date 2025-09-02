@@ -298,6 +298,23 @@
 									return false;
 								}
 
+								// Save lead_entry_id if available.
+								if ( data.success && undefined !== data.data.lead_entry_id ) {
+									const leadEntryId = data.data.lead_entry_id;
+									let leadQuizId = '';
+
+									// Get the quiz form id.
+									const leadQuizInput = $this.find('input[name=lead_quiz]');
+									if (leadQuizInput.length > 0) {
+										leadQuizId = leadQuizInput.val();
+									}
+									// Save the lead entry id in quiz hidden field attribute to be used later.
+									const entryIdInput = $('#forminator-module-'+leadQuizId).find('input[name=entry_id]');
+									if (entryIdInput.length > 0) {
+										entryIdInput.attr('lead-entry-id', leadEntryId);
+									}
+								}
+
 								// Hide validation errors
 								$this.find( '.forminator-error-message' ).not('.forminator-uploaded-files .forminator-error-message').remove();
 								$this.find( '.forminator-field' ).removeClass( 'forminator-has_error' );
@@ -612,6 +629,8 @@
 								.removeClass('forminator-success forminator-error forminator-accessible')
 								.addClass('forminator-loading forminator-show');
 						}
+
+						$this.trigger( 'before:forminator:form:submit', formData );
 
 						submitEvent.currentTarget.submit();
 
@@ -962,6 +981,12 @@
 				self.$el.find( '.forminator-has-been-disabled' ).attr( 'disabled', 'disabled' );
 
 				if( hasLeads ) {
+					// Get lead entry ID from hidden input to include in quiz submission
+					let leadsFormID = self.$el.find('input[name=entry_id]').attr('lead-entry-id') || '';
+					if ( leadsFormID ) {
+						ajaxData += '&lead_entry_id=' + leadsFormID;
+					}
+
 					var entry_id  = '';
 					if ( self.$el.find('input[name=entry_id]').length > 0 ) {
 						entry_id = self.$el.find('input[name=entry_id]').val();
@@ -1546,7 +1571,9 @@
 						// Focus on first error
 						if ( i === 0 ) {
 							self.$el.trigger( 'forminator.front.pagination.focus.input', [getElement]);
-							self.focus_to_element( getElement );
+							if( getElement.is( ':visible' ) ) {
+								self.focus_to_element( getElement );
+							}
 						}
 
 						// CHECK: Timepicker field.
@@ -1567,12 +1594,7 @@
 										$( errorMarkup ).insertBefore( getColumn.find( '.forminator-error-message[data-error-field="year"]' ) );
 
 									} else {
-
-										if ( 0 === getDesc.length ) {
-											getColumn.append( errorMarkup );
-										} else {
-											$( errorMarkup ).insertBefore( getDesc );
-										}
+										forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 									}
 
 									if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
@@ -1592,12 +1614,7 @@
 										);
 
 									} else {
-
-										if ( 0 === getDesc.length ) {
-											getColumn.append( errorMarkup );
-										} else {
-											$( errorMarkup ).insertBefore( getDesc );
-										}
+										forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 									}
 
 									if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
@@ -1610,11 +1627,7 @@
 
 								if ( 'year' === holder.data( 'field' ) ) {
 
-									if ( 0 === getDesc.length ) {
-										getColumn.append( errorMarkup );
-									} else {
-										$( errorMarkup ).insertBefore( getDesc );
-									}
+									forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 
 									if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
 
@@ -1649,12 +1662,7 @@
 											getColumn.find( '.forminator-error-message[data-error-field="minutes"]' )
 										);
 									} else {
-
-										if ( 0 === getDesc.length ) {
-											getColumn.append( errorMarkup );
-										} else {
-											$( errorMarkup ).insertBefore( getDesc );
-										}
+										forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 									}
 
 									if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
@@ -1666,12 +1674,7 @@
 								}
 
 								if ( 'minutes' === holder.data( 'field' ) ) {
-
-									if ( 0 === getDesc.length ) {
-										getColumn.append( errorMarkup );
-									} else {
-										$( errorMarkup ).insertBefore( getDesc );
-									}
+									forminatorUtils().add_error_message( getDesc, getColumn, errorMarkup );
 
 									if ( 0 === holderField.find( '.forminator-error-message' ).length ) {
 
@@ -1695,12 +1698,7 @@
 								;
 
 							if ( 0 === getError.length ) {
-
-								if ( 0 === getDesc.length ) {
-									holderField.append( errorMarkup );
-								} else {
-									$( errorMarkup ).insertBefore( getDesc );
-								}
+								forminatorUtils().add_error_message( getDesc, holderField, errorMarkup );
 							}
 
 							holderError = holderField.find( '.forminator-error-message' );

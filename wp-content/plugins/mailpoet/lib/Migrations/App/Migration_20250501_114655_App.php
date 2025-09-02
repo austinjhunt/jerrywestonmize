@@ -5,6 +5,7 @@ namespace MailPoet\Migrations\App;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Doctrine\WPDB\Connection as WPDBConnection;
 use MailPoet\Entities\StatisticsClickEntity;
 use MailPoet\Entities\StatisticsUnsubscribeEntity;
 use MailPoet\Entities\SubscriberEntity;
@@ -16,6 +17,12 @@ class Migration_20250501_114655_App extends AppMigration {
   private const DB_QUERY_CHUNK_SIZE = 1000;
 
   public function run(): void {
+    $isSQLite = WPDBConnection::isSQLite();
+    if ($isSQLite) {
+      // SQLite (used in WP Studio) does not support the TIMESTAMPDIFF function, so we skip the migration
+      return;
+    }
+
     $clicksStatsTable = $this->entityManager->getClassMetadata(StatisticsClickEntity::class)->getTableName();
     $unsubscribeStatsTable = $this->entityManager->getClassMetadata(StatisticsUnsubscribeEntity::class)->getTableName();
     $subscribersTable = $this->entityManager->getClassMetadata(SubscriberEntity::class)->getTableName();

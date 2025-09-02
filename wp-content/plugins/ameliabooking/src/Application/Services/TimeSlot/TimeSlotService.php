@@ -133,7 +133,7 @@ class TimeSlotService
         $settings = $this->getSlotsSettings($isFrontEndBooking, $slotsEntities);
 
         $props = [
-            'startDateTime'        => $searchStartDateTime,
+            'startDateTime'        => $searchStartDateTime->modify('first day of this month')->modify('- 7 days'),
             'endDateTime'          => $searchEndDateTime,
             'minimumDateTime'      => $minimumAppointmentDateTime,
             'maximumDateTime'      => $maximumAppointmentDateTime,
@@ -451,7 +451,7 @@ class TimeSlotService
                     'providers'      => $props['providerIds'],
                     'fetchCalendars' => true,
                 ],
-                $props['isFrontEndBooking'] ? ['providerStatus' => Status::VISIBLE] : []
+                $props['isFrontEndBooking'] ? ['providerStatus' => Status::VISIBLE, 'show' => 1] : []
             )
         );
 

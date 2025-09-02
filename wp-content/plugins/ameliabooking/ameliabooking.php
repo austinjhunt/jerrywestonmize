@@ -3,7 +3,7 @@
 Plugin Name: Amelia
 Plugin URI: https://wpamelia.com/
 Description: Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!
-Version: 8.4
+Version: 8.5
 Author: TMS
 Author URI: https://tmsproducts.io/
 Text Domain: wpamelia
@@ -106,7 +106,7 @@ if (!defined('AMELIA_LOGIN_URL')) {
 
 // Const for Amelia version
 if (!defined('AMELIA_VERSION')) {
-    define('AMELIA_VERSION', '8.4');
+    define('AMELIA_VERSION', '8.5');
 }
 
 // Const for site URL
@@ -140,7 +140,11 @@ if (!defined('AMELIA_DEV')) {
 }
 
 if (!defined('AMELIA_NGROK_URL')) {
-    define('AMELIA_NGROK_URL', '97619f3954de.ngrok.app');
+    define('AMELIA_NGROK_URL', 'ce3ac66a70b5.ngrok-free.app');
+}
+
+if (!defined('AMELIA_MAILCHIMP_CLIENT_ID')) {
+    define('AMELIA_MAILCHIMP_CLIENT_ID', '459163389015');
 }
 
 require_once AMELIA_PATH . '/vendor/autoload.php';

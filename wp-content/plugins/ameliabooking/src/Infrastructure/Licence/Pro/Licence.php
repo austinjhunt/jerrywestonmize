@@ -14,6 +14,8 @@ use Slim\App;
  */
 class Licence extends \AmeliaBooking\Infrastructure\Licence\Basic\Licence
 {
+    public static $licence = 'Pro';
+
     /**
      * @param Container $c
      */

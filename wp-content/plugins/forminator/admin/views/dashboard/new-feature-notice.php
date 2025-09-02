@@ -76,7 +76,7 @@ $hub_connected = Forminator_Hub_Connector::hub_connector_connected();
 				} else {
 					printf(
 						/* translators: 1. Admin name */
-						esc_html__( 'Hey %s, creating forms just got easier — and free! You can now access all our pre - made form templates without a Pro subscription. Build any type of form in seconds, no need to start from scratch.', 'forminator' ),
+						esc_html__( 'Hey %s, creating forms just got easier — and free! You can now access all our pre-made form templates without a Pro subscription. Build any type of form in seconds, no need to start from scratch.', 'forminator' ),
 						esc_html( ucfirst( $user->display_name ) )
 					);
 				}

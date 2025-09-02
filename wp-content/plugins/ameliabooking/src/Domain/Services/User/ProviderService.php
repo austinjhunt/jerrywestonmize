@@ -6,7 +6,6 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
-use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Schedule\DayOff;
 use AmeliaBooking\Domain\Entity\Schedule\Period;
@@ -26,10 +25,13 @@ use AmeliaBooking\Domain\Services\Interval\IntervalService;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Duration;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
+use DateInterval;
+use DatePeriod;
 use DateTime;
 use DateTimeZone;
 use Exception;
 use Slim\Exception\ContainerValueNotFoundException;
+use AmeliaBooking\Infrastructure\Licence;
 
 /**
  * Class ProviderService
@@ -466,5 +468,116 @@ class ProviderService
         foreach ($fakeAppointments->getItems() as $fakeAppointment) {
             $provider->getAppointmentList()->addItem($fakeAppointment);
         }
+    }
+
+    /**
+     * @param Service $service
+     * @param string  $timeZone
+     *
+     * @return array
+     */
+    public function getCustomPricing($service, $timeZone)
+    {
+        if ($service->getCustomPricing()) {
+            $customPricing = json_decode($service->getCustomPricing()->getValue(), true);
+
+            if (
+                $customPricing &&
+                $customPricing['enabled'] === 'period' &&
+                Licence\Licence::$licence !== 'Lite' &&
+                Licence\Licence::$licence !== 'Starter' &&
+                Licence\Licence::$licence !== 'Basic'
+            ) {
+                foreach ($customPricing['periods']['default'] as &$item) {
+                    $ranges = [];
+
+                    foreach ($item['ranges'] as $range) {
+                        $ranges[] = [
+                            'from'  => $this->intervalService->getSeconds($range['from'] . ':00'),
+                            'to'    => $this->intervalService->getSeconds($range['to'] . ':00'),
+                            'price' => $range['price'],
+                        ];
+                    }
+
+                    $item['ranges'] = $ranges;
+                }
+
+                foreach ($customPricing['periods']['custom'] as &$item) {
+                    $days = new DatePeriod(
+                        DateTimeService::getCustomDateTimeObjectInTimeZone(
+                            $item['dates']['start'] . ' 00:00:00',
+                            $timeZone
+                        ),
+                        new DateInterval('P1D'),
+                        DateTimeService::getCustomDateTimeObjectInTimeZone(
+                            $item['dates']['end'] . ' 23:59:59',
+                            $timeZone
+                        )
+                    );
+
+                    $dates = [];
+
+                    /** @var DateTime $day */
+                    foreach ($days as $day) {
+                        $dates[$day->format('Y-m-d')] = true;
+                    }
+
+                    $ranges = [];
+
+                    foreach ($item['ranges'] as $range) {
+                        $ranges[] = [
+                            'from'  => $this->intervalService->getSeconds($range['from'] . ':00'),
+                            'to'    => $this->intervalService->getSeconds($range['to'] . ':00'),
+                            'price' => $range['price'],
+                        ];
+                    }
+
+                    $item['dates'] = $dates;
+
+                    $item['ranges'] = $ranges;
+                }
+
+                return $customPricing;
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * @param array  $customPricing
+     * @param string $dateString
+     * @param string $timeInSeconds
+     * @param string $timeZone
+     *
+     * @return float|null
+     */
+    public function getDateTimePrice($customPricing, $dateString, $timeInSeconds, $timeZone)
+    {
+        foreach ($customPricing['periods']['custom'] as $item) {
+            if (array_key_exists($dateString, $item['dates'])) {
+                foreach ($item['ranges'] as $range) {
+                    if ($timeInSeconds >= $range['from'] && $timeInSeconds < $range['to']) {
+                        return $range['price'];
+                    }
+                }
+            }
+        }
+
+        $appStart = DateTimeService::getCustomDateTimeObjectInTimeZone($dateString, $timeZone);
+
+        $dayIndex = (int)$appStart->format('N') - 1;
+
+        foreach ($customPricing['periods']['default'] as $item) {
+            if (in_array($dayIndex, $item['days'])) {
+                foreach ($item['ranges'] as $range) {
+                    if ($timeInSeconds >= $range['from'] && $timeInSeconds < $range['to']) {
+                        return $range['price'];
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }

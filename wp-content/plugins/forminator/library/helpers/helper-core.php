@@ -1949,7 +1949,6 @@ function forminator_recursive_array_search( $needle, $haystack ) {
 function forminator_get_accessible_user_roles() {
 	// Get the current user object.
 	$current_user = wp_get_current_user();
-
 	// Check if user is logged in | Have access to create user.
 	if ( empty( $current_user ) || ! current_user_can( 'create_users' ) ) {
 		return array();
@@ -2012,6 +2011,31 @@ function forminator_validate_registration_form_settings( $settings ) {
 		}
 	}
 	return true;
+}
+
+/**
+ * Can the current user approve a user and create a site.
+ *
+ * @param object $signup Signup.
+ * @return bool
+ */
+function forminator_can_approve_user_and_create_site( $signup ) {
+	$roles = forminator_get_accessible_user_roles();
+	if ( ! empty( $signup->user_data['role'] ) ) {
+		if ( forminator_is_main_site() ) {
+			// Either the 'Don't create a user' option is chosen, or the current user has access to the required user roles.
+			if ( 'notCreate' === $signup->user_data['role'] || isset( $roles[ $signup->user_data['role'] ] ) ) { // Respect the "Don't create a user in the network's main site" option.
+				$option_create_site = forminator_get_property( $signup->settings, 'site-registration' );
+				// Either the 'site-registration' option is disabled, or the current user has access to create sites.
+				if ( 'enable' !== $option_create_site || current_user_can( 'create_sites' ) ) {
+					return true;
+				}
+			}
+		} elseif ( isset( $roles[ $signup->user_data['role'] ] ) ) {
+			return true;
+		}
+	}
+	return false;
 }
 
 /**

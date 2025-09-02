@@ -24,6 +24,7 @@ class LiteBackendStrings
             'admin'                     => __('Admin', 'wpamelia'),
             'add_date'                  => __('Add Date', 'wpamelia'),
             'add_language'              => __('Add Language', 'wpamelia'),
+            'add_period'                => __('Add Period', 'wpamelia'),
             'all_services'              => __('All Services', 'wpamelia'),
             'appointment'               => __('Appointment', 'wpamelia'),
             'appointments'              => __('Appointments', 'wpamelia'),
@@ -180,6 +181,10 @@ class LiteBackendStrings
             'view_list'                 => __('List View', 'wpamelia'),
             'view_group'                => __('Group View', 'wpamelia'),
             'whats_new'                 => __('What\'s new', 'wpamelia'),
+            'layout_select_label'       => __('Choose layout version', 'wpamelia'),
+            'layout_dropdown'           => __('Dropdown layout', 'wpamelia'),
+            'layout_list'               => __('List layout', 'wpamelia'),
+            'layout_description'        => __('Choosing layout of first step in step by step form', 'wpamelia'),
         ];
     }
 
@@ -191,6 +196,7 @@ class LiteBackendStrings
     public static function getSettingsStrings()
     {
         return [
+            '1year'                                  => __('1 year', 'wpamelia'),
             'activate'                               => __('Activate', 'wpamelia'),
             'activation'                             => __('Activation', 'wpamelia'),
             'activation_settings'                    => __('Activation Settings', 'wpamelia'),
@@ -312,6 +318,7 @@ class LiteBackendStrings
             'envato_api_activate'                    => __('Activate with Envato', 'wpamelia'),
             'event_title_and_description'            => __('Event Title and Description', 'wpamelia'),
             'events'                                 => __('Events', 'wpamelia'),
+            'mailchimp'                              => __('Mailchimp', 'wpamelia'),
             'meeting_title'                          => __('Meeting Title', 'wpamelia'),
             'meeting_agenda'                         => __('Meeting Agenda', 'wpamelia'),
             'facebook_app_id'                        => __('Facebook App ID', 'wpamelia'),
@@ -623,6 +630,7 @@ class LiteBackendStrings
             'ph_service_name'                        => __('Service name', 'wpamelia'),
             'ph_service_price'                       => __('Service price', 'wpamelia'),
             'ph_time_zone'                           => __('Time Zone', 'wpamelia'),
+            'ph_number_of_persons'                   => __('Number of persons', 'wpamelia'),
             'phone_colon'                            => __('Phone:', 'wpamelia'),
             'sms_warning'                            => __('Effective September 30th, SMS providers will implement charges for failed message deliveries. To help minimize the occurrence of failed messages, please adhere to the following guidelines: <br>
                                                                <ol style="margin-left: 16px">
@@ -759,7 +767,6 @@ class LiteBackendStrings
         return [
             'add_day_off'                         => __('Add Day Off', 'wpamelia'),
             'add_special_day'                     => __('Add Special Day', 'wpamelia'),
-            'add_period'                          => __('Add Period', 'wpamelia'),
             'apply_to_all_days'                   => __('Apply to All Days', 'wpamelia'),
             'breaks'                              => __('Breaks', 'wpamelia'),
             'days_off_add'                        => __('Add Day Off', 'wpamelia'),
@@ -912,6 +919,8 @@ class LiteBackendStrings
             'capacity'                         => __('Capacity', 'wpamelia'),
             'settings_employee'                => __('Provider Settings', 'wpamelia'),
             'employee_saved'                   => __('Employee has been saved', 'wpamelia'),
+            'employee_show_on_site'            => __('Show employee on site', 'wpamelia'),
+            'employee_show_on_site_tooltip'    => __('If this option is disabled, employee will be available for booking from back-end pages only.', 'wpamelia'),
             'employee_panel_password'          => __('Employee Panel Password', 'wpamelia'),
             'period_services_filter'           => __('Applied for all assigned services', 'wpamelia'),
             'period_services_filter1_tooltip'  => __('Select only specific services for this period.<br/>If no services are selected, then all assigned services for this employee<br/>will be available for booking in this period.', 'wpamelia'),
@@ -1094,6 +1103,8 @@ class LiteBackendStrings
             'total_price'              => __('Total Price', 'wpamelia'),
             'bookings_price'           => __('Bookings Price', 'wpamelia'),
             'event_price'              => __('Event Price', 'wpamelia'),
+            'paid_deposit'             => __('Paid deposit', 'wpamelia'),
+            'paid_remaining_amount'    => __('Paid remaining amount', 'wpamelia'),
         ];
     }
 
@@ -1170,6 +1181,7 @@ class LiteBackendStrings
             'custom_pricing_enabled'             => __('Custom Pricing', 'wpamelia'),
             'custom_duration_pricing_enabled'    => __('Custom Duration and Pricing', 'wpamelia'),
             'custom_person_pricing_enabled'      => __('Pricing by the number of people', 'wpamelia'),
+            'custom_period_pricing_enabled'      => __('Pricing by Day & Time', 'wpamelia'),
             'custom_pricing'                     => __('Conditional Pricing', 'wpamelia'),
         ];
     }
@@ -1371,6 +1383,8 @@ class LiteBackendStrings
             'form_flow'                          => __('Form Flow', 'wpamelia'),
             'use_global_colors'                  => __('Use Global Colors', 'wpamelia'),
             'service_selection'                  => __('Service Selection', 'wpamelia'),
+            'employee_selection'                 => __('Employee Selection', 'wpamelia'),
+            'location_selection'                 => __('Location Selection', 'wpamelia'),
             'service_colon'                      => __('Service', 'wpamelia'),
             'dropdown_category_heading'          => __('Category', 'wpamelia'),
             'dropdown_items_heading'             => __('Service', 'wpamelia'),
@@ -1428,6 +1442,8 @@ class LiteBackendStrings
             'dropdowns'                          => __('Dropdowns', 'wpamelia'),
             'init_cell'                          => __('Init Cell', 'wpamelia'),
             'init_cell_text'                     => __('Init Cell Text', 'wpamelia'),
+            'lower_price'                        => __('(Lower Price)', 'wpamelia'),
+            'higher_price'                       => __('(Higher Price)', 'wpamelia'),
             'cell_selected_background'           => __('Cell Selected Background', 'wpamelia'),
             'cell_selected_text'                 => __('Cell Selected Text', 'wpamelia'),
             'cell_disabled_background'           => __('Cell Disabled Background', 'wpamelia'),
@@ -1458,6 +1474,11 @@ class LiteBackendStrings
             'csb_sidebar_content'                => __('Set up Sidebar visibility and its content', 'wpamelia'),
             'csb_services'                       => __('Service Selection', 'wpamelia'),
             'csb_services_content'               => __('Set up Services, Locations, Employees selection options', 'wpamelia'),
+            'csb_services_only_content'          => __('Set up Services selection options', 'wpamelia'),
+            'csb_employees'                      => __('Employees Selection', 'wpamelia'),
+            'csb_employees_only_content'         => __('Set up Employees selection options', 'wpamelia'),
+            'csb_locations'                      => __('Locations Selection', 'wpamelia'),
+            'csb_locations_only_content'         => __('Set up Locations selection options', 'wpamelia'),
             'csb_date_time'                      => __('Date & Time Selection', 'wpamelia'),
             'csb_date_time_content'              => __('Set up Calendar layout and Recurring popup options', 'wpamelia'),
             'csb_info_step'                      => __('Customer Information', 'wpamelia'),
@@ -1484,6 +1505,9 @@ class LiteBackendStrings
             'continue_button_type'               => __('Continue Button Type', 'wpamelia'),
             'calendar_slot_end_time'             => __('Calendar Slot End Time', 'wpamelia'),
             'show_busy_slots'                    => __('Show Busy Time Slots', 'wpamelia'),
+            'show_estimated_pricing'             => __('Show Estimated Price', 'wpamelia'),
+            'show_slot_pricing'                  => __('Show Time Slot Price', 'wpamelia'),
+            'show_indicator_pricing'             => __('Show Price Indicators', 'wpamelia'),
             'calendar_time_zone'                 => __('Calendar Time Zone', 'wpamelia'),
             'first_name'                         => __('First Name', 'wpamelia'),
             'last_name'                          => __('Last Name', 'wpamelia'),
@@ -1608,6 +1632,12 @@ class LiteBackendStrings
 
             'summary_person'                     => __('person', 'wpamelia'),
             'event_employees'                    => __('Event Employees', 'wpamelia'),
+
+            'learn_more'                         => __('Learn More', 'wpamelia'),
+            'service_information'                => __('Service information', 'wpamelia'),
+            'learn_more_button'                  => __('Learn more button', 'wpamelia'),
+            'location_address'                   => __('Location Address', 'wpamelia'),
+            'no_results_found'                   => __('No results found...', 'wpamelia'),
         ];
     }
 

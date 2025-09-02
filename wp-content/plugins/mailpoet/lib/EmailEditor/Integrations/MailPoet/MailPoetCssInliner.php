@@ -5,7 +5,7 @@ namespace MailPoet\EmailEditor\Integrations\MailPoet;
 if (!defined('ABSPATH')) exit;
 
 
-use MailPoet\EmailEditor\Engine\Renderer\Css_Inliner;
+use Automattic\WooCommerce\EmailEditor\Engine\Renderer\Css_Inliner;
 use MailPoetVendor\Pelago\Emogrifier\CssInliner;
 
 class MailPoetCssInliner implements Css_Inliner {

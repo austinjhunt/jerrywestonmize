@@ -251,9 +251,9 @@ class Forminator_Stripe extends Forminator_Field {
 		$data_font_color_focus = '#000000';
 		$data_font_color_error = '#000000';
 		$data_icon_color       = '#777771';
-		$data_icon_color_hover = '#17A8E3';
-		$data_icon_color_focus = '#17A8E3';
-		$data_icon_color_error = '#E04562';
+		$data_icon_color_hover = '#097BAA';
+		$data_icon_color_focus = '#097BAA';
+		$data_icon_color_error = '#E51919';
 
 		if ( ! empty( $settings[ $prefix . 'cform-color-settings' ] ) ) {
 			$data_placeholder      = $this->get_form_setting( $prefix . 'input-placeholder', $settings, $data_placeholder );

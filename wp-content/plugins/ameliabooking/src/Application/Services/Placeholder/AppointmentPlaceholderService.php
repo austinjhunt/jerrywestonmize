@@ -24,6 +24,7 @@ use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
+use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -271,6 +272,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                 $data['items'][$index]['invoice_discount']    += $invoiceItem['invoice_discount'];
                 $data['items'][$index]['invoice_tax']         += $invoiceItem['invoice_tax'];
                 $data['items'][$index]['invoice_paid_amount'] += $invoiceItem['invoice_paid_amount'];
+                $data['items'][$index]['total_tax']           += $invoiceItem['total_tax'];
             } else {
                 $data['items'][$index] = $invoiceItem;
                 $data['items'][$index]['item_name'] = $placeholders['service_name'];
@@ -302,6 +304,7 @@ class AppointmentPlaceholderService extends PlaceholderService
         }
 
         $data['items'] = array_values($data['items']);
+        $data['invoice_tax'] = array_sum(array_column($data['items'], 'total_tax'));
 
         $data = array_merge($data, $this->getCompanyData($bookingKey !== null ? $locale : null));
         $data = array_merge($data, $this->getCustomersData($appointment, $type, $bookingKey));
@@ -512,6 +515,8 @@ class AppointmentPlaceholderService extends PlaceholderService
         $categoryRepository = $this->container->get('domain.bookable.category.repository');
         /** @var ServiceRepository $serviceRepository */
         $serviceRepository = $this->container->get('domain.bookable.service.repository');
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->container->get('domain.users.repository');
 
         /** @var HelperService $helperService */
         $helperService = $this->container->get('application.helper.service');
@@ -527,6 +532,11 @@ class AppointmentPlaceholderService extends PlaceholderService
 
         /** @var Category $category */
         $category = $categoryRepository->getById($service->getCategoryId()->getValue());
+
+        /** @var Provider $provider */
+        $provider = $appointmentAS->isPeriodCustomPricing($service)
+            ? $userRepository->getById($appointmentArray['providerId'])
+            : null;
 
         $locale = $this->getLocale($appointmentArray, $bookingKey);
 
@@ -558,7 +568,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                     continue;
                 }
 
-                $duration = $booking['duration'] ? $booking['duration'] : $service->getDuration()->getValue();
+                $duration = $booking['duration'] ?: $service->getDuration()->getValue();
 
                 $price = $appointmentAS->getBookingPriceForService(
                     $service,
@@ -567,7 +577,9 @@ class AppointmentPlaceholderService extends PlaceholderService
                             'duration' => $duration,
                             'persons'  => $booking['persons'],
                         ]
-                    )
+                    ),
+                    $provider,
+                    $appointmentArray['bookingStart']
                 );
 
                 $servicePrices[] = $helperService->getFormattedPrice($price);
@@ -585,7 +597,9 @@ class AppointmentPlaceholderService extends PlaceholderService
                         'duration' => $duration,
                         'persons'  => $appointmentArray['bookings'][$bookingKey]['persons'],
                     ]
-                )
+                ),
+                $provider,
+                $appointmentArray['bookingStart']
             );
 
             $servicePrices[] = $helperService->getFormattedPrice(
@@ -745,10 +759,9 @@ class AppointmentPlaceholderService extends PlaceholderService
                     'item_id'            => $extraId,
                     'item_index'         => "extra_{$extraId}_{$bookingExtras[$extraId]['price']}",
                     'item_name'          => $extra->getName()->getValue(),
-                    'invoice_qty'        => $bookingExtras[$extraId]['quantity'] * $persons,
+                    'invoice_qty'        => $bookingExtras[$extraId]['quantity'] * ($multiplyByNumberOfPeople ? $persons : 1),
                     'invoice_unit_price' => $bookingExtras[$extraId]['price'],
-                    'invoice_subtotal'   => $bookingExtras[$extraId]['quantity'] * $bookingExtras[$extraId]['price'] *
-                        ($multiplyByNumberOfPeople ? $persons : 1),
+                    'invoice_subtotal'   => 0,
                     'invoice_tax'        => 0
                 ];
             }

@@ -227,6 +227,13 @@ class SettingsStorage implements SettingsStorageInterface
             'facebookPixel'          => $this->getCategorySettings('facebookPixel'),
             'googleAnalytics'        => $this->getCategorySettings('googleAnalytics'),
             'googleTag'              => $this->getCategorySettings('googleTag'),
+            'mailchimp'              => [
+                'subscribeFieldVisible' =>
+                    !empty($this->getSetting('mailchimp', 'accessToken')) &&
+                    !empty($this->getSetting('mailchimp', 'list')) &&
+                    !empty($this->getSetting('mailchimp', 'server')),
+                'checkedByDefault'      => $this->getSetting('mailchimp', 'checkedByDefault'),
+            ],
             'lessonSpace'            => [
                 'enabled' => $this->getSetting('lessonSpace', 'enabled') && $this->getSetting('lessonSpace', 'apiKey')
             ],
@@ -356,15 +363,21 @@ class SettingsStorage implements SettingsStorageInterface
                 'allowCustomerDeleteProfile'  => $this->getSetting('roles', 'allowCustomerDeleteProfile'),
                 'allowWriteEvents'            => $this->getSetting('roles', 'allowWriteEvents'),
                 'customerCabinet'             => [
-                    'enabled'        => $this->getSetting('roles', 'customerCabinet')['enabled'],
-                    'loginEnabled'   => $this->getSetting('roles', 'customerCabinet')['loginEnabled'],
-                    'tokenValidTime' => $this->getSetting('roles', 'customerCabinet')['tokenValidTime'],
-                    'pageUrl'        => $this->getSetting('roles', 'customerCabinet')['pageUrl'],
+                    'enabled'         => $this->getSetting('roles', 'customerCabinet')['enabled'],
+                    'loginEnabled'    => $this->getSetting('roles', 'customerCabinet')['loginEnabled'],
+                    'tokenValidTime'  => $this->getSetting('roles', 'customerCabinet')['tokenValidTime'],
+                    'pageUrl'         => $this->getSetting('roles', 'customerCabinet')['pageUrl'],
+                    'googleRecaptcha' => $this->getSetting('roles', 'customerCabinet')['googleRecaptcha'] &&
+                        $this->getSetting('general', 'googleRecaptcha')['siteKey'] &&
+                        $this->getSetting('general', 'googleRecaptcha')['secret'],
                 ],
                 'providerCabinet'             => [
-                    'enabled'        => $this->getSetting('roles', 'providerCabinet')['enabled'],
-                    'loginEnabled'   => $this->getSetting('roles', 'providerCabinet')['loginEnabled'],
-                    'tokenValidTime' => $this->getSetting('roles', 'providerCabinet')['tokenValidTime'],
+                    'enabled'         => $this->getSetting('roles', 'providerCabinet')['enabled'],
+                    'loginEnabled'    => $this->getSetting('roles', 'providerCabinet')['loginEnabled'],
+                    'tokenValidTime'  => $this->getSetting('roles', 'providerCabinet')['tokenValidTime'],
+                    'googleRecaptcha' => $this->getSetting('roles', 'providerCabinet')['googleRecaptcha'] &&
+                        $this->getSetting('general', 'googleRecaptcha')['siteKey'] &&
+                        $this->getSetting('general', 'googleRecaptcha')['secret'],
                 ],
                 'providerBadges'          => $this->getSetting('roles', 'providerBadges'),
                 'enableNoShowTag'         => $this->getSetting('roles', 'enableNoShowTag'),

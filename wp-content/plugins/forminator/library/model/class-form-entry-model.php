@@ -410,8 +410,6 @@ class Forminator_Form_Entry_Model {
 		return apply_filters(
 			'forminator_field_suffix',
 			array(
-				'min',
-				'max',
 				'hours',
 				'minutes',
 				'ampm',
@@ -436,6 +434,8 @@ class Forminator_Form_Entry_Model {
 				'post-tags',
 				'product-id',
 				'product-quantity',
+				'min',
+				'max',
 			)
 		);
 	}
@@ -1212,6 +1212,10 @@ class Forminator_Form_Entry_Model {
 		$table_name      = Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_ENTRY );
 		$table_meta_name = Forminator_Database_Tables::get_table_name( Forminator_Database_Tables::FORM_ENTRY_META );
 		$entry_model     = new Forminator_Form_Entry_Model( $entry_id );
+
+		if ( empty( $entry_model->entry_id ) ) {
+			return;
+		}
 
 		$form_id  = (int) $entry_model->form_id;
 		$entry_id = (int) $entry_id;

@@ -18,14 +18,18 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
+use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
+use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Interop\Container\Exception\ContainerException;
 
@@ -196,8 +200,31 @@ class UpdateAppointmentTimeCommandHandler extends CommandHandler
 
         $appointmentRepo->update((int)$command->getArg('id'), $appointment);
 
+        /** @var CustomerBooking $booking */
         foreach ($appointment->getBookings()->getItems() as $booking) {
             $paymentAS->updateBookingPaymentDate($booking, $bookingStartInUtc);
+
+            if ($appointmentAS->isPeriodCustomPricing($service)) {
+                /** @var UserRepository $userRepository */
+                $userRepository = $this->getContainer()->get('domain.users.repository');
+
+                /** @var CustomerBookingRepository $bookingRepository */
+                $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+                /** @var Provider $provider */
+                $provider = $userRepository->getById($appointment->getProviderId()->getValue());
+
+                $price = $appointmentAS->getBookingPriceForService(
+                    $service,
+                    null,
+                    $provider,
+                    $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s')
+                );
+
+                $booking->setPrice(new Price($price));
+
+                $bookingRepository->updatePrice($booking->getId()->getValue(), $booking);
+            }
         }
 
         $appointment->setRescheduled(new BooleanValueObject(true));

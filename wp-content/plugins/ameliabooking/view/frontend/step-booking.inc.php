@@ -24,7 +24,8 @@
       'service': '<?php echo esc_js($params['service']); ?>',
       'employee': '<?php echo esc_js($params['employee']); ?>',
       'location': '<?php echo esc_js($params['location']); ?>',
-      'package': '<?php echo esc_js($params['package']); ?>'
+      'package': '<?php echo esc_js($params['package']); ?>',
+      'layout': '<?php echo esc_js($params['layout']); ?>',
     }
   );
 

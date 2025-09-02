@@ -20,6 +20,7 @@ use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
+use AmeliaBooking\Domain\ValueObjects\String\Token;
 
 /**
  * Class PackageCustomerFactory
@@ -112,6 +113,10 @@ class PackageCustomerFactory
             } elseif (json_encode($data['tax']) !== false) {
                 $packageCustomer->setTax(new Json(json_encode($data['tax'])));
             }
+        }
+
+        if (isset($data['token'])) {
+            $packageCustomer->setToken(new Token($data['token']));
         }
 
         return $packageCustomer;

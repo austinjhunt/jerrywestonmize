@@ -21,4 +21,15 @@ class LiteRecaptchaService extends AbstractRecaptchaService
     {
         return true;
     }
+
+    /**
+     * @param string $value
+     * @param string $cabinetType
+     *
+     * @return boolean
+     */
+    public function process($value, $cabinetType)
+    {
+        return true;
+    }
 }

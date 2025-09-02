@@ -5,7 +5,7 @@ namespace MailPoet\EmailEditor\Integrations\MailPoet\Patterns;
 if (!defined('ABSPATH')) exit;
 
 
-use MailPoet\EmailEditor\Engine\Patterns\Abstract_Pattern;
+use Automattic\WooCommerce\EmailEditor\Engine\Patterns\Abstract_Pattern;
 use MailPoet\Util\CdnAssetUrl;
 
 abstract class Pattern extends Abstract_Pattern {

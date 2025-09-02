@@ -12,6 +12,7 @@ use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
+use Exception;
 use Square\Environment;
 use Square\Exceptions\ApiException;
 use Square\Http\ApiResponse;
@@ -58,7 +59,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
     /**
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function getClient()
     {
@@ -79,7 +80,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      * @param array $args
      *
      * @return ApiResponse
-     * @throws \Exception
+     * @throws Exception
      */
     private function getApiResponse($apiName, $functionName, $args)
     {
@@ -98,7 +99,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
     /**
      *
      * @return Location
-     * @throws \Exception
+     * @throws Exception
      */
     private function getLocation()
     {
@@ -181,7 +182,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      * @param array $transfers
      *
      * @return ApiResponse
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute($data, &$transfers)
     {
@@ -244,7 +245,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      * @param string $redirectUrl
      *
      * @return ApiResponse
-     * @throws \Exception
+     * @throws Exception
      */
     public function updatePaymentLink($paymentLink, $redirectUrl, $paymentId)
     {
@@ -271,7 +272,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      * @param $data
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getPaymentLink($data)
     {
@@ -305,7 +306,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      * @return ApiResponse
      *
      * @throws ApiException
-     * @throws \Exception
+     * @throws Exception
      */
     public function getOrderResponse($orderId)
     {
@@ -318,7 +319,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      * @return ApiResponse
      *
      * @throws ApiException
-     * @throws \Exception
+     * @throws Exception
      */
     public function completePayment($paymentId)
     {
@@ -329,7 +330,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      * @param array $data
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function refund($data)
     {
@@ -353,7 +354,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      * @param ApiResponse $response
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getErrorMessage($response)
     {
@@ -372,7 +373,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      *
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getLocations()
     {
@@ -388,7 +389,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      * @param array|null $transfers
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function getTransactionAmount($id, $transfers)
     {
@@ -405,7 +406,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      *
      * @return boolean
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function disconnectAccount($fromSquare = false)
     {
@@ -433,7 +434,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      *
      * @return boolean
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function refreshAccessToken()
     {
@@ -472,5 +473,22 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
         $squareSettings = $this->settingsService->getCategorySettings('payments')['square'];
 
         return $this->middlewareService->getAuthUrl($squareSettings['testMode']);
+    }
+
+    //create method to get country from location by locationId
+
+    /**
+     * @throws Exception
+     */
+    public function getCountryCodeByLocationId($locationId)
+    {
+        $apiResponse = $this->getApiResponse('getLocationsApi', 'retrieveLocation', [$locationId]);
+
+        if ($apiResponse->isSuccess() && $apiResponse->getResult()) {
+            $location = $apiResponse->getResult()->getLocation();
+            return $location ? $location->getCountry() : null;
+        }
+
+        return null;
     }
 }

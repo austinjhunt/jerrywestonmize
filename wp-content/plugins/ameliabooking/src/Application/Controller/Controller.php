@@ -243,6 +243,7 @@ abstract class Controller
             'providers',
             'providerIds',
             'locations',
+            'locationIds',
             'events',
             'dates',
             'types',

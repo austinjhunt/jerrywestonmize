@@ -72,3 +72,16 @@ if ( ! function_exists( 'forminator_addons_dir' ) ) {
 function forminator_payments_disabled(): bool {
 	return apply_filters( 'forminator_payments_disabled', false );
 }
+
+
+if ( ! function_exists( 'forminator_addons_disabled' ) ) {
+	/**
+	 * Check if addons functionality are disabled
+	 *
+	 * @since 1.46.0
+	 * @return boolean
+	 */
+	function forminator_addons_disabled() {
+		return apply_filters( 'forminator_addons_disabled', false );
+	}
+}

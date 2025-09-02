@@ -489,7 +489,7 @@ class Forminator_Admin_L10n {
 				'no_templates_desc' => esc_html__( 'Save any of your forms as cloud templates to reuse them across your sites connected to the Hub – no need to start from scratch. Your saved templates will appear here. ', 'forminator' ),
 				'no_templates_link' => sprintf(
 					/* translators: %1$s - opening anchor tag, %2$s - closing anchor tag */
-					esc_html__( '%1$sLearn how to save forms as cloud template%2$s.', 'forminator' ),
+					esc_html__( '%1$sLearn how to save forms as cloud templates%2$s.', 'forminator' ),
 					'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#templates" target="_blank">',
 					'</a>'
 				),

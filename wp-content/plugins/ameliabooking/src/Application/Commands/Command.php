@@ -3,10 +3,12 @@
 namespace AmeliaBooking\Application\Commands;
 
 use AmeliaBooking\Application\Commands\Booking\Appointment\AddBookingCommand;
+use AmeliaBooking\Application\Commands\Booking\Appointment\DeleteBookingRemotelyCommand;
 use AmeliaBooking\Application\Commands\Booking\Appointment\SuccessfulBookingCommand;
 use AmeliaBooking\Application\Commands\Coupon\GetValidCouponCommand;
 use AmeliaBooking\Application\Commands\Google\FetchAccessTokenWithAuthCodeCommand;
 use AmeliaBooking\Application\Commands\Google\GetGoogleAuthURLCommand;
+use AmeliaBooking\Application\Commands\Mailchimp\FetchAccessTokenMailchimpCommand;
 use AmeliaBooking\Application\Commands\Notification\GetSMSNotificationsHistoryCommand;
 use AmeliaBooking\Application\Commands\Notification\UpdateSMSNotificationHistoryCommand;
 use AmeliaBooking\Application\Commands\Notification\WhatsAppWebhookCommand;
@@ -208,6 +210,7 @@ abstract class Command
             !($this instanceof LogoutCabinetCommand) &&
             !($this instanceof AddBookingCommand) &&
             !($this instanceof AddStatsCommand) &&
+            !($this instanceof DeleteBookingRemotelyCommand) &&
             !($this instanceof GetValidCouponCommand) &&
             !($this instanceof MolliePaymentCommand) &&
             !($this instanceof MolliePaymentNotifyCommand) &&
@@ -223,6 +226,7 @@ abstract class Command
             !($this instanceof GetGoogleAuthURLCommand) &&
             !($this instanceof FetchAccessTokenWithAuthCodeOutlookCommand) &&
             !($this instanceof FetchAccessTokenWithAuthCodeCommand) &&
+            !($this instanceof FetchAccessTokenMailchimpCommand) &&
             !($this instanceof FetchAccessTokenSquareCommand) &&
             !($this instanceof WhatsAppWebhookRegisterCommand) &&
             !($this instanceof WhatsAppWebhookCommand) &&

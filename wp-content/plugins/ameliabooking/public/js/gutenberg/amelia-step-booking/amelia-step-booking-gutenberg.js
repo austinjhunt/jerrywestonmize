@@ -148,6 +148,10 @@
       parametars: {
         type: 'boolean',
         default: false
+      },
+      layout: {
+        type: 'string',
+        default: '1'
       }
     },
     edit: function (props) {
@@ -162,6 +166,10 @@
       options['packages'] = [{value: '', label: wpAmeliaLabels.show_all_packages}]
       options['show'] = [{value: '', label: wpAmeliaLabels.show_all}, {value: 'services', label: wpAmeliaLabels.services}, {value: 'packages', label: wpAmeliaLabels.packages}]
       options['trigger_type'] = [{value: 'id', label: wpAmeliaLabels.trigger_type_id}, {value: 'class', label: wpAmeliaLabels.trigger_type_class}]
+      options['layout'] = [
+        {value: '1', label: wpAmeliaLabels.layout_dropdown},
+        {value: '2', label: wpAmeliaLabels.layout_list}
+      ]
 
       function getOptions (data) {
         var options = []
@@ -253,6 +261,11 @@
 
           if (attributes.trigger && attributes.in_dialog) {
             shortCode += ' in_dialog=1'
+          }
+
+          // Add layout parameter to the shortcode
+          if (attributes.layout) {
+            shortCode += ' layout=' + attributes.layout + ''
           }
 
           shortCode += ']'
@@ -377,6 +390,19 @@
             }))
           }
         }
+
+        // Add Choose layout version dropdown
+        inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+
+        inspectorElements.push(el(components.SelectControl, {
+          id: 'amelia-js-select-layout',
+          label: wpAmeliaLabels.layout_select_label,
+          value: attributes.layout,
+          options: options.layout,
+          onChange: function (selectControl) {
+            return props.setAttributes({layout: selectControl})
+          }
+        }))
 
         inspectorElements.push(el(components.TextControl, {
           id: 'amelia-js-trigger',

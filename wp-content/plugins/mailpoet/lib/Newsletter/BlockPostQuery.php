@@ -20,7 +20,8 @@ class BlockPostQuery {
    *     search?: string,
    *     sortBy?: 'newest' | 'DESC' | 'ASC',
    *     terms?: array{'taxonomy': string, 'id': int}[],
-   *     inclusionType?: 'include'|'exclude'
+   *     inclusionType?: 'include'|'exclude',
+   *     excludeOutOfStock?: bool,
    * } $args
    */
   public $args = [];
@@ -60,7 +61,8 @@ class BlockPostQuery {
    *     search?: string,
    *     sortBy?: 'newest' | 'DESC' | 'ASC',
    *     terms?: array{'taxonomy': string, 'id': int}[],
-   *     inclusionType?: 'include'|'exclude'
+   *     inclusionType?: 'include'|'exclude',
+   *     excludeOutOfStock?: bool,
    *    },
    *    postsToExclude?: int[],
    *    newsletterId?: int|false|null,

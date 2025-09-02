@@ -43,10 +43,6 @@
       }
     }
 
-    .el-input--medium .el-input__inner {
-      height: 36px !important;
-    }
-
     .el-input--small .el-input__inner {
       height: 32px !important;
     }
@@ -1002,6 +998,16 @@
 
             &::-webkit-scrollbar-thumb:hover {
               background: darken(@color-dark-gray, 10%);
+            }
+          }
+
+          .am-extra-item {
+            .el-tabs {
+              height: 50px;
+            }
+
+            .el-tabs__content {
+              height: 0;
             }
           }
 
@@ -2788,6 +2794,59 @@
 
   .el-icon-question {
     color: @color-icon !important;
+  }
+}
+
+.am-service-periods {
+  .el-checkbox-group {
+    margin-bottom: 15px;
+  }
+
+  &-day {
+    border-bottom: 1px solid @color-divider-gray;
+    margin-top: 5px;
+
+    &-disabled {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .el-button {
+      width: auto !important;
+      margin-bottom: 15px;
+    }
+
+    &-time {
+      div {
+        input {
+          height: 40px !important;
+        }
+
+        div {
+          input {
+            height: 40px !important;
+          }
+        }
+      }
+
+      .v-money, .el-color-picker__trigger {
+        height: 40px !important;
+      }
+
+      &-remove-disabled {
+        opacity: 0.5;
+      }
+
+      margin-bottom: 5px;
+    }
+  }
+
+  &-add {
+    margin-top: 15px;
+
+    &-disabled {
+      opacity: 0.5;
+    }
   }
 }
 

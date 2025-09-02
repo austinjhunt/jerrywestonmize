@@ -355,6 +355,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             $invoiceItem['invoice_tax_rate']     = $amountData['tax_rate'];
             $invoiceItem['invoice_tax_excluded'] = $amountData['tax_excluded'];
             $invoiceItem['invoice_tax_type']     = $amountData['tax_type'];
+            $invoiceItem['total_tax']            = $amountData['total_tax'];
             $invoiceItem['invoice_extras_tax']   = !empty($amountData['extras_tax']) ? $amountData['extras_tax'] : null;
             $invoiceItem['invoice_tickets_tax']  = !empty($amountData['tickets_tax']) ? $amountData['tickets_tax'] : null;
 
@@ -441,7 +442,9 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                 'payment_type'                      => $paymentType,
                 'payment_status'                    => $payment ? $payment['status'] : '',
                 'payment_gateway'                   => $payment ? $payment['gateway'] : '',
-                'payment_created'                   => $payment ? date_i18n($dateFormat, $payment['created']) : '',
+                'payment_created'                   => $payment && !empty($payment['created'])
+                    ? date_i18n($dateFormat, strtotime($payment['created']))
+                    : '',
                 'payment_invoice_number'            => $payment ? $payment['invoiceNumber'] : '',
                 'payment_gateway_title'             => $payment ? $payment['gatewayTitle'] : '',
                 "payment_due_amount"                => $paymentDueAmount,
@@ -798,7 +801,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                 $appointment['bookings'][$bookingKey]['customer'] = $userRepository->getById($appointment['bookings'][$bookingKey]['customerId'])->toArray();
             }
 
-            if ($appointment['bookings'][$bookingKey]['customer']['customFields']) {
+            if (!empty($appointment['bookings'][$bookingKey]['customer']['customFields'])) {
                 $customerCustomFields = !is_array($appointment['bookings'][$bookingKey]['customer']['customFields']) ?
                     json_decode($appointment['bookings'][$bookingKey]['customer']['customFields'], true) :
                     $appointment['bookings'][$bookingKey]['customer']['customFields'];

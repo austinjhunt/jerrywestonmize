@@ -9,7 +9,7 @@ use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
-use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -19,7 +19,6 @@ use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
-use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -56,11 +55,25 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
      */
     public function handle(UpdateAppointmentStatusCommand $command)
     {
-        if (!$command->getPermissionService()->currentUserCanWriteStatus(Entities::APPOINTMENTS)) {
-            throw new AccessDeniedException('You are not allowed to update appointment status');
-        }
-
         $result = new CommandResult();
+
+        if (!$command->getPermissionService()->currentUserCanWriteStatus(Entities::APPOINTMENTS)) {
+            try {
+                $command->getUserApplicationService()->authorization(
+                    $command->getPage() === 'cabinet' ? $command->getToken() : null,
+                    $command->getCabinetType()
+                );
+            } catch (AuthorizationException $e) {
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setData(
+                    [
+                        'reauthorize' => true
+                    ]
+                );
+
+                return $result;
+            }
+        }
 
         $this->checkMandatoryFields($command);
 
@@ -82,23 +95,6 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
 
         /** @var Appointment $appointment */
         $appointment = $appointmentRepo->getById($appointmentId);
-
-        $packageCustomerId = $command->getField('packageCustomerId');
-
-        if ($packageCustomerId) {
-            $appArray = array_filter(
-                $appointment->getBookings()->getItems(),
-                function ($booking) use ($packageCustomerId) {
-                    /** @var Id $pcId */
-                    $pcId = $booking->getPackageCustomerService() ?
-                        $booking->getPackageCustomerService()->getPackageCustomer()->getId() : null;
-
-                    return $pcId && $pcId->getValue() === $packageCustomerId;
-                }
-            );
-
-            $appointment->setBookings(new Collection($appArray));
-        }
 
         $oldStatus = $appointment->getStatus()->getValue();
 
@@ -125,9 +121,13 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
 
         $oldAppointmentArray = $appointment->toArray();
 
+        $capacity = 0;
+
         /** @var CustomerBooking $booking */
         foreach ($appointment->getBookings()->getItems() as $booking) {
             $booking->setStatus(new BookingStatus($requestedStatus));
+
+            $capacity += $booking->getPersons()->getValue();
         }
 
         /** @var Service $service */
@@ -141,10 +141,10 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
             (
                 (
                     $service->getMaxCapacity()->getValue() === 1 &&
-                    $appointment->getBookings()->length() > 1
+                    $capacity > 1
                 ) || (
                     $service->getMaxCapacity()->getValue() > 1 &&
-                    $appointment->getBookings()->length() > $service->getMaxCapacity()->getValue()
+                    $capacity > $service->getMaxCapacity()->getValue()
                 )
             )
         ) {
@@ -157,6 +157,7 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
                     'status'                    => $appointment->getStatus()->getValue(),
                     'oldStatus'                 => $appointment->getStatus()->getValue(),
                     'message'                   => BackendStrings::getEventStrings()['maximum_capacity_reached'],
+                    'maximumCapacityReached'    => true,
                 ]
             );
 
@@ -186,19 +187,8 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
         );
 
 
-        if ($packageCustomerId) {
-            /** @var CustomerBooking $booking */
-            foreach ($appointment->getBookings()->getItems() as $booking) {
-                $bookingRepository->updateStatusById($booking->getId()->getValue(), $requestedStatus);
-            }
-
-            if ($appointment->getBookings()->length() === 1) {
-                $appointmentRepo->updateStatusById($appointmentId, $requestedStatus);
-            }
-        } else {
-            $bookingRepository->updateStatusByAppointmentId($appointmentId, $requestedStatus);
-            $appointmentRepo->updateStatusById($appointmentId, $requestedStatus);
-        }
+        $bookingRepository->updateStatusByAppointmentId($appointmentId, $requestedStatus);
+        $appointmentRepo->updateStatusById($appointmentId, $requestedStatus);
 
         $appointmentRepo->commit();
 
@@ -221,12 +211,12 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
         $result->setMessage('Successfully updated appointment status');
         $result->setData(
             [
-            Entities::APPOINTMENT       => $appointmentArray,
-            'bookingsWithChangedStatus' => $bookingsWithChangedStatus,
-            'status'                    => $requestedStatus,
-            'oldStatus'                 => $oldStatus,
-            'message'                   =>
-                BackendStrings::getAppointmentStrings()['appointment_status_changed'] . strtolower(BackendStrings::getCommonStrings()[$requestedStatus])
+                Entities::APPOINTMENT       => $appointmentArray,
+                'bookingsWithChangedStatus' => $bookingsWithChangedStatus,
+                'status'                    => $requestedStatus,
+                'oldStatus'                 => $oldStatus,
+                'message'                   =>
+                    BackendStrings::getAppointmentStrings()['appointment_status_changed'] . strtolower(BackendStrings::getCommonStrings()[$requestedStatus])
             ]
         );
 

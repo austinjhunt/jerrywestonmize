@@ -35,4 +35,12 @@ abstract class AbstractRecaptchaService
      * @return boolean
      */
     abstract public function verify($value);
+
+    /**
+     * @param string $value
+     * @param string $cabinetType
+     *
+     * @return boolean
+     */
+    abstract public function process($value, $cabinetType);
 }

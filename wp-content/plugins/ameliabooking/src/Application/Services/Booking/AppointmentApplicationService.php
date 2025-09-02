@@ -21,13 +21,14 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBookingExtra;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
-use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Services\Booking\AppointmentDomainService;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Interval\IntervalService;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\Services\User\ProviderService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\PositiveDuration;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
@@ -50,12 +51,14 @@ use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
+use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentStatusUpdatedEventHandler;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use DateTime;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
+use AmeliaBooking\Infrastructure\Licence;
 
 /**
  * Class AppointmentApplicationService
@@ -112,12 +115,20 @@ class AppointmentApplicationService
         /** @var AppointmentDomainService $appointmentDS */
         $appointmentDS = $this->container->get('domain.booking.appointment.service');
 
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->container->get('domain.users.repository');
+
         $data['bookingEnd'] = $data['bookingStart'];
 
         /** @var Appointment $appointment */
         $appointment = AppointmentFactory::create($data);
 
         $includedExtrasIds = [];
+
+        /** @var Provider $provider */
+        $provider = $this->isPeriodCustomPricing($service)
+            ? $userRepository->getById($data['providerId'])
+            : null;
 
         /** @var CustomerBooking $customerBooking */
         foreach ($appointment->getBookings()->getItems() as $customerBooking) {
@@ -140,7 +151,16 @@ class AppointmentApplicationService
                 );
             }
 
-            $customerBooking->setPrice(new Price($this->getBookingPriceForService($service, $customerBooking)));
+            $customerBooking->setPrice(
+                new Price(
+                    $this->getBookingPriceForService(
+                        $service,
+                        $customerBooking,
+                        $provider,
+                        $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s')
+                    )
+                )
+            );
         }
 
         // Set appointment status based on booking statuses
@@ -247,6 +267,7 @@ class AppointmentApplicationService
      * @throws ContainerException
      * @throws CustomerBookedException
      * @throws BookingUnavailableException
+     * @throws NotFoundException
      */
     public function addOrEditAppointment(
         $appointment,
@@ -257,6 +278,14 @@ class AppointmentApplicationService
     ) {
         /** @var BookingApplicationService $bookingAS */
         $bookingAS = $this->container->get('application.booking.booking.service');
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->container->get('domain.users.repository');
+
+        /** @var Provider $provider */
+        $provider = $this->isPeriodCustomPricing($service)
+            ? $userRepository->getById($appointment->getProviderId()->getValue())
+            : null;
 
         $appointmentStatusChanged = false;
 
@@ -296,7 +325,16 @@ class AppointmentApplicationService
 
                 $newBooking->setAppointmentId($oldAppointment->getId());
 
-                $newBooking->setPrice(new Price($this->getBookingPriceForService($service, $newBooking)));
+                $newBooking->setPrice(
+                    new Price(
+                        $this->getBookingPriceForService(
+                            $service,
+                            $newBooking,
+                            $provider,
+                            $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s')
+                        )
+                    )
+                );
 
                 $newBooking->setAggregatedPrice($service->getAggregatedPrice());
 
@@ -1502,20 +1540,47 @@ class AppointmentApplicationService
     }
 
     /**
-     * @param Service         $service
-     * @param CustomerBooking $booking
+     * @param Service $service
+     *
+     * @return boolean
+     */
+    public function isPeriodCustomPricing($service)
+    {
+        if ($service->getCustomPricing()) {
+            $customPricing = json_decode($service->getCustomPricing()->getValue(), true);
+
+            if (
+                Licence\Licence::$licence !== 'Lite' &&
+                Licence\Licence::$licence !== 'Starter' &&
+                Licence\Licence::$licence !== 'Basic' &&
+                $customPricing !== null &&
+                $customPricing['enabled'] === 'period' &&
+                $customPricing['periods']
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param Service              $service
+     * @param CustomerBooking|null $booking
+     * @param Provider             $provider
+     * @param string               $bookingStart
      *
      * @return float
-     *
-     * @throws ContainerValueNotFoundException
      */
-    public function getBookingPriceForService($service, $booking)
+    public function getBookingPriceForService($service, $booking, $provider, $bookingStart)
     {
         if ($service->getCustomPricing()) {
             $customPricing = json_decode($service->getCustomPricing()->getValue(), true);
 
             if (
                 $customPricing !== null &&
+                $booking &&
                 $booking->getDuration() &&
                 $booking->getDuration()->getValue() &&
                 ($customPricing['enabled'] === true || $customPricing['enabled'] === 'duration') &&
@@ -1526,6 +1591,7 @@ class AppointmentApplicationService
                 $customPricing !== null &&
                 $customPricing['enabled'] === 'person' &&
                 $customPricing['persons'] &&
+                $booking &&
                 $booking->getPersons() &&
                 $booking->getPersons()->getValue()
             ) {
@@ -1543,6 +1609,45 @@ class AppointmentApplicationService
                     : $customPricing['persons'][array_pop($filteredRanges)];
 
                 return $item['price'];
+            } elseif (
+                Licence\Licence::$licence !== 'Lite' &&
+                Licence\Licence::$licence !== 'Starter' &&
+                Licence\Licence::$licence !== 'Basic' &&
+                $customPricing !== null &&
+                $customPricing['enabled'] === 'period' &&
+                $customPricing['periods']
+            ) {
+                /** @var ProviderService $providerService */
+                $providerService = $this->container->get('domain.user.provider.service');
+
+                /** @var IntervalService $intervalService */
+                $intervalService = $this->container->get('domain.interval.service');
+
+                $start = DateTimeService::getCustomDateTimeObject(
+                    $bookingStart
+                )->setTimezone(
+                    DateTimeService::createTimeZone(
+                        $provider->getTimeZone()
+                            ? $provider->getTimeZone()->getValue()
+                            : DateTimeService::getTimeZone()->getName()
+                    )
+                );
+
+                $price = $providerService->getDateTimePrice(
+                    $providerService->getCustomPricing(
+                        $service,
+                        $provider->getTimeZone()
+                            ? $provider->getTimeZone()->getValue()
+                            : DateTimeService::getTimeZone()->getName()
+                    ),
+                    $start->format('Y-m-d'),
+                    $intervalService->getSeconds($start->format('H:i:s')),
+                    $provider->getTimeZone()
+                        ? $provider->getTimeZone()->getValue()
+                        : DateTimeService::getTimeZone()->getName()
+                );
+
+                return $price !== null ? $price : $service->getPrice()->getValue();
             }
         }
 

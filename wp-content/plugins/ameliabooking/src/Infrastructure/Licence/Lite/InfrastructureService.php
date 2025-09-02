@@ -45,6 +45,16 @@ class InfrastructureService
     /**
      * @param Container $c
      *
+     * @return InfrastructureServices\Mailchimp\AbstractMailchimpService
+     */
+    public static function getMailchimpService($c)
+    {
+        return new InfrastructureServices\Mailchimp\StarterMailchimpService($c);
+    }
+
+    /**
+     * @param Container $c
+     *
      * @return InfrastructureServices\Recaptcha\AbstractRecaptchaService
      */
     public static function getRecaptchaService($c)

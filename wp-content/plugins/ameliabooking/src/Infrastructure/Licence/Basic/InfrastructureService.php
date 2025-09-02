@@ -46,6 +46,16 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
     /**
      * @param Container $c
      *
+     * @return InfrastructureServices\Mailchimp\AbstractMailchimpService
+     */
+    public static function getMailchimpService($c)
+    {
+        return new InfrastructureServices\Mailchimp\MailchimpService($c);
+    }
+
+    /**
+     * @param Container $c
+     *
      * @return InfrastructureServices\Zoom\AbstractZoomService
      */
     public static function getZoomService($c)

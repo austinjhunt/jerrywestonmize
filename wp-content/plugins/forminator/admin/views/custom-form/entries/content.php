@@ -85,7 +85,6 @@ if ( $this->total_entries() > 0 ) :
 				<tbody>
 
 				<?php
-				$roles        = forminator_get_accessible_user_roles();
 				$url_entry_id = filter_input( INPUT_GET, 'entry_id', FILTER_VALIDATE_INT );
 				$url_entry_id = $url_entry_id ? $url_entry_id : 0;
 				foreach ( $this->entries_iterator() as $entries ) {
@@ -281,7 +280,7 @@ if ( $this->total_entries() > 0 ) :
 									<?php
 									if ( isset( $entries['activation_method'] ) && 'manual' === $entries['activation_method'] && ! empty( $entries['activation_key'] ) ) {
 										$signup = Forminator_CForm_User_Signups::get( $entries['activation_key'] );
-										if ( ! empty( $signup->user_data['role'] ) && isset( $roles[ $signup->user_data['role'] ] ) ) {
+										if ( forminator_can_approve_user_and_create_site( $signup ) ) {
 											?>
 
 										<div class="sui-actions-right">

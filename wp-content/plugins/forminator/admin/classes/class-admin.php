@@ -51,7 +51,9 @@ class Forminator_Admin {
 
 			add_action( 'admin_notices', array( $this, 'check_stripe_addon_version' ) );
 			add_action( 'admin_notices', array( $this, 'show_cf7_importer_notice' ) );
-			add_action( 'admin_notices', array( $this, 'show_addons_update_notice' ) );
+			if ( ! forminator_addons_disabled() ) {
+				add_action( 'admin_notices', array( $this, 'show_addons_update_notice' ) );
+			}
 			add_action( 'admin_notices', array( $this, 'set_encryption_key_notice' ) );
 		}
 
@@ -290,7 +292,7 @@ class Forminator_Admin {
 	 * @since 1.0
 	 */
 	public function add_upgrade_page() {
-		add_action( 'admin_menu', array( $this, 'init_upgrade_page' ) );
+		add_action( 'admin_menu', array( $this, 'init_upgrade_page' ), 20 );
 	}
 
 	/**
@@ -301,8 +303,8 @@ class Forminator_Admin {
 	public function init_upgrade_page() {
 		add_submenu_page(
 			'forminator',
-			esc_html__( 'Upgrade for 80% Off!', 'forminator' ),
-			esc_html__( 'Upgrade for 80% Off!', 'forminator' ),
+			esc_html__( 'Limited-time Offer', 'forminator' ),
+			esc_html__( 'Limited-time Offer', 'forminator' ),
 			forminator_get_permission( 'forminator-upgrade' ),
 			'https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_submenu_upsell'
 		);
@@ -966,7 +968,7 @@ class Forminator_Admin {
 			if ( $can_install_pro ) {
 				$action_links['upgrade'] = '<a href="' . forminator_get_link( 'plugin', 'forminator_pluginlist_upgrade' ) . '" aria-label="' . esc_attr__( 'Upgrade to Forminator Pro', 'forminator' ) . '" style="color: #8D00B1;" target="_blank">' . esc_html__( 'Upgrade', 'forminator' ) . '</a>';
 			} else {
-				$action_links['renew'] = '<a href="' . forminator_get_link( 'plugin', 'forminator_pluginlist_renew' ) . '" aria-label="' . esc_attr__( 'Upgrade For 80% Off!', 'forminator' ) . '" style="color: #8D00B1;" target="_blank">' . esc_html__( 'Upgrade For 80% Off!', 'forminator' ) . '</a>';
+				$action_links['renew'] = '<a href="' . forminator_get_link( 'plugin', 'forminator_pluginlist_renew' ) . '" aria-label="' . esc_attr__( 'Limited-time Offer', 'forminator' ) . '" style="color: #8D00B1;" target="_blank">' . esc_html__( 'Limited-time Offer', 'forminator' ) . '</a>';
 			}
 		} elseif ( in_array( $membership_type, array( 'expired', 'free', 'paused', '' ), true ) && ! $can_install_pro ) {
 			$action_links['renew'] = '<a href="' . forminator_get_link( 'plugin', 'forminator_pluginlist_renew' ) . '" aria-label="' . esc_attr__( 'Renew Membership', 'forminator' ) . '" style="color: #8D00B1;" target="_blank">' . esc_html__( 'Renew Membership', 'forminator' ) . '</a>';

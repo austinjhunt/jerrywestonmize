@@ -3,7 +3,8 @@ namespace MailPoetVendor\Carbon\Traits;
 if (!defined('ABSPATH')) exit;
 trait Timestamp
 {
- public static function createFromTimestamp($timestamp, $tz = null)
+ #[\ReturnTypeWillChange]
+public static function createFromTimestamp($timestamp, $tz = null)
  {
  return static::createFromTimestampUTC($timestamp)->setTimezone($tz);
  }

@@ -3,7 +3,7 @@ Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
 Tested up to: 6.8
-Stable tag: 1.45
+Stable tag: 1.45.1
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -230,6 +230,70 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 6. Publish Polls with Real-time Stats
 
 == Changelog ==
+
+= 1.46.2 ( 2025-08-19 ) =
+
+- Fix: Redirect URLs breaking due to double-encoding
+
+
+= 1.46.1 ( 2025-08-13 ) =
+
+- Fix: Resolved a fatal error that occurred when using certain dynamic Stripe payment methods.
+
+
+= 1.46.0 ( 2025-08-12 ) =
+
+- Enhancement: Adjust color shades for better contrast to meet WCAG 2.1 AA standards in forms with Forminator styles. You may notice minor visual changes.
+- Enhancement: Add focus outline colors to fields to meet WCAG 2.1 AA standards in forms with Forminator styles. You may notice minor visual changes.
+- Enhancement: Allow keyboard-only form completion
+- Enhancement: Update Stripe library
+- Enhancement: Improve progress bar calculation for paginated forms
+- Enhancement: Compatibility with Elementor template editor
+- Enhancement: Properly encode placeholder values used in URLs
+- Enhancement: Prevent downgrading PRO to free version on servers that ignore the 'Update URI' plugin tag
+- Enhancement: Update Onboarding Dashboard
+- Enhancement: Compatibility with PHP 8.2
+- Enhancement: Small UI improvements
+- Enhancement: Improve Group field appearance on Submissions page
+- Enhancement: Improve Group field single macro in Email Notifications and HTML fields
+- Enhancement: Add filter to disable Add-ons
+- Fix: Security improvements
+- Fix: Prevent user creation in Network and Main Site when site registration is disabled
+- Fix: Macro not working in Email Notification body for Group field
+- Fix: Visibility rules based on AM/PM and Minutes in Time field not working correctly
+- Fix: 'Is' visibility condition not working for Upload field
+- Fix: 'Is Not' visibility condition not working with Number fields when value is 0
+- Fix: Date field validation issue with visibility rules
+- Fix: Hidden Address field shifts columns in CSV exports
+- Fix: Incorrect calculation of Repeated fields with visibility conditions
+- Fix: Incorrect calculation when a hidden field is used in a formula
+- Fix: Visibility conditions not working correctly inside Group fields
+- Fix: 'Hide' visibility conditions not working when based on Hidden fields
+- Fix: Issue filling Stripe Billing Details
+- Fix: Min/Max validation issue in Number field
+- Fix: Textarea field styling broken on Material Design Style
+- Fix: Slider field colors not saved in Appearance Presets
+- Fix: Password field validation message broken when using quotes
+- Fix: RTL mode issues with Select field
+- Fix: Submission ID in Hidden field not working in Email Notification subject
+- Fix: HTML field displays only the first item of Repeated field
+- Fix: Repeater field not working in Elementor popup
+- Fix: Issue with success message after submitting Polls
+- Fix: Quiz result and Lead form data missing in Email Notifications when 'Store Submissions in Database' is disabled
+- Fix: Scrolling issue on Add-ons page
+- Fix: Fatal error when using Multiple Upload field
+- Fix: Expiry Date field not allowing manual input
+- Fix: Default hint missing for Skip Form button
+- Fix: Visibility tab not showing reactivated Multiple Name fields
+- Fix: Confirm Email field validation message not editable
+- Fix: Close button not translatable in some modals
+- Fix: Error message not shown on Timepicker when a description is present
+- Fix: 'Approve' button missing for Registration form in some cases
+- Fix: JavaScript error when adding Conditional Visibility to Submit button
+- Fix: Textarea field overlaps with error message
+- Fix: Number field limits not working when inline validation is disabled in paginated forms
+- Fix: Screen reader does not read label for Slider field
+
 
 = 1.45.1 ( 2025-07-15 ) =
 

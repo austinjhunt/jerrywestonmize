@@ -26,7 +26,8 @@ class LoginCabinetController extends Controller
         'token',
         'checkIfWpUser',
         'cabinetType',
-        'changePass'
+        'changePass',
+        'recaptcha',
     ];
 
     /**

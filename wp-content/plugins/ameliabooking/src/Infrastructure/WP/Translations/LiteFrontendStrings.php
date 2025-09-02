@@ -105,6 +105,7 @@ class LiteFrontendStrings
             'duration_colon'               => __('Duration:', 'wpamelia'),
             'email_colon'                  => __('Email:', 'wpamelia'),
             'email_exist_error'            => __('Email already exists with different name. Please check your name.', 'wpamelia'),
+            'email_required'               => __('Email field is required', 'wpamelia'),
             'employee_limit_reached'       => __('Employee daily appointment limit has been reached. Please choose another date or employee.', 'wpamelia'),
             'enter_email_warning'          => __('Please enter email', 'wpamelia'),
             'enter_first_name_warning'     => __('Please enter first name', 'wpamelia'),
@@ -176,6 +177,8 @@ class LiteFrontendStrings
             'your_name_colon'              => __('Your Name', 'wpamelia'),
 
             'service_selection'            => __('Service Selection', 'wpamelia'),
+            'employee_selection'           => __('Employee Selection', 'wpamelia'),
+            'location_selection'           => __('Location Selection', 'wpamelia'),
             'service_colon'                => __('Service', 'wpamelia'),
             'please_select_service'        => __('Please select service', 'wpamelia'),
             'dropdown_category_heading'    => __('Category', 'wpamelia'),
@@ -200,6 +203,9 @@ class LiteFrontendStrings
             'congrats_employee'            => __('Employee', 'wpamelia'),
             'show_more'                    => __('Show more', 'wpamelia'),
             'show_less'                    => __('Show less', 'wpamelia'),
+            'learn_more'                   => __('Learn More', 'wpamelia'),
+            'view_in_package'              => __('View in Package', 'wpamelia'),
+            'service_information'          => __('Service information', 'wpamelia'),
         ];
     }
 

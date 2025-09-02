@@ -691,18 +691,20 @@ class TimeSlotService
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @param Service   $service
-     * @param int       $requiredTime
-     * @param array     $freeIntervals
-     * @param array     $resourcedIntervals
-     * @param int       $slotLength
-     * @param DateTime  $startDateTime
-     * @param bool      $serviceDurationAsSlot
-     * @param bool      $bufferTimeInSlot
-     * @param bool      $isFrontEndBooking
-     * @param String    $timeZone
+     * @param Service  $service
+     * @param int      $requiredTime
+     * @param array    $freeIntervals
+     * @param array    $resourcedIntervals
+     * @param int      $slotLength
+     * @param DateTime $startDateTime
+     * @param bool     $serviceDurationAsSlot
+     * @param bool     $bufferTimeInSlot
+     * @param String   $timeZone
+     * @param bool     $structured
+     * @param array    $customPricing
      *
      * @return array
+     * @throws Exception
      */
     private function getAppointmentFreeSlots(
         $service,
@@ -713,8 +715,9 @@ class TimeSlotService
         $startDateTime,
         $serviceDurationAsSlot,
         $bufferTimeInSlot,
-        $isFrontEndBooking,
-        $timeZone
+        $timeZone,
+        $structured,
+        $customPricing
     ) {
         $availableResult = [];
 
@@ -744,7 +747,7 @@ class TimeSlotService
 
         $startDateFormatted = $startDateTime->format('Y-m-d');
 
-        $bookingLength = $serviceDurationAsSlot && $isFrontEndBooking ? $requiredTime : $slotLength;
+        $bookingLength = $serviceDurationAsSlot ? $requiredTime : $slotLength;
 
         $appCount = [];
 
@@ -922,7 +925,24 @@ class TimeSlotService
                             . sprintf('%02d', floor(($timeSlot / 60) % 60));
 
                         if ($time !== '24:00') {
-                            $availableResult[$dateKey][$time] = $data;
+                            if (!$structured) {
+                                $availableResult[$dateKey][$time] = $data;
+                            } else {
+                                foreach ($data as $item) {
+                                    $availableResult[$dateKey][$time][] = [
+                                        'e' => $item[0],
+                                        'l' => $item[1],
+                                        'p' => $customPricing
+                                            ? $this->providerService->getDateTimePrice(
+                                                $customPricing,
+                                                $dateKey,
+                                                $timeSlot,
+                                                $timeZone
+                                            )
+                                            : null,
+                                    ];
+                                }
+                            }
 
                             if ($isContinuousTime) {
                                 $continuousTimeSlot = $timeSlot;
@@ -1007,23 +1027,43 @@ class TimeSlotService
                     }
 
                     $availableResult[$dateKey][$appointmentTime] = [
-                        [
+                        !$structured ? [
                             $providerKey,
                             $appointmentData['locationId'],
                             $appointmentData['places'],
                             $appointmentData['serviceId'],
                             $appointmentData['duration'],
+                        ] : [
+                            'e' => $providerKey,
+                            'l' => $appointmentData['locationId'],
+                            'c' => $appointmentData['places'],
+                            's' => $appointmentData['serviceId'],
+                            'd' => $appointmentData['duration'],
+                            'p' => $customPricing
+                                ? $this->providerService->getDateTimePrice(
+                                    $customPricing,
+                                    $dateKey,
+                                    $this->intervalService->getSeconds($appointmentTime),
+                                    $timeZone
+                                )
+                                : null,
                         ]
                     ];
                 }
 
                 foreach ($provider['full'] as $appointmentTime => $appointmentData) {
-                    $occupiedResult[$dateKey][$appointmentTime][] = [
+                    $occupiedResult[$dateKey][$appointmentTime][] = !$structured ? [
                         $providerKey,
                         $appointmentData['locationId'],
                         $appointmentData['places'],
                         $appointmentData['serviceId'],
                         $appointmentData['duration'],
+                    ] : [
+                        'e' => $providerKey,
+                        'l' => $appointmentData['locationId'],
+                        'c' => $appointmentData['places'],
+                        's' => $appointmentData['serviceId'],
+                        'd' => $appointmentData['duration'],
                     ];
                 }
 
@@ -1177,14 +1217,23 @@ class TimeSlotService
 
         /** @var Provider $provider */
         foreach ($providers->getItems() as $provider) {
+            /** @var Service $providerService */
+            $providerService = $service;
+
             if ($provider->getServiceList()->keyExists($service->getId()->getValue())) {
-                /** @var Service $providerService */
                 $providerService = $provider->getServiceList()->getItem($service->getId()->getValue());
 
                 if ($providerService && $props['personsCount'] > $providerService->getMaxCapacity()->getValue()) {
                     continue;
                 }
             }
+
+            $customPricing = $this->providerService->getCustomPricing(
+                $providerService,
+                $provider->getTimeZone()
+                    ? $provider->getTimeZone()->getValue()
+                    : DateTimeService::getTimeZone()->getName()
+            );
 
             $providerContainer = new Collection();
 
@@ -1229,7 +1278,7 @@ class TimeSlotService
                 $props['isFrontEndBooking'] ? $settings['openedBookingAfterMin'] : false,
                 !empty($settings['allowAdminBookOverApp']),
                 ['limitCount' => $limitPerEmployee, 'appCount' => $appointmentsCount],
-                !empty($settings['allowAdminBookAtAnyTime']),
+                !empty($settings['allowAdminBookAtAnyTime'])
             );
 
             $freeProvidersSlots[$provider->getId()->getValue()] = $this->getAppointmentFreeSlots(
@@ -1243,9 +1292,10 @@ class TimeSlotService
                 $settings['allowAdminBookAtAnyTime'] ? $settings['adminServiceDurationAsSlot'] :
                     $settings['serviceDurationAsSlot'],
                 $settings['bufferTimeInSlot'],
-                true,
                 $provider->getTimeZone() ?
-                    $provider->getTimeZone()->getValue() : DateTimeService::getTimeZone()->getName()
+                    $provider->getTimeZone()->getValue() : DateTimeService::getTimeZone()->getName(),
+                !empty($props['structured']),
+                $customPricing
             );
         }
 

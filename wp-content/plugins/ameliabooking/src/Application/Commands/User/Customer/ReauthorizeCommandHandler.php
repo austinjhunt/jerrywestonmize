@@ -8,6 +8,7 @@ use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
+use AmeliaBooking\Infrastructure\Services\Recaptcha\AbstractRecaptchaService;
 
 /**
  * Class ReauthorizeCommandHandler
@@ -44,6 +45,16 @@ class ReauthorizeCommandHandler extends CommandHandler
         /** @var Customer $customer */
         $customer = $userRepository->getByEmail($command->getField('email'));
 
+        /** @var AbstractRecaptchaService $recaptchaService */
+        $recaptchaService = $this->container->get('infrastructure.recaptcha.service');
+
+        if (!$recaptchaService->process($command->getField('recaptcha'), $command->getField('cabinetType'))) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Recaptcha verification failed');
+            $result->setData(['recaptcha_error' => true]);
+
+            return $result;
+        }
 
         if ($customer !== null) {
             $notificationService->sendRecoveryEmail($customer, $command->getField('email'), $command->getField('cabinetType'));

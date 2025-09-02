@@ -7,7 +7,7 @@ use AmeliaBooking\Application\Commands\Command;
 /**
  * Class GetSquareAuthURLCommand
  *
- * @package AmeliaBooking\Application\Commands\Outlook
+ * @package AmeliaBooking\Application\Commands\Square
  */
 class GetSquareAuthURLCommand extends Command
 {

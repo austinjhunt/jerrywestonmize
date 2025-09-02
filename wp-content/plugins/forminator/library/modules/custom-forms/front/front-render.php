@@ -1119,7 +1119,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 
 		$html = sprintf(
-			'<div tabindex="0" role="tabpanel" id="forminator-custom-form-%3$s--page-0" class="forminator-pagination forminator-pagination-start" aria-labelledby="forminator-custom-form-%3$s--page-0-label" data-step="0" data-label="%1$s" data-name="%2$s">',
+			'<div tabindex="-1" role="tabpanel" id="forminator-custom-form-%3$s--page-0" class="forminator-pagination forminator-pagination-start" aria-labelledby="forminator-custom-form-%3$s--page-0-label" data-step="0" data-label="%1$s" data-name="%2$s">',
 			esc_attr( $label ),
 			esc_attr( $element_id ),
 			esc_attr( $form_settings['form_id'] )
@@ -1148,6 +1148,9 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			'last-previous'            => esc_html__( 'Previous', 'forminator' ),
 			'pagination-labels'        => 'default',
 			'has-paypal'               => $this->has_paypal(),
+			'progress-bar-type'        => 'progress',
+			/* Translators: 1. Current page number, 2. Total number of pages. */
+			'page-number-text'         => esc_html__( 'Page %1$s of %2$s', 'forminator' ),
 		);
 
 		foreach ( $properties as $property => $value ) {
@@ -1351,7 +1354,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 
 		$html = sprintf(
-			'</div><div tabindex="0" role="tabpanel" id="forminator-custom-form-%4$s--page-%1$s" class="forminator-pagination" aria-labelledby="forminator-custom-form-%4$s--page-%1$s-label" aria-hidden="true" data-step="%1$s" data-label="%2$s" data-name="%3$s" hidden>',
+			'</div><div tabindex="-1" role="tabpanel" id="forminator-custom-form-%4$s--page-%1$s" class="forminator-pagination" aria-labelledby="forminator-custom-form-%4$s--page-%1$s-label" aria-hidden="true" data-step="%1$s" data-label="%2$s" data-name="%3$s" hidden>',
 			esc_attr( $step ),
 			esc_attr( $label ),
 			esc_attr( $element_id ),
@@ -3311,7 +3314,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 * @return bool
 	 */
 	public function get_skip_text( $form_settings ) {
-		$skip_text = isset( $form_settings['skip-text'] ) ? esc_html( $form_settings['skip-text'] ) : esc_html__( 'Skip and continue', 'forminator' );
+		$skip_text = ! empty( $form_settings['skip-text'] ) ? esc_html( $form_settings['skip-text'] ) : esc_html__( 'Skip and continue', 'forminator' );
 
 		return $skip_text;
 	}

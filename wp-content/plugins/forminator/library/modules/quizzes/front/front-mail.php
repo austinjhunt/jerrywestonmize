@@ -66,6 +66,19 @@ class Forminator_Quiz_Front_Mail extends Forminator_Mail {
 			$lead_model  = Forminator_Base_Form_Model::get_model( $lead_id );
 			$form_fields = forminator_addon_format_form_fields( $lead_model );
 			$lead_data   = forminator_addons_lead_submitted_data( $form_fields, $entry );
+			// If lead data was missing and we have a lead entry id, try to reconstruct the lead data from the transient.
+			if ( empty( $lead_data ) && isset( Forminator_Front_Action::$prepared_data['lead_entry_id'] ) ) {
+				$lead_entry_id = Forminator_Front_Action::$prepared_data['lead_entry_id'];
+				// Reconstruct the exact transient key we used when saving.
+				$transient_key = 'forminator_lead_object_temporary_storage_' . $lead_entry_id;
+				$lead_entry    = get_transient( $transient_key );
+				if ( $lead_entry instanceof Forminator_Form_Entry_Model && $lead_entry->entry_id === $lead_entry_id ) {
+					$lead_entry->entry_id = 0;
+					$entry                = $lead_entry;
+					$lead_data            = forminator_addons_lead_submitted_data( $form_fields, $entry );
+					delete_transient( $transient_key );
+				}
+			}
 			$files       = $this->get_lead_file_attachment( $lead_model, $entry );
 			$print_value = ! empty( $lead_model->settings['print_value'] ) ? filter_var( $lead_model->settings['print_value'], FILTER_VALIDATE_BOOLEAN ) : false;
 

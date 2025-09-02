@@ -867,7 +867,8 @@ abstract class Forminator_Field {
 		if ( 'multiple' === $file_type ) {
 			$mainclass = 'forminator-multi-upload';
 			$class    .= ' ' . $id . '-' . $form_id;
-
+		} elseif ( 'none' !== $design ) {
+			$upload_attr['tabindex'] = '-1';
 		}
 
 		$upload_data = self::implode_attr( $upload_attr );
@@ -1146,19 +1147,17 @@ abstract class Forminator_Field {
 			return $conditions;
 		}
 
-		$parent_group   = $field_settings['parent_group'] ?? '';
-		$grouped_fields = Forminator_Front_Action::$module_object->get_grouped_fields_slugs( $parent_group );
-
-		if ( empty( $grouped_fields ) ) {
+		$parent_group = $field_settings['parent_group'] ?? '';
+		if ( empty( $parent_group ) ) {
 			return $conditions;
 		}
 
 		foreach ( $conditions as $key => $condition ) {
-			foreach ( $grouped_fields as $g_field ) {
-				if ( $condition['element_id'] === $g_field
-					|| 0 === strpos( $condition['element_id'], $g_field . '-' ) ) {
-					$conditions[ $key ]['element_id'] .= $group_suffix;
-				}
+			$dependent = Forminator_Front_Action::$module_object->get_field( $condition['element_id'], false );
+			$dep_group = $dependent ? $dependent->parent_group : '';
+
+			if ( $dep_group === $parent_group ) {
+				$conditions[ $key ]['element_id'] .= $group_suffix;
 			}
 		}
 

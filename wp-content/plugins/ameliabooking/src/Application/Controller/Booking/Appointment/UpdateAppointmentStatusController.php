@@ -22,11 +22,10 @@ class UpdateAppointmentStatusController extends Controller
      */
     public $allowedFields = [
         'status',
-        'packageCustomerId'
     ];
 
     /**
-     * Instantiates the Update Appointment command to hand it over to the Command Handler
+     * Instantiates the Update Appointment Status command to hand it over to the Command Handler
      *
      * @param Request $request
      * @param         $args
@@ -36,9 +35,17 @@ class UpdateAppointmentStatusController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command     = new UpdateAppointmentStatusCommand($args);
+        $command = new UpdateAppointmentStatusCommand($args);
+
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
+        $command->setToken($request);
+
+        $params = $request->getQueryParams();
+
+        if (isset($params['source'])) {
+            $command->setPage($params['source']);
+        }
 
         return $command;
     }

@@ -5,6 +5,9 @@ namespace MailPoet\Config;
 if (!defined('ABSPATH')) exit;
 
 
+use Automattic\WooCommerce\EmailEditor\Bootstrap as EmailEditorBootstrap;
+use Automattic\WooCommerce\EmailEditor\Email_Editor_Container;
+use Automattic\WooCommerce\EmailEditor\Engine\Logger\Email_Editor_Logger;
 use MailPoet\API\JSON\API;
 use MailPoet\API\REST\API as RestApi;
 use MailPoet\AutomaticEmails\AutomaticEmails;
@@ -14,10 +17,9 @@ use MailPoet\Automation\Integrations\MailPoet\MailPoetIntegration;
 use MailPoet\Automation\Integrations\WooCommerce\WooCommerceIntegration;
 use MailPoet\Cron\CronTrigger;
 use MailPoet\Cron\DaemonActionSchedulerRunner;
-use MailPoet\EmailEditor\Engine\Email_Editor;
-use MailPoet\EmailEditor\Integrations\Core\Initializer as CoreEmailEditorIntegration;
 use MailPoet\EmailEditor\Integrations\MailPoet\Blocks\BlockTypesController;
 use MailPoet\EmailEditor\Integrations\MailPoet\EmailEditor as MailpoetEmailEditorIntegration;
+use MailPoet\EmailEditor\Integrations\MailPoet\Logger;
 use MailPoet\InvalidStateException;
 use MailPoet\Migrator\Cli as MigratorCli;
 use MailPoet\PostEditorBlocks\PostEditorBlock;
@@ -122,20 +124,18 @@ class Initializer {
   /** @var DaemonActionSchedulerRunner */
   private $actionSchedulerRunner;
 
-  /** @var Email_Editor */
-  private $emailEditor;
-
   /** @var MailpoetEmailEditorIntegration */
   private $mailpoetEmailEditorIntegration;
-
-  /** @var CoreEmailEditorIntegration */
-  private $coreEmailEditorIntegration;
 
   /** @var BlockTypesController */
   private $blockTypesController;
 
   /** @var Url */
   private $urlHelper;
+
+  private EmailEditorBootstrap $emailEditorBootstrap;
+
+  private Email_Editor_Logger $emailEditorLogger;
 
   const INITIALIZED = 'MAILPOET_INITIALIZED';
 
@@ -170,10 +170,8 @@ class Initializer {
     WooCommerceIntegration $woocommerceIntegration,
     PersonalDataExporters $personalDataExporters,
     DaemonActionSchedulerRunner $actionSchedulerRunner,
-    Email_Editor $emailEditor,
     BlockTypesController $blockTypesController,
     MailpoetEmailEditorIntegration $mailpoetEmailEditorIntegration,
-    CoreEmailEditorIntegration $coreEmailEditorIntegration,
     Url $urlHelper
   ) {
     $this->rendererFactory = $rendererFactory;
@@ -204,11 +202,13 @@ class Initializer {
     $this->woocommerceIntegration = $woocommerceIntegration;
     $this->personalDataExporters = $personalDataExporters;
     $this->actionSchedulerRunner = $actionSchedulerRunner;
-    $this->emailEditor = $emailEditor;
     $this->mailpoetEmailEditorIntegration = $mailpoetEmailEditorIntegration;
-    $this->coreEmailEditorIntegration = $coreEmailEditorIntegration;
     $this->blockTypesController = $blockTypesController;
     $this->urlHelper = $urlHelper;
+
+    $emailEditorContainer = Email_Editor_Container::container();
+    $this->emailEditorBootstrap = $emailEditorContainer->get(EmailEditorBootstrap::class);
+    $this->emailEditorLogger = $emailEditorContainer->get(Email_Editor_Logger::class);
   }
 
   public function init() {
@@ -238,6 +238,8 @@ class Initializer {
         'runDeactivation',
       ]
     );
+
+    $this->emailEditorBootstrap->init();
 
     $this->wpFunctions->addAction('activated_plugin', [
       new PluginActivatedHook(new DeferredAdminNotices),
@@ -285,7 +287,7 @@ class Initializer {
       'multisiteDropTables',
     ]);
 
-    $this->wpFunctions->addFilter('mailpoet_email_editor_initialized', [
+    $this->wpFunctions->addFilter('woocommerce_email_editor_initialized', [
       $this,
       'setupEmailEditorIntegrations',
     ]);
@@ -328,6 +330,7 @@ class Initializer {
       $this->setupWidget();
       $this->setupWoocommerceTransactionalEmails();
       $this->assetsLoader->loadStyles();
+      $this->emailEditorLogger->set_logger(new Logger());
     } catch (\Exception $e) {
       $this->handleFailedInitialization($e);
     }
@@ -364,7 +367,6 @@ class Initializer {
       $this->postEditorBlock->init();
       $this->automationEngine->initialize();
       $this->blockTypesController->initialize();
-      $this->emailEditor->initialize();
       $this->wpFunctions->doAction('mailpoet_initialized', MAILPOET_VERSION);
     } catch (InvalidStateException $e) {
       return $this->handleRunningMigration($e);
@@ -552,7 +554,6 @@ class Initializer {
 
   public function setupEmailEditorIntegrations() {
     $this->mailpoetEmailEditorIntegration->initialize();
-    $this->coreEmailEditorIntegration->initialize();
   }
 
   public function runDeactivation() {

@@ -55,6 +55,11 @@ class DelayAction implements Action {
     }
   }
 
+  public function onDuplicate(Step $step): Step {
+    // Intentionally left empty for now
+    return $step;
+  }
+
   public static function calculateSeconds(Step $step): int {
     $delay = (int)($step->getArgs()['delay'] ?? null);
     switch ($step->getArgs()['delay_type']) {

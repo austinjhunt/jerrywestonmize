@@ -5,6 +5,7 @@ namespace MailPoet\Subscribers;
 if (!defined('ABSPATH')) exit;
 
 
+use Automattic\WooCommerce\EmailEditor\Engine\Renderer\Html2Text;
 use MailPoet\Cron\Workers\SendingQueue\Tasks\Shortcodes;
 use MailPoet\Entities\SegmentEntity;
 use MailPoet\Entities\SubscriberEntity;
@@ -18,7 +19,6 @@ use MailPoet\Settings\SettingsController;
 use MailPoet\Subscription\SubscriptionUrlFactory;
 use MailPoet\Util\Helpers;
 use MailPoet\WP\Functions as WPFunctions;
-use MailPoetVendor\Html2Text\Html2Text;
 
 class ConfirmationEmailMailer {
 

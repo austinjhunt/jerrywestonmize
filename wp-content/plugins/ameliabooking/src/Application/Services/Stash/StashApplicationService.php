@@ -212,6 +212,7 @@ class StashApplicationService
                 'name'   => $location->getName()->getValue(),
                 'status' => $location->getStatus()->getValue(),
                 'address' => $location->getAddress()->getValue(),
+                'description' => $location->getDescription() ? $location->getDescription()->getValue() : null,
                 'translations' => $location->getTranslations() ? $location->getTranslations()->getValue() : null
             ];
         }
@@ -253,6 +254,7 @@ class StashApplicationService
                 'lastName'         => $provider->getLastName()->getValue(),
                 'email'            => $provider->getEmail()->getValue(),
                 'status'           => $provider->getStatus()->getValue(),
+                'show'             => $provider->getShow()->getValue(),
                 'pictureFullPath'  => $provider->getPicture() ? $provider->getPicture()->getFullPath() : null,
                 'pictureThumbPath' => $provider->getPicture() ? $provider->getPicture()->getThumbPath() : null,
                 'locationId'       => $provider->getLocationId() ? $provider->getLocationId()->getValue() : null,

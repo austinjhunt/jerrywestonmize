@@ -437,10 +437,16 @@ class BookableApplicationService
 
                         $providerService->setCustomPricing($service->getCustomPricing());
                     } elseif ($service->getCustomPricing() && $providerService->getCustomPricing()) {
+                        $updateProviderService = true;
+
                         $serviceCustomPricing = json_decode($service->getCustomPricing()->getValue(), true);
 
                         if (empty($serviceCustomPricing['persons'])) {
                             $serviceCustomPricing['persons'] = [];
+                        }
+
+                        if (empty($serviceCustomPricing['periods'])) {
+                            $serviceCustomPricing['periods'] = ['default' => [], 'custom' => []];
                         }
 
                         $providerCustomPricing = json_decode($providerService->getCustomPricing()->getValue(), true);
@@ -449,12 +455,14 @@ class BookableApplicationService
                             $providerCustomPricing['persons'] = [];
                         }
 
+                        if (empty($providerCustomPricing['periods'])) {
+                            $providerCustomPricing['periods'] = ['default' => [], 'custom' => []];
+                        }
+
                         foreach ($serviceCustomPricing['durations'] as $duration => $durationData) {
                             if (array_key_exists($duration, $providerCustomPricing['durations'])) {
                                 $serviceCustomPricing['durations'][$duration] =
                                     $providerCustomPricing['durations'][$duration];
-                            } else {
-                                $updateProviderService = true;
                             }
                         }
 
@@ -462,30 +470,44 @@ class BookableApplicationService
                             if (array_key_exists($range, $providerCustomPricing['persons'])) {
                                 $serviceCustomPricing['persons'][$range] =
                                     $providerCustomPricing['persons'][$range];
-                            } else {
-                                $updateProviderService = true;
                             }
                         }
 
-                        if ($serviceCustomPricing['enabled'] !== $providerCustomPricing['enabled']) {
-                            $updateProviderService = true;
+                        foreach ($serviceCustomPricing['periods']['default'] as $indexService => &$dayData) {
+                            foreach ($dayData['ranges'] as &$serviceRange) {
+                                foreach ($providerCustomPricing['periods']['default'] as $indexProvider => $providerData) {
+                                    if ($indexService === $indexProvider) {
+                                        foreach ($providerData['ranges'] as $providerRange) {
+                                            if ($providerRange['from'] === $serviceRange['from'] &&
+                                                $providerRange['to'] === $serviceRange['to']
+                                            ) {
+                                                $serviceRange['price'] = $providerRange['price'];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        foreach ($serviceCustomPricing['periods']['custom'] as &$dayData) {
+                            foreach ($dayData['ranges'] as &$serviceRange) {
+                                foreach ($providerCustomPricing['periods']['custom'] as $providerData) {
+                                    if ($dayData['dates']['start'] === $providerData['dates']['start'] &&
+                                        $dayData['dates']['end'] === $providerData['dates']['end']
+                                    ) {
+                                        foreach ($providerData['ranges'] as $providerRange) {
+                                            if ($providerRange['from'] === $serviceRange['from'] &&
+                                                $providerRange['to'] === $serviceRange['to']
+                                            ) {
+                                                $serviceRange['price'] = $providerRange['price'];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                         $providerService->setCustomPricing(new Json(json_encode($serviceCustomPricing)));
-
-                        if (!$updateProviderService) {
-                            foreach ($providerCustomPricing['durations'] as $duration => $durationData) {
-                                if (!array_key_exists($duration, $serviceCustomPricing['durations'])) {
-                                    $updateProviderService = true;
-                                }
-                            }
-
-                            foreach ($providerCustomPricing['persons'] as $range => $rangeData) {
-                                if (!array_key_exists($range, $serviceCustomPricing['persons'])) {
-                                    $updateProviderService = true;
-                                }
-                            }
-                        }
                     }
 
                     if ($updateProviderService) {

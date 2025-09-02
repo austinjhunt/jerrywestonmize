@@ -49,6 +49,7 @@ class AddProviderController extends Controller
         'timeZone',
         'badgeId',
         'stripeConnect',
+        'show',
     ];
 
     /**

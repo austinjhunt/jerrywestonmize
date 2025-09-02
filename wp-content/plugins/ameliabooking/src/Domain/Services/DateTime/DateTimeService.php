@@ -37,6 +37,16 @@ class DateTimeService
     }
 
     /**
+     * @param string $timeZone
+     *
+     * @return \DateTimeZone
+     */
+    public static function createTimeZone($timeZone)
+    {
+        return new \DateTimeZone($timeZone);
+    }
+
+    /**
      * @return \DateTimeZone
      */
     public static function getTimeZone()

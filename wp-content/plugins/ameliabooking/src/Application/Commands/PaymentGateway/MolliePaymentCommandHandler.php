@@ -193,11 +193,32 @@ class MolliePaymentCommandHandler extends CommandHandler
         if ($response->isRedirect()) {
             $result = $paymentAS->updateCache($result, $command->getFields(), $cache, $reservation);
 
+            $bookings = [];
+
+            if ($result->getData()['type'] !== 'package') {
+                $bookings[] = [
+                    'id' => $result->getData()['booking']['id'],
+                    'token' => $result->getData()['booking']['token']
+                ];
+                $recurringBookings = $result->getData()['recurring'] ?? [];
+                foreach ($recurringBookings as $recurring) {
+                    $bookings[] = [
+                        'id'    => $recurring['booking']['id'],
+                        'token' => $recurring['booking']['token'],
+                    ];
+                }
+            }
+
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Proceed to Mollie Payment Page');
             $result->setData(
                 [
                     'redirectUrl' => $response->getRedirectUrl(),
+                    'bookings' => $bookings,
+                    'packageCustomer' => $result->getData()['packageCustomerId'] ? [
+                        'id' => $result->getData()['packageCustomerId'],
+                        'token' => $result->getData()['packageCustomerToken'] ?: '',
+                    ] : null
                 ]
             );
 

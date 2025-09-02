@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Application\Services\Reservation;
 
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
@@ -61,6 +62,7 @@ use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingR
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
+use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
 use AmeliaBooking\Infrastructure\Services\Recaptcha\AbstractRecaptchaService;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
@@ -307,6 +309,14 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         ) : null;
 
         if (!empty($appointmentData['bookings'][0]['customer'])) {
+            // Fix for customFields being sent as JSON string
+            if (
+                !empty($appointmentData['bookings'][0]['customer']['customFields']) &&
+                !is_array($appointmentData['bookings'][0]['customer']['customFields'])
+            ) {
+                $appointmentData['bookings'][0]['customer']['customFields'] = null;
+            }
+
             // add customer language from booking info
             $appointmentData['bookings'][0]['customer'] = array_merge(
                 $appointmentData['bookings'][0]['customer'],
@@ -434,6 +444,13 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             $appointmentData['bookings'][0]['customFields'] = json_encode(
                 $appointmentData['bookings'][0]['customFields']
             );
+        }
+
+        if (!empty($appointmentData['bookings'][0]['customer']['email']) && !empty($appointmentData['bookings'][0]['customer']['subscribeToMailchimp'])) {
+            /** @var AbstractMailchimpService $mailchimpService */
+            $mailchimpService = $this->container->get('infrastructure.mailchimp.service');
+            $userData = $user ? $user->toArray() : $appointmentData['bookings'][0]['customer'];
+            $mailchimpService->addOrUpdateSubscriber($userData['email'], $userData);
         }
 
         try {
@@ -570,6 +587,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                     'paymentId'                => $payment->getId()->getValue(),
                     'packageCustomerId'        => $payment->getPackageCustomerId()->getValue(),
                     'payment'                  => $payment->toArray(),
+                    'packageCustomerToken'     => $reservation->getPackageCustomer() && $reservation->getPackageCustomer()->getToken()
+                        ? $reservation->getPackageCustomer()->getToken()->getValue() : null,
                 ]
             );
 
@@ -657,6 +676,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                         $payment->getPackageCustomerId()->getValue() : null,
                     'payment'   => $payment ? $payment->toArray() : null,
                     'isCart'    => $isCart,
+                    'packageCustomerToken' => $reservation->getPackageCustomer() && $reservation->getPackageCustomer()->getToken()
+                        ? $reservation->getPackageCustomer()->getToken()->getValue() : null,
                 ]
             )
         );
@@ -716,7 +737,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
     {
         switch ($tax->getType()->getValue()) {
             case (AmountType::PERCENTAGE):
-                return round($amount / 100 * (float)$tax->getAmount()->getValue(), 2);
+                return round($amount / 100 * (float)$tax->getAmount()->getValue(), 4);
 
             case (AmountType::FIXED):
                 return $tax->getAmount()->getValue();
@@ -755,7 +776,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
     protected function getCouponDiscountAmount($coupon, $amount)
     {
         return $coupon && $coupon->getDiscount()
-            ? round($amount / 100 * (float)$coupon->getDiscount()->getValue(), 2)
+            ? round($amount / 100 * (float)$coupon->getDiscount()->getValue(), 4)
             : 0;
     }
 
@@ -1230,4 +1251,14 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      * @throws QueryExecutionException
      */
     abstract public function manageTaxes(&$data);
+
+    /**
+     * @param int $bookingId
+     * @param string $token
+     *
+     * @return array
+     *
+     * @throws AccessDeniedException
+     */
+    abstract public function deleteBooking($bookingId, $token = null);
 }

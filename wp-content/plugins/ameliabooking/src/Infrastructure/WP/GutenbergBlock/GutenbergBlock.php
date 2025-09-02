@@ -327,6 +327,10 @@ class GutenbergBlock
 
         if ($resultData['employees'] !== []) {
             for ($i = 0; $i < count($resultData['employees']); $i++) {
+                if (!$resultData['employees'][$i]['show']) {
+                    continue;
+                }
+
                 $data['employees'][] = [
                     'id'        => $resultData['employees'][$i]['id'],
                     'firstName' => $resultData['employees'][$i]['firstName'],

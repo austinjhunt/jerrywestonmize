@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable;
 
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
 
 /**
@@ -22,6 +23,8 @@ class PackagesCustomersTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $token = Token::MAX_LENGTH;
+
         return "CREATE TABLE {$table}  (
                   `id` INT(11) NOT NULL AUTO_INCREMENT,
                   `packageId` INT(11) NOT NULL,
@@ -34,6 +37,7 @@ class PackagesCustomersTable extends AbstractDatabaseTable
                   `status` ENUM('approved', 'pending', 'canceled', 'rejected') DEFAULT NULL,
                   `bookingsCount` INT(5) DEFAULT NULL,
                   `couponId` INT(11) DEFAULT NULL,
+                  `token` VARCHAR({$token}) NULL,
                   PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     }

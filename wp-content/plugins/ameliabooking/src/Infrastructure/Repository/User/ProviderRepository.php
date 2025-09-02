@@ -424,6 +424,12 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             $where[] = 'u.status = :providerStatus';
         }
 
+        if (isset($criteria['show'])) {
+            $params[':show'] = $criteria['show'];
+
+            $where[] = 'u.show = :show';
+        }
+
         if (!empty($criteria['providers'])) {
             foreach ($criteria['providers'] as $index => $value) {
                 $param = ':provider' . $index;
@@ -500,6 +506,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.translations AS user_translations,
                     u.timeZone AS user_timeZone,
                     u.badgeId AS badge_id,
+                    u.show AS user_show,
                     plt.locationId AS user_locationId,
                     pst.serviceId AS service_id,
                     pst.price AS service_price,
@@ -785,6 +792,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.firstName AS user_firstName,
                     u.lastName AS user_lastName,
                     u.email AS user_email,
+                    u.timeZone AS user_timeZone,
                     u.translations AS user_translations,
                     st.serviceId AS service_id,
                     st.price AS service_price,
@@ -1366,6 +1374,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 'badgeId'          => isset($row['badge_id']) ? $row['badge_id'] : null,
                 'appleCalendarId'  => isset($row['user_apple_calendar_id']) ? $row['user_apple_calendar_id'] : null,
                 'employeeAppleCalendar' => isset($row['user_employee_apple_calendar']) ? $row['user_employee_apple_calendar'] : null,
+                'show'             => isset($row['user_show']) ? $row['user_show'] : 0,
             ];
         }
 

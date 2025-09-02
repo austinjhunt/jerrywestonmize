@@ -335,6 +335,8 @@ class EventPlaceholderService extends PlaceholderService
             $firstElement = false;
         }
 
+        $data['invoice_tax'] = array_sum(array_column($data['items'], 'total_tax'));
+
         $data['invoice_number'] = $placeholders['payment_invoice_number'];
         $data['invoice_method'] = !empty($placeholders['payment_gateway_title']) ? $placeholders['payment_gateway_title'] : $placeholders['payment_type'];
         $data['invoice_issued'] = $placeholders['payment_created'];
@@ -809,8 +811,6 @@ class EventPlaceholderService extends PlaceholderService
                         'item_name' => $event['name'] . ' - ' . $ticket->getName()->getValue(),
                         'invoice_unit_price' => $bookingToEventTicket->getPrice()->getValue(),
                         'invoice_qty' => $bookingToEventTicket->getPersons()->getValue(),
-                        'invoice_subtotal' => empty($event['bookings'][$bookingKey]['aggregatedPrice']) ? $bookingToEventTicket->getPrice()->getValue()
-                            : ($bookingToEventTicket->getPersons()->getValue() * $bookingToEventTicket->getPrice()->getValue()),
                     ];
                 }
             } elseif (!empty($event['bookings'][$bookingKey]['ticketsData'])) {
@@ -845,8 +845,6 @@ class EventPlaceholderService extends PlaceholderService
                         'item_name' => $event['name'] . ' - ' . $ticket->getName()->getValue(),
                         'invoice_unit_price' => $bookingToEventTicket['price'],
                         'invoice_qty' => $bookingToEventTicket['persons'],
-                        'invoice_subtotal' => empty($event['bookings'][$bookingKey]['aggregatedPrice']) ? $bookingToEventTicket['price']
-                            : ($bookingToEventTicket['persons'] * $bookingToEventTicket['price'])
                     ];
                 }
             } else {
@@ -855,10 +853,6 @@ class EventPlaceholderService extends PlaceholderService
                     'item_name' => $event['name'],
                     'invoice_unit_price' => $event['price'],
                     'invoice_qty' => $event['bookings'][$bookingKey]['persons'],
-                    'invoice_subtotal' =>
-                        empty($event['bookings'][$bookingKey]['aggregatedPrice']) ?
-                            $event['price'] :
-                            ($event['price'] * $event['bookings'][$bookingKey]['persons'])
                 ];
             }
         } else {

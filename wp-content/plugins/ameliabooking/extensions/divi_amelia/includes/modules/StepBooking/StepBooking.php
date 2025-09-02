@@ -18,7 +18,7 @@ class DIVI_StepBooking extends ET_Builder_Module
 
     public $type = array();
     private $trigger_types = array();
-
+    private $layout_options = array();
 
     protected $module_credits = array(
         'module_uri' => '',
@@ -33,6 +33,12 @@ class DIVI_StepBooking extends ET_Builder_Module
         $this->type['0']        = BackendStrings::getWordPressStrings()['show_all'];
         $this->type['services'] = BackendStrings::getCommonStrings()['services'];
         $this->type['packages'] = BackendStrings::getCommonStrings()['packages'];
+
+        // Initialize layout options
+        $this->layout_options = [
+            '1' => BackendStrings::getCommonStrings()['layout_dropdown'],
+            '2' => BackendStrings::getCommonStrings()['layout_list']
+        ];
 
         if (!is_admin()) {
             return;
@@ -167,6 +173,15 @@ class DIVI_StepBooking extends ET_Builder_Module
             ));
         }
 
+        $array['layout'] = array(
+            'label'           => esc_html__(BackendStrings::getCommonStrings()['layout_select_label'], 'divi-divi_amelia'),
+            'type'            => 'select',
+            'options'         => $this->layout_options,
+            'toggle_slug'     => 'main_content',
+            'option_category' => 'basic_option',
+            'default'         => '1',
+        );
+
         $array['trigger'] = array(
             'label'           => esc_html__(BackendStrings::getWordPressStrings()['manually_loading'], 'divi-divi_amelia'),
             'type'            => 'text',
@@ -217,12 +232,14 @@ class DIVI_StepBooking extends ET_Builder_Module
 
     public function render($attrs, $content = null, $render_slug = null)
     {
-        $preselect =  $this->props['booking_params'];
-        $shortcode = '[ameliastepbooking';
-        $showAll   = isset($this->props['type']) ? $this->props['type'] : null;
-        $trigger   = $this->props['trigger'];
+        $preselect    =  $this->props['booking_params'];
+        $shortcode    = '[ameliastepbooking';
+        $showAll      = isset($this->props['type']) ? $this->props['type'] : null;
+        $trigger      = $this->props['trigger'];
         $trigger_type = $this->props['trigger_type'];
-        $in_dialog = $this->props['in_dialog'];
+        $in_dialog    = $this->props['in_dialog'];
+        $layout       = isset($this->props['layout']) ? $this->props['layout'] : '1'; // Default to dropdown layout
+
         if ($showAll !== null && $showAll !== '' && $showAll !== '0') {
             $shortcode .= ' show='.$showAll;
         }
@@ -235,6 +252,10 @@ class DIVI_StepBooking extends ET_Builder_Module
         if (!empty($trigger) && $in_dialog === 'on') {
             $shortcode .= ' in_dialog=1';
         }
+
+        // Add layout parameter to the shortcode
+        $shortcode .= ' layout='.$layout;
+
         if ($preselect === 'on') {
             $category = !empty($this->props['categories']) ? $this->checkValues($this->props['categories']) : null;
             $service  = !empty($this->props['services']) ? $this->checkValues($this->props['services']) : null;

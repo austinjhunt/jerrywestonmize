@@ -343,7 +343,9 @@ class Forminator_Currency extends Forminator_Field {
 					$this
 				);
 			}
-		} elseif ( ! empty( $data ) ) {
+		}
+
+		if ( ! empty( $data ) ) {
 				$separators = $this->forminator_separators( $separator, $field );
 				$point      = ! empty( $precision ) ? $separators['point'] : '';
 				$data       = str_replace( array( $separators['separator'], $point ), array( '', '.' ), $data );

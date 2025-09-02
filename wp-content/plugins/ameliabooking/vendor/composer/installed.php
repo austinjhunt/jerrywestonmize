@@ -163,6 +163,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'mailchimp/marketing' => array(
+            'pretty_version' => '3.0.80',
+            'version' => '3.0.80.0',
+            'reference' => 'c1a38f7248d8de7de412418fed8dae759b9e4b97',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../mailchimp/marketing',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'mailgun/mailgun-php' => array(
             'pretty_version' => '2.8.1',
             'version' => '2.8.1.0',

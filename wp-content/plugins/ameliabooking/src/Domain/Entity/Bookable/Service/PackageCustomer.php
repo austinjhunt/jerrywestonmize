@@ -12,6 +12,7 @@ use AmeliaBooking\Domain\Entity\Booking\AbstractCustomerBooking;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
+use AmeliaBooking\Domain\ValueObjects\String\Token;
 
 /**
  * Class PackageCustomer
@@ -40,6 +41,10 @@ class PackageCustomer extends AbstractCustomerBooking
 
     /** @var WholeNumber */
     private $bookingsCount;
+
+    /** @var Token */
+    private $token;
+
 
     /**
      * @return Id
@@ -154,6 +159,23 @@ class PackageCustomer extends AbstractCustomerBooking
     }
 
     /**
+     * @return Token|null
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+
+    /**
+     * @param Token $token
+     */
+    public function setToken(Token $token)
+    {
+        $this->token = $token;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
@@ -170,6 +192,7 @@ class PackageCustomer extends AbstractCustomerBooking
                 'purchased'     => $this->getPurchased() ?
                     $this->getPurchased()->getValue()->format($dateTimeFormat) : null,
                 'bookingsCount' => $this->getBookingsCount() ? $this->getBookingsCount()->getValue() : null,
+                'token'         => $this->getToken() ? $this->getToken()->getValue() : null,
             ]
         );
     }

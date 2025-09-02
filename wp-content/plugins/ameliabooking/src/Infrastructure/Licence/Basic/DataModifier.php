@@ -59,28 +59,36 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
      */
     public static function getUserRepositoryData($data)
     {
+        $starterData = parent::getUserRepositoryData($data);
+
         return [
             'values'                 =>
-                [
+                array_merge(
+                    $starterData['values'],
+                    [
                     ':zoomUserId'       => isset($data['zoomUserId']) ? $data['zoomUserId'] : null,
                     ':appleCalendarId'  => isset($data['appleCalendarId']) ? $data['appleCalendarId'] : null,
                     ':translations'     => isset($data['translations']) ? $data['translations'] : null,
                     ':timeZone'         => isset($data['timeZone']) ? $data['timeZone'] : null,
                     ':badgeId'          => isset($data['badgeId']) ? $data['badgeId'] : null,
-                ],
+                    ]
+                ),
             'columns'                =>
+                $starterData['columns'] .
                 '`zoomUserId`,
                 `appleCalendarId`,
                 `translations`,
                 `timeZone`,
                 `badgeId`,',
             'placeholders'           =>
+                $starterData['placeholders'] .
                 ':zoomUserId,
                 :appleCalendarId,
                 :translations,
                 :timeZone,
                 :badgeId,',
             'columnsPlaceholders'    =>
+                $starterData['columnsPlaceholders'] .
                 '`zoomUserId` = :zoomUserId,
                 `appleCalendarId` = :appleCalendarId,
                 `translations` = :translations,

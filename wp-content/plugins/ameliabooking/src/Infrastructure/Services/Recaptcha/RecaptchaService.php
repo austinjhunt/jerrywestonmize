@@ -7,6 +7,8 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Recaptcha;
 
+use AmeliaBooking\Application\Commands\CommandResult;
+
 /**
  * Class RecaptchaService
  */
@@ -45,5 +47,36 @@ class RecaptchaService extends AbstractRecaptchaService
         curl_close($ch);
 
         return $response->success;
+    }
+
+    /**
+     * @param string $value
+     * @param string $cabinetType
+     *
+     * @return boolean
+     */
+    public function process($value, $cabinetType)
+    {
+        $googleRecaptchaSettings = $this->settingsService->getSetting(
+            'general',
+            'googleRecaptcha'
+        );
+
+        $userRecaptchaSettings = $this->settingsService->getSetting(
+            'roles',
+            $cabinetType . 'Cabinet'
+        );
+
+        if (
+            $googleRecaptchaSettings['enabled'] &&
+            $googleRecaptchaSettings['siteKey'] &&
+            $googleRecaptchaSettings['secret'] &&
+            !empty($userRecaptchaSettings['googleRecaptcha']) &&
+            (!$value || !$this->verify($value))
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }

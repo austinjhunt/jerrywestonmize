@@ -403,7 +403,7 @@ class Forminator_Time extends Forminator_Field {
 						$ampm_value = $default_time_ampm;
 					}
 
-					$html .= sprintf( '<div class="forminator-col forminator-col-%s">', $cols );
+					$html .= sprintf( '<div id="%s" class="forminator-col forminator-col-%s">', $ampm['name'], $cols );
 
 						$html .= '<div class="forminator-field">';
 
@@ -589,7 +589,7 @@ class Forminator_Time extends Forminator_Field {
 		$restrict_message         = self::get_property( 'restrict_message', $field, $default_restrict_message );
 		$restrict_message         = apply_filters(
 			'forminator_time_field_limit_validation_message',
-			forminator_addcslashes( $restrict_message ),
+			$restrict_message,
 			$id,
 			$field
 		);
@@ -597,28 +597,34 @@ class Forminator_Time extends Forminator_Field {
 		$messages .= '"' . $this->get_id( $field ) . '-hours": {' . "\n";
 		$min_hour  = ( 'twelve' === $type ) ? '1' : '0';
 		$max_hour  = ( 'twelve' === $type ) ? '12' : '23';
-		$messages .= '"min": "' . sprintf(
-			apply_filters(
-				'forminator_time_field_hours_min_validation_message',
-				/* translators: 1. Minimum hour, 2. Hours label. */
-				esc_html__( 'Please enter a value greater than or equal to %1$s for %2$s.', 'forminator' )
-			),
-			$min_hour,
-			forminator_addcslashes( $hours_label )
+		$messages .= '"min": "' . forminator_addcslashes(
+			sprintf(
+				apply_filters(
+					'forminator_time_field_hours_min_validation_message',
+					/* translators: 1. Minimum hour, 2. Hours label. */
+					esc_html__( 'Please enter a value greater than or equal to %1$s for %2$s.', 'forminator' )
+				),
+				$min_hour,
+				$hours_label
+			)
 		) . '",' . "\n";
 
-		$messages .= '"max": "' . sprintf(/* translators: ... */
-			apply_filters( 'forminator_time_field_hours_max_validation_message', esc_html__( 'Please enter a value less than or equal to %1$s for %2$s.', 'forminator' ) ),
-			$max_hour,
-			forminator_addcslashes( $hours_label )
+		$messages .= '"max": "' . forminator_addcslashes(
+			sprintf(/* translators: ... */
+				apply_filters( 'forminator_time_field_hours_max_validation_message', esc_html__( 'Please enter a value less than or equal to %1$s for %2$s.', 'forminator' ) ),
+				$max_hour,
+				$hours_label
+			)
 		) . '",' . "\n";
-		$messages .= '"number": "' . sprintf(
-			apply_filters(
-				'forminator_time_field_hours_number_validation_message',
-				/* translators: 1. Hours label. */
-				esc_html__( 'Please enter a valid number for %1$s.', 'forminator' )
-			),
-			forminator_addcslashes( $hours_label )
+		$messages .= '"number": "' . forminator_addcslashes(
+			sprintf(
+				apply_filters(
+					'forminator_time_field_hours_number_validation_message',
+					/* translators: 1. Hours label. */
+					esc_html__( 'Please enter a valid number for %1$s.', 'forminator' )
+				),
+				$hours_label
+			)
 		) . '",' . "\n";
 		if ( $this->is_required( $field ) ) {
 			// Hours validation.
@@ -631,35 +637,41 @@ class Forminator_Time extends Forminator_Field {
 				$field
 			);
 
-			$messages .= '"required": "' . $hours_message . '",' . "\n";
+			$messages .= '"required": "' . addcslashes( $hours_message, '"\\/' ) . '",' . "\n";
 		}
 
 		if ( 'specific' === $restrict_time ) {
-			$messages .= '"timeLimit": "' . $restrict_message . '",' . "\n";
+			$messages .= '"timeLimit": "' . forminator_addcslashes( $restrict_message ) . '",' . "\n";
 		}
 		$messages .= '},' . "\n";
 
 		// minutes.
 		$messages .= '"' . $this->get_id( $field ) . '-minutes": {' . "\n";
-		$messages .= '"min": "' . sprintf(/* translators: ... */
-			apply_filters( 'forminator_time_field_minutes_min_validation_message', esc_html__( 'Please enter a value greater than or equal to 0 for %1$s.', 'forminator' ) ),
-			forminator_addcslashes( $minutes_label )
+		$messages .= '"min": "' . forminator_addcslashes(
+			sprintf(/* translators: ... */
+				apply_filters( 'forminator_time_field_minutes_min_validation_message', esc_html__( 'Please enter a value greater than or equal to 0 for %1$s.', 'forminator' ) ),
+				$minutes_label
+			)
 		) . '",' . "\n";
-		$messages .= '"max": "' . sprintf(
-			apply_filters(
-				'forminator_time_field_minutes_max_validation_message',
-				/* translators: 1. Minutes label. */
-				esc_html__( 'Please enter a value less than or equal to 59 for %1$s.', 'forminator' )
-			),
-			forminator_addcslashes( $minutes_label )
+		$messages .= '"max": "' . forminator_addcslashes(
+			sprintf(
+				apply_filters(
+					'forminator_time_field_minutes_max_validation_message',
+					/* translators: 1. Minutes label. */
+					esc_html__( 'Please enter a value less than or equal to 59 for %1$s.', 'forminator' )
+				),
+				$minutes_label
+			)
 		) . '",' . "\n";
-		$messages .= '"number": "' . sprintf(
-			apply_filters(
-				'forminator_time_field_minutes_number_validation_message',
-				/* translators: 1. Minutes label. */
-				esc_html__( 'Please enter a valid number for %1$s.', 'forminator' )
-			),
-			forminator_addcslashes( $minutes_label )
+		$messages .= '"number": "' . forminator_addcslashes(
+			sprintf(
+				apply_filters(
+					'forminator_time_field_minutes_number_validation_message',
+					/* translators: 1. Minutes label. */
+					esc_html__( 'Please enter a valid number for %1$s.', 'forminator' )
+				),
+				$minutes_label
+			)
 		) . '",' . "\n";
 		if ( $this->is_required( $field ) ) {
 			// Minutes validation.
@@ -672,7 +684,7 @@ class Forminator_Time extends Forminator_Field {
 				$field
 			);
 
-			$messages .= '"required": "' . $minutes_message . '",' . "\n";
+			$messages .= '"required": "' . addcslashes( $minutes_message, '"\\/' ) . '",' . "\n";
 		}
 		$messages .= '},' . "\n";
 

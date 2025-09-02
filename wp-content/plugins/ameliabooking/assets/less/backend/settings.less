@@ -132,11 +132,13 @@
 
       .am-api-key {
         &-generate {
-          .el-input__suffix {
-            color: black;
-            top: 10px;
-            cursor: pointer;
-            font-size: 18px;
+          &-input {
+            .el-input__suffix {
+              color: black;
+              top: 10px;
+              cursor: pointer;
+              font-size: 18px;
+            }
           }
         }
         &-heading {
@@ -324,6 +326,65 @@
           padding: 12px 0;
           display: inline-block;
           margin: 0;
+        }
+      }
+
+      .am-mailchimp-button {
+        padding: 0;
+        height: 40px;
+        border: 1px solid transparent;
+        width: 100%;
+        background-color: #FFE01B;
+        -webkit-border-radius: 1px;
+        border-radius: 1px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .25);
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
+        transition: background-color .218s, border-color .218s, box-shadow .218s;
+        -webkit-user-select: none;
+        -webkit-appearance: none;
+        background-image: none;
+        cursor: pointer;
+        outline: none;
+        overflow: hidden;
+        position: relative;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+
+        &.connected {
+          background-color: #DC4E41;
+          color: white;
+
+          &:hover {
+            background-color: #DC4E41;
+          }
+
+          &:focus {
+            background-color: #C53829;
+          }
+
+          .am-mailchimp-button-text {
+            color: white;
+          }
+        }
+
+        .am-mailchimp-button-image {
+          float: left;
+          background: #fff;
+          border-radius: 1px;
+          & img {
+            width: 40px;
+            height: 40px;
+          }
+        }
+
+        .am-mailchimp-button-text {
+          padding: 12px 0;
+          display: inline-block;
+          margin: 0;
+          color: black;
         }
       }
     }

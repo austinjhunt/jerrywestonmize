@@ -18,6 +18,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Lite\Licence
 {
     public static $premium = true;
 
+    public static $licence = 'Starter';
+
     /**
      * @param Container $c
      */

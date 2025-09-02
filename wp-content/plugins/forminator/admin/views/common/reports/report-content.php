@@ -105,7 +105,7 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 				)
 			);
 
-			if ( 'forminator_forms' === $args['form_type'] ) {
+			if ( ! forminator_addons_disabled() && 'forminator_forms' === $args['form_type'] ) {
 				// Geolocation widget.
 				$vars = apply_filters(
 					'forminator_reports_geolocation_widget',

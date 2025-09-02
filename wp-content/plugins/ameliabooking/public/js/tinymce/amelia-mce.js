@@ -154,6 +154,18 @@
             })
 
             if (view === 'stepbooking') {
+              // Layout version selector
+              viewBody.push({
+                type: 'listbox',
+                label: wpAmeliaLabels.layout_select_label,
+                name: 'am_layout',
+                values: [
+                  {value: '1', text: wpAmeliaLabels.layout_dropdown},
+                  {value: '2', text: wpAmeliaLabels.layout_list}
+                ],
+                classes: 'am-booking-layout',
+              })
+
               // Selector
               viewBody.push({
                 type: 'listbox',
@@ -553,6 +565,10 @@
                   shortCodeString += ' in_dialog=1'
                 }
 
+                if (view === 'stepbooking' && e.data.am_layout) {
+                  shortCodeString += ' layout=' + e.data.am_layout
+                }
+
                 editor.insertContent((view === 'stepbooking' ? '[ameliastepbooking' : '[ameliabooking') + shortCodeString + ']')
 
                 break
@@ -790,10 +806,12 @@
 
             // Create array of employees objects
             for (let i = 0; i < response.data.employees.length; i++) {
-              employees.push({
-                value: response.data.employees[i].id,
-                text: response.data.employees[i].firstName + ' ' + response.data.employees[i].lastName + ' (id: ' + response.data.employees[i].id + ')'
-              })
+              if (response.data.employees[i].show) {
+                employees.push({
+                  value: response.data.employees[i].id,
+                  text: response.data.employees[i].firstName + ' ' + response.data.employees[i].lastName + ' (id: ' + response.data.employees[i].id + ')'
+                })
+              }
             }
 
             // Create array of locations objects

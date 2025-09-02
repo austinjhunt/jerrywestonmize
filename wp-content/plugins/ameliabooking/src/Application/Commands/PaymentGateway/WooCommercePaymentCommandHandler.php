@@ -201,7 +201,7 @@ class WooCommercePaymentCommandHandler extends CommandHandler
         $appointmentData['cacheData'] = json_encode(
             [
                 'status'  => null,
-                'request' => $componentProps,
+                'request' => $componentProps
             ]
         );
 

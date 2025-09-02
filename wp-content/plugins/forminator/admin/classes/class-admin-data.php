@@ -207,6 +207,8 @@ class Forminator_Admin_Data {
 			'hasSavedChanges'                => is_int( $id ) && Forminator_Base_Form_Model::get_temp_settings( $id ),
 			'saveDelay'                      => apply_filters( 'forminator_save_delay', 1500 ),
 			'autoSave'                       => get_option( 'forminator_auto_saving', true ),
+			'addonsDisabled'                 => forminator_addons_disabled(),
+			'formColorSettings'              => Forminator_Custom_Form_Admin::get_default_color_settings(),
 		);
 	}
 

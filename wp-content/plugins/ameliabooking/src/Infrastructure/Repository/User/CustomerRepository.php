@@ -161,6 +161,12 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
             $row['externalId'] = $row['externalId'] === null ? $row['externalId'] : (int)$row['externalId'];
             $row['lastAppointment'] = $row['lastAppointment'] ?
                 DateTimeService::getCustomDateTimeFromUtc($row['lastAppointment']) : $row['lastAppointment'];
+
+            // Fix for customFields being encoded multiple times
+            if ($row['customFields'] && !is_array(json_decode($row['customFields'], true))) {
+                $row['customFields'] = null;
+            }
+
             $items[(int)$row['id']] = $row;
         }
 

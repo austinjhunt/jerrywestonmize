@@ -315,7 +315,7 @@ abstract class Forminator_Mail {
 	 * @param array $notification - Selected PDFs in form notifications.
 	 */
 	public function set_pdfs( $notification ) {
-		if ( ! empty( $notification['email-pdfs'] ) ) {
+		if ( ! empty( $notification['email-pdfs'] ) && ! forminator_addons_disabled() ) {
 			$this->pdfs = $notification['email-pdfs'];
 		} else {
 			$this->pdfs = array();

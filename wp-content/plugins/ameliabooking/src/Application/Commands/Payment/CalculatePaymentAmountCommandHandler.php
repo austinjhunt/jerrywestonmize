@@ -16,6 +16,7 @@ use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -55,6 +56,8 @@ class CalculatePaymentAmountCommandHandler extends CommandHandler
         /** @var BookingApplicationService $bookingAS */
         $bookingAS = $this->container->get('application.booking.booking.service');
 
+        $squareSettings = $settingsService->getCategorySettings('payments')['square'];
+
         $reservation = $reservationService->getNew(true, true, true);
 
         $reservationService->processBooking(
@@ -80,12 +83,21 @@ class CalculatePaymentAmountCommandHandler extends CommandHandler
 
         $paymentAmount = $reservationService->getReservationPaymentAmount($reservation);
 
+        $countryCode = null;
+        if ($squareSettings['enabled']) {
+            /** @var SquareService $squareService */
+            $squareService = $this->container->get('infrastructure.payment.square.service');
+
+            $countryCode = $squareService->getCountryCodeByLocationId($squareSettings['locationId']);
+        }
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setData(
             [
-                'amount'    => $paymentAmount,
-                'currency'  => $settingsService->getCategorySettings('payments')['currency'],
-                'transfers' => $transfers,
+                'amount'      => $paymentAmount,
+                'currency'    => $settingsService->getCategorySettings('payments')['currency'],
+                'transfers'   => $transfers,
+                'countryCode' => $countryCode,
             ]
         );
 

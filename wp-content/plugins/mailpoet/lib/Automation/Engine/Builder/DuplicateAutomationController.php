@@ -10,6 +10,7 @@ use MailPoet\Automation\Engine\Data\NextStep;
 use MailPoet\Automation\Engine\Data\Step;
 use MailPoet\Automation\Engine\Exceptions;
 use MailPoet\Automation\Engine\Exceptions\InvalidStateException;
+use MailPoet\Automation\Engine\Registry;
 use MailPoet\Automation\Engine\Storage\AutomationStorage;
 use MailPoet\Automation\Engine\WordPress;
 use MailPoet\Util\Security;
@@ -21,12 +22,17 @@ class DuplicateAutomationController {
   /** @var AutomationStorage */
   private $automationStorage;
 
+  /** @var Registry */
+  private $registry;
+
   public function __construct(
     WordPress $wordPress,
-    AutomationStorage $automationStorage
+    AutomationStorage $automationStorage,
+    Registry $registry
   ) {
     $this->wordPress = $wordPress;
     $this->automationStorage = $automationStorage;
+    $this->registry = $registry;
   }
 
   public function duplicateAutomation(int $id): Automation {
@@ -41,6 +47,17 @@ class DuplicateAutomationController {
       $this->wordPress->wpGetCurrentUser()
     );
     $duplicate->setStatus(Automation::STATUS_DRAFT);
+
+    $steps = $duplicate->getSteps();
+    foreach ($steps as $id => $step) {
+      if ($step->getType() === 'action') {
+        $action = $this->registry->getAction($step->getKey());
+        if ($action) {
+          $steps[$id] = $action->onDuplicate($step);
+        }
+      }
+    }
+    $duplicate->setSteps($steps);
 
     $automationId = $this->automationStorage->createAutomation($duplicate);
     $savedAutomation = $this->automationStorage->getAutomation($automationId);

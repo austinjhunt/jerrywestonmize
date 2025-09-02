@@ -60,4 +60,19 @@ class Helper {
     }
     return wcs_get_subscription($id);
   }
+
+  /**
+   * @param array<string, mixed> $args
+   * @return \WC_Subscription[]
+   */
+  public function wcsGetSubscriptions(array $args = []): array {
+    if (!function_exists('wcs_get_subscriptions')) {
+      return [];
+    }
+    $subscriptions = wcs_get_subscriptions($args);
+    if (!is_array($subscriptions)) {
+      return [];
+    }
+    return $subscriptions;
+  }
 }

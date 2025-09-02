@@ -5,8 +5,10 @@ namespace MailPoet\Newsletter\Renderer;
 if (!defined('ABSPATH')) exit;
 
 
+use Automattic\WooCommerce\EmailEditor\Email_Editor_Container;
+use Automattic\WooCommerce\EmailEditor\Engine\Renderer\Html2Text;
+use Automattic\WooCommerce\EmailEditor\Engine\Renderer\Renderer as GuntenbergRenderer;
 use MailPoet\Config\Env;
-use MailPoet\EmailEditor\Engine\Renderer\Renderer as GuntenbergRenderer;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\SendingQueueEntity;
 use MailPoet\Logging\LoggerFactory;
@@ -17,7 +19,6 @@ use MailPoet\NewsletterProcessingException;
 use MailPoet\Util\License\Features\CapabilitiesManager;
 use MailPoet\Util\pQuery\DomNode;
 use MailPoet\WP\Functions as WPFunctions;
-use MailPoetVendor\Html2Text\Html2Text;
 
 class Renderer {
   const NEWSLETTER_TEMPLATE = 'Template.html';
@@ -51,7 +52,6 @@ class Renderer {
 
   public function __construct(
     BodyRenderer $bodyRenderer,
-    GuntenbergRenderer $guntenbergRenderer,
     Preprocessor $preprocessor,
     \MailPoetVendor\CSS $cSSInliner,
     WPFunctions $wp,
@@ -61,7 +61,7 @@ class Renderer {
     CapabilitiesManager $capabilitiesManager
   ) {
     $this->bodyRenderer = $bodyRenderer;
-    $this->guntenbergRenderer = $guntenbergRenderer;
+    $this->guntenbergRenderer = Email_Editor_Container::container()->get(GuntenbergRenderer::class);
     $this->preprocessor = $preprocessor;
     $this->cSSInliner = $cSSInliner;
     $this->wp = $wp;

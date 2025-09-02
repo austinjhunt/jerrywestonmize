@@ -68,6 +68,27 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Lite\DataModifi
      *
      * @return array
      */
+    public static function getUserRepositoryData($data)
+    {
+        return [
+            'values'                 =>
+                [
+                    ':show'  => isset($data['show']) ? (int)$data['show'] : 1,
+                ],
+            'columns'             =>
+                '`show`,',
+            'placeholders'           =>
+                ':show,',
+            'columnsPlaceholders'    =>
+                '`show` = :show,',
+        ];
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
     public static function getServiceRepositoryData($data)
     {
         return [

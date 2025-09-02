@@ -182,7 +182,7 @@ class Forminator_Upload extends Forminator_Field {
 				$upload_attr['data-limit']         = $file_limit;
 				$upload_attr['data-limit-message'] = /* translators: %d: File limit */ sprintf( esc_html__( 'You can upload a maximum of %d files.', 'forminator' ), $file_limit );
 			}
-			$upload_limit = self::get_property( 'upload-limit', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST );
+			$upload_limit = self::get_property( 'upload-limit', $field );
 			$max_size     = wp_max_upload_size();
 			if ( ! empty( $upload_limit ) ) {
 				$filesize  = self::get_property( 'filesize', $field, 'MB' );
@@ -318,7 +318,7 @@ class Forminator_Upload extends Forminator_Field {
 			$messages                  = $messages . '"required": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 		}
 		$extension_message = esc_html__( 'Error saving form. Uploaded file extension is not allowed.', 'forminator' );
-		$messages         .= '"extension": "' . $extension_message . '",' . "\n";
+		$messages         .= '"extension": "' . forminator_addcslashes( $extension_message ) . '",' . "\n";
 
 		$messages .= '},' . "\n";
 
@@ -343,7 +343,7 @@ class Forminator_Upload extends Forminator_Field {
 		$id                    = self::get_property( 'element_id', $field );
 		$field_name            = $id;
 		$custom_limit_size     = true;
-		$upload_limit          = self::get_property( 'upload-limit', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST );
+		$upload_limit          = self::get_property( 'upload-limit', $field );
 		$filesize              = self::get_property( 'filesize', $field, 'MB' );
 		$custom_file_type      = self::get_property( 'custom-files', $field, false );
 		$use_library           = self::get_property( 'use_library', $field, false );
@@ -352,7 +352,7 @@ class Forminator_Upload extends Forminator_Field {
 		$mime_types            = array();
 		$additional_mime_types = array();
 
-		if ( self::FIELD_PROPERTY_VALUE_NOT_EXIST === $upload_limit || empty( $upload_limit ) ) {
+		if ( empty( $upload_limit ) ) {
 			$custom_limit_size = false;
 		}
 

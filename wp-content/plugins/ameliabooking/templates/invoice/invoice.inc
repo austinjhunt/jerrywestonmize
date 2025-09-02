@@ -27,9 +27,10 @@ $includedTax  = !empty($itemsWithTax) && !array_values($itemsWithTax)[0]['invoic
 
 $invoiceSubtotal = array_sum(array_column($data['items'], 'invoice_subtotal'));
 $invoiceDiscount = array_sum(array_column($data['items'], 'invoice_discount'));
-$invoiceTax      = array_sum(array_column($data['items'], 'invoice_tax'));
+$invoiceTax      = $data['invoice_tax'];
 
-$invoiceTotal = $invoiceSubtotal - $invoiceDiscount + ($includedTax ? 0 : $invoiceTax);
+$invoiceTotal = $invoiceSubtotal - $invoiceDiscount;
+$invoiceTotal += $invoiceTotal ? $invoiceTax : 0;
 
 $invoicePaid = array_sum(array_column($data['items'], 'invoice_paid_amount'));
 
@@ -321,9 +322,11 @@ if ($filename) {
             <thead class="invoice-body-items-name">
             <tr>
                 <td><?php echo BackendStrings::getFinanceStrings()['invoice_item']; ?></td>
-                <td><?php echo BackendStrings::getFinanceStrings()['invoice_unit_price'] . ($includedTax ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></td>
+                <td><?php echo BackendStrings::getFinanceStrings()['invoice_unit_price'] .
+                        ($includedTax ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></td>
                 <td><?php echo BackendStrings::getFinanceStrings()['invoice_qty']; ?></td>
-                <td><?php echo BackendStrings::getFinanceStrings()['invoice_total_item_price'] . ($includedTax ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></td>
+                <td><?php echo BackendStrings::getFinanceStrings()['invoice_total_item_price'] .
+                        ($includedTax ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></td>
                 <?php if ($taxEnabled) : ?>
                     <td><?php echo BackendStrings::getFinanceStrings()['invoice_tax_rate']; ?></td>
                     <td><?php echo BackendStrings::getFinanceStrings()['invoice_tax_amount']; ?></td>
@@ -336,7 +339,7 @@ if ($filename) {
                     <td><?php echo $appData['item_name'] ?></td>
                     <td><?php echo $helperService->getFormattedPrice($appData['invoice_unit_price']) ?></td>
                     <td><?php echo $appData['invoice_qty'] ?></td>
-                    <td><?php echo $helperService->getFormattedPrice($appData['invoice_subtotal']) ?></td>
+                    <td><?php echo $helperService->getFormattedPrice($appData['invoice_unit_price'] * $appData['invoice_qty']) ?></td>
                     <?php if ($taxEnabled) : ?>
                         <td><?php echo !empty($appData['invoice_tax_rate']) ? $appData['invoice_tax_rate'] : 0 ?></td>
                         <td><?php echo $helperService->getFormattedPrice(!empty($appData['invoice_tax']) ? $appData['invoice_tax'] : 0) ?></td>
@@ -348,7 +351,7 @@ if ($filename) {
         <div class="invoice-body-sum">
             <?php if ($invoiceSubtotal !== $invoiceTotal) : ?>
                 <div>
-                    <span><?php echo BackendStrings::getFinanceStrings()['invoice_subtotal'] . ($includedTax ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : '');?></span>
+                    <span><?php echo BackendStrings::getFinanceStrings()['invoice_subtotal'];?></span>
                     <span><?php echo $helperService->getFormattedPrice($invoiceSubtotal) ?></span>
                 </div>
             <?php endif; ?>
@@ -368,7 +371,8 @@ if ($filename) {
                 <hr>
             <?php endif; ?>
             <div class="invoice-body-total">
-                <span><?php echo BackendStrings::getFinanceStrings()['invoice_total'] . ($includedTax ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></span>
+                <span><?php echo BackendStrings::getFinanceStrings()['invoice_total'] .
+                        ($includedTax && $invoiceTotal > 0 ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></span>
                 <span><?php echo $helperService->getFormattedPrice($invoiceTotal) ?></span>
             </div>
             <?php if ($invoicePaid) : ?>

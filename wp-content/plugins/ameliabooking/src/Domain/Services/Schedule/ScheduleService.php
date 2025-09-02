@@ -167,7 +167,8 @@ class ScheduleService
         $hasVisibleLocations = $this->locationService->hasVisibleLocations($locations);
 
         /** @var Location $providerLocation */
-        $providerLocation = $provider->getLocationId() && $locations->length() ?
+        $providerLocation = $provider->getLocationId() && $locations->length()
+            && $locations->keyExists($provider->getLocationId()->getValue()) ?
             $locations->getItem($provider->getLocationId()->getValue()) : null;
 
         $providerLocationId = $providerLocation ? $providerLocation->getId()->getValue() : null;

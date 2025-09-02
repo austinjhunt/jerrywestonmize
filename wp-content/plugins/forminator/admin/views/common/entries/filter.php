@@ -156,7 +156,7 @@ $is_show_fields     = ! method_exists( $this, 'has_leads' ) || (bool) $this->has
 
 	<div class="sui-row">
 
-		<?php if ( 'form' === static::$module_slug ) { ?>
+		<?php if ( 'form' === $this::$module_slug ) { ?>
 			<div class="sui-col-md-6">
 
 				<div class="sui-form-field">

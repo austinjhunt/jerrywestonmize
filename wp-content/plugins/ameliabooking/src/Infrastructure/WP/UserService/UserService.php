@@ -53,39 +53,38 @@ class UserService
             return null;
         }
 
+        $userType = UserRoles::getUserAmeliaRole($wpUser = wp_get_current_user()) ?: 'customer';
+
         try {
             // First try to get from repository
             $currentUserEntity = $this->usersRepository->findByExternalId($uid);
-            if (!$currentUserEntity instanceof AbstractUser) {
+
+            if (
+                !($currentUserEntity instanceof AbstractUser) ||
+                (
+                    $userType === 'manager' &&
+                    ($currentUserEntity->getType() === 'provider' || $currentUserEntity->getType() === 'customer')
+                )
+            ) {
                 throw new NotFoundException('User not found');
             }
 
             return $currentUserEntity;
         } catch (NotFoundException $e) {
             // If user not found creating an entity based on WordPress user data
-            $userType = UserRoles::getUserAmeliaRole($wpUser = wp_get_current_user()) ?: 'customer';
-
-            if (empty($wpUser->ID)) {
-                return null;
-            }
-
-            $firstName = $wpUser->get('first_name') !== '' ?
-                $wpUser->get('first_name') : $wpUser->get('user_nicename');
-            $lastName  = $wpUser->get('last_name') !== '' ?
-                $wpUser->get('last_name') : $wpUser->get('user_nicename');
-            $email     = $wpUser->get('user_email');
-
-            $currentUserEntity = UserFactory::create(
+            return !empty($wpUser->ID) ? UserFactory::create(
                 [
-                'type'       => $userType,
-                'firstName'  => $firstName,
-                'lastName'   => $lastName,
-                'email'      => $email ?: 'guest@example.com',
-                'externalId' => $wpUser->ID
+                    'type'       => $userType,
+                    'firstName'  => $wpUser->get('first_name') !== ''
+                        ? $wpUser->get('first_name')
+                        : $wpUser->get('user_nicename'),
+                    'lastName'   => $wpUser->get('last_name') !== ''
+                        ? $wpUser->get('last_name')
+                        : $wpUser->get('user_nicename'),
+                    'email'      => $wpUser->get('user_email') ?: 'guest@example.com',
+                    'externalId' => $wpUser->ID
                 ]
-            );
-
-            return $currentUserEntity;
+            ) : null;
         }
     }
 

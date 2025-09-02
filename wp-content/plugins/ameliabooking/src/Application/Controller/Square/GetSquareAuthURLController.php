@@ -9,7 +9,7 @@ use Slim\Http\Request;
 /**
  * Class GetSquareAuthURLController
  *
- * @package AmeliaBooking\Application\Controller\Outlook
+ * @package AmeliaBooking\Application\Controller\Square
  */
 class GetSquareAuthURLController extends Controller
 {

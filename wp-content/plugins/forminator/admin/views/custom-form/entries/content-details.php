@@ -134,20 +134,35 @@ function forminator_submissions_content_details( $detail_item, $inside_group = f
 												<?php
 												$sub_entries = forminator_submissions_remove_quantity( $sub_entries, $detail_item['type'] );
 												foreach ( $sub_entries as $sub_key => $sub_entry ) {
-
-													$html  = '';
-													$html .= '<div class="sui-box-settings-slim-row sui-sm">';
-													$html .= '<div class="sui-box-settings-col-1">';
-													$html .= '<span class="sui-settings-label sui-sm">' .
-														Forminator_Field::convert_markdown( esc_html( $sub_entry['label'] ) ) .
-													'</span>';
-													$html .= '</div>';
-													$html .= '<div class="sui-box-settings-col-2">';
-													$html .= '<span class="sui-description">' . $sub_entry['value'] . '</span>';
-													$html .= '</div>';
-													$html .= '</div>';
-
-													echo wp_kses_post( $html );
+													$class_names = 'sui-box-settings-col-2';
+													if ( ! empty( $sub_entry['sub_entries'] ) ) {
+														$class_names .= ' sui-border-frame';
+													}
+													?>
+													<div class="sui-box-settings-slim-row sui-sm">
+														<div class="sui-box-settings-col-1">
+															<span class="sui-settings-label sui-sm">
+																<?php
+																// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+																echo Forminator_Field::convert_markdown( esc_html( $sub_entry['label'] ) );
+																?>
+															</span>
+														</div>
+														<div class="<?php echo esc_attr( $class_names ); ?>">
+															<?php
+															if ( empty( $sub_entry['sub_entries'] ) ) {
+																?>
+																<span class="sui-description">
+																	<?php echo wp_kses_post( $sub_entry['value'] ); ?>
+																</span>
+																<?php
+															} else {
+																forminator_submissions_content_details( $sub_entry, true );
+															}
+															?>
+														</div>
+													</div>
+													<?php
 												}
 												?>
 

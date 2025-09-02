@@ -5,8 +5,9 @@ namespace MailPoet\EmailEditor\Integrations\MailPoet;
 if (!defined('ABSPATH')) exit;
 
 
+use Automattic\WooCommerce\EmailEditor\Email_Editor_Container;
+use Automattic\WooCommerce\EmailEditor\Engine\Dependency_Check;
 use MailPoet\Config\AccessControl;
-use MailPoet\EmailEditor\Engine\Dependency_Check;
 use MailPoet\WP\Functions as WPFunctions;
 
 class DependencyNotice {
@@ -15,11 +16,10 @@ class DependencyNotice {
   private Dependency_Check $dependencyCheck;
 
   public function __construct(
-    WPFunctions $wp,
-    Dependency_Check $dependencyCheck
+    WPFunctions $wp
   ) {
     $this->wp = $wp;
-    $this->dependencyCheck = $dependencyCheck;
+    $this->dependencyCheck = Email_Editor_Container::container()->get(Dependency_Check::class);
   }
 
   public function checkDependenciesAndEventuallyShowNotice(): bool {

@@ -19,6 +19,8 @@ class Licence
 {
     public static $premium = false;
 
+    public static $licence = 'Lite';
+
     /**
      * @param Container $c
      */

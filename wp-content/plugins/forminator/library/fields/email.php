@@ -333,6 +333,10 @@ class Forminator_Email extends Forminator_Field {
 
 				$messages .= '"required": "' . forminator_addcslashes( $required_error ) . '",' . "\n";
 			}
+			if ( $is_validate ) {
+				$messages .= '"emailWP": "' . forminator_addcslashes( $validation_message ) . '",' . "\n";
+				$messages .= '"email": "' . forminator_addcslashes( $validation_message ) . '",' . "\n";
+			}
 
 			$validation_message_not_match = self::get_property( 'confirm-email-mismatch', $field );
 			$not_match_error              = apply_filters(
@@ -341,7 +345,7 @@ class Forminator_Email extends Forminator_Field {
 				$id,
 				$field
 			);
-			$messages                    .= '"equalToClosestEmail": "' . $not_match_error . '",' . "\n";
+			$messages                    .= '"equalToClosestEmail": "' . forminator_addcslashes( $not_match_error ) . '",' . "\n";
 			$messages                    .= '},' . "\n";
 		}
 

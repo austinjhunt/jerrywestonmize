@@ -17,6 +17,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
+use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -49,6 +50,9 @@ class UpdateCustomerCommandHandler extends CommandHandler
 
         /** @var UserRepository $userRepository */
         $userRepository = $this->getContainer()->get('domain.users.repository');
+
+        /** @var AbstractMailchimpService $mailchimpService */
+        $mailchimpService = $this->container->get('infrastructure.mailchimp.service');
 
         $userRepository->beginTransaction();
 
@@ -183,6 +187,10 @@ class UpdateCustomerCommandHandler extends CommandHandler
             $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
             $bookingRepository->updateInfoByCustomerId($oldUser->getId()->getValue(), null);
+        }
+
+        if ($oldUser->getEmail() && $oldUser->getEmail()->getValue() && $newUser->getEmail() && $newUser->getEmail()->getValue()) {
+            $mailchimpService->addOrUpdateSubscriber($oldUser->getEmail()->getValue(), $newUser->toArray(), false);
         }
 
         $userRepository->commit();

@@ -47,6 +47,7 @@ use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
+use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
 use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use Interop\Container\Exception\ContainerException;
 
@@ -276,7 +277,7 @@ class GetEntitiesCommandHandler extends CommandHandler
             /** @var Collection $providers */
             $providers = $providerRepository->getWithSchedule(
                 [
-                    'dates' => [
+                    'dates' => !empty($params['dates']) ? $params['dates'] : [
                         DateTimeService::getNowDateTimeObject()->modify('-1 days')->format('Y-m-d H:i:s')
                     ],
                     'fetchCalendars' => $currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_ADMIN,
@@ -564,13 +565,34 @@ class GetEntitiesCommandHandler extends CommandHandler
                 }
             }
 
+            $mailchimpLists = [];
+            if (
+                !empty($settingsDS->getSetting('mailchimp', 'accessToken'))
+                && in_array('mailchimpLists', $params['types'])
+            ) {
+                /** @var AbstractMailchimpService $mailchimpService */
+                $mailchimpService = $this->container->get('infrastructure.mailchimp.service');
+
+                try {
+                    $mailchimpLists = $mailchimpService->getLists();
+
+                    $mailchimpSettings = $settingsDS->getCategorySettings('mailchimp');
+                    if (!empty($mailchimpLists) && !$mailchimpSettings['list']) {
+                        $mailchimpSettings['list'] = $mailchimpLists[0];
+                        $settingsDS->setCategorySettings('mailchimp', $mailchimpSettings);
+                    }
+                } catch (\Exception $e) {
+                }
+            }
+
             $resultData['settings'] = [
                 'general'   => [
                     'usedLanguages' => $settingsDS->getSetting('general', 'usedLanguages'),
                 ],
                 'languages' => $languagesSorted,
                 'daysOff'   => $daysOff,
-                'squareLocations' => $squareLocations
+                'squareLocations' => $squareLocations,
+                'mailchimpLists' => $mailchimpLists,
             ];
         }
 

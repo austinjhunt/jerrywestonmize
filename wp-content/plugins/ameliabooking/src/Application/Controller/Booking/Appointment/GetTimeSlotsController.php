@@ -37,7 +37,8 @@ class GetTimeSlotsController extends Controller
         'allowBookingIfNotMin',
         'timeSlotLength',
         'serviceDurationAsSlot',
-        'bufferTimeInSlot'
+        'bufferTimeInSlot',
+        'structured',
     ];
 
     /**
@@ -75,6 +76,7 @@ class GetTimeSlotsController extends Controller
 
         $command->setField('serviceId', (int)$request->getQueryParam('serviceId', 0));
         $command->setField('locationId', (int)$request->getQueryParam('locationId', 0));
+        $command->setField('locationIds', !empty($params['locationIds']) ? $params['locationIds'] : []);
         $command->setField('serviceDuration', (int)$request->getQueryParam('serviceDuration', 0));
         $command->setField('weekDays', (array)$request->getQueryParam('weekDays', [1, 2, 3, 4, 5, 6, 7]));
         $command->setField('startDateTime', (string)$request->getQueryParam('startDateTime', ''));
@@ -95,6 +97,7 @@ class GetTimeSlotsController extends Controller
         $command->setField('timeSlotLength', $request->getQueryParam('timeSlotLength'));
         $command->setField('serviceDurationAsSlot', $request->getQueryParam('serviceDurationAsSlot'));
         $command->setField('bufferTimeInSlot', $request->getQueryParam('bufferTimeInSlot'));
+        $command->setField('structured', $request->getQueryParam('structured'));
 
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);

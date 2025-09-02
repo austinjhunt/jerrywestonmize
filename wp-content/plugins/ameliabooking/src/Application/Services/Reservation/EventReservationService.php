@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Application\Services\Reservation;
 
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
 use AmeliaBooking\Application\Services\Deposit\AbstractDepositApplicationService;
@@ -565,7 +566,9 @@ class EventReservationService extends AbstractReservationService
                         'lastName'        => $customer->getLastName()->getValue(),
                         'phone'           => $customer->getPhone()->getValue(),
                         'countryPhoneIso' => $customer->getCountryPhoneIso() ?
-                            $customer->getCountryPhoneIso()->getValue() : null
+                            $customer->getCountryPhoneIso()->getValue() : null,
+                        'customFields'    => $customer->getCustomFields() ?
+                            json_decode($customer->getCustomFields()->getValue(), true) : null,
                     ],
                     'info'         => $booking->getInfo()->getValue(),
                     'persons'      => $booking->getPersons()->getValue(),
@@ -998,6 +1001,8 @@ class EventReservationService extends AbstractReservationService
             $price = $taxApplicationService->getBasePrice($price, $eventTax);
         }
 
+        $subtotalPrice = $price;
+
         $subtraction = 0;
 
         $reductionAmount = [
@@ -1033,12 +1038,13 @@ class EventReservationService extends AbstractReservationService
             'discount'     => $reductionAmount['discount'],
             'deduction'    => $reductionAmount['deduction'],
             'unit_price'   => $unitPrice,
-            'qty'          => $persons,
-            'subtotal'     => $unitPrice * ($this->isAggregatedPrice($bookable) ? $persons : 1),
-            'tax'          => !empty($ticketsTax) || !$unitPrice ? null : $taxAmount,
-            'tax_rate'     => $eventTax && $unitPrice ? $this->getTaxRate($eventTax) : '',
-            'tax_type'     => $eventTax && $unitPrice ? $eventTax->getType()->getValue() : '',
-            'tax_excluded' => $eventTax && $unitPrice ? $eventTax->getExcluded()->getValue() : false,
+            'qty'          => $this->isAggregatedPrice($bookable) ? $persons : 1,
+            'subtotal'     => $subtotalPrice,
+            'tax'          => $eventTax ? $this->getTaxAmount($eventTax, $subtotalPrice) : 0,
+            'total_tax'    => $taxAmount,
+            'tax_rate'     => $eventTax ? $this->getTaxRate($eventTax) : '',
+            'tax_type'     => $eventTax ? $eventTax->getType()->getValue() : '',
+            'tax_excluded' => $eventTax ? $eventTax->getExcluded()->getValue() : false,
             'tickets_tax'  => $ticketsTax,
             'full_discount' => $reductionAmount['discount'] + $reductionAmount['deduction']
         ];
@@ -1281,5 +1287,46 @@ class EventReservationService extends AbstractReservationService
                 $taxes
             );
         }
+    }
+
+    /**
+     * @param int $bookingId
+     * @param string $token
+     *
+     * @return array
+     *
+     * @throws AccessDeniedException
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public function deleteBooking($bookingId, $token = null)
+    {
+        /** @var CustomerBookingRepository $customerBookingRepository */
+        $customerBookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+        /** @var EventApplicationService $eventApplicationService */
+        $eventApplicationService = $this->container->get('application.booking.event.service');
+
+        /** @var CustomerBooking $customerBooking */
+        $customerBooking = $customerBookingRepository->getById((int)$bookingId);
+
+        if (!$customerBooking) {
+            throw new \Exception('Booking not found');
+        }
+
+        if (!$customerBooking->getToken() || $customerBooking->getToken()->getValue() !== $token) {
+            throw new AccessDeniedException('Invalid token');
+        }
+
+        $customerBookingRepository->beginTransaction();
+
+        if (!$eventApplicationService->deleteEventBooking($customerBooking)) {
+            $customerBookingRepository->rollback();
+            throw new \Exception('Could not delete booking');
+        }
+
+        $customerBookingRepository->commit();
+
+        return [];
     }
 }

@@ -1083,7 +1083,7 @@ class Forminator_Date extends Forminator_Field {
 					$date_format,
 					$this
 				);
-				$messages               = '"' . $this->get_id( $field ) . '-day": "<strong>' . $day_label . '</strong> ' . forminator_addcslashes( $day_validation_message ) . '",' . "\n";
+				$messages               = '"' . $this->get_id( $field ) . '-day": "<strong>' . forminator_addcslashes( $day_label ) . '</strong> ' . forminator_addcslashes( $day_validation_message ) . '",' . "\n";
 
 				$month_validation_message = apply_filters(
 					'forminator_field_date_month_validation_message',
@@ -1093,7 +1093,7 @@ class Forminator_Date extends Forminator_Field {
 					$date_format,
 					$this
 				);
-				$messages                .= '"' . $this->get_id( $field ) . '-month": "<strong>' . $month_label . '</strong> ' . forminator_addcslashes( $month_validation_message ) . '",' . "\n";
+				$messages                .= '"' . $this->get_id( $field ) . '-month": "<strong>' . forminator_addcslashes( $month_label ) . '</strong> ' . forminator_addcslashes( $month_validation_message ) . '",' . "\n";
 
 				$year_validation_message = apply_filters(
 					'forminator_field_date_year_validation_message',
@@ -1103,7 +1103,7 @@ class Forminator_Date extends Forminator_Field {
 					$date_format,
 					$this
 				);
-				$messages               .= '"' . $this->get_id( $field ) . '-year": "<strong>' . $year_label . '</strong> ' . forminator_addcslashes( $year_validation_message ) . '",' . "\n";
+				$messages               .= '"' . $this->get_id( $field ) . '-year": "<strong>' . forminator_addcslashes( $year_label ) . '</strong> ' . forminator_addcslashes( $year_validation_message ) . '",' . "\n";
 		}
 
 		return apply_filters( 'forminator_field_date_validation_message', $messages, $field, $type, $date_format, $this );

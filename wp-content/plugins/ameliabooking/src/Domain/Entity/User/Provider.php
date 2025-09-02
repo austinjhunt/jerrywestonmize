@@ -6,6 +6,7 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Google\GoogleCalendar;
 use AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar;
 use AmeliaBooking\Domain\Entity\Stripe\StripeConnect;
+use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\Description;
 use AmeliaBooking\Domain\ValueObjects\String\Email;
@@ -57,6 +58,10 @@ class Provider extends AbstractUser
 
     /** @var AppleCalendarEmployeeConnect */
     private $employeeAppleCalendar;
+
+    /** @var  BooleanValueObject */
+    private $show;
+
 
     /**
      * @param Name       $firstName
@@ -305,6 +310,16 @@ class Provider extends AbstractUser
         $this->employeeAppleCalendar = $employeeAppleCalendar;
     }
 
+    public function getShow()
+    {
+        return $this->show;
+    }
+
+    public function setShow(BooleanValueObject $show)
+    {
+        $this->show = $show;
+    }
+
 
     /**
      * Returns the Provider entity fields in an array form
@@ -327,6 +342,7 @@ class Provider extends AbstractUser
                 'badgeId'               => $this->getBadgeId() ? $this->getBadgeId()->getValue() : null,
                 'stripeConnect'         => $this->getStripeConnect() ? $this->getStripeConnect()->toArray() : null,
                 'employeeAppleCalendar' => $this->getEmployeeAppleCalendar() ? $this->getEmployeeAppleCalendar()->toArray() : null,
+                'show'                  => $this->getShow() ? $this->getShow()->getValue() : null,
             ]
         );
     }
