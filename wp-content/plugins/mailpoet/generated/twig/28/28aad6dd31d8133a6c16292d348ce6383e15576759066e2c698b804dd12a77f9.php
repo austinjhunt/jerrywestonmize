@@ -76,7 +76,10 @@ class __TwigTemplate_a48d787d9575f1182960bff4df69cda2c5953bb35a467320cc2088e9c84
 \t\t\t\t\t<td class=\"td font-family text-align-left\" style='color: #636363; border: 0; font-family: \"Helvetica Neue\",Helvetica,Roboto,Arial,sans-serif; text-align: left; padding: 8px 12px; padding-left: 0; vertical-align: middle; word-wrap: break-word;' align=\"left\">
 \t\t\t\t\t\t<table class=\"order-item-data\" style='color: #3c3c3c; font-family: \"Helvetica Neue\",Helvetica,Roboto,Arial,sans-serif;'>
 \t\t\t\t\t\t\t<tr>
-\t\t\t\t\t\t\t\t<td style=\"vertical-align: middle; padding-left: 0; border-bottom: 1px solid rgba(0,0,0,.2); padding-bottom: 24px; border: 0; padding: 0;\"><img src=\"http://mailpoet.plugin:8002/wp-content/plugins/woocommerce/assets/images/placeholder.png\" width=\"48\" height=\"48\" alt=\"\" style=\"border: none; display: inline-block; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; vertical-align: middle; margin-right: 24px; max-width: 100%;\" border=\"0\"></td>
+\t\t\t\t\t\t\t\t<td style=\"vertical-align: middle; padding-left: 0; border-bottom: 1px solid rgba(0,0,0,.2); padding-bottom: 24px; border: 0; padding: 0;\"><img src=\"";
+        // line 24
+        yield $this->extensions['MailPoet\Twig\Functions']->wcPlaceholderImgSrc();
+        yield "\" width=\"48\" height=\"48\" alt=\"\" style=\"border: none; display: inline-block; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; vertical-align: middle; margin-right: 24px; max-width: 100%;\" border=\"0\"></td>
 \t\t\t\t\t\t\t\t<td style=\"vertical-align: middle; padding-right: 0; border-bottom: 1px solid rgba(0,0,0,.2); padding-bottom: 24px; border: 0; padding: 0;\">
 \t\t\t\t\t\t\t\t\t";
         // line 26
@@ -95,7 +98,10 @@ class __TwigTemplate_a48d787d9575f1182960bff4df69cda2c5953bb35a467320cc2088e9c84
 \t\t\t\t\t<td class=\"td font-family text-align-left\" style='color: #636363; border: 0; font-family: \"Helvetica Neue\",Helvetica,Roboto,Arial,sans-serif; text-align: left; padding: 8px 12px; padding-left: 0; border-bottom: 1px solid rgba(0,0,0,.2); padding-bottom: 24px; vertical-align: middle; word-wrap: break-word;' align=\"left\">
 \t\t\t\t\t\t<table class=\"order-item-data\" style='color: #3c3c3c; font-family: \"Helvetica Neue\",Helvetica,Roboto,Arial,sans-serif;'>
 \t\t\t\t\t\t\t<tr>
-\t\t\t\t\t\t\t\t<td style=\"vertical-align: middle; padding-left: 0; border-bottom: 1px solid rgba(0,0,0,.2); padding-bottom: 24px; border: 0; padding: 0;\"><img src=\"http://mailpoet.plugin:8002/wp-content/plugins/woocommerce/assets/images/placeholder.png\" width=\"48\" height=\"48\" alt=\"\" style=\"border: none; display: inline-block; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; vertical-align: middle; margin-right: 24px; max-width: 100%;\" border=\"0\"></td>
+\t\t\t\t\t\t\t\t<td style=\"vertical-align: middle; padding-left: 0; border-bottom: 1px solid rgba(0,0,0,.2); padding-bottom: 24px; border: 0; padding: 0;\"><img src=\"";
+        // line 40
+        yield $this->extensions['MailPoet\Twig\Functions']->wcPlaceholderImgSrc();
+        yield "\" width=\"48\" height=\"48\" alt=\"\" style=\"border: none; display: inline-block; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; vertical-align: middle; margin-right: 24px; max-width: 100%;\" border=\"0\"></td>
 \t\t\t\t\t\t\t\t<td style=\"vertical-align: middle; padding-right: 0; border-bottom: 1px solid rgba(0,0,0,.2); padding-bottom: 24px; border: 0; padding: 0;\">
 \t\t\t\t\t\t\t\t\t";
         // line 42
@@ -247,7 +253,7 @@ class __TwigTemplate_a48d787d9575f1182960bff4df69cda2c5953bb35a467320cc2088e9c84
      */
     public function getDebugInfo()
     {
-        return array (  213 => 109,  200 => 99,  192 => 94,  181 => 86,  176 => 84,  172 => 83,  165 => 79,  161 => 78,  153 => 73,  143 => 68,  134 => 62,  126 => 57,  103 => 43,  99 => 42,  80 => 26,  66 => 15,  60 => 12,  56 => 11,  52 => 10,  42 => 3,  38 => 1,);
+        return array (  219 => 109,  206 => 99,  198 => 94,  187 => 86,  182 => 84,  178 => 83,  171 => 79,  167 => 78,  159 => 73,  149 => 68,  140 => 62,  132 => 57,  109 => 43,  105 => 42,  100 => 40,  83 => 26,  78 => 24,  66 => 15,  60 => 12,  56 => 11,  52 => 10,  42 => 3,  38 => 1,);
     }
 
     public function getSourceContext()

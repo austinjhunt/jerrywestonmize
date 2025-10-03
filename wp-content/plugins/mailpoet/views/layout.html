@@ -50,6 +50,7 @@
   var mailpoet_free_domains = <%= json_encode(mailpoet_free_domains()) %>;
   var mailpoet_woocommerce_active = <%= json_encode(is_woocommerce_active()) %>;
   var mailpoet_woocommerce_email_improvements_enabled = <%= json_encode(is_woocommerce_email_improvements_enabled()) %>;
+  var mailpoet_woocommerce_bookings_active = <%= json_encode(is_woocommerce_bookings_active) %>;
   var mailpoet_woocommerce_subscriptions_active = <%= json_encode(is_woocommerce_subscriptions_active) %>;
   var mailpoet_woocommerce_store_config = <%= json_encode(woocommerce_store_config) %>;
   // RFC 5322 standard; http://emailregex.com/ combined with https://google.github.io/closure-library/api/goog.format.EmailAddress.html#isValid
@@ -71,6 +72,7 @@
   var mailpoet_admin_plugins_url = '<%= admin_plugins_url %>';
   var mailpoet_is_dotcom = <%= json_encode(is_dotcom()) %>;
   var mailpoet_cron_trigger_method = <%= json_encode(cron_trigger_method) %>;
+  var mailpoet_use_block_email_editor_for_automation_emails = <%= json_encode(use_block_email_editor_for_automation_emails) %>;
 
   var mailpoet_site_name = '<%= site_name %>';
   var mailpoet_site_url = "<%= site_url %>";

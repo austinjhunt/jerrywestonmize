@@ -84,6 +84,8 @@ class PageRenderer {
   /** @var WooCommerce\WooCommerceSubscriptions\Helper */
   private $wooCommerceSubscriptionsHelper;
 
+  private WooCommerce\WooCommerceBookings\Helper $wooCommerceBookingsHelper;
+
   private CapabilitiesManager $capabilitiesManager;
 
   public function __construct(
@@ -104,6 +106,7 @@ class PageRenderer {
     AssetsController $assetsController,
     WooCommerce\Helper $wooCommerceHelper,
     WooCommerce\WooCommerceSubscriptions\Helper $wooCommerceSubscriptionsHelper,
+    WooCommerce\WooCommerceBookings\Helper $wooCommerceBookingsHelper,
     CapabilitiesManager $capabilitiesManager
   ) {
     $this->bridge = $bridge;
@@ -123,6 +126,7 @@ class PageRenderer {
     $this->assetsController = $assetsController;
     $this->wooCommerceHelper = $wooCommerceHelper;
     $this->wooCommerceSubscriptionsHelper = $wooCommerceSubscriptionsHelper;
+    $this->wooCommerceBookingsHelper = $wooCommerceBookingsHelper;
     $this->capabilitiesManager = $capabilitiesManager;
   }
 
@@ -209,7 +213,9 @@ class PageRenderer {
       }, $this->tagRepository->findAll()),
       'display_chatbot_widget' => $this->displayChatBotWidget(),
       'is_woocommerce_subscriptions_active' => $this->wooCommerceSubscriptionsHelper->isWooCommerceSubscriptionsActive(),
+      'is_woocommerce_bookings_active' => $this->wooCommerceBookingsHelper->isWooCommerceBookingsActive(),
       'cron_trigger_method' => $this->settings->get('cron_trigger.method'),
+      'use_block_email_editor_for_automation_emails' => $this->useBlockEmailEditorForAutomationNewsletter(),
     ];
 
     if (!$defaults['premium_plugin_active']) {
@@ -258,5 +264,11 @@ class PageRenderer {
   public function displayChatBotWidget(): bool {
     $display = $this->wp->applyFilters('mailpoet_display_docsbot_widget', $this->settings->get('3rd_party_libs.enabled') === '1');
     return (bool)$display;
+  }
+
+  public function useBlockEmailEditorForAutomationNewsletter(): bool {
+    $default = $this->settings->get('use_block_email_editor_for_automation_emails.enabled') === '1';
+    $status = $this->wp->applyFilters('mailpoet_use_block_email_editor_for_automation_emails', $default);
+    return (bool)$status;
   }
 }

@@ -897,6 +897,12 @@
 				$pagination_field = this.$el.find( submit_selector )
 				;
 
+			// Handle page-break elements specially
+			if (element_id.startsWith('page-break-')) {
+				this.toggle_page_break_field(element_id, action, type);
+				return;
+			}
+
 			// Handle show action
 			if (action === "show") {
 				if (type === "valid") {
@@ -1025,6 +1031,105 @@
 			this.$el.trigger('forminator:field:condition:toggled');
 
 			this.toggle_confirm_field( element_id, action, type );
+		},
+
+		/**
+		 * Handle page-break field visibility
+		 *
+		 * @param {string} element_id - The page-break element ID (e.g., 'page-break-1')
+		 * @param {string} action - The action ('show' or 'hide')
+		 * @param {string} type - The type ('valid' or 'invalid')
+		 */
+		toggle_page_break_field: function (element_id, action, type) {
+			const HIDDEN_CLASSES = 'forminator-hidden forminator-page-hidden';
+
+			// Find the pagination div that contains this page-break
+			var $current_pagination = this.$el.find('div.forminator-pagination[data-name="' + element_id + '"]');
+
+			if ($current_pagination.length === 0) {
+				console.warn('Could not find pagination div for page-break:', element_id);
+				return;
+			}
+
+			// Find the next pagination div after the current one
+			var $actual_pagination = $current_pagination.next('div.forminator-pagination');
+
+			if ($actual_pagination.length === 0) {
+				console.warn('Could not find next pagination div after page-break:', element_id);
+				return;
+			}
+
+			// Check if the actual pagination is the last one (no pagination after it)
+			if ($actual_pagination.next('div.forminator-pagination').length === 0) {
+				// This is the last pagination div, do nothing
+				return;
+			}
+
+			// Get the step number from the actual pagination
+			var step_number = $actual_pagination.attr('data-step');
+			var $step_element = this.$el.find('.forminator-step-' + step_number);
+			var $break_element = $step_element.next('.forminator-break');
+
+			// Handle show action
+			if (action === "show") {
+				if (type === "valid") {
+					// Show the actual pagination div
+					$actual_pagination.removeClass(HIDDEN_CLASSES);
+					$actual_pagination.removeAttr('hidden');
+
+					// Show the step element and break
+					if ($step_element.length) {
+						$step_element.removeClass(HIDDEN_CLASSES);
+					}
+					if ($break_element.length) {
+						$break_element.removeClass(HIDDEN_CLASSES);
+					}
+				} else {
+					// Invalid show - hide the actual pagination div
+					$actual_pagination.addClass(HIDDEN_CLASSES);
+					$actual_pagination.attr('hidden', 'hidden');
+
+					// Hide the step element and break
+					if ($step_element.length) {
+						$step_element.addClass(HIDDEN_CLASSES);
+					}
+					if ($break_element.length) {
+						$break_element.addClass(HIDDEN_CLASSES);
+					}
+				}
+			}
+
+			// Handle hide action
+			if (action === "hide") {
+				if (type === "valid") {
+					// Hide the actual pagination div
+					$actual_pagination.addClass(HIDDEN_CLASSES);
+					$actual_pagination.attr('hidden', 'hidden');
+
+					// Hide the step element and break
+					if ($step_element.length) {
+						$step_element.addClass(HIDDEN_CLASSES);
+					}
+					if ($break_element.length) {
+						$break_element.addClass(HIDDEN_CLASSES);
+					}
+				} else {
+					// Invalid hide - show the actual pagination div
+					$actual_pagination.removeClass(HIDDEN_CLASSES);
+					$actual_pagination.removeAttr('hidden');
+
+					// Show the step element and break
+					if ($step_element.length) {
+						$step_element.removeClass(HIDDEN_CLASSES);
+					}
+					if ($break_element.length) {
+						$break_element.removeClass(HIDDEN_CLASSES);
+					}
+				}
+			}
+
+			this.$el.trigger('forminator:field:condition:toggled');
+			this.$el.trigger('forminator:page-break:toggled');
 		},
 
 		clear_value: function(element_id, e) {

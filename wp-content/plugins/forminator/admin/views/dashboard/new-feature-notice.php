@@ -18,11 +18,6 @@ $url       = add_query_arg(
 	admin_url( 'admin.php' )
 );
 
-if ( ! FORMINATOR_PRO ) {
-	$banner_1x = forminator_plugin_url() . 'assets/images/Feature_highlight_2.png';
-	$banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight_2@2x.png';
-}
-
 $hub_connected = Forminator_Hub_Connector::hub_connector_connected();
 ?>
 
@@ -37,7 +32,7 @@ $hub_connected = Forminator_Hub_Connector::hub_connector_connected();
 		aria-labelledby="forminator-new-feature__title"
 	>
 
-		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1450"
+		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1470"
 			data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
 
 			<div class="sui-box-header sui-flatten sui-content-center">
@@ -57,92 +52,27 @@ $hub_connected = Forminator_Hub_Connector::hub_connector_connected();
 
 				<h3 class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: initial;">
 				<?php
-				if ( FORMINATOR_PRO ) {
-					esc_html_e( 'New Feature: Real-Time Autosave', 'forminator' );
-				} else {
-					esc_html_e( 'New: Pro Form Templates Are Now Free!', 'forminator' );
-				}
+					esc_html_e( 'New: Visibility conditions for Page Break', 'forminator' );
 				?>
 				</h3>
 
 				<p class="sui-description">
 				<?php
-				if ( FORMINATOR_PRO ) {
-					printf(
-						/* translators: 1. Admin name */
-						esc_html__( 'Hey %s, We know how frustrating it is to lose progress while editing a form. That’s why we’ve introduced Real-Time Autosave — your changes are now saved automatically as you go. Whether you\'re tweaking a field or reordering sections, your work is safe.', 'forminator' ),
-						esc_html( ucfirst( $user->display_name ) ),
-					);
-				} else {
-					printf(
-						/* translators: 1. Admin name */
-						esc_html__( 'Hey %s, creating forms just got easier — and free! You can now access all our pre-made form templates without a Pro subscription. Build any type of form in seconds, no need to start from scratch.', 'forminator' ),
-						esc_html( ucfirst( $user->display_name ) )
-					);
-				}
+				printf(
+					/* translators: 1. Admin name */
+					esc_html__( 'Hey %s! Are you creating multi-page forms? Then we have good news for you! You can now apply rules to your form to show or hide any page based on conditional logic.', 'forminator' ),
+					esc_html( ucfirst( $user->display_name ) ),
+				);
 				?>
 				</p>
-
-				<?php if ( FORMINATOR_PRO ) : ?>
-				<div class="sui-modal-list" style="text-align: left; background-color: #F8F8F8; padding: 15px; border-radius: 5px;">
-					<h4><?php esc_html_e( 'What\'s New?', 'forminator' ); ?></h4>
-					<ul>
-
-						<li>
-							<h3 style="margin-bottom: 0;">
-								<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
-								&nbsp;&nbsp;
-								<?php esc_html_e( 'Focus on editing', 'forminator' ); ?>
-							</h3>
-							<p class="sui-description" style="margin: 5px 0 20px 25px;">
-								<?php esc_html_e( 'Every change is saved instantly, so you can stay in the flow.', 'forminator' ); ?>
-							</p>
-						</li>
-
-						<li>
-							<h3 style="margin-bottom: 0;">
-								<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
-								&nbsp;&nbsp;
-								<?php esc_html_e( 'Work without pressure', 'forminator' ); ?>
-							</h3>
-							<p class="sui-description" style="margin: 5px 0 20px 25px;">
-								<?php esc_html_e( 'All updates are saved as drafts until you\'re ready to publish.', 'forminator' ); ?>
-							</p>
-						</li>
-
-						<li>
-							<h3 style="margin-bottom: 0;">
-								<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
-								&nbsp;&nbsp;
-								<?php esc_html_e( 'Go live when you\'re ready', 'forminator' ); ?>
-							</h3>
-							<p class="sui-description" style="margin: 5px 0 0 25px;">
-								<?php esc_html_e( 'Click “Publish Changes” to make your draft live, or “Discard Changes” to undo your recent edits.', 'forminator' ); ?>
-							</p>
-						</li>
-
-					</ul>
-				</div>
-			<?php elseif ( ! $hub_connected ) : ?>
-				<p></p>
-				<p class="sui-description">
-					<?php esc_html_e( 'Connect your site now to start using templates and unlock even more free perks!', 'forminator' ); ?>
-				</p>
-			<?php endif; ?>
 
 			</div>
 
 			<div class="sui-box-footer sui-flatten sui-content-center">
 
-			<?php if ( FORMINATOR_PRO || $hub_connected ) { ?>
 				<button class="sui-button forminator-dismiss-new-feature" data-modal-close>
 					<?php esc_html_e( 'Got it', 'forminator' ); ?>
 				</button>
-			<?php } else { ?>
-				<button data-link="<?php echo esc_url( $url ); ?>" class="sui-button sui-button-blue forminator-dismiss-new-feature" data-modal-close>
-					<?php esc_html_e( 'Connect site', 'forminator' ); ?>
-				</button>
-			<?php } ?>
 
 			</div>
 

@@ -67,8 +67,10 @@ class __TwigTemplate_92fba8e0d2ff9feb9ceaa2e95d322a6e957ae3ddae6715114b7c7810b6f
         // line 14
         yield $this->extensions['MailPoet\Twig\I18n']->translate("You can access your account area to view orders, change your password, and more via the link below:", "woocommerce");
         yield "</p>
-\t\t<p style=\"margin: 0 0 16px;\"><a target=\"_blank\" href=\"http://mailpoet.plugin:8002/my-account/\" style=\"color: #7f54b3; font-weight: normal; text-decoration: underline;\">";
+\t\t<p style=\"margin: 0 0 16px;\"><a target=\"_blank\" href=\"";
         // line 15
+        yield $this->extensions['MailPoet\Twig\Functions']->wcPageUrl("myaccount");
+        yield "\" style=\"color: #7f54b3; font-weight: normal; text-decoration: underline;\">";
         yield $this->extensions['MailPoet\Twig\I18n']->translate("My account", "woocommerce");
         yield "</a></p>
 \t</div>
@@ -111,7 +113,7 @@ class __TwigTemplate_92fba8e0d2ff9feb9ceaa2e95d322a6e957ae3ddae6715114b7c7810b6f
      */
     public function getDebugInfo()
     {
-        return array (  77 => 20,  69 => 15,  65 => 14,  60 => 12,  55 => 10,  51 => 9,  42 => 3,  38 => 1,);
+        return array (  79 => 20,  69 => 15,  65 => 14,  60 => 12,  55 => 10,  51 => 9,  42 => 3,  38 => 1,);
     }
 
     public function getSourceContext()

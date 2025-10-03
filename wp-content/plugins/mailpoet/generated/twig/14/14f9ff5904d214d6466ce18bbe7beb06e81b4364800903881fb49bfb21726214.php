@@ -79,7 +79,10 @@ class __TwigTemplate_6f7e1148a5f3a65b46aa154c34acfe8dd18c1a70f49ceeef161b5895204
 \t\t\t\t\t\t<table class=\"order-item-data\" style='color: #3c3c3c; font-family: \"Helvetica Neue\",Helvetica,Roboto,Arial,sans-serif;'>
 \t\t\t\t\t\t\t<tr>
 \t\t\t\t\t\t\t\t<td style=\"vertical-align: middle; padding-left: 0; border-bottom: 1px solid rgba(0,0,0,.2); padding-bottom: 24px; border: 0; padding: 0;\">
-\t\t\t\t\t\t\t\t\t<img src=\"http://mailpoet.plugin:8002/wp-content/plugins/woocommerce/assets/images/placeholder.png\" width=\"48\" height=\"48\" alt=\"\" style=\"border: none; display: inline-block; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; vertical-align: middle; margin-right: 24px; max-width: 100%;\" border=\"0\">
+\t\t\t\t\t\t\t\t\t<img src=\"";
+        // line 25
+        yield $this->extensions['MailPoet\Twig\Functions']->wcPlaceholderImgSrc();
+        yield "\" width=\"48\" height=\"48\" alt=\"\" style=\"border: none; display: inline-block; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; vertical-align: middle; margin-right: 24px; max-width: 100%;\" border=\"0\">
 \t\t\t\t\t\t\t\t\t</td>
 \t\t\t\t\t\t\t\t<td style=\"vertical-align: middle; padding-right: 0; border-bottom: 1px solid rgba(0,0,0,.2); padding-bottom: 24px; border: 0; padding: 0;\">
 \t\t\t\t\t\t\t\t\t";
@@ -100,7 +103,10 @@ class __TwigTemplate_6f7e1148a5f3a65b46aa154c34acfe8dd18c1a70f49ceeef161b5895204
 \t\t\t\t\t\t<table class=\"order-item-data\" style='color: #3c3c3c; font-family: \"Helvetica Neue\",Helvetica,Roboto,Arial,sans-serif;'>
 \t\t\t\t\t\t\t<tr>
 \t\t\t\t\t\t\t\t<td style=\"vertical-align: middle; padding-left: 0; border-bottom: 1px solid rgba(0,0,0,.2); padding-bottom: 24px; border: 0; padding: 0;\">
-\t\t\t\t\t\t\t\t\t<img src=\"http://mailpoet.plugin:8002/wp-content/plugins/woocommerce/assets/images/placeholder.png\" width=\"48\" height=\"48\" alt=\"\" style=\"border: none; display: inline-block; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; vertical-align: middle; margin-right: 24px; max-width: 100%;\" border=\"0\">
+\t\t\t\t\t\t\t\t\t<img src=\"";
+        // line 43
+        yield $this->extensions['MailPoet\Twig\Functions']->wcPlaceholderImgSrc();
+        yield "\" width=\"48\" height=\"48\" alt=\"\" style=\"border: none; display: inline-block; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; vertical-align: middle; margin-right: 24px; max-width: 100%;\" border=\"0\">
 \t\t\t\t\t\t\t\t\t</td>
 \t\t\t\t\t\t\t\t<td style=\"vertical-align: middle; padding-right: 0; border-bottom: 1px solid rgba(0,0,0,.2); padding-bottom: 24px; border: 0; padding: 0;\">
 \t\t\t\t\t\t\t\t\t";
@@ -253,7 +259,7 @@ class __TwigTemplate_6f7e1148a5f3a65b46aa154c34acfe8dd18c1a70f49ceeef161b5895204
      */
     public function getDebugInfo()
     {
-        return array (  219 => 113,  206 => 103,  198 => 98,  187 => 90,  182 => 88,  178 => 87,  171 => 83,  167 => 82,  159 => 77,  149 => 72,  140 => 66,  132 => 61,  109 => 47,  105 => 46,  84 => 28,  66 => 15,  60 => 12,  56 => 11,  52 => 10,  42 => 3,  38 => 1,);
+        return array (  225 => 113,  212 => 103,  204 => 98,  193 => 90,  188 => 88,  184 => 87,  177 => 83,  173 => 82,  165 => 77,  155 => 72,  146 => 66,  138 => 61,  115 => 47,  111 => 46,  105 => 43,  87 => 28,  81 => 25,  66 => 15,  60 => 12,  56 => 11,  52 => 10,  42 => 3,  38 => 1,);
     }
 
     public function getSourceContext()

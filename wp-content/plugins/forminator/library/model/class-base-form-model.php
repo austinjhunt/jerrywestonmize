@@ -304,6 +304,40 @@ abstract class Forminator_Base_Form_Model {
 		return $grouped_fields;
 	}
 
+
+	/**
+	 * Get filtered fields by page break.
+	 *
+	 * @param string $page_break_id Page break ID.
+	 * @return array
+	 */
+	public function get_page_fields( $page_break_id ) {
+		$fields             = $this->get_fields();
+		$last_page_break_id = null;
+		$page_fields        = array();
+		$collecting         = false;
+		foreach ( $fields as $field ) {
+			if ( 0 === strpos( $field->slug, 'page-break-' ) ) {
+				if ( $field->element_id === $page_break_id ) {
+					$collecting = true;
+				} else {
+					$collecting = false;
+				}
+				$last_page_break_id = $field->element_id;
+			} elseif ( $collecting ) {
+				$page_fields[] = $field;
+			}
+		}
+
+		// If it's the last page break id, then the page fields are empty.
+		// Because we ignore visibility conditions on the last page.
+		if ( $page_break_id === $last_page_break_id ) {
+			$page_fields = array();
+		}
+
+		return $page_fields;
+	}
+
 	/**
 	 * Get fields IDs of filtered fields by group
 	 *

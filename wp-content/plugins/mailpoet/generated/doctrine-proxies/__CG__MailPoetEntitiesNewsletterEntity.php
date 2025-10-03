@@ -765,6 +765,28 @@ class NewsletterEntity extends \MailPoet\Entities\NewsletterEntity implements \M
     /**
      * {@inheritDoc}
      */
+    public function isAutomation(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isAutomation', []);
+
+        return parent::isAutomation();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isAutomationTransactional(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isAutomationTransactional', []);
+
+        return parent::isAutomationTransactional();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getId()
     {
         if ($this->__isInitialized__ === false) {

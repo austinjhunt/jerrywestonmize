@@ -3,7 +3,7 @@ Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
 Tested up to: 6.8
-Stable tag: 1.45.1
+Stable tag: 1.46.2
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -230,6 +230,13 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 6. Publish Polls with Real-time Stats
 
 == Changelog ==
+
+= 1.47.0 ( 2025-09-09 ) =
+
+- Enhancement: Add page visibility conditions for paginated forms
+- Enhancement: Improve Page Break field design
+- Fix: Prevent placing the Page Break field in the same row with other fields
+
 
 = 1.46.2 ( 2025-08-19 ) =
 

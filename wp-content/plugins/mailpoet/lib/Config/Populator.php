@@ -16,6 +16,7 @@ use MailPoet\Cron\Workers\NewsletterTemplateThumbnails;
 use MailPoet\Cron\Workers\StatsNotifications\Worker;
 use MailPoet\Cron\Workers\SubscriberLinkTokens;
 use MailPoet\Cron\Workers\SubscribersLastEngagement;
+use MailPoet\Cron\Workers\Tracks;
 use MailPoet\Cron\Workers\UnsubscribeTokens;
 use MailPoet\Doctrine\WPDB\Connection;
 use MailPoet\Entities\NewsletterEntity;
@@ -183,6 +184,7 @@ class Populator {
     $this->scheduleNewsletterTemplateThumbnails();
     $this->scheduleBackfillEngagementData();
     $this->scheduleMixpanel();
+    $this->scheduleTracks();
   }
 
   private function createMailPoetPage() {
@@ -680,6 +682,10 @@ class Populator {
 
   private function scheduleMixpanel() {
     $this->scheduleTask(Mixpanel::TASK_TYPE, Carbon::now()->millisecond(0));
+  }
+
+  private function scheduleTracks(): void {
+    $this->scheduleTask(Tracks::TASK_TYPE, Carbon::now()->millisecond(0));
   }
 
   private function scheduleTask($type, $datetime, $priority = null) {

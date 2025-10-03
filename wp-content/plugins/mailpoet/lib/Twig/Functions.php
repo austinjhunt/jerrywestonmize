@@ -225,6 +225,16 @@ class Functions extends AbstractExtension {
         [$this, 'pendingApprovalMessage'],
         ['is_safe' => ['html']]
       ),
+      new TwigFunction(
+        'get_product_placeholder_img',
+        [$this, 'wcPlaceholderImgSrc'],
+        ['is_safe' => ['all']]
+      ),
+      new TwigFunction(
+        'get_wc_page_url',
+        [$this, 'wcPageUrl'],
+        ['is_safe' => ['all']]
+      ),
     ];
   }
 
@@ -388,5 +398,13 @@ class Functions extends AbstractExtension {
 
   public function pendingApprovalMessage(): string {
     return $this->getPendingApprovalNotice()->getPendingApprovalMessage();
+  }
+
+  public function wcPlaceholderImgSrc(string $size = 'woocommerce_thumbnail'): string {
+    return esc_url($this->getWooCommerceHelper()->wcPlaceholderImgSrc($size));
+  }
+
+  public function wcPageUrl(string $page): string {
+    return esc_url($this->getWooCommerceHelper()->wcGetPagePermalink($page));
   }
 }

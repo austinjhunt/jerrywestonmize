@@ -2166,6 +2166,13 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			}
 			return;
 		}
+		if ( 'page-break' === substr( $field_id, 0, 10 ) ) {
+			$page_break_fields = self::$module_object->get_page_fields( $field_id );
+			foreach ( $page_break_fields as $field ) {
+				self::update_hidden_fields_array( $field->slug, '', $field->to_formatted_array() );
+			}
+			return;
+		}
 		unset( self::$prepared_data[ $full_id ] );
 		$field_suffix = Forminator_Form_Entry_Model::field_suffix();
 		foreach ( $field_suffix as $suffix ) {

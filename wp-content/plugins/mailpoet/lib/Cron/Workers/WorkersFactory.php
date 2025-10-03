@@ -35,6 +35,8 @@ class WorkersFactory {
     BackfillEngagementData::TASK_TYPE,
     Mixpanel::TASK_TYPE,
     AbandonedCartWorker::TASK_TYPE,
+    LogCleanup::TASK_TYPE,
+    Tracks::TASK_TYPE,
   ];
 
   /** @var ContainerWrapper */
@@ -89,6 +91,11 @@ class WorkersFactory {
   /** @return ExportFilesCleanup */
   public function createExportFilesCleanupWorker() {
     return $this->container->get(ExportFilesCleanup::class);
+  }
+
+  /** @return LogCleanup */
+  public function createLogCleanupWorker() {
+    return $this->container->get(LogCleanup::class);
   }
 
   /** @return InactiveSubscribers */
@@ -163,5 +170,9 @@ class WorkersFactory {
 
   public function createMixpanelWorker() {
     return $this->container->get(Mixpanel::class);
+  }
+
+  public function createTracksWorker() {
+    return $this->container->get(Tracks::class);
   }
 }

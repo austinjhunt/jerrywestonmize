@@ -19929,6 +19929,37 @@ html.sui-has-overlay {
   }
 }
 
+.sui-2-12-23 .sui-wrap .fui-builder-field-block .fui-field--border {
+  display: block;
+  flex: 1;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-field-block .fui-field--border span {
+  display: block;
+  flex: 1;
+  height: 4px;
+  background: #ccc;
+  border-radius: 2px;
+  width: 100%;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-field-block[data-field=page-break] .fui-field--info .fui-field--move [class*=sui-icon-] {
+  color: #aaa;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-field-block[data-field=page-break] .fui-field--actions {
+  position: relative;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-field-block[data-field=page-break] .forminator-field-delete {
+  position: absolute;
+  left: -100%;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-field-block[data-field=page-break]:hover .fui-field--border:last-child span {
+  width: 85%;
+}
+
 .sui-2-12-23 .sui-wrap .fui-builder-fields {
   background-color: #f8f8f8;
 }
@@ -19964,6 +19995,25 @@ html.sui-has-overlay {
 .sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-field-block .forminator-field-action-divider {
   opacity: 0;
   border-right: 1px solid #e6e6e6;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-field-block[data-field=page-break] {
+  border: none;
+  box-shadow: none;
+  background-color: #f8f8f8;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-field-block[data-field=page-break] .fui-field--name {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+  margin-right: 20px;
+  position: relative;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-field-block[data-field=page-break] .fui-field--name .fui-field--label span {
+  margin-left: 0;
 }
 
 .sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-fields--footer .sui-button-dashed {
@@ -20088,6 +20138,10 @@ html.sui-has-overlay {
   .sui-2-12-23 .sui-wrap .fui-col-3 .fui-builder-field-block .fui-field--info .fui-field--icon {
     display: none;
   }
+}
+
+.sui-2-12-23 .sui-wrap.sui-color-accessible .fui-builder-field-block .fui-field--border span {
+  background: #000;
 }
 
 .sui-2-12-23 .sui-wrap .forminator-pdf-form-builder .sui-box .fui-builder-section--insert {

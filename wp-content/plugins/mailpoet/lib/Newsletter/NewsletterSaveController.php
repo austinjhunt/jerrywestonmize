@@ -156,10 +156,27 @@ class NewsletterSaveController {
     $this->rescheduleIfNeeded($newsletter);
     $this->updateQueue($newsletter, $data['options'] ?? []);
     $this->authorizedEmailsController->onNewsletterSenderAddressUpdate($newsletter, $oldSenderAddress);
-    if (isset($data['new_editor']) && $data['new_editor']) {
+    if ($this->isNewEditor($data)) {
       $this->ensureWpPost($newsletter);
     }
     return $newsletter;
+  }
+
+  private function isNewEditor(array $data): bool {
+    if (!isset($data['new_editor'])) {
+      return false;
+    }
+
+    $value = $data['new_editor'];
+
+    if (is_bool($value)) return $value;
+    if (is_int($value)) return $value === 1;
+    if (is_string($value)) {
+      $norm = strtolower(trim($value));
+      if (in_array($norm, ['1', 'true', 'yes', 'on'], true)) return true;
+      if (in_array($norm, ['0', 'false', 'no', 'off', ''], true)) return false;
+    }
+    return (bool)$value;
   }
 
   private function sanitizeAutomationEmailData(array $data, NewsletterEntity $newsletter): array {

@@ -415,24 +415,24 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "60328e362d4c2c802a54fcbf04f9d3fb892b4cf8"
+                "reference": "0cc9dd0f17f61d8131e7df6b84bd344899fe2608"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/60328e362d4c2c802a54fcbf04f9d3fb892b4cf8",
-                "reference": "60328e362d4c2c802a54fcbf04f9d3fb892b4cf8",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/0cc9dd0f17f61d8131e7df6b84bd344899fe2608",
+                "reference": "0cc9dd0f17f61d8131e7df6b84bd344899fe2608",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2"
             },
-            "time": "2024-09-09T11:45:10+00:00",
+            "time": "2025-01-02T08:10:11+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "installation-source": "dist",
@@ -474,7 +474,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.31.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.33.0"
             },
             "funding": [
                 {
@@ -483,6 +483,10 @@
                 },
                 {
                     "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
                     "type": "github"
                 },
                 {
@@ -601,21 +605,21 @@
         },
         {
             "name": "woocommerce/email-editor",
-            "version": "1.4.2",
-            "version_normalized": "1.4.2.0",
+            "version": "1.6.0",
+            "version_normalized": "1.6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/woocommerce/email-editor.git",
-                "reference": "6588511189f1bf573556fffe38e85e738d28bfda"
+                "reference": "d3514f3bcb4a228287e1f77e617b0780da0e573d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/woocommerce/email-editor/zipball/6588511189f1bf573556fffe38e85e738d28bfda",
-                "reference": "6588511189f1bf573556fffe38e85e738d28bfda",
+                "url": "https://api.github.com/repos/woocommerce/email-editor/zipball/d3514f3bcb4a228287e1f77e617b0780da0e573d",
+                "reference": "d3514f3bcb4a228287e1f77e617b0780da0e573d",
                 "shasum": ""
             },
             "require": {
-                "pelago/emogrifier": "^7.3",
+                "pelago/emogrifier": "7.3.0",
                 "php": ">=7.4"
             },
             "require-dev": {
@@ -624,7 +628,7 @@
                 "woocommerce/woocommerce-sniffs": "1.0.0",
                 "yoast/phpunit-polyfills": "^4.0"
             },
-            "time": "2025-08-21T07:17:09+00:00",
+            "time": "2025-09-18T09:08:50+00:00",
             "type": "wordpress-plugin",
             "extra": {
                 "changelogger": {
@@ -655,7 +659,7 @@
             ],
             "description": "Email editor based on WordPress Gutenberg package.",
             "support": {
-                "source": "https://github.com/woocommerce/email-editor/tree/1.4.2"
+                "source": "https://github.com/woocommerce/email-editor/tree/1.6.0"
             },
             "install-path": "../woocommerce/email-editor"
         }

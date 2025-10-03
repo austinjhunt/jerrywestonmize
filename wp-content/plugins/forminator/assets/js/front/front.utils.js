@@ -134,6 +134,7 @@ class forminatorFrontUtils {
 	is_hidden( $element_id ) {
 		const $column_field = $element_id.closest('.forminator-col'),
 			$group_field = $element_id.closest('.forminator-field-group'),
+			$pagination_field = $element_id.closest('.forminator-pagination'),
 			$row_field = $column_field.closest('.forminator-row')
 		;
 
@@ -147,6 +148,10 @@ class forminatorFrontUtils {
 		}
 
 		if( $group_field.length > 0 && $group_field.hasClass( 'forminator-hidden' ) ) {
+			return true;
+		}
+
+		if( $pagination_field.length > 0 && $pagination_field.hasClass( 'forminator-page-hidden' ) ) {
 			return true;
 		}
 
