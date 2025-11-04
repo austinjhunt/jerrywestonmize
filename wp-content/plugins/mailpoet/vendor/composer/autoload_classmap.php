@@ -77,6 +77,7 @@ return array(
  'Automattic\\WooCommerce\\EmailEditor\\Integrations\\Core\\Renderer\\Blocks\\Social_Links' => $vendorDir . '/woocommerce/email-editor/src/Integrations/Core/Renderer/Blocks/class-social-links.php',
  'Automattic\\WooCommerce\\EmailEditor\\Integrations\\Core\\Renderer\\Blocks\\Table' => $vendorDir . '/woocommerce/email-editor/src/Integrations/Core/Renderer/Blocks/class-table.php',
  'Automattic\\WooCommerce\\EmailEditor\\Integrations\\Core\\Renderer\\Blocks\\Text' => $vendorDir . '/woocommerce/email-editor/src/Integrations/Core/Renderer/Blocks/class-text.php',
+ 'Automattic\\WooCommerce\\EmailEditor\\Integrations\\Core\\Renderer\\Blocks\\Video' => $vendorDir . '/woocommerce/email-editor/src/Integrations/Core/Renderer/Blocks/class-video.php',
  'Automattic\\WooCommerce\\EmailEditor\\Integrations\\Utils\\Dom_Document_Helper' => $vendorDir . '/woocommerce/email-editor/src/Integrations/Utils/class-dom-document-helper.php',
  'Automattic\\WooCommerce\\EmailEditor\\Integrations\\Utils\\Html_Processing_Helper' => $vendorDir . '/woocommerce/email-editor/src/Integrations/Utils/class-html-processing-helper.php',
  'Automattic\\WooCommerce\\EmailEditor\\Integrations\\Utils\\Social_Links_Helper' => $vendorDir . '/woocommerce/email-editor/src/Integrations/Utils/class-social-links-helper.php',

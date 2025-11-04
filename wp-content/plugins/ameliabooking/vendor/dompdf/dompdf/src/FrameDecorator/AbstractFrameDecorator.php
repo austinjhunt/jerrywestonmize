@@ -4,20 +4,20 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\FrameDecorator;
+namespace AmeliaDompdf\FrameDecorator;
 
 use DOMElement;
 use DOMNode;
-use Dompdf\Helpers;
-use Dompdf\Dompdf;
-use Dompdf\Exception;
-use Dompdf\Frame;
-use Dompdf\Frame\Factory;
-use Dompdf\Frame\FrameListIterator;
-use Dompdf\Frame\FrameTreeIterator;
-use Dompdf\FrameReflower\AbstractFrameReflower;
-use Dompdf\Css\Style;
-use Dompdf\Positioner\AbstractPositioner;
+use AmeliaDompdf\Helpers;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Exception;
+use AmeliaDompdf\Frame;
+use AmeliaDompdf\Frame\Factory;
+use AmeliaDompdf\Frame\FrameListIterator;
+use AmeliaDompdf\Frame\FrameTreeIterator;
+use AmeliaDompdf\FrameReflower\AbstractFrameReflower;
+use AmeliaDompdf\Css\Style;
+use AmeliaDompdf\Positioner\AbstractPositioner;
 
 /**
  * Base AbstractFrameDecorator class

@@ -190,6 +190,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                     'ids'           => $appointmentsIds,
                     'skipServices'  => isset($params['skipServices']) ? $params['skipServices'] : false,
                     'skipProviders' => isset($params['skipProviders']) ? $params['skipProviders'] : false,
+                    'joinPackages'  => $isCabinetPage
                 ]
             );
         } elseif ($isDashboardPackageRequest || ($user && $user->getId() && $isCabinetPackageRequest)) {

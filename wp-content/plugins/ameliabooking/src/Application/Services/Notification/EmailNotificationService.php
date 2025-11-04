@@ -9,6 +9,7 @@ namespace AmeliaBooking\Application\Services\Notification;
 
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
+use AmeliaBooking\Application\Services\QrCode\QrCodeApplicationService;
 use AmeliaBooking\Application\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -19,6 +20,7 @@ use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
+use AmeliaBooking\Domain\ValueObjects\String\Email;
 use AmeliaBooking\Domain\ValueObjects\String\NotificationStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationLogRepository;
@@ -28,7 +30,7 @@ use AmeliaBooking\Infrastructure\Services\Notification\MailgunService;
 use AmeliaBooking\Infrastructure\Services\Notification\OutlookService;
 use AmeliaBooking\Infrastructure\Services\Notification\PHPMailService;
 use AmeliaBooking\Infrastructure\Services\Notification\SMTPService;
-use AmeliaBooking\Domain\ValueObjects\String\Email;
+use AmeliaBooking\Infrastructure\WP\Integrations\ThriveAutomator\Apps\AmeliaBooking;
 use Exception;
 use InvalidArgumentException;
 use Slim\Exception\ContainerException;
@@ -250,6 +252,22 @@ class EmailNotificationService extends AbstractNotificationService
                         ]
                     );
 
+                    $qrCodeItems = [];
+
+                    if (
+                        $notification->getName()->getValue() === 'customer_event_qr_code' && $bookingKey !== null
+                    ) {
+                        if (!empty($appointmentArray['bookings'][$bookingKey]['qrCodes'])) {
+                            /** @var QrCodeApplicationService $qrApplicationService */
+                            $qrApplicationService = $this->container->get('application.qrcode.service');
+
+                            $qrCodeItems = $qrApplicationService->createQrCodeEventTickets(
+                                $appointmentArray,
+                                $appointmentArray['bookings'][$bookingKey]
+                            );
+                        }
+                    }
+
                     if ($logNotification && $user['id']) {
                         $logNotificationId = $notificationLogRepo->add(
                             $notification,
@@ -268,12 +286,23 @@ class EmailNotificationService extends AbstractNotificationService
                     }
 
                     if ($this->getSend() && empty($emailData['skipSending'])) {
+                        $attachments = [];
+                        if (!empty($emailData['attachments'])) {
+                            $attachments = array_merge($attachments, $emailData['attachments']);
+                        }
+                        if (!empty($invoice)) {
+                            $attachments = array_merge($attachments, [$invoice]);
+                        }
+                        if (!empty($qrCodeItems)) {
+                            $attachments = array_merge($attachments, $qrCodeItems);
+                        }
+
                         $mailService->send(
                             $emailData['email'],
                             $emailData['subject'],
                             $emailData['body'],
                             $emailData['bcc'],
-                            array_merge($emailData['attachments'], [$invoice])
+                            $attachments
                         );
                     } elseif (empty($emailData['skipSending'])) {
                         $this->addPreparedNotificationData(

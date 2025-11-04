@@ -68,6 +68,9 @@ class CustomField
     /** @var IntegerValue */
     private $width;
 
+    /** @var BooleanValueObject */
+    private $includeInInvoice;
+
     /**
      * CustomField constructor.
      *
@@ -334,6 +337,22 @@ class CustomField
         $this->position = $width;
     }
 
+    /**
+     * @return BooleanValueObject
+     */
+    public function getIncludeInInvoice()
+    {
+        return $this->includeInInvoice;
+    }
+
+    /**
+     * @param BooleanValueObject $includeInInvoice
+     */
+    public function setIncludeInInvoice($includeInInvoice)
+    {
+        $this->includeInInvoice = $includeInInvoice;
+    }
+
 
     /**
      * @return array
@@ -356,6 +375,7 @@ class CustomField
             'width'           => $this->getWidth() ? $this->getWidth()->getValue() : 50,
             'saveType'        => $this->getSaveType()->getValue(),
             'saveFirstChoice' => $this->getSaveFirstChoice() ? $this->getSaveFirstChoice()->getValue() : null,
+            'includeInInvoice' => $this->getIncludeInInvoice() ? $this->getIncludeInInvoice()->getValue() : null,
         ];
     }
 }

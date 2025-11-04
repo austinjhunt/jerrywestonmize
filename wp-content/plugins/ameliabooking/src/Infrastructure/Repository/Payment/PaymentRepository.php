@@ -680,13 +680,16 @@ class PaymentRepository extends AbstractRepository
         $whereEvent        = $whereEvent ? ' AND ' . implode(' AND ', $whereEvent) : '';
 
         $groupBy = '';
+        $countApp  = 'p.customerBookingId';
+        $countPack = 'p.packageCustomerId';
         if ($invoice) {
             $groupBy = 'GROUP BY IFNULL(invoiceNumber, id)';
+            $countApp = $countPack = 'p.invoiceNumber';
         }
 
 
         $appointmentQuery1 = "SELECT
-                COUNT(DISTINCT(p.customerBookingId)) AS appointmentsCount1,
+                COUNT(DISTINCT({$countApp})) AS appointmentsCount1,
                 0 AS appointmentsCount2,
                 0 AS eventsCount,
                 p.id AS id,
@@ -700,7 +703,7 @@ class PaymentRepository extends AbstractRepository
 
         $appointmentQuery2 = "SELECT
                 0 AS appointmentsCount1,
-                COUNT(DISTINCT(p.packageCustomerId)) AS appointmentsCount2,
+                COUNT(DISTINCT({$countPack})) AS appointmentsCount2,
                 0 AS eventsCount,
                 p.id AS id,
                 p.invoiceNumber AS invoiceNumber,
@@ -714,7 +717,7 @@ class PaymentRepository extends AbstractRepository
         $eventQuery = "SELECT
                 0 AS appointmentsCount1,
                 0 AS appointmentsCount2,
-                COUNT(DISTINCT(p.customerBookingId)) AS eventsCount,
+                COUNT(DISTINCT({$countApp})) AS eventsCount,
                 p.id AS id,
                 p.invoiceNumber AS invoiceNumber,
                 p.created AS created,

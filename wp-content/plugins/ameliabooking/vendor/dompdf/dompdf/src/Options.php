@@ -4,7 +4,7 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf;
+namespace AmeliaDompdf;
 
 class Options
 {
@@ -108,7 +108,7 @@ class Options
      * The default paper size.
      *
      * North America standard is "letter"; other countries generally "a4"
-     * @see \Dompdf\Adapter\CPDF::PAPER_SIZES for valid sizes
+     * @see \AmeliaDompdf\Adapter\CPDF::PAPER_SIZES for valid sizes
      *
      * @var string|float[]
      */
@@ -293,7 +293,7 @@ class Options
      *
      * Valid settings are 'PDFLib', 'CPDF', 'GD', and 'auto'. 'auto' will
      * look for PDFLib and use it if found, or if not it will fall back on
-     * CPDF. 'GD' renders PDFs to graphic files. {@link Dompdf\CanvasFactory}
+     * CPDF. 'GD' renders PDFs to graphic files. {@link AmeliaDompdf\CanvasFactory}
      * ultimately determines which rendering class to instantiate
      * based on this setting.
      *

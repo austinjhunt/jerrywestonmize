@@ -32,6 +32,7 @@ use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use AmeliaBooking\Infrastructure\WP\UserService\CreateWPUser;
 use AmeliaBooking\Infrastructure\WP\UserService\UserService;
+use AmeliaFirebase\JWT\Key;
 use Exception;
 use AmeliaFirebase\JWT\JWT;
 use Interop\Container\Exception\ContainerException;
@@ -410,11 +411,11 @@ class UserApplicationService
             throw new AccessDeniedException('You are not allowed to access this page.');
         }
 
+        $secretKey = $jwtSettings[$isUrlToken ? 'urlJwtSecret' : 'headerJwtSecret'];
         try {
             $jwtObject = JWT::decode(
                 $token,
-                $jwtSettings[$isUrlToken ? 'urlJwtSecret' : 'headerJwtSecret'],
-                array('HS256')
+                new Key($secretKey, 'HS256')
             );
         } catch (Exception $e) {
             return null;

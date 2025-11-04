@@ -329,6 +329,7 @@ class Initializer {
       $this->renderer = $this->rendererFactory->getRenderer();
       $this->setupWidget();
       $this->setupWoocommerceTransactionalEmails();
+      $this->setupMarketingConfirmationEmail();
       $this->assetsLoader->loadStyles();
       $this->emailEditorLogger->set_logger(new Logger());
     } catch (\Exception $e) {
@@ -566,6 +567,14 @@ class Initializer {
     if ($wcEnabled && $optInEnabled) {
       $this->wcTransactionalEmails->overrideStylesForWooEmails();
       $this->wcTransactionalEmails->useTemplateForWoocommerceEmails();
+    }
+  }
+
+  private function setupMarketingConfirmationEmail() {
+    $wcEnabled = $this->wcHelper->isWooCommerceActive();
+    if ($wcEnabled) {
+      $emails = new \MailPoet\WooCommerce\Emails();
+      $emails->init();
     }
   }
 

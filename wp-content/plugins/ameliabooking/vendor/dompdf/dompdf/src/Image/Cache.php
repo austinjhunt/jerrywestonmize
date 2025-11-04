@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Image;
+namespace AmeliaDompdf\Image;
 
-use Dompdf\Options;
-use Dompdf\Helpers;
-use Dompdf\Exception\ImageException;
+use AmeliaDompdf\Options;
+use AmeliaDompdf\Helpers;
+use AmeliaDompdf\Exception\ImageException;
 
 /**
  * Static class that resolves image urls and downloads and caches
@@ -55,7 +55,7 @@ class Cache
      * @param string $protocol  Default protocol if none specified in $url
      * @param string $host      Default host if none specified in $url
      * @param string $base_path Default path if none specified in $url
-     * @param Options $options  An instance of Dompdf\Options
+     * @param Options $options  An instance of AmeliaDompdf\Options
      *
      * @return array            An array with three elements: The local path to the image, the image
      *                          extension, and an error message if the image could not be cached

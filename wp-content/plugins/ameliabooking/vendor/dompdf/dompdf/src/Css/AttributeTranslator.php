@@ -4,10 +4,10 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Css;
+namespace AmeliaDompdf\Css;
 
-use Dompdf\Frame;
-use Dompdf\Helpers;
+use AmeliaDompdf\Frame;
+use AmeliaDompdf\Helpers;
 
 /**
  * Translates HTML 4.0 attributes into CSS rules

@@ -4,15 +4,15 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Frame;
+namespace AmeliaDompdf\Frame;
 
 use DOMDocument;
 use DOMNode;
 use DOMElement;
 use DOMXPath;
 
-use Dompdf\Exception;
-use Dompdf\Frame;
+use AmeliaDompdf\Exception;
+use AmeliaDompdf\Frame;
 use IteratorAggregate;
 
 /**

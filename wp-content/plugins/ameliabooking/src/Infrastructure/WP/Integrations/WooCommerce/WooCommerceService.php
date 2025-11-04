@@ -587,6 +587,14 @@ class WooCommerceService
                 ]
             );
 
+            if (!$event || !$event->getId()) {
+                $wooCommerceCart = self::getWooCommerceCart();
+                foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
+                    $wooCommerceCart->remove_cart_item($wc_key);
+                }
+                return;
+            }
+
             $bookings[$event->getId()->getValue()] = [
                 'bookable'   => [
                     'type'             => Entities::EVENT,

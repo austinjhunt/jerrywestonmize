@@ -2,12 +2,12 @@
 
 namespace AmeliaBooking\Application\Services\Invoice;
 
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use Interop\Container\Exception\ContainerException;
-use Dompdf\Dompdf;
 
 /**
  * Class AbstractInvoiceApplicationService
@@ -30,6 +30,8 @@ abstract class AbstractInvoiceApplicationService
 
     /**
      * @param int $paymentId
+     * @param int|null $customerId
+     * @param string $format
      *
      * @return array
      *
@@ -37,6 +39,7 @@ abstract class AbstractInvoiceApplicationService
      * @throws NotFoundException
      * @throws QueryExecutionException
      * @throws ContainerException
+     * @throws AccessDeniedException
      */
-    abstract public function generateInvoice($paymentId);
+    abstract public function generateInvoice($paymentId, int $customerId = null, $format = null);
 }

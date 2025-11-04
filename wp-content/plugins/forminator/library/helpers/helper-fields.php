@@ -679,11 +679,11 @@ function forminator_get_value_from_form_entry( $element_id, ?Forminator_Form_Mod
 		$data = recreate_prepared_data( $custom_form, $entry );
 	}
 	// For HTML field we get the relevant field label instead of field value for select, radio and checkboxes and for them themselves.
-	if ( $get_labels && ! $print_value && ( strpos( $element_id, 'radio' ) === 0
+	if ( $get_labels && ( strpos( $element_id, 'radio' ) === 0
 		|| strpos( $element_id, 'select' ) === 0
 		|| strpos( $element_id, 'checkbox' ) === 0
 		) ) {
-		$value = forminator_replace_field_data( $custom_form, $element_id, $data, false, $is_pdf );
+		$value = forminator_replace_field_data( $custom_form, $element_id, $data, $is_pdf, $print_value );
 	} elseif ( ( strpos( $element_id, 'postdata' ) !== false
 			|| strpos( $element_id, 'upload' ) !== false
 			|| strpos( $element_id, 'html' ) !== false
@@ -758,12 +758,12 @@ function forminator_get_value_from_form_entry( $element_id, ?Forminator_Form_Mod
  * @param Forminator_Form_Model $custom_form Forminator_Form_Model.
  * @param string                $element_id Element Id.
  * @param array                 $data Data.
- * @param bool                  $quiz_mail Quiz mail.
  * @param bool                  $is_pdf Is PDF.
+ * @param bool                  $print_value Whether to show values instead of labels.
  *
  * @return mixed
  */
-function forminator_replace_field_data( $custom_form, $element_id, $data, $quiz_mail = false, $is_pdf = false ) {
+function forminator_replace_field_data( $custom_form, $element_id, $data, $is_pdf = false, $print_value = false ) {
 	$field_value = isset( $data[ $element_id ] ) ? $data[ $element_id ] : null;
 	$value       = '';
 	if ( ! is_null( $field_value ) ) {
@@ -771,22 +771,17 @@ function forminator_replace_field_data( $custom_form, $element_id, $data, $quiz_
 		$fields_slugs  = wp_list_pluck( $form_fields, 'slug' );
 		$parent_id     = preg_replace( '/(-[^-]+)-[^-]+$/', '$1', $element_id );
 		$field_key     = array_search( $parent_id, $fields_slugs, true );
-		$field_options = false !== $field_key && ! empty( $form_fields[ $field_key ]->raw['options'] )
-				? wp_list_pluck( $form_fields[ $field_key ]->options, 'label', 'value' )
-				: array();
-		if ( $quiz_mail ) {
-			if ( false !== strpos( $field_value, ',' ) ) {
-				$field_value = array_map( 'trim', explode( ',', $field_value ) );
+		$field_options = array();
+		if ( false !== $field_key && ! empty( $form_fields[ $field_key ]->raw['options'] ) ) {
+			// Include both label and image data for each option.
+			foreach ( $form_fields[ $field_key ]->raw['options'] as $option ) {
+				$field_options[ $option['value'] ] = array(
+					'label' => $option['label'],
+					'image' => isset( $option['image'] ) ? $option['image'] : '',
+				);
 			}
-
-			$selected_values = is_array( $field_value ) ? $field_value : array( $field_value );
-
-			if ( is_array( $field_value ) ) {
-				$value = array_keys( array_intersect( $field_options, array_map( 'stripslashes', $selected_values ) ) );
-			} else {
-				$value = implode( ', ', array_keys( array_intersect( $field_options, array_map( 'stripslashes', $selected_values ) ) ) );
-			}
-		} elseif ( $is_pdf ) {
+		}
+		if ( $is_pdf ) {
 			// Since PDFs use entry meta which is already from the database, it has been processed already.
 			if ( is_array( $field_value ) && isset( $field_value['value'] ) ) {
 				$value = $field_value['value'];
@@ -796,20 +791,51 @@ function forminator_replace_field_data( $custom_form, $element_id, $data, $quiz_
 		} else {
 			$selected_values = is_array( $field_value ) ? $field_value : array( $field_value );
 			$selected_values = array_map( 'htmlspecialchars_decode', $selected_values );
+			$field           = $custom_form->get_field( $element_id, true );
 
-			// Check if custom option is enabled for this field.
-			$field                = $custom_form->get_field( $element_id, true );
-			$enable_custom_option = Forminator_Field::get_property( 'enable_custom_option', $field, false );
-			if ( $enable_custom_option && ! empty( $selected_values ) ) {
-				if ( in_array( 'custom_option', $selected_values, true ) ) {
-					$custom_value = isset( $data[ 'custom-' . $element_id ] ) ? $data[ 'custom-' . $element_id ] : '';
-					// Append the custom input value for the "Other" option.
-					if ( '' !== $custom_value ) {
-						$field_options['custom_option'] = $field_options['custom_option'] . ': ' . $custom_value;
+			// Check if we should display images for radio/checkbox fields.
+			$enable_images = Forminator_Field::get_property( 'enable_images', $field, false, 'bool' );
+
+			// Check if we're in email context using parent class static property.
+			$is_email = false;
+			if ( class_exists( 'Forminator_Mail' ) && method_exists( 'Forminator_Mail', 'is_email_context' ) ) {
+				$is_email = Forminator_Mail::is_email_context();
+			}
+
+			if ( ! empty( $field_options ) ) {
+				$display_items = array();
+				foreach ( $selected_values as $selected_value ) {
+					$selected_value = stripslashes( $selected_value );
+
+					if ( isset( $field_options[ $selected_value ] ) ) {
+						$option_data  = $field_options[ $selected_value ];
+						$display_text = $print_value ? $selected_value : $option_data['label'];
+
+						// Handle custom option text enhancement.
+						if ( 'custom_option' === $selected_value ) {
+							$enable_custom_option = Forminator_Field::get_property( 'enable_custom_option', $field, false );
+							$custom_value         = $data[ 'custom-' . $element_id ] ?? '';
+							// Append the custom input value for the "Other" option.
+							if ( $enable_custom_option && '' !== $custom_value ) {
+								$display_text .= ': ' . $custom_value;
+							}
+						}
+
+						// Apply image markup if enabled and this is for email.
+						if ( $enable_images && $is_email && ! empty( $option_data['image'] ) ) {
+							$display_items[] = forminator_get_email_image_markup( $option_data['image'], $display_text, $display_text, 'field' );
+						} else {
+							$display_items[] = $display_text;
+						}
+					} else {
+						$display_items[] = $selected_value;
 					}
 				}
+
+				$value = implode( '<br/>', $display_items );
+			} else {
+				$value = implode( ', ', array_keys( array_intersect( array_flip( array_column( $field_options, 'label' ) ), array_map( 'stripslashes', $selected_values ) ) ) );
 			}
-			$value = implode( ', ', array_keys( array_intersect( array_flip( $field_options ), array_map( 'stripslashes', $selected_values ) ) ) );
 		}
 	}
 
@@ -1395,6 +1421,12 @@ function forminator_replace_variables( $content, $id = false, $entry = null ) {
 function render_entry( $item, $column_name, $field = null, $type = '', $remove_empty = false, $att_id_only = false, $separator = '<br>', $show_label = true ) {
 	$data = $item->get_meta( $column_name, '' );
 
+	// Check if we're in email context using parent class static property.
+	$is_email = false;
+	if ( class_exists( 'Forminator_Mail' ) && method_exists( 'Forminator_Mail', 'is_email_context' ) ) {
+		$is_email = Forminator_Mail::is_email_context();
+	}
+
 	$is_calculation = false;
 	if ( stripos( $column_name, 'calculation' ) !== false ) {
 		$is_calculation = true;
@@ -1437,9 +1469,17 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 							$files_count = count( $file_urls );
 							foreach ( $file_urls as $index => $file_url ) {
 								$file_name = basename( $file_url );
-								$file_name = "<a href='" . esc_url( $file_url ) . "' target='_blank' rel='noreferrer' title='" . esc_html__( 'View File', 'forminator' ) . "'>$file_name</a>";
-								$output   .= $file_name;
-								$output   .= $index < $files_count - 1 ? $separator : '';
+
+								if ( $is_email && forminator_can_display_as_image( $file_url ) ) {
+									// For email notifications, display image if possible.
+									$output .= forminator_get_email_image_markup( $file_url, $file_name, '', 'upload' );
+								} else {
+									// Default link display.
+									$file_name = "<a href='" . esc_url( $file_url ) . "' target='_blank' rel='noreferrer' title='" . esc_html__( 'View File', 'forminator' ) . "'>$file_name</a>";
+									$output   .= $file_name;
+								}
+
+								$output .= $index < $files_count - 1 ? $separator : '';
 							}
 						}
 					} elseif ( ! is_int( $key ) ) {
@@ -1727,7 +1767,8 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 					$output = substr( trim( $output ), 0, - 1 );
 
 				}
-			} elseif ( is_array( $data ) ) {
+				// If it is an array and not an upload field.
+			} elseif ( is_array( $data ) && stripos( $column_name, 'upload' ) === false ) {
 				$output = implode( ', ', $data );
 			}
 
@@ -3596,4 +3637,47 @@ function forminator_render_rating_field( $rating_value, $rating_items ) {
 	$output .= '</div>';
 
 	return $output;
+}
+
+/**
+ * Check if a file can be displayed as an image
+ *
+ * @param string $file_url File URL.
+ * @return bool
+ */
+function forminator_can_display_as_image( $file_url ) {
+	$image_extensions = array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tiff', 'tif', 'ico', 'webp', 'heic' );
+	$file_extension   = strtolower( pathinfo( $file_url, PATHINFO_EXTENSION ) );
+
+	return in_array( $file_extension, $image_extensions, true );
+}
+
+/**
+ * Get image markup for email notifications
+ *
+ * @param string $image_url Image URL.
+ * @param string $alt_text Alt text for the image.
+ * @param string $label Label to display below image.
+ * @param string $context Context where this is used (radio, checkbox, signature, upload).
+ * @return string
+ */
+function forminator_get_email_image_markup( $image_url, $alt_text, $label = '', $context = '' ) {
+	$default_markup = '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $alt_text ) . '" style="max-width: 300px; height: auto; margin: 5px 0;">';
+
+	if ( ! empty( $label ) ) {
+		$default_markup .= '<br/>' . esc_html( $label );
+	}
+
+	/**
+	 * Filter the image markup for email notifications
+	 *
+	 * @since 1.0
+	 *
+	 * @param string $markup The HTML markup for the image.
+	 * @param string $image_url The URL of the image.
+	 * @param string $alt_text The alt text for the image.
+	 * @param string $label The label to display below the image.
+	 * @param string $context The context where this is used (radio, checkbox, signature, upload).
+	 */
+	return apply_filters( 'forminator_email_image_markup', $default_markup, $image_url, $alt_text, $label, $context );
 }

@@ -4,13 +4,13 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\FrameDecorator;
+namespace AmeliaDompdf\FrameDecorator;
 
-use Dompdf\Cellmap;
+use AmeliaDompdf\Cellmap;
 use DOMNode;
-use Dompdf\Css\Style;
-use Dompdf\Dompdf;
-use Dompdf\Frame;
+use AmeliaDompdf\Css\Style;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Frame;
 
 /**
  * Decorates Frames for table layout

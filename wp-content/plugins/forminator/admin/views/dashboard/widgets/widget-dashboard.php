@@ -9,7 +9,7 @@ echo forminator_template( 'templates/preset/popup' ); /* phpcs:ignore WordPress.
 
 ?>
 
-<div class="sui-box <?php echo esc_attr( $this->get_box_summary_classes() ); ?>">
+<div id="forminator-dashboard-box-on-board" class="sui-box <?php echo esc_attr( $this->get_box_summary_classes() ); ?>">
 	<div class="forminator-dashboard-no-form-block">
 		<div class="forminator-dashboard-create-first-form">
 			<svg width="120" height="123" viewBox="0 0 120 123" fill="none" xmlns="http://www.w3.org/2000/svg">

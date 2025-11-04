@@ -4,9 +4,9 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Renderer;
+namespace AmeliaDompdf\Renderer;
 
-use Dompdf\Frame;
+use AmeliaDompdf\Frame;
 
 /**
  * Renders inline frames

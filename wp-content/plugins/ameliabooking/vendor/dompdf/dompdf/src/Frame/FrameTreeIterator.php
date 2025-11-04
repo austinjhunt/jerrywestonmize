@@ -4,10 +4,10 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Frame;
+namespace AmeliaDompdf\Frame;
 
 use Iterator;
-use Dompdf\Frame;
+use AmeliaDompdf\Frame;
 
 /**
  * Pre-order Iterator

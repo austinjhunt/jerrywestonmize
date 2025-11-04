@@ -99,43 +99,26 @@ class Site_Style_Sync_Controller {
  }
  private function convert_color_styles( array $color_styles ): array {
  $email_colors = array();
- if ( isset( $color_styles['background'] ) ) {
- $email_colors['background'] = $color_styles['background'];
- }
- if ( isset( $color_styles['text'] ) ) {
- $email_colors['text'] = $color_styles['text'];
- }
+ $this->resolve_and_assign( $color_styles, 'background', $email_colors );
+ $this->resolve_and_assign( $color_styles, 'text', $email_colors );
  return $email_colors;
  }
  private function convert_typography_styles( array $typography_styles ): array {
  $email_typography = array();
- // Convert font family to email-safe alternative.
- if ( isset( $typography_styles['fontFamily'] ) ) {
- $email_typography['fontFamily'] = $this->convert_to_email_safe_font( $typography_styles['fontFamily'] );
- }
- // Convert font size to px if needed.
- if ( isset( $typography_styles['fontSize'] ) ) {
- $email_typography['fontSize'] = $this->convert_to_px_size( $typography_styles['fontSize'] );
- }
- // Preserve email-compatible typography properties.
+ // Handle special cases with processors.
+ $this->resolve_and_assign( $typography_styles, 'fontFamily', $email_typography, array( $this, 'convert_to_email_safe_font' ) );
+ $this->resolve_and_assign( $typography_styles, 'fontSize', $email_typography, array( $this, 'convert_to_px_size' ) );
+ // Handle compatible properties without processing.
  $compatible_props = array( 'fontWeight', 'fontStyle', 'lineHeight', 'letterSpacing', 'textTransform', 'textDecoration' );
  foreach ( $compatible_props as $prop ) {
- if ( isset( $typography_styles[ $prop ] ) ) {
- $email_typography[ $prop ] = $typography_styles[ $prop ];
- }
+ $this->resolve_and_assign( $typography_styles, $prop, $email_typography );
  }
  return $email_typography;
  }
  private function convert_spacing_styles( array $spacing_styles ): array {
  $email_spacing = array();
- // Convert padding to px values.
- if ( isset( $spacing_styles['padding'] ) ) {
- $email_spacing['padding'] = $this->convert_spacing_values( $spacing_styles['padding'] );
- }
- // Convert blockGap to px if present.
- if ( isset( $spacing_styles['blockGap'] ) ) {
- $email_spacing['blockGap'] = $this->convert_to_px_size( $spacing_styles['blockGap'] );
- }
+ $this->resolve_and_assign( $spacing_styles, 'padding', $email_spacing, array( $this, 'convert_spacing_values' ) );
+ $this->resolve_and_assign( $spacing_styles, 'blockGap', $email_spacing, array( $this, 'convert_to_px_size' ) );
  // Note: We intentionally skip margin as it's not supported in email renderer.
  return $email_spacing;
  }
@@ -165,6 +148,29 @@ class Site_Style_Sync_Controller {
  $email_element['spacing'] = $this->convert_spacing_styles( $element_style['spacing'] );
  }
  return $email_element;
+ }
+ private function resolve_and_assign( array $styles, string $property, array &$target, ?callable $processor = null ): bool {
+ if ( ! isset( $styles[ $property ] ) ) {
+ return false;
+ }
+ $resolved = $this->resolve_style_value( $styles[ $property ] );
+ if ( ! $resolved ) {
+ return false;
+ }
+ $target[ $property ] = $processor ? $processor( $resolved ) : $resolved;
+ return true;
+ }
+ private function resolve_style_value( $style_value ) {
+ // Check if this is a reference array.
+ if ( is_array( $style_value ) && isset( $style_value['ref'] ) ) {
+ $ref = $style_value['ref'];
+ if ( ! is_string( $ref ) || empty( $ref ) ) {
+ return null;
+ }
+ $path = explode( '.', $ref );
+ return _wp_array_get( $this->get_site_theme()->get_data(), $path, null );
+ }
+ return $style_value;
  }
  private function convert_to_email_safe_font( string $font_family ): string {
  // Get email-safe fonts.

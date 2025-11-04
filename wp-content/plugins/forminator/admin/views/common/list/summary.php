@@ -27,7 +27,7 @@ if ( $count > 0 || $is_search ) {
 
 			<div class="sui-summary-details">
 
-				<span class="sui-summary-large"><?php echo esc_html( $count_active ); ?></span>
+				<span id="forminator-summary-active-<?php echo esc_attr( static::$module_slug ); ?>-count" class="sui-summary-large"><?php echo esc_html( $count_active ); ?></span>
 
 				<span class="sui-summary-sub">
 				<?php
@@ -101,17 +101,17 @@ if ( $count > 0 || $is_search ) {
 
 			<ul class="sui-list">
 
-				<li>
+				<li id="forminator-summary-last-submission">
 					<span class="sui-list-label"><?php esc_html_e( 'Last Submission', 'forminator' ); ?></span>
 					<span class="sui-list-detail"><?php echo esc_html( forminator_get_latest_entry_time( $this::$module_slug ) ); ?></span>
 				</li>
 
-				<li>
+				<li id="forminator-summary-submissions-in-30-days">
 					<span class="sui-list-label"><?php esc_html_e( 'Submissions in the last 30 days', 'forminator' ); ?></span>
 					<span class="sui-list-detail"><?php echo esc_html( $total_entries_from_last_month ); ?></span>
 				</li>
 				<?php if ( ! empty( $most_entry ) && get_post_status( $most_entry->form_id ) && 0 !== (int) $most_entry->entry_count ) { ?>
-					<li>
+					<li id="forminator-summary-most-submissions">
 						<span class="sui-list-label"><?php esc_html_e( 'Most submissions', 'forminator' ); ?></span>
 						<span class="sui-list-detail">
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $wizard_page . '&id=' . $most_entry->form_id ) ); ?>">

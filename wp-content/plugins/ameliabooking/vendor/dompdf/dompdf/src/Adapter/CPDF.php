@@ -6,20 +6,20 @@
  */
 
 // FIXME: Need to sanity check inputs to this class
-namespace Dompdf\Adapter;
+namespace AmeliaDompdf\Adapter;
 
-use Dompdf\Canvas;
-use Dompdf\Dompdf;
-use Dompdf\Exception;
-use Dompdf\FontMetrics;
-use Dompdf\Helpers;
-use Dompdf\Image\Cache;
+use AmeliaDompdf\Canvas;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Exception;
+use AmeliaDompdf\FontMetrics;
+use AmeliaDompdf\Helpers;
+use AmeliaDompdf\Image\Cache;
 use FontLib\Exception\FontNotFoundException;
 
 /**
  * PDF rendering interface
  *
- * Dompdf\Adapter\CPDF provides a simple stateless interface to the stateful one
+ * AmeliaDompdf\Adapter\CPDF provides a simple stateless interface to the stateful one
  * provided by the Cpdf class.
  *
  * Unless otherwise mentioned, all dimensions are in points (1/72 in).  The
@@ -109,7 +109,7 @@ class CPDF implements Canvas
     /**
      * Instance of Cpdf class
      *
-     * @var \Dompdf\Cpdf
+     * @var \AmeliaDompdf\Cpdf
      */
     protected $_pdf;
 
@@ -174,7 +174,7 @@ class CPDF implements Canvas
             $this->_dompdf = $dompdf;
         }
 
-        $this->_pdf = new \Dompdf\Cpdf(
+        $this->_pdf = new \AmeliaDompdf\Cpdf(
             $size,
             true,
             $this->_dompdf->getOptions()->getFontCache(),
@@ -202,7 +202,7 @@ class CPDF implements Canvas
     /**
      * Returns the Cpdf instance
      *
-     * @return \Dompdf\Cpdf
+     * @return \AmeliaDompdf\Cpdf
      */
     public function get_cpdf()
     {
@@ -689,8 +689,8 @@ class CPDF implements Canvas
             $pdf->addForm();
         }
 
-        $ft = \Dompdf\Cpdf::ACROFORM_FIELD_CHOICE;
-        $ff = \Dompdf\Cpdf::ACROFORM_FIELD_CHOICE_COMBO;
+        $ft = \AmeliaDompdf\Cpdf::ACROFORM_FIELD_CHOICE;
+        $ff = \AmeliaDompdf\Cpdf::ACROFORM_FIELD_CHOICE_COMBO;
 
         $id = $pdf->addFormField($ft, rand(), $x, $this->y($y) - $h, $x + $w, $this->y($y), $ff, $size, $color);
         $pdf->setFormFieldOpt($id, $opts);
@@ -706,8 +706,8 @@ class CPDF implements Canvas
             $pdf->addForm();
         }
 
-        $ft = \Dompdf\Cpdf::ACROFORM_FIELD_TEXT;
-        $ff = \Dompdf\Cpdf::ACROFORM_FIELD_TEXT_MULTILINE;
+        $ft = \AmeliaDompdf\Cpdf::ACROFORM_FIELD_TEXT;
+        $ff = \AmeliaDompdf\Cpdf::ACROFORM_FIELD_TEXT_MULTILINE;
 
         $pdf->addFormField($ft, rand(), $x, $this->y($y) - $h, $x + $w, $this->y($y), $ff, $size, $color);
     }
@@ -722,19 +722,19 @@ class CPDF implements Canvas
             $pdf->addForm();
         }
 
-        $ft = \Dompdf\Cpdf::ACROFORM_FIELD_TEXT;
+        $ft = \AmeliaDompdf\Cpdf::ACROFORM_FIELD_TEXT;
         $ff = 0;
 
         switch ($type) {
             case 'text':
-                $ft = \Dompdf\Cpdf::ACROFORM_FIELD_TEXT;
+                $ft = \AmeliaDompdf\Cpdf::ACROFORM_FIELD_TEXT;
                 break;
             case 'password':
-                $ft = \Dompdf\Cpdf::ACROFORM_FIELD_TEXT;
-                $ff = \Dompdf\Cpdf::ACROFORM_FIELD_TEXT_PASSWORD;
+                $ft = \AmeliaDompdf\Cpdf::ACROFORM_FIELD_TEXT;
+                $ff = \AmeliaDompdf\Cpdf::ACROFORM_FIELD_TEXT_PASSWORD;
                 break;
             case 'submit':
-                $ft = \Dompdf\Cpdf::ACROFORM_FIELD_BUTTON;
+                $ft = \AmeliaDompdf\Cpdf::ACROFORM_FIELD_BUTTON;
                 break;
         }
 

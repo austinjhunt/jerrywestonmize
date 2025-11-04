@@ -13,8 +13,10 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Invoice\AbstractInvoiceApplicationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Payment\InvoiceApplicationService;
+use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 
 /**
@@ -36,11 +38,32 @@ class GenerateInvoiceCommandHandler extends CommandHandler
      */
     public function handle(GenerateInvoiceCommand $command)
     {
+        $result = new CommandResult();
+
+        /** @var UserApplicationService $userAS */
+        $userAS = $this->getContainer()->get('application.user.service');
+
+        /** @var AbstractUser|null $currentUser */
+        $currentUser = null;
         if (!$command->getPermissionService()->currentUserCanRead(Entities::FINANCE)) {
-            throw new AccessDeniedException('You are not allowed to read payments.');
+            if ($command->getToken()) {
+                $currentUser = $userAS->getAuthenticatedUser($command->getToken(), false, 'customerCabinet');
+                if ($currentUser === null) {
+                    $result->setResult(CommandResult::RESULT_ERROR);
+                    $result->setMessage('Could not retrieve user');
+                    $result->setData(
+                        [
+                            'reauthorize' => true
+                        ]
+                    );
+
+                    return $result;
+                }
+            } else {
+                throw new AccessDeniedException('You are not allowed to generate this invoice.');
+            }
         }
 
-        $result = new CommandResult();
 
         /** @var AbstractInvoiceApplicationService $invoiceService */
         $invoiceService = $this->container->get('application.invoice.service');
@@ -48,7 +71,11 @@ class GenerateInvoiceCommandHandler extends CommandHandler
         $paymentId = $command->getArg('id');
 
         try {
-            $file = $invoiceService->generateInvoice($paymentId);
+            $file = $invoiceService->generateInvoice($paymentId, $currentUser ? $currentUser->getId()->getValue() : null, $command->getField('format'));
+        } catch (AccessDeniedException $e) {
+            $result->setMessage('You are not allowed to generate this invoice.');
+            $result->setResult(CommandResult::RESULT_ERROR);
+            return $result;
         } catch (\Exception $e) {
             $result->setMessage($e->getMessage());
             $result->setResult(CommandResult::RESULT_ERROR);

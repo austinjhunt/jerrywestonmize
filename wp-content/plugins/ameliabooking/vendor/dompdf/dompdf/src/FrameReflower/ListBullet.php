@@ -4,10 +4,10 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\FrameReflower;
+namespace AmeliaDompdf\FrameReflower;
 
-use Dompdf\FrameDecorator\Block as BlockFrameDecorator;
-use Dompdf\FrameDecorator\ListBullet as ListBulletFrameDecorator;
+use AmeliaDompdf\FrameDecorator\Block as BlockFrameDecorator;
+use AmeliaDompdf\FrameDecorator\ListBullet as ListBulletFrameDecorator;
 
 /**
  * Reflows list bullets

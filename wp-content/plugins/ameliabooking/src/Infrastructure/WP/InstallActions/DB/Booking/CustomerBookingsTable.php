@@ -43,6 +43,7 @@ class CustomerBookingsTable extends AbstractDatabaseTable
                     `duration` int(11) DEFAULT NULL,
                     `created` DATETIME NULL,
                     `actionsCompleted` TINYINT(1) NULL,
+                    `qrCodes` TEXT NULL,
                     PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     }

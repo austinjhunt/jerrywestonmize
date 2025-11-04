@@ -103,7 +103,8 @@ class Forminator_Admin_Data {
 		$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 		$user = wp_get_current_user();
 
-		$dashboard = class_exists( 'WPMUDEV_Dashboard' );
+		$dashboard      = class_exists( 'WPMUDEV_Dashboard' );
+		$extension_pack = class_exists( 'Forminator_Extension_Pack' );
 
 		return array(
 			'ajaxUrl'                        => forminator_ajax_url(),
@@ -184,6 +185,7 @@ class Forminator_Admin_Data {
 			'dashboardPlugin'                => $dashboard,
 			'isWPMUDEVloggedIn'              => $dashboard && WPMUDEV_Dashboard::$api->get_key(),
 			'expiredMembership'              => $dashboard && forminator_get_wpmudev_membership() === 'expired',
+			'extensionPack'                  => $extension_pack,
 			'userRoles'                      => forminator_get_accessible_user_roles(),
 			'pages'                          => self::get_pages(),
 			'hasPayPal'                      => forminator_has_paypal_settings(),
@@ -208,7 +210,15 @@ class Forminator_Admin_Data {
 			'saveDelay'                      => apply_filters( 'forminator_save_delay', 1500 ),
 			'autoSave'                       => get_option( 'forminator_auto_saving', true ),
 			'addonsDisabled'                 => forminator_addons_disabled(),
+			'abandonmentDisabled'            => forminator_form_abandonment_disabled(),
 			'formColorSettings'              => Forminator_Custom_Form_Admin::get_default_color_settings(),
+			'install_addon'                  => filter_input( INPUT_GET, 'forminator_install_addon', FILTER_VALIDATE_INT ),
+			'open_addon'                     => filter_input( INPUT_GET, 'forminator_open_addon', FILTER_VALIDATE_INT ),
+			'EXTENSION_PACK_PID'             => Forminator_Admin_Addons_Page::EXTENSION_PACK_PID,
+			'isUserRegistrationEnabled'      => forminator_is_user_registration_enabled(),
+			'isSiteRegistrationEnabled'      => forminator_is_site_registration_enabled(),
+			'networkAdminUrl'                => network_admin_url(),
+			'isMultisite'                    => is_multisite(),
 		);
 	}
 

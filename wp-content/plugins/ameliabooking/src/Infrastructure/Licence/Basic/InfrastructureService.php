@@ -125,6 +125,16 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
         );
     }
 
+    public static function getBarionService($c)
+    {
+        return new InfrastructureServices\Payment\BarionService(
+            $c->get('domain.settings.service'),
+            new InfrastructureServices\Payment\CurrencyService(
+                $c->get('domain.settings.service')
+            )
+        );
+    }
+
     /**
      * @param Container $c
      *

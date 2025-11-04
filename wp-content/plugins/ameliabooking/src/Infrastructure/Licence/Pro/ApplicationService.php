@@ -41,4 +41,14 @@ class ApplicationService extends \AmeliaBooking\Infrastructure\Licence\Basic\App
     {
         return new ApplicationServices\Notification\WhatsAppNotificationService($c, 'whatsapp');
     }
+
+    /**
+     * @param Container $c
+     *
+     * @return ApplicationServices\QrCode\AbstractQrCodeApplicationService
+     */
+    public static function getQrCodeService($c)
+    {
+        return new ApplicationServices\QrCode\QrCodeApplicationService($c);
+    }
 }

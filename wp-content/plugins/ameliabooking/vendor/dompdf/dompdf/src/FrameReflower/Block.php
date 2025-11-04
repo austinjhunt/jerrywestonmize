@@ -4,15 +4,15 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\FrameReflower;
+namespace AmeliaDompdf\FrameReflower;
 
-use Dompdf\FrameDecorator\AbstractFrameDecorator;
-use Dompdf\FrameDecorator\Block as BlockFrameDecorator;
-use Dompdf\FrameDecorator\TableCell as TableCellFrameDecorator;
-use Dompdf\FrameDecorator\Text as TextFrameDecorator;
-use Dompdf\Exception;
-use Dompdf\Css\Style;
-use Dompdf\Helpers;
+use AmeliaDompdf\FrameDecorator\AbstractFrameDecorator;
+use AmeliaDompdf\FrameDecorator\Block as BlockFrameDecorator;
+use AmeliaDompdf\FrameDecorator\TableCell as TableCellFrameDecorator;
+use AmeliaDompdf\FrameDecorator\Text as TextFrameDecorator;
+use AmeliaDompdf\Exception;
+use AmeliaDompdf\Css\Style;
+use AmeliaDompdf\Helpers;
 
 /**
  * Reflows block frames

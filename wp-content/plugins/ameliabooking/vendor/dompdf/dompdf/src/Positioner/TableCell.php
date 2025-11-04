@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Positioner;
+namespace AmeliaDompdf\Positioner;
 
-use Dompdf\Exception;
-use Dompdf\FrameDecorator\AbstractFrameDecorator;
-use Dompdf\FrameDecorator\Table;
+use AmeliaDompdf\Exception;
+use AmeliaDompdf\FrameDecorator\AbstractFrameDecorator;
+use AmeliaDompdf\FrameDecorator\Table;
 
 /**
  * Positions table cells

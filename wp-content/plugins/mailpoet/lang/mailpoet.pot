@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the MailPoet plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MailPoet 5.15.1\n"
+"Project-Id-Version: MailPoet 5.16.3\n"
 "Report-Msgid-Bugs-To: http://support.mailpoet.com/\n"
 "Last-Translator: MailPoet i18n (https://www.transifex.com/organization/wysija)\n"
 "Language-Team: MailPoet i18n <https://www.transifex.com/organization/wysija>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-30T03:22:34+00:00\n"
+"POT-Creation-Date: 2025-10-27T14:05:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -648,7 +648,7 @@ msgstr ""
 #: views/help.html:70
 #: lib/API/MP/v1/CustomFields.php:27
 #: lib/Automation/Integrations/WordPress/Subjects/UserSubject.php:63
-#: lib/EmailEditor/Integrations/MailPoet/EmailEditor.php:67
+#: lib/EmailEditor/Integrations/MailPoet/EmailEditor.php:75
 #: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:56
 #: lib/Form/Templates/Templates/InitialForm.php:22
 #: lib/Subscribers/ImportExport/ImportExportFactory.php:60
@@ -1103,7 +1103,7 @@ msgid "Close"
 msgstr ""
 
 #: views/form/iframe.html:46
-#: lib/PostEditorBlocks/SubscriptionFormBlock.php:60
+#: lib/PostEditorBlocks/SubscriptionFormBlock.php:61
 msgid "MailPoet Subscription Form"
 msgstr ""
 
@@ -1502,9 +1502,9 @@ msgstr ""
 #: views/newsletter/templates/blocks/posts/settingsDisplayOptions.hbs:223
 #: views/newsletter/templates/blocks/products/settingsDisplayOptions.hbs:186
 #: views/newsletter/templates/blocks/social/settingsIcon.hbs:42
-#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:89
-#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:98
 #: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:107
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:116
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:125
 msgid "Link"
 msgstr ""
 
@@ -3144,6 +3144,7 @@ msgstr ""
 #: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:40
 #: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:49
 #: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:58
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:67
 #: lib/Newsletter/Shortcodes/ShortcodesHelper.php:20
 #: lib/Newsletter/Shortcodes/ShortcodesHelper.php:135
 #: lib/Newsletter/Shortcodes/ShortcodesHelper.php:136
@@ -5803,7 +5804,7 @@ msgid "Read our guide"
 msgstr ""
 
 #: views/settings_translations.html:68
-#: lib/EmailEditor/Integrations/MailPoet/EmailEditorPreviewEmail.php:43
+#: lib/EmailEditor/Integrations/MailPoet/EmailEditorPreviewEmail.php:49
 msgid "Invalid email address"
 msgstr ""
 
@@ -6931,7 +6932,7 @@ msgstr ""
 #: lib/API/JSON/v1/Newsletters.php:319
 #: lib/API/JSON/v1/Newsletters.php:334
 #: lib/API/JSON/v1/Newsletters.php:358
-#: lib/EmailEditor/Integrations/MailPoet/EmailEditorPreviewEmail.php:56
+#: lib/EmailEditor/Integrations/MailPoet/EmailEditorPreviewEmail.php:62
 #: assets/dist/js/admin.js:2
 msgid "This email does not exist."
 msgstr ""
@@ -7522,8 +7523,8 @@ msgstr ""
 #. translators: %s is the name of the segment
 #: lib/Automation/Engine/Builder/DuplicateAutomationController.php:69
 #: lib/Form/FormSaveController.php:22
-#: lib/Newsletter/NewsletterSaveController.php:197
-#: lib/Newsletter/NewsletterSaveController.php:223
+#: lib/Newsletter/NewsletterSaveController.php:202
+#: lib/Newsletter/NewsletterSaveController.php:228
 #: lib/Segments/DynamicSegments/SegmentSaveController.php:55
 #: lib/Segments/SegmentSaveController.php:47
 msgid "Copy of %s"
@@ -7976,6 +7977,7 @@ msgid "Send email"
 msgstr ""
 
 #: lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php:155
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:137
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/commons.js:9
 #: assets/dist/js/email_editor_integration/email_editor_integration.js:34
@@ -8816,11 +8818,19 @@ msgstr ""
 msgid "MailPoet Page"
 msgstr ""
 
-#: lib/Captcha/PageRenderer.php:82
+#: lib/Captcha/PageRenderer.php:76
+msgid "This is a preview of the CAPTCHA page."
+msgstr ""
+
+#: lib/Captcha/PageRenderer.php:77
+msgid "When users need to verify they’re not a robot, the CAPTCHA form will be displayed here."
+msgstr ""
+
+#: lib/Captcha/PageRenderer.php:90
 msgid "Confirm you’re not a robot"
 msgstr ""
 
-#: lib/Captcha/ReCaptchaHooks.php:73
+#: lib/Captcha/ReCaptchaHooks.php:79
 #: lib/Form/AssetsController.php:94
 msgid "An error has happened while performing a request, please try again later."
 msgstr ""
@@ -8914,7 +8924,7 @@ msgstr ""
 
 #: lib/Config/Menu.php:229
 #: lib/Config/Menu.php:230
-#: lib/EmailEditor/Integrations/MailPoet/EmailEditor.php:66
+#: lib/EmailEditor/Integrations/MailPoet/EmailEditor.php:74
 #: assets/dist/js/admin.js:2
 #: assets/dist/js/automation_analytics.js:9
 msgid "Emails"
@@ -10042,7 +10052,7 @@ msgstr ""
 msgid "This email was created using the new editor, which requires WordPress version %1$s or higher. Please update your setup to continue editing or previewing this email."
 msgstr ""
 
-#: lib/EmailEditor/Integrations/MailPoet/EmailEditorPreviewEmail.php:39
+#: lib/EmailEditor/Integrations/MailPoet/EmailEditorPreviewEmail.php:45
 msgid "Missing required data"
 msgstr ""
 
@@ -10118,30 +10128,39 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:67
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:65
+msgid "Activation Link"
+msgstr ""
+
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:76
 msgid "Site Title"
 msgstr ""
 
-#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:69
 #: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:78
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:87
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:96
 #: lib/Newsletter/Shortcodes/ShortcodesHelper.php:114
 msgid "Site"
 msgstr ""
 
-#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:76
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:85
+msgid "Site Description"
+msgstr ""
+
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:94
 #: lib/Newsletter/Shortcodes/ShortcodesHelper.php:128
 msgid "Homepage URL"
 msgstr ""
 
-#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:87
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:105
 msgid "Unsubscribe URL"
 msgstr ""
 
-#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:96
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:114
 msgid "Manage subscription URL"
 msgstr ""
 
-#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:105
+#: lib/EmailEditor/Integrations/MailPoet/PersonalizationTagManager.php:123
 msgid "View in browser URL"
 msgstr ""
 
@@ -10940,12 +10959,12 @@ msgid "no name"
 msgstr ""
 
 #: lib/Form/Widget.php:157
-#: lib/PostEditorBlocks/SubscriptionFormBlock.php:61
+#: lib/PostEditorBlocks/SubscriptionFormBlock.php:62
 msgid "inactive"
 msgstr ""
 
 #: lib/Form/Widget.php:164
-#: lib/PostEditorBlocks/SubscriptionFormBlock.php:59
+#: lib/PostEditorBlocks/SubscriptionFormBlock.php:60
 msgid "Create a new form"
 msgstr ""
 
@@ -11068,7 +11087,7 @@ msgstr ""
 msgid "Not active"
 msgstr ""
 
-#: lib/Newsletter/NewsletterSaveController.php:483
+#: lib/Newsletter/NewsletterSaveController.php:497
 msgid "New Email"
 msgstr ""
 
@@ -11203,7 +11222,7 @@ msgstr ""
 msgid "Homepage link"
 msgstr ""
 
-#: lib/PostEditorBlocks/SubscriptionFormBlock.php:58
+#: lib/PostEditorBlocks/SubscriptionFormBlock.php:59
 msgid "Select a MailPoet form"
 msgstr ""
 
@@ -11323,7 +11342,7 @@ msgid ""
 "<a target=\"_blank\" href=\"[site:homepage_url]\">[site:title]</a>"
 msgstr ""
 
-#: lib/Subscribers/ConfirmationEmailMailer.php:191
+#: lib/Subscribers/ConfirmationEmailMailer.php:252
 msgid "There was an error when sending a confirmation email for your subscription. Please contact the website owner."
 msgstr ""
 
@@ -11854,6 +11873,111 @@ msgstr ""
 #: lib/WooCommerce/CouponPreProcessor.php:98
 msgctxt "Coupon block code generation"
 msgid "Auto Generated coupon by MailPoet for email: %1$s: %2$s"
+msgstr ""
+
+#: lib/WooCommerce/Emails.php:84
+msgid "Marketing"
+msgstr ""
+
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:28
+msgid "MailPoet Marketing Confirmation"
+msgstr ""
+
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:29
+msgid "Send an email for customers to confirm their subscription to marketing emails."
+msgstr ""
+
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:58
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:65
+msgid "Confirm your subscription to {site_title}"
+msgstr ""
+
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:131
+msgid "Enable/Disable"
+msgstr ""
+
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:133
+msgid "Enable this email notification"
+msgstr ""
+
+#. translators: %s is a list of available placeholders
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:142
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:154
+msgid "Available placeholders: %s"
+msgstr ""
+
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:149
+msgid "Email heading"
+msgstr ""
+
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:161
+msgid "Additional content"
+msgstr ""
+
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:162
+msgid "Text to appear below the main email content."
+msgstr ""
+
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:168
+msgid "Email type"
+msgstr ""
+
+#: lib/WooCommerce/Emails/MarketingConfirmation.php:170
+msgid "Choose which format of email to send."
+msgstr ""
+
+#. translators: %s: Site title
+#: lib/WooCommerce/Emails/Templates/emails/block/marketing-confirmation.php:22
+msgid "Confirm your subscription to %s"
+msgstr ""
+
+#. translators: %s: Subscriber first name
+#: lib/WooCommerce/Emails/Templates/emails/block/marketing-confirmation.php:31
+#: lib/WooCommerce/Emails/Templates/emails/marketing-confirmation.php:32
+#: lib/WooCommerce/Emails/Templates/emails/plain/marketing-confirmation.php:27
+msgid "Hello %s,"
+msgstr ""
+
+#. translators: %s: Default placeholder used when no subscriber name is available, e.g. "Hello there"
+#. translators: %s: Subscriber first name
+#: lib/WooCommerce/Emails/Templates/emails/block/marketing-confirmation.php:35
+#: lib/WooCommerce/Emails/Templates/emails/marketing-confirmation.php:32
+msgctxt "subscriber name placeholder"
+msgid "there"
+msgstr ""
+
+#. translators: %s: Site title
+#. translators: %s: Site name
+#: lib/WooCommerce/Emails/Templates/emails/block/marketing-confirmation.php:42
+#: lib/WooCommerce/Emails/Templates/emails/marketing-confirmation.php:39
+#: lib/WooCommerce/Emails/Templates/emails/plain/marketing-confirmation.php:31
+msgid "You've received this message because you subscribed to %s. Please confirm your subscription to receive emails from us:"
+msgstr ""
+
+#: lib/WooCommerce/Emails/Templates/emails/block/marketing-confirmation.php:48
+#: lib/WooCommerce/Emails/Templates/emails/marketing-confirmation.php:43
+msgid "Click here to confirm your subscription"
+msgstr ""
+
+#: lib/WooCommerce/Emails/Templates/emails/block/marketing-confirmation.php:53
+#: lib/WooCommerce/Emails/Templates/emails/marketing-confirmation.php:45
+#: lib/WooCommerce/Emails/Templates/emails/plain/marketing-confirmation.php:39
+msgid "Thank you,"
+msgstr ""
+
+#: lib/WooCommerce/Emails/Templates/emails/block/marketing-confirmation.php:58
+#: lib/WooCommerce/Emails/Templates/emails/marketing-confirmation.php:53
+#: lib/WooCommerce/Emails/Templates/emails/plain/marketing-confirmation.php:49
+msgid "If you received this email by mistake, simply delete it. You won't receive any more emails from us unless you confirm your subscription using the link above."
+msgstr ""
+
+#. translators: %s: Subscriber first name
+#: lib/WooCommerce/Emails/Templates/emails/plain/marketing-confirmation.php:27
+msgid "there"
+msgstr ""
+
+#: lib/WooCommerce/Emails/Templates/emails/plain/marketing-confirmation.php:34
+msgid "Click here to confirm your subscription:"
 msgstr ""
 
 #: lib/WooCommerce/MailPoetTask.php:20
@@ -15382,15 +15506,27 @@ msgid "Starting an automation by creating a review is a premium feature."
 msgstr ""
 
 #: assets/dist/js/commons.js:9
+msgid "Booking Created"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "This trigger fires when a new booking is created. This includes bookings initiated by shoppers on store front end and manually created by admin users. This trigger doesn’t fire for “in-cart” bookings and a valid customer is needed to trigger this automation."
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "bookings"
+msgstr ""
+
+#: assets/dist/js/commons.js:9
+msgid "Starting an automation when a booking is created is a premium feature."
+msgstr ""
+
+#: assets/dist/js/commons.js:9
 msgid "Woo Booking status changed"
 msgstr ""
 
 #: assets/dist/js/commons.js:9
 msgid "Start the automation when booking changed to a specific status."
-msgstr ""
-
-#: assets/dist/js/commons.js:9
-msgid "bookings"
 msgstr ""
 
 #: assets/dist/js/commons.js:9
@@ -16676,6 +16812,14 @@ msgstr ""
 
 #: assets/dist/js/settings.js:1
 msgid "Separated – only human opens are counted as total opens. More accurate, but the numbers tend to be lower."
+msgstr ""
+
+#: assets/dist/js/settings.js:1
+msgid "Built-in CAPTCHA page"
+msgstr ""
+
+#: assets/dist/js/settings.js:1
+msgid "Built-in CAPTCHA is shown when users need to verify they’re not a robot. You can customize this page by editing it in WordPress and using the [mailpoet_page] shortcode to display the CAPTCHA form."
 msgstr ""
 
 #: assets/dist/js/settings.js:1

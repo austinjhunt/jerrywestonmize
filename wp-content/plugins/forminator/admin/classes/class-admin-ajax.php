@@ -144,6 +144,7 @@ class Forminator_Admin_AJAX {
 		// Process ajax actions.
 		$ajax_actions = array(
 			'forminator_addons-install',
+			'forminator_addons-install-activate',
 			'forminator_addons-activate',
 			'forminator_addons-deactivate',
 			'forminator_addons-delete',

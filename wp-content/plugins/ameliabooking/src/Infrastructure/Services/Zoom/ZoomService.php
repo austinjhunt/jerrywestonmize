@@ -40,7 +40,7 @@ class ZoomService extends AbstractZoomService
             'exp' => time() + 3600
         ];
 
-        return JWT::encode($token, $apiSecret);
+        return JWT::encode($token, $apiSecret, 'HS256');
     }
 
     /**

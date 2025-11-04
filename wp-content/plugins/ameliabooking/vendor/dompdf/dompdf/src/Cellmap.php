@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf;
+namespace AmeliaDompdf;
 
-use Dompdf\FrameDecorator\AbstractFrameDecorator;
-use Dompdf\FrameDecorator\Table as TableFrameDecorator;
-use Dompdf\FrameDecorator\TableCell as TableCellFrameDecorator;
+use AmeliaDompdf\FrameDecorator\AbstractFrameDecorator;
+use AmeliaDompdf\FrameDecorator\Table as TableFrameDecorator;
+use AmeliaDompdf\FrameDecorator\TableCell as TableCellFrameDecorator;
 
 /**
  * Maps table cells to the table grid.

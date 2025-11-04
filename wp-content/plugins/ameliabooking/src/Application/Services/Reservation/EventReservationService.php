@@ -8,6 +8,7 @@ use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
 use AmeliaBooking\Application\Services\Deposit\AbstractDepositApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
+use AmeliaBooking\Application\Services\QrCode\QrCodeApplicationService;
 use AmeliaBooking\Application\Services\Tax\TaxApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
@@ -161,7 +162,7 @@ class EventReservationService extends AbstractReservationService
         $bookingStatus = empty($eventData['bookings'][0]['status']) ? BookingStatus::APPROVED : $eventData['bookings'][0]['status'];
 
         if (!empty($eventData['payment']['gateway'])) {
-            $bookingStatus = in_array($eventData['payment']['gateway'], [PaymentType::MOLLIE]) ?
+            $bookingStatus = in_array($eventData['payment']['gateway'], [PaymentType::MOLLIE, PaymentType::BARION]) ?
                 BookingStatus::PENDING : (empty($eventData['bookings'][0]['status']) ? BookingStatus::APPROVED : $eventData['bookings'][0]['status']);
 
             if (!empty($eventData['payment']['orderStatus'])) {
@@ -323,6 +324,23 @@ class EventReservationService extends AbstractReservationService
             }
 
             $booking->setId(new Id($bookingId));
+
+            // BEGIN QR Codes generation for event booking
+            $qrCodeEventsSettings = $settingsDS->getSetting('appointments', 'qrCodeEvents');
+
+            if ($qrCodeEventsSettings['enabled'] ?? false) {
+                /** @var QrCodeApplicationService $qrCodeApplicationService */
+                $qrCodeApplicationService = $this->container->get('application.qrcode.service');
+
+                $qrCodes = $qrCodeApplicationService->createQrCodeEventData($event, $booking);
+
+
+                if (!empty($qrCodes)) {
+                    $booking->setQrCodes(new Json(json_encode($qrCodes)));
+                    $bookingRepository->update($bookingId, $booking);
+                }
+            }
+            // END QR Codes generation
 
             /** @var Payment $payment */
             $payment = $this->addPayment(

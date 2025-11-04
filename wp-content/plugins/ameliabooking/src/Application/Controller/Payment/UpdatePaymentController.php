@@ -27,6 +27,7 @@ class UpdatePaymentController extends Controller
         'customerBookingId',
         'packageCustomerId',
         'dateTime',
+        'entity',
         'status',
         'gateway',
         'gatewayTitle',

@@ -273,13 +273,33 @@ class UserFactory
             $user->setCountryPhoneIso(new Name($data['countryPhoneIso']));
         }
 
-        if (($data['type'] === 'customer' || $data['type'] === 'provider') && !empty($data['stripeConnect'])) {
+        if ($data['type'] === 'provider' && !empty($data['stripeConnect'])) {
             if (!is_array($data['stripeConnect'])) {
                 $data['stripeConnect'] = json_decode($data['stripeConnect'], true);
             }
             $user->setStripeConnect(StripeFactory::create($data['stripeConnect']));
         }
 
+        if ($data['type'] === 'customer' && !empty($data['stripeConnect'])) {
+            if (!is_array($data['stripeConnect'])) {
+                $data['stripeConnect'] = json_decode($data['stripeConnect'], true);
+            }
+
+            if (!empty($data['stripeConnect'])) {
+                if (empty($data['stripeConnect'][0])) {
+                    $data['stripeConnect'] = [$data['stripeConnect']];
+                }
+            } else {
+                $data['stripeConnect'] = [];
+            }
+
+            $stripeConnects = new Collection();
+            foreach ($data['stripeConnect'] as $key => $stripeConnect) {
+                $stripeConnects->addItem(StripeFactory::create($stripeConnect));
+            }
+
+            $user->setStripeConnect($stripeConnects);
+        }
 
         if (!empty($data['birthday'])) {
             if (is_string($data['birthday'])) {

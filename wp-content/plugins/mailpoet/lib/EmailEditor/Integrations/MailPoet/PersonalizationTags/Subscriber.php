@@ -6,15 +6,18 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\Subscribers\SubscribersRepository;
+use MailPoet\Subscription\SubscriptionUrlFactory;
 
 class Subscriber {
 
   private SubscribersRepository $subscribersRepository;
+  private SubscriptionUrlFactory $subscriptionUrlFactory;
 
   public function __construct(
     SubscribersRepository $subscribersRepository
   ) {
     $this->subscribersRepository = $subscribersRepository;
+    $this->subscriptionUrlFactory = SubscriptionUrlFactory::getInstance();
   }
 
   public function getFirstName(array $context, array $args = []): string {
@@ -33,5 +36,16 @@ class Subscriber {
 
   public function getEmail(array $context, array $args = []): string {
     return $context['recipient_email'] ?? '';
+  }
+
+  public function getActivationLink(array $context, array $args = []): string {
+    $subscriberEmail = $context['recipient_email'] ?? null;
+    $subscriber = $subscriberEmail ? $this->subscribersRepository->findOneBy(['email' => $subscriberEmail]) : null;
+
+    if (!$subscriber) {
+      return '';
+    }
+
+    return $this->subscriptionUrlFactory->getConfirmationUrl($subscriber);
   }
 }

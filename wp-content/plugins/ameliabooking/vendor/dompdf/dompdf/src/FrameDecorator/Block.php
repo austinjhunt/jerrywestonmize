@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\FrameDecorator;
+namespace AmeliaDompdf\FrameDecorator;
 
-use Dompdf\Dompdf;
-use Dompdf\Frame;
-use Dompdf\LineBox;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Frame;
+use AmeliaDompdf\LineBox;
 
 /**
  * Decorates frames for block layout

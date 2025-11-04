@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\FrameReflower;
+namespace AmeliaDompdf\FrameReflower;
 
-use Dompdf\FrameDecorator\Block as BlockFrameDecorator;
-use Dompdf\FrameDecorator\Inline as InlineFrameDecorator;
-use Dompdf\FrameDecorator\Text as TextFrameDecorator;
+use AmeliaDompdf\FrameDecorator\Block as BlockFrameDecorator;
+use AmeliaDompdf\FrameDecorator\Inline as InlineFrameDecorator;
+use AmeliaDompdf\FrameDecorator\Text as TextFrameDecorator;
 
 /**
  * Reflows inline frames

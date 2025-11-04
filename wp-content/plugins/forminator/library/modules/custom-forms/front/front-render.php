@@ -2189,7 +2189,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		$nonce      = $this->nonce_field( 'forminator_submit_form' . $form_id, 'forminator_nonce' );
 		$post_id    = $this->get_post_id();
 		$has_paypal = $this->has_paypal();
-		$form_type  = isset( $this->model->settings['form-type'] ) ? $this->model->settings['form-type'] : '';
+		$settings   = $this->get_form_settings();
+		$form_type  = $settings['form-type'] ?? '';
 
 		if ( $has_paypal ) {
 			if ( ! ( self::$paypal instanceof Forminator_Paypal_Express ) ) {
@@ -2222,7 +2223,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 
 		if ( $this->is_login_form() ) {
-			$redirect_url = ! empty( $this->model->settings['redirect-url'] ) ? $this->model->settings['redirect-url'] : admin_url();
+			$redirect_url = ! empty( $settings['redirect-url'] ) ? $settings['redirect-url'] : admin_url();
 			$redirect_url = forminator_replace_variables( $redirect_url, $form_id );
 			$html        .= sprintf( '<input type="hidden" name="redirect_to" value="%s">', esc_url( $redirect_url ) );
 		}
@@ -2237,7 +2238,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			$html .= sprintf( '<input type="hidden" name="action" value="%s">', 'forminator_submit_form_custom-forms' );
 		}
 
-		if ( isset( $this->model->settings['use_save_and_continue'] ) && filter_var( $this->model->settings['use_save_and_continue'], FILTER_VALIDATE_BOOLEAN ) ) {
+		if ( isset( $settings['use_save_and_continue'] ) && filter_var( $settings['use_save_and_continue'], FILTER_VALIDATE_BOOLEAN ) ) {
 			$html .= '<input type="hidden" name="save_draft" value="false">';
 
 			if ( ! empty( $this->draft_id ) ) {
@@ -2247,12 +2248,12 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 
 		$html .= $this->do_after_render_form_for_addons();
 
+		$html = apply_filters( 'forminator_render_form_submit_markup', $html, $form_id, $post_id, $nonce, $settings );
 		if ( $render ) {
-			$html = apply_filters( 'forminator_render_form_submit_markup', $html, $form_id, $post_id, $nonce );
 			echo wp_kses_post( $html );
 		} else {
 			/* @noinspection PhpInconsistentReturnPointsInspection */
-			return apply_filters( 'forminator_render_form_submit_markup', $html, $form_id, $post_id, $nonce );
+			return $html;
 		}
 	}
 

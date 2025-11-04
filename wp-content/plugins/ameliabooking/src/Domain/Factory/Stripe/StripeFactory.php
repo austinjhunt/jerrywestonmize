@@ -32,6 +32,10 @@ class StripeFactory
             $stripeConnect->setAmount(new Price($data['amount']));
         }
 
+        if (isset($data['accountId'])) {
+            $stripeConnect->setAccountId(new Name($data['accountId']));
+        }
+
         return $stripeConnect;
     }
 }

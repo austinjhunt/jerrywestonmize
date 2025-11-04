@@ -5,9 +5,9 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Css;
+namespace AmeliaDompdf\Css;
 
-use Dompdf\Helpers;
+use AmeliaDompdf\Helpers;
 
 class Color
 {

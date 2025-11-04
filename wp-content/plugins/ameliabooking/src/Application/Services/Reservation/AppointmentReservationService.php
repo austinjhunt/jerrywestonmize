@@ -406,7 +406,7 @@ class AppointmentReservationService extends AbstractReservationService
         if (
             (
             (!empty($appointmentData['payment']['gateway']) &&
-                in_array($appointmentData['payment']['gateway'], [PaymentType::MOLLIE])) || !empty($appointmentData['isMollie'])
+                in_array($appointmentData['payment']['gateway'], [PaymentType::MOLLIE, PaymentType::BARION])) || !empty($appointmentData['isMollie'])
             ) && !(
                 !empty($appointmentData['bookings'][0]['packageCustomerService']['id']) &&
                 $reservation->getLoggedInUser() &&
@@ -1222,6 +1222,17 @@ class AppointmentReservationService extends AbstractReservationService
                     ]
                 ];
 
+                if ($booking->getInfo() && $booking->getInfo()->getValue()) {
+                    $timeZone = json_decode($booking->getInfo()->getValue(), true)['timeZone'];
+                    if ($timeZone) {
+                        $timeZoneObj = new \DateTimeZone($timeZone);
+                        $startDateTime = $appointment->getBookingStart()->getValue();
+                        $utcDateTime = (clone $startDateTime)->setTimezone(new \DateTimeZone('UTC'));
+                        $offsetInMinutes = $timeZoneObj->getOffset($utcDateTime) / 60;
+                        $appointmentArrayModified['bookings'][0]['utcOffset'] = $offsetInMinutes;
+                    }
+                }
+
                 if (WooCommerceService::isEnabled()) {
                     WooCommerceService::updateItemMetaData(
                         $payment->getWcOrderId()->getValue(),
@@ -1399,16 +1410,28 @@ class AppointmentReservationService extends AbstractReservationService
             }
             $extrasAmountWithoutDiscount += $extraAmountWithoutDiscount;
             $extrasTaxAmount += $extraTaxAmount;
+
+            $extras[$customerBookingExtra->getExtraId()->getValue()] = [];
+
             if ($extraTax) {
                 $extras[$customerBookingExtra->getExtraId()->getValue()] =
                     [
-                        'amount' =>  $this->getTaxAmount(
-                            $extraTax,
-                            $extraAmountWithoutDiscount
-                        ),
-                        'rate' => $this->getTaxRate($extraTax),
-                        'excluded' => $extraTax->getExcluded()->getValue()
+                        'tax' =>
+                            [
+                                'amount' =>  $this->getTaxAmount(
+                                    $extraTax,
+                                    $extraAmountWithoutDiscount
+                                ),
+                                'rate' => $this->getTaxRate($extraTax),
+                                'excluded' => $extraTax->getExcluded()->getValue(),
+                                'type' => $extraTax->getType()->getValue()
+                            ]
                     ];
+            }
+
+            if ($extraDeductionAmount || $extraDiscountAmount) {
+                $extras[$customerBookingExtra->getExtraId()->getValue()]['full_discount'] =
+                    $extraDeductionAmount + $extraDiscountAmount;
             }
         }
 
@@ -1425,9 +1448,10 @@ class AppointmentReservationService extends AbstractReservationService
             'tax_rate'   => $serviceTax ? $this->getTaxRate($serviceTax) : '',
             'tax_type'   => $serviceTax ? $serviceTax->getType()->getValue() : '',
             'tax_excluded' => $serviceTax ? $serviceTax->getExcluded()->getValue() : false,
-            'extras_tax' => $extras,
+            'extras_items' => $extras,
+            'service_discount' => $serviceDeductionAmount + $serviceDiscountAmount,
             'total_tax'  => $serviceTaxAmount + $extrasTaxAmount,
-            'full_discount' => $reductionAmount['deduction'] + $reductionAmount['discount']
+            'full_discount' => $reductionAmount['deduction'] + $reductionAmount['discount'],
         ];
     }
 
@@ -1927,6 +1951,16 @@ class AppointmentReservationService extends AbstractReservationService
                     if (!empty($recurringData['bookings'][0]['extras'])) {
                         foreach ($recurringData['bookings'][0]['extras'] as $extraKey => $bookingData) {
                             $data['recurring'][$key]['bookings'][0]['extras'][$extraKey]['tax'] = $taxAS->getTaxData(
+                                $bookingData['extraId'],
+                                Entities::EXTRA,
+                                $taxes
+                            );
+                        }
+                    }
+
+                    if (!empty($recurringData['extras'])) {
+                        foreach ($recurringData['extras'] as $extraKey => $bookingData) {
+                            $data['recurring'][$key]['extras'][$extraKey]['tax'] = $taxAS->getTaxData(
                                 $bookingData['extraId'],
                                 Entities::EXTRA,
                                 $taxes

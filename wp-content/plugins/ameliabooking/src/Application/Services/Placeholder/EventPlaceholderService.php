@@ -341,6 +341,10 @@ class EventPlaceholderService extends PlaceholderService
         $data['invoice_method'] = !empty($placeholders['payment_gateway_title']) ? $placeholders['payment_gateway_title'] : $placeholders['payment_type'];
         $data['invoice_issued'] = $placeholders['payment_created'];
 
+        $data['customer_custom_fields'] = array_filter($placeholders, function ($key) {
+            return strpos($key, 'invoice_custom_field_') === 0;
+        }, ARRAY_FILTER_USE_KEY);
+
         $data = array_merge($data, $this->getCompanyData($bookingKey !== null ? $locale : null));
         $data = array_merge($data, $this->getCustomersData($event, $type, $bookingKey));
 
@@ -939,6 +943,19 @@ class EventPlaceholderService extends PlaceholderService
             $timeZone = !empty($info['timeZone']) ? $info['timeZone'] : '';
         }
 
+        // BEGIN QR Codes placeholders extraction (only when single booking context)
+        $qrCodeTicketItems = [];
+        if ($bookingKey !== null && !empty($event['bookings'][$bookingKey]['qrCodes'])) {
+            $qrArray = $event['bookings'][$bookingKey]['qrCodes'];
+            if (is_string($qrArray)) {
+                $decoded = json_decode($qrArray, true);
+            } else {
+                $decoded = is_array($qrArray) ? $qrArray : [];
+            }
+            $qrCodeTicketItems = $decoded;
+        }
+        // END QR Codes placeholders extraction
+
         return array_merge(
             [
             'attendee_code'            => is_array($attendeeCode) ?  implode(', ', $attendeeCode) : substr($attendeeCode, 0, 5),
@@ -1017,7 +1034,8 @@ class EventPlaceholderService extends PlaceholderService
                 $timeFormat,
                 $oldEventEnd->getTimestamp()
             ) : '',
-            'invoice_items_event'              => $invoiceItems
+            'invoice_items_event'              => $invoiceItems,
+            'qr_code_tickets'                  => $qrCodeTicketItems,
             ],
             $staff
         );

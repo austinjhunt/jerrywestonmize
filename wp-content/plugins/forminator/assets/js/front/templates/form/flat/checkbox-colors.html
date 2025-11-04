@@ -40,8 +40,8 @@
 	<?php } ?>
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-checkbox .forminator-checkbox-image {
-		<?php if ( forminator_array_value_exists( $properties, 'radio-image-background-static' ) && !empty( $properties['radio-image-background-static'] ) ) { ?>
-			background-color: <?php echo $properties['radio-image-background-static'] ?>;
+		<?php if ( forminator_array_value_exists( $properties, 'radio-image-background' ) && !empty( $properties['radio-image-background'] ) ) { ?>
+			background-color: <?php echo $properties['radio-image-background'] ?>;
 		<?php } else { ?>
 			background-color: #EDEDED;
 		<?php } ?>
@@ -76,8 +76,8 @@
 
 	@media screen and ( max-width: 782px ) {
 		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-checkbox:hover .forminator-checkbox-image {
-			<?php if ( forminator_array_value_exists( $properties, 'radio-image-background-static' ) && !empty( $properties['radio-image-background-static'] ) ) { ?>
-				background-color: <?php echo $properties['radio-image-background-static'] ?>;
+			<?php if ( forminator_array_value_exists( $properties, 'radio-image-background' ) && !empty( $properties['radio-image-background'] ) ) { ?>
+				background-color: <?php echo $properties['radio-image-background'] ?>;
 			<?php } else { ?>
 				background-color: #EDEDED;
 			<?php } ?>

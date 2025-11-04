@@ -900,15 +900,15 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         yield "';
     var mailpoet_product_categories = ";
         // line 725
-        yield json_encode(($context["product_categories"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["product_categories"] ?? null));
         yield ";
     var mailpoet_products = ";
         // line 726
-        yield json_encode(($context["products"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["products"] ?? null));
         yield ";
     var mailpoet_original_template_body = ";
         // line 727
-        yield json_encode(($context["original_template_body"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["original_template_body"] ?? null));
         yield ";
 
     var config = {
@@ -2392,22 +2392,22 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         woocommerceHeading: {
           contents: ";
         // line 1821
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "email_headings", [], "any", false, false, false, 1821));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "email_headings", [], "any", false, false, false, 1821));
         yield ",
         },
         coupon: {
             type: 'coupon',
             discountType: ";
         // line 1825
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1825), "defaults", [], "any", false, false, false, 1825), "discountType", [], "any", false, false, false, 1825));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1825), "defaults", [], "any", false, false, false, 1825), "discountType", [], "any", false, false, false, 1825));
         yield ",
             code: ";
         // line 1826
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1826), "defaults", [], "any", false, false, false, 1826), "code", [], "any", false, false, false, 1826));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1826), "defaults", [], "any", false, false, false, 1826), "code", [], "any", false, false, false, 1826));
         yield ",
             amountMax: ";
         // line 1827
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1827), "defaults", [], "any", false, false, false, 1827), "amountMax", [], "any", false, false, false, 1827));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1827), "defaults", [], "any", false, false, false, 1827), "amountMax", [], "any", false, false, false, 1827));
         yield ",
             amount: 10,
             expiryDay: 10,
@@ -2431,7 +2431,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
       },
       shortcodes: ";
         // line 1848
-        yield json_encode(($context["shortcodes"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["shortcodes"] ?? null));
         yield ",
       sidepanelWidth: '331px',
       newsletterPreview: {
@@ -2488,53 +2488,53 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         text: {
           fontColor: ";
             // line 1873
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "text_color", [], "any", false, false, false, 1873));
+            yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "text_color", [], "any", false, false, false, 1873));
             yield ",
         },
         h1: {
           fontColor: ";
             // line 1876
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1876));
+            yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1876));
             yield ",
         },
         h2: {
           fontColor: ";
             // line 1879
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1879));
+            yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1879));
             yield ",
         },
         h3: {
           fontColor: ";
             // line 1882
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1882));
+            yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1882));
             yield ",
         },
         link: {
           fontColor: ";
             // line 1885
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "link_color", [], "any", false, false, false, 1885));
+            yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "link_color", [], "any", false, false, false, 1885));
             yield ",
         },
         wrapper: {
           backgroundColor: ";
             // line 1888
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "body_background_color", [], "any", false, false, false, 1888));
+            yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "body_background_color", [], "any", false, false, false, 1888));
             yield ",
         },
         body: {
           backgroundColor: ";
             // line 1891
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "background_color", [], "any", false, false, false, 1891));
+            yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "background_color", [], "any", false, false, false, 1891));
             yield ",
         },
         woocommerce: {
           brandingColor: ";
             // line 1894
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1894));
+            yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_color", [], "any", false, false, false, 1894));
             yield ",
           headingFontColor: ";
             // line 1895
-            yield json_encode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_text_color", [], "any", false, false, false, 1895));
+            yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "base_text_color", [], "any", false, false, false, 1895));
             yield ",
           isSavedWithUpdatedStyles: true,
         },
@@ -2551,7 +2551,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         }
         // line 1904
         yield "      coupon: ";
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1904), "config", [], "any", false, false, false, 1904));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, ($context["woocommerce"] ?? null), "coupon", [], "any", false, false, false, 1904), "config", [], "any", false, false, false, 1904));
         yield ",
     };
 

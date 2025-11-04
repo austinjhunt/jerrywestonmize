@@ -61,19 +61,19 @@ class __TwigTemplate_70c39d9791cbbcea05d3fbbb309cad375978ada7981fa12e84ee320845b
         yield ";
     var mailpoet_segments = ";
         // line 8
-        yield json_encode(($context["segments"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["segments"] ?? null));
         yield ";
     var mailpoet_custom_fields = ";
         // line 9
-        yield json_encode(($context["custom_fields"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["custom_fields"] ?? null));
         yield ";
     var mailpoet_month_names = ";
         // line 10
-        yield json_encode(($context["month_names"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["month_names"] ?? null));
         yield ";
     var mailpoet_date_formats = ";
         // line 11
-        yield json_encode(($context["date_formats"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["date_formats"] ?? null));
         yield ";
   </script>
 

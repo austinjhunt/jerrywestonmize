@@ -28,6 +28,7 @@ use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
+use AmeliaBooking\Domain\Entity\Stripe\StripeConnect;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Entity\User\Provider;
@@ -59,6 +60,7 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepo
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
@@ -67,9 +69,11 @@ use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
+use AmeliaBooking\Infrastructure\Routes\Stripe\Stripe;
 use AmeliaBooking\Infrastructure\Services\Payment\CurrencyService;
 use AmeliaBooking\Infrastructure\Services\Payment\RazorpayService;
 use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
+use AmeliaBooking\Infrastructure\Services\Payment\StripeService;
 use AmeliaBooking\Infrastructure\WP\HelperService\HelperService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
@@ -389,7 +393,8 @@ class PaymentApplicationService
                 $paymentData['gateway'] === 'payPal' ||
                 $paymentData['gateway'] === 'mollie' ||
                 $paymentData['gateway'] === 'razorpay' ||
-                $paymentData['gateway'] === 'square'
+                $paymentData['gateway'] === 'square' ||
+                $paymentData['gateway'] === 'barion'
             )
         ) {
             $result->setResult(CommandResult::RESULT_ERROR);
@@ -435,7 +440,7 @@ class PaymentApplicationService
                 return true;
 
             case ('stripe'):
-                /** @var PaymentServiceInterface $paymentService */
+                /** @var StripeService $paymentService */
                 $paymentService = $this->container->get('infrastructure.payment.stripe.service');
 
                 $this->setTransfers(
@@ -457,19 +462,17 @@ class PaymentApplicationService
                 /** @var CustomerRepository $customerRepository */
                 $customerRepository = $this->container->get('domain.users.customers.repository');
 
-                $stripeCustomerId = null;
-
                 $customer = null;
 
+                $stripeCustomerId = null;
+
                 if ($reservation->getCustomer() && $reservation->getCustomer()->getId()) {
-                    /** @var Customer $customer */
+                    /** @var \AmeliaBooking\Domain\Entity\User\Customer $customer */
                     $customer = $customerRepository->getById($reservation->getCustomer()->getId()->getValue());
 
-                    if ($customer && $customer->getType() === AbstractUser::USER_ROLE_CUSTOMER) {
-                        $stripeCustomerId = $customer->getStripeConnect() && $customer->getStripeConnect()->getId()
-                            ? $customer->getStripeConnect()->getId()->getValue() : null;
-                    }
+                    $stripeCustomerId = $paymentService->getStripeCustomerId($customer, $transfers);
                 }
+
 
                 try {
                     $response = $paymentService->execute(
@@ -531,10 +534,11 @@ class PaymentApplicationService
                 }
 
                 if (!empty($response['customerId']) && ($stripeCustomerId === null || $response['customerId'] !== $stripeCustomerId)) {
-                    $stripeConnect = StripeFactory::create(['id' => $response['customerId']]);
+                    $newStripeConnectArray = $paymentService->setNewStripeCustomerId($customer, $response['customerId'], $transfers);
+
                     $customerRepository->updateFieldById(
                         $reservation->getCustomer()->getId()->getValue(),
-                        json_encode($stripeConnect->toArray()),
+                        json_encode($newStripeConnectArray),
                         'stripeConnect'
                     );
                 }
@@ -601,6 +605,7 @@ class PaymentApplicationService
 
             case ('wc'):
             case ('mollie'):
+            case ('barion'):
                 return true;
             case ('razorpay'):
                 /** @var RazorpayService $paymentService */
@@ -1098,6 +1103,10 @@ class PaymentApplicationService
                     !empty($entitySettings) && !empty($entitySettings['payments']['square']) ?
                         ($entitySettings['payments']['square']['enabled'] && $paymentSettings['square']['enabled']) :
                         $paymentSettings['square']['enabled'],
+                'barion'   =>
+                        !empty($entitySettings) && !empty($entitySettings['payments']['barion']) ?
+                            ($entitySettings['payments']['barion']['enabled'] && $paymentSettings['barion']['enabled']) :
+                            $paymentSettings['barion']['enabled'],
             ];
 
             $methods = apply_filters('amelia_payment_link_methods', $methods, $data);
@@ -1145,6 +1154,45 @@ class PaymentApplicationService
                 }
 
                 return apply_filters('amelia_wc_payment_link', $paymentLinks, $amount, $data);
+            }
+
+            if (!empty($methods['barion'])) {
+                /** @var PaymentServiceInterface $paymentService */
+                $paymentService = $this->container->get('infrastructure.payment.barion.service');
+
+                $additionalInformation = $paymentAS->getBookingInformationForPaymentSettings(
+                    $reservation,
+                    PaymentType::BARION
+                );
+
+                $name = '';
+                if ($type === Entities::APPOINTMENT) {
+                    /** @var ServiceRepository $serviceRepository */
+                    $serviceRepository = $this->container->get('domain.bookable.service.repository');
+                    $service = $serviceRepository->getById($reservation['serviceId']);
+                    $name = $service->getName()->getValue();
+                } else {
+                    $name = $reservation['name'];
+                }
+
+                $paymentData = [
+                    'amount'      => $amount,
+                    'reservation' => $reservation,
+                    'returnUrl'   => $callbackLink . '&paymentMethod=barion&barionStatus=success',
+                    'cancelUrl'   => $callbackLink . '&paymentMethod=barion&barionStatus=canceled',
+                    'name'        => $name,
+                    'info'        => $additionalInformation,
+                    'paymentId'   => $data['paymentId'],
+                ];
+
+                $paymentLink = $paymentService->getPaymentLink($paymentData);
+
+                if (empty($paymentLink['Errors'])) {
+                    $paymentLinks['payment_link_barion'] = $paymentLink['GatewayUrl'];
+                } else {
+                    $paymentLinks['payment_link_error_code']    = $paymentLink['Status'];
+                    $paymentLinks['payment_link_error_message'] = $paymentLink['Message'];
+                }
             }
 
             if (!empty($methods['payPal'])) {

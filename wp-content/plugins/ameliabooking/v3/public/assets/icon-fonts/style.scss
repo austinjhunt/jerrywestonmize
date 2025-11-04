@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?oedm2j');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?oedm2j#iefix') format('embedded-opentype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?oedm2j') format('truetype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?oedm2j') format('woff'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?oedm2j##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?ifn795');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?ifn795#iefix') format('embedded-opentype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?ifn795') format('truetype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?ifn795') format('woff'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?ifn795##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -27,6 +27,51 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.am-icon-mobile {
+  &:before {
+    content: $am-icon-mobile;
+  }
+}
+.am-icon-bolt-lightning {
+  &:before {
+    content: $am-icon-bolt-lightning;
+  }
+}
+.am-icon-bolt-lightning-fill {
+  &:before {
+    content: $am-icon-bolt-lightning-fill;
+  }
+}
+.am-icon-bulb {
+  &:before {
+    content: $am-icon-bulb;
+  }
+}
+.am-icon-bulb-off {
+  &:before {
+    content: $am-icon-bulb-off;
+  }
+}
+.am-icon-close-filled {
+  &:before {
+    content: $am-icon-close-filled;
+  }
+}
+.am-icon-scan-qr-code {
+  &:before {
+    content: $am-icon-scan-qr-code;
+  }
+}
+.am-icon-download {
+  &:before {
+    content: $am-icon-download;
+  }
+}
+.am-icon-eye {
+  &:before {
+    content: $am-icon-eye;
+  }
+}
 .am-icon-list-bulleted {
   &:before {
     content: $am-icon-list-bulleted;
@@ -547,3 +592,4 @@
     content: $am-icon-yahoo;
   }
 }
+

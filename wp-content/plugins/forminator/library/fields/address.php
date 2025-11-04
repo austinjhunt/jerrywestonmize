@@ -216,6 +216,18 @@ class Forminator_Address extends Forminator_Field {
 			'aria-required' => $ariareq,
 		);
 
+		// Add autocomplete attribute for browser autofill.
+		$browser_autofill = self::get_property( $slug . '_browser_autofill', $field, 'enabled' );
+		if ( 'enabled' === $browser_autofill ) {
+			if ( 'street_address' === $slug ) {
+				$address['autocomplete'] = 'address-line1';
+			} elseif ( 'address_line' === $slug ) {
+				$address['autocomplete'] = 'address-line2';
+			}
+		} else {
+			$address['autocomplete'] = 'off';
+		}
+
 		if ( empty( $draft_value ) ) {
 
 			$address = $this->replace_from_prefill( $field, $address, $slug );
@@ -297,8 +309,8 @@ class Forminator_Address extends Forminator_Field {
 			$html .= sprintf( '<div class="forminator-row" data-multiple="%s">', $multirow );
 
 			if ( $city ) {
-
-				$city_data = array(
+				$browser_autofill = self::get_property( 'address_city_browser_autofill', $field, 'enabled' );
+				$city_data        = array(
 					'type'          => 'text',
 					'name'          => $city_id,
 					'placeholder'   => $this->sanitize_value( self::get_property( 'address_city_placeholder', $field ) ),
@@ -306,6 +318,7 @@ class Forminator_Address extends Forminator_Field {
 					'class'         => 'forminator-input',
 					'data-required' => $city_required,
 					'aria-required' => $city_ariareq,
+					'autocomplete'  => 'enabled' === $browser_autofill ? 'address-level2' : 'off',
 				);
 
 				if ( isset( $draft_value['city'] ) ) {
@@ -337,8 +350,8 @@ class Forminator_Address extends Forminator_Field {
 			}
 
 			if ( $state ) {
-
-				$state_data = array(
+				$browser_autofill = self::get_property( 'address_state_browser_autofill', $field, 'enabled' );
+				$state_data       = array(
 					'type'          => 'text',
 					'name'          => $state_id,
 					'placeholder'   => $this->sanitize_value( self::get_property( 'address_state_placeholder', $field ) ),
@@ -346,6 +359,7 @@ class Forminator_Address extends Forminator_Field {
 					'class'         => 'forminator-input',
 					'data-required' => $state_required,
 					'aria-required' => $state_ariareq,
+					'autocomplete'  => 'enabled' === $browser_autofill ? 'address-level1' : 'off',
 				);
 
 				if ( isset( $draft_value['state'] ) ) {
@@ -427,13 +441,14 @@ class Forminator_Address extends Forminator_Field {
 			$html .= sprintf( '<div class="forminator-row" data-multiple="%s">', $multirow );
 
 			if ( $address_zip ) {
-
-				$zip_data = array(
-					'type'        => 'text',
-					'name'        => $zip_id,
-					'placeholder' => $this->sanitize_value( self::get_property( 'address_zip_placeholder', $field ) ),
-					'id'          => self::get_field_id( $zip_id ),
-					'class'       => 'forminator-input',
+				$browser_autofill = self::get_property( 'address_zip_browser_autofill', $field, 'enabled' );
+				$zip_data         = array(
+					'type'         => 'text',
+					'name'         => $zip_id,
+					'placeholder'  => $this->sanitize_value( self::get_property( 'address_zip_placeholder', $field ) ),
+					'id'           => self::get_field_id( $zip_id ),
+					'class'        => 'forminator-input',
+					'autocomplete' => 'enabled' === $browser_autofill ? 'postal-code' : 'off',
 				);
 
 				if ( isset( $draft_value['zip'] ) ) {
@@ -465,13 +480,14 @@ class Forminator_Address extends Forminator_Field {
 			}
 
 			if ( $address_country ) {
-
-				$country_data = array(
+				$browser_autofill = self::get_property( 'address_country_browser_autofill', $field, 'enabled' );
+				$country_data     = array(
 					'name'             => $country_id,
 					'id'               => self::get_field_id( $this->form_settings['form_id'] . '__field--' . $country_id ),
 					'class'            => 'forminator-select2',
 					'data-search'      => 'true',
 					'data-placeholder' => esc_html__( 'Select country', 'forminator' ),
+					'autocomplete'     => 'enabled' === $browser_autofill ? 'country-name country' : 'off',
 				);
 
 				$countries = array(

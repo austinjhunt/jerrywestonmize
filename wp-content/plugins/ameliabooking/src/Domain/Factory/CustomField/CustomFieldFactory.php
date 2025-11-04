@@ -96,6 +96,10 @@ class CustomFieldFactory
             $customField->setUseAsLocation(new BooleanValueObject($data['useAsLocation']));
         }
 
+        if (isset($data['includeInInvoice'])) {
+            $customField->setIncludeInInvoice(new BooleanValueObject($data['includeInInvoice']));
+        }
+
         if (isset($data['saveFirstChoice'])) {
             $customField->setSaveFirstChoice(new BooleanValueObject($data['saveFirstChoice']));
         }
@@ -132,6 +136,7 @@ class CustomFieldFactory
             $customFields[$customFieldId]['useAsLocation']   = $row['cf_useAsLocation'];
             $customFields[$customFieldId]['width']           = $row['cf_width'];
             $customFields[$customFieldId]['saveFirstChoice'] = $row['cf_saveFirstChoice'];
+            $customFields[$customFieldId]['includeInInvoice'] = $row['cf_includeInInvoice'];
 
 
             if ($optionId) {

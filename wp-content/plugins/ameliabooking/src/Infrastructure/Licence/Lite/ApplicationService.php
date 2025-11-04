@@ -149,4 +149,14 @@ class ApplicationService
     {
         return new ApplicationServices\Invoice\StarterInvoiceApplicationService($c);
     }
+
+    /**
+     * @param Container $c
+     *
+     * @return ApplicationServices\QrCode\AbstractQrCodeApplicationService
+     */
+    public static function getQrCodeService($c)
+    {
+        return new ApplicationServices\QrCode\StarterQrCodeApplicationService($c);
+    }
 }

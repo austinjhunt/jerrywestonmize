@@ -767,12 +767,15 @@ class TimeSlotService
                     }
 
                     if ($timePeriod[1] === 86400) {
-                        $nextDateString = DateTimeService::getDateTimeObjectInTimeZone(
+                        $nextDate = DateTimeService::getDateTimeObjectInTimeZone(
                             $dateKey . ' 00:00:00',
                             $timeZone
-                        )->modify('+1 days')->format('Y-m-d');
+                        )->modify('+1 days');
+
+                        $nextDateString = $nextDate->format('Y-m-d');
 
                         if (
+                            $nextDate->format('j') !== '1' &&
                             isset($freeIntervals[$nextDateString][$providerKey]['intervals'][0]) &&
                             $freeIntervals[$nextDateString][$providerKey]['intervals'][0][0] === 0
                         ) {
@@ -924,7 +927,7 @@ class TimeSlotService
                         $time = sprintf('%02d', floor($timeSlot / 3600)) . ':'
                             . sprintf('%02d', floor(($timeSlot / 60) % 60));
 
-                        if ($time !== '24:00') {
+                        if ($timeSlot <= 86400) {
                             if (!$structured) {
                                 $availableResult[$dateKey][$time] = $data;
                             } else {

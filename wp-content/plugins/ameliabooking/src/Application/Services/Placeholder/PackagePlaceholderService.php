@@ -13,6 +13,7 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomerService;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
+use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
@@ -27,6 +28,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
+use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
@@ -119,6 +121,7 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             'payment_link_razorpay' => '',
             'payment_link_mollie' => '',
             'payment_link_square' => '',
+            'payment_link_barion' => ''
         ];
 
         if (!empty($package['paymentLinks'])) {
@@ -126,6 +129,8 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                 $paymentLinks[$paymentType] = $type === 'email' ? '<a href="' . $paymentLink . '">' . $paymentLink . '</a>' : $paymentLink;
             }
         }
+
+        $package['bookings'] = [['customer' => $package['customer']]];
 
         return array_merge(
             $paymentLinks,
@@ -136,6 +141,11 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                 $type,
                 0,
                 UserFactory::create($package['customer'])
+            ),
+            $this->getCustomFieldsData(
+                $package,
+                $type,
+                0
             ),
             $this->getRecurringAppointmentsData($package, $bookingKey, $type, 'package', null),
             [
@@ -161,7 +171,22 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
     {
         $reservationData['bookable']['packageCustomerId'] = $reservationData['packageCustomerId'];
         $reservationData['bookable']['customer']          = $reservationData['customer'];
-        return $this->getPlaceholdersData($reservationData['bookable'], null, 'email', UserFactory::create($reservationData['customer']), null, true);
+
+        $data = $this->getPlaceholdersData(
+            $reservationData['bookable'],
+            null,
+            'email',
+            UserFactory::create($reservationData['customer']),
+            null,
+            true
+        );
+
+        $data['customer_custom_fields'] = array_filter($data, function ($key) {
+            return strpos($key, 'invoice_custom_field_') === 0;
+        }, ARRAY_FILTER_USE_KEY);
+
+
+        return $data;
     }
 
     /**
@@ -252,24 +277,24 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                         }
                     }
 
-                    switch ($payment->getGateway()->getName()->getValue()) {
-                        case 'onSite':
-                            $method = BackendStrings::getCommonStrings()['on_site'];
-                            break;
-                        case 'wc':
-                            $method = BackendStrings::getSettingsStrings()['wc_name'];
-                            break;
-                        default:
-                            $method = BackendStrings::getSettingsStrings()[$payment->getGateway()->getName()->getValue()];
-                            break;
-                    }
-
-                    $paymentType .= ($index === array_keys($payments)[0] ? '' : ', ') . $method;
-
                     if (
                         !empty($package['packageCustomerId']) &&
                         $packageCustomerService->getPackageCustomer()->getId()->getValue() === $package['packageCustomerId']
                     ) {
+                        switch ($payment->getGateway()->getName()->getValue()) {
+                            case 'onSite':
+                                $method = BackendStrings::getCommonStrings()['on_site'];
+                                break;
+                            case 'wc':
+                                $method = BackendStrings::getSettingsStrings()['wc_name'];
+                                break;
+                            default:
+                                $method = BackendStrings::getSettingsStrings()[$payment->getGateway()->getName()->getValue()];
+                                break;
+                        }
+
+                        $paymentType .= ($index === array_keys($payments)[0] ? '' : ', ') . $method;
+
                         $invoiceItem['invoice_number'] = $payment->getInvoiceNumber() ? $payment->getInvoiceNumber()->getValue() : '';
                         $invoiceItem['invoice_issued'] = !empty($payment->toArray()['created']) ? date_i18n($dateFormat, $payment->toArray()['created']) : '';
                         $invoiceItem['invoice_method'] = $payment->getGatewayTitle() ? $payment->getGatewayTitle()->getValue() : $method;

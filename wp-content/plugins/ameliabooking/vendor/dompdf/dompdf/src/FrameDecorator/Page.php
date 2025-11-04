@@ -4,13 +4,13 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\FrameDecorator;
+namespace AmeliaDompdf\FrameDecorator;
 
-use Dompdf\Dompdf;
-use Dompdf\Exception;
-use Dompdf\Helpers;
-use Dompdf\Frame;
-use Dompdf\Renderer;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Exception;
+use AmeliaDompdf\Helpers;
+use AmeliaDompdf\Frame;
+use AmeliaDompdf\Renderer;
 
 /**
  * Decorates frames for page layout

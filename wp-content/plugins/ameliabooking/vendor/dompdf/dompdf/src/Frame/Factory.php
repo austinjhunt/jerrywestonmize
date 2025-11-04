@@ -4,15 +4,15 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Frame;
+namespace AmeliaDompdf\Frame;
 
-use Dompdf\Dompdf;
-use Dompdf\Exception;
-use Dompdf\Frame;
-use Dompdf\FrameDecorator\AbstractFrameDecorator;
-use Dompdf\FrameDecorator\Page as PageFrameDecorator;
-use Dompdf\FrameReflower\Page as PageFrameReflower;
-use Dompdf\Positioner\AbstractPositioner;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Exception;
+use AmeliaDompdf\Frame;
+use AmeliaDompdf\FrameDecorator\AbstractFrameDecorator;
+use AmeliaDompdf\FrameDecorator\Page as PageFrameDecorator;
+use AmeliaDompdf\FrameReflower\Page as PageFrameReflower;
+use AmeliaDompdf\Positioner\AbstractPositioner;
 use DOMXPath;
 
 /**
@@ -191,8 +191,8 @@ class Factory
             $reflower = "Image";
         }
 
-        $decorator  = "Dompdf\\FrameDecorator\\$decorator";
-        $reflower   = "Dompdf\\FrameReflower\\$reflower";
+        $decorator  = "AmeliaDompdf\\FrameDecorator\\$decorator";
+        $reflower   = "AmeliaDompdf\\FrameReflower\\$reflower";
 
         /** @var AbstractFrameDecorator $deco */
         $deco = new $decorator($frame, $dompdf);
@@ -254,7 +254,7 @@ class Factory
     protected static function getPositionerInstance(string $type): AbstractPositioner
     {
         if (!isset(self::$_positioners[$type])) {
-            $class = '\\Dompdf\\Positioner\\'.$type;
+            $class = '\\AmeliaDompdf\\Positioner\\'.$type;
             self::$_positioners[$type] = new $class();
         }
         return self::$_positioners[$type];

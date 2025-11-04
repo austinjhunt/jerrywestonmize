@@ -3,7 +3,7 @@ Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
 Tested up to: 6.8
-Stable tag: 1.46.2
+Stable tag: 1.47
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -230,6 +230,51 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 6. Publish Polls with Real-time Stats
 
 == Changelog ==
+
+= 1.48.2 ( 2025-10-15 ) =
+
+- Fix: Issue with some submission data not properly rendering when object cache is enabled
+- Fix: Error message for required Select fields is not cleared after submission
+
+
+= 1.48.1 ( 2025-10-10 ) =
+
+- Fix: Google Sheets token refresh issue
+
+
+= 1.48.0 ( 2025-10-06 ) =
+
+- Enhancement: Respect WordPress network settings that disable site creation and display a notice on the Form Editor screen for registration forms on the main site of multisite networks
+- Enhancement: Respect WordPress settings that disable user registration and display a notice on the Form Editor screen for registration forms
+- Enhancement: Add a new "Map ID" field to Geolocation settings
+- Enhancement: Improve browser autofill
+- Enhancement: Add option to enable or disable browser autofill for input fields (Name, Address, and Phone)
+- Enhancement: Display Signature, Radio, Checkbox, and Upload fields in the email body as images instead of text or URLs
+- Enhancement: Add "status" column to "frmt_form_entry" table in the database for submissions
+- Enhancement: Improve WP caching for submissions based on their status
+- Enhancement: Improve compatibility with Photonic Gallery plugin
+- Enhancement: Hide integration API keys
+- Enhancement: Add add-on page notices when there is no connection to the Hub
+- Enhancement: Hide HTML field from Payment custom metadata
+- Enhancement: Enable the Slider step values toggle by default
+- Fix: Registration is still allowed even when the network option is deactivated
+- Fix: Can't set conditions that include the Date Picker field if the site language differs from English
+- Fix: Stripe payment method does not change on the front end if the user visited the form before and did not submit it
+- Fix: Select placeholder is duplicated when using an Elementor popup triggered by an On Click event
+- Fix: Single Upload field not working in the media library with the Stripe field
+- Fix: Sudden layout changes move the Submit button after filling out a required field
+- Fix: Calculation field removes the modulo operator without brackets
+- Fix: The min/max validation message is reversed for Number and Currency fields
+- Fix: Fields with conditional visibility inside repeater groups do not record all data
+- Fix: PayPal field breaks the selected values when the variable amount is not properly configured
+- Fix: Word "array" for the Upload field appears in the PDF if no files are uploaded
+- Fix: Show correct navigation links when some features are disabled
+- Fix: Categories and Tags (Multiple) in the Post Data field remain selected when the form is submitted
+- Fix: Incorrect classes on Submit button for paginated forms
+- Fix: Number field value does not display in HTML fields if it is on the same row as a hidden Calculation field
+- Fix: Default Radio/Checkbox image background color isn't working
+- Fix: Issue with Group field, HTML widget, and visibility conditionals
+
 
 = 1.47.0 ( 2025-09-09 ) =
 

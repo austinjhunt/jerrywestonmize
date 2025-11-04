@@ -12,6 +12,7 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Notification\Notification;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\NotificationStatus;
@@ -274,8 +275,11 @@ class AppointmentNotificationService
                     $providerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
                     $notificationService->checkCustom($providerNotification, $appointment->toArray(), $sendDefault)
                 ) {
+                    $appointmentArray = $appointment->toArray();
+                    $appointmentArray['sendForAllBookings'] = true;
+
                     $notificationService->sendNotification(
-                        $appointment->toArray(),
+                        $appointmentArray,
                         $providerNotification,
                         true
                     );
@@ -316,6 +320,40 @@ class AppointmentNotificationService
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * @param AbstractNotificationService $notificationService
+     * @param Event                       $event
+     * @param bool                        $logNotification
+     * @param int                         $bookingKey
+     *
+     *
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     */
+    public function sendQrNotifications(
+        $notificationService,
+        $event,
+        $bookingKey,
+        $logNotification = true
+    ) {
+        $notifications = $notificationService->getByNameAndType(
+            "customer_event_qr_code",
+            $notificationService->getType()
+        );
+
+        $qrNotification = $notifications->getItem($notifications->keys()[0]);
+
+        if ($qrNotification->getStatus()->getValue() === NotificationStatus::ENABLED) {
+            $notificationService->sendNotification(
+                $event->toArray(),
+                $qrNotification,
+                $logNotification,
+                $bookingKey
+            );
         }
     }
 }

@@ -54,6 +54,9 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Basic\Licence
                 Commands\Stripe\GetStripeAccountDashboardUrlCommand::class         => new Commands\Stripe\GetStripeAccountDashboardUrlCommandHandler($c),
                 Commands\Stripe\StripeOnboardRedirectCommand::class                => new Commands\Stripe\StripeOnboardRedirectCommandHandler($c),
                 Commands\Stripe\StripeAccountDisconnectCommand::class              => new Commands\Stripe\StripeAccountDisconnectCommandHandler($c),
+                // QR Code
+                Commands\QrCode\ScanQrCodeCommand::class                           => new Commands\QrCode\ScanQrCodeCommandHandler($c),
+                Commands\QrCode\GetQrCodeCommand::class                            => new Commands\QrCode\GetQrCodeCommandHandler($c),
             ]
         );
     }
@@ -75,5 +78,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Basic\Licence
         Routes\Stripe\Stripe::routes($app);
 
         Routes\Notification\WhatsApp::routes($app);
+
+        Routes\QrCode\QrCode::routes($app);
     }
 }

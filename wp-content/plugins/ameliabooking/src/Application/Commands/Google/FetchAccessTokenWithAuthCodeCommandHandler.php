@@ -60,6 +60,10 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
 
         $accessToken = apply_filters('amelia_before_google_calendar_added_filter', $accessToken, $command->getField('userId'));
 
+        if (is_array($accessToken)) {
+            $accessToken = json_encode($accessToken);
+        }
+
         $googleCalendar = GoogleCalendarFactory::create(['token' => $accessToken]);
 
         $googleCalendarRepository->beginTransaction();

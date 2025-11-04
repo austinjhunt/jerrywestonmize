@@ -38,7 +38,8 @@ class UpdateCustomFieldController extends Controller
         'useAsLocation',
         'width',
         'saveType',
-        'saveFirstChoice'
+        'saveFirstChoice',
+        'includeInInvoice'
     ];
 
     /**

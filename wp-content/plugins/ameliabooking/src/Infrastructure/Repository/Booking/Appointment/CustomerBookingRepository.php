@@ -66,6 +66,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             ':created'         => !empty($data['created']) ?
                 DateTimeService::getCustomDateTimeInUtc($data['created']) : DateTimeService::getNowDateTimeInUtc(),
             ':actionsCompleted' => $data['actionsCompleted'] ? 1 : 0,
+            ':qrCodes'         => $data['qrCodes'] && json_decode($data['qrCodes']) !== false ? $data['qrCodes'] : null,
         ];
 
         try {
@@ -87,7 +88,8 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                 `packageCustomerServiceId`,
                 `duration`,
                 `created`,
-                `actionsCompleted`
+                `actionsCompleted`,
+                `qrCodes`
                 )
                 VALUES (
                 :appointmentId, 
@@ -105,7 +107,8 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                 :packageCustomerServiceId,
                 :duration,
                 :created,
-                :actionsCompleted
+                :actionsCompleted,
+                :qrCodes
                 )"
             );
 
@@ -140,6 +143,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             ':persons'      => $data['persons'],
             ':couponId'     => !empty($data['coupon']) ? $data['coupon']['id'] : null,
             ':customFields' => $data['customFields'],
+            ':qrCodes'      => $data['qrCodes'] && json_decode($data['qrCodes']) !== false ? $data['qrCodes'] : null,
         ];
 
         try {
@@ -150,7 +154,8 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                 `duration`     = :duration,
                 `persons`      = :persons,
                 `couponId`     = :couponId,
-                `customFields` = :customFields
+                `customFields` = :customFields,
+                `qrCodes`      = :qrCodes
                 WHERE id = :id"
             );
 
@@ -489,6 +494,29 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
         }
     }
 
+    public function getQrTicketNumber($ticketNo)
+    {
+        try {
+            $params[':ticketNo'] = '%' . $ticketNo . '%';
+
+            $statement = $this->connection->prepare(
+                "SELECT
+                id,
+                qrCodes
+                FROM {$this->table} cb
+                WHERE qrCodes LIKE :ticketNo"
+            );
+
+            $statement->execute($params);
+
+            $row = $statement->fetch();
+
+            return $row ?: null;
+        } catch (Exception $e) {
+            throw new QueryExecutionException('Unable to return customer bookings from ' . __CLASS__, $e->getCode(), $e);
+        }
+    }
+
     /**
      * @param int $id
      *
@@ -526,6 +554,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                     cb.created AS booking_created,
                     cb.token AS booking_token,
                     
+                    cb.qrCodes AS booking_qrCodes,
                     cu.id AS customer_id,
                     cu.firstName AS customer_firstName,
                     cu.lastName AS customer_lastName,
@@ -704,6 +733,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                     cb.packageCustomerServiceId AS packageCustomerServiceId,
                     cb.duration AS duration,
                     cb.created AS created,
+                    cb.qrCodes AS qrCodes,
                     cb.tax AS tax
                 FROM {$this->table} cb
                 {$where}"
@@ -1005,6 +1035,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             cb.utcOffset AS booking_utcOffset,
             cb.token AS booking_token,
             cb.aggregatedPrice AS booking_aggregatedPrice,
+            cb.qrCodes AS booking_qrCodes,
             
             ep.id as event_periodId,
             ep.periodStart as event_periodStart,

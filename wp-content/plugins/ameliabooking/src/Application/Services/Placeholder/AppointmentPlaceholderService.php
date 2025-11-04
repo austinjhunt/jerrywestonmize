@@ -243,7 +243,7 @@ class AppointmentPlaceholderService extends PlaceholderService
     {
         $type = 'email';
 
-        $data = [];
+        $data = ['customer_custom_fields' => []];
 
         $appointment = $reservationData['appointment'];
         $bookingKey  = array_search($reservationData['booking']['id'], array_column($appointment['bookings'], 'id'));
@@ -270,6 +270,7 @@ class AppointmentPlaceholderService extends PlaceholderService
                 $data['items'][$index]['invoice_qty']         += $invoiceItem['invoice_qty'];
                 $data['items'][$index]['invoice_subtotal']    += $invoiceItem['invoice_subtotal'];
                 $data['items'][$index]['invoice_discount']    += $invoiceItem['invoice_discount'];
+                $data['items'][$index]['service_discount']    += $invoiceItem['service_discount'];
                 $data['items'][$index]['invoice_tax']         += $invoiceItem['invoice_tax'];
                 $data['items'][$index]['invoice_paid_amount'] += $invoiceItem['invoice_paid_amount'];
                 $data['items'][$index]['total_tax']           += $invoiceItem['total_tax'];
@@ -279,28 +280,40 @@ class AppointmentPlaceholderService extends PlaceholderService
             }
 
             $extraItems      = $placeholders['invoice_items_extras'];
-            $extraItemsTaxes = $invoiceItem['invoice_extras_tax'];
+            $extraItemsTaxes = $invoiceItem['invoice_extras_items'];
             foreach ($extraItems as $extraItem) {
                 $index = $extraItem['item_index'];
                 if (!empty($data['items'][$index])) {
                     $data['items'][$index]['invoice_qty']      += $extraItem['invoice_qty'];
                     $data['items'][$index]['invoice_subtotal'] += $extraItem['invoice_subtotal'];
-                    $data['items'][$index]['invoice_tax']      += $extraItem['invoice_tax']['amount'];
-                    $data['items'][$index]['invoice_tax_rate'] += $extraItem['invoice_tax']['rate'];
+                    $data['items'][$index]['invoice_tax']      += !empty($extraItemsTaxes[$extraItem['item_id']]['tax']['amount']) ?
+                        $extraItemsTaxes[$extraItem['item_id']]['tax']['amount'] : 0;
+                    $data['items'][$index]['invoice_discount'] += !empty($extraItemsTaxes[$extraItem['item_id']]['full_discount']) ?
+                        $extraItemsTaxes[$extraItem['item_id']]['full_discount'] : 0;
                 } else {
                     $data['items'][$index] = array_merge(
                         $extraItem,
                         !empty($extraItemsTaxes[$extraItem['item_id']]) ?
                             [
                                 'invoice_tax' =>
-                                $extraItemsTaxes[$extraItem['item_id']]['amount'],
-                                'invoice_tax_rate' => $extraItemsTaxes[$extraItem['item_id']]['rate'],
-                                'invoice_tax_excluded' => $extraItemsTaxes[$extraItem['item_id']]['excluded']
+                                $extraItemsTaxes[$extraItem['item_id']]['tax']['amount'],
+                                'invoice_tax_rate' => $extraItemsTaxes[$extraItem['item_id']]['tax']['rate'],
+                                'invoice_tax_excluded' => $extraItemsTaxes[$extraItem['item_id']]['tax']['excluded'],
+                                'invoice_tax_type' => $extraItemsTaxes[$extraItem['item_id']]['tax']['type'],
+                                'invoice_discount' => !empty($extraItemsTaxes[$extraItem['item_id']]['full_discount']) ?
+                                    $extraItemsTaxes[$extraItem['item_id']]['full_discount'] : 0,
                             ] :
                             []
                     );
                 }
             }
+
+            $data['customer_custom_fields'] = array_merge(
+                $data['customer_custom_fields'],
+                array_filter($placeholders, function ($key) {
+                    return strpos($key, 'invoice_custom_field_') === 0;
+                }, ARRAY_FILTER_USE_KEY)
+            );
         }
 
         $data['items'] = array_values($data['items']);
@@ -742,7 +755,10 @@ class AppointmentPlaceholderService extends PlaceholderService
 
             if (array_key_exists($extraId, $bookingExtras) && $bookingExtras[$extraId]['quantity'] !== 0) {
                 if ($bookingKey === null) {
-                    if (!array_key_exists($extraId, $lastBookingExtraIds)) {
+                    if (
+                        empty($appointmentArray['sendForAllBookings']) &&
+                        !array_key_exists($extraId, $lastBookingExtraIds)
+                    ) {
                         continue;
                     }
                 }

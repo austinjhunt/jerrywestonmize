@@ -38,7 +38,8 @@ class PaymentCallbackController extends Controller
         'method',
         'accountId',
         'orderId',
-        'squareOrderId'
+        'squareOrderId',
+        'barionStatus'
     ];
 
     /**

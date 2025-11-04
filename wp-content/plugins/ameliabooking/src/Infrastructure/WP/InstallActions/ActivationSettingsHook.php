@@ -229,15 +229,17 @@ class ActivationSettingsHook
     {
 
         $settings = [
-            'pictureFullPath'  => '',
-            'pictureThumbPath' => '',
-            'name'             => '',
-            'address'          => '',
-            'phone'            => '',
-            'vat'              => '',
-            'countryPhoneIso'  => '',
-            'website'          => '',
-            'translations'     => '',
+            'pictureFullPath'   => '',
+            'pictureThumbPath'  => '',
+            'name'              => '',
+            'address'           => '',
+            'addressComponents' => [],
+            'countryCode'       => '',
+            'phone'             => '',
+            'vat'               => '',
+            'countryPhoneIso'   => '',
+            'website'           => '',
+            'translations'      => '',
         ];
 
         self::initSettings('company', $settings);
@@ -283,6 +285,7 @@ class ActivationSettingsHook
             'breakReplacement'     => '<br>',
             'pendingReminder'      => false,
             'sendInvoice'          => false,
+            'invoiceFormat'        => 'pdf',
             'whatsAppEnabled'      =>
                 $savedSettings &&
                 !empty($savedSettings['whatsAppPhoneID']) &&
@@ -433,6 +436,7 @@ This message does not have an option for responding. If you need additional info
             'sendEventInvitationEmail'         => false,
             'removeOutlookCalendarBusySlots'   => false,
             'maximumNumberOfEventsReturned'    => 50,
+            'ignoreAmeliaEvents'               => false,
             'eventTitle'                       => '%service_name%',
             'eventDescription'                 => '',
             'includeBufferTimeOutlookCalendar' => false,
@@ -918,6 +922,27 @@ This message does not have an option for responding. If you need additional info
                     'cart'        => null
                 ],
             ],
+            'barion' => [
+                'enabled'         => false,
+                'sandboxMode'     => false,
+                'livePOSKey'      => '',
+                'sandboxPOSKey'   => '',
+                'payeeEmail'      => '',
+                'description'     => [
+                    'enabled'     => false,
+                    'appointment' => '',
+                    'package'     => '',
+                    'event'       => '',
+                    'cart'        => '',
+                ],
+                'metaData'           => [
+                    'enabled'     => false,
+                    'appointment' => null,
+                    'package'     => null,
+                    'event'       => null,
+                    'cart'        => null
+                ],
+            ],
         ];
     }
 
@@ -984,6 +1009,7 @@ This message does not have an option for responding. If you need additional info
                 ['square', 'clientLiveId'],
                 ['square', 'clientTestId'],
                 ['square', 'countryCode'],
+                ['barion', 'metaData'],
             ],
             $settings
         );
@@ -1755,6 +1781,9 @@ This message does not have an option for responding. If you need additional info
             'waitingListEvents'                 => [
                 'enabled'                          => false,
                 'addingMethod'                     => 'Manually'
+            ],
+            'qrCodeEvents'                      => [
+                'enabled'                          => false,
             ],
             'pastDaysEvents'                       => 0,
             'employeeSelection'                    => 'random',

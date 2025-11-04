@@ -167,10 +167,15 @@ class AmeliaShortcodeService
             );
         }
 
+        $allowedUploadedFileExtensions =
+            !empty($settingsService->getSetting('general', 'customFieldsAllowedExtensions'))
+                ? $settingsService->getSetting('general', 'customFieldsAllowedExtensions')
+                : AbstractCustomFieldApplicationService::$allowedUploadedFileExtensions;
+
         wp_localize_script(
             'amelia_booking_scripts',
             'fileUploadExtensions',
-            array_keys(AbstractCustomFieldApplicationService::$allowedUploadedFileExtensions)
+            array_keys($allowedUploadedFileExtensions)
         );
 
         if ($settingsService->getSetting('activation', 'stash') && self::$counter === 1) {

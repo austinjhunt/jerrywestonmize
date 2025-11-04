@@ -18,11 +18,27 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 abstract class Forminator_Mail {
 	/**
+	 * Whether we're currently in email context
+	 *
+	 * @var bool
+	 */
+	protected static $is_email_context = false;
+
+	/**
 	 * Message variables
 	 *
 	 * @var array
 	 */
 	protected $message_vars;
+
+	/**
+	 * Check if we're currently in email context
+	 *
+	 * @return bool
+	 */
+	public static function is_email_context() {
+		return self::$is_email_context;
+	}
 
 	/**
 	 * Default content type
@@ -322,7 +338,6 @@ abstract class Forminator_Mail {
 		}
 	}
 
-
 	/**
 	 * Set attachment
 	 *
@@ -333,8 +348,13 @@ abstract class Forminator_Mail {
 	 * @param mixed $entry - Entry.
 	 */
 	public function set_attachment( $attachment, $custom_form = null, $entry = null ) {
-		$this->attachment = apply_filters( 'forminator_custom_form_mail_attachment', $attachment, $custom_form, $entry, $this->pdfs );
+		// Set email context to false to avoid replacing images in PDFs.
+		$old_value              = self::$is_email_context;
+		self::$is_email_context = false;
+		$this->attachment       = apply_filters( 'forminator_custom_form_mail_attachment', $attachment, $custom_form, $entry, $this->pdfs );
+		self::$is_email_context = $old_value;
 	}
+
 	/**
 	 * Set headers
 	 *

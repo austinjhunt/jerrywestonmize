@@ -551,12 +551,15 @@ class AppointmentApplicationService
                     $paymentAmount = $paymentDeposit;
                 }
 
-                if (
-                    $customerBooking->getCustomerId() &&
-                    !empty($paymentData['customerPaymentParentId'][$customerBooking->getCustomerId()->getValue()])
-                ) {
-                    $paymentData['parentId'] =
-                        $paymentData['customerPaymentParentId'][$customerBooking->getCustomerId()->getValue()];
+                if ($customerBooking->getCustomerId()) {
+                    if (!empty($paymentData['customerPaymentParentId'][$customerBooking->getCustomerId()->getValue()])) {
+                        $paymentData['parentId'] =
+                            $paymentData['customerPaymentParentId'][$customerBooking->getCustomerId()->getValue()];
+                    }
+                    if (!empty($paymentData['customerPaymentInvoiceNumber'][$customerBooking->getCustomerId()->getValue()])) {
+                        $paymentData['invoiceNumber'] =
+                            $paymentData['customerPaymentInvoiceNumber'][$customerBooking->getCustomerId()->getValue()];
+                    }
                 }
 
                 /** @var Payment $payment */
@@ -682,12 +685,15 @@ class AppointmentApplicationService
                         $paymentAmount = $paymentDeposit;
                     }
 
-                    if (
-                        $newBooking->getCustomerId() &&
-                        !empty($paymentData['customerPaymentParentId'][$newBooking->getCustomerId()->getValue()])
-                    ) {
-                        $paymentData['parentId'] =
-                            $paymentData['customerPaymentParentId'][$newBooking->getCustomerId()->getValue()];
+                    if ($newBooking->getCustomerId()) {
+                        if (!empty($paymentData['customerPaymentParentId'][$newBooking->getCustomerId()->getValue()])) {
+                            $paymentData['parentId'] =
+                                $paymentData['customerPaymentParentId'][$newBooking->getCustomerId()->getValue()];
+                        }
+                        if (!empty($paymentData['customerPaymentInvoiceNumber'][$newBooking->getCustomerId()->getValue()])) {
+                            $paymentData['invoiceNumber'] =
+                                $paymentData['customerPaymentInvoiceNumber'][$newBooking->getCustomerId()->getValue()];
+                        }
                     }
 
                     /** @var Payment $payment */

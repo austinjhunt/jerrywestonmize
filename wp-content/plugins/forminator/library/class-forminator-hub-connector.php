@@ -132,6 +132,8 @@ class Forminator_Hub_Connector {
 			$feature = filter_input( INPUT_GET, 'feature' );
 			if ( 'preset-template' === $feature ) {
 				$feature_name = esc_html__( 'Preset Templates', 'forminator' );
+			} elseif ( 'extension-pack' === $feature ) {
+				$feature_name = esc_html__( 'Extension Pack Add-on', 'forminator' );
 			} else {
 				$feature_name = esc_html__( 'Cloud Templates', 'forminator' );
 			}
@@ -181,6 +183,25 @@ class Forminator_Hub_Connector {
 				}
 			} elseif ( 'preset-template' === $feature ) {
 				$utm_campaign = 'forminator_form-builder_hub-connector_preset-templates_connector';
+			} elseif ( 'extension-pack' === $feature ) {
+				switch ( $page_referral ) {
+					case 'form_builder':
+						$page_referral = 'forminator_form-builder_form-abandonment';
+						break;
+					case 'forms_page':
+						$page_referral = 'forminator_form-page_form-overview';
+						break;
+					case 'report_page':
+						$page_referral = 'forminator_form-report-page_report-overview';
+						break;
+					case 'report_widget':
+						$page_referral = 'forminator_form-report-page_form-abandonment-widget';
+						break;
+					default:
+						$page_referral = 'forminator_addons-page';
+						break;
+				}
+				$utm_campaign = $page_referral . '-free-addon_hub-connector';
 			} else {
 				$utm_campaign = 'forminator_form-builder_hub-connector_cloud-templates_connector';
 			}
@@ -189,6 +210,8 @@ class Forminator_Hub_Connector {
 				'screens'    => array(
 					'forminator_page_forminator-templates',
 					'forminator-pro_page_forminator-templates',
+					'forminator_page_forminator-addons',
+					'forminator-pro_page_forminator-addons',
 					'forminator_page_forminator-cform',
 					'forminator-pro_page_forminator-cform',
 					'forminator_page_forminator-cform-wizard',
@@ -200,12 +223,11 @@ class Forminator_Hub_Connector {
 						'utm_medium'   => 'plugin',
 						'utm_campaign' => $utm_campaign,
 						'utm_content'  => 'hub-connector',
+						'utm_source'   => self::PLUGIN_IDENTIFIER,
 					),
 				),
 			);
-			if ( 'wp-dashboard' === $page_referral ) {
-				$options['extra_args']['register']['utm_source'] = 'forminator';
-			}
+
 			\WPMUDEV\Hub\Connector::get()->set_options( self::PLUGIN_IDENTIFIER, $options );
 		}
 	}
@@ -260,6 +282,10 @@ class Forminator_Hub_Connector {
 		$id = filter_input( INPUT_GET, 'id' );
 		if ( $id ) {
 			$args['id'] = $id;
+		}
+		$page_referral = filter_input( INPUT_GET, 'page_referral' );
+		if ( $page_referral ) {
+			$args['page_referral'] = $page_referral;
 		}
 
 		$args['page_action'] = self::CONNECTION_ACTION;

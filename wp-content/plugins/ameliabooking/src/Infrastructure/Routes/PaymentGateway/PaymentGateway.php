@@ -7,6 +7,9 @@
 
 namespace AmeliaBooking\Infrastructure\Routes\PaymentGateway;
 
+use AmeliaBooking\Application\Controller\PaymentGateway\BarionPaymentCallbackController;
+use AmeliaBooking\Application\Controller\PaymentGateway\BarionPaymentController;
+use AmeliaBooking\Application\Controller\PaymentGateway\BarionPaymentNotifyController;
 use AmeliaBooking\Application\Controller\PaymentGateway\MolliePaymentController;
 use AmeliaBooking\Application\Controller\PaymentGateway\MolliePaymentNotifyController;
 use AmeliaBooking\Application\Controller\PaymentGateway\PayPalPaymentCallbackController;
@@ -41,5 +44,13 @@ class PaymentGateway
         $app->post('/payment/mollie', MolliePaymentController::class);
 
         $app->post('/payment/razorpay', RazorpayPaymentController::class);
+
+        $app->post('/payment/barion', BarionPaymentController::class);
+
+        $app->get('/payment/barion/notify', BarionPaymentNotifyController::class);
+
+        $app->get('/payment/barion/callback', BarionPaymentCallbackController::class);
+
+        $app->post('/payment/barion/callback', BarionPaymentCallbackController::class);
     }
 }

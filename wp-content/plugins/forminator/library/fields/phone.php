@@ -236,8 +236,8 @@ class Forminator_Phone extends Forminator_Field {
 				$value = 0 === strpos( $value, ' ' ) ? str_replace( ' ', '+', $value ) : trim( $value );
 			}
 		}
-
-		$phone_attr = array(
+		$browser_autofill = self::get_property( 'browser_autofill', $field, 'disabled' );
+		$phone_attr       = array(
 			'type'          => 'text',
 			'name'          => $name,
 			'value'         => $value,
@@ -246,7 +246,7 @@ class Forminator_Phone extends Forminator_Field {
 			'class'         => 'forminator-input forminator-field--phone',
 			'data-required' => $required,
 			'aria-required' => $ariareq,
-			'autocomplete'  => 'off',
+			'autocomplete'  => 'enabled' === $browser_autofill ? 'tel-national' : 'off',
 		);
 
 		if ( wp_is_mobile() ) {

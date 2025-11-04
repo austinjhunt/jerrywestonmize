@@ -23,6 +23,8 @@ final class PaymentType
 
     public const SQUARE = 'square';
 
+    public const BARION = 'barion';
+
     /**
      * @var string
      */

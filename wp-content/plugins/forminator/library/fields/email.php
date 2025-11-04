@@ -144,7 +144,9 @@ class Forminator_Email extends Forminator_Field {
 		$description = self::get_property( 'description', $field );
 		$is_confirm  = self::get_property( 'confirm-email', $field, '', 'bool' );
 
-		$descr_position = self::get_description_position( $field, $settings );
+		$descr_position    = self::get_description_position( $field, $settings );
+		$browser_autofill  = self::get_property( 'browser_autofill', $field, 'enabled' );
+		$autocomplete_attr = 'enabled' === $browser_autofill ? 'email' : 'off';
 
 		if ( (bool) $required ) {
 			$ariareq = 'true';
@@ -169,6 +171,7 @@ class Forminator_Email extends Forminator_Field {
 			'class'         => 'forminator-input forminator-email--field',
 			'data-required' => $required,
 			'aria-required' => $ariareq,
+			'autocomplete'  => $autocomplete_attr,
 		);
 
 		$autofill_markup = $this->get_element_autofill_markup_attr( self::get_property( 'element_id', $field ) );
@@ -205,6 +208,7 @@ class Forminator_Email extends Forminator_Field {
 				'class'         => 'forminator-input forminator-name--field',
 				'data-required' => $required,
 				'aria-required' => $ariareq,
+				'autocomplete'  => $autocomplete_attr,
 			);
 
 			if ( ! empty( $confirm_email_description ) ) {

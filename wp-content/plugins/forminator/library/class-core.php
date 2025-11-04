@@ -227,7 +227,7 @@ class Forminator_Core {
 	 * @return void
 	 */
 	public static function init_mixpanel( bool $force = false ) {
-		if ( ( ! self::is_tracking_active() && ! $force ) || ! is_admin() ) {
+		if ( ! forminator_usage_tracking_disabled() && ( ( ! self::is_tracking_active() && ! $force ) || ! is_admin() ) ) {
 			return;
 		}
 
@@ -279,6 +279,8 @@ class Forminator_Core {
 		include_once forminator_plugin_dir() . 'library/abstracts/abstract-class-user.php';
 
 		// Classes.
+		/* @noinspection PhpIncludeInspection */
+		include_once forminator_plugin_dir() . 'library/class-abandonment.php';
 		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'library/class-loader.php';
 		/* @noinspection PhpIncludeInspection */
@@ -619,7 +621,8 @@ class Forminator_Core {
 		}
 
 		// Cannot use esc_url_raw coz it strips curly braces.
-		if ( 'redirect-url' === $current_key ) {
+		if ( 'redirect-url' === $current_key
+			|| 'formula' === $current_key ) { // Cannot use sanitize_text_field as it removes percentage strings.
 			return trim( wp_strip_all_tags( $data ) );
 		}
 

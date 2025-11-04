@@ -92,6 +92,14 @@ class CustomerBookingFactory
             $customerBooking->setInfo(new Json($data['info']));
         }
 
+        if (isset($data['qrCodes'])) {
+            if (is_string($data['qrCodes'])) {
+                $customerBooking->setQrCodes(new Json($data['qrCodes']));
+            } elseif (json_encode($data['qrCodes']) !== false) {
+                $customerBooking->setQrCodes(new Json(json_encode($data['qrCodes'])));
+            }
+        }
+
         if (isset($data['utcOffset'])) {
             $customerBooking->setUtcOffset(new IntegerValue($data['utcOffset']));
         }
@@ -235,6 +243,7 @@ class CustomerBookingFactory
                     'duration'        => !empty($row['booking_duration']) ? $row['booking_duration'] : null,
                     'token'           => isset($row['booking_token']) ? $row['booking_token'] : null,
                     'tax'             => isset($row['booking_tax']) ? $row['booking_tax'] : null,
+                    'qrCodes'         => isset($row['booking_qrCodes']) ? $row['booking_qrCodes'] : (isset($row['qrCodes']) ? $row['qrCodes'] : null),
                 ];
             }
 
@@ -248,6 +257,7 @@ class CustomerBookingFactory
                     'phone'     => $row['customer_phone'],
                     'gender'    => $row['customer_gender'],
                     'birthday'  => $row['customer_birthday'],
+                    'customFields' => !empty($row['customer_customFields']) ? $row['customer_customFields'] : null,
                 ];
             }
 

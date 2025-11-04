@@ -29,6 +29,7 @@ use Square\Models\OrderLineItem;
 use Square\Models\PaymentLink;
 use Square\Models\PrePopulatedData;
 use Square\Models\RefundPaymentRequest;
+use Square\Models\RegisterDomainRequest;
 use Square\Models\UpdatePaymentLinkRequest;
 use Square\SquareClient;
 
@@ -424,13 +425,19 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
         return true;
     }
 
+    /**
+     *
+     * @param array $accessToken
+     * @return boolean
+     *
+     * @throws Exception
+     */
     public function isAccessTokenExpired($accessToken)
     {
         return DateTimeService::getNowDateTimeObject() >= DateTimeService::getCustomDateTimeObject($accessToken['expires_at']);
     }
 
     /**
-     *
      *
      * @return boolean
      *
@@ -468,6 +475,12 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
         return true;
     }
 
+    /**
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
     public function getAuthUrl()
     {
         $squareSettings = $this->settingsService->getCategorySettings('payments')['square'];
@@ -490,5 +503,17 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
         }
 
         return null;
+    }
+
+    /**
+     * @return ApiResponse
+     */
+    public function registerDomainForApplePay()
+    {
+        return $this->getApiResponse(
+            'getApplePayApi',
+            'registerDomain',
+            [new RegisterDomainRequest(str_replace(['http://', 'https://'], '', AMELIA_SITE_URL))]
+        );
     }
 }

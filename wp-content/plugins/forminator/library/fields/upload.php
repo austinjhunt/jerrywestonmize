@@ -494,8 +494,10 @@ class Forminator_Upload extends Forminator_Field {
 					wp_mkdir_p( $file_path );
 				}
 
-				// Create Index file.
-				self::forminator_upload_index_file( $form_id, $file_path );
+				if ( ! forminator_create_index_file_disabled() ) {
+					// Create Index file.
+					self::forminator_upload_index_file( $form_id, $file_path );
+				}
 
 				if ( wp_is_writable( $file_path ) ) {
 					$file_path = $file_path . '/' . $filename;
@@ -527,7 +529,7 @@ class Forminator_Upload extends Forminator_Field {
 				// use move_uploaded_file instead of $wp_filesystem->put_contents.
 				// increase performance, and avoid permission issues.
 				if ( false !== move_uploaded_file( $file_object['tmp_name'], $file_path ) ) {
-					if ( $use_library && ( 'multiple' !== $file_type || ( 'multiple' === $file_type && 'submit' === $upload_type ) ) ) {
+					if ( $use_library && 'submit' === $upload_type ) {
 						$upload_id = wp_insert_attachment(
 							array(
 								'guid'           => $file_path,
@@ -629,8 +631,10 @@ class Forminator_Upload extends Forminator_Field {
 				wp_mkdir_p( $upload_path );
 			}
 
-			// Create Index file.
-			self::forminator_upload_index_file( $form_id, $upload_path );
+			if ( ! forminator_create_index_file_disabled() ) {
+				// Create Index file.
+				self::forminator_upload_index_file( $form_id, $upload_path );
+			}
 
 			foreach ( $upload_data['file'] as $upload ) {
 				$upload_temp_path = forminator_upload_root_temp();
@@ -652,7 +656,7 @@ class Forminator_Upload extends Forminator_Field {
 
 					if ( file_exists( $temp_path ) ) {
 						if ( $this->move_file( $temp_path, $file_path ) ) {
-							if ( $use_library && 'multiple' === $file_type ) {
+							if ( $use_library ) {
 								$upload_id = wp_insert_attachment(
 									array(
 										'guid'           => $file_path,
@@ -899,11 +903,12 @@ class Forminator_Upload extends Forminator_Field {
 		}
 		if ( ! is_wp_error( $temp_path ) && file_exists( $temp_path ) ) {
 			if ( $this->move_file( $temp_path, $file_path ) ) {
-				if ( $use_library && 'multiple' === $file_type ) {
+				$file_mime = $this->get_mime_type( $file_path );
+				if ( $use_library ) {
 					$upload_id = wp_insert_attachment(
 						array(
 							'guid'           => $file_path,
-							'post_mime_type' => $upload['mime_type'],
+							'post_mime_type' => $file_mime,
 							'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
 							'post_content'   => '',
 							'post_status'    => 'inherit',

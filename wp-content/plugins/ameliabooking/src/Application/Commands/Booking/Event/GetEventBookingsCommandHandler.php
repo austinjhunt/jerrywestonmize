@@ -289,6 +289,7 @@ class GetEventBookingsCommandHandler extends CommandHandler
                     'total'  => $paymentAS->calculateAppointmentPrice($booking, BookableType::EVENT),
                 ],
                 'payments' => array_values($booking['payments']),
+                'qrCodes' => !empty($booking['qrCodes']) ? $booking['qrCodes'] : null,
             ];
         }
 

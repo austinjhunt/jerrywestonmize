@@ -142,6 +142,7 @@ class LiteFrontendStrings
             'total_number_of_persons'      => __('Total Number of People:', 'wpamelia'),
             'view'                         => __('View', 'wpamelia'),
             'select'                       => __('Select', 'wpamelia'),
+            'free'                         => __('Free', 'wpamelia'),
         ];
     }
 

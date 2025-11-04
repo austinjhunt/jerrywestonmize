@@ -80,6 +80,17 @@ $entries['infrastructure.payment.razorpay.service'] = function ($c) {
 };
 
 /**
+ * Barion Payment Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface
+ */
+$entries['infrastructure.payment.barion.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getBarionService($c);
+};
+
+/**
  * Square Payment Service
  *
  * @param Container $c
@@ -211,4 +222,16 @@ $entries['infrastructure.apple.calendar.service'] = function ($c) {
 
 $entries['infrastructure.social.authentication.service'] = function ($c) {
     return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getSocialAuthenticationService($c);
+};
+
+/**
+ * QR Code Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Infrastructure\Services\QrCode\AbstractQrCodeInfrastructureService
+ */
+
+$entries['infrastructure.qrcode.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getQrCodeService($c);
 };

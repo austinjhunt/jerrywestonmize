@@ -24,9 +24,15 @@ class EmailEditorPreviewEmail {
 
   /**
    * Sends preview email
+   * @param bool|array $postData
+   * @return bool|array
    * @throws \Exception
    */
-  public function sendPreviewEmail($postData): bool {
+  public function sendPreviewEmail($postData) {
+    if (is_bool($postData) || !isset($postData['postId']) || get_post_type((int)$postData['postId']) !== EmailEditor::MAILPOET_EMAIL_POST_TYPE) {
+      return $postData;
+    }
+
     $this->validateData($postData);
 
     $newsletter = $this->fetchNewsletter($postData);

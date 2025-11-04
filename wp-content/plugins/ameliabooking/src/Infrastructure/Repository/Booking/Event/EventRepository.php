@@ -1401,6 +1401,8 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             $joins .= "
                 LEFT JOIN {$ticketsTable} eti ON eti.eventId = e.id
             ";
+
+            $orderBy .= (!empty($orderBy) ? ',' : 'ORDER BY') . ' eti.id ASC';
         }
 
         if (!empty($criteria['fetchEventsTags'])) {
@@ -1637,6 +1639,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 cu.phone AS customer_phone,
                 cu.gender AS customer_gender,
                 cu.birthday AS customer_birthday,
+                cu.customFields AS customer_customFields,
             ';
 
             $joins .= "
@@ -1674,7 +1677,8 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             cb.utcOffset AS booking_utcOffset,
             cb.token AS booking_token,
             cb.aggregatedPrice AS booking_aggregatedPrice,
-            cb.tax AS booking_tax
+            cb.tax AS booking_tax,
+            cb.qrCodes AS booking_qrCodes
         ';
 
         if (!empty($criteria['ids'])) {

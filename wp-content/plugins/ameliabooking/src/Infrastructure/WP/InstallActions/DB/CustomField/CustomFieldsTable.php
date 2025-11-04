@@ -35,6 +35,7 @@ class CustomFieldsTable extends AbstractDatabaseTable
                    `width` INT(11) NOT NULL DEFAULT 50,
                    `saveType` ENUM('bookings', 'customer') NOT NULL DEFAULT 'bookings',
                    `saveFirstChoice` TINYINT(1) NULL DEFAULT NULL,
+                   `includeInInvoice` TINYINT(1) NULL DEFAULT NULL,
                     PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     }

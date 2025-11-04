@@ -587,6 +587,10 @@ class PackageApplicationService extends AbstractPackageApplicationService
                     $booking->getPackageCustomerService()->setPackageCustomer(
                         $packageCustomerService->getPackageCustomer()
                     );
+
+                    if ($packageCustomerService->getPackageCustomer()) {
+                        $booking->setPayments($packageCustomerService->getPackageCustomer()->getPayments());
+                    }
                 }
             }
 

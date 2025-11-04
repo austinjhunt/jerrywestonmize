@@ -2,15 +2,16 @@
 
 namespace AmeliaBooking\Application\Services\Invoice;
 
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
-use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
-use Dompdf\Dompdf;
+use AmeliaDompdf\Dompdf;
 use Slim\Exception\ContainerException;
 
 /**
@@ -22,6 +23,8 @@ class InvoiceApplicationService extends AbstractInvoiceApplicationService
 {
     /**
      * @param int $paymentId
+     * @param int|null $customerId
+     * @param string $format
      *
      * @return array
      *
@@ -30,11 +33,14 @@ class InvoiceApplicationService extends AbstractInvoiceApplicationService
      * @throws QueryExecutionException
      * @throws ContainerException
      * @throws \Interop\Container\Exception\ContainerException
+     * @throws AccessDeniedException
      */
-    public function generateInvoice($paymentId)
+    public function generateInvoice($paymentId, $customerId = null, $format = null)
     {
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
 
         /** @var Payment $payment */
         $payment = $paymentRepository->getById($paymentId);
@@ -61,27 +67,118 @@ class InvoiceApplicationService extends AbstractInvoiceApplicationService
 
         $reservation = $reservationService->getReservationByPayment($payment);
 
+        if ($customerId && $reservation->getData()['customer']['id'] !== $customerId) {
+            throw new AccessDeniedException();
+        }
+
         $reservationData = $reservation->getData();
 
-        $invoiceData = $placeholderService->getInvoicePlaceholdersData($reservationData);
+        $data = $placeholderService->getInvoicePlaceholdersData($reservationData);
 
-        ob_start();
-        include AMELIA_PATH . '/templates/invoice/invoice.inc';
-        $html = ob_get_clean();
+        $invoiceData = $this->getInvoiceData($data);
 
-        $dompdf = new Dompdf();
+        $format = $format ?: $settingsService->getSetting('notifications', 'invoiceFormat');
 
-        $dompdf->setPaper('A4');
+        if ($format === 'pdf') {
+            $invoiceData['placeholders']['customer_custom_fields'] =   array_map(
+                function ($el) {
+                    return $el['label'] . ': ' . $el['value'];
+                },
+                $invoiceData['placeholders']['customer_custom_fields']
+            );
 
-        $dompdf->loadHtml($html);
+            ob_start();
+            include AMELIA_PATH . '/templates/invoice/invoice.inc';
+            $html = ob_get_clean();
 
-        $dompdf->render();
+            $dompdf = new Dompdf();
+
+            $dompdf->setPaper('A4');
+
+            $dompdf->loadHtml($html);
+
+            $dompdf->render();
+
+            $file = [
+                'name'       => 'Invoice.pdf',
+                'type'       => 'application/pdf',
+                'content'    => $dompdf->output()
+            ];
+        } else {
+            $currency = $settingsService->getCategorySettings('payments')['currency'];
+
+            $companyData = $settingsService->getCategorySettings('company');
+
+            $invoiceData['placeholders']['company_address_components'] = $companyData['addressComponents'];
+
+            $xmlService = new XMLInvoiceService();
+
+            $xml = $xmlService->generateXml($invoiceData, $currency);
+
+            $file = [
+                'name'       => 'Invoice.xml',
+                'type'       => 'application/xml',
+                'content'    => $xml
+            ];
+        }
+
+
+        return array_merge($file, [
+            'customerId' => $reservation->getData()['customer']['id']
+        ]);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    private function getInvoiceData($data)
+    {
+        $itemsWithTax = array_filter(
+            $data['items'],
+            function ($item) {
+                return !empty($item['invoice_tax']);
+            }
+        );
+        $taxEnabled   = !empty($itemsWithTax) && !empty(array_values($itemsWithTax)[0]['invoice_tax']);
+        $includedTax  = !empty($itemsWithTax) && !array_values($itemsWithTax)[0]['invoice_tax_excluded'];
+
+        $invoiceSubtotal = array_sum(array_column($data['items'], 'invoice_subtotal'));
+        $invoiceDiscount = array_sum(array_map(function ($item) {
+            return !empty($item['service_discount']) ? $item['service_discount'] : $item['invoice_discount'];
+        }, $data['items']));
+        $invoiceTax      = $data['invoice_tax'];
+
+        $invoiceTotal = $invoiceSubtotal - $invoiceDiscount;
+        $invoiceTotal += $invoiceTotal ? $invoiceTax : 0;
+
+        $invoicePaid = array_sum(array_column($data['items'], 'invoice_paid_amount'));
+
+        $invoicePaid = ($invoicePaid < $invoiceTotal) ? $invoicePaid : 0;
+
+        $invoiceLeftToPay = $invoiceTotal - $invoicePaid;
+
+        $filename = !empty($data['company_logo']) ? $data['company_logo'] : null;
+        if ($filename) {
+            $mime = pathinfo($filename, PATHINFO_EXTENSION);
+            $img  = base64_encode(file_get_contents($filename));
+        }
+
+        $data['customer_custom_fields'] = array_values($data['customer_custom_fields']);
 
         return [
-            'name'       => 'Invoice.pdf',
-            'type'       => 'application/pdf',
-            'content'    =>  $dompdf->output(),
-            'customerId' => $reservation->getData()['customer']['id']
+            'items' => $data['items'],
+            'taxEnabled' => $taxEnabled,
+            'includedTax' => $includedTax,
+            'subtotal' => $invoiceSubtotal,
+            'discount' => $invoiceDiscount,
+            'tax' => $invoiceTax,
+            'total' => $invoiceTotal,
+            'paid' => $invoicePaid,
+            'leftToPay' => $invoiceLeftToPay,
+            'companyLogo' => $filename ? ['filename' => $filename, 'mime' => $mime, 'img' => $img] : null,
+            'placeholders' => $data,
         ];
     }
 }

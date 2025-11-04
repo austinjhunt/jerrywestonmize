@@ -226,11 +226,85 @@ class NewsletterListingRepository extends ListingRepository {
 
   protected function applyFilters(QueryBuilder $queryBuilder, array $filters) {
     $segmentId = $filters['segment'] ?? null;
-    if ($segmentId) {
+    if ($segmentId && is_numeric($segmentId)) {
       $queryBuilder
         ->join('n.newsletterSegments', 'ns')
         ->andWhere('ns.segment = :segmentId')
-        ->setParameter('segmentId', $segmentId);
+        ->setParameter('segmentId', (int)$segmentId);
+    }
+
+    // Filter by sent_at/scheduled_at date
+    $sentAtFrom = $filters['sent_at_from'] ?? null;
+    if ($sentAtFrom && is_string($sentAtFrom) && $this->isValidDateTime($sentAtFrom)) {
+      $subQueryFrom = $queryBuilder->getEntityManager()->createQueryBuilder()
+        ->select('1')
+        ->from('MailPoet\Entities\SendingQueueEntity', 'queueFrom')
+        ->join('queueFrom.task', 'taskFrom')
+        ->where('queueFrom.newsletter = n.id')
+        ->andWhere('taskFrom.scheduledAt >= :sentAtFrom')
+        ->getDQL();
+
+      $queryBuilder
+        ->andWhere('(n.sentAt >= :sentAtFrom OR EXISTS (' . $subQueryFrom . '))')
+        ->setParameter('sentAtFrom', $sentAtFrom);
+    }
+
+    $sentAtTo = $filters['sent_at_to'] ?? null;
+    if ($sentAtTo && is_string($sentAtTo) && $this->isValidDateTime($sentAtTo)) {
+      $subQueryTo = $queryBuilder->getEntityManager()->createQueryBuilder()
+        ->select('1')
+        ->from('MailPoet\Entities\SendingQueueEntity', 'queueTo')
+        ->join('queueTo.task', 'taskTo')
+        ->where('queueTo.newsletter = n.id')
+        ->andWhere('taskTo.scheduledAt <= :sentAtTo')
+        ->getDQL();
+
+      $queryBuilder
+        ->andWhere('(n.sentAt <= :sentAtTo OR EXISTS (' . $subQueryTo . '))')
+        ->setParameter('sentAtTo', $sentAtTo);
+    }
+
+    // Filter by segment IDs with advanced operators
+    $segmentIds = $filters['segment_ids'] ?? null;
+    if (!$segmentIds || !is_array($segmentIds)) {
+      return;
+    }
+    $segmentIds = array_filter($segmentIds, 'is_numeric');
+    $segmentIds = array_map('intval', $segmentIds);
+    if (empty($segmentIds)) {
+      return;
+    }
+
+    $segmentOperator = $filters['segment_operator'] ?? null;
+    if (!in_array($segmentOperator, ['isAny', 'isNone'], true)) {
+      return;
+    }
+
+    if ($segmentOperator === 'isAny') {
+      $queryBuilder
+        ->join('n.newsletterSegments', 'ns2')
+        ->andWhere('ns2.segment IN (:segmentIds)')
+        ->setParameter('segmentIds', $segmentIds);
+    } elseif ($segmentOperator === 'isNone') {
+      $subQuery = $queryBuilder->getEntityManager()->createQueryBuilder()
+        ->select('1')
+        ->from(NewsletterEntity::class, 'nNone')
+        ->join('nNone.newsletterSegments', 'nsNone')
+        ->where('nNone.id = n.id')
+        ->andWhere('nsNone.segment IN (:segmentIdsNone)')
+        ->getDQL();
+      $queryBuilder
+        ->andWhere('NOT EXISTS (' . $subQuery . ')')
+        ->setParameter('segmentIdsNone', $segmentIds);
+    }
+  }
+
+  private function isValidDateTime(string $dateTime): bool {
+    try {
+      new \DateTime($dateTime);
+      return true;
+    } catch (\Exception $e) {
+      return false;
     }
   }
 

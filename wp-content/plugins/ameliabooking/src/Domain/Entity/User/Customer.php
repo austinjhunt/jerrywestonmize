@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Domain\Entity\User;
 
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Stripe\StripeConnect;
 use AmeliaBooking\Domain\ValueObjects\Gender;
 use AmeliaBooking\Domain\ValueObjects\String\Email;
@@ -18,7 +19,7 @@ class Customer extends AbstractUser
     /** @var Gender */
     private $gender;
 
-    /** @var StripeConnect */
+    /** @var Collection */
     private $stripeConnect;
 
 
@@ -66,7 +67,7 @@ class Customer extends AbstractUser
     }
 
     /**
-     * @return StripeConnect
+     * @return Collection
      */
     public function getStripeConnect()
     {
@@ -74,7 +75,7 @@ class Customer extends AbstractUser
     }
 
     /**
-     * @param StripeConnect $stripeConnect
+     * @param Collection $stripeConnect
      */
     public function setStripeConnect($stripeConnect)
     {

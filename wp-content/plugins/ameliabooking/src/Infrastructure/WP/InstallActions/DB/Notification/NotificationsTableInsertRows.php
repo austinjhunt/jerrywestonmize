@@ -154,6 +154,14 @@ class NotificationsTableInsertRows extends AbstractDatabaseTable
             $rows = array_merge($rows, [NotificationsStrings::getProviderWaitingListSmsNotification()]);
         }
 
+        $customerQrCode = !(int)$wpdb->get_row(
+            "SELECT COUNT(*) AS count FROM {$table} WHERE name = 'customer_event_qr_code'"
+        )->count;
+
+        if ($customerQrCode) {
+            $rows = array_merge($rows, [NotificationsStrings::getCustomerQrCodeEmailNotification()]);
+        }
+
         $addWhatsApp = !(int)$wpdb->get_row("SELECT COUNT(*) AS count FROM {$table} WHERE type = 'whatsapp'")->count;
 
         if ($addWhatsApp) {

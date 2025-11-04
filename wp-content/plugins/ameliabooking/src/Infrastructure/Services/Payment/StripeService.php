@@ -7,10 +7,16 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Payment;
 
+use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Stripe\StripeConnect;
+use AmeliaBooking\Domain\Factory\Stripe\StripeFactory;
 use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
+use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
+use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaStripe\Customer;
 use AmeliaStripe\Exception\ApiErrorException;
 use AmeliaStripe\PaymentIntent;
@@ -114,22 +120,18 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 $stripeData['metadata'] = $data['metaData'];
             }
 
-            // BEGIN MODS 
-            if ($data['metaData']['Customer Email']) {
-                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
-            }
-            // also added a fallback description since that was appearing as null on the Stripe side
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
-            } else {
-                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
-            // END MODS
 
             $customerId = $this->createCustomer($data, $additionalStripeData);
 
             if ($customerId) {
                 $stripeData = array_merge($stripeData, ['customer' => $customerId]);
+            }
+
+            if (!empty($data['customerData']) && !empty($data['customerData']['email'])) {
+                $stripeData['receipt_email'] = $data['customerData']['email'];
             }
 
             $stripeData = apply_filters(
@@ -542,6 +544,13 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
         return $response->getLastResponse()->code === 200 ? $response->toArray()['url'] : null;
     }
 
+    /**
+     * @param array $data
+     * @param array $additionalStripeData
+     *
+     * @return string|null
+     * @throws Exception
+     */
     private function createCustomer($data, $additionalStripeData)
     {
         $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
@@ -553,7 +562,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
         $customerId = $data['customerId'];
         if (!empty($customerId)) {
             try {
-                $customer = Customer::retrieve($customerId);
+                $customer = Customer::retrieve($customerId, $additionalStripeData);
             } catch (Exception $e) {
                 $customerId = null;
             }
@@ -583,5 +592,92 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
         }
 
         return $customerId;
+    }
+
+    /**
+     * @param \AmeliaBooking\Domain\Entity\User\Customer $customer
+     * @param array $transfers
+     *
+     * @return string|null
+     * @throws \Exception
+     */
+    public function getStripeCustomerId($customer, $transfers)
+    {
+        $stripeConnectSettings = $this->settingsService->getSetting('payments', 'stripe')['connect'];
+
+        $connectToEmployeeStripeAccount =
+            $stripeConnectSettings['enabled'] &&
+            sizeof($transfers['accounts']) === 1 &&
+            $stripeConnectSettings['method'] === 'direct';
+
+        $existingStripeConnects = $customer->getStripeConnect() ?: new Collection();
+
+        /** @var StripeConnect $stripeConnect */
+        foreach ($existingStripeConnects->getItems() as $stripeConnect) {
+            if (
+                (!$connectToEmployeeStripeAccount && !$stripeConnect->getAccountId()) ||
+                (
+                    $stripeConnect->getAccountId() &&
+                    $stripeConnect->getAccountId()->getValue() === array_keys($transfers['accounts'])[0]
+                )
+            ) {
+                return $stripeConnect->getId()->getValue();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param \AmeliaBooking\Domain\Entity\User\Customer $customer
+     * @param string $newCustomerId
+     * @param array $transfers
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    public function setNewStripeCustomerId($customer, $newCustomerId, array $transfers)
+    {
+        $stripeConnectSettings = $this->settingsService->getSetting('payments', 'stripe')['connect'];
+
+        $connectToEmployeeStripeAccount =
+            $stripeConnectSettings['enabled'] &&
+            sizeof($transfers['accounts']) === 1 &&
+            $stripeConnectSettings['method'] === 'direct';
+
+        $existingStripeConnects = $customer->getStripeConnect() ?: new Collection();
+
+        $stripeConnectExists = false;
+        /** @var StripeConnect $stripeConnect */
+        foreach ($existingStripeConnects->getItems() as $stripeConnect) {
+            if (
+                (!$connectToEmployeeStripeAccount && !$stripeConnect->getAccountId()) ||
+                (
+                    $stripeConnect->getAccountId() &&
+                    $stripeConnect->getAccountId()->getValue() === array_keys($transfers['accounts'])[0]
+                )
+            ) {
+                $stripeConnectExists = true;
+                $stripeConnect->setId(new Name($newCustomerId));
+                if ($connectToEmployeeStripeAccount) {
+                    $stripeConnect->setAccountId(new Name(array_keys($transfers['accounts'])[0]));
+                }
+                break;
+            }
+        }
+
+        if (!$stripeConnectExists) {
+            $existingStripeConnects->addItem(
+                StripeFactory::create(
+                    [
+                        'id' => $newCustomerId,
+                        'accountId' => $connectToEmployeeStripeAccount ?
+                            array_keys($transfers['accounts'])[0] : null
+                    ]
+                )
+            );
+        }
+
+        return $existingStripeConnects->toArray();
     }
 }

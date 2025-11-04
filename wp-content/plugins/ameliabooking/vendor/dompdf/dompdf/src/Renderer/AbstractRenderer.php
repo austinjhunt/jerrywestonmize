@@ -4,16 +4,16 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Renderer;
+namespace AmeliaDompdf\Renderer;
 
 use DOMElement;
-use Dompdf\Adapter\CPDF;
-use Dompdf\Css\Color;
-use Dompdf\Css\Style;
-use Dompdf\Dompdf;
-use Dompdf\Frame;
-use Dompdf\Helpers;
-use Dompdf\Image\Cache;
+use AmeliaDompdf\Adapter\CPDF;
+use AmeliaDompdf\Css\Color;
+use AmeliaDompdf\Css\Style;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Frame;
+use AmeliaDompdf\Helpers;
+use AmeliaDompdf\Image\Cache;
 
 /**
  * Base renderer class
@@ -26,7 +26,7 @@ abstract class AbstractRenderer
     /**
      * Rendering backend
      *
-     * @var \Dompdf\Canvas
+     * @var \AmeliaDompdf\Canvas
      */
     protected $_canvas;
 

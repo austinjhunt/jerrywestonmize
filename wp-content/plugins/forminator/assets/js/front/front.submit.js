@@ -222,6 +222,7 @@
 
 					formData = new FormData(this); // reinit values
 
+					formData.append( 'form_uid', self.$el.data( 'uid' ) );
 					if ( $saveDraft && hasPagination ) {
 						formData.append( 'draft_page', formStep );
 					}
@@ -496,13 +497,13 @@
 										//self.$el.find( '.forminator-input-file' ).val('');
 
 										// Reset selects
-										if ( $this.find('.forminator-select').length > 0 ) {
-											$this.find('.forminator-select').each(function (index, value) {
+										if ( $this.find('.forminator-select2').length > 0 ) {
+											$this.find('.forminator-select2').each(function (index, value) {
 												var defaultValue = $(value).data('default-value');
 												if ( '' === defaultValue ) {
 													defaultValue = $(value).val();
 												}
-												$(value).val(defaultValue).trigger("fui:change");
+												$(value).val(defaultValue).trigger("change.select2");
 											});
 										}
 										// Reset multiselect
@@ -518,6 +519,15 @@
 													$(val).prop('checked', false);
 													$(val).closest('label').removeClass('forminator-is_checked');
 												}
+											});
+										});
+
+										// Reset Post data multiselect fields.
+										$this.find( '.forminator-field-postdata' ).each(function () {
+											let multiSelect = $(this).find( '.forminator-multiselect' );
+											multiSelect.find('input[type="checkbox"]').each(function (i, val) {
+												$(val).prop('checked', false);
+												$(val).closest('label').removeClass('forminator-is_checked');
 											});
 										});
 

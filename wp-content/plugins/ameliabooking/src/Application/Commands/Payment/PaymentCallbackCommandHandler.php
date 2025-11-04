@@ -5,10 +5,12 @@ namespace AmeliaBooking\Application\Commands\Payment;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
+use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Payment\PaymentGateway;
+use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Factory\Stripe\StripeFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
@@ -26,6 +28,7 @@ use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Services\Payment\MollieService;
 use AmeliaBooking\Infrastructure\Services\Payment\PayPalService;
 use AmeliaBooking\Infrastructure\Services\Payment\RazorpayService;
+use AmeliaBooking\Infrastructure\Services\Payment\BarionService;
 use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use AmeliaBooking\Infrastructure\Services\Payment\StripeService;
 use Interop\Container\Exception\ContainerException;
@@ -102,7 +105,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
             try {
                 $status = PaymentStatus::PAID;
                 if ($gateway) {
-                    /** @var RazorpayService|MollieService|StripeService|PayPalService|SquareService $paymentService */
+                    /** @var RazorpayService|MollieService|StripeService|PayPalService|SquareService|BarionService $paymentService */
                     $paymentService = $this->container->get('infrastructure.payment.' . $gateway . '.service');
 
                     switch ($gateway) {
@@ -118,6 +121,23 @@ class PaymentCallbackCommandHandler extends CommandHandler
                             $paymentService->verify($attributes);
                             $transactionId = $attributes['razorpay_payment_id'];
                             break;
+
+                        case 'barion':
+                            $barionPaymentId = $command->getField('paymentId');
+
+                            $paymentState = $paymentService->getPaymentState($barionPaymentId);
+                            if ($paymentState['Status'] !== 'Succeeded'  || $command->getField('barionStatus') === 'canceled') {
+                                $result->setResult(CommandResult::RESULT_SUCCESS);
+                                $result->setMessage('');
+                                $result->setData([]);
+                                $result->setUrl($redirectLink . '&status=canceled');
+
+
+                                return $result;
+                            }
+                            $transactionId = $barionPaymentId;
+                            break;
+
                         case ('payPal'):
                             $response = $paymentService->complete(
                                 [
@@ -223,6 +243,30 @@ class PaymentCallbackCommandHandler extends CommandHandler
                             if ($changeBookingStatus && $data['booking']['status'] !== BookingStatus::APPROVED) {
                                 $appointmentAS->approveBooking($data['booking']['id']);
                             }
+                        }
+
+                        if (
+                            $settingsDS->getSetting('appointments', 'qrCodeEvents')['enabled'] === true &&
+                            $payment->getEntity()->getValue() === Entities::EVENT
+                        ) {
+                            /** @var ApplicationNotificationService $applicationNotificationService */
+                            $applicationNotificationService = $this->container->get('application.notification.service');
+
+                            $bookingKey = null;
+
+                            $reservationData = $reservation->getData();
+                            $customerBookingId = $payment->getCustomerBookingId() ? $payment->getCustomerBookingId()->getValue() : null;
+
+                            foreach ($reservationData['event']['bookings'] as $index => $reservationBooking) {
+                                if ($reservationBooking['id'] === $customerBookingId) {
+                                    $bookingKey = $index;
+                                }
+                            }
+
+                            $applicationNotificationService->sendEventQrNotification(
+                                EventFactory::create($reservationData['event']),
+                                $bookingKey
+                            );
                         }
                     }
                 }

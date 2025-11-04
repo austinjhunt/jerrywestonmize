@@ -4,30 +4,36 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
+class ComposerStaticInit75362788a3c025b3a0f4f799d84536a7
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
-        '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
-        '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
-        '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
         'a0edc8309cc5e1d60e3047b5df6b7052_am' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
+        '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         'c964ee0ededf28c96ebd9db5099ef910_am' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62_am' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '383eaff206634a77a1be54e64e6459c7_am' => __DIR__ . '/..' . '/sabre/uri/lib/functions.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '1f87db08236948d07391152dccb70f04' => __DIR__ . '/..' . '/google/apiclient-services/autoload.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
+        'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
         '3569eecfeed3bcf0bad3c998a494ecb8_am' => __DIR__ . '/..' . '/sabre/xml/lib/Deserializer/functions.php',
         '93aa591bc4ca510c520999e34229ee79_am' => __DIR__ . '/..' . '/sabre/xml/lib/Serializer/functions.php',
-        'cf150f72bd303a2ff07711c9a70f2d53' => __DIR__ . '/..' . '/google/apiclient/src/Google/autoload.php',
+        'a8d3953fd9959404dd22d3dfcd0a79f0' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'p' => 
+        array (
+            'phpseclib3\\' => 11,
+        ),
         'a' => 
         array (
             'apimatic\\jsonmapper\\' => 20,
@@ -73,6 +79,8 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
             'Psr\\Log\\' => 8,
             'AmeliaPsr\\Http\\Message\\' => 17,
             'AmeliaPsr\\Container\\' => 14,
+            'Psr\\Cache\\' => 10,
+            'ParagonIE\\ConstantTime\\' => 23,
             'AmeliaPHPMailer\\PHPMailer\\' => 20,
         ),
         'O' => 
@@ -83,6 +91,7 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
         ),
         'M' => 
         array (
+            'Monolog\\' => 8,
             'Money\\' => 6,
             'Microsoft\\Graph\\' => 16,
             'Masterminds\\' => 12,
@@ -98,6 +107,9 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
             'AmeliaGuzzleHttp\\Psr7\\' => 16,
             'AmeliaGuzzleHttp\\Promise\\' => 19,
             'AmeliaGuzzleHttp\\' => 11,
+            'AmeliaGoogle\\Service\\' => 15,
+            'AmeliaGoogle\\Auth\\' => 12,
+            'AmeliaGoogle\\' => 7,
         ),
         'F' => 
         array (
@@ -105,9 +117,14 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
             'AmeliaFirebase\\JWT\\' => 13,
             'FastRoute\\' => 10,
         ),
+        'E' => 
+        array (
+            'Endroid\\QrCode\\' => 15,
+        ),
         'D' => 
         array (
-            'Dompdf\\' => 7,
+            'AmeliaDompdf\\' => 7,
+            'DASPRiD\\Enum\\' => 13,
         ),
         'C' => 
         array (
@@ -119,6 +136,7 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
         array (
             'Box\\Spout\\' => 10,
             'Beta\\Microsoft\\Graph\\' => 21,
+            'BaconQrCode\\' => 12,
         ),
         'A' => 
         array (
@@ -136,6 +154,10 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
     );
 
     public static $prefixDirsPsr4 = array (
+        'phpseclib3\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
+        ),
         'apimatic\\jsonmapper\\' => 
         array (
             0 => __DIR__ . '/..' . '/apimatic/jsonmapper/src',
@@ -236,6 +258,14 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
+        'Psr\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/cache/src',
+        ),
+        'ParagonIE\\ConstantTime\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
+        ),
         'AmeliaPHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
@@ -251,6 +281,10 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
         'Omnipay\\Common\\' => 
         array (
             0 => __DIR__ . '/..' . '/omnipay/common/src/Common',
+        ),
+        'Monolog\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
         'Money\\' => 
         array (
@@ -288,6 +322,18 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
+        'AmeliaGoogle\\Service\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/google/apiclient-services/src',
+        ),
+        'AmeliaGoogle\\Auth\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/google/auth/src',
+        ),
+        'AmeliaGoogle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/google/apiclient/src',
+        ),
         'FontLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-font-lib/src/FontLib',
@@ -300,9 +346,17 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
         ),
-        'Dompdf\\' => 
+        'Endroid\\QrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/endroid/qr-code/src',
+        ),
+        'AmeliaDompdf\\' => 
         array (
             0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
+        ),
+        'DASPRiD\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dasprid/enum/src',
         ),
         'Core\\' => 
         array (
@@ -323,6 +377,10 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
         'Beta\\Microsoft\\Graph\\' => 
         array (
             0 => __DIR__ . '/..' . '/microsoft/microsoft-graph/src/Beta/Microsoft/Graph',
+        ),
+        'BaconQrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
         ),
         'AmeliaStripe\\' => 
         array (
@@ -449,8 +507,29 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
         'AssertionError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/AssertionError.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'DivisionByZeroError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/DivisionByZeroError.php',
-        'Dompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
+        'AmeliaDompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
         'Error' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/Error.php',
+        'AmeliaGoogle_AccessToken_Revoke' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_AccessToken_Verify' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_AuthHandler_AuthHandlerFactory' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_AuthHandler_Guzzle5AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_AuthHandler_Guzzle6AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_AuthHandler_Guzzle7AuthHandler' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Client' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Collection' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Http_Batch' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Http_MediaFileUpload' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Http_REST' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Model' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Service' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Service_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Service_Resource' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Task_Composer' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Task_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Task_Retryable' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Task_Runner' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'AmeliaGoogle_Utils_UriTemplate' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'Omnipay\\Omnipay' => __DIR__ . '/..' . '/omnipay/common/src/Omnipay.php',
         'ParseError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ParseError.php',
@@ -462,10 +541,10 @@ class ComposerStaticInit6d3f206415f019452e4e341326f9c29e
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6d3f206415f019452e4e341326f9c29e::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6d3f206415f019452e4e341326f9c29e::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit6d3f206415f019452e4e341326f9c29e::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit6d3f206415f019452e4e341326f9c29e::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit75362788a3c025b3a0f4f799d84536a7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit75362788a3c025b3a0f4f799d84536a7::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit75362788a3c025b3a0f4f799d84536a7::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit75362788a3c025b3a0f4f799d84536a7::$classMap;
 
         }, null, ClassLoader::class);
     }

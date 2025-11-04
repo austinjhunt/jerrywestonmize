@@ -198,6 +198,14 @@ class CustomerApplicationService extends UserApplicationService
             ) {
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setData($userWithSameMail ? ['emailError' => true] : ['phoneError' => true]);
+            } elseif (
+                empty($userWithSameValue->getEmail()->getValue()) && !empty($user->getEmail())
+            ) {
+                $userRepository->updateFieldById(
+                    $userWithSameValue->getId()->getValue(),
+                    $user->getEmail()->getValue(),
+                    'email'
+                );
             }
 
             return $userWithSameValue;

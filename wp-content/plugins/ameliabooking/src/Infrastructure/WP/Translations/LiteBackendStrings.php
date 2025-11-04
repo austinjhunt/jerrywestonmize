@@ -139,6 +139,7 @@ class LiteBackendStrings
             'payment_method'            => __('Payment Method', 'wpamelia'),
             'payment_status'            => __('Payment Status', 'wpamelia'),
             'payment_tooltip'           => __('If all payment methods are disabled on the service/event,<br/>the default payment method will be used.', 'wpamelia'),
+            'pdf'                       => __('PDF', 'wpamelia'),
             'pending'                   => __('Pending', 'wpamelia'),
             'phone'                     => __('Phone', 'wpamelia'),
             'rejected'                  => __('Rejected', 'wpamelia'),
@@ -185,6 +186,8 @@ class LiteBackendStrings
             'layout_dropdown'           => __('Dropdown layout', 'wpamelia'),
             'layout_list'               => __('List layout', 'wpamelia'),
             'layout_description'        => __('Choosing layout of first step in step by step form', 'wpamelia'),
+            'new_caps'                  => __('NEW', 'wpamelia'),
+            'xml'                       => __('XML', 'wpamelia'),
         ];
     }
 
@@ -274,9 +277,11 @@ class LiteBackendStrings
             'company'                                => __('Company', 'wpamelia'),
             'company_settings'                       => __('Company Settings', 'wpamelia'),
             'company_settings_description'           => __('Use these settings to set up picture, name, address, phone and website of your company', 'wpamelia'),
+            'country'                                => __('Country', 'wpamelia'),
             'cart_enable'                            => __('Cart', 'wpamelia'),
             'cart_enable_tooltip'                    => __('If this option is enabled, customers will be able to book multiple services in a single booking process.', 'wpamelia'),
             'coupons'                                => __('Coupons', 'wpamelia'),
+            'description_barion'                     => __('Description for Barion', 'wpamelia'),
             'enable_no_show_tag'                     => __('Enable No-show tag', 'wpamelia'),
             'enable_no_show_tag_tooltip'             => __('Enable this option if you want to see which Customers were a No-show', 'wpamelia'),
             'description_square'                     => __('Description for Square', 'wpamelia'),
@@ -293,6 +298,10 @@ class LiteBackendStrings
             'customers_as_attendees'                 => __('Add Event\'s Attendees', 'wpamelia'),
             'customer_cabinet'                       => __('Customer Panel Page URL', 'wpamelia'),
             'employee_cabinet'                       => __('Employee Panel Page URL', 'wpamelia'),
+            'enable_qr_code'                         => __('Enable QR code E-Tickets', 'wpamelia'),
+            'events_qr_code_notice_title'            => __('Send notification to users with QR Code E-Tickets', 'wpamelia'),
+            'events_qr_code_notice_subtitle'         => __('You need to set up a QR Code E-Tickets notification.', 'wpamelia'),
+            'events_qr_code_notice_btn_text'         => __('Set Notification', 'wpamelia'),
             'enable_waiting_list'                    => __('Enable Waiting List', 'wpamelia'),
             'events_show_waiting_list_slots'         => __('Show waiting list slots', 'wpamelia'),
             'events_waiting_list_notice_title'       => __('Notify the users in waiting lists', 'wpamelia'),
@@ -356,6 +365,7 @@ class LiteBackendStrings
             'log_out'                                => __('Log Out', 'wpamelia'),
             'integrations_settings'                  => __('Integrations', 'wpamelia'),
             'integrations_settings_description'      => __("Manage Google Calendar Integration, Outlook Calendar Integration, Zoom Integration and Web Hooks", 'wpamelia'),
+            'invoice_format'                         => __('Invoice Format', 'wpamelia'),
             'iplocate_api_key'                       => __('IPLocate Api Key', 'wpamelia'),
             'iplocate_api_key_tooltip'               => __('Please sign up for an API key at iplocate.io/signup for 1000 free API requests/day.<br/> The limit for access without an API key has been reduced to 50 requests/day.', 'wpamelia'),
             'h1'                                     => __('1h', 'wpamelia'),
@@ -1638,6 +1648,13 @@ class LiteBackendStrings
             'learn_more_button'                  => __('Learn more button', 'wpamelia'),
             'location_address'                   => __('Location Address', 'wpamelia'),
             'no_results_found'                   => __('No results found...', 'wpamelia'),
+            'card_field'                         => __('Card Field', 'wpamelia'),
+            'popup_content'                      => __('Popup Content', 'wpamelia'),
+            'employees'                          => __('Employees', 'wpamelia'),
+            'layout'                             => __('Layout', 'wpamelia'),
+            'search_input_field'                 => __('Search Input Field', 'wpamelia'),
+            'category_input_field'               => __('Category Input Field', 'wpamelia'),
+            'select_service_category'            => __('Select Service Category', 'wpamelia'),
         ];
     }
 

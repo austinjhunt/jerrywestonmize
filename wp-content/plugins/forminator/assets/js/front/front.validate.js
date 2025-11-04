@@ -340,12 +340,14 @@
 					// Remove invalid attribute for screen readers
 					holder.removeAttr( 'aria-invalid' );
 
-					// Remove error message
-					holderError.remove();
+					setTimeout( function () {
+						// Remove error message
+						holderError.remove();
 
-					// Remove error class
-					holderField.removeClass( 'forminator-has_error' );
-					holder.trigger('validation:unhighlight');
+						// Remove error class
+						holderField.removeClass( 'forminator-has_error' );
+						holder.trigger('validation:unhighlight');
+					}, 100 ); // Small timeout to ensure the submit button can be clicked.
 
 				},
 

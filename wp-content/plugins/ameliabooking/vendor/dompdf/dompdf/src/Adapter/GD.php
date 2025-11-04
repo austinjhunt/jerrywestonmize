@@ -4,12 +4,12 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Adapter;
+namespace AmeliaDompdf\Adapter;
 
-use Dompdf\Canvas;
-use Dompdf\Dompdf;
-use Dompdf\Helpers;
-use Dompdf\Image\Cache;
+use AmeliaDompdf\Canvas;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Helpers;
+use AmeliaDompdf\Image\Cache;
 
 /**
  * Image rendering interface

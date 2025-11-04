@@ -81,7 +81,7 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         yield "\";
   var mailpoet_date_offset = ";
         // line 39
-        yield json_encode(get_option("gmt_offset"));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(get_option("gmt_offset"));
         yield ";
   var mailpoet_version = \"";
         // line 40
@@ -97,15 +97,15 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         yield "\";
   var mailpoet_urls = ";
         // line 43
-        yield json_encode(($context["urls"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["urls"] ?? null));
         yield ";
   var mailpoet_premium_version = ";
         // line 44
-        yield json_encode($this->extensions['MailPoet\Twig\Functions']->getMailPoetPremiumVersion());
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode($this->extensions['MailPoet\Twig\Functions']->getMailPoetPremiumVersion());
         yield ";
   var mailpoet_main_page_slug =   ";
         // line 45
-        yield json_encode(($context["main_page"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["main_page"] ?? null));
         yield ";
   var mailpoet_3rd_party_libs_enabled = ";
         // line 46
@@ -117,7 +117,7 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         yield ";
   var mailpoet_analytics_public_id = ";
         // line 48
-        yield json_encode($this->extensions['MailPoet\Twig\Analytics']->getPublicId());
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode($this->extensions['MailPoet\Twig\Analytics']->getPublicId());
         yield ";
   var mailpoet_analytics_new_public_id = ";
         // line 49
@@ -125,41 +125,41 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         yield ";
   var mailpoet_free_domains = ";
         // line 50
-        yield json_encode($this->extensions['MailPoet\Twig\Functions']->getFreeDomains());
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode($this->extensions['MailPoet\Twig\Functions']->getFreeDomains());
         yield ";
   var mailpoet_woocommerce_active = ";
         // line 51
-        yield json_encode($this->extensions['MailPoet\Twig\Functions']->isWoocommerceActive());
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode($this->extensions['MailPoet\Twig\Functions']->isWoocommerceActive());
         yield ";
   var mailpoet_woocommerce_email_improvements_enabled = ";
         // line 52
-        yield json_encode($this->extensions['MailPoet\Twig\Functions']->isWoocommerceEmailImprovementsEnabled());
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode($this->extensions['MailPoet\Twig\Functions']->isWoocommerceEmailImprovementsEnabled());
         yield ";
   var mailpoet_woocommerce_bookings_active = ";
         // line 53
-        yield json_encode(($context["is_woocommerce_bookings_active"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["is_woocommerce_bookings_active"] ?? null));
         yield ";
   var mailpoet_woocommerce_subscriptions_active = ";
         // line 54
-        yield json_encode(($context["is_woocommerce_subscriptions_active"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["is_woocommerce_subscriptions_active"] ?? null));
         yield ";
   var mailpoet_woocommerce_store_config = ";
         // line 55
-        yield json_encode(($context["woocommerce_store_config"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["woocommerce_store_config"] ?? null));
         yield ";
   // RFC 5322 standard; http://emailregex.com/ combined with https://google.github.io/closure-library/api/goog.format.EmailAddress.html#isValid
   var mailpoet_email_regex = /(?=^[+a-zA-Z0-9_.!#\$%&'*\\/=?^`{|}~-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9]{2,63}\$)(?=^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,})))/;
   var mailpoet_feature_flags = ";
         // line 58
-        yield json_encode(($context["feature_flags"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["feature_flags"] ?? null));
         yield ";
   var mailpoet_referral_id = ";
         // line 59
-        yield json_encode(($context["referral_id"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["referral_id"] ?? null));
         yield ";
   var mailpoet_wp_segment_state = ";
         // line 60
-        yield json_encode(($context["wp_segment_state"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["wp_segment_state"] ?? null));
         yield ";
   var mailpoet_mta_method = '";
         // line 61
@@ -167,39 +167,39 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         yield "';
   var mailpoet_tracking_config = ";
         // line 62
-        yield json_encode(($context["tracking_config"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["tracking_config"] ?? null));
         yield ";
   var mailpoet_is_new_user = ";
         // line 63
-        yield json_encode((($context["is_new_user"] ?? null) == true));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode((($context["is_new_user"] ?? null) == true));
         yield ";
   var mailpoet_installed_days_ago = ";
         // line 64
-        yield json_encode(($context["installed_days_ago"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["installed_days_ago"] ?? null));
         yield ";
   var mailpoet_send_transactional_emails = ";
         // line 65
-        yield json_encode(($context["send_transactional_emails"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["send_transactional_emails"] ?? null));
         yield ";
   var mailpoet_transactional_emails_opt_in_notice_dismissed = ";
         // line 66
-        yield json_encode(($context["transactional_emails_opt_in_notice_dismissed"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["transactional_emails_opt_in_notice_dismissed"] ?? null));
         yield ";
   var mailpoet_deactivate_subscriber_after_inactive_days = ";
         // line 67
-        yield json_encode(($context["deactivate_subscriber_after_inactive_days"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["deactivate_subscriber_after_inactive_days"] ?? null));
         yield ";
   var mailpoet_woocommerce_version = ";
         // line 68
-        yield json_encode($this->extensions['MailPoet\Twig\Functions']->getWooCommerceVersion());
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode($this->extensions['MailPoet\Twig\Functions']->getWooCommerceVersion());
         yield ";
   var mailpoet_track_wizard_loaded_via_woocommerce = ";
         // line 69
-        yield json_encode(($context["track_wizard_loaded_via_woocommerce"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["track_wizard_loaded_via_woocommerce"] ?? null));
         yield ";
   var mailpoet_track_wizard_loaded_via_woocommerce_marketing_dashboard = ";
         // line 70
-        yield json_encode(($context["track_wizard_loaded_via_woocommerce_marketing_dashboard"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["track_wizard_loaded_via_woocommerce_marketing_dashboard"] ?? null));
         yield ";
   var mailpoet_mail_function_enabled = '";
         // line 71
@@ -211,15 +211,15 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         yield "';
   var mailpoet_is_dotcom = ";
         // line 73
-        yield json_encode($this->extensions['MailPoet\Twig\Functions']->isDotcom());
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode($this->extensions['MailPoet\Twig\Functions']->isDotcom());
         yield ";
   var mailpoet_cron_trigger_method = ";
         // line 74
-        yield json_encode(($context["cron_trigger_method"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["cron_trigger_method"] ?? null));
         yield ";
   var mailpoet_use_block_email_editor_for_automation_emails = ";
         // line 75
-        yield json_encode(($context["use_block_email_editor_for_automation_emails"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["use_block_email_editor_for_automation_emails"] ?? null));
         yield ";
 
   var mailpoet_site_name = '";
@@ -242,47 +242,47 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         yield "';
   var mailpoet_premium_link = ";
         // line 83
-        yield json_encode(($context["link_premium"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["link_premium"] ?? null));
         yield ";
   var mailpoet_premium_plugin_installed = ";
         // line 84
-        yield json_encode(($context["premium_plugin_installed"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["premium_plugin_installed"] ?? null));
         yield ";
   var mailpoet_premium_active = ";
         // line 85
-        yield json_encode(($context["premium_plugin_active"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["premium_plugin_active"] ?? null));
         yield ";
   var mailpoet_premium_plugin_download_url = ";
         // line 86
-        yield json_encode(($context["premium_plugin_download_url"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["premium_plugin_download_url"] ?? null));
         yield ";
   var mailpoet_premium_plugin_activation_url = ";
         // line 87
-        yield json_encode(($context["premium_plugin_activation_url"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["premium_plugin_activation_url"] ?? null));
         yield ";
   var mailpoet_has_valid_api_key = ";
         // line 88
-        yield json_encode(($context["has_valid_api_key"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["has_valid_api_key"] ?? null));
         yield ";
   var mailpoet_has_valid_premium_key = ";
         // line 89
-        yield json_encode(($context["has_valid_premium_key"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["has_valid_premium_key"] ?? null));
         yield ";
   var mailpoet_has_premium_support = ";
         // line 90
-        yield json_encode(($context["has_premium_support"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["has_premium_support"] ?? null));
         yield ";
   var has_mss_key_specified = ";
         // line 91
-        yield json_encode(($context["has_mss_key_specified"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["has_mss_key_specified"] ?? null));
         yield ";
   var mailpoet_mss_key_invalid = ";
         // line 92
-        yield json_encode(($context["mss_key_invalid"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["mss_key_invalid"] ?? null));
         yield ";
   var mailpoet_mss_key_valid = ";
         // line 93
-        yield json_encode(($context["mss_key_valid"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["mss_key_valid"] ?? null));
         yield ";
   var mailpoet_mss_key_pending_approval = '";
         // line 94
@@ -290,7 +290,7 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         yield "';
   var mailpoet_mss_active = ";
         // line 95
-        yield json_encode(($context["mss_active"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["mss_active"] ?? null));
         yield ";
   var mailpoet_plugin_partial_key = '";
         // line 96
@@ -302,7 +302,7 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         yield ";
   var mailpoet_subscribers_counts_cache_created_at = ";
         // line 98
-        yield json_encode(($context["subscribers_counts_cache_created_at"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["subscribers_counts_cache_created_at"] ?? null));
         yield ";
   var mailpoet_subscribers_limit = ";
         // line 99
@@ -310,31 +310,31 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
         yield ";
   var mailpoet_subscribers_limit_reached = ";
         // line 100
-        yield json_encode(($context["subscribers_limit_reached"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["subscribers_limit_reached"] ?? null));
         yield ";
   var mailpoet_email_volume_limit = ";
         // line 101
-        yield json_encode(($context["email_volume_limit"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["email_volume_limit"] ?? null));
         yield ";
   var mailpoet_email_volume_limit_reached = ";
         // line 102
-        yield json_encode(($context["email_volume_limit_reached"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["email_volume_limit_reached"] ?? null));
         yield ";
   var mailpoet_capabilities = ";
         // line 103
-        yield json_encode(($context["capabilities"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["capabilities"] ?? null));
         yield ";
   var mailpoet_tier = ";
         // line 104
-        yield json_encode(($context["tier"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["tier"] ?? null));
         yield ";
   var mailpoet_cdn_url = ";
         // line 105
-        yield json_encode($this->extensions['MailPoet\Twig\Assets']->generateCdnUrl(""));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode($this->extensions['MailPoet\Twig\Assets']->generateCdnUrl(""));
         yield ";
   var mailpoet_tags = ";
         // line 106
-        yield json_encode(($context["tags"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["tags"] ?? null));
         yield ";
 
   ";

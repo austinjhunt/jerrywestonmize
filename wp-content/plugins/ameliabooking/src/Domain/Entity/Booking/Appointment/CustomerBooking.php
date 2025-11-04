@@ -82,6 +82,9 @@ class CustomerBooking extends AbstractCustomerBooking
     /** @var Json */
     protected $info;
 
+    /** @var Json */
+    private $qrCodes;
+
     /** @var array */
     protected $icsFiles;
 
@@ -391,6 +394,22 @@ class CustomerBooking extends AbstractCustomerBooking
     }
 
     /**
+     * @return Json
+     */
+    public function getQrCodes()
+    {
+        return $this->qrCodes;
+    }
+
+    /**
+     * @param Json $qrCodes
+     */
+    public function setQrCodes(Json $qrCodes)
+    {
+        $this->qrCodes = $qrCodes;
+    }
+
+    /**
      * @return array
      */
     public function getIcsFiles()
@@ -434,6 +453,7 @@ class CustomerBooking extends AbstractCustomerBooking
                 'isUpdated'       => $this->isUpdated() ? $this->isUpdated()->getValue() : null,
                 'customFields'    => null !== $this->getCustomFields() ? $this->getCustomFields()->getValue() : null,
                 'info'            => null !== $this->getInfo() ? $this->getInfo()->getValue() : null,
+                'qrCodes'         => null !== $this->getQrCodes() ? $this->getQrCodes()->getValue() : null,
                 'icsFiles'        => null !== $this->getIcsFiles() ? $this->getIcsFiles() : null,
             ]
         );

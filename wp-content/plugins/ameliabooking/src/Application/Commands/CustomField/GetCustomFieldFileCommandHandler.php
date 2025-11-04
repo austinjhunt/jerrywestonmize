@@ -18,6 +18,7 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
@@ -49,6 +50,9 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
 
         /** @var UserApplicationService $userAS */
         $userAS = $this->container->get('application.user.service');
+
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
 
         $isCabinetPage = $command->getPage() === 'cabinet';
 
@@ -162,6 +166,11 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
             return $result;
         }
 
+        $allowedUploadedFileExtensions =
+            !empty($settingsDS->getSetting('general', 'customFieldsAllowedExtensions'))
+                ? $settingsDS->getSetting('general', 'customFieldsAllowedExtensions')
+                : AbstractCustomFieldApplicationService::$allowedUploadedFileExtensions;
+
         $result->setAttachment(true);
 
         $fileInfo = $customFields[$command->getArg('id')]['value'][$command->getArg('index')];
@@ -169,7 +178,7 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
         $result->setFile(
             [
             'name'     => $fileInfo['name'],
-            'type'     => AbstractCustomFieldApplicationService::$allowedUploadedFileExtensions[
+            'type'     => $allowedUploadedFileExtensions[
                 '.' . strtolower(pathinfo($fileInfo['fileName'], PATHINFO_EXTENSION))
             ],
             'content'  => file_get_contents(

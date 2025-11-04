@@ -4,17 +4,17 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf;
+namespace AmeliaDompdf;
 
-use Dompdf\Renderer\AbstractRenderer;
-use Dompdf\Renderer\Block;
-use Dompdf\Renderer\Image;
-use Dompdf\Renderer\Inline;
-use Dompdf\Renderer\ListBullet;
-use Dompdf\Renderer\TableCell;
-use Dompdf\Renderer\TableRow;
-use Dompdf\Renderer\TableRowGroup;
-use Dompdf\Renderer\Text;
+use AmeliaDompdf\Renderer\AbstractRenderer;
+use AmeliaDompdf\Renderer\Block;
+use AmeliaDompdf\Renderer\Image;
+use AmeliaDompdf\Renderer\Inline;
+use AmeliaDompdf\Renderer\ListBullet;
+use AmeliaDompdf\Renderer\TableCell;
+use AmeliaDompdf\Renderer\TableRow;
+use AmeliaDompdf\Renderer\TableRowGroup;
+use AmeliaDompdf\Renderer\Text;
 
 /**
  * Concrete renderer

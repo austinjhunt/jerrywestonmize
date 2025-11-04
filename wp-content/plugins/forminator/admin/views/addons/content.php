@@ -46,7 +46,11 @@ $img_path = forminator_plugin_url() . 'assets/images/';
 						</div>
 					</div>
 				</div>
-			<?php } ?>
+				<?php
+			}
+
+			echo forminator_template( 'common/banner/content' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			?>
 
 			<?php
 			if ( empty( $projects['all'] ) ) {
@@ -88,12 +92,9 @@ $img_path = forminator_plugin_url() . 'assets/images/';
 </div>
 
 <?php
-if ( FORMINATOR_PRO && ! empty( $projects['all'] ) ) {
-	foreach ( $projects['all'] as $slug => $addons ) {
-		if ( ! empty( $addons ) ) {
-			Forminator_Admin_Addons_Page::get_instance()->addons_render( 'addons-activate-popup', $addons->pid, $addons ); // Need to remove this from the process.
-			Forminator_Admin_Addons_Page::get_instance()->addons_render( 'addon-details', $addons->pid, $addons );
-		}
+foreach ( $projects['all'] as $slug => $addons ) {
+	if ( ! empty( $addons ) && ( FORMINATOR_PRO || ! empty( $addons->is_free ) ) ) {
+		Forminator_Admin_Addons_Page::get_instance()->addons_render( 'addons-activate-popup', $addons->pid, $addons ); // Need to remove this from the process.
+		Forminator_Admin_Addons_Page::get_instance()->addons_render( 'addon-details', $addons->pid, $addons );
 	}
 }
-?>

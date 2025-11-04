@@ -4,19 +4,19 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Adapter;
+namespace AmeliaDompdf\Adapter;
 
-use Dompdf\Canvas;
-use Dompdf\Dompdf;
-use Dompdf\Exception;
-use Dompdf\FontMetrics;
-use Dompdf\Helpers;
-use Dompdf\Image\Cache;
+use AmeliaDompdf\Canvas;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Exception;
+use AmeliaDompdf\FontMetrics;
+use AmeliaDompdf\Helpers;
+use AmeliaDompdf\Image\Cache;
 
 /**
  * PDF rendering interface
  *
- * Dompdf\Adapter\PDFLib provides a simple, stateless interface to the one
+ * AmeliaDompdf\Adapter\PDFLib provides a simple, stateless interface to the one
  * provided by PDFLib.
  *
  * Unless otherwise mentioned, all dimensions are in points (1/72 in).
@@ -36,7 +36,7 @@ class PDFLib implements Canvas
      *
      * @var array
      */
-    public static $PAPER_SIZES = []; // Set to Dompdf\Adapter\CPDF::$PAPER_SIZES below.
+    public static $PAPER_SIZES = []; // Set to AmeliaDompdf\Adapter\CPDF::$PAPER_SIZES below.
 
     /**
      * Whether to create PDFs in memory or on disk
@@ -78,7 +78,7 @@ class PDFLib implements Canvas
     ];
 
     /**
-     * @var \Dompdf\Dompdf
+     * @var \AmeliaDompdf\Dompdf
      */
     protected $_dompdf;
 

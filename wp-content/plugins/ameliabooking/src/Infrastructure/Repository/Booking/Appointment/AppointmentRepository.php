@@ -1064,6 +1064,9 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
 
                 $packagesJoin = "LEFT JOIN {$this->packagesCustomersServicesTable} pcs ON pcs.id = cb.packageCustomerServiceId
                                  LEFT JOIN {$this->packagesCustomersTable} pc ON pcs.packageCustomerId = pc.id";
+            } elseif (!empty($criteria['joinPackages'])) {
+                $packagesJoin = "LEFT JOIN {$this->packagesCustomersServicesTable} pcs ON pcs.id = cb.packageCustomerServiceId
+                                 LEFT JOIN {$this->packagesCustomersTable} pc ON pcs.packageCustomerId = pc.id";
             }
 
 
@@ -1169,6 +1172,10 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 $paymentsFields = '';
 
                 $paymentsJoin = '';
+            }
+
+            if (!empty($criteria['joinPackages'])) {
+                $paymentsJoin .= " || p.packageCustomerId = pc.id";
             }
 
             $bookingExtrasFields = '

@@ -108,7 +108,7 @@ class TimeSlotService
 
         $searchStartDateTime = clone $requiredDateTime;
 
-        $searchStartDateTime->modify('-1 days');
+        $searchStartDateTime->modify('first day of this month')->modify('-1 days');
 
         $searchEndDateTime = clone $requiredDateTime;
 
@@ -133,7 +133,7 @@ class TimeSlotService
         $settings = $this->getSlotsSettings($isFrontEndBooking, $slotsEntities);
 
         $props = [
-            'startDateTime'        => $searchStartDateTime->modify('first day of this month')->modify('- 7 days'),
+            'startDateTime'        => $searchStartDateTime,
             'endDateTime'          => $searchEndDateTime,
             'minimumDateTime'      => $minimumAppointmentDateTime,
             'maximumDateTime'      => $maximumAppointmentDateTime,

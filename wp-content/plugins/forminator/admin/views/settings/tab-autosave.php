@@ -8,12 +8,11 @@
 // Whether autosave is enabled for builders.
 $forminator_auto_saving = get_option( 'forminator_auto_saving', true );
 ?>
-<div class="sui-box-settings-row">
+<div id="forminator-section-settings-autosave" class="sui-box-settings-row">
 
 	<div class="sui-box-settings-col-1">
 		<span class="sui-settings-label">
 			<?php esc_html_e( 'Autosave', 'forminator' ); ?>&nbsp;
-			<span class="sui-tag sui-tag-sm sui-tag-green"><?php esc_html_e( 'New', 'forminator' ); ?></span>
 		</span>
 		<span class="sui-description">
 			<?php

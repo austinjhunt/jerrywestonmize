@@ -120,25 +120,40 @@ class GetEventsCommandHandler extends CommandHandler
             }
         }
 
+        $criteria = [
+            'fetchEventsPeriods'    => true,
+            'fetchEventsTickets'    => true,
+            'fetchEventsTags'       => $isFrontEnd,
+            'fetchEventsProviders'  => ($isFrontEnd || $command->getPage() === 'calendar'),
+            'fetchEventsImages'     => $isFrontEnd,
+            'fetchBookings'         => true,
+            'fetchBookingsTickets'  => true,
+            'fetchBookingsCoupons'  => $isCabinetPage,
+            'fetchBookingsPayments' => $isCabinetPage,
+            'fetchBookingsUsers'    => $isCabinetPage,
+        ];
+
         /** @var Collection $events */
         $events = $eventAS->getEventsByCriteria(
             $params,
-            [
-                'fetchEventsPeriods'    => true,
-                'fetchEventsTickets'    => true,
-                'fetchEventsTags'       => $isFrontEnd,
-                'fetchEventsProviders'  => ($isFrontEnd || $command->getPage() === 'calendar'),
-                'fetchEventsImages'     => $isFrontEnd,
-                'fetchBookings'         => true,
-                'fetchBookingsTickets'  => true,
-                'fetchBookingsCoupons'  => $isCabinetPage,
-                'fetchBookingsPayments' => $isCabinetPage,
-                'fetchBookingsUsers'    => $isCabinetPage,
-            ],
+            $criteria,
             $isFrontEnd
                 ? (!empty($params['limit']) ? $params['limit'] : $settingsDS->getSetting('general', 'itemsPerPage'))
                 : $settingsDS->getSetting('general', 'itemsPerPageBackEnd')
         );
+
+        $popupEventId = !empty($params['idPopup']) ? $params['idPopup'] : null;
+
+        /** @var Collection $requestedEvents */
+        $requestedEvents = $popupEventId && !$events->keyExists($popupEventId) ? $eventAS->getEventsByCriteria(
+            array_merge($params, ['id' => [$popupEventId]]),
+            $criteria,
+            1
+        ) : new Collection();
+
+        foreach ($requestedEvents->getItems() as $event) {
+            $events->placeItem($event, $event->getId()->getValue(), true);
+        }
 
         $currentDateTime = DateTimeService::getNowDateTimeObject();
 

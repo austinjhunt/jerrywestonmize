@@ -85,6 +85,7 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
             ':translations'    => $data['translations'],
             ':width'           => $data['width'],
             ':saveFirstChoice' => $data['saveFirstChoice'] ? 1 : 0,
+            ':includeInInvoice' => $data['includeInInvoice'] ? 1 : 0,
         ];
 
         try {
@@ -92,9 +93,9 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                 "INSERT INTO
                 {$this->table}
                 (
-                `label`, `type`, `saveType`, `required`, `position`, `translations`, `width`, `saveFirstChoice`
+                `label`, `type`, `saveType`, `required`, `position`, `translations`, `width`, `saveFirstChoice`, `includeInInvoice`
                 ) VALUES (
-                :label, :type, :saveType, :required, :position, :translations, :width, :saveFirstChoice
+                :label, :type, :saveType, :required, :position, :translations, :width, :saveFirstChoice, :includeInInvoice
                 )"
             );
 
@@ -132,6 +133,7 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
             ':useAsLocation'   => $data['useAsLocation'] ? 1 : 0,
             ':saveFirstChoice' => $data['saveFirstChoice'] ? 1 : 0,
             ':width'           => $data['width'] ? : 50,
+            ':includeInInvoice' => $data['includeInInvoice'] ? 1 : 0,
             ':id'              => $id,
         ];
 
@@ -147,6 +149,7 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                 `allEvents` = :allEvents,
                 `useAsLocation` = :useAsLocation,
                 `saveFirstChoice` = :saveFirstChoice,
+                `includeInInvoice` = :includeInInvoice,
                 `width` = :width
                 WHERE
                 id = :id"
@@ -197,6 +200,7 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                     cf.useAsLocation AS cf_useAsLocation,
                     cf.width AS cf_width,
                     cf.saveFirstChoice AS cf_saveFirstChoice,
+                    cf.includeInInvoice AS cf_includeInInvoice,
                     cfo.id AS cfo_id,
                     cfo.customFieldId AS cfo_custom_field_id,
                     cfo.label AS cfo_label,

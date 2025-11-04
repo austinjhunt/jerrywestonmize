@@ -4,9 +4,9 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Positioner;
+namespace AmeliaDompdf\Positioner;
 
-use Dompdf\FrameDecorator\AbstractFrameDecorator;
+use AmeliaDompdf\FrameDecorator\AbstractFrameDecorator;
 
 /**
  * Dummy positioner

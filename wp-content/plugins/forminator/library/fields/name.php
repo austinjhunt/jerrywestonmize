@@ -162,7 +162,8 @@ class Forminator_Name extends Forminator_Field {
 		$description = self::get_property( 'description', $field, '' );
 		$placeholder = $this->sanitize_value( self::get_property( 'placeholder', $field ) );
 
-		$descr_position = self::get_property( 'descr_position', $field );
+		$descr_position   = self::get_property( 'descr_position', $field );
+		$browser_autofill = self::get_property( 'browser_autofill', $field, 'enabled' );
 
 		if ( (bool) $required ) {
 			$ariareq = 'true';
@@ -189,6 +190,7 @@ class Forminator_Name extends Forminator_Field {
 			'id'            => $id,
 			'class'         => 'forminator-input forminator-name--field',
 			'aria-required' => $ariareq,
+			'autocomplete'  => 'enabled' === $browser_autofill ? 'name' : 'off',
 		);
 
 		$autofill_markup = $this->get_element_autofill_markup_attr( $name );
@@ -284,12 +286,13 @@ class Forminator_Name extends Forminator_Field {
 
 			// FIELD: Prefix.
 		if ( $prefix ) {
-
-			$prefix_data = array(
-				'name'       => self::get_subfield_id( $id, '-prefix' ),
-				'id'         => self::get_field_id( $this->form_settings['form_id'] . '__field--' . $id ),
-				'class'      => 'basic' === $design ? '' : 'forminator-select2',
-				'data-multi' => true,
+			$browser_autofill = self::get_property( 'prefix_browser_autofill', $field, 'enabled' );
+			$prefix_data      = array(
+				'name'         => self::get_subfield_id( $id, '-prefix' ),
+				'id'           => self::get_field_id( $this->form_settings['form_id'] . '__field--' . $id ),
+				'class'        => 'basic' === $design ? '' : 'forminator-select2',
+				'data-multi'   => true,
+				'autocomplete' => 'enabled' === $browser_autofill ? 'honorific-prefix' : 'off',
 			);
 
 			$options        = array();
@@ -340,8 +343,8 @@ class Forminator_Name extends Forminator_Field {
 
 			// FIELD: First Name.
 		if ( $fname ) {
-
-			$first_name = array(
+			$browser_autofill = self::get_property( 'fname_browser_autofill', $field, 'enabled' );
+			$first_name       = array(
 				'type'          => 'text',
 				'name'          => self::get_subfield_id( $id, '-first-name' ),
 				'placeholder'   => $this->sanitize_value( self::get_property( 'fname_placeholder', $field ) ),
@@ -349,6 +352,7 @@ class Forminator_Name extends Forminator_Field {
 				'class'         => 'forminator-input',
 				'aria-required' => $fname_ariareq,
 				'data-multi'    => true,
+				'autocomplete'  => 'enabled' === $browser_autofill ? 'given-name' : 'off',
 			);
 
 			$autofill_markup = $this->get_element_autofill_markup_attr( self::get_subfield_id( $id, '-first-name' ) );
@@ -384,8 +388,8 @@ class Forminator_Name extends Forminator_Field {
 
 			// FIELD: Middle Name.
 		if ( $mname ) {
-
-			$middle_name = array(
+			$browser_autofill = self::get_property( 'mname_browser_autofill', $field, 'enabled' );
+			$middle_name      = array(
 				'type'          => 'text',
 				'name'          => self::get_subfield_id( $id, '-middle-name' ),
 				'placeholder'   => $this->sanitize_value( self::get_property( 'mname_placeholder', $field ) ),
@@ -393,6 +397,7 @@ class Forminator_Name extends Forminator_Field {
 				'class'         => 'forminator-input',
 				'aria-required' => $mname_ariareq,
 				'data-multi'    => true,
+				'autocomplete'  => 'enabled' === $browser_autofill ? 'additional-name' : 'off',
 			);
 
 			if ( isset( $draft_value['middle-name'] ) ) {
@@ -424,8 +429,8 @@ class Forminator_Name extends Forminator_Field {
 
 			// FIELD: Last Name.
 		if ( $lname ) {
-
-			$last_name = array(
+			$browser_autofill = self::get_property( 'lname_browser_autofill', $field, 'enabled' );
+			$last_name        = array(
 				'type'          => 'text',
 				'name'          => self::get_subfield_id( $id, '-last-name' ),
 				'placeholder'   => $this->sanitize_value( self::get_property( 'lname_placeholder', $field ) ),
@@ -433,6 +438,7 @@ class Forminator_Name extends Forminator_Field {
 				'class'         => 'forminator-input',
 				'aria-required' => $lname_ariareq,
 				'data-multi'    => true,
+				'autocomplete'  => 'enabled' === $browser_autofill ? 'family-name' : 'off',
 			);
 
 			$autofill_markup = $this->get_element_autofill_markup_attr( self::get_subfield_id( $id, '-last-name' ) );

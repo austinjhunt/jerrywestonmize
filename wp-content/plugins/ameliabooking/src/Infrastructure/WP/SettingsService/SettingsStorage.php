@@ -249,6 +249,7 @@ class SettingsStorage implements SettingsStorageInterface
                 'replyTo'             => $this->getSetting('notifications', 'replyTo'),
                 'senderEmail'         => $this->getSetting('notifications', 'senderEmail'),
                 'notifyCustomers'     => $this->getSetting('notifications', 'notifyCustomers'),
+                'invoiceFormat'       => $this->getSetting('notifications', 'invoiceFormat'),
                 'sendAllCF'           => $this->getSetting('notifications', 'sendAllCF'),
                 'cancelSuccessUrl'    => $this->getSetting('notifications', 'cancelSuccessUrl'),
                 'cancelErrorUrl'      => $this->getSetting('notifications', 'cancelErrorUrl'),
@@ -321,6 +322,13 @@ class SettingsStorage implements SettingsStorageInterface
                 ],
                 'razorpay'                     => [
                     'enabled'   => $this->getSetting('payments', 'razorpay')['enabled'],
+                ],
+                'barion'                     => [
+                    'enabled'       => $this->getSetting('payments', 'barion')['enabled'],
+                    'sandboxMode'   => $this->getSetting('payments', 'barion')['sandboxMode'],
+                    'livePOSKey'    => $this->getSetting('payments', 'barion')['livePOSKey'],
+                    'sandboxPOSKey' => $this->getSetting('payments', 'barion')['sandboxPOSKey'],
+                    'payeeEmail'    => $this->getSetting('payments', 'barion')['payeeEmail'],
                 ],
             ],
             'role'                   => $userType,

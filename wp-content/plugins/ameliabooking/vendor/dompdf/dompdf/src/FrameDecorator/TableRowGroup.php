@@ -4,10 +4,10 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\FrameDecorator;
+namespace AmeliaDompdf\FrameDecorator;
 
-use Dompdf\Dompdf;
-use Dompdf\Frame;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Frame;
 
 /**
  * Table row group decorator

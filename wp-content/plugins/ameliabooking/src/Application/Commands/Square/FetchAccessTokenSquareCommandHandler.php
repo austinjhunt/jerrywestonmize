@@ -65,6 +65,8 @@ class FetchAccessTokenSquareCommandHandler extends CommandHandler
             604800
         );
 
+        $squareService->registerDomainForApplePay();
+
         unset($accessToken['decrypted_access_token']);
         unset($accessToken['decrypted_refresh_token']);
 

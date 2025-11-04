@@ -77,7 +77,7 @@ $hub_connected = Forminator_Hub_Connector::hub_connector_connected();
 			</div>
 
 			<?php
-			if ( ! Forminator_Core::is_tracking_active() ) {
+			if ( ! forminator_usage_tracking_disabled() && ! Forminator_Core::is_tracking_active() ) {
 				$settings_url = add_query_arg(
 					array(
 						'page'    => 'forminator-settings',

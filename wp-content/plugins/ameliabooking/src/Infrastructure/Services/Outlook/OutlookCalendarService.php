@@ -588,7 +588,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     continue;
                 }
                 $extendedProperties = $event->getSingleValueExtendedProperties();
-                if ($extendedProperties !== null) {
+                if ($extendedProperties !== null && !$this->settings['ignoreAmeliaEvents']) {
                     foreach ($extendedProperties as $extendedProperty) {
                         if (
                             $extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId' &&
@@ -687,9 +687,12 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                         }
 
                         $extendedProperties = $event->getSingleValueExtendedProperties();
-                        if ($extendedProperties !== null) {
+                        if ($extendedProperties !== null && !$this->settings['ignoreAmeliaEvents']) {
                             foreach ($extendedProperties as $extendedProperty) {
-                                if ($extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId') {
+                                if (
+                                    $extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId' &&
+                                    $excludeAppointmentId && (int)$extendedProperty['value'] === $excludeAppointmentId
+                                ) {
                                     continue 2;
                                 }
                             }
@@ -1039,13 +1042,20 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         if ($location || $address) {
             $outlookLocation = new Location();
             $outlookLocation->setDisplayName($address ?: $location->getName()->getValue());
-            $outlookAddress = new PhysicalAddress();
-            $outlookAddress->setStreet($address ?: ($location->getAddress() ? $location->getAddress()->getValue() : null));
-            $outlookCoordinates = new OutlookGeoCoordinates();
-            $outlookCoordinates->setLatitude($location && $location->getCoordinates() ? $location->getCoordinates()->getLatitude() : null);
-            $outlookCoordinates->setLongitude($location && $location->getCoordinates() ? $location->getCoordinates()->getLongitude() : null);
-            $outlookLocation->setCoordinates($outlookCoordinates);
-            $outlookLocation->setAddress($outlookAddress);
+
+            if ($location && $location->getCoordinates()) {
+                $outlookCoordinates = new OutlookGeoCoordinates();
+                $outlookCoordinates->setLatitude($location->getCoordinates()->getLatitude());
+                $outlookCoordinates->setLongitude($location->getCoordinates()->getLongitude());
+                $outlookLocation->setCoordinates($outlookCoordinates);
+            }
+
+            if ($location) {
+                $outlookAddress = new PhysicalAddress();
+                $outlookAddress->setStreet($location->getAddress() ? $location->getAddress()->getValue() : null);
+                $outlookLocation->setAddress($outlookAddress);
+            }
+
             $event->setLocation($outlookLocation);
         }
 

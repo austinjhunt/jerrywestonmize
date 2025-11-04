@@ -10,6 +10,7 @@ namespace AmeliaBooking\Application\Services\Notification;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
+use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Infrastructure\Common\Container;
@@ -273,5 +274,29 @@ class ApplicationNotificationService
         if ($changedProviderId) {
             $appointment->setProviderId(new Id($newProviderId));
         }
+    }
+
+    /**
+     * @param Event $event
+     * @param string $bookingKey
+     *
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     */
+    public function sendEventQrNotification($event, $bookingKey)
+    {
+        /** @var AppointmentNotificationService $appointmentNotificationService */
+        $appointmentNotificationService = $this->container->get('application.notification.appointment.service');
+
+        /** @var EmailNotificationService $emailNotificationService */
+        $emailNotificationService = $this->container->get('application.emailNotification.service');
+
+        $appointmentNotificationService->sendQrNotifications(
+            $emailNotificationService,
+            $event,
+            $bookingKey,
+            true
+        );
     }
 }

@@ -745,6 +745,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 				'entry_id'   => $entry->entry_id,
 				'draft_id'   => $entry->draft_id,
 				'entry_date' => $entry->time_created,
+				'status'     => $entry->status,
 				'summary'    => array(),
 				'detail'     => array(),
 			);

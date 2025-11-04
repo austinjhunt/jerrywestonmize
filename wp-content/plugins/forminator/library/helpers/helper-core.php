@@ -2113,3 +2113,38 @@ function forminator_cloud_templates_disabled(): bool {
 
 	return $is_disabled;
 }
+
+/**
+ * Check if user registration is enabled in WordPress settings.
+ *
+ * @return bool
+ */
+function forminator_is_user_registration_enabled() {
+	if ( is_multisite() ) {
+		$registration_option = get_site_option( 'registration' );
+		if ( in_array( $registration_option, array( 'all', 'user' ), true ) ) {
+			return true;
+		}
+	} elseif ( get_option( 'users_can_register' ) ) {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Check if site registration is enabled in WordPress settings.
+ *
+ * @return bool
+ */
+function forminator_is_site_registration_enabled() {
+	// Allow site registration only if on the main site and site registration is enabled.
+	if ( forminator_is_main_site() ) {
+		$registration_option = get_site_option( 'registration' );
+		// Site registration is enabled only if the option is set to 'all'.
+		// For the 'blog' option, only logged-in users can register new sites, so we don't support that here.
+		if ( 'all' === $registration_option ) {
+			return true;
+		}
+	}
+	return false;
+}

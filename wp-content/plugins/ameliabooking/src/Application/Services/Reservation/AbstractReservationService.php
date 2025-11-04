@@ -379,7 +379,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
 
                 $appointmentData['bookings'][0]['customer']['id'] = $user->getId()->getValue();
 
-                if ($user->getType() === AbstractUser::USER_ROLE_CUSTOMER && $user->getStripeConnect() && $user->getStripeConnect()->getId()) {
+                if ($user->getType() === AbstractUser::USER_ROLE_CUSTOMER && $user->getStripeConnect()) {
                     $appointmentData['bookings'][0]['customer']['stripeConnect'] = $user->getStripeConnect()->toArray();
                 }
             }
@@ -819,6 +819,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             case (PaymentType::PAY_PAL):
             case (PaymentType::STRIPE):
             case (PaymentType::RAZORPAY):
+            case (PaymentType::BARION):
                 $paymentStatus = PaymentStatus::PAID;
                 break;
         }
@@ -846,7 +847,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             $paymentStatus = PaymentStatus::PARTIALLY_PAID;
         }
 
-        if (in_array($paymentData['gateway'], [PaymentType::MOLLIE])) {
+        if (in_array($paymentData['gateway'], [PaymentType::MOLLIE, PaymentType::BARION])) {
             $paymentStatus = PaymentStatus::PENDING;
         }
 

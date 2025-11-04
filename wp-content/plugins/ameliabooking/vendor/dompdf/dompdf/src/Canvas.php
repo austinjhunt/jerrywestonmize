@@ -4,12 +4,12 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf;
+namespace AmeliaDompdf;
 
 /**
  * Main rendering interface
  *
- * Currently {@link Dompdf\Adapter\CPDF}, {@link Dompdf\Adapter\PDFLib}, and {@link Dompdf\Adapter\GD}
+ * Currently {@link AmeliaDompdf\Adapter\CPDF}, {@link AmeliaDompdf\Adapter\PDFLib}, and {@link AmeliaDompdf\Adapter\GD}
  * implement this interface.
  *
  * Implementations should measure x and y increasing to the left and down,
@@ -22,7 +22,7 @@ namespace Dompdf;
 interface Canvas
 {
     /**
-     * @param string|float[] $paper       The paper size to use as either a standard paper size (see {@link Dompdf\Adapter\CPDF::$PAPER_SIZES})
+     * @param string|float[] $paper       The paper size to use as either a standard paper size (see {@link AmeliaDompdf\Adapter\CPDF::$PAPER_SIZES})
      *                                    or an array of the form `[x1, y1, x2, y2]` (typically `[0, 0, width, height]`).
      * @param string         $orientation The paper orientation, either `portrait` or `landscape`.
      * @param Dompdf|null    $dompdf      The Dompdf instance.

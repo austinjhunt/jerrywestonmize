@@ -209,6 +209,7 @@ class AddAppointmentCommandHandler extends CommandHandler
 
         foreach ($appointmentData['bookings'] as $bookingData) {
             $paymentData['customerPaymentParentId'][(int)$bookingData['customerId']] = null;
+            $paymentData['customerPaymentInvoiceNumber'][(int)$bookingData['customerId']] = null;
         }
 
         /** @var CustomerBooking $booking */
@@ -216,15 +217,21 @@ class AddAppointmentCommandHandler extends CommandHandler
             if (
                 $booking->getCustomerId() &&
                 $booking->getCustomerId()->getValue() &&
-                array_key_exists($booking->getCustomerId()->getValue(), $paymentData['customerPaymentParentId']) &&
                 $booking->getPayments() &&
                 $booking->getPayments()->keyExists(0)
             ) {
                 /** @var Payment $payment */
                 $payment = $booking->getPayments()->getItem(0);
 
-                $paymentData['customerPaymentParentId'][$booking->getCustomerId()->getValue()]
-                    = $payment->getId()->getValue();
+                if (array_key_exists($booking->getCustomerId()->getValue(), $paymentData['customerPaymentParentId'])) {
+                    $paymentData['customerPaymentParentId'][$booking->getCustomerId()->getValue()]
+                        = $payment->getId()->getValue();
+                }
+
+                if (array_key_exists($booking->getCustomerId()->getValue(), $paymentData['customerPaymentInvoiceNumber'])) {
+                    $paymentData['customerPaymentInvoiceNumber'][$booking->getCustomerId()->getValue()]
+                        = $payment->getInvoiceNumber() ? $payment->getInvoiceNumber()->getValue() : null;
+                }
             }
         }
 

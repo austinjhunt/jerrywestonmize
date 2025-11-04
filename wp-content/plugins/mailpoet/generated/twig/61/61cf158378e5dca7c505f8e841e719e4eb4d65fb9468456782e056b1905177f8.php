@@ -61,71 +61,71 @@ class __TwigTemplate_7b59605c39916c71a648c889aa253010605f62b41e4c92a7c75e0e0e6a5
   ";
         // line 12
         yield "  var mailpoet_form_data = ";
-        yield json_encode(($context["form"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["form"] ?? null));
         yield ";
   var mailpoet_form_exports = ";
         // line 13
-        yield json_encode(($context["form_exports"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["form_exports"] ?? null));
         yield ";
   var mailpoet_form_segments = ";
         // line 14
-        yield json_encode(($context["segments"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["segments"] ?? null));
         yield ";
   var mailpoet_custom_fields = ";
         // line 15
-        yield json_encode(($context["custom_fields"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["custom_fields"] ?? null));
         yield ";
   var mailpoet_date_types = ";
         // line 16
-        yield json_encode(($context["date_types"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["date_types"] ?? null));
         yield ";
   var mailpoet_date_formats = ";
         // line 17
-        yield json_encode(($context["date_formats"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["date_formats"] ?? null));
         yield ";
   var mailpoet_month_names = ";
         // line 18
-        yield json_encode(($context["month_names"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["month_names"] ?? null));
         yield ";
   var mailpoet_form_preview_page = ";
         // line 19
-        yield json_encode(($context["preview_page_url"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["preview_page_url"] ?? null));
         yield ";
   var mailpoet_custom_fonts = ";
         // line 20
-        yield json_encode(($context["custom_fonts"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["custom_fonts"] ?? null));
         yield ";
   var mailpoet_translations = ";
         // line 21
-        yield json_encode(($context["translations"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["translations"] ?? null));
         yield ";
   var mailpoet_all_wp_posts = ";
         // line 22
-        yield json_encode(($context["posts"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["posts"] ?? null));
         yield ";
   var mailpoet_all_wp_pages = ";
         // line 23
-        yield json_encode(($context["pages"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["pages"] ?? null));
         yield ";
   var mailpoet_all_wp_categories = ";
         // line 24
-        yield json_encode(($context["categories"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["categories"] ?? null));
         yield ";
   var mailpoet_all_wp_tags = ";
         // line 25
-        yield json_encode(($context["tags"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["tags"] ?? null));
         yield ";
   var mailpoet_woocommerce_products = ";
         // line 26
-        yield json_encode(($context["products"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["products"] ?? null));
         yield ";
   var mailpoet_woocommerce_categories = ";
         // line 27
-        yield json_encode(($context["product_categories"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["product_categories"] ?? null));
         yield ";
   var mailpoet_woocommerce_tags = ";
         // line 28
-        yield json_encode(($context["product_tags"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Filters']->wpJsonEncode(($context["product_tags"] ?? null));
         yield ";
   var mailpoet_close_icons_url = '";
         // line 29

@@ -135,6 +135,8 @@ class forminatorFrontUtils {
 		const $column_field = $element_id.closest('.forminator-col'),
 			$group_field = $element_id.closest('.forminator-field-group'),
 			$pagination_field = $element_id.closest('.forminator-pagination'),
+			$address_field = $element_id.closest('.forminator-field-address'),
+			$name_field = $element_id.closest('.forminator-field-name'),
 			$row_field = $column_field.closest('.forminator-row')
 		;
 
@@ -147,7 +149,9 @@ class forminatorFrontUtils {
 			return true;
 		}
 
-		if( $group_field.length > 0 && $group_field.hasClass( 'forminator-hidden' ) ) {
+		if( ( $group_field.length > 0 && $group_field.hasClass( 'forminator-hidden' ) )
+			|| ( $address_field.length > 0 && $address_field.hasClass( 'forminator-hidden' ) )
+			|| ( $name_field.length > 0 && $name_field.hasClass( 'forminator-hidden' ) ) ) {
 			return true;
 		}
 

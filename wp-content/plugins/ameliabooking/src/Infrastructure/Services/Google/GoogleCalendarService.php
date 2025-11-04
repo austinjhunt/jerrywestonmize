@@ -41,8 +41,9 @@ use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingRe
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventEditedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventStatusUpdatedEventHandler;
-use AmeliaGoogle_Service_Calendar_CalendarListEntry;
-use AmeliaGoogle_Service_Calendar_Event;
+use AmeliaGoogle\Client;
+use AmeliaGoogle\Service\Calendar;
+use AmeliaGoogle\Service\Calendar\CalendarListEntry;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 
@@ -53,10 +54,10 @@ use Interop\Container\Exception\ContainerException;
  */
 class GoogleCalendarService extends AbstractGoogleCalendarService
 {
-    /** @var \AmeliaGoogle_Client $client */
+    /** @var Client $client */
     private $client;
 
-    /** @var \AmeliaGoogle_Service_Calendar $service */
+    /** @var Calendar $service */
     private $service;
 
     /** @var SettingsService */
@@ -77,7 +78,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
         $this->settings = $this->container->get('domain.settings.service')->getCategorySettings('googleCalendar');
 
-        $this->client = new \AmeliaGoogle_Client();
+        $this->client = new Client();
         $this->client->setClientId($this->settings['clientID']);
         $this->client->setClientSecret($this->settings['clientSecret']);
     }
@@ -111,6 +112,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
         $this->client->addScope('https://www.googleapis.com/auth/calendar');
         $this->client->setApprovalPrompt('force');
         $this->client->setAccessType('offline');
+        $this->client->setPrompt('consent');
 
         return $this->client->createAuthUrl();
     }
@@ -120,13 +122,13 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      *
      * @param $authCode
      * @param $redirectUri
-     * @return string
+     * @return array
      */
     public function fetchAccessTokenWithAuthCode($authCode, $redirectUri)
     {
         $this->client->setRedirectUri($redirectUri);
 
-        return $this->client->authenticate($authCode);
+        return $this->client->fetchAccessTokenWithAuthCode($authCode);
     }
 
     /**
@@ -149,7 +151,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
             $calendarList = $this->service->calendarList->listCalendarList(['minAccessRole' => 'writer']);
 
-            /** @var AmeliaGoogle_Service_Calendar_CalendarListEntry $calendar */
+            /** @var CalendarListEntry $calendar */
             foreach ($calendarList->getItems() as $calendar) {
                 $calendars[] = [
                     'id'      => $calendar->getId(),
@@ -529,7 +531,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                         $events = self::$providersGoogleEvents[$provider->getId()->getValue()];
                     }
 
-                    /** @var AmeliaGoogle_Service_Calendar_Event $event */
+                    /** @var Calendar\Event $event */
                     foreach ($events->getItems() as $event) {
                         // Continue if event is set to "Free"
                         if ($event->getTransparency() === 'transparent') {
@@ -613,7 +615,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     private function insertEvent($appointment, $provider, $period = null)
     {
-        $queryParams = ['sendNotifications' => $this->settings['sendEventInvitationEmail']];
+        $queryParams = ['sendUpdates' => $this->settings['sendEventInvitationEmail'] ? 'all' : 'none'];
 
         /** @var SettingsService $settingsService */
         $settingsService  = $this->container->get('domain.settings.service');
@@ -687,7 +689,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                 $provider->getGoogleCalendar()->getCalendarId()->getValue(),
                 $entity->getGoogleCalendarEventId()->getValue(),
                 $event,
-                ['sendNotifications' => $this->settings['sendEventInvitationEmail']]
+                ['sendUpdates' => $this->settings['sendEventInvitationEmail'] ? 'all' : 'none']
             );
 
             do_action('amelia_after_google_calendar_event_updated', $event, $appointment->toArray(), $provider->toArray());
@@ -721,7 +723,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                 $provider->getGoogleCalendar()->getCalendarId()->getValue(),
                 $entity->getGoogleCalendarEventId()->getValue(),
                 $event,
-                ['sendNotifications' => $this->settings['sendEventInvitationEmail']]
+                ['sendUpdates' => $this->settings['sendEventInvitationEmail'] ? 'all' : 'none']
             );
 
             do_action('amelia_after_google_calendar_event_patched', $event, $appointment->toArray(), $provider->toArray());
@@ -757,7 +759,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      * @param Provider    $provider
      * @param EventPeriod $period
      *
-     * @return AmeliaGoogle_Service_Calendar_Event
+     * @return Calendar\Event
      *
      * @throws NotFoundException
      * @throws QueryExecutionException
@@ -874,7 +876,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
             ];
         }
 
-        return new AmeliaGoogle_Service_Calendar_Event($eventData);
+        return new Calendar\Event($eventData);
     }
 
     /**
@@ -982,7 +984,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     private function authorizeProvider($provider)
     {
-        $this->client = new \AmeliaGoogle_Client();
+        $this->client = new Client();
         $this->client->setClientId($this->settings['clientID']);
         $this->client->setClientSecret($this->settings['clientSecret']);
 
@@ -992,7 +994,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
             $this->refreshToken($provider);
         }
 
-        $this->service = new \AmeliaGoogle_Service_Calendar($this->client);
+        $this->service = new Calendar($this->client);
 
         return true;
     }
@@ -1013,11 +1015,16 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
         $this->client->refreshToken($this->client->getRefreshToken());
 
+        $accessToken = $this->client->getAccessToken();
+        if (is_array($accessToken)) {
+            $accessToken = json_encode($accessToken);
+        }
+
         $provider->setGoogleCalendar(
             GoogleCalendarFactory::create(
                 [
                     'id'         => $provider->getGoogleCalendar()->getId()->getValue(),
-                    'token'      => $this->client->getAccessToken(),
+                    'token'      => $accessToken,
                     'calendarId' => $provider->getGoogleCalendar()->getCalendarId()->getValue()
                 ]
             )

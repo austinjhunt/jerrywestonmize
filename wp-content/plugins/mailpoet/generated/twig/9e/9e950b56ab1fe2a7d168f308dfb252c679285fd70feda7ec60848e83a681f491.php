@@ -58,11 +58,11 @@ class __TwigTemplate_e93f1843f587ff72b997c53dfebf2ffe3fe3c73139e95193f6816aeb1e2
   ";
         // line 9
         yield "    var mailpoet_mta_log = ";
-        yield json_encode(($context["mta_log"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["mta_log"] ?? null));
         yield ";
     var mailpoet_homepage_data = ";
         // line 10
-        yield json_encode(($context["homepage"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["homepage"] ?? null));
         yield ";
   ";
         // line 12

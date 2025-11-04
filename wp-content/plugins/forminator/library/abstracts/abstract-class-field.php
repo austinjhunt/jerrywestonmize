@@ -1100,8 +1100,14 @@ abstract class Forminator_Field {
 
 			// Check parent conditions only if the current condition is matched.
 			if ( $is_condition_fulfilled && ! $current_is_hidden && Forminator_Front_Action::$module_object ) {
-				$parent_field  = Forminator_Front_Action::$module_object->get_field( $element_id );
-				$parent_hidden = self::is_hidden( $parent_field, array(), $group_suffix );
+				$parent_field = Forminator_Front_Action::$module_object->get_field( $element_id );
+				// If the parent field and the current field are in the same group, we need to pass the group suffix to check their visibility correctly.
+				if ( ! empty( $field_settings['parent_group'] ) && ! empty( $parent_field['parent_group'] )
+					&& $field_settings['parent_group'] === $parent_field['parent_group'] ) {
+						$parent_hidden = self::is_hidden( $parent_field, array(), $group_suffix );
+				} else {
+					$parent_hidden = self::is_hidden( $parent_field );
+				}
 
 				if ( $parent_hidden ) {
 					--$condition_fulfilled;

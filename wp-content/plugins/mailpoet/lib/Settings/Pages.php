@@ -120,6 +120,7 @@ class Pages {
 
   public static function getPageData($page) {
     $subscriptionUrlFactory = Subscription\SubscriptionUrlFactory::getInstance();
+    $captchaUrlFactory = \MailPoet\DI\ContainerWrapper::getInstance()->get(\MailPoet\Captcha\CaptchaUrlFactory::class);
     return [
       'id' => $page->ID,
       'title' => $page->post_title, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
@@ -129,6 +130,7 @@ class Pages {
         'confirm' => $subscriptionUrlFactory->getSubscriptionUrl($page, 'confirm'),
         'confirm_unsubscribe' => $subscriptionUrlFactory->getSubscriptionUrl($page, 'confirm_unsubscribe'),
         're_engagement' => $subscriptionUrlFactory->getSubscriptionUrl($page, 're_engagement'),
+        'captcha' => $captchaUrlFactory->getCaptchaPreviewUrl($page),
       ],
     ];
   }

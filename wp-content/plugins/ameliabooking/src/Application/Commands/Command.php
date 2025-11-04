@@ -17,6 +17,8 @@ use AmeliaBooking\Application\Commands\Outlook\FetchAccessTokenWithAuthCodeOutlo
 use AmeliaBooking\Application\Commands\Payment\CalculatePaymentAmountCommand;
 use AmeliaBooking\Application\Commands\Payment\PaymentCallbackCommand;
 use AmeliaBooking\Application\Commands\Payment\PaymentLinkCommand;
+use AmeliaBooking\Application\Commands\PaymentGateway\BarionPaymentCallbackCommand;
+use AmeliaBooking\Application\Commands\PaymentGateway\BarionPaymentCommand;
 use AmeliaBooking\Application\Commands\PaymentGateway\MolliePaymentCommand;
 use AmeliaBooking\Application\Commands\PaymentGateway\MolliePaymentNotifyCommand;
 use AmeliaBooking\Application\Commands\PaymentGateway\PayPalPaymentCallbackCommand;
@@ -217,6 +219,8 @@ abstract class Command
             !($this instanceof PayPalPaymentCommand) &&
             !($this instanceof PayPalPaymentCallbackCommand) &&
             !($this instanceof RazorpayPaymentCommand) &&
+            !($this instanceof BarionPaymentCommand) &&
+            !($this instanceof BarionPaymentCallbackCommand) &&
             !($this instanceof SquarePaymentCommand) &&
             !($this instanceof SquareRefundWebhookCommand) &&
             !($this instanceof DisconnectFromSquareAccountCommand) &&

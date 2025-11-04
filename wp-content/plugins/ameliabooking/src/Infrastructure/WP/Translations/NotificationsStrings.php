@@ -1851,4 +1851,31 @@ Thank you,
             ]
         ];
     }
+
+    /**
+     * default customer's QR Code notification
+     *
+     * @return array
+     */
+    public static function getCustomerQrCodeEmailNotification()
+    {
+        return [
+            'name'       => 'customer_event_qr_code',
+            'entity'     => 'event',
+            'type'       => 'email',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'customer',
+            'subject'    => 'E-Ticket for %event_name%',
+            'content'    =>
+                'Dear <strong>%customer_full_name%</strong>,<br><br>
+                 Thank you for registering for 
+                 <strong>%event_name%</strong> on 
+                 <strong>%event_start_date_time%</strong>.<br><br>
+                 Please save the following E-Ticket on your mobile phone and present it upon arrival.<br><br>
+                 We are waiting for you at <strong>%event_location%</strong>.<br><br>
+                 Thank you for choosing our company,<br><strong>%company_name%</strong>'
+        ];
+    }
 }

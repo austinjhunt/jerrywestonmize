@@ -64,6 +64,15 @@ class PersonalizationTagManager {
         null,
         [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
       ));
+      $registry->register(new Personalization_Tag(
+        __('Activation Link', 'mailpoet'),
+        'mailpoet/subscriber-activation-link',
+        __('Subscriber', 'mailpoet'),
+        [$this->subscriber, 'getActivationLink'],
+        [],
+        null,
+        [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
+      ));
 
       // Site Personalization Tags
       $registry->register(new Personalization_Tag(
@@ -71,6 +80,15 @@ class PersonalizationTagManager {
         'mailpoet/site-title',
         __('Site', 'mailpoet'),
         [$this->site, 'getTitle'],
+        [],
+        null,
+        [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
+      ));
+      $registry->register(new Personalization_Tag(
+        __('Site Description', 'mailpoet'),
+        'mailpoet/site-description',
+        __('Site', 'mailpoet'),
+        [$this->site, 'getDescription'],
         [],
         null,
         [EmailEditor::MAILPOET_EMAIL_POST_TYPE]

@@ -4,17 +4,17 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf;
+namespace AmeliaDompdf;
 
 use DOMDocument;
 use DOMNode;
-use Dompdf\Adapter\CPDF;
+use AmeliaDompdf\Adapter\CPDF;
 use DOMXPath;
-use Dompdf\Frame\Factory;
-use Dompdf\Frame\FrameTree;
-use Dompdf\Image\Cache;
-use Dompdf\Css\Stylesheet;
-use Dompdf\Helpers;
+use AmeliaDompdf\Frame\Factory;
+use AmeliaDompdf\Frame\FrameTree;
+use AmeliaDompdf\Image\Cache;
+use AmeliaDompdf\Css\Stylesheet;
+use AmeliaDompdf\Helpers;
 use Masterminds\HTML5;
 
 /**
@@ -57,9 +57,9 @@ use Masterminds\HTML5;
  * Frame}s are rendered using an adapted {@link Cpdf} class, originally
  * written by Wayne Munro, http://www.ros.co.nz/pdf/.  (Some performance
  * related changes have been made to the original {@link Cpdf} class, and
- * the {@link Dompdf\Adapter\CPDF} class provides a simple, stateless interface to
+ * the {@link AmeliaDompdf\Adapter\CPDF} class provides a simple, stateless interface to
  * PDF generation.)  PDFLib support has now also been added, via the {@link
- * Dompdf\Adapter\PDFLib}.
+ * AmeliaDompdf\Adapter\PDFLib}.
  *
  *
  * @package dompdf
@@ -1004,7 +1004,7 @@ class Dompdf
     /**
      * Sets the paper size & orientation
      *
-     * @param string|float[] $size 'letter', 'legal', 'A4', etc. {@link Dompdf\Adapter\CPDF::$PAPER_SIZES}
+     * @param string|float[] $size 'letter', 'legal', 'A4', etc. {@link AmeliaDompdf\Adapter\CPDF::$PAPER_SIZES}
      * @param string $orientation 'portrait' or 'landscape'
      * @return $this
      */
@@ -1293,7 +1293,7 @@ class Dompdf
     }
 
     /**
-     * Return the underlying Canvas instance (e.g. Dompdf\Adapter\CPDF, Dompdf\Adapter\GD)
+     * Return the underlying Canvas instance (e.g. AmeliaDompdf\Adapter\CPDF, AmeliaDompdf\Adapter\GD)
      *
      * @return Canvas
      */

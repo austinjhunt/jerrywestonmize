@@ -7,8 +7,8 @@
 
 use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
-use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
+use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Cache\CacheApplicationService;
 use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
@@ -551,4 +551,15 @@ $entries['application.ics.service'] = function ($c) {
  */
 $entries['application.stash.service'] = function ($c) {
     return new AmeliaBooking\Application\Services\Stash\StashApplicationService($c);
+};
+
+/**
+ * QR Code service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\QrCode\AbstractQrCodeApplicationService
+ */
+$entries['application.qrcode.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getQrCodeService($c);
 };

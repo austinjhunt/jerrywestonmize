@@ -18,6 +18,10 @@ class StripeConnect
     /** @var Price */
     private $amount;
 
+    /** @var Name */
+    private $accountId;
+
+
     /**
      * @return Name
      */
@@ -50,6 +54,16 @@ class StripeConnect
         $this->amount = $amount;
     }
 
+    public function getAccountId()
+    {
+        return $this->accountId;
+    }
+
+    public function setAccountId(Name $accountId)
+    {
+        $this->accountId = $accountId;
+    }
+
     /**
      * @return array
      */
@@ -58,6 +72,7 @@ class StripeConnect
         return [
             'id'          => $this->getId() ? $this->getId()->getValue() : null,
             'amount'      => $this->getAmount() ? $this->getAmount()->getValue() : null,
+            'accountId'   => $this->getAccountId() ? $this->getAccountId()->getValue() : null,
         ];
     }
 }

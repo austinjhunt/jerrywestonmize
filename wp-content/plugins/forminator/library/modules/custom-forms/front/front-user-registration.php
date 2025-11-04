@@ -581,6 +581,12 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 		);
 		$setting = $custom_form->settings;
 
+		$activation_method = forminator_get_property( $setting, 'activation-method' );
+		// Site validation is not required if site registration is disabled and activation is not set to manual.
+		if ( 'manual' !== $activation_method && ! forminator_is_site_registration_enabled() ) {
+			return $data;
+		}
+
 		// Make sure option 'Site registration' is set.
 		$option_create_site = forminator_get_property( $setting, 'site-registration' );
 		if ( $is_approve || ! $option_create_site || ( isset( $option_create_site ) && 'enable' !== $option_create_site ) ) {
@@ -638,6 +644,12 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 
 		// Is option 'Site registration' enabled?
 		$option_create_site = forminator_get_property( $setting, 'site-registration' );
+
+		$activation_method = forminator_get_property( $setting, 'activation-method' );
+		// If activation method is not 'manual' and site registration is disabled, do not create a site.
+		if ( 'manual' !== $activation_method && ! forminator_is_site_registration_enabled() ) {
+			$option_create_site = false;
+		}
 		if ( ! $option_create_site || ( isset( $option_create_site ) && 'enable' !== $option_create_site ) ) {
 			$this->maybe_remove_user_from_main_site( $setting, $user_id );
 			return false;

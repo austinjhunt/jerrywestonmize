@@ -61,7 +61,7 @@ class __TwigTemplate_176225ef6518abb3a235b9f1785c332f068c4c798b602f397b3f290225c
     ";
         // line 12
         yield "      var mailpoet_logs = ";
-        yield json_encode(($context["logs"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["logs"] ?? null));
         yield ";
       var mailpoet_logs_default_from = '";
         // line 13

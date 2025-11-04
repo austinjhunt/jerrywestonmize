@@ -4,21 +4,21 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\FrameReflower;
+namespace AmeliaDompdf\FrameReflower;
 
-use Dompdf\Css\Content\Attr;
-use Dompdf\Css\Content\CloseQuote;
-use Dompdf\Css\Content\Counter;
-use Dompdf\Css\Content\Counters;
-use Dompdf\Css\Content\NoCloseQuote;
-use Dompdf\Css\Content\NoOpenQuote;
-use Dompdf\Css\Content\OpenQuote;
-use Dompdf\Css\Content\StringPart;
-use Dompdf\Dompdf;
-use Dompdf\Frame;
-use Dompdf\Frame\Factory;
-use Dompdf\FrameDecorator\AbstractFrameDecorator;
-use Dompdf\FrameDecorator\Block;
+use AmeliaDompdf\Css\Content\Attr;
+use AmeliaDompdf\Css\Content\CloseQuote;
+use AmeliaDompdf\Css\Content\Counter;
+use AmeliaDompdf\Css\Content\Counters;
+use AmeliaDompdf\Css\Content\NoCloseQuote;
+use AmeliaDompdf\Css\Content\NoOpenQuote;
+use AmeliaDompdf\Css\Content\OpenQuote;
+use AmeliaDompdf\Css\Content\StringPart;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Frame;
+use AmeliaDompdf\Frame\Factory;
+use AmeliaDompdf\FrameDecorator\AbstractFrameDecorator;
+use AmeliaDompdf\FrameDecorator\Block;
 
 /**
  * Base reflower class

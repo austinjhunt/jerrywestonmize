@@ -317,7 +317,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	private static function check_captcha() {
 		// Ignore captcha re-check if we have Stripe/PayPal field.
 		if (
-			self::$is_draft ||
+			self::$is_draft || self::$is_abandoned ||
 			! empty( self::$info['stripe_field'] ) ||
 			self::is_in_hidden_fields( 'stripe-' ) ||
 			! empty( self::$info['paypal_field'] )
@@ -445,11 +445,16 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	 * @throws Exception When there is an error.
 	 */
 	private static function validate_registration() {
-		if ( self::$is_draft || self::$is_spam ) {
+		if ( self::$is_draft || self::$is_spam || self::$is_abandoned ) {
 			return;
 		}
 
 		if ( isset( self::$module_settings['form-type'] ) && 'registration' === self::$module_settings['form-type'] ) {
+			$activation_method = forminator_get_property( self::$module_settings, 'activation-method' );
+			if ( 'manual' !== $activation_method && ! forminator_is_user_registration_enabled() ) {
+				return; // Validation is not required if registration is disabled and activation is not manual.
+			}
+
 			// Check who can register new users.
 			if ( ! is_user_logged_in() ) {
 				$can_creat_user = true;
@@ -494,6 +499,11 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		}
 
 		if ( isset( self::$module_settings['form-type'] ) && 'registration' === self::$module_settings['form-type'] ) {
+			$activation_method = forminator_get_property( self::$module_settings, 'activation-method' );
+			// Do not register new users if registration is disabled and activation is not manual.
+			if ( 'manual' !== $activation_method && ! forminator_is_user_registration_enabled() ) {
+				return;
+			}
 			// Check who can register new users.
 			if ( ! is_user_logged_in() ) {
 				$can_creat_user = true;
@@ -682,7 +692,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		 */
 		$field_data = $form_field_obj->sanitize( $field_array, $field_data );
 
-		if ( ! self::$is_draft ) {
+		if ( ! self::$is_draft && ! self::$is_abandoned ) {
 			$field_data = $form_field_obj->validate_entry( $field_array, $field_data );
 		}
 		$form_field_obj->is_valid_entry();
@@ -770,7 +780,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			'name'  => '_forminator_user_ip',
 			'value' => Forminator_Geo::get_user_ip(),
 		);
-		if ( ! self::$is_draft
+		if ( ! self::$is_draft && ! self::$is_abandoned
 				&& ! empty( self::$module_settings['logged-users'] )
 				&& ! empty( self::$module_settings['limit-per-user'] ) ) {
 			self::$info['field_data_array'][] = array(
@@ -892,9 +902,6 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 				return $stripe_entry_data;
 
 			} catch ( Exception $e ) {
-				// Delete entry if paymentIntent confirmation is not successful.
-				$entry->delete();
-
 				return new WP_Error( 'forminator_stripe_error', $e->getMessage() );
 			}
 		} else {
@@ -991,16 +998,10 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 				return new WP_Error( 'forminator_stripe_error', esc_html( $error_data['message'] ) );
 			}
 		} catch ( Exception $e ) {
-			// Delete entry if capture is not successful.
-			$entry->delete();
-
 			return new WP_Error( 'forminator_stripe_error', $e->getMessage() );
 		}
 
 		if ( 'succeeded' !== $intent->status ) {
-			// Delete entry if capture is not successful.
-			$entry->delete();
-
 			return new WP_Error( 'forminator_stripe_error', esc_html__( 'Payment failed, please try again!', 'forminator' ) );
 		}
 
@@ -1023,8 +1024,6 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	 * @return array
 	 */
 	public static function handle_failed_stripe_response( $result, $entry ) {
-		// Delete entry if 3d security or additional confirmation is needed, we will store it on next attempt.
-		$entry->delete();
 		$error_data = array(
 			'message' => __( 'This payment requires additional authentication! Please follow the instructions.', 'forminator' ),
 		);
@@ -1136,10 +1135,25 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 				self::attach_addons_on_form_submit();
 
 				$entry->draft_id = $this->set_entry_draft_id();
+				if ( self::$is_spam ) {
+					$entry->status = 'spam';
+				} elseif ( self::$is_abandoned ) {
+					$entry->status = 'abandoned';
+					self::check_abandonment_required_fields();
+				} elseif ( self::$is_draft && ! empty( $entry->draft_id ) ) {
+					$entry->status = 'draft';
+				} else {
+					$entry->status = 'active';
+				}
 
-				if ( self::$is_draft || ! self::prevent_store() ) {
+				if ( self::$is_draft || self::$is_abandoned || ! self::prevent_store() ) {
 					$entry->save( null, null, self::$previous_draft_id );
 				}
+			}
+
+			if ( self::$is_abandoned ) {
+				self::save_entry_fields( $entry );
+				return self::return_success();
 			}
 
 			self::process_uploads( 'upload' );
@@ -1184,6 +1198,31 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	}
 
 	/**
+	 * Check abandonment required fields
+	 *
+	 * @throws Exception When there is an error.
+	 */
+	private static function check_abandonment_required_fields() {
+		$required_fields = self::$module_settings['abandonment_required_fields'] ?? array();
+		if ( empty( $required_fields ) ) {
+			return true;
+		}
+		foreach ( $required_fields as $field_id ) {
+			$field_value = filter_input( INPUT_POST, $field_id );
+			if ( empty( $field_value ) ) {
+				throw new Exception(
+					sprintf(
+						/* translators: %s: Field name */
+						esc_html__( 'Field %s is required', 'forminator' ),
+						esc_html( $field_id )
+					)
+				);
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Send email
 	 *
 	 * @param object $entry Entry.
@@ -1218,7 +1257,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		// ADDON add_entry_fields.
 		// @since 1.2 Add field_data_array to param.
 		$added_data_array = self::$info['field_data_array'];
-		if ( ! self::$is_draft ) {
+		if ( ! self::$is_draft && ! self::$is_abandoned ) {
 			$added_data_array = self::attach_addons_add_entry_fields( $added_data_array, $entry );
 			$added_data_array = self::replace_values_to_labels( $added_data_array, $entry );
 		} else {
@@ -1810,7 +1849,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	 * @throws Exception When there is an error.
 	 */
 	private static function attach_addons_on_form_submit() {
-		if ( self::$is_draft || self::$is_spam ) {
+		if ( self::$is_draft || self::$is_spam || self::$is_abandoned ) {
 			return;
 		}
 
@@ -1958,9 +1997,6 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		$capture = $paypal->capture_order( $entry_data['transaction_id'], $mode );
 
 		if ( ! isset( $capture->status ) || 'COMPLETED' !== $capture->status ) {
-			// Delete entry if capture is not successful.
-			$entry->delete();
-
 			throw new Exception( esc_html__( 'Payment failed, please try again!', 'forminator' ) );
 		}
 		$paypal_entry_data['value']['status'] = 'COMPLETED';
@@ -2228,7 +2264,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 				isset( $_FILES[ $mod_field_id ] ) && // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				'postdata' === $field_type &&
 				'post-image' === $suffix &&
-				! self::$is_draft
+				! self::$is_draft && ! self::$is_abandoned
 			) {
 				$post_image = $field_object->upload_post_image( $field_settings, $mod_field_id );
 				if ( is_array( $post_image ) && $post_image['attachment_id'] > 0 ) {
@@ -2367,7 +2403,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		}
 		$custom_vars = Forminator_Field::get_property( 'post_custom_fields', $field_settings );
 		$custom_meta = Forminator_Field::get_property( 'options', $field_settings );
-		if ( empty( $custom_vars ) || empty( $custom_meta ) || self::$is_draft ) {
+		if ( empty( $custom_vars ) || empty( $custom_meta ) || self::$is_draft || self::$is_abandoned ) {
 			return;
 		}
 		$dependent_fields = array();
@@ -2455,7 +2491,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	 * @param array $field_settings Field settings.
 	 */
 	private static function handle_upload_field( $field_settings ) {
-		if ( self::$is_draft ) {
+		if ( self::$is_draft || self::$is_abandoned ) {
 			return;
 		}
 
@@ -2595,7 +2631,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	 */
 	private static function handle_select_field( $field_settings ) {
 		$is_limit = Forminator_Field::get_property( 'limit_status', $field_settings );
-		if ( self::$is_draft || 'enable' !== $is_limit ) {
+		if ( self::$is_draft || self::$is_abandoned || 'enable' !== $is_limit ) {
 			return;
 		}
 		$field_id     = Forminator_Field::get_property( 'element_id', $field_settings );

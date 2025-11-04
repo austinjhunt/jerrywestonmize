@@ -118,7 +118,7 @@ class HelperService
             $data['exp'] = $expireTimeStamp;
         }
 
-        return JWT::encode($data, $secret);
+        return JWT::encode($data, $secret, 'HS256');
     }
 
     /**
@@ -150,7 +150,8 @@ class HelperService
         );
 
         if ($cabinetURL) {
-            $tokenParam = $type === 'email' ? (strpos($cabinetURL, '?') === false ? '?token=' : '&token=') .
+            $tokenParam = $type === 'email' || $type === 'whatsapp' ?
+                (strpos($cabinetURL, '?') === false ? '?token=' : '&token=') .
                 $this->getGeneratedJWT(
                     $email,
                     $cabinetSettings['urlJwtSecret'],

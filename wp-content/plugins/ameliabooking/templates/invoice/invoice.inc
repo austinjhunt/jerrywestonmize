@@ -1,48 +1,12 @@
 <?php
 
 use AmeliaBooking\Application\Services\Helper\HelperService;
-use AmeliaBooking\Domain\Services\Settings\SettingsService;
-use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
-
-/** @var Container $container */
-$container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
 
 /** @var HelperService $helperService */
 $helperService = $this->container->get('application.helper.service');
 
-/** @var SettingsService $settingsDS */
-$settingsDS = $this->container->get('domain.settings.service');
-
-$data = $invoiceData;
-
-$itemsWithTax = array_filter(
-    $data['items'],
-    function ($item) {
-        return !empty($item['invoice_tax']);
-    }
-);
-$taxEnabled   = !empty($itemsWithTax) && !empty(array_values($itemsWithTax)[0]['invoice_tax']);
-$includedTax  = !empty($itemsWithTax) && !array_values($itemsWithTax)[0]['invoice_tax_excluded'];
-
-$invoiceSubtotal = array_sum(array_column($data['items'], 'invoice_subtotal'));
-$invoiceDiscount = array_sum(array_column($data['items'], 'invoice_discount'));
-$invoiceTax      = $data['invoice_tax'];
-
-$invoiceTotal = $invoiceSubtotal - $invoiceDiscount;
-$invoiceTotal += $invoiceTotal ? $invoiceTax : 0;
-
-$invoicePaid = array_sum(array_column($data['items'], 'invoice_paid_amount'));
-
-$invoicePaid = ($invoicePaid < $invoiceTotal) ? $invoicePaid : 0;
-
-$invoiceLeftToPay = $invoiceTotal - $invoicePaid;
-
-$filename = !empty($data['company_logo']) ? $data['company_logo'] : null;
-if ($filename) {
-    $mime = pathinfo($filename, PATHINFO_EXTENSION);
-    $img  = base64_encode(file_get_contents($filename));
-}
+$data = $invoiceData['placeholders'];
 
 ?>
 <!DOCTYPE html>
@@ -122,24 +86,50 @@ if ($filename) {
       }
 
       .invoice-body-customer {
+          width: 49%;
           color: #1A2C37;
           margin-bottom: 35px;
+          float: left;
       }
 
-      .invoice-body-customer > div {
+      .invoice-body-customer td {
           font-size: 14px;
           font-weight: 400;
           padding-bottom: 5px;
       }
 
-      .invoice-body-customer > div:first-child {
+      .invoice-body-customer tr td:first-child {
+          text-align: left;
+      }
+
+      .invoice-body-customer-to td {
           font-weight: bold;
           padding-bottom: 10px
+      }
+
+      .invoice-body-cf {
+          width: 49%;
+          color: #1A2C37;
+          margin-bottom: 35px;
+          float: right;
+          text-align: right;
+      }
+
+      .invoice-body-cf tr:first-child td {
+        font-weight: bold;
+        padding-bottom: 10px
+      }
+
+      .invoice-body-cf td {
+          font-size: 14px;
+          font-weight: 400;
+          padding-bottom: 5px;
       }
 
       .invoice-body-items {
           width: 100%;
           margin-bottom: 20px;
+          clear: both;
       }
 
       .invoice-body-items td {
@@ -232,15 +222,16 @@ if ($filename) {
 
         <div class="invoice-header-first-line">
             <table class="invoice-header-first-line-company">
-                <tr>
-                    <?php if (!empty($data['company_name']) && $filename) : ?>
+                <tr>$
+                    <?php if (!empty($data['company_name']) && $invoiceData['companyLogo']) : ?>
                         <td class="invoice-header-first-line-company-name">
                             <span><b><?php echo $data['company_name'] ?></b></span>
                         </td>
                     <?php endif; ?>
-                    <?php if ($filename) : ?>
+                    <?php if ($invoiceData['companyLogo']) : ?>
                         <td>
-                            <img src='data:<?php echo $mime; ?>;base64, . <?php echo $img; ?>' alt="logo">
+                            <img src='data:<?php echo $invoiceData['companyLogo']['mime']; ?>;base64, . <?php echo $invoiceData['companyLogo']['img']; ?>'
+                                 alt="logo">
                         </td>
                     <?php endif; ?>
                 </tr>
@@ -311,36 +302,58 @@ if ($filename) {
     </div>
 
     <div class="invoice-body">
-        <div class="invoice-body-customer">
-            <div class="invoice-body-customer-to"><?php echo BackendStrings::getCommonStrings()['to_upper'] ?></div>
-            <div class="invoice-body-customer-name"><?php echo $data['customer_full_name'] ?></div>
-            <div class="invoice-body-customer-email"><?php echo !empty($data['customer_email']) ? $data['customer_email'] : '' ?></div>
-            <div class="invoice-body-customer-phone"><?php echo !empty($data['customer_phone']) ? $data['customer_phone'] : '' ?></div>
-        </div>
+        <table class="invoice-body-customer">
+            <tr class="invoice-body-customer-to">
+                <td><?php echo BackendStrings::getCommonStrings()['to_upper'] ?></td>
+            </tr>
+            <tr>
+                <td class="invoice-body-customer-name"><?php echo $data['customer_full_name'] ?></td>
+            </tr>
+            <tr>
+                <td class="invoice-body-customer-email"><?php echo !empty($data['customer_email']) ? $data['customer_email'] : ' ' ?></td>
+            </tr>
+            <tr>
+                <td class="invoice-body-customer-phone"><?php echo !empty($data['customer_phone']) ? $data['customer_phone'] : ' ' ?></td>
+            </tr>
+        </table>
+
+        <?php if (!empty($data['customer_custom_fields'])) : ?>
+            <table class="invoice-body-cf">
+                <tr>
+                    <td><?php echo BackendStrings::getFinanceStrings()['invoice_additional_information'] ?></td>
+                </tr>
+                <?php foreach ($data['customer_custom_fields'] as $key => $customerCustomField) : ?>
+                    <tr>
+                        <td><?php echo $customerCustomField ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        <?php endif; ?>
+
 
         <table class='invoice-body-items'>
             <thead class="invoice-body-items-name">
             <tr>
                 <td><?php echo BackendStrings::getFinanceStrings()['invoice_item']; ?></td>
                 <td><?php echo BackendStrings::getFinanceStrings()['invoice_unit_price'] .
-                        ($includedTax ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></td>
+                        ($invoiceData['includedTax'] ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></td>
                 <td><?php echo BackendStrings::getFinanceStrings()['invoice_qty']; ?></td>
                 <td><?php echo BackendStrings::getFinanceStrings()['invoice_total_item_price'] .
-                        ($includedTax ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></td>
-                <?php if ($taxEnabled) : ?>
+                        ($invoiceData['includedTax'] ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></td>
+                <?php if ($invoiceData['taxEnabled']) : ?>
                     <td><?php echo BackendStrings::getFinanceStrings()['invoice_tax_rate']; ?></td>
                     <td><?php echo BackendStrings::getFinanceStrings()['invoice_tax_amount']; ?></td>
                 <?php endif; ?>
             </tr>
             </thead>
             <?php
-            foreach ($data['items'] as $key => $appData) : ?>
+            foreach ($invoiceData['items'] as $key => $appData) : ?>
                 <tr class="invoice-body-items-data">
                     <td><?php echo $appData['item_name'] ?></td>
                     <td><?php echo $helperService->getFormattedPrice($appData['invoice_unit_price']) ?></td>
                     <td><?php echo $appData['invoice_qty'] ?></td>
                     <td><?php echo $helperService->getFormattedPrice($appData['invoice_unit_price'] * $appData['invoice_qty']) ?></td>
-                    <?php if ($taxEnabled) : ?>
+                    <?php if ($invoiceData['taxEnabled']) : ?>
                         <td><?php echo !empty($appData['invoice_tax_rate']) ? $appData['invoice_tax_rate'] : 0 ?></td>
                         <td><?php echo $helperService->getFormattedPrice(!empty($appData['invoice_tax']) ? $appData['invoice_tax'] : 0) ?></td>
                     <?php endif; ?>
@@ -349,41 +362,41 @@ if ($filename) {
         </table>
 
         <div class="invoice-body-sum">
-            <?php if ($invoiceSubtotal !== $invoiceTotal) : ?>
+            <?php if ($invoiceData['subtotal'] !== $invoiceData['total']) : ?>
                 <div>
                     <span><?php echo BackendStrings::getFinanceStrings()['invoice_subtotal'];?></span>
-                    <span><?php echo $helperService->getFormattedPrice($invoiceSubtotal) ?></span>
+                    <span><?php echo $helperService->getFormattedPrice($invoiceData['subtotal']) ?></span>
                 </div>
             <?php endif; ?>
-            <?php if ($invoiceDiscount > 0) : ?>
+            <?php if ($invoiceData['discount'] > 0) : ?>
                 <div>
                     <span><?php echo BackendStrings::getFinanceStrings()['invoice_discount']; ?></span>
-                    <span><?php echo $helperService->getFormattedPrice($invoiceDiscount) ?></span>
+                    <span><?php echo $helperService->getFormattedPrice($invoiceData['discount']) ?></span>
                 </div>
             <?php endif; ?>
-            <?php if ($invoiceTax > 0) : ?>
+            <?php if ($invoiceData['tax'] > 0) : ?>
                 <div>
                     <span><?php echo BackendStrings::getFinanceStrings()['invoice_tax']; ?></span>
-                    <span><?php echo $helperService->getFormattedPrice($invoiceTax) ?></span>
+                    <span><?php echo $helperService->getFormattedPrice($invoiceData['tax']) ?></span>
                 </div>
             <?php endif; ?>
-            <?php if ($invoiceSubtotal !== $invoiceTotal || $invoiceTax > 0) : ?>
+            <?php if ($invoiceData['subtotal'] !== $invoiceData['total'] || $invoiceData['tax'] > 0) : ?>
                 <hr>
             <?php endif; ?>
             <div class="invoice-body-total">
                 <span><?php echo BackendStrings::getFinanceStrings()['invoice_total'] .
-                        ($includedTax && $invoiceTotal > 0 ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></span>
-                <span><?php echo $helperService->getFormattedPrice($invoiceTotal) ?></span>
+                        ($invoiceData['includedTax'] && $invoiceData['total'] > 0 ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></span>
+                <span><?php echo $helperService->getFormattedPrice($invoiceData['total']) ?></span>
             </div>
-            <?php if ($invoicePaid) : ?>
+            <?php if ($invoiceData['paid']) : ?>
                 <hr>
                 <div>
                     <span><?php echo BackendStrings::getFinanceStrings()['invoice_paid']; ?></span>
-                    <span><?php echo $helperService->getFormattedPrice($invoicePaid) ?></span>
+                    <span><?php echo $helperService->getFormattedPrice($invoiceData['paid']) ?></span>
                 </div>
                 <div>
                     <span><?php echo BackendStrings::getFinanceStrings()['invoice_left_to_pay']; ?></span>
-                    <span><?php echo $helperService->getFormattedPrice($invoiceLeftToPay) ?></span>
+                    <span><?php echo $helperService->getFormattedPrice($invoiceData['leftToPay']) ?></span>
                 </div>
             <?php endif; ?>
         </div>

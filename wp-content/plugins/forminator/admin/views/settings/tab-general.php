@@ -30,7 +30,7 @@ $nonce   = wp_create_nonce( 'forminator_save_dashboard_settings' );
 			<?php $this->template( 'settings/tab-editor' ); ?>
 
 			<?php
-			if ( is_wpmu_dev_admin() || ! forminator_can_whitelabel() ) {
+			if ( ! forminator_usage_tracking_disabled() && ( is_wpmu_dev_admin() || ! forminator_can_whitelabel() ) ) {
 				$this->template( 'settings/tab-tracking' );
 			}
 			?>

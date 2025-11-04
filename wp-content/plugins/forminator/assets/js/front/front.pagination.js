@@ -616,11 +616,11 @@
 				} else {
 					this.$el.find( '#forminator-submit' )
 						.removeAttr( 'id' )
-						.removeClass( 'forminator-button-submit forminator-hidden' )
+						.removeClass( 'forminator-button-submit forminator-hidden ' + submitButtonClass )
 						.addClass( 'forminator-button-next' );
 					if( this.custom_label['has-paypal'] === true ) {
 						this.$el.find( '#forminator-paypal-submit' ).removeAttr( 'id' ).addClass('forminator-hidden');
-						this.$el.find('.forminator-button-next').removeClass( 'forminator-button-submit forminator-hidden' );
+						this.$el.find('.forminator-button-next').removeClass( 'forminator-button-submit forminator-hidden ' + submitButtonClass );
 					}
 					this.$el.find( '.forminator-button-back' ).html( this.prev_button_txt );
 					this.$el.find( '.forminator-button-next' ).html( this.next_button_txt );

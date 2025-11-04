@@ -57,15 +57,15 @@ class __TwigTemplate_8954bd8b685d4d0f3d5c30a93054f9e0c323f916e761dedb785c0985321
   <script type=\"text/javascript\">
     var systemInfoData = ";
         // line 8
-        yield json_encode(($context["systemInfoData"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["systemInfoData"] ?? null));
         yield ";
     var systemStatusData = ";
         // line 9
-        yield json_encode(($context["systemStatusData"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["systemStatusData"] ?? null));
         yield ";
     var actionSchedulerData = ";
         // line 10
-        yield json_encode(($context["actionSchedulerData"] ?? null));
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["actionSchedulerData"] ?? null));
         yield ";
   </script>
 

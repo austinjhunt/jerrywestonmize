@@ -4,16 +4,16 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Css;
+namespace AmeliaDompdf\Css;
 
 use DOMElement;
 use DOMXPath;
-use Dompdf\Css\Content\Url;
-use Dompdf\Dompdf;
-use Dompdf\Exception;
-use Dompdf\FontMetrics;
-use Dompdf\Frame\FrameTree;
-use Dompdf\Helpers;
+use AmeliaDompdf\Css\Content\Url;
+use AmeliaDompdf\Dompdf;
+use AmeliaDompdf\Exception;
+use AmeliaDompdf\FontMetrics;
+use AmeliaDompdf\Frame\FrameTree;
+use AmeliaDompdf\Helpers;
 
 /**
  * The master stylesheet class

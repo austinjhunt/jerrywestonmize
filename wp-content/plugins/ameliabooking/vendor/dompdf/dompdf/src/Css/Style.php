@@ -4,23 +4,23 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace Dompdf\Css;
+namespace AmeliaDompdf\Css;
 
-use Dompdf\Adapter\CPDF;
-use Dompdf\Css\Content\Attr;
-use Dompdf\Css\Content\CloseQuote;
-use Dompdf\Css\Content\ContentPart;
-use Dompdf\Css\Content\Counter;
-use Dompdf\Css\Content\Counters;
-use Dompdf\Css\Content\NoCloseQuote;
-use Dompdf\Css\Content\NoOpenQuote;
-use Dompdf\Css\Content\OpenQuote;
-use Dompdf\Css\Content\StringPart;
-use Dompdf\Css\Content\Url;
-use Dompdf\Exception;
-use Dompdf\FontMetrics;
-use Dompdf\Frame;
-use Dompdf\Helpers;
+use AmeliaDompdf\Adapter\CPDF;
+use AmeliaDompdf\Css\Content\Attr;
+use AmeliaDompdf\Css\Content\CloseQuote;
+use AmeliaDompdf\Css\Content\ContentPart;
+use AmeliaDompdf\Css\Content\Counter;
+use AmeliaDompdf\Css\Content\Counters;
+use AmeliaDompdf\Css\Content\NoCloseQuote;
+use AmeliaDompdf\Css\Content\NoOpenQuote;
+use AmeliaDompdf\Css\Content\OpenQuote;
+use AmeliaDompdf\Css\Content\StringPart;
+use AmeliaDompdf\Css\Content\Url;
+use AmeliaDompdf\Exception;
+use AmeliaDompdf\FontMetrics;
+use AmeliaDompdf\Frame;
+use AmeliaDompdf\Helpers;
 
 /**
  * Represents CSS properties.
