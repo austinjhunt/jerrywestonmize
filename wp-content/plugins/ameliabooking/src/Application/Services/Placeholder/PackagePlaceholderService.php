@@ -357,11 +357,17 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
 
         $expirationDate = null;
 
+        $startDate = null;
+
         $couponDiscount = $discountValue + $deductionValue;
 
         if ($coupon) {
             if (!empty($coupon['expirationDate'])) {
                 $expirationDate = $coupon['expirationDate'];
+            }
+
+            if (!empty($coupon['startDate'])) {
+                $startDate = $coupon['startDate'];
             }
 
             $couponsUsed[] =
@@ -370,6 +376,8 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                     $helperService->getFormattedPrice($discountValue) . ' ' . $break : '') .
                 ($deductionValue ? BackendStrings::getPaymentStrings()['deduction'] . ': ' .
                     $helperService->getFormattedPrice($deductionValue) . ' ' . $break : '') .
+                ($startDate ? BackendStrings::getCommonStrings()['start_date'] . ': ' .
+                    $startDate . ' ' . $break : '') .
                 ($expirationDate ? BackendStrings::getPaymentStrings()['expiration_date'] . ': ' .
                     $expirationDate : '');
         }

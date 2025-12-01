@@ -7,7 +7,9 @@ use MailPoetVendor\Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use MailPoetVendor\Doctrine\DBAL\Types\Type;
 use MailPoetVendor\Doctrine\Deprecations\Deprecation;
 use MailPoetVendor\Psr\Cache\CacheItemPoolInterface;
+use RuntimeException;
 use TypeError;
+use function class_exists;
 use function get_class;
 use function hash;
 use function serialize;
@@ -38,7 +40,13 @@ class QueryCacheProfile
  public function getResultCacheDriver()
  {
  Deprecation::trigger('doctrine/dbal', 'https://github.com/doctrine/dbal/pull/4620', '%s is deprecated, call getResultCache() instead.', __METHOD__);
- return $this->resultCache !== null ? DoctrineProvider::wrap($this->resultCache) : null;
+ if ($this->resultCache === null) {
+ return null;
+ }
+ if (!class_exists(DoctrineProvider::class)) {
+ throw new RuntimeException(sprintf('Calling %s() is not supported if the doctrine/cache package is not installed. ' . 'Try running "composer require doctrine/cache" or migrate cache access to PSR-6.', __METHOD__));
+ }
+ return DoctrineProvider::wrap($this->resultCache);
  }
  public function getLifetime()
  {

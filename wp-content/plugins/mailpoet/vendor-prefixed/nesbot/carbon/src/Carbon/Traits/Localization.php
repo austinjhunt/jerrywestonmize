@@ -194,7 +194,7 @@ trait Localization
  {
  return static::translateTimeString($timeString, $this->getTranslatorLocale(), $to);
  }
- public function locale(string $locale = null, ...$fallbackLocales)
+ public function locale(?string $locale = null, ...$fallbackLocales)
  {
  if ($locale === null) {
  return $this->getTranslatorLocale();

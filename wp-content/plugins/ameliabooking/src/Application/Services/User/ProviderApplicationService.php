@@ -386,6 +386,67 @@ class ProviderApplicationService
     }
 
     /**
+     * Creating the modified day list of the copied saved day list
+     * by adding new days, removing deleted days and replacing existing days with the new day list days
+     *
+     * @param Collection $newDayList
+     * @param Collection $savedDayList
+     * @param Collection $removedDayList
+     *
+     * @return Collection
+     * @throws ContainerValueNotFoundException
+     * @throws InvalidArgumentException
+     */
+    public function getModifiedDayList(
+        Collection $newDayList,
+        Collection $savedDayList,
+        Collection $removedDayList
+    ): Collection {
+        /** @var Collection $modifiedDayList */
+        $modifiedDayList = clone $savedDayList;
+
+        $newDayListIndexesById = [];
+
+        /** @var DayOff|SpecialDay $item */
+        foreach ($newDayList->getItems() as $index => $item) {
+            if ($item->getId()) {
+                $newDayListIndexesById[$item->getId()->getValue()] = $index;
+            }
+        }
+
+        $removedDayIds = [];
+
+        /** @var DayOff|SpecialDay $item */
+        foreach ($removedDayList->getItems() as $item) {
+            if ($item->getId()) {
+                $removedDayIds[$item->getId()->getValue()] = true;
+            }
+        }
+
+        /** @var DayOff|SpecialDay $item */
+        foreach ($modifiedDayList->getItems() as $index => $item) {
+            if (isset($removedDayIds[$item->getId()->getValue()])) {
+                $modifiedDayList->deleteItem($index);
+            } elseif (isset($newDayListIndexesById[$item->getId()->getValue()])) {
+                $modifiedDayList->placeItem(
+                    $newDayList->getItem($newDayListIndexesById[$item->getId()->getValue()]),
+                    $index,
+                    true
+                );
+            }
+        }
+
+        /** @var DayOff|SpecialDay $item */
+        foreach ($newDayList->getItems() as $item) {
+            if (!$item->getId() || !$item->getId()->getValue()) {
+                $modifiedDayList->addItem($item);
+            }
+        }
+
+        return $modifiedDayList;
+    }
+
+    /**
      * Modify period for persist if there is only one location in period
      *
      * @param Collection $dayList

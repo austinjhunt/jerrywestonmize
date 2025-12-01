@@ -7,12 +7,15 @@ use MailPoetVendor\Doctrine\DBAL\Driver\API\MySQL;
 use MailPoetVendor\Doctrine\DBAL\Exception;
 use MailPoetVendor\Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use MailPoetVendor\Doctrine\DBAL\Platforms\AbstractPlatform;
+use MailPoetVendor\Doctrine\DBAL\Platforms\MariaDb1010Platform;
 use MailPoetVendor\Doctrine\DBAL\Platforms\MariaDb1027Platform;
 use MailPoetVendor\Doctrine\DBAL\Platforms\MariaDb1043Platform;
 use MailPoetVendor\Doctrine\DBAL\Platforms\MariaDb1052Platform;
 use MailPoetVendor\Doctrine\DBAL\Platforms\MariaDb1060Platform;
+use MailPoetVendor\Doctrine\DBAL\Platforms\MariaDb110700Platform;
 use MailPoetVendor\Doctrine\DBAL\Platforms\MySQL57Platform;
 use MailPoetVendor\Doctrine\DBAL\Platforms\MySQL80Platform;
+use MailPoetVendor\Doctrine\DBAL\Platforms\MySQL84Platform;
 use MailPoetVendor\Doctrine\DBAL\Platforms\MySQLPlatform;
 use MailPoetVendor\Doctrine\DBAL\Schema\MySQLSchemaManager;
 use MailPoetVendor\Doctrine\DBAL\VersionAwarePlatformDriver;
@@ -28,6 +31,12 @@ abstract class AbstractMySQLDriver implements VersionAwarePlatformDriver
  $mariadb = stripos($version, 'mariadb') !== \false;
  if ($mariadb) {
  $mariaDbVersion = $this->getMariaDbMysqlVersionNumber($version);
+ if (version_compare($mariaDbVersion, '11.7.0', '>=')) {
+ return new MariaDb110700Platform();
+ }
+ if (version_compare($mariaDbVersion, '10.10.0', '>=')) {
+ return new MariaDb1010Platform();
+ }
  if (version_compare($mariaDbVersion, '10.6.0', '>=')) {
  return new MariaDb1060Platform();
  }
@@ -43,6 +52,12 @@ abstract class AbstractMySQLDriver implements VersionAwarePlatformDriver
  }
  } else {
  $oracleMysqlVersion = $this->getOracleMysqlVersionNumber($version);
+ if (version_compare($oracleMysqlVersion, '8.4.0', '>=')) {
+ if (!version_compare($version, '8.4.0', '>=')) {
+ Deprecation::trigger('doctrine/orm', 'https://github.com/doctrine/dbal/pull/5779', 'Version detection logic for MySQL will change in DBAL 4. ' . 'Please specify the version as the server reports it, e.g. "8.4.0" instead of "8.4".');
+ }
+ return new MySQL84Platform();
+ }
  if (version_compare($oracleMysqlVersion, '8', '>=')) {
  if (!version_compare($version, '8.0.0', '>=')) {
  Deprecation::trigger('doctrine/orm', 'https://github.com/doctrine/dbal/pull/5779', 'Version detection logic for MySQL will change in DBAL 4. ' . 'Please specify the version as the server reports it, e.g. "8.0.31" instead of "8".');
@@ -61,7 +76,7 @@ abstract class AbstractMySQLDriver implements VersionAwarePlatformDriver
  }
  private function getOracleMysqlVersionNumber(string $versionString) : string
  {
- if (preg_match('/^(?P<major>\\d+)(?:\\.(?P<minor>\\d+)(?:\\.(?P<patch>\\d+))?)?/', $versionString, $versionParts) === 0) {
+ if (preg_match('/^(?P<major>\\d+)(?:\\.(?P<minor>\\d+)(?:\\.(?P<patch>\\d+))?)?/', $versionString, $versionParts) !== 1) {
  throw Exception::invalidPlatformVersionSpecified($versionString, '<major_version>.<minor_version>.<patch_version>');
  }
  $majorVersion = $versionParts['major'];
@@ -69,6 +84,8 @@ abstract class AbstractMySQLDriver implements VersionAwarePlatformDriver
  $patchVersion = $versionParts['patch'] ?? null;
  if ($majorVersion === '5' && $minorVersion === '7') {
  $patchVersion ??= '9';
+ } else {
+ $patchVersion ??= '0';
  }
  return $majorVersion . '.' . $minorVersion . '.' . $patchVersion;
  }
@@ -77,7 +94,7 @@ abstract class AbstractMySQLDriver implements VersionAwarePlatformDriver
  if (stripos($versionString, 'MariaDB') === 0) {
  Deprecation::trigger('doctrine/orm', 'https://github.com/doctrine/dbal/pull/5779', 'Version detection logic for MySQL will change in DBAL 4. ' . 'Please specify the version as the server reports it, ' . 'e.g. "10.9.3-MariaDB" instead of "mariadb-10.9".');
  }
- if (preg_match('/^(?:5\\.5\\.5-)?(mariadb-)?(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)/i', $versionString, $versionParts) === 0) {
+ if (preg_match('/^(?:5\\.5\\.5-)?(mariadb-)?(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)/i', $versionString, $versionParts) !== 1) {
  throw Exception::invalidPlatformVersionSpecified($versionString, '^(?:5\\.5\\.5-)?(mariadb-)?<major_version>.<minor_version>.<patch_version>');
  }
  return $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'];

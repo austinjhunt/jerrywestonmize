@@ -1,12 +1,11 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence;
 if (!defined('ABSPATH')) exit;
-use MailPoetVendor\Doctrine\Deprecations\Deprecation;
 use InvalidArgumentException;
 use ReflectionClass;
-use function explode;
+use function assert;
 use function sprintf;
-use function strpos;
 abstract class AbstractManagerRegistry implements ManagerRegistry
 {
  private $name;
@@ -15,7 +14,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
  private $defaultConnection;
  private $defaultManager;
  private $proxyInterfaceName;
- public function __construct($name, array $connections, array $managers, $defaultConnection, $defaultManager, $proxyInterfaceName)
+ public function __construct(string $name, array $connections, array $managers, string $defaultConnection, string $defaultManager, string $proxyInterfaceName)
  {
  $this->name = $name;
  $this->connections = $connections;
@@ -24,13 +23,13 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
  $this->defaultManager = $defaultManager;
  $this->proxyInterfaceName = $proxyInterfaceName;
  }
- protected abstract function getService($name);
- protected abstract function resetService($name);
+ protected abstract function getService(string $name);
+ protected abstract function resetService(string $name);
  public function getName()
  {
  return $this->name;
  }
- public function getConnection($name = null)
+ public function getConnection(?string $name = null)
  {
  if ($name === null) {
  $name = $this->defaultConnection;
@@ -60,7 +59,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
  {
  return $this->defaultManager;
  }
- public function getManager($name = null)
+ public function getManager(?string $name = null)
  {
  if ($name === null) {
  $name = $this->defaultManager;
@@ -68,22 +67,27 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
  if (!isset($this->managers[$name])) {
  throw new InvalidArgumentException(sprintf('Doctrine %s Manager named "%s" does not exist.', $this->name, $name));
  }
- return $this->getService($this->managers[$name]);
+ $service = $this->getService($this->managers[$name]);
+ assert($service instanceof ObjectManager);
+ return $service;
  }
- public function getManagerForClass($class)
+ public function getManagerForClass(string $class)
  {
- $className = $this->getRealClassName($class);
- $proxyClass = new ReflectionClass($className);
- if ($proxyClass->implementsInterface($this->proxyInterfaceName)) {
- $parentClass = $proxyClass->getParentClass();
- if (!$parentClass) {
+ $proxyClass = new ReflectionClass($class);
+ if ($proxyClass->isAnonymous()) {
  return null;
  }
- $className = $parentClass->getName();
+ if ($proxyClass->implementsInterface($this->proxyInterfaceName)) {
+ $parentClass = $proxyClass->getParentClass();
+ if ($parentClass === \false) {
+ return null;
+ }
+ $class = $parentClass->getName();
  }
  foreach ($this->managers as $id) {
  $manager = $this->getService($id);
- if (!$manager->getMetadataFactory()->isTransient($className)) {
+ assert($manager instanceof ObjectManager);
+ if (!$manager->getMetadataFactory()->isTransient($class)) {
  return $manager;
  }
  }
@@ -95,17 +99,19 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
  }
  public function getManagers()
  {
- $dms = [];
+ $managers = [];
  foreach ($this->managers as $name => $id) {
- $dms[$name] = $this->getService($id);
+ $manager = $this->getService($id);
+ assert($manager instanceof ObjectManager);
+ $managers[$name] = $manager;
  }
- return $dms;
+ return $managers;
  }
- public function getRepository($persistentObject, $persistentManagerName = null)
+ public function getRepository(string $persistentObject, ?string $persistentManagerName = null)
  {
  return $this->selectManager($persistentObject, $persistentManagerName)->getRepository($persistentObject);
  }
- public function resetManager($name = null)
+ public function resetManager(?string $name = null)
  {
  if ($name === null) {
  $name = $this->defaultManager;
@@ -118,21 +124,11 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
  $this->resetService($this->managers[$name]);
  return $this->getManager($name);
  }
- private function selectManager(string $persistentObjectName, ?string $persistentManagerName = null) : ObjectManager
+ private function selectManager(string $persistentObject, ?string $persistentManagerName = null) : ObjectManager
  {
  if ($persistentManagerName !== null) {
  return $this->getManager($persistentManagerName);
  }
- return $this->getManagerForClass($persistentObjectName) ?? $this->getManager();
- }
- private function getRealClassName(string $classNameOrAlias) : string
- {
- // Check for namespace alias
- if (strpos($classNameOrAlias, ':') !== \false) {
- Deprecation::trigger('doctrine/persistence', 'https://github.com/doctrine/persistence/issues/204', 'Short namespace aliases such as "%s" are deprecated, use ::class constant instead.', $classNameOrAlias);
- [$namespaceAlias, $simpleClassName] = explode(':', $classNameOrAlias, 2);
- return $this->getAliasNamespace($namespaceAlias) . '\\' . $simpleClassName;
- }
- return $classNameOrAlias;
+ return $this->getManagerForClass($persistentObject) ?? $this->getManager();
  }
 }

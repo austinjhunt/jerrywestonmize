@@ -451,10 +451,15 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         }
 
         if (!empty($criteria['search'])) {
-            $where[] = "(e.name LIKE '%" . $criteria['search'] . "%' 
-            OR e.translations LIKE '{\"name\":{%" . $criteria['search'] . "%\"description\":{%'
-            OR e.translations LIKE '{\"description\":{%\"name\":{%" . $criteria['search'] . "%'
-            OR (e.translations LIKE '{\"name\":{%" . $criteria['search'] . "%' AND e.translations NOT LIKE '%\"description\":{%'))";
+            $params[':search1'] = "%{$criteria['search']}%";
+            $params[':search2'] = "{\"name\":{%{$criteria['search']}%\"description\":{%";
+            $params[':search3'] = "{\"description\":{%\"name\":{%{$criteria['search']}%";
+            $params[':search4'] = "{\"name\":{%{$criteria['search']}%";
+
+            $where[] = "(e.name LIKE :search1 
+            OR e.translations LIKE :search2
+            OR e.translations LIKE :search3
+            OR (e.translations LIKE :search4 AND e.translations NOT LIKE '%\"description\":{%'))";
         }
 
 
@@ -682,10 +687,15 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         }
 
         if (!empty($criteria['search'])) {
-            $where[] = "(e.name LIKE '%" . $criteria['search'] . "%' 
-            OR e.translations LIKE '{\"name\":{%" . $criteria['search'] . "%\"description\":{%'
-            OR e.translations LIKE '{\"description\":{%\"name\":{%" . $criteria['search'] . "%'
-            OR (e.translations LIKE '{\"name\":{%" . $criteria['search'] . "%' AND e.translations NOT LIKE '%\"description\":{%'))";
+            $params[':search1'] = "%{$criteria['search']}%";
+            $params[':search2'] = "{\"name\":{%{$criteria['search']}%\"description\":{%";
+            $params[':search3'] = "{\"description\":{%\"name\":{%{$criteria['search']}%";
+            $params[':search4'] = "{\"name\":{%{$criteria['search']}%";
+
+            $where[] = "(e.name LIKE :search1 
+            OR e.translations LIKE :search2
+            OR e.translations LIKE :search3
+            OR (e.translations LIKE :search4 AND e.translations NOT LIKE '%\"description\":{%'))";
         }
 
         if (isset($criteria['show'])) {

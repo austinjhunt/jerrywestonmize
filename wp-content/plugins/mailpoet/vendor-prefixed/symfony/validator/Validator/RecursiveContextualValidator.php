@@ -132,7 +132,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface
  $cacheKey = $this->generateCacheKey($objectOrClass);
  $propertyPath = PropertyPath::append($this->defaultPropertyPath, $propertyName);
  } else {
- // $objectOrClass contains a class name
+ // $objectOrClass contains a class ?name
  $object = null;
  $class = $objectOrClass;
  $cacheKey = null;

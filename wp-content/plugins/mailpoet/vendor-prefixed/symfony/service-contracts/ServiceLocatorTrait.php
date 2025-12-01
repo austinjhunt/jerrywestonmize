@@ -15,11 +15,11 @@ trait ServiceLocatorTrait
  {
  $this->factories = $factories;
  }
- public function has($id)
+ public function has(string $id)
  {
  return isset($this->factories[$id]);
  }
- public function get($id)
+ public function get(string $id)
  {
  if (!isset($this->factories[$id])) {
  throw $this->createNotFoundException($id);

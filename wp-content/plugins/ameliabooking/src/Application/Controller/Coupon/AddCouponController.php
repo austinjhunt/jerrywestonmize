@@ -38,6 +38,7 @@ class AddCouponController extends Controller
         'events',
         'packages',
         'expirationDate',
+        'startDate',
         'allServices',
         'allEvents',
         'allPackages'

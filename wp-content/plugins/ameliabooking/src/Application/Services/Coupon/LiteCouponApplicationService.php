@@ -71,12 +71,13 @@ class LiteCouponApplicationService extends AbstractCouponApplicationService
      * @param Coupon $coupon
      * @param int    $userId
      * @param bool   $inspectCoupon
+     * @param bool   $isPlaceholder
      *
      * @return boolean
      *
      * @throws ContainerValueNotFoundException
      */
-    public function inspectCoupon($coupon, $userId, $inspectCoupon)
+    public function inspectCoupon($coupon, $userId, $inspectCoupon, $isPlaceholder = false)
     {
         return false;
     }

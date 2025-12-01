@@ -1,4 +1,5 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence\Mapping\Driver;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Doctrine\Persistence\Mapping\MappingException;
@@ -6,15 +7,17 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use function array_merge;
 use function array_unique;
+use function assert;
 use function is_dir;
 use function is_file;
+use function is_string;
 use function str_replace;
 use const DIRECTORY_SEPARATOR;
 class DefaultFileLocator implements FileLocator
 {
  protected $paths = [];
  protected $fileExtension;
- public function __construct($paths, $fileExtension = null)
+ public function __construct($paths, ?string $fileExtension = null)
  {
  $this->addPaths((array) $paths);
  $this->fileExtension = $fileExtension;
@@ -31,11 +34,11 @@ class DefaultFileLocator implements FileLocator
  {
  return $this->fileExtension;
  }
- public function setFileExtension($fileExtension)
+ public function setFileExtension(?string $fileExtension)
  {
  $this->fileExtension = $fileExtension;
  }
- public function findMappingFile($className)
+ public function findMappingFile(string $className)
  {
  $fileName = str_replace('\\', '.', $className) . $this->fileExtension;
  // Check whether file exists
@@ -46,10 +49,12 @@ class DefaultFileLocator implements FileLocator
  }
  throw MappingException::mappingFileNotFound($className, $fileName);
  }
- public function getAllClassNames($globalBasename)
+ public function getAllClassNames(string $globalBasename)
  {
+ if ($this->paths === []) {
+ return [];
+ }
  $classes = [];
- if ($this->paths) {
  foreach ($this->paths as $path) {
  if (!is_dir($path)) {
  throw MappingException::fileMappingDriversRequireConfiguredDirectoryPath($path);
@@ -61,18 +66,18 @@ class DefaultFileLocator implements FileLocator
  continue;
  }
  // NOTE: All files found here means classes are not transient!
+ assert(is_string($fileName));
  $class = str_replace('.', '\\', $fileName);
  $classes[] = $class;
  }
  }
- }
  return $classes;
  }
- public function fileExists($className)
+ public function fileExists(string $className)
  {
  $fileName = str_replace('\\', '.', $className) . $this->fileExtension;
  // Check whether file exists
- foreach ((array) $this->paths as $path) {
+ foreach ($this->paths as $path) {
  if (is_file($path . DIRECTORY_SEPARATOR . $fileName)) {
  return \true;
  }

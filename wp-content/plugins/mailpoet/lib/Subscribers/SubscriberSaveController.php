@@ -201,7 +201,7 @@ class SubscriberSaveController {
   }
 
   private function findSegments(array $segmentIds): array {
-    return $this->segmentsRepository->findBy(['id' => $segmentIds]);
+    return $this->segmentsRepository->findByIds($segmentIds);
   }
 
   private function findNewSegments(array $data): array {

@@ -121,6 +121,14 @@ class CouponFactory
             }
         }
 
+        if (!empty($data['startDate'])) {
+            if (is_string($data['startDate'])) {
+                $coupon->setStartDate(new DateTimeValue(DateTimeService::getCustomDateTimeObject($data['startDate'])));
+            } else {
+                $coupon->setStartDate(new DateTimeValue($data['startDate']));
+            }
+        }
+
         if (!empty($data['allServices'])) {
             $coupon->setAllServices(new BooleanValueObject($data['allServices']));
         }
@@ -167,6 +175,7 @@ class CouponFactory
             $coupons[$couponId]['notificationRecurring'] = $row['coupon_notificationRecurring'];
             $coupons[$couponId]['status']         = $row['coupon_status'];
             $coupons[$couponId]['expirationDate'] = $row['coupon_expirationDate'];
+            $coupons[$couponId]['startDate']      = $row['coupon_startDate'];
             $coupons[$couponId]['allServices']    = $row['coupon_allServices'];
             $coupons[$couponId]['allEvents']      = $row['coupon_allEvents'];
             $coupons[$couponId]['allPackages']    = $row['coupon_allPackages'];

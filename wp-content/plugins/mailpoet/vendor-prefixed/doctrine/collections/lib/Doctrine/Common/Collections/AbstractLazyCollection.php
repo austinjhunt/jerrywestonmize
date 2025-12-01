@@ -2,6 +2,7 @@
 namespace MailPoetVendor\Doctrine\Common\Collections;
 if (!defined('ABSPATH')) exit;
 use Closure;
+use LogicException;
 use ReturnTypeWillChange;
 use Traversable;
 abstract class AbstractLazyCollection implements Collection
@@ -175,6 +176,9 @@ abstract class AbstractLazyCollection implements Collection
  }
  $this->doInitialize();
  $this->initialized = \true;
+ if ($this->collection === null) {
+ throw new LogicException('You must initialize the collection property in the doInitialize() method.');
+ }
  }
  protected abstract function doInitialize();
 }

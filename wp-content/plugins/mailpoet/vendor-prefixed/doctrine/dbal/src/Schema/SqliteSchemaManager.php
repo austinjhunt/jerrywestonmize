@@ -106,7 +106,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
  public function listTableForeignKeys($table, $database = null)
  {
  $table = $this->normalizeName($table);
- $columns = $this->selectForeignKeyColumns('', $table)->fetchAllAssociative();
+ $columns = $this->selectForeignKeyColumns($database ?? 'main', $table)->fetchAllAssociative();
  if (count($columns) > 0) {
  $columns = $this->addDetailsToTableForeignKeyColumns($table, $columns);
  }
@@ -158,7 +158,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
  protected function _getPortableTableColumnList($table, $database, $tableColumns)
  {
  $list = parent::_getPortableTableColumnList($table, $database, $tableColumns);
- // find column with autoincrement
+ // find column with ?autoincrement
  $autoincrementColumn = null;
  $autoincrementCount = 0;
  foreach ($tableColumns as $tableColumn) {
@@ -293,7 +293,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
  }
  private function parseColumnCollationFromSQL(string $column, string $sql) : ?string
  {
- $pattern = '{(?:\\W' . preg_quote($column) . '\\W|\\W' . preg_quote($this->_platform->quoteSingleIdentifier($column)) . '\\W)[^,(]+(?:\\([^()]+\\)[^,]*)?(?:(?:DEFAULT|CHECK)\\s*(?:\\(.*?\\))?[^,]*)*COLLATE\\s+["\']?([^\\s,"\')]+)}is';
+ $pattern = '{' . $this->buildIdentifierPattern($column) . '[^,(]+(?:\\([^()]+\\)[^,]*)?(?:(?:DEFAULT|CHECK)\\s*(?:\\(.*?\\))?[^,]*)*COLLATE\\s+["\']?([^\\s,"\')]+)}is';
  if (preg_match($pattern, $sql, $match) !== 1) {
  return null;
  }
@@ -302,8 +302,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
  private function parseTableCommentFromSQL(string $table, string $sql) : ?string
  {
  $pattern = '/\\s* # Allow whitespace characters at start of line
-CREATE\\sTABLE # Match "CREATE TABLE"
-(?:\\W"' . preg_quote($this->_platform->quoteSingleIdentifier($table), '/') . '"\\W|\\W' . preg_quote($table, '/') . '\\W) # Match table name (quoted and unquoted)
+CREATE\\sTABLE' . $this->buildIdentifierPattern($table) . '
 ( # Start capture
  (?:\\s*--[^\\n]*\\n?)+ # Capture anything that starts with whitespaces followed by -- until the end of the line(s)
 )/ix';
@@ -315,12 +314,18 @@ CREATE\\sTABLE # Match "CREATE TABLE"
  }
  private function parseColumnCommentFromSQL(string $column, string $sql) : ?string
  {
- $pattern = '{[\\s(,](?:\\W' . preg_quote($this->_platform->quoteSingleIdentifier($column)) . '\\W|\\W' . preg_quote($column) . '\\W)(?:\\([^)]*?\\)|[^,(])*?,?((?:(?!\\n))(?:\\s*--[^\\n]*\\n?)+)}i';
+ $pattern = '{[\\s(,]' . $this->buildIdentifierPattern($column) . '(?:\\([^)]*?\\)|[^,(])*?,?((?:(?!\\n))(?:\\s*--[^\\n]*\\n?)+)}i';
  if (preg_match($pattern, $sql, $match) !== 1) {
  return null;
  }
  $comment = preg_replace('{^\\s*--}m', '', rtrim($match[1], "\n"));
  return $comment === '' ? null : $comment;
+ }
+ private function buildIdentifierPattern(string $identifier) : string
+ {
+ return '(?:' . implode('|', array_map(static function (string $sql) : string {
+ return '\\W' . preg_quote($sql, '/') . '\\W';
+ }, [$identifier, $this->_platform->quoteSingleIdentifier($identifier)])) . ')';
  }
  private function getCreateTableSQL(string $table) : string
  {
@@ -414,7 +419,7 @@ SQL;
  $params = [];
  if ($tableName !== null) {
  $conditions[] = 't.name = ?';
- $params[] = str_replace('.', '__', $tableName);
+ $params[] = $this->_platform->canEmulateSchemas() ? str_replace('.', '__', $tableName) : $tableName;
  }
  $sql .= ' WHERE ' . implode(' AND ', $conditions) . ' ORDER BY t.name, c.cid';
  return $this->_conn->executeQuery($sql, $params);
@@ -431,7 +436,7 @@ SQL;
  $params = [];
  if ($tableName !== null) {
  $conditions[] = 't.name = ?';
- $params[] = str_replace('.', '__', $tableName);
+ $params[] = $this->_platform->canEmulateSchemas() ? str_replace('.', '__', $tableName) : $tableName;
  }
  $sql .= ' WHERE ' . implode(' AND ', $conditions) . ' ORDER BY t.name, i.seq';
  return $this->_conn->executeQuery($sql, $params);
@@ -449,7 +454,7 @@ SQL;
  $params = [];
  if ($tableName !== null) {
  $conditions[] = 't.name = ?';
- $params[] = str_replace('.', '__', $tableName);
+ $params[] = $this->_platform->canEmulateSchemas() ? str_replace('.', '__', $tableName) : $tableName;
  }
  $sql .= ' WHERE ' . implode(' AND ', $conditions) . ' ORDER BY t.name, p.id DESC, p.seq';
  return $this->_conn->executeQuery($sql, $params);

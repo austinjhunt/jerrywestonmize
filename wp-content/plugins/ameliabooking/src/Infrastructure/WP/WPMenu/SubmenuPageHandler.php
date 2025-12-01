@@ -206,7 +206,8 @@ class SubmenuPageHandler
                         BackendStrings::getCustomerStrings(),
                         BackendStrings::getAppointmentStrings(),
                         BackendStrings::getPaymentStrings(),
-                        BackendStrings::getRecurringStrings()
+                        BackendStrings::getRecurringStrings(),
+                        BackendStrings::getSettingsStrings()
                     )
                 );
 
@@ -244,7 +245,8 @@ class SubmenuPageHandler
                         BackendStrings::getDashboardStrings(),
                         BackendStrings::getPaymentStrings(),
                         BackendStrings::getRecurringStrings(),
-                        BackendStrings::getNotificationsStrings()
+                        BackendStrings::getNotificationsStrings(),
+                        BackendStrings::getSettingsStrings()
                     )
                 );
 
@@ -263,7 +265,8 @@ class SubmenuPageHandler
                         BackendStrings::getPaymentStrings(),
                         BackendStrings::getEventStrings(),
                         BackendStrings::getBookableStrings(),
-                        BackendStrings::getRecurringStrings()
+                        BackendStrings::getRecurringStrings(),
+                        BackendStrings::getSettingsStrings()
                     )
                 );
 
@@ -402,7 +405,7 @@ class SubmenuPageHandler
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/admin.a7e7fc8a.js',
+                AMELIA_URL . 'v3/public/assets/admin.0ad45c47.js',
                 [],
                 AMELIA_VERSION,
                 true

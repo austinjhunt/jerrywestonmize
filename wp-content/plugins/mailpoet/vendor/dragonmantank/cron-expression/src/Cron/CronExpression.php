@@ -76,7 +76,7 @@ class CronExpression
  {
  return self::$registeredAliases;
  }
- public static function factory(string $expression, FieldFactoryInterface $fieldFactory = null): CronExpression
+ public static function factory(string $expression,?FieldFactoryInterface $fieldFactory = null): CronExpression
  {
  return new static($expression, $fieldFactory);
  }
@@ -89,7 +89,7 @@ class CronExpression
  }
  return true;
  }
- public function __construct(string $expression, FieldFactoryInterface $fieldFactory = null)
+ public function __construct(string $expression,?FieldFactoryInterface $fieldFactory = null)
  {
  $shortcut = strtolower($expression);
  $expression = self::$registeredAliases[$shortcut] ?? $expression;

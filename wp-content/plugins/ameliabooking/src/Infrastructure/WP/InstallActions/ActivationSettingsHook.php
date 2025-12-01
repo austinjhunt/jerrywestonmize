@@ -1785,6 +1785,10 @@ This message does not have an option for responding. If you need additional info
             'qrCodeEvents'                      => [
                 'enabled'                          => false,
             ],
+            'waitingListAppointments'           => [
+                'enabled'                          => false,
+                'redirectUrlDenied'                => ''
+            ],
             'pastDaysEvents'                       => 0,
             'employeeSelection'                    => 'random',
             'bringingAnyoneLogic'                  => 'additional',

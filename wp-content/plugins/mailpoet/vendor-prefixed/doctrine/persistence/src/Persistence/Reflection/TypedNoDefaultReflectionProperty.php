@@ -1,8 +1,8 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence\Reflection;
 if (!defined('ABSPATH')) exit;
-use ReflectionProperty;
-class TypedNoDefaultReflectionProperty extends ReflectionProperty
+class TypedNoDefaultReflectionProperty extends RuntimeReflectionProperty
 {
  use TypedNoDefaultReflectionPropertyBase;
 }

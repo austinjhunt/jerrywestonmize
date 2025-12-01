@@ -7,7 +7,7 @@ class InvalidDateException extends BaseInvalidArgumentException implements Inval
 {
  private $field;
  private $value;
- public function __construct($field, $value, $code = 0, Throwable $previous = null)
+ public function __construct($field, $value, $code = 0,?Throwable $previous = null)
  {
  $this->field = $field;
  $this->value = $value;

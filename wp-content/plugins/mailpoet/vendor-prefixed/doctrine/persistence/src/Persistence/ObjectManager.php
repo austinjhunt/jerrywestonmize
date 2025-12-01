@@ -1,21 +1,21 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Doctrine\Persistence\Mapping\ClassMetadata;
 use MailPoetVendor\Doctrine\Persistence\Mapping\ClassMetadataFactory;
 interface ObjectManager
 {
- public function find($className, $id);
- public function persist($object);
- public function remove($object);
- public function merge($object);
- public function clear($objectName = null);
- public function detach($object);
- public function refresh($object);
+ public function find(string $className, $id);
+ public function persist(object $object);
+ public function remove(object $object);
+ public function clear();
+ public function detach(object $object);
+ public function refresh(object $object);
  public function flush();
- public function getRepository($className);
- public function getClassMetadata($className);
+ public function getRepository(string $className);
+ public function getClassMetadata(string $className);
  public function getMetadataFactory();
- public function initializeObject($obj);
- public function contains($object);
+ public function initializeObject(object $obj);
+ public function contains(object $object);
 }

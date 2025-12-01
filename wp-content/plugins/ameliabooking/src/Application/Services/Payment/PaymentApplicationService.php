@@ -1128,14 +1128,27 @@ class PaymentApplicationService
                 $appointmentData['wcProductId'] = $bookableSettings && isset($bookableSettings['payments']['wc']['productId']) ?
                     $bookableSettings['payments']['wc']['productId'] : null;
 
-                $linkPayment = PaymentFactory::create($oldPayment);
+                $linkPayment = PaymentFactory::create([
+                    'status' => PaymentStatus::PENDING,
+                    'amount' => $amount,
+                    'gateway' => 'wc',
+                    'entity' => $type,
+                    'dateTime' => null,
+                ]);
 
-                $linkPayment->setStatus(new PaymentStatus(PaymentStatus::PENDING));
-                $linkPayment->setDateTime(null);
-                $linkPayment->setWcOrderId(null);
-                $linkPayment->setGatewayTitle(null);
-                $linkPayment->setEntity(new Name($type));
+                if ($oldPayment['gateway'] === 'onSite') {
+                    $linkPayment->setId(new Id($oldPayment['id']));
+                    $linkPayment->setWcOrderItemId(new Id($oldPayment['wcOrderItemId']));
+                    $linkPayment->setWcOrderId(new Id($oldPayment['wcOrderId']));
+                }
+
                 $linkPayment->setActionsCompleted(new BooleanValueObject(true));
+                if (!empty($oldPayment['customerBookingId'])) {
+                    $linkPayment->setCustomerBookingId(new Id($oldPayment['customerBookingId']));
+                }
+                if (!empty($oldPayment['invoiceNumber'])) {
+                    $linkPayment->setInvoiceNumber(new Id($oldPayment['invoiceNumber']));
+                }
                 if ($type === Entities::PACKAGE) {
                     $linkPayment->setCustomerBookingId(null);
                     $linkPayment->setPackageCustomerId(new Id($data['packageCustomerId']));
@@ -1146,7 +1159,7 @@ class PaymentApplicationService
                 $appointmentData['payment']['fromPanel']  = !empty($data['fromPanel']);
                 $appointmentData['payment']['newPayment'] = $oldPayment['gateway'] !== 'onSite';
 
-                $paymentLink = WooCommerceService::createWcOrder($appointmentData, $amount, $oldPayment['wcOrderId']);
+                $paymentLink = WooCommerceService::getPaymentLink($appointmentData, $amount, $oldPayment['wcOrderId'], $amount === $totalPrice);
                 if (!empty($paymentLink['link'])) {
                     $paymentLinks['payment_link_woocommerce'] = $paymentLink['link'];
                 } else {

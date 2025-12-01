@@ -8,7 +8,7 @@ class ParseErrorException extends BaseInvalidArgumentException implements Invali
  protected $expected;
  protected $actual;
  protected $help;
- public function __construct($expected, $actual, $help = '', $code = 0, Throwable $previous = null)
+ public function __construct($expected, $actual, $help = '', $code = 0,?Throwable $previous = null)
  {
  $this->expected = $expected;
  $this->actual = $actual;

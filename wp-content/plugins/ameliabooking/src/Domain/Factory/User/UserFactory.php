@@ -66,8 +66,6 @@ class UserFactory
                 break;
             case 'provider':
                 $weekDayList     = [];
-                $dayOffList      = [];
-                $specialDayList  = [];
                 $serviceList     = [];
                 $appointmentList = [];
 
@@ -119,48 +117,6 @@ class UserFactory
                     }
                 }
 
-                if (isset($data['specialDayList'])) {
-                    foreach ((array)$data['specialDayList'] as $specialDay) {
-                        $periodList = [];
-
-                        if (isset($specialDay['periodList'])) {
-                            foreach ((array)$specialDay['periodList'] as $period) {
-                                $periodServiceList = [];
-
-                                if (isset($period['periodServiceList'])) {
-                                    foreach ((array)$period['periodServiceList'] as $periodService) {
-                                        $periodServiceList[] = SpecialDayPeriodServiceFactory::create($periodService);
-                                    }
-                                }
-
-                                $periodLocationList = [];
-
-                                if (isset($period['periodLocationList'])) {
-                                    foreach ((array)$period['periodLocationList'] as $periodLocation) {
-                                        $periodLocationList[] = SpecialDayPeriodLocationFactory::create($periodLocation);
-                                    }
-                                }
-
-                                $period['periodServiceList'] = $periodServiceList;
-
-                                $period['periodLocationList'] = $periodLocationList;
-
-                                $periodList[] = SpecialDayPeriodFactory::create($period);
-                            }
-
-                            $specialDay['periodList'] = $periodList;
-                        }
-
-                        $specialDayList[] = SpecialDayFactory::create($specialDay);
-                    }
-                }
-
-                if (isset($data['dayOffList'])) {
-                    foreach ((array)$data['dayOffList'] as $dayOff) {
-                        $dayOffList[] = DayOffFactory::create($dayOff);
-                    }
-                }
-
                 if (isset($data['serviceList'])) {
                     foreach ((array)$data['serviceList'] as $service) {
                         $serviceList[$service['id']] = ServiceFactory::create($service);
@@ -174,8 +130,8 @@ class UserFactory
                     new Phone(isset($data['phone']) ? $data['phone'] : null),
                     new Collection($weekDayList),
                     new Collection($serviceList),
-                    new Collection($dayOffList),
-                    new Collection($specialDayList),
+                    isset($data['dayOffList']) ? self::createDayOffList($data['dayOffList']) : new Collection(),
+                    isset($data['specialDayList']) ? self::createSpecialDayList($data['specialDayList']) : new Collection(),
                     new Collection($appointmentList)
                 );
 
@@ -332,5 +288,69 @@ class UserFactory
         }
 
         return $user;
+    }
+
+    /**
+     * @param $data
+     *
+     * @return Collection
+     * @throws InvalidArgumentException
+     */
+    public static function createDayOffList($data)
+    {
+        $dayOffList = [];
+
+        foreach ((array)$data as $dayOff) {
+            $dayOffList[] = DayOffFactory::create($dayOff);
+        }
+
+        return new Collection($dayOffList);
+    }
+
+    /**
+     * @param $data
+     *
+     * @return Collection
+     * @throws InvalidArgumentException
+     */
+    public static function createSpecialDayList($data)
+    {
+        $specialDayList = [];
+
+        foreach ((array)$data as $specialDay) {
+            $periodList = [];
+
+            if (isset($specialDay['periodList'])) {
+                foreach ((array)$specialDay['periodList'] as $period) {
+                    $periodServiceList = [];
+
+                    if (isset($period['periodServiceList'])) {
+                        foreach ((array)$period['periodServiceList'] as $periodService) {
+                            $periodServiceList[] = SpecialDayPeriodServiceFactory::create($periodService);
+                        }
+                    }
+
+                    $periodLocationList = [];
+
+                    if (isset($period['periodLocationList'])) {
+                        foreach ((array)$period['periodLocationList'] as $periodLocation) {
+                            $periodLocationList[] = SpecialDayPeriodLocationFactory::create($periodLocation);
+                        }
+                    }
+
+                    $period['periodServiceList'] = $periodServiceList;
+
+                    $period['periodLocationList'] = $periodLocationList;
+
+                    $periodList[] = SpecialDayPeriodFactory::create($period);
+                }
+
+                $specialDay['periodList'] = $periodList;
+            }
+
+            $specialDayList[] = SpecialDayFactory::create($specialDay);
+        }
+
+        return new Collection($specialDayList);
     }
 }

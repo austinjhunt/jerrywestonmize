@@ -7,7 +7,7 @@ use MailPoetVendor\Sabberworm\CSS\Parsing\SourceException;
 class Parser
 {
  private $oParserState;
- public function __construct($sText, Settings $oParserSettings = null, $iLineNo = 1)
+ public function __construct($sText,?Settings $oParserSettings = null, $iLineNo = 1)
  {
  if ($oParserSettings === null) {
  $oParserSettings = Settings::create();

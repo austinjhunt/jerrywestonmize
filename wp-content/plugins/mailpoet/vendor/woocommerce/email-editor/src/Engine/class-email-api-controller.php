@@ -59,6 +59,27 @@ class Email_Api_Controller {
  200
  );
  }
+ public function get_personalization_tags_collection(): WP_REST_Response {
+ $tags = $this->personalization_tags_registry->get_all();
+ return new WP_REST_Response(
+ array_values(
+ array_map(
+ function ( Personalization_Tag $tag ) {
+ return array(
+ 'name' => $tag->get_name(),
+ 'token' => $tag->get_token(),
+ 'category' => $tag->get_category(),
+ 'attributes' => $tag->get_attributes(),
+ 'valueToInsert' => $tag->get_value_to_insert(),
+ 'postTypes' => $tag->get_post_types(),
+ );
+ },
+ $tags
+ )
+ ),
+ 200
+ );
+ }
  public function get_email_data_schema(): array {
  return Builder::object()->to_array();
  }

@@ -11,6 +11,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
+use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -21,6 +22,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
+use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
@@ -97,6 +99,8 @@ class AppointmentAddedEventHandler
             ]
         );
 
+        $firstAppointmentCustomersIds = array_column($appointment['bookings'], 'customerId');
+
         foreach ($recurringData as $key => $recurringReservationData) {
             /** @var Appointment $recurringReservationObject */
             $recurringReservationObject = AppointmentFactory::create($recurringReservationData[Entities::APPOINTMENT]);
@@ -106,6 +110,29 @@ class AppointmentAddedEventHandler
             $appointments->addItem($recurringReservationObject, $recurringReservationObject->getId()->getValue(), true);
 
             $pastRecurringAppointment = $recurringReservationObject->getBookingStart()->getValue() < DateTimeService::getNowDateTimeObject();
+
+            foreach ($recurringReservationData[Entities::APPOINTMENT]['bookings'] as $bookingKey => $recurringReservationBooking) {
+                if (in_array($recurringReservationBooking['customerId'], $firstAppointmentCustomersIds) && !$pastRecurringAppointment) {
+                    $booking = $recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey];
+                    if ($booking['status'] === BookingStatus::APPROVED || $booking['status'] === BookingStatus::PENDING) {
+                        $paymentId = !empty($booking['payments'][0]['id']) ? $booking['payments'][0]['id'] : null;
+
+                        $data = [
+                            'booking' => $booking,
+                            'type' => Entities::APPOINTMENT,
+                            'appointment' => $recurringReservationObject->toArray(),
+                            'paymentId' => $paymentId,
+                            'bookable' => $appointmentObject->getService()->toArray(),
+                            'customer' => $booking['customer']
+                        ];
+
+                        if (!empty($paymentId) && !empty($appointment['createPaymentLinks'])) {
+                            $recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey]['payments'][0]['paymentLinks'] =
+                                $paymentAS->createPaymentLink($data, $bookingKey);
+                        }
+                    }
+                }
+            }
 
             $applicationIntegrationService->handleAppointment(
                 $recurringReservationObject,
@@ -123,6 +150,8 @@ class AppointmentAddedEventHandler
         if (!$pastAppointment) {
             /** @var IcsApplicationService $icsService */
             $icsService = $container->get('application.ics.service');
+
+            $waitingBookings = new Collection();
 
             foreach ($appointment['bookings'] as $index => $booking) {
                 if ($booking['status'] === BookingStatus::APPROVED || $booking['status'] === BookingStatus::PENDING) {
@@ -146,6 +175,10 @@ class AppointmentAddedEventHandler
                         $appointment['bookings'][$index]['payments'][0]['paymentLinks'] = $paymentAS->createPaymentLink($data, $index);
                     }
                 }
+
+                if ($booking['status'] === BookingStatus::WAITING) {
+                    $waitingBookings->addItem(CustomerBookingFactory::create($booking));
+                }
             }
 
             $emailNotificationService->sendAppointmentStatusNotifications(
@@ -163,9 +196,21 @@ class AppointmentAddedEventHandler
             if ($whatsAppNotificationService->checkRequiredFields()) {
                 $whatsAppNotificationService->sendAppointmentStatusNotifications($appointment, false, true);
             }
+
+            if ($waitingBookings->getItems()) {
+                /** @var ApplicationNotificationService $applicationNotificationService */
+                $applicationNotificationService = $container->get('application.notification.service');
+
+                $applicationNotificationService->sendAppointmentCustomersStatusNotifications(
+                    $appointmentObject,
+                    $waitingBookings,
+                    true,
+                    true,
+                    false
+                );
+            }
         }
 
-        $firstAppointmentCustomersIds = array_column($appointment['bookings'], 'customerId');
 
         foreach ($recurringData as $key => $recurringReservationData) {
             /** @var Appointment $recurringReservationObject */

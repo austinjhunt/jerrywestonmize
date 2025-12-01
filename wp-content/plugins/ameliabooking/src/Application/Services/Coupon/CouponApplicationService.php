@@ -245,6 +245,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
                 'entityIds'              => $entityIds,
                 'couponsCaseInsensitive' => $couponsCaseInsensitive,
                 'notExpired'             => true,
+                'notStarted'             => true,
             ]
         );
 
@@ -310,6 +311,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
      * @param Coupon $coupon
      * @param int    $userId
      * @param bool   $inspectCoupon
+     * @param bool   $isPlaceholder
      *
      * @return boolean
      *
@@ -319,7 +321,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
      * @throws InvalidArgumentException
      * @throws CouponExpiredException
      */
-    public function inspectCoupon($coupon, $userId, $inspectCoupon)
+    public function inspectCoupon($coupon, $userId, $inspectCoupon, $isPlaceholder = false)
     {
         if (
             $inspectCoupon &&
@@ -348,6 +350,18 @@ class CouponApplicationService extends AbstractCouponApplicationService
 
             if ($inspectCoupon && $currentDate > $expirationDate) {
                 throw new CouponExpiredException(FrontendStrings::getCommonStrings()['coupon_expired']);
+            }
+        }
+
+        if ($coupon->getStartDate() && !$isPlaceholder) {
+            $currentDate = DateTimeService::getNowDateTimeObject();
+
+            $startDate = DateTimeService::getCustomDateTimeObject(
+                $coupon->getStartDate()->getValue()->format('Y-m-d') . ' 00:00:00'
+            );
+
+            if ($inspectCoupon && $currentDate < $startDate) {
+                throw new CouponInvalidException(FrontendStrings::getCommonStrings()['coupon_invalid']);
             }
         }
 
@@ -463,6 +477,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
                 'couponsCaseInsensitive' => !empty($criteria['couponsCaseInsensitive']),
                 'notificationInterval'   => !empty($criteria['notificationInterval']),
                 'notExpired'             => !empty($criteria['notExpired']),
+                'notStarted'             => !empty($criteria['notStarted']),
             ]
         );
 

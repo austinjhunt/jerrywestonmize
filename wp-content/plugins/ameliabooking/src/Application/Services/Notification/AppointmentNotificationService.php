@@ -156,7 +156,8 @@ class AppointmentNotificationService
                             (
                                 $sendInvoice &&
                                 $booking->getPayments()->length() &&
-                                $booking->getPayments()->keyExists(0)
+                                $booking->getPayments()->keyExists(0) &&
+                                $booking->getStatus()->getValue() !== BookingStatus::WAITING
                             )
                             ? $invoiceService->generateInvoice(
                                 $booking->getPayments()->getItem(0)->getId()->getValue()
@@ -239,6 +240,82 @@ class AppointmentNotificationService
                                 $bookingKey
                             );
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Send waiting list available spot notifications.
+     * Triggered when a booking for an approved appointment is canceled and there are waiting bookings.
+     * Sends one notification to provider and one to each waiting customer.
+     *
+     * @param AbstractNotificationService $notificationService
+     * @param Appointment $appointment
+     * @param Collection $waitingBookings Collection of CustomerBooking objects with status 'waiting'
+     *
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public function sendWaitingListAvailableSpotNotification(
+        $notificationService,
+        $appointment,
+        $waitingBookings
+    ) {
+        if (!$waitingBookings->length()) {
+            return;
+        }
+
+        // Provider notification (single)
+        /** @var Collection $providerNotifications */
+        $providerNotifications = $notificationService->getByNameAndType(
+            'provider_appointment_waiting_available_spot',
+            $notificationService->getType()
+        );
+        $sendDefaultProvider = $notificationService->sendDefault($providerNotifications, $appointment->toArray());
+        foreach ($providerNotifications->getItems() as $providerNotification) {
+            if (
+                $providerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
+                $notificationService->checkCustom($providerNotification, $appointment->toArray(), $sendDefaultProvider)
+            ) {
+                $notificationService->sendNotification(
+                    $appointment->toArray(),
+                    $providerNotification,
+                    true
+                );
+            }
+        }
+
+        // Customer notifications (each waiting booking)
+        /** @var Collection $customerNotifications */
+        $customerNotifications = $notificationService->getByNameAndType(
+            'customer_appointment_waiting_available_spot',
+            $notificationService->getType()
+        );
+        $sendDefaultCustomer = $notificationService->sendDefault($customerNotifications, $appointment->toArray());
+        foreach ($customerNotifications->getItems() as $customerNotification) {
+            if (
+                $customerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
+                $notificationService->checkCustom($customerNotification, $appointment->toArray(), $sendDefaultCustomer)
+            ) {
+                foreach ($waitingBookings->getItems() as $waitingBooking) {
+                    $bookingKey = null;
+                    foreach ($appointment->getBookings()->getItems() as $appBookingKey => $appBooking) {
+                        if ($appBooking->getId()->getValue() === $waitingBooking->getId()->getValue()) {
+                            $bookingKey = $appBookingKey;
+                            break;
+                        }
+                    }
+                    if ($bookingKey !== null) {
+                        $notificationService->sendNotification(
+                            array_merge($appointment->toArray(), [
+                                'bookings' => $appointment->getBookings()->toArray(),
+                            ]),
+                            $customerNotification,
+                            true,
+                            $bookingKey
+                        );
                     }
                 }
             }

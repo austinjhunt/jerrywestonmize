@@ -36,6 +36,35 @@ class Personalization_Tags_Registry {
  )
  );
  }
+ public function unregister( $token_or_tag ): ?Personalization_Tag {
+ // Extract token from the argument.
+ if ( $token_or_tag instanceof Personalization_Tag ) {
+ $token = $token_or_tag->get_token();
+ } elseif ( is_string( $token_or_tag ) ) {
+ $token = $token_or_tag;
+ } else {
+ $this->logger->warning(
+ 'Invalid argument type for unregister method',
+ array(
+ 'type' => gettype( $token_or_tag ),
+ )
+ );
+ return null;
+ }
+ $tag = $this->tags[ $token ] ?? null;
+ if ( $tag ) {
+ unset( $this->tags[ $token ] );
+ $this->logger->debug(
+ 'Personalization tag unregistered',
+ array(
+ 'token' => $token,
+ 'name' => $tag->get_name(),
+ 'category' => $tag->get_category(),
+ )
+ );
+ }
+ return $tag;
+ }
  public function get_by_token( string $token ): ?Personalization_Tag {
  return $this->tags[ $token ] ?? null;
  }

@@ -244,7 +244,8 @@ class AppointmentApplicationService
                 if (
                     ($status === BookingStatus::APPROVED && $hasCapacity && $hasLocation) ||
                     ($status === BookingStatus::PENDING && ($bookIfPending || $hasCapacity) && $hasLocation) ||
-                    ($status === BookingStatus::CANCELED || $status === BookingStatus::REJECTED || $status === BookingStatus::NO_SHOW)
+                    ($status === BookingStatus::CANCELED || $status === BookingStatus::REJECTED || $status === BookingStatus::NO_SHOW) ||
+                    ($appointmentData['bookings'][0]['status'] === BookingStatus::WAITING && !$hasCapacity)
                 ) {
                     return $existingAppointment;
                 }

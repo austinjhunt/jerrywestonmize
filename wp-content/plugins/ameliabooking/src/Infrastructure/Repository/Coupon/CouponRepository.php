@@ -103,9 +103,10 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
             ':notificationInterval'  => $data['notificationInterval'],
             ':notificationRecurring' => $data['notificationRecurring'] ? 1 : 0,
             ':expirationDate'        => $data['expirationDate'],
-            ':allServices'           => $data['allServices'],
-            ':allEvents'             => $data['allEvents'],
-            ':allPackages'           => $data['allPackages']
+            ':startDate'             => $data['startDate'],
+            ':allServices'           => $data['allServices'] ? 1 : 0,
+            ':allEvents'             => $data['allEvents'] ? 1 : 0,
+            ':allPackages'           => $data['allPackages'] ? 1 : 0
         ];
 
         try {
@@ -122,6 +123,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                  `notificationInterval`,
                  `notificationRecurring`,
                  `expirationDate`,
+                 `startDate`,
                  `allServices`,
                  `allEvents`,
                  `allPackages`  
@@ -135,6 +137,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                   :notificationInterval,
                   :notificationRecurring,
                   :expirationDate,
+                  :startDate,
                   :allServices,
                   :allEvents,
                   :allPackages
@@ -176,9 +179,10 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
             ':notificationRecurring' => $data['notificationRecurring'] ? 1 : 0,
             ':id'                    => $id,
             ':expirationDate'        => $data['expirationDate'],
-            ':allServices'           => $data['allServices'],
-            ':allEvents'             => $data['allEvents'],
-            ':allPackages'           => $data['allPackages']
+            ':startDate'             => $data['startDate'],
+            ':allServices'           => $data['allServices'] ? 1 : 0,
+            ':allEvents'             => $data['allEvents'] ? 1 : 0,
+            ':allPackages'           => $data['allPackages'] ? 1 : 0
         ];
 
         try {
@@ -194,6 +198,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 `notificationInterval`  = :notificationInterval,
                 `notificationRecurring` = :notificationRecurring,
                 `expirationDate`        = :expirationDate,
+                `startDate`             = :startDate,
                 `allServices`           = :allServices,
                 `allEvents`             = :allEvents,
                 `allPackages`           = :allPackages
@@ -235,6 +240,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                     c.notificationRecurring AS coupon_notificationRecurring,
                     c.status AS coupon_status,
                     c.expirationDate AS coupon_expirationDate,
+                    c.startDate AS coupon_startDate,
                     c.allServices AS coupon_allServices,
                     c.allEvents AS coupon_allEvents,
                     c.allPackages AS coupon_allPackages,
@@ -377,6 +383,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                     c.notificationRecurring AS coupon_notificationRecurring,
                     c.status AS coupon_status,
                     c.expirationDate AS coupon_expirationDate,
+                    c.startDate AS coupon_startDate,
                     c.allServices AS coupon_allServices,
                     c.allEvents AS coupon_allEvents,
                     c.allPackages AS coupon_allPackages
@@ -510,6 +517,13 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 $where[] = "(c.expirationDate IS NULL OR c.expirationDate >= {$currentDateTime})";
             }
 
+            if (!empty($criteria['notStarted'])) {
+                $currentDateTime = "STR_TO_DATE('" . DateTimeService::getNowDateTimeInUtc() . "', '%Y-%m-%d %H:%i:%s')";
+
+                $where[] = "(c.startDate IS NULL OR c.startDate <= {$currentDateTime})";
+            }
+
+
             if (!empty($criteria['couponIds'])) {
                 $couponIdsParams = [];
 
@@ -538,6 +552,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                     c.notificationRecurring AS coupon_notificationRecurring,
                     c.status AS coupon_status,
                     c.expirationDate AS coupon_expirationDate,
+                    c.startDate AS coupon_startDate,
                     c.allServices AS coupon_allServices,
                     c.allEvents AS coupon_allEvents,
                     c.allPackages AS coupon_allPackages

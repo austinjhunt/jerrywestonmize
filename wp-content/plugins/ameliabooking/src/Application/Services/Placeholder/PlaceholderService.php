@@ -85,6 +85,10 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
         unset($data['items']);
         unset($data['qr_code_tickets']);
 
+        $data = array_filter($data, function ($key) {
+            return strpos($key, 'invoice_custom_field') !== 0;
+        }, ARRAY_FILTER_USE_KEY);
+
         $placeholders = array_map(
             function ($placeholder) {
                 return "%{$placeholder}%";
@@ -285,6 +289,12 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     $expirationDate = $customerBooking['coupon']['expirationDate'];
                 }
 
+                $startDate = null;
+
+                if (!empty($customerBooking['coupon']['startDate'])) {
+                    $startDate = $customerBooking['coupon']['startDate'];
+                }
+
                 if (($amountData['discount'] || $amountData['deduction']) && !empty($customerBooking['info'])) {
                     $customerData = json_decode($customerBooking['info'], true);
 
@@ -304,6 +314,8 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                             $helperService->getFormattedPrice($amountData['discount']) . ' ' . $break : '') .
                         ($amountData['deduction'] ? BackendStrings::getPaymentStrings()['deduction'] . ': ' .
                             $helperService->getFormattedPrice($amountData['deduction']) . ' ' . $break : '') .
+                        ($startDate ? BackendStrings::getCommonStrings()['start_date'] . ': ' .
+                            $startDate . ' ' . $break : '') .
                         ($expirationDate ? BackendStrings::getPaymentStrings()['expiration_date'] . ': ' .
                             $expirationDate : '');
                 }
@@ -336,6 +348,12 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                 $expirationDate = $appointment['bookings'][$bookingKey]['coupon']['expirationDate'];
             }
 
+            $startDate = null;
+
+            if (!empty($appointment['bookings'][$bookingKey]['coupon']['startDate'])) {
+                $startDate = $appointment['bookings'][$bookingKey]['coupon']['startDate'];
+            }
+
             if (!empty($appointment['bookings'][$bookingKey]['coupon']['code'])) {
                 $couponsUsed[] =
                     $appointment['bookings'][$bookingKey]['coupon']['code'] . ' ' . $break .
@@ -343,6 +361,8 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                         $helperService->getFormattedPrice($amountData['discount']) . ' ' . $break : '') .
                     ($amountData['deduction'] ? BackendStrings::getPaymentStrings()['deduction'] . ': ' .
                         $helperService->getFormattedPrice($amountData['deduction']) . ' ' . $break : '') .
+                    ($startDate ? BackendStrings::getCommonStrings()['start_date'] . ': ' .
+                        $startDate . ' ' . $break : '') .
                     ($expirationDate ? BackendStrings::getPaymentStrings()['expiration_date'] . ': ' .
                         $expirationDate : '');
             }
@@ -429,6 +449,8 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
 
         $dateFormat = $settingsService->getSetting('wordpress', 'dateFormat');
 
+        $customerWaiting = $bookingKey !== null && $appointment['bookings'][$bookingKey]['status'] === BookingStatus::WAITING;
+
         return array_merge(
             $paymentLinks,
             [
@@ -439,7 +461,8 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                         AMELIA_ACTION_URL . '/bookings/cancel/' . $appointment['bookings'][$bookingKey]['id'] .
                         ($token ? '&token=' . $token : '') . "&type={$appointment['type']}" : '',
                 'appointment_approve_url' =>
-                    $bookingKeyForEmployee !== null ? (AMELIA_ACTION_URL . '/bookings/success/' . $bookingKeyForEmployee .
+                    ($bookingKeyForEmployee !== null || $customerWaiting) ? (AMELIA_ACTION_URL . '/bookings/success/' .
+                        ($customerWaiting ? $appointment['bookings'][$bookingKey]['id'] : $bookingKeyForEmployee) .
                         '&token=' . $token) : '',
                 'appointment_reject_url' =>
                     $bookingKeyForEmployee !== null ? (AMELIA_ACTION_URL . '/bookings/reject/' . $bookingKeyForEmployee .
@@ -1082,19 +1105,22 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     );
 
                 try {
-                    if ($sendCoupon && $couponAS->inspectCoupon($coupon, $customerId, true)) {
+                    if ($sendCoupon && $couponAS->inspectCoupon($coupon, $customerId, true, true)) {
                         $couponsData["coupon_{$coupon->getId()->getValue()}"] =
                             FrontendStrings::getCommonStrings()['coupon_send_text'] . ' ' .
                             $coupon->getCode()->getValue() . ' ' . $break .
                             ($coupon->getDeduction() && $coupon->getDeduction()->getValue() ?
                                 BackendStrings::getFinanceStrings()['deduction'] . ' ' .
-                                $helperService->getFormattedPrice($coupon->getDeduction()->getValue()) . $break
+                                $helperService->getFormattedPrice($coupon->getDeduction()->getValue()) . ' ' . $break
                                 : ''
                             ) .
                             ($coupon->getDiscount() && $coupon->getDiscount()->getValue() ?
                                 BackendStrings::getPaymentStrings()['discount_amount'] . ' ' .
                                 $coupon->getDiscount()->getValue() . '% ' . $break
                                 : '') .
+                            ($coupon->getStartDate() && $coupon->getStartDate()->getValue() ?
+                                BackendStrings::getCommonStrings()['start_date'] . ': ' .
+                                date_i18n($coupon->getStartDate()->getValue()->format('Y-m-d')) . ' ' : '') .
                             ($coupon->getExpirationDate() && $coupon->getExpirationDate()->getValue() ?
                                 BackendStrings::getPaymentStrings()['expiration_date'] . ': ' .
                                 date_i18n($coupon->getExpirationDate()->getValue()->format('Y-m-d')) : '');

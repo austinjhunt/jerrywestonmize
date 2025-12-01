@@ -256,6 +256,7 @@ abstract class AbstractNotificationService
                     foreach (array_keys($appointmentArray['bookings']) as $bookingKey) {
                         if (
                             !$appointmentArray['bookings'][$bookingKey]['isChangedStatus'] ||
+                            $appointmentArray['bookings'][$bookingKey]['status'] === BookingStatus::WAITING ||
                             (
                                 isset($appointmentArray['bookings'][$bookingKey]['skipNotification']) &&
                                 $appointmentArray['bookings'][$bookingKey]['skipNotification']

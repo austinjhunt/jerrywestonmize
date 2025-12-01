@@ -19,6 +19,7 @@ use MailPoetVendor\Doctrine\DBAL\Exception\TableExistsException;
 use MailPoetVendor\Doctrine\DBAL\Exception\TableNotFoundException;
 use MailPoetVendor\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use MailPoetVendor\Doctrine\DBAL\Query;
+use function strpos;
 final class ExceptionConverter implements ExceptionConverterInterface
 {
  public function convert(Exception $exception, ?Query $query) : DriverException
@@ -67,6 +68,13 @@ final class ExceptionConverter implements ExceptionConverterInterface
  case 1554:
  case 1626:
  return new SyntaxErrorException($exception, $query);
+ case 1524:
+ if (strpos($exception->getMessage(), 'Plugin \'mysql_native_password\' is not loaded') === \false) {
+ break;
+ }
+ // Workaround for MySQL 8.4 if we request an unknown user.
+ // https://bugs.mysql.com/bug.php?id=114876
+ return new ConnectionException($exception, $query);
  case 1044:
  case 1045:
  case 1046:
@@ -82,6 +90,7 @@ final class ExceptionConverter implements ExceptionConverterInterface
  case 2054:
  return new ConnectionException($exception, $query);
  case 2006:
+ case 4031:
  return new ConnectionLost($exception, $query);
  case 1048:
  case 1121:

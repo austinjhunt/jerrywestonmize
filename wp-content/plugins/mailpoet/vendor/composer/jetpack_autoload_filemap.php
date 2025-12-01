@@ -4,10 +4,6 @@ if (!defined('ABSPATH')) exit;
 $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 return array(
- 'a4a119a56e50fbb293281d9a48007e0e' => array(
- 'version' => '1.9999999.9999999.9999999-dev',
- 'path' => $vendorDir . '/symfony/polyfill-php80/bootstrap.php'
- ),
  '1f155afceeab454b94183cdd8d5248a6' => array(
  'version' => '2.11.0.0',
  'path' => $vendorDir . '/mixpanel/mixpanel-php/lib/Mixpanel.php'

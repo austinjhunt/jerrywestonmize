@@ -2,7 +2,7 @@
 namespace MailPoetVendor\Doctrine\DBAL\Platforms\Keywords;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Doctrine\Deprecations\Deprecation;
-final class MariaDb102Keywords extends MariaDBKeywords
+class MariaDb102Keywords extends MariaDBKeywords
 {
  public function getName() : string
  {

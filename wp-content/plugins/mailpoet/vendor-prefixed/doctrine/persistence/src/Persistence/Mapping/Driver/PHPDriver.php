@@ -1,4 +1,5 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence\Mapping\Driver;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Doctrine\Persistence\Mapping\ClassMetadata;
@@ -9,12 +10,12 @@ class PHPDriver extends FileDriver
  {
  parent::__construct($locator, '.php');
  }
- public function loadMetadataForClass($className, ClassMetadata $metadata)
+ public function loadMetadataForClass(string $className, ClassMetadata $metadata)
  {
  $this->metadata = $metadata;
  $this->loadMappingFile($this->locator->findMappingFile($className));
  }
- protected function loadMappingFile($file)
+ protected function loadMappingFile(string $file)
  {
  $metadata = $this->metadata;
  include $file;

@@ -1,4 +1,5 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence\Mapping;
 if (!defined('ABSPATH')) exit;
 use function strpos;
@@ -7,11 +8,11 @@ use function strrpos;
 use function substr;
 class StaticReflectionService implements ReflectionService
 {
- public function getParentClasses($class)
+ public function getParentClasses(string $class)
  {
  return [];
  }
- public function getClassShortName($class)
+ public function getClassShortName(string $class)
  {
  $nsSeparatorLastPosition = strrpos($class, '\\');
  if ($nsSeparatorLastPosition !== \false) {
@@ -19,7 +20,7 @@ class StaticReflectionService implements ReflectionService
  }
  return $class;
  }
- public function getClassNamespace($class)
+ public function getClassNamespace(string $class)
  {
  $namespace = '';
  if (strpos($class, '\\') !== \false) {
@@ -27,15 +28,15 @@ class StaticReflectionService implements ReflectionService
  }
  return $namespace;
  }
- public function getClass($class)
+ public function getClass(string $class)
  {
  return null;
  }
- public function getAccessibleProperty($class, $property)
+ public function getAccessibleProperty(string $class, string $property)
  {
  return null;
  }
- public function hasPublicMethod($class, $method)
+ public function hasPublicMethod(string $class, string $method)
  {
  return \true;
  }

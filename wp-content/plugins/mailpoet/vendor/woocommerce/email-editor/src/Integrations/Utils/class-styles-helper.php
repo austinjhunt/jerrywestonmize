@@ -10,9 +10,16 @@ class Styles_Helper {
  'declarations' => array(),
  'classnames' => '',
  );
- public static function parse_value( string $value ): float {
+ public static function parse_value( $value ): float {
+ // Handle numeric values.
+ if ( is_numeric( $value ) ) {
+ return (float) $value;
+ }
+ // Handle string values.
+ if ( is_string( $value ) ) {
  if ( preg_match( '/^\s*(-?\d+(?:\.\d+)?)/', $value, $m ) ) {
  return (float) $m[1];
+ }
  }
  return 0.0;
  }

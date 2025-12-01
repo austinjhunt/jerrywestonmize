@@ -26,11 +26,12 @@ abstract class AbstractResourceService
      *
      * @param Collection $resources
      * @param array      $entitiesIds
+     * @param int        $serviceId
      *
      * @return void
      * @throws InvalidArgumentException
      */
-    abstract public function setNonSharedResources($resources, $entitiesIds);
+    abstract public function setNonSharedResources($resources, $entitiesIds, $serviceId);
 
     /**
      * get collection of resources for service

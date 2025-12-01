@@ -247,10 +247,15 @@ class TimeSlotService
 
             if ($app->getServiceId()->getValue() === $serviceId) {
                 $persons = 0;
+                $personsWaiting = 0;
 
                 /** @var CustomerBooking $booking */
                 foreach ($app->getBookings()->getItems() as $booking) {
-                    $persons += $booking->getPersons()->getValue();
+                    if ($booking->getStatus()->getValue() !== BookingStatus::WAITING) {
+                        $persons += $booking->getPersons()->getValue();
+                    } else {
+                        $personsWaiting += $booking->getPersons()->getValue();
+                    }
                 }
 
                 $status = $app->getStatus()->getValue();
@@ -301,6 +306,7 @@ class TimeSlotService
                             'end'        => $app->getBookingEnd()->getValue()->format('Y-m-d H:i:s'),
                             'serviceId'  => $app->getServiceId()->getValue(),
                             'duration'   => ($duration->days * 24 * 60) + ($duration->h * 60) + $duration->i,
+                            'waiting'    => $personsWaiting,
                         ];
                 }
             } elseif ($app->getServiceId()->getValue()) {
@@ -1067,6 +1073,7 @@ class TimeSlotService
                         'c' => $appointmentData['places'],
                         's' => $appointmentData['serviceId'],
                         'd' => $appointmentData['duration'],
+                        'w' => $appointmentData['waiting'] ?? 0,
                     ];
                 }
 

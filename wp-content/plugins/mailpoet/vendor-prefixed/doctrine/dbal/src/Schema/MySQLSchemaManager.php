@@ -339,26 +339,11 @@ SQL;
  }
  protected function fetchTableOptionsByTable(string $databaseName, ?string $tableName = null) : array
  {
- $sql = <<<'SQL'
- SELECT t.TABLE_NAME,
- t.ENGINE,
- t.AUTO_INCREMENT,
- t.TABLE_COMMENT,
- t.CREATE_OPTIONS,
- t.TABLE_COLLATION,
- ccsa.CHARACTER_SET_NAME
- FROM information_schema.TABLES t
- INNER JOIN information_schema.COLLATION_CHARACTER_SET_APPLICABILITY ccsa
- ON ccsa.COLLATION_NAME = t.TABLE_COLLATION
-SQL;
- $conditions = ['t.TABLE_SCHEMA = ?'];
+ $sql = $this->_platform->fetchTableOptionsByTable($tableName !== null);
  $params = [$databaseName];
  if ($tableName !== null) {
- $conditions[] = 't.TABLE_NAME = ?';
  $params[] = $tableName;
  }
- $conditions[] = "t.TABLE_TYPE = 'BASE TABLE'";
- $sql .= ' WHERE ' . implode(' AND ', $conditions);
  $metadata = $this->_conn->executeQuery($sql, $params)->fetchAllAssociativeIndexed();
  $tableOptions = [];
  foreach ($metadata as $table => $data) {

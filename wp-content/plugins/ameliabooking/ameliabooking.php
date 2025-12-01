@@ -3,7 +3,7 @@
 Plugin Name: Amelia
 Plugin URI: https://wpamelia.com/
 Description: Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!
-Version: 8.6
+Version: 8.7
 Author: TMS
 Author URI: https://tmsproducts.io/
 Text Domain: wpamelia
@@ -106,7 +106,7 @@ if (!defined('AMELIA_LOGIN_URL')) {
 
 // Const for Amelia version
 if (!defined('AMELIA_VERSION')) {
-    define('AMELIA_VERSION', '8.6');
+    define('AMELIA_VERSION', '8.7');
 }
 
 // Const for site URL
@@ -540,6 +540,39 @@ class Plugin
         exit;
     }
 
+    /**
+     * @param array $links
+     *
+     * @return array
+     */
+    public static function addPluginActionLinks($links)
+    {
+        $primaryLinks = [
+            '<a href="' . admin_url('admin.php?page=wpamelia-dashboard') . '">View</a>',
+            '<a href="' . admin_url('admin.php?page=wpamelia-settings') . '">Settings</a>'
+        ];
+
+        return array_merge($primaryLinks, $links);
+    }
+
+    /**
+     * @param array  $links
+     * @param string $file
+     * @param array  $pluginData
+     * @param string $status
+     *
+     * @return array
+     */
+    public static function addPluginRowMeta($links, $file, $pluginData, $status)
+    {
+        if ($file !== AMELIA_PLUGIN_SLUG) {
+            return $links;
+        }
+
+        $links[] = '<a href="https://wpamelia.com/documentation/" target="_blank" rel="noopener">Docs</a>';
+
+        return $links;
+    }
 }
 
 add_action('wp_ajax_amelia_remove_wpdt_promo_notice', array('AmeliaBooking\Plugin', 'amelia_remove_wpdt_promo_notice'));
@@ -609,6 +642,8 @@ add_filter('submenu_file', function($submenu_file) {
 });
 
 add_action('thrive_automator_init', array('AmeliaBooking\Infrastructure\WP\Integrations\ThriveAutomator\ThriveAutomatorService', 'init'));
+add_filter('plugin_row_meta', array('AmeliaBooking\Plugin', 'addPluginRowMeta'), 10, 4);
+add_filter('plugin_action_links_' . AMELIA_PLUGIN_SLUG, array('AmeliaBooking\Plugin', 'addPluginActionLinks'));
 
 add_action( 'wp_logout',  array('AmeliaBooking\Infrastructure\WP\UserService\UserService', 'logoutAmeliaUser'));
 add_action( 'profile_update',  array('AmeliaBooking\Infrastructure\WP\UserService\UserService', 'updateAmeliaUser'), 10, 3);

@@ -92,9 +92,6 @@ class Settings_Controller {
  if ( ! isset( $block->supports['email'] ) || ! $block->supports['email'] ) {
  continue;
  }
- if ( strpos( $block->name, 'core/' ) !== false ) {
- continue;
- }
  foreach ( $block->style_handles as $handle ) {
  $allowed_iframe_style_handles[] = $handle . '-css';
  }

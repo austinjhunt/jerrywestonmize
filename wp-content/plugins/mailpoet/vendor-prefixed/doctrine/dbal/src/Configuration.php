@@ -9,7 +9,11 @@ use MailPoetVendor\Doctrine\DBAL\Logging\SQLLogger;
 use MailPoetVendor\Doctrine\DBAL\Schema\SchemaManagerFactory;
 use MailPoetVendor\Doctrine\Deprecations\Deprecation;
 use MailPoetVendor\Psr\Cache\CacheItemPoolInterface;
+use RuntimeException;
+use function class_exists;
 use function func_num_args;
+use function interface_exists;
+use function sprintf;
 class Configuration
 {
  private array $middlewares = [];
@@ -43,11 +47,16 @@ class Configuration
  public function getResultCacheImpl() : ?Cache
  {
  Deprecation::trigger('doctrine/dbal', 'https://github.com/doctrine/dbal/pull/4620', '%s is deprecated, call getResultCache() instead.', __METHOD__);
+ if ($this->resultCache !== null && !interface_exists(Cache::class)) {
+ throw new RuntimeException(sprintf('Calling %s() is not supported if the doctrine/cache package is not installed. ' . 'Try running "composer require doctrine/cache" or migrate cache access to PSR-6.', __METHOD__));
+ }
  return $this->resultCacheImpl;
  }
  public function setResultCache(CacheItemPoolInterface $cache) : void
  {
+ if (class_exists(DoctrineProvider::class)) {
  $this->resultCacheImpl = DoctrineProvider::wrap($cache);
+ }
  $this->resultCache = $cache;
  }
  public function setResultCacheImpl(Cache $cacheImpl) : void

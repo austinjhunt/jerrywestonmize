@@ -8,22 +8,6 @@ return array(
  'version' => '1.11.0.0',
  'path' => array( $vendorDir . '/webmozart/assert/src' )
  ),
- 'Symfony\\Polyfill\\Php80\\' => array(
- 'version' => '1.9999999.9999999.9999999-dev',
- 'path' => array( $vendorDir . '/symfony/polyfill-php80' )
- ),
- 'Symfony\\Component\\CssSelector\\' => array(
- 'version' => '5.4.9999999.9999999-dev',
- 'path' => array( $vendorDir . '/symfony/css-selector' )
- ),
- 'Sabberworm\\CSS\\' => array(
- 'version' => '8.9999999.9999999.9999999-dev',
- 'path' => array( $vendorDir . '/sabberworm/php-css-parser/src' )
- ),
- 'Pelago\\Emogrifier\\' => array(
- 'version' => '7.3.0.0',
- 'path' => array( $vendorDir . '/pelago/emogrifier/src' )
- ),
  'MailPoet\\Test\\DataGenerator\\' => array(
  'version' => 'dev-trunk',
  'path' => array( $baseDir . '/tests/DataGenerator' )

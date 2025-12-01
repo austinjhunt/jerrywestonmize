@@ -13,6 +13,7 @@ use AmeliaBooking\Application\Services\Deposit\AbstractDepositApplicationService
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Tax\TaxApplicationService;
 use AmeliaBooking\Application\Services\TimeSlot\TimeSlotService as ApplicationTimeSlotService;
+use AmeliaBooking\Application\Services\WaitingList\WaitingListService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
 use AmeliaBooking\Domain\Common\Exceptions\BookingsLimitReachedException;
@@ -359,6 +360,8 @@ class AppointmentReservationService extends AbstractReservationService
         $bookableAS = $this->container->get('application.bookable.service');
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
+        /** @var WaitingListService $waitingListService */
+        $waitingListService = $this->container->get('application.waitingList.service');
 
         $appointmentStatusChanged = false;
 
@@ -391,8 +394,8 @@ class AppointmentReservationService extends AbstractReservationService
             ->getGeneralSettings()
             ->getDefaultAppointmentStatus();
 
-        $appointmentData['bookings'][0]['status'] = !empty($appointmentData['packageBookingFromBackend']) ?
-            $appointmentData['bookings'][0]['status'] : $bookingStatus;
+        $appointmentData['bookings'][0]['status'] = (!empty($appointmentData['packageBookingFromBackend']) ||
+            $appointmentData['bookings'][0]['status'] === BookingStatus::WAITING) ? $appointmentData['bookings'][0]['status'] : $bookingStatus;
 
         if (!empty($appointmentData['payment']['gateway']) && !empty($appointmentData['payment']['orderStatus'])) {
             $appointmentData['bookings'][0]['status'] = $this->getWcStatus(
@@ -552,7 +555,10 @@ class AppointmentReservationService extends AbstractReservationService
                 ];
             }
 
+            $isWaitingListBooking = $waitingListService->isWaitingListBooking($service, $appointmentData, $booking);
+
             if (
+                !$isWaitingListBooking &&
                 !$applicationTimeSlotService->isSlotFree(
                     $service,
                     $appointment->getBookingStart()->getValue(),

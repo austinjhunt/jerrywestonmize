@@ -82,15 +82,15 @@ class CarbonTimeZone extends DateTimeZone
  {
  return $this->getAbbreviatedName($dst);
  }
- public function toOffsetName(DateTimeInterface $date = null)
+ public function toOffsetName(?DateTimeInterface $date = null)
  {
  return static::getOffsetNameFromMinuteOffset($this->getOffset($date ?: Carbon::now($this)) / 60);
  }
- public function toOffsetTimeZone(DateTimeInterface $date = null)
+ public function toOffsetTimeZone(?DateTimeInterface $date = null)
  {
  return new static($this->toOffsetName($date));
  }
- public function toRegionName(DateTimeInterface $date = null, $isDst = 1)
+ public function toRegionName(?DateTimeInterface $date = null, $isDst = 1)
  {
  $name = $this->getName();
  $firstChar = \substr($name, 0, 1);
@@ -117,7 +117,7 @@ class CarbonTimeZone extends DateTimeZone
  }
  return \false;
  }
- public function toRegionTimeZone(DateTimeInterface $date = null)
+ public function toRegionTimeZone(?DateTimeInterface $date = null)
  {
  $tz = $this->toRegionName($date);
  if ($tz !== \false) {

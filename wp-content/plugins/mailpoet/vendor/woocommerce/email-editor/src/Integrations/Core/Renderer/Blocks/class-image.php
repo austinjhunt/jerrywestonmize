@@ -16,12 +16,13 @@ class Image extends Abstract_Block_Renderer {
  $image = $parsed_html['image'];
  $caption = $parsed_html['caption'];
  $class = $parsed_html['class'];
+ $anchor_tag_href = $parsed_html['anchor_tag_href'];
  $parsed_block = $this->add_image_size_when_missing( $parsed_block, $image_url );
  $image = $this->add_image_dimensions( $image, $parsed_block );
  $image_with_wrapper = str_replace(
  array( '{image_content}', '{caption_content}' ),
  array( $image, $caption ),
- $this->get_block_wrapper( $parsed_block, $rendering_context, $caption )
+ $this->get_block_wrapper( $parsed_block, $rendering_context, $caption, $anchor_tag_href )
  );
  $image_with_wrapper = $this->apply_rounded_style( $image_with_wrapper, $parsed_block );
  $image_with_wrapper = $this->apply_image_border_style( $image_with_wrapper, $parsed_block, $class );
@@ -135,7 +136,7 @@ class Image extends Abstract_Block_Renderer {
  $styles['font-size'] = $parsed_block['email_attrs']['font-size'] ?? $theme_data['styles']['typography']['fontSize'];
  return \WP_Style_Engine::compile_css( $styles, '' );
  }
- private function get_block_wrapper( array $parsed_block, Rendering_Context $rendering_context, ?string $caption ): string {
+ private function get_block_wrapper( array $parsed_block, Rendering_Context $rendering_context, ?string $caption, ?string $anchor_tag_href ): string {
  $styles = array(
  'border-collapse' => 'collapse',
  'border-spacing' => '0px',
@@ -183,7 +184,15 @@ class Image extends Abstract_Block_Renderer {
  'class' => 'email-image-cell',
  'style' => 'overflow: hidden;',
  );
- $image_html = Table_Wrapper_Helper::render_table_wrapper( '{image_content}', $image_table_attrs, $image_cell_attrs );
+ $image_content = '{image_content}';
+ if ( $anchor_tag_href ) {
+ $image_content = sprintf(
+ '<a href="%s" rel="noopener nofollow" target="_blank">%s</a>',
+ esc_url( $anchor_tag_href ),
+ '{image_content}'
+ );
+ }
+ $image_html = Table_Wrapper_Helper::render_table_wrapper( $image_content, $image_table_attrs, $image_cell_attrs );
  $inner_content = $image_html . $caption_html;
  return Table_Wrapper_Helper::render_table_wrapper( $inner_content, $table_attrs, $cell_attrs );
  }
@@ -230,11 +239,14 @@ class Image extends Abstract_Block_Renderer {
  $figcaption = $dom_helper->find_element( 'figcaption' );
  $figcaption_html = $figcaption ? $dom_helper->get_outer_html( $figcaption ) : '';
  $figcaption_html = str_replace( array( '<figcaption', '</figcaption>' ), array( '<span', '</span>' ), $figcaption_html );
+ $anchor_tag = $dom_helper->find_element( 'a' );
+ $anchor_tag_href = $anchor_tag ? $dom_helper->get_attribute_value( $anchor_tag, 'href' ) : '';
  return array(
  'imageUrl' => $image_src ? $image_src : '',
  'image' => $this->cleanup_image_html( $image_html ),
  'caption' => $figcaption_html ? $figcaption_html : '',
  'class' => $image_class ? $image_class : '',
+ 'anchor_tag_href' => $anchor_tag_href ? $anchor_tag_href : '',
  );
  }
  private function cleanup_image_html( string $content_html ): string {

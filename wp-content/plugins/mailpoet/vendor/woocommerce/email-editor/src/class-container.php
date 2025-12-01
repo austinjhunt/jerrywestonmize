@@ -5,6 +5,9 @@ if (!defined('ABSPATH')) exit;
 class Container {
  protected array $services = array();
  protected array $instances = array();
+ public function __unserialize( array $data ): void {
+ throw new \Exception( 'Deserialization of Container is not allowed for security reasons.' );
+ }
  public function set( string $name, callable $callback ): void {
  $this->services[ $name ] = $callback;
  }

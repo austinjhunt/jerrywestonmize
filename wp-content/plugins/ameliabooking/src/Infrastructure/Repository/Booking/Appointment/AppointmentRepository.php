@@ -173,6 +173,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     c.discount AS coupon_discount,
                     c.deduction AS coupon_deduction,
                     c.expirationDate AS coupon_expirationDate,
+                    c.startDate AS coupon_startDate,
                     c.limit AS coupon_limit,
                     c.customerLimit AS coupon_customerLimit,
                     c.status AS coupon_status,
@@ -277,6 +278,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     c.discount AS coupon_discount,
                     c.deduction AS coupon_deduction,
                     c.expirationDate AS coupon_expirationDate,
+                    c.startDate AS coupon_startDate,
                     c.limit AS coupon_limit,
                     c.customerLimit AS coupon_customerLimit,
                     c.status AS coupon_status        
@@ -380,6 +382,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     c.discount AS coupon_discount,
                     c.deduction AS coupon_deduction,
                     c.expirationDate AS coupon_expirationDate,
+                    c.startDate AS coupon_startDate,
                     c.limit AS coupon_limit,
                     c.customerLimit AS coupon_customerLimit,
                     c.status AS coupon_status
@@ -647,8 +650,8 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
         $params = [];
 
         $where = [
-            "a.status IN ('approved', 'pending')",
-            "cb.status IN ('approved', 'pending')",
+            "a.status IN ('approved', 'pending', 'waiting')",
+            "cb.status IN ('approved', 'pending', 'waiting')",
             "a.bookingStart >= STR_TO_DATE('{$startDateTime}', '%Y-%m-%d %H:%i:%s')",
         ];
 
@@ -1202,6 +1205,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                 c.discount AS coupon_discount,
                 c.deduction AS coupon_deduction,
                 c.expirationDate AS coupon_expirationDate,
+                c.startDate AS coupon_startDate,
                 c.limit AS coupon_limit,
                 c.customerLimit AS coupon_customerLimit,
                 c.status AS coupon_status,

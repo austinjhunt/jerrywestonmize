@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Forminator package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Forminator 1.48.2\n"
+"Project-Id-Version: Forminator 1.48.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/build\n"
-"POT-Creation-Date: 2025-10-15 12:38:49+00:00\n"
+"POT-Creation-Date: 2025-11-19 12:19:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5551,6 +5551,7 @@ msgstr ""
 #: library/lib/dash-notice/wpmudev-dash-notification.php:309
 #: library/lib/free-notices/classes/notices/class-rating.php:82
 #: library/lib/recommended-plugins/notice.php:485
+#: library/lib/wpmudev-blackfriday/includes/class-banner.php:397
 msgid "Dismiss"
 msgstr ""
 
@@ -18094,7 +18095,7 @@ msgstr ""
 msgid "Failed to save new entry meta."
 msgstr ""
 
-#: library/class-core.php:463
+#: library/class-core.php:481
 msgid "Post Custom Data"
 msgstr ""
 
@@ -23402,6 +23403,31 @@ msgstr ""
 
 #: library/lib/recommended-plugins/notice.php:325
 msgid "Generate leads with pop-ups, slide-ins and email opt-ins."
+msgstr ""
+
+#: library/lib/wpmudev-blackfriday/includes/class-action-links.php:77
+#: library/lib/wpmudev-blackfriday/includes/class-admin-menu.php:87
+msgid "Get Black Friday Deal"
+msgstr ""
+
+#: library/lib/wpmudev-blackfriday/includes/class-admin-menu.php:88
+msgid "WPMUDEV Black Friday Deal"
+msgstr ""
+
+#: library/lib/wpmudev-blackfriday/includes/class-banner.php:398
+msgid "Black Friday"
+msgstr ""
+
+#: library/lib/wpmudev-blackfriday/includes/class-banner.php:399
+msgid "Sale"
+msgstr ""
+
+#: library/lib/wpmudev-blackfriday/includes/class-banner.php:400
+msgid "Get 11 months for free"
+msgstr ""
+
+#: library/lib/wpmudev-blackfriday/includes/class-banner.php:401
+msgid "See the Deal"
 msgstr ""
 
 #: library/model/class-base-form-model.php:1336

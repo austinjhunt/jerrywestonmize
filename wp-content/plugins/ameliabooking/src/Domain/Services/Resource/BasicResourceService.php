@@ -34,12 +34,13 @@ class BasicResourceService extends AbstractResourceService
      * set substitute resources instead of resources that are not shred between services/locations
      *
      * @param Collection $resources
-     * @param array $entitiesIds
+     * @param array      $entitiesIds
+     * @param int        $serviceId
      *
      * @return void
      * @throws InvalidArgumentException
      */
-    public function setNonSharedResources($resources, $entitiesIds)
+    public function setNonSharedResources($resources, $entitiesIds, $serviceId)
     {
     }
 

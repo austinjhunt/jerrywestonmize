@@ -6,7 +6,7 @@ use Throwable;
 class UnknownSetterException extends BaseInvalidArgumentException implements BadMethodCallException
 {
  protected $setter;
- public function __construct($setter, $code = 0, Throwable $previous = null)
+ public function __construct($setter, $code = 0,?Throwable $previous = null)
  {
  $this->setter = $setter;
  parent::__construct("Unknown setter '{$setter}'", $code, $previous);

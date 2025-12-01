@@ -261,6 +261,8 @@ class LimitLoginAttempts
 		add_action( 'login_errors', array( $this, 'fixup_error_messages' ) );
 		// hook for the plugin UM
 		add_action( 'um_submit_form_errors_hook_login', array( $this, 'um_limit_login_failed' ) );
+		// hook for the plugin MemberPress
+		add_filter( 'mepr_validate_login', array( $this, 'mepr_validate_login_handler' ), 10, 2 );
 
 		if ( Helpers::is_network_mode() ) {
 			add_action( 'network_admin_menu', array( $this, 'network_admin_menu' ) );
@@ -340,6 +342,10 @@ class LimitLoginAttempts
 
 	public function login_page_render_js()
 	{
+		if ( isset( $_SESSION['llar_user_is_whitelisted'] ) && true === $_SESSION['llar_user_is_whitelisted'] ) {
+			unset( $_SESSION['llar_user_is_whitelisted'] );
+			return;
+		}
 		global $limit_login_just_lockedout, $limit_login_nonempty_credentials, $um_limit_login_failed;
 
 		if ( Config::get( 'active_app' ) === 'local' && ! $limit_login_nonempty_credentials ) {
@@ -662,7 +668,7 @@ class LimitLoginAttempts
 					}
 
 				} elseif ( $this->is_username_whitelisted( $username ) || $this->is_ip_whitelisted( $ip ) ) {
-
+					$_SESSION['llar_user_is_whitelisted'] = true;
 					remove_filter( 'wp_login_failed', array( $this, 'limit_login_failed' ) );
 					remove_filter( 'wp_authenticate_user', array( $this, 'wp_authenticate_user' ), 99999 );
 					remove_filter( 'login_errors', array( $this, 'fixup_error_messages' ) );
@@ -1121,6 +1127,34 @@ class LimitLoginAttempts
 	}
 
 	/**
+	 * For plugin MemberPress
+	 * Triggers authenticate filter to allow Limit Login Attempts Reloaded
+	 * to track credentials and check lockouts before MemberPress validates the password
+	 * This enables the plugin to display remaining attempts messages
+	 *
+	 * @param array $errors Array of existing errors
+	 * @param array $params Login parameters (log, pwd)
+	 * @return array Unchanged errors array (we don't block, only track)
+	 */
+	public function mepr_validate_login_handler( $errors, $params = array() )
+	{
+		if ( ! isset( $_POST['log'] ) || ! isset( $_POST['pwd'] ) ) {
+			return $errors;
+		}
+
+		$log = sanitize_text_field( wp_unslash( $_POST['log'] ) );
+		$pwd = isset( $_POST['pwd'] ) ? $_POST['pwd'] : ''; // Password should not be sanitized
+
+		// Trigger authenticate filter to track credentials and check lockouts
+		// This sets $limit_login_nonempty_credentials and $_SESSION['login_attempts_left']
+		// We don't block here - MemberPress will handle blocking if needed
+		apply_filters( 'authenticate', null, $log, $pwd );
+
+		// Return errors unchanged - we're only tracking, not blocking
+		return $errors;
+	}
+
+	/**
 	 * Action when login attempt failed
 	 *
 	 * Increase nr of retries (if necessary). Reset valid value. Setup
@@ -1392,8 +1426,9 @@ class LimitLoginAttempts
 		$plugin_data = get_plugin_data( LLA_PLUGIN_DIR . 'limit-login-attempts-reloaded.php' );
 
 		$subject = sprintf(
-			__( "Failed login by IP %s www.limitloginattempts.com", 'limit-login-attempts-reloaded' ),
-			esc_html( $ip )
+			__( "Failed login by IP %s %s", 'limit-login-attempts-reloaded' ),
+			esc_html( $ip ),
+			esc_html( $site_domain )
 		);
 
 		ob_start();

@@ -124,6 +124,7 @@ class LiteFrontendStrings
             'licence_dev_description'      => __('Available in Elite licence', 'wpamelia'),
             'licence_button_text'          => __('Upgrade', 'wpamelia'),
             'min'                          => __('min', 'wpamelia'),
+            'no_results_found'             => __('No results found...', 'wpamelia'),
             'on_site'                      => __('On-site', 'wpamelia'),
             'payment_btn_on_site'          => __('On-Site', 'wpamelia'),
             'oops'                         => __('Oops...'),
@@ -242,6 +243,7 @@ class LiteFrontendStrings
             'event_show_less'           => __('Show less', 'wpamelia'),
             'event_show_more'           => __('Show more', 'wpamelia'),
             'event_location'            => __('Event Location', 'wpamelia'),
+            'no_events'                 => __('No results found...', 'wpamelia'),
         ];
     }
 
@@ -266,6 +268,7 @@ class LiteFrontendStrings
             'back_btn'                           => __('Go Back', 'wpamelia'),
             'heading_service'                    => __('Service', 'wpamelia'),
             'heading_services'                   => __('Services', 'wpamelia'),
+            'no_search_data'                     => __('No results', 'wpamelia'),
         ];
     }
 

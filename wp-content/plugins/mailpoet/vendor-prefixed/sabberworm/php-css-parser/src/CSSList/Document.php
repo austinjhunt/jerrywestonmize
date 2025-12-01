@@ -67,7 +67,7 @@ class Document extends CSSBlockList
  $oDeclaration->createShorthands();
  }
  }
- public function render(OutputFormat $oOutputFormat = null)
+ public function render(?OutputFormat $oOutputFormat = null)
  {
  if ($oOutputFormat === null) {
  $oOutputFormat = new OutputFormat();

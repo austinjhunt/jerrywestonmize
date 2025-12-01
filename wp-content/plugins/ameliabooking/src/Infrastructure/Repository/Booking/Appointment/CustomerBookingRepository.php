@@ -578,6 +578,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                     c.discount AS coupon_discount,
                     c.deduction AS coupon_deduction,
                     c.expirationDate AS coupon_expirationDate,
+                    c.startDate AS coupon_startDate,
                     c.limit AS coupon_limit,
                     c.customerLimit AS coupon_customerLimit,
                     c.status AS coupon_status

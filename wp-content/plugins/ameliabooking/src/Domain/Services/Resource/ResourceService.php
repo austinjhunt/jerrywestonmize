@@ -7,6 +7,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Bookable\Service\ResourceFactory;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
@@ -46,11 +47,12 @@ class ResourceService extends AbstractResourceService
      *
      * @param Collection $resources
      * @param array      $entitiesIds
+     * @param int        $serviceId
      *
      * @return void
      * @throws InvalidArgumentException
      */
-    public function setNonSharedResources($resources, $entitiesIds)
+    public function setNonSharedResources($resources, $entitiesIds, $serviceId)
     {
         /** @var Resource $resource */
         foreach ($resources->getItems() as $resourceIndex => $resource) {
@@ -62,12 +64,18 @@ class ResourceService extends AbstractResourceService
 
                 $substituteResourceEntities = [];
 
-                foreach ($resource->getEntities() as $index => $item) {
+                foreach ($resource->getEntities() as $item) {
                     if ($item['entityType'] === $resource->getShared()->getValue()) {
                         $resourceEntitiesIds[] = $item['entityId'];
                     } else {
                         $substituteResourceEntities[] = $item;
                     }
+                }
+
+                $resourceEntitiesIds = $resourceEntitiesIds ?: $entitiesIds[$resource->getShared()->getValue()];
+
+                if ($resource->getShared()->getValue() === Entities::SERVICE) {
+                    $resourceEntitiesIds = [$serviceId];
                 }
 
                 foreach ($resourceEntitiesIds ?: $entitiesIds[$resource->getShared()->getValue()] as $entityId) {

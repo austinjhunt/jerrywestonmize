@@ -302,6 +302,7 @@ class AppointmentFactory
                 $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['customerLimit'] = $row['coupon_customerLimit'];
                 $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['status']        = $row['coupon_status'];
                 $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['expirationDate'] = $row['coupon_expirationDate'];
+                $appointments[$appointmentId]['bookings'][$bookingId]['coupon']['startDate']     = $row['coupon_startDate'];
             }
 
             if ($bookingId && $customerId) {

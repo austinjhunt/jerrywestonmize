@@ -120,7 +120,8 @@ class EntityService
             [
                 'service'  => $services->keys(),
                 'location' => $locations->keys(),
-            ]
+            ],
+            $props['serviceId']
         );
 
         /** @var SlotsEntities $filteredSlotsEntities */

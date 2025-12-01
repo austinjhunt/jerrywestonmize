@@ -8,6 +8,7 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
@@ -18,6 +19,7 @@ use AmeliaBooking\Domain\ValueObjects\String\Password;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService;
+use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -37,6 +39,7 @@ class UpdateProviderCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws ContainerException
+     * @throws Exception
      */
     public function handle(UpdateProviderCommand $command)
     {
@@ -127,12 +130,25 @@ class UpdateProviderCommandHandler extends CommandHandler
         /** @var Provider $newUser */
         $newUser = UserFactory::create($newUserData);
 
-        if (!($newUser instanceof AbstractUser)) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage('Could not update user.');
+        $newUser->setDayOffList(
+            $providerAS->getModifiedDayList(
+                $newUser->getDayOffList(),
+                $oldUser->getDayOffList(),
+                !empty($newUserData['removedDayOffList'])
+                    ? UserFactory::createDayOffList($newUserData['removedDayOffList'])
+                    : new Collection()
+            )
+        );
 
-            return $result;
-        }
+        $newUser->setSpecialDayList(
+            $providerAS->getModifiedDayList(
+                $newUser->getSpecialDayList(),
+                $oldUser->getSpecialDayList(),
+                !empty($newUserData['removedSpecialDayList'])
+                    ? UserFactory::createSpecialDayList($newUserData['removedSpecialDayList'])
+                    : new Collection()
+            )
+        );
 
         if ($command->getUserApplicationService()->checkProviderPermissions($currentUser, $command->getToken())) {
             /** @var SettingsService $settingsDS */

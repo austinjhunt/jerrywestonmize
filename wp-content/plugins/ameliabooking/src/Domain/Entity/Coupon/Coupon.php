@@ -67,6 +67,9 @@ class Coupon
     /** @var DateTimeValue */
     private $expirationDate;
 
+    /** @var DateTimeValue */
+    private $startDate;
+
     /** @var BooleanValueObject */
     private $allServices;
 
@@ -294,11 +297,27 @@ class Coupon
     }
 
     /**
+     * @return DateTimeValue
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
      * @param DateTimeValue $expirationDate
      */
     public function setExpirationDate(DateTimeValue $expirationDate)
     {
         $this->expirationDate = $expirationDate;
+    }
+
+    /**
+     * @param DateTimeValue $startDate
+     */
+    public function setStartDate(DateTimeValue $startDate)
+    {
+        $this->startDate = $startDate;
     }
 
     /**
@@ -369,6 +388,7 @@ class Coupon
             'eventList'             => $this->getEventList() ? $this->getEventList()->toArray() : [],
             'packageList'           => $this->getPackageList() ? $this->getPackageList()->toArray() : [],
             'expirationDate'        => $this->getExpirationDate() ? $this->getExpirationDate()->getValue()->format('Y-m-d') : null,
+            'startDate'             => $this->getStartDate() ? $this->getStartDate()->getValue()->format('Y-m-d') : null,
             'allServices'           => $this->getAllServices() ? $this->getAllServices()->getValue() : 0,
             'allEvents'             => $this->getAllEvents() ? $this->getAllEvents()->getValue() : 0,
             'allPackages'           => $this->getAllPackages() ? $this->getAllPackages()->getValue() : 0,

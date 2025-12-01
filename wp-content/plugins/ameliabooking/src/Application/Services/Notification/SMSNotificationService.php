@@ -112,7 +112,7 @@ class SMSNotificationService extends AbstractNotificationService
                         $notificationContent,
                         array_merge(
                             $data,
-                            ['cart_appointments_details' => $data['providersAppointments'][$user['id']]]
+                            ['cart_appointments_details' => $data['providersAppointments'][$user['id']]]['cart_appointments_details']
                         )
                     );
                 }

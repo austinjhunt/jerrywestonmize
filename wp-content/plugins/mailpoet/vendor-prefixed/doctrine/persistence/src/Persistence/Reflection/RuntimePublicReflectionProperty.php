@@ -1,4 +1,5 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence\Reflection;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Doctrine\Common\Proxy\Proxy;
@@ -9,15 +10,7 @@ class RuntimePublicReflectionProperty extends ReflectionProperty
  #[\ReturnTypeWillChange]
  public function getValue($object = null)
  {
- $name = $this->getName();
- if ($object instanceof Proxy && !$object->__isInitialized()) {
- $originalInitializer = $object->__getInitializer();
- $object->__setInitializer(null);
- $val = $object->{$name} ?? null;
- $object->__setInitializer($originalInitializer);
- return $val;
- }
- return isset($object->{$name}) ? parent::getValue($object) : null;
+ return $object !== null ? ((array) $object)[$this->getName()] ?? null : parent::getValue();
  }
  #[\ReturnTypeWillChange]
  public function setValue($object, $value = null)

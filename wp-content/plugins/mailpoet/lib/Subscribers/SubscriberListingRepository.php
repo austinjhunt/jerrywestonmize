@@ -107,7 +107,7 @@ class SubscriberListingRepository extends ListingRepository {
   }
 
   protected function applySelectClause(QueryBuilder $queryBuilder) {
-    $queryBuilder->select("PARTIAL s.{id,email,firstName,lastName,status,createdAt,updatedAt,countConfirmations,wpUserId,isWoocommerceUser,engagementScore,lastSubscribedAt}");
+    $queryBuilder->select("PARTIAL s.{id,email,firstName,lastName,status,createdAt,deletedAt,updatedAt,countConfirmations,wpUserId,isWoocommerceUser,engagementScore,lastSubscribedAt}");
   }
 
   protected function applyFromClause(QueryBuilder $queryBuilder) {
@@ -179,6 +179,58 @@ class SubscriberListingRepository extends ListingRepository {
         $queryBuilder->join('s.subscriberTags', 'st', Join::WITH, 'st.tag = :stTag')
           ->setParameter('stTag', $tag);
       }
+    }
+
+    // Status inclusion filter
+    $statusInclude = $filters['statusInclude'] ?? [];
+    if (!empty($statusInclude)) {
+      $statusInclude = is_array($statusInclude) ? $statusInclude : [$statusInclude];
+      // Sanitize: only allow valid status values
+      $statusInclude = array_filter($statusInclude, function($status) {
+        return is_string($status) && in_array($status, self::$supportedStatuses, true);
+      });
+      if (!empty($statusInclude)) {
+        $queryBuilder->andWhere('s.status IN (:statusInclude)')
+          ->setParameter('statusInclude', $statusInclude);
+      }
+    }
+
+    // Status exclusion filter
+    $statusExclude = $filters['statusExclude'] ?? [];
+    if (!empty($statusExclude)) {
+      $statusExclude = is_array($statusExclude) ? $statusExclude : [$statusExclude];
+      // Sanitize: only allow valid status values
+      $statusExclude = array_filter($statusExclude, function($status) {
+        return is_string($status) && in_array($status, self::$supportedStatuses, true);
+      });
+      if (!empty($statusExclude)) {
+        $queryBuilder->andWhere('s.status NOT IN (:statusExclude)')
+          ->setParameter('statusExclude', $statusExclude);
+      }
+    }
+
+    // Filter by created_at date
+    $createdAtFrom = $filters['createdAtFrom'] ?? null;
+    if ($createdAtFrom && is_string($createdAtFrom) && $this->isValidDateTime($createdAtFrom)) {
+      $queryBuilder
+        ->andWhere('s.createdAt >= :createdAtFrom')
+        ->setParameter('createdAtFrom', $createdAtFrom);
+    }
+
+    $createdAtTo = $filters['createdAtTo'] ?? null;
+    if ($createdAtTo && is_string($createdAtTo) && $this->isValidDateTime($createdAtTo)) {
+      $queryBuilder
+        ->andWhere('s.createdAt <= :createdAtTo')
+        ->setParameter('createdAtTo', $createdAtTo);
+    }
+  }
+
+  private function isValidDateTime(string $dateTime): bool {
+    try {
+      new \DateTime($dateTime);
+      return true;
+    } catch (\Exception $e) {
+      return false;
     }
   }
 

@@ -304,7 +304,7 @@ class FormEntity extends \MailPoet\Entities\FormEntity implements \MailPoetVendo
     /**
      * {@inheritDoc}
      */
-    public function getBlocksByTypes(array $types, array $blocks = NULL): array
+    public function getBlocksByTypes(array $types, ?array $blocks = NULL): array
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getBlocksByTypes', [$types, $blocks]);

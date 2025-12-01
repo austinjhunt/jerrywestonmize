@@ -725,7 +725,7 @@ EOT;
  if (!$type->isBuiltin() && $name !== 'static') {
  $name = '\\' . $name;
  }
- if ($type->allowsNull() && !in_array($name, ['mixed', 'null'], \true) && ($parameter === null || !$parameter->isDefaultValueAvailable() || $parameter->getDefaultValue() !== null)) {
+ if ($type->allowsNull() && !in_array($name, ['mixed', 'null'], \true)) {
  $name = '?' . $name;
  }
  return $name;

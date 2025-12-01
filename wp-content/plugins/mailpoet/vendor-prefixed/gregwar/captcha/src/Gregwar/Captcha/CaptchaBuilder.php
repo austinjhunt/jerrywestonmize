@@ -9,6 +9,7 @@ class CaptchaBuilder implements CaptchaBuilderInterface
  protected $textColor = array();
  protected $lineColor = null;
  protected $backgroundColor = null;
+ protected $background = null;
  protected $backgroundImages = array();
  protected $contents = null;
  protected $phrase = null;
@@ -31,7 +32,7 @@ class CaptchaBuilder implements CaptchaBuilderInterface
  return $this;
  }
  public $tempDir = 'temp/';
- public function __construct($phrase = null, PhraseBuilderInterface $builder = null)
+ public function __construct($phrase = null,?PhraseBuilderInterface $builder = null)
  {
  if ($builder === null) {
  $this->builder = new PhraseBuilder();

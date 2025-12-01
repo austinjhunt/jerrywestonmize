@@ -89,7 +89,10 @@ class AppointmentDomainService
             return BookingStatus::NO_SHOW;
         }
 
-        if ($bookingsCount['waitingBookings'] === $totalBookings) {
+        if (
+            $bookingsCount['waitingBookings'] === $totalBookings &&
+            ($bookingsCount['approvedBookings'] !== 0 || $bookingsCount['pendingBookings'] !== 0)
+        ) {
             return BookingStatus::WAITING;
         }
 

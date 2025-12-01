@@ -1,14 +1,14 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence;
 if (!defined('ABSPATH')) exit;
 interface ManagerRegistry extends ConnectionRegistry
 {
  public function getDefaultManagerName();
- public function getManager($name = null);
+ public function getManager(?string $name = null);
  public function getManagers();
- public function resetManager($name = null);
- public function getAliasNamespace($alias);
+ public function resetManager(?string $name = null);
  public function getManagerNames();
- public function getRepository($persistentObject, $persistentManagerName = null);
- public function getManagerForClass($class);
+ public function getRepository(string $persistentObject, ?string $persistentManagerName = null);
+ public function getManagerForClass(string $class);
 }

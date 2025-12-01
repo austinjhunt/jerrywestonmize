@@ -45,6 +45,9 @@ class Personalization_Tag {
  $this->value_to_insert = $value_to_insert;
  $this->post_types = $post_types;
  }
+ public function __unserialize( array $data ): void {
+ throw new \Exception( 'Deserialization of Personalization_Tag is not allowed for security reasons.' );
+ }
  public function get_name(): string {
  return $this->name;
  }
@@ -62,6 +65,9 @@ class Personalization_Tag {
  }
  public function get_post_types(): array {
  return $this->post_types;
+ }
+ public function get_callback(): callable {
+ return $this->callback;
  }
  public function execute_callback( $context, $args = array() ): string {
  return call_user_func( $this->callback, ...array_merge( array( $context ), array( $args ) ) );

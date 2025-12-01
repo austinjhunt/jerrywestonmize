@@ -1218,7 +1218,7 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
     }
 
     /**
-     * default customer's waiting list notification
+     * default customer's waiting list notification - events
      *
      * @return array
      */
@@ -1243,7 +1243,32 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
     }
 
     /**
-     * default customer's waiting list notification
+     * default customer's waiting list notification - appointments
+     *
+     * @return array
+     */
+    public static function getCustomerAppointmentWaitingListEmailNotification()
+    {
+        return [
+            'name'       => 'customer_appointment_waiting',
+            'entity'     => 'appointment',
+            'type'       => 'email',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'customer',
+            'subject'    => '%service_name% Waiting List joined',
+            'content'    =>
+                'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully joined the Waiting List for the
+                 <strong>%service_name%</strong> service at
+                 <strong>%location_address%</strong> on
+                 <strong>%appointment_date_time%</strong>.<br><br>
+                 Thank you for choosing our company,<br><strong>%company_name%</strong>'
+        ];
+    }
+
+    /**
+     * default customer's waiting list notification - events
      *
      * @return array
      */
@@ -1268,6 +1293,57 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
     }
 
     /**
+     * default customer's waiting list notification - appointments
+     *
+     * @return array
+     */
+    public static function getProviderAppointmentWaitingListEmailNotification()
+    {
+        return [
+            'name'       => 'provider_appointment_waiting',
+            'entity'     => 'appointment',
+            'type'       => 'email',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'provider',
+            'subject'    => '%service_name% Waiting List joined',
+            'content'    =>
+                'Hi <strong>%employee_full_name%</strong>,<br><br>A new attendee has been added to the waiting list for
+                 <strong>%service_name%</strong> Service at
+                 <strong>%location_address%</strong> on
+                 <strong>%appointment_date_time%</strong>.<br><br>
+                 Thank you,<br><strong>%company_name%</strong>'
+        ];
+    }
+
+    /**
+     * default customer's waiting list available spot notification - appointments
+     *
+     * @return array
+     */
+    public static function getCustomerAppointmentWaitingListAvailableSpotEmailNotification()
+    {
+        return [
+            'name'       => 'customer_appointment_waiting_available_spot',
+            'entity'     => 'appointment',
+            'type'       => 'email',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'customer',
+            'subject'    => 'A Spot Just Opened Up for %service_name% ',
+            'content'    =>
+                'Dear <strong>%customer_full_name%</strong>,<br><br> Good news! A spot has just become available for
+                 <strong>%service_name%</strong> on
+                 <strong>%appointment_date_time%</strong>.<br><br>
+                 You’re on the waiting list, and now is your chance to confirm your booking before it’s taken by someone else.<br><br>
+                 <a href="%appointment_approve_url%">Confirm My Appointment</a><br><br>
+                 Thank you for choosing our company,<br><strong>%company_name%</strong>'
+        ];
+    }
+
+    /**
      * default customer's waiting list notification
      *
      * @return array
@@ -1286,8 +1362,65 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
             'content'    =>
                 'Dear %customer_full_name%,
                 
-You have successfully joined the Waiting List for the %event_name% event at %event_location% on %event_start_date_time%.
+                You have successfully joined the Waiting List for the %event_name% event at %event_location% on %event_start_date_time%.
+                Thank you for choosing our company,
+                
+                %company_name%'
+        ];
+    }
 
+    /**
+     * default customer's waiting list notification - appointments
+     *
+     * @return array
+     */
+    public static function getCustomerAppointmentWaitingListSmsNotification()
+    {
+        return [
+            'name'       => 'customer_appointment_waiting',
+            'entity'     => 'appointment',
+            'type'       => 'sms',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'customer',
+            'subject'    => '%event_name% Waiting List joined',
+            'content'    =>
+                'Dear %customer_full_name%,
+                
+You have successfully joined the Waiting List for the
+%service_name% service at %location_address% on %appointment_date_time%.
+                
+Thank you for choosing our company,
+%company_name%'
+        ];
+    }
+
+    /**
+     * default customer's waiting list available spot notification - appointments
+     *
+     * @return array
+     */
+    public static function getCustomerAppointmentWaitingListAvailableSpotSmsNotification()
+    {
+        return [
+            'name'       => 'customer_appointment_waiting_available_spot',
+            'entity'     => 'appointment',
+            'type'       => 'sms',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'customer',
+            'subject'    => 'A Spot Just Opened Up for %service_name%',
+            'content'    =>
+                'Dear %customer_full_name%,
+
+Good news! A spot has just become available for
+%service_name% on %appointment_date_time%.
+                 
+You’re on the waiting list, and now is your chance to confirm your booking before it’s taken by someone else.
+<a href="%appointment_approve_url%">Confirm My Appointment</a>
+                 
 Thank you for choosing our company,
 %company_name%'
         ];
@@ -1313,6 +1446,32 @@ Thank you for choosing our company,
                 'Hi %employee_full_name%,
                 
 A new attendee has been added to the waiting list for %event_name% Event at %event_location% on %event_start_date_time%.
+
+Thank you,
+%company_name%'
+        ];
+    }
+
+    /**
+     * default customer's waiting list notification - appointments
+     *
+     * @return array
+     */
+    public static function getProviderAppointmentWaitingListSmsNotification()
+    {
+        return [
+            'name'       => 'provider_appointment_waiting',
+            'entity'     => 'appointment',
+            'type'       => 'sms',
+            'time'       => 'NULL',
+            'timeBefore' => 'NULL',
+            'timeAfter'  => 'NULL',
+            'sendTo'     => 'provider',
+            'subject'    => '%service_name% Waiting List joined',
+            'content'    =>
+                'Hi %employee_full_name%,
+                
+A new attendee has been added to the waiting list for %service_name% Service at %location_address% on %appointment_date_time%.
 
 Thank you,
 %company_name%'
@@ -1576,7 +1735,6 @@ Thank you for choosing our company,
      */
     public static function getWhatsAppWaitingListNotifications()
     {
-        // needs to be changed for basic and lite
         $sendTo = ['customer', 'provider'];
 
         $newRows = [];
@@ -1585,6 +1743,62 @@ Thank you for choosing our company,
             $newRows[] = [
                 'name'       => $to . '_event_waiting',
                 'entity'     => 'event',
+                'type'       => 'whatsapp',
+                'time'       => 'NULL',
+                'timeBefore' => 'NULL',
+                'timeAfter'  => 'NULL',
+                'sendTo'     => $to,
+                'subject'    => '',
+                'content'    => ''
+            ];
+        }
+
+        return $newRows;
+    }
+
+    /**
+     * Array of default whatsapp notifications
+     *
+     * @return array
+     */
+    public static function getWhatsAppAppointmentWaitingListNotifications()
+    {
+        $sendTo = ['customer', 'provider'];
+
+        $newRows = [];
+
+        foreach ($sendTo as $to) {
+            $newRows[] = [
+                'name'       => $to . '_appointment_waiting',
+                'entity'     => 'appointment',
+                'type'       => 'whatsapp',
+                'time'       => 'NULL',
+                'timeBefore' => 'NULL',
+                'timeAfter'  => 'NULL',
+                'sendTo'     => $to,
+                'subject'    => '',
+                'content'    => ''
+            ];
+        }
+
+        return $newRows;
+    }
+
+    /**
+     * Array of default whatsapp notifications
+     *
+     * @return array
+     */
+    public static function getWhatsAppAppointmentWaitingListAvailableSpotNotifications()
+    {
+        $sendTo = ['customer'];
+
+        $newRows = [];
+
+        foreach ($sendTo as $to) {
+            $newRows[] = [
+                'name'       => $to . '_appointment_waiting_available_spot',
+                'entity'     => 'appointment',
                 'type'       => 'whatsapp',
                 'time'       => 'NULL',
                 'timeBefore' => 'NULL',

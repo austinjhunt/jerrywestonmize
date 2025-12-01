@@ -127,8 +127,13 @@ class Link implements CategoryInterface {
     ?SendingQueueEntity $queue = null,
     $wpUserPreview = false
   ): ?string {
+    // Parse shortcode to extract action and arguments
+    $shortcodeDetails = $this->parseShortcode($shortcodeAction);
+    $action = $shortcodeDetails['action'];
+    $arguments = $shortcodeDetails['arguments'];
+
     $subscriptionUrlFactory = SubscriptionUrlFactory::getInstance();
-    switch ($shortcodeAction) {
+    switch ($action) {
       case 'subscription_unsubscribe_url':
         $url = $subscriptionUrlFactory->getConfirmUnsubscribeUrl(
           $subscriber,
@@ -156,16 +161,17 @@ class Link implements CategoryInterface {
         $url = $subscriptionUrlFactory->getReEngagementUrl($subscriber);
         break;
       default:
-        $shortcode = self::getFullShortcode($shortcodeAction);
+        $shortcode = self::getFullShortcode($action);
         $url = $this->wp->applyFilters(
           'mailpoet_newsletter_shortcode_link',
           $shortcode,
           $newsletter,
           $subscriber,
           $queue,
+          $arguments,
           $wpUserPreview
         );
-        $url = ($url !== $shortcodeAction) ? $url : null;
+        $url = ($url !== $shortcode) ? $url : null;
         break;
     }
     return $url;
@@ -173,5 +179,67 @@ class Link implements CategoryInterface {
 
   private function getFullShortcode($action): string {
     return sprintf('[link:%s]', $action);
+  }
+
+  /**
+   * Parse a shortcode string to extract action and arguments.
+   * Supports both MailPoet-style [link:action | arg:value] and WordPress-style [link:action arg="value"].
+   */
+  private function parseShortcode(string $shortcode): array {
+    // Decode HTML entities in case the shortcode came from HTML content (e.g., &quot; -> ")
+    $shortcode = html_entity_decode($shortcode, ENT_QUOTES, 'UTF-8');
+
+    $action = null;
+
+    // Try WordPress-style shortcode parsing first (supports multiple arguments)
+    $atts = $this->wp->shortcodeParseAtts(trim($shortcode, '[]'));
+    if (!empty($atts[0]) && strpos($atts[0], ':') !== false) {
+      [, $action] = explode(':', $atts[0], 2);
+      $arguments = [];
+      foreach ($atts as $attrName => $attrValue) {
+        if (!is_numeric($attrName)) {
+          // Strip surrounding quotes from attribute values
+          $arguments[$attrName] = trim($attrValue, '"\' ');
+        }
+      }
+      // Only return if we found at least one named attribute
+      // Otherwise, fall through to try MailPoet-style parsing
+      if (!empty($arguments)) {
+        return ['action' => $action, 'arguments' => $arguments];
+      }
+    }
+
+    // Fallback to MailPoet-style parsing (single argument with pipe syntax)
+    // Pattern matches: [link:action | argument:value] or [link:action]
+    // Example: [link:custom_link | token:abc123]
+    // Captures:
+    //   - action: \w+ (word characters only, e.g., "custom_link")
+    //   - argument: \w+ (word characters only, e.g., "token")
+    //   - argument_value: .*? (any characters, non-greedy, e.g., "abc123")
+    // Note: Only supports a single argument with pipe syntax
+    if (preg_match('/\[link:(?P<action>\w+)(?:.*?\|.*?(?P<argument>\w+):(?P<argument_value>.*?))?\]/', $shortcode, $match)) {
+      $arguments = [];
+      if (!empty($match['argument'])) {
+        $arguments[$match['argument']] = $match['argument_value'] ?? '';
+      }
+      return ['action' => $match['action'], 'arguments' => $arguments];
+    }
+
+    // Simple action-only shortcode without arguments
+    // Pattern matches: [link:action]
+    // Example: [link:unsubscribe]
+    // Captures:
+    //   - action: \w+ (word characters only, e.g., "unsubscribe")
+    if (preg_match('/\[link:(?P<action>\w+)\]/', $shortcode, $match)) {
+      return ['action' => $match['action'], 'arguments' => []];
+    }
+
+    // If all parsing fails, return the action from WordPress parser if available
+    // Otherwise return the shortcode as action with no arguments
+    if ($action !== null) {
+      return ['action' => $action, 'arguments' => []];
+    }
+
+    return ['action' => $shortcode, 'arguments' => []];
   }
 }

@@ -1688,4 +1688,37 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             throw new QueryExecutionException('Unable to delete data from ' . __CLASS__, $e->getCode(), $e);
         }
     }
+
+    /**
+     * Get max service capacity for a specific provider
+     *
+     * @param int $providerId
+     * @param int $serviceId
+     *
+     * @return int|null
+     * @throws QueryExecutionException
+     */
+    public function getMaxCapacityByServiceId($providerId, $serviceId)
+    {
+        $params = [
+            ':userId' => $providerId,
+            ':serviceId' => $serviceId
+        ];
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT maxCapacity 
+                FROM {$this->providerServicesTable} 
+                WHERE userId = :userId AND serviceId = :serviceId"
+            );
+
+            $statement->execute($params);
+
+            $row = $statement->fetch();
+
+            return $row ? (int)$row['maxCapacity'] : 0;
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get max capacity from ' . __CLASS__, $e->getCode(), $e);
+        }
+    }
 }

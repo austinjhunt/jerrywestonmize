@@ -1,4 +1,5 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence\Mapping\Driver;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Doctrine\Persistence\Mapping\ClassMetadata;
@@ -25,7 +26,7 @@ class StaticPHPDriver implements MappingDriver
  {
  $this->paths = array_unique(array_merge($this->paths, $paths));
  }
- public function loadMetadataForClass($className, ClassMetadata $metadata)
+ public function loadMetadataForClass(string $className, ClassMetadata $metadata)
  {
  $className::loadMetadata($metadata);
  }
@@ -34,7 +35,7 @@ class StaticPHPDriver implements MappingDriver
  if ($this->classNames !== null) {
  return $this->classNames;
  }
- if (!$this->paths) {
+ if ($this->paths === []) {
  throw MappingException::pathRequiredForDriver(static::class);
  }
  $classes = [];
@@ -57,7 +58,7 @@ class StaticPHPDriver implements MappingDriver
  foreach ($declared as $className) {
  $rc = new ReflectionClass($className);
  $sourceFile = $rc->getFileName();
- if (!in_array($sourceFile, $includedFiles) || $this->isTransient($className)) {
+ if (!in_array($sourceFile, $includedFiles, \true) || $this->isTransient($className)) {
  continue;
  }
  $classes[] = $className;
@@ -65,7 +66,7 @@ class StaticPHPDriver implements MappingDriver
  $this->classNames = $classes;
  return $classes;
  }
- public function isTransient($className)
+ public function isTransient(string $className)
  {
  return !method_exists($className, 'loadMetadata');
  }

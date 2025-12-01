@@ -211,6 +211,57 @@ class ApplicationNotificationService
     }
 
     /**
+     * Wrapper for sending waiting list available spot notifications through all active channels.
+     *
+     * @param Appointment $appointment
+     * @param Collection  $waitingBookings
+     *
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public function sendWaitingListAvailableSpotNotifications(
+        $appointment,
+        $waitingBookings
+    ) {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        /** @var AppointmentNotificationService $appointmentNotificationService */
+        $appointmentNotificationService = $this->container->get('application.notification.appointment.service');
+
+        /** @var EmailNotificationService $emailNotificationService */
+        $emailNotificationService = $this->container->get('application.emailNotification.service');
+
+        /** @var SMSNotificationService $smsNotificationService */
+        $smsNotificationService = $this->container->get('application.smsNotification.service');
+
+        /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
+        $whatsAppNotificationService = $this->container->get('application.whatsAppNotification.service');
+
+        $appointmentNotificationService->sendWaitingListAvailableSpotNotification(
+            $emailNotificationService,
+            $appointment,
+            $waitingBookings
+        );
+
+        if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
+            $appointmentNotificationService->sendWaitingListAvailableSpotNotification(
+                $smsNotificationService,
+                $appointment,
+                $waitingBookings
+            );
+        }
+
+        if ($whatsAppNotificationService->checkRequiredFields()) {
+            $appointmentNotificationService->sendWaitingListAvailableSpotNotification(
+                $whatsAppNotificationService,
+                $appointment,
+                $waitingBookings
+            );
+        }
+    }
+
+    /**
      * @param Appointment $appointment
      * @param int|null    $changedProviderId
      * @param bool        $notifyProvider

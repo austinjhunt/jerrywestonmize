@@ -11,6 +11,17 @@ class BasicApiService
 {
     /**
      * @param $apiKey
+     * @param $hashedKeys
+     *
+     * @return boolean
+     */
+    public function checkApiKeys($apiKey, $hashedKeys)
+    {
+        return false;
+    }
+
+    /**
+     * @param $apiKey
      *
      * @return string
      */

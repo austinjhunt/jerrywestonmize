@@ -1454,6 +1454,95 @@
     }
   }
 
+  .am-customer-waiting-list {
+
+    .am-customer-waiting-list-data {
+      border-bottom: 1px solid @color-divider-gray;
+      padding: 0 0 @padding-medium;
+
+      h3 {
+        margin: 0 0 @margin-small - 1px;
+        line-height: 1;
+        font-weight: 500;
+      }
+
+      span {
+        margin: 0;
+        line-height: 1.1;
+        color: @color-text-second;
+        display: block;
+        font-size: @mini-fs;
+      }
+    }
+
+    .am-appointment-status.small {
+      display: inline-block;
+
+      .am-appointment-status-symbol:before {
+        left: 11px;
+      }
+
+      .el-select {
+        i {
+          display: none;
+        }
+
+        input {
+          width: 0;
+          padding: 0 @padding-medium + 2px;
+          color: @color-white;
+        }
+      }
+    }
+
+    .am-appointment-persons.small {
+      display: inline-block;
+      position: relative;
+
+      .el-select {
+        width: 64px;
+
+        input {
+          padding: 0 @padding-big;
+          text-align: center;
+        }
+
+        i {
+          width: 26px;
+        }
+      }
+
+      svg, img {
+        position: absolute;
+        top: 14px;
+        left: 7px;
+      }
+    }
+
+    .am-appointment-remove.small {
+      display: inline-block;
+      position: relative;
+
+      .el-icon-question {
+        margin-left: 25px;
+      }
+
+      .el-icon-close {
+        margin-right: 20px;
+      }
+
+      i.remove {
+        cursor: pointer;
+        color: @color-text-second;
+        font-size: @regular-fs;
+
+        &:hover {
+          color: @color-text-prime;
+        }
+      }
+    }
+  }
+
   .total {
     background-color: @color-light-gray;
     padding: @padding-medium;

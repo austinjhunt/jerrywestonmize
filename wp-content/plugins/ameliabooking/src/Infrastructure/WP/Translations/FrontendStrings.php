@@ -97,7 +97,6 @@ class FrontendStrings
     public static function getCommonStrings()
     {
         $labels = Licence\Licence::$premium ? [
-            'no_results_found'             => __('No results found...', 'wpamelia'),
             'add_coupon'                   => __('Add Coupon', 'wpamelia'),
             'amount_fixed'                 => __('Fixed amount', 'wpamelia'),
             'amount_percentage'            => __('Percentage', 'wpamelia'),
@@ -115,6 +114,8 @@ class FrontendStrings
             'appointment'                  => __('Appointment', 'wpamelia'),
             'appointments'                 => __('Appointments', 'wpamelia'),
             'appointment_info'             => __('Appointment Info', 'wpamelia'),
+            'appointment_waiting_list_notify_message'
+                                           => __('We\'ll notify you if a spot opens up.', 'wpamelia'),
             'at'                           => __('at', 'wpamelia'),
             'barion'                       => __('Barion', 'wpamelia'),
             'book'                         => __('Book', 'wpamelia'),
@@ -550,7 +551,6 @@ class FrontendStrings
             'event_tickets'             => __('Tickets', 'wpamelia'),
             'event_tickets_context'     => __('Select the number of tickets that you want to book for each ticket type', 'wpamelia'),
             'event_ticket_types'        => __('Ticket Types', 'wpamelia'),
-            'no_events'                 => __('No results found...', 'wpamelia'),
             'event_select_tickets'      => __('Select Tickets', 'wpamelia'),
             'congrats_panel'            => __('Customer Panel', 'wpamelia'),
             'join_waiting_list'         => __('Join waiting list', 'wpamelia'),
@@ -610,7 +610,6 @@ class FrontendStrings
             'employee_info'                      => __('Employee information', 'wpamelia'),
             'book_service'                       => __('Book This Service', 'wpamelia'),
             'book_package'                       => __('Book This Package', 'wpamelia'),
-            'no_search_data'                     => __('No results', 'wpamelia'),
             'tab_employees'                      => __('Employees', 'wpamelia'),
         ] : [];
 

@@ -6,6 +6,7 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\User\CustomerApplicationService;
+use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
@@ -16,7 +17,9 @@ use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use Slim\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -60,6 +63,7 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
 
         /** @var CustomerApplicationService $customerAS */
         $customerAS = $this->container->get('application.user.customer.service');
+
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
@@ -88,8 +92,18 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
 
         $booking->setToken(new Token($token['token']));
 
-        if (!$customerAS->isCustomerBooking($booking, $user, $command->getField('token'))) {
+        if (
+            $booking->getStatus()->getValue() !== BookingStatus::WAITING &&
+            !$customerAS->isCustomerBooking($booking, $user, $command->getField('token'))
+        ) {
             throw new AccessDeniedException('You are not allowed to update booking status');
+        }
+
+        if ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
+            $waitingListResult = $this->validateWaitingListCapacity($booking, $settingsService, $notificationSettings);
+            if ($waitingListResult !== null) {
+                return $waitingListResult;
+            }
         }
 
         /** @var ReservationServiceInterface $reservationService */
@@ -119,11 +133,84 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
 
             do_action('amelia_after_booking_approved_link', $booking ? $booking->toArray() : null);
         } elseif ($notificationSettings['approveErrorUrl'] && $result->getResult() === CommandResult::RESULT_ERROR) {
-            $result->setUrl($notificationSettings['approveErrorUrl']);
+            $result->setUrl(
+                !empty($notificationSettings['approveErrorUrl']) ?
+                    $notificationSettings['approveErrorUrl'] : home_url()
+            );
         } else {
-            $result->setUrl('/');
+            $result->setUrl(home_url());
         }
 
         return $result;
+    }
+
+    /**
+     * Validates waiting list appointment capacity
+     *
+     * @param CustomerBooking $booking
+     * @param SettingsService $settingsService
+     * @param array $notificationSettings
+     * @return CommandResult|null Returns CommandResult if validation fails, null if validation passes
+     * @throws ContainerValueNotFoundException
+     * @throws ContainerException
+     */
+    private function validateWaitingListCapacity(CustomerBooking $booking, SettingsService $settingsService, array $notificationSettings)
+    {
+        $appointmentSettings = $settingsService->getCategorySettings('appointments');
+        $waitingListDeniedUrl = !empty($appointmentSettings['waitingListAppointments']['redirectUrlDenied']) ?
+            $appointmentSettings['waitingListAppointments']['redirectUrlDenied'] : home_url();
+
+        /** @var AppointmentRepository $appointmentRepo */
+        $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
+
+        /** @var Appointment $appointment */
+        $appointment = $appointmentRepo->getById($booking->getAppointmentId()->getValue());
+
+        if ($appointment === null) {
+            $result = new CommandResult();
+            $result->setUrl($notificationSettings['approveErrorUrl']);
+            $result->setMessage('This appointment does not exist!');
+            return $result;
+        }
+
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        $capacity = $providerRepository->getMaxCapacityByServiceId(
+            $appointment->getProviderId()->getValue(),
+            $appointment->getServiceId()->getValue()
+        );
+
+        $currentBookedPersons = $this->calculateCurrentBookedPersons($appointment);
+
+        if (($capacity - $currentBookedPersons) < $booking->getPersons()->getValue()) {
+            $result = new CommandResult();
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setUrl($waitingListDeniedUrl);
+            $result->setMessage('This slot is already taken!');
+            return $result;
+        }
+
+        return null;
+    }
+
+    /**
+     * Calculates the total number of persons currently booked for an appointment
+     *
+     * @param Appointment $appointment
+     * @return int
+     */
+    private function calculateCurrentBookedPersons(Appointment $appointment)
+    {
+        $persons = 0;
+        $approvedStatuses = [BookingStatus::APPROVED, BookingStatus::PENDING];
+
+        foreach ($appointment->getBookings()->getItems() as $existingBooking) {
+            if (in_array($existingBooking->getStatus()->getValue(), $approvedStatuses)) {
+                $persons += $existingBooking->getPersons()->getValue();
+            }
+        }
+
+        return $persons;
     }
 }

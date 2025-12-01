@@ -10,6 +10,9 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
+use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
+use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -80,6 +83,24 @@ class BookingCanceledEventHandler
                     ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
                 ]
             );
+
+            // Handle waiting list: find waiting bookings and notify them + provider about available spot
+            /** @var ApplicationNotificationService $applicationNotificationService */
+            $applicationNotificationService = $container->get('application.notification.service');
+
+            $waitingBookings = new Collection();
+            foreach ($reservationObject->getBookings()->getItems() as $booking) {
+                if ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
+                    $waitingBookings->addItem($booking);
+                }
+            }
+
+            if ($waitingBookings->length()) {
+                $applicationNotificationService->sendWaitingListAvailableSpotNotifications(
+                    $reservationObject,
+                    $waitingBookings
+                );
+            }
         }
 
         $booking = $commandResult->getData()[Entities::BOOKING];

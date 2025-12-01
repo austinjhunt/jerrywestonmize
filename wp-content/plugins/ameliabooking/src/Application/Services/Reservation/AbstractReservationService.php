@@ -24,7 +24,6 @@ use AmeliaBooking\Domain\Common\Exceptions\ForbiddenFileUploadException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Common\Exceptions\PackageBookingUnavailableException;
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
-use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomerService;
 use AmeliaBooking\Domain\Entity\Booking\AbstractCustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -39,6 +38,7 @@ use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Factory\Tax\TaxFactory;
+use AmeliaBooking\Domain\Services\Api\BasicApiService;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -207,7 +207,13 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 'googleRecaptcha'
             );
 
-            if ($googleRecaptchaSettings['enabled']) {
+            $apiKeysGenerated = $settingsService->getSetting('apiKeys', 'apiKeys');
+            /** @var BasicApiService $apiService */
+            $apiService = $this->container->get('domain.api.service');
+            $isValidAPIRequest = getallheaders() && !empty(getallheaders()['Amelia']) &&
+                $apiService->checkApiKeys(getallheaders()['Amelia'], $apiKeysGenerated);
+
+            if ($googleRecaptchaSettings['enabled'] && !$isValidAPIRequest) {
                 /** @var AbstractRecaptchaService $recaptchaService */
                 $recaptchaService = $this->container->get('infrastructure.recaptcha.service');
 

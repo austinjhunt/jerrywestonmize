@@ -1,27 +1,27 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence\Mapping;
 if (!defined('ABSPATH')) exit;
-use MailPoetVendor\Doctrine\Persistence\Reflection\RuntimePublicReflectionProperty;
+use MailPoetVendor\Doctrine\Persistence\Reflection\RuntimeReflectionProperty;
 use MailPoetVendor\Doctrine\Persistence\Reflection\TypedNoDefaultReflectionProperty;
-use MailPoetVendor\Doctrine\Persistence\Reflection\TypedNoDefaultRuntimePublicReflectionProperty;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
-use ReflectionProperty;
 use function array_key_exists;
 use function assert;
 use function class_exists;
 use function class_parents;
 use function phpversion;
 use function version_compare;
+use const PHP_VERSION_ID;
 class RuntimeReflectionService implements ReflectionService
 {
  private $supportsTypedPropertiesWorkaround;
  public function __construct()
  {
- $this->supportsTypedPropertiesWorkaround = version_compare((string) phpversion(), '7.4.0') >= 0;
+ $this->supportsTypedPropertiesWorkaround = version_compare(phpversion(), '7.4.0') >= 0;
  }
- public function getParentClasses($class)
+ public function getParentClasses(string $class)
  {
  if (!class_exists($class)) {
  throw MappingException::nonExistingClass($class);
@@ -30,36 +30,32 @@ class RuntimeReflectionService implements ReflectionService
  assert($parents !== \false);
  return $parents;
  }
- public function getClassShortName($class)
+ public function getClassShortName(string $class)
  {
  $reflectionClass = new ReflectionClass($class);
  return $reflectionClass->getShortName();
  }
- public function getClassNamespace($class)
+ public function getClassNamespace(string $class)
  {
  $reflectionClass = new ReflectionClass($class);
  return $reflectionClass->getNamespaceName();
  }
- public function getClass($class)
+ public function getClass(string $class)
  {
  return new ReflectionClass($class);
  }
- public function getAccessibleProperty($class, $property)
+ public function getAccessibleProperty(string $class, string $property)
  {
- $reflectionProperty = new ReflectionProperty($class, $property);
+ $reflectionProperty = new RuntimeReflectionProperty($class, $property);
  if ($this->supportsTypedPropertiesWorkaround && !array_key_exists($property, $this->getClass($class)->getDefaultProperties())) {
- if ($reflectionProperty->isPublic()) {
- $reflectionProperty = new TypedNoDefaultRuntimePublicReflectionProperty($class, $property);
- } else {
  $reflectionProperty = new TypedNoDefaultReflectionProperty($class, $property);
  }
- } elseif ($reflectionProperty->isPublic()) {
- $reflectionProperty = new RuntimePublicReflectionProperty($class, $property);
- }
+ if (PHP_VERSION_ID < 80100) {
  $reflectionProperty->setAccessible(\true);
+ }
  return $reflectionProperty;
  }
- public function hasPublicMethod($class, $method)
+ public function hasPublicMethod(string $class, string $method)
  {
  try {
  $reflectionMethod = new ReflectionMethod($class, $method);

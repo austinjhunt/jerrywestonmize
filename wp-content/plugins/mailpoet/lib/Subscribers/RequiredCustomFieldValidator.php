@@ -58,7 +58,7 @@ class RequiredCustomFieldValidator {
       if (!$ids) {
         return [];
       }
-      $requiredCustomFields = $this->customFieldRepository->findBy(['id' => $ids]);
+      $requiredCustomFields = $this->customFieldRepository->findByIds($ids);
     } else {
       $requiredCustomFields = $this->customFieldRepository->findAll();
     }

@@ -8,14 +8,19 @@ use MailPoetVendor\Doctrine\DBAL\Cache\CacheException;
 use MailPoetVendor\Doctrine\DBAL\Cache\QueryCacheProfile;
 use MailPoetVendor\Doctrine\DBAL\Driver\API\ExceptionConverter;
 use MailPoetVendor\Doctrine\DBAL\Driver\Connection as DriverConnection;
+use MailPoetVendor\Doctrine\DBAL\Driver\Exception as TheDriverException;
 use MailPoetVendor\Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use MailPoetVendor\Doctrine\DBAL\Driver\Statement as DriverStatement;
 use MailPoetVendor\Doctrine\DBAL\Event\TransactionBeginEventArgs;
 use MailPoetVendor\Doctrine\DBAL\Event\TransactionCommitEventArgs;
 use MailPoetVendor\Doctrine\DBAL\Event\TransactionRollBackEventArgs;
 use MailPoetVendor\Doctrine\DBAL\Exception\ConnectionLost;
+use MailPoetVendor\Doctrine\DBAL\Exception\DeadlockException;
 use MailPoetVendor\Doctrine\DBAL\Exception\DriverException;
+use MailPoetVendor\Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use MailPoetVendor\Doctrine\DBAL\Exception\InvalidArgumentException;
+use MailPoetVendor\Doctrine\DBAL\Exception\TransactionRolledBack;
+use MailPoetVendor\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use MailPoetVendor\Doctrine\DBAL\Platforms\AbstractPlatform;
 use MailPoetVendor\Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use MailPoetVendor\Doctrine\DBAL\Query\QueryBuilder;
@@ -497,14 +502,29 @@ class Connection
  public function transactional(Closure $func)
  {
  $this->beginTransaction();
+ $successful = \false;
  try {
  $res = $func($this);
- $this->commit();
- return $res;
- } catch (Throwable $e) {
+ $successful = \true;
+ } finally {
+ if (!$successful) {
  $this->rollBack();
- throw $e;
  }
+ }
+ $shouldRollback = \true;
+ try {
+ $this->commit();
+ $shouldRollback = \false;
+ } catch (TheDriverException $t) {
+ $convertedException = $this->handleDriverException($t, null);
+ $shouldRollback = !($convertedException instanceof TransactionRolledBack || $convertedException instanceof UniqueConstraintViolationException || $convertedException instanceof ForeignKeyConstraintViolationException || $convertedException instanceof DeadlockException);
+ throw $t;
+ } finally {
+ if ($shouldRollback) {
+ $this->rollBack();
+ }
+ }
+ return $res;
  }
  public function setNestTransactionsWithSavepoints($nestTransactionsWithSavepoints)
  {
@@ -573,11 +593,19 @@ DEPRECATION
  }
  $result = \true;
  $connection = $this->getWrappedConnection();
+ try {
  if ($this->transactionNestingLevel === 1) {
  $result = $this->doCommit($connection);
  } elseif ($this->nestTransactionsWithSavepoints) {
  $this->releaseSavepoint($this->_getNestedTransactionSavePointName());
  }
+ } finally {
+ $this->updateTransactionStateAfterCommit();
+ }
+ return $result;
+ }
+ private function updateTransactionStateAfterCommit() : void
+ {
  --$this->transactionNestingLevel;
  $eventManager = $this->getEventManager();
  if ($eventManager->hasListeners(Events::onTransactionCommit)) {
@@ -585,10 +613,9 @@ DEPRECATION
  $eventManager->dispatchEvent(Events::onTransactionCommit, new TransactionCommitEventArgs($this));
  }
  if ($this->autoCommit !== \false || $this->transactionNestingLevel !== 0) {
- return $result;
+ return;
  }
  $this->beginTransaction();
- return $result;
  }
  private function doCommit(DriverConnection $connection)
  {

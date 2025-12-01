@@ -109,9 +109,18 @@ class AppointmentEditedEventHandler
         /** @var Collection $removedBookings */
         $removedBookings = new Collection();
 
+        $notifyWaitingCustomers = false;
+
         foreach ($bookings as $booking) {
             if ($booking['isChangedStatus'] && $booking['status'] === BookingStatus::REJECTED) {
                 $removedBookings->addItem(CustomerBookingFactory::create($booking));
+            }
+
+            if (
+                $booking['isChangedStatus'] &&
+                in_array($booking['status'], [BookingStatus::REJECTED, BookingStatus::CANCELED], true)
+            ) {
+                $notifyWaitingCustomers = true;
             }
         }
 
@@ -213,6 +222,22 @@ class AppointmentEditedEventHandler
             false,
             $reservationObject->isNotifyParticipants()
         );
+
+        if ($notifyWaitingCustomers) {
+            $waitingBookings = new Collection();
+
+            foreach ($appointment['bookings'] as $booking) {
+                if ($booking['status'] === BookingStatus::WAITING) {
+                    $waitingBookings->addItem(CustomerBookingFactory::create($booking));
+                }
+            }
+            if ($waitingBookings->getItems()) {
+                $applicationNotificationService->sendWaitingListAvailableSpotNotifications(
+                    $reservationObject,
+                    $waitingBookings
+                );
+            }
+        }
 
         if (
             $appointmentRescheduled &&

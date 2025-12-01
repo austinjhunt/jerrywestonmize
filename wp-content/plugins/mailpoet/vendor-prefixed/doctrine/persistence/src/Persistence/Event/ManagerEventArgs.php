@@ -1,4 +1,5 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence\Event;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Doctrine\Common\EventArgs;

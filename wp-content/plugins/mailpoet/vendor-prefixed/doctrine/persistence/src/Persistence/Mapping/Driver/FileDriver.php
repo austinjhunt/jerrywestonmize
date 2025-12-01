@@ -1,7 +1,7 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence\Mapping\Driver;
 if (!defined('ABSPATH')) exit;
-use MailPoetVendor\Doctrine\Persistence\Mapping\ClassMetadata;
 use MailPoetVendor\Doctrine\Persistence\Mapping\MappingException;
 use function array_keys;
 use function array_merge;
@@ -13,8 +13,8 @@ abstract class FileDriver implements MappingDriver
 {
  protected $locator;
  protected $classCache;
- protected $globalBasename;
- public function __construct($locator, $fileExtension = null)
+ protected $globalBasename = '';
+ public function __construct($locator, ?string $fileExtension = null)
  {
  if ($locator instanceof FileLocator) {
  $this->locator = $locator;
@@ -22,7 +22,7 @@ abstract class FileDriver implements MappingDriver
  $this->locator = new DefaultFileLocator((array) $locator, $fileExtension);
  }
  }
- public function setGlobalBasename($file)
+ public function setGlobalBasename(string $file)
  {
  $this->globalBasename = $file;
  }
@@ -30,7 +30,7 @@ abstract class FileDriver implements MappingDriver
  {
  return $this->globalBasename;
  }
- public function getElement($className)
+ public function getElement(string $className)
  {
  if ($this->classCache === null) {
  $this->initialize();
@@ -45,7 +45,7 @@ abstract class FileDriver implements MappingDriver
  $this->classCache[$className] = $result[$className];
  return $result[$className];
  }
- public function isTransient($className)
+ public function isTransient(string $className)
  {
  if ($this->classCache === null) {
  $this->initialize();
@@ -60,16 +60,18 @@ abstract class FileDriver implements MappingDriver
  if ($this->classCache === null) {
  $this->initialize();
  }
- if (!$this->classCache) {
- return (array) $this->locator->getAllClassNames($this->globalBasename);
+ if ($this->classCache === []) {
+ return $this->locator->getAllClassNames($this->globalBasename);
  }
- return array_values(array_unique(array_merge(array_keys($this->classCache), (array) $this->locator->getAllClassNames($this->globalBasename))));
+ $classCache = $this->classCache;
+ $keys = array_keys($classCache);
+ return array_values(array_unique(array_merge($keys, $this->locator->getAllClassNames($this->globalBasename))));
  }
- protected abstract function loadMappingFile($file);
+ protected abstract function loadMappingFile(string $file);
  protected function initialize()
  {
  $this->classCache = [];
- if ($this->globalBasename === null) {
+ if ($this->globalBasename === '') {
  return;
  }
  foreach ($this->locator->getPaths() as $path) {

@@ -85,9 +85,6 @@ class WooCommerceService
     /** @var array $checkout_info */
     protected static $checkout_info = [];
 
-    /** @var array $processedAmeliaItems */
-    protected static $processedAmeliaItems = [];
-
     public const AMELIA = 'ameliabooking';
 
     /**
@@ -477,7 +474,7 @@ class WooCommerceService
      *
      * @param $data
      *
-     * @return array
+     * @return array|null
      */
     private static function getEntity($data)
     {
@@ -1770,8 +1767,9 @@ class WooCommerceService
 
                 $paymentDueAmount = self::getPaymentAmount($wc_item[self::AMELIA], false);
 
+                $paymentAmount = self::getPaymentAmount($wc_item[self::AMELIA]);
                 if (self::hasDeposit($wc_item[self::AMELIA])) {
-                    $paymentDueAmount = $paymentDueAmount - self::getPaymentAmount($wc_item[self::AMELIA]);
+                    $paymentDueAmount = $paymentDueAmount - $paymentAmount;
                 }
 
                 $placeholderData["payment_due_amount"] = $paymentDueAmount < 0
@@ -1779,7 +1777,7 @@ class WooCommerceService
                     : $helperService->getFormattedPrice($paymentDueAmount);
 
                 $placeholderData["{$wc_item[self::AMELIA]['type']}_deposit_payment"] = self::hasDeposit($wc_item[self::AMELIA])
-                    ? $helperService->getFormattedPrice(self::getPaymentAmount($wc_item[self::AMELIA]))
+                    ? $helperService->getFormattedPrice($paymentAmount)
                     : $helperService->getFormattedPrice(0);
 
                 $metaData = $placeholderService->applyPlaceholders(
@@ -2050,7 +2048,9 @@ class WooCommerceService
         /** @var Reservation $reservation */
         $reservation = self::getReservation($wcItemAmeliaCache, $applyDeposit);
 
-        $paymentAmount = $reservationService->getReservationPaymentAmount($reservation);
+        $paymentAmount = !empty($wcItemAmeliaCache['payment']['fromLink']) ?
+            $wcItemAmeliaCache['price'] :
+            $reservationService->getReservationPaymentAmount($reservation);
 
         return apply_filters('amelia_get_modified_price', $paymentAmount, $wcItemAmeliaCache, $bookableData);
     }
@@ -2685,77 +2685,57 @@ class WooCommerceService
         return null;
     }
 
-    /**
-     * @param $orderId
-     *
-     * @return array|null
-     * @throws ContainerException
-     */
-    public static function getPaymentLink($orderId)
+    public static function getPaymentLink($data, $price, $oldOrderId, $payFullPrice)
     {
-        $order = wc_get_order($orderId);
-        if ($order) {
-            return ['link' => $order->get_checkout_payment_url(), 'status' => 200];
-        }
-        return null;
-    }
-
-    public static function createWcOrder($appointmentData, $price, $oldOrderId)
-    {
+        $appointmentData = $data;
         if ($oldOrderId) {
-            $oldOrder = new \WC_Order($oldOrderId);
-            $order    = wc_create_order(['customer_id' => $oldOrder->get_customer_id()]);
-            $order->set_address($oldOrder->get_address(), 'billing');
+            $oldOrder = wc_get_order($oldOrderId);
+            if ($payFullPrice) {
+                return ['link' => $oldOrder->get_checkout_payment_url(), 'status' => 200];
+            }
+            foreach ($oldOrder->get_items() as $itemId => $orderItem) {
+                $ameliaMetaData = wc_get_order_item_meta($itemId, self::AMELIA);
 
-            $order->add_product(
-                wc_get_product(
-                    !empty($appointmentData['wcProductId']) ?
-                        $appointmentData['wcProductId'] :
-                        self::getProductIdFromSettings()
-                ),
-                1,
-                ['subtotal' => $price, 'total' => $price ]
+                if ($ameliaMetaData && is_array($ameliaMetaData)) {
+                    $appointmentData = $ameliaMetaData;
+                    unset($appointmentData['processed']);
+                    $appointmentData['payment'] = $data['payment'];
+                    break;
+                }
+            }
+        }
+        $appointmentData['payment']['fromLink'] = true;
+        $appointmentData['price'] = $price;
+        $link =  wc_get_checkout_url();
+        if (
+            !empty($appointmentData['locale'][0]) &&
+            function_exists('icl_object_id') &&
+            ($plink = apply_filters('wpml_permalink', get_permalink(get_option('woocommerce_checkout_page_id')), $appointmentData['locale'][0], true))
+        ) {
+            $link = $plink;
+        }
+
+        if (!empty($appointmentData['payment']['fromPanel'])) {
+            self::addToCart($appointmentData);
+        } else {
+            $cache = CacheFactory::create(
+                [
+                    'name' => (new Token())->getValue(),
+                    'data' => json_encode($appointmentData),
+                ]
             );
 
-            foreach ($order->get_items() as $itemId => $orderItem) {
-                wc_add_order_item_meta($itemId, self::AMELIA, $appointmentData);
-            }
+            /** @var CacheRepository $cacheRepository */
+            $cacheRepository = self::$container->get('domain.cache.repository');
 
-            $order->calculate_totals();
+            $cacheId = $cacheRepository->add($cache);
 
-            return self::getPaymentLink($order->get_id());
-        } else {
-            $link =  wc_get_checkout_url();
-            if (
-                !empty($appointmentData['locale'][0]) &&
-                function_exists('icl_object_id') &&
-                ($plink = apply_filters('wpml_permalink', get_permalink(get_option('woocommerce_checkout_page_id')), $appointmentData['locale'][0], true))
-            ) {
-                $link = $plink;
-            }
+            $cache->setId(new Id($cacheId));
 
-            if (!empty($appointmentData['payment']['fromPanel'])) {
-                self::addToCart($appointmentData);
-            } else {
-                $cache = CacheFactory::create(
-                    [
-                        'name' => (new Token())->getValue(),
-                        'data' => json_encode($appointmentData),
-                    ]
-                );
-
-                /** @var CacheRepository $cacheRepository */
-                $cacheRepository = self::$container->get('domain.cache.repository');
-
-                $cacheId = $cacheRepository->add($cache);
-
-                $cache->setId(new Id($cacheId));
-
-                $link .= (strpos($link, '?') ? '&' : '?') . 'amelia_cache_id=' . $cacheId . '_' . $cache->getName()->getValue();
-            }
-
-            return ['link' =>  $link, 'status' => 200];
+            $link .= (strpos($link, '?') ? '&' : '?') . 'amelia_cache_id=' . $cacheId . '_' . $cache->getName()->getValue();
         }
+
+        return ['link' =>  $link, 'status' => 200];
     }
 
     public static function beforeCheckoutForm()
@@ -2915,7 +2895,7 @@ class WooCommerceService
             self::isAmeliaOrder($order) &&
             self::isAmeliaOrderValidForBooking($order) &&
             !self::isAmeliaOrderPrePaid() &&
-            !self::isAmeliaOrderFromPaymentLink($order, false)
+            !self::isAmeliaOrderFromPaymentLink($order)
         ) {
             self::createBookings($order, false, false);
         }
@@ -2938,7 +2918,7 @@ class WooCommerceService
             if (self::isAmeliaOrderProcessed($order)) {
                 self::manageOrderUpdateStatus($order);
             } elseif (self::isAmeliaOrderValidForBooking($order)) {
-                if (self::isAmeliaOrderFromPaymentLink($order, true)) {
+                if (self::isAmeliaOrderFromPaymentLink($order)) {
                     self::managePaymentCreatedFromPaymentLink($order);
                 } elseif (self::isAmeliaOrderPrePaid()) {
                     self::createBookings($order, true, true);
@@ -2998,13 +2978,12 @@ class WooCommerceService
      * @param $inspectRules
      * @return bool
      */
-    private static function isAmeliaOrderFromPaymentLink($order, $inspectRules)
+    private static function isAmeliaOrderFromPaymentLink($order)
     {
         foreach ($order->get_items() as $item_id => $order_item) {
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
             if (
-                (!$inspectRules || self::isValid($order->get_status(), $data) !== false) &&
                 !isset($data['processed']) &&
                 isset($data['payment']['fromLink']) &&
                 $data['payment']['fromLink']
@@ -3222,11 +3201,13 @@ class WooCommerceService
             try {
                 if (
                     (!$inspectRules || self::isValid($order->get_status(), $data) !== false) &&
-                    !array_key_exists($key, self::$processedAmeliaItems) &&
+                    !array_key_exists('booked', $data) &&
                     !empty($data) &&
                     !isset($data['processed'])
                 ) {
-                    self::$processedAmeliaItems[$key] = true;
+                    $data['booked'] = false;
+
+                    wc_update_order_item_meta($item_id, self::AMELIA, $data);
 
                     $customFields = !empty($data['allCustomFields']) ?
                         $data['allCustomFields'] : $data['bookings'][0]['customFields'];
@@ -3300,6 +3281,8 @@ class WooCommerceService
 
                     $data['recurring'] = [];
 
+                    $data['booked'] = true;
+
                     wc_update_order_item_meta($item_id, self::AMELIA, $data);
                 }
             } catch (ContainerException $e) {
@@ -3321,17 +3304,17 @@ class WooCommerceService
         foreach ($order->get_items() as $item_id => $order_item) {
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
-            $key = $data && is_array($data) && isset($data['wcItemHash']) ? $data['wcItemHash'] : 0;
-
             try {
                 if (
                     self::isValid($order->get_status(), $data) !== false &&
-                    !array_key_exists($key, self::$processedAmeliaItems) &&
+                    !array_key_exists('booked', $data) &&
                     !isset($data['processed']) &&
                     isset($data['payment']['fromLink']) &&
                     $data['payment']['fromLink']
                 ) {
-                    self::$processedAmeliaItems[$key] = true;
+                    $data['booked'] = false;
+
+                    wc_update_order_item_meta($item_id, self::AMELIA, $data);
 
                     self::setAmeliaItemData($data, $order, $data['couponCode'], [], true, $item_id);
 
@@ -3379,15 +3362,7 @@ class WooCommerceService
                         $payment->getEntity()->getValue()
                     );
 
-                    $requestedStatus = $reservationService->getWcStatus(
-                        $data['payment']['entity'],
-                        $order->get_status(),
-                        'booking',
-                        true
-                    );
-                    if ($requestedStatus !== false) {
-                        self::updateBookingStatus($payment, $data['payment']['entity'], $order);
-                    } elseif ($data['payment']['entity'] === Entities::APPOINTMENT) {
+                    if ($data['payment']['entity'] === Entities::APPOINTMENT) {
                         /** @var SettingsService $settingsDS */
                         $settingsDS = self::$container->get('domain.settings.service');
                         /** @var AppointmentApplicationService $appointmentAS */
@@ -3414,6 +3389,10 @@ class WooCommerceService
                             $appointmentAS->approveBooking($data['booking']['id']);
                         }
                     }
+
+                    $data['booked'] = true;
+
+                    wc_update_order_item_meta($item_id, self::AMELIA, $data);
                 }
             } catch (ContainerException $e) {
             } catch (\Exception $e) {

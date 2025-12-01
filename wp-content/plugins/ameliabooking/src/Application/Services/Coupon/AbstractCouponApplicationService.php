@@ -88,6 +88,7 @@ abstract class AbstractCouponApplicationService
      * @param Coupon $coupon
      * @param int    $userId
      * @param bool   $inspectCoupon
+     * @param bool   $isPlaceholder
      *
      * @return boolean
      *
@@ -97,7 +98,7 @@ abstract class AbstractCouponApplicationService
      * @throws InvalidArgumentException
      * @throws CouponExpiredException
      */
-    abstract public function inspectCoupon($coupon, $userId, $inspectCoupon);
+    abstract public function inspectCoupon($coupon, $userId, $inspectCoupon, $isPlaceholder = false);
 
     /**
      * @param Coupon   $coupon

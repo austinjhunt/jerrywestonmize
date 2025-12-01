@@ -1,4 +1,5 @@
 <?php
+declare (strict_types=1);
 namespace MailPoetVendor\Doctrine\Persistence\Mapping\Driver;
 if (!defined('ABSPATH')) exit;
 use MailPoetVendor\Doctrine\Persistence\Mapping\MappingException;
@@ -49,13 +50,13 @@ trait ColocatedMappingDriver
  {
  $this->fileExtension = $fileExtension;
  }
- public abstract function isTransient($className);
+ public abstract function isTransient(string $className);
  public function getAllClassNames()
  {
  if ($this->classNames !== null) {
  return $this->classNames;
  }
- if (!$this->paths) {
+ if ($this->paths === []) {
  throw MappingException::pathRequiredForDriver(static::class);
  }
  $classes = [];
@@ -87,7 +88,7 @@ trait ColocatedMappingDriver
  foreach ($declared as $className) {
  $rc = new ReflectionClass($className);
  $sourceFile = $rc->getFileName();
- if (!in_array($sourceFile, $includedFiles) || $this->isTransient($className)) {
+ if (!in_array($sourceFile, $includedFiles, \true) || $this->isTransient($className)) {
  continue;
  }
  $classes[] = $className;
