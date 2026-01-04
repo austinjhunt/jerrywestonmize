@@ -136,19 +136,25 @@ if ($data['metaData']) {
 
 ...
 
-// BEGIN MODS
-
-if ($data['metaData']['Customer Email']) {
-	$stripeData['receipt_email'] = $data['metaData']['Customer Email'];
-}
-// also added a fallback description since that was appearing as null on the Stripe side
+// begin mods with fallback values 
 if ($data['description']) {
 	$stripeData['description'] = $data['description'];
-} else {
+} else if (!empty($data['metaData']['Customer Name'])) {
 	$stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
 }
-// END MODS
 
+$customerId = $this->createCustomer($data, $additionalStripeData);
+
+if ($customerId) {
+	$stripeData = array_merge($stripeData, ['customer' => $customerId]);
+}
+
+if (!empty($data['customerData']) && !empty($data['customerData']['email'])) {
+	$stripeData['receipt_email'] = $data['customerData']['email'];
+} else if (!empty($data['metaData']['Customer Email'])) {
+	$stripeData['receipt_email'] = $data['metaData']['Customer Email'];
+}
+// end mods with fallback values 
 ....
 
 $stripeData = apply_filters(
